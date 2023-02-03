@@ -13,25 +13,25 @@ import { mod } from '@utils/general';
             transition('enter => leave', [
                 style({
                     opacity: 1,
-                    visibility: 'visible'
+                    visibility: 'visible',
                 }),
                 animate(
                     animations.carouselImage.leave,
-                    style({ opacity: 0, visibility: 'hidden' })
-                )
+                    style({ opacity: 0, visibility: 'hidden' }),
+                ),
             ]),
             transition('* => enter', [
                 style({
                     opacity: 0,
-                    visibility: 'hidden'
+                    visibility: 'hidden',
                 }),
                 animate(
                     animations.carouselImage.enter,
-                    style({ opacity: 1, visibility: 'visible' })
-                )
-            ])
-        ])
-    ]
+                    style({ opacity: 1, visibility: 'visible' }),
+                ),
+            ]),
+        ]),
+    ],
 })
 export class NxCarouselComponent implements OnInit {
     @Input() screenshots;

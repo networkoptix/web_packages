@@ -1,11 +1,4 @@
-import {
-    Component,
-    ElementRef,
-    Input,
-    OnInit,
-    ViewChild,
-    ViewEncapsulation
-} from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
 
@@ -41,7 +34,7 @@ import { CoercedBoolInput, IBool } from '@decorators/ibool';
     selector: 'nx-block',
     templateUrl: 'content-block.component.html',
     styleUrls: ['content-block.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxContentBlockComponent implements OnInit {
     @Input('type') type: string;
@@ -63,14 +56,14 @@ export class NxContentBlockComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.haveHeader = (this.headerWrapper.nativeElement.childNodes[0]?.childNodes.length > 0);
-        this.haveFooter = (this.footerWrapper.nativeElement.childNodes?.length > 0);
+        this.haveHeader = this.headerWrapper.nativeElement.childNodes[0]?.childNodes.length > 0;
+        this.haveFooter = this.footerWrapper.nativeElement.childNodes?.length > 0;
 
-        this.fixedHeight = (this.fixedHeight !== undefined);
-        this.hoverable = (this.hoverable !== undefined);
+        this.fixedHeight = this.fixedHeight !== undefined;
+        this.hoverable = this.hoverable !== undefined;
 
-        this.headerStyle = (this.headerStyle) ? this.headerStyle + '-header' : '';
-        this.headerClass = (this.headerClass) ? this.headerClass : '';
+        this.headerStyle = this.headerStyle ? this.headerStyle + '-header' : '';
+        this.headerClass = this.headerClass ? this.headerClass : '';
 
         this.headerClasses = this.headerStyle + this.headerClass;
     }

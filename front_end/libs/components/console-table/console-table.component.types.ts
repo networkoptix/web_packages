@@ -1,15 +1,9 @@
 import md5 from 'md5';
 
-import {
-    DataStructureMeta
-} from '@pages/developer-console/console/edit/console-edit.component.types';
-import {
-    ContentSettings, ContextManifest
-} from '@services/nx-cloud-api/nx-cloud-api.types';
+import { DataStructureMeta } from '@pages/developer-console/console/edit/console-edit.component.types';
+import { ContentSettings, ContextManifest } from '@services/nx-cloud-api/nx-cloud-api.types';
 
-import {
-    DropdownItem
-} from '../dropdowns/generic/dropdown.component.types';
+import { DropdownItem } from '../dropdowns/generic/dropdown.component.types';
 
 export enum ConfigType {
     TEXT = 'text',
@@ -21,7 +15,7 @@ export enum ConfigType {
     ICON_MODAL = 'icon_modal',
     ASYNC_HANDLER = 'async_handler',
     DROPDOWN = 'dropdown',
-    BOOLEAN = 'boolean'
+    BOOLEAN = 'boolean',
 }
 
 export interface ColumnConfig {
@@ -40,7 +34,7 @@ export enum ActionType {
     SUCCESS = 'success',
     DANGER = 'danger',
     WARNING = 'warning',
-    INFO = 'info'
+    INFO = 'info',
 }
 
 interface ActionConfig {
@@ -59,7 +53,7 @@ export interface ModalManifest {
 export enum OptionalFeatures {
     FILTER = 'filter',
     SEARCH = 'search',
-    PER_PAGE = 'perPage'
+    PER_PAGE = 'perPage',
 }
 
 export interface ConsoleManifest {
@@ -88,7 +82,7 @@ export interface ConsoleManifest {
 export enum ModalType {
     CLIENT_EDIT = 'client-edit',
     CLIENT_CREATE = 'client-create',
-    CLIENT_DOWNLOAD = 'client-download'
+    CLIENT_DOWNLOAD = 'client-download',
 }
 
 export class ModalContent {
@@ -99,23 +93,23 @@ export class ModalContent {
         readonly values?: Record<string, any>,
         readonly manifest?: ModalManifest,
         readonly settings?: ContentSettings,
-        readonly contextList?: ContextManifest[]
+        readonly contextList?: ContextManifest[],
     ) {}
 }
 
 export class GenericEditModalContent {
     constructor(
         readonly contextManifest: ContextManifest,
-        readonly handlerProcess: ((values: unknown) => PromiseLike<unknown>),
-        readonly deleteProcess?: ((values: unknown) => PromiseLike<unknown>),
+        readonly handlerProcess: (values: unknown) => PromiseLike<unknown>,
+        readonly deleteProcess?: (values: unknown) => PromiseLike<unknown>,
         readonly id?: string,
         readonly heading?: string,
-        readonly values?: Record<string, unknown>
+        readonly values?: Record<string, unknown>,
     ) {}
 }
 
 export enum ConsoleSection {
-    CUSTOM_CLIENTS = 'custom-clients'
+    CUSTOM_CLIENTS = 'custom-clients',
 }
 
 export class ListSerializer<Initial, Serialized> {
@@ -128,7 +122,7 @@ export class ListSerializer<Initial, Serialized> {
         route: string,
         manifest: ConsoleManifest,
         initialData?: Initial[],
-        private contentSettings?: ContentSettings
+        private contentSettings?: ContentSettings,
     ) {
         this.editManifest = manifest.editManifest;
         this.downloadManifest = manifest.downloadManifest;
@@ -152,9 +146,8 @@ export class ListSerializer<Initial, Serialized> {
         const createHash = (values: Record<any, any>) =>
             md5(
                 JSON.stringify(
-                    Object.entries(values)
-                        .sort(([aKey], [bKey]) => aKey < bKey ? 1 : -1)
-                )
+                    Object.entries(values).sort(([aKey], [bKey]) => (aKey < bKey ? 1 : -1)),
+                ),
             );
         const createDownloadAsyncValues = ({ values: _, ...values }) => ({
             modal: ModalType.CLIENT_DOWNLOAD,
@@ -162,22 +155,21 @@ export class ListSerializer<Initial, Serialized> {
             manifest: this.downloadManifest,
             settings: this.contentSettings || {},
             lookupKey: createHash(values),
-            values
+            values,
         });
         const createSettingsModalValues = ({ values: _, ...values }) => ({
             modal: ModalType.CLIENT_EDIT,
             heading: this.editManifest.label,
             manifest: this.editManifest,
             settings: this.contentSettings || {},
-            values
+            values,
         });
 
-        return data.map(
-            item => ({
-                ...item,
-                downloadAsync: createDownloadAsyncValues(item),
-                settingsModal: createSettingsModalValues(item)
-            }));
+        return data.map(item => ({
+            ...item,
+            downloadAsync: createDownloadAsyncValues(item),
+            settingsModal: createSettingsModalValues(item),
+        }));
     };
 }
 

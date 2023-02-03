@@ -1,9 +1,4 @@
-import {
-    Component,
-    EventEmitter,
-    Inject, Input,
-    Output,
-} from '@angular/core';
+import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
@@ -12,7 +7,7 @@ import { map, switchMap } from 'rxjs/operators';
 
 import {
     FilterState,
-    FilterUpdatePayload
+    FilterUpdatePayload,
 } from '@components/advanced-filter/advanced-filter.component.types';
 import {
     ConfigType,
@@ -20,7 +15,7 @@ import {
     ConsoleSection,
     ListSerializer,
     ModalType,
-    OptionalFeatures
+    OptionalFeatures,
 } from '@components/console-table/console-table.component.types';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -36,7 +31,7 @@ import { CustomClientAPI } from '@services/nx-cloud-api/custom-client-api';
 import {
     ContentManifest,
     ContextManifest,
-    DocAsset
+    DocAsset,
 } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { NxHeaderService } from '@services/nx-header.service';
 import { WINDOW } from '@services/window-provider';
@@ -48,7 +43,7 @@ import { TableDataSource } from './table-data-source';
 @Component({
     selector: 'nx-console-table',
     templateUrl: 'console-table.component.html',
-    styleUrls: ['console-table.component.scss']
+    styleUrls: ['console-table.component.scss'],
 })
 export class NxConsoleTableComponent {
     @Input() sectionParam: ConsoleSection;
@@ -89,13 +84,16 @@ export class NxConsoleTableComponent {
         private menusService: NxMenusService,
         private toastService: NxToastService,
         private consoleService: NxConsoleService,
-        @Inject(WINDOW) private window: Window
+        @Inject(WINDOW) private window: Window,
     ) {
         this.route.queryParams.pipe(untilDestroyed(this)).subscribe(this.updatePageState);
     }
 
     async ngOnChanges({ sectionParam }: NgChanges<NxConsoleTableComponent>): Promise<void> {
-        if (sectionParam && (sectionParam.firstChange || sectionParam.currentValue !== sectionParam.previousValue)) {
+        if (
+            sectionParam &&
+            (sectionParam.firstChange || sectionParam.currentValue !== sectionParam.previousValue)
+        ) {
             this.selectedManifest = null;
             this.displayedColumns = null;
             this.selectedData = null;
@@ -105,17 +103,33 @@ export class NxConsoleTableComponent {
                 this.update$.pipe(switchMap(this.cloudApi.getSubAPI(this.sectionParam).list)),
                 this.cloudApi.getSubAPI(this.sectionParam).getManifest() as BehaviorSubject<{}>,
                 this.menusService.getMenu('configuration').pipe(
-                    map(({ nodes }) => NxHeaderService.findMatchFactory(`${this.base}/${this.sectionParam}`)(nodes)?.assetId),
-                    switchMap(assetId => assetId ? this.cloudApi.getDocAsset(assetId) : Promise.resolve(null as DocAsset))
-                )
+                    map(
+                        ({ nodes }) =>
+                            NxHeaderService.findMatchFactory(`${this.base}/${this.sectionParam}`)(
+                                nodes,
+                            )?.assetId,
+                    ),
+                    switchMap(assetId =>
+                        assetId
+                            ? this.cloudApi.getDocAsset(assetId)
+                            : Promise.resolve(null as DocAsset),
+                    ),
+                ),
             ]).subscribe(([list, contentManifest, docAsset]) => {
                 this.contentManifest = contentManifest as ContentManifest;
                 this.docAsset = docAsset;
                 this.selectedManifest = manifest[this.sectionParam];
-                this.displayedColumns = (this.selectedManifest?.contexts || []).map(({ name }) => name);
+                this.displayedColumns = (this.selectedManifest?.contexts || []).map(
+                    ({ name }) => name,
+                );
                 this.manifest = this.selectedManifest.editManifest;
                 const { page = 1, search = '', perPage = 0 } = this.route.snapshot.queryParams;
-                const { data } = new ListSerializer(this.sectionParam, this.selectedManifest, <unknown>list as unknown[], this.contentManifest.manifest.settings);
+                const { data } = new ListSerializer(
+                    this.sectionParam,
+                    this.selectedManifest,
+                    (<unknown>list) as unknown[],
+                    this.contentManifest.manifest.settings,
+                );
                 this.noItems = !data.length;
                 this.showSearch ||= !!search;
                 const perPageFromParam = parseInt(perPage || this.selectedManifest.perPage);
@@ -132,17 +146,28 @@ export class NxConsoleTableComponent {
                     this.selectedManifest.minItemsAdvanced,
                     parseInt(page),
                     search,
-                    this.displayedColumns.filter(key => !this.selectedManifest.excludeFromSearch.includes(key)),
-                    this.updatePageParam
+                    this.displayedColumns.filter(
+                        key => !this.selectedManifest.excludeFromSearch.includes(key),
+                    ),
+                    this.updatePageParam,
                 );
 
                 for (const asset of data as any[]) {
-                    this.headerService.addDynamicDevConsoleNode(asset, `${this.base}/${this.sectionParam}/${ConsoleMode.EDIT}`, this.contentManifest.manifest.contexts);
+                    this.headerService.addDynamicDevConsoleNode(
+                        asset,
+                        `${this.base}/${this.sectionParam}/${ConsoleMode.EDIT}`,
+                        this.contentManifest.manifest.contexts,
+                    );
                 }
                 this.dataLoaded = true;
-                const targetState = this.consoleService.targetState || { id: this.route.snapshot.queryParams.download, download: true };
+                const targetState = this.consoleService.targetState || {
+                    id: this.route.snapshot.queryParams.download,
+                    download: true,
+                };
                 if (targetState && targetState.id !== undefined) {
-                    const { index, value } = this.selectedData.findElementIndex(parseInt(targetState.id));
+                    const { index, value } = this.selectedData.findElementIndex(
+                        parseInt(targetState.id),
+                    );
                     const page = this.selectedData.indexToPage(index);
                     setTimeout(_ => this.updatePageParam(page));
 
@@ -155,15 +180,15 @@ export class NxConsoleTableComponent {
         }
     }
 
-    #paramUpdaterFactory = (param: string) => <Value>(value: Value) => this.router.navigate(
-        [],
-        {
-            relativeTo: this.route,
-            queryParams: { [param]: value },
-            queryParamsHandling: 'merge',
-            replaceUrl: true
-        }
-    );
+    #paramUpdaterFactory =
+        (param: string) =>
+        <Value>(value: Value) =>
+            this.router.navigate([], {
+                relativeTo: this.route,
+                queryParams: { [param]: value },
+                queryParamsHandling: 'merge',
+                replaceUrl: true,
+            });
 
     updateEditValues(asset): void {
         this.editValues.emit(asset.values);
@@ -176,7 +201,11 @@ export class NxConsoleTableComponent {
     }
 
     updateFixedWidth(column, event, defaultWidth = 0): void {
-        this.fixedWidths[column] = Math.max(defaultWidth, Math.round(event.width + 24), this.fixedWidths[column] || 0);
+        this.fixedWidths[column] = Math.max(
+            defaultWidth,
+            Math.round(event.width + 24),
+            this.fixedWidths[column] || 0,
+        );
     }
 
     filterUpdaterFactory = (fieldName: string) => (payload: FilterUpdatePayload) => {
@@ -197,7 +226,11 @@ export class NxConsoleTableComponent {
     }
 
     updatePageState = ({ page, search, perPage = 0 }): void => {
-        this.selectedData?.updateState({ page: Math.min(parseInt(page), this.selectedData.numberOfPages$.value), search, perPage: perPage || this.selectedManifest.perPage });
+        this.selectedData?.updateState({
+            page: Math.min(parseInt(page), this.selectedData.numberOfPages$.value),
+            search,
+            perPage: perPage || this.selectedManifest.perPage,
+        });
     };
 
     resetSearch(): void {
@@ -215,14 +248,15 @@ export class NxConsoleTableComponent {
             manifest: this.manifest,
             heading: this.translate.instant('devConsole.create'),
             settings: this.contentManifest.manifest.settings,
-            contextList: this.contextList
+            contextList: this.contextList,
         };
 
-        const actions = modal => ({
-            [ModalType.CLIENT_CREATE]: () => this.dialogService.edit(createClientModalContent),
-            [ModalType.CLIENT_EDIT]: () => this.dialogService.edit(modalContent)
-            // [ModalType.CLIENT_DOWNLOAD] : () => this.dialogService.downloadAsync(modalContent)
-        })[modal || ModalType.CLIENT_CREATE]();
+        const actions = modal =>
+            ({
+                [ModalType.CLIENT_CREATE]: () => this.dialogService.edit(createClientModalContent),
+                [ModalType.CLIENT_EDIT]: () => this.dialogService.edit(modalContent),
+                // [ModalType.CLIENT_DOWNLOAD] : () => this.dialogService.downloadAsync(modalContent)
+            }[modal || ModalType.CLIENT_CREATE]());
 
         const action = await actions(modalContent?.modal);
         if (action) {
@@ -236,7 +270,7 @@ export class NxConsoleTableComponent {
 
     handleAsync = async (asyncSettings): Promise<void> => {
         const apiLookup: Partial<Record<ModalType, ConsoleSection>> = {
-            [ModalType.CLIENT_DOWNLOAD]: ConsoleSection.CUSTOM_CLIENTS
+            [ModalType.CLIENT_DOWNLOAD]: ConsoleSection.CUSTOM_CLIENTS,
         };
 
         const buildDownloadToast = (url: string): string => {
@@ -246,28 +280,23 @@ export class NxConsoleTableComponent {
         };
 
         const notifyDownload = (url: string): void => {
-            this.toastService.show(
-                buildDownloadToast(url),
-                toast.success,
-                { showHTML: true }
-            );
+            this.toastService.show(buildDownloadToast(url), toast.success, { showHTML: true });
         };
 
-        const {
-            generatePackage,
-            checkPackage,
-            getDownloadUrl
-        } = this.cloudApi.getSubAPI(apiLookup[asyncSettings.modal]) as CustomClientAPI;
+        const { generatePackage, checkPackage, getDownloadUrl } = this.cloudApi.getSubAPI(
+            apiLookup[asyncSettings.modal],
+        ) as CustomClientAPI;
         const packageHandler = new PackageHandler(
             asyncSettings.values.id,
             generatePackage,
             checkPackage,
             getDownloadUrl,
             this.window,
-            notifyDownload
+            notifyDownload,
         );
         this.asyncErrors[asyncSettings.lookupKey] = false;
-        this.asyncInProgress[asyncSettings.lookupKey] = asyncSettings.manifest.fields[1].meta?.options?.pending;
+        this.asyncInProgress[asyncSettings.lookupKey] =
+            asyncSettings.manifest.fields[1].meta?.options?.pending;
         this.cancelHandlers[asyncSettings.lookupKey] = () => {
             this.asyncErrors[asyncSettings.lookupKey] = false;
             this.asyncInProgress[asyncSettings.lookupKey] = false;
@@ -285,7 +314,9 @@ export class NxConsoleTableComponent {
                     break;
 
                 default:
-                    this.asyncInProgress[asyncSettings.lookupKey] = `(${state ? Math.floor(state.current / state.total) : 0}%)`;
+                    this.asyncInProgress[asyncSettings.lookupKey] = `(${
+                        state ? Math.floor(state.current / state.total) : 0
+                    }%)`;
             }
         });
     };

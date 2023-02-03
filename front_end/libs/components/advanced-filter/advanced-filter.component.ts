@@ -1,30 +1,19 @@
-import {
-    Component,
-    EventEmitter,
-    Input,
-    Output,
-} from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
-import {
-    AdditionalFilter
-} from '@components/console-table/console-table.component.types';
+import { AdditionalFilter } from '@components/console-table/console-table.component.types';
 import {
     DataStructureFilter,
     GroupingOptions,
-    SortOptions
+    SortOptions,
 } from '@pages/developer-console/console/edit/console-edit.component.types';
 import { NgChanges } from '@utils/ng-changes';
 
-import {
-    FilterSort,
-    FilterState,
-    FilterUpdatePayload
-} from './advanced-filter.component.types';
+import { FilterSort, FilterState, FilterUpdatePayload } from './advanced-filter.component.types';
 
 @Component({
     selector: 'nx-advanced-filter',
     templateUrl: 'advanced-filter.component.html',
-    styleUrls: ['advanced-filter.component.scss']
+    styleUrls: ['advanced-filter.component.scss'],
 })
 export class NxAdvancedFilterComponent {
     @Output() onClose = new EventEmitter();
@@ -41,12 +30,12 @@ export class NxAdvancedFilterComponent {
         [GroupingOptions.DATE_DAY]: 'shortDate',
         [GroupingOptions.DATE_AUTO]: 'shortDate',
         [GroupingOptions.DATE_MONTH]: 'MMMM, y',
-        default: 'short'
+        default: 'short',
     };
 
     currentState: FilterState = {
         sort: FilterSort.NONE,
-        selections: []
+        selections: [],
     };
 
     FILTER_SORT = FilterSort;
@@ -66,7 +55,7 @@ export class NxAdvancedFilterComponent {
         const value = !!this.filter.multiSelect;
         this.updateState({
             sort: FilterSort.NONE,
-            selections: this.currentState.selections.map(({ name }) => ({ name, value }))
+            selections: this.currentState.selections.map(({ name }) => ({ name, value })),
         });
     }
 
@@ -77,37 +66,34 @@ export class NxAdvancedFilterComponent {
 
     updateSelection(updatedName, updatedValue, event: MouseEvent): void {
         event.stopPropagation();
-        const selections = this.currentState.selections.map(({
-            name, value
-        }) => ({
-            name,
-            value: name === updatedName
-                ? updatedValue
-                : this.filter.multiSelect
-                    ? value
-                    : false
-        })).sort(
-            this.sortCallbackFactory()
-        );
+        const selections = this.currentState.selections
+            .map(({ name, value }) => ({
+                name,
+                value:
+                    name === updatedName ? updatedValue : this.filter.multiSelect ? value : false,
+            }))
+            .sort(this.sortCallbackFactory());
 
         this.updateState({ selections });
     }
 
-    sortCallbackFactory = (forceAsc = false) => (a, b) => {
-        const sanitizeSortValue = value => {
-            if (this.filter.sortable === SortOptions.TEXT) {
-                return value.toLowerCase();
-            }
+    sortCallbackFactory =
+        (forceAsc = false) =>
+        (a, b) => {
+            const sanitizeSortValue = value => {
+                if (this.filter.sortable === SortOptions.TEXT) {
+                    return value.toLowerCase();
+                }
 
-            return value;
+                return value;
+            };
+
+            const sortValue = forceAsc || this.currentState.sort !== FilterSort.DESC ? 1 : -1;
+            const aValue = sanitizeSortValue(a[this.field]);
+            const bValue = sanitizeSortValue(b[this.field]);
+
+            return aValue === bValue ? 0 : aValue > bValue ? sortValue : -sortValue;
         };
-
-        const sortValue = (forceAsc || this.currentState.sort !== FilterSort.DESC) ? 1 : -1;
-        const aValue = sanitizeSortValue(a[this.field]);
-        const bValue = sanitizeSortValue(b[this.field]);
-
-        return aValue === bValue ? 0 : aValue > bValue ? sortValue : -sortValue;
-    };
 
     groupCompare(a, b) {
         if (!this.filter.grouping || this.filter.grouping === GroupingOptions.TEXT) {
@@ -146,9 +132,11 @@ export class NxAdvancedFilterComponent {
         }
 
         if (this.currentState.selections.some(({ value }) => value)) {
-            data = data.filter(values => this.currentState.selections.find(({
-                name, value
-            }) => value && this.groupCompare(name, values[this.field])));
+            data = data.filter(values =>
+                this.currentState.selections.find(
+                    ({ name, value }) => value && this.groupCompare(name, values[this.field]),
+                ),
+            );
         }
 
         return data;
@@ -166,26 +154,23 @@ export class NxAdvancedFilterComponent {
             changes.data &&
             changes.data.previousValue?.length !== changes.data.currentValue.length
         ) {
-            this.currentState.selections = this.data.reduce((
-                selections, values
-            ) => {
-                const name = values[this.field];
-                const previousSelection = selections.find(
-                    ({ name: existingName }) =>
-                        this.groupCompare(existingName, name)
-                );
-                const value = previousSelection
-                    ? previousSelection.value
-                    : !!this.filter.multiSelect;
+            this.currentState.selections = this.data
+                .reduce((selections, values) => {
+                    const name = values[this.field];
+                    const previousSelection = selections.find(({ name: existingName }) =>
+                        this.groupCompare(existingName, name),
+                    );
+                    const value = previousSelection
+                        ? previousSelection.value
+                        : !!this.filter.multiSelect;
 
-                if (!previousSelection) {
-                    selections.push({ name, value });
-                }
+                    if (!previousSelection) {
+                        selections.push({ name, value });
+                    }
 
-                return selections;
-            }, this.currentState.selections).sort(
-                this.sortCallbackFactory(true)
-            );
+                    return selections;
+                }, this.currentState.selections)
+                .sort(this.sortCallbackFactory(true));
         }
 
         if (

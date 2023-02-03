@@ -5,7 +5,7 @@ import { icons } from '@lib/variables/static-variables';
 @Component({
     selector: 'nx-clip',
     templateUrl: 'clip.component.html',
-    styleUrls: ['./clip.component.scss']
+    styleUrls: ['./clip.component.scss'],
 })
 export class ClipComponent {
     @Input() sourceUrl: string;

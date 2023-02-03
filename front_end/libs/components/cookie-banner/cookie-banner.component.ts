@@ -12,24 +12,24 @@ import { icons } from '@lib/variables/static-variables';
 @Component({
     selector: 'nx-cookie-banner',
     templateUrl: './cookie-banner.component.html',
-    styleUrls: ['./cookie-banner.component.scss']
+    styleUrls: ['./cookie-banner.component.scss'],
 })
 export class NxCookieBannerComponent implements OnInit {
     LANG = staticLang;
     cookieBannerReviewed: boolean;
     icons = icons;
 
-    constructor(
-        private localStorage: LocalStorageService,
-        private store: Store,
-    ) {}
+    constructor(private localStorage: LocalStorageService, private store: Store) {}
 
     ngOnInit(): void {
-        this.cookieBannerReviewed =
-            this.localStorage.retrieve('cookiereviewed') === true;
+        this.cookieBannerReviewed = this.localStorage.retrieve('cookiereviewed') === true;
 
-        this.store.select(accountSelectors.selectCurrentUser)
-            .pipe(first(value => value !== undefined), untilDestroyed(this))
+        this.store
+            .select(accountSelectors.selectCurrentUser)
+            .pipe(
+                first(value => value !== undefined),
+                untilDestroyed(this),
+            )
             .subscribe(account => {
                 if (account) {
                     if (account.cookie_reviewed) {

@@ -1,11 +1,4 @@
-import {
-    Component,
-    ElementRef,
-    Input,
-    OnInit,
-    ViewChild,
-    ViewEncapsulation
-} from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
 
@@ -26,7 +19,7 @@ import { IBool, CoercedBoolInput } from '@decorators/ibool';
     selector: 'nx-section',
     templateUrl: 'section.component.html',
     encapsulation: ViewEncapsulation.None,
-    styleUrls: ['section.component.scss']
+    styleUrls: ['section.component.scss'],
 })
 export class NxContentBlockSectionComponent implements OnInit {
     @Input() type: string;
@@ -39,6 +32,6 @@ export class NxContentBlockSectionComponent implements OnInit {
     ngOnInit(): void {
         this.type = this.type || '';
         this.haveSubheader =
-            (this.subHeaderWrapper.nativeElement.childNodes[0].childNodes.length > 0);
+            this.subHeaderWrapper.nativeElement.childNodes[0].childNodes.length > 0;
     }
 }

@@ -1,12 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import {
-    Component,
-    forwardRef,
-    Input,
-    HostListener,
-    ViewChild,
-    Inject
-} from '@angular/core';
+import { Component, forwardRef, Input, HostListener, ViewChild, Inject } from '@angular/core';
 import { NG_VALUE_ACCESSOR, NgForm } from '@angular/forms';
 
 import { Process } from '@services/process.service/process';
@@ -22,9 +15,9 @@ import { NxProcessButtonComponent } from '../process-button/process-button.compo
             provide: NG_VALUE_ACCESSOR,
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxApplyComponent),
-            multi: true
-        }
-    ]
+            multi: true,
+        },
+    ],
 })
 export class NxApplyComponent {
     @ViewChild(NxProcessButtonComponent, { static: false }) processButton: NxProcessButtonComponent;

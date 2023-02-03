@@ -2,12 +2,8 @@ import { DataSource } from '@angular/cdk/collections';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import type {
-    FilterState,
-} from '@components/advanced-filter/advanced-filter.component.types';
-import type {
-    AdditionalFilter,
-} from '@components/console-table/console-table.component.types';
+import type { FilterState } from '@components/advanced-filter/advanced-filter.component.types';
+import type { AdditionalFilter } from '@components/console-table/console-table.component.types';
 
 export class TableDataSource extends DataSource<any> {
     #baseData$: BehaviorSubject<any[]> = new BehaviorSubject([]);
@@ -15,7 +11,9 @@ export class TableDataSource extends DataSource<any> {
     #currentPage$: BehaviorSubject<number> = new BehaviorSubject(null);
     #displayedColumns$: BehaviorSubject<string[]> = new BehaviorSubject([]);
     #numberOfItems$ = new BehaviorSubject(0);
-    #additionalFilters$: BehaviorSubject<Record<string, AdditionalFilter>> = new BehaviorSubject({});
+    #additionalFilters$: BehaviorSubject<Record<string, AdditionalFilter>> = new BehaviorSubject(
+        {},
+    );
     search$: BehaviorSubject<string> = new BehaviorSubject(null);
     noSearchMatches$ = new BehaviorSubject(false);
     numberOfPages$ = new BehaviorSubject(0);
@@ -23,14 +21,15 @@ export class TableDataSource extends DataSource<any> {
     minItemsAdvanced = 0;
     filterStates: Map<string, FilterState> = new Map();
 
-    perPage$ = combineLatest([
-        this.#numberOfItems$,
-        this.#itemsPerPage$
-    ]).pipe(
-        map(([items, perPage]) => Math.min(items, perPage))
+    perPage$ = combineLatest([this.#numberOfItems$, this.#itemsPerPage$]).pipe(
+        map(([items, perPage]) => Math.min(items, perPage)),
     );
 
-    updateFilters(filtersToUpdate: Record<string, AdditionalFilter>, fieldName: string, filterState: FilterState): void {
+    updateFilters(
+        filtersToUpdate: Record<string, AdditionalFilter>,
+        fieldName: string,
+        filterState: FilterState,
+    ): void {
         if (this.filterStates.get(fieldName)?.sort !== filterState.sort) {
             this.filterStates.delete(fieldName);
         }
@@ -41,7 +40,12 @@ export class TableDataSource extends DataSource<any> {
     }
 
     data$ = combineLatest([
-        this.#baseData$, this.#itemsPerPage$, this.#currentPage$, this.#displayedColumns$, this.search$, this.#additionalFilters$
+        this.#baseData$,
+        this.#itemsPerPage$,
+        this.#currentPage$,
+        this.#displayedColumns$,
+        this.search$,
+        this.#additionalFilters$,
     ]).pipe(
         map(([data, perPage, currentPage, displayedColumns, search, additionalFilters]) => {
             if (!data.length) {
@@ -50,7 +54,9 @@ export class TableDataSource extends DataSource<any> {
             let noSearchMatches = false;
             if (search && displayedColumns.length) {
                 const filteredData = data.filter(data => {
-                    return displayedColumns.some(key => (data[key]?.toLowerCase || '').includes(search.toLowerCase()));
+                    return displayedColumns.some(key =>
+                        (data[key]?.toLowerCase || '').includes(search.toLowerCase()),
+                    );
                 });
                 noSearchMatches = !filteredData.length;
                 if (!noSearchMatches) {
@@ -69,9 +75,7 @@ export class TableDataSource extends DataSource<any> {
                     const bIndex = sortOrder.indexOf(b);
                     return aIndex - bIndex;
                 })
-                .reduce((
-                    filtered, [_, filterFunc]
-                ) => filterFunc(filtered), data);
+                .reduce((filtered, [_, filterFunc]) => filterFunc(filtered), data);
             // for (const field of sortOrder) {
             //     const sortBy = this.filterStates.get(field)?.sort;
             //     if (sortBy) {
@@ -96,7 +100,8 @@ export class TableDataSource extends DataSource<any> {
             this.#numberOfItems$.next(data.length);
 
             return data.slice(start, end);
-        }));
+        }),
+    );
 
     constructor(
         data,
@@ -105,7 +110,7 @@ export class TableDataSource extends DataSource<any> {
         currentPage = 1,
         search = '',
         displayedColumns = [],
-      private updatePageParam = page => console.error(`Missing param handler ${page}`)
+        private updatePageParam = page => console.error(`Missing param handler ${page}`),
     ) {
         super();
         this.minItemsAdvanced = minItemsAdvanced;

@@ -6,7 +6,7 @@ import {
     forwardRef,
     OnInit,
     ViewEncapsulation,
-    OnChanges
+    OnChanges,
 } from '@angular/core';
 import {
     NG_VALUE_ACCESSOR,
@@ -40,16 +40,16 @@ import { NgChanges } from '@utils/ng-changes';
             provide: NG_VALUE_ACCESSOR,
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxCheckboxComponent),
-            multi: true
+            multi: true,
         },
         {
             provide: NG_VALIDATORS,
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxCheckboxComponent),
-            multi: true
-        }
+            multi: true,
+        },
     ],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {
     @Input() componentId: string;
@@ -79,8 +79,8 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
     public validate(c: FormControl<string>): ValidationErrors | null {
         const err = {
             requiredError: {
-                required: true
-            }
+                required: true,
+            },
         };
 
         if (this.required && !c.value) {
@@ -111,10 +111,7 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
      * Write a new (model) value to the element.
      */
     writeValue(value: boolean): void {
-        if (
-            value !== null && !this.disabled ||
-            this.disabled && !value
-        ) {
+        if ((value !== null && !this.disabled) || (this.disabled && !value)) {
             this.value = value;
             this.state = this.cbxStates[String(this.value)];
         }

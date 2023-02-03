@@ -1,11 +1,4 @@
-import {
-    Component,
-    EventEmitter,
-    Input,
-    OnInit,
-    Output,
-    ViewEncapsulation
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 
 /* Usage
  <nx-alert-block
@@ -22,7 +15,7 @@ import {
     selector: 'nx-alert-block',
     templateUrl: 'block.component.html',
     styleUrls: ['block.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxAlertBlockComponent implements OnInit {
     @Input() iconSrc: string;

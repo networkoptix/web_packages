@@ -493,10 +493,7 @@ module.exports = {
         },
         {
             files: ['*.ts'],
-            extends: [
-                'plugin:@angular-eslint/recommended',
-                // 'plugin:@angular-eslint/template/process-inline-templates',
-            ],
+            extends: ['plugin:@angular-eslint/recommended'],
             plugins: ['@angular-eslint'],
             rules: {
                 // TODO: Evaluate whether we want these or not
@@ -509,6 +506,11 @@ module.exports = {
                 '@angular-eslint/no-output-on-prefix': 'off',
                 '@angular-eslint/use-lifecycle-interface': 'off',
             },
+        },
+        {
+            files: ['*.ts'],
+            extends: ['plugin:@angular-eslint/template/process-inline-templates'],
+            excludedFiles: ['*.spec.ts'],
         },
         {
             // Temporary override for applying @angular-eslint rules
@@ -568,6 +570,19 @@ module.exports = {
             },
         },
         {
+            files: [
+                // '*.js', '*.ts'
+                'libs/components/[a-c]*/**/*.ts',
+            ],
+            excludedFiles: ['*.module.ts', '*.spec.ts'], // Lower priority
+            extends: ['plugin:prettier/recommended'],
+            plugins: ['prettier'],
+            rules: {
+                // https://github.com/prettier/eslint-config-prettier#curly
+                curly: ['error', 'all'],
+            },
+        },
+        {
             files: ['*.component.html'],
             parser: '@angular-eslint/template-parser',
             plugins: ['@angular-eslint/template'],
@@ -606,8 +621,6 @@ module.exports = {
             rules: {
                 'prettier/prettier': ['error', {
                     parser: 'angular',
-                    printWidth: 100,
-                    singleAttributePerLine: true,
                 }],
             },
         },

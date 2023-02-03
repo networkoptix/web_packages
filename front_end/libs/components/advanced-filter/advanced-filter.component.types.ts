@@ -1,11 +1,9 @@
-import type {
-    AdditionalFilter
-} from '@components/console-table/console-table.component.types';
+import type { AdditionalFilter } from '@components/console-table/console-table.component.types';
 
 export enum FilterSort {
     ASC = 'asc',
     DESC = 'desc',
-    NONE = ''
+    NONE = '',
 }
 
 interface Selection {
