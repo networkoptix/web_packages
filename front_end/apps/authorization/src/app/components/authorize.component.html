@@ -37,6 +37,7 @@
             [emailProcess]="checkEmailProcess"
             [errorCode]="emailErrorCode"
             [reactivate]="reactivate"
+            [isMobileClient]="isMobileClient"
             (setCurrentState)="setCurrentState($event)"
         ></nx-authorize-email-component>
         <nx-authorize-password-component
