@@ -72,20 +72,6 @@ export class NxOverlayModalComponent implements OnInit {
             }, 2000);
         }
         this.systemAvailableSubscription = this.appState.systemAvailable$.subscribe(async state => {
-            /* Temporary patch for Firefox-specific behavior where a false state is emitted
-            before a true state after successful login, which results in a overlay flash
-
-            Caused by errors when getting login sessions, which is intercepted by
-            LocalSystemStatusInterceptor on FF right after successful login and sets
-            appState.systemAvailable$ to false
-
-            This should be removed once the underlying issue is fixed
-            https://networkoptix.atlassian.net/browse/CLOUD-9674
-            */
-            if (!state && !this.system) {
-                return;
-            }
-
             if (!state && this.system?.serverManager.servers.length > 1) {
                 // mainServer.status is unreliable ...
                 // if system availability state was changed to FALSE -> check if current server is available

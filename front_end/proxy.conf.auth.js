@@ -4,7 +4,8 @@ const proxyTargetConfig = {
     dev3: 'https://dev3.cloud.hdw.mx',
     local: 'http://localhost:8000',
     prod: 'https://nxvms.com',
-    stage: 'https://stage.nxvms.com/'
+    stage: 'https://stage.nxvms.com',
+    regress: 'https://regress.cloud.hdw.mx',
 };
 const target = process.env.CLOUD_TARGET || 'cloud-test';
 const PROXY_CONFIG = [
@@ -30,6 +31,7 @@ const PROXY_CONFIG = [
             '/static/customization',
             '/static/lang_en_US',
             '/static/lang_ru_RU',
+            '/static/lang_es_ES',
             '/static/styles',
             '/static/images',
             '/static/fonts',

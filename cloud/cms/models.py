@@ -3,8 +3,10 @@ import hashlib
 import json
 from json.decoder import JSONDecodeError
 import os
+from pydoc import doc
 import re
 import sys
+import copy
 from typing import Any, List
 import uuid
 from contextlib import suppress
@@ -398,7 +400,6 @@ def get_cached_menu(customization_name, name=None, user=None, menu_type=None, re
     overrides = {header: value for header, value in request.META.items() if header.startswith('HTTP_FEATURE_')} if request else {}
 
     menu_customization = MENU_CACHE[customization_name]
-
     if menu_customization is None:
         menus_to_generate = [*Menu.REQUIRED_MENUS, name] if name else Menu.REQUIRED_MENUS
         menu_customization = Menu.generate_menus(customization=customization_name, menu_names=menus_to_generate)
@@ -409,6 +410,10 @@ def get_cached_menu(customization_name, name=None, user=None, menu_type=None, re
             MENU_CACHE[customization_name] = menu_customization = {**menu_customization, **generated}
 
     for menu_name, menu in menu_customization.items():
+        if not menu:
+            generated = Menu.generate_menus(customization=customization_name, menu_names=[menu_name])
+            MENU_CACHE[customization_name] = menu_customization = {**menu_customization, **generated}
+            menu = MENU_CACHE[customization_name][menu_name]
         check_user_menu_permissions(menu['nodes'], user, overrides, customization=customization_name, request=request)
 
     if menu_type:
@@ -2096,6 +2101,26 @@ class Menu(models.Model):
             raise ValidationError(
                 f'Menu already exists with base_url={base_url} and url={url}. Please select a unique route.')
         super(Menu, self).validate_unique(exclude=exclude)
+
+    def save(self, *args, **kwargs):
+        self.clear_menu_from_cache_for_all_customizations()
+        super().save(*args, **kwargs)
+
+    def clear_menu_from_cache_for_all_customizations(self):
+        for customization in Customization.objects.all().values_list('name', flat=True):
+                doc_cache_key = f'{customization}-doc-dir'
+                menu_name = self.name.lower()
+                if cache := MENU_CACHE[customization]:
+                    new_cache = copy.deepcopy(cache)
+                    if new_cache.get(menu_name):
+                        new_cache[menu_name] = None
+                    MENU_CACHE[customization] = new_cache
+                if cache := MENU_CACHE[doc_cache_key]:
+                    new_cache = copy.deepcopy(cache)
+                    if new_cache.get(menu_name):
+                        new_cache[menu_name] = None
+                    MENU_CACHE[doc_cache_key] = new_cache
+
 
     def preview_url(self, state='draft'):
         """Preview url for menu change form.

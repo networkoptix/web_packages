@@ -22,9 +22,9 @@ export class CloudStorageAPI extends BaseCloudServiceAPI {
      * @param withFreshSession WithFreshSession
      * @returns (serverUrl?: string, cloudHost?: string) => CloudStorageAPI
      */
-    static createApiFactory: CreateApiFactory<CloudStorageAPI> = (http: HttpClient, withFreshSession: WithFreshSession) => (serverUrl: string = '', cloudHost: string = '') => new CloudStorageAPI(serverUrl, cloudHost, http, withFreshSession);
+    static createApiFactory: CreateApiFactory<CloudStorageAPI> = (http: HttpClient, withFreshSession: WithFreshSession) => (serverUrl: string = '', cloudHost: () => string = () => '') => new CloudStorageAPI(serverUrl, cloudHost, http, withFreshSession);
 
-    constructor(serverUrl: string, cloudHost: string, http: HttpClient, withFreshSession: WithFreshSession) {
+    constructor(serverUrl: string, cloudHost: () => string, http: HttpClient, withFreshSession: WithFreshSession) {
         super(serverUrl, CloudStorageAPI.API_BASE, cloudHost, http, withFreshSession);
     }
 

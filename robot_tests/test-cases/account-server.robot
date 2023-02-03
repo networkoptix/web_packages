@@ -10,17 +10,17 @@ Force Tags        account
 1. Delete account button becomes enabled
     [Tags]    C69856        delete_account
     Go To    ${url}/account
-    Log In    ${server 4}[owner]    ${password}    button=None   api=${False}
+    Log In    ${server 4}[cloudOwner]    ${password}    button=None   api=${False}
     Verify in Account Page
     Wait Until Element is Visible    ${DELETE ACCOUNT DISABLED BUTTON}
     Mouse Over    ${DELETE ACCOUNT BUTTON}
     Wait Until Element Is Visible    ${CAN NOT DELETE ACCOUNT TOOLTIP}
-    Detach Server From Cloud    https://${QA BURBANK IP}:${server 5}[port]    ${server 5}[local auth]
+    Detach Server From Cloud    https://${QA BURBANK IP}:${server 5}[port][0]    ${server 5}[localAuth]
     Reload page
     Wait Until Element is Visible    ${DELETE ACCOUNT DISABLED BUTTON}
     Mouse Over    ${DELETE ACCOUNT BUTTON}
     Wait Until Element Is Visible    ${CAN NOT DELETE ACCOUNT TOOLTIP}
-    Detach Server From Cloud    https://${QA BURBANK IP}:${server 4}[port]    ${server 4}[local auth]
+    Detach Server From Cloud    https://${QA BURBANK IP}:${server 4}[port][0]    ${server 4}[localAuth]
     Sleep    20
     Reload page
     Wait Until Element Is Visible    ${DELETE ACCOUNT BUTTON}
@@ -29,9 +29,9 @@ Force Tags        account
 2. After account deletion user is deleted from all systems that were shared with this user
     [Tags]    C69862    delete_account
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
-    Share    ${server 1}[cloud auth]    ${server 1}[cloud id]    ${ACCESS ROLES}[admin]    ${random email}      ${permissions}[cloudAdmin]
-    Share    ${server 1}[cloud auth]    ${server 2}[cloud id]    ${ACCESS ROLES}[viewer]    ${random email}     ${permissions}[viewer]
-    Share    ${server 1}[cloud auth]    ${server 3}[cloud id]    ${ACCESS ROLES}[custom]    ${random email}     ${permissions}[custom]
+    Share    ${server 1}[cloudAuth]    ${server 1}[id]    ${ACCESS ROLES}[admin]    ${random email}      ${permissions}[cloudAdmin]
+    Share    ${server 1}[cloudAuth]    ${server 2}[id]    ${ACCESS ROLES}[viewer]    ${random email}     ${permissions}[viewer]
+    Share    ${server 1}[cloudAuth]    ${server 3}[id]    ${ACCESS ROLES}[custom]    ${random email}     ${permissions}[custom]
     Go To    ${url}/account
     Log In    ${random email}    ${password}    button=None    api=${False}
     Verify in Account Page
@@ -41,18 +41,18 @@ Force Tags        account
     Click Button    ${DELETE ACCOUNT MODAL BUTTON}
     Validate Log Out
     Log In    ${random email}    ${password}   validate=${False}    exists=${False}   api=${False}
-    Log In    ${server 1}[owner]    ${password}    button=None   api=${False}
-    Go To   ${url}/systems/${server 1}[cloud id]
+    Log In    ${server 1}[cloudOwner]    ${password}    button=None   api=${False}
+    Go To   ${url}/systems/${server 1}[id]
     Go to Users List
     Wait Until Element Is Visible    ${USERS LIST}
     Wait Until Element Is Not Visible    ${USERS LIST}//nx-level-3-item//span[contains(text(),'${random email}')]/../../../a
 
-    Go To   ${url}/systems/${server 2}[cloud id]
+    Go To   ${url}/systems/${server 2}[id]
     Go to Users List
     Wait Until Element Is Visible    ${USERS LIST}
     Wait Until Element Is Not Visible    ${USERS LIST}//nx-level-3-item//span[contains(text(),'${random email}')]/../../../a
 
-    Go To   ${url}/systems/${server 3}[cloud id]
+    Go To   ${url}/systems/${server 3}[id]
     Go to Users List
     Wait Until Element Is Visible    ${USERS LIST}
     Wait Until Element Is Not Visible    ${USERS LIST}//nx-level-3-item//span[contains(text(),'${random email}')]/../../../a
@@ -60,10 +60,10 @@ Force Tags        account
 3. Admin and Owner can access account settings by selecting themselves in users List
     [Tags]
     Go To    ${url}
-    Log In    ${server 1}[owner]    ${password}
-    Go To    ${url}/systems/${server 1}[cloud id]
+    Log In    ${server 1}[cloudOwner]    ${password}
+    Go To    ${url}/systems/${server 1}[id]
     Go To Users List
-    Select User in Users List    ${server 1}[owner]
+    Select User in Users List    ${server 1}[cloudOwner]
     Wait Until Element is Visible    ${ACCOUNT SETTINGS BUTTON SYSTEM}
     Click Button    ${ACCOUNT SETTINGS BUTTON SYSTEM}
     Verify in Account Page
@@ -71,21 +71,21 @@ Force Tags        account
 4. Change first and last name shows in system
     [Tags]    C41573    C30655
     Go To    ${url}/account
-    Log In    ${server 1}[cloud users][liveViewer]    ${password}    button=None    api=${False}
+    Log In    ${server 1}[cloudUsers][liveViewer]    ${password}    button=None    api=${False}
     Verify in Account Page
     Input Text    ${ACCOUNT FIRST NAME}    nameChanged
     Input Text    ${ACCOUNT LAST NAME}    nameChanged
     Click Button    ${ACCOUNT SAVE}
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Log Out
-    Go To    ${url}/systems/${server 1}[cloud id]
-    Log In    ${server 1}[owner]    ${password}    button=None    api=${False}
+    Go To    ${url}/systems/${server 1}[id]
+    Log In    ${server 1}[cloudOwner]    ${password}    button=None    api=${False}
     Go To Users List
-    Select User in Users List   ${server 1}[cloud users][liveViewer]
+    Select User in Users List   ${server 1}[cloudUsers][liveViewer]
     Wait Until Element Is Visible    //nx-system-user-component//nx-block//header//span[contains(text(),'nameChanged nameChanged')]
     Log Out
     Go To    ${url}/account
-    Log In    ${server 1}[cloud users][liveViewer]    ${password}    button=None    api=${False}
+    Log In    ${server 1}[cloudUsers][liveViewer]    ${password}    button=None    api=${False}
     Verify in Account Page
     sleep    2
     Wait Until Textfield Contains    ${ACCOUNT FIRST NAME}    nameChanged
@@ -94,18 +94,18 @@ Force Tags        account
     Wait Until Textfield Contains    ${ACCOUNT LAST NAME}    nameChanged
 
     # Check that the user's name has changed in system via API
-    ${users}=   Get Users    ${AUTO SYS AUTH}    https://${QA BURBANK IP}:${server 1}[port] 
+    ${users}=   Get Users    ${AUTO SYS AUTH}    https://${QA BURBANK IP}:${server 1}[port][0] 
     FOR    ${user}    IN    @{users}
-        Run Keyword If    '${user}[email]'=='${server 1}[cloud users][liveViewer]'    Run Keywords
+        Run Keyword If    '${user}[email]'=='${server 1}[cloudUsers][liveViewer]'    Run Keywords
         ...    Should Be Equal As Strings    ${user}[fullName]    nameChanged nameChanged
         ...    AND     Exit For Loop
     END
-    Set Account Name    ${server 1}[cloud users][liveViewer]    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
+    Set Account Name    ${server 1}[cloudUsers][liveViewer]    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
 
 5. User who owns a system cannot remove themselves
     [Tags]    C69855        delete_account
     Go To    ${url}/account
-    Log In    ${server 1}[owner]    ${password}    button=None   api=${False}
+    Log In    ${server 1}[cloudOwner]    ${password}    button=None   api=${False}
     Verify in Account Page
     Wait Until Element is Visible    ${DELETE ACCOUNT DISABLED BUTTON}
     Mouse Over    ${DELETE ACCOUNT BUTTON}
@@ -114,21 +114,21 @@ Force Tags        account
 6. Delete account button is enabled
     [Tags]    C69854        delete account
     Go To    ${url}/account
-    Log In    ${server 1}[cloud users][cloudAdmin]    ${password}    button=None   api=${False}
+    Log In    ${server 1}[cloudUsers][cloudAdmin]    ${password}    button=None   api=${False}
     Verify in Account Page
     Wait Until Element is Enabled    ${DELETE ACCOUNT BUTTON}
 
     Log Out
     Sleep   2
     Go To    ${url}/account
-    Log In    ${server 1}[cloud users][viewer]    ${password}    button=None    api=${False}
+    Log In    ${server 1}[cloudUsers][viewer]    ${password}    button=None    api=${False}
     Verify in Account Page
     Wait Until Element is Enabled    ${DELETE ACCOUNT BUTTON}
 
 7. User who owns a system cannot remove themselves
     [Tags]    C69855        delete_account
     Go To    ${url}/account
-    Log In    ${server 1}[owner]    ${password}    button=None   api=${False}
+    Log In    ${server 1}[cloudOwner]    ${password}    button=None   api=${False}
     Verify in Account Page
     Wait Until Element is Visible    ${DELETE ACCOUNT DISABLED BUTTON}
     Mouse Over    ${DELETE ACCOUNT BUTTON}
@@ -136,5 +136,5 @@ Force Tags        account
 
 8. Deletion attempt when Delete Account button is disabled (via API)
     [Tags]    C76389        delete_account
-    Delete Account    ${server 1}[owner]    ${password}
-    Log In    ${server 1}[owner]    ${password}
+    Delete Account    ${server 1}[cloudOwner]    ${password}
+    Log In    ${server 1}[cloudOwner]    ${password}

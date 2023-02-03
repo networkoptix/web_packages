@@ -451,7 +451,9 @@ export class WizardStateService {
     }
 
     finish(): void {
-        this.closeNative().catch(() => {
+        this.closeNative().catch(async () => {
+            await this.server.logout();
+
             const redirect = `${this.window.location.protocol}//${this.window.location.host}`;
             if (this.window.top !== this.window.self) {
                 this.window.top.window.location.href = redirect;

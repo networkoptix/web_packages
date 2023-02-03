@@ -13,6 +13,7 @@ export interface AuthorizeParams {
     email?: string;
     access_code?: string;
     access_token?: string;
+    lang?: string;
 }
 
 export type AuthorizeStateType = 'email' |

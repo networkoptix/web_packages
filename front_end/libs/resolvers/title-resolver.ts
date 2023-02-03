@@ -43,8 +43,10 @@ export class NxPageTitleStrategy extends TitleStrategy {
                         const mod = titleObj.modifier
                             ? `${this.translateService.instant(lang.downloads.groups[titleObj.modifier].label)}`
                             : ` - ${productName}`;
-
-                        title = this.translateService.instant(lang.pageTitles[titleObj.baseTitle]) + mod;
+                        const baseTitle = `${lang.pageTitles?.[titleObj.baseTitle] || titleObj}`;
+                        if (baseTitle) {
+                            title = this.translateService.instant(baseTitle) + mod;
+                        }
                         break;
                 }
 
@@ -61,7 +63,11 @@ export class NxPageTitleStrategy extends TitleStrategy {
             title = this.translateService.instant(lang.metaDefaults.default.title);
         }
 
-        description = this.translateService.instant(description ?? lang.metaDefaults.default.description);
+        if (description?.length) {
+            description = this.translateService.instant(description);
+        } else {
+            description = this.translateService.instant(lang.metaDefaults.default.description);
+        }
         this.pageMetaService.setMetaProperties(routerState.url, { title, description });
     }
 }

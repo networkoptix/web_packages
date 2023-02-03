@@ -54,7 +54,6 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
     };
 
     private saveAccount: Process;
-    private langChanged = false;
 
     constructor(
         configService: NxConfigService,
@@ -81,13 +80,6 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
                 setTimeout(() => {
                     this.pageService.pageTitle(this.LANG.pageTitles.account);
                     this.initProcess();
-                    if (this.langChanged) {
-                        this.langChanged = false;
-                        this.toastService.notify(
-                            this.LANG.account.accountSavedSuccess,
-                            toast.success,
-                        );
-                    }
                 });
             });
     }
@@ -152,7 +144,6 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
     }
 
     changeLanguage(langCode: string): void {
-        this.langChanged = true;
         this.langCode = langCode;
         this.store.dispatch(
             accountActions.updateCurrentUser({ update: { language: langCode } })

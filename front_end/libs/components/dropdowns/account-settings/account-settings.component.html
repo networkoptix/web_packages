@@ -49,7 +49,8 @@
                     <a
                         class="dropdown-item inset"
                         attr.data-testid="dropdownItem{{ i }}"
-                        [href]="dropdownItem.route"
+                        [routerLink]="dropdownItem.route"
+                        (click)="show = false"
                     >
                         <span>{{ dropdownItem.name | translate }}</span>
                     </a>

@@ -230,6 +230,7 @@ export class AppComponent implements OnInit {
                     });
             }
             this.appStateService.headerVisibility = false;
+            this.appStateService.footerVisibility = false;
             return;
         } else if (bootstrapProvider.newSystem) {
             // Cleanup any leftovers. Hard clear() cause page reload loop
@@ -244,7 +245,7 @@ export class AppComponent implements OnInit {
             this.localStorageService.store('resetServer', false);
             this.dialogsService.wizard();
             return;
-        } else {
+        } else if (this.CONFIG.featureFlags.newHeader) {
             router.events.subscribe(event => {
                 if (event instanceof NavigationEnd) {
                     this.appStateService.footerVisibility = event.url.split('/').filter(segment => !!segment)?.[0] !== 'systems';

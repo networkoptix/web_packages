@@ -14,7 +14,7 @@ import {
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { startCase } from 'lodash-es';
 import { Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { filter, take } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { permissions } from '@lib/variables/static-variables';
@@ -120,7 +120,7 @@ export class DownloadHistoryComponent implements OnInit {
                     };
                 }
 
-                if (!this.currentTab) {
+                if (!this.currentTab && !this.build) {
                     this.pageService.pageTitle(startCase(this.noteTypes[0]));
                 }
 
@@ -133,6 +133,15 @@ export class DownloadHistoryComponent implements OnInit {
             )
             .finally(() => {
                 this.sub.unsubscribe();
+            });
+    }
+
+    private getDataAuthorized(): void {
+        this.accountService.requireLogin()
+            .then(account => {
+                if (isAccount(account)) {
+                    this.getData();
+                }
             });
     }
 
@@ -180,12 +189,16 @@ export class DownloadHistoryComponent implements OnInit {
                 if (this.build === undefined) {
                     this.getData();
                 } else {
-                    this.accountService.requireLogin().then(account => {
-                        if (isAccount(account)) {
-                            this.getData();
-                        }
-                    });
+                    this.getDataAuthorized();
                 }
+            } else {
+                this.appStateService.readySubject.pipe(
+                    filter(ready => ready),
+                    take(1),
+                ).subscribe(() => {
+                    this.canViewRelease = true;
+                    this.getDataAuthorized();
+                });
             }
         });
     }

@@ -737,7 +737,6 @@
     "minimum 8 chars": "minimum 8 chars",
     "or": "or",
     "reset": "reset",
-    "result": "result",
     "see organizations": "see organizations",
     "you": "you",
     "{numUsers} users from this system have accounts with disabled two-factor authentication. They will not be able to log in to the system.": "{numUsers} users from this system have accounts with disabled two-factor authentication. They will not be able to log in to the system."

@@ -32,9 +32,9 @@ export class LicenseServerAPI extends BaseCloudServiceAPI {
      * @param withFreshSession WithFreshSession
      * @returns  (serverUrl?: string, cloudHost?: string) => LicenseServerAPI
      */
-    static createApiFactory: CreateApiFactory<LicenseServerAPI> = (http: HttpClient, withFreshSession: WithFreshSession) => (serverUrl: string, cloudHost: string) => new LicenseServerAPI(serverUrl, cloudHost, http, withFreshSession);
+    static createApiFactory: CreateApiFactory<LicenseServerAPI> = (http: HttpClient, withFreshSession: WithFreshSession) => (serverUrl: string, cloudHost: () => string) => new LicenseServerAPI(serverUrl, cloudHost, http, withFreshSession);
 
-    constructor(serverUrl: string, cloudHost: string, http: HttpClient, withFreshSession: WithFreshSession) {
+    constructor(serverUrl: string, cloudHost: () => string, http: HttpClient, withFreshSession: WithFreshSession) {
         super(serverUrl, LicenseServerAPI.API_BASE, cloudHost, http, withFreshSession);
     }
 

@@ -48,11 +48,7 @@
             class="search-results-label"
             *ngIf="searchMode && _toggle"
         >
-            <span
-                translate
-                [translateParams]="{ count: _searchableItemsLength }"
-                >result</span
-            >
+            <span>{{ LANG.result | translate: { count: _searchableItemsLength } }}</span>
         </div>
         <div
             class="search-results"

@@ -164,7 +164,7 @@ export class NxSystemLicensesComponent implements OnInit {
 
     private addLicenseSummary(item): void {
         // for license summary block
-        const type = item.info.type;
+        const { type } = item.info;
         const license = this.licenseSummaries.find(ls => ls.type === type);
 
         let avail = parseInt(item.info.count) || 0;

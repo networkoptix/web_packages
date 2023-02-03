@@ -28,7 +28,7 @@ import { NxAppStateService } from './nx-app-state.service';
 import type { APIDocType, MenuManifest } from './nx-config/base-config';
 import type { IConfig } from './nx-config/config-types';
 import * as t from './system-api.types';
-import { ChangedIdReturned, SystemConfigSettings } from './system-api.types';
+import { SystemConfigSettings } from './system-api.types';
 import { NxSystemAPI } from './system-legacy-api.service';
 import type { IParams } from './system.service/system-types';
 import { NxUriCacheService } from './uri-cache.service';
@@ -318,8 +318,9 @@ export class NxSystemRestAPI extends NxSystemAPI {
         if (useToken) {
             headers = headers.set(this.token, accessToken || this.#vmsToken || '');
         }
-
-        headers = headers.set('Authorization', `Bearer ${accessToken}`);
+        if (accessToken) {
+            headers = headers.set('Authorization', `Bearer ${accessToken}`);
+        }
 
         if (this.serverId) {
             headers = headers.set('X-Server-Guid', this.serverId);
@@ -698,7 +699,9 @@ export class NxSystemRestAPI extends NxSystemAPI {
         takeRemoteSettings = true
     ) {
         const [basicCredentials, _] = remoteEndpoint.includes('@') ? remoteEndpoint.split('@') : [];
-        remoteEndpoint = remoteEndpoint.replace(/https?:\/\/(?:.*@)?/, '');
+        remoteEndpoint = remoteEndpoint
+            .replace(/https?:\/\/(?:.*@)?/, '')
+            .replace(/\/$/, '');
         const request = remoteServerId
             ? of({ id: remoteServerId, cloudSystemId: '' })
             : this.proxy('get', 'https', remoteEndpoint, 'rest/v1/servers/this/info', {});
@@ -944,20 +947,6 @@ export class NxSystemRestAPI extends NxSystemAPI {
             'isHttpDigestEnabled',
         ];
         return pick(user, supportedFields);
-    }
-
-    saveUser<U extends t.RestV1SaveUser>(user: U): Observable<ChangedIdReturned> {
-        user.type = user.isCloud ? 'cloud' : 'local'; // TODO: add LDAP
-        user.isHttpDigestEnabled = !user.isCloud;
-
-        return this.post<t.ChangedIdReturned>(
-            '/rest/v1/users',
-            this.cleanUserObject(user)
-        );
-    }
-
-    deleteUser(userId: string): Observable<ChangedIdReturned> {
-        return this.delete<t.ChangedIdReturned>(`/rest/v1/users/${this.cleanId(userId)}`);
     }
 
     /** Not Implemented functions **/

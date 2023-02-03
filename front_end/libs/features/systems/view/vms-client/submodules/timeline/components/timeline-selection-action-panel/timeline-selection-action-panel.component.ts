@@ -132,8 +132,8 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
         if (s.isActive) {
             this.exportUrl();
             this.exportEnabled = !!this.vms.selectedCamera.getRecords(
-                this.status.range.start,
-                this.status.range.end,
+                Math.max(this.status.range.start, this.selection.timeline.fullRange.start),
+                Math.min(this.status.range.end, this.selection.timeline.fullRange.end),
                 1000
             ).length;
         } else {
@@ -143,7 +143,11 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
     }
 
     public initSetTimeDialog(): void {
-        const dialog = this.dialogs.selectTimeRange(this.selection);
+        const dialog = this.dialogs.selectTimeRange(
+            this.selection,
+            this.timeline.fullRange.start,
+            this.timeline.fullRange.end
+        );
         dialog.then(this._onTimeSetDialogDone);
     }
 

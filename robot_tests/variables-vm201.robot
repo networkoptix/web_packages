@@ -1,5 +1,4 @@
 *** Settings ***
-Variables    getvars.py
 
 *** Variables ***
 ${ALERT}                              //span[@ng-if='!message.compileContent']

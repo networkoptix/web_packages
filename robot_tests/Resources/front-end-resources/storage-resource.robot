@@ -7,8 +7,6 @@ Resource          system-server-resource.robot
 ${QA BURBANK IP}     10.1.5.34
 ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
-${storage string 1}    --mount type=bind,source="/home/qaburbank/disk-invalid",target=/invalid
-${storage string 2}    ${EMPTY}
 ${camera}      E4-30-22-4A-D1-EB
 ${camera url}    172.20.3.253
 ${camera manufacturer}    Hanwha Techwin
@@ -25,7 +23,7 @@ ${drives}    5
 
 *** Keywords ***
 Storage Suite Setup
-    # ${value} sets the correct value needed to Turn On Analytics based on server version (currently the script below only supporting 4.3 and 4.1)
+    # ${value} sets the correct value needed to Turn On Analytics based on server version
     ${value} =    Set Variable If    '${IMAGE}' == '${IMAGE 4.3}'    [\"{beee013e-d913-8f47-144f-2092371ee118}\"]    [\"{687611a2-fd30-94e7-7f4c-8705642b0bcc}\"]
     ${value} =    Set Variable If    '${IMAGE}' == '${IMAGE 5.0}'    [\"{d018384f-8f08-6a40-70a8-1405ba18b455}\"]    [\"{687611a2-fd30-94e7-7f4c-8705642b0bcc}\"]
     Set Suite Variable     ${value}    ${value}
@@ -39,7 +37,6 @@ Storage Suite Setup
     Open Browser and go to URL    ${url}
     ${owner} =    Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
     Log    owner created ..... | PASS |    DEBUG      console=${console}
-    #${storage string} =    Set Variable    -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v /data/:/opt/networkoptix/mediaserver/var -v /video:/recordings
     Make Directory    disk-invalid
     Log    disk-invalid created ..... | PASS |    DEBUG      console=${console}    
     @{disk} =    Create List    ${EMPTY}    ${EMPTY}    ${EMPTY}    ${EMPTY}    ${EMPTY}
@@ -56,59 +53,50 @@ Storage Suite Setup
             Catenate Storages Two    ${disk[${n}]}[string]
         END
     END
-    #${storage string 1} =    Get Substring    ${storage string 1}    1
-    ${storage string 2} =    Get Substring    ${storage string 2}    1    
-    ${server 1} =    Create Base System    storage0-${random}    owner=${owner}    storage string=${storage string 1}
-    Set Suite Variable    ${server 1}    ${server 1}
-    Log    docker ${server 1['name']} created ..... | PASS |    DEBUG      console=${console}
-    Log    ${server 1['name']} system created ..... | PASS |    DEBUG      console=${console}
-    ${server 2} =    Create Base System    storage1-${random}    owner=${owner}    add users=${False}    storage string=${storage string 2}
-    Set Suite Variable    ${server 2}    ${server 2}
-    Log    docker ${server 2['name']} created ..... | PASS |    DEBUG      console=${console}
-    Log   ${server 2['name']} system created ..... | PASS |    DEBUG      console=${console}
-    ${server 3} =    Create Base System    storage2-${random}    owner=${owner}    add users=${False}
-    Set Suite Variable    ${server 3}    ${server 3}
-    Log    docker ${server 3['name']} created ..... | PASS |    DEBUG      console=${console}
-    Log    ${server 3['name']} system created ..... | PASS |    DEBUG      console=${console}
-    Log    users added to ${server 1['name']} ..... | PASS |    DEBUG      console=${console}
+    ${servers} =    Create Systems
+    Set Suite Variable    ${servers}    ${servers}
+    Set Suite Variable    ${server 1}    ${servers}[0]
+    Set Suite Variable    ${server 2}    ${servers}[1]
+    Set Suite Variable    ${server 3}    ${servers}[2]
     @{disabled} =    Create List    disk2    disk3
     @{backups} =    Create List    disk1
-    Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
+    Set Default Storage Config    https://${QA BURBANK IP}:${server 1}[port][0]    ${disabled}    ${backups}
     Log    default storage config set .....| PASS |    DEBUG      console=${console}
-    Activate License    ${server 1['local auth']}    https://${QA BURBANK IP}:${server 1['port']}    ${TRIAL LICENSE}
+    Activate License    ${server 1['localAuth']}    https://${QA BURBANK IP}:${server 1}[port][0]    ${TRIAL LICENSE}
     Sleep    5
     Log    trial license activated .....| PASS |    DEBUG      console=${console}
     Add Analytics stub plugin   ${server 1['name']}
-    ${results} =    Add Camera    https://${QA BURBANK IP}:${server 1['port']}    ${camera user}    ${camera password}    ${camera}    ${camera url}    ${server 1}[local auth]    ${camera manufacturer}
+    ${results} =    Add Camera    https://${QA BURBANK IP}:${server 1}[port][0]    ${camera user}    ${camera password}    ${camera}    ${camera url}    ${server 1}[localAuth]    ${camera manufacturer}
     Log    ${results}
     Log    camera added ..... | PASS |    DEBUG      console=${console}
     Sleep    15
     # restarting server and creating inaccessible disk
-    Restart Server    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
+    Restart Server    https://${QA BURBANK IP}:${server 1}[port][0]    ${server 1['localAuth']}
     Sleep    3
     Remove Directory    disk-invalid
     Log    disk-invalid deleted ..... | PASS |    DEBUG      console=${console}
     Sleep    90
     Log    server restarted ..... | PASS |    DEBUG      console=${console}
     Go to    ${url}
-    Turn On Recording    ${server 1['owner']}    ${server 1['cloud id']}
-    Verify Storages    5    owner=${server 1['owner']}    system=${server 1['cloud id']}    login=${TRUE}
-    Verify Storages    1    owner=${server 1['owner']}    system=${server 2['cloud id']}    login=${TRUE}
+    Turn On Recording    ${server 1['cloudOwner']}    ${server 1['id']}
+    Verify Storages    5    owner=${server 1['cloudOwner']}    system=${server 1['id']}    login=${TRUE}
+    Verify Storages    1    owner=${server 1['cloudOwner']}    system=${server 2['id']}    login=${TRUE}
 
 Catenate Storages One
     [Arguments]    ${string}
-    ${storage string 1} =    Catenate    ${storage string 1}    ${string}
-    Set Suite Variable    ${storage string 1}    ${storage string 1}
+    ${storage string 1} =    Catenate    ${storage string}[0]    ${string}
+    Set List Value    ${storage string}   0   ${storage string 1}
+    Set Suite Variable    ${storage string}   ${storage string}
 
 Catenate Storages Two
     [Arguments]    ${string}
-    ${storage string 2} =    Catenate    ${storage string 2}    ${string}
-    Set Suite Variable    ${storage string 2}    ${storage string 2}
+    ${storage string 2} =    Catenate    ${storage string}[1]    ${string}
+    ${storage string 2} =    Get Substring    ${storage string 2}    1
+    Set List Value    ${storage string}   1   ${storage string 2}
+    Set Suite Variable    ${storage string}   ${storage string}
 
 Storage Suite Teardown
-    Delete Base System    ${server 1}
-    Delete Base System    ${server 2}
-    Delete Base System    ${server 3}
+    Teardown Servers    ${servers}
     FOR    ${n}    IN RANGE    5
         Delete Virtual Disk    ${disk[${n}]}[img]    ${disk[${n}]}[folder]
     END
@@ -133,7 +121,7 @@ Verify Storages
 Turn on Recording
     [Arguments]    ${owner}    ${system}
     IF    ${IMAGE} == ${IMAGE 5.0} or ${IMAGE} == ${IMAGE 5.1}
-        Start Recording API    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['token']}    ${camera resourceId}    camera_auth=${camera auth}
+        Start Recording API    https://${QA BURBANK IP}:${server 1}[port][0]    ${server 1['token']}    ${camera resourceId}    camera_auth=${camera auth}
         Log in to user and system    ${owner}     ${system}
         Go To Cameras
         ${status} =     Run Keyword and Return Status     Wait Until Element Is Visible    //span[contains(text(), "Edit Credentials")]    timeout=15
@@ -211,7 +199,7 @@ Set Default Storage Config
 Reset to Default Storage Config
     @{disabled} =    Create List    disk2    disk3
     @{backups} =    Create List    disk1
-    Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
+    Set Default Storage Config    https://${QA BURBANK IP}:${server 1}[port][0]    ${disabled}    ${backups}
 
 Add Analytics stub plugin
     [Arguments]    ${server name}
@@ -461,7 +449,7 @@ Restart
     Reset to Default Storage Config
 
 Storage Test Setup
-    [Arguments]     ${disabled}=${None}     ${backups}=${None}     ${port}=${server 1['port']}     ${email}=${server 1['owner']}    ${system}=${server 1['cloud id']}   ${config storage}=${True}
+    [Arguments]     ${disabled}=${None}     ${backups}=${None}     ${port}=${server 1}[port][0]     ${email}=${server 1['cloudOwner']}    ${system}=${server 1['id']}   ${config storage}=${True}
     ${disabled disks} =    Convert Disk String to List      ${disabled}
     ${backup disks} =    Convert Disk String to List      ${backups}
     Run Keyword If    ${config storage}     Set Default Storage Config    https://${QA BURBANK IP}:${port}    ${disabled disks}     ${backup disks}

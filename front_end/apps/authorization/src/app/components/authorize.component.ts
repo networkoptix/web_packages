@@ -474,7 +474,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         this.checkAuthCodeProcess = this.processService.createProcess(
             () => {
                 this.authCodeErrorCode = '';
-                if (this.clientType === ClientType.system2faAuth) {
+                if (this.clientType === ClientType.system2faAuth && !this.initialData.redirect_uri.includes('redirect-oauth')) {
                     return this.cloudService.updateSessionWith2fa(this.authCode);
                 }
 
@@ -489,6 +489,12 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 timeoutMs
             },
             res => {
+                // no success message if password restored, just returns user object
+                if (this.action === 'restore_password' && res.email) {
+                    this.errorDialog$.value && this.errorDialog$.next(false);
+                    this.confirmReset = true;
+                    this.setCurrentState('reset');
+                }
                 if (res.resultCode === 'ok') {
                     this.handleLoginSuccess({});
                 }
@@ -515,6 +521,11 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             },
             { ignoreError: true, timeoutMs },
             res => {
+                if (this.action === 'restore_password' && res.email) {
+                    this.errorDialog$.value && this.errorDialog$.next(false);
+                    this.confirmReset = true;
+                    this.setCurrentState('reset');
+                }
                 if (res.resultCode === 'ok') {
                     this.handleLoginSuccess({});
                 }
@@ -551,7 +562,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                     this.createErrorCode = ['email', 'portalError'];
                 } else {
                     // in the case when code is passed with registration (ie when user gets invited to system)
-                    if (res.activated) {
+                    if (res.statusCode === 'activated') {
                         this.activated$.next(true);
                     }
 

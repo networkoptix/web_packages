@@ -1,7 +1,10 @@
 import { HttpClient } from '@angular/common/http';
+import { inject } from '@angular/core';
 import md5 from 'md5';
 import { Observable, zip } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+
+import { WINDOW } from '@services/window-provider';
 
 import { CloudResponse, CloudUser, System, WithFreshSession } from '../../nx-cloud-api.types';
 import { BaseCloudServiceAPI, CreateApiFactory, implementsCloudServiceApi } from '../base-cloud-service-api';
@@ -26,6 +29,8 @@ interface ShareBody {
     isEnabled
 }
 
+const getWindow = (): Window => inject(WINDOW);
+
 @implementsCloudServiceApi
 export class CloudDbAPI extends BaseCloudServiceAPI {
     /**
@@ -41,11 +46,12 @@ export class CloudDbAPI extends BaseCloudServiceAPI {
      * @param withFreshSession WithFreshSession
      * @returns (serverUrl?: string, cloudHost?: string) => CloudDbAPI
      */
-    static createApiFactory: CreateApiFactory<CloudDbAPI> = (http: HttpClient, withFreshSession: WithFreshSession, refreshToken: Observable<string>) => (serverUrl: string = '', hostOrCustomization: string = '') => new CloudDbAPI(serverUrl, hostOrCustomization, http, withFreshSession, refreshToken);
+    static createApiFactory: CreateApiFactory<CloudDbAPI> = (http: HttpClient, withFreshSession: WithFreshSession, refreshToken: Observable<string>) => (serverUrl: string = '', hostOrCustomization: () => string = () => '') => new CloudDbAPI(serverUrl, hostOrCustomization, http, withFreshSession, refreshToken);
 
     #refreshToken$: Observable<string>;
+    window = getWindow();
 
-    constructor(serverUrl: string, hostOrCustomization: string, http: HttpClient, withFreshSession: WithFreshSession, refreshToken: Observable<string>) {
+    constructor(serverUrl: string, hostOrCustomization: () => string, http: HttpClient, withFreshSession: WithFreshSession, refreshToken: Observable<string>) {
         super(serverUrl, CloudDbAPI.API_BASE, hostOrCustomization, http, withFreshSession);
         this.#refreshToken$ = refreshToken;
     }
@@ -60,7 +66,7 @@ export class CloudDbAPI extends BaseCloudServiceAPI {
     }
 
     public systems(systemId = ''): Observable<System[]> {
-        return this.get(this.systemEndpoint(NonSystemIdEndpoint.get), { params: systemId ? { systemId } : { customization: this.hostOrCustomization } }).pipe(map(({ systems }) => systems));
+        return this.get(this.systemEndpoint(NonSystemIdEndpoint.get), { params: systemId ? { systemId } : { customization: this.hostOrCustomization() } }).pipe(map(({ systems }) => systems));
     }
 
     public getCloudUsers(systemId = ''): Observable<CloudUser[]> {
@@ -93,7 +99,7 @@ export class CloudDbAPI extends BaseCloudServiceAPI {
                 client_id: 'cloud_portal',
                 grant_type: 'authorization_code',
                 response_type: responseType,
-                scope: systemId === '*' ? systemId : `cloudSystemId=${systemId}`,
+                scope: systemId === '*' ? undefined : `${this.window.location.host} cloudSystemId=${systemId}`,
                 code
             })),
             switchMap(body => this.post<{ code: string }>(this.authEndpoint('token'), { body }))

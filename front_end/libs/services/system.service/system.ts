@@ -720,7 +720,7 @@ export class NxSystem {
             }),
             catchError(() => Promise.resolve('')),
             switchMap(licenseServer => this.cloudApi.checkLicenseServer(this.id, licenseServer)),
-            map(({ licenseServer }) => this.cloudApi.licenseServerApiFactory(licenseServer, _cloudHost))
+            map(({ licenseServer }) => this.cloudApi.licenseServerApiFactory(licenseServer, () => _cloudHost))
         );
     };
 

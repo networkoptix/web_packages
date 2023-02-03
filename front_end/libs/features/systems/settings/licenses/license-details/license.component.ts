@@ -122,7 +122,7 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
             [
                 new InfoBlockLine(
                     this.LANG.license.info.type,
-                    typeof info.type === 'function' ? info.type() : info.type
+                    info.type
                 ),
                 new InfoBlockLine(this.LANG.license.info.channels, info.count),
                 new InfoBlockLine(

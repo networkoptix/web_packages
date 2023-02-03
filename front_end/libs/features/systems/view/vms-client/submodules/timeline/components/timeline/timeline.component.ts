@@ -9,10 +9,12 @@ import {
     Inject,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { fromEvent, Subject } from 'rxjs';
 import { debounceTime, startWith } from 'rxjs/operators';
 
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxSystemService } from '@services/system.service/system.service';
 import { WINDOW } from '@services/window-provider';
 import { WebClientUxService } from '@view/services/webclient-ux.service';
 import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
@@ -42,6 +44,7 @@ const MOUSE_MOVE_DT_LIMIT = 99999999;
 // let times_rendered = 0
 
 const CLICK_AND_HOLD_TIMEOUT = 250;
+const VMS_VERSION_TIMELINE_ENABLED = 4.2;
 
 @UntilDestroy()
 @Component({
@@ -64,7 +67,11 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     public isDragging: boolean = false;
     clickAndHoldHandler;
 
+    public readonly archiveSelectionEnabled: boolean = false;
+
     constructor(
+        deviceService: DeviceDetectorService,
+        systemService: NxSystemService,
         protected configService: NxConfigService,
         public timeline: TimelineService,
         protected playback: PlaybackService,
@@ -75,8 +82,11 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         public ux: WebClientUxService,
         @Inject(WINDOW) private window: Window,
     ) {
+        const device = deviceService.getDeviceInfo();
         this.archiveSelectionEnabled =
-            this.configService.flagsEnabled('archiveSelection');
+            this.configService.flagsEnabled('archiveSelection') &&
+            device.deviceType !== 'mobile' &&
+            systemService.getCurrentSystem().version >= VMS_VERSION_TIMELINE_ENABLED;
 
         this.selection.subject
             .pipe(untilDestroyed(this))
@@ -86,8 +96,6 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
                     selection.hoverMode;
             });
     }
-
-    public readonly archiveSelectionEnabled: boolean = false;
 
     protected _onTimelineStatusChange(s: TimelineServiceStatus): void {
         if (s.canvasGeometryUpdateRequested) {

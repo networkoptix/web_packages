@@ -450,6 +450,7 @@ export class MergeModalContent {
                                     'admin:admin@'
                                 );
                             }
+                            this.remotePassword = 'admin';
                             this.machine.transition(this.confirmMerge);
                         } else if (!Object.keys(res).length || res.error === '0' || !res.error) {
                             if (this.serverUrlInputExists) {
@@ -624,11 +625,11 @@ export class MergeModalContent {
                     },
                     missingPassword: () => {
                         this.updateShow(this.confirmPasswordError, { passwordErrorText: this.passwordRequired });
-                        this.confirmMergeInput.nativeElement.focus();
+                        this.confirmMergeInput?.nativeElement.focus();
                     },
                     wrongPassword: () => {
                         this.updateShow(this.confirmPasswordError, { passwordErrorText: this.passwordWrong, passwordValue: '' });
-                        this.confirmMergeInput.nativeElement.focus();
+                        this.confirmMergeInput?.nativeElement.focus();
                     },
                     [this.wrongLogin]: 'potentialErrorString'
                 },

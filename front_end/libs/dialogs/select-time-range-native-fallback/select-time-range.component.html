@@ -35,7 +35,9 @@
                     [ngClass]="themeClass"
                     name="start-date"
                     type="date"
-                    (blur)="checkMaxDate()"
+                    [min]="rangeEndDate"
+                    [max]="rangeStartDate"
+                    (blur)="checkMaxMinDate()"
                     [(ngModel)]="startDate"
                 />
                 <input
@@ -60,7 +62,9 @@
                     [ngClass]="themeClass"
                     name="end-date"
                     type="date"
-                    (blur)="checkMaxDate()"
+                    [min]="rangeEndDate"
+                    [max]="rangeStartDate"
+                    (blur)="checkMaxMinDate()"
                     [(ngModel)]="endDate"
                 />
                 <input

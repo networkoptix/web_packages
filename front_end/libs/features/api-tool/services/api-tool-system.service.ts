@@ -37,6 +37,7 @@ export class NxAPIToolSystemService {
     systemEmitter$ = new Subject<EmitInfo<NxSystemInfo | NxSystem>>();
     systemManifest$ = new BehaviorSubject<MenuManifest>(null);
     validSystems: NxSystemInfo[] = []; // Used for trying all possible systems before showing an error
+    systems: NxSystemInfo[] = [];
     manualSystemChange = false;
     systemChangeLockout = false;
 
@@ -354,6 +355,7 @@ export class NxAPIToolSystemService {
             if (!isDisabled) {
                 this.validSystems.push(system);
             }
+            this.systems.push(system);
         });
     }
 

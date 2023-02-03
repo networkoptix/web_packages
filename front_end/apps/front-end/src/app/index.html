@@ -77,7 +77,7 @@
             const themeFromStorage = window.localStorage.getItem('ngx-webstorage|loginstate') && window.localStorage.getItem('ngx-webstorage|theme')?.replaceAll('"', '')
             const localStorageTheme = themeFromStorage in themes && themeFromStorage;
             const storedTheme = themeFromCookie || localStorageTheme || 'auto';
-            const systemTheme = this.window.matchMedia('(prefers-color-scheme: dark)') ? 'dark' : 'light'
+            const systemTheme = this.window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
             const theme = storedTheme === 'auto' ? systemTheme : storedTheme;
             document.querySelector('html').setAttribute('data-theme', theme);
             document.querySelector('body').style.backgroundColor = themes[theme];

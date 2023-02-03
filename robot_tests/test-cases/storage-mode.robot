@@ -7,6 +7,9 @@ Test Teardown     Run Keywords    QA Video Recording Stop      storage-resource.
 Suite Teardown    Run Keyword and Ignore Error   Storage Suite Teardown
 Force Tags        storage
 
+*** Variables ***
+@{storage string}    --mount type=bind,source="/home/qaburbank/disk-invalid",target=/invalid    ${EMPTY}    ${EMPTY}
+
 *** Test Cases ***
 1. Disabling storage warnings aren't shown - Main storages
     [Tags]    C81570    mode
@@ -265,12 +268,8 @@ Force Tags        storage
     [Tags]    C81544    mode    archive
     [Setup]     Storage Test Setup       disk1 disk2 disk3
     Skip If Image Is    4.3_test    5.0_test    5.0    5.1      msg=Backup Archive not supported with 5.0_test
-#    @{disabled} =    Create List    disk1    disk2    disk3
-#    @{backups} =    Create List
-#    Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
+    
     Log    Step 1
-#    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-#    Go To Servers
     Wait Until Elements Are Visible With Retry    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE DISABLED NOT IN USE}
 
     Log    Step 2
@@ -302,7 +301,7 @@ Force Tags        storage
     Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
     Enable Archive Backup
     Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
-    Set Backup Setting To    BackupManual    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
+    Set Backup Setting To    BackupManual    https://${QA BURBANK IP}:${server 1}[port][0]    ${server 1['localAuth']}
     Reload Page
     Wait Until Element Is Not Visible    ${ARCHIVE BACKUP SWITCH ENABLED}
     Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
@@ -322,13 +321,13 @@ Force Tags        storage
     Should Be True    ${files 3 disk2} == ${files 2 disk2} or ${files 3 disk2} < ${files 2 disk2}
 
     Log    Step 7
-    # Turn On Backup For Camera    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
+    # Turn On Backup For Camera    https://${QA BURBANK IP}:${server 1}[port][0]    ${server 1['localAuth']}
     # Reload Page
     # Wait Until Element Is Visible    ${ARCHIVE BACKUP CHECK BOX}
     # Enable Archive Backup
     # Wait Until Elements Are Visible    ${ARCHIVE BACKUP STREAMS MSG}    ${ARCHIVE BACKUP CLIENT MSG}    ${SAVE BUTTON}    ${CANCEL BUTTON}
     # Click     Element    ${SAVE BUTTON}
-    # Set Backup Setting To    BackupManual    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
+    # Set Backup Setting To    BackupManual    https://${QA BURBANK IP}:${server 1}[port][0]    ${server 1['localAuth']}
     # Reload Page
     # Wait Until Element Is Not Visible    ${ARCHIVE BACKUP SWITCH ENABLED}
 
@@ -340,7 +339,7 @@ Force Tags        storage
 
     # Log    Step 8
     ${files disk0} =    Verify Recorded Video Files    disk0
-    Set Backup Setting To    BackupRealTime    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
+    Set Backup Setting To    BackupRealTime    https://${QA BURBANK IP}:${server 1}[port][0]    ${server 1['localAuth']}
     Reload Page
     Wait Until Elements Are Visible    ${ARCHIVE BACKUP STREAMS MSG}    ${ARCHIVE BACKUP CLIENT MSG}
     ${backup initialized} =    Set Variable    ${TRUE}
@@ -403,9 +402,7 @@ Force Tags        storage
     [Tags]    C81546    mode    archive
     [Setup]     Storage Test Setup       config storage=${False}
     Skip If Image Is    4.3_test    5.0_test    5.0    5.1       msg=Backup Archive not supported with 5.0_test
-#    Log    Step 1
-#    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
+    Log    Step 1
     Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE ENABLED BACKUP}
     Wait Until Element Is Visible    ${ARCHIVE BACKUP CHECK BOX}
     ${status} =    Run Keyword And Return Status     Page Should Not Contain Element    ${ARCHIVE BACKUP STREAMS MSG}
@@ -456,8 +453,6 @@ Force Tags        storage
     [Tags]    C81558    mode
     [Setup]     Storage Test Setup       config storage=${False}
     Log    Step 1
-#    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-#    Go to Servers
     Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE ENABLED BACKUP}
 
     Log    Step 2
@@ -485,13 +480,8 @@ Force Tags        storage
 10. Disabling storage warnings - Main storages
     [Tags]    C81562    mode
     [Setup]     Storage Test Setup       disk3    disk2
-#    @{disabled} =    Create List    disk3
-#    @{backups} =    Create List     disk2
-#    Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
 
     Log    Step 1
-#    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-#    Go to Servers
     Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}
 
     Log    Step 2
@@ -541,8 +531,6 @@ Force Tags        storage
     [Setup]     Storage Test Setup       config storage=${False}
     Skip If Image Is    4.3_test    5.0_test    5.0    5.1     msg=Backup Archive not supported with 5.0_test
     Log    Step 1
-#    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-#    Go to Servers
     Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE ENABLED BACKUP}
     Wait Until Element Is Visible    ${ARCHIVE BACKUP CHECK BOX}
     ${status} =    Run Keyword And Return Status     Page Should Not Contain Element    ${ARCHIVE BACKUP STREAMS MSG}

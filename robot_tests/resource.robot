@@ -1476,16 +1476,16 @@ QA Video Recording Stop
 
 Enable Cloud User via API
     [Arguments]    ${status}    ${accessRole}   ${server}
-    ${users} =   Get Cloud System Users    ${server}[cloud auth]    ${server}[cloud id]
+    ${users} =   Get Cloud System Users    ${server}[cloudAuth]    ${server}[id]
     FOR    ${user}    IN    @{users}
         IF    '${user}[accessRole]' == '${accessRole}'
-            ${locals} =     Get Users    ${server}[local auth]    https://${QA BURBANK IP}:${server}[port]
+            ${locals} =     Get Users    ${server}[localAuth]    https://${QA BURBANK IP}:${server}[port][0]
             FOR     ${local}    IN    @{locals}
                 IF    '${local}[email]' == '${user}[accountEmail]'
                     Set Test Variable    ${name}   ${local}[email]
                     ${response} =   Save User Existing Legacy
                     ...    token=${server}[token]
-                    ...    serverUrl=https://${QA BURBANK IP}:${server}[port]
+                    ...    serverUrl=https://${QA BURBANK IP}:${server}[port][0]
                     ...    name=${local}[name]
                     ...    permissions=${local}[permissions]
                     ...    email=${local}[email]
