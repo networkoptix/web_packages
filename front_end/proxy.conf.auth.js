@@ -6,7 +6,7 @@ const proxyTargetConfig = {
     prod: 'https://nxvms.com',
     stage: 'https://stage.nxvms.com'
 };
-const target = process.env.CLOUD_TARGET || 'stage';
+const target = process.env.CLOUD_TARGET || 'cloud-test';
 const PROXY_CONFIG = [
     {
         context: [
