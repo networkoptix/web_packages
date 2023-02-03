@@ -68,6 +68,12 @@ html[data-theme="dark"] {
 
     --elements-disabled : #3A4D57; //$dark12;
 
+    --svg-info-fill: #{$info_icon_dark};
+    --svg-info-elm-fill: #{$info_icon_dark_elm};
+
+    --svg-warning-fill: #{$warning_icon_dark};
+    --svg-warning-elm-fill: #{$warning_icon_dark_elm};
+
     --svg-std-icon-fill : #587785; //$dark18;
     --svg-path-light-color : #2B383F; //$dark9;
     --svg-path-dark-color  : #E1E7EA; //$light4;

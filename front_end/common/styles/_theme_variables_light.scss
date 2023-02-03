@@ -70,6 +70,12 @@ html[data-theme="light"] {
 
     --elements-disabled : #{$light10};
 
+    --svg-info-fill: #{$info_icon};
+    --svg-info-elm-fill: #{$info_icon_dark};
+
+    --svg-warning-fill: #{$warning_icon};
+    --svg-warning-elm-fill: #{$info_icon_dark};
+
     --svg-std-icon-fill : #{$light16};
     --svg-path-light-color: #{$light4};
     --svg-path-dark-color: #{$dark9};
@@ -491,7 +497,7 @@ html[data-theme="light"] {
     --card-simple-info-bg           : rgba(var(--bluez-light--rgb), .3);
     --card-simple-info-border-color : rgba(var(--bluez-light--rgb), .1);
     --card-simple-info-color        : #{$dark9};
-    --card-simple-info-svg-color    : var(--bluez-light);
+    --card-simple-info-svg-color    : var(--bluez-bright);
 
     --card-simple-warning-bg           : rgba(var(--yellow_main--rgb), .1);
     --card-simple-warning-border-color : rgba(var(--yellow_main--rgb), .3);
@@ -500,7 +506,7 @@ html[data-theme="light"] {
     --card-simple-error-bg : rgba(var(--red_l2--rgb), .1);
     --card-simple-error-border-color : rgba(var(--red_l2--rgb), .3);
     --card-simple-error-color : #{$dark9};
-    --card-simple-error-svg-color    : #{$red-main};
+    --card-simple-error-svg-color    : #{$red_l2};
     --card-simple-error-svg-ornament-color    : #{$light1};
 
     --card-simple-default-bg : #{$red2};
