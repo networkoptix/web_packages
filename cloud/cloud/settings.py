@@ -66,6 +66,7 @@ STATICFILES_FINDERS = [
 ]
 
 CUSTOMIZATION = os.getenv('CUSTOMIZATION')
+LOCAL_CUSTOMIZATION = None
 if not CUSTOMIZATION:
     CUSTOMIZATION = conf['customization']
 
@@ -81,6 +82,8 @@ if LOCAL_ENVIRONMENT:
     )
     PREVIEW_URL = '/preview/'
     PREVIEW_LOCATION = os.path.join(STATIC_LOCATION, CUSTOMIZATION, "preview")
+
+    LOCAL_CUSTOMIZATION = os.getenv('CUSTOMIZATION', 'default')
 
 cloud_db = conf['cloud_database']
 
@@ -129,6 +132,7 @@ INSTALLED_APPS = (
 
 
 MIDDLEWARE = (
+    'cloud.middleware.CustomizationMiddleware',
     'cloud.middleware.CachedMiddleware',
     'cloud.middleware.HeaderMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -346,6 +350,10 @@ CACHES = {
         "TIMEOUT": REDIS_CACHE['TIMEOUT'],
         "LOCATION": REDIS_CACHE['LOCATION'] + '/13',
         "KEY_PREFIX": 'requests'
+    },
+    "local": {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'local'
     }
 }
 
