@@ -1,7 +1,7 @@
 import { InjectionToken } from '@angular/core';
 
 import { environment } from '@environments/environment';
-import type { NxSystemRole } from '@services/system.service/user-manager/user-manager-types';
+import type { NxSystemRole } from '@services/system.service/user-manager/user-manager-types.bak';
 
 import { nxConfig } from './config';
 import { IConfig } from './config-types';

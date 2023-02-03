@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators';
 
 import { NxHealthService } from '@pages/health/health.service';
 import { SettingsConfig } from '@services/nx-config/base-config';
-import { NxSystemUser } from '@services/system.service/user-manager/user-manager-types';
+import { NxSystemUser } from '@services/system.service/user-manager/user-manager-types.bak';
 
 import { NxAppStateService } from './nx-app-state.service';
 import { IConfig } from './nx-config/config-types';
