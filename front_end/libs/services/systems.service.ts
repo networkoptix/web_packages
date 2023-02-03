@@ -9,7 +9,7 @@ import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { NxSessionService } from '@services/session.service';
 import { alphabeticalSort, paramSortFunc } from '@utils/general';
-import { memoizeAsyncPersistent, memoizeAsyncShort } from '@utils/memoize';
+import { memoizeAsyncPersistent } from '@utils/memoize';
 
 // import * as SystemsActions from '../store/systems/systems.actions';
 
@@ -149,18 +149,9 @@ export class NxSystemsService {
         }
     }
 
-    private _getSystems(systemId?: string): Observable<System[]> {
-        return systemId ? this.singleSystem(systemId) : this.systemsList();
-    }
-
-    @memoizeAsyncShort
-    private singleSystem(systemId: string): Observable<System[]> {
-        return this.cloudApi.systems(systemId).pipe(shareReplay({ bufferSize: 1, refCount: false }));
-    }
-
     @memoizeAsyncPersistent
-    private systemsList(): Observable<System[]> {
-        return combineLatest([timer(0, updateInterval), this.currentUser$]).pipe(switchMap(() => this.cloudApi.systems()));
+    private _getSystems(systemId?: string): Observable<System[]> {
+        return combineLatest([timer(0, updateInterval), this.currentUser$]).pipe(switchMap(() => this.cloudApi.systems(systemId)));
     }
 
     forceUpdateSystems(userEmail?: string): Observable<NxSystemInfo[]> {

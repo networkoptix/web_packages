@@ -23,7 +23,7 @@ import { NxSystem } from './system';
 export class NxSystemService {
     CONFIG: IConfig;
     private system: NxSystem;
-    private systemsCache: { [systemId: string]: NxSystem };
+    private systemsCache: { [systemId: string]: NxSystem } = {};
 
     constructor(
         configService: NxConfigService,
@@ -37,14 +37,12 @@ export class NxSystemService {
         @Inject(LOCALE_ID) private locale: string,
     ) {
         this.CONFIG = configService.getConfig();
-        this.systemsCache = {};
     }
 
     getCurrentSystem(): NxSystem {
         return this.system;
     }
 
-    @memoizeDecorator()
     createSystem(
         currentUserEmail: string,
         systemId: string,
@@ -98,9 +96,9 @@ export class NxSystemService {
 
         this.system = system;
         this.system.lostConnection = false;
-        if (!skipPoll) {
-            this.system.startPoll(systemId);
-        }
+        // if (!skipPoll) {
+        //     this.system.startPoll(systemId);
+        // }
         return this.system;
     }
 

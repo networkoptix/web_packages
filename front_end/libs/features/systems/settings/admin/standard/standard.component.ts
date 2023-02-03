@@ -10,6 +10,7 @@ import {
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { firstValueFrom } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
@@ -90,8 +91,6 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
     timeValue: number;
     currentMaxTimeUnit: number;
     previousInputValue: number;
-    limitSessionTimeUnits: Record<LimitSessionTimeUnit, LimitSessionTimeItem>;
-    limitSessionTimeItems: LimitSessionTimeItem[];
     saveSettings: Process;
     setWarningMessageThroughApplyService: () => void;
     selectElement;
@@ -112,6 +111,30 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         videoTrafficEncryptionForced: false,
         sessionLimitMinutes: 0
     };
+
+    limitSessionTimeUnits: Record<LimitSessionTimeUnit, LimitSessionTimeItem> = {
+        days: {
+            value: 'days',
+            name: this.LANG.system.settings.sessionLimitDuration.days,
+            id: 1,
+            max: 999999,
+            default: 30
+        },
+        hours: {
+            value: 'hours',
+            name: this.LANG.system.settings.sessionLimitDuration.hours,
+            id: 2,
+            max: 999999
+        },
+        minutes: {
+            value: 'minutes',
+            name: this.LANG.system.settings.sessionLimitDuration.minutes,
+            id: 3,
+            max: 999999
+        }
+    };
+
+    limitSessionTimeItems: LimitSessionTimeItem[] = [...Object.values(this.limitSessionTimeUnits)];
 
     icons = icons;
 
@@ -143,30 +166,8 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
     DAY_MINS = DAY_MINS; // For template access
 
     ngOnInit(): void {
-        this.limitSessionTimeUnits = {
-            days: {
-                value: 'days',
-                name: this.LANG.system.settings.sessionLimitDuration.days,
-                id: 1,
-                max: 999999,
-                default: 30
-            },
-            hours: {
-                value: 'hours',
-                name: this.LANG.system.settings.sessionLimitDuration.hours,
-                id: 2,
-                max: 999999
-            },
-            minutes: {
-                value: 'minutes',
-                name: this.LANG.system.settings.sessionLimitDuration.minutes,
-                id: 3,
-                max: 999999
-            }
-        };
         this.menuService.section = menus.systemSettings.admin.id;
         this.menuService.detail = menus.systemSettings.general.id;
-        this.limitSessionTimeItems = [...Object.values(this.limitSessionTimeUnits)];
         this.initProcess();
 
         if (this.CONFIG.cloudCapabilities.alexaIntegrationEnabled) {
@@ -196,7 +197,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
             const { previousValue, currentValue, firstChange } = changes.settings;
             if (
                 (JSON.stringify(previousValue) !== JSON.stringify(currentValue) ||
-                    !this.settingsWatchersSet) && !firstChange && !this.applyService.locked
+                    !this.settingsWatchersSet) && (!previousValue || firstChange) && !this.applyService.locked
             ) {
                 if (currentValue && Object.keys(currentValue).length) {
                     this.setValues(currentValue);
@@ -266,7 +267,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         }
         const changes = { ...sw };
 
-        return this.system.updateOrGetSystemSettings(changes).toPromise();
+        return firstValueFrom(this.system.updateOrGetSystemSettings(changes));
     }
 
     initProcess(): void {

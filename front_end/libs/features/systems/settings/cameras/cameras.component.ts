@@ -487,6 +487,11 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     }
                 }
             });
+        this.settingsService.system.getLicenseChannels().pipe(untilDestroyed(this)).subscribe(({ available }) => {
+            this.availableLicenses = available;
+        }, _ => {
+            this.availableLicenses = 0;
+        });
 
         this.settingsSubscription = this.settingsService.systemSubject$
             .pipe(
@@ -988,11 +993,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
             this.applyService.reset();
             this.applyService.setVisible();
-            this.system.getLicenseChannels().then(({ available }) => {
-                this.availableLicenses = available;
-            }).catch(_ => {
-                this.availableLicenses = 0;
-            });
             this.showPreloader = false;
         } else if (this.parsedCameraId) {
             this.noCameras = false;

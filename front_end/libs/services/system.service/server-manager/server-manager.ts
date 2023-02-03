@@ -1,5 +1,5 @@
-import { firstValueFrom, Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
+import { map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import stringify from 'safe-stable-stringify';
 
 import { environment } from '@environments/environment';
@@ -13,7 +13,7 @@ import * as t from '@services/system-api.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { alphabeticalSort } from '@utils/general';
-import { memoizeDecorator } from '@utils/memoize';
+import { memoizeAsyncPersistent, memoizeDecorator } from '@utils/memoize';
 import { setServerIpAndPort } from '@utils/nx';
 
 import { NxCloudApiService } from '../../nx-cloud-api';
@@ -174,23 +174,25 @@ export class ServerManager {
     }
 
     getLicenses() {
-        return this.mediaserver.getLicenses().toPromise();
+        return this.mediaserver.getLicenses();
     }
 
-    private calcChannelsLegacy(cameras): Promise<{ total: number; used: number; available: number; }> {
-        return this.getLicenses().then(({ licenses, hwids }: any) => {
-            const parsedLicenses = licenses.map(this.parseLicense);
-            const total: number = parsedLicenses.reduce((qty, { COUNT, EXPIRATION, CLASS, HWID }) => {
-                EXPIRATION = EXPIRATION && (EXPIRATION.replace(' ', 'T') + 'Z'); // for Safari compatibility
-                const activeLicense = hwids.includes(HWID) && (!EXPIRATION || new Date(EXPIRATION).getTime() > Date.now());
-                return activeLicense && (CLASS === 'digital' || CLASS === 'starter' || CLASS === 'edge') ? qty + parseInt(COUNT) : qty;
-            }, 0);
-            const used = cameras.filter(({ scheduleEnabled, status }) => scheduleEnabled).length; // count all cameras - not just ONLINE ones
-            const available = total - used;
-            return { total, used, available };
-        });
+    private calcChannelsLegacy(cameras): Observable<{ total: number; used: number; available: number; }> {
+        return this.getLicenses().pipe(
+            map(({ licenses, hwids }: any) => {
+                const parsedLicenses = licenses.map(this.parseLicense);
+                const total: number = parsedLicenses.reduce((qty, { COUNT, EXPIRATION, CLASS, HWID }) => {
+                    EXPIRATION = EXPIRATION && (EXPIRATION.replace(' ', 'T') + 'Z'); // for Safari compatibility
+                    const activeLicense = hwids.includes(HWID) && (!EXPIRATION || new Date(EXPIRATION).getTime() > Date.now());
+                    return activeLicense && (CLASS === 'digital' || CLASS === 'starter' || CLASS === 'edge') ? qty + parseInt(COUNT) : qty;
+                }, 0);
+                const used = cameras.filter(({ scheduleEnabled, status }) => scheduleEnabled).length; // count all cameras - not just ONLINE ones
+                const available = total - used;
+                return { total, used, available };
+            })
+        );
     }
-    private calcChannels(): Promise<{ total: number; used: number; available: number; }> {
+    private calcChannels(): Observable<{ total: number; used: number; available: number; }> {
         return this.system.mediaserver.getLicenseSummaries()
             .pipe(map((licenses: any) => {
                 return Object.entries(licenses)
@@ -205,11 +207,22 @@ export class ServerManager {
                         available: 0, inUse: 0, total: 0
                     });
             })
-            ).toPromise();
+            );
     }
 
-    getLicenseChannels(cameras): Promise<{ total: number; used: number; available: number; }> {
-        return this.system.version > this.cutOff ? this.calcChannels() : this.calcChannelsLegacy(cameras);
+    private updateLicenseChannels$ = new BehaviorSubject('');
+
+    getLicenseChannels(cameras): Observable<{ total: number; used: number; available: number; }> {
+        this.updateLicenseChannels$.next('update');
+        return this.handleGetLicenseChannels(cameras);
+    }
+
+    @memoizeAsyncPersistent
+    private handleGetLicenseChannels(cameras) {
+        return this.updateLicenseChannels$.pipe(
+            switchMap(() => this.system.version > this.cutOff ? this.calcChannels() : this.calcChannelsLegacy(cameras)),
+            shareReplay({ bufferSize: 1, refCount: false })
+        );
     }
 
     getModuleInfo(serverId?: string): Observable<t.ModuleInformation> {

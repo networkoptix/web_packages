@@ -4,14 +4,17 @@ import { Injector } from '@angular/core';
 import { pick } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
 import { SessionStorageService } from 'ngx-webstorage';
-import { from, Observable, of, throwError } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, from, Observable, of, throwError } from 'rxjs';
 import {
     catchError,
+    filter,
     map,
     mergeMap,
+    retry,
     retryWhen,
     switchMap,
     tap,
+    throttleTime,
     timeout
 } from 'rxjs/operators';
 
@@ -19,7 +22,7 @@ import { environment } from '@environments/environment';
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
 import { NxHealthService } from '@pages/health/health.service';
 import { NxStorageService } from '@services/storage.service';
-import { defaultHashFunction, memoizeAsync } from '@utils/memoize';
+import { defaultHashFunction, memoizeAsync, memoizeAsyncMedium, memoizeAsyncPersistent } from '@utils/memoize';
 
 import { SECURITY_LEVEL } from '../../apps/setup-wizard/src/app/types/wizard-state.types';
 import { apiDocURL, apiTool, sessionFreshnessSec } from '../variables/static-variables';
@@ -621,28 +624,45 @@ export class NxSystemRestAPI extends NxSystemAPI {
         ).toPromise();
     }
 
+    @memoizeAsyncPersistent
     getApiDoc(type: APIDocType = 'main') {
         return this.get<APIDoc>(apiDocURL[type]).toPromise();
     }
 
+    @memoizeAsyncPersistent
     fetchApiToolJSON(route: string) {
         return this.get<APIDoc>(`/static/${route}`).toPromise();
     }
 
+    @memoizeAsyncPersistent
     getAPIToolManifest(): Promise<MenuManifest> {
         return this.get('/static/openapi_manifest.json').toPromise().catch(() => apiTool.defaultManifest);
     }
 
+    @memoizeAsyncPersistent
     getApiChangelog(): Promise<string> {
         return this.http.get(`${this.urlBase}/web/static/api_changelog.md`, { responseType: 'text' }).toPromise();
     }
 
+    @memoizeAsyncPersistent
     getApiPreamble(): Promise<string> {
         return this.http.get(`${this.urlBase}/web/static/api_preamble.md`, { responseType: 'text' }).toPromise();
     }
 
+    protected updateSystemSettings$ = new BehaviorSubject('');
+
     getSystemSettings(): Promise<any> {
-        return this.get('/rest/v1/system/settings').toPromise();
+        this.updateSystemSettings$.next('update');
+        return firstValueFrom(this.getSystemSettingsHandler());
+    }
+
+    @memoizeAsyncPersistent
+    protected getSystemSettingsHandler() {
+        return this.updateSystemSettings$.pipe(
+            throttleTime(1000),
+            switchMap(() => this.get('/rest/v1/system/settings')),
+            retry(3)
+        );
     }
 
     backupControl(action?: 'start' | 'stop') {
@@ -655,7 +675,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     renameSystem(_, systemName: string) {
-        return this.post('/api/systemSettings', { systemName }).toPromise().catch();
+        return firstValueFrom(this.updateOrGetSettings({ systemName })).catch();
     }
 
     detachFromSystem(currentPassword?: string, serverId?: string) {
@@ -671,11 +691,19 @@ export class NxSystemRestAPI extends NxSystemAPI {
             });
     }
 
+    private mergeUpdater$ = new BehaviorSubject(true);
+
     checkMergeStatus(forceReload = true) {
-        return this.get<t.MergeStatus>(
-            '/rest/v1/system/merge',
-            {},
-            { [forceReload ? 'reset-cache' : 'cache-request']: 'true' }
+        this.mergeUpdater$.next(forceReload);
+        return this.checkMergeStatusHandler(forceReload);
+    }
+
+    @memoizeAsyncPersistent
+    private checkMergeStatusHandler(forceReload) {
+        return this.mergeUpdater$.pipe(
+            throttleTime(10 * 1000),
+            filter(force => force === forceReload),
+            switchMap(() => this.get<t.MergeStatus>('/rest/v1/system/merge', {}, { [forceReload ? 'reset-cache' : 'cache-request']: 'true' }))
         );
     }
 
@@ -856,6 +884,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.delete(`/rest/v1/layouts/${layoutId}`);
     }
 
+    @memoizeAsyncMedium
     getLicenseSummaries(): Observable<any> {
         const params = {
             _keepDefault: true

@@ -193,7 +193,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: NgChanges<NxMenuComponent>): void {
-        const currentContent = changes.content.currentValue;
+        const currentContent = changes.content?.currentValue;
         if (currentContent) {
             if (!isEqual(currentContent.level1, this.menuService.content)) {
                 this.menuService.content = cloneDeep(currentContent.level1);
@@ -274,7 +274,11 @@ export class NxMenuComponent implements OnInit, OnChanges {
     }
 
     getMenuDimensions(): void {
-        this.elmHeader = this.renderer.selectRootElement('nx-header header', true);
+        try {
+            this.elmHeader = this.renderer.selectRootElement('nx-header header', true);
+        } catch (e) {
+            return;
+        }
         this.windowHeight = this.totalWindowHeight - this.elmHeader.offsetHeight - this.stdPadding;
         if (this.searchable) {
             this.elmMenuSearch = this.renderer.selectRootElement('nx-search', true);
@@ -310,7 +314,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
     }
 
     resizeMenu(): void {
-        if (this.autoFit && this.scrollArea && !this.searchMode) {
+        if (this.elmHeader && this.elmMenuSearch && this.autoFit && this.scrollArea && !this.searchMode) {
             setTimeout(() => {
                 let windowHeightFit: number;
                 this.menuOverflow = 'hidden';

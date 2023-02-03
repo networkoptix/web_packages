@@ -14,7 +14,7 @@ import {
 } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { escape } from 'lodash-es';
-import { Subject, Subscription } from 'rxjs';
+import { firstValueFrom, Subject, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter, takeUntil, tap } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
@@ -204,7 +204,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.content = { ...this.content }; // trigger onChange
                 if (!environment.isLocal && this.system) {
                     this.system.stopPoll();
-                    this.settingsService.system = undefined;
                 }
                 this.systemNoAccess = false;
                 this.menuVisible = false;
@@ -396,13 +395,15 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             if (isOnline) {
                                 this.ribbonService.hide();
                             } else {
-                                this.ribbonService.show(
-                                    this.LANG.ribbon.systemOffline,
-                                    [],
-                                    'alert',
-                                    undefined,
-                                    true
-                                );
+                                firstValueFrom(this.system.mediaserver.ping()).catch(() => {
+                                    this.ribbonService.show(
+                                        this.LANG.ribbon.systemOffline,
+                                        [],
+                                        'alert',
+                                        undefined,
+                                        true
+                                    );
+                                });
                             }
                         })
                     )
@@ -446,7 +447,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     getSystemInfo(): void {
-        this.settingsService.system = undefined;
+        if (this.settingsService.system?.id !== this.systemId) {
+            this.settingsService.system = undefined;
+        }
         this.accountService
             .get()
             .then(account => {
@@ -504,13 +507,19 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         this.secondaryMerge = false;
                         this.ribbonService.hide();
                         let ribbonText: string;
-                        let systemOnly = false;
                         const { primary, secondary } =
                             this.systemsService.systemsMerging || {};
 
                         if (!this.system.isOnline) {
-                            ribbonText = this.LANG.ribbon.systemOffline;
-                            systemOnly = true;
+                            firstValueFrom(this.system.mediaserver.ping()).catch(() => {
+                                this.ribbonService.show(
+                                    this.LANG.ribbon.systemOffline,
+                                    [],
+                                    'alert',
+                                    undefined,
+                                    true
+                                );
+                            });
                         } else if (primary?.id === this.system.id) {
                             const secondarySystem = this.systemsService.systems
                                 .find(system => secondary.id === system.id);
@@ -538,9 +547,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             this.ribbonService.show(
                                 ribbonText,
                                 [],
-                                'alert',
-                                undefined,
-                                systemOnly
+                                'alert'
                             );
                         }
 

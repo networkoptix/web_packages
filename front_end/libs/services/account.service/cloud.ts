@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
+import { firstValueFrom } from 'rxjs';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { redirect, responseOk } from '@lib/variables/static-variables';
@@ -88,8 +89,7 @@ export class CloudAccount extends BaseAccount {
             return Promise.resolve(this.account);
         }
 
-        return this.cloudApi
-            .account(true).toPromise()
+        return firstValueFrom(this.cloudApi.account(true))
             .then((account: Account | any) => {
                 // eslint-disable-next-line camelcase
                 if (!account?.is_authenticated) {

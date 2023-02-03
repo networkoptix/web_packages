@@ -16,6 +16,7 @@ import {
     of,
     timer,
     Observable,
+    firstValueFrom,
 } from 'rxjs';
 import {
     map,
@@ -424,9 +425,9 @@ export class NxSystemStorageComponent implements OnInit {
         }
         await this.system.storageManager.updateOrGetBackupControl(this.serverId, 'start');
         if (!this.system.useRest) {
-            await this.system.updateOrGetSystemSettings({
+            await firstValueFrom(this.system.updateOrGetSystemSettings({
                 backupNewCamerasByDefault: true, backupQualities: 'CameraBackupLowQuality'
-            }).toPromise();
+            }));
             await Promise.all(
                 this.system.serverManager.servers.map(({ id, backupType }) => {
                     return backupType !== 'BackupManual' || id === this.serverId

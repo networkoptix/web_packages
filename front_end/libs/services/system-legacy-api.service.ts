@@ -4,14 +4,15 @@ import { Injector } from '@angular/core';
 import { pick } from 'lodash-es';
 import md5 from 'md5';
 import { CookieService } from 'ngx-cookie-service';
-import { from, of, throwError, Observable } from 'rxjs';
+import { from, of, throwError, Observable, BehaviorSubject, firstValueFrom } from 'rxjs';
 import {
     flatMap,
     map,
     mergeMap,
     retryWhen,
     timeout,
-    tap
+    tap,
+    switchMap
 } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
@@ -317,7 +318,7 @@ export class NxSystemAPI {
         );
     }
 
-    protected getRequestAggregator<AggregatedType>(requests: string[]) {
+    protected getRequestAggregator<AggregatedType>(requests: string[], requestTimeout = 60 * 1000) {
         const concatRequests = encodeURI(
             requests
                 .map(request => {
@@ -326,7 +327,7 @@ export class NxSystemAPI {
                 .join('&')
         ).replace('/', '%2F');
         const url = `/api/aggregator?${concatRequests}`;
-        return this.get<AggregatedType>(url);
+        return this.get<AggregatedType>(url, {}, {}, requestTimeout);
     }
 
     init(
@@ -531,7 +532,7 @@ export class NxSystemAPI {
     }
 
     changeSystemName(systemName: string) {
-        return this.updateOrGetSettings({ systemName }).toPromise();
+        return firstValueFrom(this.updateOrGetSettings({ systemName }));
     }
 
     configureServer(configureParams: t.ConfigureParams) {
@@ -540,6 +541,10 @@ export class NxSystemAPI {
 
     changeAdminPassword(newPassword: string, currentPassword: string) {
         return this.configureServer({ password: newPassword, currentPassword });
+    }
+
+    ping() {
+        return this.get('/api/ping');
     }
 
     pingSystem(url: string, remoteLogin: string, remotePassword: string) {
@@ -668,11 +673,21 @@ export class NxSystemAPI {
         return this.get<t.SystemTime>('/api/synchronizedTime');
     }
 
+    public settingsUpdater$ = new BehaviorSubject('');
+
+    @memoizeAsyncPersistent
+    public getSettings() {
+        return this.settingsUpdater$.pipe(switchMap(() => this.get<t.NormalResponse<t.SystemSettings>>('/api/systemSettings')));
+    }
+
     public updateOrGetSettings(updateParams: Partial<t.Settings>) {
-        return this.get<t.NormalResponse<t.SystemSettings>>(
-            '/api/systemSettings',
-            updateParams
-        );
+        const update = Object.keys(updateParams).length > 0;
+        return update
+            ? this.get<t.NormalResponse<t.SystemSettings>>(
+                '/api/systemSettings',
+                updateParams
+            ).pipe(tap(() => this.settingsUpdater$.next('')))
+            : this.getSettings();
     }
 
     @memoizeAsyncPersistent
@@ -1361,7 +1376,7 @@ export class NxSystemAPI {
     }
 
     renameSystem(_, systemName: string) {
-        return this.get('/api/systemSettings', { systemName }).toPromise();
+        return firstValueFrom(this.updateOrGetSettings({ systemName }));
     }
 
     getBookmarks(): Observable<unknown> {

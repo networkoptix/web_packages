@@ -1,10 +1,10 @@
 import { Router } from '@angular/router';
-import { memoize } from 'lodash-es';
 import {
     BehaviorSubject,
     Subscription,
     Observable,
-    forkJoin
+    forkJoin,
+    firstValueFrom
 } from 'rxjs';
 import { auditTime, catchError, map, shareReplay, switchMap } from 'rxjs/operators';
 import stringify from 'safe-stable-stringify';
@@ -21,7 +21,7 @@ import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { cleanId, KeyFilter } from '@utils/general';
-import { memoizeDecorator } from '@utils/memoize';
+import { memoizeAsyncPersistent, memoizeDecorator } from '@utils/memoize';
 import { setServerIpAndPort } from '@utils/nx';
 
 import { NxCloudApiService } from '../nx-cloud-api';
@@ -71,7 +71,7 @@ export class NxSystem {
 
     private _isAvailable: boolean = false;
     stateMessage: string = '';
-    isOnline: boolean = false;
+    isOnline: boolean = true;
     info: Record<string, any>;
     mergeInfo: Record<string, any>;
     cloudStorageSystemEnabled: boolean = false;
@@ -150,6 +150,7 @@ export class NxSystem {
         this.infoSubject.next(system);
     }
 
+    @memoizeAsyncPersistent
     private getSystemCapabilities() {
         return this.mediaserver.getSystemSettings()
             .then(({ specificFeatures }) => specificFeatures);
@@ -189,7 +190,7 @@ export class NxSystem {
         }
     }
 
-    initSystem = memoize((currentUserEmail: string, systemId?: string, serverId?: string, userId?: string): void => {
+    initSystem = (currentUserEmail: string, systemId?: string, serverId?: string, userId?: string): void => {
         this.systemIdInit = systemId;
         this.serverIdInit = serverId;
         this.userIdInit = userId;
@@ -235,7 +236,7 @@ export class NxSystem {
         );
 
         this.storageManager = new StorageManager(this);
-    }, (...args) => stringify(args));
+    };
 
     updateSystemAuth = (force = true) => {
         if (environment.isLocal || !force && this.mediaserver?.authGet) { // no need to update
@@ -467,16 +468,18 @@ export class NxSystem {
                 .then(() => environment.isLocal ? Promise.resolve() : this.getUsers(true, true))
                 .catch(error => {
                     if (error?.offline) {
-                        this.isOnline = false;
-                        this.ribbonService.show(
-                            this.LANG.ribbon.systemOffline,
-                            [],
-                            'alert',
-                            undefined,
-                            true
-                        );
-                        this.isAvailable = false;
-                        this.systemInfo = this;
+                        firstValueFrom(this.mediaserver.ping()).catch(() => {
+                            this.isOnline = false;
+                            this.ribbonService.show(
+                                this.LANG.ribbon.systemOffline,
+                                [],
+                                'alert',
+                                undefined,
+                                true
+                            );
+                            this.isAvailable = false;
+                            this.systemInfo = this;
+                        });
                     }
                     this.lostConnection = error?.data && error.data.resultCode === 'forbidden';
                 })
@@ -1132,7 +1135,7 @@ export class NxSystem {
      * @deprecated Method should be referenced from serverManager instead of directly from system.
      * TODO: Need to update this method once better license information is available from server with details on license types.
      */
-    getLicenseChannels(): Promise<{ total: number; used: number; available: number; }> {
+    getLicenseChannels(): Observable<{ total: number; used: number; available: number; }> {
         return this.serverManager.getLicenseChannels(this.cameraManager.cameras);
     }
 

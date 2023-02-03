@@ -77,7 +77,7 @@
                 id="permissionsSelect"
                 name="permissionsSelect"
                 [system]="system"
-                [roles]="system.accessRoles"
+                [roles]="system.userManager.accessRoles"
                 [ngModel]="user.role"
                 (ngModelChange)="setPermission($event)"
             >

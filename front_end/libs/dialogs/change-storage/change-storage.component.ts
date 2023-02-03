@@ -64,9 +64,9 @@ export class ChangeStorageModalContent {
                 reply: { settings: { metadataStorageChangePolicy } }
             } = await firstValueFrom(this.system.updateOrGetSystemSettings());
             if (metadataStorageChangePolicy !== 'remove') {
-                await this.system.updateOrGetSystemSettings({
+                await firstValueFrom(this.system.updateOrGetSystemSettings({
                     metadataStorageChangePolicy: 'remove'
-                }).toPromise();
+                }));
             }
             return Promise.resolve();
         } catch (error) {

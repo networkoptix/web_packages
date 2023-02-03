@@ -7,7 +7,7 @@ import LogRocket from 'logrocket';
 import { CookieService } from 'ngx-cookie-service';
 import { EMPTY, of, from, BehaviorSubject, throwError, defer } from 'rxjs';
 import type { Observable } from 'rxjs';
-import { catchError, concatMap, switchMap, map, tap, shareReplay, filter } from 'rxjs/operators';
+import { catchError, concatMap, switchMap, map, tap, shareReplay, filter, throttleTime } from 'rxjs/operators';
 
 import type {
     AuthorizeParams,
@@ -22,7 +22,7 @@ import { OauthService } from '@services/oauth.service';
 import { NxSwCacheService } from '@services/sw-cache.service';
 import { WINDOW } from '@services/window-provider';
 import { mapValuesToStrings } from '@utils/general';
-import { defaultHashFunction, memoizeAsync, memoizeAsyncLong, memoizeAsyncPersistent, memoizeAsyncShort } from '@utils/memoize';
+import { memoizeAsyncLong, memoizeAsyncPersistent, memoizeAsyncShort } from '@utils/memoize';
 
 import { Account } from '../account.service/account';
 import type { IConfig } from '../nx-config/config-types';
@@ -383,12 +383,12 @@ export class NxCloudApiService {
         });
     }
 
-    @memoizeAsyncShort
+    @memoizeAsyncLong
     systems(systemId?: string) {
         return this.cloudDbApi.systems(systemId);
     }
 
-    @memoizeAsyncShort
+    @memoizeAsyncLong
     users(systemId: string) {
         return this.cloudDbApi.getCloudUsers(systemId);
     }
@@ -532,29 +532,31 @@ export class NxCloudApiService {
         return this.http.post<t.CloudResponse>(apiBase + '/account/delete', { password }).toPromise();
     }
 
-    @memoizeAsync(
-        defaultHashFunction,
-        forceUpdate => !!forceUpdate,
-        10 * 1000
-    )
+    private accountUpdater$ = new BehaviorSubject(true);
+
     account(forceUpdate = false) {
-        const endpoint = apiBase + '/account';
-        const params: { force?: true } = {};
-        if (forceUpdate) {
-            params.force = true;
-        }
-        return this.http.get<Account>(endpoint, { params })
-            .pipe(
-                map(account => {
-                    if (!account.isCloud) {
-                        // Returned object is readonly sometimes for some reason
-                        account = { ...account, isCloud: true };
-                    }
-                    this.currentAccount = account;
-                    return account;
-                },
-                tap(this.logRocketIdentifyUser))
-            );
+        this.accountUpdater$.next(forceUpdate);
+        return this.handleAccount().pipe(
+            // skip(forceUpdate ? 1 : 0)
+        );
+    }
+
+    @memoizeAsyncPersistent
+    private handleAccount() {
+        return this.accountUpdater$.pipe(
+            filter(force => force),
+            throttleTime(10 * 1000),
+            switchMap(() => this.http.get<Account>(`${apiBase}/account`, { params: { force: true } })),
+            map(account => {
+                if (!account.isCloud) {
+                    // Returned object is readonly sometimes for some reason
+                    account = { ...account, isCloud: true };
+                }
+                this.currentAccount = account;
+                return account;
+            },
+            tap(this.logRocketIdentifyUser))
+        );
     }
 
     checkFeatureNotice = <T>(

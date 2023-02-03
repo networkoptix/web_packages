@@ -11,7 +11,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';
@@ -30,7 +30,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import { SystemConfigSettings } from '@services/system-api.types';
+import * as t from '@services/system-api.types';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
@@ -78,7 +78,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     connectToCloudProcess: Process;
     disconnectProcess: Process;
 
-    settingsForSystem$: Observable<SystemConfigSettings>;
+    settingsForSystem$: Observable<t.Settings>;
     systemName: string;
     systemNameFormWatcher: FormWatcher;
     systemNameProcess: Process;
@@ -190,6 +190,16 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         );
 
         this.setupDefaults();
+        this.settingsForSystem$ = this.settingsService
+            .systemSubject$
+            .pipe(
+                filter(system => {
+                    return system?.id === this.route.snapshot.params.systemId;
+                }),
+                switchMap(system => system.updateOrGetSystemSettings()),
+                map(res => res?.reply?.settings),
+                untilDestroyed(this)
+            );
     }
 
     ngOnInit(): void {
@@ -203,13 +213,15 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             renameDisabled: false
         };
 
-        if (this.settingsServiceSubscription) {
-            this.settingsServiceSubscription.unsubscribe();
-        }
-        this.settingsServiceSubscription = this.settingsService
+        this.settingsService
             .systemSubject$
-            .pipe(distinctUntilChanged())
-            .subscribe(system => {
+            .pipe(
+                filter(system => {
+                    return system?.id === this.route.snapshot.params.systemId;
+                }),
+                distinctUntilChanged(),
+                untilDestroyed(this)
+            ).subscribe(system => {
                 if (!system) {
                     this.system = undefined;
                     return;
@@ -262,7 +274,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                                     this.system.userManager.permissions.isAdmin
                                 )
                         ) {
-                            this.settingsForSystem$ = this.settingsService.getUpdatedSettings().pipe(untilDestroyed(this));
+                            this.settingsService.getUpdatedSettings();
                         }
                     });
             });

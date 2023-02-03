@@ -1,7 +1,7 @@
 /** This should be refactored to not be its own service */
 import { Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { BehaviorSubject, catchError, filter, map, Observable, shareReplay, switchMap } from 'rxjs';
+import { BehaviorSubject, catchError, filter, forkJoin, map, Observable, shareReplay, switchMap } from 'rxjs';
 
 import { SystemConfigSettings } from '@services/system-api.types';
 import type { NxSystem } from '@services/system.service/system';
@@ -32,20 +32,22 @@ export class NxSettingsService implements OnDestroy {
 
     updater$ = new BehaviorSubject('');
 
-    getUpdatedSettings(): Observable<SystemConfigSettings> {
-        this.updater$.next('update');
+    getUpdatedSettings(): Observable<{ [x: string]: SystemConfigSettings }> {
         return this.systemSettings$;
     }
 
-    systemSettings$ = this.systemSubject$.pipe(
+    systemSettings$: Observable<{ [x: string]: SystemConfigSettings }> = this.systemSubject$.pipe(
         filter(val => !!val),
         switchMap(system => this.updater$.pipe(map(() => system))),
-        switchMap(system => system.mediaserver.updateOrGetSettings({})),
-        map(res => res?.reply?.settings),
-        filter(val => !!val),
+        switchMap(system => forkJoin({
+            [system.id]: system.mediaserver.updateOrGetSettings({}).pipe(map(res => res?.reply?.settings))
+        })),
+        filter(val => {
+            console.log(val);
+            return !!Object.values(val).pop();
+        }),
         catchError(() => Promise.resolve(null)),
-        // startWith(null),
-        shareReplay({ bufferSize: 1, refCount: false })
+        shareReplay({ bufferSize: 100, refCount: false })
     );
 
     ngOnDestroy(): void {

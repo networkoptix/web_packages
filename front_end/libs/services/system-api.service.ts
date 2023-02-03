@@ -6,6 +6,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { environment } from '@environments/environment';
 import { NxHealthService } from '@pages/health/health.service';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
+import { memoizeAsyncPersistent } from '@utils/memoize';
 
 import { NxAppStateService } from './nx-app-state.service';
 import type { IConfig } from './nx-config/config-types';
@@ -37,6 +38,7 @@ export class NxSystemAPIService {
         // this.systemConnections = {};
     }
 
+    @memoizeAsyncPersistent
     createConnection<S extends NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2 | NxSystemRestAPI3 = NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2 | NxSystemRestAPI3>(
         user: string,
         systemId: string,

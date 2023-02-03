@@ -5,6 +5,7 @@ import { Observable, zip } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 import { WINDOW } from '@services/window-provider';
+import { memoizeAsyncMedium } from '@utils/memoize';
 
 import { CloudResponse, CloudUser, System, WithFreshSession } from '../../nx-cloud-api.types';
 import { BaseCloudServiceAPI, CreateApiFactory, implementsCloudServiceApi } from '../base-cloud-service-api';
@@ -125,6 +126,7 @@ export class CloudDbAPI extends BaseCloudServiceAPI {
         return this.tokenHandler(systemId, 'token');
     }
 
+    @memoizeAsyncMedium
     public getAuth(systemId = '*', realm = 'VMS'): Observable<{ authGet: string, authPost: string, authPlay: string }> {
         const digestFactory = (login: string, password: string, nonce: string) => (method: string) => {
             const loginDigest = md5(`${login}:${realm}:${password}`);

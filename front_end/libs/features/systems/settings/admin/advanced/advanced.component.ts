@@ -77,9 +77,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
             });
 
         this.saveAdvancedSettings = this.processService.createProcess(() => {
-            return this.system
-                .updateOrGetSystemSettings(this.changedFields)
-                .toPromise()
+            return firstValueFrom(this.system.updateOrGetSystemSettings(this.changedFields))
                 .then((response: any) => {
                     if (
                         typeof (response.error) !== 'undefined' &&
