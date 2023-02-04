@@ -70,7 +70,7 @@ header {
         }
 
         .btn-dropdown-toggle {
-            @include typography.regular13dark9;
+            @include typography.regular13nocolor;
             background-color: transparent !important;
             box-shadow: none;
             border-radius: 0;
@@ -121,7 +121,7 @@ header {
         max-width: 100%;
 
         &.btn.btn-dropdown-toggle span .text-muted {
-            @include typography.regular14light;
+            @include typography.regular14nocolor;
         }
 
         &::after {

@@ -492,7 +492,7 @@ html[data-theme="light-gray"] {
     --card-simple-info-bg           : rgba(var(--bluez-light--rgb), .3);
     --card-simple-info-border-color : rgba(var(--bluez-light--rgb), .1);
     --card-simple-info-color        : #{$dark_gray_9};
-    --card-simple-info-svg-color    : var(--bluez-light);
+    --card-simple-info-svg-color    : var(--bluez-bright);
 
     --card-simple-warning-bg           : rgba(var(--yellow_main--rgb), .1);
     --card-simple-warning-border-color : rgba(var(--yellow_main--rgb), .3);
@@ -501,7 +501,7 @@ html[data-theme="light-gray"] {
     --card-simple-error-bg : rgba(var(--red_l2--rgb), .1);
     --card-simple-error-border-color : rgba(var(--red_l2--rgb), .3);
     --card-simple-error-color : #{$dark_gray_9};
-    --card-simple-error-svg-color    : #{$red-main};
+    --card-simple-error-svg-color    : #{$red_l2};
     --card-simple-error-svg-ornament-color    : #{$light_gray_1};
 
     --card-simple-default-bg : #{$red2};
