@@ -24,6 +24,7 @@ import {
     InfoBlockSection,
     InfoBlockSize
 } from '@components/info-block/info-block.component.types';
+import { ModalBase } from '@dialogs/modal-base';
 import { NxToastService } from '@dialogs/toast.service';
 import { icons, apiBase, credentialsValidation, toast } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
@@ -45,7 +46,8 @@ import { TfaAction, T_FA_STEPS } from './two-fa.component.types';
     templateUrl: 'two-fa.component.html',
     styleUrls: ['two-fa.component.scss']
 })
-export class TwoFAModalContent<A extends TfaAction> implements OnInit, AfterViewInit {
+export class TwoFAModalContent<A extends TfaAction>
+    extends ModalBase<Account2faReturn> implements OnInit, AfterViewInit {
     LANG = staticLang;
 
     TfaAction = TfaAction;
@@ -163,6 +165,7 @@ export class TwoFAModalContent<A extends TfaAction> implements OnInit, AfterView
         @Inject(DOCUMENT) private document: Document,
         @Inject(DIALOG_DATA) protected dialogData: Account2faData<A>,
     ) {
+        super(dialogRef);
         this.setupDefaults();
 
         // Type narrowing isn't quite working here
@@ -503,7 +506,7 @@ export class TwoFAModalContent<A extends TfaAction> implements OnInit, AfterView
         return this.accountService.updateSessionWith2fa(this.tfaCode);
     }
 
-    close = (action?: Account2faReturn): void => {
+    override close = (action?: Account2faReturn): void => {
         if (this.listenFor2faActivation) {
             this.window.removeEventListener('beforeunload', this.removeUnverified2faKey);
         }
@@ -564,11 +567,4 @@ export class TwoFAModalContent<A extends TfaAction> implements OnInit, AfterView
     copyToClipboard(): void {
         this.clipboardService.copy(this.newCodes.join('\n'));
     }
-
-    lock = (): void => {
-        this.dialogRef.disableClose = true;
-    };
-    unlock = (): void => {
-        this.dialogRef.disableClose = false;
-    };
 }

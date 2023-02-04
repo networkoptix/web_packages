@@ -14,7 +14,7 @@
             data-dismiss="modal"
             aria-label="Close"
             (click)="closeWizard()"
-            *ngIf="!dialogRef.disableClose"
+            *ngIf="closable"
         >
             <span class="close-content"></span>
         </button>
@@ -102,7 +102,7 @@
             data-dismiss="modal"
             aria-label="Close"
             (click)="close()"
-            *ngIf="!dialogRef.disableClose"
+            *ngIf="closable"
         >
             <span class="close-content"></span>
         </button>
@@ -169,7 +169,7 @@
             data-dismiss="modal"
             aria-label="Close"
             (click)="closeWizard()"
-            *ngIf="!dialogRef.disableClose"
+            *ngIf="closable"
         >
             <span class="close-content"></span>
         </button>
@@ -266,7 +266,7 @@
             data-dismiss="modal"
             aria-label="Close"
             (click)="closeWizard('deactivate')"
-            *ngIf="!dialogRef.disableClose"
+            *ngIf="closable"
         >
             <span class="close-content"></span>
         </button>
@@ -365,7 +365,7 @@
             data-dismiss="modal"
             aria-label="Close"
             (click)="closeWizard('deactivate')"
-            *ngIf="!dialogRef.disableClose"
+            *ngIf="closable"
         >
             <span class="close-content"></span>
         </button>
@@ -465,7 +465,7 @@
             data-dismiss="modal"
             aria-label="Close"
             (click)="close('enabled')"
-            *ngIf="!dialogRef.disableClose"
+            *ngIf="closable"
         >
             <span class="close-content"></span>
         </button>
@@ -537,7 +537,7 @@
             data-dismiss="modal"
             aria-label="Close"
             (click)="closeWizard()"
-            *ngIf="!dialogRef.disableClose"
+            *ngIf="closable"
         >
             <span class="close-content"></span>
         </button>
@@ -646,7 +646,7 @@
             data-dismiss="modal"
             aria-label="Close"
             (click)="closeWizard()"
-            *ngIf="!dialogRef.disableClose"
+            *ngIf="closable"
         >
             <span class="close-content"></span>
         </button>

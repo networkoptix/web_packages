@@ -3,17 +3,18 @@ import { Component, ViewChild } from '@angular/core';
 import type { NgForm, NgModel } from '@angular/forms';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { ModalBase } from '@dialogs/modal-base';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 
-import type { DeleteCloudUser as DialogTypes } from '../dialogs.types';
+import type { DeleteCloudUser as DT } from '../dialogs.types';
 
 @Component({
     selector: 'nx-modal-delete-cloud-user-content',
     templateUrl: 'delete-cloud-user.component.html'
 })
-export class DeleteCloudUserModalContent {
+export class DeleteCloudUserModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;
 
     deleteCloudUser: Process;
@@ -25,13 +26,15 @@ export class DeleteCloudUserModalContent {
     constructor(
         private processService: NxProcessService,
         private cloudService: NxCloudApiService,
-        public dialogRef: DialogRef<DialogTypes['return']>,
-    ) {}
+        public dialogRef: DialogRef<DT['return']>,
+    ) {
+        super(dialogRef);
+    }
 
     ngOnInit(): void {
         this.deleteCloudUser = this.processService.createProcess(
             () => {
-                this.dialogRef.disableClose = true;
+                this.lock();
                 return this.cloudService.deleteCloudUser(this.passwordForUser);
             },
             {
@@ -56,14 +59,6 @@ export class DeleteCloudUserModalContent {
                 this.unlock();
             });
     }
-
-    close = (msg?: DialogTypes['return']): void => {
-        this.dialogRef.close(msg);
-    };
-
-    unlock = (): void => {
-        this.dialogRef.disableClose = false;
-    };
 
     clearErrors(): void {
         this.deleteForm.form.controls.password.setErrors({});

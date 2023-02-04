@@ -11,7 +11,7 @@
             data-dismiss="modal"
             aria-label="Close"
             (click)="close()"
-            *ngIf="!dialogRef.disableClose"
+            *ngIf="closable"
         >
             <div class="close-content"></div>
         </button>

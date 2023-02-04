@@ -10,7 +10,8 @@ import staticLang from '@common/language/language_i18n_static.json';
 import type {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';
-import type { Message as DialogTypes } from '@dialogs/dialogs.types';
+import type { Message as DT } from '@dialogs/dialogs.types';
+import { ModalBase } from '@dialogs/modal-base';
 import { credentialsValidation, dialogs } from '@lib/variables/static-variables';
 import { Translatable } from '@pipes/any-translate.types';
 import { NxAccountService } from '@services/account.service';
@@ -26,11 +27,11 @@ type Subject = DropdownItem<string>;
     templateUrl: 'message.component.html',
     styleUrls: []
 })
-export class MessageModalContent implements OnInit {
+export class MessageModalContent extends ModalBase<DT['return']> implements OnInit {
     LANG = staticLang;
 
     messageType: string;
-    data: DialogTypes['data']['data'];
+    data: DT['data']['data'];
     placeholder: string;
     sendMessage: Process;
     userName: string;
@@ -47,10 +48,11 @@ export class MessageModalContent implements OnInit {
         private translateService: TranslateService,
         private processService: NxProcessService,
         private account: NxAccountService,
-        public dialogRef: DialogRef<DialogTypes['return']>,
-        @Inject(DIALOG_DATA) private dialogData: DialogTypes['data'],
+        public dialogRef: DialogRef<DT['return']>,
+        @Inject(DIALOG_DATA) private dialogData: DT['data'],
         @Inject(WINDOW) private window: Window,
     ) {
+        super(dialogRef);
         this.placeholder = '';
         this.subject = '';
         this.subjectMessage = '';
@@ -62,7 +64,7 @@ export class MessageModalContent implements OnInit {
 
         this.initForm();
         this.sendMessage = this.processService.createProcess(() => {
-            this.dialogRef.disableClose = false;
+            this.lock();
             const asset = this.data.assetId || this.data.asset;
 
             return this.account.sendMessage(
@@ -80,15 +82,6 @@ export class MessageModalContent implements OnInit {
             this.unlock();
         });
     }
-
-    unlock = (): void => {
-        this.dialogRef.disableClose = false;
-    };
-
-    close = (msg?: DialogTypes['return']): void => {
-        this.dialogRef.close(msg);
-        this.unlock();
-    };
 
     private initForm(): void {
         this.placeholder = '';

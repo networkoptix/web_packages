@@ -17,7 +17,7 @@
             aria-label="Close"
             (click)="close()"
             (mousedown)="clearErrors()"
-            *ngIf="!dialogRef.disableClose"
+            *ngIf="closable"
         >
             <div class="close-content"></div>
         </button>

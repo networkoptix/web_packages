@@ -8,6 +8,7 @@ import type {
     SearchableDropdownItem
 } from '@components/dropdowns/searchable/searchable.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { ModalBase } from '@dialogs/modal-base';
 import { icons, servers } from '@lib/variables/static-variables';
 import { NxLoginService } from '@services/login.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -15,7 +16,7 @@ import type { SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.typ
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 
-import type { TransferOwnership as DialogTypes } from '../dialogs.types';
+import type { TransferOwnership as DT } from '../dialogs.types';
 
 interface UserItem extends SearchableDropdownItem {
     userEnabled: boolean;
@@ -26,7 +27,7 @@ interface UserItem extends SearchableDropdownItem {
     templateUrl: './transfer-ownership.component.html',
     styleUrls: ['./transfer-ownership.component.scss']
 })
-export class TransferOwnershipModalContent implements OnInit {
+export class TransferOwnershipModalContent extends ModalBase<DT['return']> implements OnInit {
     @ViewChild('transferOwnershipForm') form: NgForm;
 
     LANG = staticLang;
@@ -46,9 +47,11 @@ export class TransferOwnershipModalContent implements OnInit {
         private cloudService: NxCloudApiService,
         private loginService: NxLoginService,
         private dialogService: NxDialogsService,
-        public dialogRef: DialogRef<DialogTypes['return']>,
-        @Inject(DIALOG_DATA) public system: DialogTypes['data'],
-    ) {}
+        public dialogRef: DialogRef<DT['return']>,
+        @Inject(DIALOG_DATA) public system: DT['data'],
+    ) {
+        super(dialogRef);
+    }
 
     ngOnInit(): void {
         this.userItems = this.system.userManager.nonOwners({ cloud: true })
@@ -74,7 +77,7 @@ export class TransferOwnershipModalContent implements OnInit {
 
         this.transferOwnership = this.processService.createProcess(
             async () => {
-                this.dialogRef.disableClose = true;
+                this.lock();
                 const newOwnerEmail = this.selectedUser.value;
                 return firstValueFrom(
                     this.cloudService.startTransfer(this.system.id, newOwnerEmail)
@@ -82,12 +85,12 @@ export class TransferOwnershipModalContent implements OnInit {
             },
             { errorCodes, ignoreError: true },
             (res: SystemTransferInfo) => {
-                this.dialogRef.disableClose = false;
+                this.unlock();
                 this.transferComplete = true;
                 this.transferInfo = res;
             },
             err => {
-                this.dialogRef.disableClose = false;
+                this.unlock();
                 if (err?.resultCode === 'userPasswordRequired' || err.errorId === servers.errors.oldSessionErrorId) {
                     this.updateSession = true;
                     this.loginService.currentSystem = this.system;
@@ -118,14 +121,6 @@ export class TransferOwnershipModalContent implements OnInit {
             this.form.control.setErrors({ userNotFound: true });
         }
     }
-
-    unlock = (): void => {
-        this.dialogRef.disableClose = false;
-    };
-
-    close = (info?: DialogTypes['return']): void => {
-        this.dialogRef.close(info);
-    };
 
     openAddUserDialog(): void {
         this.dialogRef.close();

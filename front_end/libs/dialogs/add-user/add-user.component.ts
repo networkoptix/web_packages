@@ -4,6 +4,7 @@ import type { NgForm } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { ModalBase } from '@dialogs/modal-base';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
@@ -11,14 +12,14 @@ import { Process } from '@services/process.service/process';
 import type { ChangedIdReturned } from '@services/system-api.types';
 import type { NewUserBase, NxAccessRole } from '@services/system.service/user-manager/user-manager-types';
 
-import type { AddUser as DialogTypes } from '../dialogs.types';
+import type { AddUser as DT } from '../dialogs.types';
 
 @Component({
     selector: 'nx-modal-add-user-content',
     templateUrl: 'add-user.component.html',
     styleUrls: []
 })
-export class AddUserModalContent {
+export class AddUserModalContent extends ModalBase<DT['return']> {
     @ViewChild('addUserForm') private form: NgForm;
 
     LANG = staticLang;
@@ -37,9 +38,10 @@ export class AddUserModalContent {
     constructor(
         configService: NxConfigService,
         private processService: NxProcessService,
-        public dialogRef: DialogRef<DialogTypes['return']>,
-        @Inject(DIALOG_DATA) public system: DialogTypes['data'],
+        public dialogRef: DialogRef<DT['return']>,
+        @Inject(DIALOG_DATA) public system: DT['data'],
     ) {
+        super(dialogRef);
         this.CONFIG = configService.getConfig();
     }
 
@@ -90,7 +92,7 @@ export class AddUserModalContent {
         this.setPermission(defaultRole);
 
         this.addUser = this.processService.createProcess(() => {
-            this.dialogRef.disableClose = true;
+            this.lock();
             this.hideErrors = false;
             const userExists = this.system.userManager.users.some(item => {
                 return item.email === this.user.email;
@@ -111,7 +113,6 @@ export class AddUserModalContent {
         user => {
             this.hideErrors = true;
             this.close(user.id);
-            this.unlock();
         },
         err => {
             this.unlock();
@@ -121,12 +122,4 @@ export class AddUserModalContent {
             console.error(err);
         });
     }
-
-    close = (msg?: DialogTypes['return']): void => {
-        this.dialogRef.close(msg);
-    };
-
-    unlock = (): void => {
-        this.dialogRef.disableClose = false;
-    };
 }

@@ -2,17 +2,18 @@ import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { Component, Inject } from '@angular/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { ModalBase } from '@dialogs/modal-base';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 
-import type { RemoveUser as DialogTypes } from '../dialogs.types';
+import type { RemoveUser as DT } from '../dialogs.types';
 
 @Component({
     selector: 'nx-modal-remove-user-content',
     templateUrl: 'remove-user.component.html',
     styleUrls: []
 })
-export class RemoveUserModalContent {
+export class RemoveUserModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;
 
     removeUserProcess: Process;
@@ -21,9 +22,10 @@ export class RemoveUserModalContent {
 
     constructor(
         private processService: NxProcessService,
-        public dialogRef: DialogRef<DialogTypes['return']>,
-        @Inject(DIALOG_DATA) private dialogData: DialogTypes['data'],
+        public dialogRef: DialogRef<DT['return']>,
+        @Inject(DIALOG_DATA) private dialogData: DT['data'],
     ) {
+        super(dialogRef);
     }
 
     ngOnInit(): void {
@@ -33,24 +35,15 @@ export class RemoveUserModalContent {
         this.dialogButtonText = this.LANG.dialogs.buttons[msg];
 
         this.removeUserProcess = this.processService.createProcess(() => {
-            this.dialogRef.disableClose = true;
+            this.lock();
             return system.userManager.deleteUser(user)
                 .then(() => system.getUsers(true));
         }, {
             errorPrefix: this.LANG.errorCodes.cantSharePrefix
         }, () => {
             this.close(true);
-            this.unlock();
         }, () => {
             this.unlock();
         });
     }
-
-    close = (result?: DialogTypes['return']): void => {
-        this.dialogRef.close(result);
-    };
-
-    unlock = (): void => {
-        this.dialogRef.disableClose = false;
-    };
 }

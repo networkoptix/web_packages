@@ -523,15 +523,17 @@ export class NxDialogsService extends DialogBase {
     2. Replace dialogRef and DIALOG_DATA in the dialog component with the CDK equivalents.
        DialogRef should have the dialog's return type as the generic, and DIALOG_DATA should
        be the dialog's data type.
-    3. If closable property is present, replace with !dialogRef.disableClose
-       a. IMPORTANT: Because clicking outside of the dialog will close it by default,
-          make sure to set disableClose to true at the beginning of the Process
-          if the dialog has one, and to set it to false when the Process completes
-          or errors.
-    4. Replace the dialog method in dialogs.service.ts
+    3. Extend dialog class with ModalBase with the dialog's return type as the generic.
+       a. Remove the existing .close() method unless overriding with additional behavior
+    4. Delete existing closable property if present
+       a. IMPORTANT: Because the default behavior is closing the dialog when
+          clicking outside of it, make sure to use the .lock() method at the beginning
+          of the Process if the dialog has one, and to .unlock() when the Process
+          completes without closing or errors.
+    5. Replace the dialog method in dialogs.service.ts
        a. If you don't require any special behavior, use the dialogV2Factory
        b. If you do require special behavior, use openV2 directly
-    5. Convert the dialog component to SCAM
+    6. Convert the dialog component to SCAM
        a. Remove the component from declarations in dialogs.module.ts and add
           the module to imports
      */
