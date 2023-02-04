@@ -39,22 +39,7 @@ nx-block div.checkbox-block:last-of-type+.helper-block {
 }
 
 .session-alert {
-    height: 20px;
-    margin-top: 0.5rem;
     margin-left: 1.5rem;
-
-    display: flex;
-    align-items: center;
-
-    span {
-        margin-left: 5px;
-        line-height: 20px;
-    }
-
-    &.no-session-alert {
-        height: 2rem;
-        // Match input height so no height shift on toggle
-    }
 }
 
 .session-toggle-disabled {

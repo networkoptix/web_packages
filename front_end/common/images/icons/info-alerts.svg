@@ -3,7 +3,29 @@
 <svg version="1.1" id="Layer_2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 20 20" style="enable-background:new 0 0 20 20;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:#2FA2DB;}
+		.info-icon {
+			fill:var(--svg-info-fill);
+			stroke: none;
+		}
+		.info-contrast {
+			fill: var(--svg-info-elm-fill);
+			stroke: none;
+		}
 </style>
-<path class="st0" d="M10,2c-4.4,0-8,3.6-8,8s3.6,8,8,8s8-3.6,8-8S14.4,2,10,2z M10.8,14H9.2v-1.6h1.6V14z M10.8,11H9.2V6h1.6V11z"/>
+	<circle class="info-icon" cx="10" cy="10" r="10"/>
+	<rect
+		 class="info-contrast"
+		 width="2"
+		 height="6"
+		 x="9"
+		 y="5"
+		 ry="0"
+	/>
+	<rect
+		 class="info-contrast"
+		 width="2"
+		 height="2"
+		 x="9"
+		 y="13"
+	/>
 </svg>

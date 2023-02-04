@@ -13,10 +13,10 @@ export class WizardModalContent implements OnInit {
     @ViewChild('iframe', { static: false }) iframe: ElementRef<HTMLIFrameElement>;
 
     ngOnInit(): void {
-        if (environment.isLocal) {
+        if (environment.setupUrl) {
             // if running webadmin locally and want to use setup wizard
             // run setup wizard too and adjust port if needed
-            this.inlineUrl = 'https://localhost:9003' + this.inlineUrl;
+            this.inlineUrl = environment.setupUrl + this.inlineUrl;
         }
     }
 

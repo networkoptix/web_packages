@@ -140,10 +140,11 @@
 
         svg-icon {
             svg {
-
                 g,
-                path {
-                    fill: var(--btn-text-hover-color) !important;
+                path,
+                circle {
+                    stroke: var(--btn-text-hover-color) !important;
+                    fill : none;
                 }
             }
         }
@@ -163,8 +164,10 @@
             height: 20px;
 
             g,
-            path {
-                fill: var(--btn-text-color) !important;
+            path,
+            circle {
+                stroke: var(--btn-text-color) !important;
+                fill: none;
             }
         }
     }
