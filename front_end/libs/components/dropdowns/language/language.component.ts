@@ -38,7 +38,7 @@ class BaseLanguageDropdown extends BaseDropdown {
     langCode: string;
     activeLanguage: ILanguage = {
         language: '',
-        name: ''
+        name: '',
     };
     icons = icons;
     images = images;
@@ -87,7 +87,7 @@ class BaseLanguageDropdown extends BaseDropdown {
     setLanguage(): void {
         if (this.activeLanguage?.language !== this.langCode) {
             this.activeLanguage = this.languages.find(lang => {
-                return (lang.language === this.langCode);
+                return lang.language === this.langCode;
             });
 
             if (this.languageService.currentLang !== this.langCode) {
@@ -95,12 +95,10 @@ class BaseLanguageDropdown extends BaseDropdown {
                     this.sessionService.language = this.langCode;
                     this.window.location.reload();
                 } else {
-                    this.cloudApi
-                        .changeLanguage(this.langCode)
-                        .then(() => {
-                            this.languageService.currentLang = this.langCode;
-                            this.langChange.emit(this.langCode);
-                        });
+                    this.cloudApi.changeLanguage(this.langCode).then(() => {
+                        this.languageService.currentLang = this.langCode;
+                        this.langChange.emit(this.langCode);
+                    });
                 }
             }
         }
@@ -110,16 +108,18 @@ class BaseLanguageDropdown extends BaseDropdown {
         this.direction = this.dropup ? 'dropup' : '';
 
         this.cloudApi.getLanguages().then(data => {
-            this.languages = this.CONFIG?.supportedLanguages?.length === 0
-                ? data
-                : data.filter(language =>
-                    this.CONFIG.supportedLanguages?.includes(language.language));
+            this.languages =
+                this.CONFIG?.supportedLanguages?.length === 0
+                    ? data
+                    : data.filter(language =>
+                          this.CONFIG.supportedLanguages?.includes(language.language),
+                      );
             this.languages.sort(alphabeticalSort(this.locale, lang => lang.language));
 
             this.splitLanguages();
 
             this.activeLanguage = this.languages.find(lang => {
-                return (lang.language === this.currentLang);
+                return lang.language === this.currentLang;
             });
             this.onChangeCallback(this.activeLanguage?.language);
         });
@@ -143,29 +143,33 @@ class BaseLanguageDropdown extends BaseDropdown {
 @Component({
     selector: 'nx-language-select',
     templateUrl: 'language.component.html',
-    styleUrls: [environment.isLocal ? 'language-webadmin.component.scss' : 'language.component.scss'],
+    styleUrls: [
+        environment.isLocal ? 'language-webadmin.component.scss' : 'language.component.scss',
+    ],
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxLanguageDropdown),
-            multi: true
-        }
-    ]
+            multi: true,
+        },
+    ],
 })
 export class NxLanguageDropdown extends BaseLanguageDropdown {}
 
 @Component({
     selector: 'nx-header-language-select',
     templateUrl: 'language.component.html',
-    styleUrls: [environment.isLocal ? 'language-webadmin.component.scss' : 'language.component.scss'],
+    styleUrls: [
+        environment.isLocal ? 'language-webadmin.component.scss' : 'language.component.scss',
+    ],
     encapsulation: ViewEncapsulation.None,
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
             useExisting: forwardRef(() => NxLanguageDropdown),
-            multi: true
-        }
-    ]
+            multi: true,
+        },
+    ],
 })
 export class NxHeaderLanguageDropdown extends BaseLanguageDropdown {}

@@ -8,7 +8,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 @Component({
     selector: 'nx-system-tile',
     templateUrl: 'system-tile.component.html',
-    styleUrls: ['system-tile.component.scss']
+    styleUrls: ['system-tile.component.scss'],
 })
 export class NxSystemTileComponent {
     @Input() system: System;

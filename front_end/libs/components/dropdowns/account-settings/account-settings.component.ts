@@ -1,16 +1,7 @@
-import {
-    Component,
-    ElementRef,
-    Input,
-    OnDestroy,
-    ViewChild
-} from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import {
-    BehaviorSubject,
-    combineLatest,
-} from 'rxjs';
+import { BehaviorSubject, combineLatest } from 'rxjs';
 
 import { accountSelectors } from '@common/store/account';
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
@@ -31,10 +22,9 @@ import { BaseDropdown } from '../injDropdown';
     styleUrls: [
         environment.isLocal
             ? 'account-settings-webadmin.component.scss'
-            : 'account-settings.component.scss'
-    ]
+            : 'account-settings.component.scss',
+    ],
 })
-
 export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy {
     @IBool() @Input() small: CoercedBoolInput;
     @ViewChild('dropdown') dropdown: ElementRef<HTMLDivElement>;
@@ -49,19 +39,21 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
 
     readonly environment = environment;
 
-    settings: Pick<Account, 'name' | 'email' | 'is_staff' | 'is_superuser' | 'first_name' | 'last_name'> = {
+    settings: Pick<
+        Account,
+        'name' | 'email' | 'is_staff' | 'is_superuser' | 'first_name' | 'last_name'
+    > = {
         name: '',
         email: '',
         first_name: '',
         last_name: '',
         is_staff: false,
-        is_superuser: false
+        is_superuser: false,
     };
     accountDropdownStaff: AccountDropdown[];
     accountDropdown: AccountDropdown[];
 
     constructor(
-
         configService: NxConfigService,
         headerService: NxHeaderService,
         private accountService: NxAccountService,
@@ -77,7 +69,8 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
     }
 
     ngOnInit(): void {
-        this.store.select(accountSelectors.selectCurrentUser)
+        this.store
+            .select(accountSelectors.selectCurrentUser)
             .pipe(untilDestroyed(this))
             .subscribe(account => {
                 if (account) {
@@ -87,7 +80,7 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
                         last_name: account.last_name,
                         email: account.email,
                         is_staff: account.is_staff,
-                        is_superuser: account.is_superuser
+                        is_superuser: account.is_superuser,
                     };
                     this.displayedFullName = this.makeFullName(account);
                 } else {
@@ -97,22 +90,24 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
                         first_name: '',
                         last_name: '',
                         is_staff: false,
-                        is_superuser: false
+                        is_superuser: false,
                     };
                     this.displayedFullName = '';
                 }
             });
         combineLatest(this.dropdownWidth$, this.buttonWidth)
-            .pipe(untilDestroyed(this)).subscribe(([dropdown, button]) => {
+            .pipe(untilDestroyed(this))
+            .subscribe(([dropdown, button]) => {
                 if (dropdown && button) {
                     const self = this?.dropdown.nativeElement;
                     let widthFromRightEdge = 0;
                     if (this.environment.isLocal && self?.parentNode.nextSibling) {
-                        widthFromRightEdge = -1 * (self.parentNode.nextSibling as HTMLElement).offsetWidth;
+                        widthFromRightEdge =
+                            -1 * (self.parentNode.nextSibling as HTMLElement).offsetWidth;
                     }
 
                     this.rightOffset$.next(
-                        Math.max(button - dropdown + 18, widthFromRightEdge) | 0
+                        Math.max(button - dropdown + 18, widthFromRightEdge) | 0,
                     );
                 }
             });

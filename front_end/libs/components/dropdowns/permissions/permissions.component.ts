@@ -10,7 +10,7 @@ import type { NxSystem } from '@services/system.service/system';
 import type {
     NxAccessRole,
     PredefinedRole,
-    UserRole
+    UserRole,
 } from '@services/system.service/user-manager/user-manager-types';
 import type { NgChanges } from '@utils/ng-changes';
 
@@ -18,9 +18,9 @@ import { BaseDropdown } from '../injDropdown';
 
 // NxAccessLevel with optionLabel added for dropdown
 type AccessLevelItem =
-    PredefinedRole & { optionLabel: string } |
-    UserRole & { optionLabel: string } |
-    CustomPermission & { optionLabel: string };
+    | (PredefinedRole & { optionLabel: string })
+    | (UserRole & { optionLabel: string })
+    | (CustomPermission & { optionLabel: string });
 
 @Component({
     selector: 'nx-permissions-select',
@@ -31,9 +31,9 @@ type AccessLevelItem =
             provide: NG_VALUE_ACCESSOR,
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxPermissionsDropdown),
-            multi: true
-        }
-    ]
+            multi: true,
+        },
+    ],
 })
 export class NxPermissionsDropdown extends BaseDropdown {
     @Input() id: string;
@@ -49,11 +49,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
 
     private selected: AccessLevelItem;
 
-    constructor(
-
-        configService: NxConfigService,
-        private applyService: NxApplyService
-    ) {
+    constructor(configService: NxConfigService, private applyService: NxApplyService) {
         super(configService);
     }
 
@@ -63,9 +59,8 @@ export class NxPermissionsDropdown extends BaseDropdown {
     writeValue(value: AccessLevelItem | null): void {
         if (value !== null && !this.applyService.locked) {
             this.selected = value;
-            this.selection = this.LANG.accessRoles[value.name]?.label ||
-                value.name ||
-                this.LANG.pleaseSelect;
+            this.selection =
+                this.LANG.accessRoles[value.name]?.label || value.name || this.LANG.pleaseSelect;
         }
     }
 
@@ -87,7 +82,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
             })
             .map(role => ({
                 ...role,
-                optionLabel: this.LANG.accessRoles[role.name].label || role.name
+                optionLabel: this.LANG.accessRoles[role.name].label || role.name,
             }));
     }
 
@@ -96,9 +91,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
             this.processAccessRoles();
             const role = this.accessRoles.find(x => x.name === this.selected?.name);
             const roleOptionLabel =
-                this.LANG.accessRoles[role?.name]?.label ||
-                role?.name ||
-                this.LANG.pleaseSelect;
+                this.LANG.accessRoles[role?.name]?.label || role?.name || this.LANG.pleaseSelect;
 
             if (!role || roleOptionLabel !== this.selection) {
                 this.selection = roleOptionLabel;
@@ -111,10 +104,9 @@ export class NxPermissionsDropdown extends BaseDropdown {
         this.show = false;
         this.selection = role.optionLabel;
 
-        const {
-            optionLabel: _,
-            ...selectedRole
-        } = this.accessRoles.find(accessRole => accessRole.name === role.name);
+        const { optionLabel: _, ...selectedRole } = this.accessRoles.find(
+            accessRole => accessRole.name === role.name,
+        );
         // Remove optionLabel before sending up
 
         this.onChangeCallback(selectedRole);

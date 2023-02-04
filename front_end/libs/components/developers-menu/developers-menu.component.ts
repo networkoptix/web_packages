@@ -1,12 +1,5 @@
 import { Location } from '@angular/common';
-import {
-    Component,
-    Output,
-    EventEmitter,
-    Inject,
-    OnInit,
-    Input
-} from '@angular/core';
+import { Component, Output, EventEmitter, Inject, OnInit, Input } from '@angular/core';
 import { QueryParamsHandling } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep, last } from 'lodash-es';
@@ -29,7 +22,7 @@ import type { MenuNodeWithParent, ClickEvent, RelatedLinks } from './developers-
 @Component({
     selector: 'nx-developers-menu',
     templateUrl: 'developers-menu.component.html',
-    styleUrls: ['developers-menu.component.scss']
+    styleUrls: ['developers-menu.component.scss'],
 })
 export class NxDevelopersMenuComponent implements OnInit {
     @Output() onClick = new EventEmitter<ClickEvent>();
@@ -63,7 +56,7 @@ export class NxDevelopersMenuComponent implements OnInit {
         public location: Location,
         public ribbonService: NxRibbonService,
         private uriService: NxUriService,
-        @Inject(WINDOW) private window: Window
+        @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
     }
@@ -97,20 +90,40 @@ export class NxDevelopersMenuComponent implements OnInit {
             }
         };
         const relatedNodes = [];
-        const findActiveNode = (nodes: MenuNodeWithParent[], targetAssetId, targetState, action: string = 'update') => {
+        const findActiveNode = (
+            nodes: MenuNodeWithParent[],
+            targetAssetId,
+            targetState,
+            action: string = 'update',
+        ) => {
             const checkNode = (node: MenuNodeWithParent) => {
-                if (node.asset_id === targetAssetId && (!node.state && !activeAssetState || node.state === activeAssetState)) {
+                if (
+                    node.asset_id === targetAssetId &&
+                    ((!node.state && !activeAssetState) || node.state === activeAssetState)
+                ) {
                     if (action === 'update') {
                         updateActiveRoutes(node, true);
                         if (node.next_item) {
-                            this.relatedLinks.emit({ type: 'next', nodes: nodes.filter(node => !node.indented) });
+                            this.relatedLinks.emit({
+                                type: 'next',
+                                nodes: nodes.filter(node => !node.indented),
+                            });
                         } else {
                             node.related_asset_ids.forEach(id => {
                                 findActiveNode(this.menuNodes, id, targetState, 'findRelated');
                             });
-                            this.relatedLinks.emit({ type: 'related', nodes: relatedNodes.filter(node => !node.indented) });
+                            this.relatedLinks.emit({
+                                type: 'related',
+                                nodes: relatedNodes.filter(node => !node.indented),
+                            });
                         }
-                    } else if (action === 'findRelated' && !relatedNodes.some(relNode => relNode.url === node.url || relNode.asset_id === targetAssetId)) {
+                    } else if (
+                        action === 'findRelated' &&
+                        !relatedNodes.some(
+                            relNode =>
+                                relNode.url === node.url || relNode.asset_id === targetAssetId,
+                        )
+                    ) {
                         relatedNodes.push(node);
                     }
                 } else if (node.nodes?.length) {
@@ -121,11 +134,17 @@ export class NxDevelopersMenuComponent implements OnInit {
         };
 
         findActiveNode(this.menuNodes, activeAssetId, activeAssetState);
-        this.highlightedTopNode = last(this.activeRouteNodes.filter(name => !this.openNodes.includes(name)));
+        this.highlightedTopNode = last(
+            this.activeRouteNodes.filter(name => !this.openNodes.includes(name)),
+        );
     };
 
     toggleOpen(node: MenuNode) {
-        const getRootNode = (name, nodesToCheck = this.displayedMenuNodes, rootNode: MenuNodeWithParent[] = []) => {
+        const getRootNode = (
+            name,
+            nodesToCheck = this.displayedMenuNodes,
+            rootNode: MenuNodeWithParent[] = [],
+        ) => {
             const checkNode = (currentNode: MenuNodeWithParent) => {
                 const currentNodeName = currentNode.name || currentNode.display_name;
                 if (currentNodeName === name) {
@@ -151,23 +170,24 @@ export class NxDevelopersMenuComponent implements OnInit {
             return nodeNames;
         };
         const nodesFromRoot = rootNodeName => getRootNode(rootNodeName).reduce(getChildNodes, []);
-        const filterTree = rootNodeName => nodeToCheck => !nodesFromRoot(rootNodeName).includes(nodeToCheck);
+        const filterTree = rootNodeName => nodeToCheck =>
+            !nodesFromRoot(rootNodeName).includes(nodeToCheck);
         const name = node.name || node.display_name;
         if (!this.openNodes.includes(name)) {
             this.openNodes.push(name);
         } else {
             this.openNodes = this.openNodes.filter(filterTree(name));
         }
-        this.highlightedTopNode = last(this.activeRouteNodes.filter(name => !this.openNodes.includes(name)));
+        this.highlightedTopNode = last(
+            this.activeRouteNodes.filter(name => !this.openNodes.includes(name)),
+        );
     }
 
     prefetchAsset(assetId, state, version): void {
         if (assetId) {
             timer(this.CONFIG.featureFlags.kbInstantSearch ? 50 : 250)
-                .pipe(
-                    untilDestroyed(this),
-                    takeUntil(this.mouseLeave$),
-                ).subscribe(() => {
+                .pipe(untilDestroyed(this), takeUntil(this.mouseLeave$))
+                .subscribe(() => {
                     this.handlePrefetch.emit({ assetId, state, version });
                 });
         }
@@ -227,7 +247,11 @@ export class NxDevelopersMenuComponent implements OnInit {
                 }
                 inQuery = true;
             }
-            if (pathMatchesQuery || isSeperator || this.additionalSearchNodes.find(node => node.name === menuNode.name)) {
+            if (
+                pathMatchesQuery ||
+                isSeperator ||
+                this.additionalSearchNodes.find(node => node.name === menuNode.name)
+            ) {
                 inQuery = true;
             }
             for (const node of menuNode.nodes) {
@@ -266,9 +290,7 @@ export class NxDevelopersMenuComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.service.menuSubject?.pipe(
-            untilDestroyed(this)
-        ).subscribe(menu => {
+        this.service.menuSubject?.pipe(untilDestroyed(this)).subscribe(menu => {
             if (menu?.nodes?.length) {
                 this.displayedMenuNodes = menu.nodes;
                 this.menuNodes = menu.nodes;
@@ -284,9 +306,7 @@ export class NxDevelopersMenuComponent implements OnInit {
             }
         });
 
-        this.service.activeAssetIdSubject?.pipe(
-            untilDestroyed(this)
-        ).subscribe(id => {
+        this.service.activeAssetIdSubject?.pipe(untilDestroyed(this)).subscribe(id => {
             this.updateActive(id, this.service.activeAssetState);
         });
 

@@ -1,8 +1,4 @@
-import {
-    Component,
-    Input,
-    forwardRef,
-} from '@angular/core';
+import { Component, Input, forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
@@ -38,11 +34,10 @@ import type { MultiSelectItem } from './multi-select.component.types';
             provide: NG_VALUE_ACCESSOR,
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxMultiSelectDropdown),
-            multi: true
-        }
-    ]
+            multi: true,
+        },
+    ],
 })
-
 export class NxMultiSelectDropdown extends BaseDropdown {
     @Input() id: string = 'multiselect';
     @Input('items') itemsOrig: MultiSelectItem[];
@@ -57,9 +52,7 @@ export class NxMultiSelectDropdown extends BaseDropdown {
 
     private innerValue: MultiSelectItem['id'][] = [];
 
-    constructor(
-        configService: NxConfigService
-    ) {
+    constructor(configService: NxConfigService) {
         super(configService);
     }
 
@@ -101,7 +94,7 @@ export class NxMultiSelectDropdown extends BaseDropdown {
         this.filter = value;
 
         this.items = this.itemsOrig.filter(item =>
-            item.label.toLowerCase().includes(value.toLowerCase())
+            item.label.toLowerCase().includes(value.toLowerCase()),
         );
         this.updateItems();
     }
@@ -122,38 +115,38 @@ export class NxMultiSelectDropdown extends BaseDropdown {
     updateLabel(): void {
         switch (this.innerValue.length) {
             case 1: {
-                const selectedItem = this.items.find(item =>
-                    item.id === this.innerValue[0]
-                );
+                const selectedItem = this.items.find(item => item.id === this.innerValue[0]);
                 this.textSelected = selectedItem.label;
                 break;
             }
             case 0:
             case this.items.length: {
-                this.textSelected = this.id === 'user-groups'
-                    ? {
-                        value: this.LANG.userGroups.multiple,
-                        params: {
-                            count: this.innerValue.length
-                        }
-                    }
-                    : this.LANG.search.Any;
+                this.textSelected =
+                    this.id === 'user-groups'
+                        ? {
+                              value: this.LANG.userGroups.multiple,
+                              params: {
+                                  count: this.innerValue.length,
+                              },
+                          }
+                        : this.LANG.search.Any;
                 break;
             }
             default: {
-                this.textSelected = this.id === 'user-groups'
-                    ? {
-                        value: this.LANG.userGroups.multiple,
-                        params: {
-                            count: this.innerValue.length
-                        }
-                    }
-                    : {
-                        value: this.LANG.search.selected,
-                        params: {
-                            count: this.innerValue.length
-                        }
-                    };
+                this.textSelected =
+                    this.id === 'user-groups'
+                        ? {
+                              value: this.LANG.userGroups.multiple,
+                              params: {
+                                  count: this.innerValue.length,
+                              },
+                          }
+                        : {
+                              value: this.LANG.search.selected,
+                              params: {
+                                  count: this.innerValue.length,
+                              },
+                          };
                 break;
             }
         }

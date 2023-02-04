@@ -1,4 +1,12 @@
-import { Component, ComponentFactoryResolver, ViewChild, ViewContainerRef, Input, Output, EventEmitter } from '@angular/core';
+import {
+    Component,
+    ComponentFactoryResolver,
+    ViewChild,
+    ViewContainerRef,
+    Input,
+    Output,
+    EventEmitter,
+} from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Observable } from 'rxjs';
 
@@ -13,7 +21,7 @@ import { WIDGETS } from './register-widget';
 @Component({
     selector: 'nx-dynamic-widget',
     templateUrl: './dynamic-widget.component.html',
-    styleUrls: ['./dynamic-widget.component.scss']
+    styleUrls: ['./dynamic-widget.component.scss'],
 })
 export class NxDynamicWidgetComponent {
     @Output() syncChanges = new EventEmitter();
@@ -28,7 +36,7 @@ export class NxDynamicWidgetComponent {
      * Wrapper to dynamically get static properties. Might remove if we don't end up extending this component for third party widgets.
      */
     get staticProperties() {
-        this.#staticProperties ||= (this.constructor as typeof NxDynamicWidgetComponent);
+        this.#staticProperties ||= this.constructor as typeof NxDynamicWidgetComponent;
         return this.#staticProperties;
     }
 
@@ -48,7 +56,8 @@ export class NxDynamicWidgetComponent {
         return NxDynamicWidgetComponent.WIDGETS.find(({ IDENTIFIER }) => IDENTIFIER === identifier);
     };
 
-    static getFirstPartyWidgetConfigs = () => NxDynamicWidgetComponent.WIDGETS.map(FirstPartyWidget.getConfig);
+    static getFirstPartyWidgetConfigs = () =>
+        NxDynamicWidgetComponent.WIDGETS.map(FirstPartyWidget.getConfig);
 
     @ViewChild('widgetTarget', { read: ViewContainerRef }) widgetTarget: ViewContainerRef;
 
@@ -57,12 +66,17 @@ export class NxDynamicWidgetComponent {
      */
     initializeWidget(): void {
         const component = NxDynamicWidgetComponent.findWidget(this.card.identifier);
-        const dynamicComponentFactory = this.componentFactoryResolver.resolveComponentFactory(component);
-        this.componentInstance = this.widgetTarget.createComponent(dynamicComponentFactory).instance;
+        const dynamicComponentFactory =
+            this.componentFactoryResolver.resolveComponentFactory(component);
+        this.componentInstance =
+            this.widgetTarget.createComponent(dynamicComponentFactory).instance;
         this.card.editMode = this.card.editMode || !Object.entries(this.card.config).length;
         this.componentInstance.card = this.card;
         if (this.card.identifier !== 'third-party') {
-            this.componentInstance.card.sizes = component.SIZES.map(({ name, value }) => ({ name: `${component.NAME} (${name})`, value }));
+            this.componentInstance.card.sizes = component.SIZES.map(({ name, value }) => ({
+                name: `${component.NAME} (${name})`,
+                value,
+            }));
         }
         this.componentInstance.saveSettings = this.saveSettings;
         this.componentInstance.showAction = this.showAction;
@@ -80,7 +94,5 @@ export class NxDynamicWidgetComponent {
         this.initializeWidget();
     }
 
-    constructor(
-        private componentFactoryResolver: ComponentFactoryResolver
-    ) {}
+    constructor(private componentFactoryResolver: ComponentFactoryResolver) {}
 }

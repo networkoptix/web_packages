@@ -1,7 +1,4 @@
-import {
-    Component,
-    Input,
-} from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ActivationEnd, NavigationCancel, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
@@ -25,7 +22,7 @@ import { BaseDropdown } from '../injDropdown';
 @Component({
     selector: 'nx-drop-menu',
     templateUrl: 'drop-menu.component.html',
-    styleUrls: ['drop-menu.component.scss']
+    styleUrls: ['drop-menu.component.scss'],
 })
 export class NxDropMenu extends BaseDropdown {
     @Input() endpoint: any = {};
@@ -43,7 +40,7 @@ export class NxDropMenu extends BaseDropdown {
         health: false,
         register: false,
         settings: false,
-        view: false
+        view: false,
     };
 
     params: any;
@@ -58,49 +55,42 @@ export class NxDropMenu extends BaseDropdown {
         private accountService: NxAccountService,
     ) {
         super(configService);
-        this.menusService.currentSystemNode$
-            .pipe(
-                untilDestroyed(this)
-            )
-            .subscribe(_ => {
-                this.getMenu();
-            });
+        this.menusService.currentSystemNode$.pipe(untilDestroyed(this)).subscribe(_ => {
+            this.getMenu();
+        });
 
-        this.router
-            .events
+        this.router.events
             .pipe(
                 untilDestroyed(this),
-                filter(event => event instanceof ActivationEnd ||
-                    event instanceof NavigationCancel
-                )
+                filter(
+                    event => event instanceof ActivationEnd || event instanceof NavigationCancel,
+                ),
             )
             .subscribe(() => {
                 this.headerService.show$ = false;
             });
 
-        translateService.onTranslationChange
-            .pipe(untilDestroyed(this))
-            .subscribe(() => {
-                setTimeout(() => {
-                    this.getMenu();
-                    if (environment.isLocal) {
-                        return;
-                    }
+        translateService.onTranslationChange.pipe(untilDestroyed(this)).subscribe(() => {
+            setTimeout(() => {
+                this.getMenu();
+                if (environment.isLocal) {
+                    return;
+                }
 
-                    const activeSystem = this.headerService.activeSystem ||
-                        this.headerService.lastActive$.value ||
-                        this.systems?.[0];
-                    this.menusService.updateActiveSystemMenu(activeSystem);
-                });
+                const activeSystem =
+                    this.headerService.activeSystem ||
+                    this.headerService.lastActive$.value ||
+                    this.systems?.[0];
+                this.menusService.updateActiveSystemMenu(activeSystem);
             });
+        });
     }
 
     private getMenu(): void {
         this.getMenuSubscription && this.getMenuSubscription.unsubscribe();
-        this.getMenuSubscription = this.menusService.getMenu('header', this.systems$.value.length >= 1)
-            .pipe(
-                untilDestroyed(this)
-            )
+        this.getMenuSubscription = this.menusService
+            .getMenu('header', this.systems$.value.length >= 1)
+            .pipe(untilDestroyed(this))
             .subscribe(header => {
                 const nodes = this.menusService.cleanEmptyNodes(header.nodes);
                 if (environment.isLocal) {
@@ -133,8 +123,8 @@ export class NxDropMenu extends BaseDropdown {
         const minWidth = 160;
 
         // Determines columns and columnWidths
-        this.columns$.next(Math.min(width / minWidth | 0, 4));
-        this.columnWidth = (width / this.columns$.value | 0);
+        this.columns$.next(Math.min((width / minWidth) | 0, 4));
+        this.columnWidth = (width / this.columns$.value) | 0;
 
         // Max systems to display, use the number of columns as the index to determine which value to use
         const systemLimitByColumns = [0, 5, 8, 12, 16];
@@ -146,8 +136,8 @@ export class NxDropMenu extends BaseDropdown {
             this.systems.length === maxSystems
                 ? maxSystems
                 : this.systems.length > maxSystems
-                    ? maxSystems - 1
-                    : this.systems.length
+                ? maxSystems - 1
+                : this.systems.length,
         );
         this.systems$.next(systems);
 
@@ -159,7 +149,8 @@ export class NxDropMenu extends BaseDropdown {
     updateURI(sid = this.headerService.activeSystem.id, endpoint, home = false): void {
         this.headerService.show$ = false;
         this.uriService.updateURI(this.menusService.getUrl(sid, endpoint, home)).then(() => {
-            const activeSystem = this.headerService.activeSystem ||
+            const activeSystem =
+                this.headerService.activeSystem ||
                 this.headerService.lastActive$.value ||
                 this.systems[0];
             this.menusService.updateActiveSystemMenu(activeSystem);
@@ -180,7 +171,8 @@ export class NxDropMenu extends BaseDropdown {
             }
             const isAdmin = user?.permissions?.includes('GlobalAdminPermission') || false;
             this.systems$.next(changes.systems.currentValue);
-            const activeSystem = this.headerService.activeSystem ||
+            const activeSystem =
+                this.headerService.activeSystem ||
                 this.headerService.lastActive$.value ||
                 this.systems[0];
             activeSystem.version ||= 5.1;

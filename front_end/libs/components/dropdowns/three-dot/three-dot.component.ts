@@ -1,8 +1,4 @@
-import {
-    Component,
-    Input,
-    forwardRef
-} from '@angular/core';
+import { Component, Input, forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -26,18 +22,16 @@ import type { ActionItems } from './three-dot.component.types';
             provide: NG_VALUE_ACCESSOR,
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxThreeDotDropdown),
-            multi: true
-        }
-    ]
+            multi: true,
+        },
+    ],
 })
 export class NxThreeDotDropdown extends BaseDropdown {
     @Input() items: ActionItems[];
     @Input() name: string;
     @Input() componentId: string = 'three-dot-menu';
 
-    constructor(
-        configService: NxConfigService
-    ) {
+    constructor(configService: NxConfigService) {
         super(configService);
     }
 

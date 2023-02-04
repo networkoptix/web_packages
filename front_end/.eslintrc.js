@@ -570,7 +570,7 @@ module.exports = {
         {
             files: [
                 // '*.js', '*.ts'
-                'libs/components/[a-c]*/**/*.ts',
+                'libs/components/[a-d]*/**/*.ts',
             ],
             excludedFiles: ['*.module.ts', '*.spec.ts'], // Lower priority
             extends: ['plugin:prettier/recommended'],

@@ -1,7 +1,4 @@
-import {
-    Component,
-    Input,
-} from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -12,9 +9,8 @@ import { BaseDropdown } from '../injDropdown';
 @Component({
     selector: 'nx-active-system',
     templateUrl: 'active-system.component.html',
-    styleUrls: ['active-system.component.scss']
+    styleUrls: ['active-system.component.scss'],
 })
-
 export class NxActiveSystemDropdown extends BaseDropdown {
     @Input() activeSystem;
 
@@ -24,14 +20,10 @@ export class NxActiveSystemDropdown extends BaseDropdown {
     active = {
         health: false,
         settings: false,
-        view: false
+        view: false,
     };
 
-    constructor(
-
-        configService: NxConfigService,
-        private router: Router
-    ) {
+    constructor(configService: NxConfigService, private router: Router) {
         super(configService);
     }
 
@@ -40,9 +32,9 @@ export class NxActiveSystemDropdown extends BaseDropdown {
     }
 
     updateActive(endpoint = 'settings'): void {
-        this.active.health = (endpoint === 'health');
-        this.active.view = (endpoint === 'view');
-        this.active.settings = (endpoint === 'settings');
+        this.active.health = endpoint === 'health';
+        this.active.view = endpoint === 'view';
+        this.active.settings = endpoint === 'settings';
     }
 
     ngOnInit(): void {
@@ -55,8 +47,9 @@ export class NxActiveSystemDropdown extends BaseDropdown {
             if (!('id' in changes.activeSystem.currentValue)) {
                 this.activeSystem = { id: '0' }; // Avoid JS timing error (in console)
             } else if (changes.activeSystem.currentValue.id !== '0') {
-                this.canViewInfo = this.CONFIG.accessRoles.adminAccess
-                    .includes(changes.activeSystem.currentValue.accessRole.toLowerCase());
+                this.canViewInfo = this.CONFIG.accessRoles.adminAccess.includes(
+                    changes.activeSystem.currentValue.accessRole.toLowerCase(),
+                );
             }
         }
     }

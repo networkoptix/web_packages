@@ -5,7 +5,7 @@ import {
     EventEmitter,
     Output,
     ViewChild,
-    ElementRef
+    ElementRef,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -40,12 +40,12 @@ import type { DropdownItem } from './dropdown.component.types';
             provide: NG_VALUE_ACCESSOR,
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxGenericDropdown),
-            multi: true
-        }
-    ]
+            multi: true,
+        },
+    ],
 })
 export class NxGenericDropdown<
-    Item extends DropdownItem<unknown> = DropdownItem<unknown>
+    Item extends DropdownItem<unknown> = DropdownItem<unknown>,
 > extends BaseDropdown {
     @Input() id: string = 'genericSelect';
     @Input() items: Item[];
@@ -77,11 +77,7 @@ export class NxGenericDropdown<
     // Used in merge.component.ts
     @ViewChild('dropdownButtonFocus') dropdownToggleButton: HTMLButtonElement;
 
-    constructor(
-
-        configService: NxConfigService,
-        public ref: ElementRef<HTMLElement>
-    ) {
+    constructor(configService: NxConfigService, public ref: ElementRef<HTMLElement>) {
         super(configService);
         this.noMatchMsg ??= this.LANG.search.noMatches || 'No matches';
     }
@@ -133,9 +129,10 @@ export class NxGenericDropdown<
 
     filterChanged(value: string): void {
         this.filter = value;
-        this._items = this.items.filter(item =>
-            caseInsenstiveSearch(item.name, this.filter) ||
-            item.help && caseInsenstiveSearch(item.help, this.filter)
+        this._items = this.items.filter(
+            item =>
+                caseInsenstiveSearch(item.name, this.filter) ||
+                (item.help && caseInsenstiveSearch(item.help, this.filter)),
         );
 
         if (!this._items.length) {

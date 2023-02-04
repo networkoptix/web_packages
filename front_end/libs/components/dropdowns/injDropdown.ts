@@ -1,9 +1,4 @@
-import {
-    Injectable,
-    OnChanges,
-    OnDestroy,
-    OnInit
-} from '@angular/core';
+import { Injectable, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
@@ -13,7 +8,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NgChanges } from '@utils/ng-changes';
 
-const noop = () => { };
+const noop = () => {};
 
 @UntilDestroy()
 @Injectable()
@@ -31,22 +26,18 @@ export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, Cont
     public onTouchedCallback: () => void = noop;
     public onChangeCallback: (_: any) => void = noop;
 
-    constructor(
-        configService: NxConfigService
-    ) {
+    constructor(configService: NxConfigService) {
         this.CONFIG = configService.getConfig();
         this.message = this.LANG.pleaseSelect;
         this.show = false;
     }
 
-    ngOnInit(): void {
-    }
+    ngOnInit(): void {}
 
     // needed for @UntilDestroy
-    ngOnDestroy(): void {
-    }
+    ngOnDestroy(): void {}
 
-    ngOnChanges(changes: NgChanges<BaseDropdown>): void { }
+    ngOnChanges(changes: NgChanges<BaseDropdown>): void {}
 
     trackItem(index, item) {
         return item ? item.value : undefined;
@@ -61,11 +52,7 @@ export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, Cont
             _value = value.value;
         }
 
-        if (
-            _value !== null &&
-            _value !== undefined &&
-            !(value instanceof Watcher)
-        ) {
+        if (_value !== null && _value !== undefined && !(value instanceof Watcher)) {
             this._selectedItem = _value;
         }
     }

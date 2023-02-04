@@ -11,7 +11,7 @@ import { NxHeaderService } from '@services/nx-header.service';
 @Component({
     selector: 'nx-navigation-tile',
     templateUrl: 'navigation-tile.component.html',
-    styleUrls: ['navigation-tile.component.scss']
+    styleUrls: ['navigation-tile.component.scss'],
 })
 export class NxNavigationTileComponent {
     @Input() node: MenuNode;
@@ -20,9 +20,7 @@ export class NxNavigationTileComponent {
     iconsDir: string;
     loginStateSubscription: SubscriptionLike;
 
-    constructor(
-        public headerService: NxHeaderService
-    ) {
+    constructor(public headerService: NxHeaderService) {
         this.iconsDir = icons.dir;
     }
 
@@ -35,9 +33,9 @@ export class NxNavigationTileComponent {
     checkActive(node) {
         const { childNode } = this.headerService.currentLocation;
         const { url } = node;
-        const breadcrumbUrls =
-            (childNode?.breadcrumbs || [])
-                .map(({ url }) => url).filter(url => url);
+        const breadcrumbUrls = (childNode?.breadcrumbs || [])
+            .map(({ url }) => url)
+            .filter(url => url);
         return breadcrumbUrls.includes(url);
     }
 
