@@ -23,6 +23,7 @@ import type { APIDoc } from '@pages/api-tool/api-tool-types';
 import { NxHealthService } from '@pages/health/health.service';
 import { NxStorageService } from '@services/storage.service';
 import { defaultHashFunction, memoizeAsync, memoizeAsyncMedium, memoizeAsyncPersistent } from '@utils/memoize';
+import { startWithCache } from '@utils/start-with-cached';
 
 import { SECURITY_LEVEL } from '../../apps/setup-wizard/src/app/types/wizard-state.types';
 import { apiDocURL, apiTool, sessionFreshnessSec } from '../variables/static-variables';
@@ -380,7 +381,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         const fullUrl = `${this.urlBase}${url}`;
         const responseType = <any>(customHttpHeaders?.responseType || 'json');
         return this.#getHeaders(customHttpHeaders, url).pipe(
-            switchMap(headers => this.http.get<ResponseType>(fullUrl, { headers, params, responseType })),
+            switchMap(headers => this.http.get<ResponseType>(fullUrl, { headers, params, responseType }).pipe(startWithCache(fullUrl, { headers, params, responseType }))),
             retryWhen(request => this.retryHandler(request)),
             timeout(requestTimeout),
             tap(undefined, error => {

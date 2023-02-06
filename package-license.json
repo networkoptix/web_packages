@@ -6510,6 +6510,15 @@
             "path": "cloud_portal/front_end/node_modules/dev-ip",
             "licenseFile": "cloud_portal/front_end/node_modules/dev-ip/LICENSE-MIT"
         },
+        "dexie@3.2.3": {
+            "licenses": "Apache-2.0",
+            "repository": "https://github.com/dfahlander/Dexie.js",
+            "publisher": "David Fahlander",
+            "email": "https://github.com/dfahlander",
+            "path": "cloud_portal/front_end/node_modules/dexie",
+            "licenseFile": "cloud_portal/front_end/node_modules/dexie/LICENSE",
+            "noticeFile": "cloud_portal/front_end/node_modules/dexie/NOTICE"
+        },
         "di@0.0.1": {
             "licenses": "MIT",
             "repository": "https://github.com/vojtajina/node-di",

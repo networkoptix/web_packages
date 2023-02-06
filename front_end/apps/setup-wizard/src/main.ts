@@ -10,9 +10,16 @@ if (environment.production) {
     enableProdMode();
 }
 
-DynamicConfig.dynamicConfigFactory().then(useValue => {
-    platformBrowserDynamic([
-        { provide: DynamicConfig, useValue }
-    ]).bootstrapModule(AppModule)
-        .catch(err => console.error(err));
-});
+interface Bootstrapable {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    bootstrap(): Promise<any>;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const bootstrapProviders = (...providers: Bootstrapable[]): Promise<any> => Promise.allSettled(providers.map(provider => provider.bootstrap())).then(providerResults => providerResults.map(res => res.status === 'fulfilled' && res.value).filter(val => !!val));
+
+bootstrapProviders(
+    DynamicConfig
+).then(providers => platformBrowserDynamic(providers).bootstrapModule(AppModule)
+    .catch(err => console.error(err))
+);

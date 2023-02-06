@@ -7,8 +7,14 @@ import { nxConfig } from './config';
 import { IConfig } from './config-types';
 
 export class DynamicConfig {
-    static async dynamicConfigFactory(): Promise<DynamicConfig> {
-        return new DynamicConfig(await DynamicConfig.getData());
+    static async bootstrap(): Promise<{ provide: typeof DynamicConfig, useValue: DynamicConfig }> {
+        const preloadedAccount = await DynamicConfig.getAccount();
+        const [data, preloadedTranslation] = await Promise.allSettled([
+            DynamicConfig.getData(),
+            DynamicConfig.getTranslation()
+        ]).then(res => res.map(res => res.status === 'fulfilled' && res.value));
+
+        return { provide: DynamicConfig, useValue: new DynamicConfig({ ...data, preloadedAccount, preloadedTranslation }) };
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -32,7 +38,65 @@ export class DynamicConfig {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    static async getAccount(): Promise<any> {
+        const currentAccount = await fetch(environment.isLocal ? '/rest/v1/login/sessions/current' : '/api/account').then(res => res.json()).catch(() => null);
+        if (currentAccount?.is_authenticated || environment.isLocal) {
+            // Return account if authenticated. Ignore auth and code params. Let app bootstrap and handle auth when current user is logged in.
+            return currentAccount;
+        }
+
+        const url = new URL(location.href.replace('#/', ''));
+        const code = url.searchParams.get('code');
+        const auth = url.searchParams.get('auth');
+        const cloudAuthorize = url.toString().includes('cloud-authorize');
+
+        if (code && !cloudAuthorize) {
+            // Handle code login if no user is currently logged in.
+            const loggedIn = await fetch('/api/account/loginCode', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code })
+            }).then(res => res.json()).catch(() => null);
+
+            if (loggedIn) {
+                const params = new URLSearchParams(url.search);
+                params.delete('code');
+                history.replaceState({}, null, url.href.replace(url.search, params.toString()));
+            }
+            return loggedIn;
+        } else if (auth) {
+            // Handle auth login if no user is currently logged in.
+            const [email, password] = atob(decodeURIComponent(auth)).split(':');
+            const remember = false;
+            const timezone = (Intl && Intl.DateTimeFormat().resolvedOptions().timeZone) || '';
+
+            const loggedIn = await fetch('/api/account/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password, remember, timezone })
+            }).then(res => res.json()).catch(() => null);
+
+            if (loggedIn) {
+                const params = new URLSearchParams(url.search);
+                params.delete('auth');
+                history.replaceState({}, null, url.href.replace(url.search, params.toString()));
+            }
+
+            return loggedIn;
+        }
+
+        return currentAccount;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    static getTranslation(): Promise<any> {
+        return fetch(environment.isLocal ? `/static/lang_${nxConfig.defaultLanguage}/language_compiled.json` : '/api/utils/language').then(res => res.json()).catch(() => null);
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private mapPropertiesToConfig(data: any): IConfig {
+        nxConfig.preloadedAccount = data.preloadedAccount;
+        nxConfig.preloadedTranslation = data.preloadedTranslation;
         if (environment.isLocal) {
             // weird timing issue occur when using method updateConfig. Re-factored to explicit assignment. (TT)
             const { defaultLanguage, description, webadminConfig, supportedLanguages } = data;

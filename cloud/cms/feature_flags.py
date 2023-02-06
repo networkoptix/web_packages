@@ -79,6 +79,9 @@ class FLAGS(metaclass=_FlagType):
     system_groups = ('System Groups', 'systemGroups', '%SYSTEM_GROUPS_ENABLED%')
     channel_partners = ('Chanel Partners', 'channelPartners', '%CHANNEL_PARTNERS_ENABLED%')
 
+    request_caching = ('Request Caching', 'requestCaching', '%REQUEST_CACHING_ENABLED%')
+    request_caching_remote_sync = ('Request Caching Remote Sync', 'requestCachingRemoteSync', '%REQUEST_CACHING_REMOTE_SYNC_ENABLED%')
+
     # TODO: Remove this with https://networkoptix.atlassian.net/browse/CLOUD-8667 *********
     five_r = ('Paginator(experimental)', 'paginatorExperimental', '%FIVE_R_ENABLED%')
     # *************************************************************************************

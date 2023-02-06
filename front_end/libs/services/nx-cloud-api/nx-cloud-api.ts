@@ -23,6 +23,7 @@ import { NxSwCacheService } from '@services/sw-cache.service';
 import { WINDOW } from '@services/window-provider';
 import { mapValuesToStrings } from '@utils/general';
 import { memoizeAsyncLong, memoizeAsyncPersistent, memoizeAsyncShort } from '@utils/memoize';
+import { startWithCache } from '@utils/start-with-cached';
 
 import { Account } from '../account.service/account';
 import type { IConfig } from '../nx-config/config-types';
@@ -160,6 +161,10 @@ export class NxCloudApiService {
         }
     }
 
+    cachedGet<T = unknown>(...args: Parameters<typeof this.http.get>) {
+        return this.http.get<T>(...args).pipe(startWithCache(...args));
+    }
+
     checkResponseHasError<_T extends any>(data: any) {
         // this is not a repetition
         if (data?.resultCode && data.resultCode !== responseOk) {
@@ -248,34 +253,34 @@ export class NxCloudApiService {
     getStaticLanding() {
         const httpOptions = {
             headers: new HttpHeaders({ 'Content-Type': 'application/text' }),
-            responseType: 'text' as const
+            responseType: 'text' as any
         };
-        return this.http.get('/' + this.CONFIG.viewsDir + 'static/landing.html', httpOptions);
+        return this.cachedGet<string>('/' + this.CONFIG.viewsDir + 'static/landing.html', httpOptions);
     }
 
     @memoizeAsyncPersistent
     getStatic(url) {
         const httpOptions = {
             headers: new HttpHeaders({ 'Content-Type': 'application/text' }),
-            responseType: 'text' as const
+            responseType: 'text' as any
         };
-        return this.http.get(url, httpOptions);
+        return this.cachedGet<string>(url, httpOptions);
     }
 
     @memoizeAsyncPersistent
     getCommonPasswords() {
-        return this.http.get<{ [key: string]: number; }>('/static/scripts/commonPasswordsList.json');
+        return this.cachedGet<{ [key: string]: number; }>('/static/scripts/commonPasswordsList.json');
     }
 
     @staffSWBypass
     @memoizeAsyncLong
     getIntegrations() {
-        return this.http.get<{ data: t.Integration[] }>(apiBase + '/cms/integrations');
+        return this.cachedGet<{ data: t.Integration[] }>(apiBase + '/cms/integrations');
     }
 
     @memoizeAsyncLong
     getIntegrationsCount() {
-        return this.http.get<t.IntegrationCount>(apiBase + '/cms/integration_count');
+        return this.cachedGet<t.IntegrationCount>(apiBase + '/cms/integration_count');
     }
 
     @staffSWBypass
@@ -284,12 +289,12 @@ export class NxCloudApiService {
         let uri = apiBase + '/cms/integration/' + id;
         uri += (status) ? '?' + status : '';
 
-        return this.http.get<Array<t.Integration>>(uri);
+        return this.cachedGet<Array<t.Integration>>(uri);
     }
 
     @memoizeAsyncLong
     getIPVD() {
-        return this.http.get<t.IPVDCameras>(apiBase + '/ipvd');
+        return this.cachedGet<t.IPVDCameras>(apiBase + '/ipvd');
     }
 
     getCode(systemId: string) {
@@ -329,13 +334,13 @@ export class NxCloudApiService {
     @staffSWBypass
     @memoizeAsyncPersistent
     getReadOnlyAPIs() {
-        return this.http.get<{ data: t.ReadOnlyAPI[] }>(apiBase + '/cms/readonly_apis');
+        return this.cachedGet<{ data: t.ReadOnlyAPI[] }>(apiBase + '/cms/readonly_apis');
     }
 
     @staffSWBypass
     @memoizeAsyncPersistent
     getReadOnlyAPI(id: number) {
-        return this.http.get<t.ReadOnlyAPIDetail>(apiBase + `/cms/readonly_apis/${id}`);
+        return this.cachedGet<t.ReadOnlyAPIDetail>(apiBase + `/cms/readonly_apis/${id}`);
     }
 
     // not used, except in debug
@@ -602,7 +607,7 @@ export class NxCloudApiService {
         const uri = environment.isLocal
             ? '/static/languages.json'
             : `${this.window.location.origin}/${staticBase}/languages.json`;
-        return this.http.get<t.ILanguages>(uri).toPromise();
+        return this.cachedGet<t.ILanguages>(uri).toPromise();
     }
 
     @swClear('apiFresh', '/utils/language', true)
@@ -614,12 +619,12 @@ export class NxCloudApiService {
 
     @memoizeAsyncPersistent
     getDownloads(): Promise<t.Downloads | null> {
-        return this.http.get<t.Downloads | null>(apiBase + '/utils/downloads').toPromise();
+        return this.cachedGet<t.Downloads | null>(apiBase + '/utils/downloads').toPromise();
     }
 
     @memoizeAsyncPersistent
     getDownloadsHistory(build: string | undefined): Promise<t.BuildHistory | t.Build> {
-        return this.http.get<t.BuildHistory | t.Build>(
+        return this.cachedGet<t.BuildHistory | t.Build>(
             apiBase + '/utils/downloads/' + (build || 'history')
         ).toPromise();
     }
@@ -778,7 +783,7 @@ export class NxCloudApiService {
         }
         const route = `${apiBase}/cms/documentation${endpoint}?${params.toString()}`;
         this.cacheService.addToCache(route);
-        return this.http.get<any>(route).pipe(catchError(error => {
+        return this.cachedGet<any>(route).pipe(catchError(error => {
             if (error.status === 404) {
                 this.#show404();
                 return EMPTY;
@@ -803,7 +808,7 @@ export class NxCloudApiService {
     @memoizeAsyncPersistent
     getDocAsset(assetId) {
         const route = `${apiBase}/cms/documentation/${assetId}`;
-        return this.http.get<t.DocAsset>(route)
+        return this.cachedGet<t.DocAsset>(route)
             .pipe(catchError(_ => of(<t.DocAsset>{ blocks: [], id: null, shortDescription: null, title: null })));
     }
 

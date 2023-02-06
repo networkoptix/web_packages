@@ -85,7 +85,7 @@ export class NxBootstrapProvider {
 
         return new Promise<boolean>((resolve, reject) => {
             return Promise.all([
-                this.languageService.loadLanguage(),
+                this.CONFIG.preloadedTranslation ? Promise.resolve(this.CONFIG.preloadedTranslation) : this.languageService.loadLanguage(),
                 this.getModuleInfo()
             ]).then(([language, moduleInfo]: any) => {
                 // language fail may have special character or

@@ -5,6 +5,7 @@ import { catchError, Observable, switchMap } from 'rxjs';
 import { environment } from '@environments/environment';
 import { WINDOWS_PROVIDERS, WINDOW } from '@services/window-provider';
 import { staticImplements } from '@utils/general';
+import { startWithCache } from '@utils/start-with-cached';
 
 import { WithFreshSession } from '../nx-cloud-api.types';
 
@@ -66,7 +67,7 @@ export abstract class BaseCloudServiceAPI {
         this.hostOrCustomization ||= () => (environment.cloudHost || Injector.create({ providers: WINDOWS_PROVIDERS }).get(WINDOW).location.hostname);
     }
 
-    protected get = <T>(endpoint: string, options?: BaseRequestOptions): Observable<T> => this.#handle<T>(endpoint, (url, { body, ...options }) => this.http.get<T>(url, options), this.#processOptionsFactory(options));
+    protected get = <T>(endpoint: string, options?: BaseRequestOptions): Observable<T> => this.#handle<T>(endpoint, (url, { body, ...options }) => this.http.get<T>(url, options).pipe(startWithCache(url, options)), this.#processOptionsFactory(options));
 
     protected post = <T>(endpoint: string, options?: PostRequestOptions): Observable<T> => this.#handle<T>(endpoint, (url, { body, ...options }) => this.http.post<T>(url, body, options), this.#processOptionsFactory(options));
 

@@ -123,6 +123,7 @@
     "angular-svg-icon": "14.0.0",
     "bootstrap": "4.5.2",
     "dateformat": "3.0.3",
+    "dexie": "^3.2.3",
     "drange": "1.0.2",
     "file-saver": "2.0.5",
     "firebase": "9.8.4",

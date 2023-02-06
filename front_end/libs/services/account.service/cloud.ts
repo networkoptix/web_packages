@@ -71,6 +71,7 @@ export class CloudAccount extends BaseAccount {
             store,
             dialogs,
         );
+        this.account = this.CONFIG.preloadedAccount as Account;
     }
 
     get(forceUpdate = false): Promise<Account> {

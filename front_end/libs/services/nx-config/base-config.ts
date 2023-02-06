@@ -30,6 +30,8 @@ export interface ThemeConfig {
 }
 
 export interface BaseConfig {
+    preloadedAccount: unknown,
+    preloadedTranslation: Object,
     accountDropdown: AccountDropdown[];
     accountDropdownStaff: AccountDropdown[];
     commonPasswordsList?: { [key: string]: number; };
@@ -166,7 +168,9 @@ const FeatureFlagKeys = [
     'layoutsTimeline',
     'layoutsPtz',
     'layoutsDemo',
-    'channelPartners'
+    'channelPartners',
+    'requestCaching',
+    'requestCachingRemoteSync'
 ] as const;
 
 export type FeatureFlagType = typeof FeatureFlagKeys[number];

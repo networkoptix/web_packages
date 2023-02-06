@@ -5,6 +5,8 @@ import { FeatureFlagStrings } from '@services/nx-config/base-config';
 import { IConfig } from './config-types';
 
 export const nxConfig: IConfig = {
+    preloadedAccount: null,
+    preloadedTranslation: null,
     isInIframe: false,
     allowDebugMode: false,
     browserNotSupported: false,
