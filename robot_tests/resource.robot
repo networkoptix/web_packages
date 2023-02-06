@@ -1,6 +1,6 @@
 *** Settings ***
-Resource     variables.robot
 Resource     variables-env.robot
+Resource     variables.robot
 Resource     Resources/cms-resources.robot
 
 Library      String
@@ -483,7 +483,7 @@ Share To
     Wait Until Element Is Visible    ${USERS LIST LINK}
     Wait Until Keyword Succeeds    10    0.5    Click Element    ${USERS LIST LINK}
     Wait Until Element Is Visible    ${ADD USER BUTTON SYSTEMS}    timeout=60
-    Sleep    1
+    Sleep    3
     Click Button    ${ADD USER BUTTON SYSTEMS}
     Wait Until Elements Are Visible    ${ADD USER EMAIL}    ${ADD USER BUTTON MODAL}
     Input Text    ${ADD USER EMAIL}    ${email}

@@ -10,7 +10,7 @@ Force Tags
 
 *** Test Cases ***
 1. Enable and perform login with 2fa
-    [tags]    smoke
+    [tags]    smoke    ci
     Log In    ${login user}    ${password}   api=${False}
     Turn on 2fa Functionality
     Wait Until Element Is Visible    ${2FA ENABLED BADGE}
@@ -18,7 +18,7 @@ Force Tags
     Log In    ${login user}    ${password}    2fa=${True}   api=${False}
 
 2. 2fa login with random backup code
-    [Tags]    smoke
+    [Tags]    smoke    ci
     Log In    ${login user}    ${password}   api=${False}
     ${random one time backup code}=    Turn on 2fa Functionality
     Wait Until Element Is Visible    ${2FA ENABLED BADGE}
@@ -37,7 +37,7 @@ Force Tags
     Log In    ${login user}    ${password}    2fa=${True}
 
 5. Successful disabling 2FA for user with enabled 2FA for specific systems
-    [Tags]    smoke
+    [Tags]    smoke    ci
     Log In    ${login user}    ${password}
     Turn on 2fa Functionality
     Check or uncheck 2fa ask for verification checkbox
@@ -47,7 +47,7 @@ Force Tags
     Api Log In    email=${login user}    password=${password}    verification_code=3r3wr
 
 6. Successful disabling 2FA for user with enabled 2FA for the whole account
-    [Tags]    smoke
+    [Tags]    smoke    ci
     Log In    ${login user}    ${password}
     Turn on 2fa Functionality
     Wait Until Element Is Visible    ${2FA VERIFICATION CHECKBOX}

@@ -24,7 +24,7 @@ Force Tags        Threaded
 #    Wait Until Page Does Not Contain Element    ${LOG IN MODAL}
 
 3. Allows to log in with existing credentials and to log out
-    [tags]    C24212    C24213    smoke
+    [tags]    C24212    C24213    smoke    ci
     Log In    ${login user}    ${password}    api=${False}
     Log Out
 
