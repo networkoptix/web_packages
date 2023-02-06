@@ -33,6 +33,7 @@ Restart
 
 Turn on 2fa Functionality
     [Arguments]    ${2fa link method}=without qr scan
+    Verify In System    ${system}[name]
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    
     Click Element    ${ACCOUNT DROPDOWN}
     Wait Until Element is Visible    ${SECURITY DROPDOWN}

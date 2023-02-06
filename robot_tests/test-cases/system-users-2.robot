@@ -474,6 +474,7 @@ Force Tags        system    Threaded    users
     Go To    ${url}
     Log in to user and system    ${servers}[0][cloudOwner]    ${servers}[0][id]
     Verify In System    ${servers}[0][name]
+    sleep    2
     Share To    ${user}    ${ADMIN TEXT}
     Sleep    10
     # Might not be necessary after CLOUD-6113
@@ -535,6 +536,7 @@ Force Tags        system    Threaded    users
     ${random email}=   Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
     Append To List    ${TMP USERS}    ${random email}
     Go To Users List
+    Sleep    3
     Share To    ${random email}    ${ADMIN TEXT}
     sleep    10
     ${role}=   Get Cloud User Role  ${servers}[0][cloudAuth]    ${random email}    ${servers}[0][id]

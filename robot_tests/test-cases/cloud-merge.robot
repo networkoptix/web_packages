@@ -341,7 +341,7 @@ Force Tags        merge
     Click Button    ${MERGE FAILED OK BUTTON}
     Go To    ${ENV}/systems/
     sleep    5
-    Location Should Be    ${ENV}/systems/${system 1}[cloud id]
+    Wait Until Location Is    ${ENV}/systems/${system 1}[cloud id]    120
 
 9. Positive scenario with selected cloud system (selected system is primary)
     [Tags]    C70931    pos    must

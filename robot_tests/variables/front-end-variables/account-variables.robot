@@ -12,7 +12,7 @@ ${CZECH ALERT}                        Váš účet byl úspěšně uložen
 #${ACCOUNT FIRST NAME}                 //input[@id='firstName']
 
 ${ACCOUNT DROPDOWN}                   //header//div[@id="accountSettingsDropdown"]/preceding-sibling::button
-${ACCOUNT SETTINGS BUTTON}            //header//li//a[@href = '/account/']
+${ACCOUNT SETTINGS BUTTON}            //header//li//a[@href = '/account']
 ${LOG IN CLOSE BUTTON}                //button[@data-dismiss='modal']
 ${ACCOUNT SETTINGS BUTTON SYSTEM}     //button[@id="accountSettingsButton"]
 ${ACCOUNT EMAIL}                      //a[@id='settings']

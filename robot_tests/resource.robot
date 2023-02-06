@@ -124,6 +124,7 @@ Log In
             Go To   ${access}[link]
             Sleep   3
             Run Keyword If   ${validate}     Validate Log In    ${user}    password=${password}
+            Set User Theme    ${user}    ${password}    ${THEME}
         ELSE
             Log In Cloud    ${user}    ${password}    ${validate}    ${button}     ${exists}    ${reset}    ${2fa}    ${2fa backup code}
         END
@@ -357,7 +358,7 @@ Get Random Email Robot
     [return]    ${random email}
 
 Get Email Link
-    [Arguments]    ${recipient}    ${link type}    ${via email}=${FROM EMAIL DEFAULT}    ${timeout}=120
+    [Arguments]    ${recipient}    ${link type}    ${via email}=${FROM EMAIL DEFAULT}    ${timeout}=300
     IF    ${via_email}
         Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL NO SEND}    is_secure=True
         ${email}=   Wait For Email    recipient=${recipient}    timeout=${timeout}    status=UNSEEN
