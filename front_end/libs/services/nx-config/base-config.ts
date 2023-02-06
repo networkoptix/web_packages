@@ -329,7 +329,6 @@ export interface Subjects {
     integration: string[];
     ipvd_feedback_page: string[];
     ipvd_feedback_device: string[];
-    showAnalyticsEvents?: boolean;
 }
 
 export interface Type {

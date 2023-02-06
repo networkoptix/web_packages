@@ -56,7 +56,6 @@ const typeLintBlacklist = [
     '**/third-party/third-party-widget.component.ts',
     /* Dialogs */
     '**/add-storage/add-storage.component.ts',
-    '**/add-user/add-user.component.ts',
     '**/add-widget/add-widget.component.ts',
     '**/change-password/change-password.component.ts',
     '**/change-storage/change-storage.component.ts',
@@ -74,7 +73,6 @@ const typeLintBlacklist = [
     '**/merge/merge.component.ts',
     '**/merge/stateForMergeDialog.ts',
     '**/merge/stateMachine.ts',
-    '**/message/message.component.ts',
     '**/remove-system/remove-system.component.ts',
     '**/reset-backup/reset-backup.component.ts',
     '**/reset-server/reset-server.component.ts',

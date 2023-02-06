@@ -31,7 +31,7 @@ import { NxMoreDevicesModule } from './bookmarks/more-devices/more-devices.modul
 import { NxMoreTagsModule } from './bookmarks/more-tags/more-tags.module';
 import { ChangePasswordModalContent } from './change-password/change-password.component';
 import { ChangeStorageModalContent } from './change-storage/change-storage.component';
-import { Client2faWarningModalContent } from './client-2fa-warning/client-2fa-warning.component';
+import { Client2faWarningModalModule } from './client-2fa-warning/client-2fa-warning.module';
 import { CloudStorageActivateModalContent } from './cloud-storage/activate/cloud-storage-activate.component';
 import { CloudStorageDeleteModalContent } from './cloud-storage/delete/cloud-storage-delete.component';
 import { CloudStorageModifyModalContent } from './cloud-storage/modify/cloud-storage-modify.component';
@@ -47,7 +47,7 @@ import { EmbedModalContent } from './embed/embed.component';
 import { GenericDialogModule } from './generic/generic.module';
 import { Mandatory2faModalContent } from './mandatory-2fa/mandatory-2fa.component';
 import { MergeModalContent } from './merge/merge.component';
-import { MessageModalContent } from './message/message.component';
+import { MessageModalModule } from './message/message.module';
 import { NewFeatureInformationModalContent } from './new-feature/new-feature.component';
 import { RefreshSessionModalModule } from './refresh-session/refresh-session.module';
 import { RemoveSystemModalContent } from './remove-system/remove-system.component';
@@ -98,6 +98,8 @@ import { WizardModalContent } from './wizard/wizard.component';
         RemoveUserModalModule,
         DeleteCloudUserModalModule,
         RefreshSessionModalModule,
+        MessageModalModule,
+        Client2faWarningModalModule,
     ],
     declarations: [
         DisconnectModalContent,
@@ -107,7 +109,6 @@ import { WizardModalContent } from './wizard/wizard.component';
         AddStorageModalContent,
         ChangeStorageModalContent,
         MergeModalContent,
-        MessageModalContent,
         EmbedModalContent,
         RestartServerModalContent,
         DetachServerModalContent,
@@ -126,7 +127,6 @@ import { WizardModalContent } from './wizard/wizard.component';
         AddWidgetModalContent,
         ConnectCloudModalContent,
         SelectTimeRangeModalContent,
-        Client2faWarningModalContent,
         ReserveSpaceWarningModalContent,
         CreateSystemGroupModalContent,
         NewFeatureInformationModalContent,

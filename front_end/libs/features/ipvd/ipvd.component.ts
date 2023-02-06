@@ -553,20 +553,20 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     }
 
     openPageFeedback(): void {
-        this.dialogs.message(
-            dialogs.message.type.ipvd_page,
-            { disclaimer: this.LANG.privacyPolicy.ipvd, asset: '' }
-        );
+        this.dialogs.message({
+            messageType: dialogs.message.type.ipvd_page,
+            data: { disclaimer: this.LANG.privacyPolicy.ipvd, asset: '' }
+        });
     }
 
     openDeviceFeedback(): void {
-        this.dialogs.message(
-            dialogs.message.type.ipvd_device,
-            {
+        this.dialogs.message({
+            messageType: dialogs.message.type.ipvd_device,
+            data: {
                 disclaimer: this.LANG.privacyPolicy.ipvd,
                 asset: this.activeCamera?.model ?? ''
             }
-        );
+        });
     }
 
     resetActiveCamera(skipUpdateURI?: boolean): void {

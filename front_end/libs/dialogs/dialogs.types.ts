@@ -60,8 +60,21 @@ export interface Confirm extends Generic {
     data: ConfirmData;
 }
 
+interface MessageData {
+    messageType: string;
+    data: {
+        disclaimer: Translatable;
+        email?: string;
+        asset: string;
+        assetId?: string;
+        to?: string;
+    };
+}
+export type Message = DialogType<MessageData, true>;
+
 /* Auth */
 export type RefreshSession = DialogType<NxSystem, true>;
+export type Client2faWarning = DialogType<void, void>;
 
 /* Account */
 interface Account2faActionData {

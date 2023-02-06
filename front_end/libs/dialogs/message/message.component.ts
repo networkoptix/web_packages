@@ -1,18 +1,16 @@
+import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import {
     Component,
     Inject,
-    Input,
     OnInit,
-    ViewChild
 } from '@angular/core';
-import { NgForm } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import type {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';
-import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
+import type { Message as DialogTypes } from '@dialogs/dialogs.types';
 import { credentialsValidation, dialogs } from '@lib/variables/static-variables';
 import { Translatable } from '@pipes/any-translate.types';
 import { NxAccountService } from '@services/account.service';
@@ -29,32 +27,28 @@ type Subject = DropdownItem<string>;
     styleUrls: []
 })
 export class MessageModalContent implements OnInit {
-    @Input() closable = true;
-
     LANG = staticLang;
 
     messageType: string;
-    data: any;
+    data: DialogTypes['data']['data'];
     placeholder: string;
     sendMessage: Process;
     userName: string;
     userEmail: string;
     message: string;
-    agree: boolean;
     title: Translatable;
-    subject: string;
+    private subject: string;
     subjectMessage: string;
     subjects: Subject[];
     url: string;
     credentialsValidation = credentialsValidation;
-    @ViewChild('feedbackForm', { static: true }) public feedbackForm: NgForm;
 
     constructor(
         private translateService: TranslateService,
         private processService: NxProcessService,
         private account: NxAccountService,
-        private dialogRef: DialogRef,
-        @Inject(DIALOG_DATA) private dialogData: any,
+        public dialogRef: DialogRef<DialogTypes['return']>,
+        @Inject(DIALOG_DATA) private dialogData: DialogTypes['data'],
         @Inject(WINDOW) private window: Window,
     ) {
         this.placeholder = '';
@@ -68,6 +62,7 @@ export class MessageModalContent implements OnInit {
 
         this.initForm();
         this.sendMessage = this.processService.createProcess(() => {
+            this.dialogRef.disableClose = false;
             const asset = this.data.assetId || this.data.asset;
 
             return this.account.sendMessage(
@@ -81,14 +76,21 @@ export class MessageModalContent implements OnInit {
             successMessage: this.LANG.dialogs.message.sent
         }).then(() => {
             this.close(true);
+        }, () => {
+            this.unlock();
         });
     }
 
-    close = (msg: string | boolean = false): void => {
-        this.dialogRef.close(msg);
+    unlock = (): void => {
+        this.dialogRef.disableClose = false;
     };
 
-    initForm(): void {
+    close = (msg?: DialogTypes['return']): void => {
+        this.dialogRef.close(msg);
+        this.unlock();
+    };
+
+    private initForm(): void {
         this.placeholder = '';
         if (this.messageType === dialogs.message.type.ipvd_page) {
             this.placeholder = this.LANG.dialogs.message.placeholders.feedback;
@@ -101,7 +103,8 @@ export class MessageModalContent implements OnInit {
                 : { companyName: this.data.to }
         };
 
-        this.subjects = dialogs.message.subjects[this.messageType]
+        const type = this.messageType as keyof typeof dialogs.message.subjects;
+        this.subjects = dialogs.message.subjects[type]
             .map(subject => {
                 return {
                     value: subject,

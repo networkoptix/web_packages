@@ -1,7 +1,8 @@
+import { DialogRef } from '@angular/cdk/dialog';
 import { Component } from '@angular/core';
 
 import * as staticLang from '@common/language/language_i18n_static.json';
-import { DialogRef } from '@dialogs/dialog-ref';
+import type { Client2faWarning as DT } from '@dialogs/dialogs.types';
 
 @Component({
     selector: 'nx-client-2fa-warning',
@@ -11,8 +12,7 @@ import { DialogRef } from '@dialogs/dialog-ref';
 export class Client2faWarningModalContent {
     LANG = staticLang;
     constructor(
-        private dialogRef: DialogRef,
-        // @Inject(DIALOG_DATA) private dialogData: never,
+        private dialogRef: DialogRef<DT['return']>,
     ) {
     }
 

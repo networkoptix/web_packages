@@ -13,7 +13,6 @@ import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import type { RibbonAction } from '@components/ribbon/ribbon.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import type { MessageParams } from '@dialogs/message/message.component.types';
 import { icons, dialogs } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
@@ -219,7 +218,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     }
 
     openMessageDialog(): void {
-        const data: MessageParams = {
+        const data = {
             to: this.plugin.information.companyName,
             email: this.plugin.support.supportEmail,
             disclaimer: {
@@ -232,9 +231,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
             assetId: this.plugin.id,
             asset: this.plugin.information.name
         };
-        this.dialogs
-            .message(dialogs.message.type.integration, data)
-            .then(() => { });
+        this.dialogs.message({ messageType: dialogs.message.type.integration, data });
     }
 
     handleDashboardOpen(open, queryParams, url): void {

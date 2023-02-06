@@ -31,10 +31,6 @@ import * as Dt from './dialogs.types';
 import { NxToastService } from './toast.service';
 import { TfaAction } from './two-fa/two-fa.component.types';
 
-interface IParams<Value = any> {
-    [key: string]: Value;
-}
-
 @UntilDestroy({ checkProperties: true })
 @Injectable({ providedIn: 'root' })
 export class NxDialogsService extends DialogBase {
@@ -382,22 +378,6 @@ export class NxDialogsService extends DialogBase {
             .afterClosed();
     }
 
-    public async message(type: string, data: IParams): Promise<any> {
-        const config: Partial<DialogConfig> = {
-            data: {
-                messageType: type,
-                data,
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-        const component = await import('./message/message.component').then(m => m.MessageModalContent);
-
-        return this.open(component, dialogConfig)
-            .afterClosed();
-    }
-
     // TODO: Not used - keep as reference
     // public embed (systemId: string) {
     //     const config: Partial<DialogConfig> = {};
@@ -500,16 +480,6 @@ export class NxDialogsService extends DialogBase {
         return this.open(component, dialogConfig).afterClosed();
     }
 
-    public async client2faWarning(): Promise<void> {
-        const config: Partial<DialogConfig> = {};
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-        const component = await import('./client-2fa-warning/client-2fa-warning.component').then(m => m.Client2faWarningModalContent);
-
-        return this.open(component, dialogConfig).afterClosed();
-    }
-
     public async reserveSpaceWarning(): Promise<string | void> {
         const config: Partial<DialogConfig> = {};
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
@@ -548,6 +518,24 @@ export class NxDialogsService extends DialogBase {
     public cloudLayoutsInfo = this.#newFeatureMethodFactory('cloudLayouts');
 
     /* ANGULAR CDK DIALOGS */
+    /* General steps for migrating a dialog to angular CDK
+    1. Add data and return types to dialogs.types.ts.
+    2. Replace dialogRef and DIALOG_DATA in the dialog component with the CDK equivalents.
+       DialogRef should have the dialog's return type as the generic, and DIALOG_DATA should
+       be the dialog's data type.
+    3. If closable property is present, replace with !dialogRef.disableClose
+       a. IMPORTANT: Because clicking outside of the dialog will close it by default,
+          make sure to set disableClose to true at the beginning of the Process
+          if the dialog has one, and to set it to false when the Process completes
+          or errors.
+    4. Replace the dialog method in dialogs.service.ts
+       a. If you don't require any special behavior, use the dialogV2Factory
+       b. If you do require special behavior, use openV2 directly
+    5. Convert the dialog component to SCAM
+       a. Remove the component from declarations in dialogs.module.ts and add
+          the module to imports
+     */
+
     private openV2<R, D = never, T = unknown>(
         component: ComponentType<T>,
         customconfig: CdkDialogConfig<D> = {}
@@ -589,25 +577,19 @@ export class NxDialogsService extends DialogBase {
     async alert(data: Dt.Alert['data']): Promise<Dt.Alert['return']> {
         const component = await import('./generic/generic.component').then(m => m.GenericModalContent);
         const dialogConfig: CdkDialogConfig<Dt.Generic['data']> = {
-            width: DIALOG_SIZE_V2.NORMAL,
-            data: { ...data, footer: { actionable: false, ...data.footer } },
+            data: { ...data, footer: { actionable: false, ...(data.footer ?? {}) } },
             // Only close button
         };
-        return firstValueFrom(
-            this.cdkDialog.open<Dt.Alert['return']>(component, dialogConfig).closed
-        );
+        return this.openV2(component, dialogConfig);
     }
 
     async confirm(data: Dt.Confirm['data']): Promise<Dt.Confirm['return']> {
         const component = await import('./generic/generic.component').then(m => m.GenericModalContent);
         const dialogConfig: CdkDialogConfig<Dt.Generic['data']> = {
-            width: DIALOG_SIZE_V2.NORMAL,
             data: { ...data, footer: { actionable: true, ...data.footer } },
             // With action/cancel buttons
         };
-        return firstValueFrom(
-            this.cdkDialog.open<Dt.Confirm['return']>(component, dialogConfig).closed
-        );
+        return this.openV2(component, dialogConfig);
     }
 
     /* Auth */
@@ -623,6 +605,10 @@ export class NxDialogsService extends DialogBase {
     refreshSession = this.dialogV2Factory<Dt.RefreshSession>(
         () => import('./refresh-session/refresh-session.component').then(m => m.RefreshSessionModalContent),
         { disableClose: true }
+    );
+
+    client2faWarning = this.dialogV2Factory<Dt.Client2faWarning>(
+        () => import('./client-2fa-warning/client-2fa-warning.component').then(m => m.Client2faWarningModalContent)
     );
 
     /* Account */
@@ -670,6 +656,11 @@ export class NxDialogsService extends DialogBase {
             data: { oldPassword, newPassword }
         });
     }
+
+    message = this.dialogV2Factory<Dt.Message>(
+        () => import('./message/message.component').then(m => m.MessageModalContent),
+        { autoFocus: '#message' },
+    );
 
     /* Systems */
 
