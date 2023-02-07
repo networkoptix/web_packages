@@ -77,13 +77,11 @@ Verify Add Storage Dialog
 
 Server Advanced Settings Suite Setup
     Open Browser and go to URL    ${url}
-    ${random} =	   Generate Random String   length=5
-    Set Suite Variable     ${random}    ${random}
-    ${owner}=    Register and activate account with random email    mark    hamil    ${password}
-    ${server} =    Create Base System    servers_advanced-${random}    owner=${owner}    storage string=-v recordings:/recordings  
-    Set Suite Variable    &{server}    &{server} 
+    ${servers} =    Create Systems
+    Set Suite Variable    ${servers}    ${servers}
+    Set Suite Variable    ${server}     ${servers}[0]
     Go to    ${url}
-    Run Keyword If    '''${mode}'''=='''cloud'''    Set Suite Variable     ${user in charge}    ${server}[owner]
+    Run Keyword If    '''${mode}'''=='''cloud'''    Set Suite Variable     ${user in charge}    ${server}[cloudOwner]
     ...    ELSE   Set Suite Variable     ${user in charge}    admin
     Sleep    20
 
@@ -98,7 +96,7 @@ Advanced Server Settings Test Setup
 
 Cloud Test Setup System Servers Advanced
     [Arguments]    ${server}    ${user}    ${verify}
-    Log in to system    ${server}    ${user}    validate=${True}
+    Log in to system new   ${server}    ${user}    validate=${True}
     Wait Until Element is Visible    ${SERVERS LINK}
     Sleep    1
     Click Link    ${SERVERS LINK}
@@ -117,7 +115,7 @@ Advanced Server Test Teardown
 
 Server Advanced Settings Suite Teardown
     Close All Browsers
-    Delete Base System    ${server}
+    Teardown Servers    ${servers}
 
 Server Settings Suite Setup
     Open Browser and go to URL    ${url}

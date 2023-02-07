@@ -435,11 +435,3 @@ System Offline Restart
     Common Restart Logout    ${ENV}
     Log in to user and system   ${system}[cloudOwner]    ${system}[id]
     Wait Until Elements Are Visible    ${SYSTEM NAME OFFLINE}    ${DISCONNECT FROM NX}    ${USERS LIST LINK}
-
-Log in to system new
-    [Arguments]    ${system}    ${email}    ${password}=${BASE PASSWORD}    ${validate}=${False}
-    ${url}=   Set Variable If
-    ...    '''${mode}'''== '''cloud'''    ${ENV}/systems/${system}[id]
-    ...    '''${mode}'''=='''webadmin'''    https://${QA BURBANK IP}:${system}[port][0]
-    Go To    ${url}
-    Log In    ${email}    ${password}    validate=${validate}    button=${None}

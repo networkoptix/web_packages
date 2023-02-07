@@ -34,7 +34,7 @@ Force Tags
     Turn on 2fa Functionality    2fa link method=with qr scan
     Wait Until Element Is Visible    ${2FA ENABLED BADGE}
     Log Out
-    Log In    ${login user}    ${password}    2fa=${True}
+    Log In    ${login user}    ${password}    2fa=${True}    api=${False}
 
 5. Successful disabling 2FA for user with enabled 2FA for specific systems
     [Tags]    smoke    ci
@@ -72,7 +72,7 @@ Force Tags
 
 8. Successfully changing 2FA mode for user to the whole account
     [Tags]    C93781
-    Log In    ${login user}    ${password}
+    Log In    ${login user}    ${password}    api=${False}
     Turn on 2fa Functionality
     Wait Until Element Is Visible    ${2FA VERIFICATION CHECKBOX}
     Check or uncheck 2fa ask for verification checkbox
@@ -86,7 +86,7 @@ Force Tags
     
 9. Unsuccessful cloud authorization with 2FA using expired code from app
     [Tags]    C94715
-    Log In    ${login user}    ${password}
+    Log In    ${login user}    ${password}    api=${False}
     Turn on 2fa Functionality
     Wait Until Element Is Visible    ${2FA ENABLED BADGE}
     Log Out

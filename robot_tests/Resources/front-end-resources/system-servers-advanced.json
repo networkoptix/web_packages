@@ -1,0 +1,14 @@
+[
+    {
+        "addUsers":true,
+        "cloudOwner":"",
+        "cloudOwnerId":0,
+        "cloudUsers":{},
+        "localUsers":{},
+        "mac" : "",
+        "name": "",
+        "port": "",
+        "ports":1,
+        "serverId":""
+    }
+]

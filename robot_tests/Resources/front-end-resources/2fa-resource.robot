@@ -8,14 +8,12 @@ Open New Browser On Failure
 
 Setup
     Open Browser and go to URL    ${url}
-    ${user}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
-    Set Suite Variable    ${login user}    ${user}
-    ${rand}=   Generate Random String      length=5
-    ${system}=   Create Base System    2fa-${rand}    image=${IMAGE}    owner=${login user}    add users=${False}
-    Set Suite Variable    ${server url}    https://${QABURBANK IP}:${system}[port]
-    Set Suite Variable    ${system}    ${system}
+    ${servers} =    Create Systems
+    Set Suite Variable    ${servers}    ${servers}
+    Set Suite Variable    ${login user}    ${servers}[0][cloudOwner]
+    Set Suite Variable    ${system}    ${servers}[0]
     ${local system}=   Run Keyword If   '''${mode}'''=='''webadmin'''    Create Base System    2fa_local_${rand}    image=${IMAGE}
-    Set Suite Variable    ${system}
+    Set Suite Variable    ${server url}    https://${QABURBANK IP}:${system}[port][0]
     Set Suite Variable    ${local system}
     Sleep    6
 
@@ -25,7 +23,7 @@ Restart
 
 2fa Suite Teardown
     Close All Browsers
-    Delete Base System    ${system}
+    Teardown Servers    ${servers}
 
 2fa Test Teardown
     ${totp}=    Get 2fa Verification Code    ${2fa key value}

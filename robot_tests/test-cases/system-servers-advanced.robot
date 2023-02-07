@@ -4,12 +4,14 @@ Suite Setup       Server Advanced Settings Suite Setup
 Test Setup        Run Keywords    QA Video Recording Start      Advanced Server Settings Test Setup
 Test Teardown     Run Keywords    QA Video Recording Stop       Advanced Server Test Teardown
 Suite Teardown    Run Keyword and Ignore Error    Server Advanced Settings Suite Teardown
-Force Tags        advanced server
+Force Tags        advanced server     cloud
 
+*** Variables ***
+@{storage string}     -v recordings:/recordings  
 
 *** Test Cases ***
 1. Advanced server settings availability
-    [Tags]    C76558    threaded    cloud    webadmin
+    [Tags]    C76558    webadmin
     Log    Step 1
     Elements Should Not Be Visible
     ...    @{ADVANCED SETTINGS ALERT BAR}
@@ -27,9 +29,9 @@ Force Tags        advanced server
     Log Out
     
     IF    '''${mode}'''=='''cloud'''
-        Log in to system    ${server}    ${server}[cloud users][cloudAdmin] 
+        Log in to system new    ${server}    ${server}[cloudUsers][cloudAdmin]
     ELSE
-        Log in to system    ${server}    ${server}[local users][cloudAdmin][login]    validate=${True}
+        Log in to system new   ${server}    ${server}[localUsers][cloudAdmin][login]    validate=${True}
     END
     Wait Until Element is Visible    ${SERVERS LINK}
     Sleep    1
@@ -50,9 +52,9 @@ Force Tags        advanced server
     Log    Step 4
     Log Out
     IF    '''${mode}'''=='''cloud'''
-        Log in to system    ${server}    ${server}[cloud users][advancedViewer]    validate=${True}
+        Log in to system new    ${server}    ${server}[cloudUsers][advancedViewer]    validate=${True}
     ELSE
-        Log in to system    ${server}    ${server}[local users][advancedViewer][login]    validate=${True}
+        Log in to system new   ${server}    ${server}[localUsers][advancedViewer][login]    validate=${True}
     END
     sleep    5
     Go To    ${location}${ADVANCED SETTINGS}
@@ -64,7 +66,7 @@ Force Tags        advanced server
 
 
 2. "Hide Advanced Settings" button is available and functional
-    [Tags]    C76571    threaded    cloud    webadmin
+    [Tags]    C76571    webadmin
     ${location} =    Get Location
     Go To    ${location}${ADVANCED SETTINGS}
     Reload Page
@@ -85,7 +87,7 @@ Force Tags        advanced server
     ...    @{LOG SETTINGS BLOCK}
 
 3. Toggle switch functionality
-    [Tags]    C76572    threaded    cloud    webadmin
+    [Tags]    C76572    webadmin
     ${location} =    Get Location
     ##sleep    5
     Go To    ${location}${ADVANCED SETTINGS}
@@ -121,7 +123,7 @@ Force Tags        advanced server
     Press Keys    None    ESC
 
 4. Reserved space dropdown menu functionality
-    [Tags]    C76576    threaded    cloud    webadmin
+    [Tags]    C76576    webadmin
     ${location} =    Get Location
     ##sleep    5
     Go To    ${location}${ADVANCED SETTINGS}
@@ -195,7 +197,7 @@ Force Tags        advanced server
     ...    ELSE IF    '${bytes 2}' == 'GB'   Should Be Equal    ${value}    ${divide 1024}
 
 5. Log settings functionality
-    [Tags]    C76573    threaded    cloud    webadmin
+    [Tags]    C76573    webadmin
     ${location} =    Get Location
     Go To    ${location}${ADVANCED SETTINGS}
     Reload Page
@@ -209,7 +211,7 @@ Force Tags        advanced server
        ${id} =    Get Element Attribute    ${dropdown}    id
        ${original} =    Get Text    ${dropdown}/span
        ${original} =    Fetch From Left    ${original}    (
-       Test Every Loglevel Option    ${dropdown}    ${id}    https://${QA BURBANK IP}:${server['port']}
+       Test Every Loglevel Option    ${dropdown}    ${id}    https://${QA BURBANK IP}:${server}[port][0]
        ${current} =    Get Text    ${dropdown}/span
        ${current} =    Fetch From Left    ${original}    (
        IF    '''${original}''' != '''${current}'''
@@ -219,10 +221,10 @@ Force Tags        advanced server
     END
 
 6. Advanced server settings for offline system
-    [Tags]    C76559    threaded    cloud
+    [Tags]    C76559
     Log    Preconditions
     Verify on Servers Page
-    Stop Docker Server    ${server}[id]
+    Stop Docker Server    ${server}[name]
     ${location} =    Get Location
 
     Log    Step 1
@@ -235,7 +237,7 @@ Force Tags        advanced server
     ...    @{LOG SETTINGS BLOCK}
 
     Log    Step 2: make sure settings are back after the server is back online
-    Start Docker Server    ${server}[id]
+    Start Docker Server    ${server}[name]
     Wait Until Element Is Not Visible    ${THIS PAGE CANNOT BE LOADED}    timeout=300
     Wait Until Element is Visible    ${SERVERS LINK}    60
     Sleep    1

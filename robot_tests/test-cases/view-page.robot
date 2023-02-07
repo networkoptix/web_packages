@@ -4,7 +4,7 @@ Suite Setup       View Page Suite Setup
 Test Setup        Run Keywords    QA Video Recording Start     View Page Test Setup
 Test Teardown     Run Keywords    QA Video Recording Stop      restart and log out
 Suite Teardown    Run Keyword and Ignore Error    View Suite Teardown
-Force Tags        cameras
+Force Tags        cameras    WIP
 
 *** Test Cases ***
 1. Resource Tree is loaded correctly

@@ -220,6 +220,14 @@ Log in to system
     Go To    ${url}
     Log In    ${email}    ${password}    validate=${validate}    button=${None}
 
+Log in to system new
+    [Arguments]    ${system}    ${email}    ${password}=${BASE PASSWORD}    ${validate}=${False}
+    ${url}=   Set Variable If
+    ...    '''${mode}'''== '''cloud'''    ${ENV}/systems/${system}[id]
+    ...    '''${mode}'''=='''webadmin'''    https://${QA BURBANK IP}:${system}[port][0]
+    Go To    ${url}
+    Log In    ${email}    ${password}    validate=${validate}    button=${None}
+
 Validate Log In
     [Arguments]    ${email}    ${password}=${BASE PASSWORD}    ${timeout}=${selenium_timeout}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${selenium_timeout}
