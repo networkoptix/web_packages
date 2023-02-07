@@ -1,10 +1,11 @@
 import { Inject, Injectable } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { LocalStorageService, SessionStorageService } from 'ngx-webstorage';
+import { SessionStorageService } from 'ngx-webstorage';
 
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxSessionService } from '@services/session.service';
 import { WINDOW } from '@services/window-provider';
 
 import { CustomAccountProperty } from './nx-cloud-api/custom-account-property';
@@ -33,7 +34,7 @@ export class NxThemeService {
         configService: NxConfigService,
         private cloudApi: NxCloudApiService,
         private sessionStorage: SessionStorageService,
-        private localStorageService: LocalStorageService,
+        private sessionService: NxSessionService,
         @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
@@ -49,6 +50,29 @@ export class NxThemeService {
                     );
                 }
             });
+
+        this.sessionService.loginStateSubject
+            .pipe(untilDestroyed(this))
+            .subscribe(async (loginState: string) => {
+                if (loginState) {
+                    await this.themeCustomProperty.get(false, true)
+                        .then(result => {
+                            this.userTheme = this.getThemeRealName(result.theme || this.CONFIG.themeConfig.default);
+                            this.themeSelected = this.getThemeRealName(result.theme || this.CONFIG.themeConfig.default);
+                        }, err => {
+                            console.error('Feature not available', err);
+                        });
+                } else {
+                    this.themeSelected = this.CONFIG.themeConfig.default === 'auto'
+                        ? this.CONFIG.themeConfig.default
+                        : this.getThemeRealName(this.CONFIG.themeConfig.default);
+                }
+
+                const currentTheme = this.sessionStorage.retrieve('theme');
+                if (this.themeSelected !== currentTheme) {
+                    await this.setTheme(this.themeSelected, loginState);
+                }
+            });
     }
 
     async initTheme(): Promise<void> {
@@ -60,17 +84,16 @@ export class NxThemeService {
             });
         }
 
-        const loginState = this.localStorageService.retrieve('loginstate');
+        if (!this.CONFIG.featureFlags.themesEnabled) {
+            this.themeSelected = this.availThemes.light;
+            await this.setTheme(this.themeSelected, undefined);
+            return;
+        }
+
         this.themeSelected = this.sessionStorage.retrieve('theme');
         NxConfigService.isDarkTheme = this.themeSelected === this.availThemes.dark;
 
         this.darkThemeMq = this.window.matchMedia('(prefers-color-scheme: dark)');
-
-        if (!this.CONFIG.featureFlags.themesEnabled) {
-            this.themeSelected = this.availThemes.light;
-            await this.setTheme(this.themeSelected, loginState);
-            return;
-        }
 
         this.darkThemeMq.addEventListener('change', e => {
             this.themeSelected = this.sessionStorage.retrieve('theme');
@@ -81,22 +104,6 @@ export class NxThemeService {
             const theme = NxConfigService.isDarkTheme ? this.availThemes.dark : this.availThemes.light;
             this.window.document.documentElement.setAttribute('data-theme', theme);
         });
-
-        if (loginState) {
-            await this.themeCustomProperty.get(false, true)
-                .then(result => {
-                    this.userTheme = this.getThemeRealName(result.theme || this.CONFIG.themeConfig.default);
-                    this.themeSelected = this.getThemeRealName(result.theme || this.CONFIG.themeConfig.default);
-                }, err => {
-                    console.error('Feature not available', err);
-                });
-        } else {
-            this.themeSelected = this.CONFIG.themeConfig.default === 'auto'
-                ? this.CONFIG.themeConfig.default
-                : this.getThemeRealName(this.CONFIG.themeConfig.default);
-        }
-
-        await this.setTheme(this.themeSelected, loginState);
     }
 
     getTheme(): string {
