@@ -249,7 +249,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return request.pipe(
             mergeMap(
                 (
-                    error: { status: number; resultCode: string, error: { error: string, errorId: string } },
+                    error: { status: number; resultCode: string; error: { error: string; errorId: string } },
                     attempt: number
                 ) => {
                     if (attempt === 0) {

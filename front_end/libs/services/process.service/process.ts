@@ -13,7 +13,7 @@ import { responseOk, toast } from '@lib/variables/static-variables';
 import { NxSessionService } from '../session.service';
 
 export interface IErrorCodes {
-    [key: string]: string | Function
+    [key: string]: string | Function;
 }
 
 export interface ProcessSettings {

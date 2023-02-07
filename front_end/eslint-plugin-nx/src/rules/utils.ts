@@ -22,7 +22,7 @@ export interface DecoratorCall extends TSESTree.Decorator {
 }
 
 export interface DecoratorNoCall extends TSESTree.Decorator {
-    expression: TSESTree.Identifier
+    expression: TSESTree.Identifier;
 }
 
 /** Type for decorator with or without call */

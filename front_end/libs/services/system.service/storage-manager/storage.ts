@@ -32,17 +32,17 @@ export enum STORAGE_STATUS {
 
 export interface SaveStoragePayload {
     addParams: {
-        name : string,
-        value : string,
-    },
-    id : string,
-    isBackup : boolean,
-    parentId : string,
-    spaceLimit : string,
-    storageType : string,
-    typeId : string,
-    url : string,
-    usedForWriting : boolean
+        name : string;
+        value : string;
+    };
+    id : string;
+    isBackup : boolean;
+    parentId : string;
+    spaceLimit : string;
+    storageType : string;
+    typeId : string;
+    url : string;
+    usedForWriting : boolean;
 }
 
 /**

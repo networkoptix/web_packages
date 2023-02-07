@@ -177,7 +177,7 @@ export class ServerManager {
         return this.mediaserver.getLicenses();
     }
 
-    private calcChannelsLegacy(cameras): Observable<{ total: number; used: number; available: number; }> {
+    private calcChannelsLegacy(cameras): Observable<{ total: number; used: number; available: number }> {
         return this.getLicenses().pipe(
             map(({ licenses, hwids }: any) => {
                 const parsedLicenses = licenses.map(this.parseLicense);
@@ -192,7 +192,7 @@ export class ServerManager {
             })
         );
     }
-    private calcChannels(): Observable<{ total: number; used: number; available: number; }> {
+    private calcChannels(): Observable<{ total: number; used: number; available: number }> {
         return this.system.mediaserver.getLicenseSummaries()
             .pipe(map((licenses: any) => {
                 return Object.entries(licenses)
@@ -212,7 +212,7 @@ export class ServerManager {
 
     private updateLicenseChannels$ = new BehaviorSubject('');
 
-    getLicenseChannels(cameras): Observable<{ total: number; used: number; available: number; }> {
+    getLicenseChannels(cameras): Observable<{ total: number; used: number; available: number }> {
         this.updateLicenseChannels$.next('update');
         return this.handleGetLicenseChannels(cameras);
     }
@@ -373,7 +373,7 @@ export class ServerManager {
         return this.mediaserver.createEvent(params);
     }
 
-    parseLicense({ key, licenseBlock }: { key: string; licenseBlock: string; }) {
+    parseLicense({ key, licenseBlock }: { key: string; licenseBlock: string }) {
         const parsedBlock: any = licenseBlock.split('\n').reduce((parsed, current) => {
             const [curKey, curVal] = current.split('=');
             return { ...parsed, [curKey]: curVal };

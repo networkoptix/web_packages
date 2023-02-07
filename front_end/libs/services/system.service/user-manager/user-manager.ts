@@ -301,10 +301,10 @@ export class UserManager {
     }
 
     protected canBeEdited(user: {
-        isMe: boolean,
-        isLocalOwner: boolean,
-        isCloudOwner: boolean,
-        isAdmin: boolean,
+        isMe: boolean;
+        isLocalOwner: boolean;
+        isCloudOwner: boolean;
+        isAdmin: boolean;
     }): boolean {
         /**
          * User can not be edited if:

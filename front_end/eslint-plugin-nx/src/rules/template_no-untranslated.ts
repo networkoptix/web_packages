@@ -41,9 +41,9 @@ type Text = WithType<TmplAstText, TMPL_AST_NODES.Text$3>
     | WithType<TmplAstBoundText, TMPL_AST_NODES.BoundText> & {
         value: TmplAstBoundText['value'] & {
             ast: {
-                strings: string[],
+                strings: string[];
             };
-        }
+        };
     };
 // Text around BoundText (e.g. <div>foo {{ bar }}</div>) is not separate
 // $Text3 elements, but instead .value.ast.strings on the BoundText element

@@ -117,9 +117,9 @@ export class NxUrlProtocolService {
     getLink(
         linkSettings: LinkSettings
     ): Promise<{
-        link: string,
-        authKey?: string | undefined,
-        code?: string
+        link: string;
+        authKey?: string | undefined;
+        code?: string;
     }> {
         return Promise.all([
             linkSettings.useOauth ? Promise.resolve('') : this.accountService.authKey(),

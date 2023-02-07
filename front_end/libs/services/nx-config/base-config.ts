@@ -30,17 +30,17 @@ export interface ThemeConfig {
 }
 
 export interface BaseConfig {
-    preloadedAccount: unknown,
-    preloadedTranslation: Object,
+    preloadedAccount: unknown;
+    preloadedTranslation: Object;
     accountDropdown: AccountDropdown[];
     accountDropdownStaff: AccountDropdown[];
-    commonPasswordsList?: { [key: string]: number; };
+    commonPasswordsList?: { [key: string]: number };
     capabilities?: Capabilities;
     viewsDir?: string;
     customization: string;
     previewPath?: string;
     featureFlags: FeatureFlags;
-    featureFlagStrings: Record<FeatureFlagType, FeatureFlagType>
+    featureFlagStrings: Record<FeatureFlagType, FeatureFlagType>;
     // TODO Need to double check this type, object in config but accessed as array in integrations.component.ts
     // This is on line 107
     integration: Integration | any;
@@ -71,7 +71,7 @@ export interface BaseConfig {
     vmsName: string;
     accessRoles: AccessRoles;
     allowDebugMode: boolean;
-    serverDocumentation: ServerDocumentation
+    serverDocumentation: ServerDocumentation;
     defaultLanguage: string;
     supportedLanguages: string[];
     headerHeight: number;
@@ -88,7 +88,7 @@ export type RouteCheckTuple = [lookup?: RegExp, replacementUrl?: string, additio
 export interface Developers {
     landing: {
         adminLink: string;
-    }
+    };
 }
 
 export interface Landing {
@@ -103,25 +103,25 @@ export interface FooterItem {
 }
 
 export interface MenuStructure {
-    title: string,
-    description: string,
-    nodes: MenuNode[]
+    title: string;
+    description: string;
+    nodes: MenuNode[];
 }
 
 export interface MenusStructure {
-    [menuName: string]: MenuStructure
+    [menuName: string]: MenuStructure;
 }
 
 export interface DocMenuMap {
     [key: string]: {
-        [key: string]: string
-    }
+        [key: string]: string;
+    };
 }
 
 export interface LicenseType {
     name: string;
     title: string;
-    deactivationsAllowed: number
+    deactivationsAllowed: number;
 }
 
 export type LicenseTypes = LicenseType[];
@@ -192,11 +192,11 @@ export interface APIDocURL {
 }
 
 export interface APIToolSettings {
-    manualSystemChangeCooldown: number
+    manualSystemChangeCooldown: number;
     apiTypes: {
-        main: APIType,
-        deprecated: APIType
-    }
+        main: APIType;
+        deprecated: APIType;
+    };
     defaultManifest: MenuManifest;
     legacyManifest : MenuManifest;
 }
@@ -204,16 +204,16 @@ export interface APIToolSettings {
 export interface ManifestItem {
     name: string;
     sections: {
-        name?: string,
-        scheme: string
-    }[]
+        name?: string;
+        scheme: string;
+    }[];
 }
 
 export type MenuManifest = ManifestItem[];
 
 interface APIType {
-    type: string,
-    displayName: string
+    type: string;
+    displayName: string;
 }
 
 export interface AccessRoles {
@@ -225,16 +225,16 @@ export interface AccessRoles {
     editCameraPermissionFlag: string;
     globalAdminPermissionFlag: string;
     allMediaPermissionFlag: string;
-    viewArchivesPermissionFlag: string,
+    viewArchivesPermissionFlag: string;
     customPermission: CustomPermission;
     predefinedRoles: PredefinedRole[];
     order: string[];
 }
 
 export interface AccountDropdown {
-    name: string,
-    route: string,
-    newWindow: boolean
+    name: string;
+    route: string;
+    newWindow: boolean;
 }
 
 export interface CameraSettings {
@@ -267,7 +267,7 @@ export interface ClientMode {
 }
 
 export interface CloudCapabilities {
-    developersEnabled: boolean,
+    developersEnabled: boolean;
     feedbackEnabled: boolean;
     healthMonitor?: string;
     healthMonitorCacheTimeout?: number;
@@ -469,7 +469,7 @@ export interface Icons {
     dirButtons: string;
     dirTextButtons: string;
     dirHeader: string;
-    dirLayouts: string,
+    dirLayouts: string;
     dirNonStandard: string;
     dirNonStandardView: string;
     dirPagePlaceholder: string;
@@ -551,7 +551,7 @@ export interface Table {
 }
 
 export interface Menus {
-    customization: Customization,
+    customization: Customization;
     account: Account;
     systemHealth: SystemHealth;
     systemSettings: SystemSettings;
@@ -559,7 +559,7 @@ export interface Menus {
 }
 
 export interface Customization {
-    id: string,
+    id: string;
     baseUrl: string;
     icon: string;
     partners: Partners;
@@ -618,7 +618,7 @@ export interface Server extends Admin {
     statusIcons: {
         offline: string;
         online: string;
-    }
+    };
 }
 
 export interface Cameras extends Admin {
@@ -629,7 +629,7 @@ export interface Cameras extends Admin {
         scheduled: string;
         unauthorized: string;
         online: string;
-    }
+    };
 }
 
 export interface Buttons {
@@ -688,7 +688,7 @@ export interface ServersStatus {
     restarting: string;
     resetting: string;
     checking: string;
-    mismatchedcertificate: string
+    mismatchedcertificate: string;
 }
 
 export interface System {
@@ -752,68 +752,68 @@ export interface Setting {
 }
 
 export interface SettingsConfig {
-    auditTrailEnabled: Setting,
-    cameraSettingsOptimization: Setting,
-    cloudConnectUdpHolePunchingEnabled: Setting,
-    defaultMotionMask: string,
-    disabledVendors: Setting,
-    ec2AliveUpdateIntervalSec: Setting,
-    ec2ConnectionKeepAliveTimeoutSec: Setting,
-    ec2KeepAliveProbeCount:Setting,
-    emailFrom: Setting,
-    emailSignature: Setting,
-    emailSupportEmail: Setting,
-    ldapAdminDn: Setting,
-    ldapAdminPassword: Setting,
-    ldapSearchBase: Setting,
-    ldapSearchFilter: Setting,
-    ldapUri: Setting,
-    autoDiscoveryEnabled: Setting,
-    smtpConnectionType: Setting,
-    smtpHost: Setting,
-    smtpPort:Setting,
-    smtpSimple: Setting,
-    smtpTimeout:Setting,
-    smtpPassword: Setting,
-    smtpUser: Setting,
-    updateNotificationsEnabled: Setting,
-    arecontRtspEnabled: Setting,
-    backupNewCamerasByDefault: Setting,
-    statisticsAllowed: Setting,
-    backupQualities: Setting,
-    serverDiscoveryPingTimeoutSec:Setting,
-    cloudAccountName: Setting,
-    cloudHost: Setting,
-    cloudAuthKey: Setting,
-    cloudSystemID: Setting,
-    systemName: Setting,
-    licenseServer: Setting,
-    newSystem: Setting,
-    proxyConnectTimeoutSec:Setting,
-    crossdomainEnabled: Setting,
-    maxRtspConnectDurationSec: Setting,
-    statisticsReportLastNumber: Setting,
-    statisticsReportLastTime: Setting,
-    statisticsReportLastVersion: Setting,
-    statisticsReportServerApi: Setting,
-    statisticsReportTimeCycle:Setting,
-    localSystemId: Setting,
-    systemId: Setting,
-    systemNameForId: Setting,
-    takeCameraOwnershipWithoutLock: Setting,
-    upnpPortMappingEnabled: Setting,
-    trafficEncryptionForced: Setting,
-    videoTrafficEncryptionForced: Setting,
-    updateStatus: Setting,
-    watermarkSettings: Setting,
-    timeSynchronizationEnabled: Setting,
-    primaryTimeServer: Setting,
-    osTimeChangeCheckPeriodMs:Setting,
-    syncTimeExchangePeriod:Setting,
-    syncTimeEpsilon:Setting,
-    maxVirtualCameraArchiveSynchronizationThreads:Setting,
-    maxEventLogRecords:Setting,
-    forceLiveCacheForPrimaryStream: Setting
+    auditTrailEnabled: Setting;
+    cameraSettingsOptimization: Setting;
+    cloudConnectUdpHolePunchingEnabled: Setting;
+    defaultMotionMask: string;
+    disabledVendors: Setting;
+    ec2AliveUpdateIntervalSec: Setting;
+    ec2ConnectionKeepAliveTimeoutSec: Setting;
+    ec2KeepAliveProbeCount:Setting;
+    emailFrom: Setting;
+    emailSignature: Setting;
+    emailSupportEmail: Setting;
+    ldapAdminDn: Setting;
+    ldapAdminPassword: Setting;
+    ldapSearchBase: Setting;
+    ldapSearchFilter: Setting;
+    ldapUri: Setting;
+    autoDiscoveryEnabled: Setting;
+    smtpConnectionType: Setting;
+    smtpHost: Setting;
+    smtpPort:Setting;
+    smtpSimple: Setting;
+    smtpTimeout:Setting;
+    smtpPassword: Setting;
+    smtpUser: Setting;
+    updateNotificationsEnabled: Setting;
+    arecontRtspEnabled: Setting;
+    backupNewCamerasByDefault: Setting;
+    statisticsAllowed: Setting;
+    backupQualities: Setting;
+    serverDiscoveryPingTimeoutSec:Setting;
+    cloudAccountName: Setting;
+    cloudHost: Setting;
+    cloudAuthKey: Setting;
+    cloudSystemID: Setting;
+    systemName: Setting;
+    licenseServer: Setting;
+    newSystem: Setting;
+    proxyConnectTimeoutSec:Setting;
+    crossdomainEnabled: Setting;
+    maxRtspConnectDurationSec: Setting;
+    statisticsReportLastNumber: Setting;
+    statisticsReportLastTime: Setting;
+    statisticsReportLastVersion: Setting;
+    statisticsReportServerApi: Setting;
+    statisticsReportTimeCycle:Setting;
+    localSystemId: Setting;
+    systemId: Setting;
+    systemNameForId: Setting;
+    takeCameraOwnershipWithoutLock: Setting;
+    upnpPortMappingEnabled: Setting;
+    trafficEncryptionForced: Setting;
+    videoTrafficEncryptionForced: Setting;
+    updateStatus: Setting;
+    watermarkSettings: Setting;
+    timeSynchronizationEnabled: Setting;
+    primaryTimeServer: Setting;
+    osTimeChangeCheckPeriodMs:Setting;
+    syncTimeExchangePeriod:Setting;
+    syncTimeEpsilon:Setting;
+    maxVirtualCameraArchiveSynchronizationThreads:Setting;
+    maxEventLogRecords:Setting;
+    forceLiveCacheForPrimaryStream: Setting;
 }
 
 // export interface LoggersConfig {

@@ -1135,7 +1135,7 @@ export class NxSystem {
      * @deprecated Method should be referenced from serverManager instead of directly from system.
      * TODO: Need to update this method once better license information is available from server with details on license types.
      */
-    getLicenseChannels(): Observable<{ total: number; used: number; available: number; }> {
+    getLicenseChannels(): Observable<{ total: number; used: number; available: number }> {
         return this.serverManager.getLicenseChannels(this.cameraManager.cameras);
     }
 

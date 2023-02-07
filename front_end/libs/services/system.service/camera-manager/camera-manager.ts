@@ -86,8 +86,8 @@ export class CameraManager {
         serverTimes,
         cameras,
     } : {
-        serverTimes: ServerTime[],
-        cameras: ec2Camera[]
+        serverTimes: ServerTime[];
+        cameras: ec2Camera[];
     }): Promise<NxSystemCamera[]> {
         const camerasHealth = (await firstValueFrom(this.serverManager.mediaserver.getHealthValues()))
             .reply

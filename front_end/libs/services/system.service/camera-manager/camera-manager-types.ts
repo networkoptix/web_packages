@@ -16,7 +16,7 @@ export interface NxSystemCamera extends Omit<ec2Camera, 'addParams'> {
     motionEnabled: boolean;
     motionLowResEnabled: boolean;
     parentName: string;
-    parsedAddParams: ParsedAddParams
+    parsedAddParams: ParsedAddParams;
     previewUrl: string;
     recordingSettings: RecordingSettings;
     secondsToday: number;

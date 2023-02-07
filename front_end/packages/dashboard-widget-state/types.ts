@@ -18,7 +18,7 @@ export interface System {
 }
 
 export interface MediaServer {
-    getAuthKeys: () => { authGet: string, authPost: string, authPlay: string };
+    getAuthKeys: () => { authGet: string; authPost: string; authPlay: string };
     createEvent: (event: EventParams) => Promise<any>;
     getEvents: (
         from: number,
@@ -27,7 +27,7 @@ export interface MediaServer {
         eventType?: EventTypes,
         actionType?: ActionTypes,
         eventRuleId?: string
-    ) => Promise<any>
+    ) => Promise<any>;
 }
 
 export enum EventTypes {
@@ -87,7 +87,7 @@ export interface EventParams {
     caption?: string;
     description?: string;
     metaData?: string;
-    state?: EventState
+    state?: EventState;
 }
 
 export interface CameraManager {

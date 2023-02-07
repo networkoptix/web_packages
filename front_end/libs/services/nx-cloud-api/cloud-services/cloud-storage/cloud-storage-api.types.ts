@@ -2,27 +2,27 @@
 import { uuid, int, email, url } from '../base-cloud-service-api.types';
 
 export interface StorageId {
-    storageId: uuid
+    storageId: uuid;
 }
 
 export interface SlaveStorageId {
-    slaveStorageId: uuid
+    slaveStorageId: uuid;
 }
 
 export interface SystemId {
-    systemId: uuid
+    systemId: uuid;
 }
 
 export interface TotalSpace {
-    totalSpace: int
+    totalSpace: int;
 }
 
 export interface Systems {
-    systems: uuid[]
+    systems: uuid[];
 }
 
 export interface Region {
-    region: string
+    region: string;
 }
 
 export enum StorageType {
@@ -31,34 +31,34 @@ export enum StorageType {
 }
 
 export interface StorageDevice extends Region {
-    type: StorageType,
-    dataUrl: url
+    type: StorageType;
+    dataUrl: url;
 }
 
 export interface StorageCreate extends TotalSpace, Systems, Region {}
 
 export interface StorageInfo extends TotalSpace, Systems {
-    id: uuid,
-    freeSpace: int,
-    ioDevices: StorageDevice[],
-    owner: email
+    id: uuid;
+    freeSpace: int;
+    ioDevices: StorageDevice[];
+    owner: email;
 }
 
 export interface StorageStatistics {
-    spaceUsed: int,
-    currentRecordingBitrate: int,
-    maxLiveDelay: int,
-    maxCameraRetention: int,
-    cameraCount: int
+    spaceUsed: int;
+    currentRecordingBitrate: int;
+    maxLiveDelay: int;
+    maxCameraRetention: int;
+    cameraCount: int;
 }
 
 export interface StorageCredentials {
-    urls: url[],
-    locations: StorageDevice[],
-    login: string,
-    password: string,
-    sessionToken: string,
-    durationSeconds: int
+    urls: url[];
+    locations: StorageDevice[];
+    login: string;
+    password: string;
+    sessionToken: string;
+    durationSeconds: int;
 }
 
 export interface BoundSystem extends StorageId, SystemId {}

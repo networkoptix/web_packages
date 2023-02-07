@@ -269,7 +269,7 @@ export class NxCloudApiService {
 
     @memoizeAsyncPersistent
     getCommonPasswords() {
-        return this.cachedGet<{ [key: string]: number; }>('/static/scripts/commonPasswordsList.json');
+        return this.cachedGet<{ [key: string]: number }>('/static/scripts/commonPasswordsList.json');
     }
 
     @staffSWBypass
@@ -307,9 +307,9 @@ export class NxCloudApiService {
     }
 
     @memoizeAsyncShort
-    getSystemToken(systemId: string): Observable<{ access_token: string, refresh_token: string }> {
+    getSystemToken(systemId: string): Observable<{ access_token: string; refresh_token: string }> {
         // Todo: Using cloud portal to avoid auth issue with clouddb. Need to revert this once cloudDbApi.getToken is fixed.
-        return this.http.post<{ access_token: string, refresh_token: string }>(`${apiBase}/systems/${systemId}/token`, {}).pipe(shareReplay({ bufferSize: 1, refCount: false, windowTime: 10 * 1000 }));
+        return this.http.post<{ access_token: string; refresh_token: string }>(`${apiBase}/systems/${systemId}/token`, {}).pipe(shareReplay({ bufferSize: 1, refCount: false, windowTime: 10 * 1000 }));
         // return this.cloudDbApi.getToken(systemId);
     }
 
@@ -761,7 +761,7 @@ export class NxCloudApiService {
 
     @staffSWBypass
     @memoizeAsyncPersistent
-    getDocumentation(name, type: t.DOC_TYPES, assetIdOrSearchObject?: string | number | { query: string | number, page?: number }, state?: string, assetVersion?: number) {
+    getDocumentation(name, type: t.DOC_TYPES, assetIdOrSearchObject?: string | number | { query: string | number; page?: number }, state?: string, assetVersion?: number) {
         let endpoint = name ? `/${type}/${name}` : '';
         let params = new HttpParams();
         if (typeof assetIdOrSearchObject === 'string' || typeof assetIdOrSearchObject === 'number') {
@@ -903,7 +903,7 @@ export class NxCloudApiService {
         return this.oauthService.logoutTokens(accessToken, refreshToken);
     }
 
-    getAssets = (maxAge = 0, params) => this.http.get<{ last: string, data: t.ExplorerNode[] }>(`${apiBase}/assets`, { params: { maxAge, ...params } });
+    getAssets = (maxAge = 0, params) => this.http.get<{ last: string; data: t.ExplorerNode[] }>(`${apiBase}/assets`, { params: { maxAge, ...params } });
 
     testEmailNotification(emailNotificationPayload: t.EmailNotification) {
         return this.http.post(apiBase + '/notifications/email_notification', emailNotificationPayload);

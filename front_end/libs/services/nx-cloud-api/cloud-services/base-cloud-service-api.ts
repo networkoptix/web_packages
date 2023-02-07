@@ -27,8 +27,8 @@ export type CreateApiFactory<ApiType = unknown> = (http: HttpClient, withFreshSe
  * Static properties methods required for using BaseCloudServiceAPI abstract class.
  */
 interface CloudServiceAPI {
-    API_BASE: string
-    createApiFactory: CreateApiFactory,
+    API_BASE: string;
+    createApiFactory: CreateApiFactory;
 }
 
 /**

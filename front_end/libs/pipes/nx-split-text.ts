@@ -7,8 +7,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { strSplice } from '@utils/general';
 
 type extraParams = {
-    length: number,
-    translateParams: Record<string, string>
+    length: number;
+    translateParams: Record<string, string>;
 };
 
 /** A pipe to split text into chunks.

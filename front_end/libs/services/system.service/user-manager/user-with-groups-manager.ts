@@ -20,7 +20,7 @@ export class UserWithGroupsManager extends UserManager {
     protected mediaserver: NxSystemRestAPI3;
     protected _userGroups: NxUserGroup[];
     protected _groupPermissions: {
-        [id: string]: Set<string>
+        [id: string]: Set<string>;
     };
     protected _ownerEmail: string;
     protected _userId: string;
@@ -155,7 +155,7 @@ export class UserWithGroupsManager extends UserManager {
     processGroups(userGroups: NxUserGroup[]): void {
         this._userGroups = userGroups;
         const processedGroups: {
-            [id: string]: Set<string>
+            [id: string]: Set<string>;
         } = {};
         userGroups.forEach((userGroup: NxUserGroup) => {
             processedGroups[userGroup.id] = new Set(userGroup.permissions.split('|'));
@@ -166,7 +166,7 @@ export class UserWithGroupsManager extends UserManager {
         this._groupPermissions = processedGroups;
     }
 
-    getPermissionsFromUserGroups({ userGroupIds, permissions }: { userGroupIds?: string[], permissions: string }): Set<string> {
+    getPermissionsFromUserGroups({ userGroupIds, permissions }: { userGroupIds?: string[]; permissions: string }): Set<string> {
         const permissionSet = new Set<string>(permissions && permissions.includes('|')
             ? permissions.split('|')
             : [permissions]

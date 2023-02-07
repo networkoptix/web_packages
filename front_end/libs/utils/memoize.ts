@@ -25,7 +25,7 @@ export function objectRef(this: Record<string, string>): string {
     return stringify(fromThis);
 }
 
-export function defaultHashFunction(this: { memoizationId: string; }, ...args: unknown[]): Hash {
+export function defaultHashFunction(this: { memoizationId: string }, ...args: unknown[]): Hash {
     try {
         // Issue with Proxy objects from IConfig. Ignore first hashes.
         return stringify(args);

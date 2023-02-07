@@ -43,8 +43,8 @@ export class SelectTimeRangeModalContent implements OnInit {
         @Inject(DIALOG_DATA)
         private dialogData: {
             selection: TimelineSelectionService;
-            start: Date,
-            end: Date,
+            start: Date;
+            end: Date;
         },
     ) {
         pickFrom(this.dialogData, ['selection', 'start', 'end'], this);

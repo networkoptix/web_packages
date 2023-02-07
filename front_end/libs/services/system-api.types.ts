@@ -9,138 +9,138 @@ interface IParams<Value = any> {
  * export interface GetUserRoles extends NormalResponse<UserPermissions> {}
  */
 export interface NormalResponse<Reply = {}> {
-    error: string,
-    errorString: string,
-    reply: Reply,
+    error: string;
+    errorString: string;
+    reply: Reply;
 }
 
 export interface RebuildResponse<Reply = {}> {
-    reply?: Reply,
-    main?: Reply,
-    backup?: Reply
+    reply?: Reply;
+    main?: Reply;
+    backup?: Reply;
 }
 
 export interface Settings {
-    additionalLocalFsTypes: string,
-    arecontRtspEnabled: string,
-    auditTrailEnabled: string,
-    auditTrailPeriodDays: string,
-    autoDiscoveryEnabled: string,
-    autoDiscoveryResponseEnabled: string,
-    autoUpdateThumbnails: string,
-    backupNewCamerasByDefault: string,
-    backupQualities: string,
-    cameraSettingsOptimization: string,
-    clientStatisticsSettingsUrl: string,
-    cloudAccountName: string,
-    cloudConnectRelayingEnabled: string,
-    cloudConnectUdpHolePunchingEnabled: string,
-    cloudHost: string,
-    cloudSystemID: string,
-    crossdomainEnabled: string,
-    defaultExportVideoCodec: string,
-    defaultVideoCodec: string,
-    disabledVendors: string,
-    downloaderPeers: string,
-    ec2AliveUpdateIntervalSec: string,
-    ec2ConnectionKeepAliveTimeoutSec: string,
-    ec2KeepAliveProbeCount: string,
-    emailFrom: string,
-    emailSignature: string,
-    emailSupportEmail: string,
-    enableEdgeRecording: string,
-    eventLogPeriodDays: string,
-    forceLiveCacheForPrimaryStream: string,
-    installedUpdateInformation: string,
-    lastMergeMasterId: string,
-    lastMergeSlaveId: string,
-    ldapAdminDn: string,
-    ldapSearchBase: string,
-    ldapSearchFilter: string,
-    ldapSearchTimeoutS: string,
-    ldapUri: string,
-    licenseServer: string,
-    localSystemId: string,
-    lowQualityScreenVideoCodec: string,
-    maxDifferenceBetweenSynchronizedAndInternetTime: string,
-    maxDifferenceBetweenSynchronizedAndLocalTimeMs: string,
-    maxEventLogRecords: string,
-    maxP2pAllClientsSizeBytes: string,
-    maxP2pQueueSizeBytes: string,
-    maxRecordQueueSizeBytes: string,
-    maxRecordQueueSizeElements: string,
-    maxRemoteArchiveSynchronizationThreads: string,
-    maxRtpRetryCount: string,
-    maxRtspConnectDurationSeconds: string,
-    maxSceneItems: string,
-    maxVirtualCameraArchiveSynchronizationThreads: string,
-    maxHttpTranscodingSessions: string,
-    metadataStorageChangePolicy: string,
-    osTimeChangeCheckPeriodMs: string,
-    primaryTimeServer: string,
-    proxyConnectTimeoutSec: string,
-    pushNotificationsLanguage: string,
-    resourceFileUri: string,
-    rtpTimeoutMs: string,
-    sequentialFlirOnvifSearcherEnabled: string,
-    serverDiscoveryPingTimeoutSec: string,
-    sessionLimitMinutes: string,
-    smtpConnectionType: string,
-    smtpHost: string,
-    smtpPort: string,
-    smtpSimple: string,
-    smtpTimeout: string,
-    smtpUser: string,
-    specificFeatures: string,
-    statisticsAllowed: string,
-    statisticsReportLastNumber: string,
-    statisticsReportLastTime: string,
-    statisticsReportLastVersion: string,
-    statisticsReportServerApi: string,
-    statisticsReportTimeCycle: string,
-    statisticsReportUpdateDelay: string,
-    syncTimeEpsilon: string,
-    syncTimeExchangePeriod: string,
-    systemName: string,
-    takeCameraOwnershipWithoutLock: string,
-    targetUpdateInformation: string,
-    timeSynchronizationEnabled: string,
-    trafficEncryptionForced: string,
-    updateNotificationsEnabled: string,
-    upnpPortMappingEnabled: string,
-    useTextEmailFormat: string,
-    useWindowsEmailLineFeed: string,
-    videoTrafficEncryptionForced: string,
-    watermarkSettings: string,
-    webSocketEnabled: string
+    additionalLocalFsTypes: string;
+    arecontRtspEnabled: string;
+    auditTrailEnabled: string;
+    auditTrailPeriodDays: string;
+    autoDiscoveryEnabled: string;
+    autoDiscoveryResponseEnabled: string;
+    autoUpdateThumbnails: string;
+    backupNewCamerasByDefault: string;
+    backupQualities: string;
+    cameraSettingsOptimization: string;
+    clientStatisticsSettingsUrl: string;
+    cloudAccountName: string;
+    cloudConnectRelayingEnabled: string;
+    cloudConnectUdpHolePunchingEnabled: string;
+    cloudHost: string;
+    cloudSystemID: string;
+    crossdomainEnabled: string;
+    defaultExportVideoCodec: string;
+    defaultVideoCodec: string;
+    disabledVendors: string;
+    downloaderPeers: string;
+    ec2AliveUpdateIntervalSec: string;
+    ec2ConnectionKeepAliveTimeoutSec: string;
+    ec2KeepAliveProbeCount: string;
+    emailFrom: string;
+    emailSignature: string;
+    emailSupportEmail: string;
+    enableEdgeRecording: string;
+    eventLogPeriodDays: string;
+    forceLiveCacheForPrimaryStream: string;
+    installedUpdateInformation: string;
+    lastMergeMasterId: string;
+    lastMergeSlaveId: string;
+    ldapAdminDn: string;
+    ldapSearchBase: string;
+    ldapSearchFilter: string;
+    ldapSearchTimeoutS: string;
+    ldapUri: string;
+    licenseServer: string;
+    localSystemId: string;
+    lowQualityScreenVideoCodec: string;
+    maxDifferenceBetweenSynchronizedAndInternetTime: string;
+    maxDifferenceBetweenSynchronizedAndLocalTimeMs: string;
+    maxEventLogRecords: string;
+    maxP2pAllClientsSizeBytes: string;
+    maxP2pQueueSizeBytes: string;
+    maxRecordQueueSizeBytes: string;
+    maxRecordQueueSizeElements: string;
+    maxRemoteArchiveSynchronizationThreads: string;
+    maxRtpRetryCount: string;
+    maxRtspConnectDurationSeconds: string;
+    maxSceneItems: string;
+    maxVirtualCameraArchiveSynchronizationThreads: string;
+    maxHttpTranscodingSessions: string;
+    metadataStorageChangePolicy: string;
+    osTimeChangeCheckPeriodMs: string;
+    primaryTimeServer: string;
+    proxyConnectTimeoutSec: string;
+    pushNotificationsLanguage: string;
+    resourceFileUri: string;
+    rtpTimeoutMs: string;
+    sequentialFlirOnvifSearcherEnabled: string;
+    serverDiscoveryPingTimeoutSec: string;
+    sessionLimitMinutes: string;
+    smtpConnectionType: string;
+    smtpHost: string;
+    smtpPort: string;
+    smtpSimple: string;
+    smtpTimeout: string;
+    smtpUser: string;
+    specificFeatures: string;
+    statisticsAllowed: string;
+    statisticsReportLastNumber: string;
+    statisticsReportLastTime: string;
+    statisticsReportLastVersion: string;
+    statisticsReportServerApi: string;
+    statisticsReportTimeCycle: string;
+    statisticsReportUpdateDelay: string;
+    syncTimeEpsilon: string;
+    syncTimeExchangePeriod: string;
+    systemName: string;
+    takeCameraOwnershipWithoutLock: string;
+    targetUpdateInformation: string;
+    timeSynchronizationEnabled: string;
+    trafficEncryptionForced: string;
+    updateNotificationsEnabled: string;
+    upnpPortMappingEnabled: string;
+    useTextEmailFormat: string;
+    useWindowsEmailLineFeed: string;
+    videoTrafficEncryptionForced: string;
+    watermarkSettings: string;
+    webSocketEnabled: string;
 }
 
 export interface SystemSettings {
-    settings: Settings
+    settings: Settings;
 }
 
 interface SystemTimeReply {
-    isTakenFromInternet: boolean,
-    utcTimeMs: string
+    isTakenFromInternet: boolean;
+    utcTimeMs: string;
 }
 export interface SystemTime extends NormalResponse<SystemTimeReply> {}
 
 export interface Param {
-    name: string,
-    value: string
+    name: string;
+    value: string;
 }
 
 export interface ec2Storage {
-    addParams: Param[],
-    id: string,
-    isBackup: boolean,
-    name: string,
-    parentId: string,
-    spaceLimit: string,
-    storageType: string,
-    typeId: string,
-    url: string,
-    usedForWriting: boolean
+    addParams: Param[];
+    id: string;
+    isBackup: boolean;
+    name: string;
+    parentId: string;
+    spaceLimit: string;
+    storageType: string;
+    typeId: string;
+    url: string;
+    usedForWriting: boolean;
 }
 
 interface ApiConfigureReply {
@@ -151,58 +151,58 @@ export interface ApiConfigure extends NormalResponse<ApiConfigureReply> {}
 export interface RestartServer extends NormalResponse<null> {}
 
 export interface ModuleInformationReply {
-    brand: string,
-    cloudHost: string,
-    cloudSystemId: string,
-    customization: string,
-    ecDbReadOnly: boolean,
-    flags?: IParams<boolean>,
-    hardwareIds?: string[],
-    hwPlatform: string,
-    id: string,
-    localSystemId: string,
-    name: string,
+    brand: string;
+    cloudHost: string;
+    cloudSystemId: string;
+    customization: string;
+    ecDbReadOnly: boolean;
+    flags?: IParams<boolean>;
+    hardwareIds?: string[];
+    hwPlatform: string;
+    id: string;
+    localSystemId: string;
+    name: string;
     osInfo: {
-        platform: string,
-        variant: string,
-        variantVersion: string
-    },
-    osTimeMs?: number,
-    port: number,
-    protoVersion: number,
-    realm?: string,
-    remoteAddresses: string[],
-    runtimeId: string,
-    serverFlags: string,
-    sslAllowed: true,
-    status?: string,
-    synchronizedTimeMs?: number,
-    systemName: string,
-    timeZoneOffsetMs?: number,
-    type: string,
-    version: string
+        platform: string;
+        variant: string;
+        variantVersion: string;
+    };
+    osTimeMs?: number;
+    port: number;
+    protoVersion: number;
+    realm?: string;
+    remoteAddresses: string[];
+    runtimeId: string;
+    serverFlags: string;
+    sslAllowed: true;
+    status?: string;
+    synchronizedTimeMs?: number;
+    systemName: string;
+    timeZoneOffsetMs?: number;
+    type: string;
+    version: string;
 }
 export type ModuleInformation = NormalResponse<ModuleInformationReply>;
 
 export interface HardwareIds {
-    hardwareIds: string[],
-    serverId: string
+    hardwareIds: string[];
+    serverId: string;
 }
 
 export interface LogLevelReply {
-    EC2_TRAN: string,
-    HTTP: string,
-    HWID: string,
-    MAIN: string,
-    PERMISSIONS: string
+    EC2_TRAN: string;
+    HTTP: string;
+    HWID: string;
+    MAIN: string;
+    PERMISSIONS: string;
 }
 export interface LogLevel extends NormalResponse<LogLevelReply> {}
 
 export interface ServerTime {
-    osTime: string,
-    serverId: string,
-    timeZoneOffset: string,
-    vmsTime: string,
+    osTime: string;
+    serverId: string;
+    timeZoneOffset: string;
+    vmsTime: string;
 }
 
 export interface ec2AccessRight {
@@ -211,9 +211,9 @@ export interface ec2AccessRight {
 }
 
 export interface ec2PredefinedRole {
-    isOwner: boolean,
-    name: string,
-    permissions: string
+    isOwner: boolean;
+    name: string;
+    permissions: string;
 }
 
 export interface ec2UserRole {
@@ -237,37 +237,37 @@ export interface CurrentUser {
 }
 
 export interface ec2User {
-    cryptSha512Hash: string,
-    digest: string,
-    email: string,
-    fullName: string,
-    hash: string,
-    id: string,
-    isAdmin: boolean,
-    isCloud: boolean,
-    isEnabled: boolean,
-    isLdap: boolean,
-    name: string,
-    parentId: string,
-    permissions: string,
-    realm: string,
-    typeId: string,
-    url: string,
-    userRoleId: string
+    cryptSha512Hash: string;
+    digest: string;
+    email: string;
+    fullName: string;
+    hash: string;
+    id: string;
+    isAdmin: boolean;
+    isCloud: boolean;
+    isEnabled: boolean;
+    isLdap: boolean;
+    name: string;
+    parentId: string;
+    permissions: string;
+    realm: string;
+    typeId: string;
+    url: string;
+    userRoleId: string;
     userRoleIds: string[];
 }
 
 export interface UserSession {
-  username: string,
-  token: string,
-  ageS: number,
-  expiresInS: number
+  username: string;
+  token: string;
+  ageS: number;
+  expiresInS: number;
 }
 
 interface AggregatedUsersReply {
     'ec2/getAccessRights': ec2AccessRight[];
-    'ec2/getPredefinedRoles': ec2PredefinedRole[],
-    'ec2/getUserRoles': ec2UserRole[],
+    'ec2/getPredefinedRoles': ec2PredefinedRole[];
+    'ec2/getUserRoles': ec2UserRole[];
     'ec2/getUsers': ec2User[];
 }
 export interface AggregatedUsers extends NormalResponse<AggregatedUsersReply> {}
@@ -293,93 +293,93 @@ export type RestV1SaveUser = ec2SaveUser & Partial<{
 }>;
 
 export interface ChangedIdReturned {
-    id: string
+    id: string;
 }
 
 export interface Task {
-    bitrateKbps: number,
-    dayOfWeek: number,
-    endTime: number,
-    fps: number,
+    bitrateKbps: number;
+    dayOfWeek: number;
+    endTime: number;
+    fps: number;
     metadataTypes: string;
-    recordingType: string,
-    startTime: number,
-    streamQuality: string
+    recordingType: string;
+    startTime: number;
+    streamQuality: string;
 }
 
 export interface ec2Camera {
-    addParams: Param[],
-    audioEnabled: boolean,
+    addParams: Param[];
+    audioEnabled: boolean;
     backupContentType: string;
     backupPolicy: string;
     backupQuality: string;
-    backupType?: string,
-    controlEnabled: boolean,
-    dewarpingParams: string,
-    disableDualStreaming: boolean,
-    failoverPriority: string,
-    groupId: string,
-    groupName: string,
-    id: string,
-    licenseUsed: boolean,
-    logicalId: string,
-    mac: string,
-    manuallyAdded: boolean,
-    maxArchiveDays: number,
+    backupType?: string;
+    controlEnabled: boolean;
+    dewarpingParams: string;
+    disableDualStreaming: boolean;
+    failoverPriority: string;
+    groupId: string;
+    groupName: string;
+    id: string;
+    licenseUsed: boolean;
+    logicalId: string;
+    mac: string;
+    manuallyAdded: boolean;
+    maxArchiveDays: number;
     maxArchivePeriodS: number;
-    minArchiveDays: number,
+    minArchiveDays: number;
     minArchivePeriodS: number;
-    model: string,
-    motionMask: string,
-    motionType: string,
-    name: string,
-    parentId: string,
-    physicalId: string,
-    preferredServerId: string,
-    recordAfterMotionSec: number,
-    recordBeforeMotionSec: number,
-    scheduleEnabled: boolean,
-    scheduleTasks: Task[],
-    status: string,
-    statusFlags: string,
-    typeId: string,
-    url: string,
-    userDefinedGroupName: string,
-    vendor: string
+    model: string;
+    motionMask: string;
+    motionType: string;
+    name: string;
+    parentId: string;
+    physicalId: string;
+    preferredServerId: string;
+    recordAfterMotionSec: number;
+    recordBeforeMotionSec: number;
+    scheduleEnabled: boolean;
+    scheduleTasks: Task[];
+    status: string;
+    statusFlags: string;
+    typeId: string;
+    url: string;
+    userDefinedGroupName: string;
+    vendor: string;
 }
 
 export interface EmptyObjectReturned {}
 
 export interface ec2MediaServer {
-    addParams: Param[],
-    allowAutoRedundancy: boolean,
-    authKey: string,
+    addParams: Param[];
+    allowAutoRedundancy: boolean;
+    authKey: string;
     // backupBitrate: number,
     // backupDaysOfTheWeek: string,
     // backupDuration: number,
     // backupStart: number,
     backupBitrateBytesPerSecond: unknown[];
-    backupType?: string,
-    flags: string,
-    id: string,
+    backupType?: string;
+    flags: string;
+    id: string;
     locationId: number;
-    maxCameras: number,
-    metadataStorageId?: string,
-    name: string,
-    networkAddresses: string,
-    osInfo: string,
-    parentId: string,
-    status: string,
-    storages: ec2Storage[],
-    systemInfo: string,
-    typeId: string,
-    url: string,
-    version: string
+    maxCameras: number;
+    metadataStorageId?: string;
+    name: string;
+    networkAddresses: string;
+    osInfo: string;
+    parentId: string;
+    status: string;
+    storages: ec2Storage[];
+    systemInfo: string;
+    typeId: string;
+    url: string;
+    version: string;
 }
 
 export type AggregatedServersAndCameras = NormalResponse<{
-    '/ec2/getMediaServersEx': ec2MediaServer[],
-    'ec2/getCamerasEx': ec2Camera[]
+    '/ec2/getMediaServersEx': ec2MediaServer[];
+    'ec2/getCamerasEx': ec2Camera[];
 }>;
 
 export type CameraManagerUpdateResp = NormalResponse<{
@@ -407,15 +407,15 @@ export interface TimeAndCameras {
 }
 
 interface ResourceTypes {
-    id: string,
-    name: string,
-    parentId: string[],
+    id: string;
+    name: string;
+    parentId: string[];
     propertyTypes: {
-        defaultValue: string,
-        name: string,
-        resourceTypeId: string,
-    }[],
-    vendor: string,
+        defaultValue: string;
+        name: string;
+        resourceTypeId: string;
+    }[];
+    vendor: string;
 }
 
 export interface GetResourceTypes extends Array<ResourceTypes> {}
@@ -424,189 +424,189 @@ export interface AlarmsReply {
     cameras?: {
         [id: string]: {
             availability: {
-                status?: { level: string, text: string }[];
-                offlineEvents?: { level: string, text: string }[];
-            }
-        }
-    },
+                status?: { level: string; text: string }[];
+                offlineEvents?: { level: string; text: string }[];
+            };
+        };
+    };
     servers?: {
         [id: string]: {
             [key: string]: {
                 [key: string]: {
-                    level: string,
-                    text: string
-                }[]
-            }
-        }
-    }
+                    level: string;
+                    text: string;
+                }[];
+            };
+        };
+    };
 }
 
 interface ManifestReplyObjects {
-    id: string,
-    name: string,
-    resource: string,
+    id: string;
+    name: string;
+    resource: string;
     values: {
-        id: string,
-        name: string,
+        id: string;
+        name: string;
         values: {
-            description: string,
-            display: string,
-            format: string,
-            id: string,
-            name: string
-        }[]
-    }[]
+            description: string;
+            display: string;
+            format: string;
+            id: string;
+            name: string;
+        }[];
+    }[];
 }
 
 export interface CameraValues {
     [id: string]: {
         _: {
-            name: string,
-            thumbnail: string
-        },
+            name: string;
+            thumbnail: string;
+        };
         availability: {
-            ipConflicts: number,
-            ipConflicts3min: number,
-            offlineEvents: number,
-            status: string,
-            streamIssues: number,
-            streamIssues1h: number
-        },
+            ipConflicts: number;
+            ipConflicts3min: number;
+            offlineEvents: number;
+            status: string;
+            streamIssues: number;
+            streamIssues1h: number;
+        };
         info: {
-            firmware: string,
-            ip: string,
-            model: string,
-            recording: string,
-            server: string,
-            type: string,
-            vendor: string
-        },
+            firmware: string;
+            ip: string;
+            model: string;
+            recording: string;
+            server: string;
+            type: string;
+            vendor: string;
+        };
         secondaryStream: {
-            recommendedMaxSecondaryResolution: string
-        },
+            recommendedMaxSecondaryResolution: string;
+        };
         storage: {
-            hasArchiveRotated: boolean
-        }
-    }
+            hasArchiveRotated: boolean;
+        };
+    };
 }
 
 interface NetworkInterfaces {
     [id: string]: {
-        _: { name: string },
+        _: { name: string };
         info: {
-            displayAddress: string,
-            otherAddresses: string[],
-            server: string,
-            state: string
-        },
+            displayAddress: string;
+            otherAddresses: string[];
+            server: string;
+            state: string;
+        };
         rates: {
-            inBps: number,
-            inBps1m: number,
-            outBps: number,
-            outBps1m: number
-        }
-    },
+            inBps: number;
+            inBps1m: number;
+            outBps: number;
+            outBps1m: number;
+        };
+    };
 }
 
 interface Servers {
     [id: string]: {
-        _: { name: string },
+        _: { name: string };
         activity: {
-            actionsTriggered: number,
-            actionsTriggered1m: number,
-            activePlugins: string,
-            apiCalls: number,
-            apiCalls1m: number,
-            thumbnails: number,
-            thumbnails1m: number,
-            transactionsPerSecond: number,
-            transactionsPerSecond1m: number
-        },
+            actionsTriggered: number;
+            actionsTriggered1m: number;
+            activePlugins: string;
+            apiCalls: number;
+            apiCalls1m: number;
+            thumbnails: number;
+            thumbnails1m: number;
+            transactionsPerSecond: number;
+            transactionsPerSecond1m: number;
+        };
         availability: {
-            offlineEvents: number,
-            status: string,
-            uptimeS?: number
-        },
+            offlineEvents: number;
+            status: string;
+            uptimeS?: number;
+        };
         info: {
-            cpu: string,
-            cpuCores?: number,
-            os: string,
-            osTime?: string,
-            publicIp: string,
-            ram: number,
-            vmsTime?: string,
-            vmsTimeChanged?: number,
-            vmsTimeChanged24h?: number
-        },
+            cpu: string;
+            cpuCores?: number;
+            os: string;
+            osTime?: string;
+            publicIp: string;
+            ram: number;
+            vmsTime?: string;
+            vmsTimeChanged?: number;
+            vmsTimeChanged24h?: number;
+        };
         load: {
-            cameras: number,
-            cpuUsageP?: number,
-            decodedPixels?: number,
-            decodingSpeed3s?: number,
-            decodingThreads?: number,
-            encodedPixels?: number,
-            encodingSpeed3s?: number,
-            encodingThreads?: number,
-            incomingConnections?: number,
-            logLevel?: string,
-            outgoingConnections?: number,
-            primaryStreams?: number,
-            ramUsageB?: number,
-            ramUsageP?: number,
-            secondaryStreams?: number,
-            serverCpuUsageP?: number,
-            serverRamUsage?: number,
-            serverRamUsageP?: number,
-            threads?: number
-        }
-    }
+            cameras: number;
+            cpuUsageP?: number;
+            decodedPixels?: number;
+            decodingSpeed3s?: number;
+            decodingThreads?: number;
+            encodedPixels?: number;
+            encodingSpeed3s?: number;
+            encodingThreads?: number;
+            incomingConnections?: number;
+            logLevel?: string;
+            outgoingConnections?: number;
+            primaryStreams?: number;
+            ramUsageB?: number;
+            ramUsageP?: number;
+            secondaryStreams?: number;
+            serverCpuUsageP?: number;
+            serverRamUsage?: number;
+            serverRamUsageP?: number;
+            threads?: number;
+        };
+    };
 }
 
 interface Storage {
     [id: string]: {
-        _: { name: string },
+        _: { name: string };
         activity: {
-            readRateBps: number,
-            readRateBps1m: number,
-            transactionsPerSecond: number,
-            writeRateBps: number,
-            writeRateBps1m: number
-        },
+            readRateBps: number;
+            readRateBps1m: number;
+            transactionsPerSecond: number;
+            writeRateBps: number;
+            writeRateBps1m: number;
+        };
         info: {
-            server: string,
-            type: string
-        },
-        space: { totalSpaceB: number },
+            server: string;
+            type: string;
+        };
+        space: { totalSpaceB: number };
         state: {
-            issues: number,
-            issues24h: number,
-            status: string,
-            systemStatus: string
-        }
-    }
+            issues: number;
+            issues24h: number;
+            status: string;
+            systemStatus: string;
+        };
+    };
 }
 
 interface SystemInfo {
     [id: string]: {
         info: {
-            cameras: number,
-            name: string,
-            recommendedMaxCameras: number,
-            recommendedMaxServers: number,
-            servers: number,
-            storages: number,
-            users: number,
-            version: string
-        }
-    }
+            cameras: number;
+            name: string;
+            recommendedMaxCameras: number;
+            recommendedMaxServers: number;
+            servers: number;
+            storages: number;
+            users: number;
+            version: string;
+        };
+    };
 }
 
 interface ValuesReply {
-    cameras: CameraValues,
-    networkInterfaces: NetworkInterfaces,
-    servers: Servers,
-    storage: Storage,
-    systems: SystemInfo
+    cameras: CameraValues;
+    networkInterfaces: NetworkInterfaces;
+    servers: Servers;
+    storage: Storage;
+    systems: SystemInfo;
 }
 
 export interface Alarms extends NormalResponse<AlarmsReply> {}
@@ -614,40 +614,40 @@ export interface Manifests extends NormalResponse<Array<ManifestReplyObjects>> {
 export interface Values extends NormalResponse<ValuesReply> {}
 
 export interface AggregatedHealthReportReply {
-    'ec2/metrics/alarms': Alarms,
-    'ec2/metrics/manifest': Manifests,
-    'ec2/metrics/values': Values
+    'ec2/metrics/alarms': Alarms;
+    'ec2/metrics/manifest': Manifests;
+    'ec2/metrics/values': Values;
 }
 
 export interface AggregatedHealthReport extends NormalResponse<AggregatedHealthReportReply> {}
 
 interface DiscoveredPeersReply {
-    brand: string,
-    cloudHost: string,
-    cloudSystemId: string,
-    customization: string,
-    ecDbReadOnly: boolean,
-    flags?: IParams<boolean>,
-    hwPlatform: string,
-    id: string,
-    localSystemId: string,
-    name: string,
+    brand: string;
+    cloudHost: string;
+    cloudSystemId: string;
+    customization: string;
+    ecDbReadOnly: boolean;
+    flags?: IParams<boolean>;
+    hwPlatform: string;
+    id: string;
+    localSystemId: string;
+    name: string;
     osInfo: {
-        platform: string,
-        variant: string,
-        variantVersion: string
-    },
-    port: number,
-    protoVersion: number,
-    realm: string,
-    remoteAddresses: string[],
-    runtimeId: string,
-    serverFlags: string,
-    sslAllowed: boolean,
-    status: string,
-    systemName: string,
-    type: string,
-    version: string
+        platform: string;
+        variant: string;
+        variantVersion: string;
+    };
+    port: number;
+    protoVersion: number;
+    realm: string;
+    remoteAddresses: string[];
+    runtimeId: string;
+    serverFlags: string;
+    sslAllowed: boolean;
+    status: string;
+    systemName: string;
+    type: string;
+    version: string;
 }
 
 export interface DiscoveredPeers extends NormalResponse<DiscoveredPeersReply[]> {}
@@ -655,8 +655,8 @@ export interface DiscoveredPeers extends NormalResponse<DiscoveredPeersReply[]> 
 export interface MergeSystems extends NormalResponse<DiscoveredPeersReply> {}
 
 interface MergeStatusReply {
-    mergeId: string,
-    mergeInProgress: boolean
+    mergeId: string;
+    mergeInProgress: boolean;
 }
 export interface MergeStatus extends NormalResponse<MergeStatusReply> {}
 
@@ -692,7 +692,7 @@ export interface EventParams {
     caption?: string;
     description?: string;
     metaData?: string;
-    state?: EventState
+    state?: EventState;
 }
 
 export interface ConfigureParams {
@@ -766,29 +766,29 @@ export interface ServerNetworkSettings {
 }
 
 interface RuleDefaults {
-    schedule: string
-    system: boolean
-    eventState: string
-    disabled: boolean
-    aggregationPeriod: number
+    schedule: string;
+    system: boolean;
+    eventState: string;
+    disabled: boolean;
+    aggregationPeriod: number;
 }
 
 export interface BaseRule extends Partial<RuleDefaults> {
-    actionResourceIds?: string[]
-    actionType: string
-    comment?: string
-    eventResourceIds?: string[]
-    eventType: EventTypes
-    id?: string
+    actionResourceIds?: string[];
+    actionType: string;
+    comment?: string;
+    eventResourceIds?: string[];
+    eventType: EventTypes;
+    id?: string;
 }
 
 export interface RawRule extends BaseRule {
-    actionParams: any
-    eventCondition: any
+    actionParams: any;
+    eventCondition: any;
 }
 export interface EventRule extends BaseRule {
-    actionParams: string
-    eventCondition: string
+    actionParams: string;
+    eventCondition: string;
 }
 
 export interface ResourceParam {
@@ -821,8 +821,8 @@ export interface ServerDocumentation {
     errorId: string;
     errorString: string;
     reply: {
-        settings: ServerDocumentationSettings[]
-    }
+        settings: ServerDocumentationSettings[];
+    };
 }
 
 export type WebPages = WebPage[];

@@ -27,7 +27,7 @@ interface ShareBody {
     accountEmail: string;
     accessRole: string;
     systemId: string;
-    isEnabled
+    isEnabled;
 }
 
 const getWindow = (): Window => inject(WINDOW);
@@ -92,8 +92,8 @@ export class CloudDbAPI extends BaseCloudServiceAPI {
 
     /** CloudDB Auth Endpoints */
 
-    private tokenHandler(systemId: string, responseType: 'token'): Observable<{ access_token: string, refresh_token: string }>;
-    private tokenHandler(systemId: string, responseType: 'code'): Observable<{ access_code: string, code: string }>;
+    private tokenHandler(systemId: string, responseType: 'token'): Observable<{ access_token: string; refresh_token: string }>;
+    private tokenHandler(systemId: string, responseType: 'code'): Observable<{ access_code: string; code: string }>;
     private tokenHandler(systemId: string, responseType: string): Observable<unknown> {
         return this.#refreshToken$.pipe(
             map(code => ({
@@ -122,12 +122,12 @@ export class CloudDbAPI extends BaseCloudServiceAPI {
         return this.tokenHandler(systemId, 'code');
     }
 
-    public getToken(systemId = '*'): Observable<{ access_token: string, refresh_token: string }> {
+    public getToken(systemId = '*'): Observable<{ access_token: string; refresh_token: string }> {
         return this.tokenHandler(systemId, 'token');
     }
 
     @memoizeAsyncMedium
-    public getAuth(systemId = '*', realm = 'VMS'): Observable<{ authGet: string, authPost: string, authPlay: string }> {
+    public getAuth(systemId = '*', realm = 'VMS'): Observable<{ authGet: string; authPost: string; authPlay: string }> {
         const digestFactory = (login: string, password: string, nonce: string) => (method: string) => {
             const loginDigest = md5(`${login}:${realm}:${password}`);
             const methodDigest = md5(`${method}:`);
@@ -153,7 +153,7 @@ export class CloudDbAPI extends BaseCloudServiceAPI {
         );
     }
 
-    public createTemporaryCredentials(type = 'short', expirationPeriod = '', prolongationPeriod = '', autoProlongationEnabled = false): Observable<{ login: string, password: string }> {
+    public createTemporaryCredentials(type = 'short', expirationPeriod = '', prolongationPeriod = '', autoProlongationEnabled = false): Observable<{ login: string; password: string }> {
         const body = {
             timeouts: {
                 autoProlongationEnabled,

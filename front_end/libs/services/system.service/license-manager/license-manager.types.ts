@@ -22,7 +22,7 @@ export interface LicenseKeyInfo extends Pick<LicenseStateInfo, 'expirationDate' 
 export type ProcessedLicenseKey = {
     [key in LicenseKeyFields]: string;
 } & {
-    sizeBytes: number
+    sizeBytes: number;
 };
 
 export interface LicenseTagInfo {

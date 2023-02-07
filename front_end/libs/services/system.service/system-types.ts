@@ -48,8 +48,8 @@ export interface ServerTimeInfo {
 }
 
 export interface NxMediaServer extends ec2MediaServer {
-    ip: string,
-    port: string,
+    ip: string;
+    port: string;
     cameras: ec2Camera[];
 }
 
@@ -121,9 +121,9 @@ export interface CameraAdvancedParams {
 }
 
 export interface License {
-    type: string,
-    count: number,
-    countAvail: number,
-    inUse?: number | string,
-    required: number
+    type: string;
+    count: number;
+    countAvail: number;
+    inUse?: number | string;
+    required: number;
 }

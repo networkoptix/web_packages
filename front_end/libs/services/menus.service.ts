@@ -34,12 +34,12 @@ export class NxMenusService {
     apiBase: string = apiBase;
 
     endpoint: Partial<{
-        view: boolean,
-        settings: boolean,
-        information: boolean,
-        bookmarks: boolean,
-        monitoring: boolean,
-        layouts: boolean
+        view: boolean;
+        settings: boolean;
+        information: boolean;
+        bookmarks: boolean;
+        monitoring: boolean;
+        layouts: boolean;
     }> = {};
 
     constructor(

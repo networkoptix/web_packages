@@ -10,69 +10,69 @@ export interface ILanguage {
     name: string;
 }
 
-export type WithFreshSession = (minSessionSeconds?: number) => <T>(observableInputFactory: (config: { accessToken: string, getFreshAccessToken: () => Observable<string> }) => ObservableInput<T>) => Observable<T>;
+export type WithFreshSession = (minSessionSeconds?: number) => <T>(observableInputFactory: (config: { accessToken: string; getFreshAccessToken: () => Observable<string> }) => ObservableInput<T>) => Observable<T>;
 
 export type ILanguages = ILanguage[];
 
 export interface CloudResponse {
-    errorClass: string,
-    errorDetail: number,
-    errorText: string,
-    resultCode: string
+    errorClass: string;
+    errorDetail: number;
+    errorText: string;
+    resultCode: string;
 }
 
 export interface AuthKey {
-    'auth_key': string
+    'auth_key': string;
 }
 
 export interface VisitedKey {
-    visited: boolean
+    visited: boolean;
 }
 
 export interface AuthCode {
-    email: string
+    email: string;
 }
 
 export interface Integration {
     information: {
-        name: string,
-        shortDescription: string,
+        name: string;
+        shortDescription: string;
         type: {
-            id: string,
-            label: string,
-        }[],
-        tags: string,
-        companyName: string,
-        companyWeb: string,
-        companyPrivacyPolicyLink: string,
-        termsOfUseLink: string
-    },
+            id: string;
+            label: string;
+        }[];
+        tags: string;
+        companyName: string;
+        companyWeb: string;
+        companyPrivacyPolicyLink: string;
+        termsOfUseLink: string;
+    };
     overview: {
-        [overviewTexts: string]: string
-    },
+        [overviewTexts: string]: string;
+    };
     instructions: {
-        [instructionScreenshots: string]: string,
-        installationInstructions: string
-    },
+        [instructionScreenshots: string]: string;
+        installationInstructions: string;
+    };
     support: {
-        supportEmail: string,
-        supportPhone: string,
-        supportWeb: string
-    },
+        supportEmail: string;
+        supportPhone: string;
+        supportWeb: string;
+    };
     requirementsAndCompatibility: {
-        testedVersions: string[],
-        testedBuild: string,
-        platforms: string[],
-        additionalRequirements: string
-    },
+        testedVersions: string[];
+        testedBuild: string;
+        platforms: string[];
+        additionalRequirements: string;
+    };
     versionDetails: {
-        version: string,
-        whatsNew: string
-    },
-    mine: boolean,
-    pending: boolean,
-    draft: boolean,
-    id: number
+        version: string;
+        whatsNew: string;
+    };
+    mine: boolean;
+    pending: boolean;
+    draft: boolean;
+    id: number;
 }
 
 export interface IntegrationCount {
@@ -80,153 +80,153 @@ export interface IntegrationCount {
 }
 
 export interface SystemAuth {
-    authGet: string,
-    authPost: string,
-    authPlay: string
+    authGet: string;
+    authPost: string;
+    authPlay: string;
 }
 
 export interface Firmwares {
-    count: number,
-    name: string,
-    percentage: string,
-    barLength: number
+    count: number;
+    name: string;
+    percentage: string;
+    barLength: number;
 }
 
 export interface Cameras {
-    vendor: string,
-    model: string,
-    count: number,
-    primaryCodec: string,
-    secondaryCodec: string,
-    maxResolution: string,
-    sndResolution: string,
-    maxFps: number,
-    isDualStreamingSupported: boolean,
-    isIoSupported: boolean,
-    isMdSupported: boolean,
-    isPtzSupported: boolean,
-    isAudioSupported: boolean,
-    isTwAudioSupported: boolean,
-    isAptzSupported: boolean,
-    isMultiSensor: boolean,
-    isFisheye: boolean,
-    firmwares: Firmwares[],
-    notes: string,
-    timestamp: string,
-    hardwareType: string,
-    aliases: string,
-    analyticsEvents: string[],
-    isAnalyticsSupported: boolean,
-    maxFirmwareCount: number,
-    totalCameraCount: number,
-    isH265: boolean,
-    hardwareTypeId: string,
-    resolutionArea: number,
-    sortKey: string
+    vendor: string;
+    model: string;
+    count: number;
+    primaryCodec: string;
+    secondaryCodec: string;
+    maxResolution: string;
+    sndResolution: string;
+    maxFps: number;
+    isDualStreamingSupported: boolean;
+    isIoSupported: boolean;
+    isMdSupported: boolean;
+    isPtzSupported: boolean;
+    isAudioSupported: boolean;
+    isTwAudioSupported: boolean;
+    isAptzSupported: boolean;
+    isMultiSensor: boolean;
+    isFisheye: boolean;
+    firmwares: Firmwares[];
+    notes: string;
+    timestamp: string;
+    hardwareType: string;
+    aliases: string;
+    analyticsEvents: string[];
+    isAnalyticsSupported: boolean;
+    maxFirmwareCount: number;
+    totalCameraCount: number;
+    isH265: boolean;
+    hardwareTypeId: string;
+    resolutionArea: number;
+    sortKey: string;
 }
 
 export interface Vendors {
-    name: string,
-    count: number
+    name: string;
+    count: number;
 }
 
 export interface IPVDCameras {
-    cameras: Cameras[],
-    vendors: Vendors[],
-    analytics: string[],
-    'num_cameras': number,
-    cached: boolean
+    cameras: Cameras[];
+    vendors: Vendors[];
+    analytics: string[];
+    'num_cameras': number;
+    cached: boolean;
 }
 
 export interface RegisterUser {
-    activated: boolean,
-    resultCode?: string
+    activated: boolean;
+    resultCode?: string;
 }
 
 export interface System {
-    accessRole: string,
-    authKey: string,
+    accessRole: string;
+    authKey: string;
     authKeyHash: string;
     capabilities: Record<string, number>;
-    cloudConnectionSubscriptionStatus: boolean,
-    customization: string,
-    id: string,
-    lastLoginTime: string,
-    name: string,
-    opaque: string,
-    ownerAccountEmail: string,
-    ownerFullName: string,
-    registrationTime: string,
-    sharingPermissions: { accessRole: string }[],
-    stateOfHealth: string,
-    status: string,
+    cloudConnectionSubscriptionStatus: boolean;
+    customization: string;
+    id: string;
+    lastLoginTime: string;
+    name: string;
+    opaque: string;
+    ownerAccountEmail: string;
+    ownerFullName: string;
+    registrationTime: string;
+    sharingPermissions: { accessRole: string }[];
+    stateOfHealth: string;
+    status: string;
     system2faEnabled: boolean;
-    systemSequence: string,
+    systemSequence: string;
     usageFrequency: number;
     version: string;
 }
 
 /** Cached user when system cannot be reached */
 export interface CloudUser {
-    accessRole: string,
-    accountEmail: string,
-    accountFullName: string,
-    accountId: string,
-    customPermissions: string,
-    isEnabled: boolean,
-    lastLoginTime: string,
-    systemId: string,
-    usageFrequency: number,
-    userRoleId: string,
-    vmsUserId: string
+    accessRole: string;
+    accountEmail: string;
+    accountFullName: string;
+    accountId: string;
+    customPermissions: string;
+    isEnabled: boolean;
+    lastLoginTime: string;
+    systemId: string;
+    usageFrequency: number;
+    userRoleId: string;
+    vmsUserId: string;
 }
 
 export interface Downloads {
     backwardsCompatible: boolean;
-    beta: boolean,
-    buildNumber: number,
-    cloudGroup: string,
-    date: string,
-    dismissed: boolean,
-    installers: Installer[],
-    password: string,
-    platforms: Platform[],
-    product: string,
-    productDescription: string,
-    releaseNotes: string,
-    releaseUrl: string
-    type: string,
-    version: string,
-    meta_version: string | null, // Used for metavms builds
+    beta: boolean;
+    buildNumber: number;
+    cloudGroup: string;
+    date: string;
+    dismissed: boolean;
+    installers: Installer[];
+    password: string;
+    platforms: Platform[];
+    product: string;
+    productDescription: string;
+    releaseNotes: string;
+    releaseUrl: string;
+    type: string;
+    version: string;
+    meta_version: string | null; // Used for metavms builds
 }
 
 type ReadOnlyAPIType = 'VMS';
 
 export interface ReadOnlyAPI {
-    id: number,
-    enabled: boolean,
-    type: ReadOnlyAPIType,
-    name: string,
-    version: string,
-    manifest: string
+    id: number;
+    enabled: boolean;
+    type: ReadOnlyAPIType;
+    name: string;
+    version: string;
+    manifest: string;
 }
 
 export interface ReadOnlyAPIDetail extends ReadOnlyAPI {
     files: [{
-        filename: string,
-        type: 'JSON' | 'Preamble Markdown File' | 'Changelog Markdown File'
-        content: APIDoc | string
-    }]
+        filename: string;
+        type: 'JSON' | 'Preamble Markdown File' | 'Changelog Markdown File';
+        content: APIDoc | string;
+    }];
 }
 
 export interface Installer {
-    appType: string,
-    beta: boolean,
-    cloudGroup: string,
-    fileName: string,
-    niceName: string
-    path: string,
-    platform: string,
+    appType: string;
+    beta: boolean;
+    cloudGroup: string;
+    fileName: string;
+    niceName: string;
+    path: string;
+    platform: string;
 }
 
 export interface Platform extends Installer {
@@ -243,43 +243,43 @@ export interface AccountEdit {
 }
 
 export interface CloudStorage {
-    freeSpace: string,
-    id: string,
+    freeSpace: string;
+    id: string;
     ioDevices: {
-        dataUrl: string,
-        region: string,
-        type: string,
-    }[],
-    owner: string,
-    systems: string[],
-    totalSpace: string,
+        dataUrl: string;
+        region: string;
+        type: string;
+    }[];
+    owner: string;
+    systems: string[];
+    totalSpace: string;
 }
 
 export interface CloudStorageUsage extends CloudResponse {
-    enabled: boolean,
-    cloudCapacity: string,
-    currentRecordings: number,
-    whenFullyUsed: number,
-    amountUsed: number,
-    archiveFrom: number,
-    recordingBitrate: number,
-    delayFromLive: number,
-    spaceUsed: number
+    enabled: boolean;
+    cloudCapacity: string;
+    currentRecordings: number;
+    whenFullyUsed: number;
+    amountUsed: number;
+    archiveFrom: number;
+    recordingBitrate: number;
+    delayFromLive: number;
+    spaceUsed: number;
 }
 
 export interface CheckEmailExists {
-    active: boolean,
-    emailExists: boolean
+    active: boolean;
+    emailExists: boolean;
 }
 
 export interface CustomClient {
     id?: number;
     last_modified: string;
     name: string;
-    created_on: string
+    created_on: string;
     created_by: string;
     values: {
-        [field: string]: string
+        [field: string]: string;
     };
 }
 
@@ -289,7 +289,7 @@ export interface FieldManifest {
     type: ConfigType;
     description?: string;
     metaOnly?: boolean;
-    meta?: Record<string, unknown>,
+    meta?: Record<string, unknown>;
     optional?: boolean;
     placeholder?: string;
 }
@@ -304,34 +304,34 @@ export interface ContextManifest {
 
 export interface ContentSettings {
     [key: string]: {
-        hidden?: boolean,
-        label?: string,
-        options?: DropdownItem<string>[]
-    }
+        hidden?: boolean;
+        label?: string;
+        options?: DropdownItem<string>[];
+    };
 }
 
 export interface ContentManifest {
     manifest: {
-        contexts: ContextManifest[]
-        settings?: ContentSettings
-    }
+        contexts: ContextManifest[];
+        settings?: ContentSettings;
+    };
 }
 
 export interface DocBlock {
-    content: string,
-    contentHTML: string,
+    content: string;
+    contentHTML: string;
     type: string;
 }
 
 export interface DocAsset {
-    id: number,
-    shortDescription: string,
-    title: string,
-    blocks: DocBlock[]
+    id: number;
+    shortDescription: string;
+    title: string;
+    blocks: DocBlock[];
 }
 
 export interface TwoFactorBackupCodes {
-    backup_code: string
+    backup_code: string;
 }
 
 export interface ExplorerNode {
@@ -344,25 +344,25 @@ export interface ExplorerNode {
 
 export interface InstantSearchOptions {
     query: string;
-    kbMenus?: string[],
+    kbMenus?: string[];
     labels?: string[];
     cropLength?: number;
     perPage?: number;
     page?: number;
 }
 export interface NotificationAttachment {
-    filename: string,
-    content: string,
-    mimetype: string
+    filename: string;
+    content: string;
+    mimetype: string;
 }
 
 export interface EmailNotification {
-    targets: string[],
-    subject: string,
-    systemId?: string,
-    messageHtml?: string,
-    messageText?: string,
-    attachments?: NotificationAttachment[]
+    targets: string[];
+    subject: string;
+    systemId?: string;
+    messageHtml?: string;
+    messageText?: string;
+    attachments?: NotificationAttachment[];
 }
 
 export interface SystemTransferInfo {

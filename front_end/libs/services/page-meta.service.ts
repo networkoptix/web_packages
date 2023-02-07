@@ -14,7 +14,7 @@ import { NxConfigService } from './nx-config/nx-config.service';
 import { WINDOW } from './window-provider';
 
 interface MetaLookup {
-    [key: string]: Record<string, string>
+    [key: string]: Record<string, string>;
 }
 
 @UntilDestroy()

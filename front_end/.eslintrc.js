@@ -399,7 +399,7 @@ module.exports = {
                 ...tsExtension('lines-between-class-members', ['error', {
                     exceptAfterSingleLine: true,
                 }]),
-                // '@typescript-eslint/member-delimiter-style': 'error',
+                '@typescript-eslint/member-delimiter-style': 'error',
                 ...tsExtension('no-array-constructor'),
                 ...tsExtension('no-dupe-class-members'),
                 ...tsExtension('no-extra-parens', ['error', 'functions']),

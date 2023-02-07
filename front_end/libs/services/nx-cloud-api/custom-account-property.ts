@@ -5,7 +5,7 @@ import { catchError, switchMap, shareReplay, take, debounceTime } from 'rxjs/ope
 import { apiBase } from '@lib/variables/static-variables';
 
 interface MappingCallbackFn<T> {
-    (current: T): T | Promise<T> | Observable<T>
+    (current: T): T | Promise<T> | Observable<T>;
 }
 
 export class CustomAccountProperty<T> {

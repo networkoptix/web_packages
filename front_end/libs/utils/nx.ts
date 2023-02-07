@@ -62,7 +62,7 @@ export function setServerIpAndPort(
     return { ...server, ip, port };
 }
 
-type TranslatableStep = Omit<IStepOption, 'title' | 'content'> & { title: TranslatableStrict, content: TranslatableStrict };
+type TranslatableStep = Omit<IStepOption, 'title' | 'content'> & { title: TranslatableStrict; content: TranslatableStrict };
 
 export const translateStep = (instant: (TranslatableObject) => string) => (step: TranslatableStep): IStepOption => ({
     ...step,
@@ -98,7 +98,7 @@ export const generateTour = (
 }).filter(step => !!step);
 
 interface Language {
-    [key: string]: Language | string
+    [key: string]: Language | string;
 }
 
 export const processLanguageFactory = (customStrings: { [key: string]: string }) => function processLanguage(language: Language) {
