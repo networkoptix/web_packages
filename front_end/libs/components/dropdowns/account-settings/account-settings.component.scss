@@ -25,13 +25,15 @@
 
         & > button {
             background-color : var(--btn-header-main-bg);
-            color            : var(--btn-header-main-color);
+            color            : var(--btn-header-main-color) !important;
             border           : 1px solid transparent;
             height           : 100% !important;
             border-radius    : 4px;
 
-            svg-icon svg .st0 {
-                fill : var(--btn-header-main-color);
+            svg-icon svg {
+                .st0, .icon-with-fill {
+                    fill: var(--btn-header-main-color) !important;
+                }
             }
         }
 
@@ -62,8 +64,8 @@
     }
 
     .dropdown.new-header {
-        margin-top : 0px;
-        padding    : 0px;
+        margin-top : 0;
+        padding    : 0;
 
         .dropdown-menu {
             top           : 37px !important;

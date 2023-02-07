@@ -35,7 +35,7 @@
     button {
         border: 1px solid transparent;
         background-color: var(--btn-header-main-bg);
-        color: var(--btn-header-main-color);
+        color: var(--btn-header-main-color) !important;
     }
 }
 
@@ -45,7 +45,7 @@
     &>button {
         border: 1px solid var(--btn-header-main-border-color);
         background-color: var(--btn-header-main-bg);
-        color: var(--btn-header-main-color);
+        color: var(--btn-header-main-color) !important;
         height: 41px !important;
         border-radius: 4px;
 
