@@ -106,35 +106,11 @@
                 "namedChunks": true
             },
             "configurations": {
-                "regress": {
+                "dev": {
                     "fileReplacements": [
                         {
                             "replace": "common/environments/environment.ts",
-                            "with": "common/environments/environment.regress.ts"
-                        }
-                    ]
-                },
-                "cloud-test": {
-                    "fileReplacements": [
-                        {
-                            "replace": "common/environments/environment.ts",
-                            "with": "common/environments/environment.cloud-test.ts"
-                        }
-                    ]
-                },
-                "dev2": {
-                    "fileReplacements": [
-                        {
-                            "replace": "common/environments/environment.ts",
-                            "with": "common/environments/environment.dev2.ts"
-                        }
-                    ]
-                },
-                "dev3": {
-                    "fileReplacements": [
-                        {
-                            "replace": "common/environments/environment.ts",
-                            "with": "common/environments/environment.dev3.ts"
+                            "with": "common/environments/environment.dev.ts"
                         }
                     ]
                 },
@@ -177,14 +153,6 @@
                     ],
                     "serviceWorker": true,
                     "ngswConfigPath": "ngsw-config.json"
-                },
-                "stage": {
-                    "fileReplacements": [
-                        {
-                            "replace": "common/environments/environment.ts",
-                            "with": "common/environments/environment.stage.ts"
-                        }
-                    ]
                 }
             },
             "defaultConfiguration": ""
@@ -211,28 +179,14 @@
                 "ssl": true
             },
             "configurations": {
-                "regress": {
-                    "browserTarget": "front-end:build:regress"
-                },
-                "cloud-test": {
-                    "browserTarget": "front-end:build:cloud-test"
-                },
-                "dev2": {
-                    "browserTarget": "front-end:build:dev2"
-                },
-                "dev3": {
-                    "browserTarget": "front-end:build:dev3"
-                },
-                "local": {
-                    "browserTarget": "front-end:build:local"
+                "development": {
+                    "browserTarget": "front-end:build:dev"
                 },
                 "production": {
                     "browserTarget": "front-end:build:production"
-                },
-                "stage": {
-                    "browserTarget": "front-end:build:stage"
                 }
-            }
+            },
+            "defaultConfiguration": "development"
         },
         "extract-i18n": {
             "builder": "@angular-devkit/build-angular:extract-i18n",

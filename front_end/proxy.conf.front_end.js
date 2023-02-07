@@ -1,19 +1,5 @@
-const legacyTargetConfigs = {
-    prod: 'https://nxvms.com',
-    stage: 'https://stage.nxvms.com'
-};
+const { rewriteLegacy, target, targetInstanceUrl } = require('./proxy-helper');
 
-const proxyTargetConfig = {
-    regress: 'https://regress.cloud.hdw.mx',
-    dev2: 'https://dev2.cloud.hdw.mx',
-    dev3: 'https://dev3.cloud.hdw.mx',
-    local: 'http://localhost:8000',
-    'cloud-test': 'https://cloud-test.hdw.mx',
-    ...legacyTargetConfigs
-};
-
-const target = process.env.CLOUD_TARGET || 'cloud-test';
-const rewriteLegacy = target in legacyTargetConfigs;
 const rewritePaths = {
     '/api/cms': '/api',
     '/api/notifications': '/api'
@@ -56,12 +42,12 @@ const PROXY_CONFIG = [
             '/static/lang_ge_DE',
             '/swagger-ui'
         ],
-        target: proxyTargetConfig[target],
+        target: targetInstanceUrl,
         changeOrigin: true,
         secure: false,
         pathRewrite: rewriteLegacy ? rewritePaths : {},
         bypass: function (req, res, proxyOptions) {
-            req.headers.origin = proxyTargetConfig[target];
+            req.headers.origin = targetInstanceUrl;
         }
     },
     {
@@ -83,7 +69,7 @@ const PROXY_CONFIG = [
         context: [
             '/system_groups',
         ],
-        target: proxyTargetConfig[target],
+        target: targetInstanceUrl,
         changeOrigin: true,
         secure: false,
         ws: true,

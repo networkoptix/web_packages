@@ -84,6 +84,12 @@
           ]
         },
         "development": {
+          "fileReplacements": [
+            {
+                "replace": "common/environments/environment.ts",
+                "with": "common/environments/environment.dev.ts"
+            }
+          ],
           "outputHashing": "all",
           "extractLicenses": true,
           "vendorChunk": false,
@@ -230,9 +236,13 @@
         "ssl": true
       },
       "configurations": {
+        "development": {
+          "browserTarget": "authorization:build:development"
+        },
         "production": {
           "browserTarget": "authorization:build:production"
-        }
+        },
+        "defaultConfiguration": "development"
       }
     },
     "extract-i18n": {

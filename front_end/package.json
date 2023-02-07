@@ -26,6 +26,7 @@
   },
   "scripts": {
     "ng": "nx",
+    "serve-dynamic": "read -p 'Enter target cloud instance name or url: ' target && export CLOUD_TARGET=$target && npm run serve:cloud",
     "serve": "export CLOUD_TARGET=local && npm run serve:cloud",
     "serve-cloud-test": "export CLOUD_TARGET=cloud-test && npm run serve:cloud",
     "serve-dev2": "export CLOUD_TARGET=dev2 && npm run serve:cloud",
@@ -47,7 +48,7 @@
     "serve:setup-wizard": "npm run setVarSkin && npm run update-lang-files && nx run setup-wizard:serve:development --proxy-config proxy.conf.setup-wizard.js",
     "serve:setup-wizard:quick": "npm run setVarSkin && nx run setup-wizard:serve:development --proxy-config proxy.conf.setup-wizard.js",
     "serve:auth": "npm run setVarSkin && npm run update-lang-files && nx run authorization:serve:development --proxy-config proxy.conf.auth.js",
-    "serve:cloud": "npm run setVarSkin && npm run update-lang-files && nx run front-end:serve:$CLOUD_TARGET --proxy-config proxy.conf.front_end.js",
+    "serve:cloud": "npm run setVarSkin && npm run update-lang-files && nx run front-end:serve --proxy-config proxy.conf.front_end.js",
     "serve:webadmin": "npm run update-lang-files && nx run webadmin:serve:development --proxy-config proxy.conf.webadmin.js",
     "build": "npm run cleardist && npm run lang && nx run-many --target=build --projects=front-end,authorization --configuration=production --skip-nx-cache=true",
     "build:ci": "npm run setSkin && npx nx run-many --target=build --all --parallel=$(getconf _NPROCESSORS_ONLN) --exclude=unconverted --skip-nx-cache=true",

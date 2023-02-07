@@ -6,7 +6,8 @@ import { IEnvironment } from './environment-config';
 export const environment: IEnvironment = {
     isLocal: false,
     production: false,
-    cloudHost: 'regress.cloud.hdw.mx'
+    cloudHost: 'localhost:8000',
+    cloudHostDev: '$TARGET_INSTANCE_URL'
 };
 
 /*

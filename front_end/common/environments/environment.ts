@@ -6,7 +6,6 @@ import { IEnvironment } from './environment-config';
 export const environment: IEnvironment = {
     isLocal: false,
     production: false,
-    // !Important. Do not change this. If you need a new env for another instance add it.
     cloudHost: 'cloud-test.hdw.mx'
 };
 
