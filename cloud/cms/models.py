@@ -3209,6 +3209,7 @@ class ReadOnlyAPI(models.Model):
     version = models.CharField(help_text="API version", max_length=13, validators=[version_validator])
     type = models.IntegerField(
        choices=API_TYPES, default=API_TYPES.VMS)
+    order = models.IntegerField(default=0, help_text="lower number will show up first in the dropdown")
     enabled = models.BooleanField(default=True)
     manifest = models.TextField(default=DEFAULT_MANIFEST, help_text="Content manifest")
 
