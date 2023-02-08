@@ -1,16 +1,11 @@
-import {
-    Component,
-    Input,
-    forwardRef,
-    ViewEncapsulation
-} from '@angular/core';
+import { Component, Input, forwardRef, ViewEncapsulation } from '@angular/core';
 import {
     ControlValueAccessor,
     NG_VALUE_ACCESSOR,
     NG_VALIDATORS,
     Validator,
     FormControl,
-    ValidationErrors
+    ValidationErrors,
 } from '@angular/forms';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -25,16 +20,16 @@ import { credentialsValidation } from '@lib/variables/static-variables';
             provide: NG_VALUE_ACCESSOR,
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxEmailComponent),
-            multi: true
+            multi: true,
         },
         {
             provide: NG_VALIDATORS,
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxEmailComponent),
-            multi: true
-        }
+            multi: true,
+        },
     ],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxEmailComponent implements ControlValueAccessor, Validator {
     @Input() form;
@@ -52,24 +47,22 @@ export class NxEmailComponent implements ControlValueAccessor, Validator {
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
-    public onTouchedCallback = (): void => {
-    };
+    public onTouchedCallback = (): void => {};
 
-    private onChangeCallback = (_: any): void => {
-    };
+    private onChangeCallback = (_: any): void => {};
 
     // validates the form, returns null when valid else the validation object
     public validate(c: FormControl<string>): ValidationErrors | null {
         if (!c.value) {
             return {
-                required: true
+                required: true,
             };
         }
 
         const EMAIL_REGEXP = new RegExp(credentialsValidation.emailRegex);
         if (!EMAIL_REGEXP.test(c.value)) {
             return {
-                pattern: true
+                pattern: true,
             };
         }
 

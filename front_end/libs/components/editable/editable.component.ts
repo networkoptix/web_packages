@@ -7,25 +7,24 @@ import {
     EventEmitter,
     Output,
     ViewEncapsulation,
-    OnInit
+    OnInit,
 } from '@angular/core';
-import {
-    ControlValueAccessor,
-    NG_VALUE_ACCESSOR
-} from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { escape } from 'lodash-es';
 
 @Component({
     selector: 'nx-text-editable',
     template: '<ng-content></ng-content>',
-    providers: [{
-        provide: NG_VALUE_ACCESSOR,
-        // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        useExisting: forwardRef(() => NxTextEditableComponent),
-        multi: true
-    }],
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            // eslint-disable-next-line @typescript-eslint/no-use-before-define
+            useExisting: forwardRef(() => NxTextEditableComponent),
+            multi: true,
+        },
+    ],
     styleUrls: ['editable.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxTextEditableComponent implements OnInit, ControlValueAccessor {
     /*
@@ -91,9 +90,7 @@ export class NxTextEditableComponent implements OnInit, ControlValueAccessor {
     private onTouchedCallback = (): void => {};
     private onChangeCallback = (_: any): void => {};
 
-    constructor(
-        private el: ElementRef
-    ) {}
+    constructor(private el: ElementRef) {}
 
     ngOnInit(): void {
         this.required = Boolean(this.required); // handle "undefined" and string values
@@ -110,7 +107,8 @@ export class NxTextEditableComponent implements OnInit, ControlValueAccessor {
 
     // called when model is written to view. (model -> view)
     writeValue(value: string): void {
-        if (!this._initialValue && value || value) { // do not update before component is initialized
+        if ((!this._initialValue && value) || value) {
+            // do not update before component is initialized
             this._initialValue = value;
             this.el.nativeElement.textContent = value || '';
             this.el.nativeElement.classList.add(this.initialClass);

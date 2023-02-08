@@ -1,9 +1,4 @@
-import {
-    Component,
-    Input,
-    OnDestroy,
-    OnInit
-} from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -18,7 +13,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 @Component({
     selector: 'nx-footer',
     templateUrl: 'footer.component.html',
-    styleUrls: ['footer.component.scss']
+    styleUrls: ['footer.component.scss'],
 })
 export class NxFooterComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
@@ -38,17 +33,15 @@ export class NxFooterComponent implements OnInit, OnDestroy {
         configService: NxConfigService,
         private appState: NxAppStateService,
         private menusService: NxMenusService,
-        translateService: TranslateService
+        translateService: TranslateService,
     ) {
         this.CONFIG = configService.getConfig();
 
-        translateService.onTranslationChange
-            .pipe(untilDestroyed(this))
-            .subscribe(() => {
-                setTimeout(() => {
-                    this.getMenu();
-                });
+        translateService.onTranslationChange.pipe(untilDestroyed(this)).subscribe(() => {
+            setTimeout(() => {
+                this.getMenu();
             });
+        });
     }
 
     ngOnDestroy(): void {}
@@ -60,11 +53,9 @@ export class NxFooterComponent implements OnInit, OnDestroy {
         this.copyrightYear = this.CONFIG.company.copyrightYear;
 
         this.getMenu();
-        this.appState.footerVisibleSubject
-            .pipe(untilDestroyed(this))
-            .subscribe(visible => {
-                this.viewFooter = visible;
-            });
+        this.appState.footerVisibleSubject.pipe(untilDestroyed(this)).subscribe(visible => {
+            this.viewFooter = visible;
+        });
     }
 
     trackItem(index, item) {
@@ -79,7 +70,7 @@ export class NxFooterComponent implements OnInit, OnDestroy {
                     footerItem.new_window = true;
                     footerItem.url = footerItem.url.replace(
                         '{{CLOUD_HOST}}',
-                        this.CONFIG.cloudHost
+                        this.CONFIG.cloudHost,
                     );
                 });
             }

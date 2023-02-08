@@ -1,8 +1,4 @@
-import {
-    Component,
-    Input,
-    OnChanges,
-} from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { LegendPosition } from '@swimlane/ngx-charts';
 import { curveBasis } from 'd3-shape';
@@ -25,9 +21,8 @@ import { NgChanges } from '@utils/ng-changes';
 @Component({
     selector: 'nx-monitoring-graph',
     templateUrl: 'graph.component.html',
-    styleUrls: ['graph.component.scss']
+    styleUrls: ['graph.component.scss'],
 })
-
 export class NxMonitoringGraphComponent implements OnChanges {
     @Input() system: NxSystem;
     @Input() systemId: string;
@@ -68,7 +63,7 @@ export class NxMonitoringGraphComponent implements OnChanges {
     constructor(
         private systemsService: NxSystemsService,
         private systemService: NxSystemService,
-        private accountService: NxAccountService
+        private accountService: NxAccountService,
     ) {
         this.setupDefaults();
 
@@ -76,12 +71,19 @@ export class NxMonitoringGraphComponent implements OnChanges {
     }
 
     async ngOnChanges(changes: NgChanges<NxMonitoringGraphComponent>): Promise<void> {
-        if (changes.system?.currentValue || changes.selectedServerId?.currentValue || changes.systemId?.currentValue) {
+        if (
+            changes.system?.currentValue ||
+            changes.selectedServerId?.currentValue ||
+            changes.systemId?.currentValue
+        ) {
             this.destroy$.next(true);
 
             if (this.systemId && !this.system) {
                 await this.systemsService.getSystemAsPromise(this.systemId);
-                this.system = this.systemService.createSystem(this.accountService.account.email, this.systemId);
+                this.system = this.systemService.createSystem(
+                    this.accountService.account.email,
+                    this.systemId,
+                );
                 await this.system.update();
                 // await this.system.serverManager.initSystemMediaServers();
             }
@@ -99,30 +101,34 @@ export class NxMonitoringGraphComponent implements OnChanges {
                 concatMap(() => this.system.serverManager.getStatistics(this.selectedServerId)),
                 untilDestroyed(this),
                 takeUntil(this.destroy$),
-            ).subscribe(response => {
-                response.reply && response.reply.statistics.forEach(data => {
-                    const seriesData = this.multi.find(series => series.name === data.description);
-                    if (!seriesData) {
-                        const series = Array.from({ length: 50 }, (_, i) => {
-                            return { name: i + 1, value: 0 };
-                        });
-                        this.multi.push({
-                            name: data.description,
-                            series
-                        });
-                        this.multi[this.multi.length - 1].series.push({
-                            name: response.reply.uptimeMs,
-                            value: Math.round(data.value * 100)
-                        });
-                        this.multi[this.multi.length - 1].series.shift();
-                    } else {
-                        seriesData.series.push({
-                            name: response.reply.uptimeMs,
-                            value: Math.round(data.value * 100)
-                        });
-                        seriesData.series.shift();
-                    }
-                });
+            )
+            .subscribe(response => {
+                response.reply &&
+                    response.reply.statistics.forEach(data => {
+                        const seriesData = this.multi.find(
+                            series => series.name === data.description,
+                        );
+                        if (!seriesData) {
+                            const series = Array.from({ length: 50 }, (_, i) => {
+                                return { name: i + 1, value: 0 };
+                            });
+                            this.multi.push({
+                                name: data.description,
+                                series,
+                            });
+                            this.multi[this.multi.length - 1].series.push({
+                                name: response.reply.uptimeMs,
+                                value: Math.round(data.value * 100),
+                            });
+                            this.multi[this.multi.length - 1].series.shift();
+                        } else {
+                            seriesData.series.push({
+                                name: response.reply.uptimeMs,
+                                value: Math.round(data.value * 100),
+                            });
+                            seriesData.series.shift();
+                        }
+                    });
 
                 this.multi = [...this.multi];
             });

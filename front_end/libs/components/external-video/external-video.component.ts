@@ -6,16 +6,14 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 @Component({
     selector: 'nx-external-video',
     templateUrl: 'external-video.component.html',
-    styleUrls: ['external-video.component.scss']
+    styleUrls: ['external-video.component.scss'],
 })
 export class NxExternalVideoComponent implements OnInit {
     @Input('src') videoSrc: string;
     CONFIG: IConfig;
     src;
 
-    constructor(configService: NxConfigService,
-                private sanitizer: DomSanitizer
-    ) {
+    constructor(configService: NxConfigService, private sanitizer: DomSanitizer) {
         this.CONFIG = configService.getConfig();
     }
 
