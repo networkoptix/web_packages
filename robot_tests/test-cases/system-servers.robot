@@ -40,27 +40,7 @@ Force Tags        system
     Verify Server Buttons Are Enabled
     ${loc}=   Get Location
     ${split}=   Split String    ${loc}    separator=/servers/%7B
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     Change server name via API    ${server auth}    server 1 name changed    ${servers}[0][id]    https://${QA BURBANK IP}:${servers}[0][port][0]
-=======
-<<<<<<< HEAD
-    Change server name via API    ${server auth}    server 1 name changed    ${servers}[server 1][id]    https://${QA BURBANK IP}:${servers}[server 1][port][0]
-=======
-    Change server name via API    ${server auth}    server 1 name changed    ${servers}[server 1][id]    https://${QA BURBANK IP}:${servers}[server 1][port]
->>>>>>> some updates to dictionary references
->>>>>>> some updates to dictionary references
-=======
-    Change server name via API    ${server auth}    server 1 name changed    ${servers}[server 1][id]    https://${QA BURBANK IP}:${servers}[server 1][port][0]
->>>>>>> update users2 for new dict, and add auths to dict
-=======
-    Change server name via API    ${server auth}    server 1 name changed    ${servers}[0][id]    https://${QA BURBANK IP}:${servers}[0][port][0]
->>>>>>> handle token and convert to list of dicts instead of 1 dict
-=======
-    Change server name via API    ${server auth}    server 1 name changed    ${servers}[0][id]    https://${QA BURBANK IP}:${servers}[0][port][0]
->>>>>>> 1af0104885264d2bbe6e8347936c9fb4fd4487cb
     Sleep    1
     Reload Page
     Sleep   5
@@ -68,27 +48,7 @@ Force Tags        system
     #Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..
     Element Text Should Be    ${SYSTEM NAME}    server 1 name changed
     Log    Reset the name to server 1
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     Change server name via API    ${server auth}    server 1    ${servers}[0][id]    https://${QA BURBANK IP}:${servers}[0][port][0]
-=======
-<<<<<<< HEAD
-    Change server name via API    ${server auth}    server 1    ${servers}[server 1][id]    https://${QA BURBANK IP}:${servers}[server 1][port][0]
-=======
-    Change server name via API    ${server auth}    server 1    ${servers}[server 1][id]    https://${QA BURBANK IP}:${servers}[server 1][port]
->>>>>>> some updates to dictionary references
->>>>>>> some updates to dictionary references
-=======
-    Change server name via API    ${server auth}    server 1    ${servers}[server 1][id]    https://${QA BURBANK IP}:${servers}[server 1][port][0]
->>>>>>> update users2 for new dict, and add auths to dict
-=======
-    Change server name via API    ${server auth}    server 1    ${servers}[0][id]    https://${QA BURBANK IP}:${servers}[0][port][0]
->>>>>>> handle token and convert to list of dicts instead of 1 dict
-=======
-    Change server name via API    ${server auth}    server 1    ${servers}[0][id]    https://${QA BURBANK IP}:${servers}[0][port][0]
->>>>>>> 1af0104885264d2bbe6e8347936c9fb4fd4487cb
 
 3. Restart close button works
     [Tags]    C70968    cloud    webadmin
@@ -147,32 +107,8 @@ Force Tags        system
     ELSE
         Sleep    60
         Close Browser
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+
         Open Browser and go to URL    https://${QA BURBANK IP}:${servers}[0][port][0]
-=======
-=======
->>>>>>> update users2 for new dict, and add auths to dict
-<<<<<<< HEAD
-        Open Browser and go to URL    https://${QA BURBANK IP}:${servers}[server 1][port][0]
-=======
-        Open Browser and go to URL    https://${QA BURBANK IP}:${servers}[server 1][port]
->>>>>>> some updates to dictionary references
-<<<<<<< HEAD
->>>>>>> some updates to dictionary references
-=======
-=======
-        Open Browser and go to URL    https://${QA BURBANK IP}:${servers}[server 1][port][0]
->>>>>>> update users2 for new dict, and add auths to dict
->>>>>>> update users2 for new dict, and add auths to dict
-=======
-        Open Browser and go to URL    https://${QA BURBANK IP}:${servers}[server 1][port][0]
->>>>>>> handle token and convert to list of dicts instead of 1 dict
-=======
-        Open Browser and go to URL    https://${QA BURBANK IP}:${servers}[0][port][0]
->>>>>>> 1af0104885264d2bbe6e8347936c9fb4fd4487cb
         Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]    timeout=95
     END
 

@@ -445,7 +445,7 @@ Force Tags        system    cloud
         ...    Pass Execution    Webadmin tests complete
 
     Run keyword and continue on failure    Check For Alert    ${SUCCESSFULLY DISCONNECTED}
-    Wait Until Location Is    ${ENV}/systems
+    Wait Until Location Contains    ${ENV}/systems
     Wait Until Element Is Not Visible    ${SYSTEMS TILE}//h2[text()="${system}[name]"]
 
     # Verify changes are reflected correctly in the header
