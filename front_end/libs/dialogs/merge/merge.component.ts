@@ -465,11 +465,11 @@ export class MergeModalContent {
                         }
                         // Handling for rest errors.
                         if (err.errorString) {
-                            if (err.errorString.includes(this.LANG.dialogs.merge.restError.duplicateServer)) {
+                            if (err.errorString.includes(this.LANG.dialogs.merge.restError.duplicateServer())) {
                                 err.message = this.duplicateServers;
-                            } else if (err.errorString.includes(this.LANG.dialogs.merge.restError.useCloudMerge)) {
+                            } else if (err.errorString.includes(this.LANG.dialogs.merge.restError.useCloudMerge())) {
                                 err.message = this.targetSystemBoundToCloud;
-                            } else if (err.errorString.includes(this.LANG.dialogs.merge.restError.differentCloudOwners)) {
+                            } else if (err.errorString.includes(this.LANG.dialogs.merge.restError.differentCloudOwners())) {
                                 err.message = this.differentOwners;
                             }
                         }
@@ -514,7 +514,7 @@ export class MergeModalContent {
                         this.machine.state.template.passwordValue
                     ).toPromise()
                         .catch(res => {
-                            if (res.error && res.error.errorString.toLowerCase() === 'wrong password.') {
+                            if (res.error && res.error.errorId === this.CONFIG.servers.errors.invalidParameter) {
                                 this.updateShow(this.confirmPasswordError, {
                                     passwordErrorText: this.passwordWrong
                                 });

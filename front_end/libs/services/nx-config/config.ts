@@ -636,6 +636,7 @@ export const nxConfig: IConfig = {
             mismatchedcertificate: 'mismatchedcertificate'
         },
         errors: {
+            invalidParameter: 'invalidParameter',
             oldSessionErrorId: 'sessionExpired',
             unauthorized: 'unauthorized'
         }

@@ -252,9 +252,10 @@ export class NxSystemAPI {
         url: string,
         data?: any,
         paramsToAdd = {},
+        customHeaders = {},
         customTimeout = 60000
     ) {
-        let headers = new HttpHeaders();
+        let headers = new HttpHeaders(customHeaders);
         let params = new HttpParams();
         const fullUrl = `${this.urlBase}${url}`;
         data = data || {};
