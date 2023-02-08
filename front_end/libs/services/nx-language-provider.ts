@@ -4,8 +4,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { i18n } from 'dateformat';
 import { LocalStorageService } from 'ngx-webstorage';
 
+import { toast } from '@app/variables/static-variables';
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSwCacheService } from '@services/sw-cache.service';
 import { NxUriCacheService } from '@services/uri-cache.service';
@@ -23,6 +26,8 @@ export class NxLanguageProviderService {
         configService: NxConfigService,
         private translate: TranslateService,
         private http: HttpClient,
+        private cloudApi: NxCloudApiService,
+        private toastService: NxToastService,
         private sessionService: NxSessionService,
         private storageService: LocalStorageService,
         private cacheService: NxUriCacheService,
@@ -78,10 +83,24 @@ export class NxLanguageProviderService {
     }
 
     setTranslations(lang: string, translation): void {
-        this.translate.setTranslation(lang, translation);
-        this.translate.use(lang); // this will tell TranslateService to switch language -> see "breadcrumbs"
-        const productName = staticLang?.[environment.isLocal ? 'metaDefaultsWebadmin' : 'metaDefaults']?.default?.site_name || '';
-        this.translate.set('productName', productName);
+        // language fail may have special character or
+        // syntax error ... like use of double curly braces
+        try {
+            this.translate.setTranslation(lang, translation);
+            this.translate.use(lang); // this will tell TranslateService to switch language -> see "breadcrumbs"
+            const productName = staticLang?.[environment.isLocal ? 'metaDefaultsWebadmin' : 'metaDefaults']?.default?.site_name || '';
+            this.translate.set('productName', productName);
+        } catch (e) {
+            this.toastService.notify(
+                'Loaded default language due to an error while setting up desired language.',
+                toast.warning,
+            );
+            this.cloudApi
+                .changeLanguage(this.translate.getDefaultLang())
+                .then(() => {
+                    this.currentLang = this.translate.getDefaultLang();
+                });
+        }
     }
 
     public get defaultLanguage() {
@@ -98,7 +117,11 @@ export class NxLanguageProviderService {
 
     public set currentLang(language: string) {
         // avoid undefined "language"
-        if (!language || language === this.translate.currentLang) {
+        if (
+            !language ||
+            language === this.translate.currentLang &&
+            this.sessionService.language === language
+        ) {
             return;
         }
 
