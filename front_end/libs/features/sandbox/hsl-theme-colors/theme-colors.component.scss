@@ -12,7 +12,7 @@
     --brand-s: 60%;
     --brand-l: 50%;
 
-    --new-error-core: hsl(0, var(--brand-s), var(--brand-l));
+    --new-error-core: hsl(0, var(--brand-s), calc(var(--brand-l) + 0%));
     --new-error-dark: hsl(0, var(--brand-s), calc(var(--brand-l) + 7%));
     --new-error-light: hsl(0, var(--brand-s), calc(var(--brand-l) - 7%));
 
@@ -53,7 +53,7 @@
         display: flex;
         align-items: center;
 
-        &.error {
+        &.error-core {
             background-color: var(--new-error-core);
         }
 

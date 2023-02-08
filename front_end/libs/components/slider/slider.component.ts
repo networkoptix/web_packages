@@ -3,14 +3,15 @@ import {
     Component,
     ElementRef,
     EventEmitter,
-    Input,
+    Input, OnChanges,
     OnInit,
     Output,
     Renderer2,
-    ViewChild,
+    ViewChild
 } from '@angular/core';
 
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
+import { NgChanges } from '@utils/ng-changes';
 
 type SliderRange = { start: number; end: number; decimal?: boolean };
 
@@ -19,7 +20,7 @@ type SliderRange = { start: number; end: number; decimal?: boolean };
     templateUrl: 'slider.component.html',
     styleUrls: ['slider.component.scss'],
 })
-export class NxSliderComponent implements OnInit {
+export class NxSliderComponent implements OnInit, OnChanges {
     @Input() id: string;
     @Input() name: string;
     @IBool() @Input() disabled: CoercedBoolInput;
@@ -58,6 +59,12 @@ export class NxSliderComponent implements OnInit {
         this.scale = this.sliderWidth / this.range.end;
 
         this.setValue(this.value);
+    }
+
+    ngOnChanges(changes: NgChanges<NxSliderComponent>): void {
+        if (changes.value?.currentValue) {
+            this.value = changes.value.currentValue;
+        }
     }
 
     sliderDragMove(event: CdkDragMove<unknown>): void {

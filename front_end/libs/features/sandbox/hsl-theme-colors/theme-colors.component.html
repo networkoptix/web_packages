@@ -9,120 +9,82 @@
         novalidete
     >
         <div class="row col-5">
-            <div class="col-4">
-                <div class="input-label col-12">Hue</div>
+            <div class="col-12 p-0">
+                <div class="input-label col-12">HEX Brand Color</div>
                 <div class="col-12">
-                    <nx-slider
-                        name="hueBrand"
-                        [range]="{ start: 0, end: 360 }"
-                        [value]="brand.hue"
-                        (onDrag)="setBrandHue($event)"
-                    >
-                    </nx-slider>
-                    <nx-text-editable
-                        name="hueBrand"
-                        [(ngModel)]="brand.hue"
-                        (ngModelChange)="setBrandHue($event)"
-                    ></nx-text-editable>
+                    <input
+                        #brandInput
+                        class="form-control"
+                        (keyup)="changeBrandColor($event)"
+                    />
                 </div>
             </div>
-            <div class="col-4">
-                <div class="input-label col-12">Saturation</div>
-                <div class="col-12">
-                    <nx-slider
-                        name="saturationBrand"
-                        [range]="{ start: 0, end: 100 }"
-                        [value]="brand.saturation"
-                        (onDrag)="setBrandSaturation($event)"
-                    >
-                    </nx-slider>
-                    <nx-text-editable
-                        name="saturationBrand"
-                        [(ngModel)]="brand.saturation"
-                        (ngModelChange)="setBrandSaturation($event)"
-                    ></nx-text-editable>
+            <div class="row col-12">
+                <hr
+                    class="col-12"
+                    style="background-color: lightgray"
+                />
+                <div class="col-4 p-0">
+                    <div class="input-label col-12">Hue</div>
+                    <div class="col-12">
+                        <input
+                            name="hueBrand"
+                            class="form-control"
+                            [(ngModel)]="brand.hue"
+                            (ngModelChange)="setBrandHue($event)"
+                        />
+                    </div>
                 </div>
-            </div>
-            <div class="col-4">
-                <div class="input-label col-12">Luminosity</div>
-                <div class="col-12">
-                    <nx-slider
-                        name="luminosityBrand"
-                        [range]="{ start: 0, end: 100 }"
-                        [value]="brand.luminosity"
-                        (onDrag)="setBrandLuminosity($event)"
-                    >
-                    </nx-slider>
-                    <nx-text-editable
-                        name="luminosityBrand"
-                        [(ngModel)]="brand.luminosity"
-                        (ngModelChange)="setBrandLuminosity($event)"
-                    ></nx-text-editable>
+                <div class="col-4 p-0">
+                    <div class="input-label col-12">Saturation</div>
+                    <div class="col-12">
+                        <input
+                            name="saturationBrand"
+                            class="form-control"
+                            [(ngModel)]="brand.saturation"
+                            (ngModelChange)="setBrandSaturation($event)"
+                        />
+                    </div>
                 </div>
-            </div>
+                <div class="col-4 p-0">
+                    <div class="input-label col-12">Luminosity</div>
+                    <div class="col-12">
+                        <input
+                            name="luminosityBrand"
+                            class="form-control"
+                            [(ngModel)]="brand.luminosity"
+                            (ngModelChange)="setBrandLuminosity($event)"
+                        />
+                    </div>
+                </div>
 
-            <hr
-                class="col-12"
-                style="background-color: lightgray"
-            />
+                <hr
+                    class="col-12"
+                    style="background-color: lightgray"
+                />
+            </div>
 
             <div class="col-12 p-3">
-                <div class="row col-12">
-                    <div class="col-2 color error-dark"></div>
-                    <div class="col-10 color">error-dark</div>
-                </div>
-                <div class="row col-12">
-                    <div class="col-2 color error"></div>
-                    <div class="col-10 color">error core</div>
-                </div>
-                <div class="row col-12">
-                    <div class="col-2 color error-light"></div>
-                    <div class="col-10 color">error-light</div>
+                <div
+                    class="row col-12"
+                    *ngFor="let i of hexError"
+                >
+                    <div class="col-2 color error-{{ i.label }}"></div>
+                    <div class="col-10 color">{{ i.hex }} - error {{ i.label }}</div>
                 </div>
 
                 <br /><br /><br /><br />
 
-                <div class="row col-12">
-                    <div class="col-2 color brand-l4"></div>
-                    <div class="col-10 color">brand l4</div>
+                <div
+                    class="row col-12"
+                    *ngFor="let i of hexBrand"
+                >
+                    <div class="col-2 color brand-{{ i.label }}"></div>
+                    <div class="col-10 color">{{ i.hex }} - brand {{ i.label }}</div>
                 </div>
-                <div class="row col-12">
-                    <div class="col-2 color brand-l3"></div>
-                    <div class="col-10 color">brand l3</div>
-                </div>
-                <div class="row col-12">
-                    <div class="col-2 color brand-l2"></div>
-                    <div class="col-10 color">brand l2</div>
-                </div>
-                <div class="row col-12">
-                    <div class="col-2 color brand-l1"></div>
-                    <div class="col-10 color">brand l1</div>
-                </div>
-                <div class="row col-12">
-                    <div class="col-2 color brand-core"></div>
-                    <div class="col-10 color">brand</div>
-                </div>
-                <div class="row col-12">
-                    <div class="col-2 color brand-d1"></div>
-                    <div class="col-10 color">brand d1</div>
-                </div>
-                <div class="row col-12">
-                    <div class="col-2 color brand-d2"></div>
-                    <div class="col-10 color">brand d2</div>
-                </div>
-                <div class="row col-12">
-                    <div class="col-2 color brand-d3"></div>
-                    <div class="col-10 color">brand d3</div>
-                </div>
-                <div class="row col-12">
-                    <div class="col-2 color brand-d4"></div>
-                    <div class="col-10 color">brand d4</div>
-                </div>
-                <div class="row col-12">
-                    <div class="col-2 color brand-d5"></div>
-                    <div class="col-10 color">brand d5</div>
-                </div>
+
                 <br /><br /><br /><br />
+
                 <div class="row col-12">
                     <div class="col-2 color brand-dimmed"></div>
                     <div class="col-10 color">brand dimmed</div>
@@ -135,80 +97,89 @@
         </div>
 
         <div class="row col-6 offset-1">
-            <div class="col-4">
-                <div class="input-label col-12">Hue</div>
+            <div class="col-12 p-0">
+                <div class="input-label col-12">
+                    HEX Base Color (lum set to {{ luminosityStep }})
+                </div>
                 <div class="col-12">
-                    <nx-slider
-                        name="hueColor"
-                        [range]="{ start: 0, end: 360 }"
-                        [value]="color.hue"
-                        (onDrag)="setColorHue($event)"
-                    >
-                    </nx-slider>
-                    <nx-text-editable
-                        name="hueColor"
-                        [(ngModel)]="color.hue"
-                        (ngModelChange)="setColorHue($event)"
-                    ></nx-text-editable>
+                    <input
+                        #colorInput
+                        class="form-control"
+                        placeholder="Will override base set by brand color"
+                        (keyup)="changeBaseColor($event)"
+                    />
                 </div>
             </div>
-            <div class="col-4">
-                <div class="input-label col-12">Saturation</div>
-                <div class="col-12">
-                    <nx-slider
-                        name="saturationColor"
-                        [range]="{ start: 0, end: 100 }"
-                        [value]="color.saturation"
-                        (onDrag)="setColorSaturation($event)"
-                    >
-                    </nx-slider>
-                    <nx-text-editable
-                        name="saturationColor"
-                        [(ngModel)]="color.saturation"
-                        (ngModelChange)="setColorSaturation($event)"
-                    ></nx-text-editable>
+            <div class="row col-12">
+                <hr
+                    class="col-12"
+                    style="background-color: lightgray"
+                />
+                <div class="col-4 p-0">
+                    <div class="input-label col-12">Hue</div>
+                    <div class="col-12">
+                        <input
+                            name="hueColor"
+                            class="form-control"
+                            [(ngModel)]="color.hue"
+                            (ngModelChange)="setColorHue($event)"
+                        />
+                    </div>
                 </div>
-            </div>
-            <div class="col-4">
-                <div class="input-label col-12">Luminosity (step in %)</div>
-                <div class="col-12">
-                    <nx-slider
-                        name="luminosityStep"
-                        [range]="{ start: 0.0, end: 10.0, decimal: true }"
-                        [value]="luminosityStep"
-                        (onDrag)="setColorLuminosityStep($event)"
-                    >
-                    </nx-slider>
-                    <nx-text-editable
-                        name="luminosityStep"
-                        [(ngModel)]="luminosityStep"
-                        (ngModelChange)="setColorLuminosityStep($event)"
-                    ></nx-text-editable>
+                <div class="col-4 p-0">
+                    <div class="input-label col-12">Saturation</div>
+                    <div class="col-12">
+                        <input
+                            name="saturationColor"
+                            class="form-control"
+                            [(ngModel)]="color.saturation"
+                            (ngModelChange)="setColorSaturation($event)"
+                        />
+                    </div>
                 </div>
-            </div>
+                <div class="col-4 p-0">
+                    <div class="input-label col-12">Luminosity (step in %)</div>
+                    <div class="col-12">
+                        <input
+                            name="luminosityStep"
+                            class="form-control"
+                            [(ngModel)]="luminosityStep"
+                            (ngModelChange)="setColorLuminosityStep($event)"
+                        />
+                    </div>
+                </div>
 
-            <hr
-                class="col-12"
-                style="background-color: lightgray"
-            />
+                <hr
+                    class="col-12"
+                    style="background-color: lightgray"
+                />
+            </div>
 
             <div class="col-6 p-3">
+                <div class="row col-12">
+                    <div class="col-2 color light0"></div>
+                    <div class="col-10 color">&nbsp;</div>
+                </div>
                 <div
                     class="row col-12"
                     *ngFor="let i of colorNumbers"
                 >
                     <div class="col-2 color light{{ i }}"></div>
-                    <div class="col-10 color">light{{ i }}</div>
+                    <div class="col-10 color">{{ hexLight[i] }} - light{{ i }}</div>
                 </div>
             </div>
 
             <div class="col-6 p-3">
+                <div class="row col-12">
+                    <div class="col-2 color dark0"></div>
+                    <div class="col-10 color">&nbsp;</div>
+                </div>
                 <div
                     class="row col-12"
                     *ngFor="let i of colorNumbers"
                 >
                     <div class="col-2 color dark{{ i }}"></div>
-                    <div class="col-10 color">dark{{ i }}</div>
+                    <div class="col-10 color">{{ hexDark[i] }} - dark{{ i }}</div>
                 </div>
             </div>
         </div>
