@@ -11,7 +11,7 @@ import {
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject, Subscription, timer } from 'rxjs';
+import { of, Subject, Subscription, timer } from 'rxjs';
 import { distinctUntilChanged, filter, take, takeUntil } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
@@ -490,13 +490,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                                 new SimpleTimeRange(0, 0),
                                 [],
                                 c.status !== 'Offline'
-                                    ? this.system?.mediaserver.previewUrl(
-                                        c.id,
-                                        0,
-                                        128,
-                                        128,
-                                    )
-                                    : '',
+                                    ? this.system?.mediaserver.previewUrl(c.id, 0, 128, 128)
+                                    : of(''),
                                 (transport: string, quality: string, t?: ms) =>
                                     this.system?.getPlaybackUrl(
                                         c.id,
@@ -505,12 +500,10 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                                         t,
                                     ),
                                 (t?: ms, width = 128, height = 128) =>
-                                    this.system?.mediaserver.previewUrl(
-                                        c.id,
-                                        t,
-                                        width,
-                                        height,
-                                    ),
+                                    c.status !== 'Offline'
+                                        ? this.system?.mediaserver.previewUrl(c.id, t, width, height)
+                                        : of(''),
+                                this.system.info?.system2faEnabled
                             );
                             result.parseAdditionalParams(c.addParams);
                             return result;

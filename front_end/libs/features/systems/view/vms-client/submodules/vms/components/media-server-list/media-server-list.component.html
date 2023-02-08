@@ -79,15 +79,15 @@
                             class="preloader"
                             *ngIf="
                                 isCameraVisible[camera.id] &&
-                                camera.thumbnailUrl &&
+                                (camera.thumbnailUrl | async) &&
                                 !previewLoaded[camera.id]
                             "
                         ></nx-pre-loader>
                         <img
                             alt="thumbnail preview"
                             class="fs-exclude"
-                            *ngIf="camera.thumbnailUrl"
-                            [src]="camera.thumbnailUrl"
+                            *ngIf="camera.thumbnailUrl | async as thumbnail"
+                            [src]="thumbnail | safe: 'resourceUrl'"
                             (load)="handlePreviewLoaded(camera.id)"
                             (error)="handlePreviewError(camera.id)"
                         />

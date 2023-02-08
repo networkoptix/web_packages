@@ -1105,10 +1105,12 @@ export class NxSystemAPI {
             data.rotate = rotate;
         }
 
-        if (this.systemId) {
+        if (this.version === 0 && this.systemId) {
             data.auth = this.authGet;
         }
-        return this.generateGetUrl(endpoint, data);
+        const url = this.generateGetUrl(endpoint, data);
+        return this.get(url, undefined, { responseType: 'blob' })
+            .pipe(map(blob => blob ? URL.createObjectURL(blob) : undefined));
     }
 
     hlsUrl(cameraId: string, position: string = 'now', resolution: string = '') {

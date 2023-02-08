@@ -108,7 +108,7 @@ export class ServerManager {
         height: number,
         rotate: number,
         auth?: string
-    ): string {
+    ): Observable<string> {
         return this.mediaserver.previewUrl(cameraId, time, width, height, rotate, auth);
     }
 
