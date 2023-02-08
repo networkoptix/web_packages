@@ -2815,6 +2815,126 @@
             "path": "cloud_portal/front_end/node_modules/@cypress/webpack-preprocessor",
             "licenseFile": "cloud_portal/front_end/node_modules/@cypress/webpack-preprocessor/LICENSE.md"
         },
+        "@d3fc/d3fc-annotation@3.0.12": {
+            "licenses": "MIT",
+            "repository": "https://github.com/d3fc/d3fc",
+            "path": "cloud_portal/front_end/node_modules/@d3fc/d3fc-annotation",
+            "licenseFile": "cloud_portal/front_end/node_modules/@d3fc/d3fc-annotation/LICENSE"
+        },
+        "@d3fc/d3fc-axis@3.0.6": {
+            "licenses": "MIT",
+            "repository": "https://github.com/d3fc/d3fc",
+            "path": "cloud_portal/front_end/node_modules/@d3fc/d3fc-axis",
+            "licenseFile": "cloud_portal/front_end/node_modules/@d3fc/d3fc-axis/LICENSE.txt"
+        },
+        "@d3fc/d3fc-brush@3.0.3": {
+            "licenses": "MIT",
+            "repository": "https://github.com/d3fc/d3fc",
+            "path": "cloud_portal/front_end/node_modules/@d3fc/d3fc-brush",
+            "licenseFile": "cloud_portal/front_end/node_modules/@d3fc/d3fc-brush/LICENSE.txt"
+        },
+        "@d3fc/d3fc-chart@5.1.5": {
+            "licenses": "MIT",
+            "repository": "https://github.com/d3fc/d3fc",
+            "path": "cloud_portal/front_end/node_modules/@d3fc/d3fc-chart",
+            "licenseFile": "cloud_portal/front_end/node_modules/@d3fc/d3fc-chart/LICENSE"
+        },
+        "@d3fc/d3fc-data-join@6.0.3": {
+            "licenses": "MIT",
+            "repository": "https://github.com/d3fc/d3fc",
+            "path": "cloud_portal/front_end/node_modules/@d3fc/d3fc-data-join",
+            "licenseFile": "cloud_portal/front_end/node_modules/@d3fc/d3fc-data-join/LICENSE"
+        },
+        "@d3fc/d3fc-discontinuous-scale@4.1.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/d3fc/d3fc",
+            "path": "cloud_portal/front_end/node_modules/@d3fc/d3fc-discontinuous-scale",
+            "licenseFile": "cloud_portal/front_end/node_modules/@d3fc/d3fc-discontinuous-scale/LICENSE"
+        },
+        "@d3fc/d3fc-element@6.2.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/d3fc/d3fc",
+            "path": "cloud_portal/front_end/node_modules/@d3fc/d3fc-element",
+            "licenseFile": "cloud_portal/front_end/node_modules/@d3fc/d3fc-element/LICENSE"
+        },
+        "@d3fc/d3fc-extent@4.0.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/d3fc/d3fc",
+            "path": "cloud_portal/front_end/node_modules/@d3fc/d3fc-extent",
+            "licenseFile": "cloud_portal/front_end/node_modules/@d3fc/d3fc-extent/LICENSE"
+        },
+        "@d3fc/d3fc-financial-feed@7.1.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/d3fc/d3fc",
+            "path": "cloud_portal/front_end/node_modules/@d3fc/d3fc-financial-feed",
+            "licenseFile": "cloud_portal/front_end/node_modules/@d3fc/d3fc-financial-feed/LICENSE.txt"
+        },
+        "@d3fc/d3fc-group@3.0.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/d3fc/d3fc",
+            "path": "cloud_portal/front_end/node_modules/@d3fc/d3fc-group",
+            "licenseFile": "cloud_portal/front_end/node_modules/@d3fc/d3fc-group/LICENSE"
+        },
+        "@d3fc/d3fc-label-layout@7.0.3": {
+            "licenses": "MIT",
+            "repository": "https://github.com/d3fc/d3fc",
+            "path": "cloud_portal/front_end/node_modules/@d3fc/d3fc-label-layout",
+            "licenseFile": "cloud_portal/front_end/node_modules/@d3fc/d3fc-label-layout/LICENSE"
+        },
+        "@d3fc/d3fc-pointer@3.0.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/d3fc/d3fc",
+            "path": "cloud_portal/front_end/node_modules/@d3fc/d3fc-pointer",
+            "licenseFile": "cloud_portal/front_end/node_modules/@d3fc/d3fc-pointer/LICENSE"
+        },
+        "@d3fc/d3fc-random-data@4.0.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/d3fc/d3fc",
+            "path": "cloud_portal/front_end/node_modules/@d3fc/d3fc-random-data",
+            "licenseFile": "cloud_portal/front_end/node_modules/@d3fc/d3fc-random-data/LICENSE.txt"
+        },
+        "@d3fc/d3fc-rebind@6.0.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/d3fc/d3fc",
+            "path": "cloud_portal/front_end/node_modules/@d3fc/d3fc-rebind",
+            "licenseFile": "cloud_portal/front_end/node_modules/@d3fc/d3fc-rebind/LICENSE"
+        },
+        "@d3fc/d3fc-sample@5.0.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/d3fc/d3fc",
+            "path": "cloud_portal/front_end/node_modules/@d3fc/d3fc-sample",
+            "licenseFile": "cloud_portal/front_end/node_modules/@d3fc/d3fc-sample/LICENSE"
+        },
+        "@d3fc/d3fc-series@6.1.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/d3fc/d3fc",
+            "path": "cloud_portal/front_end/node_modules/@d3fc/d3fc-series",
+            "licenseFile": "cloud_portal/front_end/node_modules/@d3fc/d3fc-series/LICENSE"
+        },
+        "@d3fc/d3fc-shape@6.0.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/d3fc/d3fc",
+            "path": "cloud_portal/front_end/node_modules/@d3fc/d3fc-shape",
+            "licenseFile": "cloud_portal/front_end/node_modules/@d3fc/d3fc-shape/LICENSE"
+        },
+        "@d3fc/d3fc-technical-indicator@8.1.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/d3fc/d3fc",
+            "path": "cloud_portal/front_end/node_modules/@d3fc/d3fc-technical-indicator",
+            "licenseFile": "cloud_portal/front_end/node_modules/@d3fc/d3fc-technical-indicator/LICENSE"
+        },
+        "@d3fc/d3fc-webgl@3.2.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/d3fc/d3fc",
+            "path": "cloud_portal/front_end/node_modules/@d3fc/d3fc-webgl",
+            "licenseFile": "cloud_portal/front_end/node_modules/@d3fc/d3fc-webgl/LICENSE"
+        },
+        "@d3fc/d3fc-zoom@1.1.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/d3fc/d3fc",
+            "path": "cloud_portal/front_end/node_modules/@d3fc/d3fc-zoom",
+            "licenseFile": "cloud_portal/front_end/node_modules/@d3fc/d3fc-zoom/LICENSE"
+        },
         "@dabh/diagnostics@2.0.3": {
             "licenses": "MIT",
             "repository": "https://github.com/3rd-Eden/diagnostics",
@@ -3912,17 +4032,191 @@
             "path": "cloud_portal/front_end/node_modules/@types/cors",
             "licenseFile": "cloud_portal/front_end/node_modules/@types/cors/LICENSE"
         },
+        "@types/d3-array@3.0.4": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/d3-array",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/d3-array/LICENSE"
+        },
+        "@types/d3-axis@3.0.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/d3-axis",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/d3-axis/LICENSE"
+        },
+        "@types/d3-brush@3.0.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/d3-brush",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/d3-brush/LICENSE"
+        },
+        "@types/d3-chord@3.0.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/d3-chord",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/d3-chord/LICENSE"
+        },
+        "@types/d3-color@3.1.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/d3-color",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/d3-color/LICENSE"
+        },
+        "@types/d3-contour@3.0.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/d3-contour",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/d3-contour/LICENSE"
+        },
+        "@types/d3-delaunay@6.0.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/d3-delaunay",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/d3-delaunay/LICENSE"
+        },
+        "@types/d3-dispatch@3.0.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/d3-dispatch",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/d3-dispatch/LICENSE"
+        },
+        "@types/d3-drag@3.0.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/d3-drag",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/d3-drag/LICENSE"
+        },
+        "@types/d3-dsv@3.0.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/d3-dsv",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/d3-dsv/LICENSE"
+        },
+        "@types/d3-ease@3.0.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/d3-ease",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/d3-ease/LICENSE"
+        },
+        "@types/d3-fetch@3.0.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/d3-fetch",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/d3-fetch/LICENSE"
+        },
+        "@types/d3-force@3.0.4": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/d3-force",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/d3-force/LICENSE"
+        },
+        "@types/d3-format@3.0.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/d3-format",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/d3-format/LICENSE"
+        },
+        "@types/d3-geo@3.0.3": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/d3-geo",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/d3-geo/LICENSE"
+        },
+        "@types/d3-hierarchy@3.1.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/d3-hierarchy",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/d3-hierarchy/LICENSE"
+        },
+        "@types/d3-interpolate@3.0.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/d3-interpolate",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/d3-interpolate/LICENSE"
+        },
         "@types/d3-path@2.0.2": {
             "licenses": "MIT",
             "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
             "path": "cloud_portal/front_end/node_modules/@types/d3-path",
             "licenseFile": "cloud_portal/front_end/node_modules/@types/d3-path/LICENSE"
         },
+        "@types/d3-polygon@3.0.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/d3-polygon",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/d3-polygon/LICENSE"
+        },
+        "@types/d3-quadtree@3.0.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/d3-quadtree",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/d3-quadtree/LICENSE"
+        },
+        "@types/d3-random@3.0.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/d3-random",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/d3-random/LICENSE"
+        },
+        "@types/d3-scale-chromatic@3.0.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/d3-scale-chromatic",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/d3-scale-chromatic/LICENSE"
+        },
+        "@types/d3-scale@4.0.3": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/d3-scale",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/d3-scale/LICENSE"
+        },
+        "@types/d3-selection@3.0.4": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/d3-selection",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/d3-selection/LICENSE"
+        },
         "@types/d3-shape@2.1.3": {
             "licenses": "MIT",
             "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
             "path": "cloud_portal/front_end/node_modules/@types/d3-shape",
             "licenseFile": "cloud_portal/front_end/node_modules/@types/d3-shape/LICENSE"
+        },
+        "@types/d3-time-format@4.0.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/d3-time-format",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/d3-time-format/LICENSE"
+        },
+        "@types/d3-time@3.0.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/d3-time",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/d3-time/LICENSE"
+        },
+        "@types/d3-timer@3.0.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/d3-timer",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/d3-timer/LICENSE"
+        },
+        "@types/d3-transition@3.0.3": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/d3-transition",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/d3-transition/LICENSE"
+        },
+        "@types/d3-zoom@3.0.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/d3-zoom",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/d3-zoom/LICENSE"
+        },
+        "@types/d3@7.4.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/d3",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/d3/LICENSE"
         },
         "@types/dateformat@5.0.0": {
             "licenses": "MIT",
@@ -3977,6 +4271,12 @@
             "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
             "path": "cloud_portal/front_end/node_modules/@types/fscreen",
             "licenseFile": "cloud_portal/front_end/node_modules/@types/fscreen/LICENSE"
+        },
+        "@types/geojson@7946.0.10": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/geojson",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/geojson/LICENSE"
         },
         "@types/glob@7.2.0": {
             "licenses": "MIT",
@@ -6260,13 +6560,19 @@
             "path": "cloud_portal/front_end/node_modules/d3-zoom",
             "licenseFile": "cloud_portal/front_end/node_modules/d3-zoom/LICENSE"
         },
-        "d3@7.6.1": {
+        "d3@7.8.2": {
             "licenses": "ISC",
             "repository": "https://github.com/d3/d3",
             "publisher": "Mike Bostock",
             "url": "https://bost.ocks.org/mike",
             "path": "cloud_portal/front_end/node_modules/d3",
             "licenseFile": "cloud_portal/front_end/node_modules/d3/LICENSE"
+        },
+        "d3fc@15.2.6": {
+            "licenses": "MIT",
+            "repository": "https://github.com/d3fc/d3fc",
+            "path": "cloud_portal/front_end/node_modules/d3fc",
+            "licenseFile": "cloud_portal/front_end/node_modules/d3fc/LICENSE"
         },
         "dagre-d3@0.6.4": {
             "licenses": "MIT",

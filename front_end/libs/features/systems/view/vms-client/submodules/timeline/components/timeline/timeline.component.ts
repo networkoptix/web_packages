@@ -152,9 +152,11 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     public onAnimationFrame(): void {
+        // console.time();
         const ctx = this.canvasView.nativeElement.getContext('2d');
         // console.log('render #', times_rendered)
         this.canvasRenderer.render(ctx);
+        // console.timeEnd();
 
         // if (times_rendered++ >= MAX_TIMES_RENDERED) return
 

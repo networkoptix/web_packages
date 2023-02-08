@@ -1,0 +1,110 @@
+#nx-x-axis-minor,
+#nx-x-axis-major {
+    overflow: hidden;
+    border: 1px solid lightgray;
+}
+
+#nx-x-axis-major {
+    margin-top: -1px;
+}
+
+#chart {
+    d3fc-group.cartesian-chart {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 1px;
+        //grid-template-columns: minmax(1em, max-content) auto 1fr auto minmax(1em, max-content);
+        //grid-template-rows: minmax(1em, max-content) auto 1fr auto minmax(1em, max-content);
+    }
+
+    d3fc-group.cartesian-chart > .top-label {
+        display: none;
+    }
+
+    d3fc-group.cartesian-chart > .bottom-label {
+        display: none;
+    }
+
+    d3fc-group.cartesian-chart > .y-label {
+        display: none;
+    }
+
+    d3fc-group.cartesian-chart > .right-label {
+        display: none;
+    }
+
+    d3fc-group.cartesian-chart > .plot-area {
+        overflow: hidden;
+        grid-column: 3;
+        grid-row: 3;
+    }
+
+    d3fc-canvas, d3fc-svg {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: 100%;
+        //border: 1px solid gold;
+    }
+
+    d3fc-canvas.webgl-plot-area {
+        height: 100px;
+    }
+
+    d3fc-svg.left-axis {
+        display: none;
+    }
+
+    d3fc-svg.x-axis {
+        // this axis need to be rendered but not visible
+        visibility: hidden;
+        height: 0;
+
+        //& svg {
+        //    height: 24px;
+        //    outline: 1px solid lightgray;
+        //
+        //    & path {
+        //        stroke: lightgray;
+        //
+        //        &.domain {
+        //            stroke: transparent;
+        //        }
+        //    }
+        //}
+    }
+
+    d3fc-svg > svg {
+        overflow: visible;
+    }
+
+    d3fc-canvas > canvas, d3fc-svg > svg {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+    }
+}
+
+d3fc-svg.nx-x-axis-major,
+d3fc-svg.nx-x-axis-minor {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 24px;
+
+    & svg {
+        height: 24px;
+        //outline: 1px solid lightgray;
+
+        & path {
+            stroke: lightgray;
+
+            &.domain {
+                stroke: transparent;
+            }
+        }
+    }
+}

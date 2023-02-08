@@ -47,6 +47,10 @@ export class NxSandboxComponent {
                             id: 'themeHSL',
                             label: 'HSL colors',
                             path: '/hsl-theme'
+                        }, {
+                            id: 'webgl',
+                            label: 'WebGL',
+                            path: '/webgl'
                         }
                     ]
                 }, {

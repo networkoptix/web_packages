@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
+// import { NxWebGLComponent } from '@components/../systems/view/components/webgl/webgl.component';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { MenuModule } from '@app/menu/menu.module';
@@ -15,9 +16,14 @@ import { NxSliderModule } from '@components/slider/slider.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
+import { WebglComponent } from '@pages/sandbox/webgl/webgl.component';
 import {
     VmsClientModule
 } from '@pages/systems/view/vms-client/vms-client.module';
+import {
+    NxWebglCanvasComponent
+} from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-canvas.component';
+import { VmsClientTimelineModule } from '@vms-client/submodules/timeline/timeline.module';
 
 import { NxAccountSettingsModule } from '../account/settings/settings.module';
 import { NxGridLayoutComponent } from '../layout/layout.component';
@@ -61,6 +67,10 @@ const appRoutes: Routes = [
                 path: 'basic-colors',
                 component: NxBasicColorsComponent,
                 canDeactivate: [ApplyGuard],
+            },
+            {
+                path: 'webgl',
+                component: WebglComponent,
             },
             {
                 path: 'custom-colors',
@@ -149,7 +159,8 @@ const appRoutes: Routes = [
         AlertBlockModule,
         ContentBlockModule,
         NxAccountSettingsModule,
-        NxSliderModule
+        NxSliderModule,
+        VmsClientTimelineModule
     ],
     providers: [
     ],
@@ -170,11 +181,16 @@ const appRoutes: Routes = [
         NxCustomColorsComponent,
         NxThemeColorsComponent,
         NxHSLThemeColorsComponent,
+        WebglComponent,
+        NxWebglCanvasComponent
     ],
     bootstrap: [
     ],
     exports: [
         NxSandboxComponent
+    ],
+    schemas: [
+        CUSTOM_ELEMENTS_SCHEMA
     ]
 })
 export class SandboxModule {
