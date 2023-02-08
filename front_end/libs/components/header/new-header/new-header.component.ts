@@ -4,7 +4,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { cloneDeep } from 'lodash-es';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 
 import { accountSelectors } from '@common/store/account';
 import { NxMenusService } from '@services/menus.service';
@@ -12,6 +12,7 @@ import { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSystem } from '@services/system.service/system';
+import { NxSystemsService } from '@services/systems.service';
 import { GridBreakpoints } from '@styles/theme-variables-common';
 
 @UntilDestroy()
@@ -29,12 +30,14 @@ export class NxNewHeaderComponent {
     displayedNodes: MenuNode[];
     loggedIn: boolean | undefined = undefined;
     isMobile$ = new BehaviorSubject<boolean>(false);
+    systemCount$: Observable<number>;
 
     constructor(
         public headerService: NxHeaderService,
         menusService: NxMenusService,
         router: Router,
         private scrollMechanicsService: NxScrollMechanicsService,
+        systemsService: NxSystemsService,
         private store: Store,
     ) {
         router.events.pipe(filter(event => event instanceof NavigationEnd), untilDestroyed(this)).subscribe((event: NavigationEnd) => {
@@ -77,6 +80,8 @@ export class NxNewHeaderComponent {
         if (router.url === '/') {
             this.selectedNode = this.findNodeBasedOnURL(this.displayedNodes, 'content/about');
         }
+
+        this.systemCount$ = systemsService.systemsSubject.pipe(map(systems => systems.length));
     }
 
     handleNodeSelect(node: MenuNode): void {

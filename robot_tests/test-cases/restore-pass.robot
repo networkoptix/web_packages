@@ -42,7 +42,7 @@ Force Tags
     Get Restore Code and Open the Link    ${email}    restore=${True}    new password=${password}
 
 5. Should set new password, login with new password
-    [Tags]    email    C26260    smoke
+    [Tags]    email    C26260    smoke    ci
     ${email}=   Register Random User
     Send "Restore Password" Email    ${email}
     Get Restore Code and Open the Link    ${email}    restore=${True}    new password=${ALT PASSWORD}
@@ -161,7 +161,7 @@ Force Tags
     Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}    ${RESET PASSWORD COMP HEADER}
 
 12. Check restore password email links, colors, cloud name, and open link in new tab
-    [Tags]    C26260     deb    smoke
+    [Tags]    C26260     deb    smoke    ci
     # We open the mailbox to first delete the activation email so that the restore password email is easily found and not confused
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${user}=   Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}

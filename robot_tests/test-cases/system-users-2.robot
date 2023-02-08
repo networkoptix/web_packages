@@ -436,7 +436,7 @@ Force Tags        system    Threaded    users
     END
 
 15. Delete user works
-    [Tags]    email    C41903    webadmin    cloud    smoke
+    [Tags]    email    C41903    webadmin    cloud    smoke    ci
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${servers}[0][cloudOwner]    ${servers}[0][cloudUsers][cloudAdmin]
     ...    ELSE    Create List    ${servers}[0][cloudOwner]    admin    ${servers}[0][cloudUsers][cloudAdmin]    ${servers}[0][localUsers][cloudAdmin][login]
     FOR    ${user}    IN    @{list}
@@ -465,7 +465,7 @@ Force Tags        system    Threaded    users
     END
 
 16. Share with registered user works and sends him notification
-    [Tags]    email    C41888    cloud    smoke
+    [Tags]    email    C41888    cloud    smoke    ci
     ${random email}=    Register and activate account with random email    mark     hamil    ${password}
     ${user}=   Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
     Register And Activate Account    users    notification    ${user}    ${BASE PASSWORD}
@@ -474,6 +474,7 @@ Force Tags        system    Threaded    users
     Go To    ${url}
     Log in to user and system    ${servers}[0][cloudOwner]    ${servers}[0][id]
     Verify In System    ${servers}[0][name]
+    sleep    2
     Share To    ${user}    ${ADMIN TEXT}
     Sleep    10
     # Might not be necessary after CLOUD-6113
@@ -516,7 +517,7 @@ Force Tags        system    Threaded    users
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
 
 17. Share with registered user gives user access to system
-    [Tags]    email    C41888    cloud    smoke
+    [Tags]    email    C41888    cloud    smoke    ci
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}  
     Share    ${servers}[0][cloudAuth]    ${servers}[0][id]    viewer    ${random email}      ${permissions}[viewer]
     Log in to user and system    ${random email}    ${servers}[0][id]
@@ -529,12 +530,13 @@ Force Tags        system    Threaded    users
     Element Should Not Be Visible    ${ADD USER BUTTON SYSTEMS}
 
 18. Share with unregistered user - Verify email recieved
-    [Tags]    email    C41889    cloud    CLOUD-8643    smoke
+    [Tags]    email    C41889    cloud    CLOUD-8643    smoke    ci
     Log    Step 1
     Log in to user and system    ${servers}[0][cloudOwner]    ${servers}[0][id]
     ${random email}=   Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
     Append To List    ${TMP USERS}    ${random email}
     Go To Users List
+    Sleep    3
     Share To    ${random email}    ${ADMIN TEXT}
     sleep    10
     ${role}=   Get Cloud User Role  ${servers}[0][cloudAuth]    ${random email}    ${servers}[0][id]
@@ -569,7 +571,7 @@ Force Tags        system    Threaded    users
     Close Mailbox
 
 18.5 New user brought to registration page with code and with correct email locked after having a system shared
-    [Tags]   email    C41889    cloud    CLOUD-8643    smoke
+    [Tags]   email    C41889    cloud    CLOUD-8643    smoke    ci
     [Setup]    Share System With New User And Grab Email Link
     Log    Step 5-6
     Go To    ${invite link}

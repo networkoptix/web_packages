@@ -8,8 +8,9 @@ Force Tags        account
 
 *** Test Cases ***
 1. Can access the account page from dropdown
-    [Tags]    smoke
+    [Tags]    smoke    ci
     Log In    ${no perm}    ${password}
+    Sleep    3
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}
     Click Button    ${ACCOUNT DROPDOWN}
     Wait Until Element is Visible    ${ACCOUNT SETTINGS BUTTON}
@@ -42,7 +43,7 @@ Force Tags        account
     Verify in account page
 
 5. Changing first name and saving maintains that setting
-    [Tags]    C41573    smoke
+    [Tags]    C41573    smoke    ci
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    button=None   api=${False}
     Verify in Account Page
@@ -64,7 +65,7 @@ Force Tags        account
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
 
 6. Changing last name and saving maintains that setting
-    [Tags]    C41573    smoke
+    [Tags]    C41573    smoke    ci
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    button=None   api=${False}
     Verify in Account Page

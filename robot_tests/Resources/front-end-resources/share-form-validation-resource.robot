@@ -4,13 +4,12 @@ Resource          ../../resource.robot
 *** Keywords ***
 Share Form Setup
     Open Browser and go to URL    ${url}
-    ${random}=    Generate Random String      length=5
-    ${owner}=   Register and activate account with random email    mark    hamill    ${BASE PASSWORD}
-    ${server} =    Create Base System      shareform-${random}    owner=${owner}
-    Set Suite Variable    &{server}    &{server}
+    ${servers} =    Create Systems
+    Set Suite Variable    ${servers}    ${servers}
+    Set Suite Variable    ${server}    ${servers}[0]
     Run Keyword If    '''${mode}'''=='''cloud'''    Run Keywords
     ...    Go to    ${url}
-    ...    AND    Log in to user and system     ${server['owner']}    ${server['cloud id']}    password=${password}
+    ...    AND    Log in to user and system     ${server['cloudOwner']}    ${server['id']}    password=${password}
     ...    AND    Sleep    10
     ...    AND    Wait Until Element is Visible    ${SERVERS LINK}    300
     ...    AND    Sleep    5
@@ -19,11 +18,7 @@ Share Form Setup
     ...    AND    Log Out
     
 Share Form Tear Down
-    Run Keyword If    '''${mode}'''=='''cloud'''    Disconnect Server via API    ${auth}    ${server['cloud id']}    ${password}    ${server['owner']}
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
-    ${results}    Execute Command    docker container stop ${server}[id]
-    ${results}    Execute Command    docker container rm ${server}[id]
+    Teardown Servers    ${servers}
     FOR    ${user}    IN    @{server['cloud users'].values()}
          Run Keyword If    '''${mode}'''=='''cloud'''    Delete Account    ${user}      ${password}  
     END
@@ -37,12 +32,12 @@ Restart
 Open Share Dialog
     Share Form Setup
         Run Keyword If    '''${mode}'''=='''cloud'''    Run Keywords
-    ...    Go To   ${url}/systems/${server['cloud id']}
-    ...    AND    Log In     ${server['owner']}    ${password}    button=None
+    ...    Go To   ${url}/systems/${server['id']}
+    ...    AND    Log In     ${server['cloudOwner']}    ${password}    button=None
     ...    ELSE    Run Keywords
-    ...    Open Browser and Go To URL    https://${QA BURBANK IP}:${server['port']}
-    ...    AND    Log In     ${server['local auth'][0]}    ${server['local auth'][1]}    button=None
-    # Run Keyword If    '${email}' == '${server['owner']}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}
+    ...    Open Browser and Go To URL    https://${QA BURBANK IP}:${server}[port][0]
+    ...    AND    Log In     ${server['localAuth'][0]}    ${server['localAuth'][1]}    button=None
+    # Run Keyword If    '${email}' == '${server['cloudOwner']}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}
     # Run Keyword If    '${email}' == '${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
     Wait Until Elements Are Visible    ${USERS LIST LINK}

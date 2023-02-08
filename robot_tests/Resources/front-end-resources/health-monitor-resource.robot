@@ -27,15 +27,17 @@ Upload Json
 
 Health Monitor Suite Setup
     Open Browser and go to URL      ${url}
-    ${owner}=   Register and activate account with random email    mark    hamill    ${password}
-    ${random}=   Generate Random String      length=5
-    ${server 1}=   Create Base System    HM1-${random}    owner=${owner}
-    ${server 2}=   Create Base System    HM2-${random}    owner=${owner}
-    Set Suite Variable    ${server 1}    ${server 1}
-    Set Suite Variable    ${server 2}    ${server 2}
-    Stop Docker Server    ${server 2}[id]
+#    ${owner}=   Register and activate account with random email    mark    hamill    ${password}
+#    ${random}=   Generate Random String      length=5
+#    ${server 1}=   Create Base System    HM1-${random}    owner=${owner}
+#    ${server 2}=   Create Base System    HM2-${random}    owner=${owner}
+    ${servers} =     Create Systems
+    Set Suite Variable    ${servers}     ${servers}
+    Set Suite Variable    ${server 1}    ${servers}[0]
+    Set Suite Variable    ${server 2}    ${servers}[1]
+    Stop Docker Server    ${server 2}[name]
     Go to    ${ENV}
-    Run Keyword If    '''${mode}'''=='''cloud'''    Set Suite Variable     ${user in charge}    ${server 1}[owner]
+    Run Keyword If    '''${mode}'''=='''cloud'''    Set Suite Variable     ${user in charge}    ${server 1}[cloudOwner]
     ...    ELSE   Set Suite Variable     ${user in charge}    admin
 
 Health Monitor Test Setup
@@ -48,7 +50,7 @@ Health Monitor Test Setup
 
 Cloud Test Setup
     [Arguments]    ${server}    ${user}    ${verify}
-    Log in to system    ${server}    ${user}    validate=${True}
+    Log in to system new    ${server}    ${user}    validate=${True}
     Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
 
 Web Admin Test Setup
@@ -147,8 +149,9 @@ Count All Alerts and Validate Totals Shown
 
 Health Monitor Suite Teardown
     Close All Browsers
-    Delete Base System    ${server 1}
-    Delete Base System    ${server 2}
+    Teardown Servers    ${servers}
+#    Delete Base System    ${server 1}
+#    Delete Base System    ${server 2}
 
 
 Health Monitor Details Setup
@@ -172,7 +175,7 @@ Health Monitor Details Tear Down
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
     ${results}    Execute Command    docker container stop ${server}[id]
     ${results}    Execute Command    docker container rm ${server}[id]
-    FOR    ${user}    IN    @{server['cloud users'].values()}
+    FOR    ${user}    IN    @{server['cloudUsers'].values()}
          Run Keyword If    '''${mode}'''=='''cloud'''    Delete Account    ${user}          ${password}  
     END
     Close All Connections

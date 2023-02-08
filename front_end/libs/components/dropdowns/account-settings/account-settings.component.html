@@ -46,14 +46,12 @@
                     class="dropdown-item-container"
                     *ngFor="let dropdownItem of accountDropdown; let i = index"
                 >
-                    <a
-                        class="dropdown-item inset"
-                        attr.data-testid="dropdownItem{{ i }}"
-                        [routerLink]="dropdownItem.route"
-                        (click)="show = false"
-                    >
-                        <span>{{ dropdownItem.name | translate }}</span>
-                    </a>
+                    <ng-container
+                        *ngTemplateOutlet="
+                            dropdownItem.newWindow ? externalLink : routerLink;
+                            context: { dropdownItem: dropdownItem, index: i }
+                        "
+                    ></ng-container>
                 </li>
             </ng-container>
             <li class="dropdown-item-container">
@@ -76,12 +74,12 @@
             ></li>
             <li
                 class="dropdown-item-container"
-                *ngFor="let dropdownItem of accountDropdownStaff"
+                *ngFor="let dropdownItem of accountDropdown; let i = index"
             >
                 <ng-container
                     *ngTemplateOutlet="
                         dropdownItem.newWindow ? externalLink : routerLink;
-                        context: { dropdownItem: dropdownItem }
+                        context: { dropdownItem: dropdownItem, index: i }
                     "
                 ></ng-container>
             </li>
@@ -92,9 +90,11 @@
 <ng-template
     #routerLink
     let-dropdownItem="dropdownItem"
+    let-index="index"
 >
     <a
         class="dropdown-item inset"
+        id="dropdownItem{{ index }}"
         (click)="hide()"
         [routerLink]="dropdownItem.route"
     >
@@ -105,12 +105,12 @@
 <ng-template
     #externalLink
     let-dropdownItem="dropdownItem"
+    let-index="index"
 >
     <a
         class="dropdown-item inset"
-        (click)="hide(); (true)"
-        [attr.href]="dropdownItem.route"
-        target="_blank"
+        id="dropdownItem{{ index }}"
+        [href]="dropdownItem.route"
     >
         <span>{{ dropdownItem.name | translate }}</span>
     </a>

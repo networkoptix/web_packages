@@ -12,6 +12,7 @@ import { NxHeaderService } from '@services/nx-header.service';
 export class NxHeaderLevelOneComponent {
     @Input() menuNodes: MenuNode[] = [];
     @Input() selectedNode: MenuNode;
+    @Input() noSystems: boolean;
     @Input() loggedIn: boolean | undefined = undefined;
     @Output() nodeSelect = new EventEmitter<MenuNode>();
     profileDropdownOpen = false;

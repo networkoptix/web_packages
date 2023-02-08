@@ -8,7 +8,7 @@
     >
         <ng-container *ngFor="let node of menuNodes">
             <div
-                *ngIf="!node.invisible && !(singleSystem && node.url === '/systems')"
+                *ngIf="!node.invisible && !(systemCount < 2 && node.url === '/systems')"
                 class="menu-item"
             >
                 <div class="node-name">{{ node.display_name | translate }}</div>

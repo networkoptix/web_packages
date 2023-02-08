@@ -229,6 +229,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         }
         this.route.queryParams.subscribe(async (params: AuthorizeParams) => {
             this.initialData = cloneDeep(params);
+            this.isMobileClient = Boolean(this.initialData.redirect_uri || this.initialData.redirect_url) && this.deviceService.isMobile();
             this.initialData.email &&= this.initialData.email.replace(' ', '+');
             if (this.window.nativeClient && !this.initialData.email) {
                 const clientEmail = nativeClient.username && await nativeClient?.username();

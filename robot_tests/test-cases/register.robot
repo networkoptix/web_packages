@@ -8,7 +8,7 @@ Force Tags        Threaded
 
 *** Test Cases ***
 1. Should open register page in anonymous state by clicking Register button on top right corner
-    [tags]    smoke
+    [tags]    smoke    ci
     Wait Until Element Is Visible    ${CREATE ACCOUNT HEADER}
     Click Link    ${CREATE ACCOUNT HEADER}
     Location Should Be    ${url}/authorize?client_type=create
@@ -38,7 +38,7 @@ Force Tags        Threaded
     Wait Until Element Is Visible    ${REGISTER FORM}
 
 5. Should register user with correct credentials
-    [tags]    smoke
+    [tags]    smoke    ci
     ${email}    Get Random Email Robot    ${BASE EMAIL}
     Register    mark    hamill    ${email}    ${password}
     Validate Register Success
@@ -233,7 +233,7 @@ Force Tags        Threaded
     Wait Until Element Is Visible    ${REGISTER FORM}//p[contains(@class,"error-label") and contains(text(),"${ACCOUNT ALREADY EXISTS}")]
 
 21. Check registration email links, colors, cloud name, and user name
-    [tags]    C24211    C43021    Customizations    smoke
+    [tags]    C24211    C43021    Customizations    smoke    ci
     ${email}    Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
     Check Language Anonymous
     Register    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${email}    ${password}

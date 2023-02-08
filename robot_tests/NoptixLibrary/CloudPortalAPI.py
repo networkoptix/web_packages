@@ -541,8 +541,11 @@ class CloudPortalAPI(object):
             "first_name": firstName,
             "last_name": lastName
         }
-        r = requests.post(f'{self.env}/api/account/register', auth=HTTPBasicAuth(self.baseEmail, self.password),
-                          json=body, verify=False)
+        r = requests.post(f'{self.env}/api/account/register',
+                          auth=HTTPBasicAuth(self.baseEmail, self.password),
+                          json=body,
+                          verify=False)
+        assert r.status_code == 200
         return r.json()
 
     @keyword

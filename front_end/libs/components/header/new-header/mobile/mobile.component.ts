@@ -6,7 +6,6 @@ import { icons } from '@lib/variables/static-variables';
 import { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
-import { NxSystemsService } from '@services/systems.service';
 import { GridBreakpoints } from '@styles/theme-variables-common';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -21,15 +20,14 @@ import { mobileIconState } from '../new-header-types';
 export class NxHeaderMobileComponent {
     @Input() loggedIn: boolean;
     @Input() menuNodes: MenuNode[] = [];
+    @Input() systemCount: number = 0;
     menuOpen$ = new BehaviorSubject(false);
     isProfile$ = new BehaviorSubject(false);
     isTablet$ = new BehaviorSubject(false);
-    singleSystem$ = new BehaviorSubject(false);
     currentSystemMenu: MenuNode;
     iconState: mobileIconState;
     icons = icons;
     constructor(public headerService: NxHeaderService,
-        systemsService: NxSystemsService,
         scrollMechanics: NxScrollMechanicsService) {
         this.headerService.currentLocation$.pipe(untilDestroyed(this)).subscribe(currentLocation => {
             this.setIconState(this.loggedIn, currentLocation?.path);
@@ -41,10 +39,6 @@ export class NxHeaderMobileComponent {
 
         scrollMechanics.windowSizeSubject.pipe(untilDestroyed(this)).subscribe(({ width }) => {
             this.isTablet$.next(width < GridBreakpoints.MD && width > GridBreakpoints.SM);
-        });
-
-        systemsService.systemsSubject.pipe(untilDestroyed(this)).subscribe(systems => {
-            this.singleSystem$.next(systems.length === 1);
         });
     }
 
@@ -73,7 +67,7 @@ export class NxHeaderMobileComponent {
                 if (path === '/systems') {
                     state = mobileIconState.NONE;
                 } else if (this.headerService.activeSystem && path?.includes('/systems/')) {
-                    if (!this.singleSystem$.value) {
+                    if (this.systemCount > 1) {
                         state = mobileIconState.RETURN_TO_SYSTEMS;
                     } else {
                         state = mobileIconState.NONE;

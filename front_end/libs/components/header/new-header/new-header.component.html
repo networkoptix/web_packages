@@ -2,6 +2,7 @@
     <nx-header-level-one
         [menuNodes]="displayedNodes"
         [selectedNode]="selectedNode"
+        [noSystems]="(systemCount$ | async) === 0"
         (nodeSelect)="handleNodeSelect($any($event))"
         [loggedIn]="loggedIn"
     >
@@ -17,4 +18,5 @@
     *ngIf="isMobile$ | async"
     [loggedIn]="loggedIn"
     [menuNodes]="displayedNodes"
+    [systemCount]="systemCount$ | async"
 ></nx-header-mobile>

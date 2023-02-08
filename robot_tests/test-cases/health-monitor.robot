@@ -16,8 +16,8 @@ Force Tags        Threaded    hm
 
 2. Administrator Has Access to Health Monitoring
     [Tags]    cloud    webadmin
-    [Setup]    Run Keyword If    '''${mode}'''=='''cloud'''    Health Monitor Test Setup    user=${server 1}[cloud users][cloudAdmin]
-    ...    ELSE    Health Monitor Test Setup    user=${server 1}[local users][cloudAdmin][login]
+    [Setup]    Run Keyword If    '''${mode}'''=='''cloud'''    Health Monitor Test Setup    user=${server 1}[cloudUsers][cloudAdmin]
+    ...    ELSE    Health Monitor Test Setup    user=${server 1}[localUsers][cloudAdmin][login]
     Sleep    1
     Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
@@ -54,7 +54,7 @@ Force Tags        Threaded    hm
 
 6. Advanced Viewer Does Not Have Access To Health Monitor
     [Tags]    cloud    webadmin
-    [Setup]    Run Keyword If    '''${mode}'''=='''cloud'''    Health Monitor Test Setup    user=${server 1}[cloud users][advancedViewer]
+    [Setup]    Run Keyword If    '''${mode}'''=='''cloud'''    Health Monitor Test Setup    user=${server 1}[cloudUsers][advancedViewer]
     ...    ELSE    Health Monitor Test Setup    user=${server 1}[local users][advancedViewer][login]
     Sleep    5
     Run Keyword and Expect Error    *    Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}    10
@@ -64,7 +64,7 @@ Force Tags        Threaded    hm
 
 7. Viewer Does Not Have Access To Health Monitor
     [Tags]    cloud    webadmin
-    [Setup]    Run Keyword If    '''${mode}'''=='''cloud'''    Health Monitor Test Setup    user=${server 1}[cloud users][viewer]
+    [Setup]    Run Keyword If    '''${mode}'''=='''cloud'''    Health Monitor Test Setup    user=${server 1}[cloudUsers][viewer]
     ...    ELSE    Health Monitor Test Setup    user=${server 1}[local users][viewer][login]
     Run Keyword and Expect Error    *    Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}    10
     ${location}=   Get location
@@ -73,7 +73,7 @@ Force Tags        Threaded    hm
 
 8. Live Viewer Does Not Have Access To Health Monitor
     [Tags]    cloud    webadmin
-    [Setup]    Run Keyword If    '''${mode}'''=='''cloud'''    Health Monitor Test Setup    user=${server 1}[cloud users][liveViewer]
+    [Setup]    Run Keyword If    '''${mode}'''=='''cloud'''    Health Monitor Test Setup    user=${server 1}[cloudUsers][liveViewer]
     ...    ELSE    Health Monitor Test Setup    user=${server 1}[local users][liveViewer][login]
     Run Keyword and Expect Error    *    Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}    10
     ${location}=   Get location

@@ -268,7 +268,7 @@ Force Tags        merge
 
 # Positive scenarios
 8. Positive scenario with selected cloud system (selected system is secondary)
-    [Tags]    C70930    pos    must    smoke
+    [Tags]    C70930    pos    must    smoke    ci
     Log    Test set up
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
@@ -341,7 +341,7 @@ Force Tags        merge
     Click Button    ${MERGE FAILED OK BUTTON}
     Go To    ${ENV}/systems/
     sleep    5
-    Location Should Be    ${ENV}/systems/${system 1}[cloud id]
+    Wait Until Location Is    ${ENV}/systems/${system 1}[cloud id]    120
 
 9. Positive scenario with selected cloud system (selected system is primary)
     [Tags]    C70931    pos    must

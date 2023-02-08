@@ -1,6 +1,6 @@
 *** Settings ***
-Resource     variables.robot
 Resource     variables-env.robot
+Resource     variables.robot
 Resource     Resources/cms-resources.robot
 
 Library      String
@@ -121,6 +121,7 @@ Log In
     IF    '''${mode}'''=='''cloud'''
         IF   ${api}
             ${access} =    Get Access Code    ${user}     ${password}
+            Set User Theme    ${user}    ${password}    ${THEME}
             Go To   ${access}[link]
             Sleep   3
             Run Keyword If   ${validate}     Validate Log In    ${user}    password=${password}
@@ -216,6 +217,14 @@ Log in to system
     ${url}=   Set Variable If
     ...    '''${mode}'''== '''cloud'''    ${ENV}/systems/${system}[cloud id]
     ...    '''${mode}'''=='''webadmin'''    https://${QA BURBANK IP}:${system}[port]
+    Go To    ${url}
+    Log In    ${email}    ${password}    validate=${validate}    button=${None}
+
+Log in to system new
+    [Arguments]    ${system}    ${email}    ${password}=${BASE PASSWORD}    ${validate}=${False}
+    ${url}=   Set Variable If
+    ...    '''${mode}'''== '''cloud'''    ${ENV}/systems/${system}[id]
+    ...    '''${mode}'''=='''webadmin'''    https://${QA BURBANK IP}:${system}[port][0]
     Go To    ${url}
     Log In    ${email}    ${password}    validate=${validate}    button=${None}
 
@@ -357,7 +366,7 @@ Get Random Email Robot
     [return]    ${random email}
 
 Get Email Link
-    [Arguments]    ${recipient}    ${link type}    ${via email}=${FROM EMAIL DEFAULT}    ${timeout}=120
+    [Arguments]    ${recipient}    ${link type}    ${via email}=${FROM EMAIL DEFAULT}    ${timeout}=300
     IF    ${via_email}
         Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL NO SEND}    is_secure=True
         ${email}=   Wait For Email    recipient=${recipient}    timeout=${timeout}    status=UNSEEN
@@ -482,7 +491,7 @@ Share To
     Wait Until Element Is Visible    ${USERS LIST LINK}
     Wait Until Keyword Succeeds    10    0.5    Click Element    ${USERS LIST LINK}
     Wait Until Element Is Visible    ${ADD USER BUTTON SYSTEMS}    timeout=60
-    Sleep    1
+    Sleep    3
     Click Button    ${ADD USER BUTTON SYSTEMS}
     Wait Until Elements Are Visible    ${ADD USER EMAIL}    ${ADD USER BUTTON MODAL}
     Input Text    ${ADD USER EMAIL}    ${email}
@@ -490,6 +499,7 @@ Share To
     Sleep    1
     Click Button    ${ADD USER PERMISSIONS DROPDOWN}
     Wait Until Elements Are Visible    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${permissions}']    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
+    Sleep    3
     Click Link    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
     Click Button    ${ADD USER BUTTON MODAL}
     ${s}=   Replace String    ${EMAIL IS ALREADY REGISTERED TEXT}    %SYSTEM%    ${system}

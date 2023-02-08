@@ -45,7 +45,7 @@ ${2FA VERIFICATION CHECKBOX ID}             //nx-account-security-component//nx-
 ${2FA ERROR LOGIN CODE}                     //nx-authorize-component//nx-authorize-auth-code-component//p[contains(text(),"${2FA INVALID CODE TEXT}")]
 ${2FA DISABLE MODAL HEADER}                 //nx-two-fa-modal-content//h1[contains(text(),"${2FA DISABLE MODAL HEADER TEXT}")]
 ${2FA DISABLE MODAL DESCRIPTION}            //nx-two-fa-modal-content//form//label[text()="${2FA DISABLE MODAL DESCRIPTION TEXT}"]
-${2FA DISABLE MODAL BTN}                    //nx-two-fa-modal-content//button[@id="disableFinish" or @type="submit"]
+${2FA DISABLE MODAL BTN}                    //nx-two-fa-modal-content//button[@type="submit"]
 ${2FA DISABLE MODAL RED COLOR}              rgba(194, 38, 38, 1)
 ${2FA DISABLE MODAL CANCEL BTN}             //nx-two-fa-modal-content//button[(@type="reset") or contains(text(),"${CANCEL BUTTON TEXT}")]
 ${2FA SECURITY PAGE SAVE BTN}               //nx-account-security-component//nx-apply//button[@type="submit"]
