@@ -1151,6 +1151,9 @@ export class NxSystemAPI {
     }
 
     public getExportUrl({ transport, cameraId, pos, endPos, duration }) {
+        if (!['mp4', 'mkv'].includes(transport)) {
+            transport = 'mkv';
+        }
         cameraId = cameraId?.replace(/{|}/g, '');
         const url = `/web/media/${cameraId}.${transport}`;
         const params = {
