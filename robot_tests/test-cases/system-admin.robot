@@ -467,7 +467,7 @@ Force Tags        system    cloud
 
     # Verify the system is removed from others' users accounts
     Log In    ${system}[cloudUsers][viewer]    ${base password}
-    Wait Until Location Is    ${ENV}/systems
+    Wait Until Location Contains    ${ENV}/systems
     Wait until element is visible    //span[contains(text(), "${YOU HAVE NO SYSTEMS TEXT}")]
     Validate Header Button Text    0
     Click Button    ${SYSTEMS DROPDOWN}

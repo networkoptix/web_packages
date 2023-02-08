@@ -10,6 +10,7 @@ Force Tags        account
 1. Can access the account page from dropdown
     [Tags]    smoke    ci
     Log In    ${no perm}    ${password}
+    Sleep    3
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}
     Click Button    ${ACCOUNT DROPDOWN}
     Wait Until Element is Visible    ${ACCOUNT SETTINGS BUTTON}

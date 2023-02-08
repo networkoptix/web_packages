@@ -875,10 +875,10 @@ class GenericKeywords(object):
                 server["token"] = self.server_api.get_server_token(server["localAuth"], f"https://{self.ssh_host}:{server['port'][0]}")
                 
             # Add local users if required
+            permissions = BuiltIn().get_variable_value('${permissions}')
             for server in serversJson:
                 if server["addUsers"] == True:
                     localUsersNames = BuiltIn().get_variable_value('${role names}').keys()
-                    permissions = BuiltIn().get_variable_value('${permissions}')
                     localUsers={}
                     for user in localUsersNames:
                         self.server_api.save_user(
@@ -895,12 +895,20 @@ class GenericKeywords(object):
                     server.update({"localUsers":localUsers})
 
             # Register, Activate, and Share cloud users if required
-            for server in serversJson:
-                if server["addUsers"] == True and 'cloudOwnerId'in server:
-                    cloudUsers = BuiltIn().run_keyword('Register and Activate Generic Users')
-                    self.Add_Cloud_Users(server["cloudAuth"], cloudUsers, server['id'])
-                    server.update({"cloudUsers":cloudUsers})
-        
+            if server["addUsers"] and 'cloudOwnerId' in server:
+                for server in serversJson:
+                    for permission in permissions:
+                        email = self.get_random_email(self.base_email, sendemail=self.from_email)
+                        self.cloud_api.register_account("Mark", "Hamill", email, self.password)
+                        server["cloudUsers"].update({permission:email})
+
+                for server in serversJson:
+                    for user in server["cloudUsers"]:
+                        BuiltIn().run_keyword('Activate', server["cloudUsers"][user], self.from_email)
+                        self.Add_user_to_cloud_system_if_not_there(server["id"], user, server["cloudUsers"][user], [server["cloudOwner"], self.password])
+                
+
+
         return serversJson
 
 

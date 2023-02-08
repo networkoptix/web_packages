@@ -121,10 +121,10 @@ Log In
     IF    '''${mode}'''=='''cloud'''
         IF   ${api}
             ${access} =    Get Access Code    ${user}     ${password}
+            Set User Theme    ${user}    ${password}    ${THEME}
             Go To   ${access}[link]
             Sleep   3
             Run Keyword If   ${validate}     Validate Log In    ${user}    password=${password}
-            Set User Theme    ${user}    ${password}    ${THEME}
         ELSE
             Log In Cloud    ${user}    ${password}    ${validate}    ${button}     ${exists}    ${reset}    ${2fa}    ${2fa backup code}
         END
@@ -499,6 +499,7 @@ Share To
     Sleep    1
     Click Button    ${ADD USER PERMISSIONS DROPDOWN}
     Wait Until Elements Are Visible    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${permissions}']    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
+    Sleep    3
     Click Link    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
     Click Button    ${ADD USER BUTTON MODAL}
     ${s}=   Replace String    ${EMAIL IS ALREADY REGISTERED TEXT}    %SYSTEM%    ${system}

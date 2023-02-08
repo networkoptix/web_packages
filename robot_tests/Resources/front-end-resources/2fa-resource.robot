@@ -91,6 +91,7 @@ Turn off 2fa Functionality
 Login with one time backup code
     [arguments]    ${email}    ${password}    ${random one time backup code}
     Log In    ${email}    ${password}    2fa=${True}    2fa backup code=${random one time backup code}   api=${False}
+    Sleep    3
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}
     Click Button    ${ACCOUNT DROPDOWN}
     Wait Until Element is Visible    ${SECURITY DROPDOWN}

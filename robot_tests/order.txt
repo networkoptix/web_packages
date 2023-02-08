@@ -1,3 +1,5 @@
+--suite Test-Cases.System-Users
+--suite Test-Cases.System-Users-2
 --suite Test-Cases.Cloud-Merge
 --suite Test-Cases.Storage
 --suite Test-Cases.Storage-Mode
@@ -5,7 +7,6 @@
 --suite Test-Cases.Account
 --suite Test-Cases.Activate
 --suite Test-Cases.System-Servers
---suite Test-Cases.System-Users
 --suite Test-Cases.System-Cameras
 --suite Test-Cases.System-Admin
 --suite Test-Cases.System-Admin-Settings
