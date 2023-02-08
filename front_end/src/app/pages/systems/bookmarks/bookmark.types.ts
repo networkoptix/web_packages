@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+
 export interface Bookmark {
     id: string;
     deviceId: string;
@@ -9,7 +11,7 @@ export interface Bookmark {
     creatorUserId: string;
     creationTimeMs: string;
     src?: string;
-    thumbnail?: string;
+    thumbnail?: Observable<string>;
     tagsFormatted?: { type: string, label: string }[];
     isVisible: boolean;
 }

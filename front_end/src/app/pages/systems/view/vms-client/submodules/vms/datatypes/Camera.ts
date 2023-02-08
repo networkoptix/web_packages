@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+
 import { PlaybackTransport } from '@view/view.types';
 import { ms, int } from '@vms-client/utils/type-aliases';
 
@@ -43,13 +45,14 @@ export class Camera implements ICamera {
         public readonly disableDualStreaming: boolean,
         protected _archiveRange: ISimpleTimeRange,
         protected _archive: CameraArchive = [],
-        public readonly thumbnailUrl: string | undefined = undefined,
+        public readonly thumbnailUrl: Observable<string> | undefined = undefined,
         public readonly getVideoUrl: (
             transport: string,
             quality: string,
             t?: ms
         ) => string,
-        public readonly getPosterUrl: (t?: ms) => string
+        public readonly getPosterUrl: (t?: ms) => Observable<string>,
+        public readonly require2fa: boolean = false
     ) {
         this._initBirdView();
     }
@@ -104,7 +107,10 @@ export class Camera implements ICamera {
     }
 
     public get availableTransports() {
-        function isTransportSupported(t) {
+        const isTransportSupported = t => {
+            if (this.require2fa) {
+                return t === 'hls';
+            }
             switch (t) {
                 case 'hls':
                 case 'webm':
@@ -115,7 +121,7 @@ export class Camera implements ICamera {
                 default:
                     return false;
             }
-        }
+        };
 
         const result = new Set();
         this._mediaStreams

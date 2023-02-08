@@ -59,7 +59,7 @@
             <clip
                 class="fs-exclude video"
                 [sourceUrl]="bookmark.src"
-                [posterUrl]="bookmark.isVisible ? bookmark.thumbnail : ''"
+                [posterUrl]="bookmark.isVisible ? (bookmark.thumbnail | async) : ''"
             ></clip>
         </main>
         <footer class="tags-compact">

@@ -7,8 +7,9 @@ import {
     Output,
     EventEmitter,
     ViewEncapsulation,
-    OnChanges,
+    OnChanges, inject,
 } from '@angular/core';
+import { LocalStorageService, SessionStorageService } from 'ngx-webstorage';
 import type videojs from 'video.js';
 
 import { NgChanges } from '@utils/ng-changes';
@@ -17,6 +18,9 @@ import {
 } from '@vms-client/utils';
 
 import { PLAYBACK_MODE } from '../../../datatypes/PlaybackState';
+
+const getSessionStorage = () => inject(SessionStorageService);
+const getLocalStorage = () => inject(LocalStorageService);
 
 @Component({
     selector: 'player-js',
@@ -42,12 +46,21 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
     @ViewChild('video', { static: true }) videoView: ElementRef<HTMLVideoElement>;
 
     actualRotation = 0;
+
+    private sessionStorage = getSessionStorage();
+    private localStorage = getLocalStorage();
     private player: videojs.Player;
     private hasPlayed = false;
+    private readonly xRuntimeGuid = 'x-runtime-guid';
     protected transport = '';
 
     // For lazy loading player
     #videojs: videojs;
+
+    private fetchRuntime() {
+        const systemId = this.localStorage.retrieve('systemId');
+        return this.sessionStorage.retrieve(`${systemId ? systemId + '-' : ''}${this.xRuntimeGuid}`);
+    }
 
     async initPlayer(): Promise<void> {
         if (this.player) return;
@@ -66,6 +79,12 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         };
 
         this.#videojs ||= await import('video.js').then(m => m.default);
+        this.#videojs.Vhs.xhr.beforeRequest = options => {
+            if (!options.headers) {
+                options.headers = {};
+            }
+            options.headers[this.xRuntimeGuid] = this.fetchRuntime();
+        };
 
         this.player = this.#videojs(this.videoView.nativeElement, options);
 
@@ -181,11 +200,12 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
 
     protected _startPlayback(): void {
         const sourceUrl = this.sourceUrl || null;
-        let posterUrl = BASE64_SINGLE_TRANSPARENT_PIXEL;
+        const posterUrl = this.posterUrl || BASE64_SINGLE_TRANSPARENT_PIXEL;
 
-        if (this.posterUrl && !this.posterUrl.includes('rotate')) {
-            posterUrl = `${this.posterUrl}&rotate=${this.transport !== 'hls' && this.rotation || 0}`;
-        }
+        // If the poster is already rotate I am not sure if this is needed anymore.
+        // if (this.posterUrl && !this.posterUrl.includes('rotate')) {
+        //     posterUrl = `${this.posterUrl}&rotate=${this.transport !== 'hls' && this.rotation || 0}`;
+        // }
 
         if (!sourceUrl) {
             return;

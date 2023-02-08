@@ -837,16 +837,14 @@ export class NxSystemRestAPI extends NxSystemAPI {
     ) {
         const data: {
             cameraId: string;
-            auth: string;
             time?: number | string;
             width?: number;
             height?: number;
             rotate?: number;
         } = {
             cameraId: this.cleanId(cameraId),
-            auth: auth || this.authGet
         };
-        let endpoint = '/web/ec2/cameraThumbnail';
+        let endpoint = '/ec2/cameraThumbnail';
 
         if (time) {
             data.time = time;
@@ -867,7 +865,8 @@ export class NxSystemRestAPI extends NxSystemAPI {
             data.rotate = rotate;
         }
 
-        return this.generateGetUrl(endpoint, data);
+        return this.get(endpoint, data, { responseType: 'blob' })
+            .pipe(map(blob => blob ? URL.createObjectURL(blob) : undefined));
     }
 
     protected generateGetUrl(url: string, data: IParams, absUrl?: boolean) {

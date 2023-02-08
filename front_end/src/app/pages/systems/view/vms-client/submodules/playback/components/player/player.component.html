@@ -33,7 +33,7 @@
         (bufferingChange)="onBufferingChange($event)"
         [mode]="playbackState.mode"
         [paused]="playbackState.paused"
-        [posterUrl]="playbackState.posterUrl"
+        [posterUrl]="playbackState.posterUrl | async"
         [rotation]="rotateDeg"
         [sourceUrl]="playbackState.sourceUrl"
     >
