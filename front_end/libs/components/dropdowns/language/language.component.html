@@ -119,7 +119,11 @@
         ></span>
         <span>{{ lang.name }}</span>
     </span>
-    <span *ngIf="newHeader">
+    <span
+        *ngIf="newHeader"
+        id="{{ lang.language }}"
+        lang="{{ lang.language }}"
+    >
         <span class="lang-code">{{ lang.name.slice(0, 2) | uppercase }}</span>
         <span class="lang-name">{{ lang.name }}</span>
     </span>

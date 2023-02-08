@@ -31,14 +31,15 @@
                 {{ headerService.activeSystem.name }}
             </span>
         </div>
-        <svg-icon
-            *ngSwitchCase="'logo'"
-            nx-add-svg-src
-            [svgStyle]="isMobile ? { 'width.px': '130', 'height.px': '32' } : null"
-            [src]="images.dirHeader + 'logo.svg'"
-            id="logo"
-        >
-        </svg-icon>
+        <ng-container *ngSwitchCase="'logo'">
+            <img
+                [alt]="CONFIG.cloudName + ' logo'"
+                [src]="'/static/images/dark_logo.png'"
+                class="logo-png"
+                onerror="this.onerror=null;this.src='/static/images/logo.png'"
+                data-testid="logo"
+            />
+        </ng-container>
         <div
             *ngSwitchCase="'mobileMenu'"
             translate

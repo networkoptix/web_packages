@@ -1,7 +1,7 @@
 <div class="menu-level-one">
     <ng-container *ngFor="let node of menuNodes">
         <a
-            *ngIf="!node.invisible"
+            *ngIf="!node.invisible && !(node.url === '/systems' && noSystems)"
             (click)="handleNavigation(node, $event); onNodeSelect(node)"
             [ngClass]="{ active: node?.name === selectedNode?.name }"
             class="menu-item btn btn-menu"

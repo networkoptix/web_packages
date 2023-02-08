@@ -3,6 +3,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { icons, images } from '@lib/variables/static-variables';
+import { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NgChanges } from '@utils/ng-changes';
@@ -20,6 +22,7 @@ export class NxHeaderLogoAreaComponent implements OnInit {
     @Input() menuOpen = false;
     @Input() isProfile = false;
     @Output() logoClick = new EventEmitter<'system' | 'systems-list'>();
+    CONFIG: IConfig;
     LANG = staticLang;
     logoState = logoAreaState.LOGO;
     singleSystem = false;
@@ -28,8 +31,10 @@ export class NxHeaderLogoAreaComponent implements OnInit {
 
     constructor(
         public headerService: NxHeaderService,
-        systemsService: NxSystemsService
+        systemsService: NxSystemsService,
+        configService: NxConfigService
     ) {
+        this.CONFIG = configService.getConfig();
         this.headerService.currentLocation$.pipe(untilDestroyed(this)).subscribe(currentLocation => {
             this.checkLogoState(currentLocation);
         });

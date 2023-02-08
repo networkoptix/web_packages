@@ -26,7 +26,7 @@ export class NxMobileHeaderMenuComponent {
   @Input() loggedIn: boolean = false;
   @Input() isProfile: boolean = false;
   @Input() isTablet: boolean = false;
-  @Input() singleSystem: boolean = false;
+  @Input() systemCount: number = 0;
   @Output() nodeClicked = new EventEmitter<boolean>();
   profileMenu: MenuNode[];
   LANG = staticLang;
