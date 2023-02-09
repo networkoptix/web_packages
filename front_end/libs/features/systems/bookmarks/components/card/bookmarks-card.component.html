@@ -10,7 +10,7 @@
             class="bookmarks-image-playIcon"
         ></svg-icon>
         <img
-            [lazyLoad]="bookmark.thumbnail"
+            [lazyLoad]="bookmark.thumbnail | async"
             [alt]="'thumbnail of ' + bookmark.name"
         />
     </div>
