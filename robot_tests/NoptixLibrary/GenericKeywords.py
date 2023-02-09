@@ -38,6 +38,8 @@ class GenericKeywords(object):
     def __init__(self):
         self.cloud_host = BuiltIn().get_variable_value("${ENV}")
         self.ssh_host = BuiltIn().get_variable_value("${QA BURBANK IP}")
+        self.ssh_username = BuiltIn().get_variable_value("${QA BURBANK USER}")
+        self.ssh_password = BuiltIn().get_variable_value("${QA BURBANK PASS}")
         self.image = BuiltIn().get_variable_value("${IMAGE}")
         self.password = BuiltIn().get_variable_value("${BASE PASSWORD}")
         self.from_email = BuiltIn().get_variable_value("${FROM EMAIL DEFAULT}")
@@ -797,7 +799,7 @@ class GenericKeywords(object):
     def _ssh_client(self):
         with paramiko.SSHClient() as ssh_client:
             ssh_client.load_system_host_keys()
-            ssh_client.connect(self.ssh_host, username='qaburbank', password='QABurbank777$')
+            ssh_client.connect(self.ssh_host, username=self.ssh_username, password=self.ssh_password)
             yield ssh_client
 
 
