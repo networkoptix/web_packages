@@ -72,7 +72,7 @@ fi
 
 LETSENCRYPT_STAGE_CERT_REQUIRED=1 \
   PATH="$GOOGLE_CHROME_DIR:$VENV_BIN_DIR:$PATH" \
-  pabot --pabotlib --ordering order.txt --processes 4 -L trace:info \
+  pabot --pabotlib --ordering order.txt --processes 8 -L trace:info \
   -v ENV:"https://$CLOUD_HOST" \
   -v "FROM EMAIL DEFAULT":True \
   --listener NoptixLibrary/FeatureFlagListener.py \
