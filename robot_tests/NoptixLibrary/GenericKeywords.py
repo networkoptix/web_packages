@@ -37,9 +37,9 @@ from googletrans import Translator
 class GenericKeywords(object):
     def __init__(self):
         self.cloud_host = BuiltIn().get_variable_value("${ENV}")
-        self.ssh_host = BuiltIn().get_variable_value("${QA BURBANK IP}")
-        self.ssh_username = BuiltIn().get_variable_value("${QA BURBANK USER}")
-        self.ssh_password = BuiltIn().get_variable_value("${QA BURBANK PASS}")
+        self.docker_host_ip = BuiltIn().get_variable_value("${QA BURBANK IP}")
+        self.docker_host_username = BuiltIn().get_variable_value("${QA BURBANK USER}")
+        self.docker_host_password = BuiltIn().get_variable_value("${QA BURBANK PASS}")
         self.image = BuiltIn().get_variable_value("${IMAGE}")
         self.password = BuiltIn().get_variable_value("${BASE PASSWORD}")
         self.from_email = BuiltIn().get_variable_value("${FROM EMAIL DEFAULT}")
@@ -799,7 +799,8 @@ class GenericKeywords(object):
     def _ssh_client(self):
         with paramiko.SSHClient() as ssh_client:
             ssh_client.load_system_host_keys()
-            ssh_client.connect(self.ssh_host, username=self.ssh_username, password=self.ssh_password)
+            ssh_client.connect(
+                self.docker_host_ip, username=self.docker_host_username, password=self.docker_host_password)
             yield ssh_client
 
 
@@ -824,7 +825,8 @@ class GenericKeywords(object):
             # Set up systems
             time.sleep(5)
             for server in serversJson:
-                self.server_api.setup_local_system(f"https://{self.ssh_host}:{server['port'][0]}", "qweasd 123", server["name"])
+                self.server_api.setup_local_system(
+                    f"https://{self.docker_host_ip}:{server['port'][0]}", "qweasd 123", server["name"])
             
             # Register and activate owner user(s)
             ownerRequired = False
@@ -855,7 +857,7 @@ class GenericKeywords(object):
                 if 'cloudOwnerId' in server:
                     serverId = self.server_api.API_connect_to_cloud(
                         [server["cloudOwner"], self.password], 
-                        f"https://{self.ssh_host}:{server['port'][0]}", 
+                        f"https://{self.docker_host_ip}:{server['port'][0]}",
                         self.cloud_host, 
                         name=server["name"])
                     server.update({"id": serverId})
@@ -868,7 +870,8 @@ class GenericKeywords(object):
 
             # get server token for authentication
             for server in serversJson:
-                server["token"] = self.server_api.get_server_token(server["localAuth"], f"https://{self.ssh_host}:{server['port'][0]}")
+                server["token"] = self.server_api.get_server_token(
+                    server["localAuth"], f"https://{self.docker_host_ip}:{server['port'][0]}")
                 
             # Add local users if required
             permissions = BuiltIn().get_variable_value('${permissions}')
@@ -879,7 +882,7 @@ class GenericKeywords(object):
                     for user in localUsersNames:
                         self.server_api.save_user(
                             server["token"],
-                            f"https://{self.ssh_host}:{server['port'][0]}",
+                            f"https://{self.docker_host_ip}:{server['port'][0]}",
                             "Local"+user, 
                             permissions[user], 
                             f"noptixautoqa+local{user}@gmail.com",
