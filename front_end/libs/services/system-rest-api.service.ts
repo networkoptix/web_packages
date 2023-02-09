@@ -122,12 +122,17 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.#vmsToken;
     }
 
-    protected proxy(method, protocol, serverAddress, requestUrl, data) {
+    protected proxy(method, protocol, serverAddress, requestUrl, data, coercedEnglishError?: boolean) {
         const url = `/proxy/${protocol}/${serverAddress}/${requestUrl}`;
+
+        const headers = {};
+        if (coercedEnglishError) {
+            headers['Accept-Language'] = 'en-US';
+        }
         if (method === 'get') {
-            return this.get(url, data);
+            return this.get(url, data, headers);
         } else if (method === 'post') {
-            return this.post(url, data);
+            return this.post(url, data, headers);
         }
         throwError(new Error('Invalid http method type was passed.'));
     }
@@ -385,6 +390,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         url: string,
         data?: any,
         paramsToAdd = {},
+        customHeaders = {},
         customTimeout = 60000
     ) {
         data = data || {};
@@ -396,7 +402,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
         url = `${this.urlBase}${url}`;
 
-        return this.#getHeaders({}, url)
+        return this.#getHeaders(customHeaders, url)
             .pipe(
                 switchMap(headers => this.http.post<ResponseType>(url, data, { params, headers })),
                 retryWhen(request => this.retryHandler(request)),
@@ -714,7 +720,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
                             }
                         }
                         const data = { username: 'admin', password, remember: false };
-                        return this.proxy('post', 'https', remoteEndpoint, 'rest/v1/login/sessions', data);
+                        return this.proxy('post', 'https', remoteEndpoint, 'rest/v1/login/sessions', data, true);
                     }
                 }
                 return of(info);
@@ -733,7 +739,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
                     ignoreIncompatible: false,
                     ignoreOfflineServerDuplicates: true
                 };
-                return this.post<t.MergeSystems>('/rest/v1/system/merge', data);
+                return this.post<t.MergeSystems>('/rest/v1/system/merge', data, undefined, { 'Accept-Language': 'en-US' });
             })
         );
     }
@@ -857,16 +863,14 @@ export class NxSystemRestAPI extends NxSystemAPI {
     ) {
         const data: {
             cameraId: string;
-            auth: string;
             time?: number | string;
             width?: number;
             height?: number;
             rotate?: number;
         } = {
             cameraId: this.cleanId(cameraId),
-            auth: auth || this.authGet
         };
-        let endpoint = '/web/ec2/cameraThumbnail';
+        let endpoint = '/ec2/cameraThumbnail';
 
         if (data.time === 'now' || time === 'now') {
             data.time = 'LATEST';
@@ -889,7 +893,8 @@ export class NxSystemRestAPI extends NxSystemAPI {
             data.rotate = rotate;
         }
 
-        return this.generateGetUrl(endpoint, data);
+        return this.get(endpoint, data, { responseType: 'blob' })
+            .pipe(map(blob => blob ? URL.createObjectURL(blob) : undefined));
     }
 
     protected generateGetUrl(url: string, data: IParams, absUrl?: boolean) {

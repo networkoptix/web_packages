@@ -140,7 +140,7 @@ export class PlayerComponent implements OnInit, AfterViewInit {
     public videoErrorEventHandler(event: any): void {
         const { player } = event.target;
         if (player && ['abort', 'error'].includes(event.type)) {
-            this.http.get(player.src())
+            this.http.get(player.src(), { headers: { 'Accept-Language': 'en-US' } })
                 .pipe(untilDestroyed(this))
                 .subscribe((response: any) => {
                     switch (response?.error) {

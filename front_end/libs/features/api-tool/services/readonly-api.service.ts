@@ -48,9 +48,12 @@ export class NxReadonlyAPIService {
         if (!this.isEnabled) return;
 
         const readonlyAPIs = await this.api.getReadOnlyAPIs().toPromise();
-        for (const API of readonlyAPIs.data) {
-            this.readonlyAPIIDs.push(API.id);
-            this.emitReadOnlyAPI(API, !API.enabled);
+        if (readonlyAPIs.data) {
+            readonlyAPIs.data.sort((a, b) => a.order - b.order);
+            for (const API of readonlyAPIs.data) {
+                this.readonlyAPIIDs.push(API.id);
+                this.emitReadOnlyAPI(API, !API.enabled);
+            }
         }
     }
 

@@ -448,6 +448,9 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     };
 
     addLineCounter = (parent: HTMLElement): void => {
+        if (parent.innerText.length > 20000) {
+            return; // Too many lines, dont show line counters
+        }
         if (parent.classList.contains('curl')) {
             parent.innerHTML = parent.innerText;
         }

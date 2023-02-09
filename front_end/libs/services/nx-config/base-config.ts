@@ -675,6 +675,7 @@ export interface Port {
 }
 
 export interface ServerError {
+    invalidParameter: string;
     oldSessionErrorId: string;
     unauthorized: string;
 }
