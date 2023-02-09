@@ -911,7 +911,7 @@ Get Random Available Port
     [Return]    ${port}
 
 Create Docker Server
-    [Arguments]    ${name}     ${customPort}    ${image}=${IMAGE}     ${storage string}=${EMPTY}    ${VMS}=new    ${network}=bridge
+    [Arguments]    ${name}     ${customPort}    ${image}=${IMAGE}     ${storage string}=${EMPTY}    ${network}=bridge
     &{server}=   Create Dictionary
     ${mac}=   Get Random MAC
     Acquire Lock   create_server_lock
