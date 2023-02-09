@@ -15,7 +15,7 @@
             ></svg-icon>
             <img
                 [lazyLoad]="bookmark.thumbnail"
-                [src]="bookmark.thumbnail"
+                [src]="bookmark.thumbnail | async"
                 [alt]="'thumbnail of ' + bookmark.name"
                 (error)="workingThumbnail = false"
             />

@@ -1,8 +1,10 @@
+import { Observable } from 'rxjs';
+
 import type { Bookmark as BookmarkResp } from '@services/system-api.types';
 
 export interface Bookmark extends BookmarkResp {
     src: string;
-    thumbnail: string;
+    thumbnail: Observable<string>;
     tagsFormatted: { type: string; label: string }[];
     isVisible: boolean;
 }
