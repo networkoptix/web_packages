@@ -81,7 +81,7 @@
             <span class="camera-name">{{ thumbnails[card.config.selectedCamera].name }}</span>
             <img
                 class="fs-exclude"
-                [src]="thumbnails[card.config.selectedCamera].previewUrl"
+                [src]="thumbnails[card.config.selectedCamera].previewUrl | async"
             />
         </ng-container>
     </ng-container>

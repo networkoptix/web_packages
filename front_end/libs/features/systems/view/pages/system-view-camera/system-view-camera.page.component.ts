@@ -12,7 +12,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { animationFrameScheduler, BehaviorSubject, interval, Subject, timer } from 'rxjs';
+import { animationFrameScheduler, BehaviorSubject, interval, Observable, of, Subject, timer } from 'rxjs';
 import { filter, takeUntil, throttleTime } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -62,7 +62,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     public id: string;
     public camera: ICamera;
     public system: NxSystem;
-    public previewUrl = '';
+    public previewUrl: Observable<string> = of('');
 
     CONFIG: IConfig;
     LANG = staticLang;
@@ -539,7 +539,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         }
         this.unsub$.next('done');
         this.getRecordsInProgress = this.id;
-        this.previewUrl = `url(${this.system.getPreviewUrl(this.id, null)})`;
+        this.previewUrl = this.system.getPreviewUrl(this.id, null);
         if (!this.vms.selectedCamera.hasArchive) {
             this.getRecordsInProgress = undefined;
             this._initSelectedCamera();

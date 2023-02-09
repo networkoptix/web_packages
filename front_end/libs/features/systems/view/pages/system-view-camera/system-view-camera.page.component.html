@@ -161,7 +161,7 @@
             <ng-template #noPlayer>
                 <div
                     class="offline-message"
-                    [style.background-image]="previewUrl"
+                    [style.background-image]="'url(' + (previewUrl | async) + ')'"
                 >
                     <nx-player-placeholder
                         *ngIf="cameraError; else unreachable"

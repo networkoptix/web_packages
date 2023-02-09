@@ -15,7 +15,8 @@ import {
     BehaviorSubject,
     from,
     throwError,
-    of
+    of,
+    Observable
 } from 'rxjs';
 import {
     filter,
@@ -229,7 +230,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         );
     }
 
-    get preview(): string {
+    get preview(): Observable<string> {
         return this.system.serverManager.getPreviewUrl(
             this.selectedCamera.id,
             null,

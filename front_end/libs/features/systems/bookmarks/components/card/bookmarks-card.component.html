@@ -14,8 +14,9 @@
                 class="bookmarks-image-playIcon"
             ></svg-icon>
             <img
-                [lazyLoad]="bookmark.thumbnail"
-                [src]="bookmark.thumbnail | async"
+                *ngIf="bookmark.thumbnail | async as thumbnail"
+                [lazyLoad]="thumbnail"
+                [src]="thumbnail"
                 [alt]="'thumbnail of ' + bookmark.name"
                 (error)="workingThumbnail = false"
             />

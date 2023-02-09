@@ -9,7 +9,7 @@ import {
     Inject,
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { fromEvent, Subscription } from 'rxjs';
+import { fromEvent, Observable, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
 import { WINDOW } from '@services/window-provider';
@@ -19,7 +19,7 @@ import { NxHealthService } from '../../health.service';
 interface ThumbNail {
     loaded: boolean;
     time: string;
-    url: string;
+    url: Observable<string>;
 }
 
 @UntilDestroy({ checkProperties: true })

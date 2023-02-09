@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+
 import type { ec2Camera, Task } from '@services/system-api.types';
 
 import type { ParsedAddParams } from './add-params.types';
@@ -17,7 +19,7 @@ export interface NxSystemCamera extends Omit<ec2Camera, 'addParams'> {
     motionLowResEnabled: boolean;
     parentName: string;
     parsedAddParams: ParsedAddParams;
-    previewUrl: string;
+    previewUrl: Observable<string>;
     recordingSettings: RecordingSettings;
     secondsToday: number;
     webRtcUrl: (params?: Record<string, unknown>) => string;
