@@ -580,6 +580,7 @@ export const servers: configTypes.Servers = {
         mismatchedcertificate: 'mismatchedcertificate'
     },
     errors: {
+        invalidParameter: 'invalidParameter',
         oldSessionErrorId: 'sessionExpired',
         unauthorized: 'unauthorized'
     }

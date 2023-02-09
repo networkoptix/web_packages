@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+
 import { PlaybackTransport } from '@view/view.types';
 import { ms, int } from '@vms-client/utils/type-aliases';
 
@@ -93,7 +95,7 @@ export interface ICamera {
     archive: CameraArchive;
     readonly archiveEnd: ms;
 
-    thumbnailUrl: string;
+    thumbnailUrl: Observable<string>;
 
     getVideoUrl: (transport: string, quality: string, t?: ms) => string;
     getPosterUrl(t?: ms, width?: number, height?: number);

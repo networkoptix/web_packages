@@ -263,9 +263,10 @@ export class NxSystemAPI {
         url: string,
         data?: any,
         paramsToAdd = {},
+        customHeaders = {},
         customTimeout = 60000
     ) {
-        let headers = new HttpHeaders();
+        let headers = new HttpHeaders(customHeaders);
         let params = new HttpParams();
         const fullUrl = `${this.urlBase}${url}`;
         data = data || {};
@@ -1095,10 +1096,12 @@ export class NxSystemAPI {
             data.rotate = rotate;
         }
 
-        if (this.systemId) {
+        if (this.version === 0 && this.systemId) {
             data.auth = this.authGet;
         }
-        return this.generateGetUrl(endpoint, data);
+        const url = this.generateGetUrl(endpoint, data);
+        return this.get(url, undefined, { responseType: 'blob' })
+            .pipe(map(blob => blob ? URL.createObjectURL(blob) : undefined));
     }
 
     hlsUrl(cameraId: string, position: string = 'now', resolution: string = '') {
@@ -1137,6 +1140,9 @@ export class NxSystemAPI {
     }
 
     public getExportUrl({ transport, cameraId, pos, endPos, duration }) {
+        if (!['mp4', 'mkv'].includes(transport)) {
+            transport = 'mkv';
+        }
         cameraId = cameraId?.replace(/{|}/g, '');
         const url = `/web/media/${cameraId}.${transport}`;
         const params = {

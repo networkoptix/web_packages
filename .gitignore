@@ -13,7 +13,9 @@ subinclude:robot_tests/.hgignore
 *.sqlite3
 
 env
+env_*
 nenv
+nenv_*
 venv
 cloud/.idea
 cloud/static

@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+
 import { PlaybackQuality, PlaybackTransport } from '@view/view.types';
 import { ms } from '@vms-client/utils/type-aliases';
 
@@ -25,7 +27,7 @@ export interface StoppedPlaybackState extends AbstractPlaybackState {
 export interface ArchivePlaybackState extends AbstractPlaybackState {
     mode: PLAYBACK_MODE.ARCHIVE;
     sourceUrl: string;
-    posterUrl?: string;
+    posterUrl?: Observable<string>;
     startTime: ms;
     currentTime: ms;
     started: boolean;
@@ -39,7 +41,7 @@ export interface ArchivePlaybackState extends AbstractPlaybackState {
 export interface LivePlaybackState extends AbstractPlaybackState {
     mode: PLAYBACK_MODE.LIVE;
     sourceUrl: string;
-    posterUrl?: string;
+    posterUrl?: Observable<string>;
     currentTime: ms;
     started: boolean;
     quality: PlaybackQuality;
@@ -67,7 +69,7 @@ export function createInitialArchiveState(
     t: ms,
     quality: PlaybackQuality = 'auto',
     transport: PlaybackTransport = 'webm',
-    posterUrl?: string
+    posterUrl?: Observable<string>
 ): ArchivePlaybackState {
     return {
         mode: PLAYBACK_MODE.ARCHIVE,
@@ -89,7 +91,7 @@ export function createInitialLiveState(
     sourceUrl: string,
     quality: PlaybackQuality = 'auto',
     transport: PlaybackTransport = 'webm',
-    posterUrl?: string
+    posterUrl?: Observable<string>
 ): LivePlaybackState {
     return {
         mode: PLAYBACK_MODE.LIVE,

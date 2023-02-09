@@ -79,7 +79,6 @@ export class NxBootstrapProvider {
     }
 
     load(): Promise<boolean> {
-        let setLangFail = false;
         this.CONFIG = this.configService.config;
         this.languageService.defaultLanguage = this.CONFIG.defaultLanguage;
 
@@ -88,13 +87,7 @@ export class NxBootstrapProvider {
                 this.CONFIG.preloadedTranslation ? Promise.resolve(this.CONFIG.preloadedTranslation) : this.languageService.loadLanguage(),
                 this.getModuleInfo()
             ]).then(([language, moduleInfo]: any) => {
-                // language fail may have special character or
-                // syntax error ... like use of double curly braces
-                try {
-                    this.setLanguage(language);
-                } catch (e) {
-                    setLangFail = true;
-                }
+                this.setLanguage(language);
 
                 if (moduleInfo.reply) {
                     this.isNewSystem = moduleInfo.reply.serverFlags.includes('SF_NewSystem');
@@ -110,17 +103,8 @@ export class NxBootstrapProvider {
             }).catch(err => {
                 console.error(err);
                 // some fail handling is done in app component
-                if (setLangFail) {
-                    this.languageService.currentLang = this.CONFIG.defaultLanguage;
-                    new Promise(() => {
-                        this.languageService.loadLanguage();
-                    }).then(language => {
-                        this.setLanguage(language);
-                        this.isLoaded = true;
-                        console.info('Loaded default language due to an error while setting up desired language.');
-                        resolve(true);
-                    });
-                }
+                this.isLoaded = true;
+                resolve(true);
             }).finally(() => {
                 this.window.document.querySelector('body').style.backgroundColor = null;
             });

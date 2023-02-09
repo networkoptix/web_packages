@@ -208,6 +208,7 @@ export interface ReadOnlyAPI {
     type: ReadOnlyAPIType;
     name: string;
     version: string;
+    order: number;
     manifest: string;
 }
 

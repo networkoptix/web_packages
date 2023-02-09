@@ -67,7 +67,7 @@ def has_permission(user, asset, permission=None):
 
 
 @register.simple_tag(takes_context=True)
-def has_customization_permission(user, customization, permission, context):
+def has_customization_permission(context, user, customization, permission):
     customization = customization or get_customization(context['request'])
     return UserGroupsToAssetPermissions.check_customization_permission(user, customization, permission)
 
