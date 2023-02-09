@@ -75,6 +75,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     merging: boolean;
     editMode = false;
     enableEdit = false;
+    checkCloudProcess: Process;
     connectToCloudProcess: Process;
     disconnectProcess: Process;
 
@@ -327,28 +328,19 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 );
             });
 
-        this.disconnectProcess = this.processService.createProcess(
-            async () => this.CONFIG.featureFlags.cloudStorage && this.system.cloudStorageCapable && this.cloudApiService.getCloudStorageUsage(this.system.id)
-                .then(_ => Promise.reject()) // If cloud storage usage returns okay then that probably means we are using cloud storage.
-                .catch(_ => Promise.resolve()), // If the request fails that means storage is probably not used.
+        this.checkCloudProcess = this.processService.createProcess(
+            () => {
+                const startUrl = this.router.url;
+                return this.CONFIG.featureFlags.cloudStorage && this.system.cloudStorageCapable
+                    ? this.cloudApiService.getCloudStorageUsage(this.system.id)
+                        .then(_ => Promise.reject()) // If cloud storage usage returns okay then that probably means we are using cloud storage.
+                        .catch(_ => Promise.resolve(startUrl)) // If the request fails that means storage is probably not used.
+                    : Promise.resolve(startUrl);
+            },
             { ignoreError: true },
-            async () => {
-                const pageDidntChangePattern = new RegExp(`\/systems\/${this.system.id}$`);
-                if (pageDidntChangePattern.test(this.router.url) && await this.dialogs.disconnect(this.system)) {
-                    if (this.environment.isLocal && this.system.currentUser?.isCloud) {
-                        this.accountService.logout();
-                    } else {
-                        if (this.environment.isLocal) {
-                            // give the user chance to read the toaster
-                            setTimeout(() => this.window.location.reload(), 2000);
-                        } else {
-                            this.router
-                                .navigate([redirect.authorised])
-                                .catch(error => {
-                                    console.error(error);
-                                });
-                        }
-                    }
+            url => {
+                if (url === this.router.url) {
+                    this.disconnectProcess.run();
                 }
             },
             () => {
@@ -366,6 +358,28 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         actionLabel: ok
                     }
                 });
+            }
+        );
+
+        this.disconnectProcess = this.processService.createProcess(
+            () => this.dialogs.disconnect(this.system),
+            { ignoreError: true },
+            res => {
+                if (!res) { // Dialog was canceled or closed
+                    return;
+                }
+                if (!this.environment.isLocal) {
+                    return this.router
+                        .navigate([redirect.authorised])
+                        .catch(error => {
+                            console.error(error);
+                        });
+                }
+                if (this.system.currentUser?.isCloud) {
+                    return this.accountService.logout();
+                }
+                // give the user chance to read the toaster
+                setTimeout(() => this.window.location.reload(), 2000);
             });
     }
 

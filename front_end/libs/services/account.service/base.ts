@@ -174,8 +174,8 @@ export abstract class BaseAccount implements OnDestroy {
         );
         const loginState = this.sessionService.loginState;
         const login = account?.email || account?.name;
-        if (!loginState || loginState !== login) {
-            this.sessionService.loginState = login || null;
+        if (login && (!loginState || loginState !== login)) {
+            this.sessionService.loginState = login;
         }
     }
 

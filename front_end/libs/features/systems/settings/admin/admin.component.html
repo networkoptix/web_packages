@@ -168,7 +168,7 @@
                                 actionType="default"
                                 [buttonDisabled]="settings.disconnectDisabled"
                                 [buttonText]="'Disconnect from %CLOUD_NAME%' | translate"
-                                [process]="disconnectProcess"
+                                [process]="checkCloudProcess"
                             >
                             </nx-process-button>
                         </div>
@@ -272,13 +272,16 @@
                                     <span>&nbsp;({{ system.info.ownerAccountEmail }})</span>
                                 </span>
                             </span>
-                            <nx-process-button
-                                *ngIf="system.isMine"
-                                actionType="default"
-                                [buttonText]="'Disconnect from %CLOUD_NAME%' | translate"
-                                [process]="disconnectProcess"
-                            >
-                            </nx-process-button>
+                            <div class="mt-3">
+                                <nx-process-button
+                                    *ngIf="system.isMine"
+                                    class="mt-3"
+                                    actionType="default"
+                                    [buttonText]="'Disconnect from %CLOUD_NAME%' | translate"
+                                    [process]="checkCloudProcess"
+                                >
+                                </nx-process-button>
+                            </div>
                         </div>
                     </div>
                 </div>
