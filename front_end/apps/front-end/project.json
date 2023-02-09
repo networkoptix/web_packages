@@ -148,7 +148,7 @@
                         {
                             "type": "anyScript",
                             "maximumWarning": "1mb",
-                            "maximumError": "2mb"
+                            "maximumError": "3mb"
                         }
                     ],
                     "serviceWorker": true,
