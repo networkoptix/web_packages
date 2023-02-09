@@ -445,7 +445,7 @@ html[data-theme="dark"] {
     --swagger-delete-bg : #{$red_d1};
     --swagger-patch-bg  : #{$cyan600};
     --swagger-post-bg   : #{$green_d1};
-    --swagger-btn-execute-bg    : #{$blue13};
+    --swagger-btn-execute-bg    : var(--brand-core);
     --swagger-btn-execute-color : #{$light4};
     --swagger-btn-value-text-color   : #{$light10};
     --swagger-btn-key-text-color     : #{$purple400};

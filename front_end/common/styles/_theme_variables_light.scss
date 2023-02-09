@@ -443,7 +443,7 @@ html[data-theme="light"] {
     --swagger-delete-bg : #{$red_l1};
     --swagger-patch-bg  : #{$cyan400};
     --swagger-post-bg   : #{$green_l1};
-    --swagger-btn-execute-bg : #{$blue1};
+    --swagger-btn-execute-bg : var(--brand-core);
     --swagger-btn-execute-color : #{$light1};
     --swagger-btn-value-text-color : #{$dark9};
     --swagger-btn-key-text-color : #{$purple500};

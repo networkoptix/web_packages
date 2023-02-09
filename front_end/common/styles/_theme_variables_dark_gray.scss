@@ -439,7 +439,7 @@ html[data-theme="dark-gray"] {
     --swagger-delete-bg : #{$red_d1};
     --swagger-patch-bg  : #{$cyan600};
     --swagger-post-bg   : #{$green_d1};
-    --swagger-btn-execute-bg    : #{$blue13};
+    --swagger-btn-execute-bg    : var(--brand-core);
     --swagger-btn-execute-color : #{$light_gray_4};
     --swagger-btn-value-text-color   : #{$light_gray_10};
     --swagger-btn-key-text-color     : #{$purple400};
