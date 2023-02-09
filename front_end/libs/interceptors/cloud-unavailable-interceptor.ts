@@ -19,6 +19,7 @@ export class CloudUnavailableInterceptor implements HttpInterceptor {
     dialogService: NxDialogsService;
     error: string;
     retryTimeout: number;
+    private readonly whiteList: string[] = ['/storage/usageStats'];
 
     constructor(
         injector: Injector
@@ -36,7 +37,8 @@ export class CloudUnavailableInterceptor implements HttpInterceptor {
     ): Observable<HttpEvent<unknown>> {
         return next.handle(req).pipe(
             catchError(response => {
-                if (response.error?.resultCode === this.error) {
+                const { url } = response;
+                if (response.error?.resultCode === this.error && !this.whiteList.some(ignoreUrl => url.includes(ignoreUrl))) {
                     return timer(this.retryTimeout).pipe(
                         flatMap(() => next.handle(req)
                             .pipe(catchError(response => {

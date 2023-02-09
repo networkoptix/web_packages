@@ -593,7 +593,7 @@ Force Tags        system    Threaded    users
     ${activate account result}=    Get Text    ${ACCOUNT CREATION EMAIL SUCCESS}
 
     Sleep    5
-    Should Be Equal As Strings    ${activate account result}    ${ACCOUNT CREATED TEXT}
+    Should Be Equal As Strings    ${activate account result}    ${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}
     Resource.Log in    user=${random email}    password=${BASE PASSWORD}    button=${ACTIVATE MODAL LOGIN BTN}    reset=${True}
     Go To    ${ENV}/systems/${servers}[0][id]
     Go To Users List
