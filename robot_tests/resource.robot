@@ -917,19 +917,14 @@ Create Docker Server
     Acquire Lock   create_server_lock
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    IF    '5.0' not in $image
-        Set Local Variable   ${vms}    old
-    ELSE
-        Set Local Variable    ${vms}    new
-    END
     IF    not $customPort
         ${port}=   Get Random Available Port
     ELSE
         ${port}=   Set Variable    ${customPort}
     END
     ${ENV NO HTTP}=   Replace String    ${ENV}    https://    ${EMPTY}
-    ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --name=${name} --restart=always -e VMS=${vms} -e PORT=${port} -e CLOUD_HOST=${ENV NO HTTP} --privileged --network=${network} --cap-add=NET_ADMIN ${storage string} ${image}
-                  ...    ELSE    Execute Command    docker run -d --name=${name} --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 -e CLOUD_HOST=${ENV NO HTTP} --privileged --network=${network} --cap-add=NET_ADMIN ${storage string} ${image}
+    ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --name=${name} --restart=always -e PORT=${port} -e CLOUD_HOST=${ENV NO HTTP} --privileged --network=${network} --cap-add=NET_ADMIN ${storage string} ${image}
+                  ...    ELSE    Execute Command    docker run -d --name=${name} --restart=always --mac-address=${mac} -p ${port}:7001 -e CLOUD_HOST=${ENV NO HTTP} --privileged --network=${network} --cap-add=NET_ADMIN ${storage string} ${image}
     ${id}=   Evaluate    $full_id[:12]
     Set to Dictionary    ${server}    id=${id}
     Set to Dictionary    ${server}    port=${port}
