@@ -14,7 +14,7 @@ import { logoAreaState, logoClickType } from '../new-header-types';
 @Component({
     selector: 'nx-header-level-two',
     templateUrl: './header-level-two.component.html',
-    styleUrls: ['./header-level-two.component.scss']
+    styleUrls: ['./header-level-two.component.scss'],
 })
 export class NxHeaderLevelTwoComponent {
     @ViewChild('menuItems', { static: true }) menuItemsRef: ElementRef<HTMLElement>;
@@ -26,11 +26,11 @@ export class NxHeaderLevelTwoComponent {
     navArrowState = {
         visible: false,
         left: false,
-        right: true
+        right: true,
     };
     sizeConstants = {
         logoAreaWidth: 256,
-        margins: 25
+        margins: 25,
     };
     icons = icons;
     images = images;
@@ -39,9 +39,10 @@ export class NxHeaderLevelTwoComponent {
     // but this property is used to make the UI smooth when navigating between nodes while the currentLocation is changing
 
     constructor(
-                public headerService: NxHeaderService,
-                private menusService: NxMenusService,
-                private scrollMechanics: NxScrollMechanicsService) {
+        public headerService: NxHeaderService,
+        private menusService: NxMenusService,
+        private scrollMechanics: NxScrollMechanicsService,
+    ) {
         this.scrollMechanics.windowSizeSubject.pipe(untilDestroyed(this)).subscribe(size => {
             this.recalculateSizes(size.width);
         });
@@ -60,7 +61,7 @@ export class NxHeaderLevelTwoComponent {
     scrollMenuItems(direction: 'left' | 'right'): void {
         const menuItemsEl = this.menuItemsRef.nativeElement;
         const scrollDistance = 300;
-        const changedScroll = direction === 'right' ? scrollDistance : (-1 * scrollDistance);
+        const changedScroll = direction === 'right' ? scrollDistance : -1 * scrollDistance;
         const maxScrollLeft = menuItemsEl.scrollWidth - menuItemsEl.clientWidth;
         const newScroll = Math.max(menuItemsEl.scrollLeft + changedScroll, 0);
         menuItemsEl.scrollLeft = newScroll;
@@ -73,7 +74,8 @@ export class NxHeaderLevelTwoComponent {
             const menuItemsEl = this.menuItemsRef?.nativeElement;
             if (menuItemsEl) {
                 this.navArrowState.visible = menuItemsEl.scrollWidth > menuItemsEl.clientWidth;
-                this.navArrowState.right = menuItemsEl.scrollLeft !== (menuItemsEl.scrollWidth - menuItemsEl.clientWidth);
+                this.navArrowState.right =
+                    menuItemsEl.scrollLeft !== menuItemsEl.scrollWidth - menuItemsEl.clientWidth;
                 if (checkLeft) {
                     this.navArrowState.left = menuItemsEl.scrollLeft !== 0;
                 }

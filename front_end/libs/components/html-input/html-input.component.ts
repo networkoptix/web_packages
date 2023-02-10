@@ -15,9 +15,9 @@ import { DEFAULT_EDITOR_CONFIG } from './editor-config';
             provide: NG_VALUE_ACCESSOR,
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxHTMLComponent),
-            multi: true
-        }
-    ]
+            multi: true,
+        },
+    ],
 })
 export class NxHTMLComponent implements ControlValueAccessor {
     @Input() editorOverrides: Record<any, any>;
@@ -28,9 +28,7 @@ export class NxHTMLComponent implements ControlValueAccessor {
     valueLoaded = false;
     #value = '';
 
-    constructor(
-        configService: NxConfigService,
-    ) {
+    constructor(configService: NxConfigService) {
         this.CONFIG = configService.getConfig();
     }
 
@@ -40,8 +38,8 @@ export class NxHTMLComponent implements ControlValueAccessor {
             ...(this.editorOverrides || {}),
             ...{
                 skin: this.CONFIG.isDarkTheme ? 'oxide-dark' : '',
-                content_css: this.CONFIG.isDarkTheme ? 'dark' : ''
-            }
+                content_css: this.CONFIG.isDarkTheme ? 'dark' : '',
+            },
         };
     }
 

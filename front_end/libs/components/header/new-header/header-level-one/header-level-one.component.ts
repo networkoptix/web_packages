@@ -7,7 +7,7 @@ import { NxHeaderService } from '@services/nx-header.service';
 @Component({
     selector: 'nx-header-level-one',
     templateUrl: './header-level-one.component.html',
-    styleUrls: ['./header-level-one.component.scss']
+    styleUrls: ['./header-level-one.component.scss'],
 })
 export class NxHeaderLevelOneComponent {
     @Input() menuNodes: MenuNode[] = [];
@@ -25,7 +25,7 @@ export class NxHeaderLevelOneComponent {
     }
 
     handleNavigation(node: MenuNode, event: MouseEvent): void {
-        const firstNodeWithURL = node.nodes.find(subNode => (subNode.url && !subNode.new_window));
+        const firstNodeWithURL = node.nodes.find(subNode => subNode.url && !subNode.new_window);
         if (firstNodeWithURL) {
             let navNode = firstNodeWithURL;
             if (firstNodeWithURL.url === '/systems') {

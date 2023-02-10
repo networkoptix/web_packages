@@ -7,11 +7,9 @@ import { NxHeaderService } from '@services/nx-header.service';
 @Component({
     selector: 'nx-header-tabs',
     templateUrl: './tabs.component.html',
-    styleUrls: [environment.isLocal ? './tabs-webadmin.component.scss' : './tabs.component.scss']
+    styleUrls: [environment.isLocal ? './tabs-webadmin.component.scss' : './tabs.component.scss'],
 })
 export class NxTabsComponent {
     @Input() node: MenuNode;
-    constructor(
-        public headerService: NxHeaderService
-    ) {}
+    constructor(public headerService: NxHeaderService) {}
 }

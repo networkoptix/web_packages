@@ -3,7 +3,7 @@ export enum logoAreaState {
     SYSTEMS = 'systems',
     LOGO = 'logo',
     MOBILE_OPEN = 'mobileMenu',
-    PROFILE_OPEN = 'mobileProfile'
+    PROFILE_OPEN = 'mobileProfile',
 }
 
 export enum mobileIconState {
@@ -11,7 +11,7 @@ export enum mobileIconState {
     RETURN_TO_SYSTEMS = 'returnToSystems',
     RETURN = 'return',
     PROFILE = 'profile',
-    NONE = 'none'
+    NONE = 'none',
 }
 
 export type logoClickType = 'system' | 'systems-list';

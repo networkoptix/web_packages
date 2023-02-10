@@ -15,7 +15,7 @@ import { logoAreaState, logoClickType } from '../new-header-types';
 @Component({
     selector: 'nx-header-logo-area',
     templateUrl: './logo-area.component.html',
-    styleUrls: ['./logo-area.component.scss']
+    styleUrls: ['./logo-area.component.scss'],
 })
 export class NxHeaderLogoAreaComponent implements OnInit {
     @Input() isMobile = false;
@@ -32,12 +32,14 @@ export class NxHeaderLogoAreaComponent implements OnInit {
     constructor(
         public headerService: NxHeaderService,
         systemsService: NxSystemsService,
-        configService: NxConfigService
+        configService: NxConfigService,
     ) {
         this.CONFIG = configService.getConfig();
-        this.headerService.currentLocation$.pipe(untilDestroyed(this)).subscribe(currentLocation => {
-            this.checkLogoState(currentLocation);
-        });
+        this.headerService.currentLocation$
+            .pipe(untilDestroyed(this))
+            .subscribe(currentLocation => {
+                this.checkLogoState(currentLocation);
+            });
         systemsService.systemsSubject.pipe(untilDestroyed(this)).subscribe(systems => {
             this.singleSystem = systems.length === 1;
         });
@@ -69,8 +71,10 @@ export class NxHeaderLogoAreaComponent implements OnInit {
     }
 
     ngOnChanges(changes: NgChanges<NxHeaderLogoAreaComponent>): void {
-        if (changes.menuOpen?.currentValue !== changes.menuOpen?.previousValue ||
-            changes.isProfile?.currentValue !== changes.isProfile?.previousValue) {
+        if (
+            changes.menuOpen?.currentValue !== changes.menuOpen?.previousValue ||
+            changes.isProfile?.currentValue !== changes.isProfile?.previousValue
+        ) {
             this.checkLogoState(this.headerService.currentLocation);
         }
     }

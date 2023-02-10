@@ -6,25 +6,21 @@ import {
     Renderer2,
     Inject,
     ViewChild,
-    ViewContainerRef
+    ViewContainerRef,
 } from '@angular/core';
 import {
     ActivatedRoute,
     NavigationEnd,
     Event as RouterEvent,
     Router,
-    RoutesRecognized
+    RoutesRecognized,
 } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { sum } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
 import { LocalStorageService, SessionStorageService } from 'ngx-webstorage';
-import {
-    BehaviorSubject,
-    combineLatest,
-    fromEvent,
-} from 'rxjs';
+import { BehaviorSubject, combineLatest, fromEvent } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -53,22 +49,22 @@ class CombinedWidths {
         public tabs: number = 0,
         public rightNav: number = 0,
         public windowWidth: number = 0,
-        public breadcrumbWidths: number[] = []
-    ) { }
+        public breadcrumbWidths: number[] = [],
+    ) {}
 }
 
 enum sizes {
     SM = 24,
     MD = 48,
     LG = 72,
-    XL = 96
+    XL = 96,
 }
 
 @UntilDestroy()
 @Component({
     selector: 'nx-header',
     templateUrl: 'header.component.html',
-    styleUrls: [environment.isLocal ? 'header-webadmin.component.scss' : 'header.component.scss']
+    styleUrls: [environment.isLocal ? 'header-webadmin.component.scss' : 'header.component.scss'],
 })
 export class NxHeaderComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
@@ -139,13 +135,11 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     ) {
         this.CONFIG = configService.getConfig();
 
-        translateService.onTranslationChange
-            .pipe(untilDestroyed(this))
-            .subscribe(() => {
-                setTimeout(() => {
-                    this.getMenu();
-                });
+        translateService.onTranslationChange.pipe(untilDestroyed(this)).subscribe(() => {
+            setTimeout(() => {
+                this.getMenu();
             });
+        });
 
         this.newHeader = this.CONFIG.featureFlags.newHeader;
         if (this.newHeader) {
@@ -157,7 +151,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             .pipe(
                 untilDestroyed(this),
                 map(event => (event.target as Window).innerWidth),
-                startWith(this.window.innerWidth)
+                startWith(this.window.innerWidth),
             )
             .subscribe(width => this.windowWidth$.next(width));
 
@@ -168,32 +162,27 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             this.tabsWidth$,
             this.rightNavWidth$,
             this.windowWidth$,
-            this.breadcrumbWidth$
-        ]).pipe(
-            untilDestroyed(this),
-            map(([icon, mainButton, tabs, rightNav, windowWidth, breadcrumbWidths]) => ({
-                totalWidths: icon + mainButton + tabs + rightNav + sum(breadcrumbWidths),
-                icon,
-                mainButton,
-                tabs,
-                rightNav,
-                windowWidth,
-                breadcrumbWidths
-            }))
-        ).subscribe(combinedWidths => this.combinedWidths$.next(combinedWidths));
+            this.breadcrumbWidth$,
+        ])
+            .pipe(
+                untilDestroyed(this),
+                map(([icon, mainButton, tabs, rightNav, windowWidth, breadcrumbWidths]) => ({
+                    totalWidths: icon + mainButton + tabs + rightNav + sum(breadcrumbWidths),
+                    icon,
+                    mainButton,
+                    tabs,
+                    rightNav,
+                    windowWidth,
+                    breadcrumbWidths,
+                })),
+            )
+            .subscribe(combinedWidths => this.combinedWidths$.next(combinedWidths));
 
         // This handles the adaptive behavior of the header, in most cases navWidth is used to toggle different component views
         // For cases where the component view to use is determined by breakpoint, that logic should be implemented here instead of CSS
         // It's non-standard but will make the code easier to reason about when all logic for determining component size/views are in one place
-        this.combinedWidths$.subscribe(({
-            totalWidths,
-            icon,
-            mainButton,
-            tabs,
-            rightNav,
-            windowWidth,
-            breadcrumbWidths
-        }) => {
+        this.combinedWidths$.subscribe(widths => {
+            const { totalWidths, icon, tabs, rightNav, windowWidth, breadcrumbWidths } = widths;
             const padding: sizes = sizes.SM;
             const nodes = !!headerService.currentLocation.parentNode?.nodes;
             const breadcrumbs = this.filterBreadcrumbs(headerService.currentLocation?.breadcrumbs);
@@ -264,7 +253,9 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         if (!environment.production) {
             this.headerService.authorizeUrl = `https://${environment.cloudHost}/authorize?redirect_url=${this.window.location.href}`;
         }
-        this.headerService.createUrl = `${this.headerService.authorizeUrl}${environment.production ? '?' : '&'}client_type=create`;
+        this.headerService.createUrl = `${this.headerService.authorizeUrl}${
+            environment.production ? '?' : '&'
+        }client_type=create`;
 
         NxConfigService.configChanged.subscribe(() => {
             this.logoSrc = `/static/images/${this.CONFIG.isDarkTheme ? 'dark_' : ''}logo.png`;
@@ -272,7 +263,8 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     }
 
     private getMenu(): void {
-        this.menusService.getMenu('header', true)
+        this.menusService
+            .getMenu('header', true)
             .pipe(untilDestroyed(this))
             .subscribe(header => {
                 const nodes = this.menusService.cleanEmptyNodes(header.nodes);
@@ -304,28 +296,28 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         compRef.instance.width = this.windowWidth$;
     }
 
-    updateBreadcrumbSizes = wrapper => this.breadcrumbWidth$.next(
-        Array.from(
-            wrapper.children
-        ).map((
-            element: HTMLElement
-        ) => parseInt(
-            this.window.getComputedStyle(
-                element
-            ).getPropertyValue(
-                'margin-right'
-            )) + element.offsetWidth)
-    );
+    updateBreadcrumbSizes = wrapper =>
+        this.breadcrumbWidth$.next(
+            Array.from(wrapper.children).map(
+                (element: HTMLElement) =>
+                    parseInt(
+                        this.window.getComputedStyle(element).getPropertyValue('margin-right'),
+                    ) + element.offsetWidth,
+            ),
+        );
 
-    ngOnDestroy(): void { }
+    ngOnDestroy(): void {}
 
     ngOnInit(): void {
-        this.sessionStorage.observe('theme')
+        this.sessionStorage
+            .observe('theme')
             .pipe(untilDestroyed(this))
             .subscribe(() => {
                 // wait CONFIG to update
                 setTimeout(() => {
-                    this.logoSrc = `/static/images/${this.CONFIG.isDarkTheme ? 'dark_' : ''}logo.png`;
+                    this.logoSrc = `/static/images/${
+                        this.CONFIG.isDarkTheme ? 'dark_' : ''
+                    }logo.png`;
                 });
             });
 
@@ -338,39 +330,36 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         this.viewHeader = showHeaderAndFooter;
         this.active = {};
 
-        this.appState.headerVisibleSubject
-            .pipe(untilDestroyed(this))
-            .subscribe(visible => {
-                this.viewHeader = visible || this.bootstrapProvider.newSystem;
-            });
+        this.appState.headerVisibleSubject.pipe(untilDestroyed(this)).subscribe(visible => {
+            this.viewHeader = visible || this.bootstrapProvider.newSystem;
+        });
 
-        this.router.events
-            .pipe(untilDestroyed(this))
-            .subscribe((event: RouterEvent) => {
-                if (event instanceof RoutesRecognized) {
-                    this.systemId = event.state.root.firstChild.params.systemId || '';
-                    this.storageService.store('systemId', this.systemId);
+        this.router.events.pipe(untilDestroyed(this)).subscribe((event: RouterEvent) => {
+            if (event instanceof RoutesRecognized) {
+                this.systemId = event.state.root.firstChild.params.systemId || '';
+                this.storageService.store('systemId', this.systemId);
+                this.updateActiveSystem();
+                this.updateActive();
+            }
+
+            if (this.userEmail && event instanceof NavigationEnd) {
+                // You only receive NavigationEnd events
+                if (this.systemId && !this.systems) {
+                    this.systemsService
+                        .forceUpdateSystems()
+                        .toPromise()
+                        .then(() => {
+                            this.updateActiveSystem();
+                            this.updateActive();
+                        });
+                } else {
                     this.updateActiveSystem();
                     this.updateActive();
                 }
-
-                if (this.userEmail && event instanceof NavigationEnd) {
-                    // You only receive NavigationEnd events
-                    if (this.systemId && !this.systems) {
-                        this.systemsService
-                            .forceUpdateSystems()
-                            .toPromise().then(() => {
-                                this.updateActiveSystem();
-                                this.updateActive();
-                            });
-                    } else {
-                        this.updateActiveSystem();
-                        this.updateActive();
-                    }
-                    this.headerService.setLocation(event.url);
-                    this.headerService.show$ = false;
-                }
-            });
+                this.headerService.setLocation(event.url);
+                this.headerService.show$ = false;
+            }
+        });
 
         this.sessionService.loginStateSubject
             .pipe(untilDestroyed(this))
@@ -423,48 +412,44 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 this.system = this.systemService.createLocalSystem(
                     this.accountService.mediaServerApi,
                     account?.id,
-                    account?.email
+                    account?.email,
                 );
                 this.system.update().then(() => {
                     this.singleSystem = true;
                     this.systemCounter = 1;
-                    this.system.infoSubject
-                        .pipe(untilDestroyed(this))
-                        .subscribe(system => {
-                            this.systems = [system];
-                            this.updateActiveSystem();
-                            this.updateActive();
-                            this.headerService.activeSystem = system?.moduleInfo;
-                        });
+                    this.system.infoSubject.pipe(untilDestroyed(this)).subscribe(system => {
+                        this.systems = [system];
+                        this.updateActiveSystem();
+                        this.updateActive();
+                        this.headerService.activeSystem = system?.moduleInfo;
+                    });
                 });
             });
         } else {
-            this.systemsService.systemsSubject
-                .pipe(untilDestroyed(this))
-                .subscribe(systems => {
-                    if (!systems) {
-                        return;
-                    }
+            this.systemsService.systemsSubject.pipe(untilDestroyed(this)).subscribe(systems => {
+                if (!systems) {
+                    return;
+                }
 
-                    this.systemId = this.storageService.retrieve('systemId');
-                    if (this.router.url.startsWith('/systems/')) {
-                        this.systemId = this.router.url.split('/')[2].split('?')[0];
-                    }
+                this.systemId = this.storageService.retrieve('systemId');
+                if (this.router.url.startsWith('/systems/')) {
+                    this.systemId = this.router.url.split('/')[2].split('?')[0];
+                }
 
-                    if (
-                        !this.systemId &&
-                        this.route.firstChild &&
-                        this.route.firstChild.snapshot.params.systemId
-                    ) {
-                        this.systemId = this.route.firstChild.snapshot.params.systemId;
-                    }
-                    this.systems = systems;
-                    this.singleSystem = (this.systems.length === 1);
-                    this.systemCounter = this.systems.length;
+                if (
+                    !this.systemId &&
+                    this.route.firstChild &&
+                    this.route.firstChild.snapshot.params.systemId
+                ) {
+                    this.systemId = this.route.firstChild.snapshot.params.systemId;
+                }
+                this.systems = systems;
+                this.singleSystem = this.systems.length === 1;
+                this.systemCounter = this.systems.length;
 
-                    this.updateActiveSystem();
-                    this.updateActive();
-                });
+                this.updateActiveSystem();
+                this.updateActive();
+            });
         }
     }
 
@@ -472,7 +457,8 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         if (
             this.systemId &&
             this.isActive(event.target.id) &&
-            !this.isActive('view') && !this.isActive('health')
+            !this.isActive('view') &&
+            !this.isActive('health')
         ) {
             event.stopPropagation();
             return false;
@@ -497,7 +483,8 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         this.active.view = this.isActive('/view');
         this.active.information = this.isActive('/health');
         this.active.bookmarks = this.isActive('/bookmarks');
-        this.active.settings = this.systemId &&
+        this.active.settings =
+            this.systemId &&
             this.isActive('/systems') &&
             !this.isActive('/view') &&
             !this.isActive('/health') &&
@@ -509,14 +496,14 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         if (!this.systems) {
             return;
         }
-        if (this.singleSystem || this.environment.isLocal) { // Special case for a single system - it always active
+        if (this.singleSystem || this.environment.isLocal) {
+            // Special case for a single system - it always active
             this.headerService.activeSystem = this.systems[0];
         } else if (this.systemId) {
             // Will only have multiple systems on cloud
-            this.headerService.activeSystem = (this.systems as NxSystemInfo[])
-                .find(system => {
-                    return this.systemId === system.id;
-                });
+            this.headerService.activeSystem = (this.systems as NxSystemInfo[]).find(system => {
+                return this.systemId === system.id;
+            });
         } else {
             this.headerService.activeSystem = undefined;
         }
@@ -527,14 +514,15 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                     this.stopActiveSubscription();
                     this.system = this.systemService.createSystem(
                         this.userEmail,
-                        this.headerService.activeSystem.id
+                        this.headerService.activeSystem.id,
                     );
 
-                    this.system.getInfoAndPermissions(false)
+                    this.system
+                        .getInfoAndPermissions(false)
                         .then(system => {
                             this.canSeeInfo = system?.canViewInfo() || false;
                         })
-                        .catch(_ => { });
+                        .catch(_ => {});
                 }
             } else {
                 this.stopActiveSubscription();
@@ -543,10 +531,12 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     }
 
     canShowNav() {
-        return this.navVisible &&
+        return (
+            this.navVisible &&
             this.headerService.activeSystem &&
             !this.active.integrations &&
-            !this.active.ipvd;
+            !this.active.ipvd
+        );
     }
 
     filterBreadcrumbs([_, ...nodes] = []) {
@@ -570,11 +560,15 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             return `/systems/${this.headerService.activeSystem.id}/view`;
         }
 
-        return (this.CONFIG.featureFlags.dashboardRedirect || this.cookieService.get('devServer')) ? '/dashboard' : '/';
+        return this.CONFIG.featureFlags.dashboardRedirect || this.cookieService.get('devServer')
+            ? '/dashboard'
+            : '/';
     }
 
     get mainNode() {
-        return this.headerService.currentLocation.parentNode?.breadcrumbs?.[0] ||
-            this.headerService.currentLocation.parentNode;
+        return (
+            this.headerService.currentLocation.parentNode?.breadcrumbs?.[0] ||
+            this.headerService.currentLocation.parentNode
+        );
     }
 }

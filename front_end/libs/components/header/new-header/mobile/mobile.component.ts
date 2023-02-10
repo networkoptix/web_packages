@@ -15,7 +15,7 @@ import { mobileIconState } from '../new-header-types';
 @Component({
     selector: 'nx-header-mobile',
     templateUrl: './mobile.component.html',
-    styleUrls: ['./mobile.component.scss']
+    styleUrls: ['./mobile.component.scss'],
 })
 export class NxHeaderMobileComponent {
     @Input() loggedIn: boolean;
@@ -27,11 +27,12 @@ export class NxHeaderMobileComponent {
     currentSystemMenu: MenuNode;
     iconState: mobileIconState;
     icons = icons;
-    constructor(public headerService: NxHeaderService,
-        scrollMechanics: NxScrollMechanicsService) {
-        this.headerService.currentLocation$.pipe(untilDestroyed(this)).subscribe(currentLocation => {
-            this.setIconState(this.loggedIn, currentLocation?.path);
-        });
+    constructor(public headerService: NxHeaderService, scrollMechanics: NxScrollMechanicsService) {
+        this.headerService.currentLocation$
+            .pipe(untilDestroyed(this))
+            .subscribe(currentLocation => {
+                this.setIconState(this.loggedIn, currentLocation?.path);
+            });
 
         this.menuOpen$.pipe(untilDestroyed(this)).subscribe(() => {
             this.setIconState(this.loggedIn, this.headerService.currentLocation?.path);
@@ -55,7 +56,10 @@ export class NxHeaderMobileComponent {
 
     ngOnChanges(changes: NgChanges<NxHeaderMobileComponent>): void {
         if (changes.loggedIn?.currentValue) {
-            this.setIconState(changes.loggedIn.currentValue, this.headerService.currentLocation?.path);
+            this.setIconState(
+                changes.loggedIn.currentValue,
+                this.headerService.currentLocation?.path,
+            );
         }
     }
 

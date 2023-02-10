@@ -1,9 +1,4 @@
-import {
-    Component,
-    Input,
-    OnChanges,
-    OnInit,
-} from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -17,14 +12,16 @@ enum mainButtonState {
     ALL = 'all',
     NODE = 'node',
     SYSTEM = 'system',
-    SYSTEMS = 'systems'
+    SYSTEMS = 'systems',
 }
 
 @UntilDestroy()
 @Component({
     selector: 'nx-header-main-button',
     templateUrl: 'main-button.component.html',
-    styleUrls: [environment.isLocal ? 'main-button-webadmin.component.scss' : 'main-button.component.scss']
+    styleUrls: [
+        environment.isLocal ? 'main-button-webadmin.component.scss' : 'main-button.component.scss',
+    ],
 })
 export class NxHeaderMainButtonComponent implements OnInit, OnChanges {
     @Input() endpoint: any;
@@ -39,10 +36,7 @@ export class NxHeaderMainButtonComponent implements OnInit, OnChanges {
     state: string;
     icons = icons;
 
-    constructor(
-        public headerService: NxHeaderService
-    ) {
-    }
+    constructor(public headerService: NxHeaderService) {}
 
     ngOnInit(): void {
         this.systemCounter = this.systems?.length ?? 0;
@@ -57,20 +51,11 @@ export class NxHeaderMainButtonComponent implements OnInit, OnChanges {
         let state = mainButtonState.ALL;
         if (this.environment.isLocal) {
             state = mainButtonState.SYSTEM;
-        } else if (
-            this.node &&
-            !this.headerService.currentLocation.isSystem
-        ) {
+        } else if (this.node && !this.headerService.currentLocation.isSystem) {
             state = mainButtonState.NODE;
-        } else if (
-            this.headerService.currentLocation.isSystem &&
-            this.headerService.activeSystem
-        ) {
+        } else if (this.headerService.currentLocation.isSystem && this.headerService.activeSystem) {
             state = mainButtonState.SYSTEM;
-        } else if (
-            this.headerService.currentLocation.isSystem &&
-            this.systems
-        ) {
+        } else if (this.headerService.currentLocation.isSystem && this.systems) {
             state = mainButtonState.SYSTEMS;
         }
         return state;

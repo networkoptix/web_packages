@@ -11,7 +11,11 @@ import { BaseDropdown } from '../../dropdowns/injDropdown';
 @Component({
     selector: 'nx-nav-dropdown',
     templateUrl: 'nav-dropdown.component.html',
-    styleUrls: [environment.isLocal ? 'nav-dropdown-webadmin.component.scss' : 'nav-dropdown.component.scss']
+    styleUrls: [
+        environment.isLocal
+            ? 'nav-dropdown-webadmin.component.scss'
+            : 'nav-dropdown.component.scss',
+    ],
 })
 export class NxNavDropdownComponent extends BaseDropdown {
     @ViewChild('dropDownButton') dropDownButton: ElementRef<HTMLButtonElement>;
@@ -28,7 +32,8 @@ export class NxNavDropdownComponent extends BaseDropdown {
     }
 
     get nodes() {
-        const nodes = this.dropdownNode?.nodes ||
+        const nodes =
+            this.dropdownNode?.nodes ||
             this.nodeLocation?.parentNode?.nodes ||
             this.nodeLocation?.nodes;
         if (!nodes) {
@@ -46,7 +51,7 @@ export class NxNavDropdownComponent extends BaseDropdown {
     constructor(
         configService: NxConfigService,
         public headerService: NxHeaderService,
-        @Inject(WINDOW) private window: Window
+        @Inject(WINDOW) private window: Window,
     ) {
         super(configService);
     }
@@ -57,9 +62,10 @@ export class NxNavDropdownComponent extends BaseDropdown {
     }
 
     updateOffset(): void {
-        this.offset = this.window.innerWidth > 420
-            ? 0
-            : -this.dropDownButton.nativeElement.getBoundingClientRect().left;
+        this.offset =
+            this.window.innerWidth > 420
+                ? 0
+                : -this.dropDownButton.nativeElement.getBoundingClientRect().left;
     }
 
     get hideDropdown() {

@@ -1,6 +1,6 @@
 function retrieveImageFromClipboardAsBase64(pasteEvent, callback, imageFormat = 'image/png') {
     if (!pasteEvent.clipboardData) {
-        if (typeof (callback) === 'function') {
+        if (typeof callback === 'function') {
             callback(undefined);
         }
     }
@@ -8,7 +8,7 @@ function retrieveImageFromClipboardAsBase64(pasteEvent, callback, imageFormat = 
     const items = pasteEvent.clipboardData.items;
 
     if (!items) {
-        if (typeof (callback) === 'function') {
+        if (typeof callback === 'function') {
             callback(undefined);
         }
     }
@@ -38,7 +38,7 @@ function retrieveImageFromClipboardAsBase64(pasteEvent, callback, imageFormat = 
             ctx.drawImage(img, 0, 0);
 
             // Execute callback with the base64 URI of the image
-            if (typeof (callback) === 'function') {
+            if (typeof callback === 'function') {
                 callback(imageCanvas.toDataURL(imageFormat));
             }
         };
@@ -58,7 +58,7 @@ function pasteHandleImages(pasteEvent, editor) {
 
     const addBase64Image = b64Image => {
         if (b64Image) {
-            const srcAttr = /src="(.*?)"/igm.exec(clipContent);
+            const srcAttr = /src="(.*?)"/gim.exec(clipContent);
             const imageSrc = srcAttr ? srcAttr[1] : '';
             const body = editor.getBody();
             const pastedImgElements = body.querySelectorAll(`img[src="${imageSrc}"]`);
@@ -69,7 +69,10 @@ function pasteHandleImages(pasteEvent, editor) {
                 });
             } else {
                 // CSP or something else blocked it, so we reinsert the image without the URL this time
-                const newContent = clipContent.replace(/(.*src=")(.*?)(".*)/igm, '$1' + b64Image + '$3');
+                const newContent = clipContent.replace(
+                    /(.*src=")(.*?)(".*)/gim,
+                    '$1' + b64Image + '$3',
+                );
                 editor.insertContent(newContent);
             }
         }
@@ -97,7 +100,8 @@ export const DEFAULT_EDITOR_CONFIG = {
     base_url: '/static/tinymce',
     suffix: '.min',
     branding: false,
-    toolbar: 'undo redo | formatselect link bold italic underline | bullist numlist | outdent indent | code removeformat paste pastetext preview',
+    toolbar:
+        'undo redo | formatselect link bold italic underline | bullist numlist | outdent indent | code removeformat paste pastetext preview',
     menubar: false,
     paste_data_images: true,
     plugins: 'code, preview, -visualblocks, -advcode,paste, link, lists, autoresize',
@@ -153,7 +157,11 @@ export const DEFAULT_EDITOR_CONFIG = {
 
         const { settings, documentBaseURI } = this; // Callback gets attached to JE instance
         // Don't convert link href since thats the CSS files that gets loaded into the editor also skip local file URLs
-        if (!settings.convert_urls || (node && node.nodeName === 'LINK') || url.startsWith('file:')) {
+        if (
+            !settings.convert_urls ||
+            (node && node.nodeName === 'LINK') ||
+            url.startsWith('file:')
+        ) {
             return url;
         }
 
@@ -180,7 +188,7 @@ export const DEFAULT_EDITOR_CONFIG = {
                 fegaussianblur: 'feGaussianBlur',
                 fecolormatrix: 'feColorMatrix',
                 fecomposite: 'feComposite',
-                stddeviation: 'stdDeviation'
+                stddeviation: 'stdDeviation',
             };
 
             const re = new RegExp(Object.keys(mapObj).join('|'), 'g');
@@ -188,5 +196,5 @@ export const DEFAULT_EDITOR_CONFIG = {
                 return mapObj[matched];
             });
         });
-    }
+    },
 };

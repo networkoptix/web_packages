@@ -19,7 +19,7 @@ import { GridBreakpoints } from '@styles/theme-variables-common';
 @Component({
     selector: 'nx-new-header',
     templateUrl: './new-header.component.html',
-    styleUrls: ['./new-header.component.scss']
+    styleUrls: ['./new-header.component.scss'],
 })
 export class NxNewHeaderComponent {
     @Input() nodes: MenuNode[];
@@ -40,25 +40,45 @@ export class NxNewHeaderComponent {
         systemsService: NxSystemsService,
         private store: Store,
     ) {
-        router.events.pipe(filter(event => event instanceof NavigationEnd), untilDestroyed(this)).subscribe((event: NavigationEnd) => {
-            if (event.url === '/') {
-                this.selectedNode = this.findNodeBasedOnURL(this.displayedNodes, '/content/about');
-                return;
-            }
-            if (event.url.includes('/systems/')) {
-                menusService.updateActiveSystemMenu(this.headerService.activeSystem || this.headerService.lastActive$.value);
-            }
-            this.headerService.setLocation(event.url);
-            this.selectedNode = this.findNodeBasedOnURL(this.displayedNodes, this.headerService.currentLocation?.path);
-        });
+        router.events
+            .pipe(
+                filter(event => event instanceof NavigationEnd),
+                untilDestroyed(this),
+            )
+            .subscribe((event: NavigationEnd) => {
+                if (event.url === '/') {
+                    this.selectedNode = this.findNodeBasedOnURL(
+                        this.displayedNodes,
+                        '/content/about',
+                    );
+                    return;
+                }
+                if (event.url.includes('/systems/')) {
+                    menusService.updateActiveSystemMenu(
+                        this.headerService.activeSystem || this.headerService.lastActive$.value,
+                    );
+                }
+                this.headerService.setLocation(event.url);
+                this.selectedNode = this.findNodeBasedOnURL(
+                    this.displayedNodes,
+                    this.headerService.currentLocation?.path,
+                );
+            });
 
-        menusService.currentSystemNode$.pipe(filter(node => !!node), untilDestroyed(this)).subscribe(node => {
-            if (headerService.currentLocation?.path?.includes('/systems/')) { // specific system page
-                this.selectedNode = cloneDeep({ ...node, name: 'systems' });
-            }
-        });
+        menusService.currentSystemNode$
+            .pipe(
+                filter(node => !!node),
+                untilDestroyed(this),
+            )
+            .subscribe(node => {
+                if (headerService.currentLocation?.path?.includes('/systems/')) {
+                    // specific system page
+                    this.selectedNode = cloneDeep({ ...node, name: 'systems' });
+                }
+            });
 
-        this.store.select(accountSelectors.selectCurrentUser)
+        this.store
+            .select(accountSelectors.selectCurrentUser)
             .pipe(untilDestroyed(this))
             .subscribe(account => {
                 if (account) {
@@ -70,12 +90,17 @@ export class NxNewHeaderComponent {
 
         this.headerService.nodes$.pipe(untilDestroyed(this)).subscribe(nodes => {
             this.displayedNodes = nodes;
-            this.selectedNode = this.findNodeBasedOnURL(nodes, this.headerService.currentLocation?.path || router.url);
+            this.selectedNode = this.findNodeBasedOnURL(
+                nodes,
+                this.headerService.currentLocation?.path || router.url,
+            );
         });
 
-        this.scrollMechanicsService.windowSizeSubject.pipe(untilDestroyed(this)).subscribe(({ width }) => {
-            this.isMobile$.next(width < GridBreakpoints.MD);
-        });
+        this.scrollMechanicsService.windowSizeSubject
+            .pipe(untilDestroyed(this))
+            .subscribe(({ width }) => {
+                this.isMobile$.next(width < GridBreakpoints.MD);
+            });
 
         if (router.url === '/') {
             this.selectedNode = this.findNodeBasedOnURL(this.displayedNodes, 'content/about');
@@ -85,16 +110,23 @@ export class NxNewHeaderComponent {
     }
 
     handleNodeSelect(node: MenuNode): void {
-        if (this.selectedNode !== node && !(this.selectedNode?.url.includes('/systems') && node.url.includes('/systems'))) {
+        if (
+            this.selectedNode !== node &&
+            !(this.selectedNode?.url.includes('/systems') && node.url.includes('/systems'))
+        ) {
             this.selectedNode = node;
         }
     }
 
     navigateToSystemsList(): void {
-        this.selectedNode = this.headerService.nodes.find(node => node.url === '/systems') || this.selectedNode;
+        this.selectedNode =
+            this.headerService.nodes.find(node => node.url === '/systems') || this.selectedNode;
     }
 
     findNodeBasedOnURL(nodes: MenuNode[], url: string): MenuNode {
-        return nodes?.find(node => node?.nodes.find(subNode => subNode.url === url)) || this.selectedNode;
+        return (
+            nodes?.find(node => node?.nodes.find(subNode => subNode.url === url)) ||
+            this.selectedNode
+        );
     }
 }

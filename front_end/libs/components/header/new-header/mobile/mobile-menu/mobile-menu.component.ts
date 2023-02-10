@@ -18,64 +18,72 @@ import { NxSystemsService } from '@services/systems.service';
 @Component({
     selector: 'nx-mobile-menu',
     templateUrl: './mobile-menu.component.html',
-    styleUrls: ['./mobile-menu.component.scss']
+    styleUrls: ['./mobile-menu.component.scss'],
 })
 export class NxMobileHeaderMenuComponent {
-  @Input() menuNodes: MenuNode[] = [];
-  @Input() selectedNode: MenuNode;
-  @Input() loggedIn: boolean = false;
-  @Input() isProfile: boolean = false;
-  @Input() isTablet: boolean = false;
-  @Input() systemCount: number = 0;
-  @Output() nodeClicked = new EventEmitter<boolean>();
-  profileMenu: MenuNode[];
-  LANG = staticLang;
-  currentSystemMenu: MenuNode;
-  showCurrentSystem = false;
+    @Input() menuNodes: MenuNode[] = [];
+    @Input() selectedNode: MenuNode;
+    @Input() loggedIn: boolean = false;
+    @Input() isProfile: boolean = false;
+    @Input() isTablet: boolean = false;
+    @Input() systemCount: number = 0;
+    @Output() nodeClicked = new EventEmitter<boolean>();
+    profileMenu: MenuNode[];
+    LANG = staticLang;
+    currentSystemMenu: MenuNode;
+    showCurrentSystem = false;
 
-  CONFIG: IConfig;
-  icons: {
-    dirHeader: string;
-  };
-  images: {
-    dirHeader: string;
-  };
+    CONFIG: IConfig;
+    icons: {
+        dirHeader: string;
+    };
+    images: {
+        dirHeader: string;
+    };
 
-  constructor(public headerService: NxHeaderService,
-              private configService: NxConfigService,
-              private accountService: NxAccountService,
-              systemsService: NxSystemsService,
-              menusService: NxMenusService) {
-      this.CONFIG = this.configService.getConfig();
-      this.profileMenu = this.makeProfileMenu(accountDropdown);
-      this.icons = icons;
-      this.images = images;
+    constructor(
+        public headerService: NxHeaderService,
+        private configService: NxConfigService,
+        private accountService: NxAccountService,
+        systemsService: NxSystemsService,
+        menusService: NxMenusService,
+    ) {
+        this.CONFIG = this.configService.getConfig();
+        this.profileMenu = this.makeProfileMenu(accountDropdown);
+        this.icons = icons;
+        this.images = images;
 
-      menusService.currentSystemNode$.pipe(filter(node => !!node), untilDestroyed(this)).subscribe(node => {
-          if (headerService.currentLocation?.path?.includes('/systems/')) { // specific system page
-              this.currentSystemMenu = cloneDeep({ ...node, name: 'systems' });
-          }
-      });
+        menusService.currentSystemNode$
+            .pipe(
+                filter(node => !!node),
+                untilDestroyed(this),
+            )
+            .subscribe(node => {
+                if (headerService.currentLocation?.path?.includes('/systems/')) {
+                    // specific system page
+                    this.currentSystemMenu = cloneDeep({ ...node, name: 'systems' });
+                }
+            });
 
-      headerService.currentLocation$.pipe(untilDestroyed(this)).subscribe(currentLocation => {
-          this.showCurrentSystem = currentLocation?.path?.includes('/systems/');
-      });
-  }
+        headerService.currentLocation$.pipe(untilDestroyed(this)).subscribe(currentLocation => {
+            this.showCurrentSystem = currentLocation?.path?.includes('/systems/');
+        });
+    }
 
-  nodeClick(node: MenuNode, event: MouseEvent): void {
-      this.headerService.handleNav(node, event);
-      this.nodeClicked.emit(true);
-  }
+    nodeClick(node: MenuNode, event: MouseEvent): void {
+        this.headerService.handleNav(node, event);
+        this.nodeClicked.emit(true);
+    }
 
-  makeProfileMenu(dropdownItems: AccountDropdown[]): MenuNode[] {
-      const menu: MenuNode[] = [];
-      for (const item of dropdownItems) {
-          menu.push(new MenuNode(item.name, item.route, item.name));
-      }
-      return menu;
-  }
+    makeProfileMenu(dropdownItems: AccountDropdown[]): MenuNode[] {
+        const menu: MenuNode[] = [];
+        for (const item of dropdownItems) {
+            menu.push(new MenuNode(item.name, item.route, item.name));
+        }
+        return menu;
+    }
 
-  logout(): void {
-      this.accountService.logout(false);
-  }
+    logout(): void {
+        this.accountService.logout(false);
+    }
 }
