@@ -4,6 +4,7 @@
 
 :root {
 	@include generateVarAndRgb(--bluez-light, $bluez-light);
+	@include generateVarAndRgb(--bluez-light-dim, $bluez-light-dim);
 	@include generateVarAndRgb(--bluez-bright, $bluez-bright);
 	@include generateVarAndRgb(--bluez, $bluez);
 	@include generateVarAndRgb(--blue8, $blue8);
