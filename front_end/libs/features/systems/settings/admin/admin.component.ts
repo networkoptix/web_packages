@@ -195,7 +195,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             .systemSubject$
             .pipe(
                 filter(system => {
-                    return system?.id === this.route.snapshot.params.systemId;
+                    return environment.isLocal || system?.id === this.route.snapshot.params.systemId;
                 }),
                 switchMap(system => system.updateOrGetSystemSettings()),
                 map(res => res?.reply?.settings),
@@ -219,7 +219,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             .systemSubject$
             .pipe(
                 filter(system => {
-                    return system?.id === this.route.snapshot.params.systemId;
+                    return environment.isLocal || system?.id === this.route.snapshot.params.systemId;
                 }),
                 distinctUntilChanged(),
                 untilDestroyed(this)
