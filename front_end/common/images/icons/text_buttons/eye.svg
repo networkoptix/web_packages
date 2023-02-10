@@ -5,6 +5,6 @@
 <style type="text/css">
 	.st0{stroke:#2B383F;}
 </style>
-<path class="stroke-color-main" fill-rule="evenodd" clip-rule="evenodd" fill="none" stroke-miterlimit="10" d="M10,5.5c3.1,0,6.3,1.5,8.5,4.5c-2.2,3-5.4,4.5-8.5,4.5S3.7,13,1.5,10C3.7,7,6.9,5.5,10,5.5z"/>
-<circle class="stroke-color-main" fill-rule="evenodd" clip-rule="evenodd" fill="none" stroke-miterlimit="10" cx="10" cy="10" r="2.5"/>
+<path class="st0 stroke-color-main" fill-rule="evenodd" clip-rule="evenodd" fill="none" stroke-miterlimit="10" d="M10,5.5c3.1,0,6.3,1.5,8.5,4.5c-2.2,3-5.4,4.5-8.5,4.5S3.7,13,1.5,10C3.7,7,6.9,5.5,10,5.5z"/>
+<circle class="st0 stroke-color-main" fill-rule="evenodd" clip-rule="evenodd" fill="none" stroke-miterlimit="10" cx="10" cy="10" r="2.5"/>
 </svg>
