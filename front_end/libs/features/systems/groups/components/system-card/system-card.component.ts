@@ -91,7 +91,7 @@ export class NxSystemCardComponent implements OnInit {
                         }
                     })
                     .then(result => {
-                        if (result === true) {
+                        if (result) {
                             this.router
                                 .navigate(['/download'])
                                 .catch(error => {

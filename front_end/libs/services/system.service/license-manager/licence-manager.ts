@@ -3,16 +3,17 @@ import { BehaviorSubject, map, Observable, shareReplay, switchMap, filter, tap, 
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
-import { Translatable } from '@pipes/any-translate.types';
+import { Translatable, TranslateObject } from '@pipes/nx-translate.types';
 import { CloudLicenseUpdate, LicenseInfo, LicenseState } from '@services/nx-cloud-api/cloud-services/license-server/license-server-api.types';
 import { NxSystemsService } from '@services/systems.service';
 import { Destroyable } from '@utils/Destroyable';
+import { bitsToString } from '@utils/bits-to-string';
 
 import { LicenseServerAPI } from '../../nx-cloud-api/cloud-services/license-server/license-server-api';
 import { NxSystem } from '../system';
 
-import { mapLicenseKeyInfo, processLicenseKeys } from './license-manager-utils';
-import { ProcessedLicenseKey, CLOUD_STORAGE_STATES, LicenseTagInfo, LicenseTranslationBaseKeys } from './license-manager.types';
+import { mapLicenseKeyInfo } from './license-manager-utils';
+import { ProcessedLicenseKey, CLOUD_STORAGE_STATES, LicenseTagInfo, LicenseTranslationBaseKeys, LicenseKeyInfo } from './license-manager.types';
 
 export class LicenseManager extends Destroyable {
     #systemsService: NxSystemsService;
@@ -27,10 +28,24 @@ export class LicenseManager extends Destroyable {
 
     /** State factories */
 
+    processLicenseKeys = (licenses: LicenseKeyInfo[], filterState: LicenseState): Observable<ProcessedLicenseKey[]> => this.#systemsService.systemsSubject.pipe(
+        map(systems => licenses
+            .filter(({ licenseState }) => !filterState || licenseState === filterState)
+            .map(({
+                expirationDate, licenseState, cloudSystemId, licenseKey, cloudStorageSizeBytes
+            }) => ({
+                size: bitsToString(+cloudStorageSizeBytes),
+                state: licenseState,
+                system: licenseState === LicenseState.ACTIVE ? systems.find(({ id }) => id === cloudSystemId)?.name || cloudSystemId : this.translateMessage(staticLang.cloudStorage.fromServer.Unassigned as LicenseTranslationBaseKeys),
+                expires: new Date(expirationDate).toLocaleDateString(),
+                key: licenseKey,
+                sizeBytes: +cloudStorageSizeBytes
+            }))));
+
     #processForCloudStorageUi = (base: Observable<LicenseInfo[]>, filterState?: LicenseState): Observable<ProcessedLicenseKey[]> => base.pipe(
         filter(licenses => !!licenses),
         map(mapLicenseKeyInfo),
-        switchMap(licenses => processLicenseKeys(this.#systemsService, this.translateMessage, licenses, filterState)),
+        switchMap(licenses => this.processLicenseKeys(licenses, filterState)),
         shareReplay({ bufferSize: 1, refCount: true }),
         this.onDestroyed
     );
@@ -51,11 +66,11 @@ export class LicenseManager extends Destroyable {
 
     /** License Manager Helpers */
 
-    translateMessage = (key: LicenseTranslationBaseKeys, params?: unknown): Translatable => ({ value: LicenseManager.TRANSLATION_BASE[key], params: params || {} });
+    translateMessage = (key: LicenseTranslationBaseKeys, params?: TranslateObject['params']): Translatable => ({ value: LicenseManager.TRANSLATION_BASE[key], params: params || {} });
 
     #toTagInfo = (keyInfo: ProcessedLicenseKey): LicenseTagInfo => ({
         key: keyInfo.key,
-        info: this.translateMessage('until', keyInfo)
+        info: this.translateMessage('until', { ...keyInfo, sizeBytes: keyInfo.sizeBytes.toString() })
     });
 
     /** Cloud Storage Helpers */

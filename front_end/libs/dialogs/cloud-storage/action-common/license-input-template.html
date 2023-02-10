@@ -76,8 +76,8 @@
                         </ng-container>
                     </ng-template>
                     <ng-container *ngIf="licenseMessage || licenseWarning; else default">
-                        <span *ngIf="licenseMessage">{{licenseMessage | translate}}</span>
-                        <span *ngIf="licenseWarning" class="text-warning">{{licenseWarning | translate}}</span>
+                        <span *ngIf="licenseMessage">{{licenseMessage | nxTranslate}}</span>
+                        <span *ngIf="licenseWarning" class="text-warning">{{licenseWarning | nxTranslate}}</span>
                     </ng-container>
                 </div>
             </div>

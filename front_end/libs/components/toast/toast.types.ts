@@ -1,4 +1,4 @@
-import { Translatable } from '@pipes/any-translate.types';
+import { Translatable } from '@pipes/nx-translate.types';
 
 export interface ToastOptions {
     autohide?: boolean;

@@ -13,7 +13,7 @@
         class="modal-title"
         [ngClass]="{ closable: !dialogRef.disableClose }"
     >
-        <span class="ellipsis">{{ dialogData.title | translate }}</span>
+        <span class="ellipsis">{{ dialogData.title | nxTranslate }}</span>
     </h1>
 </div>
 <div
@@ -22,10 +22,10 @@
 >
     <p
         *ngIf="!dialogData.safeHTML; else safe"
-        [innerHTML]="message | translate"
+        [innerHTML]="message | nxTranslate"
     ></p>
     <ng-template #safe>
-        <p [innerHTML]="message | translate | safe: 'html'"></p>
+        <p [innerHTML]="message | nxTranslate | safe: 'html'"></p>
     </ng-template>
 </div>
 
@@ -41,15 +41,15 @@
             [ngClass]="f.buttonClass || 'btn-primary'"
             (click)="close(true)"
         >
-            {{ f.actionLabel | translate }}
+            {{ f.actionLabel | nxTranslate }}
         </button>
         <button
             type="button"
             class="btn btn-default"
             *ngIf="f.cancelLabel"
-            (click)="close(f.cancelLabel)"
+            (click)="close(false)"
         >
-            <span class="ellipsis">{{ f.cancelLabel | translate }}</span>
+            <span class="ellipsis">{{ f.cancelLabel | nxTranslate }}</span>
         </button>
     </ng-container>
     <button
@@ -57,7 +57,7 @@
         type="button"
         class="btn"
         [ngClass]="f.buttonClass || 'btn-primary'"
-        (click)="close('CANCEL')"
+        (click)="close()"
         translate
     >
         Close

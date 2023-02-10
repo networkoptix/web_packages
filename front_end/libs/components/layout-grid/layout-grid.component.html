@@ -197,7 +197,8 @@
                     <div class="server-tooltip-wrapper">
                         <h4>
                             {{
-                                { value: LANG.layouts.statistics, params: node.details } | translate
+                                { value: LANG.layouts.statistics, params: node.details }
+                                    | nxTranslate
                             }}
                         </h4>
                         <ng-container *ngIf="serverStats$ | async as res; else tooltipLoading">

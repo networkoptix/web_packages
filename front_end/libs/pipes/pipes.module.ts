@@ -1,17 +1,17 @@
 import { NgModule } from '@angular/core';
 
-import { AnyTranslatePipe } from './any-translate.pipe';
 import { AsPipe } from './as';
 import { EscapeHtmlPipe } from './escape-html';
 import { NxHealthDatePipe } from './health-date';
 import { NxSafePipe } from './nx-safe';
 import { TextTransformPipe } from './nx-split-text';
+import { NxTranslatePipe } from './nx-translate.pipe';
 
 @NgModule({
     imports: [
     ],
     declarations: [
-        AnyTranslatePipe,
+        NxTranslatePipe,
         NxHealthDatePipe,
         NxSafePipe,
         TextTransformPipe,
@@ -19,7 +19,7 @@ import { TextTransformPipe } from './nx-split-text';
         EscapeHtmlPipe,
     ],
     exports: [
-        AnyTranslatePipe,
+        NxTranslatePipe,
         NxHealthDatePipe,
         NxSafePipe,
         TextTransformPipe,

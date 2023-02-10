@@ -6,7 +6,7 @@ import {
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { icons } from '@lib/variables/static-variables';
-import { Translatable } from '@pipes/any-translate.types';
+import { Translatable } from '@pipes/nx-translate.types';
 import { NxHeaderService } from '@services/nx-header.service';
 
 import { NxRibbonService } from './ribbon.service';

@@ -17,7 +17,6 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { credentialsValidation, icons, menus, toast } from '@lib/variables/static-variables';
-import { Translatable } from '@pipes/any-translate.types';
 import { NxApplyService } from '@services/apply.service';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
@@ -57,20 +56,20 @@ export class NxSystemUsersWithGroupsComponent implements OnInit, OnDestroy {
     selectedUser: NxSystemUser;
     systemAvailable: boolean;
     system: NxSystem;
-    deleteMessage: Translatable;
+    deleteMessage: string;
     fullName: string;
     email: string;
     username: string;
     role: string;
     roles: string[];
     selectedGroups: string[];
-    selectedGroupsList: { name: Translatable; description: Translatable }[];
+    selectedGroupsList: { name: string; description: string }[];
     credentialsValidation = credentialsValidation;
     icons = icons;
     menus = menus;
     toast = toast;
 
-    processedGroups: { id: string; label: Translatable; tooltip?: string }[];
+    processedGroups: { id: string; label: string; tooltip?: string }[];
 
     private passwordChanged: boolean = false;
 

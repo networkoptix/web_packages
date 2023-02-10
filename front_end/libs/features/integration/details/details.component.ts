@@ -234,8 +234,8 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
         this.dialogs.message({ messageType: dialogs.message.type.integration, data });
     }
 
-    handleDashboardOpen(open, queryParams, url): void {
-        if (open === true) {
+    handleDashboardOpen(open: boolean, queryParams, url): void {
+        if (open) {
             const route = ['dashboard'];
             const options = { queryParams };
 
@@ -244,7 +244,9 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
             } else {
                 this.window.parent.postMessage({ route, options }, '*');
             }
-        } else if (open === 'Download file') {
+        } else if (open === false) {
+            // This is a deliberate check, confirm dialog returns true/false for
+            // action/cancel buttons and undefined for closing with X
             this.window.location.href = url;
         }
     }

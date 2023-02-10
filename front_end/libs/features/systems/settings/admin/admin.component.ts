@@ -353,7 +353,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         buttons: { ok }
                     }
                 } = this.LANG;
-                return this.dialogs.confirm({
+                this.dialogs.confirm({
                     title,
                     message,
                     safeHTML: true,
@@ -476,7 +476,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     cancelLabel: this.LANG.dialogs.buttons.cancel,
                 }
             }).then(result => {
-                if (result === true) {
+                if (result) {
                     return this.system.deleteFromCurrentAccount().subscribe(res => {
                         this.toastService.notify(
                             {

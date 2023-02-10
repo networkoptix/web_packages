@@ -5,7 +5,7 @@ import { zip } from 'lodash-es';
 import type { IStepOption } from 'ngx-ui-tour-md-menu';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import type { TranslatableObject, TranslatableStrict } from '@pipes/any-translate.types';
+import type { TranslateObject, Translatable } from '@pipes/nx-translate.types';
 import type { MenuNode } from '@services/menus.service.types';
 import type { ec2MediaServer } from '@services/system-api.types';
 
@@ -62,7 +62,7 @@ export function setServerIpAndPort(
     return { ...server, ip, port };
 }
 
-type TranslatableStep = Omit<IStepOption, 'title' | 'content'> & { title: TranslatableStrict; content: TranslatableStrict };
+type TranslatableStep = Omit<IStepOption, 'title' | 'content'> & { title: Translatable; content: Translatable };
 
 export const translateStep = (instant: (TranslatableObject) => string) => (step: TranslatableStep): IStepOption => ({
     ...step,
@@ -115,9 +115,9 @@ export const processLanguageFactory = (customStrings: { [key: string]: string })
     return language;
 };
 
-export const toTranslatable = (value: unknown): TranslatableObject => typeof value === 'string' ? { value } : value as TranslatableObject;
+export const toTranslateObj = (value: Translatable): TranslateObject => typeof value === 'string' ? { value } : value;
 
-const flattenTranslatables = ([start, ...end]: TranslatableStrict[]): TranslatableObject => ({
+const flattenTranslatables = ([start, ...end]: Translatable[]): TranslateObject => ({
     value: staticLang.exclude.nested,
     params: {
         start,
@@ -146,5 +146,5 @@ const flattenTranslatables = ([start, ...end]: TranslatableStrict[]): Translatab
  * @param translatableExpressions
  * @returns
  */
-export const nestedTranslation = (strings: TemplateStringsArray, ...translatableExpressions: TranslatableStrict[]): TranslatableObject => flattenTranslatables(
-    zip(strings, translatableExpressions.map(toTranslatable)).reduce((vals, val) => [...vals, ...val], []).filter(val => val));
+export const nestedTranslation = (strings: TemplateStringsArray, ...translatableExpressions: Translatable[]): TranslateObject => flattenTranslatables(
+    zip(strings, translatableExpressions.map(toTranslateObj)).reduce((vals, val) => [...vals, ...val], []).filter(val => val));

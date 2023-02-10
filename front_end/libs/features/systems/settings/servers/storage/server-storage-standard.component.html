@@ -340,7 +340,7 @@
                 *ngIf="!reindexingMain; else reindexMainProgress"
                 [disabled]="modeReindexDisabled(storageModes.MAIN)"
                 type="button"
-                [nxTooltip]="tooltipContent | translate"
+                [nxTooltip]="tooltipContent"
                 (click)="reindexingMain = true; reindexStorage(storageModes.MAIN)"
                 translate
             >
@@ -385,7 +385,7 @@
                     class="btn btn-default mt-2"
                     type="button"
                     [disabled]="modeReindexDisabled(storageModes.BACKUP)"
-                    [nxTooltip]="tooltipContent | translate"
+                    [nxTooltip]="tooltipContent"
                     (click)="reindexingBackup = true; reindexStorage(storageModes.BACKUP)"
                     translate
                 >

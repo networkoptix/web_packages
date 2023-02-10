@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
+import type { Translatable } from '@pipes/nx-translate.types';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxHeaderService } from '@services/nx-header.service';
 
@@ -25,9 +26,9 @@ export class NxRibbonService {
 
     ) {
     }
-    /* eslint-disable @typescript-eslint/no-explicit-any */
+
     show(
-        message: string | { value: string; params?: any },
+        message: Translatable,
         actions: RibbonAction[],
         type?: string,
         updateFunction?: () => void,

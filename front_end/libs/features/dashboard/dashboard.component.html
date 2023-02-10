@@ -155,7 +155,7 @@
                 cdkDragLockAxis="y"
                 [routerLink]="[]"
                 (mousedown)="showSettings = false"
-                [nxTooltip]="dragEnabled ? (dashboardTooltip | translate) : ''"
+                [nxTooltip]="dragEnabled ? dashboardTooltip : ''"
                 [queryParams]="{ dashboardId: dashboard.id }"
                 routerLinkActive="active"
                 class="menu-item"

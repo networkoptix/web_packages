@@ -20,7 +20,7 @@ import { LayoutResourceTree, ResourceNode, ResourceType } from '@components/layo
 import { WebRTCStreamManager } from '@components/video-player/WebRTCStreamManager';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
-import { AnyTranslatePipe } from '@pipes/any-translate.pipe';
+import { NxTranslatePipe } from '@pipes/nx-translate.pipe';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ContextManifest } from '@services/nx-cloud-api/nx-cloud-api.types';
@@ -379,7 +379,7 @@ export class NxLayoutViewComponent {
         }
         this.tourService.initialize(
             generateTour('cloud-layouts')(cloudLayoutTours[tourGroup]).map(
-                translateStep((...args) => new AnyTranslatePipe(this.translate, this.cd).transform(...args))));
+                translateStep((...args) => new NxTranslatePipe(this.translate, this.cd).transform(...args))));
         this.cloudApi.checkFeatureNotice('cloudLayouts', () => this.dialogsService.cloudLayoutsInfo().then(start => {
             if (start) {
                 this.tourService.start();
@@ -496,7 +496,7 @@ export class NxLayoutViewComponent {
                     footer,
                 });
             }),
-            switchMap(res => res === true && this.selectedSystem$),
+            switchMap(res => res && this.selectedSystem$),
             switchMap((system: NxSystem) => system && (system.mediaserver as NxSystemRestAPI).deleteLayout(id as string).pipe(
                 tap(() => this.updateLayout(this.refreshLayouts$.value.replace(id as string, '')))
             ))

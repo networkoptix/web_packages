@@ -1,7 +1,7 @@
 import { BehaviorSubject, switchMap, filter, catchError, shareReplay, Observable, from, map, throwError } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { Translatable } from '@pipes/any-translate.types';
+import { Translatable, TranslateObject } from '@pipes/nx-translate.types';
 import { uuid } from '@services/nx-cloud-api/cloud-services/base-cloud-service-api.types';
 import { BoundSystem, StorageInfo } from '@services/nx-cloud-api/cloud-services/cloud-storage/cloud-storage-api.types';
 import { NxSystemsService } from '@services/systems.service';
@@ -21,9 +21,9 @@ export enum CloudStorageUpdate {
 
 export interface Usage {
     size: number;
-    sizeText: string;
+    sizeText: Translatable;
     color: string;
-    title: string;
+    title: Translatable;
 }
 
 export class CloudStorageManager extends Destroyable {
@@ -84,9 +84,9 @@ export class CloudStorageManager extends Destroyable {
 
     /** Cloud Storage Manager Helpers */
 
-    #translateMessage = (key: LicenseTranslationBaseKeys, params?: unknown): Translatable => ({ value: CloudStorageManager.TRANSLATION_BASE[key], params: params || {} });
+    #translateMessage = (key: LicenseTranslationBaseKeys, params?: TranslateObject['params']): TranslateObject => ({ value: CloudStorageManager.TRANSLATION_BASE[key], params: params || {} });
 
-    #getSizeText = (usageSpace: number, percentage: number): string => this.#translateMessage('usedSpace' as LicenseTranslationBaseKeys, { usageSpace: bitsToString(usageSpace), percentage });
+    #getSizeText = (usageSpace: number, percentage: number): TranslateObject => this.#translateMessage('usedSpace', { usageSpace: bitsToString(usageSpace), percentage: percentage.toString() });
 
     /**
      * Gets plain text usage message.
@@ -98,7 +98,7 @@ export class CloudStorageManager extends Destroyable {
      * @param totalSpace number
      * @returns Observable<string>
      */
-    public getUsageMessage(totalSpace: number): Observable<string> {
+    public getUsageMessage(totalSpace: number): Observable<Translatable> {
         if (!totalSpace) {
             return from([' ']);
         }
@@ -110,7 +110,7 @@ export class CloudStorageManager extends Destroyable {
                 const used = usedSpace === 0 ? `0 ${total.split(' ')[1]}` : bitsToString(usedSpace);
                 const percent = Math.round(usedSpace / totalSpace * 100);
 
-                return this.#translateMessage('used', { used, total, percent });
+                return this.#translateMessage('used', { used, total, percent: percent.toString() });
             })
         );
     }

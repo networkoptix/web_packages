@@ -724,7 +724,7 @@ export class NxSystemStorageComponent implements OnInit {
                 cancelLabel: this.LANG.dialogs.buttons.cancel,
             }
         }).then(response => {
-            if (response === true) {
+            if (response) {
                 this.system
                     .removeStorage({ id: storage.storageId })
                     .toPromise()

@@ -24,7 +24,7 @@ import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { alertTimeout, clientMode, menus, redirect, ribbonHeight } from '@lib/variables/static-variables';
-import { Translatable } from '@pipes/any-translate.types';
+import { Translatable } from '@pipes/nx-translate.types';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxApplyService } from '@services/apply.service';

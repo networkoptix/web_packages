@@ -2,7 +2,7 @@ import type { SelectionModel } from '@angular/cdk/collections';
 import type { EventEmitter } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
-import type { Translatable } from '@pipes/any-translate.types';
+import type { Translatable } from '@pipes/nx-translate.types';
 import type { CloudResponse, SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
@@ -44,7 +44,7 @@ interface ActionableGenericFooter {
     actionLabel: Translatable;
     cancelLabel?: Translatable;
 }
-export type Generic = DialogType<GenericData, string | true>;
+export type Generic = DialogType<GenericData, boolean>;
 
 interface AlertData extends GenericData {
     footer?: Omit<CloseOnlyGenericFooter, 'actionable'>;

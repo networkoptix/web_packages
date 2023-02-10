@@ -1,3 +1,5 @@
+import type { Translatable } from '@pipes/nx-translate.types';
+
 export interface ContentToggle {
     nodeId: string;
     state: boolean;
@@ -55,7 +57,7 @@ export interface Level3Item {
     path: string;
     query?: Record<string, string>;
 
-    additionalLabel?: string;
+    additionalLabel?: Translatable;
     subNode?: Level1Item | Level2Item;
     icon?: string;
     svgIcon?: string;

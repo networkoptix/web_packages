@@ -363,7 +363,7 @@ export abstract class BaseAccount implements OnDestroy {
                                 cancelLabel,
                             }
                         }).then(result => {
-                            if ((isRestore || isRegister || isActivate) && result === cancelLabel) {
+                            if ((isRestore || isRegister || isActivate) && result === false) {
                                 this.logout(true, skipReload);
                                 return true;
                             } else {
@@ -460,7 +460,7 @@ export abstract class BaseAccount implements OnDestroy {
                     cancelLabel: { value: this.LANG.dialogs.buttons.stayAs, params: { email: account.email } },
                 }
             });
-            if (res === true) {
+            if (res) {
                 this.stopAccountPoll();
                 return this.loginTokens(tokens);
             }
@@ -492,7 +492,7 @@ export abstract class BaseAccount implements OnDestroy {
                 }
             });
 
-            if (response === true) {
+            if (response) {
                 await this.logoutHelper(true, true);
                 await this.sleep(1000);
                 return this.window.location.reload();

@@ -12,7 +12,7 @@ import { filter, map, takeUntil } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { icons } from '@lib/variables/static-variables';
-import { Translatable } from '@pipes/any-translate.types';
+import { Translatable } from '@pipes/nx-translate.types';
 import { Process } from '@services/process.service/process';
 
 import type { AuthorizeStateType } from '../authorize.component.types';

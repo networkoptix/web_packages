@@ -3,7 +3,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { icons } from '@lib/variables/static-variables';
-import { Translatable } from '@pipes/any-translate.types';
+import { Translatable } from '@pipes/nx-translate.types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -126,7 +126,7 @@ export class NxMultiSelectDropdown extends BaseDropdown {
                         ? {
                               value: this.LANG.userGroups.multiple,
                               params: {
-                                  count: this.innerValue.length,
+                                  count: this.innerValue.length.toString(),
                               },
                           }
                         : this.LANG.search.Any;
@@ -138,13 +138,13 @@ export class NxMultiSelectDropdown extends BaseDropdown {
                         ? {
                               value: this.LANG.userGroups.multiple,
                               params: {
-                                  count: this.innerValue.length,
+                                  count: this.innerValue.length.toString(),
                               },
                           }
                         : {
                               value: this.LANG.search.selected,
                               params: {
-                                  count: this.innerValue.length,
+                                  count: this.innerValue.length.toString(),
                               },
                           };
                 break;

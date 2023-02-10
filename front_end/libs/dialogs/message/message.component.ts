@@ -13,7 +13,7 @@ import type {
 import type { Message as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { credentialsValidation, dialogs } from '@lib/variables/static-variables';
-import { Translatable } from '@pipes/any-translate.types';
+import { Translatable } from '@pipes/nx-translate.types';
 import { NxAccountService } from '@services/account.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';

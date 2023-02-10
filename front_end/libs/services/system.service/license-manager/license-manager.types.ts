@@ -1,4 +1,5 @@
 import type staticLang from '@common/language/language_i18n_static.json';
+import { Translatable } from '@pipes/nx-translate.types';
 import { CloudStorageSize, LicenseKey, LicenseStateInfo } from '@services/nx-cloud-api/cloud-services/license-server/license-server-api.types';
 
 export enum CLOUD_STORAGE_STATES {
@@ -7,27 +8,20 @@ export enum CLOUD_STORAGE_STATES {
     ACTIVATED = 'activated'
 }
 
-export interface KeyTableFields {
-    size: (params?: Record<string, string | number>) => string;
-    state: (params?: Record<string, string | number>) => string;
-    system: (params?: Record<string, string | number>) => string;
-    expires: (params?: Record<string, string | number>) => string;
-    key: (params?: Record<string, string | number>) => string;
-}
-
-export type LicenseKeyFields = keyof KeyTableFields;
+export type KeyTableFieldsKey = keyof typeof staticLang.cloudStorage.keyTableFields;
 
 export interface LicenseKeyInfo extends Pick<LicenseStateInfo, 'expirationDate' | 'licenseState' | 'cloudSystemId'>, CloudStorageSize, LicenseKey { }
 
 export type ProcessedLicenseKey = {
-    [key in LicenseKeyFields]: string;
+    [key in Exclude<KeyTableFieldsKey, 'system'>]: string;
 } & {
     sizeBytes: number;
+    system: Translatable;
 };
 
 export interface LicenseTagInfo {
     key: string;
-    info: string;
+    info: Translatable;
     warningText?: string;
 }
 

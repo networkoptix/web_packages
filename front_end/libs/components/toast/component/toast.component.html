@@ -10,12 +10,12 @@
             *ngIf="toast.showHTML"
             class="toast-content"
             data-testid="toast-content"
-            [innerHTML]="toast.content | translate"
+            [innerHTML]="toast.content | nxTranslate"
         ></span>
         <span
             *ngIf="!toast.showHTML"
             class="toast-content"
-            [innerText]="toast.content | translate"
+            [innerText]="toast.content | nxTranslate"
         ></span>
         <button
             type="button"

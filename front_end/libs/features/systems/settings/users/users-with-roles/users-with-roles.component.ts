@@ -18,7 +18,6 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { credentialsValidation, icons, menus, toast } from '@lib/variables/static-variables';
-import { Translatable } from '@pipes/any-translate.types';
 import { NxApplyService } from '@services/apply.service';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
@@ -51,11 +50,11 @@ export class NxSystemUsersWithRolesComponent implements OnInit, OnDestroy {
     private locked = new Set<string>();
     private localUserName: string;
 
-    accessDescription: Translatable;
+    accessDescription: string;
     selectedUser: NxUser;
     systemAvailable: boolean;
     system: NxSystem;
-    deleteMessage: Translatable;
+    deleteMessage: string;
     fullName: string;
     email: string;
     username: string;

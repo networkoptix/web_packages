@@ -8,7 +8,7 @@ import { SubscriptionLike, firstValueFrom } from 'rxjs';
 import staticLang from '@common/language/language_i18n_static.json';
 import { GenericEditModalContent, ModalContent } from '@components/console-table/console-table.component.types';
 import { DashboardConfiguration } from '@pages/dashboard/dashboard-configuration';
-import { Translatable } from '@pipes/any-translate.types';
+import { Translatable } from '@pipes/nx-translate.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
@@ -576,7 +576,7 @@ export class NxDialogsService extends DialogBase {
         () => import('./generic/generic.component').then(m => m.GenericModalContent)
     );
 
-    async alert(data: Dt.Alert['data']): Promise<Dt.Alert['return']> {
+    async alert(data: Dt.Alert['data']): Promise<void> {
         const component = await import('./generic/generic.component').then(m => m.GenericModalContent);
         const dialogConfig: CdkDialogConfig<Dt.Generic['data']> = {
             data: { ...data, footer: { actionable: false, ...(data.footer ?? {}) } },

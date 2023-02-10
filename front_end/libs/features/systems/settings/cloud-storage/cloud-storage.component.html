@@ -89,7 +89,7 @@
     <div class="usage-info-block">
         <h4>
             <span *ngIf="(usages$ | async)?.length; else noStorages">{{
-                usageMessage$ | async | translate
+                usageMessage$ | async | nxTranslate
             }}</span>
         </h4>
         <ng-template #activateNotice>
@@ -115,8 +115,8 @@
                             [style.background]="usage.color"
                             class="legend"
                         ></div>
-                        <div class="description">{{ usage.title | translate }}</div>
-                        <div class="size">{{ usage.sizeText | translate }}</div>
+                        <div class="description">{{ usage.title | nxTranslate }}</div>
+                        <div class="size">{{ usage.sizeText | nxTranslate }}</div>
                     </div>
                 </ng-template>
                 <div

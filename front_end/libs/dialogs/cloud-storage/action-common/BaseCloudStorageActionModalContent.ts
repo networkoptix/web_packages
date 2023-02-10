@@ -2,12 +2,13 @@ import { map, Observable } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { Translatable } from '@pipes/nx-translate.types';
 import { LicenseState } from '@services/nx-cloud-api/cloud-services/license-server/license-server-api.types';
 import { IConfig } from '@services/nx-config/config-types';
 import { Process, ProcessSettings } from '@services/process.service/process';
 import { CloudStorageManager, CloudStorageUpdate } from '@services/system.service/cloud-storage-manager/cloud-storage-manager';
 import { LicenseManager } from '@services/system.service/license-manager/licence-manager';
-import { LicenseTagInfo } from '@services/system.service/license-manager/license-manager.types';
+import { LicenseTagInfo, LicenseTranslationBaseKeys } from '@services/system.service/license-manager/license-manager.types';
 import { pickFrom } from '@utils/general';
 
 export enum CloudStorageActionType {
@@ -42,10 +43,10 @@ export class BaseCloudStorageActionModalContent {
     // Action properties
     password = '';
     license = '';
-    licenseMessage = '';
-    licenseWarning = '';
-    systemWarning = '';
-    passwordWarning = '';
+    licenseMessage: Translatable = '';
+    licenseWarning: Translatable = '';
+    systemWarning: Translatable = '';
+    passwordWarning: Translatable = '';
     mask = this.DEFAULT_MASK;
     success = false;
     dashes = /-/g;
@@ -96,15 +97,15 @@ export class BaseCloudStorageActionModalContent {
         licenseKey = [],
         password = []
     }: {
-        userId: string[];
-        cloudSystemId: string[];
-        licenseKey: string[];
-        password: string[];
+        userId: LicenseTranslationBaseKeys[];
+        cloudSystemId: LicenseTranslationBaseKeys[];
+        licenseKey: LicenseTranslationBaseKeys[];
+        password: LicenseTranslationBaseKeys[];
         status: string;
     }) => {
         const errors = [];
 
-        const [licenseError, ...otherLicenseErrors] = licenseKey.map(this.licenseManager.translateMessage);
+        const [licenseError, ...otherLicenseErrors] = licenseKey.map(k => this.licenseManager.translateMessage(k));
 
         if (licenseError) {
             this.licenseMessage = '';
@@ -116,7 +117,7 @@ export class BaseCloudStorageActionModalContent {
             errors.push(...otherLicenseErrors);
         }
 
-        const [systemError, ...otherSystemErrors] = cloudSystemId.map(this.licenseManager.translateMessage);
+        const [systemError, ...otherSystemErrors] = cloudSystemId.map(k => this.licenseManager.translateMessage(k));
 
         if (systemError) {
             if (this.showLicenseInput) {
@@ -127,7 +128,7 @@ export class BaseCloudStorageActionModalContent {
             errors.push(...otherSystemErrors);
         }
 
-        const [passwordError, ...otherPasswordErrors] = password.map(this.licenseManager.translateMessage);
+        const [passwordError, ...otherPasswordErrors] = password.map(k => this.licenseManager.translateMessage(k));
 
         if (passwordError) {
             if (this.showPasswordInput) {
@@ -138,7 +139,7 @@ export class BaseCloudStorageActionModalContent {
             errors.push(...otherPasswordErrors);
         }
 
-        errors.push(...userId.map(this.licenseManager.translateMessage));
+        errors.push(...userId.map(k => this.licenseManager.translateMessage(k)));
 
         this.errors = errors;
     };

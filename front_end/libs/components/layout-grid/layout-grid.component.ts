@@ -17,7 +17,6 @@ import staticLang from '@common/language/language_i18n_static.json';
 import { ConfigType } from '@components/console-table/console-table.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons } from '@lib/variables/static-variables';
-import { TranslatableStrict } from '@pipes/any-translate.types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 import { IConfig } from '@services/nx-config/config-types';
@@ -809,7 +808,7 @@ export class NxLayoutGridComponent {
 
     removeItem = async ({ id, resourceId }: LayoutItem): Promise<void> => {
         const item = this.layoutItemLookup[resourceId];
-        let update: boolean | string = true;
+        let update = true;
         if (item) {
             const { title, message, footer } = this.LANG.layouts.removeItem;
             update = await this.dialogsService.confirm({
@@ -817,12 +816,12 @@ export class NxLayoutGridComponent {
                 message: {
                     value: message,
                     params: { name: item.name, layoutName: this.layout.name }
-                } as TranslatableStrict,
+                },
                 footer,
             });
         }
 
-        if (update === true) {
+        if (update) {
             this.layout.items = this.layout.items.filter(item => item.id !== id);
             this.autoSave();
         }

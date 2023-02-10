@@ -8,6 +8,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NxSearchHighlightModule } from '@components/search-highlight/search-highlight.module';
 import { SearchModule } from '@components/search/search.module';
 import { DirectivesModule } from '@directives/directives.module';
+import { PipesModule } from '@pipes/pipes.module';
 
 import { NxAlertCounter } from './alert-counter/alert-counter.component';
 import { NxLevel1ItemComponent } from './level-1/level-1-item.component';
@@ -26,6 +27,7 @@ import { NxMenuComponent } from './menu.component';
         TranslateModule,
 
         DirectivesModule,
+        PipesModule,
         SearchModule,
         NxSearchHighlightModule,
     ],

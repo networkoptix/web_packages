@@ -15,7 +15,7 @@ import { icons, menus } from '@lib/variables/static-variables';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { CloudStorageManager, CloudStorageUpdate } from '@services/system.service/cloud-storage-manager/cloud-storage-manager';
 import { LicenseManager } from '@services/system.service/license-manager/licence-manager';
-import { CLOUD_STORAGE_STATES, LicenseKeyFields, ProcessedLicenseKey } from '@services/system.service/license-manager/license-manager.types';
+import { CLOUD_STORAGE_STATES, KeyTableFieldsKey, ProcessedLicenseKey } from '@services/system.service/license-manager/license-manager.types';
 import { NxSystem } from '@services/system.service/system';
 
 import { NxSettingsService } from '../settings.service';
@@ -37,14 +37,14 @@ export class NxCloudStorageComponent implements OnInit {
 
     CLOUD_STORAGE_STATES = CLOUD_STORAGE_STATES;
     showKeys$ = new BehaviorSubject(false);
-    fields: LicenseKeyFields[] = ['size', 'state', 'system', 'expires', 'key'];
+    fields: KeyTableFieldsKey[] = ['size', 'state', 'system', 'expires', 'key'];
     asc = true;
     sortBy = '';
     serverSettings = '';
     licenseManager: LicenseManager;
     cloudStorageManager: CloudStorageManager;
 
-    #sort$ = new BehaviorSubject<LicenseKeyFields>(null);
+    #sort$ = new BehaviorSubject<KeyTableFieldsKey>(null);
     systemLicenses$ = new BehaviorSubject<ProcessedLicenseKey[]>(null);
     userLicenses$ = new BehaviorSubject<ProcessedLicenseKey[]>(null);
     icons = icons;
@@ -64,7 +64,7 @@ export class NxCloudStorageComponent implements OnInit {
         switchMap(sizeBytes => this.cloudStorageManager.getUsages(sizeBytes))
     );
 
-    sort(column: LicenseKeyFields): void {
+    sort(column: KeyTableFieldsKey): void {
         if (this.sortBy === column) {
             this.asc = !this.asc;
         } else {

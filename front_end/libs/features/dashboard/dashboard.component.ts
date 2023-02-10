@@ -249,9 +249,7 @@ export class NxDashboardComponent implements DashboardGroup {
             }
         });
 
-        const updated = state === true;
-
-        return updated ? downloadedDashboard : currentDashboard;
+        return state ? downloadedDashboard : currentDashboard;
     }
 
     /**
@@ -425,7 +423,7 @@ export class NxDashboardComponent implements DashboardGroup {
                 cancelLabel: 'Cancel',
             }
         });
-        if (result !== true) {
+        if (!result) {
             return;
         }
         this.menu = this.menu.filter((_, index) => index !== removeIndex);
