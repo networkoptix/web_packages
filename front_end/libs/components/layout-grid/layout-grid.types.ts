@@ -70,7 +70,7 @@ export enum ResourceType {
     SERVER = 'server',
     SERVERS = 'servers',
     WEB_PAGE = 'webpage',
-    WEB_PAGES = 'webpages'
+    WEB_PAGES = 'webpages',
 }
 
 export interface BaseResourceNode {

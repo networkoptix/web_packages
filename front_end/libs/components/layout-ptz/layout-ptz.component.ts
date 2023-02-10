@@ -12,9 +12,8 @@ import { NxSystem } from '@services/system.service/system';
 @Component({
     selector: 'nx-layout-ptz',
     templateUrl: 'layout-ptz.component.html',
-    styleUrls: ['layout-ptz.component.scss']
+    styleUrls: ['layout-ptz.component.scss'],
 })
-
 export class NxLayoutPtzComponent {
     @Input() camera: NxSystemCamera;
     @Input() system: NxSystem;
@@ -35,48 +34,55 @@ export class NxLayoutPtzComponent {
         this.action$.next(action);
     }
 
-    handleAction = (updater$: BehaviorSubject<number>) => ({ action, detail }: { action: string; detail: number }): void => {
-        if (action === 'exit') {
-            return;
-        }
-        const max = 0.03;
-        const limit = (amount: number): number => clamp(amount, -max, max);
-        const speed = 1;
-        const cameraId = this.camera.id;
-        let pan = 0;
-        let tilt = 0;
-        let zoom = 0;
-        const amount = limit(['left', 'down', 'out'].includes(action) ? -detail : detail);
+    handleAction =
+        (updater$: BehaviorSubject<number>) =>
+        ({ action, detail }: { action: string; detail: number }): void => {
+            if (action === 'exit') {
+                return;
+            }
+            const max = 0.03;
+            const limit = (amount: number): number => clamp(amount, -max, max);
+            const speed = 1;
+            const cameraId = this.camera.id;
+            let pan = 0;
+            let tilt = 0;
+            let zoom = 0;
+            const amount = limit(['left', 'down', 'out'].includes(action) ? -detail : detail);
 
-        if (['left', 'right'].includes(action)) {
-            pan = amount;
-        } else if (['up', 'down'].includes(action)) {
-            tilt = amount;
-        } else {
-            zoom = amount * 10;
-        }
+            if (['left', 'right'].includes(action)) {
+                pan = amount;
+            } else if (['up', 'down'].includes(action)) {
+                tilt = amount;
+            } else {
+                zoom = amount * 10;
+            }
 
-        const triggerNext = (): void => {
-            const delayBasis = zoom ? 1 : Math.max(Math.abs(pan), Math.abs(tilt)) * 200;
-            const delay = delayBasis * 69;
-            setTimeout(() => updater$.next(updater$.value + 1), delay);
+            const triggerNext = (): void => {
+                const delayBasis = zoom ? 1 : Math.max(Math.abs(pan), Math.abs(tilt)) * 200;
+                const delay = delayBasis * 69;
+                setTimeout(() => updater$.next(updater$.value + 1), delay);
+            };
+
+            this.system
+                .ptz({ cameraId, speed, command: PtzCommands.RELATIVE_MOVE, pan, tilt, zoom })
+                .subscribe(triggerNext);
         };
 
-        this.system.ptz({ cameraId, speed, command: PtzCommands.RELATIVE_MOVE, pan, tilt, zoom }).subscribe(triggerNext);
-    };
-
-    constructor(
-    ) {
+    constructor() {
         const updater$ = new BehaviorSubject(1);
-        this.action$.pipe(
-            switchMap(action => {
-                if (action) {
-                    updater$.next(1);
-                    return updater$.pipe(map(multiplier => ({ action, detail: 1.2 ** multiplier / 420 })));
-                }
-                return NEVER;
-            }),
-            untilDestroyed(this)
-        ).subscribe(this.handleAction(updater$));
+        this.action$
+            .pipe(
+                switchMap(action => {
+                    if (action) {
+                        updater$.next(1);
+                        return updater$.pipe(
+                            map(multiplier => ({ action, detail: 1.2 ** multiplier / 420 })),
+                        );
+                    }
+                    return NEVER;
+                }),
+                untilDestroyed(this),
+            )
+            .subscribe(this.handleAction(updater$));
     }
 }

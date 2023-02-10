@@ -7,13 +7,13 @@ import {
     InfoBlockSize,
     InfoLineStyle,
     InfoBlockColumns,
-    InfoBlockSections
+    InfoBlockSections,
 } from './info-block.component.types';
 
 @Component({
     selector: 'nx-info-block',
     templateUrl: 'info-block.component.html',
-    styleUrls: ['info-block.component.scss']
+    styleUrls: ['info-block.component.scss'],
 })
 export class NxInfoBlockComponent implements OnInit {
     @Input() sectionsOrColumns: InfoBlockColumns | InfoBlockSections;
@@ -52,7 +52,8 @@ export class NxInfoBlockComponent implements OnInit {
                 this.heightCache[lookup] || 0,
                 keys[idx].clientHeight,
                 values[idx].clientHeight,
-                16);
+                16,
+            );
         });
     }
 }

@@ -20,7 +20,7 @@ type LoggerDropdownItem = DropdownItem<string>;
 @UntilDestroy()
 @Component({
     selector: 'nx-logger',
-    templateUrl: './logger.component.html'
+    templateUrl: './logger.component.html',
 })
 export class NxLoggerComponent implements OnChanges {
     private readonly relayUrl: string;
@@ -43,7 +43,7 @@ export class NxLoggerComponent implements OnChanges {
     constructor(
         config: NxConfigService,
         private cookieService: CookieService,
-        @Inject(WINDOW) private window: Window
+        @Inject(WINDOW) private window: Window,
     ) {
         this.relayUrl = config.getConfig().trafficRelayHost;
     }
@@ -55,14 +55,19 @@ export class NxLoggerComponent implements OnChanges {
         let loggerHost = host;
 
         if (!environment.isLocal) {
-            this.systemRequires2fa = (await this.system.getInfoFromCloudDb().toPromise())[0]?.system2faEnabled;
+            this.systemRequires2fa = (
+                await this.system.getInfoFromCloudDb().toPromise()
+            )[0]?.system2faEnabled;
 
             if (!this.systemRequires2fa) {
                 const { authGet } = this.system.mediaserver.getAuthKeys();
                 if (authGet) {
                     params = params.set('auth', authGet);
                 }
-                loggerHost = this.relayUrl.replace('{systemId}', `${cleanId(this.selectedServerId)}.${this.system.id}`);
+                loggerHost = this.relayUrl.replace(
+                    '{systemId}',
+                    `${cleanId(this.selectedServerId)}.${this.system.id}`,
+                );
                 const localProxy = this.cookieService.get('cors_bypass') || '';
                 this.logUrl = `${localProxy}${protocol}//${loggerHost}/web/api/showLog?${params.toString()}`;
             }
@@ -72,15 +77,15 @@ export class NxLoggerComponent implements OnChanges {
             this.logData = logData;
         };
 
-        const update = () => this.system.serverManager
-            .getLogs(this.selectedServerId, { name: logger.value, lines: 1000 })
-            .then(handleLogResponse, ({ error }) => handleLogResponse(error));
+        const update = () =>
+            this.system.serverManager
+                .getLogs(this.selectedServerId, { name: logger.value, lines: 1000 })
+                .then(handleLogResponse, ({ error }) => handleLogResponse(error));
 
         if (this.refreshInterval) {
-            timer(0, this.refreshInterval).pipe(
-                untilDestroyed(this),
-                takeUntil(this.cancel$)
-            ).subscribe(update);
+            timer(0, this.refreshInterval)
+                .pipe(untilDestroyed(this), takeUntil(this.cancel$))
+                .subscribe(update);
         } else {
             update();
         }
@@ -91,17 +96,18 @@ export class NxLoggerComponent implements OnChanges {
             if (this.selectedServerId) {
                 this.logData = '';
                 if (!environment.isLocal) {
-                    this.systemRequires2fa = (await this.system.getInfoFromCloudDb().toPromise())[0]?.system2faEnabled;
+                    this.systemRequires2fa = (
+                        await this.system.getInfoFromCloudDb().toPromise()
+                    )[0]?.system2faEnabled;
                 }
-                this.system.serverManager.logLevel(this.selectedServerId)
-                    .then(res => {
-                        this.logLevels = Object.keys(res.reply).map(level => ({
-                            name: level,
-                            value: level,
-                        }));
-                        this.selectedLogLevel = { name: 'MAIN', value: 'MAIN' };
-                        this.getLogs(this.selectedLogLevel);
-                    });
+                this.system.serverManager.logLevel(this.selectedServerId).then(res => {
+                    this.logLevels = Object.keys(res.reply).map(level => ({
+                        name: level,
+                        value: level,
+                    }));
+                    this.selectedLogLevel = { name: 'MAIN', value: 'MAIN' };
+                    this.getLogs(this.selectedLogLevel);
+                });
             }
         }
     }
