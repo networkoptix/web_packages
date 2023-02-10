@@ -35,8 +35,8 @@
                     [ngClass]="themeClass"
                     name="start-date"
                     type="date"
-                    [min]="rangeEndDate"
-                    [max]="rangeStartDate"
+                    [max]="timelineEnd"
+                    [min]="timelineStart"
                     (blur)="checkMaxMinDate()"
                     [(ngModel)]="startDate"
                 />
@@ -45,6 +45,7 @@
                     [ngClass]="themeClass"
                     name="start-time"
                     type="time"
+                    (blur)="checkMaxMinDate()"
                     [(ngModel)]="startTime"
                 />
             </div>
@@ -62,8 +63,8 @@
                     [ngClass]="themeClass"
                     name="end-date"
                     type="date"
-                    [min]="rangeEndDate"
-                    [max]="rangeStartDate"
+                    [max]="timelineEnd"
+                    [min]="timelineStart"
                     (blur)="checkMaxMinDate()"
                     [(ngModel)]="endDate"
                 />
@@ -72,6 +73,7 @@
                     [ngClass]="themeClass"
                     name="end-time"
                     type="time"
+                    (blur)="checkMaxMinDate()"
                     [(ngModel)]="endTime"
                 />
             </div>

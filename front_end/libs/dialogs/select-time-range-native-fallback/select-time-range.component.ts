@@ -7,6 +7,7 @@ import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { pickFrom } from '@utils/general';
 import { TimelineSelectionService } from '@vms-client/submodules/timeline/services/timeline.selection.service';
+import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 
 const DATE_FORMAT_STRING = 'yyyy-mm-dd';
@@ -26,13 +27,18 @@ export class SelectTimeRangeModalContent implements OnInit {
     endDate: string;
     endTime: string;
 
+    tweakedTStart: Date;
+    tweakedTEnd: Date;
+
     selection: TimelineSelectionService;
     start: number;
     end: number;
 
     themeClass: string;
-    rangeStartDate: string;
-    rangeEndDate: string;
+    tweakedTimelineStartDate: Date;
+    tweakedTimelineEndDate: Date;
+    timelineStart: string;
+    timelineEnd: string;
 
     @Input() closable = true;
 
@@ -40,6 +46,7 @@ export class SelectTimeRangeModalContent implements OnInit {
         configService: NxConfigService,
         private dialogRef: DialogRef,
         private vms: VideoManagementSystemService,
+        private timeline: TimelineService,
         @Inject(DIALOG_DATA)
         private dialogData: {
             selection: TimelineSelectionService;
@@ -77,38 +84,61 @@ export class SelectTimeRangeModalContent implements OnInit {
     };
 
     checkMaxMinDate() {
-        const todayInMs = Date.now();
-
         const newStartDate = new Date(
             this.startDate + 'T' + this.startTime
         ).getTime();
 
-        if (isNaN(newStartDate) || newStartDate < this.start || newStartDate > todayInMs) {
-            this.startDate = this.rangeStartDate;
+        if (
+            isNaN(newStartDate) ||
+            newStartDate < this.tweakedTimelineStartDate.getTime() ||
+            newStartDate > this.tweakedTimelineEndDate.getTime()
+        ) {
+            this.startDate = dateFormat(this.tweakedTimelineStartDate, DATE_FORMAT_STRING);
+            this.startTime = dateFormat(this.tweakedTimelineStartDate, TIME_FORMAT_STRING);
         }
 
         const newEndDate = new Date(
             this.endDate + 'T' + this.endTime
         ).getTime();
 
-        if (isNaN(newEndDate) || newEndDate > todayInMs) {
-            this.endDate = this.rangeEndDate;
+        if (
+            isNaN(newEndDate) ||
+            newEndDate > this.tweakedTimelineEndDate.getTime()
+        ) {
+            this.endDate = dateFormat(this.tweakedTimelineEndDate, DATE_FORMAT_STRING);
+            this.endTime = dateFormat(this.tweakedTimelineEndDate, TIME_FORMAT_STRING);
         }
     }
 
-    ngOnInit(): void {
-        const tweakedTStart = new Date(
-            this.vms.tweakT(this.selection.range.start),
+    private initSelectionDates(): void {
+        this.tweakedTStart = new Date(
+            this.vms.tweakT(this.selection.range.start)
         );
-        const tweakedTEnd = new Date(this.vms.tweakT(this.selection.range.end));
+        this.tweakedTEnd = new Date(
+            this.vms.tweakT(this.selection.range.end)
+        );
 
-        this.startDate = dateFormat(tweakedTStart, DATE_FORMAT_STRING);
-        this.startTime = dateFormat(tweakedTStart, TIME_FORMAT_STRING);
-        this.endDate = dateFormat(tweakedTEnd, DATE_FORMAT_STRING);
-        this.endTime = dateFormat(tweakedTEnd, TIME_FORMAT_STRING);
+        this.startDate = dateFormat(this.tweakedTStart, DATE_FORMAT_STRING);
+        this.startTime = dateFormat(this.tweakedTStart, TIME_FORMAT_STRING);
+        this.endDate = dateFormat(this.tweakedTEnd, DATE_FORMAT_STRING);
+        this.endTime = dateFormat(this.tweakedTEnd, TIME_FORMAT_STRING);
+    }
 
-        this.rangeStartDate = new Date(this.start).toISOString().split('T')[0];
-        this.rangeEndDate = new Date(this.end).toISOString().split('T')[0];
+    private initTimelineDates(): void {
+        this.tweakedTimelineStartDate = new Date(
+            this.vms.tweakT(this.timeline.fullRange.start)
+        );
+        this.tweakedTimelineEndDate = new Date(
+            this.vms.tweakT(this.timeline.fullRange.end)
+        );
+
+        this.timelineStart = dateFormat(this.tweakedTimelineStartDate, DATE_FORMAT_STRING);
+        this.timelineEnd = dateFormat(this.tweakedTimelineEndDate, DATE_FORMAT_STRING);
+    }
+
+    ngOnInit(): void {
+        this.initSelectionDates();
+        this.initTimelineDates();
     }
 
     close = (msg: boolean | {}): void => {
