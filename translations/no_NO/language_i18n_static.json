@@ -265,7 +265,7 @@
             "yearS": "{count, plural, =0{# years} one{# year} other{# years}}",
             "monthS": "{count, plural, =0{# months} one{# month} other{# months}}",
             "weekS": "{count, plural, =0{# weeks} one{# week} other{# weeks}}",
-            "dayS": "\"{count, plural, =0{# days} one{# day} other{# days}}\"",
+            "dayS": "{count, plural, =0{# days} one{# day} other{# days}}",
             "hourS": "{count, plural, =0{# hours} one{# hour} other{# hours}}",
             "minuteS": "{count, plural, =0{# minutes} one{# minute} other{# minutes}}"
         },
@@ -449,7 +449,7 @@
             "duplicateServers": "<p class=\"mb-2\">En server ser ut til å liste seg selv under både det valgte og det gjeldende systemet.</p><p>Fjern frakoblede og inkompatible servere fra hver system og prøv igjen.</p>",
             "enterSystemAddressTitle": "Skriv inn adressen til en hvilken som helst server i systemet du vil slå sammen med denne.",
             "latestBuild": "siste versjon",
-            "mergeConfirmation": "<p class=\"mb-0\">Du er i ferd med å slå sammen systemer <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>.</p><p>Innstillinger og navnet vil bli tatt fra <strong>{{primarySystem}}</strong>.</p>",
+            "mergeConfirmation": "<p class=\"mb-0\">Du er i ferd med å slå sammen systemer <strong>{primarySystem}</strong> og <strong>{secondarySystem}</strong>.</p><p>Innstillinger og navnet vil bli tatt fra <strong>{primarySystem}</strong>.</p>",
             "mergeFailedTitle": "Systemsammenslåing mislyktes",
             "mergeSuccess": "Sammenslåing av system {primaryName} og {secondaryName} fullført",
             "mergeSystemsTitle": "Slå sammen nåværende system med",
@@ -1288,7 +1288,7 @@
         "forceLiveCacheForPrimaryStream": "Hvorvidt du skal buffer noen rammer for primærstrømmen. Verdier: \"ja\" - alltid aktivert (kan bruke mye RAM), \"nei\" - alltid deaktivert, bortsett fra når det kreves av avspillingen (f.eks. HLS), \"auto\" - lik \"nei\", men slått på når forbedring av brukeropplevelse (f.eks. når noen Analytics-plugin fungerer på kameraet)."
     },
     "result": "{count, plural, =0{# results} one{# result} other{# results}}",
-    "additionalSystems": "{{count, plural, =0{+ # Systems} one{+ # System} other{+ # Systems}}}",
+    "additionalSystems": "{count, plural, =0{+ # Systems} one{+ # System} other{+ # Systems}}",
     "security": {
         "twoFa": {
             "twoFADescription": "For øyeblikket har du <span id=\"target2FaSystems\">{count, plural, =0{# such systems} one{# such system} other{# such systems}}</span>.",
