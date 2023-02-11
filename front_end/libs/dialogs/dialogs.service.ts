@@ -701,4 +701,8 @@ export class NxDialogsService extends DialogBase {
         () => import('./bookmarks/more-tags/more-tags.component').then(m => m.NxMoreTagsModalContent),
         { width: DIALOG_SIZE_V2.INFO, autoFocus: 'input' }
     );
+
+    bookmarkDetails = this.dialogV2Factory<Dt.BookmarkDetails>(
+        () => import('./bookmarks/card-modal/bookmarks-card-modal.component').then(m => m.NxBookmarksCardModalComponent),
+    );
 }

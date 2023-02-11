@@ -1,5 +1,6 @@
 import { Component, Inject, Input, LOCALE_ID } from '@angular/core';
 
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons } from '@lib/variables/static-variables';
 
 import { Bookmark } from '../../bookmarks.types';
@@ -15,11 +16,14 @@ export class NxBookmarksCardComponent {
     icons = icons;
     workingThumbnail = true;
 
-    constructor(@Inject(LOCALE_ID) private locale: string) { }
+    constructor(
+        @Inject(LOCALE_ID) private locale: string,
+        private dialogs: NxDialogsService,
+    ) { }
 
-    timeMsToDate(durationMs: number): string {
-        const time = new Date(durationMs).toLocaleString(this.locale, { timeStyle: 'short' });
-        const date = new Date(durationMs).toLocaleString(this.locale, { dateStyle: 'medium' });
+    timeMsToDate(startTimeMs: number): string {
+        const time = new Date(startTimeMs).toLocaleString(this.locale, { timeStyle: 'short' });
+        const date = new Date(startTimeMs).toLocaleString(this.locale, { dateStyle: 'medium' });
         return `${date} • ${time}`;
     }
 
@@ -30,5 +34,9 @@ export class NxBookmarksCardComponent {
         const includeHours = hours !== 0 ? hours.toString().padStart(2, '0') + ':' : '';
 
         return `${includeHours}${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    openBookmarkModal(): void {
+        this.dialogs.bookmarkDetails(this.bookmark);
     }
 }

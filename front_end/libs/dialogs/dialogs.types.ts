@@ -2,6 +2,7 @@ import type { SelectionModel } from '@angular/cdk/collections';
 import type { EventEmitter } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
+import { Bookmark } from '@pages/systems/bookmarks/bookmarks.types';
 import type { Translatable } from '@pipes/nx-translate.types';
 import type { CloudResponse, SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { Process } from '@services/process.service/process';
@@ -134,3 +135,4 @@ export type MoreTags = DialogType<
     },
     void
 >;
+export type BookmarkDetails = DialogType<Bookmark, void>;

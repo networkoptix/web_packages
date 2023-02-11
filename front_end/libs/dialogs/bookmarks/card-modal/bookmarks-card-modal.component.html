@@ -1,0 +1,67 @@
+<div class="bookmark-modal">
+    <div class="modal-header">
+        <h1 class="title">{{ bookmark.name }}</h1>
+        <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="close()"
+        >
+            <span class="close-content"></span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <div class="video">
+            <nx-clip
+                [sourceUrl]="bookmark.src"
+                [posterUrl]="bookmark.thumbnail | async"
+            >
+            </nx-clip>
+        </div>
+        <div class="date">{{ date }} • {{ time }}</div>
+        <div class="deviceId">{{ bookmark.deviceId }}</div>
+        <h2 class="name">{{ bookmark.name }}</h2>
+        <p class="description">
+            {{ bookmark.description }}
+        </p>
+        <div class="tags">
+            <span *ngFor="let tag of bookmark.tags">#{{ tag }}</span>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <a
+            class="view-recording-button btn btn-primary"
+            href="systems/{{ bookmark.systemId }}/view/{{ bookmark.deviceId }}?time={{
+                bookmark.startTimeMs
+            }}"
+            target="_blank"
+            translate
+        >
+            <svg-icon
+                nx-add-svg-src
+                [src]="icons.dirTextButtons + 'play-2.svg'"
+                [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                [applyClass]="true"
+            ></svg-icon>
+            View Full Recording
+        </a>
+        <a
+            [href]="bookmark.src"
+            [download]="exportName"
+            class="download-button btn-default btn"
+            target="_blank"
+            translate
+        >
+            <svg-icon
+                nx-add-svg-src
+                [src]="icons.dirTextButtons + 'download-2.svg'"
+                [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                [applyClass]="true"
+            ></svg-icon>
+            Download
+        </a>
+    </div>
+</div>

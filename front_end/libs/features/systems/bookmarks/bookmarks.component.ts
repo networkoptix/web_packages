@@ -15,7 +15,7 @@ import type { Bookmark as BookmarkResp, BookmarksParams, BookmarksTags, Device }
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
-import { paramSortFunc } from '@utils/general';
+import { cleanId, paramSortFunc } from '@utils/general';
 
 import type { Bookmark, TimeRange } from './bookmarks.types';
 
@@ -193,7 +193,7 @@ export class NxBookmarksComponent implements OnInit {
                     ...bk,
                     src: this.system.mediaserver.getExportUrl({
                         cameraId: bk.deviceId,
-                        duration: bk.durationMs,
+                        duration: Math.floor(bk.durationMs / 1000),
                         endPos: bk.startTimeMs + bk.durationMs,
                         pos: bk.startTimeMs,
                         transport: 'mp4'
@@ -210,6 +210,9 @@ export class NxBookmarksComponent implements OnInit {
                         label: tag
                     })),
                     isVisible: false,
+                    deviceName: devices.find(device => device.id === bk.deviceId)?.name,
+                    deviceId: cleanId(bk.deviceId),
+                    systemId: this.system.id,
                 }));
             }),
             // Merge recently created and new bookmarks together, and update vars to check if we got new bookmarks

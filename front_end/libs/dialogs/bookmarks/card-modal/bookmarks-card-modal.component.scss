@@ -1,0 +1,64 @@
+@use "theme_variables_common" as *;
+
+.bookmark-modal {
+
+    .modal-header {
+        border-bottom: 2px solid var(--bookmarks-card-border-color) !important;
+        padding: 0 10px !important;
+
+        .title {
+            font-size: 16px !important;
+        }
+    }
+
+    .modal-body {
+        padding: 10px !important;
+
+        .date {
+            font-family: $font-family-medium;
+            font-size: 14px;
+            font-weight: 700;
+            margin: 15px 0 10px;
+        }
+    
+        .deviceId {
+            font-family: $font-family-medium;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+    
+        .name {
+            font-size: 20px !important;
+            margin-bottom: 10px;
+        }
+    
+        .description {
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+    
+        .tags {
+            display: flex;
+            margin-top: 10px;
+            gap: 3px;
+
+            span {
+                font-size: 14px;
+            }
+        }
+    }
+
+    .modal-footer {
+        display: flex;
+        padding: 10px !important;
+
+        .view-recording-button,
+        .download-button {
+            font-family: $font-family-regular;
+            
+            svg {
+                margin-right: 5px;
+            }
+        }
+    }
+}

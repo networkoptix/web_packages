@@ -7,6 +7,9 @@ export interface Bookmark extends BookmarkResp {
     thumbnail: Observable<string>;
     tagsFormatted: { type: string; label: string }[];
     isVisible: boolean;
+    deviceName: string;
+    deviceId: string;
+    systemId: string;
 }
 
 export interface TimeRange {
