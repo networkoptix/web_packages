@@ -329,6 +329,11 @@ export class NxAPIToolSystemService {
                 this.currentSystem = await this.systemService.createSystem('', this.validSystems[0].id);
                 return;
             }
+            if (this.readonlyAPIService.isEnabled) {
+                if (await this.readonlyAPIService.setReadonlyAPI()) {
+                    return;
+                }
+            }
             // No more valid systems left
             this.showError();
         }
