@@ -88,7 +88,7 @@ export class UserManager {
     }
 
     protected isAdmin(userOrRole: { permissions: string }): boolean {
-        return userOrRole.permissions.includes(
+        return userOrRole.permissions?.includes(
             this.CONFIG.accessRoles.globalAdminPermissionFlag
         );
     }

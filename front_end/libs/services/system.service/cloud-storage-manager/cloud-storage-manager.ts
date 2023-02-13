@@ -4,7 +4,6 @@ import staticLang from '@common/language/language_i18n_static.json';
 import { Translatable, TranslateObject } from '@pipes/nx-translate.types';
 import { uuid } from '@services/nx-cloud-api/cloud-services/base-cloud-service-api.types';
 import { BoundSystem, StorageInfo } from '@services/nx-cloud-api/cloud-services/cloud-storage/cloud-storage-api.types';
-import { NxSystemsService } from '@services/systems.service';
 import { Destroyable } from '@utils/Destroyable';
 import { bitsToString } from '@utils/bits-to-string';
 
@@ -27,10 +26,16 @@ export interface Usage {
 }
 
 export class CloudStorageManager extends Destroyable {
-    // @ts-expect-error will need later
-    #systemsService: NxSystemsService;
-
     static readonly TRANSLATION_BASE = staticLang.cloudStorage.fromServer;
+
+    static INSTANCES = new WeakMap<NxSystem, CloudStorageManager>();
+
+    static getInstance(cloudStorageApi: CloudStorageAPI, system: NxSystem): CloudStorageManager {
+        if (!CloudStorageManager.INSTANCES.has(system)) {
+            CloudStorageManager.INSTANCES.set(system, new CloudStorageManager(cloudStorageApi, system));
+        }
+        return CloudStorageManager.INSTANCES.get(system).update();
+    }
 
     #updater$ = new BehaviorSubject<CloudStorageUpdate[]>(Object.values(CloudStorageUpdate).filter(val => val !== CloudStorageUpdate.ACTIVATE));
 
@@ -68,6 +73,11 @@ export class CloudStorageManager extends Destroyable {
             target = this.#updater$.value.includes(target) ? this.#updater$.value : [target];
         }
         this.#updater$.next(target);
+    }
+
+    public update(): this {
+        this.updateState();
+        return this;
     }
 
     /** Actions */
@@ -172,8 +182,7 @@ export class CloudStorageManager extends Destroyable {
         );
     }
 
-    constructor(private cloudStorageApi: CloudStorageAPI, private system: NxSystem, systemsService: NxSystemsService) {
+    constructor(private cloudStorageApi: CloudStorageAPI, private system: NxSystem) {
         super();
-        this.#systemsService = systemsService;
     }
 }

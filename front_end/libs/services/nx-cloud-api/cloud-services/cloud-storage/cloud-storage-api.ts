@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, filter, Observable, switchMap } from 'rxjs';
+
+import { memoizeAsyncPersistent } from '@utils/memoize';
 
 import { WithFreshSession } from '../../nx-cloud-api.types';
 import { BaseCloudServiceAPI, CreateApiFactory, disabledMethod, implementsCloudServiceApi } from '../base-cloud-service-api';
@@ -14,6 +16,8 @@ export class CloudStorageAPI extends BaseCloudServiceAPI {
      */
     static readonly API_BASE = '/cs/v1';
 
+    static INSTANCES: Record<string, CloudStorageAPI> = {};
+
     /**
      * Create's a factory for instancating a CloudStorageAPI.
      *
@@ -22,7 +26,10 @@ export class CloudStorageAPI extends BaseCloudServiceAPI {
      * @param withFreshSession WithFreshSession
      * @returns (serverUrl?: string, cloudHost?: string) => CloudStorageAPI
      */
-    static createApiFactory: CreateApiFactory<CloudStorageAPI> = (http: HttpClient, withFreshSession: WithFreshSession) => (serverUrl: string = '', cloudHost: () => string = () => '') => new CloudStorageAPI(serverUrl, cloudHost, http, withFreshSession);
+    static createApiFactory: CreateApiFactory<CloudStorageAPI> = (http: HttpClient, withFreshSession: WithFreshSession) => (serverUrl: string = '', cloudHost: () => string = () => '') => {
+        CloudStorageAPI.INSTANCES[serverUrl] ||= new CloudStorageAPI(serverUrl, cloudHost, http, withFreshSession);
+        return CloudStorageAPI.INSTANCES[serverUrl];
+    };
 
     constructor(serverUrl: string, cloudHost: () => string, http: HttpClient, withFreshSession: WithFreshSession) {
         super(serverUrl, CloudStorageAPI.API_BASE, cloudHost, http, withFreshSession);
@@ -49,13 +56,24 @@ export class CloudStorageAPI extends BaseCloudServiceAPI {
         return this.post(this.endpoint(), { body });
     }
 
+    private storageUpdater$ = new BehaviorSubject('');
+
     /**
      * Returns all storages owned by requestor. If systemId is provided then only storages for that system are returned.
      * @param systemId? uuid
      * @returns Observable<StorageInfo[]>
      */
-    public getStorages(systemId?: uuid): Observable<StorageInfo[]> {
-        return this.get(this.endpoint(), { params: systemId ? { 'system-id': systemId } : {} });
+    public getStorages(systemId: uuid = ''): Observable<StorageInfo[]> {
+        this.storageUpdater$.next(systemId);
+        return this.handleGetStorages(systemId);
+    }
+
+    @memoizeAsyncPersistent
+    private handleGetStorages(systemId: uuid = ''): Observable<StorageInfo[]> {
+        return this.storageUpdater$.pipe(
+            filter(updatedId => !updatedId || updatedId === systemId),
+            switchMap(() => this.get<StorageInfo[]>(this.endpoint(), { params: systemId ? { systemId } : {} }))
+        );
     }
 
     /**
@@ -64,6 +82,7 @@ export class CloudStorageAPI extends BaseCloudServiceAPI {
      * @param storageId uuid
      * @returns Observable<StorageInfo>
      */
+    @disabledMethod
     public getStorage(storageId: uuid): Observable<StorageInfo> {
         return this.get(this.endpoint(storageId));
     }

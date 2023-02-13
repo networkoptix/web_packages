@@ -39,6 +39,8 @@ export class CloudDbAPI extends BaseCloudServiceAPI {
      */
     static readonly API_BASE = '/cdb';
 
+    static INSTANCES: Record<string, CloudDbAPI> = {};
+
     /**
      * Create's a factory for instancating a CloudDbAPI.
      *
@@ -47,7 +49,10 @@ export class CloudDbAPI extends BaseCloudServiceAPI {
      * @param withFreshSession WithFreshSession
      * @returns (serverUrl?: string, cloudHost?: string) => CloudDbAPI
      */
-    static createApiFactory: CreateApiFactory<CloudDbAPI> = (http: HttpClient, withFreshSession: WithFreshSession, refreshToken: Observable<string>) => (serverUrl: string = '', hostOrCustomization: () => string = () => '') => new CloudDbAPI(serverUrl, hostOrCustomization, http, withFreshSession, refreshToken);
+    static createApiFactory: CreateApiFactory<CloudDbAPI> = (http: HttpClient, withFreshSession: WithFreshSession, refreshToken: Observable<string>) => (serverUrl: string = '', hostOrCustomization: () => string = () => '') => {
+        CloudDbAPI.INSTANCES[serverUrl] ||= new CloudDbAPI(serverUrl, hostOrCustomization, http, withFreshSession, refreshToken);
+        return CloudDbAPI.INSTANCES[serverUrl];
+    };
 
     #refreshToken$: Observable<string>;
     window = getWindow();

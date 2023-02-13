@@ -26,6 +26,8 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
      */
     static readonly API_BASE = '/nxlicensed/api/v2/partners';
 
+    static INSTANCES: Record<string, ChannelPartnersApi> = {};
+
     /**
      * Creates a factory for instancing a LicenseServerApi pointing to a specific license server instance.
      *
@@ -34,7 +36,10 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
      * @param withFreshSession WithFreshSession
      * @returns  (serverUrl?: string, cloudHost?: string) => LicenseServerAPI
      */
-    static createApiFactory: CreateApiFactory<ChannelPartnersApi> = (http: HttpClient, withFreshSession: WithFreshSession) => (serverUrl: string, cloudHost: () => string) => new ChannelPartnersApi(serverUrl, cloudHost, http, withFreshSession);
+    static createApiFactory: CreateApiFactory<ChannelPartnersApi> = (http: HttpClient, withFreshSession: WithFreshSession) => (serverUrl: string, cloudHost: () => string) => {
+        ChannelPartnersApi.INSTANCES[serverUrl] ||= new ChannelPartnersApi(serverUrl, cloudHost, http, withFreshSession);
+        return ChannelPartnersApi.INSTANCES[serverUrl];
+    };
 
     constructor(
         serverUrl: string,

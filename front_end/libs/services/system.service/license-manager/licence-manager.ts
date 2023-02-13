@@ -1,5 +1,5 @@
 import { chunk } from 'lodash-es';
-import { BehaviorSubject, map, Observable, shareReplay, switchMap, filter, tap, catchError } from 'rxjs';
+import { BehaviorSubject, map, Observable, shareReplay, switchMap, filter, tap, catchError, combineLatest, take } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
@@ -8,6 +8,7 @@ import { CloudLicenseUpdate, LicenseInfo, LicenseState } from '@services/nx-clou
 import { NxSystemsService } from '@services/systems.service';
 import { Destroyable } from '@utils/Destroyable';
 import { bitsToString } from '@utils/bits-to-string';
+import { memoizeAsyncPersistent } from '@utils/memoize';
 
 import { LicenseServerAPI } from '../../nx-cloud-api/cloud-services/license-server/license-server-api';
 import { NxSystem } from '../system';
@@ -16,19 +17,56 @@ import { mapLicenseKeyInfo } from './license-manager-utils';
 import { ProcessedLicenseKey, CLOUD_STORAGE_STATES, LicenseTagInfo, LicenseTranslationBaseKeys, LicenseKeyInfo } from './license-manager.types';
 
 export class LicenseManager extends Destroyable {
-    #systemsService: NxSystemsService;
+    #updater$ = new BehaviorSubject<string[]>(['system', 'user']);
 
-    #updater$ = new BehaviorSubject<('system' | 'user')[]>(['system', 'user']);
+    static INSTANCES = new WeakMap<NxSystem, LicenseManager>();
+
+    static getInstance(licenseServerApi: LicenseServerAPI, system: NxSystem, systemsService: NxSystemsService): LicenseManager {
+        if (!LicenseManager.INSTANCES.has(system)) {
+            LicenseManager.INSTANCES.set(system, new LicenseManager(licenseServerApi, system, systemsService));
+        }
+
+        return LicenseManager.INSTANCES.get(system).update();
+    }
 
     static readonly TRANSLATION_BASE = staticLang.cloudStorage.fromServer;
 
     /** Base State */
-    public readonly systemLicenses$ = new BehaviorSubject<LicenseInfo[]>(null);
-    public readonly userLicenses$ = new BehaviorSubject<LicenseInfo[]>(null);
+    static readonly systemLicensesMap = new WeakMap<NxSystem, BehaviorSubject<LicenseInfo[]>>();
+    static readonly userLicensesMap = new WeakMap<LicenseServerAPI, BehaviorSubject<LicenseInfo[]>>();
+
+    get systemLicenses$(): BehaviorSubject<LicenseInfo[]> {
+        if (!LicenseManager.systemLicensesMap.has(this.system)) {
+            const licenseInfoSubject = new BehaviorSubject<LicenseInfo[]>(null);
+            this.#updater$.pipe(
+                filter(updates => updates.includes(this.system.id) || updates.includes('system')),
+                switchMap(() => this.licenseServerApi.getSystemLicenses(this.system.id)),
+                catchError(() => Promise.resolve([] as LicenseInfo[])),
+                this.onDestroyed
+            ).subscribe(licenseInfoSubject);
+            LicenseManager.systemLicensesMap.set(this.system, licenseInfoSubject);
+        }
+
+        return LicenseManager.systemLicensesMap.get(this.system);
+    }
+
+    get userLicenses$(): BehaviorSubject<LicenseInfo[]> {
+        if (!LicenseManager.userLicensesMap.has(this.licenseServerApi)) {
+            const licenseInfoSubject = new BehaviorSubject<LicenseInfo[]>(null);
+            this.#updater$.pipe(
+                filter(updates => updates.includes('user')),
+                switchMap(() => this.licenseServerApi.getUserLicenses()),
+                catchError(() => Promise.resolve([] as LicenseInfo[]))
+            ).subscribe(licenseInfoSubject);
+            LicenseManager.userLicensesMap.set(this.licenseServerApi, licenseInfoSubject);
+        }
+
+        return LicenseManager.userLicensesMap.get(this.licenseServerApi);
+    }
 
     /** State factories */
 
-    processLicenseKeys = (licenses: LicenseKeyInfo[], filterState: LicenseState): Observable<ProcessedLicenseKey[]> => this.#systemsService.systemsSubject.pipe(
+    processLicenseKeys = (licenses: LicenseKeyInfo[], filterState: LicenseState): Observable<ProcessedLicenseKey[]> => this.systemsService.systemsSubject.pipe(
         map(systems => licenses
             .filter(({ licenseState }) => !filterState || licenseState === filterState)
             .map(({
@@ -66,7 +104,7 @@ export class LicenseManager extends Destroyable {
 
     /** License Manager Helpers */
 
-    translateMessage = (key: LicenseTranslationBaseKeys, params?: TranslateObject['params']): Translatable => ({ value: LicenseManager.TRANSLATION_BASE[key], params: params || {} });
+    translateMessage = (key: LicenseTranslationBaseKeys, params?: TranslateObject['params']): Translatable => ({ value: LicenseManager.TRANSLATION_BASE[key] || key, params: params || {} });
 
     #toTagInfo = (keyInfo: ProcessedLicenseKey): LicenseTagInfo => ({
         key: keyInfo.key,
@@ -76,13 +114,19 @@ export class LicenseManager extends Destroyable {
     /** Cloud Storage Helpers */
 
     /** Get Target Systems */
-    public readonly getTargetSystems = (excludeSystemId = this.system.id): Observable<DropdownItem<string>[]> => this.#systemsService.systemsSubject.pipe(
-        map(systems => systems.filter(({ id, isMine }) => isMine && id !== excludeSystemId && !this.userLicenses$.value.find(({ state: { cloudSystemId, licenseState } }) => cloudSystemId === id && licenseState === LicenseState.ACTIVE)).map(({ id }) => id)),
-        switchMap(cloudSystemIds => this.licenseServerApi.getStorageActivations({ cloudSystemIds }).pipe(map(storages => ({ storages, cloudSystemIds })))),
-        map(({ storages, cloudSystemIds }) => cloudSystemIds.filter(id => !storages.find(({ systemId }) => systemId === id)?.activations?.length)),
-        switchMap(systemIds => this.#systemsService.systemsSubject.pipe(map(systems => systemIds.map(value => ({ name: systems.find(({ id }) => id === value)?.name || value, value }))))),
-        this.onDestroyed
-    );
+    @memoizeAsyncPersistent
+    public getTargetSystems(excludeSystemId = this.system.id): Observable<DropdownItem<string>[]> {
+        return combineLatest([
+            this.systemsService.systemsSubject,
+            this.userLicenses$
+        ]).pipe(
+            map(([systems, userLicenses]) => systems.filter(({ id, isMine }) => isMine && id !== excludeSystemId && !userLicenses.find(({ state: { cloudSystemId, licenseState } }) => cloudSystemId === id && licenseState === LicenseState.ACTIVE)).map(({ id }) => id)),
+            switchMap(cloudSystemIds => this.licenseServerApi.getStorageActivations({ cloudSystemIds }).pipe(map(storages => ({ storages, cloudSystemIds })))),
+            map(({ storages, cloudSystemIds }) => cloudSystemIds.filter(id => !storages.find(({ systemId }) => systemId === id)?.activations?.length)),
+            switchMap(systemIds => this.systemsService.systemsSubject.pipe(map(systems => systemIds.map(value => ({ name: systems.find(({ id }) => id === value)?.name || value, value }))))),
+            this.onDestroyed
+        );
+    }
 
     /**
      *  Get list of tags that could be activated.
@@ -90,21 +134,29 @@ export class LicenseManager extends Destroyable {
      * @param licenseState LicenseState
      * @returns Observable<LicenseTagInfo[]
      */
-    public readonly getLicenseTagInfo = (licenseState?: LicenseState): Observable<LicenseTagInfo[]> => this.userKeys$.pipe(
-        map(keys => keys.filter(({ state }) => !licenseState || state === licenseState)),
-        map(keys => keys.map(this.#toTagInfo)),
-        this.onDestroyed
-    );
+    @memoizeAsyncPersistent
+    public getLicenseTagInfo(licenseState?: LicenseState): Observable<LicenseTagInfo[]> {
+        return this.userKeys$.pipe(
+            map(keys => keys.filter(({ state }) => !licenseState || state === licenseState)),
+            map(keys => keys.map(this.#toTagInfo)),
+            this.onDestroyed
+        );
+    }
 
     static normalizeKey = (key: string): string => chunk(key.toUpperCase().replace(/-/g, '').split(''), 4).map(chunk => chunk.join('')).join('-');
 
     /** Cloud Storage State Handlers */
 
-    #updateLicense = (update: ('system' | 'user')[] = ['system', 'user']): void => this.#updater$.next(update);
+    #updateLicense = (update: string[] = []): void => this.#updater$.next([...update, this.system.id, 'user']);
+
+    update(): this {
+        this.#updateLicense([this.system.id, 'user']);
+        return this;
+    }
 
     #generateUpdateParams = (key: string, cloudSystemId?: string): CloudLicenseUpdate => {
         const licenseKey = LicenseManager.normalizeKey(key);
-        const { email: userId } = this.system.userManager.currentUser;
+        const { currentUserEmail: userId } = this.system.userManager;
         cloudSystemId ||= this.system.id;
         const params = { licenseKey, cloudSystemId, userId };
         return params;
@@ -113,7 +165,7 @@ export class LicenseManager extends Destroyable {
     #inspectLicense = (license: LicenseInfo): Promise<LicenseInfo> => {
         if (!+license.params.services.cloudStorage.cloudStorageSizeBytes) {
             // Will add to lang file after lang refactor has been merged in
-            return Promise.reject({ licenseKey: ['This license does not include cloud storage.'] });
+            return Promise.reject({ licenseKey: [LicenseManager.TRANSLATION_BASE.noCloudStorage] });
         }
         return Promise.resolve(license);
     };
@@ -123,6 +175,7 @@ export class LicenseManager extends Destroyable {
     public readonly activate = (key: string): Observable<LicenseInfo> => {
         return this.licenseServerApi.inspectLicense(LicenseManager.normalizeKey(key)).pipe(
             switchMap(this.#inspectLicense),
+            take(1),
             switchMap(() => this.licenseServerApi.activateLicense(this.#generateUpdateParams(key))),
             tap(() => this.#updateLicense()),
             this.onDestroyed
@@ -132,7 +185,10 @@ export class LicenseManager extends Destroyable {
     public readonly deactivate = (password: string, key?: string): Observable<LicenseInfo> => {
         key ||= this.systemLicenses$.value?.[0]?.params.orderParams.licenseKey;
         return this.licenseServerApi.verify(password).pipe(
-            catchError(async () => ({ password: ['Invalid Password'] })),
+            catchError(async () => {
+                return { password: [LicenseManager.TRANSLATION_BASE.incorrectPassword] };
+            }),
+            take(1),
             switchMap((res: Record<string, unknown>) => res?.password ? Promise.reject(res) : this.licenseServerApi.deactivateLicense(this.#generateUpdateParams(key))),
             tap(() => this.#updateLicense()),
             this.onDestroyed
@@ -143,7 +199,7 @@ export class LicenseManager extends Destroyable {
         const licenseKey = LicenseManager.normalizeKey(key || this.systemLicenses$.value?.[0]?.params.orderParams.licenseKey);
         const sourceCloudSystemId = this.system.id;
         return this.licenseServerApi.changeLicense({ targetCloudSystemId, licenseKey, sourceCloudSystemId }).pipe(
-            tap(() => this.#updateLicense()),
+            tap(() => this.#updateLicense([targetCloudSystemId])),
             this.onDestroyed
         );
     };
@@ -160,22 +216,8 @@ export class LicenseManager extends Destroyable {
         );
     };
 
-    constructor(private licenseServerApi: LicenseServerAPI, private system: NxSystem, systemsService: NxSystemsService) {
+    constructor(private licenseServerApi: LicenseServerAPI, private system: NxSystem, private systemsService: NxSystemsService) {
         super();
-        this.#systemsService = systemsService;
-
-        this.#updater$.pipe(
-            filter(updates => updates.includes('system')),
-            switchMap(() => this.licenseServerApi.getLicenses(this.system.id)),
-            catchError(() => Promise.resolve([] as LicenseInfo[])),
-            this.onDestroyed
-        ).subscribe(this.systemLicenses$);
-
-        this.#updater$.pipe(
-            filter(updates => updates.includes('user')),
-            switchMap(() => this.licenseServerApi.getLicenses()),
-            catchError(() => Promise.resolve([] as LicenseInfo[])),
-            this.onDestroyed
-        ).subscribe(this.userLicenses$);
+        this.systemsService = systemsService;
     }
 }

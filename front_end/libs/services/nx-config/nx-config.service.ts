@@ -58,6 +58,9 @@ export class NxConfigService {
                 const currentNode = [...nodeNames, property];
                 const currentNodeString = currentNode.join('.');
                 const value = findNode(configRef, currentNode);
+                if (property === 'toJSON') {
+                    return () => "Don't use";
+                }
                 const settingType = typeof value;
                 if (['number', 'boolean', 'string'].includes(settingType)) {
                     // Replace primitive values with updater

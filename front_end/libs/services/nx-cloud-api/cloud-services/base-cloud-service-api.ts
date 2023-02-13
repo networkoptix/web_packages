@@ -29,6 +29,7 @@ export type CreateApiFactory<ApiType = unknown> = (http: HttpClient, withFreshSe
 interface CloudServiceAPI {
     API_BASE: string;
     createApiFactory: CreateApiFactory;
+    INSTANCES: Record<string, unknown>;
 }
 
 /**

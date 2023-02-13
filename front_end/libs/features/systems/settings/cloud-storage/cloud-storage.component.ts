@@ -156,7 +156,7 @@ export class NxCloudStorageComponent implements OnInit {
     }
 
     ngOnDestroy(): void {
-        this.cloudStorageManager.destroy();
-        this.licenseManager?.destroy();
+        // this.cloudStorageManager.destroy();
+        // this.licenseManager?.destroy();
     }
 }

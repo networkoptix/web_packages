@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject, concatMap, filter, firstValueFrom, Observable, tap } from 'rxjs';
+
+import { memoizeAsyncPersistent } from '@utils/memoize';
 
 import { LicenseServerInfo, WithFreshSession } from '../../nx-cloud-api.types';
 import { BaseCloudServiceAPI, CreateApiFactory, implementsCloudServiceApi } from '../base-cloud-service-api';
@@ -24,6 +26,8 @@ export class LicenseServerAPI extends BaseCloudServiceAPI {
      */
     static readonly API_BASE = '/nxlicensed/api/v2';
 
+    static INSTANCES: Record<string, LicenseServerAPI> = {};
+
     /**
      * Create's a factory for instancating a LicenseServerApi pointing to a specific license server instance.
      *
@@ -32,10 +36,19 @@ export class LicenseServerAPI extends BaseCloudServiceAPI {
      * @param withFreshSession WithFreshSession
      * @returns  (serverUrl?: string, cloudHost?: string) => LicenseServerAPI
      */
-    static createApiFactory: CreateApiFactory<LicenseServerAPI> = (http: HttpClient, withFreshSession: WithFreshSession) => (serverUrl: string, cloudHost: () => string) => new LicenseServerAPI(serverUrl, cloudHost, http, withFreshSession);
+    static createApiFactory: CreateApiFactory<LicenseServerAPI> = (http: HttpClient, withFreshSession: WithFreshSession) => (serverUrl: string, cloudHost: () => string) => {
+        LicenseServerAPI.INSTANCES[serverUrl] ||= new LicenseServerAPI(serverUrl, cloudHost, http, withFreshSession);
+        return LicenseServerAPI.INSTANCES[serverUrl].update();
+    };
 
     constructor(serverUrl: string, cloudHost: () => string, http: HttpClient, withFreshSession: WithFreshSession) {
         super(serverUrl, LicenseServerAPI.API_BASE, cloudHost, http, withFreshSession);
+    }
+
+    public update(): this {
+        this.licenseRequestUpdater$.next('');
+        firstValueFrom(this.getUserLicenses());
+        return this;
     }
 
     /** Cloud License Helpers */
@@ -79,14 +92,36 @@ export class LicenseServerAPI extends BaseCloudServiceAPI {
         return this.put('/license/cloud/change', { body });
     }
 
+    private licenseRequestUpdater$ = new BehaviorSubject('');
+
     /**
-    * Licenses for user or system.
+    * Licenses for system.
     *
     * @param systemId string
     * @returns OObservable<LicenseInfo[]>
     */
-    public getLicenses(systemId?: uuid): Observable<LicenseInfo[]> {
-        return this.get(`/license/cloud/licenses${systemId ? '/' + systemId : ''}`);
+    public getSystemLicenses(systemId: uuid): Observable<LicenseInfo[]> {
+        this.licenseRequestUpdater$.next(systemId);
+        return this.handleLicenses(systemId);
+    }
+
+    /**
+    * Licenses for user.
+    *
+    * @param systemId string
+    * @returns OObservable<LicenseInfo[]>
+    */
+    public getUserLicenses(): Observable<LicenseInfo[]> {
+        this.licenseRequestUpdater$.next('');
+        return this.handleLicenses();
+    }
+
+    @memoizeAsyncPersistent
+    private handleLicenses(systemId = ''): Observable<LicenseInfo[]> {
+        return this.licenseRequestUpdater$.pipe(
+            filter(updatedId => !updatedId || updatedId === systemId),
+            concatMap(() => this.get<LicenseInfo[]>(`/license/cloud/licenses${systemId ? `/${systemId}` : ''}`)),
+        );
     }
 
     /**

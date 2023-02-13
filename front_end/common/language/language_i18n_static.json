@@ -354,7 +354,9 @@
             "Cloud system Id does not match license activation": "Cloud system Id does not match license activation",
             "used": "{used} of {total} ({percent}%) is used",
             "available": "Available",
-            "usedSpace": "{usageSpace} ({percentage}%)"
+            "usedSpace": "{usageSpace} ({percentage}%)",
+            "noCloudStorage": "This license does not include cloud storage.",
+            "incorrectPassword": "Invalid Password"
         },
         "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
     },

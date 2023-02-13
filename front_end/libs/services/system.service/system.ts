@@ -178,6 +178,8 @@ export class NxSystem {
         this.useRest = Math.floor(this.version) > 4;
         this.lostConnection = false;
         this.initSystem(currentUserEmail, systemId, serverId, userId);
+        firstValueFrom(this.getLicenseManager());
+        this.getCloudStorageManager(this.cloudApi.cloudStorageApi);
     }
 
     private updateSystemState(): void {
@@ -247,7 +249,9 @@ export class NxSystem {
             this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
             return Promise.resolve(true);
         }).catch(() => {
-            this.lostConnection = true;
+            firstValueFrom(this.mediaserver.ping()).catch(() => {
+                this.lostConnection = true;
+            });
         });
     };
 
@@ -286,7 +290,7 @@ export class NxSystem {
         if (!this.CONFIG.featureFlags.cloudStorage || environment.isLocal) {
             return false;
         }
-        return (this.CONFIG.cloudCapabilities.cloudStorageEnabled && this.isMine) ||
+        return (this.CONFIG.featureFlags.cloudStorage && this.isMine) ||
             (this.isAdmin && this.systemInfo?.cloudStorageSystemEnabled) ||
             (this.systemInfo?.cloudStorageCapable && this.isMine);
     }
@@ -714,7 +718,7 @@ export class NxSystem {
         return this.mediaserver.ptz(ptzCommand);
     }
 
-    public getLicenseServerApi = () => {
+    public getLicenseServerApi() {
         let _cloudHost = '';
         return this.updateOrGetSystemSettings().pipe(
             map(({ reply: { settings: { licenseServer, cloudHost } } }) => {
@@ -725,16 +729,16 @@ export class NxSystem {
             switchMap(licenseServer => this.cloudApi.checkLicenseServer(this.id, licenseServer)),
             map(({ licenseServer }) => this.cloudApi.licenseServerApiFactory(licenseServer, () => _cloudHost))
         );
-    };
+    }
 
-    public getLicenseManager = () => {
+    public getLicenseManager() {
         return this.getLicenseServerApi().pipe(
-            map(licenseServerApi => new LicenseManager(licenseServerApi, this, this.systemsService)
+            map(licenseServerApi => LicenseManager.getInstance(licenseServerApi, this, this.systemsService)
             ));
-    };
+    }
 
     public getCloudStorageManager(cloudStorageApi: CloudStorageAPI) {
-        return new CloudStorageManager(cloudStorageApi, this, this.systemsService);
+        return CloudStorageManager.getInstance(cloudStorageApi, this);
     }
 
     /**

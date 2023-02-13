@@ -58,6 +58,9 @@ export function memoizeDecorator(
             descriptor.value = memoize(
                 wrap(descriptor.value, wrapperFunctionFactory(invalidiationKey)),
                 function (...args: unknown[]) {
+                    if (functionName === 'getCloudStorageManager') {
+                        console.log('pause');
+                    }
                     const hashOrInvalidation = hashOrInvalidFunction.apply(this, args);
                     let hash = '';
                     let invalidate = false;

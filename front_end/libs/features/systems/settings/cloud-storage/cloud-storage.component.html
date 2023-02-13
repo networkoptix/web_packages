@@ -105,8 +105,6 @@
         <div
             #usageChart
             class="usage-bar"
-            (mouseenter)="showPopover(activateNotice, usageChart)"
-            (mouseout)="closePopover()"
         >
             <ng-container *ngFor="let usage of usages$ | async">
                 <ng-template #usageTooltip>

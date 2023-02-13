@@ -196,6 +196,13 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return { accessToken, cloudAccessToken, refreshToken };
     }
 
+    @memoizeAsync(
+        function (this: NxSystemRestAPI) {
+            return this.accessToken;
+        },
+        () => false,
+        Infinity
+    )
     public setAccessTokenAsCookie() {
         if (this.CONFIG.newSystem || !this.accessToken) {
             return of(true);

@@ -101,10 +101,10 @@
         <div *ngIf="showPasswordInput" class="form-group">
             <label for="password" translate>Enter your account password to continue</label>
             <input class="form-control" [ngModel]="password" (ngModelChange)="password = $event; passwordWarning = ''"
-                id="password" [placeholder]="'Enter password' | translate" name="password" type="password" required
+                id="password" [placeholder]="'Enter password' | nxTranslate" name="password" type="password" required
                 nxFocusMe />
             <div *ngIf="passwordWarning" class="input-info text-warning">
-                <span>{{passwordWarning}}</span>
+                <span>{{passwordWarning | nxTranslate}}</span>
             </div>
         </div>
         <div *ngIf="showSystemsDropdown" class="form-group">
@@ -112,20 +112,20 @@
             <nx-select id="system" name="system" [items]="targetSystems$ | async" [selected]="targetSystem"
                 (onSelected)="targetSystem = $event; systemWarning = ''"></nx-select>
             <div class="input-info text-warning">
-                <span>{{systemWarning}}</span>
+                <span>{{systemWarning | nxTranslate}}</span>
             </div>
         </div>
     </div>
     <div class="modal-footer">
-        <div *ngIf="errors.length">
+        <div *ngIf="errors.length" class="w-100 mb-3">
             <div *ngFor="let error of errors" class="input-info" class="text-warning">
-                <span>{{error}}</span>
+                <span>{{error | nxTranslate}}</span>
             </div>
         </div>
         <nx-process-button [buttonDisabled]="showSystemsDropdown && !targetSystem" [process]="actionProcess"
             [form]="actionForm" [actionType]="actionType === ACTION_TYPES.DELETE ? 'danger' : 'primary'"
-            [buttonText]="(LANG.dialogs.cloudStorage.actions[actionType].action) | translate"></nx-process-button>
-        <nx-cancel-button [process]="actionProcess" [discardFn]="close" [buttonText]="'close' | translate">
+            [buttonText]="(LANG.dialogs.cloudStorage.actions[actionType].action) | nxTranslate"></nx-process-button>
+        <nx-cancel-button [process]="actionProcess" [discardFn]="close" [buttonText]="'close' | nxTranslate">
         </nx-cancel-button>
     </div>
 </form>

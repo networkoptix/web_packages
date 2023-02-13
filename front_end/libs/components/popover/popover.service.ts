@@ -32,8 +32,17 @@ const defaultConfig: PopoverConfig<never> = {
     providedIn: 'root'
 })
 export class NxPopoverService {
-    popoverRef: PopoverRef;
+    #popoverRef: PopoverRef;
     close$ = new Subject<boolean>();
+
+    get popoverRef(): PopoverRef {
+        return this.#popoverRef;
+    }
+
+    set popoverRef(value: PopoverRef) {
+        this.#popoverRef?.close();
+        this.#popoverRef = value;
+    }
 
     constructor(
         private overlay: Overlay,

@@ -29,7 +29,7 @@ export class BaseCloudStorageActionModalContent {
     close: () => void;
     targetSystem: DropdownItem<string>;
     targetSystems$: Observable<DropdownItem<string>[]>;
-    processConfig: Partial<ProcessSettings> = { ignoreError: true };
+    processConfig: Partial<ProcessSettings> = { ignoreError: true, ignoreUnauthorized: true };
 
     // Dynamically set based on action type
     showLicenseInput: boolean;
@@ -95,12 +95,14 @@ export class BaseCloudStorageActionModalContent {
         userId = [],
         cloudSystemId = [],
         licenseKey = [],
-        password = []
+        password = [],
+        non_field_errors: nonFieldErrors = []
     }: {
         userId: LicenseTranslationBaseKeys[];
         cloudSystemId: LicenseTranslationBaseKeys[];
         licenseKey: LicenseTranslationBaseKeys[];
         password: LicenseTranslationBaseKeys[];
+        non_field_errors: LicenseTranslationBaseKeys[];
         status: string;
     }) => {
         const errors = [];
@@ -137,6 +139,10 @@ export class BaseCloudStorageActionModalContent {
                 errors.push(passwordError);
             }
             errors.push(...otherPasswordErrors);
+        }
+
+        if (nonFieldErrors) {
+            errors.push(...nonFieldErrors);
         }
 
         errors.push(...userId.map(k => this.licenseManager.translateMessage(k)));

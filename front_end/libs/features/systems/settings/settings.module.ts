@@ -10,7 +10,6 @@ import { FooterModule } from '@components/footer/footer.module';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
-import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
 import { SystemTitleResolver } from '@resolvers/system-title-resolver';
 
@@ -92,7 +91,6 @@ export const cloudSettingsRoutes: Routes = [
             {
                 path: 'cloud-storage',
                 title: SystemTitleResolver,
-                canActivate: [SystemGuard],
                 component: NxCloudStorageComponent,
                 canDeactivate: [ApplyGuard]
             },

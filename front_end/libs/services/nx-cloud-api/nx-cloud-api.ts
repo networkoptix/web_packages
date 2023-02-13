@@ -7,7 +7,7 @@ import LogRocket from 'logrocket';
 import { CookieService } from 'ngx-cookie-service';
 import { EMPTY, of, from, BehaviorSubject, throwError, defer } from 'rxjs';
 import type { Observable } from 'rxjs';
-import { catchError, concatMap, switchMap, map, tap, shareReplay, filter, throttleTime } from 'rxjs/operators';
+import { catchError, concatMap, switchMap, map, tap, shareReplay, filter, throttleTime, take } from 'rxjs/operators';
 
 import type {
     AuthorizeParams,
@@ -873,6 +873,7 @@ export class NxCloudApiService {
         );
 
         return getAccessToken(minSessionSeconds).pipe(
+            take(1),
             switchMap(({
                 accessToken
             }) => observableInputFactory({
