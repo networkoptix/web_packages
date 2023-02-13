@@ -152,7 +152,7 @@ Log In Cloud
         Sleep    1
         Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${email}
         Sleep    1
-        Click Button    ${LOG IN NEXT BUTTON}
+        Click Element    ${LOG IN NEXT BUTTON}
     END
 
     IF    ${exists}
@@ -160,7 +160,7 @@ Log In Cloud
         Wait Until Keyword Succeeds    10    0.5   Input Text     ${PASSWORD INPUT}    ${password}
         Sleep    1
         Wait Until Element Is Visible    ${LOG IN BUTTON}
-        Click Button    ${LOG IN BUTTON}
+        Click Element    ${LOG IN BUTTON}
     ELSE
         Wait Until Elements Are Visible    ${ACCOUNT DOES NOT EXIST}    ${YOU CAN CREATE AN ACCOUNT}
     END
@@ -483,6 +483,7 @@ Go to System Administration
     Click Link    ${SYSTEM ADMINISTRATION LINK}
 
 Go to Servers
+    Sleep   5
     ${location}=   Get Location
     Go To    ${location}/servers
 
@@ -746,7 +747,7 @@ Common Restart Logout
     Register Keyword To Run On Failure    NONE
     ${status}=   Run Keyword and Return Status    Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}    5
     Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword If    ${status}    Log Out via API
+    Run Keyword If    ${status}    Log Out    api=${False}
     Go To    ${url}
     Sleep    2
 
@@ -1098,7 +1099,7 @@ Execute Command Remotely
     [Return]    ${result}[0]
 
 Wait Until Element is Visible with Retry
-    [Arguments]    ${element}    ${timeout}=120
+    [Arguments]    ${element}    ${timeout}=30
     ${load} =    Run Keyword and Warn On Failure    Wait Until Element is Visible    ${element}    timeout=${timeout}
     IF    ${load} != ('PASS', None)
         Reload Page

@@ -19,7 +19,7 @@ ${REGISTER NOT ACTIVATED}             //nx-authorize-component//form[@name="emai
 ${TERMS AND CONDITIONS CHECKBOX VISIBLE}    ${REGISTER FORM}//nx-checkbox[@name="termsAndConditions"]
 ${TERMS AND CONDITIONS CHECKBOX REAL}       ${TERMS AND CONDITIONS CHECKBOX VISIBLE}//input[@id='termsAndConditions']
 
-${CREATE ACCOUNT BUTTON}              ${REGISTER FORM}//button[@id="btnCreateAccount" and contains(text(),"${CREATE ACCOUNT BUTTON TEXT}")]
+${CREATE ACCOUNT BUTTON}              ${REGISTER FORM}//button[contains(text(),"${CREATE ACCOUNT BUTTON TEXT}")]
 ${TERMS AND CONDITIONS LINK}          ${REGISTER FORM}//a[@href='/content/eula']
 ${TERMS AND CONDITIONS ERROR}         ${REGISTER FORM}//nx-checkbox/../following-sibling::p[contains(@class,'error-label') and contains(text(),"${REQUIRED TEXT}")]
 ${PRIVACY POLICY LINK}                ${REGISTER FORM}//a[@href='${PRIVACY POLICY URL HREF}']

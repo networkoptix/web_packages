@@ -102,6 +102,7 @@ Force Tags        account
     Wait Until Element Has Style    ${ACCOUNT FIRST NAME}    border-color    ${ERROR COLOR}
     Wait Until Element Has Style   ${ACCOUNT FIRST NAME}    color    ${ERROR COLOR WITH OPACITY}
 #    Wait Until Element Is Visible    ${FIRST NAME IS REQUIRED}
+    Click Button    ${ACCOUNT CANCEL}
 
 8. Last name is required
     [Tags]    C41573
@@ -122,7 +123,7 @@ Force Tags        account
     Wait Until Element Has Style    ${ACCOUNT LAST NAME}    border-color    ${ERROR COLOR}
     Wait Until Element Has Style   ${ACCOUNT LAST NAME}    color    ${ERROR COLOR WITH OPACITY}
 #    Wait Until Element Is Visible    ${FIRST NAME IS REQUIRED}
-
+    Click Button    ${ACCOUNT CANCEL}
 
 
 9. SPACE for first name is not valid
@@ -137,6 +138,7 @@ Force Tags        account
     Element Should Be Disabled       ${ACCOUNT SAVE}
     Element Should Be Enabled       ${ACCOUNT CANCEL}
 #    Element Should Be Visible    ${FIRST NAME IS REQUIRED}
+    Click Button    ${ACCOUNT CANCEL}
 
 10. SPACE for last name is not valid
     [Tags]    C41573
@@ -151,6 +153,7 @@ Force Tags        account
     Element Should Be Disabled       ${ACCOUNT SAVE}
     Element Should Be Enabled       ${ACCOUNT CANCEL}
 #    Element Should Be Visible    ${LAST NAME IS REQUIRED}
+    Click Button    ${ACCOUNT CANCEL}
 
 11. Email field is un-editable
     [Tags]    C41573
@@ -161,7 +164,8 @@ Force Tags        account
     Should Be True    "${read only}"
 
 12. Should respond to tab and go in the correct order
-    [Tags]    C41838
+    [Tags]    C41838   CLOUD-10162
+    [Setup]     Skip    Skipping due to CLOUD-10162
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    button=None   api=${False}
     Verify in Account Page
@@ -190,8 +194,8 @@ Force Tags        account
     @{LANGUAGES LIST} =    Get Dictionary Keys    ${lang dict}
     FOR    ${lang}    IN    @{LANGUAGES LIST}
         # &{d} =    Copy Dictionary    &{lang dict}[${lang}]
-        # ${info text} =    Set Variable    ${d['ACCOUNT INFORMATION']} 
-        ${info text} =    Get From Dictionary   ${lang dict}[${lang}]   ACCOUNT INFORMATION 
+        # ${info text} =    Set Variable    ${d['ACCOUNT INFORMATION']}
+        ${info text} =    Get From Dictionary   ${lang dict}[${lang}]   ACCOUNT INFORMATION
         Sleep    1
         Verify in Account Page
         IF    "${lang}"!="${LANGUAGE}"
@@ -230,21 +234,19 @@ Force Tags        account
     Go to    ${url}/account
     ${subject}=   Set Variable If   '''${LANGUAGE}'''=='''ru_RU'''    Reset your password    Восстановление пароля
     Run Keyword If    '''${subject}'''=='''Восстановление пароля'''    Run Keywords
-    ...    Log In    ${random email}    ${password}    button=None    AND
+    ...    Log In    ${random email}    ${password}    button=None    api=${False}   AND
     ...    Verify in Account Page    AND
     ...    Click Button    ${ACCOUNT LANGUAGE DROPDOWN}    AND
     ...    Wait Until Element is Visible    //nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']/..    AND
     ...    Click Element    //nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']/..    AND
-    ...    Click Button    ${ACCOUNT SAVE}    AND
     ...    Sleep    5    AND
     ...    Close Browser
     ...    ELSE   Run Keywords
-    ...    Log In    ${random email}    ${password}    button=None    AND
+    ...    Log In    ${random email}    ${password}    button=None    api=${False}   AND
     ...    Verify in Account Page    AND
     ...    Click Button    ${ACCOUNT LANGUAGE DROPDOWN}    AND
     ...    Wait Until Element is Visible    //nx-language-select//button/following-sibling::ul//span[@lang='en_US']/..    AND
     ...    Click Element    //nx-language-select//button/following-sibling::ul//span[@lang='en_US']/..    AND
-    ...    Click Button    ${ACCOUNT SAVE}    AND
     ...    Sleep    5    AND
     ...    Close Browser
 
@@ -286,7 +288,12 @@ Force Tags        account
 #    Wait Until Element Is Not Visible    ${ACCOUNT CANCEL}
     sleep    5
     Reload Page
-    Wait Until Element is Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang='${lang}']
+    Wait Until Element is Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@id='activeLang']
+    ${activeLang} =     Get Text    ${ACCOUNT LANGUAGE DROPDOWN}/span[@id='activeLang']
+    ${detectedLang} =     Detect Language     ${activeLang}
+    ${detectedLang} =    Fetch From Left   ${detectedLang}  ,
+    ${detectedLang} =    Fetch From Right   ${detectedLang}  =
+    Should Contain   ${lang}   ${detectedLang}
     IF    "${lang}"=="ja_JP"    
         Wait Until Element is Visible    //header/h4[text()='${ja_JP account info}']
     ELSE IF    "${lang}"=="de_DE"    
@@ -299,13 +306,20 @@ Force Tags        account
     Set Account Language     ${no perm}    ${password}    ${lang}
     Sleep    5
     Reload Page
-    Wait Until Element is Visible    //nx-language-select//button/span[@lang='${lang}']
+    Wait Until Element is Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@id='activeLang']
+    ${activeLang} =     Get Text    ${ACCOUNT LANGUAGE DROPDOWN}/span[@id='activeLang']
+    ${detectedLang} =     Detect Language     ${activeLang}
+    ${detectedLang} =    Fetch From Left   ${detectedLang}  ,
+    ${detectedLang} =    Fetch From Right   ${detectedLang}  =
+    Should Contain   ${lang}   ${detectedLang}
     IF    "${lang}"=="ja_JP"    
         Wait Until Element is Visible    //header/h4[text()='${ja_JP account info}']
     ELSE IF    "${lang}"=="de_DE"    
         Wait Until Element is Visible    //header/h4[text()='${de_DE account info}']
     END
     Check Language Logged In    ${no perm}    ${password}
+    Sleep    3
+    Reload page
 
 16. Should open account page in anonymous state
     [tags]    anonymous
@@ -334,6 +348,7 @@ Force Tags        account
 
 18. Password is required to delete account
     [Tags]    C69859        delete_account
+    [Teardown]    Click Button    ${DELETE ACCOUNT CLOSE BUTTON}
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Go To    ${url}/account
     Log In    ${random email}    ${password}    button=None   api=${False}
@@ -347,8 +362,10 @@ Force Tags        account
     Wait Until Element Has Style    ${DELETE ACCOUNT PASSWORD ERROR}    color    ${ERROR COLOR WITH OPACITY}
     Validate Log In    ${random email}
 
+
 19. Correct password is required to delete account
     [Tags]    C69860        delete_account
+    [Teardown]    Click Button    ${DELETE ACCOUNT CLOSE BUTTON}
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Go To    ${url}/account
     Log In    ${random email}    ${password}    button=None   api=${False}
@@ -356,7 +373,6 @@ Force Tags        account
     Click Button    ${DELETE ACCOUNT BUTTON}
     Verify Delete User Dialog
     Input Text    ${DELETE ACCOUNT PASSWORD INPUT}    qweasdqwe
-
     Click Button    ${DELETE ACCOUNT MODAL BUTTON}
     Wait Until Element Has Style    ${DELETE ACCOUNT PASSWORD INPUT}    border-color    ${ERROR COLOR}
     Wait Until Element Is Visible    ${DELETE ACCOUNT PASSWORD ERROR}

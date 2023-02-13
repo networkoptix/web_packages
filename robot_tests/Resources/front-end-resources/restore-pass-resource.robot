@@ -17,7 +17,7 @@ Send "Restore Password" Email
     Sleep    1
     Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${email}
     Sleep    1
-    Click Button    ${LOG IN NEXT BUTTON}
+    Click Element    ${LOG IN NEXT BUTTON}
     Wait Until Elements Are Visible    ${FORGOT PASSWORD BUTTON}
     Click Element    ${FORGOT PASSWORD BUTTON}
     Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${email}

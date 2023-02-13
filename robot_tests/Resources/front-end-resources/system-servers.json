@@ -15,7 +15,7 @@
     {
         "addUsers":false,
         "cloudOwner":"",
-        "cloudOwnerId":1,
+        "cloudOwnerId":0,
         "cloudUsers":{},
         "localUsers":{},
         "mac" : "",
@@ -27,7 +27,7 @@
     {
         "addUsers":false,
         "cloudOwner":"",
-        "cloudOwnerId":2,
+        "cloudOwnerId":0,
         "cloudUsers":{},
         "localUsers":{},
         "mac" : "",

@@ -132,7 +132,7 @@ Server Settings Suite Setup
 Web Admin Suite Setup
     Set Suite Variable    ${user in charge}    admin
     #sleep    120
-    Merge Systems Local    ${server auth}    admin:${password}    https://${QA BURBANK IP}:$${servers}[0][port]   ${QA BURBANK IP}:$${servers}[1][port]    currentPassword=${password}
+    Merge Systems Local    ${server auth}    admin:${password}    https://${QA BURBANK IP}:${servers}[0][port]   ${QA BURBANK IP}:${servers}[1][port]    currentPassword=${password}
     Sleep    120
     #Open Browser and go to URL    https://${QA BURBANK IP}:${server 1['port']}
     #Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]
@@ -146,7 +146,7 @@ Web Admin Suite Setup
     #Wait Until Element Is Visible    //header//a/span[text()="Log Out"]
     #Click Link    //header//a/span[text()="Log Out"]/..
 
-    @{local users}=   Reset Local Users    ${server auth}    $${servers}[0][token]    https://${QA BURBANK IP}:$${servers}[0][port]    password=${password}
+    @{local users}=   Reset Local Users    ${server auth}    ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port]    password=${password}
     Set Suite Variable    ${admin}          Local+${local users[1]}
     Set Suite Variable    ${viewer}         Local+${local users[4]}
     Set Suite Variable    ${live viewer}    Local+${local users[3]}
@@ -157,13 +157,13 @@ Web Admin Suite Setup
 Cloud Suite Setup
     Log in to user and system    ${servers}[0][cloudOwner]    ${servers}[0][id]    password=${password}
     Go to Servers
-    Verify on Servers Page    timeout=120
+    Verify on Servers Page    timeout=30
 
     Go To    ${ENV}/systems/${servers}[1][id]
     Sleep    5
     Wait Until Element is Visible    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
-    Verify on Servers Page    timeout=120
+    Verify on Servers Page    timeout=30
     Common Restart Logout    ${ENV}
     #Sleep    120
 
@@ -172,22 +172,22 @@ Cloud Suite Setup
     Wait Until Element is Visible    ${SERVERS LINK}    300
     Sleep    5
     Click Link    ${SERVERS LINK}
-    Verify on Servers Page    timeout=120
-    Log Out
+    Verify on Servers Page    timeout=30
+    Log Out   api=${False}
 
     Log in to user and system    ${servers}[0][cloudOwner]    ${servers}[2][id]    password=${password}
 
     Wait Until Element is Visible    ${SERVERS LINK}    300
     Sleep    5
     Click Link    ${SERVERS LINK}
-    Verify on Servers Page    timeout=120
-    Log Out
+    Verify on Servers Page    timeout=30
+    Log Out   api=${False}
     Open Browser and go to URL    ${ENV}
     Execute Command Remotely    docker container stop ${servers}[1][name]
 
 
 Server Settings Suite Tear Down
-    teardown servers    ${servers}
+    Teardown Servers    ${servers}
 
     Close All Connections
     Close All Browsers
