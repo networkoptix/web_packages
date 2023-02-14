@@ -70,15 +70,15 @@
         } else {
             const themes = {
                 dark: '#0D0E0F',
-                light: '#F0F3F4'
+                light: '#F0F3F4',
             }
-            const themeCookie = document.cookie.split('theme=').pop().split(';').pop()
-            const themeFromCookie = themeCookie in themes && themeCookie
-            const themeFromStorage = window.localStorage.getItem('ngx-webstorage|loginstate') && window.localStorage.getItem('ngx-webstorage|theme')?.replaceAll('"', '')
-            const localStorageTheme = themeFromStorage in themes && themeFromStorage;
-            const storedTheme = themeFromCookie || localStorageTheme || 'auto';
+            const getCookieValue = (name) => (
+              document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || ''
+            )
+            const themeCookie = getCookieValue('theme');
+            const themeFromCookie = themeCookie in themes && themeCookie || 'auto';
             const systemTheme = this.window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-            const theme = storedTheme === 'auto' ? systemTheme : storedTheme;
+            const theme = themeFromCookie === 'auto' ? systemTheme : themeFromCookie;
             document.querySelector('html').setAttribute('data-theme', theme);
             document.querySelector('body').style.backgroundColor = themes[theme];
         }
