@@ -7,7 +7,6 @@ import {
     OnDestroy,
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { Observable, of } from 'rxjs';
 
 import { NgChanges } from '@utils/ng-changes';
 
@@ -21,7 +20,7 @@ export class NxImageComponent implements OnChanges, OnDestroy {
     @Input() isPrimary: boolean;
     @Input() state: string;
     @Input() time: string;
-    @Input() url: Observable<string>;
+    @Input() url: string;
     @Input() lightBackground: boolean = false;
     @Input() motionPreview: boolean = false;
     @Input() preloader: boolean = false;
@@ -64,6 +63,9 @@ export class NxImageComponent implements OnChanges, OnDestroy {
                 this.show = false;
             }
         }
+        if (!this.url) {
+            this.loaded.emit(true);
+        }
         if (
             this.state === 'Unauthorized' ||
             changes.state && ![
@@ -72,7 +74,7 @@ export class NxImageComponent implements OnChanges, OnDestroy {
                 'Scheduled'
             ].includes(changes.state.currentValue)
         ) {
-            this.url = of('');
+            this.url = '';
             this.loaded.emit(true);
         }
     }
