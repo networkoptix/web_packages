@@ -119,7 +119,7 @@
                                 aspect="override"
                                 [preloader]="true"
                                 [state]="selectedCamera.status"
-                                [url]="preview + '&reload=' + (reload$ | async)"
+                                [url]="preview$ | async"
                                 [lightBackground]="true"
                             ></nx-health-image>
                         </div>
@@ -443,7 +443,7 @@
                                         [motionPreview]="true"
                                         [preloader]="true"
                                         [state]="selectedCamera.status"
-                                        [url]="preview + '&reload=' + (reload$ | async)"
+                                        [url]="preview$ | async"
                                         (loaded)="toggleMotionGrid()"
                                         [lightBackground]="true"
                                     ></nx-health-image>

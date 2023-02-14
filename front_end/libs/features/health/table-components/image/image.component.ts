@@ -63,6 +63,9 @@ export class NxImageComponent implements OnChanges, OnDestroy {
                 this.show = false;
             }
         }
+        if (!this.url) {
+            this.loaded.emit(true);
+        }
         if (
             this.state.toLowerCase() === 'Unauthorized'.toLowerCase() ||
             changes.state && ![
