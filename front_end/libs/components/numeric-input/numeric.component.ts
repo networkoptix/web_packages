@@ -1,18 +1,11 @@
-import {
-    Component,
-    EventEmitter,
-    forwardRef,
-    Input,
-    OnInit,
-    Output
-} from '@angular/core';
+import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
 import {
     ControlValueAccessor,
     FormControl,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
     ValidationErrors,
-    Validator
+    Validator,
 } from '@angular/forms';
 
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
@@ -41,15 +34,15 @@ import { icons } from '@lib/variables/static-variables';
             provide: NG_VALUE_ACCESSOR,
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxNumericComponent),
-            multi: true
+            multi: true,
         },
         {
             provide: NG_VALIDATORS,
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxNumericComponent),
-            multi: true
-        }
-    ]
+            multi: true,
+        },
+    ],
 })
 export class NxNumericComponent implements OnInit, ControlValueAccessor, Validator {
     @Input() id: string;
@@ -73,18 +66,16 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor, Validat
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
-    private onTouchedCallback = (): void => {
-    };
+    private onTouchedCallback = (): void => {};
 
-    private onChangeCallback = (_: any): void => {
-    };
+    private onChangeCallback = (_: any): void => {};
 
     // validates the form, returns null when valid else the validation object
     public validate(c: FormControl<number>): ValidationErrors | null {
         const err = {
             requiredError: {
-                required: true
-            }
+                required: true,
+            },
         };
 
         this._touched = c.touched;

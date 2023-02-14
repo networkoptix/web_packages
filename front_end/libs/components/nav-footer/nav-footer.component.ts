@@ -76,8 +76,6 @@ export class NxNavFooterComponent implements OnInit {
         url: string,
         width = this.scrollMechanicsService.windowSizeSubject.value.width,
     ): void {
-        this.visible$.next(
-            width > GridBreakpoints.SM && !url.includes('/systems'),
-        );
+        this.visible$.next(width > GridBreakpoints.SM && !url.includes('/systems'));
     }
 }

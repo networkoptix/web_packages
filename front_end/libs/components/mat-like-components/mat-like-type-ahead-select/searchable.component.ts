@@ -7,7 +7,14 @@ import {
     ElementRef,
     ViewChild,
 } from '@angular/core';
-import { NgForm, NG_VALIDATORS, NG_VALUE_ACCESSOR, FormControl, Validator, ValidationErrors } from '@angular/forms';
+import {
+    NgForm,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
+    FormControl,
+    Validator,
+    ValidationErrors,
+} from '@angular/forms';
 import { escapeRegExp } from 'lodash-es';
 
 import { icons } from '@lib/variables/static-variables';
@@ -41,17 +48,16 @@ import type { SearchableDropdownItem as Item } from './searchable.component.type
             provide: NG_VALUE_ACCESSOR,
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxMatLikeTypeAheadDropdown),
-            multi: true
+            multi: true,
         },
         {
             provide: NG_VALIDATORS,
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxMatLikeTypeAheadDropdown),
-            multi: true
-        }
-    ]
+            multi: true,
+        },
+    ],
 })
-
 export class NxMatLikeTypeAheadDropdown extends BaseDropdown implements Validator {
     @Input() form: NgForm;
     @Input() componentId: string = 'searchableSelect';
@@ -80,23 +86,21 @@ export class NxMatLikeTypeAheadDropdown extends BaseDropdown implements Validato
     public validate(c: FormControl<Item>): ValidationErrors | null {
         if (!c.value?.value) {
             return {
-                required: true
+                required: true,
             };
         }
 
         // check pattern
         if (this.validation && !new RegExp(this.validation).test(c.value?.value)) {
             return {
-                pattern: true
+                pattern: true,
             };
         }
 
         return null; // valid
     }
 
-    constructor(
-        configService: NxConfigService,
-    ) {
+    constructor(configService: NxConfigService) {
         super(configService);
         this.noMatchMsg ??= this.LANG.search.noMatches || '';
     }
@@ -127,9 +131,10 @@ export class NxMatLikeTypeAheadDropdown extends BaseDropdown implements Validato
 
         if (filter) {
             this.filter = new RegExp(`(${escapeRegExp(filter)})`, 'i');
-            this._items = this.items.filter(item =>
-                caseInsenstiveSearch(item.name, filter) ||
-                item.help && caseInsenstiveSearch(item.help, filter)
+            this._items = this.items.filter(
+                item =>
+                    caseInsenstiveSearch(item.name, filter) ||
+                    (item.help && caseInsenstiveSearch(item.help, filter)),
             );
         } else {
             this.filter = undefined;
@@ -139,7 +144,7 @@ export class NxMatLikeTypeAheadDropdown extends BaseDropdown implements Validato
         if (this.freeText) {
             const freeTypeItem: Item = {
                 name: this.searchInput.nativeElement.innerText,
-                value: this.searchInput.nativeElement.innerText
+                value: this.searchInput.nativeElement.innerText,
             };
             this._selectedItem = freeTypeItem;
             this.onSelected.emit(freeTypeItem);

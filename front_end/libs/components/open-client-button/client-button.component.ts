@@ -1,10 +1,4 @@
-import {
-    Component,
-    OnInit,
-    Input,
-    ViewEncapsulation,
-    OnDestroy
-} from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -21,7 +15,7 @@ import { NxUrlProtocolService } from '@services/url-protocol.service';
     selector: 'nx-client-button',
     templateUrl: 'client-button.component.html',
     styleUrls: ['client-button.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxClientButtonComponent implements OnInit, OnDestroy {
     @Input() system;
@@ -64,43 +58,46 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
         this.modalActive = false;
         this.canceled = false;
 
-        this.openClient = this.processService.createProcess(() => {
-            if (this.account.account2faEnabled && !this.system.useRest) {
-                return this.dialogs.client2faWarning();
-            }
-            return this.urlProtocol
-                .open(this.system && this.system.id, this.system.useRest);
-        }, {
-            errorCodes: {
-                notVisited: () => false
-            }
-        }, () => {
-            this.modalActive = false;
-        }, () => {
-            if (this.modalActive || this.canceled) {
-                return;
-            }
-            this.modalActive = true;
-            return this.dialogs
-                .confirm({
-                    title: this.LANG.dialogs.titles.noClientDetected,
-                    message: this.LANG.errorCodes.cantOpenClient,
-                    footer: {
-                        actionLabel: this.LANG.dialogs.buttons.download,
-                        cancelLabel: this.LANG.dialogs.buttons.cancel,
-                    }
-                })
-                .then(result => {
-                    if (result) {
-                        this.router
-                            .navigate(['/download'])
-                            .catch(error => {
+        this.openClient = this.processService.createProcess(
+            () => {
+                if (this.account.account2faEnabled && !this.system.useRest) {
+                    return this.dialogs.client2faWarning();
+                }
+                return this.urlProtocol.open(this.system && this.system.id, this.system.useRest);
+            },
+            {
+                errorCodes: {
+                    notVisited: () => false,
+                },
+            },
+            () => {
+                this.modalActive = false;
+            },
+            () => {
+                if (this.modalActive || this.canceled) {
+                    return;
+                }
+                this.modalActive = true;
+                return this.dialogs
+                    .confirm({
+                        title: this.LANG.dialogs.titles.noClientDetected,
+                        message: this.LANG.errorCodes.cantOpenClient,
+                        footer: {
+                            actionLabel: this.LANG.dialogs.buttons.download,
+                            cancelLabel: this.LANG.dialogs.buttons.cancel,
+                        },
+                    })
+                    .then(result => {
+                        if (result) {
+                            this.router.navigate(['/download']).catch(error => {
                                 console.error(error);
                             });
-                    }
-                }).finally(() => {
-                    this.modalActive = false;
-                });
-        });
+                        }
+                    })
+                    .finally(() => {
+                        this.modalActive = false;
+                    });
+            },
+        );
     }
 }

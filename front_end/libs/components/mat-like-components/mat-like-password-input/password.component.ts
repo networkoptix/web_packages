@@ -8,7 +8,7 @@ import {
     ViewChild,
     ElementRef,
     TemplateRef,
-    ViewContainerRef
+    ViewContainerRef,
 } from '@angular/core';
 import {
     ControlValueAccessor,
@@ -18,7 +18,7 @@ import {
     NgModel,
     ValidationErrors,
     FormControl,
-    NgForm
+    NgForm,
 } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
@@ -40,18 +40,20 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
             provide: NG_VALUE_ACCESSOR,
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxMatLikePasswordComponent),
-            multi: true
+            multi: true,
         },
         {
             provide: NG_VALIDATORS,
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxMatLikePasswordComponent),
-            multi: true
-        }
+            multi: true,
+        },
     ],
     // encapsulation: ViewEncapsulation.None
 })
-export class NxMatLikePasswordComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {
+export class NxMatLikePasswordComponent
+    implements OnInit, OnDestroy, ControlValueAccessor, Validator
+{
     @Input() form: NgForm;
     @Input() componentId: string;
     @Input() component: NgModel;
@@ -89,42 +91,54 @@ export class NxMatLikePasswordComponent implements OnInit, OnDestroy, ControlVal
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
-    public onTouchedCallback = (): void => {
-    };
+    public onTouchedCallback = (): void => {};
 
-    private onChangeCallback = (_: string): void => {
-    };
+    private onChangeCallback = (_: string): void => {};
 
     // validates the form, returns null when valid else the validation object
     public validate(c: FormControl<string>): ValidationErrors | null {
         this._passwordControl = c;
         // internal validations (validation msgs)
         this._required = !c.value;
-        this._minlength = c.value ? c.value?.length < credentialsValidation.passwordRequirements.minLength : true;
+        this._minlength = c.value
+            ? c.value?.length < credentialsValidation.passwordRequirements.minLength
+            : true;
         this._hasDigit = c.value ? new RegExp('[0-9]+').test(c.value) : false;
-        this._hasSymbol = c.value ? new RegExp('[!@#\$%\^&\*\(\)_\+-]+').test(c.value) : false;
+        this._hasSymbol = c.value ? new RegExp('[!@#$%^&*()_+-]+').test(c.value) : false;
         this._hasLowerCase = c.value ? new RegExp('[a-z]+').test(c.value) : false;
         this._hasUpperCase = c.value ? new RegExp('[A-Z]+').test(c.value) : false;
-        this._hasConfirmed = this.confirmation ? c.value ? c.value === this.confirm : false : true;
+        this._hasConfirmed = this.confirmation
+            ? c.value
+                ? c.value === this.confirm
+                : false
+            : true;
 
         // external validations (FORM)
         if (this._required) {
             return {
-                required: true
+                required: true,
             };
         }
 
         // check pattern
-        if (!(this._hasDigit && this._hasSymbol && this._hasLowerCase && this._hasUpperCase && this._hasConfirmed)) {
+        if (
+            !(
+                this._hasDigit &&
+                this._hasSymbol &&
+                this._hasLowerCase &&
+                this._hasUpperCase &&
+                this._hasConfirmed
+            )
+        ) {
             return {
-                invalid: true
+                invalid: true,
             };
         }
 
         // check length
         if (this._minlength) {
             return {
-                minlength: true
+                minlength: true,
             };
         }
 
@@ -147,7 +161,8 @@ export class NxMatLikePasswordComponent implements OnInit, OnDestroy, ControlVal
 
     private loadCommonPasswords(): void {
         if (!this.CONFIG.commonPasswordsList) {
-            this.api.getCommonPasswords()
+            this.api
+                .getCommonPasswords()
                 .pipe(untilDestroyed(this))
                 .subscribe(data => {
                     this.CONFIG.commonPasswordsList = data;
@@ -161,13 +176,12 @@ export class NxMatLikePasswordComponent implements OnInit, OnDestroy, ControlVal
         this.form.form.get(this.componentId).markAsUntouched();
     }
 
-    ngOnDestroy(): void {
-    }
+    ngOnDestroy(): void {}
 
     ngOnInit(): void {
         this.fairPassword = true;
         this.passwordToggle = true;
-        this.componentId = (this.componentId || 'generic');
+        this.componentId = this.componentId || 'generic';
 
         this.loadCommonPasswords(); // Load most common passwords
     }
@@ -219,9 +233,10 @@ export class NxMatLikePasswordComponent implements OnInit, OnDestroy, ControlVal
             {
                 panelClass: 'validation-popover',
                 arrowOffset: 4,
-                positionStrategy: POS_STRATEGY.TOP
+                positionStrategy: POS_STRATEGY.TOP,
             },
-            this._viewContainerRef);
+            this._viewContainerRef,
+        );
     }
 
     closeLegend(): void {

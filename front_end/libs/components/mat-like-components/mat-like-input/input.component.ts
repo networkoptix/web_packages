@@ -1,18 +1,11 @@
-import {
-    Component,
-    EventEmitter,
-    forwardRef,
-    Input,
-    OnInit,
-    Output
-} from '@angular/core';
+import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
 import {
     ControlValueAccessor,
     FormControl,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
     ValidationErrors,
-    Validator
+    Validator,
 } from '@angular/forms';
 
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
@@ -41,15 +34,15 @@ import { IBool, CoercedBoolInput } from '@decorators/ibool';
             provide: NG_VALUE_ACCESSOR,
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxMatLikeInputComponent),
-            multi: true
+            multi: true,
         },
         {
             provide: NG_VALIDATORS,
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxMatLikeInputComponent),
-            multi: true
-        }
-    ]
+            multi: true,
+        },
+    ],
 })
 export class NxMatLikeInputComponent implements OnInit, ControlValueAccessor, Validator {
     @Input() componentId: string;
@@ -69,18 +62,16 @@ export class NxMatLikeInputComponent implements OnInit, ControlValueAccessor, Va
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
-    private onTouchedCallback = (): void => {
-    };
+    private onTouchedCallback = (): void => {};
 
-    private onChangeCallback = (fn: string): void => {
-    };
+    private onChangeCallback = (fn: string): void => {};
 
     // validates the form, returns null when valid else the validation object
     public validate(c: FormControl<number>): ValidationErrors | null {
         const err = {
             requiredError: {
-                required: true
-            }
+                required: true,
+            },
         };
 
         this._touched = c.touched;
@@ -95,7 +86,7 @@ export class NxMatLikeInputComponent implements OnInit, ControlValueAccessor, Va
     }
 
     ngOnInit(): void {
-        this.componentId = (this.componentId || 'generic');
+        this.componentId = this.componentId || 'generic';
     }
 
     /**
