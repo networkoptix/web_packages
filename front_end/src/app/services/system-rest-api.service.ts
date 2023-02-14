@@ -846,7 +846,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         };
         let endpoint = '/ec2/cameraThumbnail';
 
-        if (time) {
+        if (time && (time !== 'now' && time !== 'LATEST')) {
             data.time = time;
         } else {
             endpoint += '?ignoreExternalArchive';
