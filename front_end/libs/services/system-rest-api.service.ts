@@ -18,7 +18,6 @@ import { environment } from '@environments/environment';
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
 import { NxHealthService } from '@pages/health/health.service';
 import { NxStorageService } from '@services/storage.service';
-import { NxSystemUser } from '@services/system.service/user-manager/user-manager-types';
 
 import { SECURITY_LEVEL } from '../../apps/setup-wizard/src/app/types/wizard-state.types';
 
@@ -26,7 +25,7 @@ import { NxAppStateService } from './nx-app-state.service';
 import type { APIDocType, MenuManifest } from './nx-config/base-config';
 import type { IConfig } from './nx-config/config-types';
 import * as t from './system-api.types';
-import { ChangedIdReturned, SystemConfigSettings } from './system-api.types';
+import { SystemConfigSettings } from './system-api.types';
 import { NxSystemAPI } from './system-legacy-api.service';
 import type { IParams } from './system.service/system-types';
 import { NxUriCacheService } from './uri-cache.service';
@@ -914,20 +913,6 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     createEvent(params: t.EventParams) {
         return this.post('/api/createEvent', params).toPromise();
-    }
-
-    saveUser(user: NxSystemUser): Observable<ChangedIdReturned> {
-        user.type = user.isCloud ? 'cloud' : 'local'; // TODO: add LDAP
-        user.isHttpDigestEnabled = !user.isCloud;
-
-        return this.post<t.ChangedIdReturned>(
-            '/rest/v1/users',
-            this.cleanUserObject(user)
-        );
-    }
-
-    deleteUser(userId: string): Observable<ChangedIdReturned> {
-        return this.delete<t.ChangedIdReturned>(`/rest/v1/users/${this.cleanId(userId)}`);
     }
 
     /** Not Implemented functions **/

@@ -7,10 +7,12 @@ import { map } from 'rxjs/operators';
 
 import { NxHealthService } from '@pages/health/health.service';
 import { SettingsConfig } from '@services/nx-config/base-config';
+import { NxSystemUser } from '@services/system.service/user-manager/user-manager-types';
 
 import { NxAppStateService } from './nx-app-state.service';
 import { IConfig } from './nx-config/config-types';
 import * as t from './system-api.types';
+import { ChangedIdReturned } from './system-api.types';
 import { NxSystemRestAPI } from './system-rest-api.service';
 import { IParams } from './system.service/system-types';
 import { NxUriCacheService } from './uri-cache.service';
@@ -249,6 +251,35 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
     activateLicense(key): Observable<any> {
         return this.put(`/rest/v2/licenses/${key}`)
             .pipe(map(res => this.responseWrapper(res)));
+    }
+
+    addUser(user: NxSystemUser): Observable<ChangedIdReturned> {
+        user.type = user.isCloud ? 'cloud' : 'local'; // TODO: add LDAP
+        user.isHttpDigestEnabled = !user.isCloud;
+
+        return this.post<t.ChangedIdReturned>(
+            '/rest/v1/users',
+            this.cleanUserObject(user)
+        );
+    }
+
+    saveUser(user: NxSystemUser): Observable<ChangedIdReturned> {
+        user.type = user.isCloud ? 'cloud' : 'local'; // TODO: add LDAP
+        user.isHttpDigestEnabled = !user.isCloud;
+
+        if (!user.isCloud) {
+            user.name && delete user.name;
+            user.isHttpDigestEnabled && delete user.isHttpDigestEnabled;
+        }
+
+        return this.patch<t.ChangedIdReturned>(
+            `/rest/v1/users/${user.id}`,
+            this.cleanUserObject(user)
+        );
+    }
+
+    deleteUser(userId: string): Observable<ChangedIdReturned> {
+        return this.delete<t.ChangedIdReturned>(`/rest/v1/users/${this.cleanId(userId)}`);
     }
 
     // Health Monitoring

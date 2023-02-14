@@ -6,6 +6,7 @@ import {
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
+import { NxLoginService } from '@services/login.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -31,14 +32,16 @@ export class RemoveUserModalContent {
     system: NxSystem;
     user: NxSystemUser;
     removeUserProcess: Process;
+    needsUpdate: boolean;
     dialogTitle: string;
     dialogButtonText: string;
 
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
+        private loginService: NxLoginService,
         private processService: NxProcessService,
-        private dialogRef: DialogRef,
+        public dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
     ) {
         this.CONFIG = configService.getConfig();
@@ -52,15 +55,29 @@ export class RemoveUserModalContent {
         this.dialogTitle = this.LANG.dialogs.titles[`${msg}User`]?.();
         this.dialogButtonText = this.LANG.dialogs.buttons[msg]?.();
 
-        this.removeUserProcess = this.processService.createProcess(() => {
-            return this.system.deleteUser(this.user).then(() => {
-                return this.system.getUsers(true);
+        this.removeUserProcess = this.processService.createProcess(
+            () => this.system.deleteUser(this.user),
+            {
+                ignoreError: true,
+                errorPrefix: this.LANG.errorCodes.cantSharePrefix?.()
+            },
+            () => this.system.getUsers(true).then(() => this.dialogRef.close(true)),
+            err => {
+                if (
+                    err.errorId ===
+                    this.CONFIG.servers.errors.oldSessionErrorId
+                ) {
+                    this.needsUpdate = true;
+                    this.loginService.currentSystem = this.system;
+                    this.loginService.updateSession('renewWeb')
+                        .then(ready => {
+                            this.needsUpdate = !ready;
+                            if (ready) {
+                                this.removeUserProcess.run();
+                            }
+                        });
+                }
             });
-        }, {
-            errorPrefix: this.LANG.errorCodes.cantSharePrefix?.()
-        }).then(() => {
-            this.dialogRef.close(true);
-        });
     }
 
     close = (): void => {

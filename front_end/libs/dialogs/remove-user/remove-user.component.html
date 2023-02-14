@@ -11,18 +11,26 @@
         <div class="close-content"></div>
     </button>
 </div>
-
-<div class="modal-footer">
-    <nx-process-button
-        [process]="removeUserProcess"
-        [actionType]="'danger'"
-        [buttonText]="dialogButtonText"
-    ></nx-process-button>
-    <button
-        type="button"
-        class="btn btn-default"
-        (click)="close()"
-    >
-        {{ LANG.dialogs.buttons.cancel() }}
-    </button>
+<div [ngStyle]="{ display: needsUpdate ? 'none' : 'unset' }">
+    <div class="modal-footer">
+        <nx-process-button
+            [process]="removeUserProcess"
+            [actionType]="'danger'"
+            [buttonText]="dialogButtonText"
+        ></nx-process-button>
+        <button
+            type="button"
+            class="btn btn-default"
+            (click)="close()"
+        >
+            {{ LANG.dialogs.buttons.cancel() }}
+        </button>
+    </div>
 </div>
+<nx-update-webadmin-session
+    *ngIf="system.useRest && needsUpdate"
+    (loginSuccess)="needsUpdate = false; removeUserProcess.run()"
+    [dialogRef]="dialogRef"
+    [system]="system"
+    processAction="danger"
+></nx-update-webadmin-session>

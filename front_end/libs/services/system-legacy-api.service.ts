@@ -1441,4 +1441,8 @@ export class NxSystemAPI {
     wizardGetSystemSettings(): Observable<unknown> {
         throw new Error('should only be using rest v2 version');
     }
+
+    addUser(user: NxSystemUser): Observable<unknown> {
+        throw new Error('should only be using rest v2 version');
+    }
 }

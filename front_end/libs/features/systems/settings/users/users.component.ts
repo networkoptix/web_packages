@@ -15,6 +15,7 @@ import { filter } from 'rxjs/operators';
 import { NxMenuService } from '@app/menu/menu.service';
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { NxApplyService } from '@services/apply.service';
@@ -80,6 +81,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         private applyService: NxApplyService,
         private pageService: NxPageService,
         private dialogs: NxDialogsService,
+        private simpleDialogService: NxSimpleDialogsService,
         private settingsService: NxSettingsService,
         private menuService: NxMenuService,
         private processService: NxProcessService,
@@ -166,19 +168,19 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     }
 
     private initProcesses(): void {
+        // DO not attempt to set the process correctly!!! Due to issues with multiple for watchers it's best to leave this alone for now.
         this.editUser = this.processService.createProcess(async () => {
             if (this.shouldChangePassword) {
                 // console.log('rejected saving the form until password has changed')
-                return Promise.reject();
+                return Promise.reject({ errorString: 'password needs to change' });
             }
             if (this.userSettingsForm?.invalid) {
-                return Promise.reject();
+                return Promise.reject({ errorString: 'form is invalid' });
             }
             const user = this.selectedUser;
             if (!user.name || this.locked.has(user.email)) {
-                return Promise.reject();
+                return Promise.reject({ errorString: 'its locked' });
             }
-
             try {
                 this.locked.add(user.email);
                 user.name = this.localUserName;
@@ -186,18 +188,29 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 user.fullName = this.fullName;
                 await this.system.userManager.saveUser(user, user.role);
                 await this.system.getUsers(true).catch(err => console.error(err));
-            } catch (_) {
-                this.toastService.notify(
-                    this.LANG.toastMessage.userChangesFail(),
-                    this.CONFIG.toast.warning,
-                );
+            } catch (err) {
+                if (err?.error?.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
+                    const ready = await this.simpleDialogService.refreshSession(this.system);
+                    if (ready) {
+                        await this.system.userManager.saveUser(user, user.role);
+                        await this.system.getUsers(true);
+                    }
+                } else {
+                    this.toastService.notify(
+                        this.LANG.toastMessage.userChangesFail(),
+                        this.CONFIG.toast.warning,
+                    );
+                }
             } finally {
-                this.locked.delete(user.email);
+                this.locked.delete(this.selectedUser.email);
                 this.setUser();
             }
         }, {
             ignoreError: true
-        });
+        },
+        undefined,
+        () => {} // Added to suppress the default logging in processes
+        );
     }
 
     public removeUser(): void {

@@ -8,6 +8,7 @@ import { BehaviorSubject } from 'rxjs';
 
 import { LanguageI18NStaticTypes } from '@common/language/language_i18n_static_types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
+import { NxLoginService } from '@services/login.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -32,6 +33,7 @@ export class AddUserModalContent {
     hideErrors: boolean = true;
     alreadyExists: string;
     addUser: Process;
+    needsUpdate: boolean;
     user;
     selectedPermissionSubject = new BehaviorSubject<any>({ name: '' });
     accessDescription: string;
@@ -39,8 +41,9 @@ export class AddUserModalContent {
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
+        private loginService: NxLoginService,
         private processService: NxProcessService,
-        private dialogRef: DialogRef,
+        public dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
     ) {
         this.CONFIG = configService.getConfig();
@@ -118,11 +121,28 @@ export class AddUserModalContent {
                 return this.saveUser();
             }
         },
-        {},
+        {
+            ignoreError: true
+        },
         user => {
             if (user) {
                 this.hideErrors = true;
                 this.close(user.id);
+            }
+        }, err => {
+            if (
+                err.errorId ===
+                    this.CONFIG.servers.errors.oldSessionErrorId
+            ) {
+                this.needsUpdate = true;
+                this.loginService.currentSystem = this.system;
+                this.loginService.updateSession('renewWeb')
+                    .then(ready => {
+                        this.needsUpdate = !ready;
+                        if (ready) {
+                            this.addUser.run();
+                        }
+                    });
             }
         });
     }
