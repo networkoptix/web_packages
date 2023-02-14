@@ -1123,10 +1123,7 @@ export class NxSystemAPI {
             data.rotate = rotate;
         }
 
-        if (this.version === 0 && this.systemId) {
-            data.auth = this.authGet;
-        }
-        const url = this.generateGetUrl(endpoint, data);
+        const url = this.generateGetUrl(endpoint, data).replace(this.urlBase, '');
         return this.get(url, undefined, { responseType: 'blob' })
             .pipe(map(blob => blob ? URL.createObjectURL(blob) : undefined));
     }

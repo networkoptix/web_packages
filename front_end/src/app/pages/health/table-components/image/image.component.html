@@ -39,8 +39,7 @@
         class="fs-exclude"
         alt="{{ state }}"
         *ngIf="
-            (state === 'Online' || state === 'Recording' || state === 'Scheduled') &&
-                (url | async) as url;
+            (state === 'Online' || state === 'Recording' || state === 'Scheduled') && url;
             else noLivePreview
         "
         [src]="url | safe: 'resourceUrl'"
@@ -48,7 +47,7 @@
         [style.width]="motionPreview || lightBackground ? '100%' : 'auto'"
         [attr.object-fit]="'cover'"
         (load)="loaded.emit(true)"
-        (error)="loaded.emit(true)"
+        (error)="url = ''; loaded.emit(true)"
     />
     <ng-template #noLivePreview>
         <div
