@@ -140,6 +140,8 @@ export class NxAPIToolDropdownsComponent implements OnInit {
         });
 
         this.readonlyAPIService.currentReadonlyAPI$.pipe(untilDestroyed(this), filter(readonlyAPI => !!readonlyAPI)).subscribe(readonlyAPI => {
+            const readonlyAPIToFind = readonlyAPI?.api?.id.toString() || this.readonlyAPIService.currentReadonlyAPI?.api?.id.toString();
+            this.system = findExistingItem(this.systems, readonlyAPIToFind);
             this.type = this.types[0];
             this.openAPIJSONService.currentType = 1;
         });

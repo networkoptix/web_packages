@@ -459,7 +459,7 @@ html[data-theme="dark"] {
     --swagger-delete-bg : #{$red_d1};
     --swagger-patch-bg  : #{$cyan600};
     --swagger-post-bg   : #{$green_d1};
-    --swagger-btn-execute-bg    : #{$blue13};
+    --swagger-btn-execute-bg    : var(--brand-core);
     --swagger-btn-execute-color : #{$light4};
     --swagger-btn-value-text-color   : #{$light10};
     --swagger-btn-key-text-color     : #{$purple400};
@@ -518,6 +518,7 @@ html[data-theme="dark"] {
     --card-simple-warning-bg           : var(--yellow_d2_lighter);
     --card-simple-warning-border-color : var(--yellow_d2_lighter);
     --card-simple-warning-color        : #000000; //$dark1;
+    --card-simple-warning-svg-color    : #000000; //$dark1;
 
     --card-simple-error-bg           : var(--red_d1_lighter);
     --card-simple-error-border-color : var(--red_d1_lighter);

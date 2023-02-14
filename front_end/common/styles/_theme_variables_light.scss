@@ -457,9 +457,9 @@ html[data-theme="light"] {
     --swagger-get-bg : #{$blue9};
     --swagger-put-bg : #{$orange_l1};
     --swagger-delete-bg : #{$red_l1};
-    --swagger-patch-bg : #{$cyan400};
-    --swagger-post-bg : #{$green_l1};
-    --swagger-btn-execute-bg : #{$blue1};
+    --swagger-patch-bg  : #{$cyan400};
+    --swagger-post-bg   : #{$green_l1};
+    --swagger-btn-execute-bg : var(--brand-core);
     --swagger-btn-execute-color : #{$light1};
     --swagger-btn-value-text-color : #{$dark9};
     --swagger-btn-key-text-color : #{$purple500};
@@ -510,19 +510,20 @@ html[data-theme="light"] {
     --card-body-bg : #{$light1};
     --card-hover-bg : #{$light1};
 
-    --card-simple-info-bg : rgba(var(--bluez-light--rgb), .3);
-    --card-simple-info-border-color : rgba(var(--bluez-light--rgb), .1);
+    --card-simple-info-bg : var(--bluez-light);
+    --card-simple-info-border-color : var(--bluez-light-dim);
     --card-simple-info-color : #{$dark9};
     --card-simple-info-svg-color : var(--bluez-bright);
 
-    --card-simple-warning-bg : rgba(var(--yellow_main--rgb), .1);
-    --card-simple-warning-border-color : rgba(var(--yellow_main--rgb), .3);
+    --card-simple-warning-bg : var(--yellow-l2);
+    --card-simple-warning-border-color : var(--yellow-l1);
     --card-simple-warning-color : #{$dark9};
+    --card-simple-warning-svg-color : var(--yellow-main);
 
-    --card-simple-error-bg : rgba(var(--red_l2--rgb), .1);
-    --card-simple-error-border-color : rgba(var(--red_l2--rgb), .3);
+    --card-simple-error-bg : #{$red2_dim};
+    --card-simple-error-border-color : #{$red2_dimmer};
     --card-simple-error-color : #{$dark9};
-    --card-simple-error-svg-color : #{$red_l2};
+    --card-simple-error-svg-color : #{$red_main};
     --card-simple-error-svg-ornament-color : #{$light1};
 
     --card-simple-default-bg : #{$red2};

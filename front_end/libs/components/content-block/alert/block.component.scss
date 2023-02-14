@@ -167,6 +167,7 @@
         color: var(--card-simple-error-color);
         background-color: var(--card-simple-error-bg);
         border: 1px solid var(--card-simple-error-border-color);
+        border-radius: 0;
         margin-bottom: 8px;
         line-height: 18px;
 
@@ -205,13 +206,14 @@
         color: var(--card-simple-warning-color);
         background-color: var(--card-simple-warning-bg);
         border: 1px solid var(--card-simple-warning-border-color);
+        border-radius: 0;
         margin-bottom: 8px;
         line-height: 18px;
 
         svg-icon svg .st0,
         svg-icon svg .st1,
         svg-icon svg .error {
-            stroke: var(--card-simple-warning-color);
+            stroke: var(--card-simple-warning-svg-color);
         }
 
         a {
@@ -233,7 +235,7 @@
             svg-icon svg .st0,
             svg-icon svg path {
                 stroke: none;
-                fill: var(--card-simple-warning-color);
+                fill: var(--card-simple-warning-svg-color);
             }
         }
 
@@ -246,7 +248,8 @@
         @include typography.regular13nocolor;
         color: var(--card-simple-info-color);
         background-color: var(--card-simple-info-bg);
-        border: 1px solid var(--card-simple-info-bg);
+        border: 1px solid var(--card-simple-info-border-color);
+        border-radius: 0;
         margin-bottom: 8px;
         line-height: 18px;
 

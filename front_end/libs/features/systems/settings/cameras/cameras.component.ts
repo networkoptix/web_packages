@@ -16,7 +16,8 @@ import {
     from,
     throwError,
     of,
-    Observable
+    Observable,
+    combineLatest
 } from 'rxjs';
 import {
     filter,
@@ -27,7 +28,8 @@ import {
     retry,
     tap,
     catchError,
-    switchMap
+    switchMap,
+    share
 } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
@@ -111,8 +113,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     LANG = staticLang;
     isMobile: boolean;
     infoBlockSizeEnum = InfoBlockSize;
-    reload$ = new BehaviorSubject(0);
-    private width$ = new BehaviorSubject(0);
+    public reload$ = new BehaviorSubject(0);
+    width$ = new BehaviorSubject(0);
+    preview$: Observable<string>;
     sensitivity = new FormGroup({
         current: new FormControl<SensitivityButtonValue>(false)
     });
@@ -227,18 +230,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         const aspect = this.selectedAspect.value || ASPECT_RATIOS['4:3'];
         return Math.min(
             Math.floor(this.canvasWidth / aspect / 32) * 32, this.maxHeight
-        );
-    }
-
-    get preview(): Observable<string> {
-        return this.system.serverManager.getPreviewUrl(
-            this.selectedCamera.id,
-            null,
-            (
-                this.selectedAspect.value || ASPECT_RATIOS['4:3']
-            ) * this.maxHeight * 2,
-            this.maxHeight * 2,
-            this.selectedRotation.value || 0
         );
     }
 
@@ -607,6 +598,28 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             ]);
 
         this.motionGridChangeWatcher.originalValue = false;
+        this.preview$ = combineLatest([
+            this.route.params,
+            this.selectedAspectWatcher.valueSubject,
+            this.selectedRotationWatcher.valueSubject,
+            this.reload$
+        ]).pipe(
+            switchMap(([{ cameraId }, _1, _2, _3]) => {
+                if (!cameraId || _1 === undefined || _2 === undefined) {
+                    return of('');
+                }
+                return this.system.getPreviewUrl(
+                    cameraId,
+                    null,
+                    (
+                        this.selectedAspect?.value as number ||
+                        this.aspectRatios[1].value as number
+                    ) * this.maxHeight * 2,
+                    this.maxHeight * 2,
+                    this.selectedRotation?.value || 0
+                );
+            }),
+            share());
     }
 
     ngOnDestroy(): void {

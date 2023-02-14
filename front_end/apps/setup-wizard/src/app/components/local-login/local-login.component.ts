@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, HostListener, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
@@ -57,4 +57,13 @@ export class LocalLoginComponent implements AfterViewInit {
     //         this.setAdminPasswordForm.controls.confirmPassword.setErrors({ dontMatch: true });
     //     }
     // }
+
+    @HostListener('document:keypress', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent): void {
+        if (event.key === 'Enter') {
+            if (this.setAdminPasswordForm.form.valid) {
+                this.wizardService.finish();
+            }
+        }
+    }
 }

@@ -45,7 +45,7 @@
                 url;
             else noLivePreview
         "
-        [src]="url"
+        [src]="url | safe: 'resourceUrl'"
         [style.height]="motionPreview || lightBackground ? '100%' : 'auto'"
         [style.width]="motionPreview || lightBackground ? '100%' : 'auto'"
         [attr.object-fit]="'cover'"

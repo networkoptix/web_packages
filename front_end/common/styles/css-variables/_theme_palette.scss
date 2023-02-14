@@ -1,5 +1,6 @@
 @use "../utils" as *;
 @use "../theme_palette.scss" as *;
+@use "../native-theme/theme_palette.scss" as native;
 
 :root {
 	@include generateVarAndRgb(--dark1, $dark1);
@@ -59,4 +60,12 @@
 	@include generateVarAndRgb(--red_d7, $red_d7);
 	@include generateVarAndRgb(--error, $red_l2);
 	@include generateVarAndRgb(--error-label, $red_l1);
+	@include generateVarAndRgb(--red-l1-brighter, $red_l1_brighter);
+
+	@include generateVarAndRgb(--yellow-l2, native.$yellow_l2);
+	@include generateVarAndRgb(--yellow-l1, native.$yellow_l1);
+	@include generateVarAndRgb(--yellow-main, native.$yellow_main);
+	@include generateVarAndRgb(--yellow-d1, native.$yellow_d1);
+	@include generateVarAndRgb(--yellow-d2-lighter, native.$yellow_d2_lighter);
+	@include generateVarAndRgb(--yellow-d2, native.$yellow_d2);
 }
