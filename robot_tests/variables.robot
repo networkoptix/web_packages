@@ -154,7 +154,7 @@ ${REMOVE USER MODAL}                  //nx-modal-remove-user-content
 ${REMOVE BUTTON}                      ${REMOVE USER MODAL}//button[contains(text(),'${REMOVE BUTTON TEXT}')]
 ${REMOVE CANCEL BUTTON}               ${REMOVE USER MODAL}//button[contains(text(),"${CANCEL BUTTON TEXT}")]
 
-${USERS LIST LINK}                    //a[@data-testid='users']
+${USERS LIST LINK}                    //a[@id='users']
 ${USERS LIST}                         ${USERS LIST LINK}/../../div[contains(@class,'level-3-items')]
 
 

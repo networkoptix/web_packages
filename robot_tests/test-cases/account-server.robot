@@ -69,7 +69,7 @@ Force Tags        account
     Verify in Account Page
 
 4. Change first and last name shows in system
-    [Tags]    C41573    C30655
+    [Tags]    C41573    C30655   CLOUD-10176
     Go To    ${url}/account
     Log In    ${server 1}[cloudUsers][liveViewer]    ${password}    button=None    api=${False}
     Verify in Account Page
@@ -77,13 +77,13 @@ Force Tags        account
     Input Text    ${ACCOUNT LAST NAME}    nameChanged
     Click Button    ${ACCOUNT SAVE}
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
-    Log Out
+    Log Out   api=${False}
     Go To    ${url}/systems/${server 1}[id]
     Log In    ${server 1}[cloudOwner]    ${password}    button=None    api=${False}
     Go To Users List
     Select User in Users List   ${server 1}[cloudUsers][liveViewer]
     Wait Until Element Is Visible    //nx-system-user-component//nx-block//header//span[contains(text(),'nameChanged nameChanged')]
-    Log Out
+    Log Out    api=${False}
     Go To    ${url}/account
     Log In    ${server 1}[cloudUsers][liveViewer]    ${password}    button=None    api=${False}
     Verify in Account Page
@@ -118,7 +118,7 @@ Force Tags        account
     Verify in Account Page
     Wait Until Element is Enabled    ${DELETE ACCOUNT BUTTON}
 
-    Log Out
+    Log Out    api=${False}
     Sleep   2
     Go To    ${url}/account
     Log In    ${server 1}[cloudUsers][viewer]    ${password}    button=None    api=${False}

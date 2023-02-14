@@ -14,7 +14,7 @@ ${CZECH ALERT}                        Váš účet byl úspěšně uložen
 ${ACCOUNT DROPDOWN}                   //header//div[@data-testid="accountSettingsDropdown"]/preceding-sibling::button
 ${ACCOUNT SETTINGS BUTTON}            //header//li//a[@href = '/account']
 ${LOG IN CLOSE BUTTON}                //button[@data-dismiss='modal']
-${ACCOUNT SETTINGS BUTTON SYSTEM}     //button[@data-testid="accountSettingsButton"]
+${ACCOUNT SETTINGS BUTTON SYSTEM}     //button[@id="accountSettingsButton"]
 ${ACCOUNT EMAIL}                      //a[@id='settings']
 ${ACCOUNT FIRST NAME}                 //form[@name='accountForm']//input[@id='firstName']
 ${ACCOUNT LAST NAME}                  //form[@name='accountForm']//input[@id='lastName']
