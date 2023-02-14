@@ -589,7 +589,7 @@ export class NxSystemAPI {
         cloudSystemID: string,
         cloudAuthKey: string,
         cloudAccountName: string
-    ): void {
+    ): Observable<void> {
         throw Error(this.forbiddenMsg);
     }
 

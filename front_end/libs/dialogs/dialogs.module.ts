@@ -37,21 +37,21 @@ import { CloudStorageActivateModalContent } from './cloud-storage/activate/cloud
 import { CloudStorageDeleteModalContent } from './cloud-storage/delete/cloud-storage-delete.component';
 import { CloudStorageModifyModalContent } from './cloud-storage/modify/cloud-storage-modify.component';
 import { CloudStorageMoveModalContent } from './cloud-storage/move/cloud-storage-move.component';
-import { ConnectCloudModalContent } from './connect-cloud/connect-cloud.component';
+import { ConnectCloudModalModule } from './connect-cloud/connect-cloud.module';
 import { CreateSystemGroupModalContent } from './create-system-group/create-system-group.component';
 import { DeleteCloudUserModalModule } from './delete-cloud-user/delete-cloud-user.module';
 import { DetachServerModalContent } from './detach-server/detach-server.component';
-import { DisconnectModalContent } from './disconnect/disconnect.component';
+import { DisconnectModalModule } from './disconnect/disconnect.module';
 import { DownloadAsyncModalContent } from './download-async/download-async.component';
 import { EditModalContent } from './edit/edit.component';
 import { EmbedModalContent } from './embed/embed.component';
 import { GenericDialogModule } from './generic/generic.module';
-import { Mandatory2faModalContent } from './mandatory-2fa/mandatory-2fa.component';
+import { Mandatory2faModalModule } from './mandatory-2fa/mandatory-2fa.module';
 import { MergeModalContent } from './merge/merge.component';
 import { MessageModalModule } from './message/message.module';
 import { NewFeatureInformationModalContent } from './new-feature/new-feature.component';
 import { RefreshSessionModalModule } from './refresh-session/refresh-session.module';
-import { RemoveSystemModalContent } from './remove-system/remove-system.component';
+import { RemoveSystemModalModule } from './remove-system/remove-system.module';
 import { RemoveUserModalModule } from './remove-user/remove-user.module';
 import { ReserveSpaceWarningModalContent } from './reserve-space-warning/reserve-space-warning.component';
 import { ResetBackupModalContent } from './reset-backup/reset-backup.component';
@@ -102,9 +102,12 @@ import { WizardModalContent } from './wizard/wizard.component';
         RefreshSessionModalModule,
         MessageModalModule,
         Client2faWarningModalModule,
+        ConnectCloudModalModule,
+        DisconnectModalModule,
+        RemoveSystemModalModule,
+        Mandatory2faModalModule,
     ],
     declarations: [
-        DisconnectModalContent,
         AddPartnerBrandModalContent,
         AddCustomizationUserModalContent,
         AddPartnerModalContent,
@@ -122,12 +125,9 @@ import { WizardModalContent } from './wizard/wizard.component';
         UpdateCameraCredentialsModalContent,
         ResetBackupModalContent,
         AddStorageModalContent,
-        RemoveSystemModalContent,
         EditModalContent,
         DownloadAsyncModalContent,
-        Mandatory2faModalContent,
         AddWidgetModalContent,
-        ConnectCloudModalContent,
         SelectTimeRangeModalContent,
         ReserveSpaceWarningModalContent,
         CreateSystemGroupModalContent,

@@ -1,13 +1,14 @@
+import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, Inject, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, Renderer2, ViewChild, ElementRef } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { LocalStorageService } from 'ngx-webstorage';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
+import { ModalBase } from '@dialogs/modal-base';
 import { environment } from '@environments/environment';
 import { apiBase, oauthStore } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
@@ -18,7 +19,35 @@ import { OauthService } from '@services/oauth.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { WINDOW } from '@services/window-provider';
-import { pickFrom } from '@utils/general';
+
+import type { ConnectLocalToCloud as DT } from '../dialogs.types';
+
+// These are probably usable elsewhere, but limiting scope to this dialog for now
+interface Token {
+    access_token: string;
+    expires_at: string;
+    expires_in: string;
+    refresh_token: string;
+    scope: string;
+    token_type: string;
+}
+
+type Connect = Omit<
+    t.System,
+    'accessRole'
+    | 'capabilities'
+    | 'lastLoginTime'
+    | 'ownerFullName'
+    | 'sharingPermissions'
+    | 'sateofHealth'
+    | 'usageFrequency'
+    | 'version'
+>;
+
+interface Introspect extends Omit<Token, 'refresh_token'> {
+    username: string;
+    time_since_password: string;
+}
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -26,22 +55,21 @@ import { pickFrom } from '@utils/general';
     templateUrl: 'connect-cloud.component.html',
     styleUrls: []
 })
-export class ConnectCloudModalContent implements OnInit {
-    @Input() closable = true;
-    @ViewChild('connectForm', { static: true }) connectForm: NgForm;
+export class ConnectCloudModalContent extends ModalBase<DT['return']> implements OnInit {
+    @ViewChild('connectForm', { static: true }) private connectForm: NgForm;
+    @ViewChild('passwordContainer') private passwordContainer: ElementRef<HTMLDivElement>;
+    // Password input is used by NgModel
 
     LANG = staticLang;
     CONFIG: IConfig;
     readonly isLocal: boolean;
     readonly environment = environment;
 
-    system;
-    cloudTokens: any;
+    private cloudTokens: Token;
     codeExists: boolean;
-    codeSubscription: Subscription;
+    private codeSubscription: Subscription;
     connectProcess: Process;
     wrongPassword: boolean;
-    apiBase: string = apiBase;
 
     auth = {
         username: '',
@@ -50,23 +78,21 @@ export class ConnectCloudModalContent implements OnInit {
 
     constructor(
         configService: NxConfigService,
-
         private http: HttpClient,
         private oauthService: OauthService,
         private processService: NxProcessService,
         private renderer: Renderer2,
         private storage: LocalStorageService,
         private account: NxAccountService,
-        private dialogRef: DialogRef,
-        @Inject(DIALOG_DATA) private dialogData: any,
+        public dialogRef: DialogRef<DT['return']>,
+        @Inject(DIALOG_DATA) private system: DT['data'],
         @Inject(WINDOW) private window: Window,
     ) {
+        super(dialogRef);
         this.CONFIG = configService.getConfig();
     }
 
     ngOnInit(): void {
-        pickFrom(this.dialogData, ['system'], this);
-
         this.setupProcess();
         this.setupAuth();
 
@@ -76,40 +102,46 @@ export class ConnectCloudModalContent implements OnInit {
         this.window.open('/#/cloud-authorize?state=connect', '_blank').focus();
     }
 
-    private connect(systemName, email, accessToken) {
+    private connect(systemName: string, email: string, accessToken: string): Observable<Connect> {
         let headers = new HttpHeaders();
         headers = headers.set('Authorization', `Bearer ${accessToken}`);
-        return this.http.post<t.CloudResponse>(
-            this.CONFIG.cloudHost + this.apiBase + '/systems/connect',
+        return this.http.post<Connect>(
+            this.CONFIG.cloudHost + apiBase + '/systems/connect',
             { name: systemName, email },
             { headers }
         );
     }
 
-    private handleCode(code) {
+    private handleCode(code: string): Promise<void> {
         return this.system.mediaserver.loginOauth(code, true).toPromise()
-            .then(res => {
+            .then((res: Token) => {
                 this.codeExists = !!code;
                 this.cloudTokens = res;
-                this.codeSubscription && this.codeSubscription.unsubscribe();
+                this.codeSubscription?.unsubscribe();
                 this.storage.clear(oauthStore.code);
+                if (this.codeExists) {
+                    setTimeout(() => {
+                        this.passwordContainer.nativeElement.querySelector('input').focus();
+                    });
+                    // Allow password input to become enabled
+                }
             });
     }
 
-    private handleConnectLocalToCloud(tokens) {
+    private handleConnectLocalToCloud(tokens: Token): Promise<void> {
         const token = tokens.access_token;
-        return this.http.get(
+        return this.http.get<Introspect>(
             this.CONFIG.cloudHost + '/oauth/introspect/',
             { params: { token } }
         ).pipe(
-            switchMap((tokenInfo: any) =>
+            switchMap(tokenInfo =>
                 this.connect(
                     this.system.info.systemName,
                     tokenInfo.username,
                     token
                 )
             ),
-            switchMap((res: any) =>
+            switchMap(res =>
                 this.system.mediaserver.saveCloudSystemCredentials(
                     res.id,
                     res.authKey,
@@ -128,21 +160,23 @@ export class ConnectCloudModalContent implements OnInit {
             });
     }
 
-    private setupProcess() {
-        const passwordError = () => {
+    private setupProcess(): void {
+        const passwordError = (): true => {
             this.wrongPassword = true;
             this.auth.password = '';
 
             this.renderer.selectRootElement('#password').focus();
             return true;
         };
-        const successHandler = () => {
+        const successHandler = (): Promise<void> => {
             return this.oauthService.logoutTokens(
                 this.cloudTokens.access_token,
                 this.cloudTokens.refresh_token
             ).then(() => this.close(false));
         };
-        const errorHandler = () => { };
+        const errorHandler = (): void => {
+            this.unlock();
+        };
         const settings = {
             ignoreError: true,
             ignoreUnauthorized: true,
@@ -153,6 +187,7 @@ export class ConnectCloudModalContent implements OnInit {
             errorPrefix: this.LANG.errorCodes.cantConnectSystemPrefix
         };
         this.connectProcess = this.processService.createProcess(() => {
+            this.lock();
             this.connectForm.controls.password.setErrors(undefined);
             return this.system.mediaserver.loginToken(
                 this.auth.username,
@@ -173,9 +208,5 @@ export class ConnectCloudModalContent implements OnInit {
         }
 
         close.finally(() => this.close(true));
-    };
-
-    close = (msg?: boolean): void => {
-        this.dialogRef.close(msg);
     };
 }

@@ -202,23 +202,6 @@ export class NxDialogsService extends DialogBase {
         () => import('./cloud-storage/move/cloud-storage-move.component').then(m => m.CloudStorageMoveModalContent)
     );
 
-    async connectLocalToCloud(
-        system: NxSystem,
-    ) {
-        const config: Partial<DialogConfig> = {
-            data: {
-                system,
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-        const component = await import('./connect-cloud/connect-cloud.component').then(m => m.ConnectCloudModalContent);
-
-        return this.open(component, dialogConfig)
-            .afterClosed();
-    }
-
     public async addPartnerBrand() {
         const config: Partial<DialogConfig> = {};
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
@@ -247,36 +230,6 @@ export class NxDialogsService extends DialogBase {
 
         await this.preloadDialogsModule();
         const component = await import('./add-partner/add-partner.component').then(m => m.AddPartnerModalContent);
-
-        return this.open(component, dialogConfig)
-            .afterClosed();
-    }
-
-    public async disconnect(system: NxSystem) {
-        const config: Partial<DialogConfig> = {
-            data: {
-                system,
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-        const component = await import('./disconnect/disconnect.component').then(m => m.DisconnectModalContent);
-
-        return this.open(component, dialogConfig)
-            .afterClosed();
-    }
-
-    public async removeSystem(system: NxSystem) {
-        const config: Partial<DialogConfig> = {
-            data: {
-                system,
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-        const component = await import('./remove-system/remove-system.component').then(m => m.RemoveSystemModalContent);
 
         return this.open(component, dialogConfig)
             .afterClosed();
@@ -421,26 +374,6 @@ export class NxDialogsService extends DialogBase {
 
         await this.preloadDialogsModule();
         const component = await import('./reset-backup/reset-backup.component').then(m => m.ResetBackupModalContent);
-
-        return this.open(component, dialogConfig)
-            .afterClosed();
-    }
-
-    public async toggleSystem2fa(
-        system: NxSystem,
-        system2faEnabled: boolean,
-    ): Promise<string | undefined> {
-        const config: Partial<DialogConfig> = {
-            width: DIALOG_SIZE.SMALL,
-            data: {
-                system,
-                system2faEnabled,
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-        const component = await import('./mandatory-2fa/mandatory-2fa.component').then(m => m.Mandatory2faModalContent);
 
         return this.open(component, dialogConfig)
             .afterClosed();
@@ -669,6 +602,24 @@ export class NxDialogsService extends DialogBase {
     /* Groups */
 
     /* Admin */
+    connectLocalToCloud = this.dialogV2Factory<Dt.ConnectLocalToCloud>(
+        () => import('./connect-cloud/connect-cloud.component').then(m => m.ConnectCloudModalContent)
+    );
+
+    disconnect = this.dialogV2Factory<Dt.Disconnect>(
+        () => import('./disconnect/disconnect.component').then(m => m.DisconnectModalContent)
+    );
+
+    removeSystem = this.dialogV2Factory<Dt.RemoveSystem>(
+        () => import('./remove-system/remove-system.component').then(m => m.RemoveSystemModalContent),
+        { autoFocus: 'input' },
+    );
+
+    toggleSystem2fa = this.dialogV2Factory<Dt.Mandatory2fa>(
+        () => import('./mandatory-2fa/mandatory-2fa.component').then(m => m.Mandatory2faModalContent),
+        { width: DIALOG_SIZE_V2.SMALL },
+    );
+
     transferOwnership = this.dialogV2Factory<Dt.TransferOwnership>(
         () => import('./transfer-ownership/transfer-ownership.component').then(m => m.TransferOwnershipModalContent)
     );

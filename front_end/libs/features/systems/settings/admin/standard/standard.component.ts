@@ -8,7 +8,6 @@ import {
     OnDestroy
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { firstValueFrom } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
@@ -97,7 +96,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
     alexaSettings: Partial<AlexaSettings>;
     eventRulesBeingSetup = false;
 
-    is2faDialogActive: Promise<any>;
+    is2faDialogActive: boolean;
     system2faEnabled = false;
     settingsWatchersSet = false;
     canChange2fa = false;
@@ -150,8 +149,6 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
 
     constructor(
         configService: NxConfigService,
-
-        private router: Router,
         private applyService: NxApplyService,
         private cloudApi: NxCloudApiService,
         private dialogService: NxDialogsService,
@@ -340,29 +337,18 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
 
         if (this.is2faDialogActive) {
             return;
+        } else {
+            this.is2faDialogActive = true;
         }
 
-        // @ts-expect-error
-        this.is2faDialogActive = await this.dialogService
-            .toggleSystem2fa(this.system, !this.system2faEnabled) // using !this.system2faEnabled as click event was canceled --TT
+        this.dialogService
+            .toggleSystem2fa({ system: this.system, system2faEnabled: this.system2faEnabled })
             .then(res => {
-                if (res === 'success') {
+                if (res) {
                     this.system2faEnabled = !this.system2faEnabled;
                 }
-
-                if (res === 'GOTO_SECURITY') {
-                    // let apply service process to finish
-                    setTimeout(() => {
-                        this.router
-                            .navigate(['/account/security'])
-                            .catch(error => {
-                                console.error(error);
-                            });
-                    });
-                }
             }).finally(() => {
-                this.is2faDialogActive = undefined;
-                return Promise.resolve();
+                this.is2faDialogActive = false;
             });
     }
 

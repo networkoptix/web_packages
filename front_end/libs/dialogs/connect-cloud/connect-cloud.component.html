@@ -60,7 +60,10 @@
                 />
             </div>
 
-            <div class="form-group">
+            <div
+                class="form-group"
+                #passwordContainer
+            >
                 <label
                     for="password"
                     translate
@@ -76,7 +79,6 @@
                     type="password"
                     [disabled]="!codeExists"
                     required
-                    nxFocusMe
                 />
                 <ng-container *ngIf="password.invalid">
                     <div *ngIf="password.touched && password.dirty && !wrongPassword">
@@ -109,6 +111,7 @@
         ></nx-process-button>
         <nx-cancel-button
             [process]="connectProcess"
+            [cancelFn]="unlock"
             [discardFn]="cancel"
         ></nx-cancel-button>
     </div>

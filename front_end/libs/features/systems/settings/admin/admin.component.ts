@@ -424,7 +424,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         });
     }
 
-    connectLocalToCloud() {
+    connectLocalToCloud(): Promise<boolean> {
         if (this.window.navigator.onLine) {
             return this.dialogs.connectLocalToCloud(this.system);
         } else {

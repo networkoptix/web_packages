@@ -1,9 +1,10 @@
-import { Component, Inject, Input } from '@angular/core';
+import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
+import { Component, Inject } from '@angular/core';
 import { of } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { ModalBase } from '@dialogs/modal-base';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import type { IEnvironment } from '@environments/environment-config';
@@ -14,35 +15,22 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxSystemAPIService } from '@services/system-api.service';
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
-import type { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
-import { pickFrom } from '@utils/general';
+
+import type { Disconnect as DT } from '../dialogs.types';
 
 @Component({
     selector: 'nx-modal-disconnect-content',
     templateUrl: 'disconnect.component.html',
     styleUrls: []
 })
-export class DisconnectModalContent {
-    @Input() closable: boolean = true;
-
+export class DisconnectModalContent extends ModalBase<DT['return']> {
     readonly environment: IEnvironment = environment;
     LANG = staticLang;
     needsUpdate: boolean;
     disconnect: Process;
     disconnectInterval: number;
-    system: NxSystem;
-    // password: string;
-    // wrongPassword: boolean;
-    // auth = {
-    //     username : '',
-    //     password : ''
-    // };
-
-    // hideErrors = true;
-
-    // @ViewChild('disconnectForm', { static: true }) disconnectForm: HTMLFormElement;
 
     constructor(
         private processService: NxProcessService,
@@ -52,36 +40,16 @@ export class DisconnectModalContent {
         private toastService: NxToastService,
         private systemsService: NxSystemsService,
         private account: NxAccountService,
-        public dialogRef: DialogRef,
-        @Inject(DIALOG_DATA) private dialogData: {
-            system: NxSystem;
-        },
+        public dialogRef: DialogRef<DT['return']>,
+        @Inject(DIALOG_DATA) public system: DT['data'],
         @Inject(WINDOW) private window: Window,
     ) {
+        super(dialogRef);
     }
 
     ngOnInit(): void {
-        pickFrom(this.dialogData, ['system'], this);
-
-        // const passwordError = () => {
-        //     this.wrongPassword = true;
-        //     this.auth.password = '';
-
-        //     this.renderer.selectRootElement('#password').focus();
-        //     return true;
-        // };
-        // this.auth.password = '';
-        // this.account
-        //     .get()
-        //     .then((account) => {
-        //         if (account) {
-        //             this.auth.username = this.isLocal ? account.first_name : account.email;
-        //         }
-        //     });
-
         this.disconnect = this.processService.createProcess(() => {
-            // this.disconnectForm.controls.password.setErrors(undefined);
-            // this.wrongPassword = false;
+            this.lock();
 
             if (this.environment.isLocal) {
                 return this.disconnectLocal();
@@ -105,11 +73,6 @@ export class DisconnectModalContent {
         }, {
             ignoreError: true,
             ignoreUnauthorized: true
-            // errorCodes         : {
-            //     'Wrong password.' : passwordError,
-            //     wrongPassword     : passwordError
-            // },
-            // errorPrefix        : this.LANG.errorCodes.cantDisconnectSystemPrefix()
         }, res => {
             this.close(true);
             this.toastService.notify(
@@ -117,6 +80,7 @@ export class DisconnectModalContent {
                 toast.success,
             );
         }, err => {
+            this.unlock();
             if (err?.resultCode === 'userPasswordRequired' || err.errorId === servers.errors.oldSessionErrorId) {
                 this.needsUpdate = true;
                 this.loginService.currentSystem = this.system;
@@ -133,7 +97,7 @@ export class DisconnectModalContent {
         });
     }
 
-    close = (msg?: boolean): void => {
+    override close = (msg?: DT['return']): void => {
         clearInterval(this.disconnectInterval);
         this.dialogRef.close(msg);
     };

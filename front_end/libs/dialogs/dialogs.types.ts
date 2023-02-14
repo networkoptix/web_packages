@@ -101,6 +101,16 @@ export type Account2faReturn = string;
 /* Groups */
 
 /* Admin */
+export type ConnectLocalToCloud = DialogType<NxSystem, boolean>;
+export type Disconnect = DialogType<NxSystem, boolean>;
+export type RemoveSystem = DialogType<NxSystem, boolean>;
+
+interface Mandatory2faData {
+    system: NxSystem;
+    system2faEnabled: boolean;
+}
+export type Mandatory2fa = DialogType<Mandatory2faData, boolean>;
+
 export type TransferOwnership = DialogType<NxSystem, SystemTransferInfo>;
 
 /* Cameras */

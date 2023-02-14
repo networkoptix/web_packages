@@ -3,8 +3,6 @@
     name="disconnectForm"
     novalidate
 >
-    <!-- [ngClass]="{'hide-errors': hideErrors}"
-      (submit)="hideErrors = false"> -->
     <div class="modal-header">
         <h1
             class="modal-title"
@@ -50,6 +48,7 @@
             ></nx-process-button>
             <nx-cancel-button
                 [process]="disconnect"
+                [cancelFn]="unlock"
                 [discardFn]="close"
                 data-testid="cancelDisconnectSystemBtn"
             ></nx-cancel-button>

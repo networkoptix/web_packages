@@ -27,7 +27,7 @@
         <p>
             <span translate>Enable it in your</span>&nbsp;<a
                 routerLink="/account/security"
-                (click)="close('GOTO_SECURITY')"
+                (click)="close()"
                 translate
                 >account settings</a
             >
@@ -45,7 +45,7 @@
 </ng-template>
 
 <form
-    *ngIf="!showError; else enable2fa"
+    *ngIf="accountTotpExists; else enable2fa"
     #mandatory2faForm="ngForm"
     name="mandatory2faForm"
     novalidate
@@ -60,7 +60,7 @@
             </h1>
         </ng-template>
         <h1
-            *ngIf="system2faEnabled; else disable2fa"
+            *ngIf="!system2faEnabled; else disable2fa"
             class="modal-title"
             translate
         >
@@ -128,14 +128,15 @@
         <nx-process-button
             [process]="mandatory2fa"
             [form]="mandatory2faForm"
-            [actionType]="system2faEnabled ? 'primary' : 'danger'"
+            [actionType]="!system2faEnabled ? 'primary' : 'danger'"
             [buttonText]="
-                system2faEnabled ? LANG.dialogs.buttons.enable : LANG.dialogs.buttons.disable
+                !system2faEnabled ? LANG.dialogs.buttons.enable : LANG.dialogs.buttons.disable
             "
         ></nx-process-button>
         <nx-cancel-button
             [process]="mandatory2fa"
-            [discardFn]="cancel"
+            [cancelFn]="unlock"
+            [discardFn]="close"
         ></nx-cancel-button>
     </div>
 </form>

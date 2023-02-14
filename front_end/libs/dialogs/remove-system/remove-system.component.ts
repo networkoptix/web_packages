@@ -1,37 +1,30 @@
+import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import {
     Component,
     Inject,
-    Input,
     Renderer2,
     ViewChild
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
+import { ModalBase } from '@dialogs/modal-base';
 import { NxToastService } from '@dialogs/toast.service';
-import { environment } from '@environments/environment';
 import { toast } from '@lib/variables/static-variables';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import { NxSystemAPI } from '@services/system-legacy-api.service';
-import type { NxSystem } from '@services/system.service/system';
-import { pickFrom } from '@utils/general';
+
+import type { RemoveSystem as DT } from '../dialogs.types';
 
 @Component({
     selector: 'nx-modal-remove-model-content',
     templateUrl: 'remove-system.component.html',
     styleUrls: []
 })
-export class RemoveSystemModalContent {
-    @Input() closable = true;
-
+export class RemoveSystemModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;
 
     disconnectFromAccount: Process;
-    system: NxSystem;
-    isLocal: boolean;
-    password: string;
     wrongPassword: boolean;
     auth = {
         username: '',
@@ -39,21 +32,20 @@ export class RemoveSystemModalContent {
     };
 
     hideErrors = true;
-    mediaServerApi: NxSystemAPI;
 
-    @ViewChild('disconnectAccountForm', { static: true }) disconnectAccountForm: NgForm;
+    @ViewChild('disconnectAccountForm', { static: true }) private disconnectAccountForm: NgForm;
 
     constructor(
         private processService: NxProcessService,
         private renderer: Renderer2,
         private toastService: NxToastService,
-        private dialogRef: DialogRef,
-        @Inject(DIALOG_DATA) private dialogData: any,
+        public dialogRef: DialogRef<DT['return']>,
+        @Inject(DIALOG_DATA) public system: DT['data'],
     ) {
-        this.isLocal = environment.isLocal;
+        super(dialogRef);
     }
 
-    credentialErrorHandler = () => {
+    private credentialErrorHandler = (): true => {
         this.wrongPassword = true;
         this.auth.password = '';
 
@@ -62,12 +54,10 @@ export class RemoveSystemModalContent {
     };
 
     ngOnInit(): void {
-        pickFrom(this.dialogData, ['system'], this);
-
         this.auth.username = this.system.userManager.currentUserEmail;
-        this.auth.password = '';
 
         this.disconnectFromAccount = this.processService.createProcess(() => {
+            this.lock();
             this.disconnectAccountForm.controls.password.setErrors(undefined);
             this.wrongPassword = false;
             return this.system.deleteFromCurrentAccount(this.auth.password).toPromise();
@@ -87,10 +77,9 @@ export class RemoveSystemModalContent {
                 }
             };
             this.toastService.notify(msg, toast.success);
-        }, err => console.error(err));
+        }, err => {
+            console.error(err);
+            this.unlock();
+        });
     }
-
-    close = (withResult?: boolean): void => {
-        this.dialogRef.close(withResult);
-    };
 }

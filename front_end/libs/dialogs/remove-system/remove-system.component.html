@@ -66,6 +66,7 @@
         ></nx-process-button>
         <nx-cancel-button
             [process]="disconnectFromAccount"
+            [cancelFn]="unlock"
             [discardFn]="close"
         ></nx-cancel-button>
     </div>
