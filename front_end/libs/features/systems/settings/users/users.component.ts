@@ -34,6 +34,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit(): void {
+        // TODO: make vms_5.1 user changes in the child components
         this.settingsService.systemSubject
             .pipe(
                 untilDestroyed(this),

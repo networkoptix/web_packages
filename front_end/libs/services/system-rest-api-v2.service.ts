@@ -308,6 +308,35 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
             .pipe(map(res => this.responseWrapper(res)));
     }
 
+    addUser(user: NxSystemUser): Observable<ChangedIdReturned> {
+        user.type = user.isCloud ? 'cloud' : 'local'; // TODO: add LDAP
+        user.isHttpDigestEnabled = !user.isCloud;
+
+        return this.post<t.ChangedIdReturned>(
+            '/rest/v1/users',
+            this.cleanUserObject(user)
+        );
+    }
+
+    saveUser(user: NxSystemUser): Observable<ChangedIdReturned> {
+        user.type = user.isCloud ? 'cloud' : 'local'; // TODO: add LDAP
+        user.isHttpDigestEnabled = !user.isCloud;
+
+        if (!user.isCloud) {
+            user.name && delete user.name;
+            user.isHttpDigestEnabled && delete user.isHttpDigestEnabled;
+        }
+
+        return this.patch<t.ChangedIdReturned>(
+            `/rest/v1/users/${user.id}`,
+            this.cleanUserObject(user)
+        );
+    }
+
+    deleteUser(userId: string): Observable<ChangedIdReturned> {
+        return this.delete<t.ChangedIdReturned>(`/rest/v1/users/${this.cleanId(userId)}`);
+    }
+
     // Health Monitoring
     // private getMetricsHealth(metricType: string): any {
     //     return this.get(`/rest/v2/system/metrics/${metricType}`,

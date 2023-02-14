@@ -4,6 +4,7 @@ import type { NgForm } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxLoginService } from '@services/login.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
@@ -26,6 +27,7 @@ export class AddUserModalContent {
     hideErrors: boolean = true;
     systemName: string;
     addUser: Process;
+    needsUpdate: boolean;
     user;
     selectedPermissionSubject = new BehaviorSubject<any>({ name: '' });
     accessDescription: string;
@@ -33,6 +35,7 @@ export class AddUserModalContent {
     constructor(
         configService: NxConfigService,
         private processService: NxProcessService,
+        private loginService: NxLoginService,
         public dialogRef: DialogRef<DialogTypes['return']>,
         @Inject(DIALOG_DATA) public system: DialogTypes['data'],
     ) {
@@ -104,7 +107,8 @@ export class AddUserModalContent {
                 alreadyExists: () => {
                     this.form.controls.addUserEmail.setErrors({ alreadyExists: true });
                 }
-            }
+            },
+            ignoreError: true
         },
         user => {
             this.hideErrors = true;
@@ -116,7 +120,20 @@ export class AddUserModalContent {
             if (err?.resultCode === 'alreadyExists') {
                 return;
             }
-            console.error(err);
+            if (
+                err.errorId ===
+                this.CONFIG.servers.errors.oldSessionErrorId
+            ) {
+                this.needsUpdate = true;
+                this.loginService.currentSystem = this.system;
+                this.loginService.updateSession('renewWeb')
+                    .then(ready => {
+                        this.needsUpdate = !ready;
+                        if (ready) {
+                            this.addUser.run();
+                        }
+                    });
+            }
         });
     }
 

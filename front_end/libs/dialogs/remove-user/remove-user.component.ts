@@ -2,6 +2,7 @@ import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { Component, Inject } from '@angular/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxLoginService } from '@services/login.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 
@@ -16,10 +17,12 @@ export class RemoveUserModalContent {
     LANG = staticLang;
 
     removeUserProcess: Process;
+    needsUpdate: boolean;
     dialogTitle: string;
     dialogButtonText: string;
 
     constructor(
+        private loginService: NxLoginService,
         private processService: NxProcessService,
         public dialogRef: DialogRef<DialogTypes['return']>,
         @Inject(DIALOG_DATA) private dialogData: DialogTypes['data'],
@@ -34,15 +37,30 @@ export class RemoveUserModalContent {
 
         this.removeUserProcess = this.processService.createProcess(() => {
             this.dialogRef.disableClose = true;
-            return system.userManager.deleteUser(user)
-                .then(() => system.getUsers(true));
+            return system.userManager.deleteUser(user);
         }, {
-            errorPrefix: this.LANG.errorCodes.cantSharePrefix
+            errorPrefix: this.LANG.errorCodes.cantSharePrefix,
+            ignoreError: true
         }, () => {
+            this.system.getUsers(true).then(() => this.dialogRef.close(true)
             this.close(true);
             this.unlock();
-        }, () => {
+        }, err => {
             this.unlock();
+            if (
+                err.errorId ===
+                this.CONFIG.servers.errors.oldSessionErrorId
+            ) {
+                this.needsUpdate = true;
+                this.loginService.currentSystem = this.system;
+                this.loginService.updateSession('renewWeb')
+                    .then(ready => {
+                        this.needsUpdate = !ready;
+                        if (ready) {
+                            this.removeUserProcess.run();
+                        }
+                    });
+            }
         });
     }
 

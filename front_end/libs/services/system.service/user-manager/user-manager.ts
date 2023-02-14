@@ -2,6 +2,7 @@ import { isEqual, cloneDeep } from 'lodash-es';
 
 import { environment } from '@environments/environment';
 import type { IConfig } from '@services/nx-config/config-types';
+import { ChangedIdReturned } from '@services/system-api.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { alphabeticalSort } from '@utils/general';
 
@@ -132,13 +133,12 @@ export class UserManager {
     deleteUser(removedUser: NxSystemUser) {
         return this.mediaserver.deleteUser(removedUser.id).toPromise()
             .then(data => {
+                if (!data) {
+                    data = removedUser;
+                }
                 this.users = this.users.filter(user => {
                     return user.id !== data.id;
                 });
-            })
-            .catch(err => {
-                console.info('failed to removed from system directly');
-                console.error(err);
             });
     }
 
@@ -300,7 +300,11 @@ export class UserManager {
             delete user.permissions;
         }
 
-        return this.mediaserver.saveUser(user).toPromise().then((result: NxSystemUser) => {
+        const saveAction = userCreated && this.mediaserver.version === 5.1
+            ? this.mediaserver.addUser(user)
+            : this.mediaserver.saveUser(user);
+
+        return saveAction.toPromise().then((result: NxSystemUser) => {
             user.id = result.id;
             user.role = role;
             user.accessRole = role.name || role.label;

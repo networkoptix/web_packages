@@ -1008,7 +1008,11 @@ export class NxSystem {
         const email = currentUser ? currentUser.email : this.userManager.currentUserEmail;
         if (this.isAvailable && currentUser) {
             // Try to remove me from the system directly
-            this.userManager.deleteUser(currentUser);
+            this.userManager.deleteUser(currentUser)
+                .catch(err => {
+                    console.info('Failed to removed from system directly');
+                    console.error(err);
+                });
         }
         // Anyway - send another request to cloud_db to remove my this
         const id = environment.isLocal ? this.CONFIG.cloudSystemId : this.id;
