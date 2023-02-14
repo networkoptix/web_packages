@@ -47,7 +47,9 @@
                         <span
                             *ngIf="addUserEmail.errors.alreadyExists"
                             class="input-error"
-                            >{{ LANG.dialogs.addUser.alreadyExists | translate: { systemName } }}</span
+                            >{{
+                                LANG.dialogs.addUser.alreadyExists | translate: { systemName }
+                            }}</span
                         >
                         <ng-container *ngIf="addUserEmail.touched">
                             <span

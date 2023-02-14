@@ -2,7 +2,6 @@ import { isEqual, cloneDeep } from 'lodash-es';
 
 import { environment } from '@environments/environment';
 import type { IConfig } from '@services/nx-config/config-types';
-import { ChangedIdReturned } from '@services/system-api.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { alphabeticalSort } from '@utils/general';
 

@@ -4,6 +4,7 @@ import type { NgForm } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { servers } from '@lib/variables/static-variables';
 import { NxLoginService } from '@services/login.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -122,7 +123,7 @@ export class AddUserModalContent {
             }
             if (
                 err.errorId ===
-                this.CONFIG.servers.errors.oldSessionErrorId
+                servers.errors.oldSessionErrorId
             ) {
                 this.needsUpdate = true;
                 this.loginService.currentSystem = this.system;

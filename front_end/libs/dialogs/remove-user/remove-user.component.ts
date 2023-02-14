@@ -2,6 +2,7 @@ import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { Component, Inject } from '@angular/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { servers } from '@lib/variables/static-variables';
 import { NxLoginService } from '@services/login.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -42,17 +43,17 @@ export class RemoveUserModalContent {
             errorPrefix: this.LANG.errorCodes.cantSharePrefix,
             ignoreError: true
         }, () => {
-            this.system.getUsers(true).then(() => this.dialogRef.close(true)
+            system.getUsers(true).then(() => this.dialogRef.close(true));
             this.close(true);
             this.unlock();
         }, err => {
             this.unlock();
             if (
                 err.errorId ===
-                this.CONFIG.servers.errors.oldSessionErrorId
+                servers.errors.oldSessionErrorId
             ) {
                 this.needsUpdate = true;
-                this.loginService.currentSystem = this.system;
+                this.loginService.currentSystem = system;
                 this.loginService.updateSession('renewWeb')
                     .then(ready => {
                         this.needsUpdate = !ready;

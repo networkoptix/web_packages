@@ -9,6 +9,7 @@ import type { NgForm } from '@angular/forms';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
+import { servers } from '@lib/variables/static-variables';
 import { NxLoginService } from '@services/login.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -105,7 +106,7 @@ export class ChangePasswordModalContent {
             err => {
                 if (
                     err.errorId ===
-                    this.CONFIG.servers.errors.oldSessionErrorId
+                    servers.errors.oldSessionErrorId
                 ) {
                     this.needsUpdate = true;
                     this.loginService.currentSystem = this.system;
