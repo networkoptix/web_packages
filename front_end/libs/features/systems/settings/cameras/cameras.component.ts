@@ -612,8 +612,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     cameraId,
                     null,
                     (
-                        this.selectedAspect?.value as number ||
-                        this.aspectRatios[1].value as number
+                        this.selectedAspect?.value ||
+                        this.aspectRatios[1].value
                     ) * this.maxHeight * 2,
                     this.maxHeight * 2,
                     this.selectedRotation?.value || 0

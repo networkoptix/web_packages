@@ -1,6 +1,8 @@
 <div
     (click)="openBookmarkModal()"
     role="button"
+    (nxOnIntersect)="bookmark.isVisible = $event === 'Visible'"
+    [intersectionThreshold]="0.01"
 >
     <div class="bookmarks-image-wrapper">
         <span class="bookmarks-duration">
@@ -18,9 +20,8 @@
                     class="bookmarks-image-playIcon"
                 ></svg-icon>
                 <img
-                    *ngIf="bookmark.thumbnail | async as thumbnail"
-                    [lazyLoad]="bookmark.thumbnail | async"
-                    [src]="bookmark.thumbnail"
+                    *ngIf="bookmark.isVisible && (bookmark.thumbnail | async) as thumbnail"
+                    [src]="thumbnail | safe: 'resourceUrl'"
                     [alt]="'thumbnail of ' + bookmark.name"
                     (error)="workingThumbnail = false"
                 />
