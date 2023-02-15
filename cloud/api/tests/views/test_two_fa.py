@@ -1,3 +1,4 @@
+import inspect
 import random
 import re
 from rest_framework import serializers
@@ -70,7 +71,8 @@ class TestTwoFAViews:
         assert isinstance(verification_code, CharField)
         assert verification_code.required == True
 
-    def test_two_factor_verification(self, create_user, arf, mocker):
+    @pytest.mark.asyncio
+    async def test_two_factor_verification(self, create_user, arf, mocker):
         mock_verify_2fa = mocker.patch(self.auth_mock_path + 'verify_2fa_code', return_value=True)
         mock_generate_2fa_key = mocker.patch(self.auth_mock_path + 'generate_2fa_key', return_value=True)
         access_token, code, verification_code = self.make_uuids(3)
@@ -82,19 +84,20 @@ class TestTwoFAViews:
         request = arf.get(f'/2fa/verification?code={code}&verification_code={verification_code}')
         request.session = {'access_token': access_token}
         request.user = self.user
-
-        assert view(request).status_code == 200
+        response = await view(request)
+        assert response.status_code == 200
         assert mock_verify_2fa.call_count == 1
 
         # Valid Post
         request = arf.post(f'/2fa/verification')
         request.user = self.user
-
-        assert view(request).status_code == 200
+        response = await view(request)
+        assert response.status_code == 200
         args, kwargs = mock_generate_2fa_key.call_args_list[0]
         assert isinstance(args[0], Request)
 
-    def test_backup_code_get(self, create_user, arf, mocker):
+    @pytest.mark.asyncio
+    async def test_backup_code_get(self, create_user, arf, mocker):
         mock_verify_backup_code = mocker.patch(self.auth_mock_path + 'verify_backup_code', return_value=True)
         access_token, code, verification_code = self.make_uuids(3)
         code = re.sub(r'\D', '', code)
@@ -104,11 +107,11 @@ class TestTwoFAViews:
         request.user = self.user
         view = BackupCode().as_view()
 
-        assert view(request).status_code == 200
+        assert (await view(request)).status_code == 200
         assert mock_verify_backup_code.call_count == 1
 
-
-    def test_backup_code_post_and_delete(self, create_user, arf, mocker):
+    @pytest.mark.asyncio
+    async def test_backup_code_post_and_delete(self, create_user, arf, mocker):
         mock_delete_backup_codes = mocker.patch(
             self.auth_mock_path + 'delete_backup_codes', return_value=True)
         mock_generate_backup_code = mocker.patch(
@@ -120,7 +123,7 @@ class TestTwoFAViews:
         request.user = self.user
 
         # POST
-        assert view(request).status_code == 200
+        assert (await view(request)).status_code == 200
 
         args, kwargs = mock_delete_backup_codes.call_args_list[0]
         assert isinstance(args[0], Request)
@@ -134,19 +137,18 @@ class TestTwoFAViews:
             '/2fa/backup')
         request.user = self.user
 
-        assert view(request).status_code == 200
+        assert (await view(request)).status_code == 200
         args, kwargs = mock_delete_backup_codes.call_args_list[1]
         assert isinstance(args[0], Request)
 
-    def test_add_2fa_to_session(self, create_user, arf, mocker):
+    @pytest.mark.asyncio
+    async def test_add_2fa_to_session(self, create_user, arf, mocker):
         mock_verify_2fa_code = mocker.patch(
             self.auth_mock_path + 'verify_2fa_code')
         verification_code, access_token = self.make_uuids(2)
         req = arf.post('/', {'verification_code': verification_code})
         req.session = {'access_token': access_token}
         req.user = self.user
-        response = add_2fa_to_session(req)
-
-        assert response.status_code == 200
+        assert (await add_2fa_to_session(req)).status_code == 200
         mock_verify_2fa_code.assert_called_once_with(
             verification_code, access_token)
