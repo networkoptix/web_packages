@@ -233,6 +233,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         this.sessionStorage.clear(this.token);
         storageService.clear(this.cloudToken);
         storageService.clear(this.refreshToken);
+        storageService.clear('loginState');
         this.accessToken = '';
     }
 
