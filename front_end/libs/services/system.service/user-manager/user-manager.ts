@@ -32,6 +32,7 @@ export class UserManager {
     accessRoles: NxAccessRole[];
     currentUser: NxUser;
     isMine: boolean = false;
+    permissionsUpdated = false;
     permissions: SystemPermissions = {
         editAdmins: false,
         editUsers: false,
@@ -128,6 +129,7 @@ export class UserManager {
             );
         }
 
+        this.permissionsUpdated = true;
         this.permissions = permissions;
     }
 

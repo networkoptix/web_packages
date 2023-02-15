@@ -48,9 +48,9 @@
             >
                 <nx-pre-loader *ngIf="account && !menuVisible"></nx-pre-loader>
                 <nx-menu
-                    *ngIf="account && menuVisible"
+                    *ngIf="account && menuVisible && content$ | async as contentFromDb"
                     [ngStyle]="{ display: _menuSearchMode ? 'contents' : 'block' }"
-                    [content]="content"
+                    [content]="contentFromDb"
                     [system]="system"
                     [searchable]="menuSearchable"
                     [autoFit]="true"

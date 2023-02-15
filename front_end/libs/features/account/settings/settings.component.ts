@@ -10,7 +10,7 @@ import { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { firstValueFrom } from 'rxjs';
+import { filter, firstValueFrom, map, take } from 'rxjs';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';
@@ -30,6 +30,7 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
+import { userDb } from '@src/app/db';
 
 @UntilDestroy()
 @Component({
@@ -89,25 +90,28 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
 
         this.initProcess();
 
-        this.accountService
-            .get()
-            .then(async account => {
-                if (account?.email) {
-                    this.account = { ...account };
-                    this.isUserASystemOwner();
-                    await firstValueFrom(this.systemsService.forceUpdateSystems());
+        userDb.unstructured.$.get('account').pipe(
+            filter(({ value }) => !!value),
+            map(({ value }) => value as Account),
+            // Eventually update to also update realtime. Right now having issues with clearing apply service on changes.
+            take(1)
+        ).subscribe(async account => {
+            if (account?.email) {
+                this.account = { ...account };
+                this.isUserASystemOwner();
+                await firstValueFrom(this.systemsService.forceUpdateSystems());
 
-                    setTimeout(() => {
-                        // both form are inside *ngIf="account"
-                        // otherwise they should be in ngAfterViewInit
-                        this.applyService.createFormWatcher(
-                            'accountForm',
-                            this.accountForm,
-                            this.saveAccount
-                        );
-                    });
-                }
-            });
+                setTimeout(() => {
+                    // both form are inside *ngIf="account"
+                    // otherwise they should be in ngAfterViewInit
+                    this.applyService.createFormWatcher(
+                        'accountForm',
+                        this.accountForm,
+                        this.saveAccount
+                    );
+                });
+            }
+        });
     }
 
     ngOnDestroy(): void {
@@ -118,12 +122,12 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
         this.saveAccount = undefined;
         this.saveAccount = this.processService.createProcess(() => {
             // Optimistic update
-            const { first_name, last_name } = this.account;
-            this.store.dispatch(
-                accountActions.updateCurrentUser({
-                    update: { first_name, last_name }
-                })
-            );
+            // const { first_name, last_name } = this.account;
+            // this.store.dispatch(
+            //     accountActions.updateCurrentUser({
+            //         update: { first_name, last_name }
+            //     })
+            // );
             return this.cloudApiService.accountPost(this.account);
         }, {
             errorPrefix: this.LANG.errorCodes.cantChangeAccountPrefix,

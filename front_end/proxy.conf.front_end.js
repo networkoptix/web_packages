@@ -35,6 +35,7 @@ const PROXY_CONFIG = [
             '/static/images/dark_logo.png',
             '/static/images/promo',
             '/static/lang_en_US/views/static/landing.html',
+            '/static/version.txt',
             '/static/503.html',
             '/static/customization',
             '/static/lang_ru_RU',

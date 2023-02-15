@@ -14,7 +14,7 @@ import {
 } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { escape } from 'lodash-es';
-import { firstValueFrom, Subject, Subscription } from 'rxjs';
+import { firstValueFrom, Observable, Subject, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter, takeUntil, tap } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
@@ -46,8 +46,10 @@ import type {
 } from '@services/system.service/user-manager/user-manager-types';
 import { NxSystemsService } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
+import { userDb } from '@src/app/db';
 import { GridBreakpoints } from '@styles/theme-variables-common';
 import { alphabeticalSort, cleanId } from '@utils/general';
+import { memoizeAsyncPersistent } from '@utils/memoize';
 
 import { NxSettingsService } from './settings.service';
 
@@ -65,6 +67,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     LANG = staticLang;
     plugin;
     content: Content = { base: '', selectedSection: '', level1: [] };
+
+    @memoizeAsyncPersistent
+    get content$(): Observable<Content> {
+        return userDb.menuContent.$.where({ base: menus.systemSettings.baseUrl + this.systemId }).first();
+    }
+
     menuSearchable: boolean;
 
     account: Account;
@@ -138,6 +146,23 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         });
     }
 
+    private async updateContent(skipPermissions = false): Promise<string> {
+        if (this.system.userManager?.permissionsUpdated) {
+            return userDb.menuContent.put(this.content);
+        } else if (skipPermissions) {
+            userDb.transaction('rw', userDb.menuContent, async () => {
+                const existing = await userDb.menuContent.get(this.content);
+
+                if (existing) {
+                    existing.selectedDetailsSection = this.content.selectedDetailsSection;
+                    existing.selectedSection = this.content.selectedSection;
+                    existing.selectedSubSection = this.content.selectedSubSection;
+                }
+                await userDb.menuContent.put(existing || this.content);
+            });
+        }
+    }
+
     private canNavMenu(
         origTargetValue: string,
         contentTarget: 'selectedSection' |
@@ -154,12 +179,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             ).subscribe(status => {
                 if (!['', 'canceled'].includes(status)) {
                     this.content[contentTarget] = origTargetValue;
-                    this.content = { ...this.content }; // trigger onChange
+                    this.updateContent(true);
                 }
             });
         } else {
             this.content[contentTarget] = selection;
-            this.content = { ...this.content }; // trigger onChange
+            this.updateContent(true);
         }
     }
 
@@ -201,7 +226,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.systemId = params.systemId;
                 this.content.base =
                     menus.systemSettings.baseUrl + this.systemId;
-                this.content = { ...this.content }; // trigger onChange
                 if (!environment.isLocal && this.system) {
                     this.system.stopPoll();
                 }
@@ -248,6 +272,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 }
             ]
         };
+        userDb.menuContent.get({ base: this.content.base }).then(exists => {
+            if (!exists) {
+                userDb.menuContent.put(this.content);
+            }
+        });
 
         this.menuService
             .selectedSectionSubject
@@ -826,7 +855,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             this.system.userManager.permissions.isAdmin &&
             this.system.userManager.permissions.editUsers
         );
-        this.content = { ...this.content };
+        this.updateContent();
     }
 
     getCameraStatusIcon({ id, status, scheduleEnabled, parentId }: NxSystemCamera): string {

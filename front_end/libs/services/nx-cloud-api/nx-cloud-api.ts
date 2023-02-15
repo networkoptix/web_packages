@@ -5,9 +5,9 @@ import { Router } from '@angular/router';
 import * as FullStory from '@fullstory/browser';
 import LogRocket from 'logrocket';
 import { CookieService } from 'ngx-cookie-service';
-import { EMPTY, of, from, BehaviorSubject, throwError, defer } from 'rxjs';
+import { EMPTY, of, from, BehaviorSubject, throwError, defer, firstValueFrom } from 'rxjs';
 import type { Observable } from 'rxjs';
-import { catchError, concatMap, switchMap, map, tap, shareReplay, filter, throttleTime, take } from 'rxjs/operators';
+import { catchError, concatMap, switchMap, map, tap, shareReplay, filter } from 'rxjs/operators';
 
 import type {
     AuthorizeParams,
@@ -21,6 +21,8 @@ import { FeatureFlagStrings } from '@services/nx-config/base-config';
 import { OauthService } from '@services/oauth.service';
 import { NxSwCacheService } from '@services/sw-cache.service';
 import { WINDOW } from '@services/window-provider';
+import { sharedDb, userDb } from '@src/app/db';
+import { UnstructuredTable } from '@src/app/db/models/unstructured';
 import { mapValuesToStrings } from '@utils/general';
 import { memoizeAsyncLong, memoizeAsyncPersistent, memoizeAsyncShort } from '@utils/memoize';
 import { startWithCache } from '@utils/start-with-cached';
@@ -294,7 +296,12 @@ export class NxCloudApiService {
 
     @memoizeAsyncLong
     getIPVD() {
-        return this.cachedGet<t.IPVDCameras>(apiBase + '/ipvd');
+        this.cachedGet<t.IPVDCameras>(apiBase + '/ipvd').subscribe(value => sharedDb.unstructured.put({ key: 'ipvd', value }));
+
+        return sharedDb.unstructured.$.get('ipvd').pipe(
+            filter(value => !!value),
+            map(({ value }) => value as t.IPVDCameras)
+        );
     }
 
     getCode(systemId: string) {
@@ -537,22 +544,30 @@ export class NxCloudApiService {
         return this.http.post<t.CloudResponse>(apiBase + '/account/delete', { password }).toPromise();
     }
 
-    private accountUpdater$ = new BehaviorSubject(true);
-
     account(forceUpdate = false) {
-        this.accountUpdater$.next(forceUpdate);
-        return this.handleAccount().pipe(
+        const checkIfShouldUpdate = () => userDb.transaction('rw', userDb.unstructured, async () => {
+            const lastUpdate = await userDb.unstructured.get('lastAccountUpdate') as UnstructuredTable<number>;
+            const current = await userDb.unstructured.get('account') as UnstructuredTable<Account>;
+
+            if (!current?.value || forceUpdate && (lastUpdate?.value || 0) < Date.now() - 10 * 1000) {
+                await userDb.unstructured.put({ key: 'lastAccountUpdate', value: Date.now() });
+                return true;
+            }
+            return false;
+        });
+        return from(checkIfShouldUpdate()).pipe(
+            switchMap(force => this.http.get<Account>(`${apiBase}/account`, { params: { force } })),
+            switchMap(async value => value ? userDb.unstructured.put({ key: 'account', value }) : null),
+            switchMap(() => this.handleAccount())
             // skip(forceUpdate ? 1 : 0)
         );
     }
 
     @memoizeAsyncPersistent
     private handleAccount() {
-        return this.accountUpdater$.pipe(
-            filter(force => force),
-            throttleTime(10 * 1000),
-            switchMap(() => this.http.get<Account>(`${apiBase}/account`, { params: { force: true } })),
-            map(account => {
+        return userDb.unstructured.$.get('account').pipe(
+            filter(current => !!current?.value),
+            map(({ value: account }: UnstructuredTable<Account>) => {
                 if (!account.isCloud) {
                     // Returned object is readonly sometimes for some reason
                     account = { ...account, isCloud: true };
@@ -562,6 +577,20 @@ export class NxCloudApiService {
             },
             tap(this.logRocketIdentifyUser))
         );
+        // return this.accountUpdater$.pipe(
+        //     filter(force => force),
+        //     throttleTime(10 * 1000),
+        //     switchMap(() => this.http.get<Account>(`${apiBase}/account`, { params: { force: true } })),
+        //     map(account => {
+        //         if (!account.isCloud) {
+        //             // Returned object is readonly sometimes for some reason
+        //             account = { ...account, isCloud: true };
+        //         }
+        //         this.currentAccount = account;
+        //         return account;
+        //     },
+        //     tap(this.logRocketIdentifyUser))
+        // );
     }
 
     checkFeatureNotice = <T>(
@@ -640,7 +669,14 @@ export class NxCloudApiService {
             language: account.language,
             permissions: account.permissions
         };
-        return this.http.post<t.AccountEdit>(apiBase + '/account', accountInfo).toPromise();
+        return this.http.post<t.AccountEdit>(apiBase + '/account', accountInfo).pipe(
+            switchMap(account => userDb.transaction('rw', userDb.unstructured, async () => {
+                const currentAccount = await userDb.unstructured.get('account') as UnstructuredTable<Account>;
+                currentAccount.value = { ...currentAccount.value, ...account };
+                await userDb.unstructured.put(currentAccount);
+                return account;
+            }))
+        ).toPromise();
     }
 
     changePassword(newPassword: string, oldPassword: string, mfaCode?: string) {
@@ -866,19 +902,30 @@ export class NxCloudApiService {
     #withFreshSession: t.WithFreshSession = (
         minSessionSeconds = 300
     ) => observableInputFactory => {
-        const getAccessToken = (minSession?: number) => this.account(true).pipe(
-            switchMap(({
-                sessionExpires
-            }) => !minSession || ((Date.now() + minSession) < sessionExpires) ? this.renewSessionUsingRefreshToken() : this.account())
-        );
+        const getAccountFromDb = async (force = false) => {
+            const key = 'account';
+            let value: Account = null;
+            let currentSession = !force && await userDb.unstructured.get(key) as UnstructuredTable<Account>;
 
-        return getAccessToken(minSessionSeconds).pipe(
-            take(1),
+            if (!currentSession?.value || force) {
+                value = await firstValueFrom(this.account(force)) || await firstValueFrom(this.account(true));
+                currentSession = { key, value };
+            }
+
+            if (!minSessionSeconds || ((Date.now() + minSessionSeconds) < currentSession.value.sessionExpires)) {
+                value = await firstValueFrom(this.renewSessionUsingRefreshToken());
+            }
+
+            await userDb.unstructured.put(currentSession);
+            return currentSession.value;
+        };
+
+        return from(getAccountFromDb()).pipe(
             switchMap(({
                 accessToken
             }) => observableInputFactory({
                 accessToken,
-                getFreshAccessToken: () => getAccessToken().pipe(map(({ accessToken }) => accessToken))
+                getFreshAccessToken: () => from(getAccountFromDb(true)).pipe(map(({ accessToken }) => accessToken))
             }))
         );
     };

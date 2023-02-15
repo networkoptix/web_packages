@@ -1,9 +1,11 @@
 import { Inject, Injectable } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { NxSystemInfo } from '@services/systems.service.types';
+
+import { userDb } from '../db';
 
 import { NxConfigService } from './nx-config/nx-config.service';
 import type { LoginParams } from './session.service.types';
@@ -58,11 +60,16 @@ export class NxSessionService {
         });
     }
 
+    get systems$(): Observable<NxSystemInfo[]> {
+        return userDb.systems.$.toArray();
+    }
+
     get systems(): NxSystemInfo[] {
         return this.session.retrieve('systems');
     }
 
     set systems(systems: NxSystemInfo[]) {
+        userDb.systems.bulkPut(systems);
         this.session.store('systems', systems);
     }
 

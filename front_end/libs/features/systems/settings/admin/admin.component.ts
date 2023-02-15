@@ -204,7 +204,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.systemName = this.systemsService.systems.find(s => s.id === this.route.snapshot.params.systemId)?.name;
+        this.systemName = this.systemsService.systems?.find(s => s.id === this.route.snapshot.params.systemId)?.name;
         this.accountService.get()
             .then((account?: Account) => {
                 this.user = account;

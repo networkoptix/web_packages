@@ -3824,6 +3824,13 @@
             "path": "cloud_portal/front_end/node_modules/@protobufjs/utf8",
             "licenseFile": "cloud_portal/front_end/node_modules/@protobufjs/utf8/LICENSE"
         },
+        "@pvermeer/dexie-rxjs-addon@1.1.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/PVermeer/dexie-addon-suite-monorepo",
+            "publisher": "PVermeer",
+            "path": "cloud_portal/front_end/node_modules/@pvermeer/dexie-rxjs-addon",
+            "licenseFile": "cloud_portal/front_end/node_modules/@pvermeer/dexie-rxjs-addon/LICENSE"
+        },
         "@rollup/plugin-babel@5.3.1": {
             "licenses": "MIT",
             "repository": "https://github.com/rollup/plugins",
@@ -3901,6 +3908,12 @@
             "repository": "https://github.com/socketio/emitter",
             "path": "cloud_portal/front_end/node_modules/@socket.io/component-emitter",
             "licenseFile": "cloud_portal/front_end/node_modules/@socket.io/component-emitter/LICENSE"
+        },
+        "@stablelib/utf8@1.0.0": {
+            "licenses": "MIT",
+            "publisher": "Dmitry Chestnykh",
+            "path": "cloud_portal/front_end/node_modules/@stablelib/utf8",
+            "licenseFile": "cloud_portal/front_end/node_modules/@stablelib/utf8/LICENSE"
         },
         "@stencil/core@2.5.2": {
             "licenses": "MIT",
@@ -5267,6 +5280,13 @@
             "url": "http://juliangruber.com",
             "path": "cloud_portal/front_end/node_modules/balanced-match",
             "licenseFile": "cloud_portal/front_end/node_modules/balanced-match/LICENSE.md"
+        },
+        "base64-arraybuffer-es6@0.6.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/brettz9/base64-arraybuffer",
+            "publisher": "Brett Zamir",
+            "path": "cloud_portal/front_end/node_modules/base64-arraybuffer-es6",
+            "licenseFile": "cloud_portal/front_end/node_modules/base64-arraybuffer-es6/LICENSE-MIT.txt"
         },
         "base64-js@1.5.1": {
             "licenses": "MIT",
@@ -6815,6 +6835,19 @@
             "email": "shane.osbourne8@gmail.com",
             "path": "cloud_portal/front_end/node_modules/dev-ip",
             "licenseFile": "cloud_portal/front_end/node_modules/dev-ip/LICENSE-MIT"
+        },
+        "dexie-encrypted@2.0.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/mark43/dexie-encrypted",
+            "path": "cloud_portal/front_end/node_modules/dexie-encrypted",
+            "licenseFile": "cloud_portal/front_end/node_modules/dexie-encrypted/LICENSE"
+        },
+        "dexie-observable@4.0.0-beta.13": {
+            "licenses": "Apache-2.0",
+            "repository": "https://github.com/dfahlander/Dexie.js",
+            "publisher": "David Fahlander",
+            "path": "cloud_portal/front_end/node_modules/dexie-observable",
+            "licenseFile": "cloud_portal/front_end/node_modules/dexie-observable/README.md"
         },
         "dexie@3.2.3": {
             "licenses": "Apache-2.0",
@@ -9687,6 +9720,15 @@
             "path": "cloud_portal/front_end/node_modules/lodash.camelcase",
             "licenseFile": "cloud_portal/front_end/node_modules/lodash.camelcase/LICENSE"
         },
+        "lodash.clonedeep@4.5.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/lodash/lodash",
+            "publisher": "John-David Dalton",
+            "email": "john.david.dalton@gmail.com",
+            "url": "http://allyoucanleet.com/",
+            "path": "cloud_portal/front_end/node_modules/lodash.clonedeep",
+            "licenseFile": "cloud_portal/front_end/node_modules/lodash.clonedeep/LICENSE"
+        },
         "lodash.debounce@4.0.8": {
             "licenses": "MIT",
             "repository": "https://github.com/lodash/lodash",
@@ -9695,6 +9737,15 @@
             "url": "http://allyoucanleet.com/",
             "path": "cloud_portal/front_end/node_modules/lodash.debounce",
             "licenseFile": "cloud_portal/front_end/node_modules/lodash.debounce/LICENSE"
+        },
+        "lodash.isequal@4.5.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/lodash/lodash",
+            "publisher": "John-David Dalton",
+            "email": "john.david.dalton@gmail.com",
+            "url": "http://allyoucanleet.com/",
+            "path": "cloud_portal/front_end/node_modules/lodash.isequal",
+            "licenseFile": "cloud_portal/front_end/node_modules/lodash.isequal/LICENSE"
         },
         "lodash.isfinite@3.3.2": {
             "licenses": "MIT",
@@ -9730,6 +9781,15 @@
             "url": "http://allyoucanleet.com/",
             "path": "cloud_portal/front_end/node_modules/lodash.uniq",
             "licenseFile": "cloud_portal/front_end/node_modules/lodash.uniq/LICENSE"
+        },
+        "lodash.uniqwith@4.5.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/lodash/lodash",
+            "publisher": "John-David Dalton",
+            "email": "john.david.dalton@gmail.com",
+            "url": "http://allyoucanleet.com/",
+            "path": "cloud_portal/front_end/node_modules/lodash.uniqwith",
+            "licenseFile": "cloud_portal/front_end/node_modules/lodash.uniqwith/LICENSE"
         },
         "lodash@4.17.21": {
             "licenses": "MIT",
@@ -13530,6 +13590,20 @@
             "publisher": "Microsoft Corp.",
             "path": "cloud_portal/front_end/node_modules/typescript",
             "licenseFile": "cloud_portal/front_end/node_modules/typescript/LICENSE.txt"
+        },
+        "typeson-registry@1.0.0-alpha.38": {
+            "licenses": "MIT",
+            "repository": "https://github.com/dfahlander/typeson-registry",
+            "publisher": "dfahlander",
+            "path": "cloud_portal/front_end/node_modules/typeson-registry",
+            "licenseFile": "cloud_portal/front_end/node_modules/typeson-registry/LICENSE-MIT.txt"
+        },
+        "typeson@5.18.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/dfahlander/typeson",
+            "publisher": "dfahlander",
+            "path": "cloud_portal/front_end/node_modules/typeson",
+            "licenseFile": "cloud_portal/front_end/node_modules/typeson/LICENSE-MIT.txt"
         },
         "ua-parser-js@0.7.31": {
             "licenses": "MIT",

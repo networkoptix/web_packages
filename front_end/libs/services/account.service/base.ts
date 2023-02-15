@@ -19,6 +19,9 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { OauthService } from '@services/oauth.service';
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
+import { userDb } from '@src/app/db';
+import { UnstructuredTable } from '@src/app/db/models/unstructured';
+import { memoizeAsyncPersistent } from '@utils/memoize';
 
 import { NxApplyService } from '../apply.service';
 import { NxAppStateService } from '../nx-app-state.service';
@@ -163,15 +166,23 @@ export abstract class BaseAccount implements OnDestroy {
     }
 
     // Methods shared between local and cloud versions of account service.
+    @memoizeAsyncPersistent
+    private initStoreUpdater() {
+        userDb.unstructured.$.get('account').pipe(filter(({ value }) => !!value)).subscribe(({ value: currentUser }: UnstructuredTable<Account>) => {
+            this._account = currentUser;
+            this.store.dispatch(
+                accountActions.setCurrentUser({ currentUser })
+            );
+        });
+    }
 
     get account(): Account {
         return this._account;
     }
 
     set account(account: Account) {
-        this.store.dispatch(
-            accountActions.setCurrentUser({ currentUser: account })
-        );
+        this.initStoreUpdater();
+        userDb.unstructured.put({ key: 'account', value: account });
         const loginState = this.sessionService.loginState;
         const login = account?.email || account?.name;
         if (login && (!loginState || loginState !== login)) {

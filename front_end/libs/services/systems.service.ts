@@ -1,7 +1,7 @@
 import { Inject, Injectable, Injector, LOCALE_ID } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { of, Observable, BehaviorSubject, timer, firstValueFrom, combineLatest, identity } from 'rxjs';
-import { map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
+import { map, shareReplay, switchMap, tap } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
@@ -13,6 +13,7 @@ import { memoizeAsyncPersistent } from '@utils/memoize';
 
 // import * as SystemsActions from '../store/systems/systems.actions';
 
+import { userDb } from '../db';
 import { clientMode, toast, updateInterval } from '../variables/static-variables';
 
 import { NxCloudApiService } from './nx-cloud-api';
@@ -44,11 +45,7 @@ export class NxSystemsService {
     systemsPoll: Observable<System[]>;
     systemsSubject = this.currentUser$.pipe(
         switchMap(() => environment.isLocal ? Promise.resolve([]) : this._getSystems()),
-        map(systems => {
-            const processedSystems = this.processSystems(systems);
-            this.sessionService.systems = processedSystems;
-            return processedSystems;
-        }),
+        map(systems => this.processSystems(systems)),
         environment.isLocal ? identity : tap(systems => {
             const systemService = this.injector.get(NxSystemService);
             for (const { stateOfHealth, id } of systems) {
@@ -69,7 +66,10 @@ export class NxSystemsService {
                 }
             }
         }),
-        environment.isLocal ? identity : startWith(this.sessionService.systems),
+        environment.isLocal ? identity : switchMap(systems => {
+            userDb.systems.bulkPut(systems);
+            return userDb.systems.$.toArray();
+        }),
         shareReplay({ bufferSize: 1, refCount: false })
     );
     finishedMerged: boolean = false;
