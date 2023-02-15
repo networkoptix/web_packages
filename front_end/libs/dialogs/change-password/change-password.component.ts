@@ -46,7 +46,7 @@ export class ChangePasswordModalContent {
         private renderer: Renderer2,
         private processService: NxProcessService,
         private loginService: NxLoginService,
-        private dialogRef: DialogRef,
+        public dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
     ) {
         this.newPasswordForUser = '';

@@ -6,6 +6,7 @@ import { servers } from '@lib/variables/static-variables';
 import { NxLoginService } from '@services/login.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
+import { NxSystem } from '@services/system.service/system';
 
 import type { RemoveUser as DialogTypes } from '../dialogs.types';
 
@@ -16,6 +17,7 @@ import type { RemoveUser as DialogTypes } from '../dialogs.types';
 })
 export class RemoveUserModalContent {
     LANG = staticLang;
+    system: NxSystem;
 
     removeUserProcess: Process;
     needsUpdate: boolean;
@@ -32,6 +34,7 @@ export class RemoveUserModalContent {
 
     ngOnInit(): void {
         const { user, system } = this.dialogData;
+        this.system = system;
         const msg = user.isCloud ? 'remove' : 'delete';
         this.dialogTitle = this.LANG.dialogs.titles[`${msg}User`];
         this.dialogButtonText = this.LANG.dialogs.buttons[msg];
