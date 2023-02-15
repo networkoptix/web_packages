@@ -55,16 +55,16 @@
             }
 
             &.copyright {
-                color: $light10;
+                color: var(--footer-color);
                 padding: 12px 0 0 0;
 
                 &:hover,
                 &:focus {
-                    color: $light13;
+                    color: $dark15;
                 }
 
                 &:active {
-                    color: $light10;
+                    color: $light16;
                 }
             }
         }
