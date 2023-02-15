@@ -73,7 +73,7 @@ html[data-theme="dark"] {
     --svg-info-fill: #{$info_icon_dark};
     --svg-info-elm-fill: #{$info_icon_dark_elm};
 
-    --svg-warning-fill: #{$warning_icon_dark};
+    --svg-warning-fill: #C26626;
     --svg-warning-elm-fill: #{$warning_icon_dark_elm};
 
     --svg-std-icon-fill : #587785; //$dark18;
@@ -544,7 +544,7 @@ html[data-theme="dark"] {
 
     --success-label : var(--green_main);
 
-    --error-label : #{$red_l1};
+    --error-label : #C22626;
     --error : #C22626; //$red_main;
 
     --input-bg                 : #{$dark4};
