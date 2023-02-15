@@ -6,7 +6,7 @@ import { Process } from '@services/process.service/process';
     selector: 'nx-cancel-button',
     templateUrl: 'process-cancel-button.component.html',
     styleUrls: ['process-cancel-button.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxProcessCancelButtonComponent {
     @Input() process: Process;

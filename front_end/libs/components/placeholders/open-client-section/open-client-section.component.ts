@@ -16,7 +16,7 @@ import { NxSystem } from '@services/system.service/system';
 @Component({
     selector: 'nx-open-client-section-placeholder',
     templateUrl: './open-client-section.component.html',
-    styleUrls: ['../section/section-placeholder.component.scss']
+    styleUrls: ['../section/section-placeholder.component.scss'],
 })
 export class NxOpenClientSectionPlaceholderComponent implements OnInit {
     @Input() svgFileName: string;

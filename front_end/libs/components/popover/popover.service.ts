@@ -2,14 +2,10 @@ import {
     Overlay,
     ConnectionPositionPair,
     FlexibleConnectedPositionStrategy,
-    OverlayConfig
+    OverlayConfig,
 } from '@angular/cdk/overlay';
 import { ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
-import {
-    Injectable,
-    TemplateRef,
-    ViewContainerRef
-} from '@angular/core';
+import { Injectable, TemplateRef, ViewContainerRef } from '@angular/core';
 import { timer, takeUntil, Subject, filter } from 'rxjs';
 
 import { PopoverConfig, POS_STRATEGY } from './popover-config';
@@ -22,14 +18,14 @@ const defaultConfig: PopoverConfig<never> = {
     disableClose: false,
     panelClass: '',
     arrowOffset: 8,
-    arrowSize: 16
+    arrowSize: 16,
 };
 
 /**
  * Service to open modal and manage popovers.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxPopoverService {
     #popoverRef: PopoverRef;
@@ -44,10 +40,7 @@ export class NxPopoverService {
         this.#popoverRef = value;
     }
 
-    constructor(
-        private overlay: Overlay,
-    ) {
-    }
+    constructor(private overlay: Overlay) {}
 
     private generatePopoverRefs<T>(
         hasBackdrop: OverlayConfig['hasBackdrop'],
@@ -63,7 +56,7 @@ export class NxPopoverService {
             hasBackdrop,
             panelClass,
             positionStrategy,
-            scrollStrategy: this.overlay.scrollStrategies.reposition()
+            scrollStrategy: this.overlay.scrollStrategies.reposition(),
         });
 
         const popoverRef = new PopoverRef(overlayRef, positionStrategy, popoverConfig, target.id);
@@ -72,9 +65,7 @@ export class NxPopoverService {
         return { popover, popoverRef };
     }
 
-    private generatePositions(
-        popoverConfig: PopoverConfig<unknown>
-    ): ConnectionPositionPair[] {
+    private generatePositions(popoverConfig: PopoverConfig<unknown>): ConnectionPositionPair[] {
         const arrowSize = popoverConfig.arrowSize;
         const arrowOffset = popoverConfig.arrowOffset;
         const panelOffset = arrowSize / 2;
@@ -91,7 +82,7 @@ export class NxPopoverService {
                     originX: 'center',
                     originY: 'bottom',
                     panelClass: ['top', 'center'],
-                    offsetY: panelOffset
+                    offsetY: panelOffset,
                 },
             ];
         } else if (popoverConfig.positionStrategy === POS_STRATEGY.TOP) {
@@ -102,8 +93,8 @@ export class NxPopoverService {
                     originX: 'center',
                     originY: 'top',
                     panelClass: ['bottom', 'center'],
-                    offsetY: -1 * panelOffset
-                }
+                    offsetY: -1 * panelOffset,
+                },
             ];
         } else {
             // Preferred positions, in order of priority.
@@ -117,7 +108,7 @@ export class NxPopoverService {
                     originY: 'center',
                     panelClass: ['left', 'center'],
                     offsetX: arrowOffset,
-                    offsetY: panelOffset
+                    offsetY: panelOffset,
                 },
                 // left center
                 {
@@ -127,7 +118,7 @@ export class NxPopoverService {
                     originY: 'center',
                     panelClass: ['right', 'center'],
                     offsetX: -1 * arrowOffset,
-                    offsetY: panelOffset
+                    offsetY: panelOffset,
                 },
                 // top center
                 {
@@ -136,7 +127,7 @@ export class NxPopoverService {
                     originX: 'center',
                     originY: 'top',
                     panelClass: ['bottom', 'center'],
-                    offsetY: -1 * panelOffset
+                    offsetY: -1 * panelOffset,
                 },
                 // bottom center
                 {
@@ -145,7 +136,7 @@ export class NxPopoverService {
                     originX: 'center',
                     originY: 'bottom',
                     panelClass: ['top', 'center'],
-                    offsetY: panelOffset
+                    offsetY: panelOffset,
                 },
                 // ... in same manner we can create positions like "top left", "top right" etc.
             ];
@@ -163,14 +154,10 @@ export class NxPopoverService {
         // rendering a provided template dynamically
         // if we need to render a component - here is the place to add it
         popover.attachTemplate(
-            new TemplatePortal(
-                template,
-                viewContainerRef,
-                {
-                    $implicit: config.data,
-                    popover: popoverRef
-                }
-            )
+            new TemplatePortal(template, viewContainerRef, {
+                $implicit: config.data,
+                popover: popoverRef,
+            }),
         );
     }
 
@@ -180,7 +167,7 @@ export class NxPopoverService {
         config: Partial<PopoverConfig<T>> = {},
         viewContainerRef?: ViewContainerRef,
         delayTime = 300,
-        closeExisting = true
+        closeExisting = true,
     ): this {
         this.close$.next(closeExisting);
         const popoverConfig: PopoverConfig<T> = { ...defaultConfig, ...config };
@@ -194,24 +181,17 @@ export class NxPopoverService {
             .withPositions(positions);
 
         timer(delayTime)
-            .pipe(
-                takeUntil(this.close$.pipe(filter(val => !!val)))
-            ).subscribe(() => {
+            .pipe(takeUntil(this.close$.pipe(filter(val => !!val))))
+            .subscribe(() => {
                 const { popover, popoverRef } = this.generatePopoverRefs(
                     config.hasBackdrop,
                     config.panelClass,
                     positionStrategy,
                     popoverConfig,
-                    target
+                    target,
                 );
 
-                this.renderPopover(
-                    template,
-                    popover,
-                    viewContainerRef,
-                    config,
-                    popoverRef
-                );
+                this.renderPopover(template, popover, viewContainerRef, config, popoverRef);
                 this.popoverRef = popoverRef;
             });
 

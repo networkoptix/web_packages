@@ -1,10 +1,4 @@
-import {
-    Component,
-    EventEmitter,
-    Input,
-    OnChanges,
-    Output,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { NgModel } from '@angular/forms';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -13,7 +7,7 @@ import { NgChanges } from '@utils/ng-changes';
 @Component({
     selector: 'nx-password-input-validation',
     templateUrl: 'password-validation.component.html',
-    styleUrls: ['password-validation.component.scss']
+    styleUrls: ['password-validation.component.scss'],
 })
 export class NxPasswordValidationComponent implements OnChanges {
     @Input() forElement: NgModel;
@@ -30,11 +24,10 @@ export class NxPasswordValidationComponent implements OnChanges {
 
     ngOnChanges(changes: NgChanges<NxPasswordValidationComponent>): void {
         if (changes.value) {
-            this.weak = (
+            this.weak =
                 this.forElement.errors &&
                 this.forElement.errors.minlength &&
-                !this.forElement.errors.pattern
-            );
+                !this.forElement.errors.pattern;
             this.updateWeakPassword.emit(this.weak);
         }
     }

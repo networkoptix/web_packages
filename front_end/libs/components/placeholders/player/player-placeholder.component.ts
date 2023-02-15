@@ -17,7 +17,7 @@ import { ICamera } from '@vms-client/submodules/vms/datatypes/ICamera';
 @Component({
     selector: 'nx-player-placeholder',
     templateUrl: 'player-placeholder.component.html',
-    styleUrls: ['player-placeholder.component.scss']
+    styleUrls: ['player-placeholder.component.scss'],
 })
 export class NxPlayerPlaceholderComponent implements OnInit {
     @Input() svgFileName: string;
@@ -39,9 +39,7 @@ export class NxPlayerPlaceholderComponent implements OnInit {
 
     public get settingsLinkFragment(): string {
         // surprisingly, `double-hashing` works in webadmin
-        return (this.svgFileName === 'placeholder_camera_unauthorized'
-            ? 'authorize'
-            : undefined);
+        return this.svgFileName === 'placeholder_camera_unauthorized' ? 'authorize' : undefined;
     }
 
     public get settingsLinkUrl(): string {

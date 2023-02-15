@@ -23,21 +23,16 @@ export class NxRibbonService {
     constructor(
         private appStateService: NxAppStateService,
         private headerService: NxHeaderService,
-
-    ) {
-    }
+    ) {}
 
     show(
         message: Translatable,
         actions: RibbonAction[],
         type?: string,
         updateFunction?: () => void,
-        systemOnly = false
+        systemOnly = false,
     ): void {
-        if (
-            message === this.LANG.ribbon.systemOffline &&
-            environment.isLocal
-        ) {
+        if (message === this.LANG.ribbon.systemOffline && environment.isLocal) {
             return;
         }
         if (
@@ -55,7 +50,7 @@ export class NxRibbonService {
             message,
             actions,
             type,
-            updateFunction
+            updateFunction,
         };
         this.contextSubject.next(this.context);
         this.appStateService.ribbonVisibility = true;
@@ -67,7 +62,7 @@ export class NxRibbonService {
             message: '',
             actions: [],
             type: undefined,
-            updateFunction: undefined
+            updateFunction: undefined,
         };
         this.contextSubject.next(this.context);
         this.appStateService.ribbonVisibility = false;

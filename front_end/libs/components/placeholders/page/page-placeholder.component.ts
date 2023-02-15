@@ -1,9 +1,4 @@
-import {
-    Component,
-    Input,
-    OnInit,
-    ViewEncapsulation,
-} from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { SubscriptionLike } from 'rxjs';
@@ -32,7 +27,7 @@ import { NgChanges } from '@utils/ng-changes';
     selector: 'nx-page-placeholder',
     templateUrl: 'page-placeholder.component.html',
     styleUrls: ['page-placeholder.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxPagePlaceholderComponent implements OnInit {
     @Input() type: string;
@@ -58,16 +53,16 @@ export class NxPagePlaceholderComponent implements OnInit {
 
     constructor(
         private translateService: TranslateService,
-        private scrollMechanicsService: NxScrollMechanicsService
+        private scrollMechanicsService: NxScrollMechanicsService,
     ) {
         this.iconSize = 400;
 
-        this.windowSizeSubscription = this.scrollMechanicsService
-            .windowSizeSubject
-            .subscribe(({ height, width }) => {
-                this.iconSize = (width <= COLLAPSE_SECOND_WIDTH) ? 200 : 400;
-                this.iconVisible = (height > 580);
-            });
+        this.windowSizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(
+            ({ height, width }) => {
+                this.iconSize = width <= COLLAPSE_SECOND_WIDTH ? 200 : 400;
+                this.iconVisible = height > 580;
+            },
+        );
     }
 
     ngOnInit(): void {
@@ -138,7 +133,10 @@ export class NxPagePlaceholderComponent implements OnInit {
                     this.iconName = 'NoAccess';
                     break;
                 case 'FAILED_TO_ACCESS_2FA':
-                    this.placeholderTitle = { value: this.LANG.pageTitles.failedToAccess2FA, params: { systemName: this.data.systemName } };
+                    this.placeholderTitle = {
+                        value: this.LANG.pageTitles.failedToAccess2FA,
+                        params: { systemName: this.data.systemName },
+                    };
                     this.message = this.LANG.errorCodes.failedToAccess2FA;
                     this.iconName = 'NoAccess';
                     break;
@@ -150,16 +148,19 @@ export class NxPagePlaceholderComponent implements OnInit {
                 case 'MERGE':
                     this.placeholderTitle = {
                         value: this.LANG.placeholderTexts.merge.title,
-                        params: { systemName: this.data.systemName }
+                        params: { systemName: this.data.systemName },
                     };
                     const whenFinishedMessage = this.translateService.instant(
                         this.LANG.placeholderTexts.merge.message.whenFinished,
-                        { systemName: this.data.systemName }
+                        { systemName: this.data.systemName },
                     );
-                    this.message =
-                        `
-                        <p>${this.translateService.instant(this.LANG.placeholderTexts.merge.message.dependingOnSize)}</p>
-                        <p class="mt-2">${this.translateService.instant(this.LANG.placeholderTexts.merge.message.untilFinished)}</p>
+                    this.message = `
+                        <p>${this.translateService.instant(
+                            this.LANG.placeholderTexts.merge.message.dependingOnSize,
+                        )}</p>
+                        <p class="mt-2">${this.translateService.instant(
+                            this.LANG.placeholderTexts.merge.message.untilFinished,
+                        )}</p>
                         <p class="mt-2">${whenFinishedMessage}`;
                     this.iconName = 'Merge';
                     break;
@@ -181,7 +182,8 @@ export class NxPagePlaceholderComponent implements OnInit {
                 case 'SYSTEM_FAILED_TO_LOAD_API_TOOL':
                     this.iconName = '404';
                     this.message = '';
-                    this.placeholderTitle = this.LANG.placeholderTexts.systemLoadFailureApiTool.title;
+                    this.placeholderTitle =
+                        this.LANG.placeholderTexts.systemLoadFailureApiTool.title;
                     break;
             }
         }

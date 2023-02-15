@@ -6,14 +6,14 @@ import {
     forwardRef,
     OnInit,
     ViewEncapsulation,
-    ViewChild
+    ViewChild,
 } from '@angular/core';
 import {
     NG_VALUE_ACCESSOR,
     ControlValueAccessor,
     Validator,
     ValidationErrors,
-    FormControl
+    FormControl,
 } from '@angular/forms';
 
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
@@ -37,10 +37,10 @@ import { IBool, CoercedBoolInput } from '@decorators/ibool';
             provide: NG_VALUE_ACCESSOR,
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxRadioComponent),
-            multi: true
-        }
+            multi: true,
+        },
     ],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator {
     @Input() componentId: string;
@@ -58,12 +58,11 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
         rbFalse: 'unchecked',
         rbTrue: 'checked',
         rbDisabled: 'disabled',
-        rbOrElse: 'tristate'
+        rbOrElse: 'tristate',
     };
 
     // the method set in registerOnChange to emit changes back to the form
-    private propagateChange = (_: any): void => {
-    };
+    private propagateChange = (_: any): void => {};
 
     // validates the form, returns null when valid else the validation object
     public validate(c: FormControl<string>): ValidationErrors | null {
@@ -80,7 +79,7 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
     writeValue(value): void {
         if (value === 'tristate' || value === 1) {
             this.state = this._rbxStates.rbOrElse; // 'checked'
-        } else if ((value && this.value === value)) {
+        } else if (value && this.value === value) {
             this.state = this._rbxStates.rbTrue; // 'checked'
         } else {
             // clear other radio buttons
@@ -100,8 +99,7 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
      * Set the function to be called
      * when the control receives a touch event.
      */
-    registerOnTouched(fn: () => void): void {
-    }
+    registerOnTouched(fn: () => void): void {}
 
     changeState(): void {
         if (this.disabled) {

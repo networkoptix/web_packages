@@ -1,9 +1,4 @@
-import {
-    Component,
-    OnInit,
-    Input,
-    ViewEncapsulation
-} from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 
 import { icons } from '@lib/variables/static-variables';
 import { Process } from '@services/process.service/process';
@@ -19,7 +14,7 @@ interface SvgData {
     selector: 'nx-process-button',
     templateUrl: 'process-button.component.html',
     styleUrls: ['process-button.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxProcessButtonComponent implements OnInit {
     @Input() process: Process;
@@ -41,8 +36,7 @@ export class NxProcessButtonComponent implements OnInit {
 
     ngOnInit(): void {
         if (!this.clickFn) {
-            this.clickFn = () => {
-            };
+            this.clickFn = () => {};
         }
 
         this.buttonClass = 'btn-primary';

@@ -15,7 +15,7 @@ import { icons } from '@lib/variables/static-variables';
 @Component({
     selector: 'nx-section-placeholder',
     templateUrl: 'section-placeholder.component.html',
-    styleUrls: ['section-placeholder.component.scss']
+    styleUrls: ['section-placeholder.component.scss'],
 })
 export class NxSectionPlaceholderComponent implements OnInit {
     @Input() svgFileName: string;

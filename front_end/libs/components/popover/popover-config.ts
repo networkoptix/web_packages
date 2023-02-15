@@ -4,7 +4,7 @@
 export enum POS_STRATEGY {
     DEFAULT,
     BOTTOM,
-    TOP
+    TOP,
 }
 
 export interface PopoverConfig<T = never> {

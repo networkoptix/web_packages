@@ -6,7 +6,7 @@ import {
     ViewEncapsulation,
     OnDestroy,
     ViewChild,
-    ElementRef
+    ElementRef,
 } from '@angular/core';
 import {
     ControlValueAccessor,
@@ -15,7 +15,7 @@ import {
     Validator,
     NgModel,
     ValidationErrors,
-    FormControl
+    FormControl,
 } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
@@ -35,16 +35,16 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
             provide: NG_VALUE_ACCESSOR,
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxPasswordComponent),
-            multi: true
+            multi: true,
         },
         {
             provide: NG_VALIDATORS,
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxPasswordComponent),
-            multi: true
-        }
+            multi: true,
+        },
     ],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {
     @Input() form;
@@ -72,11 +72,9 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
-    public onTouchedCallback = (): void => {
-    };
+    public onTouchedCallback = (): void => {};
 
-    private onChangeCallback = (_: any): void => {
-    };
+    private onChangeCallback = (_: any): void => {};
 
     // validates the form, returns null when valid else the validation object
     public validate(c: FormControl<string>): ValidationErrors | null {
@@ -84,27 +82,27 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
 
         if (!c.value) {
             return {
-                required: true
+                required: true,
             };
         }
 
         // check pattern
         if (!new RegExp(credentialsValidation.passwordRequirements.requiredRegex).test(c.value)) {
             return {
-                pattern: true
+                pattern: true,
             };
         }
 
         // check length
         if (c.value.length < credentialsValidation.passwordRequirements.minLength) {
             return {
-                minlength: true
+                minlength: true,
             };
         }
 
         if (this.checkCommon(c.value)) {
             return {
-                common: true
+                common: true,
             };
         }
 
@@ -114,12 +112,15 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
             if (complexity >= credentialsValidation.passwordRequirements.strongClassesCount) {
                 this.form.form.get(this.componentId).fairPassword = false;
                 return null; // valid
-            } else if (complexity > 1 && complexity < credentialsValidation.passwordRequirements.strongClassesCount) {
+            } else if (
+                complexity > 1 &&
+                complexity < credentialsValidation.passwordRequirements.strongClassesCount
+            ) {
                 this.form.form.get(this.componentId).fairPassword = true;
                 return null; // valid
             } else {
                 return {
-                    weak: true
+                    weak: true,
                 };
             }
         }
@@ -127,16 +128,14 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
         return null; // valid
     }
 
-    constructor(
-        configService: NxConfigService,
-        private api: NxCloudApiService
-    ) {
+    constructor(configService: NxConfigService, private api: NxCloudApiService) {
         this.CONFIG = configService.getConfig();
     }
 
     private loadCommonPasswords(): void {
         if (!this.CONFIG.commonPasswordsList) {
-            this.api.getCommonPasswords()
+            this.api
+                .getCommonPasswords()
                 .pipe(untilDestroyed(this))
                 .subscribe(data => {
                     this.CONFIG.commonPasswordsList = data;
@@ -153,7 +152,8 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
 
         if (!commonPassword) {
             // Check if password is in uppercase and it's lowercase value is in common list
-            commonPassword = value.toUpperCase() === value &&
+            commonPassword =
+                value.toUpperCase() === value &&
                 this.CONFIG.commonPasswordsList[value.toLowerCase()];
         }
 
@@ -161,12 +161,7 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
     }
 
     private checkComplexity(value) {
-        const classes = [
-            '[0-9]+',
-            '[a-z]+',
-            '[A-Z]+',
-            '[\\W_]+'
-        ];
+        const classes = ['[0-9]+', '[a-z]+', '[A-Z]+', '[\\W_]+'];
 
         let classesCount = 0;
 
@@ -185,8 +180,7 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
         this.form.form.get(this.componentId).markAsUntouched();
     }
 
-    ngOnDestroy(): void {
-    }
+    ngOnDestroy(): void {}
 
     ngOnInit(): void {
         this.tagWidth = 0;

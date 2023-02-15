@@ -1,7 +1,7 @@
 import {
     OverlayRef,
     FlexibleConnectedPositionStrategy,
-    ConnectedOverlayPositionChange
+    ConnectedOverlayPositionChange,
 } from '@angular/cdk/overlay';
 import { Observable, Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
@@ -21,17 +21,20 @@ export class PopoverRef {
         public targetId: string,
     ) {
         if (!config.disableClose) {
-            this.overlayRef.backdropClick()
+            this.overlayRef
+                .backdropClick()
                 .pipe(takeUntil(this.afterClosed$))
                 .subscribe(() => {
                     this.close();
                 });
 
-            this.overlayRef.keydownEvents()
+            this.overlayRef
+                .keydownEvents()
                 .pipe(
                     filter(event => event.key === 'Escape'),
                     takeUntil(this.afterClosed$),
-                ).subscribe(() => {
+                )
+                .subscribe(() => {
                     this.close();
                 });
         }

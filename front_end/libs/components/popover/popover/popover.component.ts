@@ -3,14 +3,9 @@ import {
     CdkPortalOutlet,
     ComponentPortal,
     Portal,
-    TemplatePortal
+    TemplatePortal,
 } from '@angular/cdk/portal';
-import {
-    Component,
-    ComponentRef,
-    EmbeddedViewRef,
-    ViewChild
-} from '@angular/core';
+import { Component, ComponentRef, EmbeddedViewRef, ViewChild } from '@angular/core';
 
 /**
  * Internal component that wraps user-provided popover content.
@@ -18,16 +13,14 @@ import {
 @Component({
     selector: 'nx-popover',
     templateUrl: './popover.component.html',
-    styleUrls: ['./popover.component.scss']
+    styleUrls: ['./popover.component.scss'],
 })
 export class NxPopoverComponent extends BasePortalOutlet {
     @ViewChild(CdkPortalOutlet) portalOutlet: CdkPortalOutlet;
 
     template: Portal<unknown>;
 
-    attachComponentPortal<T>(
-        componentPortal: ComponentPortal<T>
-    ): ComponentRef<T> {
+    attachComponentPortal<T>(componentPortal: ComponentPortal<T>): ComponentRef<T> {
         return this.portalOutlet.attachComponentPortal(componentPortal);
     }
 

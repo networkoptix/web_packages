@@ -1,8 +1,4 @@
-import {
-    Component,
-    OnInit,
-    ViewEncapsulation
-} from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { icons } from '@lib/variables/static-variables';
@@ -17,7 +13,7 @@ import type { RibbonAction } from './ribbon.types';
     selector: 'nx-ribbon',
     templateUrl: 'ribbon.component.html',
     styleUrls: ['ribbon.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxRibbonComponent implements OnInit {
     message: Translatable = '';
@@ -27,20 +23,15 @@ export class NxRibbonComponent implements OnInit {
     updateFunction?: () => void;
     icons = icons;
 
-    constructor(
-        private ribbonService: NxRibbonService,
-        public headerService: NxHeaderService
-    ) {}
+    constructor(private ribbonService: NxRibbonService, public headerService: NxHeaderService) {}
 
     ngOnInit(): void {
-        this.ribbonService.contextSubject
-            .pipe(untilDestroyed(this))
-            .subscribe(context => {
-                this.visibility = context.visibility;
-                this.message = context.message;
-                this.actions = context.actions;
-                this.type = context.type;
-                this.updateFunction = context.updateFunction;
-            });
+        this.ribbonService.contextSubject.pipe(untilDestroyed(this)).subscribe(context => {
+            this.visibility = context.visibility;
+            this.message = context.message;
+            this.actions = context.actions;
+            this.type = context.type;
+            this.updateFunction = context.updateFunction;
+        });
     }
 }
