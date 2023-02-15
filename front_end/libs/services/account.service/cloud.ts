@@ -118,7 +118,7 @@ export class CloudAccount extends BaseAccount {
             });
     }
 
-    login(email: string, password: string, remember: boolean, navigateHome = false) {
+    login(email: string, password: string, remember: boolean, navigateHome = false): Promise<any> {
         this.requestingLogin = this.cloudApi.login(email, password, remember);
 
         return this.requestingLogin.then((result: any) => {

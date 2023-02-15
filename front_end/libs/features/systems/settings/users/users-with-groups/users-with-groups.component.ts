@@ -5,7 +5,7 @@ import { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
 import { servers } from '@lib/variables/static-variables';
-import { Translatable } from '@pipes/any-translate.types';
+import type { NxSystemUser } from '@services/system.service/user-manager/user-manager-types.bak';
 import { UserWithGroupsManager } from '@services/system.service/user-manager/user-with-groups-manager';
 
 import { NxSystemUsersBaseComponent } from '../edit-user-base/edit-user-base.component';
@@ -28,7 +28,7 @@ import { NxSystemUsersBaseComponent } from '../edit-user-base/edit-user-base.com
 export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent {
     roles: string[];
     selectedGroups: string[];
-    selectedGroupsList: { name: Translatable, description: Translatable }[];
+    selectedGroupsList: { name: string; description: string }[];
 
     processedGroups: { id: string; label: string; tooltip?: string }[];
 
@@ -46,9 +46,9 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
                 await this.system.getUsers(true).catch(err => console.error(err));
             } catch (err) {
                 if (err?.error?.errorId === servers.errors.oldSessionErrorId) {
-                    const ready = await this.simpleDialogService.refreshSession(this.system);
+                    const ready = await this.dialogs.refreshSession(this.system);
                     if (ready) {
-                        await this.system.userManager.modifyUser(user);
+                        await (this.system.userManager as UserWithGroupsManager).modifyUser(user);
                         await this.system.getUsers(true);
                     }
                 } else {

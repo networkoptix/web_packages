@@ -92,7 +92,7 @@ export class LocalAccount extends BaseAccount {
         }
     }
 
-    login(login, password, remember = false, navigateHome = false) {
+    login(login, password, remember = false, navigateHome = false): Promise<any> {
         return this.mediaServerApi.loginToken(login, password, remember)
             .pipe(
                 catchError(({ errorString: errorText, ...res }) => {
@@ -108,7 +108,7 @@ export class LocalAccount extends BaseAccount {
                 tap((res: any) => {
                     this.sessionService.loginState = (res.resultCode) ? undefined : login;
                 })
-            );
+            ).toPromise();
     }
 
     logoutHelper(doNotRedirect = false, skipReload = false): void {

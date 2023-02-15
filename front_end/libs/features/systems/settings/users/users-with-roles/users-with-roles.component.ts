@@ -37,13 +37,13 @@ export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent 
             const user = this.formatUser(this.selectedUser);
             this.locked.add(user.email);
             try {
-                await this.system.userManager.saveUser(user, user.role);
+                await this.system.userManager.saveUser(user);
                 await this.system.getUsers(true).catch(err => console.error(err));
             } catch (err) {
                 if (err?.error?.errorId === servers.errors.oldSessionErrorId) {
-                    const ready = await this.simpleDialogService.refreshSession(this.system);
+                    const ready = await this.dialogs.refreshSession(this.system);
                     if (ready) {
-                        await this.system.userManager.saveUser(user, user.role);
+                        await this.system.userManager.saveUser(user);
                         await this.system.getUsers(true);
                     }
                 } else {

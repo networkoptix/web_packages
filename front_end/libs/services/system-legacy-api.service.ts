@@ -1438,7 +1438,7 @@ export class NxSystemAPI {
         throw new Error('should only be using rest v2 version');
     }
 
-    addUser(user: NxSystemUser): Observable<unknown> {
+    addUser<U extends t.ec2SaveUser>(user: U): Observable<t.ChangedIdReturned> {
         throw new Error('should only be using rest v2 version');
     }
 }

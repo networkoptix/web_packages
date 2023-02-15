@@ -178,7 +178,8 @@ export class NxSystem {
         this.useRest = Math.floor(this.version) > 4;
         this.lostConnection = false;
         this.initSystem(currentUserEmail, systemId, serverId, userId);
-        firstValueFrom(this.getLicenseManager());
+        // Todo: Figure out when to enable it for webadmin
+        !environment.isLocal && firstValueFrom(this.getLicenseManager());
         this.getCloudStorageManager(this.cloudApi.cloudStorageApi);
     }
 

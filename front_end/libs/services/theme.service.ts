@@ -3,6 +3,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { CookieService } from 'ngx-cookie-service';
 import { SessionStorageService } from 'ngx-webstorage';
 
+import { environment } from '@environments/environment';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -53,6 +54,9 @@ export class NxThemeService {
                 }
             });
 
+        if (environment.isLocal || !this.CONFIG.featureFlags.themesEnabled) {
+            return;
+        }
         this.sessionService.loginStateSubject
             .pipe(untilDestroyed(this))
             .subscribe(async (loginState: string) => {

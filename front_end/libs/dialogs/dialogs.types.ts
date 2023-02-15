@@ -74,7 +74,7 @@ interface MessageData {
 export type Message = DialogType<MessageData, true>;
 
 /* Auth */
-export type RefreshSession = DialogType<NxSystem, true>;
+export type RefreshSession = DialogType<NxSystem, boolean>;
 export type Client2faWarning = DialogType<void, void>;
 
 /* Account */

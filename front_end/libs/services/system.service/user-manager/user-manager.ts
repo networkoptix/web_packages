@@ -339,6 +339,9 @@ export class UserManager {
             if (userData.isLocalOwner) {
                 delete userData.name;
                 delete userData.permissions;
+            } else {
+                userData.accessRole = userData.role.name;
+                userData.permissions = userData.role.permissions;
             }
         } else {
             // Creating new user
@@ -352,7 +355,11 @@ export class UserManager {
             };
         }
 
-        const saveAction = userCreated && this.mediaserver.version === 5.1
+        if (userData?.permissions.includes('NoPermission')) {
+            userData.permissions = '';
+        }
+
+        const saveAction = !('id' in user) && this.mediaserver.version === 5.1
             ? this.mediaserver.addUser(userData)
             : this.mediaserver.saveUser(userData);
 
