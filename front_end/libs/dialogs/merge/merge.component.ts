@@ -795,7 +795,12 @@ export class MergeModalContent {
             if (!this.targetSystem.id) {
                 let secondarySystem: any;
                 if (this.system.useRest) {
-                    secondarySystem = await this.system.getRemoteServerInfo(this.serverUrl).toPromise();
+                    secondarySystem = await this.system.getRemoteServerInfo(this.serverUrl).toPromise()
+                        .catch(err => {
+                            if (err.status === 504) {
+                                throw Error(this.noServerFound);
+                            } else throw err;
+                        });
                 } else {
                     secondarySystem = (await this.system.getModuleInfoUsingUrl(this.serverUrl).toPromise()).reply;
                     if (secondarySystem) {
