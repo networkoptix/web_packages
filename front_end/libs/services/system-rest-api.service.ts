@@ -3,12 +3,13 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injector } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { SessionStorageService } from 'ngx-webstorage';
-import { from, Observable, of, throwError } from 'rxjs';
+import { combineLatest, from, Observable, of, throwError } from 'rxjs';
 import {
     catchError,
     map,
     mergeMap,
     retryWhen,
+    share,
     switchMap,
     tap,
     timeout
@@ -18,6 +19,7 @@ import { environment } from '@environments/environment';
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
 import { NxHealthService } from '@pages/health/health.service';
 import { NxStorageService } from '@services/storage.service';
+import { IPartialCamera, PartialCameraRest } from '@services/system.service/camera-manager/camera-manager-types';
 
 import { SECURITY_LEVEL } from '../../apps/setup-wizard/src/app/types/wizard-state.types';
 
@@ -639,6 +641,76 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.get('/rest/v1/system/settings').toPromise();
     }
 
+    getMediaServers(useCache: boolean) {
+        const endpoint = '/rest/v1/servers';
+        const params = {
+            _keepDefault: true,
+            _with: 'id,name,status,url'
+        };
+        return this.get<t.GetMediaServers[]>(
+            endpoint,
+            params,
+            { [useCache ? 'cache-request' : 'reset-cache']: 'true' }
+        ).pipe(
+            map(servers => {
+                servers.forEach(server => {
+                    server.networkAddresses = server.url.replace(/https?:\/\//, '');
+                });
+                return servers;
+            })
+        );
+    }
+
+    getCameras(): Observable<IPartialCamera[]> {
+        const endpoint = '/rest/v1/devices';
+        const params = {
+            _keepDefault: true,
+            _with: 'id,name,serverId,status,url,schedule.isEnabled'
+        };
+        return this.get<PartialCameraRest[]>(
+            endpoint,
+            params
+        ).pipe(map(cameras => cameras
+            .map(({ id, name, schedule, serverId, status, url }) => (
+                { id, name, status, url, scheduleEnabled: schedule.isEnabled, parentId: serverId }
+            ))));
+    }
+
+    updateSystemServersCameras() {
+        const routes = [
+            '/api/moduleInformation',
+            '/ec2/getMediaServers',
+            'ec2/getTimeOfServers'
+        ];
+        const aggregator = this.getRequestAggregator<
+            t.NormalResponse<
+                [
+                    t.ModuleInformationReply,
+                    t.GetMediaServers,
+                    t.SystemTime
+                ]
+            >
+        >(routes).pipe(
+            map(({ reply }) => {
+                return routes.map(route => {
+                    if (
+                        [
+                            '/api/moduleInformation',
+                            'ec2/getTimeOfServers'
+                        ].includes(route)
+                    ) {
+                        return reply[route].reply;
+                    }
+                    return reply[route];
+                });
+            })
+        );
+
+        return combineLatest([aggregator, this.getCameras()]).pipe(
+            map(([[moduleInfo, mediaservers, systemTime], cameras]) => [moduleInfo, mediaservers, systemTime, cameras])
+        );
+    }
+
     backupControl(action?: 'start' | 'stop') {
         const backupEndpoint = `/rest/v1/servers/${this.serverId}/backupSettings`;
         return this.post(backupEndpoint, {
@@ -891,7 +963,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         }
 
         return this.get(endpoint, data, { responseType: 'blob' })
-            .pipe(map(blob => blob ? URL.createObjectURL(blob) : undefined));
+            .pipe(map(blob => blob ? URL.createObjectURL(blob) : undefined), share());
     }
 
     protected generateGetUrl(url: string, data: IParams, absUrl?: boolean) {

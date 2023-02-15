@@ -487,7 +487,7 @@ export class NxSystem {
         if (!this.updatePromise) {
             this.updatePromise = this.getInfo(true, false, true)
                 .then(() => this.isOnline ? this.cameraManager.updateSystemServersCameras() : Promise.reject({ offline: true }))
-                .then(() => this.serverManager.getForceServers(false).toPromise())
+                .then(() => this.serverManager.getForceServers(true).toPromise())
                 .then(() => environment.isLocal ? Promise.resolve() : this.getUsers(true, true))
                 .catch(error => {
                     if (error?.offline) {
@@ -638,8 +638,8 @@ export class NxSystem {
 
     protected _setMediaServersAndCameras(apiReply) {
         // `mss` stands for mediaservers, `cs` — for cameras
-        const mss = apiReply['ec2/getMediaServersEx'] ||
-            apiReply['/ec2/getMediaServersEx'];
+        const mss = apiReply['ec2/getMediaServers'] ||
+            apiReply['/ec2/getMediaServers'];
 
         const cs = apiReply['ec2/getCamerasEx'].map(trimIds);
 

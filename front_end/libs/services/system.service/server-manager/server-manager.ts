@@ -76,29 +76,24 @@ export class ServerManager {
         return Promise.reject();
     }
 
-    // TODO: Remove servers arg from here and getForceServers, not used anywhere
-    getServers(servers?: NxSystemServer[]): Observable<NxSystemServer[]> {
-        return this.getForceServers(true, servers);
+    getServers(): Observable<NxSystemServer[]> {
+        return this.getForceServers(true);
     }
 
-    getForceServers(useCache: boolean, servers?: NxSystemServer[]): Observable<NxSystemServer[]> {
-        if (!servers) {
-            if (!this.serverSubscription || !useCache) {
-                // @ts-expect-error TODO: Fix mismatch between NxSystemServer and GetMediaServers
-                this.serverSubscription = this.mediaserver.getMediaServers(useCache);
-                this.serverSubscription.subscribe(res => {
+    getForceServers(useCache: boolean): Observable<NxSystemServer[]> {
+        if (!this.serverSubscription || !useCache) {
+            // @ts-expect-error TODO: Fix mismatch between NxSystemServer and GetMediaServers
+            this.serverSubscription = this.mediaserver.getMediaServers(useCache).pipe(
+                map(res => {
                     if (!res) {
                         return Promise.reject(new Error(`Request to server has failed ${res}`));
                     }
 
-                    this.servers = res.sort(paramSortFunc(server => server.name));
+                    this.servers = (res as unknown as NxSystemServer[]).sort(paramSortFunc(server => server.name));
                     return this.servers;
-                });
-            }
-            return this.serverSubscription;
-        } else {
-            this.servers = servers.sort(paramSortFunc(server => server.name));
+                }));
         }
+        return this.serverSubscription;
     }
 
     getPreviewUrl(

@@ -379,7 +379,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         this.sessionService.loginStateSubject
             .pipe(untilDestroyed(this))
             .subscribe((loginState: string) => {
-                console.log('loginstate', loginState);
+                // console.log('loginstate', loginState);
                 if (loginState) {
                     this.userEmail = loginState;
                     this.dropdownsVisible = true;

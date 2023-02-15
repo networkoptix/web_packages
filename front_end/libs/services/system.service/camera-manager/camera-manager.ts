@@ -1,3 +1,4 @@
+import { ServerTime } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { paramSortFunc } from '@utils/general';
 
@@ -15,7 +16,9 @@ import {
 } from './camera-manager-types';
 
 export class CameraManager {
+    private camerasHealth = {};
     private serverManager: ServerManager;
+    private serverTimes;
     servers: NxSystemServer[];
     cameras: ICamera[];
     moduleInfo: ModuleInfo;
@@ -34,7 +37,7 @@ export class CameraManager {
             this.servers = servers.sort(
                 paramSortFunc((server: any) => server.name)
             );
-            this.getCameras(serverTimes, cameras);
+            await this.getCameras(serverTimes, cameras);
             return Promise.resolve();
         } catch (error) {
             if (error.name === 'TimeoutError') {
@@ -54,104 +57,115 @@ export class CameraManager {
                         return;
                     }
                     [serverTimes, cameras] = response;
+                    this.serverTimes = serverTimes;
                 });
+        } else {
+            this.serverTimes = serverTimes;
         }
 
-        let camerasHealth;
         try {
-            camerasHealth = (await this.serverManager.mediaserver.getHealthValues().toPromise())?.reply?.cameras || {};
+            this.camerasHealth = (await this.serverManager.mediaserver.getHealthValues().toPromise())?.reply?.cameras || {};
         } catch (e) {
-            camerasHealth = {};
+            this.camerasHealth = {};
         }
 
-        const mappedCameras = <ICamera[]>cameras.map(({ addParams: addParamsRaw, parentId, id, vendor, backupType: deprecatedBackupType, ...camera }: ICamera) => {
-            const backupType = deprecatedBackupType || (<any>camera).backupQuality;
-            const server = serverTimes.find(({ serverId }) => serverId === parentId);
-            let dayOfWeek;
-            let secondsToday;
-            if (server) {
-                // Intentionally made descriptive ... I dislike time manipulation
-                const { timeZoneOffset: serverTimeZoneOffsetMs, vmsTime: vmsTimeMs } = server;
-                const localTimeZoneOffsetMs = (new Date().getTimezoneOffset()) * 60 * 1000;
-                const timeZoneOffset = parseInt(serverTimeZoneOffsetMs) + localTimeZoneOffsetMs;
-                const vmsTimeFromLocal = parseInt(vmsTimeMs) + timeZoneOffset;
-                const vmsDate = new Date(vmsTimeFromLocal);
-
-                dayOfWeek = ((vmsDate.getDay() + 6) % 7) + 1;
-                secondsToday = Math.round((vmsDate.getTime() % 86400000) / 1000);
-            }
-            const {
-                rotation,
-                overrideAr,
-                mediaCapabilities,
-                isAudioSupported: audioSupported,
-                // motionStream,
-                ...parsedAddParams
-            }: any = addParamsRaw.filter(({ name }) => [
-                'rotation',
-                'overrideAr',
-                'mediaCapabilities',
-                'isAudioSupported',
-                'supportedMotion',
-                'motionStream',
-                'credentials',
-                'hasDualStreaming',
-                'bitrateInfos'
-            ].includes(name)).reduce((params, { name, value }) => {
-                params[name] = value;
-                return params;
-            }, {});
-
-            const parentName = this.servers?.find(server => server.id === parentId)?.name;
-            const isAudioSupported = !!audioSupported;
-            const streamCapabilities = mediaCapabilities && JSON.parse(mediaCapabilities).streamCapabilities;
-            const primary = streamCapabilities && streamCapabilities.find(({ key }) => key === 'primary');
-            const _maxFps = primary && primary.value && (primary.value.maxFps || primary.value.MaxFps);
-            const maxFps = _maxFps || 15;
-            const previewRotate = overrideAr === 1 ? rotation : rotation === 180 ? 180 : 0;
-            const previewUrl = this.serverManager.mediaserver.previewUrl(id, null, overrideAr * 120, 120, previewRotate);
-            const liveUrl = this.serverManager.mediaserver.getPlaybackUrl(id, 'hls');
-            const webRtcUrl = this.system.version >= 5.1 ? (): string => this.serverManager.mediaserver.getPlaybackUrl(id, 'webRtc') : null;
-            const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });
-            const isStream = ['GENERIC_RTSP', 'GENERIC_MULTICAST', 'GENERIC_MULTICAST', 'HTTP_URL_PLUGIN'].includes(vendor);
-            // eslint-disable-next-line no-use-before-define
-            const motionEnabled = ![MotionType.noMotion, MotionType.none].includes(camera.motionType);
-            let { hasDualStreaming, bitrateInfos } = parsedAddParams;
-            let defaultRatio = 0;
-            if (bitrateInfos) {
-                bitrateInfos = JSON.parse(bitrateInfos);
-                const [x, y] = bitrateInfos.streams[0].resolution.split('x');
-                defaultRatio = x / y;
-            }
-            const multiStream = bitrateInfos && bitrateInfos.streams.length >= 2;
-            const motionLowResEnabled = !camera.disableDualStreaming && (multiStream || !!hasDualStreaming);
-
-            const newApi = this.serverManager.mediaserver instanceof NxSystemRestAPI;
-            const always = newApi ? RecordingType.META_ALWAYS : RecordingType.ALWAYS;
-            const motionOnly = newApi ? RecordingType.META_ONLY : RecordingType.MOTION_ONLY;
-            const motionLowRes = newApi ? RecordingType.META_LOW : RecordingType.MOTION_LOW;
-
-            const recordingSettings: IRecordingSettings = {
-                recording: camera.scheduleEnabled && !camera.scheduleTasks.every(({ fps }) => !fps),
-                quality: this.parseRecordingQuality(camera.scheduleTasks),
-                fps: this.parseFps(camera.scheduleTasks, maxFps),
-                motionEnabled,
-                modes: [
-                    { name: 'always', id: always, value: this.parseRecordingMode(camera, [RecordingType.META_ONLY, RecordingType.ALWAYS]), enabled: true },
-                    { name: 'motion', id: motionOnly, value: this.parseRecordingMode(camera, [RecordingType.META_ONLY, RecordingType.MOTION_ONLY]), enabled: motionEnabled },
-                    {
-                        name: 'motionLowRes',
-                        id: motionLowRes,
-                        value: !motionEnabled ? 0 : this.parseRecordingMode(camera, [RecordingType.META_LOW, RecordingType.MOTION_LOW]),
-                        enabled: motionLowResEnabled && motionEnabled
-                    }
-                ]
-            };
-            const deviceType = camerasHealth[id.replace(/{|}/g, '')]?.info?.type || 'Camera';
-            return { ...camera, deviceType, id, parentId, dayOfWeek, maxFps, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, liveUrl, webRtcUrl, rotation, status, overrideAr, mediaCapabilities, vendor, isStream, motionLowResEnabled, defaultRatio, backupType };
-        });
+        const mappedCameras: ICamera[] = await Promise.all(<ICamera[]>cameras.map(camera => this.parseCamera(camera)));
         this.cameras = mappedCameras;
         return mappedCameras;
+    }
+
+    async parseCamera(rawCamera: ICamera): Promise<ICamera> {
+        const { addParams: addParamsRaw, parentId, id, vendor, backupType: deprecatedBackupType, ...camera } = rawCamera;
+        const backupType = deprecatedBackupType || (<any>camera).backupQuality;
+        const server: ServerTime = this.serverTimes.find(({ serverId }) => serverId === parentId);
+
+        let dayOfWeek;
+        let secondsToday;
+        if (server) {
+            // Intentionally made descriptive ... I dislike time manipulation
+            const { timeZoneOffset: serverTimeZoneOffsetMs, vmsTime: vmsTimeMs } = server;
+            const localTimeZoneOffsetMs = (new Date().getTimezoneOffset()) * 60 * 1000;
+            const timeZoneOffset = parseInt(serverTimeZoneOffsetMs) + localTimeZoneOffsetMs;
+            const vmsTimeFromLocal = parseInt(vmsTimeMs) + timeZoneOffset;
+            const vmsDate = new Date(vmsTimeFromLocal);
+
+            dayOfWeek = ((vmsDate.getDay() + 6) % 7) + 1;
+            secondsToday = Math.round((vmsDate.getTime() % 86400000) / 1000);
+        }
+
+        if (!addParamsRaw) {
+            return <ICamera>{ ...camera, id, parentId };
+        }
+
+        const {
+            rotation,
+            overrideAr,
+            mediaCapabilities,
+            isAudioSupported: audioSupported,
+            // motionStream,
+            ...parsedAddParams
+        }: any = addParamsRaw.filter(({ name }) => [
+            'rotation',
+            'overrideAr',
+            'mediaCapabilities',
+            'isAudioSupported',
+            'supportedMotion',
+            'motionStream',
+            'credentials',
+            'hasDualStreaming',
+            'bitrateInfos'
+        ].includes(name)).reduce((params, { name, value }) => {
+            params[name] = value;
+            return params;
+        }, {});
+
+        const parentName = this.servers?.find(server => server.id === parentId)?.name;
+        const isAudioSupported = !!audioSupported;
+        const streamCapabilities = mediaCapabilities && JSON.parse(mediaCapabilities).streamCapabilities;
+        const primary = streamCapabilities && streamCapabilities.find(({ key }) => key === 'primary');
+        const _maxFps = primary && primary.value && (primary.value.maxFps || primary.value.MaxFps);
+        const maxFps = _maxFps || 15;
+        const previewRotate = overrideAr === 1 ? rotation : rotation === 180 ? 180 : 0;
+        const previewUrl = this.serverManager.mediaserver.previewUrl(id, null, overrideAr * 120, 120, previewRotate);
+        const liveUrl = this.serverManager.mediaserver.getPlaybackUrl(id, 'hls');
+        const webRtcUrl = this.system.version >= 5.1 ? (): string => this.serverManager.mediaserver.getPlaybackUrl(id, 'webRtc') : null;
+        const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });
+        const isStream = ['GENERIC_RTSP', 'GENERIC_MULTICAST', 'GENERIC_MULTICAST', 'HTTP_URL_PLUGIN'].includes(vendor);
+        // eslint-disable-next-line no-use-before-define
+        const motionEnabled = ![MotionType.noMotion, MotionType.none].includes(camera.motionType);
+        let { hasDualStreaming, bitrateInfos } = parsedAddParams;
+        let defaultRatio = 0;
+        if (bitrateInfos) {
+            bitrateInfos = JSON.parse(bitrateInfos);
+            const [x, y] = bitrateInfos.streams[0].resolution.split('x');
+            defaultRatio = x / y;
+        }
+        const multiStream = bitrateInfos && bitrateInfos.streams.length >= 2;
+        const motionLowResEnabled = !camera.disableDualStreaming && (multiStream || !!hasDualStreaming);
+
+        const newApi = this.serverManager.mediaserver instanceof NxSystemRestAPI;
+        const always = newApi ? RecordingType.META_ALWAYS : RecordingType.ALWAYS;
+        const motionOnly = newApi ? RecordingType.META_ONLY : RecordingType.MOTION_ONLY;
+        const motionLowRes = newApi ? RecordingType.META_LOW : RecordingType.MOTION_LOW;
+
+        const recordingSettings: IRecordingSettings = {
+            recording: camera.scheduleEnabled && !camera.scheduleTasks.every(({ fps }) => !fps),
+            quality: this.parseRecordingQuality(camera.scheduleTasks),
+            fps: this.parseFps(camera.scheduleTasks, maxFps),
+            motionEnabled,
+            modes: [
+                { name: 'always', id: always, value: this.parseRecordingMode(camera, [RecordingType.META_ONLY, RecordingType.ALWAYS]), enabled: true },
+                { name: 'motion', id: motionOnly, value: this.parseRecordingMode(camera, [RecordingType.META_ONLY, RecordingType.MOTION_ONLY]), enabled: motionEnabled },
+                {
+                    name: 'motionLowRes',
+                    id: motionLowRes,
+                    value: !motionEnabled ? 0 : this.parseRecordingMode(camera, [RecordingType.META_LOW, RecordingType.MOTION_LOW]),
+                    enabled: motionLowResEnabled && motionEnabled
+                }
+            ]
+        };
+        const deviceType = this.camerasHealth[id.replace(/{|}/g, '')]?.info?.type || 'Camera';
+        return { ...camera, deviceType, id, parentId, maxFps, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, parentName, previewUrl, liveUrl, webRtcUrl, rotation, status, overrideAr, mediaCapabilities, vendor, isStream, motionLowResEnabled, defaultRatio, backupType };
     }
 
     updateRecordingSettings(updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false,
