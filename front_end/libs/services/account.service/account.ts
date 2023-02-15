@@ -22,8 +22,7 @@ export class Account {
     accessToken: string;
     sessionExpires: number;
 
-    constructor(user: User) {
-        const { email, fullName, id, permissions, name, isAdmin, isCloud } = user || {};
+    constructor({ email, fullName, id, permissions, name, isAdmin, isCloud }: User) {
         this.email = email;
         const [first, ...rest] = (fullName || name || '').split(' ');
         this.id = id;
