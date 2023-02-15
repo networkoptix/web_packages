@@ -184,7 +184,7 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
 
     toggleVendorsShown(element: HTMLButtonElement): void {
         if (this.vendors.length !== this.allVendors.length) {
-            this.vendors = this.allVendors;
+            this.vendors = this.allVendors.sort(alphabeticalSort(this.locale, elm => elm.name));
             this.renderer.setProperty(
                 element,
                 'innerText',
