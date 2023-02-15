@@ -134,13 +134,12 @@ export class UserManager {
     deleteUser(removedUser: Pick<NxUser, 'id'>): Promise<void> {
         return this.mediaserver.deleteUser(removedUser.id).toPromise()
             .then(data => {
+                if (!data) {
+                    data = removedUser;
+                }
                 this.users = this.users.filter(user => {
                     return user.id !== data.id;
                 });
-            })
-            .catch(err => {
-                console.info('failed to removed from system directly');
-                console.error(err);
             });
     }
 
@@ -353,8 +352,12 @@ export class UserManager {
             };
         }
 
+        const saveAction = userCreated && this.mediaserver.version === 5.1
+            ? this.mediaserver.addUser(userData)
+            : this.mediaserver.saveUser(userData);
+
         // Assuming highest version since all previous version properties are allowed
-        return (this.mediaserver as NxSystemRestAPI).saveUser(userData).toPromise();
+        return saveAction.toPromise();
     }
 
     private updateAccessRoles(

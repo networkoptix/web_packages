@@ -103,6 +103,7 @@ async def login_helper(request, token, user):
     if 'timezone' in request.data:
         request.session['timezone'] = request.data['timezone']
     serializer = AccountSerializer(request, many=False)
+
     return api_success(await sync_to_async(AccountSerializer.data.fget)(serializer))
 
 
@@ -303,9 +304,8 @@ async def time_since_password(request):
 @api_view(['GET', 'POST'])
 @permission_classes((AllowAny, ))
 async def index(request):
-    theme_cookie = {'theme': { 'value': 'auto', 'httponly': False, 'secure': False }}
     if request.user.is_anonymous:
-        return api_success({'is_authenticated': False}, cookies=theme_cookie)
+        return api_success({'is_authenticated': False})
 
     if request.method == 'GET':
         # get authorized user here
@@ -319,11 +319,8 @@ async def index(request):
                 caches['requests'].set(request.user.email, current_version)
             return redirect(f'{reverse("account")}?cached={current_version}')
         serializer = AccountSerializer(request, many=False)
-        theme_custom_property = await request.user.accountcustomproperty_set.filter(endpoint='theme').afirst()
-        if theme_custom_property and isinstance(theme_custom_property.json_data, dict) and (user_theme := theme_custom_property.json_data.get('theme')):
-            theme_cookie['theme']['value'] = user_theme
 
-        return api_success(await sync_to_async(AccountSerializer.data.fget)(serializer), cookies=theme_cookie, additional_headers={'Cache-Control': f'max-age={60**2 * 24}'})
+        return api_success(await sync_to_async(AccountSerializer.data.fget)(serializer), additional_headers={'Cache-Control': f'max-age={60**2 * 24}'})
 
     serializer = AccountUpdateSerializer(request, data=request.data)
 

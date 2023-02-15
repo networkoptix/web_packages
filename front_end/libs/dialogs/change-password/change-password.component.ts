@@ -9,6 +9,8 @@ import type { NgForm } from '@angular/forms';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
+import { servers } from '@lib/variables/static-variables';
+import { NxLoginService } from '@services/login.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
@@ -30,6 +32,7 @@ export class ChangePasswordModalContent {
     system: NxSystem;
     user: NxEc2LocalUser;
     changePassword: Process;
+    needsUpdate: boolean;
     newPasswordForUser: string;
     currentPasswordForUser: string;
     confirmNewPasswordForUser: string;
@@ -42,7 +45,8 @@ export class ChangePasswordModalContent {
     constructor(
         private renderer: Renderer2,
         private processService: NxProcessService,
-        private dialogRef: DialogRef,
+        private loginService: NxLoginService,
+        public dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
     ) {
         this.newPasswordForUser = '';
@@ -98,7 +102,25 @@ export class ChangePasswordModalContent {
                 },
                 successMessage: this.LANG.account.passwordChangedSuccess,
                 errorPrefix: this.LANG.errorCodes.cantChangePasswordPrefix,
-                ignoreUnauthorized: true
+                ignoreUnauthorized: true,
+                ignoreError: true
+            },
+            undefined,
+            err => {
+                if (
+                    err.errorId ===
+                    servers.errors.oldSessionErrorId
+                ) {
+                    this.needsUpdate = true;
+                    this.loginService.currentSystem = this.system;
+                    this.loginService.updateSession('renewWeb')
+                        .then(ready => {
+                            this.needsUpdate = !ready;
+                            if (ready) {
+                                this.changePassword.run();
+                            }
+                        });
+                }
             });
     }
 
