@@ -165,6 +165,16 @@ export class NxLayoutViewComponent {
         untilDestroyed(this),
     );
 
+    systemOnline$ = this.selectedSystem$.pipe(
+        switchMap(system =>
+            system.isOnline
+                ? Promise.resolve(true)
+                : system.mediaserver.ping().pipe(map(() => true)),
+        ),
+        catchError(() => Promise.resolve(false)),
+        shareReplay({ bufferSize: 1, refCount: true }),
+    );
+
     layoutItemLookup$ = this.selectedSystem$.pipe(
         switchMap(({ mediaserver, serverManager, cameraManager }) =>
             combineLatest([

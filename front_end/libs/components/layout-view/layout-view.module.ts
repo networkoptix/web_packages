@@ -6,6 +6,7 @@ import { ComponentsCoreModule } from '@components/components-core.module';
 import { LayoutGridModule } from '@components/layout-grid/layout-grid.module';
 import { LayoutPtzModule } from '@components/layout-ptz/layout-ptz.module';
 import { LayoutTimelineModule } from '@components/layout-timeline/layout-timeline.module';
+import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 
 import { NxLayoutViewComponent } from './layout-view.component';
 
@@ -16,7 +17,8 @@ import { NxLayoutViewComponent } from './layout-view.component';
         LayoutGridModule,
         LayoutTimelineModule,
         LayoutPtzModule,
-        TourMatMenuModule
+        TourMatMenuModule,
+        PagePlaceHolderModule
     ],
     declarations: [
         NxLayoutViewComponent

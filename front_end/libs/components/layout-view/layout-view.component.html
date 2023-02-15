@@ -1,13 +1,13 @@
-<!-- <div class="select-wrapper">
-    <nx-select
-        [selected]="selectedLayoutDropdown$ | async"
-        [items]="availableLayoutsDropdown$ | async"
-        (onSelected)="changeLayout($event)"
-        [stillLoading]="!(availableLayoutsDropdown$ | async)"
-    >
-    </nx-select>
-</div> -->
-<div class="layout-wrapper">
+<ng-template #offlinePlaceholder>
+    <nx-page-placeholder
+        type="OFFLINE"
+        class="page-placeholder"
+    ></nx-page-placeholder>
+</ng-template>
+<div
+    *ngIf="systemOnline$ | async; else offlinePlaceholder"
+    class="layout-wrapper"
+>
     <nx-layout-grid
         (layoutChanged)="updateLayout($event)"
         (showPtz)="ptzControlTarget = $event"
