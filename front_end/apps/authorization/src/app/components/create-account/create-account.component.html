@@ -46,13 +46,20 @@
         'main-m': viewType === 'mobile'
     }"
     *ngIf="createHeader"
-    [ngStyle]="{ height: 'calc(100% - ' + createHeader.offsetHeight + 'px)' }"
+    [ngStyle]="{ height: 'calc(480px - ' + createHeader.offsetHeight + 'px)' }"
 >
     <form
+        #accountForm
         #createAccountForm="ngForm"
         class="form"
+        [ngClass]="{ 'too-tall': tooTall }"
+        [ngStyle]="{
+            height:
+                'calc(480px - ' + (createHeader.offsetHeight + createFooter.offsetHeight) + 'px)'
+        }"
     >
         <div
+            #rowEmail
             class="create-row"
             *ngIf="!existingEmail"
         >
@@ -126,7 +133,10 @@
                 </ng-container>
             </div>
         </div>
-        <div class="create-row">
+        <div
+            #rowName
+            class="create-row"
+        >
             <div
                 class="first-name mr-3"
                 [ngClass]="{
@@ -214,7 +224,10 @@
                 </p>
             </div>
         </div>
-        <div class="create-row">
+        <div
+            #rowPassword
+            class="create-row"
+        >
             <div
                 class="password"
                 [ngClass]="{ hasError: weakPassword }"
@@ -247,7 +260,10 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex flex-column">
+        <div
+            #rowTerms
+            class="d-flex flex-column"
+        >
             <div class="d-flex justify-content-start">
                 <nx-checkbox
                     [color]="['desktop', 'mobile'].includes(viewType) && 'desktop'"
@@ -303,6 +319,7 @@
         </div>
     </form>
     <footer
+        #createFooter
         [ngClass]="{
             'footer-w': viewType === 'web',
             'footer-d': viewType === 'desktop',

@@ -4,6 +4,11 @@
 
 
 main form {
+    &.too-tall {
+        overflow-y: scroll;
+        padding: 64px 0 12px 0 !important;
+    }
+
     .create-row {
         display: flex;
 
