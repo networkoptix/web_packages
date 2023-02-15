@@ -21,7 +21,7 @@ type SectionLookup = {
     selector: 'nx-single-entity',
     templateUrl: './single-entity.component.html',
     styleUrls: ['./single-entity.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxSingleEntityComponent implements OnChanges {
     @Input() params;

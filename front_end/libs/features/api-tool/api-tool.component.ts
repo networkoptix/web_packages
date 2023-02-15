@@ -28,7 +28,7 @@ import { NxReadonlyAPIService } from './services/readonly-api.service';
     styleUrls: ['api-tool.component.scss'],
     templateUrl: 'api-tool.component.html',
     providers: [NxAPIToolSystemService, NxOpenAPIJSONService, NxReadonlyAPIService],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxAPIToolComponent {
     @ViewChild('developersMenu') developersMenuRef: ElementRef<HTMLElement>;

@@ -11,7 +11,7 @@ import { NgChanges } from '@utils/ng-changes';
     selector: 'nx-bool-icon',
     templateUrl: './bool-icon.component.html',
     styleUrls: ['./bool-icon.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class BoolIconComponent implements OnInit {
     @Input() param: string;

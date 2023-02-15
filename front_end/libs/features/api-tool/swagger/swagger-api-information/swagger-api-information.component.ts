@@ -5,7 +5,7 @@ import { MarkdownComponent } from 'ngx-markdown';
     selector: 'nx-swagger-markdown',
     templateUrl: './swagger-api-information.component.html',
     styleUrls: ['./swagger-api-information.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxSwaggerAPIInformationComponent {
     @ViewChild('markdownRef') markdown: MarkdownComponent;

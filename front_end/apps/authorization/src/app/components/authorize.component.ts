@@ -51,7 +51,7 @@ const AUTH_BREAKPOINT = 355;
     selector: 'nx-authorize-component',
     templateUrl: 'authorize.component.html',
     styleUrls: ['authorize.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxAuthorizeComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;

@@ -79,7 +79,7 @@ require('what-input');
             </ng-container>
         </div>`,
     styleUrls: ['./app.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 
 export class AppComponent implements OnInit {

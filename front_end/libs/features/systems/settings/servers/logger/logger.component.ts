@@ -29,7 +29,7 @@ interface LoggerOption extends DropdownItem<string> {
     selector: 'nx-server-logger-component',
     templateUrl: 'logger.component.html',
     styleUrls: ['logger.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxServerLoggerComponent implements OnChanges {
     @Input() system: NxSystem;

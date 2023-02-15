@@ -38,7 +38,7 @@ import { NxHealthService } from '../health.service';
     selector: 'nx-health-viewer-component',
     templateUrl: 'viewer.component.html',
     styleUrls: ['viewer.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxReportViewerComponent implements OnInit, OnDestroy {
     LANG = staticLang;

@@ -48,7 +48,7 @@ import { highlightAllCode, setCodeBlockHTML } from './swagger-utils';
     selector: 'nx-swagger',
     styleUrls: ['swagger.component.scss'],
     templateUrl: './swagger.component.html',
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxSwaggerComponent implements OnChanges, OnInit {
     @ViewChild('viewContainerRef', { read: ViewContainerRef }) VCR: ViewContainerRef;

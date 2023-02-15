@@ -75,7 +75,7 @@ require('what-input');
             <ng-template #appToast></ng-template>
         </ng-container>`,
     styleUrls: ['./app.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 
 export class AppComponent implements AfterViewInit {

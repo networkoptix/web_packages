@@ -44,7 +44,7 @@ import type { Disclaimer, IpvdParams, FilteredCamera } from './ipvd.types';
     selector: 'nx-ipvd',
     templateUrl: 'ipvd.component.html',
     styleUrls: ['ipvd.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 
 export class NxIpvdComponent implements OnInit, AfterViewInit {

@@ -39,7 +39,7 @@ interface Params {
     selector: 'nx-system-alerts-component',
     templateUrl: 'alerts.component.html',
     styleUrls: ['alerts.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy {
     LANG = staticLang;

@@ -44,7 +44,7 @@ import { NxHealthService } from '../health.service';
     selector: 'nx-system-health-component',
     templateUrl: 'health.component.html',
     styleUrls: ['health.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxHealthComponent implements OnInit, OnDestroy {
     LANG = staticLang;

@@ -49,7 +49,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
             multi: true,
         },
     ],
-    // encapsulation: ViewEncapsulation.None
+    // encapsulation: ViewEncapsulation.None,
 })
 export class NxMatLikePasswordComponent
     implements OnInit, OnDestroy, ControlValueAccessor, Validator

@@ -14,7 +14,7 @@ interface DATA {
     selector: 'nx-webgl-canvas',
     templateUrl: 'webgl-canvas.component.html',
     styleUrls: ['webgl-canvas.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxWebglCanvasComponent implements AfterViewInit {
     @Input() initialData: Array<Record<string, string>>;

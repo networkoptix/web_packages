@@ -26,7 +26,7 @@ const getLocalStorage = () => inject(LocalStorageService);
     selector: 'nx-player-js',
     templateUrl: 'player-js.component.html',
     styleUrls: ['player-js.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class PlayerJsComponent implements OnDestroy, OnChanges {
     _log: Function;

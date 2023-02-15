@@ -61,7 +61,7 @@ const SORT_DIR = 2;
     selector: 'nx-dynamic-table',
     templateUrl: './dynamic-table.component.html',
     styleUrls: ['./dynamic-table.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit {
     @Input() tableHeader = '';

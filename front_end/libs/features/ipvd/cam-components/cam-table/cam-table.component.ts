@@ -49,7 +49,7 @@ type CsvData = Record<string, string | number>[];
     selector: 'nx-cam-table',
     templateUrl: './cam-table.component.html',
     styleUrls: ['./cam-table.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class CamTableComponent implements OnChanges, OnInit, AfterViewInit {
     @Input() elements: FilteredCamera[];
