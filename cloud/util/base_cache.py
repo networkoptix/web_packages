@@ -47,6 +47,14 @@ class BaseCache(object):
         """
         return caches[self.cache_key].get(self.lookup_key, None)
 
+    async def aget_cached_item(self):
+        """Checks cache for doc using the lookup_key attribute.
+
+        Returns:
+            doc: returns cached doc or None if not in cache
+        """
+        return await caches[self.cache_key].aget(self.lookup_key, None)
+
     def set_cached_item(self, doc):
         """Sets doc to cache using the lookup_key attribute.
 
@@ -54,6 +62,14 @@ class BaseCache(object):
             doc: Doc to be added to cache
         """
         caches[self.cache_key].set(self.lookup_key, doc)
+
+    async def aset_cached_item(self, doc):
+        """Sets doc to cache using the lookup_key attribute.
+
+        Args:
+            doc: Doc to be added to cache
+        """
+        await caches[self.cache_key].aset(self.lookup_key, doc)
 
     def clear_cache(self):
         caches[self.cache_key].clear()

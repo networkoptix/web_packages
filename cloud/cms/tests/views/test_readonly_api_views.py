@@ -2,7 +2,7 @@ import pytest
 from rest_framework import status
 from model_bakery import baker
 from random import randint, choice
-
+from asgiref.sync import async_to_sync
 from cms.views.readonly_api import *
 
 
@@ -22,10 +22,16 @@ class TestReadOnlyAPIViews:
             except StopIteration:
                 raise ReadOnlyAPI.DoesNotExist
 
+        async def mock_aget(id=None):
+            return mock_get(id)
+
         def mock_filter(type=None):
             return [model for model in self.models if model.type == type]
 
+        # Todo. Add mocks for testing prefetch_related.
+
         mocker.patch.object(ReadOnlyAPI.objects, 'get', mock_get)
+        mocker.patch.object(ReadOnlyAPI.objects, 'aget', mock_aget)
         mocker.patch.object(ReadOnlyAPI.objects, 'filter', mock_filter)
         mocker.patch.object(ReadOnlyAPI.objects, 'all', lambda: self.models)
 
@@ -36,16 +42,14 @@ class TestReadOnlyAPIViews:
         request = arf.get(request_url)
         request.session = {}
         request.user = user
-        return get_readonly_api(request, json_id)
+        return async_to_sync(get_readonly_api)(request, json_id)
 
     def test_get_readonly_api_success(self, arf, db):
         json_id = choice(self.models).id
         response = self.get_readonly_api(
             arf=arf, user=self.user, json_id=json_id)
-
-        versioned_url = response.url
         assert response.status_code == status.HTTP_302_FOUND
-
+        versioned_url = response.url
         response = self.get_readonly_api(arf=arf, user=self.user, json_id=json_id, request_url=versioned_url)
         assert response.status_code == status.HTTP_200_OK
         assert response.data['id'] == json_id
@@ -76,7 +80,7 @@ class TestReadOnlyAPIViews:
         request = arf.get(request_url)
         request.session = {}
         request.user = user
-        return get_readonly_apis(request)
+        return async_to_sync(get_readonly_apis)(request)
 
     @pytest.mark.no_db
     def test_get_readonly_apis_success(self, arf):
