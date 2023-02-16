@@ -22,11 +22,9 @@
     </div>
     <div class="modal-body">
         <div class="form-group">
-            <label
-                for="groupName"
-                translate
-                >New group name</label
-            >
+            <label for="groupName">{{
+                !hasGroups ? ('Name' | translate) : ('New Group Name' | translate)
+            }}</label>
             <input
                 #groupName="ngModel"
                 class="form-control"
@@ -36,14 +34,23 @@
                 autofocus
                 required
             />
-            <p class="modal-paragraph-light">
-                {{
-                    (targetName
-                        ? LANG.dialogs.systemGroups.createdInsideSelectedGroup
-                        : LANG.dialogs.systemGroups.createdInCurrentGroup
-                    ) | translate: { targetName: targetName }
-                }}
+            <p
+                class="modal-paragraph-light"
+                *ngIf="!hasGroups; else subsequentGroups"
+            >
+                {{ LANG.dialogs.systemGroups.createFirstGroup | translate }}
             </p>
+
+            <ng-template #subsequentGroups>
+                <p class="modal-paragraph-light">
+                    {{
+                        (targetName
+                            ? LANG.dialogs.systemGroups.createdInsideSelectedGroup
+                            : LANG.dialogs.systemGroups.createdInCurrentGroup
+                        ) | translate: { targetName: targetName }
+                    }}
+                </p>
+            </ng-template>
         </div>
         <!-- <div class="form-group">
             <label for="groupParent" translate>Group Parent</label>

@@ -605,13 +605,14 @@ html[data-theme="light"] {
     --inactive-license-text: var(--yellow_d2);
 
     // System groups
-    --groups-sidebar-bg: #{$light5};
+    --groups-sidebar-bg: #{$light2};
     @include generateVarAndRgb(--groups-sidebar-highlight, $light16);
     --groups-sidebar-highlight-color: #{$light1};
     --groups-sidebar-triangle-icon-fill: #{$dark17};
     --groups-sidebar-triangle-icon-highlight-fill: #{$light4};
     --groups-sidebar-folder-icon-fill: #{$dark17};
     --groups-sidebar-folder-icon-highlight-fill: #{$light1};
+    --groups-sidebar-intro-text-color: #{$light16};
 
     --group-card-folder-icon-body-fill: #{$light10};
     --group-card-folder-icon-tab-fill: #{$light13};

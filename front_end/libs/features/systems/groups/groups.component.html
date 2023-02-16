@@ -3,97 +3,37 @@
     cdkDropListGroup
 >
     <div
+        class="sidebar-toggling-ear-wrapper"
+        *ngIf="(loadingState$ | async) === LoadingState.LOADED"
+        [ngClass]="{ shown: (sidebarSettings.value$ | async)?.showSidebarState }"
+        (click)="handleSidebarTogglingEarClick()"
+    >
+        <div class="sidebar-toggling-ear">
+            <svg-icon
+                nx-add-svg-src
+                [src]="icons.dirTextButtons + 'arrow_expand.svg'"
+            >
+            </svg-icon>
+        </div>
+    </div>
+
+    <div
         class="sidebar-container"
-        [ngClass]="{ shown: (sidebarSetting.value$ | async)?.showSidebarState }"
+        *ngIf="(sidebarSettings.value$ | async)?.showSidebarState"
     >
         <nx-pre-loader
-            *ngIf="
-                (sidebarSetting.value$ | async)?.showSidebarState &&
-                    (loadingState$ | async) === LoadingState.LOADING;
-                else loadedContent
-            "
+            *ngIf="(loadingState$ | async) === LoadingState.LOADING; else sidebar"
         ></nx-pre-loader>
-
-        <ng-template #loadedContent>
-            <div
-                class="sidebar-toggling-ear-wrapper"
-                (click)="handleSidebarTogglingEarClick()"
-            >
-                <div class="sidebar-toggling-ear">
-                    <svg-icon
-                        nx-add-svg-src
-                        [src]="icons.dirTextButtons + 'arrow_expand.svg'"
-                    >
-                    </svg-icon>
-                </div>
-            </div>
-            <div
-                *ngIf="
-                    (sidebarSetting.value$ | async)?.showSidebarState &&
-                        !(rootGroups$ | async).length &&
-                        !(currentGroups$ | async).length;
-                    else groupsSidebar
-                "
-                class="sidebar no-groups"
-            >
-                <div class="intro-content">
-                    <img alt="placeholder image" />
-                    <h2 translate>Introducing System Groups</h2>
-                    <p [innerHTML]="LANG.systemGroups.introduction | translate"></p>
-                    <button
-                        class="btn btn-default"
-                        (click)="newGroupDialog()"
-                        translate
-                    >
-                        Create First Group
-                    </button>
-                </div>
-
-                <button (click)="dismissIntroduction()">
-                    <svg-icon
-                        nx-add-svg-src
-                        [src]="icons.dirTextButtons + 'close.svg'"
-                        [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-                    ></svg-icon>
-                    <p translate>Not interested</p>
-                </button>
-                <nx-sidebar-level [groups]="rootGroups$ | async"></nx-sidebar-level>
-            </div>
-            <ng-template #groupsSidebar>
-                <div
-                    class="sidebar"
-                    *ngIf="(sidebarSetting.value$ | async)?.showSidebarState"
-                >
-                    <div
-                        class="group-drop-list"
-                        [ngClass]="{
-                            selected: !(currentGroupId$ | async)
-                        }"
-                        cdkDropList
-                        (cdkDropListDropped)="moveToRoot($event)"
-                    >
-                        <h3 class="root">
-                            <a
-                                routerLink="/groups/"
-                                translate
-                                >My Systems</a
-                            >
-
-                            <button
-                                (click)="newGroupDialog()"
-                                class="close-button"
-                            >
-                                <svg-icon
-                                    nx-add-svg-src
-                                    [src]="icons.dir + 'plus.svg'"
-                                    [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-                                ></svg-icon>
-                            </button>
-                        </h3>
-                    </div>
-                    <nx-sidebar-level [groups]="rootGroups$ | async"></nx-sidebar-level>
-                </div>
-            </ng-template>
+        <ng-template #sidebar>
+            <nx-groups-sidebar
+                [groups]="rootGroups$ | async"
+                [currentGroupId]="currentGroupId$ | async"
+                [hasGroups]="!!(rootGroups$ | async).length"
+                [userEmail]="userEmail"
+                [ngClass]="{
+                    shown: (sidebarSettings.value$ | async)?.showSidebarState
+                }"
+            ></nx-groups-sidebar>
         </ng-template>
     </div>
     <div class="cards">

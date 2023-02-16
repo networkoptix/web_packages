@@ -15,6 +15,7 @@ import {
 import {
     NxGroupsSidebarLevelModule
 } from './components/sidebar-level/sidebar-level.module';
+import { NxSystemGroupsSidebarModule } from './components/sidebar/sidebar.module';
 import { NxSystemGroupsComponent } from './groups.component';
 import { groupsReducer } from './store/groups.reducer';
 
@@ -40,6 +41,7 @@ import { groupsReducer } from './store/groups.reducer';
         NxGroupsSidebarLevelModule,
         NxGroupsCardsModule,
         PreLoaderModule,
+        NxSystemGroupsSidebarModule,
     ],
     declarations: [
         NxSystemGroupsComponent,

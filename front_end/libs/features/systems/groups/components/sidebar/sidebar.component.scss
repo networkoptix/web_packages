@@ -1,0 +1,94 @@
+@use '../sidebar-level/sidebar-level.component.scss' as *;
+@use 'bootstrap_utils' as bootstrap;
+
+.sidebar {
+    height: 100%;
+    overflow-y: auto;
+    padding: 1rem;
+    width: 320px;
+    position: relative;
+    background-color: var(--groups-sidebar-bg);
+    color: var(--groups-sidebar-intro-text-color);
+
+
+    @include bootstrap.media-breakpoint-down(sm) {
+        position: absolute;
+        width: 100%;
+        height: calc(100% - 98px);
+        z-index: 2;
+    }
+
+    @include bootstrap.media-breakpoint-down(xs) {
+        height: calc(100% - 60px);
+    }
+
+    .root {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        button {
+            background: none;
+            padding: 0 !important;
+            display: inline !important;
+        }
+    }
+
+    .no-groups {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+        gap: 20%;
+
+        padding: 6vh 20px 1rem 20px;
+
+        .intro-container{
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            .image-placeholder {
+                height: 150px;
+                width: 150px;
+                background-color: #d9d9d9;
+            }
+            button {
+                background: transparent;
+                justify-content: space-between !important;
+                height: 30px !important;
+                width: 56%;
+                white-space: nowrap;
+  
+                p {
+                    margin-bottom: 0;
+                    font-family: 'robotoregular';
+                }
+            }
+        }
+        
+        .intro-footer {
+            display: flex;
+            justify-content: center;
+
+            button {
+                position: absolute;
+                background: transparent;
+                bottom: 0;
+                color: var(--groups-sidebar-intro-text-color);
+
+                p {
+                    font-family: "robotoregular", "Helvetica Neue", Helvetica, Arial, sans-serif;
+                }
+            }
+        }
+
+        h2 {
+                width: 75%;
+          }
+      }
+  }

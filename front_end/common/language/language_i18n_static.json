@@ -686,6 +686,7 @@
             "title": "Your session has expired"
         },
         "systemGroups": {
+            "createFirstGroup" : "Enter a new group name",
             "createdInRoot": "New group will be created in root",
             "createdInCurrentGroup": "New group will be created in current group",
             "createdInsideSelectedGroup": "New group will be created in {targetName}"
@@ -1247,6 +1248,8 @@
         "noUsersForTransfer": "There are no other users on the system besides you. Add them to system to be able to transfer rights"
     },
     "systemGroups": {
+        "mySystems": "My Systems",
+        "shared": "Shared",
         "root": "root",
         "groupCount": "{count, plural, =0{# GROUPS} one{# GROUP} other{# GROUPS}}",
         "systemCount": "{count, plural, =0{# SYSTEMS} one{# SYSTEM} other{# SYSTEMS}}",

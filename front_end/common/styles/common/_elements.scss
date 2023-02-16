@@ -183,7 +183,7 @@ span.marked {
 
 .overlay-backdrop + .cdk-global-overlay-wrapper {
     //position       : fixed !important;
-    display: block !important;
+    display: flex !important;
     z-index: 1050 !important;
     pointer-events: auto !important;
     overflow-y: auto;

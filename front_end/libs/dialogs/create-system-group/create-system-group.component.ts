@@ -26,6 +26,7 @@ export class CreateSystemGroupModalContent implements OnInit {
 
     targetId: string | undefined;
     targetName: string | undefined;
+    hasGroups: boolean | undefined;
 
     createSystemGroupProcess: Process;
 
@@ -36,10 +37,11 @@ export class CreateSystemGroupModalContent implements OnInit {
         @Inject(DIALOG_DATA) dialogData: {
             targetId?: string;
             targetName?: string;
+            hasGroups?: boolean;
         },
         private groupsService: NxSystemGroupsService,
     ) {
-        [this.targetId, this.targetName] = [dialogData.targetId, dialogData.targetName];
+        [this.targetId, this.targetName, this.hasGroups] = [dialogData.targetId, dialogData.targetName, dialogData.hasGroups];
     }
 
     ngOnInit(): void {

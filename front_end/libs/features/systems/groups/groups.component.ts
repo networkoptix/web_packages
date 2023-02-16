@@ -5,7 +5,6 @@ import { Store } from '@ngrx/store';
 import { LocalStorageService } from 'ngx-webstorage';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons } from '@lib/variables/static-variables';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
@@ -38,9 +37,8 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
     LoadingState = LoadingState;
     LANG = staticLang;
     crumbs$ = this.store.select<Crumb[] | null>(selectCrumbs);
-    username: string = this.localStorageService.retrieve('loginstate');
-    sidebarSetting: CustomAccountProperty<sidebarSettings>;
-    private groupId: string;
+    userEmail: string = this.localStorageService.retrieve('loginstate');
+    sidebarSettings: CustomAccountProperty<sidebarSettings>;
 
     loadingState$ = this.store.select<LoadingState>(selectLoadingState);
 
@@ -62,10 +60,9 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
     constructor(
         private store: Store,
         private groupsService: NxSystemGroupsService,
-        private dialogsService: NxDialogsService,
         private route: ActivatedRoute,
         private localStorageService: LocalStorageService,
-        private cloudApi: NxCloudApiService
+        private cloudApi: NxCloudApiService,
     ) {
         this.groupsService.connect();
         this.initSidebar();
@@ -73,7 +70,6 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.route.params.subscribe(params => {
-            this.groupId = params.groupId;
             this.store.dispatch(
                 GroupActions.setCurrentGroupId({
                     currentGroupId: params.groupId
@@ -87,11 +83,11 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
     }
 
     initSidebar(): void {
-        this.sidebarSetting = this.cloudApi.customAccountPropertyFactory('showSidebarState', this.username, { showSidebarState: true });
+        this.sidebarSettings = this.cloudApi.customAccountPropertyFactory('showSidebarState', this.userEmail, { showSidebarState: true });
     }
 
     public handleSidebarTogglingEarClick(): void {
-        this.sidebarSetting.update(curr => {
+        this.sidebarSettings.update(curr => {
             curr.showSidebarState = !curr.showSidebarState;
             return curr;
         }, true);
@@ -105,10 +101,6 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
         this.groupsService.onDrop(event.item.data, null);
     }
 
-    newGroupDialog(): void {
-        this.dialogsService.createSystemGroup(this.groupId);
-    }
-
     setSidebarAll(state: boolean): void {
         this.groupsService.sidebarOpenSubject.next(state);
     }
@@ -116,12 +108,5 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
     __crash(): void {
         // @ts-expect-error Deliberately crash the backend for testing
         this.groupsService.moveGroup(['foo'], ['bar']);
-    }
-
-    dismissIntroduction(): void {
-        this.sidebarSetting.update(curr => {
-            curr.showSidebarState = false;
-            return curr;
-        }, true);
     }
 }
