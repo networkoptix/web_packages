@@ -120,6 +120,9 @@ export class NxThemeService {
     }
 
     async setTheme(themeSelected: string, username: string): Promise<void> {
+        if (!this.darkThemeMq) {
+            this.darkThemeMq = this.window.matchMedia('(prefers-color-scheme: dark)');
+        }
         const docTheme = this.window.document.documentElement.getAttribute('data-theme');
         let { themesEnabled } = this.CONFIG.featureFlags;
         if (username === 'setup') {
