@@ -44,9 +44,15 @@ const obscure = (segments: string[]): string => {
     return to32.join('');
 };
 
+let versionFile: string;
+
+const getStatic = async (): Promise<string> => {
+    versionFile ||= await fetch('/static/version.txt').then(res => res.text());
+    return versionFile;
+};
+
 const generateKey = async (dbName: string): Promise<Uint8Array> => {
-    const res = await fetch('/static/version.txt');
-    const val = await res.text();
+    const val = await getStatic();
     const keyString = obscure([
         dbName,
         location.origin,
@@ -55,7 +61,7 @@ const generateKey = async (dbName: string): Promise<Uint8Array> => {
     return new TextEncoder().encode(keyString);
 };
 
-const generateDbName = (dbName?: string): string => {
+export const generateDbName = (dbName?: string): string => {
     const segments = [
         dbName || getUser(),
         stringify(definitions)
@@ -89,6 +95,12 @@ export class AppDB extends Dexie {
             Object.assign({}, ...schemas)
         );
         this.on('populate', () => this.populate());
+
+        // Delete randomly generate DBs. Used to make sure a personal instance is created before accessing it.
+        Dexie.getDatabaseNames().then(names => {
+            const randomDbNames = names.filter(name => name.includes('random') && name !== dbName);
+            randomDbNames.forEach(name => Dexie.delete(name));
+        });
     }
 
     async populate(): Promise<void> {
@@ -96,7 +108,3 @@ export class AppDB extends Dexie {
         console.log('Populating database...');
     }
 }
-
-export const userDb = AppDB.createCreateDb(generateDbName());
-
-export const sharedDb = AppDB.createCreateDb(generateDbName('shared'));

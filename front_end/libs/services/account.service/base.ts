@@ -13,13 +13,13 @@ import { accountActions, accountSelectors } from '@common/store/account';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { oauthStore, redirect, updateInterval } from '@lib/variables/static-variables';
+import { NxDbService } from '@services/db.service';
 import { NxLoginService } from '@services/login.service';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { OauthService } from '@services/oauth.service';
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
-import { userDb } from '@src/app/db';
 import { UnstructuredTable } from '@src/app/db/models/unstructured';
 import { memoizeAsyncPersistent } from '@utils/memoize';
 
@@ -96,6 +96,7 @@ export abstract class BaseAccount implements OnDestroy {
         protected bootstrapProviderService: NxBootstrapProvider,
         protected store: Store,
         protected dialogs: NxDialogsService,
+        protected db: NxDbService
     ) {
         this.CONFIG = configService.getConfig();
         // language provider will be ready at this point
@@ -167,8 +168,10 @@ export abstract class BaseAccount implements OnDestroy {
 
     // Methods shared between local and cloud versions of account service.
     @memoizeAsyncPersistent
-    private initStoreUpdater() {
-        userDb.unstructured.$.get('account').pipe(filter(({ value }) => !!value)).subscribe(({ value: currentUser }: UnstructuredTable<Account>) => {
+    private initStoreUpdater(account: Account) {
+        this.db.updatePersonal(account);
+        this.db.personal.unstructured.put({ key: 'account', value: account });
+        this.db.personal.unstructured.$.get('account').pipe(filter(({ value }) => !!value)).subscribe(({ value: currentUser }: UnstructuredTable<Account>) => {
             this._account = currentUser;
             this.store.dispatch(
                 accountActions.setCurrentUser({ currentUser })
@@ -181,8 +184,7 @@ export abstract class BaseAccount implements OnDestroy {
     }
 
     set account(account: Account) {
-        this.initStoreUpdater();
-        userDb.unstructured.put({ key: 'account', value: account });
+        this.initStoreUpdater(account);
         const loginState = this.sessionService.loginState;
         const login = account?.email || account?.name;
         if (login && (!loginState || loginState !== login)) {

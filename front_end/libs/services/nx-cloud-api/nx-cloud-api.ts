@@ -17,11 +17,11 @@ import { ConsoleSection } from '@components/console-table/console-table.componen
 import { environment } from '@environments/environment';
 import { apiBase, redirect, responseOk, staticBase } from '@lib/variables/static-variables';
 import { NxConsoleService } from '@pages/developer-console/console/console.service';
+import { NxDbService } from '@services/db.service';
 import { FeatureFlagStrings } from '@services/nx-config/base-config';
 import { OauthService } from '@services/oauth.service';
 import { NxSwCacheService } from '@services/sw-cache.service';
 import { WINDOW } from '@services/window-provider';
-import { sharedDb, userDb } from '@src/app/db';
 import { UnstructuredTable } from '@src/app/db/models/unstructured';
 import { mapValuesToStrings } from '@utils/general';
 import { memoizeAsyncLong, memoizeAsyncPersistent, memoizeAsyncShort } from '@utils/memoize';
@@ -130,7 +130,8 @@ export class NxCloudApiService {
         private consoleService: NxConsoleService,
         private oauthService: OauthService,
         private cookieService: CookieService,
-        @Inject(WINDOW) private window: Window
+        @Inject(WINDOW) private window: Window,
+        private db: NxDbService
     ) {
         this.CONFIG = configService.getConfig();
 
@@ -298,9 +299,9 @@ export class NxCloudApiService {
 
     @memoizeAsyncLong
     getIPVD() {
-        this.cachedGet<t.IPVDCameras>(apiBase + '/ipvd').subscribe(value => sharedDb.unstructured.put({ key: 'ipvd', value }));
+        this.cachedGet<t.IPVDCameras>(apiBase + '/ipvd').subscribe(value => this.db.shared.unstructured.put({ key: 'ipvd', value }));
 
-        return sharedDb.unstructured.$.get('ipvd').pipe(
+        return this.db.shared.unstructured.$.get('ipvd').pipe(
             filter(value => !!value),
             map(({ value }) => value as t.IPVDCameras)
         );
@@ -547,19 +548,19 @@ export class NxCloudApiService {
     }
 
     account(forceUpdate = false) {
-        const checkIfShouldUpdate = () => userDb.transaction('rw', userDb.unstructured, async () => {
-            const lastUpdate = await userDb.unstructured.get('lastAccountUpdate') as UnstructuredTable<number>;
-            const current = await userDb.unstructured.get('account') as UnstructuredTable<Account>;
+        const checkIfShouldUpdate = () => this.db.personal.transaction('rw', this.db.personal.unstructured, async () => {
+            const lastUpdate = await this.db.personal.unstructured.get('lastAccountUpdate') as UnstructuredTable<number>;
+            const current = await this.db.personal.unstructured.get('account') as UnstructuredTable<Account>;
 
             if (!current?.value || forceUpdate && (lastUpdate?.value || 0) < Date.now() - 10 * 1000) {
-                await userDb.unstructured.put({ key: 'lastAccountUpdate', value: Date.now() });
+                await this.db.personal.unstructured.put({ key: 'lastAccountUpdate', value: Date.now() });
                 return true;
             }
             return false;
         });
         return from(checkIfShouldUpdate()).pipe(
             switchMap(force => this.http.get<Account>(`${apiBase}/account`, { params: { force } })),
-            switchMap(async value => value ? userDb.unstructured.put({ key: 'account', value }) : null),
+            switchMap(async value => value ? this.db.personal.unstructured.put({ key: 'account', value }) : null),
             switchMap(() => this.handleAccount())
             // skip(forceUpdate ? 1 : 0)
         );
@@ -567,7 +568,7 @@ export class NxCloudApiService {
 
     @memoizeAsyncPersistent
     private handleAccount() {
-        return userDb.unstructured.$.get('account').pipe(
+        return this.db.personal.unstructured.$.get('account').pipe(
             filter(current => !!current?.value),
             map(({ value: account }: UnstructuredTable<Account>) => {
                 if (!account.isCloud) {
@@ -672,10 +673,10 @@ export class NxCloudApiService {
             permissions: account.permissions
         };
         return this.http.post<t.AccountEdit>(apiBase + '/account', accountInfo).pipe(
-            switchMap(account => userDb.transaction('rw', userDb.unstructured, async () => {
-                const currentAccount = await userDb.unstructured.get('account') as UnstructuredTable<Account>;
+            switchMap(account => this.db.personal.transaction('rw', this.db.personal.unstructured, async () => {
+                const currentAccount = await this.db.personal.unstructured.get('account') as UnstructuredTable<Account>;
                 currentAccount.value = { ...currentAccount.value, ...account };
-                await userDb.unstructured.put(currentAccount);
+                await this.db.personal.unstructured.put(currentAccount);
                 return account;
             }))
         ).toPromise();
@@ -907,7 +908,7 @@ export class NxCloudApiService {
         const getAccountFromDb = async (force = false) => {
             const key = 'account';
             let value: Account = null;
-            let currentSession = !force && await userDb.unstructured.get(key) as UnstructuredTable<Account>;
+            let currentSession = !force && await this.db.personal.unstructured.get(key) as UnstructuredTable<Account>;
 
             if (!currentSession?.value || force) {
                 value = await firstValueFrom(this.account(force)) || await firstValueFrom(this.account(true));
@@ -918,7 +919,7 @@ export class NxCloudApiService {
                 value = await firstValueFrom(this.renewSessionUsingRefreshToken());
             }
 
-            await userDb.unstructured.put(currentSession);
+            await this.db.personal.unstructured.put(currentSession);
             return currentSession.value;
         };
 

@@ -21,6 +21,7 @@ import { icons, toast } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxApplyService } from '@services/apply.service';
+import { NxDbService } from '@services/db.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { AccountEdit } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -30,7 +31,6 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
-import { userDb } from '@src/app/db';
 
 @UntilDestroy()
 @Component({
@@ -70,6 +70,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
         private toastService: NxToastService,
         private store: Store,
         @Inject(WINDOW) protected window: Window,
+        private db: NxDbService
     ) {
         this.CONFIG = configService.getConfig();
         this.menuService.detail = 'settings';
@@ -90,7 +91,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
 
         this.initProcess();
 
-        userDb.unstructured.$.get('account').pipe(
+        this.db.personal.unstructured.$.get('account').pipe(
             filter(({ value }) => !!value),
             map(({ value }) => value as Account),
             // Eventually update to also update realtime. Right now having issues with clearing apply service on changes.

@@ -28,6 +28,7 @@ import { Translatable } from '@pipes/nx-translate.types';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxApplyService } from '@services/apply.service';
+import { NxDbService } from '@services/db.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -46,7 +47,6 @@ import type {
 } from '@services/system.service/user-manager/user-manager-types';
 import { NxSystemsService } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
-import { userDb } from '@src/app/db';
 import { GridBreakpoints } from '@styles/theme-variables-common';
 import { alphabeticalSort, cleanId } from '@utils/general';
 import { memoizeAsyncPersistent } from '@utils/memoize';
@@ -70,7 +70,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     @memoizeAsyncPersistent
     get content$(): Observable<Content> {
-        return userDb.menuContent.$.where({ base: menus.systemSettings.baseUrl + this.systemId }).first();
+        return this.db.personal.menuContent.$.where({ base: menus.systemSettings.baseUrl + this.systemId }).first();
     }
 
     menuSearchable: boolean;
@@ -148,17 +148,17 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     private async updateContent(skipPermissions = false): Promise<string> {
         if (this.system.userManager?.permissionsUpdated) {
-            return userDb.menuContent.put(this.content);
+            return this.db.personal.menuContent.put(this.content);
         } else if (skipPermissions) {
-            userDb.transaction('rw', userDb.menuContent, async () => {
-                const existing = await userDb.menuContent.get(this.content);
+            this.db.personal.transaction('rw', this.db.personal.menuContent, async () => {
+                const existing = await this.db.personal.menuContent.get(this.content);
 
                 if (existing) {
                     existing.selectedDetailsSection = this.content.selectedDetailsSection;
                     existing.selectedSection = this.content.selectedSection;
                     existing.selectedSubSection = this.content.selectedSubSection;
                 }
-                await userDb.menuContent.put(existing || this.content);
+                await this.db.personal.menuContent.put(existing || this.content);
             });
         }
     }
@@ -206,6 +206,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         private appStateService: NxAppStateService,
         private ribbonService: NxRibbonService,
         @Inject(LOCALE_ID) private locale: string,
+        private db: NxDbService
     ) {
         this.CONFIG = configService.getConfig();
 
@@ -272,9 +273,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 }
             ]
         };
-        userDb.menuContent.get({ base: this.content.base }).then(exists => {
+        this.db.personal.menuContent.get({ base: this.content.base }).then(exists => {
             if (!exists) {
-                userDb.menuContent.put(this.content);
+                this.db.personal.menuContent.put(this.content);
             }
         });
 

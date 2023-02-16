@@ -8,6 +8,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { redirect, responseOk } from '@lib/variables/static-variables';
+import { NxDbService } from '@services/db.service';
 import { NxLoginService } from '@services/login.service';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -48,6 +49,7 @@ export class CloudAccount extends BaseAccount {
         protected bootstrapProviderService: NxBootstrapProvider,
         protected store: Store,
         protected dialogs: NxDialogsService,
+        protected db: NxDbService
     ) {
         super(
             configService,
@@ -70,6 +72,7 @@ export class CloudAccount extends BaseAccount {
             bootstrapProviderService,
             store,
             dialogs,
+            db
         );
         this.account = this.CONFIG.preloadedAccount as Account;
     }

@@ -7,15 +7,14 @@ import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
-import { NxSessionService } from '@services/session.service';
 import { alphabeticalSort, paramSortFunc } from '@utils/general';
 import { memoizeAsyncPersistent } from '@utils/memoize';
 
 // import * as SystemsActions from '../store/systems/systems.actions';
 
-import { userDb } from '../db';
 import { clientMode, toast, updateInterval } from '../variables/static-variables';
 
+import { NxDbService } from './db.service';
 import { NxCloudApiService } from './nx-cloud-api';
 import type { System } from './nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from './nx-config/config-types';
@@ -67,8 +66,8 @@ export class NxSystemsService {
             }
         }),
         environment.isLocal ? identity : switchMap(systems => {
-            userDb.systems.bulkPut(systems);
-            return userDb.systems.$.toArray();
+            this.db.personal.systems.bulkPut(systems);
+            return this.db.personal.systems.$.toArray();
         }),
         shareReplay({ bufferSize: 1, refCount: false })
     );
@@ -89,8 +88,10 @@ export class NxSystemsService {
         return this.currentUser$.value;
     }
 
+    #systems: NxSystemInfo[] = [];
+
     get systems(): NxSystemInfo[] {
-        return this.sessionService.systems;
+        return this.#systems;
     }
 
     constructor(
@@ -101,13 +102,16 @@ export class NxSystemsService {
         private ribbonService: NxRibbonService,
         private toastService: NxToastService,
         private uriService: NxUriService,
-        private sessionService: NxSessionService,
         private cloudApi: NxCloudApiService,
         private injector: Injector,
         // private store: Store,
+        private db: NxDbService,
         @Inject(LOCALE_ID) private locale: string,
     ) {
         this.CONFIG = configService.getConfig();
+        this.db.personal.systems.$.toArray().subscribe(systems => {
+            this.#systems = systems;
+        });
     }
 
     get userDisconnectSystem(): boolean {

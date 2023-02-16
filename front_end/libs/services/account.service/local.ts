@@ -9,6 +9,7 @@ import { tap, catchError } from 'rxjs/operators';
 
 import { redirect } from '@app/variables/static-variables';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxDbService } from '@services/db.service';
 
 import { NxLoginService } from '../login.service';
 import { NxAppStateService } from '../nx-app-state.service';
@@ -51,6 +52,7 @@ export class LocalAccount extends BaseAccount {
         protected bootstrapProviderService: NxBootstrapProvider,
         protected store: Store,
         protected dialogs: NxDialogsService,
+        protected db: NxDbService
     ) {
         super(
             configService,
@@ -73,6 +75,7 @@ export class LocalAccount extends BaseAccount {
             bootstrapProviderService,
             store,
             dialogs,
+            db
         );
         this.mediaServerApi = this.nxSystemAPIService
             .createConnection(undefined, undefined, undefined, () => of(''), 5.1);

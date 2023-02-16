@@ -5,8 +5,7 @@ import { filter } from 'rxjs/operators';
 
 import { NxSystemInfo } from '@services/systems.service.types';
 
-import { userDb } from '../db';
-
+import { NxDbService } from './db.service';
 import { NxConfigService } from './nx-config/nx-config.service';
 import type { LoginParams } from './session.service.types';
 import { NxSwCacheService } from './sw-cache.service';
@@ -26,6 +25,7 @@ export class NxSessionService {
     constructor(
         private localStorageService: LocalStorageService,
         private nxCache: NxSwCacheService,
+        private db: NxDbService,
         @Inject(WINDOW) private window: Window
     ) {
         this.session = this.localStorageService;
@@ -61,7 +61,7 @@ export class NxSessionService {
     }
 
     get systems$(): Observable<NxSystemInfo[]> {
-        return userDb.systems.$.toArray();
+        return this.db.personal.systems.$.toArray();
     }
 
     get systems(): NxSystemInfo[] {
@@ -69,7 +69,7 @@ export class NxSessionService {
     }
 
     set systems(systems: NxSystemInfo[]) {
-        userDb.systems.bulkPut(systems);
+        this.db.personal.systems.bulkPut(systems);
         this.session.store('systems', systems);
     }
 
