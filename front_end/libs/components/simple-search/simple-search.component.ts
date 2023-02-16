@@ -1,11 +1,4 @@
-import {
-    Component,
-    OnInit,
-    forwardRef,
-    Input,
-    OnChanges,
-    HostListener,
-} from '@angular/core';
+import { Component, OnInit, forwardRef, Input, OnChanges, HostListener } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { escape } from 'lodash-es';
 
@@ -20,11 +13,13 @@ import type { SuggestionList, Suggestions } from './simple-search.types';
     selector: 'nx-simple-search',
     templateUrl: 'simple-search.component.html',
     styleUrls: ['simple-search.component.scss'],
-    providers: [{
-        provide: NG_VALUE_ACCESSOR,
-        useExisting: forwardRef(() => NxSimpleSearchComponent),
-        multi: true,
-    }],
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => NxSimpleSearchComponent),
+            multi: true,
+        },
+    ],
 })
 export class NxSimpleSearchComponent implements ControlValueAccessor, OnInit, OnChanges {
     @Input() placeholder: string;
@@ -49,9 +44,7 @@ export class NxSimpleSearchComponent implements ControlValueAccessor, OnInit, On
         }
         const matches: this['matchSections'] = [];
         Object.entries(this.suggestions).forEach(([sectionName, sectionList]) => {
-            const sectionMatches = sectionList.filter(sg =>
-                caseInsenstiveSearch(sg, search)
-            );
+            const sectionMatches = sectionList.filter(sg => caseInsenstiveSearch(sg, search));
             if (sectionMatches.length) {
                 matches.push([sectionName, sectionMatches]);
             }
@@ -64,9 +57,7 @@ export class NxSimpleSearchComponent implements ControlValueAccessor, OnInit, On
         if (!this.suggestions || !Array.isArray(this.suggestions)) {
             return;
         }
-        return this.suggestions.filter(sg =>
-            caseInsenstiveSearch(sg, search)
-        );
+        return this.suggestions.filter(sg => caseInsenstiveSearch(sg, search));
     }
 
     @HostListener('document:click', ['$event.target'])
@@ -197,10 +188,7 @@ export class NxSimpleSearchComponent implements ControlValueAccessor, OnInit, On
             if (!this.matchIndexes) {
                 if (matchesLen) {
                     const lastSection = this.matchSections[matchesLen - 1][1];
-                    this.matchIndexes = [
-                        matchesLen - 1,
-                        lastSection.length - 1
-                    ];
+                    this.matchIndexes = [matchesLen - 1, lastSection.length - 1];
                 }
             } else {
                 const startOfSection = this.matchIndexes[1] === 0;
@@ -216,10 +204,7 @@ export class NxSimpleSearchComponent implements ControlValueAccessor, OnInit, On
                     // Decrement to end of prev section
                 } else if (startOfSection && firstSection) {
                     const lastSection = this.matchSections[matchesLen - 1][1];
-                    this.matchIndexes = [
-                        matchesLen - 1,
-                        lastSection.length - 1
-                    ];
+                    this.matchIndexes = [matchesLen - 1, lastSection.length - 1];
                     // Loop back to end
                 }
             }

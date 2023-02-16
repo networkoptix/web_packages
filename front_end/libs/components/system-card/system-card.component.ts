@@ -11,7 +11,7 @@ import type { NxSystemInfo } from '@services/systems.service.types';
 @Component({
     selector: 'nx-system-card',
     templateUrl: 'system-card.component.html',
-    styleUrls: ['system-card.component.scss']
+    styleUrls: ['system-card.component.scss'],
 })
 export class SystemCardComponent {
     @Input() system: NxSystemInfo;
@@ -24,38 +24,37 @@ export class SystemCardComponent {
     icons = icons;
 
     get tagType(): string {
-        return this.CONFIG.system.status[this.system.stateOfHealth]?.style ||
-            this.CONFIG.system.status.default.style;
+        return (
+            this.CONFIG.system.status[this.system.stateOfHealth]?.style ||
+            this.CONFIG.system.status.default.style
+        );
     }
 
     get systemState(): string {
-        return this.LANG.systemStatuses[this.system.stateOfHealth] ||
-            this.system.stateOfHealth;
+        return this.LANG.systemStatuses[this.system.stateOfHealth] || this.system.stateOfHealth;
     }
 
-    constructor(
-        configService: NxConfigService,
-        private systemsService: NxSystemsService,
-    ) {
+    constructor(configService: NxConfigService, private systemsService: NxSystemsService) {
         this.CONFIG = configService.config;
     }
 
     getSystemOwnerName(): string {
-        return this.systemsService.getSystemOwnerName(
-            this.system,
-            this.account?.email
-        );
+        return this.systemsService.getSystemOwnerName(this.system, this.account?.email);
     }
 
     canShowTag(): boolean {
-        return this.system.stateOfHealth !== this.CONFIG.system.status.online &&
-            !!this.LANG.systemStatuses;
+        return (
+            this.system.stateOfHealth !== this.CONFIG.system.status.online &&
+            !!this.LANG.systemStatuses
+        );
     }
 
     canShowButton(): boolean {
-        return this.LANG.system &&
+        return (
+            this.LANG.system &&
             this.system.stateOfHealth === this.CONFIG.system.status.online &&
-            !this.needToConfigureTwoFactor();
+            !this.needToConfigureTwoFactor()
+        );
     }
 
     needToConfigureTwoFactor(): boolean {

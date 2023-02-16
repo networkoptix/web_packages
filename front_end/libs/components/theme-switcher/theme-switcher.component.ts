@@ -1,8 +1,4 @@
-import {
-    Component,
-    Input,
-    OnInit,
-} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { images } from '@lib/variables/static-variables';
@@ -23,10 +19,7 @@ export class NxThemeSwitcherComponent implements OnInit {
 
     selectedTheme: string;
 
-    constructor(
-        public themeService: NxThemeService,
-    ) {
-    }
+    constructor(public themeService: NxThemeService) {}
 
     ngOnInit(): void {
         this.selectedTheme = this.themeService.getTheme();

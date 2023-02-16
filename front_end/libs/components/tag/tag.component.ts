@@ -1,11 +1,4 @@
-import {
-    Component,
-    EventEmitter,
-    forwardRef,
-    Input,
-    OnInit,
-    Output,
-} from '@angular/core';
+import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import type { Params } from '@angular/router';
 
@@ -29,12 +22,14 @@ import { IBool, CoercedBoolInput } from '@decorators/ibool';
     selector: 'nx-tag',
     templateUrl: 'tag.component.html',
     styleUrls: ['tag.component.scss'],
-    providers: [{
-        provide: NG_VALUE_ACCESSOR,
-        // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        useExisting: forwardRef(() => NxTagComponent),
-        multi: true
-    }]
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            // eslint-disable-next-line @typescript-eslint/no-use-before-define
+            useExisting: forwardRef(() => NxTagComponent),
+            multi: true,
+        },
+    ],
 })
 export class NxTagComponent implements OnInit, ControlValueAccessor {
     @Input() type: string;
@@ -53,9 +48,7 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
 
     get badgeType(): string {
         if (this.type) {
-            return this.selected
-                ? `badge-${this.type}-selected`
-                : `badge-${this.type}`;
+            return this.selected ? `badge-${this.type}-selected` : `badge-${this.type}`;
         } else {
             return this.selected ? 'badge-selected' : 'badge';
         }
@@ -64,9 +57,7 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
     ngOnInit(): void {
         const params = Object.entries<string>(this.linkParam);
         if (this.link && params.length) {
-            const queryParams = params
-                .map(([key, value]) => `${key}=${value}`)
-                .join('&');
+            const queryParams = params.map(([key, value]) => `${key}=${value}`).join('&');
             this.tagHref = `${this.link}?${queryParams}`;
         }
     }

@@ -6,7 +6,7 @@ import { Component, Input, TemplateRef } from '@angular/core';
     templateUrl: './stepper.component.html',
     styleUrls: ['./stepper.component.scss'],
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    providers: [{ provide: CdkStepper, useExisting: NxStepperComponent }]
+    providers: [{ provide: CdkStepper, useExisting: NxStepperComponent }],
 })
 export class NxStepperComponent extends CdkStepper {
     @Input() customButtonLabels: string[];

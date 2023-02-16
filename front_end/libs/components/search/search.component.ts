@@ -9,12 +9,9 @@ import {
     OnDestroy,
     EventEmitter,
     Output,
-    Inject
+    Inject,
 } from '@angular/core';
-import {
-    NG_VALUE_ACCESSOR,
-    ControlValueAccessor
-} from '@angular/forms';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
@@ -63,15 +60,16 @@ import type { SearchFilter } from './search.component.types';
     selector: 'nx-search',
     templateUrl: './search.component.html',
     encapsulation: ViewEncapsulation.None,
-    providers: [{
-        provide: NG_VALUE_ACCESSOR,
-        // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        useExisting: forwardRef(() => NxSearchComponent),
-        multi: true
-    }],
-    styleUrls: ['./search.component.scss']
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            // eslint-disable-next-line @typescript-eslint/no-use-before-define
+            useExisting: forwardRef(() => NxSearchComponent),
+            multi: true,
+        },
+    ],
+    styleUrls: ['./search.component.scss'],
 })
-
 export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccessor {
     @Input() layout: 'search' | 'selectors' | 'compact' | 'full' = 'full';
     @Input() layoutMod: boolean; // mod for 'selectors' layout (HM is using 100% width width Bootstrap) ... at some point we should unify this BS
@@ -108,8 +106,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         private searchService: NxSearchService,
         private scrollMechanicsService: NxScrollMechanicsService,
         @Inject(WINDOW) private window: Window,
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         if (this.instant) {
@@ -143,12 +140,12 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
             });
     }
 
-    ngOnDestroy(): void { }
+    ngOnDestroy(): void {}
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
-    private onTouchedCallback = (): void => { };
-    private onChangeCallback = (_: SearchFilter): void => { };
+    private onTouchedCallback = (): void => {};
+    private onChangeCallback = (_: SearchFilter): void => {};
 
     // Set touched on blur
     onBlur(): void {
@@ -177,23 +174,19 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
                 tag.value = false;
             });
             if (this.params.tags) {
-                this.params.tags
-                    .split(',')
-                    .forEach(tagName => {
-                        this.localFilter.tags.forEach(tag => {
-                            if (tag.id === tagName) {
-                                tag.value = true;
-                            }
-                        });
+                this.params.tags.split(',').forEach(tagName => {
+                    this.localFilter.tags.forEach(tag => {
+                        if (tag.id === tagName) {
+                            tag.value = true;
+                        }
                     });
+                });
             }
         }
 
         this.localFilter.selects?.forEach(select => {
             if (this.params[select.id]) {
-                select.selected = select.items.find(item =>
-                    item.value === this.params[select.id]
-                );
+                select.selected = select.items.find(item => item.value === this.params[select.id]);
             } else {
                 if (!select.selected) {
                     select.selected = { value: '0', name: this.translateSerice.instant('All') };
@@ -215,12 +208,11 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     writeValue(value: SearchFilter): void {
         // Avoid localFilter update if filter in not initialized (page refresh)
         if (
-            value && (
-                value.tags?.length ||
+            value &&
+            (value.tags?.length ||
                 value.selects?.length ||
                 value.multiselects?.length ||
-                value.tags?.length !== this.localFilter.tags?.length
-            )
+                value.tags?.length !== this.localFilter.tags?.length)
         ) {
             if (isEqual(this.localFilter, value)) {
                 return;
@@ -270,8 +262,9 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
                     selectsSelected = this.translateSerice.instant(
                         this.LANG.search.appliedFilters,
                         {
-                            count: this.numberFilters
-                        });
+                            count: this.numberFilters,
+                        },
+                    );
                 } else {
                     tagsSelected = filter.label;
                 }
@@ -280,15 +273,15 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         });
 
         this.localFilter.selects?.forEach(select => {
-            if (select.selected && select.selected.value !== '0') { // not default value
+            if (select.selected && select.selected.value !== '0') {
+                // not default value
                 this.numberFilters += 1;
-                selectsSelected = this.numberFilters > 1
-                    ? this.translateSerice.instant(
-                        this.LANG.search.appliedFilters, {
-                            count: this.numberFilters
-                        }
-                    )
-                    : `${select.label} – ${select.selected.name}`;
+                selectsSelected =
+                    this.numberFilters > 1
+                        ? this.translateSerice.instant(this.LANG.search.appliedFilters, {
+                              count: this.numberFilters,
+                          })
+                        : `${select.label} – ${select.selected.name}`;
                 flag += 1;
             }
         });
@@ -301,13 +294,14 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
             }
 
             if (select.selected.length === 1) {
-                const label = select.searchLabelSingular !== undefined
-                    ? select.searchLabelSingular
-                    : `${select.singular || select.label} –`;
+                const label =
+                    select.searchLabelSingular !== undefined
+                        ? select.searchLabelSingular
+                        : `${select.singular || select.label} –`;
 
-                const selectedLabel = select.items
-                    .find(item => item.id === select.selected[0])
-                    .label;
+                const selectedLabel = select.items.find(
+                    item => item.id === select.selected[0],
+                ).label;
                 multiSelectsSelected = `${label}${selectedLabel}`;
             } else if (select.selected.length > 1) {
                 const label = select.searchLabel ?? select.label.toLowerCase();
@@ -317,14 +311,11 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         if (flag === 1) {
             // Only one category of filter selected
             // i.e. 1 tag, 1 select, or 1 multiselect
-            this.filtersSelected = tagsSelected ||
-                selectsSelected ||
-                multiSelectsSelected;
+            this.filtersSelected = tagsSelected || selectsSelected || multiSelectsSelected;
         } else {
-            this.filtersSelected = this.translateSerice.instant(
-                this.LANG.search.appliedFilters, {
-                    count: this.numberFilters
-                });
+            this.filtersSelected = this.translateSerice.instant(this.LANG.search.appliedFilters, {
+                count: this.numberFilters,
+            });
         }
     }
 
@@ -401,25 +392,20 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
             const hasUpdatedParams = Object.values(queryParams).some(Boolean);
             const replaceUrl = hasExistingParams && hasUpdatedParams;
 
-            return this.uri.updateURI(
-                this.uri.getURL(),
-                queryParams,
-                replaceUrl
-            );
+            return this.uri.updateURI(this.uri.getURL(), queryParams, replaceUrl);
         } else {
             return Promise.resolve(null);
         }
     }
 
     modelChanged(): void {
-        this.setRouteParams()
-            .then(response => {
-                if (response === null) {
-                    return;
-                }
-                this.generateFiltersSelectedLabel();
-                this.onChangeCallback(this.localFilter);
-            });
+        this.setRouteParams().then(response => {
+            if (response === null) {
+                return;
+            }
+            this.generateFiltersSelectedLabel();
+            this.onChangeCallback(this.localFilter);
+        });
     }
 
     get canShowTags(): boolean {
@@ -427,10 +413,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     get canShowSelectors(): boolean {
-        return !!(
-            this.localFilter.selects?.length ||
-            this.localFilter.multiselects?.length
-        );
+        return !!(this.localFilter.selects?.length || this.localFilter.multiselects?.length);
     }
 
     navArrow(direction: ButtonArrowType): void {

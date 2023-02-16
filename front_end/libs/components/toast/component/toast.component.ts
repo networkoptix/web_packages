@@ -1,11 +1,4 @@
-import {
-    Component,
-    EventEmitter,
-    Input,
-    OnChanges,
-    Output,
-    TemplateRef
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, TemplateRef } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subject, timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -18,7 +11,7 @@ import type { Toast } from '../toast.types';
 @Component({
     selector: 'nx-toast',
     templateUrl: 'toast.component.html',
-    styleUrls: ['toast.component.scss']
+    styleUrls: ['toast.component.scss'],
 })
 export class NxToast implements OnChanges {
     @Input() toast: Toast;
@@ -27,7 +20,7 @@ export class NxToast implements OnChanges {
     destroy$ = new Subject<boolean>();
 
     isTemplate(
-        content: string | TemplateRef<unknown> | { value: string; params?: unknown } | unknown
+        content: string | TemplateRef<unknown> | { value: string; params?: unknown } | unknown,
     ): content is TemplateRef<unknown> {
         return content instanceof TemplateRef;
     }
@@ -35,9 +28,9 @@ export class NxToast implements OnChanges {
     ngOnChanges(changes: NgChanges<NxToast>): void {
         if (changes.toast.currentValue) {
             if (this.toast.autohide) {
-                timer(this.toast.delay).pipe(
-                    takeUntil(this.destroy$)
-                ).subscribe(() => this.remove());
+                timer(this.toast.delay)
+                    .pipe(takeUntil(this.destroy$))
+                    .subscribe(() => this.remove());
             }
         }
     }

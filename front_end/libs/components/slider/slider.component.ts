@@ -3,11 +3,12 @@ import {
     Component,
     ElementRef,
     EventEmitter,
-    Input, OnChanges,
+    Input,
+    OnChanges,
     OnInit,
     Output,
     Renderer2,
-    ViewChild
+    ViewChild,
 } from '@angular/core';
 
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
@@ -38,16 +39,14 @@ export class NxSliderComponent implements OnInit, OnChanges {
     @ViewChild('sliderBoundary', { static: true }) sliderBoundary: ElementRef<HTMLDivElement>;
     @ViewChild('slider', { static: true }) slider: ElementRef<HTMLDivElement>;
 
-    constructor(
-        private renderer: Renderer2,
-    ) { }
+    constructor(private renderer: Renderer2) {}
 
     private setValue(value: number): void {
         if (value) {
             this.renderer.setStyle(
                 this.slider.nativeElement,
                 'transform',
-                'translateX(' + this.value * this.scale + 'px'
+                'translateX(' + this.value * this.scale + 'px',
             );
             this.endValue = value;
         }

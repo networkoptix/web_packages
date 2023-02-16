@@ -46,7 +46,7 @@ export class NxSearchHighlightComponent implements OnChanges {
         this.subStrings = textValue.split(
             typeof searchValue === 'string'
                 ? new RegExp(`(${escapeRegExp(searchValue)})`, flagsValue)
-                : searchValue
+                : searchValue,
         );
     }
 }

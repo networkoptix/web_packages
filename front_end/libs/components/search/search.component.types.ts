@@ -1,9 +1,5 @@
-import type {
-    DropdownItem
-} from '@components/dropdowns/generic/dropdown.component.types';
-import type {
-    MultiSelectItem
-} from '@components/dropdowns/multi-select/multi-select.component.types';
+import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import type { MultiSelectItem } from '@components/dropdowns/multi-select/multi-select.component.types';
 import type { SearchModel } from '@services/search.service.types';
 
 /** Extend this with selects/mulitselects and other params */

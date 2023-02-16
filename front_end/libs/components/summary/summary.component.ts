@@ -15,9 +15,8 @@ import { NgChanges } from '@utils/ng-changes';
 @Component({
     selector: 'nx-license-summary-component',
     templateUrl: 'summary.component.html',
-    styleUrls: ['summary.component.scss']
+    styleUrls: ['summary.component.scss'],
 })
-
 export class NxLicenseSummaryComponent implements OnInit, OnChanges {
     @Input() selectedSystem: NxSystem;
     @Input() update: string;
@@ -30,10 +29,7 @@ export class NxLicenseSummaryComponent implements OnInit, OnChanges {
 
     system: NxSystem;
 
-    constructor(
-        configService: NxConfigService,
-        private settingsService: NxSettingsService
-    ) {
+    constructor(configService: NxConfigService, private settingsService: NxSettingsService) {
         this.CONFIG = configService.getConfig();
     }
 
@@ -44,7 +40,8 @@ export class NxLicenseSummaryComponent implements OnInit, OnChanges {
         this.settingsService.systemSubject$
             .pipe(
                 untilDestroyed(this),
-                filter(data => data !== undefined && data.id !== this.system?.id))
+                filter(data => data !== undefined && data.id !== this.system?.id),
+            )
             .subscribe(system => {
                 this.system = system;
                 this.getLicenses();
@@ -56,11 +53,12 @@ export class NxLicenseSummaryComponent implements OnInit, OnChanges {
             this.getLicenses();
         }
 
-        if (changes.licensesLegacyInfo.previousValue &&
+        if (
+            changes.licensesLegacyInfo.previousValue &&
             changes.licensesLegacyInfo?.currentValue &&
             !isEqual(
                 changes.licensesLegacyInfo.currentValue,
-                changes.licensesLegacyInfo.previousValue
+                changes.licensesLegacyInfo.previousValue,
             )
         ) {
             this.getLicenses();
@@ -69,16 +67,17 @@ export class NxLicenseSummaryComponent implements OnInit, OnChanges {
 
     getLicenses(): void {
         if (this.system.useRest) {
-            this.system
-                .getLicenseSummaries()
-                .then(response => {
+            this.system.getLicenseSummaries().then(
+                response => {
                     if (response && Object.keys(response).length) {
                         this.setLicenses(response);
                     }
-                }, () => {
+                },
+                () => {
                     // something went wrong - use legacy info
                     this.licenses = this.licensesLegacyInfo;
-                });
+                },
+            );
         } else {
             this.licenses = this.licensesLegacyInfo;
         }
@@ -88,17 +87,15 @@ export class NxLicenseSummaryComponent implements OnInit, OnChanges {
         this.licenses = Object.keys(response)
             .filter(licence => licence !== '') // don't calculate invalid licences
             .map(licence => {
-                const title = this.CONFIG.licenseTypes.find(item =>
-                    item.name === licence
-                )?.title || licence.charAt(0).toUpperCase() + licence.slice(1);
+                const title =
+                    this.CONFIG.licenseTypes.find(item => item.name === licence)?.title ||
+                    licence.charAt(0).toUpperCase() + licence.slice(1);
                 return {
                     type: title,
                     count: response[licence].total,
                     countAvail: response[licence].available,
                     inUse: response[licence].inUse,
-                    required: -1 * (
-                        response[licence].available - response[licence].inUse
-                    )
+                    required: -1 * (response[licence].available - response[licence].inUse),
                 };
             });
     }

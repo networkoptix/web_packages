@@ -1,6 +1,4 @@
-import {
-    Component
-} from '@angular/core';
+import { Component } from '@angular/core';
 import { TourService } from 'ngx-ui-tour-md-menu';
 
 import staticLang from '@common/language/language_i18n_static.json';

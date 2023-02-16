@@ -1,17 +1,10 @@
-import {
-    Component,
-    EventEmitter,
-    forwardRef,
-    Input,
-    OnInit,
-    Output,
-} from '@angular/core';
+import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
 import {
     ControlValueAccessor,
     NG_VALUE_ACCESSOR,
     Validator,
     ValidationErrors,
-    FormControl
+    FormControl,
 } from '@angular/forms';
 
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
@@ -26,9 +19,9 @@ import { NgChanges } from '@utils/ng-changes';
             provide: NG_VALUE_ACCESSOR,
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxSwitchComponent),
-            multi: true
-        }
-    ]
+            multi: true,
+        },
+    ],
 })
 export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validator {
     @Input() id: string;
@@ -55,8 +48,8 @@ export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validato
     public validate(c: FormControl<boolean>): ValidationErrors | null {
         const err = {
             requiredError: {
-                required: true
-            }
+                required: true,
+            },
         };
 
         if (this.required && !c.value) {

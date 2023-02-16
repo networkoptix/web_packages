@@ -5,12 +5,7 @@ import {
     Portal,
     TemplatePortal,
 } from '@angular/cdk/portal';
-import {
-    Component,
-    ComponentRef,
-    EmbeddedViewRef,
-    ViewChild,
-} from '@angular/core';
+import { Component, ComponentRef, EmbeddedViewRef, ViewChild } from '@angular/core';
 
 @Component({
     selector: 'nx-tooltip-component',

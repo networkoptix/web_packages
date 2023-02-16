@@ -1,11 +1,5 @@
 import { Location } from '@angular/common';
-import {
-    Component,
-    EventEmitter,
-    Input,
-    OnInit,
-    Output
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subject } from 'rxjs';
@@ -36,9 +30,8 @@ type Endpoint = Partial<{
 @Component({
     selector: 'nx-systems-list-component',
     templateUrl: 'list.component.html',
-    styleUrls: ['list.component.scss']
+    styleUrls: ['list.component.scss'],
 })
-
 export class NxSystemsListComponent implements OnInit {
     LANG = staticLang;
     showSearch: boolean;
@@ -82,7 +75,7 @@ export class NxSystemsListComponent implements OnInit {
         private menusService: NxMenusService,
         private router: Router,
         private route: ActivatedRoute,
-        private location: Location
+        private location: Location,
     ) {
         this.setupDefaults();
     }
@@ -97,9 +90,7 @@ export class NxSystemsListComponent implements OnInit {
                 this.systemsService.getSystems(account.email);
             }
 
-            this.systemsService.systemsSubject.pipe(
-                untilDestroyed(this)
-            ).subscribe(systems => {
+            this.systemsService.systemsSubject.pipe(untilDestroyed(this)).subscribe(systems => {
                 this.systems = systems;
                 this.availableSystems.emit(systems);
                 if (this.systems === undefined) {
@@ -122,19 +113,20 @@ export class NxSystemsListComponent implements OnInit {
             });
         });
 
-        this.gettingSystems = this.processService.createProcess(() => {
-            this.fetchComplete = true;
-            return this.systemsService.forceUpdateSystems().toPromise();
-        }, {
-            errorPrefix: this.LANG.errorCodes.cantGetSystemsListPrefix,
-            logoutForbidden: true
-        });
+        this.gettingSystems = this.processService.createProcess(
+            () => {
+                this.fetchComplete = true;
+                return this.systemsService.forceUpdateSystems().toPromise();
+            },
+            {
+                errorPrefix: this.LANG.errorCodes.cantGetSystemsListPrefix,
+                logoutForbidden: true,
+            },
+        );
 
         this.searchChanged
-            .pipe(
-                debounceTime(search.debounceTime),
-                untilDestroyed(this)
-            ).subscribe(() => {
+            .pipe(debounceTime(search.debounceTime), untilDestroyed(this))
+            .subscribe(() => {
                 this.searchSystems();
             });
 
@@ -154,12 +146,14 @@ export class NxSystemsListComponent implements OnInit {
 
         if (search) {
             this.filteredSystems = this.systems.filter(system => {
-                return !search ||
-                    this.hasMatch(this.LANG.system.mySystemSearch, search) &&
-                    (system.ownerAccountEmail === this.accountService.email) ||
+                return (
+                    !search ||
+                    (this.hasMatch(this.LANG.system.mySystemSearch, search) &&
+                        system.ownerAccountEmail === this.accountService.email) ||
                     this.hasMatch(system.name, search) ||
                     this.hasMatch(system.ownerFullName, search) ||
-                    this.hasMatch(system.ownerAccountEmail, search);
+                    this.hasMatch(system.ownerAccountEmail, search)
+                );
             });
         } else {
             this.filteredSystems = this.systems;
@@ -181,25 +175,26 @@ export class NxSystemsListComponent implements OnInit {
         this.endpoint.register = this.isActive('/authorize/register');
         this.endpoint.view = this.isActive('/view');
         this.endpoint.information = this.isActive('/health');
-        this.endpoint.settings = id &&
-            this.isActive('/systems') &&
-            !this.isActive('/view') &&
-            !this.isActive('/health');
+        this.endpoint.settings =
+            id && this.isActive('/systems') && !this.isActive('/view') && !this.isActive('/health');
     }
 
     openSystem = (system: NxSystemInfo): void => {
         if (this.linkHandler) {
             this.linkHandler({
                 url: this.menusService.getUrl(system.id, this.endpoint),
-                label: system.name
+                label: system.name,
             });
         } else {
             this.updateEndpoint(system.id);
             this.headerService.show$ = false;
             this.uriService
-                .updateURI(this.menusService.getUrl(system.id, this.endpoint), { search: undefined })
+                .updateURI(this.menusService.getUrl(system.id, this.endpoint), {
+                    search: undefined,
+                })
                 .then(() => {
-                    const activeSystem = this.headerService.activeSystem ||
+                    const activeSystem =
+                        this.headerService.activeSystem ||
                         this.headerService.lastActive$.value ||
                         this.systems[0];
                     this.menusService.updateActiveSystemMenu(activeSystem);

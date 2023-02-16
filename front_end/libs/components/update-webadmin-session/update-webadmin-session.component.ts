@@ -1,13 +1,5 @@
 import { DialogRef as CdkDialogRef } from '@angular/cdk/dialog';
-import {
-    Component,
-    EventEmitter,
-    Inject,
-    Input,
-    OnInit,
-    Output,
-    ViewChild
-} from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnInit, Output, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -22,7 +14,7 @@ import { WINDOW } from '@services/window-provider';
 
 @Component({
     selector: 'nx-update-webadmin-session',
-    templateUrl: 'update-webadmin-session.component.html'
+    templateUrl: 'update-webadmin-session.component.html',
 })
 export class UpdateWebadminSessionComponent implements OnInit {
     @Input() noConnectionMsg: string;
@@ -44,40 +36,47 @@ export class UpdateWebadminSessionComponent implements OnInit {
 
     auth = {
         login: '',
-        password: ''
+        password: '',
     };
 
     flags = {
         accountBlocked: false,
         hideErrors: false,
-        wrongCredentials: false
+        wrongCredentials: false,
     };
 
     constructor(
         private processService: NxProcessService,
         private toastService: NxToastService,
         @Inject(WINDOW) private window: Window,
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         Promise.all([
             this.system.mediaserver.getCurrentUser(),
-            this.system.mediaserver.getModuleInfo().toPromise()
-        ]).then(([account, serverInfo]) => {
-            const moduleInfo = serverInfo?.reply;
-            this.auth.login = account.name;
-            this.isCloud = this.system.mediaserver.isSessionOauth;
-            if (this.isCloud && !(this.window.navigator.onLine || moduleInfo?.serverFlags.includes('SF_HasPublicIP'))) {
-                this.close();
-                this.toastService.notify(
-                    `${this.noConnectionMsg} ${this.LANG.toastMessage.noConnection}`,
-                    toast.danger,
-                );
-            }
-        }).catch(() => {
-            this.isCloud = !environment.isLocal;
-        });
+            this.system.mediaserver.getModuleInfo().toPromise(),
+        ])
+            .then(([account, serverInfo]) => {
+                const moduleInfo = serverInfo?.reply;
+                this.auth.login = account.name;
+                this.isCloud = this.system.mediaserver.isSessionOauth;
+                if (
+                    this.isCloud &&
+                    !(
+                        this.window.navigator.onLine ||
+                        moduleInfo?.serverFlags.includes('SF_HasPublicIP')
+                    )
+                ) {
+                    this.close();
+                    this.toastService.notify(
+                        `${this.noConnectionMsg} ${this.LANG.toastMessage.noConnection}`,
+                        toast.danger,
+                    );
+                }
+            })
+            .catch(() => {
+                this.isCloud = !environment.isLocal;
+            });
 
         const showWrongCredentialsError = () => {
             this.flags.wrongCredentials = true;
@@ -95,19 +94,26 @@ export class UpdateWebadminSessionComponent implements OnInit {
 
                     this.flags.accountBlocked = true;
                     this.loginForm.controls.login_password.setErrors({ nx_account_blocked: true });
-                }
-            }
+                },
+            },
         };
         const successHandler = () => {
             this.loginSuccess.emit();
         };
-        const errorHandler = () => { };
-        this.login = this.processService.createProcess(() => {
-            return this.system.mediaserver.loginToken(this.auth.login, this.auth.password, true).toPromise();
-        }, settings, successHandler, errorHandler);
+        const errorHandler = () => {};
+        this.login = this.processService.createProcess(
+            () => {
+                return this.system.mediaserver
+                    .loginToken(this.auth.login, this.auth.password, true)
+                    .toPromise();
+            },
+            settings,
+            successHandler,
+            errorHandler,
+        );
     }
 
-    resetForm(): void { }
+    resetForm(): void {}
 
     setLogin(login): void {
         this.auth.login = login;
