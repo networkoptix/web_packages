@@ -37,7 +37,7 @@ export class NxAccountComponent implements OnInit, OnDestroy {
             });
     }
 
-    ngOnDestroy(): void { }
+    ngOnDestroy(): void {}
 
     ngOnInit(): void {
         this.content = {

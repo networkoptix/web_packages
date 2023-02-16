@@ -42,4 +42,4 @@ const appRoutes: Routes = [
     ],
     exports: []
 })
-export class NewLandingModule { }
+export class NewLandingModule {}

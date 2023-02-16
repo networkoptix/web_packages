@@ -82,7 +82,7 @@ export class NxSystemService {
         // This is done to set the auth keys for video. Local doesn't need auth keys
         // because cookies are same site and will be attached to all requests.
         if (!environment.isLocal) {
-            system.updateSystemAuth(true).catch(() => { });
+            system.updateSystemAuth(true).catch(() => {});
         }
 
         if (environment.isLocal || skipSettingSystem) {
@@ -92,7 +92,7 @@ export class NxSystemService {
         if (cloudSystemInfo?.useRest) {
             (system.mediaserver as NxSystemRestAPI)
                 .setAccessTokenAsCookie()
-                .subscribe(() => { });
+                .subscribe(() => {});
         }
 
         this.system = system;

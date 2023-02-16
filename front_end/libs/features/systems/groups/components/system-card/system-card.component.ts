@@ -70,7 +70,7 @@ export class NxSystemCardComponent implements OnInit {
             },
             {
                 errorCodes: {
-                    [openClientError]: () => { }
+                    [openClientError]: () => {}
                 }
             },
             () => {

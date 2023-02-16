@@ -64,4 +64,4 @@ const appRoutes: Routes = [
     ]
 })
 
-export class IpvdModule { }
+export class IpvdModule {}

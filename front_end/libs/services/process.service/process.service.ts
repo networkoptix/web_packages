@@ -14,7 +14,7 @@ export class NxProcessService {
     constructor(
         private sessionService: NxSessionService,
         private toastService: NxToastService
-    ) { }
+    ) {}
 
     /**
      * NxProcessService.createProcess has been updated to allow passing in either a promise or an observable.

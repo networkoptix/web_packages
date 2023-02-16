@@ -80,7 +80,7 @@ export class NxAccountSecurityComponent implements OnInit, OnDestroy {
             .then(action => {
                 if (action !== 'canceled') {
                     this.account2faEnabled = (action === 'enabled');
-                    this.accountService.get(true).catch(e => { });
+                    this.accountService.get(true).catch(e => {});
                 }
                 this.account2faEnabledCheck = this.account2faEnabled;
             });
@@ -118,7 +118,7 @@ export class NxAccountSecurityComponent implements OnInit, OnDestroy {
                     this.account2faEnabled = newState;
                     this.totpExistsForAccount = newState;
                     this.account2faEnabledCheck = this.account2faEnabled;
-                    this.accountService.get(true).catch(_ => { });
+                    this.accountService.get(true).catch(_ => {});
                 });
         } else {
             this.dialogs
@@ -129,7 +129,7 @@ export class NxAccountSecurityComponent implements OnInit, OnDestroy {
                         this.account2faEnabled = newState;
                         this.totpExistsForAccount = newState;
                         this.account2faEnabledCheck = this.account2faEnabled;
-                        this.accountService.get(true).catch(_ => { });
+                        this.accountService.get(true).catch(_ => {});
                     } else {
                         this.totpExistsForAccount = true; // revert value on cancel
                     }

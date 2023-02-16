@@ -35,7 +35,7 @@ export class NxHSLThemeColorsComponent implements OnInit {
     constructor(
         private self: ElementRef<HTMLElement>,
         private menuService: NxMenuService,
-    ) { }
+    ) {}
 
     ngOnInit(): void {
         this.menuService.section = 'colors';

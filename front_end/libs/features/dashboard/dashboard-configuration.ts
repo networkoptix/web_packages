@@ -7,5 +7,5 @@ export class DashboardConfiguration {
         public dashboardName = 'New Dashboard',
         public cards: WidgetCard[] = [],
         public id = uuid()
-    ) { }
+    ) {}
 }

@@ -161,7 +161,7 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
 
     // Form control functions
     // The method set in registerOnChange to emit changes back to the form
-    private propagateChange = (_: SearchFilter): void => { };
+    private propagateChange = (_: SearchFilter): void => {};
 
     writeValue(value: SearchFilter): void {
         if (value) {
@@ -212,7 +212,7 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
      * Set the function to be called
      * when the control receives a touch event.
      */
-    registerOnTouched(_fn: () => void): void { }
+    registerOnTouched(_fn: () => void): void {}
 
     setFilter(tagFilter: TagFilter): false {
         const queryParams: IpvdParams = {};

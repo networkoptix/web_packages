@@ -95,7 +95,7 @@ export class NxIntersectionObserver implements OnInit, OnDestroy {
 
     private destroy$ = new Subject();
 
-    constructor(private element: ElementRef) { }
+    constructor(private element: ElementRef) {}
 
     ngOnInit(): void {
         const element = this.element.nativeElement;

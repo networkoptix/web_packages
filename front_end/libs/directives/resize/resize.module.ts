@@ -6,4 +6,4 @@ import { NxResizeObserver } from './nx-resize.directive';
     declarations: [NxResizeObserver],
     exports: [NxResizeObserver]
 })
-export class ResizeModule { }
+export class ResizeModule {}

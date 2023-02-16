@@ -52,7 +52,7 @@ export class ServerManager {
         private cloudApi: NxCloudApiService,
         private system: NxSystem,
         private locale: string,
-    ) { }
+    ) {}
 
     @ServerManager.memoizeByServersAndConnections
     handleInitSystemMediaServers(): Record<string, NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2> {
@@ -68,7 +68,7 @@ export class ServerManager {
                         ? () => this.cloudApi.getSystemToken(this.systemId).toPromise().then(tokens => {
                             (<NxSystemRestAPI> this.mediaserver)
                                 .setTokens(tokens, true)
-                                .subscribe(() => { });
+                                .subscribe(() => {});
                             return Promise.resolve(true);
                         })
                         : () => this.cloudApi.getSystemAuth(this.systemId).toPromise().then(authKeys => {

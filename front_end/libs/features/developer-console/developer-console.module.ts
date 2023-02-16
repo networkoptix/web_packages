@@ -67,4 +67,4 @@ const appRoutes: Routes = [
     bootstrap: [],
     exports: []
 })
-export class NxDeveloperConsoleModule { }
+export class NxDeveloperConsoleModule {}

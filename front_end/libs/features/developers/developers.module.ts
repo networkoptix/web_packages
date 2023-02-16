@@ -94,4 +94,4 @@ const appRoutes: Routes = [
         NxKnowledgeBaseComponent
     ]
 })
-export class NxDevelopersModule { }
+export class NxDevelopersModule {}

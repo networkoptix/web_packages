@@ -14,7 +14,7 @@ export class NgrxDemoCounterComponent {
     count$: Observable<number> = this.store.select(selectCount);
     countSquared$ = this.store.select(selectCountSquared);
 
-    constructor(private store: Store) { }
+    constructor(private store: Store) {}
 
     increment(): void {
         this.store.dispatch(increment());

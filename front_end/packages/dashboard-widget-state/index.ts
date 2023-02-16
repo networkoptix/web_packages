@@ -15,5 +15,5 @@ export class SharedWidgetState {
         public systems$: Observable<System[]>,
         public updateSystems: () => Observable<System[]>,
         public navigateByUrl: (url) => Promise<boolean>
-    ) { }
+    ) {}
 }

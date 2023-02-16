@@ -6,4 +6,4 @@ import { NxRotate } from './nx-rotate.directive';
     declarations: [NxRotate],
     exports: [NxRotate]
 })
-export class RotateModule { }
+export class RotateModule {}

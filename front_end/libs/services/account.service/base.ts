@@ -145,7 +145,7 @@ export abstract class BaseAccount implements OnDestroy {
                 return this.dialogs.notify(this.LANG.errorCodes.wrongAuthCode, 'danger', true);
             }
             this.dialogs.notify(this.LANG.toastMessage.loggingIn, 'success', false);
-            this.loginTokens(this.tokens).then(() => { });
+            this.loginTokens(this.tokens).then(() => {});
         });
     }
 

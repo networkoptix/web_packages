@@ -216,7 +216,7 @@ export class NxSystem {
         }
         // Handling promise to satisfy the linter.
         if (!this.useRest || !(<NxSystemRestAPI> this.mediaserver)?.accessToken) {
-            unauthorizedCallback(true).then(() => { });
+            unauthorizedCallback(true).then(() => {});
         }
 
         this.userManager = (this.version >= 5.2 && this.CONFIG.featureFlags.usersWithGroups)
@@ -380,7 +380,7 @@ export class NxSystem {
                 try {
                     directCapabilities = (await this.getSystemCapabilities()) || {};
                     response.capabilities = { ...response.capabilities, ...directCapabilities };
-                } catch (e) { }
+                } catch (e) {}
                 if (this.info) {
                     Object.assign(this.info, response); // Update
                 } else {
@@ -586,7 +586,7 @@ export class NxSystem {
                 } else if (auth.access_token) {
                     (this.mediaserver as NxSystemRestAPI)
                         .setTokens(auth, true)
-                        .subscribe(() => { });
+                        .subscribe(() => {});
                 } else {
                     this.authPromise = null;
                     return Promise.reject(auth);

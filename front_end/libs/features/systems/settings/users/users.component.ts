@@ -50,5 +50,5 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             });
     }
 
-    ngOnDestroy(): void { }
+    ngOnDestroy(): void {}
 }

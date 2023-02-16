@@ -90,14 +90,14 @@ describe('NxDevConsoleComponent', () => {
                     { provide: ActivatedRoute, useValue: routeMock },
                     {
                         provide: Router,
-                        useValue: { url: '', navigateByUrl: () => { } }
+                        useValue: { url: '', navigateByUrl: () => {} }
                     },
                     { provide: NxCloudApiService, useValue: cloudMock },
                     {
                         provide: NxHeaderService,
                         useValue: {
                             currentLocation: { parentNode: { nodes: [] } },
-                            setLocation: () => { }
+                            setLocation: () => {}
                         }
                     }
                 ],

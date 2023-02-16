@@ -88,7 +88,7 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewIn
         this.popoverService.close();
     }
 
-    ngAfterViewInit(): void { }
+    ngAfterViewInit(): void {}
 
     ngOnDestroy(): void {
         this.closeLegend();

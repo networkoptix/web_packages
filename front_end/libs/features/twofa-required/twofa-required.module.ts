@@ -24,4 +24,4 @@ const routes: Routes = [
         PagePlaceHolderModule
     ]
 })
-export class TwofaRequiredModule { }
+export class TwofaRequiredModule {}

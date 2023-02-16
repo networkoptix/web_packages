@@ -52,7 +52,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
         this.setupDefaults(configService);
     }
 
-    ngOnDestroy(): void { }
+    ngOnDestroy(): void {}
 
     ngOnInit(): void {
         // Example URI

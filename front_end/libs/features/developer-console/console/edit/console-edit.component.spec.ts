@@ -92,7 +92,7 @@ describe('NxDevConsoleEditComponent', () => {
     const cloudMock = {};
     const headerMock = {
         currentLocation: { parentNode: { nodes: [] } },
-        setLocation: () => { }
+        setLocation: () => {}
     };
 
     const getSection =

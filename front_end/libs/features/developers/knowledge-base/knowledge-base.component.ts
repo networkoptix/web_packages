@@ -71,7 +71,7 @@ class KnowledgeNode {
         public cardClass: CardClasses,
         public cardIcon?: string,
         public cardLead?: string
-    ) { }
+    ) {}
 
     // Factory methods
     static normalHeader(

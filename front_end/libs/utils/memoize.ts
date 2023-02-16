@@ -101,7 +101,7 @@ function asyncWrapperFunctionFactory(invalidationKey: string): (originalFunc: (.
 
         const pipeObservable = (observable: Observable<unknown>): Observable<unknown> => observable.pipe(
             shareReplay({ bufferSize: 1, refCount: false }),
-            tap(() => { }, () => {
+            tap(() => {}, () => {
                 delete this[invalidationKey];
             })
         );

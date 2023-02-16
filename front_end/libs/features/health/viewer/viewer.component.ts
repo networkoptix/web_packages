@@ -554,7 +554,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
         this.system.mediaserver.getAggregateHealthReport(forceUpdate).pipe(
             untilDestroyed(this),
             flatMap(result => this.setupReport(result))
-        ).subscribe(() => { }, () => {
+        ).subscribe(() => {}, () => {
             if (!this.system.id) {
                 !this.window.parent
                     ? this.window.location.reload()

@@ -43,7 +43,7 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
     ) {
     }
 
-    ngOnDestroy(): void { }
+    ngOnDestroy(): void {}
 
     ngOnInit(): void {
 

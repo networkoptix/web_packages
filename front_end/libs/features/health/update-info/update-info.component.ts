@@ -36,7 +36,7 @@ export class NxUpdateInfoComponent implements OnInit, OnDestroy {
     ) {
     }
 
-    ngOnDestroy(): void { }
+    ngOnDestroy(): void {}
 
     ngOnInit(): void {
         this.initUpdateTime();

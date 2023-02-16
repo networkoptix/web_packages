@@ -290,7 +290,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
                                     return throwError(error);
                                 }),
                                 switchMap(res => {
-                                    this.setTokens(res, true).subscribe(() => { });
+                                    this.setTokens(res, true).subscribe(() => {});
                                     return of('');
                                 })
                             );
@@ -601,7 +601,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
                     );
                 }),
                 tap(systemTokens => {
-                    !skipSetting && this.setTokens(systemTokens, true).subscribe(() => { });
+                    !skipSetting && this.setTokens(systemTokens, true).subscribe(() => {});
                 })
             );
     }

@@ -330,5 +330,5 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
         );
     }
 
-    ngOnDestroy(): void { }
+    ngOnDestroy(): void {}
 }

@@ -19,7 +19,7 @@ interface BaseRequestOptions {
     body?: unknown;
 }
 
-interface PostRequestOptions extends BaseRequestOptions { }
+interface PostRequestOptions extends BaseRequestOptions {}
 
 export type CreateApiFactory<ApiType = unknown> = (http: HttpClient, withFreshSession: WithFreshSession, refreshToken?: Observable<string>) => (serverUrl?: string, cloudHost?: () => string) => ApiType;
 

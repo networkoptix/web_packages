@@ -99,7 +99,7 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.analyticsToShow = this.CONFIG.ipvd.analyticsToShow;
     }
 
-    ngOnDestroy(): void { }
+    ngOnDestroy(): void {}
 
     ngAfterViewInit(): void {
         setTimeout(() => {

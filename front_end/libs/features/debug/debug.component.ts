@@ -148,7 +148,7 @@ export class NxDebugComponent {
             process: debugProcess
         };
         // Handling promise to satisfy the linter.
-        this.systemsService.forceUpdateSystemsAsPromise().then(() => { });
+        this.systemsService.forceUpdateSystemsAsPromise().then(() => {});
     }
 
     debugProxy(): void {

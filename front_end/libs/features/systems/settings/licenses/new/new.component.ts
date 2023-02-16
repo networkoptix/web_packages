@@ -101,8 +101,8 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
             }
         }, {
             errorCodes: {
-                offline: () => { },
-                alreadyRegistered: () => { }
+                offline: () => {},
+                alreadyRegistered: () => {}
             }
         });
     }

@@ -20,7 +20,7 @@ export class NxBookmarksCardModalComponent {
         public dialogRef: DialogRef<DT['return']>,
         @Inject(LOCALE_ID) private locale: string,
         @Inject(DIALOG_DATA) public bookmark: DT['data'],
-    ) { }
+    ) {}
 
     ngOnInit(): void {
         this.exportName = `${this.bookmark.deviceId}.mp4`;

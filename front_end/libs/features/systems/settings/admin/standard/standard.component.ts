@@ -52,7 +52,7 @@ class AlexaSettings {
         public selectedSystem: string = null,
         public accountLinked = false,
         public eventRulesSetup = false
-    ) { }
+    ) {}
 
     static clean = selectedSystem =>
         input => new AlexaSettings(

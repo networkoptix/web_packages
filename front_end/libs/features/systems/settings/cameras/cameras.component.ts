@@ -554,7 +554,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                             //     this.system.cameraManager.cameras.length
                             // ) {
                             //     this.system.serverManager
-                            //         .initSystemMediaServers().catch(_ => { });
+                            //         .initSystemMediaServers().catch(_ => {});
                             // }
                             if (!this.applyService.locked) {
                                 this.setCamera();

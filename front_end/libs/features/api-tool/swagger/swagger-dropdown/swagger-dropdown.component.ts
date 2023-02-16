@@ -25,7 +25,7 @@ export class NxSwaggerDropdownComponent implements OnInit, OnDestroy {
     isMultiSelect = false;
     selectedOptions: string[] = []; // For multiselect only
 
-    constructor(private APIToolService: NxAPIToolSystemService) { }
+    constructor(private APIToolService: NxAPIToolSystemService) {}
 
     onSelect = (option: SingleDropdownOption): void => {
         this.APIToolService.preventNextChangeDetection = true;

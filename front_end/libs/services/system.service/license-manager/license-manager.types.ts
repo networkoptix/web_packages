@@ -10,7 +10,7 @@ export enum CLOUD_STORAGE_STATES {
 
 export type KeyTableFieldsKey = keyof typeof staticLang.cloudStorage.keyTableFields;
 
-export interface LicenseKeyInfo extends Pick<LicenseStateInfo, 'expirationDate' | 'licenseState' | 'cloudSystemId'>, CloudStorageSize, LicenseKey { }
+export interface LicenseKeyInfo extends Pick<LicenseStateInfo, 'expirationDate' | 'licenseState' | 'cloudSystemId'>, CloudStorageSize, LicenseKey {}
 
 export type ProcessedLicenseKey = {
     [key in Exclude<KeyTableFieldsKey, 'system'>]: string;

@@ -28,7 +28,7 @@ describe('NxDevConsoleMenuComponent', () => {
     }));
     const menusMock = {
         getMenu: () => ({
-            subscribe: () => { }
+            subscribe: () => {}
         })
     };
 

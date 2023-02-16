@@ -97,8 +97,8 @@ export class ChangePasswordModalContent {
                 errorCodes: {
                     notAuthorized: this.LANG.errorCodes.oldPasswordMistmatch,
                     wrongOldPassword: this.LANG.errorCodes.oldPasswordMistmatch,
-                    dontMatch: () => { },
-                    wrongPassword: () => { }
+                    dontMatch: () => {},
+                    wrongPassword: () => {}
                 },
                 successMessage: this.LANG.account.passwordChangedSuccess,
                 errorPrefix: this.LANG.errorCodes.cantChangePasswordPrefix,

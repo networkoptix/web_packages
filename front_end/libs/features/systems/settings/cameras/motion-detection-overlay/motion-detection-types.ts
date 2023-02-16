@@ -12,7 +12,7 @@ export class Area {
         public width: number,
         public height: number,
         public currentSelection?: boolean
-    ) { }
+    ) {}
 
     /**
      * Finds if area borders another area

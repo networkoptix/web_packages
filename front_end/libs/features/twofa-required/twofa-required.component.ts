@@ -4,7 +4,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { NxPageService } from '@services/page.service';
 
-@UntilDestroy({ })
+@UntilDestroy({})
 @Component({
     selector: 'nx-src-twofa-required',
     templateUrl: './twofa-required.component.html',

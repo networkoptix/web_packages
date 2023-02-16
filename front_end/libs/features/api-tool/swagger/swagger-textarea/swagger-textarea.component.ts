@@ -25,7 +25,7 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
     constructor(@Inject(WINDOW) private window: any,
                 @Inject(DOCUMENT) private document: Document,
                 private APIToolService: NxAPIToolSystemService,
-                private elementRef: ElementRef) { }
+                private elementRef: ElementRef) {}
 
     ngOnInit(): void {
         this.isDisabled = this.textarea.getAttribute('disabled') === '';

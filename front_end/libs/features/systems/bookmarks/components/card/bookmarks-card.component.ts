@@ -19,7 +19,7 @@ export class NxBookmarksCardComponent {
     constructor(
         @Inject(LOCALE_ID) private locale: string,
         private dialogs: NxDialogsService,
-    ) { }
+    ) {}
 
     timeMsToDate(startTimeMs: number): string {
         const time = new Date(startTimeMs).toLocaleString(this.locale, { timeStyle: 'short' });
