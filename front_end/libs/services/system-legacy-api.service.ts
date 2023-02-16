@@ -12,6 +12,7 @@ import {
     retryWhen,
     timeout,
     tap,
+    share,
     switchMap
 } from 'rxjs/operators';
 
@@ -973,9 +974,10 @@ export class NxSystemAPI {
     /* End of Working with users */
     /* Cameras and Servers */
     @memoizeAsyncMedium
-    getCameras(id?: string) {
+    getCamera(id?: string) {
         const params = id ? { id: this.cleanId(id) } : {};
-        return this.get<t.ec2Camera>('/ec2/getCamerasEx', params);
+        return this.get<t.ec2Camera>('/ec2/getCamerasEx', params)
+            .pipe(map(camera => camera[0]));
     }
 
     @memoizeAsyncMedium
@@ -1015,7 +1017,7 @@ export class NxSystemAPI {
         60 * 1000
     )
     getMediaServers(useCache: boolean): Observable<t.ec2MediaServer[]> {
-        const endpoint = '/ec2/getMediaServersEx';
+        const endpoint = '/ec2/getMediaServers';
         return this.get<t.ec2MediaServer[]>(
             endpoint,
             {},
@@ -1025,7 +1027,7 @@ export class NxSystemAPI {
 
     @memoizeAsyncMedium
     getMediaServersAndCameras(): Observable<t.AggregatedServersAndCameras> {
-        const routes = ['/ec2/getMediaServersEx', 'ec2/getCamerasEx'];
+        const routes = ['/ec2/getMediaServers', 'ec2/getCamerasEx'];
         return this.getRequestAggregator<t.AggregatedServersAndCameras>(routes);
     }
 
@@ -1037,7 +1039,7 @@ export class NxSystemAPI {
     updateSystemServersCameras(): Observable<t.CameraManagerUpdate> {
         const routes = [
             '/api/moduleInformation',
-            '/ec2/getMediaServersEx',
+            '/ec2/getMediaServers',
             'ec2/getTimeOfServers',
             'ec2/getCamerasEx',
         ];
@@ -1098,7 +1100,7 @@ export class NxSystemAPI {
 
         const url = this.generateGetUrl(endpoint, data).replace(this.urlBase, '');
         return this.get(url, undefined, { responseType: 'blob' })
-            .pipe(map(blob => blob ? URL.createObjectURL(blob) : undefined));
+            .pipe(map(blob => blob ? URL.createObjectURL(blob) : undefined), share());
     }
 
     hlsUrl(cameraId: string, position: string = 'now', resolution: string = '') {

@@ -33,6 +33,26 @@ export interface SaveCameraUserAttributes extends CameraUpdate {
     scheduleTasks?: Omit<Task, 'metadataTypes'>[];
 }
 
+export interface IPartialCamera {
+    id: string;
+    name: string;
+    parentId: string;
+    scheduleEnabled: boolean;
+    status: string;
+    url: string;
+}
+
+export interface PartialCameraRest {
+    id: string;
+    name: string;
+    schedule: {
+        isEnabled: boolean;
+    }
+    serverId: string;
+    status: string;
+    url: string;
+}
+
 export enum MotionType {
     // 4.3 systems
     HardwareGrid = 'hardware',

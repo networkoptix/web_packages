@@ -238,7 +238,11 @@ async def login_with_code(request):
             user.customization = customization
             await sync_to_async(user.save)()
     except models.Account.DoesNotExist:
-        first_name, last_name = account_info.get('fullName', '').split(' ')
+        names = account_info.get('fullName', '').split(' ')
+        first_name = names[0]
+        last_name = names[-1]
+        if first_name == last_name:
+            last_name = ''
         user = await create_user(
             account_info['email'],
             first_name=first_name,

@@ -94,7 +94,10 @@
                         <img
                             alt="thumbnail preview"
                             class="fs-exclude"
-                            *ngIf="camera.thumbnailUrl | async as thumbnail"
+                            *ngIf="
+                                isCameraVisible[camera.id] &&
+                                (camera.thumbnailUrl | async) as thumbnail
+                            "
                             [src]="thumbnail | safe: 'resourceUrl'"
                             (load)="handlePreviewLoaded(camera.id)"
                             (error)="handlePreviewError(camera.id)"

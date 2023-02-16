@@ -10,7 +10,8 @@
         border-radius: 0.25rem;
         position: relative;
         text-align: left;
-        :not(.alternate) {
+
+        &:not(.alternate) {
             max-width: 200px;
         }
 

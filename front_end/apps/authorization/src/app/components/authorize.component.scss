@@ -150,19 +150,23 @@
         max-height: 480px;
         height: 100vh;
 
+        &.show-scrollbar {
+            overflow-y: scroll;
+        }
+
         &.window-w {
             border: 1px solid var(--border-color);
             border-radius: $border-radius-base;
         }
 
         .authorize-header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
             width: 100%;
+            max-width: 480px;
             @include typography.medium22dark9lh24;
             color: var(--auth-header-color) !important;
             height: 40px;
+            line-height: rem(40px) !important;
+            text-align: center;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;

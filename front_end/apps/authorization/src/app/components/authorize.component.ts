@@ -45,6 +45,7 @@ import {
 require('what-input');
 
 const AUTH_BREAKPOINT = 355;
+const AUTH_WINDOW_HEIGHT = 480;
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -70,6 +71,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     viewType: 'desktop' | 'mobile' | 'web';
     windowLargeEnough = false;
     windowSmallEnough = false;
+    showScrollbar = false;
     initialData: AuthorizeParams;
     checkEmailProcess: Process;
     loginCode: string;
@@ -249,6 +251,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 this.window.innerHeight > ViewportBreakpoints.Tablet.width &&
                 this.viewType === 'web';
             this.windowSmallEnough = this.window.innerWidth <= AUTH_BREAKPOINT;
+            this.showScrollbar = this.window.innerHeight < AUTH_WINDOW_HEIGHT;
             fromEvent<Event>(this.window, 'resize')
                 .pipe(debounceTime(100))
                 .subscribe(event => {
@@ -257,6 +260,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                         innerHeight > ViewportBreakpoints.Tablet.width &&
                         this.viewType === 'web';
                     this.windowSmallEnough = innerWidth <= AUTH_BREAKPOINT;
+                    this.showScrollbar = innerHeight < AUTH_WINDOW_HEIGHT;
                 });
 
             if ([ClientType.loginCloud, ClientType.create].includes(this.clientType)) {

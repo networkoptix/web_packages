@@ -28,8 +28,7 @@ import {
     retry,
     tap,
     catchError,
-    switchMap,
-    share
+    switchMap
 } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
@@ -618,8 +617,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     this.maxHeight * 2,
                     this.selectedRotation?.value || 0
                 );
-            }),
-            share());
+            }));
     }
 
     ngOnDestroy(): void {
@@ -757,7 +755,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     private getCanvasSize(): Size {
         const wrapperWidth = this.width$.value;
         const maxCanvasHeightInPixels = 480;
-        const rotation = this.selectedRotation.value || 0;
+        const rotation = this.selectedRotation?.value || 0;
         const rotated = rotation % 180;
         const columnsToRoundPixelsByMultiple = rotated ? 32 : 44;
         const RowsToRoundPixelsByMultiple = rotated ? 44 : 32;
@@ -890,7 +888,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             : MotionType.SoftwareGrid;
     }
 
-    private setCamera = (forceUpdate = false): void => {
+    private setCamera = async (forceUpdate = false): Promise<void> => {
         this.applyService.reset(true);
         this.applyService.setVisible(false);
         if (
@@ -946,7 +944,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             }) + this.parsedCameraId;
             this.menuService.detail = this.parsedCameraId;
 
-            this.selectedCamera = cameras[cameraIndex];
+            this.selectedCamera = await this.system.cameraManager.parseCamera(await this.system.mediaserver.getCamera(this.parsedCameraId).toPromise());
             const {
                 vendor,
                 model,
