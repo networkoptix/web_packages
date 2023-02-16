@@ -30,7 +30,7 @@
             marginLeft="4"
         ></nx-item-icon>
         <span
-            *ngIf="!stillLoading"
+            *ngIf="!stillLoading && _selectedItem"
             [ngClass]="{
                 'ellipsis-mr': merge || ellipsisMargin,
                 ellipsis: !merge

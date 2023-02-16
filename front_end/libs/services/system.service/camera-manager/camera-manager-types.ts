@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+
 export interface IAddParamsRaw {
     name: string;
     value: string;
@@ -51,12 +53,32 @@ export interface ICamera {
     url: string;
     userDefinedGroupName: string;
     vendor: string;
-    previewUrl: string;
+    previewUrl: Observable<string>;
     webRtcUrl: (params?: Record<string, unknown>) => string;
     liveUrl: string;
     recordingSettings: IRecordingSettings;
     isStream: boolean;
     online: boolean;
+}
+
+export interface IPartialCamera {
+    id: string;
+    name: string;
+    parentId: string;
+    scheduleEnabled: boolean;
+    status: string;
+    url: string;
+}
+
+export interface PartialCameraRest {
+    id: string;
+    name: string;
+    schedule: {
+        isEnabled: boolean;
+    }
+    serverId: string;
+    status: string;
+    url: string;
 }
 
 export enum MotionType {

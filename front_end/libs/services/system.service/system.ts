@@ -459,7 +459,7 @@ export class NxSystem {
         if (!this.updatePromise) {
             this.updatePromise = this.getInfo(true, false, true)
                 .then(() => this.isOnline ? this.cameraManager.updateSystemServersCameras() : Promise.reject({ offline: true }))
-                .then(() => this.serverManager.getForceServers(false).toPromise())
+                .then(() => this.serverManager.getForceServers(true).toPromise())
                 .then(() => environment.isLocal ? Promise.resolve() : this.getUsers(true, true))
                 .catch(error => {
                     if (error?.offline) {
@@ -625,6 +625,7 @@ export class NxSystem {
             'preferredServerId',
             'typeId',
         ];
+        // Todo: Check how this works when getMediaServersEx -> getMediaServers
         // ID properties with enclosing brackets {} that we want to trim
         // while ignoring JSON strings
 

@@ -57,7 +57,7 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
     private checkIfSystemAvailable(res: HttpResponse<unknown> | HttpErrorResponse): void {
         // res might be just { type: number } and not full response
         const url = res.url && new URL(res.url, this.window.location.origin);
-        if (url?.pathname.startsWith('/static')) {
+        if (url?.pathname.startsWith('/static') || url?.pathname.includes('proxy')) {
             // Don't check on request for static resource
             return;
         }
