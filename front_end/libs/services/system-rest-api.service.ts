@@ -644,7 +644,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
             _keepDefault: true,
             _with: 'id,name,status,url'
         };
-        return this.get<t.GetMediaServers[]>(
+        return this.get<t.ec2MediaServer[]>(
             endpoint,
             params,
             { [useCache ? 'cache-request' : 'reset-cache']: 'true' }
@@ -683,7 +683,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
             t.NormalResponse<
                 [
                     t.ModuleInformationReply,
-                    t.GetMediaServers,
+                    t.ec2MediaServer,
                     t.SystemTime
                 ]
             >

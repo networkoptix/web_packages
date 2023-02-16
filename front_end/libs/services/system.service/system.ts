@@ -629,7 +629,7 @@ export class NxSystem {
         // ID properties with enclosing brackets {} that we want to trim
         // while ignoring JSON strings
 
-        const mediaServers = apiReply['/ec2/getMediaServersEx'].map(ms => {
+        const mediaServers = apiReply['/ec2/getMediaServers'].map(ms => {
             msIds.forEach(id => {
                 ms[id] = cleanId(ms[id]);
             });
