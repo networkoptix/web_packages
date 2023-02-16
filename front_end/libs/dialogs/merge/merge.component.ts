@@ -811,7 +811,9 @@ export class MergeModalContent {
                         .catch(err => {
                             if (err.status === 504) {
                                 throw Error(this.noServerFound);
-                            } else throw err;
+                            } else {
+                                throw err;
+                            }
                         });
                 } else {
                     secondarySystem = (await this.system.getModuleInfoUsingUrl(this.serverUrl).toPromise()).reply;

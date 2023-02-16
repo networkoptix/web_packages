@@ -35,9 +35,10 @@ const updateDuration = (chunk: Pick<Partial<TimeDetail>, 'durationMs'> & Omit<Ti
 };
 
 export class CameraManager {
-    private camerasHealth = {};
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private camerasHealth: any = {};
     private serverManager: ServerManager;
-    private serverTimes;
+    private serverTimes: ServerTime[];
     servers: ec2MediaServer[];
     cameras: NxSystemCamera[];
     moduleInfo: ModuleInfo;
@@ -61,7 +62,7 @@ export class CameraManager {
             this.servers = servers.sort(
                 alphabeticalSort(this.locale, server => server.name)
             );
-            await this.getCameras(serverTimes, cameras);
+            await this.processCameras({ serverTimes, cameras });
             return Promise.resolve();
         } catch (error) {
             if (error.name === 'TimeoutError') {
@@ -78,7 +79,6 @@ export class CameraManager {
                 if (!response) {
                     this.cameras = [];
                 } else {
-                    this.serverTimes = response.serverTimes;
                     return this.processCameras(response);
                 }
             });
@@ -92,6 +92,7 @@ export class CameraManager {
         serverTimes: ServerTime[];
         cameras: ec2Camera[];
     }): Promise<NxSystemCamera[]> {
+        this.serverTimes = serverTimes;
         try {
             this.camerasHealth = (await firstValueFrom(this.serverManager.mediaserver.getHealthValues()))
                 .reply
@@ -99,12 +100,12 @@ export class CameraManager {
         } catch (_) {
             this.camerasHealth = {};
         }
-        const mappedCameras: NxSystemCamera[] = await Promise.all(<NxSystemCamera[]>cameras.map(camera => this.parseCamera(camera)));
+        const mappedCameras: NxSystemCamera[] = cameras.map(camera => this.parseCamera(camera));
         this.cameras = mappedCameras;
         return mappedCameras;
     }
 
-    async parseCamera(camera: NxSystemCamera): Promise<NxSystemCamera> {
+    parseCamera(camera: ec2Camera): NxSystemCamera {
         const backupType = camera.backupType || camera.backupQuality;
         const serverTime = this.serverTimes.find(({ serverId }) => serverId === camera.parentId);
 
@@ -123,7 +124,7 @@ export class CameraManager {
         }
 
         if (!camera.addParams) {
-            return camera;
+            return camera as unknown as NxSystemCamera;
         }
 
         const addParams = Object.fromEntries(

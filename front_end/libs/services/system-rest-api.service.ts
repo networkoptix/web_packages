@@ -23,7 +23,7 @@ import { environment } from '@environments/environment';
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
 import { NxHealthService } from '@pages/health/health.service';
 import { NxStorageService } from '@services/storage.service';
-import { IPartialCamera, PartialCameraRest } from '@services/system.service/camera-manager/camera-manager-types';
+import { PartialCameraRest } from '@services/system.service/camera-manager/camera-manager-types';
 import { defaultHashFunction, memoizeAsync, memoizeAsyncMedium, memoizeAsyncPersistent } from '@utils/memoize';
 import { startWithCache } from '@utils/start-with-cached';
 
@@ -34,7 +34,7 @@ import { NxAppStateService } from './nx-app-state.service';
 import type { APIDocType, MenuManifest } from './nx-config/base-config';
 import type { IConfig } from './nx-config/config-types';
 import * as t from './system-api.types';
-import { SystemConfigSettings } from './system-api.types';
+import { ec2Camera, SystemConfigSettings } from './system-api.types';
 import { NxSystemAPI } from './system-legacy-api.service';
 import type { IParams } from './system.service/system-types';
 import { NxUriCacheService } from './uri-cache.service';
@@ -705,7 +705,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         );
     }
 
-    getCameras(): Observable<IPartialCamera[]> {
+    getCameras(): Observable<ec2Camera[]> {
         const endpoint = '/rest/v1/devices';
         const params = {
             _keepDefault: true,
@@ -716,42 +716,27 @@ export class NxSystemRestAPI extends NxSystemAPI {
             params
         ).pipe(map(cameras => cameras
             .map(({ id, name, schedule, serverId, status, url }) => (
-                { id, name, status, url, scheduleEnabled: schedule.isEnabled, parentId: serverId }
+                <ec2Camera>({ id, name, status, url, scheduleEnabled: schedule.isEnabled, parentId: serverId })
             ))));
     }
 
-    updateSystemServersCameras() {
+    updateSystemServersCameras(): Observable<t.CameraManagerUpdate> {
         const routes = [
             '/api/moduleInformation',
             '/ec2/getMediaServers',
             'ec2/getTimeOfServers'
         ];
-        const aggregator = this.getRequestAggregator<
-            t.NormalResponse<
-                [
-                    t.ModuleInformationReply,
-                    t.ec2MediaServer,
-                    t.SystemTime
-                ]
-            >
-        >(routes).pipe(
-            map(({ reply }) => {
-                return routes.map(route => {
-                    if (
-                        [
-                            '/api/moduleInformation',
-                            'ec2/getTimeOfServers'
-                        ].includes(route)
-                    ) {
-                        return reply[route].reply;
-                    }
-                    return reply[route];
-                });
-            })
-        );
+        const aggregator = this.getRequestAggregator<t.CameraManagerUpdateResp>(routes)
+            .pipe(
+                map(({ reply }) => ({
+                    moduleInfo: reply['/api/moduleInformation'].reply,
+                    servers: reply['/ec2/getMediaServersEx'],
+                    serverTimes: reply['ec2/getTimeOfServers'].reply
+                }))
+            );
 
         return combineLatest([aggregator, this.getCameras()]).pipe(
-            map(([[moduleInfo, mediaservers, systemTime], cameras]) => [moduleInfo, mediaservers, systemTime, cameras])
+            map(([{ moduleInfo, servers, serverTimes }, cameras]) => ({ moduleInfo, servers, serverTimes, cameras }))
         );
     }
 

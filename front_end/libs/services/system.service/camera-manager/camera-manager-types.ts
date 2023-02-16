@@ -47,7 +47,7 @@ export interface PartialCameraRest {
     name: string;
     schedule: {
         isEnabled: boolean;
-    }
+    };
     serverId: string;
     status: string;
     url: string;
