@@ -352,6 +352,7 @@ export interface GetMediaServers {
     backupDuration: number,
     backupStart: number,
     backupType: string,
+    endpoints?: string[];
     flags: string,
     id: string,
     maxCameras: number,
