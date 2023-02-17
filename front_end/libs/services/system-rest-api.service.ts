@@ -642,7 +642,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         const endpoint = '/rest/v1/servers';
         const params = {
             _keepDefault: true,
-            _with: 'id,name,status,url,version,osInfo'
+            _with: 'id,name,status,version,osInfo,endpoints'
         };
         return this.get<t.ec2MediaServer[]>(
             endpoint,
@@ -654,7 +654,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
                     if (typeof server.osInfo !== 'string') {
                         server.osInfo = JSON.stringify(server.osInfo);
                     }
-                    server.networkAddresses = server.url.replace(/https?:\/\//, '');
+                    server.networkAddresses = server.endpoints.join(';');
                 });
                 return servers;
             })

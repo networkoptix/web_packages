@@ -408,6 +408,7 @@ export interface ec2MediaServer {
     // backupStart: number,
     backupBitrateBytesPerSecond: unknown[];
     backupType?: string,
+    endpoints?: string[];
     flags: string,
     id: string,
     locationId: number;
