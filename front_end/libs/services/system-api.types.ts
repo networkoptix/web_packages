@@ -359,9 +359,10 @@ export interface ec2MediaServer {
     // backupDuration: number,
     // backupStart: number,
     backupBitrateBytesPerSecond: unknown[];
-    backupType?: string;
-    flags: string;
-    id: string;
+    backupType?: string,
+    endpoints?: string[];
+    flags: string,
+    id: string,
     locationId: number;
     maxCameras: number;
     metadataStorageId?: string;
