@@ -18,8 +18,7 @@ export class FeatureFlagDirective {
         private vcr: ViewContainerRef,
         private tpl: TemplateRef<unknown>,
         private configService: NxConfigService
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         if (this.configService.flagsEnabled(this.featureFlag)) {

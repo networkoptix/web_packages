@@ -4,8 +4,7 @@ import { EMPTY as empty } from 'rxjs';
 
 @Injectable()
 export class TypeResolver implements Resolve<never> {
-    constructor(private router: Router) {
-    }
+    constructor(private router: Router) {}
 
     resolve(): typeof empty {
         this.router

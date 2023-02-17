@@ -151,8 +151,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
             this.document.getElementsByClassName('headerContainer')[0].scrollHeight;
     }
 
-    ngOnDestroy(): void {
-    }
+    ngOnDestroy(): void {}
 
     setupReport(_data) {
         const data = cloneDeep(_data);

@@ -40,8 +40,7 @@ export class UpdateCameraCredentialsModalContent implements OnInit {
         private processService: NxProcessService,
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
-    ) {
-    }
+    ) {}
 
     clearPassword(): void {
         if (this.cameraPasswordCredentials === '******') {

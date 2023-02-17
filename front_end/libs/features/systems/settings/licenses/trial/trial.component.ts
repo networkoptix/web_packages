@@ -102,6 +102,5 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
         }
     }
 
-    ngOnDestroy(): void {
-    }
+    ngOnDestroy(): void {}
 }

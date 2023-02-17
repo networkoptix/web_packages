@@ -26,8 +26,7 @@ export class SimpleTimeRange {
         // public end: ms
         public readonly start: ms,
         public readonly end: ms
-    ) {
-    }
+    ) {}
 
     public get duration(): ms {
         return this.end - this.start;

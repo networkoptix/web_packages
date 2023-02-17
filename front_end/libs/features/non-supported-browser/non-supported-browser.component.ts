@@ -6,6 +6,5 @@ import { Component, OnInit } from '@angular/core';
 })
 
 export class NonSupportedBrowserComponent implements OnInit {
-    ngOnInit(): void {
-    }
+    ngOnInit(): void {}
 }

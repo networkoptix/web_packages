@@ -42,8 +42,7 @@ export class DialogRef {
 
     constructor(
         private overlayRef: OverlayRef,
-    ) {
-    }
+    ) {}
 
     /**
      * Closes the overlay. You can optionally provide a result.

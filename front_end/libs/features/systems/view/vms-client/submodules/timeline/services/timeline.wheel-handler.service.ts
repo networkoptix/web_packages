@@ -12,8 +12,7 @@ export class TimelineWheelHandlerService {
     constructor(
         protected timeline: TimelineService,
         protected timeUnderMouse: TimelineTimeUnderMouseService
-    ) {
-    }
+    ) {}
 
     public handleWheel(e: WheelEvent): void {
         if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {

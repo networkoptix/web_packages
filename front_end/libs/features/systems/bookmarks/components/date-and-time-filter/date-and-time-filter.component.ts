@@ -82,8 +82,7 @@ export class NxDateAndTimeFilterComponent {
         return new DR(thirtyDaysAgo, now);
     }
 
-    constructor(@Inject(WINDOW) private window: Window) {
-    }
+    constructor(@Inject(WINDOW) private window: Window) {}
 
     /* <mat-calendar> doesn't include a way to detect when a cell is
     hovered over, so we have to manually check with mouseover/mouseout */

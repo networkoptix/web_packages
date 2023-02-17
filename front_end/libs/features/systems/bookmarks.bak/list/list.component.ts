@@ -17,8 +17,7 @@ export class NxBookmarksListComponent implements OnDestroy {
 
     constructor(
         @Inject(WINDOW) public window: Window
-    ) {
-    }
+    ) {}
 
     ngOnDestroy(): void {}
 

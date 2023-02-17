@@ -620,8 +620,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             }));
     }
 
-    ngOnDestroy(): void {
-    }
+    ngOnDestroy(): void {}
 
     // Update menu options after language is loaded
     private updateSelects(): void {

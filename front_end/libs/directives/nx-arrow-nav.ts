@@ -11,8 +11,7 @@ export class NxArrowNavDirective {
 
     constructor(
         private _elementRef: ElementRef<HTMLElement>
-    ) {
-    }
+    ) {}
 
     private static increase(idx: number, limit: number): number {
         idx = (idx < limit) ? ++idx : limit;

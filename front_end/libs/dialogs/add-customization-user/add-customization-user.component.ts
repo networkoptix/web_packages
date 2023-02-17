@@ -22,11 +22,9 @@ export class AddCustomizationUserModalContent {
     constructor(
         private dialogRef: DialogRef,
         private partnerService: NxPartnersService,
-    ) {
-    }
+    ) {}
 
-    ngOnInit(): void {
-    }
+    ngOnInit(): void {}
 
     saveCustomizationUser(): void {
         this.partnerService.addUser({ email: this.email });

@@ -10,8 +10,7 @@ export class TimelineExtendToNowService {
     constructor(
         protected timeline: TimelineService,
         protected timeUnderMouse: TimelineTimeUnderMouseService
-    ) {
-    }
+    ) {}
 
     public extendToNow(): void {
         this.timeline.extendToNow();

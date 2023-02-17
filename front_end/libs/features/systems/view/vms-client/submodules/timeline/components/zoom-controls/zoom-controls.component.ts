@@ -30,8 +30,7 @@ export class ZoomControlsComponent implements OnInit {
         public timeline: TimelineService,
         public vms: VideoManagementSystemService,
         public playback: PlaybackService
-    ) {
-    }
+    ) {}
 
     private _onAnimationFrame(): void {
         this.performZoomingStep();

@@ -33,8 +33,7 @@ export class NxUpdateInfoComponent implements OnInit, OnDestroy {
     constructor(
         private healthService: NxHealthService,
         private ribbonService: NxRibbonService
-    ) {
-    }
+    ) {}
 
     ngOnDestroy(): void {}
 

@@ -14,8 +14,7 @@ import { NxApplyService } from '@services/apply.service';
 export class ApplyGuard<T> implements CanActivate, CanDeactivate<T> {
     constructor(
         private applyService: NxApplyService
-    ) {
-    }
+    ) {}
 
     canActivate(
         route: ActivatedRouteSnapshot,

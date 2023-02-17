@@ -34,8 +34,7 @@ export class NxWebglCanvasComponent implements AfterViewInit {
 
     constructor(
         @Inject(DOCUMENT) private document: Document,
-    ) {
-    }
+    ) {}
 
     ngAfterViewInit(): void {
         this.container = this.document.querySelector('#chart');

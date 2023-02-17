@@ -11,8 +11,7 @@ export class NxClickElsewhereDirective {
     @Output()
     nxClickElsewhere = new EventEmitter<void>();
 
-    constructor(private _elementRef: ElementRef<HTMLElement>) {
-    }
+    constructor(private _elementRef: ElementRef<HTMLElement>) {}
 
     @HostListener('document:click', ['$event.target'])
     onMouseClick(targetElement: HTMLElement): void {

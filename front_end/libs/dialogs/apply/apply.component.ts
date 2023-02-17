@@ -24,8 +24,7 @@ export class ApplyModalContent implements OnInit {
     constructor(
         private dialogRef: DialogRef<DialogTypes['return']>,
         @Inject(DIALOG_DATA) private dialogData: DialogTypes['data'],
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         pickFrom(this.dialogData, ['applyFunc', 'discardFunc', 'form'], this);

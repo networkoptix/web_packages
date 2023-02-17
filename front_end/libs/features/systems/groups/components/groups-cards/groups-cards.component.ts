@@ -30,8 +30,7 @@ export class NxGroupsCardsComponent implements OnInit {
     constructor(
         private accountService: NxAccountService,
         private groupsService: NxSystemGroupsService,
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         this.accountService.get().then(account => {

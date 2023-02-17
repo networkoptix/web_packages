@@ -134,8 +134,7 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
         ];
     }
 
-    ngOnDestroy(): void {
-    }
+    ngOnDestroy(): void {}
 
     ngOnInit(): void {
         this.uri.getParams()

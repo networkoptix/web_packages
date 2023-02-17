@@ -34,8 +34,7 @@ export class PlaybackStateIndicatorComponent implements OnInit {
         public selection: TimelineSelectionService,
         public playback: PlaybackService,
         public vms: VideoManagementSystemService
-    ) {
-    }
+    ) {}
 
     public ngOnInit(): void {
         this.playback.subject

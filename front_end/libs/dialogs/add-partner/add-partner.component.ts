@@ -22,11 +22,9 @@ export class AddPartnerModalContent {
     constructor(
         private dialogRef: DialogRef,
         private partnerService: NxPartnersService,
-    ) {
-    }
+    ) {}
 
-    ngOnInit(): void {
-    }
+    ngOnInit(): void {}
 
     savePartner(): void {
         this.partnerService.addPartner({

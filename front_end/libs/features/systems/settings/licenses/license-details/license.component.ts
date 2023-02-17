@@ -78,8 +78,7 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
         }
     }
 
-    ngOnDestroy(): void {
-    }
+    ngOnDestroy(): void {}
 
     private formatLicenseKey = (key: string) => {
         if (!key) {

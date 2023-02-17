@@ -37,8 +37,7 @@ export class NxCustomizationUsersComponent implements OnInit, OnDestroy {
         private applyService: NxApplyService,
         private partnersService: NxPartnersService,
         private dialogService: NxDialogsService,
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         this.applyService.initPageFormsWatcher(this.pageApply);

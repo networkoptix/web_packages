@@ -84,8 +84,7 @@ export class NxApplyService {
         private dialog: Dialog,
         private processService: NxProcessService,
         @Inject(DOCUMENT) private document: Document,
-    ) {
-    }
+    ) {}
 
     get locked() {
         return !!this.applyComponentInstance?.show;

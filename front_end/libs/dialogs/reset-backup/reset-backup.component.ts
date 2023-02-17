@@ -25,8 +25,7 @@ export class ResetBackupModalContent {
         private processService: NxProcessService,
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         pickFrom(this.dialogData, ['system', 'setDefaultBackupSettings'], this);

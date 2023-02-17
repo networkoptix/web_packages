@@ -32,8 +32,7 @@ export class NxPartnerOrganizationDetailComponent implements OnInit, OnDestroy {
         configService: NxConfigService,
         private route: ActivatedRoute,
         private partnersService: NxPartnersService,
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         this.route.paramMap
@@ -44,6 +43,5 @@ export class NxPartnerOrganizationDetailComponent implements OnInit, OnDestroy {
             });
     }
 
-    ngOnDestroy(): void {
-    }
+    ngOnDestroy(): void {}
 }

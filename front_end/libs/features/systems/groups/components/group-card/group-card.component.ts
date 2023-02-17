@@ -27,8 +27,7 @@ export class NxGroupCardComponent implements OnInit {
         private router: Router,
         private groupsService: NxSystemGroupsService,
         private dialogsService: NxDialogsService
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {}
 

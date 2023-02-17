@@ -35,8 +35,7 @@ export class NxSingleEntityComponent implements OnChanges {
 
     constructor(
         private healthService: NxHealthService
-    ) {
-    }
+    ) {}
 
     ngOnChanges(): void {
         this.copyParams = { ...this.params };

@@ -20,8 +20,7 @@ export class BoolIconComponent implements OnInit {
 
     public additional: string;
 
-    ngOnInit(): void {
-    }
+    ngOnInit(): void {}
 
     ngOnChanges(changes: NgChanges<BoolIconComponent>): void {
         if (changes.value) {

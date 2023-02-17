@@ -21,8 +21,7 @@ type extraParams = {
 export class TextTransformPipe implements PipeTransform {
     constructor(
         private translate : TranslateService
-    ) {
-    }
+    ) {}
 
     transform(
         text: string,

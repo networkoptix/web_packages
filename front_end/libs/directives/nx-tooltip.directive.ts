@@ -45,8 +45,7 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
         private elementRef: ElementRef,
         private overlay: Overlay,
         private _viewContainerRef: ViewContainerRef,
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         const positions: ConnectedPosition[] = this.horizontal ? [

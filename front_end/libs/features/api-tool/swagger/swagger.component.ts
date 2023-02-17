@@ -79,8 +79,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         private componentFactoryResolver: ComponentFactoryResolver,
         private toastService: NxToastService,
         @Inject(DOCUMENT) private document: Document
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         this.openAPIJSONService.currentAPIDoc$.pipe(untilDestroyed(this)).subscribe(doc => {

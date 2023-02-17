@@ -23,8 +23,7 @@ export class NxUrlProtocolService {
         @Inject(WINDOW) private window: Window,
         private accountService: NxAccountService,
         private cloudApiService: NxCloudApiService
-    ) {
-    }
+    ) {}
 
     private parseSource() {
         // TODO: Clean up this after we retire AJS

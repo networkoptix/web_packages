@@ -45,8 +45,7 @@ export class NxDevConsoleEditComponent {
         private headerService: NxHeaderService,
         private consoleService: NxConsoleService,
         private location: Location
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         const getMethod = (action: string) => {

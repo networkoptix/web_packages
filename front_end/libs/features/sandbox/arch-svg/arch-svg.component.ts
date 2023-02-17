@@ -13,8 +13,7 @@ import { NxMenuService } from '@app/menu/menu.service';
 export class NxArchSvgComponent implements OnInit {
     constructor(
         private menuService: NxMenuService,
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         this.menuService.section = 'components';

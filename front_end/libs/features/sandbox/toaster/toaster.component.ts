@@ -24,8 +24,7 @@ export class ToasterComponent implements OnInit, OnDestroy {
         private menuService: NxMenuService,
         private ribbonService: NxRibbonService,
         private processService: NxProcessService,
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         this.menuService.section = 'components';
@@ -63,8 +62,7 @@ export class ToasterComponent implements OnInit, OnDestroy {
         }
     }
 
-    refreshHealth(): void {
-    }
+    refreshHealth(): void {}
 
     notify(msg: string, type: string): void {
         this.dialogs.notify(msg, type, !this.autohide);

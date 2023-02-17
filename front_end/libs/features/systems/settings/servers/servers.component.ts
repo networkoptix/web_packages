@@ -57,8 +57,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         private location: Location,
         @Inject(WINDOW) public window: Window,
         @Inject(ViewContainerRef) public applyContainerRef: ViewContainerRef
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         this.menuService.section = 'servers';

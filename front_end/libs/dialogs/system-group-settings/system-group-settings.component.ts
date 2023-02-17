@@ -22,8 +22,7 @@ export class SystemGroupSettingsModalContent implements OnInit {
         private systemGroupsService: NxSystemGroupsService,
         public dialogRef: DialogRef,
         // @Inject(DIALOG_DATA) private dialogData: never,
-    ) {
-    }
+    ) {}
 
     private _importGroups(code: string): void {
         this.systemGroupsService.import(code);

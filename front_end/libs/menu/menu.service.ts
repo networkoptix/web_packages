@@ -20,8 +20,7 @@ export class NxMenuService implements OnDestroy {
 
     private _hoverItemId: string;
 
-    constructor(private searchService: NxSearchService) {
-    }
+    constructor(private searchService: NxSearchService) {}
 
     set content(content: Level1Item[]) {
         this.contentSubject.next(content);

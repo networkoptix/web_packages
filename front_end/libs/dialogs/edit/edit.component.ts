@@ -71,8 +71,7 @@ export class EditModalContent {
         private router: Router,
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         pickFrom(

@@ -10,8 +10,7 @@ export class TimelineRulerCanvasRendererService {
     constructor(
         protected primaryRenderer: TimelinePrimaryRulerCanvasRendererService,
         protected topRenderer: TimelineTopRulerCanvasRendererService
-    ) {
-    }
+    ) {}
 
     public render(ctx: CanvasRenderingContext2D): void {
         this.topRenderer.reset();

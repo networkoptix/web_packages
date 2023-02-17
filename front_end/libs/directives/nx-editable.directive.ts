@@ -80,8 +80,7 @@ export class NxEditableDirective implements OnInit {
 
     constructor(
         private elementRef: ElementRef
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         this.editOff();

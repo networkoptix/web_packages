@@ -600,8 +600,7 @@ export class NxThemeColorsComponent implements OnInit {
 
     constructor(
         private menuService: NxMenuService,
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         this.menuService.section = 'colors';

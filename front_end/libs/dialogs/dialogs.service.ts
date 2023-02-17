@@ -54,8 +54,7 @@ export class NxDialogsService extends DialogBase {
         this.location = location;
     }
 
-    public ngOnDestroy(): void {
-    }
+    public ngOnDestroy(): void {}
 
     public dismiss(): void {
         this.toastService.remove();

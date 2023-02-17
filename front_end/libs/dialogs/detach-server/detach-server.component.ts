@@ -38,8 +38,7 @@ export class DetachServerModalContent {
         public dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
         @Inject(WINDOW) private window: Window,
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         pickFrom(this.dialogData, ['system', 'serverName', 'serverId'], this);

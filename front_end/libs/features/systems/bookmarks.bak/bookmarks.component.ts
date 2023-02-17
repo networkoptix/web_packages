@@ -40,8 +40,7 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
         private systemService: NxSystemService,
         private route: ActivatedRoute,
         private router: Router,
-    ) {
-    }
+    ) {}
 
     ngOnDestroy(): void {}
 

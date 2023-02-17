@@ -43,8 +43,7 @@ export class NxPartnerOrganizationsListComponent implements OnInit, OnDestroy {
     constructor(
         private uri: NxUriService,
         private partnersService: NxPartnersService,
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         this.uri.getParams()
@@ -111,6 +110,5 @@ export class NxPartnerOrganizationsListComponent implements OnInit, OnDestroy {
         this.setFilter();
     }
 
-    ngOnDestroy(): void {
-    }
+    ngOnDestroy(): void {}
 }

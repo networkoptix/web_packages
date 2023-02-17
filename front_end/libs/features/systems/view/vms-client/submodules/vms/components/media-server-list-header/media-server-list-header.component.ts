@@ -14,8 +14,7 @@ export class NxMediaServerListHeaderComponent implements OnInit {
 
     constructor(
         protected cookieService: CookieService
-    ) {
-    }
+    ) {}
 
     // filterToken: string = ''
     public ipVisibilityState: boolean = false;

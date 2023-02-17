@@ -80,8 +80,7 @@ export class NxBasicColorsComponent implements OnInit {
 
     constructor(
         private menuService: NxMenuService,
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         this.menuService.section = 'colors';

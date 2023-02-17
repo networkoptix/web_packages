@@ -13,8 +13,7 @@ export class NxScrollMechanicsDirective implements OnInit {
         private element: ElementRef,
         private renderer: Renderer2,
         private scrollMechanicsService: NxScrollMechanicsService
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         setTimeout(() => {

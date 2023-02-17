@@ -20,8 +20,7 @@ export class PlaybackAdvControlsComponent implements OnInit {
     constructor(
         public playback: PlaybackService,
         protected selection: TimelineSelectionService
-    ) {
-    }
+    ) {}
 
     public ngOnInit(): void {
         this.playback.subject

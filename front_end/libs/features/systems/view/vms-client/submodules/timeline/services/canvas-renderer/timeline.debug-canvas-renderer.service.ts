@@ -17,8 +17,7 @@ export class TimelineDebugCanvasRendererService {
         protected timeline: TimelineService,
         protected vms: VideoManagementSystemService,
         private drawingConfigsService: NxDrawingConfigsService,
-    ) {
-    }
+    ) {}
 
     protected get cfg(): RecordsConfig {
         return this.drawingConfigsService.recordsDrawingConfig;

@@ -110,8 +110,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
         private appStateService: NxAppStateService,
         public menuService: NxMenuService,
         @Inject(WINDOW) private window: Window,
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         this.route.queryParams

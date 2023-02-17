@@ -51,8 +51,7 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
         };
     }
 
-    ngOnDestroy(): void {
-    }
+    ngOnDestroy(): void {}
 
     ngOnInit(): void {
         this.createEmbedUrl(this.params);

@@ -57,8 +57,7 @@ export class AddStorageModalContent {
         private toastService: NxToastService,
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
-    ) {
-    }
+    ) {}
 
     checkUrlValidity(): void {
         const urlC = this.getControls('url');

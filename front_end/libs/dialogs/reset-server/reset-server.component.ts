@@ -50,8 +50,7 @@ export class ResetServerModalContent {
         @Inject(DIALOG_DATA) private dialogData: any,
         @Inject(WINDOW) private window: Window,
         @Inject(DOCUMENT) private document: Document,
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         pickFrom(this.dialogData, ['system', 'serverName', 'serverId'], this);

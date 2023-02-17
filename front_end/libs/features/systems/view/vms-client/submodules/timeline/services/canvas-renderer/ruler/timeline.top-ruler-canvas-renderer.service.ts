@@ -28,8 +28,7 @@ export class TimelineTopRulerCanvasRendererService {
         protected timeline: TimelineService,
         protected vms: VideoManagementSystemService,
         private drawingConfigsService: NxDrawingConfigsService,
-    ) {
-    }
+    ) {}
 
     public render(ctx: CanvasRenderingContext2D): void {
         this.topRulerDrawingConfig = this.drawingConfigsService.topRulerDrawingConfig;

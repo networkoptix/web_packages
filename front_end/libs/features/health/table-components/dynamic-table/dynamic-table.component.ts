@@ -334,8 +334,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         }
     }
 
-    ngOnDestroy(): void {
-    }
+    ngOnDestroy(): void {}
 
     showTooltip(event): void {
         if (this.deviceDetectorService.browser.toLowerCase() !== 'ie') {

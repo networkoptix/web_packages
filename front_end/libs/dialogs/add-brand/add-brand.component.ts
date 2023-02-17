@@ -40,11 +40,9 @@ export class AddPartnerBrandModalContent {
     constructor(
         private dialogRef: DialogRef,
         private partnerService: NxPartnersService,
-    ) {
-    }
+    ) {}
 
-    ngOnInit(): void {
-    }
+    ngOnInit(): void {}
 
     saveBrand(): void {
         // this.newChannel.id = Date.now();

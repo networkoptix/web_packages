@@ -110,8 +110,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
     constructor(
         private processService: NxProcessService,
         private dialogsService: NxDialogsService
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         this.setupDefaults();
@@ -232,8 +231,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
         this.hideErrors = false;
     };
 
-    ngOnDestroy(): void {
-    }
+    ngOnDestroy(): void {}
 
     private formatLicenseKey = (key: string) => {
         if (key) {

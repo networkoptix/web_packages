@@ -18,8 +18,7 @@ export class CloudOwnerAuthorizationComponent implements OnInit {
         private oauthService: OauthService,
         private storageService: LocalStorageService,
         private activatedRoute: ActivatedRoute
-    ) {
-    }
+    ) {}
 
     handleCode(code: string): void {
         this.storageService.store(oauthStore.code, code);
