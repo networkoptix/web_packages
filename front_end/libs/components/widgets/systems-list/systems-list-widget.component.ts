@@ -10,7 +10,7 @@ import { FirstPartyWidget } from '../helper-classes';
 @Component({
     selector: 'nx-systems-list-widget',
     templateUrl: './systems-list-widget.component.html',
-    styleUrls: ['./systems-list-widget.component.scss']
+    styleUrls: ['./systems-list-widget.component.scss'],
 })
 export class NxSystemsListWidgetComponent extends FirstPartyWidget<
     typeof NxSystemsListWidgetComponent.BASE_CONFIG
@@ -20,7 +20,7 @@ export class NxSystemsListWidgetComponent extends FirstPartyWidget<
     static SIZES = [
         { name: 'Small', value: { cols: 4, rows: 4 } },
         { name: 'Medium', value: { cols: 8, rows: 4 } },
-        { name: 'Large', value: { cols: 16, rows: 4 } }
+        { name: 'Large', value: { cols: 16, rows: 4 } },
     ];
 
     static SELECTED_SIZE = 1;
@@ -28,13 +28,15 @@ export class NxSystemsListWidgetComponent extends FirstPartyWidget<
     static BASE_CONFIG = {
         editMode: false,
         searchEnabled: true,
-        systems: null
+        systems: null,
     };
 
     NxSystem: NxSystem;
 
     get systemsToShow() {
-        return Object.entries(this.card.config.systems || {}).map(([key, { show }]: [string, any]) => show ?? true ? key : null).filter(val => val);
+        return Object.entries(this.card.config.systems || {})
+            .map(([key, { show }]: [string, any]) => (show ?? true ? key : null))
+            .filter(val => val);
     }
 
     updateSystems(availableSystems: NxSystemInfo[]): void {

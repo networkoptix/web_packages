@@ -38,7 +38,7 @@ interface SystemDropdownItem extends DropdownItem<string> {
 @Component({
     selector: 'nx-bookmarks-widget',
     templateUrl: './bookmarks-widget.component.html',
-    styleUrls: ['./bookmarks-widget.component.scss']
+    styleUrls: ['./bookmarks-widget.component.scss'],
 })
 export class NxBookmarksWidgetComponent extends FirstPartyWidget<
     typeof NxBookmarksWidgetComponent.BASE_CONFIG
@@ -47,11 +47,11 @@ export class NxBookmarksWidgetComponent extends FirstPartyWidget<
     static NAME = 'Bookmarks';
     static SIZES = [
         { name: '2 x 4', value: { cols: 2, rows: 4 } },
-        { name: '4 x 6', value: { cols: 4, rows: 6 } }
+        { name: '4 x 6', value: { cols: 4, rows: 6 } },
     ];
 
     static BASE_CONFIG = {
-        selectedSystem: ''
+        selectedSystem: '',
     };
 
     static cloudApi: NxCloudApiService;
@@ -61,8 +61,8 @@ export class NxBookmarksWidgetComponent extends FirstPartyWidget<
         switchMap(_ => NxBookmarksWidgetComponent.cloudApi.systems()),
         shareReplay({
             bufferSize: 1,
-            refCount: true
-        })
+            refCount: true,
+        }),
     );
 
     updater$ = new Subject();
@@ -83,33 +83,49 @@ export class NxBookmarksWidgetComponent extends FirstPartyWidget<
         }),
         switchMap(_ => this.system.getBookmarks()),
         // map(getMockBookmarks), Use in case you want to demo when no bookmarks
-        switchMap(async (bookmarks: any) => bookmarks.map(bookmark => {
-            const thumbnail = this.system.serverManager.getPreviewUrl(bookmark.deviceId, bookmark.startTimeMs, 800, 800, 0, this.system.mediaserver.authGet);
-            return { ...bookmark, thumbnail };
-        })
+        switchMap(async (bookmarks: any) =>
+            bookmarks.map(bookmark => {
+                const thumbnail = this.system.serverManager.getPreviewUrl(
+                    bookmark.deviceId,
+                    bookmark.startTimeMs,
+                    800,
+                    800,
+                    0,
+                    this.system.mediaserver.authGet,
+                );
+                return { ...bookmark, thumbnail };
+            }),
         ),
         catchError(_ => Promise.resolve([])), // Promise.resolve(getMockBookmarks()) if demo
-        tap(this.toggleLoading)
+        tap(this.toggleLoading),
     ) as Observable<BookmarkWithOpener[]>;
 
     systemsDropdownItems$: Observable<SystemDropdownItem[]> = this.cloudApi.systems().pipe(
-        map(systems => systems.map(({ id: value, name, stateOfHealth }) => ({
-            name: stateOfHealth !== 'online' ? `${name} (${stateOfHealth})` : name,
-            disabled: stateOfHealth !== 'online',
-            value
-        }))),
+        map(systems =>
+            systems.map(({ id: value, name, stateOfHealth }) => ({
+                name: stateOfHealth !== 'online' ? `${name} (${stateOfHealth})` : name,
+                disabled: stateOfHealth !== 'online',
+                value,
+            })),
+        ),
         tap(async systems => {
             if (!systems.length) {
                 return;
             }
-            const selectedSystem: SystemDropdownItem = systems.find(({ value }) => value === this.card.config.selectedSystem) || systems.find(({ disabled }) => !disabled) || systems[0];
-            this.system ||= this.systemService.createSystem(this.accountService.email, selectedSystem.value);
+            const selectedSystem: SystemDropdownItem =
+                systems.find(({ value }) => value === this.card.config.selectedSystem) ||
+                systems.find(({ disabled }) => !disabled) ||
+                systems[0];
+            this.system ||= this.systemService.createSystem(
+                this.accountService.email,
+                selectedSystem.value,
+            );
             this.updateSystem(selectedSystem);
         }),
         shareReplay({
             bufferSize: 1,
-            refCount: true
-        })
+            refCount: true,
+        }),
     );
 
     toggleLoading(): void {
@@ -130,13 +146,13 @@ export class NxBookmarksWidgetComponent extends FirstPartyWidget<
         cd: ChangeDetectorRef,
         private cloudApi: NxCloudApiService,
         private accountService: NxAccountService,
-        private systemService: NxSystemService
+        private systemService: NxSystemService,
     ) {
         super(cd);
         NxHealthMonitorWidgetComponent.cloudApi = this.cloudApi;
-        NxHealthMonitorWidgetComponent.systemUpdater$.pipe(
-            untilDestroyed(this)
-        ).subscribe(NxHealthMonitorWidgetComponent.systems$);
+        NxHealthMonitorWidgetComponent.systemUpdater$
+            .pipe(untilDestroyed(this))
+            .subscribe(NxHealthMonitorWidgetComponent.systems$);
         NxHealthMonitorWidgetComponent.updateSystems$.next('update');
         this.systemsDropdownItems$.toPromise();
     }

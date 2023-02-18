@@ -37,7 +37,7 @@ class FrameTracker {
         }
 
         const seconds = (this.end - this.start) / 1000;
-        const fps = Math.round((this.frames / seconds) / this.players);
+        const fps = Math.round(this.frames / seconds / this.players);
 
         if (reset) {
             this.#reset();
@@ -65,7 +65,7 @@ type PlaybackDetails = Record<string, { fps: number; players: number }>;
 type StreamHandler = (stream: MediaStream) => unknown;
 
 export enum ConnectionError {
-    websocket = 'websocket'
+    websocket = 'websocket',
 }
 
 class MediaServerPeerConnection extends RTCPeerConnection {
@@ -93,7 +93,7 @@ class MediaServerPeerConnection extends RTCPeerConnection {
                 { urls: 'stun:stun.l.google.com:19302' },
                 { urls: 'stun:stun1.l.google.com:19302' },
                 { urls: 'stun:stun1.l.google.com:19302' },
-            ]
+            ],
         });
 
         this.ontrack = (event: RTCTrackEvent): unknown => trackHandler(event.streams[0]);
@@ -124,7 +124,7 @@ export class WebRTCStreamManager {
     /** Used to trigger sync events such as performance tuning and connection cleanup */
     static sync$ = WebRTCStreamManager.forceSync$.pipe(
         switchMap(() => timer(0, WebRTCStreamManager.SYNC_INTERVAL)),
-        shareReplay({ refCount: true, bufferSize: 1 })
+        shareReplay({ refCount: true, bufferSize: 1 }),
     );
 
     /** Whether to log current playback performance details */
@@ -135,20 +135,27 @@ export class WebRTCStreamManager {
 
     /** Playback details for use in either logging during development or for performance tuning */
     static PLAYBACK_DETAILS$ = WebRTCStreamManager.sync$.pipe(
-        map(() => Object.entries(
-            WebRTCStreamManager.EXISTING_CONNECTIONS
-        ).reduce((
-            summary,
-            [webRtcUrl, connection]
-        ) => connection?.getPlaying() ? {
-            ...summary,
-            [webRtcUrl]: { fps: connection.getFps(true), players: connection.getPlayerCount() }
-        } : summary, {} as PlaybackDetails
-        ))
+        map(() =>
+            Object.entries(WebRTCStreamManager.EXISTING_CONNECTIONS).reduce(
+                (summary, [webRtcUrl, connection]) =>
+                    connection?.getPlaying()
+                        ? {
+                              ...summary,
+                              [webRtcUrl]: {
+                                  fps: connection.getFps(true),
+                                  players: connection.getPlayerCount(),
+                              },
+                          }
+                        : summary,
+                {} as PlaybackDetails,
+            ),
+        ),
     );
 
     /** Stats logger subcription, only adding as a static property in case we want to be able to unsubscribe */
-    static STATS = WebRTCStreamManager.PLAYBACK_DETAILS$.pipe(filter(details => this.SHOW_STATS && !!Object.keys(details).length)).subscribe(WebRTCStreamManager.STATS_HANDLER);
+    static STATS = WebRTCStreamManager.PLAYBACK_DETAILS$.pipe(
+        filter(details => this.SHOW_STATS && !!Object.keys(details).length),
+    ).subscribe(WebRTCStreamManager.STATS_HANDLER);
 
     /**
      * WebRTCStreamManager factory to either return existing instance to reuse exiting connection or instantiates instance. Returns observable of the MediaStreams from the mediaserver.
@@ -157,18 +164,27 @@ export class WebRTCStreamManager {
      * @param videoElement HTMLVideoElement
      * @returns Observable<MediaStream>
      */
-    static connect(webRtcUrlFactory: (params?: Record<string, unknown>) => string, videoElement?: HTMLVideoElement): Observable<[MediaStream, ConnectionError]> {
+    static connect(
+        webRtcUrlFactory: (params?: Record<string, unknown>) => string,
+        videoElement?: HTMLVideoElement,
+    ): Observable<[MediaStream, ConnectionError]> {
         const webRtcUrl = removeAuth(webRtcUrlFactory());
-        WebRTCStreamManager.EXISTING_CONNECTIONS[webRtcUrl] ||= new WebRTCStreamManager(webRtcUrlFactory);
+        WebRTCStreamManager.EXISTING_CONNECTIONS[webRtcUrl] ||= new WebRTCStreamManager(
+            webRtcUrlFactory,
+        );
 
         WebRTCStreamManager.EXISTING_CONNECTIONS[webRtcUrl].registerElement(videoElement);
 
-        return WebRTCStreamManager.EXISTING_CONNECTIONS[webRtcUrl].mediaStream$.pipe(filter(res => !!res));
+        return WebRTCStreamManager.EXISTING_CONNECTIONS[webRtcUrl].mediaStream$.pipe(
+            filter(res => !!res),
+        );
     }
 
     static updatePosition(position = 0): void {
         WebRTCStreamManager.position = Math.round(position);
-        Object.values(WebRTCStreamManager.EXISTING_CONNECTIONS).forEach(connection => connection.updatePosition());
+        Object.values(WebRTCStreamManager.EXISTING_CONNECTIONS).forEach(connection =>
+            connection.updatePosition(),
+        );
     }
 
     updatePosition(): void {
@@ -215,7 +231,9 @@ export class WebRTCStreamManager {
     }
 
     static getPlaying(): boolean {
-        return Object.values(WebRTCStreamManager.EXISTING_CONNECTIONS).some(connection => connection.getPlaying());
+        return Object.values(WebRTCStreamManager.EXISTING_CONNECTIONS).some(connection =>
+            connection.getPlaying(),
+        );
     }
 
     public togglePlaying(play: boolean): void {
@@ -230,7 +248,9 @@ export class WebRTCStreamManager {
 
     static togglePlaying(play?: boolean): void {
         play = typeof play === 'boolean' ? play : !this.getPlaying();
-        Object.values(WebRTCStreamManager.EXISTING_CONNECTIONS).forEach(connection => connection.togglePlaying(play));
+        Object.values(WebRTCStreamManager.EXISTING_CONNECTIONS).forEach(connection =>
+            connection.togglePlaying(play),
+        );
     }
 
     /**
@@ -241,7 +261,9 @@ export class WebRTCStreamManager {
      */
     public registerElement = (videoElement?: HTMLVideoElement): void => {
         // Fix type issue with requestVideoFrameCallback
-        const element = (videoElement as HTMLVideoElement & { requestVideoFrameCallback?: (number) => void });
+        const element = videoElement as HTMLVideoElement & {
+            requestVideoFrameCallback?: (number) => void;
+        };
 
         if (!element) {
             return;
@@ -284,14 +306,22 @@ export class WebRTCStreamManager {
         const signal = JSON.parse(message.data);
 
         if (signal.sdp) {
-            this.#peerConnection.setRemoteDescription(new RTCSessionDescription(signal.sdp)).then(() => {
-                // Only create answers in response to offers
-                if (signal.sdp.type === 'offer') {
-                    this.#peerConnection.createAnswer().then(this.#createdDescription).catch(this.#errorHandler);
-                }
-            }).catch(this.#errorHandler);
+            this.#peerConnection
+                .setRemoteDescription(new RTCSessionDescription(signal.sdp))
+                .then(() => {
+                    // Only create answers in response to offers
+                    if (signal.sdp.type === 'offer') {
+                        this.#peerConnection
+                            .createAnswer()
+                            .then(this.#createdDescription)
+                            .catch(this.#errorHandler);
+                    }
+                })
+                .catch(this.#errorHandler);
         } else if (signal.ice) {
-            this.#peerConnection.addIceCandidate(new RTCIceCandidate(signal.ice)).catch(this.#errorHandler);
+            this.#peerConnection
+                .addIceCandidate(new RTCIceCandidate(signal.ice))
+                .catch(this.#errorHandler);
         } else if (signal.ice === null) {
             this.#initWebSocket();
         }
@@ -305,9 +335,14 @@ export class WebRTCStreamManager {
     #createdDescription = (description: RTCSessionDescriptionInit): void => {
         console.log('got description');
 
-        this.#peerConnection.setLocalDescription(description).then(() => {
-            this.#wsConnection.send(JSON.stringify({ sdp: this.#peerConnection.localDescription }));
-        }).catch(this.#errorHandler);
+        this.#peerConnection
+            .setLocalDescription(description)
+            .then(() => {
+                this.#wsConnection.send(
+                    JSON.stringify({ sdp: this.#peerConnection.localDescription }),
+                );
+            })
+            .catch(this.#errorHandler);
     };
 
     /**
@@ -326,7 +361,10 @@ export class WebRTCStreamManager {
      * @returns WebSocket
      */
     #getOpenWebSocketConnection = (): WebSocket => {
-        if (!this.#wsConnection || [WebSocket.CLOSED, WebSocket.CLOSING].includes(this.#wsConnection.readyState)) {
+        if (
+            !this.#wsConnection ||
+            [WebSocket.CLOSED, WebSocket.CLOSING].includes(this.#wsConnection.readyState)
+        ) {
             this.#initWebSocket();
         }
         return this.#wsConnection;
@@ -340,7 +378,9 @@ export class WebRTCStreamManager {
     #initWebSocket = (): void => {
         this.#peerConnection?.close();
         this.#peerConnection = null;
-        this.#wsConnection = new WebSocket(this.webRtcUrlFactory({ position: WebRTCStreamManager.position }));
+        this.#wsConnection = new WebSocket(
+            this.webRtcUrlFactory({ position: WebRTCStreamManager.position }),
+        );
         this.#wsConnection.onerror = () => {
             this.mediaStream$.next([null, ConnectionError.websocket]);
             this.#close();
@@ -352,21 +392,26 @@ export class WebRTCStreamManager {
      * Initializes peer connection cleanup. Closes all websockets and peer connections when mediastream doesn't have any observers.
      */
     #initPeerConnectionCleanup = (): void => {
-        WebRTCStreamManager.sync$.pipe(
-            delay(WebRTCStreamManager.SYNC_INTERVAL),
-            filter(() => !this.mediaStream$.observed),
-            take(1)
-        ).subscribe(this.#close);
+        WebRTCStreamManager.sync$
+            .pipe(
+                delay(WebRTCStreamManager.SYNC_INTERVAL),
+                filter(() => !this.mediaStream$.observed),
+                take(1),
+            )
+            .subscribe(this.#close);
     };
 
     /**
      * Ensures that peer connection to mediaserver has been initialized.
      */
     #initPeerConnection = (): void => {
-        this.#peerConnection ||= new MediaServerPeerConnection(() => this.#getOpenWebSocketConnection(), stream => {
-            console.log(stream);
-            this.mediaStream$.next([stream, null]);
-        });
+        this.#peerConnection ||= new MediaServerPeerConnection(
+            () => this.#getOpenWebSocketConnection(),
+            stream => {
+                console.log(stream);
+                this.mediaStream$.next([stream, null]);
+            },
+        );
     };
 
     /**

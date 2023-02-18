@@ -26,7 +26,7 @@ interface CameraDropdownItem extends DropdownItem<string> {
 @Component({
     selector: 'nx-live-view-widget',
     templateUrl: './live-view-widget.component.html',
-    styleUrls: ['./live-view-widget.component.scss']
+    styleUrls: ['./live-view-widget.component.scss'],
 })
 export class NxLiveViewWidgetComponent extends FirstPartyWidget<
     typeof NxLiveViewWidgetComponent.BASE_CONFIG
@@ -36,14 +36,14 @@ export class NxLiveViewWidgetComponent extends FirstPartyWidget<
     static SIZES = [
         { name: '4 x 3', value: { cols: 4, rows: 3 } },
         { name: '4 x 4', value: { cols: 4, rows: 4 } },
-        { name: '8 x 6', value: { cols: 8, rows: 6 } }
+        { name: '8 x 6', value: { cols: 8, rows: 6 } },
     ];
 
     static BASE_CONFIG = {
         selectedSystem: '',
         selectedCamera: '',
         autoUpdate: true,
-        updateInterval: 1
+        updateInterval: 1,
     };
 
     static cloudApi: NxCloudApiService;
@@ -53,8 +53,8 @@ export class NxLiveViewWidgetComponent extends FirstPartyWidget<
         switchMap(_ => NxLiveViewWidgetComponent.cloudApi.systems()),
         shareReplay({
             bufferSize: 1,
-            refCount: true
-        })
+            refCount: true,
+        }),
     );
 
     CUSTOM_LABELS = ['Select System', 'Select Camera', 'Auto Update'];
@@ -67,38 +67,56 @@ export class NxLiveViewWidgetComponent extends FirstPartyWidget<
     size: { width: number; height: number } = { width: 640, height: 640 };
 
     systemsDropdownItems$ = this.cloudApi.systems().pipe(
-        map(systems => systems.map(({ id, name, stateOfHealth }) => ({
-            name: stateOfHealth !== 'online' ? `${name} (${stateOfHealth})` : name,
-            disabled: stateOfHealth !== 'online',
-            value: cleanId(id)
-        }))),
+        map(systems =>
+            systems.map(({ id, name, stateOfHealth }) => ({
+                name: stateOfHealth !== 'online' ? `${name} (${stateOfHealth})` : name,
+                disabled: stateOfHealth !== 'online',
+                value: cleanId(id),
+            })),
+        ),
         tap(async (systems: any) => {
             if (!systems.length) {
                 return;
             }
-            const selectedSystem = systems.find(({ value }) => value === this.card.config.selectedSystem) || systems.find(({ disabled }) => !disabled) || systems[0];
+            const selectedSystem =
+                systems.find(({ value }) => value === this.card.config.selectedSystem) ||
+                systems.find(({ disabled }) => !disabled) ||
+                systems[0];
             this.updateSystem(selectedSystem);
-        })
+        }),
     );
 
     thumbnailsUpdater$ = new BehaviorSubject(Date.now());
 
     cameraThumbnails$ = this.thumbnailsUpdater$.pipe(
         switchMap(time => {
-            this.system = this.systemService.createSystem(this.accountService.email, this.card.config.selectedSystem);
+            this.system = this.systemService.createSystem(
+                this.accountService.email,
+                this.card.config.selectedSystem,
+            );
             const cameras = this.system.cameraManager.cameras;
             return combineLatest([
-                this.card.config.autoUpdate ? interval(this.card.config.updateInterval * 1000).pipe(startWith(0)) : Promise.resolve(time),
-                cameras ? Promise.resolve(cameras) : this.system.cameraManager.getCameras()
+                this.card.config.autoUpdate
+                    ? interval(this.card.config.updateInterval * 1000).pipe(startWith(0))
+                    : Promise.resolve(time),
+                cameras ? Promise.resolve(cameras) : this.system.cameraManager.getCameras(),
             ]);
         }),
-        map(([time, cameras]) => cameras.reduce((lookup, { id, parsedAddParams: { rotation }, name }) => {
-            const previewUrl = this.system.mediaserver.previewUrl(id, 0, this.size.width, this.size.height, rotation);
-            return {
-                ...lookup,
-                [cleanId(id)]: { previewUrl, name }
-            };
-        }, {}))
+        map(([time, cameras]) =>
+            cameras.reduce((lookup, { id, parsedAddParams: { rotation }, name }) => {
+                const previewUrl = this.system.mediaserver.previewUrl(
+                    id,
+                    0,
+                    this.size.width,
+                    this.size.height,
+                    rotation,
+                );
+                return {
+                    ...lookup,
+                    [cleanId(id)]: { previewUrl, name },
+                };
+            }, {}),
+        ),
     );
 
     refreshThumbnail = () => this.thumbnailsUpdater$.next(Date.now());
@@ -110,18 +128,29 @@ export class NxLiveViewWidgetComponent extends FirstPartyWidget<
             }
             await this.initCameras();
             const cameras = this.system.cameraManager.cameras || [];
-            return cameras.map<CameraDropdownItem>(({ name, id, status: state }) => ({ name, state, disabled: state !== 'online' && false, value: cleanId(id) }));
+            return cameras.map<CameraDropdownItem>(({ name, id, status: state }) => ({
+                name,
+                state,
+                disabled: state !== 'online' && false,
+                value: cleanId(id),
+            }));
         }),
         tap(cameras => {
-            this.selectedCamera = cameras.find(({ value }) => value === this.card.config.selectedCamera) || cameras.find(({ disabled }) => !disabled) || cameras[0];
+            this.selectedCamera =
+                cameras.find(({ value }) => value === this.card.config.selectedCamera) ||
+                cameras.find(({ disabled }) => !disabled) ||
+                cameras[0];
             if (this.selectedCamera) {
                 this.card.config.selectedCamera = this.selectedCamera.value;
             }
-        })
+        }),
     );
 
     initCameras = () => {
-        this.system = this.systemService.createSystem(this.accountService.email, this.card.config.selectedSystem);
+        this.system = this.systemService.createSystem(
+            this.accountService.email,
+            this.card.config.selectedSystem,
+        );
         return this.system.getMediaServersAndCameras(true);
     };
 
@@ -149,13 +178,13 @@ export class NxLiveViewWidgetComponent extends FirstPartyWidget<
         cd: ChangeDetectorRef,
         private cloudApi: NxCloudApiService,
         private accountService: NxAccountService,
-        private systemService: NxSystemService
+        private systemService: NxSystemService,
     ) {
         super(cd);
         NxLiveViewWidgetComponent.cloudApi = this.cloudApi;
-        NxLiveViewWidgetComponent.systemUpdater$.pipe(
-            untilDestroyed(this)
-        ).subscribe(NxLiveViewWidgetComponent.systems$);
+        NxLiveViewWidgetComponent.systemUpdater$
+            .pipe(untilDestroyed(this))
+            .subscribe(NxLiveViewWidgetComponent.systems$);
         NxLiveViewWidgetComponent.updateSystems$.next('update');
     }
 }

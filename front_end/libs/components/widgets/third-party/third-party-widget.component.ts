@@ -13,7 +13,7 @@ import { FirstPartyWidget } from '../helper-classes';
 @Component({
     selector: 'nx-third-party-widget',
     templateUrl: './third-party-widget.component.html',
-    styleUrls: ['./third-party-widget.component.scss']
+    styleUrls: ['./third-party-widget.component.scss'],
 })
 export class NxThirdPartyWidgetComponent extends FirstPartyWidget<
     typeof NxThirdPartyWidgetComponent.BASE_CONFIG
@@ -25,7 +25,7 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget<
         { name: '2 x 4', value: { cols: 2, rows: 4 } },
         { name: '4 x 2', value: { cols: 4, rows: 2 } },
         { name: '4 x 4', value: { cols: 4, rows: 4 } },
-        { name: '4 x 6', value: { cols: 4, rows: 6 } }
+        { name: '4 x 6', value: { cols: 4, rows: 6 } },
     ];
 
     static sharedState$: SharedWidgetState;
@@ -35,7 +35,7 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget<
         sourceUrl: '',
         source: '',
         editSource: '',
-        devMode: false
+        devMode: false,
     };
 
     static MAX_SIZE = 250000;
@@ -79,19 +79,29 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget<
                 }
             } catch (err) {
                 console.error(err);
-                const source = image ? `<img class="fs-exclude" alt="Embedded Image" src="${result}" style="width: 100%; font-size: inherit;"/>` : otherName.endsWith('.html') || otherName.endsWith('.htm') ? result : `<pre id="plain-text-editable" contenteditable>${result}</pre>`;
+                const source = image
+                    ? `<img class="fs-exclude" alt="Embedded Image" src="${result}" style="width: 100%; font-size: inherit;"/>`
+                    : otherName.endsWith('.html') || otherName.endsWith('.htm')
+                    ? result
+                    : `<pre id="plain-text-editable" contenteditable>${result}</pre>`;
                 card = {
                     name: image,
                     sizes: NxThirdPartyWidgetComponent.SIZES,
                     editSource: source,
-                    source
+                    source,
                 };
             }
             const { name, sizes: baseSizes, ...config } = card;
             this.card.title = name || otherName;
-            this.card.sizes = baseSizes.map(({ name, value }) => ({ name: `${this.card.title} (${name})`, value }));
+            this.card.sizes = baseSizes.map(({ name, value }) => ({
+                name: `${this.card.title} (${name})`,
+                value,
+            }));
             const { cols: curCols = 0, rows: curRows = 0 } = this.card.size.value;
-            this.card.size = this.card.sizes.find(({ value: { cols, rows } }) => cols === curCols && rows === curRows) || this.card.sizes[0];
+            this.card.size =
+                this.card.sizes.find(
+                    ({ value: { cols, rows } }) => cols === curCols && rows === curRows,
+                ) || this.card.sizes[0];
             this.card.config = config;
             this.saveSettings();
         };
@@ -124,7 +134,10 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget<
     };
 
     useSourceUrl = (): void => {
-        this.card.sizes = NxThirdPartyWidgetComponent.SIZES.map(({ name, ...config }) => ({ name: `${this.card.title} (${name})`, ...config }));
+        this.card.sizes = NxThirdPartyWidgetComponent.SIZES.map(({ name, ...config }) => ({
+            name: `${this.card.title} (${name})`,
+            ...config,
+        }));
         this.card.size = this.card.sizes[this.card.sizes.length - 2];
         this.card.config.useSourceUrl = false;
         this.saveSettings();
@@ -146,7 +159,8 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget<
         NxThirdPartyWidgetComponent.sharedState$ ||= new SharedWidgetState(
             systemsService.systemsSubject as any,
             () => systemsService.forceUpdateSystems() as any,
-            url => router.navigateByUrl(url));
+            url => router.navigateByUrl(url),
+        );
     }
 }
 

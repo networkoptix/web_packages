@@ -24,11 +24,12 @@ interface SystemDropdownItem extends DropdownItem<string> {
 @Component({
     selector: 'nx-event-generator-widget',
     templateUrl: './event-generator.component.html',
-    styleUrls: ['./event-generator.component.scss']
+    styleUrls: ['./event-generator.component.scss'],
 })
-export class NxEventGeneratorWidgetComponent extends FirstPartyWidget<
-    typeof NxEventGeneratorWidgetComponent.BASE_CONFIG
-> implements OnInit {
+export class NxEventGeneratorWidgetComponent
+    extends FirstPartyWidget<typeof NxEventGeneratorWidgetComponent.BASE_CONFIG>
+    implements OnInit
+{
     icons = icons;
     createEvent: Process;
     errorParams: boolean;
@@ -61,18 +62,23 @@ export class NxEventGeneratorWidgetComponent extends FirstPartyWidget<
     };
 
     systemsDropdownItems$ = this.cloudApi.systems().pipe(
-        map(systems => systems.map(({ id, name, stateOfHealth }) => ({
-            name: stateOfHealth !== 'online' ? `${name} (${stateOfHealth})` : name,
-            disabled: stateOfHealth !== 'online',
-            value: cleanId(id)
-        }))),
+        map(systems =>
+            systems.map(({ id, name, stateOfHealth }) => ({
+                name: stateOfHealth !== 'online' ? `${name} (${stateOfHealth})` : name,
+                disabled: stateOfHealth !== 'online',
+                value: cleanId(id),
+            })),
+        ),
         tap(async (systems: any) => {
             if (!systems.length) {
                 return;
             }
-            const selectedSystem = systems.find(({ value }) => value === this.card.config.selectedSystem) || systems.find(({ disabled }) => !disabled) || systems[0];
+            const selectedSystem =
+                systems.find(({ value }) => value === this.card.config.selectedSystem) ||
+                systems.find(({ disabled }) => !disabled) ||
+                systems[0];
             this.updateSystem(selectedSystem);
-        })
+        }),
     );
 
     @ViewChild('gegForm') gegForm: NgForm;
@@ -88,10 +94,13 @@ export class NxEventGeneratorWidgetComponent extends FirstPartyWidget<
     }
 
     ngOnInit(): void {
-        this.system = this.systemService.createSystem(this.accountService.email, this.card.config.selectedSystem);
+        this.system = this.systemService.createSystem(
+            this.accountService.email,
+            this.card.config.selectedSystem,
+        );
 
-        this.createEvent = this.processService
-            .createProcess(async () => {
+        this.createEvent = this.processService.createProcess(
+            async () => {
                 const { source, caption, description } = this.geg;
                 if (!(source || caption || description)) {
                     return Promise.reject({ resultCode: 'missingParam' });
@@ -111,14 +120,15 @@ export class NxEventGeneratorWidgetComponent extends FirstPartyWidget<
                         this.gegForm.controls.description.setErrors({ required: true });
                         this.errorParams = true;
                     },
-                }
+                },
             },
             (res: any) => {
                 this.response = JSON.stringify(res, undefined, 2);
             },
             (err: any) => {
                 this.response = JSON.stringify(err, undefined, 2);
-            });
+            },
+        );
     }
 
     updateSystem(system: SystemDropdownItem): void {

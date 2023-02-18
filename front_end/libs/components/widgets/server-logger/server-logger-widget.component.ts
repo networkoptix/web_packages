@@ -19,7 +19,7 @@ interface SystemDropdownItem extends DropdownItem<string> {
 @Component({
     selector: 'nx-server-logger-widget',
     templateUrl: './server-logger-widget.component.html',
-    styleUrls: ['./server-logger-widget.component.scss']
+    styleUrls: ['./server-logger-widget.component.scss'],
 })
 export class NxServerLoggerWidgetComponent extends FirstPartyWidget<
     typeof NxServerLoggerWidgetComponent.BASE_CONFIG
@@ -29,14 +29,14 @@ export class NxServerLoggerWidgetComponent extends FirstPartyWidget<
     static SIZES = [
         { name: '4 x 6', value: { cols: 4, rows: 6 } },
         { name: '6 x 12', value: { cols: 6, rows: 8 } },
-        { name: '12 x 12', value: { cols: 12, rows: 8 } }
+        { name: '12 x 12', value: { cols: 12, rows: 8 } },
     ];
 
     static BASE_CONFIG = {
         selectedSystem: '',
         selectedServer: '',
         autoRefresh: true,
-        refreshInterval: 1000
+        refreshInterval: 1000,
     };
 
     static cloudApi: NxCloudApiService;
@@ -46,8 +46,8 @@ export class NxServerLoggerWidgetComponent extends FirstPartyWidget<
         switchMap(_ => NxServerLoggerWidgetComponent.cloudApi.systems()),
         shareReplay({
             bufferSize: 1,
-            refCount: true
-        })
+            refCount: true,
+        }),
     );
 
     selectedSystem$ = new BehaviorSubject<SystemDropdownItem>(null);
@@ -56,23 +56,28 @@ export class NxServerLoggerWidgetComponent extends FirstPartyWidget<
     isOnline = true;
 
     systemsDropdownItems$ = this.cloudApi.systems().pipe(
-        map(systems => systems.map(({ id: value, name, stateOfHealth }) => ({
-            name: stateOfHealth !== 'online' ? `${name} (${stateOfHealth})` : name,
-            disabled: stateOfHealth !== 'online',
-            value
-        }))),
+        map(systems =>
+            systems.map(({ id: value, name, stateOfHealth }) => ({
+                name: stateOfHealth !== 'online' ? `${name} (${stateOfHealth})` : name,
+                disabled: stateOfHealth !== 'online',
+                value,
+            })),
+        ),
         map(systems => {
             if (!systems.length) {
                 return [];
             }
-            const selectedSystem = systems.find(({ value }) => value === this.card.config.selectedSystem) || systems.find(({ disabled }) => !disabled) || systems[0];
+            const selectedSystem =
+                systems.find(({ value }) => value === this.card.config.selectedSystem) ||
+                systems.find(({ disabled }) => !disabled) ||
+                systems[0];
             this.updateSystem(selectedSystem);
             return systems;
         }),
         shareReplay({
             bufferSize: 1,
-            refCount: true
-        })
+            refCount: true,
+        }),
     );
 
     serversDropdownItems$ = this.selectedSystem$.pipe(
@@ -82,24 +87,28 @@ export class NxServerLoggerWidgetComponent extends FirstPartyWidget<
         map(system => this.systemService.createSystem(this.accountService.email, system.value)),
         switchMap(system => system.update().then(_ => system)),
         switchMap(system => system.serverManager.getServers()),
-        map(servers => servers.map(({ id: value, name, status }) => ({
-            name: status !== 'Online' ? `${name} (${status})` : name,
-            disabled: status !== 'Online',
-            value
-        })
-        )),
+        map(servers =>
+            servers.map(({ id: value, name, status }) => ({
+                name: status !== 'Online' ? `${name} (${status})` : name,
+                disabled: status !== 'Online',
+                value,
+            })),
+        ),
         map(servers => {
             if (!servers.length) {
                 return [];
             }
-            const selectedServer = servers.find(({ value }) => value === this.card.config.selectedSystem) || servers.find(({ disabled }) => !disabled) || servers[0];
+            const selectedServer =
+                servers.find(({ value }) => value === this.card.config.selectedSystem) ||
+                servers.find(({ disabled }) => !disabled) ||
+                servers[0];
             this.updateServer(selectedServer);
             return servers;
         }),
         shareReplay({
             bufferSize: 1,
-            refCount: true
-        })
+            refCount: true,
+        }),
     );
 
     system$ = defer(() => this.getSystem(this.card.config.selectedSystem));
@@ -115,12 +124,19 @@ export class NxServerLoggerWidgetComponent extends FirstPartyWidget<
         await system.update();
         // await system.serverManager.initSystemMediaServers();
         const systemName = system.info.name;
-        const activeServer = system.servers.find(({ id }) => id === this.card.config.selectedServer);
+        const activeServer = system.servers.find(
+            ({ id }) => id === this.card.config.selectedServer,
+        );
         this.isOnline = activeServer?.status === 'Online';
         const nameUpdater = this.updateName(
-            activeServer ? `${systemName} - ${activeServer.name} (${activeServer.status})${
-                this.card.config.refreshInterval && this.card.config.autoRefresh ? ' - ' + this.card.config.refreshInterval + 'ms' : ''
-            } -` : systemName);
+            activeServer
+                ? `${systemName} - ${activeServer.name} (${activeServer.status})${
+                      this.card.config.refreshInterval && this.card.config.autoRefresh
+                          ? ' - ' + this.card.config.refreshInterval + 'ms'
+                          : ''
+                  } -`
+                : systemName,
+        );
         this.card.title = nameUpdater(this.card.size);
         this.card.sizes.forEach(nameUpdater);
         return system;
@@ -144,13 +160,13 @@ export class NxServerLoggerWidgetComponent extends FirstPartyWidget<
         cd: ChangeDetectorRef,
         private cloudApi: NxCloudApiService,
         private accountService: NxAccountService,
-        private systemService: NxSystemService
+        private systemService: NxSystemService,
     ) {
         super(cd);
         NxHealthMonitorWidgetComponent.cloudApi = this.cloudApi;
-        NxHealthMonitorWidgetComponent.systemUpdater$.pipe(
-            untilDestroyed(this)
-        ).subscribe(NxHealthMonitorWidgetComponent.systems$);
+        NxHealthMonitorWidgetComponent.systemUpdater$
+            .pipe(untilDestroyed(this))
+            .subscribe(NxHealthMonitorWidgetComponent.systems$);
         NxHealthMonitorWidgetComponent.updateSystems$.next('update');
     }
 }

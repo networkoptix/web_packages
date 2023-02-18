@@ -24,7 +24,7 @@ abstract class BaseFirstPartyWidget {
  * This is the interface used from rendering the widgets and also for saving to json or cloud
  */
 export interface WidgetCard<
-    BC extends typeof BaseFirstPartyWidget.BASE_CONFIG = Record<string, unknown>
+    BC extends typeof BaseFirstPartyWidget.BASE_CONFIG = Record<string, unknown>,
 > {
     identifier: typeof BaseFirstPartyWidget.IDENTIFIER;
     title: typeof BaseFirstPartyWidget.NAME;
@@ -42,7 +42,7 @@ export interface WidgetCard<
  * Example NxHealthMonitorWidgetComponent.registerWidget()
  */
 export class FirstPartyWidget<
-    BC extends typeof BaseFirstPartyWidget.BASE_CONFIG = Record<string, unknown>
+    BC extends typeof BaseFirstPartyWidget.BASE_CONFIG = Record<string, unknown>,
 > extends BaseFirstPartyWidget {
     card: WidgetCard<BC>;
     saveSettings: (editMode?: boolean) => Promise<void>;
@@ -50,7 +50,7 @@ export class FirstPartyWidget<
     #staticProperties: typeof FirstPartyWidget;
 
     get staticProperties() {
-        this.#staticProperties ||= (this.constructor as typeof FirstPartyWidget);
+        this.#staticProperties ||= this.constructor as typeof FirstPartyWidget;
         return this.#staticProperties;
     }
 
@@ -79,7 +79,10 @@ export class FirstPartyWidget<
      * @returns WidgetCard
      */
     static getConfig(widget: typeof FirstPartyWidget) {
-        const sizes = widget.SIZES.map(({ name, value }) => ({ name: `${widget.NAME} (${name})`, value }));
+        const sizes = widget.SIZES.map(({ name, value }) => ({
+            name: `${widget.NAME} (${name})`,
+            value,
+        }));
         const selected = widget.SELECTED_SIZE || 0;
         const last = sizes.length - 1;
         const selectedIndex = Math.min(Math.max(0, selected), last);
@@ -88,7 +91,7 @@ export class FirstPartyWidget<
             title: widget.NAME,
             sizes,
             size: sizes[selectedIndex],
-            config: widget.BASE_CONFIG || {}
+            config: widget.BASE_CONFIG || {},
         } as WidgetCard;
     }
 
