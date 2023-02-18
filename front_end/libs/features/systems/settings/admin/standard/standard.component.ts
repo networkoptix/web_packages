@@ -157,7 +157,9 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         private systemsService: NxSystemsService,
     ) {
         this.CONFIG = configService.getConfig();
-        this.alexaSettingsCustomProperty = this.cloudApi.customAccountPropertyFactory(AlexaSettings.CUSTOM_PROPERTY_ENDPOINT, new AlexaSettings());
+        if (this.CONFIG.cloudCapabilities.alexaIntegrationEnabled) {
+            this.alexaSettingsCustomProperty = this.cloudApi.customAccountPropertyFactory(AlexaSettings.CUSTOM_PROPERTY_ENDPOINT, new AlexaSettings());
+        }
     }
 
     DAY_MINS = DAY_MINS; // For template access

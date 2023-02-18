@@ -39,16 +39,21 @@
 </div>
 
 <ng-template #cameras>
-    <div class="block-container mt-3">
+    <div
+        *ngIf="account"
+        class="block-container mt-3"
+    >
         <div class="row">
             <!-- Calculate height of menu, offset by height of header div and 16px on top and bottom -->
             <div
                 class="fixed-sidebar col-12 d-flex flex-column fill-screen-height"
                 [ngStyle]="{ height: 'calc(100% - (' + headerHeight + 'px + 16px))' }"
             >
-                <nx-pre-loader *ngIf="account && !menuVisible"></nx-pre-loader>
+                <ng-template #noMenu>
+                    <nx-pre-loader></nx-pre-loader>
+                </ng-template>
                 <nx-menu
-                    *ngIf="account && menuVisible && content$ | async as contentFromDb"
+                    *ngIf="menuVisible && content$ | async as contentFromDb; else noMenu"
                     [ngStyle]="{ display: _menuSearchMode ? 'contents' : 'block' }"
                     [content]="contentFromDb"
                     [system]="system"

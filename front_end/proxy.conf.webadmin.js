@@ -59,7 +59,8 @@ const PROXY_CONFIG = [
             '/static/openapi_manifest.json',
             '/static/openapi_legacy.json',
             '/static/openapi_deprecated.json',
-            '/static/openapi.json'
+            '/static/openapi.json',
+            '/static/version.txt'
         ],
         target: targets.host,
         changeOrigin: true,

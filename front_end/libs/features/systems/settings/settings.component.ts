@@ -14,7 +14,7 @@ import {
 } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { escape } from 'lodash-es';
-import { firstValueFrom, Observable, Subject, Subscription } from 'rxjs';
+import { firstValueFrom, Subject, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter, takeUntil, tap } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
@@ -49,7 +49,6 @@ import { NxSystemsService } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
 import { GridBreakpoints } from '@styles/theme-variables-common';
 import { alphabeticalSort, cleanId } from '@utils/general';
-import { memoizeAsyncPersistent } from '@utils/memoize';
 
 import { NxSettingsService } from './settings.service';
 
@@ -67,11 +66,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     LANG = staticLang;
     plugin;
     content: Content = { base: '', selectedSection: '', level1: [] };
-
-    @memoizeAsyncPersistent
-    get content$(): Observable<Content> {
-        return this.db.personal.menuContent.$.where({ base: menus.systemSettings.baseUrl + this.systemId }).first();
-    }
+    content$: Subject<Content> = new Subject<Content>();
 
     menuSearchable: boolean;
 
@@ -147,6 +142,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     private async updateContent(skipPermissions = false): Promise<string> {
+        this.content$.next({ ...this.content });
+        if (environment.isLocal) {
+            return;
+        }
         if (this.system.userManager?.permissionsUpdated) {
             return this.db.personal.menuContent.put(this.content);
         } else if (skipPermissions) {
@@ -276,6 +275,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.db.personal.menuContent.get({ base: this.content.base }).then(exists => {
             if (!exists) {
                 this.db.personal.menuContent.put(this.content);
+            } else {
+                this.content$.next(exists);
             }
         });
 
