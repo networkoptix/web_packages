@@ -31,6 +31,8 @@ def test_login_helper(arf, mocker, django_user_model, mock_session):
     mocker.patch.object(django.contrib.auth, 'login')
     timezone_now = timezone.now()
     now = time.time()
+    expires_at = now + 1000;
+    mocker.patch.object(Auth, 'validate_token', return_value={'expires_at': expires_at})
     mocker.patch.object(timezone, 'now', return_value=timezone_now)
     mocker.patch.object(time, 'time', return_value=now)
     mocker.patch.object(Account, 'get', return_value={

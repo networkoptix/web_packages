@@ -1,9 +1,10 @@
+import time
 import django
 from django.conf import settings
 from rest_framework import serializers
 
 from api.models import Account
-from cloud.controllers.cloud_api import Account as Cdb_Account
+from cloud.controllers.cloud_api import Account as Cdb_Account, Auth
 from cms.models import UserGroupsToAssetPermissions, AssetType, UserGroupsToAssetType
 
 
@@ -71,7 +72,7 @@ class CdbAccountMixin(serializers.Serializer):
 
         self.instance.sessionVerified = request.session.get("has2fa", False)
         self.instance.accessToken = request.session.get("access_token", '')
-        self.instance.sessionExpires = request.session.get_expiry_date().timestamp()
+        self.instance.sessionExpires = int(Auth.validate_token(self.instance.accessToken).get('expires_at')) if self.instance.accessToken else 0
 
 class BaseAccountModelSerializer(CdbAccountMixin, serializers.ModelSerializer):
     class Meta:
