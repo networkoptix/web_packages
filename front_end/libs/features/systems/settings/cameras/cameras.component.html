@@ -1,7 +1,9 @@
 <nx-pre-loader
     *ngIf="
-        (!system?.show404 && showPreloader && !system?.userManager?.permissions?.editCameras) ||
-        (!selectedCamera && !noCameras)
+        !system?.show404 &&
+        showPreloader &&
+        !system?.userManager?.permissions?.editCameras &&
+        !noCameras
     "
 >
 </nx-pre-loader>
