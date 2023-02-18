@@ -499,9 +499,11 @@
                             <div
                                 *ngIf="
                                     !errors[itemDetail.details.id] &&
-                                        (itemDetail.details.online ||
-                                            !itemDetail.details.status ||
-                                            itemDetail.details.status === 'online');
+                                        ((itemDetail.details.online &&
+                                            !itemDetail.details.status) ||
+                                            ['online', 'recording'].includes(
+                                                itemDetail.details.status
+                                            ));
                                     else showError
                                 "
                                 cdkDragHandle

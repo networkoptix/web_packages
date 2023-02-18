@@ -911,12 +911,13 @@ export class NxCloudApiService {
             let currentSession = !force && await this.db.personal.unstructured.get(key) as UnstructuredTable<Account>;
 
             if (!currentSession?.value || force) {
-                value = await firstValueFrom(this.account(force)) || await firstValueFrom(this.account(true));
+                value = await firstValueFrom(this.account(force));
                 currentSession = { key, value };
             }
 
-            if (!minSessionSeconds || ((Date.now() + minSessionSeconds) < currentSession.value.sessionExpires)) {
+            if (!minSessionSeconds || ((Date.now() + minSessionSeconds * 1000) > currentSession.value.sessionExpires)) {
                 value = await firstValueFrom(this.renewSessionUsingRefreshToken());
+                currentSession = { key, value };
             }
 
             await this.db.personal.unstructured.put(currentSession);
@@ -937,6 +938,7 @@ export class NxCloudApiService {
         return this.getTokensFromCloud(refreshToken, 'refresh_token', 'code').pipe(switchMap(({ code }) => this.renewToken(code)));
     }
 
+    @memoizeAsyncPersistent
     renewToken(code: string) {
         return this.http.post<{ message: string }>(`${apiBase}/account/renewSession`, { code }).pipe(
             map(() => true),
