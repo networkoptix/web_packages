@@ -1,7 +1,7 @@
 import { Inject, Injectable, Injector, LOCALE_ID } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { of, Observable, BehaviorSubject, timer, firstValueFrom, combineLatest, identity } from 'rxjs';
-import { map, shareReplay, switchMap, tap } from 'rxjs/operators';
+import { first, map, shareReplay, switchMap } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
@@ -45,26 +45,6 @@ export class NxSystemsService {
     systemsSubject = this.currentUser$.pipe(
         switchMap(() => environment.isLocal ? Promise.resolve([]) : this._getSystems()),
         map(systems => this.processSystems(systems)),
-        environment.isLocal ? identity : tap(systems => {
-            const systemService = this.injector.get(NxSystemService);
-            for (const { stateOfHealth, id } of systems) {
-                if (stateOfHealth === 'online') {
-                    const system = systemService.createSystem(this.currentUser, id);
-                    try {
-                        (async () => {
-                            await system.update();
-                            // await system.serverManager.initSystemMediaServers();
-
-                            // Prefetch initial data
-                            firstValueFrom(system.updateOrGetSystemSettings());
-                            firstValueFrom(system.getAggregateLicenseInfo());
-                        })();
-                    } catch (error) {
-                        console.error(error);
-                    }
-                }
-            }
-        }),
         environment.isLocal ? identity : switchMap(systems => {
             this.db.personal.systems.bulkPut(systems);
             return this.db.personal.systems.$.toArray();
@@ -111,6 +91,34 @@ export class NxSystemsService {
         this.CONFIG = configService.getConfig();
         this.db.personal.systems.$.toArray().subscribe(systems => {
             this.#systems = systems;
+        });
+
+        this.populateSystems();
+    }
+
+    @memoizeAsyncPersistent
+    private populateSystems(): void {
+        if (environment.isLocal) {
+            return;
+        }
+        this.systemsSubject.pipe(first(systems => systems.length > 0)).subscribe(systems => {
+            const systemService = this.injector.get(NxSystemService);
+            for (const { stateOfHealth, id } of systems) {
+                if (stateOfHealth === 'online') {
+                    const system = systemService.createSystem(this.currentUser, id);
+                    try {
+                        (async () => {
+                            await system.update();
+
+                            // Prefetch initial data
+                            await firstValueFrom(system.updateOrGetSystemSettings());
+                            await firstValueFrom(system.getAggregateLicenseInfo());
+                        })();
+                    } catch (error) {
+                        console.error(error);
+                    }
+                }
+            }
         });
     }
 
