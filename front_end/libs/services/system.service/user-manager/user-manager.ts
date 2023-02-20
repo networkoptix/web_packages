@@ -357,7 +357,7 @@ export class UserManager {
             };
         }
 
-        if (userData?.permissions.includes('NoPermission')) {
+        if (userData?.permissions?.includes('NoPermission')) {
             userData.permissions = '';
         }
 

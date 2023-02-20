@@ -14,8 +14,8 @@ import {
 } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { escape } from 'lodash-es';
-import { firstValueFrom, Subject, Subscription } from 'rxjs';
-import { distinctUntilChanged, filter, takeUntil, tap } from 'rxjs/operators';
+import { firstValueFrom, Observable, Subject, Subscription } from 'rxjs';
+import { distinctUntilChanged, debounceTime, filter, takeUntil, tap } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import type { ContentToggle, Content, Level3Item } from '@app/menu/menu.types';
@@ -65,8 +65,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG = staticLang;
     plugin;
+    private menuData$: Subject<Content> = new Subject<Content>();
     content: Content = { base: '', selectedSection: '', level1: [] };
-    content$: Subject<Content> = new Subject<Content>();
+    content$: Observable<Content> = this.menuData$.pipe(debounceTime(0)); // It's like wrapping the next in a setTimeout
 
     menuSearchable: boolean;
 
@@ -142,7 +143,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     private async updateContent(skipPermissions = false): Promise<string> {
-        this.content$.next({ ...this.content });
+        this.menuData$.next({ ...this.content });
         if (environment.isLocal) {
             return;
         }
@@ -276,7 +277,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             if (!exists) {
                 this.db.personal.menuContent.put(this.content);
             } else {
-                this.content$.next(exists);
+                this.menuData$.next(exists);
             }
         });
 

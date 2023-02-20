@@ -1,5 +1,7 @@
 import { last } from 'lodash-es';
 
+import { environment } from '@environments/environment';
+
 import { CurrentUser, ec2User } from '../system-api.types';
 
 export interface Account {
@@ -33,8 +35,8 @@ export function newLocalAccount(user: ec2User | CurrentUser): Account {
         name,
         first_name: first,
         last_name: last((rest || [''])),
-        permissions: permissions.split('|'),
-        is_superuser: isAdmin || permissions.includes('GlobalAdminPermission'),
+        permissions: permissions?.split('|') || [],
+        is_superuser: !environment.isLocal && (isAdmin || permissions?.includes('GlobalAdminPermission')),
         isCloud,
     } as Account;
     // TODO: This should eventually be its own LocalAccount type

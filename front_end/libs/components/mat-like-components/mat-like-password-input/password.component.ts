@@ -64,6 +64,7 @@ export class NxMatLikePasswordComponent
     @Input() setFocus: boolean = false;
     @Input() confirmation: boolean = false;
     @Input() validation: boolean = false;
+    readonly relaxedRequirements: boolean = true;
 
     CONFIG: IConfig;
     LANG = staticLang;
@@ -81,9 +82,9 @@ export class NxMatLikePasswordComponent
     _required: boolean;
     _minlength: boolean;
     _hasDigit: boolean;
-    _hasSymbol: boolean;
+    _hasSymbol: boolean = this.relaxedRequirements;
     _hasLowerCase: boolean;
-    _hasUpperCase: boolean;
+    _hasUpperCase: boolean = this.relaxedRequirements;
     _hasConfirmed: boolean;
 
     @ViewChild('addons') addons: ElementRef<HTMLDivElement>;
@@ -104,9 +105,11 @@ export class NxMatLikePasswordComponent
             ? c.value?.length < credentialsValidation.passwordRequirements.minLength
             : true;
         this._hasDigit = c.value ? new RegExp('[0-9]+').test(c.value) : false;
-        this._hasSymbol = c.value ? new RegExp('[!@#$%^&*()_+-]+').test(c.value) : false;
         this._hasLowerCase = c.value ? new RegExp('[a-z]+').test(c.value) : false;
-        this._hasUpperCase = c.value ? new RegExp('[A-Z]+').test(c.value) : false;
+        if (!this.relaxedRequirements) {
+            this._hasSymbol = c.value ? new RegExp('[!@#$%^&*()_+-]+').test(c.value) : false;
+            this._hasUpperCase = c.value ? new RegExp('[A-Z]+').test(c.value) : false;
+        }
         this._hasConfirmed = this.confirmation
             ? c.value
                 ? c.value === this.confirm
