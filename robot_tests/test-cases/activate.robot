@@ -31,12 +31,12 @@ Force Tags        Threaded    activate
 4. Allows register, activate, login with with leading space in email
     [Tags]    C41864
     ${email}=   Get Random Email Robot    ${BASE EMAIL}    
-    Register And Activate Account    mark    hamill    ${SPACE}${email}    ${password}
+    Register And Activate Account    mark    hamill    ${SPACE}${email}    ${password}    reg=ui
 
 5. Allows register, activate, login with with trailing space in email
     [Tags]    C41864
     ${email}=   Get Random Email Robot    ${BASE EMAIL}
-    Register And Activate Account    mark    hamill    ${email}${SPACE}    ${password}
+    Register And Activate Account    mark    hamill    ${email}${SPACE}    ${password}    reg=ui
 
 6. Allows register, activate, login with pass!@#$%^&*()_-+=;:'\"`~,./\|?[]{} password
     [Tags]    C41861
@@ -126,10 +126,10 @@ Force Tags        Threaded    activate
     ${code}=   Get Email Link   ${email}    activate
     Should not be equal as strings    ${code}    Does not exist
     Wait Until Element is Visible    ${LOG IN NAV BAR}
-    Click Link    ${LOG IN NAV BAR}
+    Click Element    ${LOG IN NAV BAR}
     Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}    
     Input Text    ${EMAIL INPUT}    ${email}
-    Click Button    ${LOG IN NEXT BUTTON}
+    Click Element    ${LOG IN NEXT BUTTON}
     Wait Until Element Is Visible    ${RESEND ACTIVATION LINK BUTTON}
     Click Element    ${RESEND ACTIVATION LINK BUTTON}
     ${code}=   Get Email Link    ${email}    activate

@@ -384,7 +384,9 @@ Get Email Link
         Close Mailbox
         Return From Keyword    ${links}
     ELSE
-        ${code}=    Get Code From API    ${recipient}    ${link type}
+        ${activate} =   Run Keyword And Return Status    Should Be Equal As Strings     activate    ${link type}
+        ${type} =      Set Variable If     ${activate}     ${link type}_account    ${link type}
+        ${code}=    Get Code From API    ${recipient}    ${type}
         ${link}=    set variable    ${ENV}/authorize/${link type}/${code}
         Return From Keyword    ${link}
     END
