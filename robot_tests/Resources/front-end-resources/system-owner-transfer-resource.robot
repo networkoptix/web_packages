@@ -7,6 +7,8 @@ Resource    system-owner-transfer-resource.robot
 *** Keywords ***
 Owner Transfer Suite Setup
     Open Browser and go to URL    ${url}
+    ${random} =	   Generate Random String      length=5
+    Set Suite Variable     ${random}    ${random}
     ${servers} =    Create Systems
     Set Suite Variable    ${servers}    ${servers}
     Set Suite Variable    ${server 1}    ${servers}[0]

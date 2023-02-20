@@ -1017,7 +1017,7 @@ export class NxSystemAPI {
         60 * 1000
     )
     getMediaServers(useCache: boolean): Observable<t.ec2MediaServer[]> {
-        const endpoint = '/ec2/getMediaServers';
+        const endpoint = '/ec2/getMediaServersEx';
         return this.get<t.ec2MediaServer[]>(
             endpoint,
             {},

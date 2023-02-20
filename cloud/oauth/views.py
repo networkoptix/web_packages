@@ -335,7 +335,7 @@ def token(request):
     code = get_param(request, "code")
     refresh_token = get_param(request, "refresh_token")
 
-    if refresh_from_session := (refresh_token == 'session' and request.session['refresh_token']):
+    if refresh_from_session := (refresh_token == 'session' and request.session.get('refresh_token')):
         refresh_token = refresh_from_session
 
     if not code and not refresh_token:

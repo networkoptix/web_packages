@@ -39,6 +39,12 @@ export class NxSessionService {
         this.language$ = new BehaviorSubject(this.session.retrieve('language'));
 
         let hasSkippedFirstNull = !!this.session.retrieve('loginState');
+
+        if (!hasSkippedFirstNull) {
+            // Session doesn't get cleared until closed. Clear it now to prevent leaking access tokens.
+            sessionStorage.clear();
+        }
+
         // Listens to changes from other browser tabs.
         this.session.observe('loginState').pipe(
             filter(val => {
@@ -84,6 +90,8 @@ export class NxSessionService {
     invalidateSession(): void {
         this.loginState = null;
         this.session.store('loginRegister', false);
+        // Session doesn't get cleared until closed. Clear it now to prevent leaking access tokens.
+        sessionStorage.clear();
         this.cloudUserCaches.forEach(cacheName => {
             this.nxCache.clearByName(cacheName).catch(error => console.error(error));
         });

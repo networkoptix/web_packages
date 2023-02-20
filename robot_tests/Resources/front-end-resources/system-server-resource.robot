@@ -77,6 +77,8 @@ Verify Add Storage Dialog
 
 Server Advanced Settings Suite Setup
     Open Browser and go to URL    ${url}
+    ${random} =	   Generate Random String      length=5
+    Set Suite Variable     ${random}    ${random}
     ${servers} =    Create Systems
     Set Suite Variable    ${servers}    ${servers}
     Set Suite Variable    ${server}     ${servers}[0]
@@ -119,6 +121,8 @@ Server Advanced Settings Suite Teardown
 
 Server Settings Suite Setup
     Open Browser and go to URL    ${url}
+    ${random} =	   Generate Random String      length=5
+    Set Suite Variable     ${random}    ${random}
     ${servers}=    Create Systems
     Set Suite Variable    ${servers}    ${servers}
     Change server name via API    ${server auth}    server 1    ${servers}[0][id]    https://${QA BURBANK IP}:${servers}[0][port][0]

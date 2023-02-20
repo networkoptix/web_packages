@@ -8,6 +8,8 @@ Reset DB and Open New Browser On Failure
 
 Users Suite Setup
     Open Browser and go to URL    ${url}
+    ${random} =	   Generate Random String      length=5
+    Set Suite Variable     ${random}    ${random}
     ${servers}=   Create Systems
     #${token}=    Get Server Token    auth    serverUrl
     ${auth}=   set variable    ${servers}[0][cloudOwner]    ${password}

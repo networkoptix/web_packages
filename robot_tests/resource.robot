@@ -1027,11 +1027,6 @@ Remove Custom Network
     Execute Command Remotely    docker network rm ${net id}    ${host}
     [Return]    ${net id}
 
-Delete Docker Server
-    [Arguments]    ${name}
-    Execute Command Remotely    docker rm -f ${name}
-    [Return]    ${False}
-
 Start Docker Server
     [Arguments]    ${name}
     Execute Command Remotely    docker start ${name}

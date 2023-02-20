@@ -342,6 +342,7 @@ Force Tags        merge
     Go To    ${ENV}/systems/
     sleep    5
     Wait Until Location Is    ${ENV}/systems/${system 1}[cloud id]    120
+    [Teardown]    Custom Test Teardown    ${rs}
 
 9. Positive scenario with selected cloud system (selected system is primary)
     [Tags]    C70931    pos    must

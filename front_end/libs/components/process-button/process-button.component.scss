@@ -150,6 +150,30 @@ nx-process-button {
         @include mixins.details-buttons;
         cursor: pointer;
 
+        svg-icon {
+            svg {
+                height: 20px;
+
+                path {
+                    fill: var(--btn-text-color) !important;
+                    stroke: none !important;
+                }
+            }
+        }
+
+        &:hover {
+            svg-icon {
+                svg {
+                    height: 20px;
+
+                    path {
+                        fill: var(--btn-text-hover-color) !important;
+                        stroke: none !important;
+                    }
+                }
+            }
+        }
+
         // Override to block hover styling in details-buttons while processing
         &--processing:hover {
             cursor: default;
