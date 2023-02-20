@@ -7,6 +7,8 @@ Resource          storage-resource.robot
 # Setups and teardowns
 System Admin Suite Setup
     Open browser and go to URL    ${ENV}
+    ${random} =	   Generate Random String      length=5
+    Set Suite Variable     ${random}    ${random}
     ${servers} =    Create Systems
     Set Suite Variable    ${servers}    ${servers}
     Set Suite Variable    ${system}   ${servers}[0]

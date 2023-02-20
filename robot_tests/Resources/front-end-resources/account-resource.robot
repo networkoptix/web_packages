@@ -46,6 +46,8 @@ Account Server Suite Setup
     Open Browser and go to URL    ${url}
     ${no perm}=   Register and activate account with random email    mark    hamill    ${password}
     Set Suite Variable    ${no perm}    ${no perm}
+    ${random} =	   Generate Random String      length=5
+    Set Suite Variable     ${random}    ${random}
     ${servers} =    Create Systems
     Set Suite Variable    ${servers}    ${servers}
     FOR    ${i}    IN RANGE    1    6

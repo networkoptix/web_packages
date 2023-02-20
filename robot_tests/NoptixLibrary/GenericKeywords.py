@@ -813,14 +813,11 @@ class GenericKeywords(object):
             )
         with open(jsonPath,  encoding="utf-8") as suite_json:
             serversJson = json.load(suite_json)
-            if BuiltIn().get_variable_value('${random}'):
-                runName = BuiltIn().get_variable_value('${random}')
-            else:
-                runName = choices(string.ascii_lowercase + string.digits, k=8)
+            runName = BuiltIn().get_variable_value('${random}')
             storageString = BuiltIn().get_variable_value('${storage string}')
             # Start Docker server for each server in the JSON
             for idx, server in enumerate(serversJson):
-                server["name"] = f"{BuiltIn().get_variable_value('${SUITE NAME}').lower().replace('test-cases.', '')}{idx}_"
+                server["name"] = f"{BuiltIn().get_variable_value('${SUITE NAME}').lower().replace('test-cases.', '')}_{idx}_"
                 if storageString:
                     server["storage"] = storageString[idx]
                 server.update(self.create_docker_server(server, runName))
@@ -947,9 +944,10 @@ class GenericKeywords(object):
             f"{base_command} {name_command} {mac_command} {port_command} "
             f"{storage_command} {cloud_host_command} {self.image}")
 
-
-    def delete_docker_server(self, server):
-        command = f"docker rm -f {server['name']}"
+    @keyword
+    def delete_docker_server(self, name):
+        command = f'''docker container ls --filter='name={name}' --format='{{{{.Names}}}}' | xargs docker container rm -f'''
+        logger.trace(command)
         with self._ssh_client() as ssh_client:
             _, _, ssh_stderr = ssh_client.exec_command(command)
         error = ssh_stderr.read()
@@ -964,7 +962,8 @@ class GenericKeywords(object):
             # Delete each user's account if they were added
             for user in server["cloudUsers"]:
                 self.cloud_api.delete_account(server["cloudUsers"][user], self.password)
-            self.delete_docker_server(server)
         # Delete the owner account
         self.cloud_api.delete_account(server["cloudOwner"], self.password)
+        # Stop and remove docker container
+        self.delete_docker_server(BuiltIn().get_variable_value('${random}'))
 

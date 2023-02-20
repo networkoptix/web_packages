@@ -31,6 +31,8 @@ Health Monitor Suite Setup
 #    ${random}=   Generate Random String      length=5
 #    ${server 1}=   Create Base System    HM1-${random}    owner=${owner}
 #    ${server 2}=   Create Base System    HM2-${random}    owner=${owner}
+    ${random} =	   Generate Random String      length=5
+    Set Suite Variable     ${random}    ${random}
     ${servers} =     Create Systems
     Set Suite Variable    ${servers}     ${servers}
     Set Suite Variable    ${server 1}    ${servers}[0]

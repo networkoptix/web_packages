@@ -27,6 +27,13 @@ Merge Suite Teardown
     Remove Custom Network    ${custom net id 1}
     Remove Custom Network    ${custom net id 2}
 
+Custom Test Teardown
+    [Arguments]    ${random string}
+    ${status}=   Run Keyword and Return Status    Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}    2
+    Run Keyword If    ${status}    Log Out via API    validate=False
+
+    Delete Docker Server    ${random string}
+
 Remove Test Systems
     FOR    ${s}    IN    @{test systems}
         Delete Base System    ${s}

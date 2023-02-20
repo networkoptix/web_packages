@@ -4,6 +4,8 @@ Resource          ../../resource.robot
 *** Keywords ***
 Systems Page Suite Setup
     Open browser and go to URL    ${ENV}
+    ${random} =	   Generate Random String      length=5
+    Set Suite Variable     ${random}    ${random}
     ${servers} =    Create Systems
     Set Suite Variable    ${servers}    ${servers}
     Set Account Name    ${servers}[0][cloudAuth][0]    ${servers}[0][cloudAuth][1]    Main    Owner

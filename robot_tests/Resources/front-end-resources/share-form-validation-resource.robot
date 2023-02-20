@@ -4,6 +4,8 @@ Resource          ../../resource.robot
 *** Keywords ***
 Share Form Setup
     Open Browser and go to URL    ${url}
+    ${random} =	   Generate Random String      length=5
+    Set Suite Variable     ${random}    ${random}
     ${servers} =    Create Systems
     Set Suite Variable    ${servers}    ${servers}
     Set Suite Variable    ${server}    ${servers}[0]
