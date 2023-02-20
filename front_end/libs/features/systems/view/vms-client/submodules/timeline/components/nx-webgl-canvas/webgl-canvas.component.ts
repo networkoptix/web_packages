@@ -3,11 +3,19 @@ import { AfterViewInit, Component, Inject, Input, ViewEncapsulation } from '@ang
 // import * as fcWebgl from '@d3fc/d3fc-webgl';
 import * as d3 from 'd3';
 import * as fc from 'd3fc';
+import { largestTriangleThreeBucket } from 'd3fc';
 
 interface DATA {
     width: number;
     x: number;
     y: number;
+}
+
+enum TICK_BREAKPOITS {
+    lowMAJOR = 12,
+    lowMINOR = 17,
+    denseMAJOR = 20,
+    denseMINOR = 25,
 }
 
 @Component({
@@ -27,6 +35,9 @@ export class NxWebglCanvasComponent implements AfterViewInit {
 
     xAxisMajor: typeof fc.axisBottom;
     xAxisMinor: typeof fc.axisTop;
+
+    tickBreakpointMajor: number = TICK_BREAKPOITS.lowMAJOR;
+    tickBreakpointMinor: number = TICK_BREAKPOITS.lowMINOR;
 
     periodModifier: d3.CountableTimeInterval;
     formatTime: (Date) => string;
@@ -60,7 +71,8 @@ export class NxWebglCanvasComponent implements AfterViewInit {
                 return Math.max(1, xScale(d.x + d.width) - xScale(d.x));
             })
             .decorate(context => {
-                fc.webglFillColor([1, 0, 0, 1])(context);
+                // [r / 255, g / 255, b / 255, opacity] .. setting green_l2 here
+                fc.webglFillColor([76 / 255, 188 / 255, 40 / 255, 1])(context);
             }) as never);
     }
 
@@ -70,7 +82,7 @@ export class NxWebglCanvasComponent implements AfterViewInit {
             return;
         }
 
-        const startYear = new Date('2020-06-01');
+        const startYear = new Date('2015-06-01');
         const start = startYear.getTime(); // parseInt(this.initialData[0].startTimeMs);
         const end = new Date().getTime();
         const timeFrameInS = Math.ceil((end - start) / 1000);
@@ -82,6 +94,20 @@ export class NxWebglCanvasComponent implements AfterViewInit {
 
             return { x: chunkStart, y: 30, width: chunkEnd };
         });
+
+        // Create the sampler
+        const sampler = largestTriangleThreeBucket();
+
+        // Configure the x / y value accessors
+        sampler
+            .x(d => d.x)
+            .y(d => d.y);
+
+        // Configure the size of the buckets used to downsample the data.
+        sampler.bucketSize(200);
+
+        // Run the sampler
+        const sampledData = sampler(data);
 
         this.periodModifier = d3.utcYear;
 
@@ -99,7 +125,7 @@ export class NxWebglCanvasComponent implements AfterViewInit {
         this.xAxisMajor = fc.axisBottom(xScale)
             .tickSize(24)
             .tickCenterLabel(true)
-            .tickPadding(8);
+            .tickPadding(6);
         // .tickFormat(axisTimeFormat);
 
         const nxXAxisMajor = d3.select('#nx-x-axis-major')
@@ -133,8 +159,13 @@ export class NxWebglCanvasComponent implements AfterViewInit {
                                     : formatYear)(date);
         };
 
-        this.xAxisMinor = fc.axisTop(xScale)
-            .tickFormat(multiFormat);
+        const xAxisMinorTicks = (d: Date): string => {
+            return multiFormat(d);
+        };
+
+        this.xAxisMinor = fc.axisBottom(xScale)
+            .ticks(15)
+            .tickFormat(d => xAxisMinorTicks(d));
 
         const nxXAxisMinor = d3.select('#nx-x-axis-minor')
             .append('d3fc-svg')
@@ -142,10 +173,33 @@ export class NxWebglCanvasComponent implements AfterViewInit {
             .select('svg')
             .append('g')
             .attr('class', 'x axis')
-            .attr('transform', 'translate(0, 24)')
+            .attr('transform', 'translate(0, 0)')
             .call(this.xAxisMinor);
 
-        const xAxisCustomTicks = (): void => {
+        const xAxisCustomTicksFontSize = (): void => {
+            const axis = nxXAxisMinor.selectAll('text');
+            // xScale.ticks().count is not reliable
+            // @ts-expect-error blah
+            const tickCount = axis.nodes().filter(t => t.innerHTML !== '').length;
+
+            axis
+                .style(
+                    'font-size',
+                    tickCount <= this.tickBreakpointMajor
+                        ? 12
+                        : tickCount <= this.tickBreakpointMinor
+                            ? 10 : 8
+                )
+                .style(
+                    'fill',
+                    tickCount <= this.tickBreakpointMajor
+                        ? 'green'
+                        : tickCount <= this.tickBreakpointMinor
+                            ? 'red' : 'blue'
+                );
+        };
+
+        const xAxisMajorTicks = (): void => {
             const periodYears = d3.utcYears(xScale.domain()[0], xScale.domain()[1]).length;
             const periodMonths = d3.utcMonths(xScale.domain()[0], xScale.domain()[1]).length;
             const periodDays = d3.utcDays(xScale.domain()[0], xScale.domain()[1]).length;
@@ -154,7 +208,7 @@ export class NxWebglCanvasComponent implements AfterViewInit {
                 this.periodModifier = d3.utcYear;
                 this.formatTime = d3.utcFormat('%Y');
             } else {
-                if (periodMonths < 4 && periodMonths > 0) {
+                if (periodMonths < 5 && periodMonths > 0) {
                     this.periodModifier = d3.utcMonth;
                     this.formatTime = d3.utcFormat('%B %Y');
                 } else if (periodMonths === 0) {
@@ -189,6 +243,8 @@ export class NxWebglCanvasComponent implements AfterViewInit {
                 }
             }
             this.xAxisMajor.tickFormat(this.formatTime);
+
+            xAxisCustomTicksFontSize();
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             addMissingLabel();
         };
@@ -218,7 +274,7 @@ export class NxWebglCanvasComponent implements AfterViewInit {
                 nxXAxisMajor
                     .select('.missing-year')
                     .append('text')
-                    .attr('transform', 'translate(' + this.periodWidth + ', 8)')
+                    .attr('transform', 'translate(' + this.periodWidth + ',6)')
                     .attr('fill', '#000')
                     .attr('visibility', 'false')
                     .attr('dy', '0.71em')
@@ -250,6 +306,17 @@ export class NxWebglCanvasComponent implements AfterViewInit {
                 redraw();
             });
 
+        let currentPointer: Date;
+
+        const pointer = fc.pointer()
+            .on('point', ([coord]) => {
+                if (!coord) {
+                    return;
+                }
+
+                currentPointer = xScale.invert(coord.x);
+            });
+
         const chart = fc.chartCartesian({
             xScale,
             yScale,
@@ -262,7 +329,8 @@ export class NxWebglCanvasComponent implements AfterViewInit {
                     .enter()
                     .select('d3fc-canvas.webgl-plot-area')
                     .on('measure', event => {
-                        xAxisCustomTicks();
+                        xAxisMajorTicks();
+
                         if (this.width === event.detail.width) {
                             return;
                         }
@@ -270,12 +338,31 @@ export class NxWebglCanvasComponent implements AfterViewInit {
                         this.height = event.detail.height;
                         xScaleOriginal.range([0, this.width]);
                     })
-                    .call(zoom));
+                    .on('click', (event, data) => {
+                        // console.log('1 =>', event);
+                        console.log('clicked =>', currentPointer.getTime());
+                        const found = data.find(chunk => {
+                            const currentTime = currentPointer.getTime();
+                            if (chunk.x < currentTime && chunk.x + chunk.width > currentTime) {
+                                console.log('In chunk => ');
+                                return true;
+                            } else if (chunk.x > currentTime) {
+                                console.log('Next chunk => ');
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        });
+
+                        console.log('found =>', found);
+                    })
+                    .call(zoom)
+                    .call(pointer));
 
         const redraw = (): void => {
             // console.time();
             d3.select('#chart')
-                .datum(data)
+                .datum(sampledData)
                 .call(chart);
             // console.timeEnd();
         };
