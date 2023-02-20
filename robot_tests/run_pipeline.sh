@@ -72,11 +72,13 @@ fi
 
 LETSENCRYPT_STAGE_CERT_REQUIRED=1 \
   PATH="$GOOGLE_CHROME_DIR:$VENV_BIN_DIR:$PATH" \
-  pabot --pabotlib --processes 4 -e integrations -L trace:info \
+  pabot --pabotlib --ordering order.txt --processes 4 -L trace:info \
   -v ENV:"https://$CLOUD_HOST" \
   -v "FROM EMAIL DEFAULT":True \
   --listener NoptixLibrary/FeatureFlagListener.py \
-  -i 'ci' 'test-cases'
+  -i 'ci' \
+  -v cust:ci \
+  'test-cases' \
 TESTS_RESULT_CODE=$?
 
 # BUILD_URL is an environment variable provided by Jenkins.
