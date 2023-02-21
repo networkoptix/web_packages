@@ -1,25 +1,18 @@
-import {
-    Directive,
-    ElementRef,
-    HostListener,
-    Input
-} from '@angular/core';
+import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 
 @Directive({ selector: '[nxArrowNav]' })
 export class NxArrowNavDirective {
     @Input() nxArrowNav: boolean;
 
-    constructor(
-        private _elementRef: ElementRef<HTMLElement>
-    ) {}
+    constructor(private _elementRef: ElementRef<HTMLElement>) {}
 
     private static increase(idx: number, limit: number): number {
-        idx = (idx < limit) ? ++idx : limit;
+        idx = idx < limit ? ++idx : limit;
         return idx;
     }
 
     private static decrease(idx: number): number {
-        idx = (idx > 0) ? --idx : 0;
+        idx = idx > 0 ? --idx : 0;
         return idx;
     }
 
@@ -32,8 +25,9 @@ export class NxArrowNavDirective {
 
         // proceed only if open
         if (this._elementRef.nativeElement.parentElement.className.includes('show')) {
-            const elements = this._elementRef.nativeElement
-                .querySelectorAll<HTMLLIElement>('.dropdown-item-container');
+            const elements = this._elementRef.nativeElement.querySelectorAll<HTMLLIElement>(
+                '.dropdown-item-container',
+            );
             let fdElm = this._elementRef.nativeElement.querySelector(':focus');
             let idx: number;
 
@@ -50,7 +44,8 @@ export class NxArrowNavDirective {
             }
 
             // ArrowUp
-            if (e.keyCode === 38 && idx !== -1) { // prevent arrow nav before it was initialized
+            if (e.keyCode === 38 && idx !== -1) {
+                // prevent arrow nav before it was initialized
                 idx = NxArrowNavDirective.decrease(idx);
             }
 

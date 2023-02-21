@@ -12,7 +12,7 @@ import {
 import { NgChanges } from '@utils/ng-changes';
 
 @Directive({
-    selector: '[NxEditable]'
+    selector: '[NxEditable]',
 })
 export class NxEditableDirective implements OnInit {
     /*  DEPRECATED -> use NxTextEditableComponent
@@ -47,7 +47,7 @@ export class NxEditableDirective implements OnInit {
     @HostBinding('attr.innerText') innerText;
 
     private _elementClass: string[] = [];
-    private contentValue : string;
+    private contentValue: string;
 
     @Input()
     @HostBinding('class')
@@ -78,9 +78,7 @@ export class NxEditableDirective implements OnInit {
     @Output()
     contentChange = new EventEmitter<string>();
 
-    constructor(
-        private elementRef: ElementRef
-    ) {}
+    constructor(private elementRef: ElementRef) {}
 
     ngOnInit(): void {
         this.editOff();
@@ -115,7 +113,9 @@ export class NxEditableDirective implements OnInit {
     }
 
     removeClass(...classToRemove: string[]): void {
-        this.elementClass = this._elementClass.filter(currentClass => !classToRemove.find(toRemove => toRemove === currentClass)).join(' ');
+        this.elementClass = this._elementClass
+            .filter(currentClass => !classToRemove.find(toRemove => toRemove === currentClass))
+            .join(' ');
     }
 
     // Updated event handlers: Add event handling used by directive here then call event handler from DOM element

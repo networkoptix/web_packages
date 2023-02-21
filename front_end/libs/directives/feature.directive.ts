@@ -1,15 +1,10 @@
-import {
-    Directive,
-    Input,
-    TemplateRef,
-    ViewContainerRef
-} from '@angular/core';
+import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
 
 import { FeatureFlagType } from '@services/nx-config/base-config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 @Directive({
-    selector: '[featureFlag]'
+    selector: '[featureFlag]',
 })
 export class FeatureFlagDirective {
     @Input() featureFlag: boolean | FeatureFlagType | (boolean | FeatureFlagType)[];
@@ -17,7 +12,7 @@ export class FeatureFlagDirective {
     constructor(
         private vcr: ViewContainerRef,
         private tpl: TemplateRef<unknown>,
-        private configService: NxConfigService
+        private configService: NxConfigService,
     ) {}
 
     ngOnInit(): void {

@@ -1,14 +1,9 @@
-import {
-    Directive,
-    Input,
-    ElementRef,
-    OnChanges,
-} from '@angular/core';
+import { Directive, Input, ElementRef, OnChanges } from '@angular/core';
 
 import { NgChanges } from '@utils/ng-changes';
 
 @Directive({
-    selector: '[nx-add-svg-src]'
+    selector: '[nx-add-svg-src]',
 })
 export class NxAddSvgSrc implements OnChanges {
     @Input() src: string;

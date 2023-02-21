@@ -1,22 +1,21 @@
 import {
     ConnectedPosition,
     FlexibleConnectedPositionStrategy,
-    Overlay, OverlayPositionBuilder,
-    OverlayRef
+    Overlay,
+    OverlayPositionBuilder,
+    OverlayRef,
 } from '@angular/cdk/overlay';
-import {
-    ComponentPortal,
-    TemplatePortal
-} from '@angular/cdk/portal';
+import { ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
 import {
     Directive,
     ElementRef,
     HostListener,
     Input,
-    OnChanges, OnDestroy,
+    OnChanges,
+    OnDestroy,
     OnInit,
     TemplateRef,
-    ViewContainerRef
+    ViewContainerRef,
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subject, timer } from 'rxjs';
@@ -48,41 +47,43 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        const positions: ConnectedPosition[] = this.horizontal ? [
-            {
-                originX: 'end',
-                originY: 'center',
-                overlayX: 'start',
-                overlayY: 'center',
-                offsetX: 6,
-                panelClass: ['center', 'right'],
-            },
-            {
-                originX: 'start',
-                originY: 'center',
-                overlayX: 'end',
-                overlayY: 'center',
-                offsetX: -6,
-                panelClass: ['center', 'left'],
-            }
-        ] : [
-            {
-                originX: 'center',
-                originY: 'top',
-                overlayX: 'center',
-                overlayY: 'bottom',
-                offsetY: -6,
-                panelClass: ['top', 'center'],
-            },
-            {
-                originX: 'center',
-                originY: 'bottom',
-                overlayX: 'center',
-                overlayY: 'top',
-                offsetY: 6,
-                panelClass: ['bottom', 'center'],
-            }
-        ];
+        const positions: ConnectedPosition[] = this.horizontal
+            ? [
+                  {
+                      originX: 'end',
+                      originY: 'center',
+                      overlayX: 'start',
+                      overlayY: 'center',
+                      offsetX: 6,
+                      panelClass: ['center', 'right'],
+                  },
+                  {
+                      originX: 'start',
+                      originY: 'center',
+                      overlayX: 'end',
+                      overlayY: 'center',
+                      offsetX: -6,
+                      panelClass: ['center', 'left'],
+                  },
+              ]
+            : [
+                  {
+                      originX: 'center',
+                      originY: 'top',
+                      overlayX: 'center',
+                      overlayY: 'bottom',
+                      offsetY: -6,
+                      panelClass: ['top', 'center'],
+                  },
+                  {
+                      originX: 'center',
+                      originY: 'bottom',
+                      overlayX: 'center',
+                      overlayY: 'top',
+                      offsetY: 6,
+                      panelClass: ['bottom', 'center'],
+                  },
+              ];
 
         this.positionStrategy = this.overlayPositionBuilder
             .flexibleConnectedTo(this.alternativeTargetRef || this.elementRef)
@@ -116,26 +117,23 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
 
     @HostListener('mouseenter')
     show(): void {
-        timer(300).pipe(
-            takeUntil(this.destroy$),
-        ).subscribe(() => {
-            if (!this.content) {
-                return;
-            }
+        timer(300)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(() => {
+                if (!this.content) {
+                    return;
+                }
 
-            const tooltipPortal = new ComponentPortal(NxTooltipComponent);
-            const tooltipRef = this.overlayRef.attach(tooltipPortal).instance;
-            if (this.content instanceof TemplateRef) {
-                tooltipRef.attachTemplate(
-                    new TemplatePortal(
-                        this.content,
-                        this._viewContainerRef
-                    ),
-                    !!this.alternateStyle
-                );
-            } else {
-                tooltipRef.attachText(this.content, !!this.alternateStyle);
-            }
-        });
+                const tooltipPortal = new ComponentPortal(NxTooltipComponent);
+                const tooltipRef = this.overlayRef.attach(tooltipPortal).instance;
+                if (this.content instanceof TemplateRef) {
+                    tooltipRef.attachTemplate(
+                        new TemplatePortal(this.content, this._viewContainerRef),
+                        !!this.alternateStyle,
+                    );
+                } else {
+                    tooltipRef.attachText(this.content, !!this.alternateStyle);
+                }
+            });
     }
 }

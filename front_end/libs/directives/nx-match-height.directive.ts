@@ -1,11 +1,4 @@
-import {
-    AfterViewInit,
-    Directive,
-    ElementRef,
-    Input,
-    OnDestroy,
-    Inject
-} from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, Input, OnDestroy, Inject } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { fromEvent } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -17,7 +10,7 @@ import { WINDOW } from '@services/window-provider';
 // ATM, this directive doesnt work if new cards are added after the initial load, can possibly be added.
 @UntilDestroy()
 @Directive({
-    selector: '[nxMatchHeight]'
+    selector: '[nxMatchHeight]',
 })
 export class NxMatchHeightDirective implements AfterViewInit, OnDestroy {
     @Input()
@@ -25,10 +18,7 @@ export class NxMatchHeightDirective implements AfterViewInit, OnDestroy {
 
     initialLoadInterval: ReturnType<typeof setInterval>;
 
-    constructor(
-        private el: ElementRef,
-        @Inject(WINDOW) private window: Window,
-    ) {
+    constructor(private el: ElementRef, @Inject(WINDOW) private window: Window) {
         fromEvent<Event>(this.window, 'resize')
             .pipe(untilDestroyed(this), debounceTime(160))
             .subscribe(() => {
@@ -37,11 +27,15 @@ export class NxMatchHeightDirective implements AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit(): void {
-        const initialHeight = this.el.nativeElement.getElementsByClassName(this.classToMatch)[0].getBoundingClientRect().height;
+        const initialHeight = this.el.nativeElement
+            .getElementsByClassName(this.classToMatch)[0]
+            .getBoundingClientRect().height;
         let iterations = 0;
         this.initialLoadInterval = setInterval(() => {
             iterations++;
-            if (this.initialHeightDiffers(this.el.nativeElement, this.classToMatch, initialHeight)) {
+            if (
+                this.initialHeightDiffers(this.el.nativeElement, this.classToMatch, initialHeight)
+            ) {
                 this.matchHeight(this.el.nativeElement, this.classToMatch);
                 clearInterval(this.initialLoadInterval);
                 return;
@@ -53,11 +47,7 @@ export class NxMatchHeightDirective implements AfterViewInit, OnDestroy {
     }
 
     // Gets called periodically by SetInterval until a height difference is detected
-    initialHeightDiffers(
-        parent: HTMLElement,
-        className: string,
-        initialHeight: number
-    ): boolean {
+    initialHeightDiffers(parent: HTMLElement, className: string, initialHeight: number): boolean {
         const children = parent.getElementsByClassName(className);
         Array.from(children).forEach((child: HTMLElement) => {
             child.style.height = 'initial';

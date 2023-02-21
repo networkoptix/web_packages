@@ -1,8 +1,4 @@
-import {
-    Directive,
-    ElementRef,
-    Input
-} from '@angular/core';
+import { Directive, ElementRef, Input } from '@angular/core';
 
 @Directive({ selector: '[nxRotate]' })
 export class NxRotate {
@@ -17,7 +13,7 @@ export class NxRotate {
     resizeObserver: ResizeObserver;
 
     private get changeAspect(): boolean {
-        return Boolean(this.#rotation / this.#clampTo % 2);
+        return Boolean((this.#rotation / this.#clampTo) % 2);
     }
 
     #updateRotation = (): void => {
@@ -34,9 +30,7 @@ export class NxRotate {
         }
     };
 
-    constructor(
-        private el: ElementRef<HTMLElement>
-    ) {
+    constructor(private el: ElementRef<HTMLElement>) {
         this.resizeObserver = new ResizeObserver(([{ contentRect }]) => {
             this.#constrainToParent(contentRect);
         });

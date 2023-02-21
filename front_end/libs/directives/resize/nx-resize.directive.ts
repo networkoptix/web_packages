@@ -1,10 +1,4 @@
-import {
-    Directive,
-    ElementRef,
-    EventEmitter,
-    Output,
-    OnDestroy
-} from '@angular/core';
+import { Directive, ElementRef, EventEmitter, Output, OnDestroy } from '@angular/core';
 
 import type { Size } from './nx-resize.directive.types';
 
@@ -24,9 +18,7 @@ const observer = new ResizeObserver(entries => {
 export class NxResizeObserver implements OnDestroy {
     @Output() resize = new EventEmitter<Size>();
 
-    constructor(
-        protected el: ElementRef<HTMLElement>
-    ) {
+    constructor(protected el: ElementRef<HTMLElement>) {
         const target = this.el.nativeElement;
         entriesMap.set(target, this);
         observer.observe(target);

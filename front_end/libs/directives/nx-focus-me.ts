@@ -1,10 +1,4 @@
-import {
-    AfterViewInit,
-    Directive,
-    ElementRef,
-    Input,
-    OnChanges,
-} from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, Input, OnChanges } from '@angular/core';
 
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { NgChanges } from '@utils/ng-changes';
