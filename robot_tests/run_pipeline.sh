@@ -78,7 +78,7 @@ LETSENCRYPT_STAGE_CERT_REQUIRED=1 \
   --listener NoptixLibrary/FeatureFlagListener.py \
   -i 'ci' \
   -v cust:ci \
-  'test-cases' \
+  'test-cases'
 TESTS_RESULT_CODE=$?
 
 # BUILD_URL is an environment variable provided by Jenkins.
