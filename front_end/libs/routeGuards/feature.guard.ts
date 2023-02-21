@@ -6,7 +6,8 @@ import {
     UrlSegment,
     ActivatedRouteSnapshot,
     RouterStateSnapshot,
-    UrlTree
+    UrlTree,
+    Router
 } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
@@ -17,7 +18,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
     providedIn: 'root'
 })
 export class FeatureGuard implements CanActivate, CanLoad {
-    constructor(private configService: NxConfigService, private cookieService: CookieService) {}
+    constructor(private configService: NxConfigService, private cookieService: CookieService, private router: Router) {}
 
     enabled(route: Route | ActivatedRouteSnapshot): boolean {
         const { flags, override } = route.data;
@@ -35,6 +36,12 @@ export class FeatureGuard implements CanActivate, CanLoad {
     canLoad(
         route: Route,
         segments: UrlSegment[]): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-        return this.enabled(route);
+        const enabled = this.enabled(route);
+
+        if (!enabled && segments[0].path === 'systems') {
+            return Promise.resolve(this.router.parseUrl(segments.slice(0, 2).join('/')));
+        }
+
+        return enabled;
     }
 }

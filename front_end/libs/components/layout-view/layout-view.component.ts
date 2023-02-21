@@ -172,6 +172,7 @@ export class NxLayoutViewComponent {
                 : system.mediaserver.ping().pipe(map(() => true)),
         ),
         catchError(() => Promise.resolve(false)),
+        startWith(true),
         shareReplay({ bufferSize: 1, refCount: true }),
     );
 
