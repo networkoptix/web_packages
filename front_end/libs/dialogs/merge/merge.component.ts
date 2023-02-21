@@ -19,7 +19,7 @@ import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
-import { icons, maxServers, servers } from '@lib/variables/static-variables';
+import { icons, servers } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import type { Account } from '@services/account.service/account';
 import { NxLoginService } from '@services/login.service';
@@ -92,7 +92,7 @@ export class MergeModalContent {
     wrongPassword = false;
     private remotePassword: string;
     checkMergeButtonText: string;
-    maxServers: number;
+    readonly maxServers: number = 100;
     icons = icons;
 
     // static variables
@@ -150,7 +150,6 @@ export class MergeModalContent {
         @Inject(WINDOW) private window: Window,
         @Inject(LOCALE_ID) private locale: string,
     ) {
-        this.maxServers = maxServers;
         this.CONFIG = configService.getConfig();
     }
 
@@ -880,7 +879,7 @@ export class MergeModalContent {
                 if (targetServers.some(server => primaryServerIds.has(server.id))) {
                     throw Error(this.duplicateServers);
                 }
-                this.tooManyServers = mainServers.length + targetServers.length > maxServers;
+                this.tooManyServers = mainServers.length + targetServers.length > this.maxServers;
             } else {
                 throw Error(`systemVersion${mainSystemProto < targetSystemProto ? 'New' : 'Old'}`);
             }

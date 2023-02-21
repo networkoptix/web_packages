@@ -42,7 +42,7 @@ import {
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { Size } from '@directives/resize/nx-resize.directive.types';
 import { environment } from '@environments/environment';
-import { icons, cameraCredentialUpdateTimeout, menus, settingsConfig } from '@lib/variables/static-variables';
+import { icons, menus, settingsConfig } from '@lib/variables/static-variables';
 import { NxHealthService } from '@pages/health/health.service';
 import { NxApplyService } from '@services/apply.service';
 import { Watcher } from '@services/apply.service/watcher';
@@ -150,6 +150,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     canSeeInfo = false;
     editMode = false;
     icons = icons;
+    readonly cameraCredentialUpdateTimeout: number = 1500;
 
     private credentialsUpdateInProgress: boolean = false;
 
@@ -711,7 +712,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         const update = (): Promise<void> => {
             this.showUnauthorized = false;
             return of('').pipe(
-                delay(cameraCredentialUpdateTimeout),
+                delay(this.cameraCredentialUpdateTimeout),
                 switchMap(() => from(this.system.cameraManager.getCameras()).pipe(
                     switchMap(cameras => {
                         const selectedCamera = cameras.find(({ id }) => id === this.selectedCamera.id);
@@ -721,10 +722,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                         }
                         return of(selectedCamera);
                     }),
-                    delay(cameraCredentialUpdateTimeout)
+                    delay(this.cameraCredentialUpdateTimeout)
                 )),
                 retry(5),
-                delay(cameraCredentialUpdateTimeout),
+                delay(this.cameraCredentialUpdateTimeout),
                 tap(_ => this.settingsService.systemSubject$.next(this.system)),
                 catchError(err => {
                     console.error(err);

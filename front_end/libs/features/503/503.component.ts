@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 
-import { maintenanceTimeout } from '@lib/variables/static-variables';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -14,6 +13,7 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 })
 export class Nx503Component implements OnInit {
     compTemplate: SafeHtml;
+    readonly maintenanceTimeout: number = 60 * 1000;
 
     constructor(
         private appState: NxAppStateService,
@@ -49,6 +49,6 @@ export class Nx503Component implements OnInit {
                         );
                     }
                 });
-        }, maintenanceTimeout);
+        }, this.maintenanceTimeout);
     }
 }

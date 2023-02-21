@@ -13,6 +13,7 @@ import { NxSystemsService } from '@services/systems.service';
 import { NxUrlProtocolService } from '@services/url-protocol.service';
 import type { LinkSettings } from '@services/url-protocol.service';
 import { WINDOW } from '@services/window-provider';
+import { openClientTimeout, openMobileClientTimeout } from '@src/app/variables/static-variables';
 
 @Component({
     selector: 'nx-debug',

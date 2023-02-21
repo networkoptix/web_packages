@@ -14,7 +14,7 @@ import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
-import { apiRequestAttempts, toast, updateInterval } from '@lib/variables/static-variables';
+import { toast, updateInterval } from '@lib/variables/static-variables';
 import { CloudStorageAPI } from '@services/nx-cloud-api/cloud-services/cloud-storage/cloud-storage-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
@@ -100,6 +100,7 @@ export class NxSystem {
     serverIdInit: string;
     userIdInit: string;
     useRest: boolean;
+    readonly apiRequestAttempts: number = 4;
 
     infoPromise: Promise<this>;
     updatePromise: Promise<any>;
@@ -693,7 +694,7 @@ export class NxSystem {
                         r => {
                             if (!r?.reply) {
                                 this.attempts++;
-                                return this.attempts < apiRequestAttempts ? this.getServerTimes() : Promise.resolve([]);
+                                return this.attempts < this.apiRequestAttempts ? this.getServerTimes() : Promise.resolve([]);
                             }
                             this.attempts = 0;
                             const now = Date.now();
@@ -705,7 +706,7 @@ export class NxSystem {
                                 timeZoneOffset: parseInt(i.timeZoneOffset)
                             }));
                         }, err => {
-                            if (err.name === 'TimeoutError' && this.attempts < apiRequestAttempts) {
+                            if (err.name === 'TimeoutError' && this.attempts < this.apiRequestAttempts) {
                                 this.attempts++;
                                 return this.getServerTimes();
                             }

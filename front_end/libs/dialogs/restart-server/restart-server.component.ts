@@ -14,7 +14,7 @@ import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
-import { maxNumberServerChecked, servers, toast } from '@lib/variables/static-variables';
+import { servers, toast } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';
 import { NxLoginService } from '@services/login.service';
 import { NxProcessService } from '@services/process.service';
@@ -38,6 +38,7 @@ export class RestartServerModalContent {
     serverId: string;
     needsUpdate: boolean;
     restartServer: Process;
+    readonly maxNumberServerChecked: number = 6;
     private applyService: NxApplyService;
 
     constructor(
@@ -132,7 +133,7 @@ export class RestartServerModalContent {
                                 }
                                 if (
                                     !serverHasGoneOfflineOnce ||
-                                        serverOnlineChecked < maxNumberServerChecked
+                                        serverOnlineChecked < this.maxNumberServerChecked
                                 ) {
                                     serverOnlineChecked++;
                                     throw Error('still in the process of restarting');

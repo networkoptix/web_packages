@@ -16,30 +16,18 @@ import * as configTypes from '@services/nx-config/base-config';
 
 export const alertTimeout: number = 3 * 1000; // Alerts are shown for 3 seconds
 export const apiBase: string = '/api';
-export const apiRequestAttempts: number = 4; // combined with extendedRequestTimeout this mean we'll give up after 1 min
-export const cameraCredentialUpdateTimeout: number = 1500;
 export const longAlertTimeout: number = 6 * 1000; // Alerts are shown for 6 seconds
-export const maxNumberServerChecked: number = 6; // checks server status for restart; checks every 4 seconds, so constant * 4 = # of secs it checks for
 export const pollingTimeout: number = 30 * 1000;
 export const simpleURLRegex: string = '^(https:\\/\\/)?[a-zA-Z0-9@:%._\\+~#=]{2,256}(\\.[a-z]{2,6})?:[0-9]{2,6}$';
 export const buildFromEnv: string = '{{BUILD}}'.trim();
 export const buildSubstituted: boolean = buildFromEnv && !buildFromEnv.includes('BUILD');
 export const staticBase: string = buildSubstituted && !environment.isLocal ? 'static/{{BUILD}}' : 'static';
-export const extendedRequestTimeout: number = 15 * 1000;
-export const maxServers: number = 100;
-export const maintenanceTimeout: number = 60 * 1000;
-export const showHeaderAndFooter: boolean = true;
-export const licenseDeactivations: number = 3;
-export const allowBetaMode: boolean = false;
-export const globalViewArchivePermission: string = 'GlobalViewArchivePermission';
 export const openClientTimeout: number = 1000;
 export const openClientError: string = 'notVisited';
 export const openMobileClientTimeout: number = 300;
 export const responseOk: string = 'ok';
-export const timelineMouseEventTimeout: number = 300;
 export const updateInterval: number = 30 * 1000;
 export const ribbonHeight: number = 33;
-export const sessionFreshnessSec: number = 600;
 
 export const accountDropdown = [
     {

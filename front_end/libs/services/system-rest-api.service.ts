@@ -28,7 +28,7 @@ import { defaultHashFunction, memoizeAsync, memoizeAsyncMedium, memoizeAsyncPers
 import { startWithCache } from '@utils/start-with-cached';
 
 import { SECURITY_LEVEL } from '../../apps/setup-wizard/src/app/types/wizard-state.types';
-import { apiDocURL, apiTool, sessionFreshnessSec } from '../variables/static-variables';
+import { apiDocURL, apiTool } from '../variables/static-variables';
 
 import { NxAppStateService } from './nx-app-state.service';
 import type { APIDocType, MenuManifest } from './nx-config/base-config';
@@ -58,6 +58,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     private readonly token = 'x-runtime-guid';
     private readonly refreshToken = 'refreshToken';
     protected injector: Injector;
+    readonly sessionFreshnessSec: number = 600;
 
     #vmsToken: string;
 
@@ -561,7 +562,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         }
         return this.get(`/rest/v1/login/sessions/${this.accessToken}`).pipe(
             switchMap(res => {
-                return of(res.ageS < sessionFreshnessSec);
+                return of(res.ageS < this.sessionFreshnessSec);
             }));
     }
 
