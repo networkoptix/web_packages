@@ -38,7 +38,7 @@ export class WizardComponent implements OnInit {
 
     constructor(
         config: NxConfigService,
-        private wizardService: WizardStateService,
+        public wizardService: WizardStateService,
         @Inject(WINDOW) public window: Window
     ) {
         this.CONFIG = config.getConfig();

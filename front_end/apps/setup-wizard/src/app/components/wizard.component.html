@@ -40,7 +40,7 @@
                 *ngIf="fsm?.next"
                 class="btn btn-primary btn-forward"
                 (click)="next()"
-                [disabled]="nextDisabled"
+                [disabled]="nextDisabled || wizardService.appBusyState"
             >
                 <span translate>Next</span>
                 <svg-icon
