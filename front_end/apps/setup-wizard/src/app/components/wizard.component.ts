@@ -17,7 +17,6 @@ import { iState, WIZARD_STATE } from '../types/wizard-state.types';
 export class WizardComponent implements OnInit {
     icons = icons;
 
-    isCentered: boolean;
     showFooter: boolean;
     nextDisabled = false;
     state$ = new BehaviorSubject<WIZARD_STATE>(undefined);
@@ -31,17 +30,8 @@ export class WizardComponent implements OnInit {
 
     readonly noFooterComponents = [
         WIZARD_STATE.Start,
-        // WIZARD_STATE.BrokenSystem,
-        // WIZARD_STATE.LocalFailure,
-        WIZARD_STATE.MergeProcess
-    ];
-
-    readonly centeredComponents = [
         WIZARD_STATE.BrokenSystem,
-        WIZARD_STATE.LocalSuccess,
         WIZARD_STATE.LocalFailure,
-        WIZARD_STATE.InitFailure,
-        WIZARD_STATE.MergeFailure,
         WIZARD_STATE.MergeProcess
     ];
 
@@ -58,15 +48,11 @@ export class WizardComponent implements OnInit {
             .subscribe(() => {
                 this.fsm = this.wizardService.fsm;
                 this.showFooter = !this.noFooterComponents.includes(this.state$.getValue());
-                this.isCentered = this.centeredComponents.includes(this.state$.getValue());
             });
     }
 
     back(): void {
         this.wizardService.back();
-    }
-    skip(): void {
-        this.wizardService.skip();
     }
     cancel(): void {
         this.wizardService.cancel();

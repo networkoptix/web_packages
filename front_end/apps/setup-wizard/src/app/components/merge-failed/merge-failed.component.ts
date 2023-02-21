@@ -17,4 +17,12 @@ export class MergeFailedComponent implements OnInit {
 
     ngOnInit(): void {
     }
+
+    retry(): void {
+        this.wizardService.retry();
+    }
+
+    skip(): void {
+        this.wizardService.skip();
+    }
 }

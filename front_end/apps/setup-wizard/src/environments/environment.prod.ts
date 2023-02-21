@@ -1,5 +1,7 @@
-export const environment = {
-  isLocal: true,
-  isSetup: true,
-  production: true
+import { IEnvironment } from "@environments/environment-config";
+
+export const environment: IEnvironment = {
+    isLocal: true,
+    production: true,
+    isWizard: true
 };

@@ -11,14 +11,25 @@
             name="systemNameForm"
             novalidate
         >
-            <nx-mat-like-input
-                componentId="currentName"
+            <input
+                #currentName="ngModel"
+                id="currentName"
                 name="currentName"
-                [label]="'System Name' | translate"
+                class="form-control"
                 [(ngModel)]="systemName"
-                [required]="true"
+                required
+                nxFocusMe
                 [setFocus]="true"
-            ></nx-mat-like-input>
+            />
+            <div style="height: 16px; margin-top: 4px">
+                <div
+                    class="input-error"
+                    *ngIf="currentName.errors?.required"
+                    translate
+                >
+                    System name is required
+                </div>
+            </div>
         </form>
         <a
             class="additional-action-link"

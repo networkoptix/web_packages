@@ -360,6 +360,9 @@ export class WizardStateService {
             },
             mergeFailure: {
                 title: this.LANG.setupWizard.title.mergeFailure,
+                back: () => {
+                    this.currentState = WIZARD_STATE.Merge;
+                },
                 skip: () => {
                     this.currentState = WIZARD_STATE.Start;
                 },
@@ -385,6 +388,9 @@ export class WizardStateService {
             },
             localFailure: {
                 title: this.LANG.setupWizard.title.localFailure,
+                back: () => {
+                    this.currentState = WIZARD_STATE.SystemName;
+                },
                 retry: () => {
                     this.currentState = WIZARD_STATE.Start;
                 },

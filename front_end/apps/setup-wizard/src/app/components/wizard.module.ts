@@ -58,7 +58,7 @@ export const authorizedRoutes: Routes = [
                 path: 'merge',
                 component: MergeComponent
             }, {
-                path: 'mergeFailure',
+                path: 'mergeFailed',
                 component: MergeFailedComponent
             }, {
                 path: 'mergeProcess',

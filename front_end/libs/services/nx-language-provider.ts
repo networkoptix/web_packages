@@ -36,12 +36,12 @@ export class NxLanguageProviderService {
     ) {
         this.defaultLanguage = configService.getConfig().defaultLanguage;
 
-        if (environment.isSetup) {
+        if (environment.isWizard) {
             const lang = new URLSearchParams(this.window.location.search).get('lang');
             this.currentLang = lang ?? this.translate.getDefaultLang();
         }
 
-        if (environment.isLocal && !environment.isSetup) {
+        if (environment.isLocal && !environment.isWizard) {
             // Fixes circular dependency with local-system-status-interceptor.
             setTimeout(() => {
                 this.currentLang = this.sessionService.language;

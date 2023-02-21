@@ -1,6 +1,10 @@
-<div class="state-container centered">
-    <div class="state-container--title">
-        <div translate>The System cannot be configured.</div>
+<div class="state-container">
+    <div
+        class="state-container--title"
+        style="margin-bottom: 2rem"
+        translate
+    >
+        The System cannot be configured.
     </div>
     <div class="state-container--body">
         <svg-icon
@@ -9,5 +13,13 @@
             [svgStyle]="{ 'width.px': '280', 'height.px': '120', 'margin-bottom': '2rem' }"
         >
         </svg-icon>
+
+        <button
+            class="btn btn-primary"
+            (click)="retry()"
+            translate
+        >
+            Try Again
+        </button>
     </div>
 </div>

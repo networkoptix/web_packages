@@ -1,6 +1,7 @@
 <div class="state-container centered">
     <div
         class="state-container--title"
+        style="margin-bottom: 1rem"
         translate
     >
         Merge failed!
@@ -12,5 +13,22 @@
             [svgStyle]="{ 'width.px': '280', 'height.px': '120', 'margin-bottom': '2rem' }"
         >
         </svg-icon>
+
+        <div>
+            <button
+                class="btn btn-default"
+                (click)="retry()"
+                translate
+            >
+                Try again
+            </button>
+            <button
+                class="btn btn-default"
+                (click)="skip()"
+                translate
+            >
+                Setup a separate System
+            </button>
+        </div>
     </div>
 </div>

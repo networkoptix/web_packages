@@ -1,21 +1,19 @@
-<div class="state-container centered">
+<div class="state-container">
     <div class="state-container--title"></div>
     <div class="state-container--body">
         <svg-icon
             nx-add-svg-src
             [src]="icons.dirSectionPlaceholder + 'success_desktop_placeholder.svg'"
-            [svgStyle]="{ 'width.px': '240', 'height.px': '150' }"
+            [svgStyle]="{ 'width.px': '150', 'height.px': '100', 'margin-top.px': '-50' }"
             [applyClass]="true"
         ></svg-icon>
 
         <div class="d-flex flex-column align-items-center justify-content-center mb-3">
             <div translate>Server address</div>
-            &nbsp;:&nbsp;
             <h4>{{ address }}</h4>
         </div>
         <div class="d-flex flex-column align-items-center justify-content-center">
             <div translate>Administrator login</div>
-            &nbsp;:&nbsp;
             <h4>{{ username }}</h4>
         </div>
     </div>

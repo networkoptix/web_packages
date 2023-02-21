@@ -1,10 +1,8 @@
-import { Component } from '@angular/core';
-// import { Component, Inject, OnInit } from '@angular/core';
-//
-// import { NxThemeService } from '@services/theme.service';
-// import { WINDOW } from '@services/window-provider';
-//
-// import { WizardStateService } from './services/wizard-state.service';
+import { Component, OnInit } from '@angular/core';
+
+import { NxThemeService } from '@services/theme.service';
+
+import { WizardStateService } from './services/wizard-state.service';
 
 require('what-input');
 
@@ -13,18 +11,15 @@ require('what-input');
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss']
 })
-export class AppComponent {}
-// export class AppComponent implements OnInit {
-//     constructor(
-//         private themeService: NxThemeService,
-//         private wizardState: WizardStateService,
-//         @Inject(WINDOW) private window: Window
-//     ) {
-//     }
-//
-//     ngOnInit(): void {
-//         const inIFrame = this.window.self !== this.window.top;
-//         const theme = this.wizardState.hasNativeClient || !inIFrame ? 'dark' : 'light';
-//         this.themeService.setTheme(theme, 'setup');
-//     }
-// }
+export class AppComponent implements OnInit {
+    constructor(
+        private themeService: NxThemeService,
+        private wizardState: WizardStateService,
+    ) {
+    }
+
+    ngOnInit(): void {
+        const theme = this.wizardState.hasNativeClient ? 'dark' : 'light';
+        this.themeService.setTheme(theme, 'setup');
+    }
+}

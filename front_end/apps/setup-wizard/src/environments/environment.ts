@@ -2,13 +2,12 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-import { IEnvironment } from '@environments/environment-config';
+import { IEnvironment } from "@environments/environment-config";
 
 export const environment: IEnvironment = {
-  isLocal: true,
-  isSetup: true,
-  production: false,
-  cloudHost: 'cloud-test.hdw.mx'
+    isLocal: true,
+    production: true,
+    isWizard: true
 };
 
 /*

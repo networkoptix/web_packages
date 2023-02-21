@@ -1,47 +1,24 @@
 <div class="state-container">
     <div class="state-container--title">
-        <div translate>Let's configure your server first.</div>
-        <div translate>Please choose an option.</div>
+        <div translate>Please configure the server first.</div>
+        <div translate>Choose an option.</div>
     </div>
     <div class="state-container--body">
-        <div class="d-flex flex-row align-items-center w-100">
-            <div>
-                <button
-                    #setupButton
-                    [style.width.px]="buttonWidth"
-                    class="btn btn-primary"
-                    translate
-                    (click)="setupSystem()"
-                >
-                    Setup New System
-                </button>
-            </div>
-            <span
-                class="btn-helper-block"
-                style="flex: 1 1; padding-left: 1rem"
-                translate
-                >For new users</span
-            >
-        </div>
-
-        <div class="mt-2 d-flex flex-row align-items-center w-100">
-            <div>
-                <button
-                    #mergeButton
-                    [style.width.px]="buttonWidth"
-                    class="btn btn-default-clear"
-                    (click)="mergeSystem()"
-                    translate
-                >
-                    Add to Existing System
-                </button>
-            </div>
-            <span
-                class="btn-helper-block"
-                style="flex: 1 1; padding-left: 1rem"
-                translate
-                >If system has been setup before</span
-            >
-        </div>
+        <button
+            class="btn btn-primary"
+            translate
+            (click)="setupSystem()"
+        >
+            Setup New System
+        </button>
+        <div translate>or</div>
+        <button
+            class="btn btn-default-clear"
+            (click)="mergeSystem()"
+            translate
+        >
+            Add to Existing System
+        </button>
+        <div translate>(if %VMS_NAME% has been already setup)</div>
     </div>
 </div>

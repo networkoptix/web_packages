@@ -7,83 +7,52 @@
             novalidate
         >
             <div class="form-group">
-                <nx-mat-like-type-ahead-select
+                <nx-searchable-select
                     name="mergeDropdown"
                     componentId="mergeDropdown"
                     [form]="mergeForm"
                     [items]="items"
                     [(ngModel)]="remoteSystem"
-                    [label]="'Existing System URL (https://host:port)' | translate"
+                    [placeholder]="'Existing System URL (https://host:port)' | translate"
                     [noMatchMsg]="'No peers found' | translate"
                     [freeText]="true"
                     [validation]="urlRegex"
-                    [setFocus]="true"
                     #mergeDropdown="ngModel"
-                    [required]="true"
-                ></nx-mat-like-type-ahead-select>
-                <!--                <nx-searchable-select-->
-                <!--                    name="mergeDropdown"-->
-                <!--                    componentId="mergeDropdown"-->
-                <!--                    [form]="mergeForm"-->
-                <!--                    [items]="items"-->
-                <!--                    [(ngModel)]="remoteSystem"-->
-                <!--                    [placeholder]="'Existing System URL (https://host:port)' | translate"-->
-                <!--                    [noMatchMsg]="'No peers found' | translate"-->
-                <!--                    [freeText]="true"-->
-                <!--                    [validation]="urlRegex"-->
-                <!--                    #mergeDropdown="ngModel"-->
-                <!--                    required-->
-                <!--                ></nx-searchable-select>-->
+                    required
+                ></nx-searchable-select>
             </div>
             <div class="form-group">
-                <nx-mat-like-input
-                    componentId="userField"
+                <input
                     name="userField"
-                    [label]="'Login' | translate"
+                    id="userField"
+                    class="form-control"
                     [(ngModel)]="user"
-                    [autocomplete]="'off'"
-                    [required]="true"
+                    [placeholder]="'Login' | translate"
                     #userField="ngModel"
-                ></nx-mat-like-input>
-                <!--                <input-->
-                <!--                    name="userField"-->
-                <!--                    id="userField"-->
-                <!--                    class="form-control"-->
-                <!--                    [(ngModel)]="user"-->
-                <!--                    [placeholder]="'Login' | translate"-->
-                <!--                    #userField="ngModel"-->
-                <!--                    required-->
-                <!--                />-->
+                    required
+                />
             </div>
             <div class="form-group">
-                <nx-mat-like-password-input
+                <input
                     name="passwordField"
-                    componentId="passwordField"
-                    class="fs-exclude"
-                    [label]="'Password' | translate"
+                    id="passwordField"
+                    class="form-control"
+                    type="password"
                     [(ngModel)]="password"
-                    [form]="mergeForm"
-                    [component]="passwordField"
+                    [placeholder]="'Password' | translate"
                     #passwordField="ngModel"
-                ></nx-mat-like-password-input>
-                <!--                <input-->
-                <!--                    name="passwordField"-->
-                <!--                    id="passwordField"-->
-                <!--                    class="form-control"-->
-                <!--                    type="password"-->
-                <!--                    [(ngModel)]="password"-->
-                <!--                    [placeholder]="'Password' | translate"-->
-                <!--                    #passwordField="ngModel"-->
-                <!--                    required-->
-                <!--                />-->
+                    required
+                />
             </div>
             <div class="mt-2">
-                <div
-                    class="helper-block"
-                    translate
-                >
-                    * all fields are required
-                </div>
+                <ng-container *ngIf="mergeForm.touched && mergeForm.dirty && mergeForm.invalid">
+                    <div
+                        class="input-error"
+                        translate
+                    >
+                        All fields are required
+                    </div>
+                </ng-container>
             </div>
         </form>
     </div>

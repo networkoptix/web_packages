@@ -19,14 +19,15 @@ nx-pre-loader {
     align-items: center;
 }
 
-//.header {
-//    display: flex;
-//    align-items: center;
-//    justify-content: center;
-//}
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 .btn-backward {
     float: left;
+    margin-left: 1rem;
 
     svg-icon svg .st0 {
         fill : var(--card-header-text) !important;
@@ -36,7 +37,8 @@ nx-pre-loader {
 
 .btn-forward {
     float: right;
-    
+    margin-right: 1rem;
+
     svg-icon svg .st0 {
         fill : var(--btn-primary-color) !important;
         stroke : none;
