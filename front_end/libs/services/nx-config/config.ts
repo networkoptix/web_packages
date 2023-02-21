@@ -613,6 +613,7 @@ export const nxConfig: IConfig = {
     showHeaderAndFooter: true,
     headerHeight: 48,
     ribbonHeight: 33,
+    moreResultsHeight: 60,
     search: {
         debounceShortTime: 100, // ms
         debounceTime: 500, // ms

@@ -41,6 +41,7 @@ export class NxOpenAPIJSONService {
 
     get searchQuery() { return this._searchQuery; }
     set searchQuery(query: string) {
+        if (this.searchQuery === query) return;
         this._searchQuery = query;
         this.searchMoreShowing$.next(true);
     }
@@ -296,7 +297,7 @@ export class NxOpenAPIJSONService {
                 }
             }
         }
-        this.searchMoreShowing$.next(false);
         this.searchMoreNodes$.next(searchMoreNodes);
+        this.searchMoreShowing$.next(false);
     }
 }

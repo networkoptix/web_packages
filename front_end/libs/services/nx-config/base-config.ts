@@ -124,6 +124,7 @@ export interface BaseConfig {
     supportedLanguages: string[];
     headerHeight: number;
     ribbonHeight: number;
+    moreResultsHeight: number;
     browserNotSupported: boolean;
     sessionFreshnessSec: number;
     // loggersConfig: LoggersConfig;

@@ -112,5 +112,6 @@
     span {
         @include typography.regular13nocolor;
         color: var(--light-text-color);
+        margin-left: 4px;
     }
 }
