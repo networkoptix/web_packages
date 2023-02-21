@@ -353,7 +353,9 @@ def downloads(request):
         downloads_result = requests.get(downloads_path)
         downloads_result.raise_for_status()
         downloads_json = downloads_result.json()
-        downloads_json['releaseNotes'] = updates_record['release_notes']
+        downloads_json['releaseNotes'] = ''
+        if (release_notes := updates_record.get('release_notes')) and release_notes != 'https://updates.hdwitness.com/release_notes.html':
+            downloads_json['releaseNotes'] = release_notes
         downloads_json['releaseUrl'] = updates_path + '/' + build_number + '/'
         # add release notes to downloads.json
         # evaluate file paths
