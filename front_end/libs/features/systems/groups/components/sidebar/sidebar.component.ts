@@ -8,7 +8,7 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 import { icons } from '@src/app/variables/static-variables';
 
-import { GroupsItem, GroupItem } from '../../groups.types';
+import { GroupsItem, GroupItem, SharedItems, BaseItems } from '../../groups.types';
 import { NxSystemGroupsService } from '../../services/system-groups.service';
 
 interface sidebarSettings {
@@ -22,9 +22,12 @@ interface sidebarSettings {
 })
 export class NxSystemGroupsSidebarComponent {
     @Input() currentGroupId: string;
+    @Input() showPersonal: boolean;
     @Input() hasGroups: boolean;
     @Input() groups: GroupItem[];
     @Input() userEmail: string;
+    @Input() sharedSidebarItems: SharedItems;
+    @Input() personalSidebarItems: BaseItems;
 
     showSidebar: CustomAccountProperty<sidebarSettings>;
     icons = icons;

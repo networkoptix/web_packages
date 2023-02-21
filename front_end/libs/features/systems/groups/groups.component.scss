@@ -5,11 +5,9 @@
     display: flex;
     height: 100%;
 
-
     .sidebar-container { 
         border-right: solid 1px var(--border-color);
     }
-
 
     .sidebar-toggling-ear-wrapper {
         display: flex;
@@ -47,7 +45,6 @@
         }
     }
     
-
     .cards {
         flex: 1;
         padding: 1rem;
@@ -65,10 +62,13 @@
             }
         }
 
+        .button-container{
+            display: flex;
+        }
+
         nx-groups-cards {
             overflow-y: auto;
             padding-right: 1rem;
-
             flex: 1;
         }
     }

@@ -26,10 +26,12 @@
         ></nx-pre-loader>
         <ng-template #sidebar>
             <nx-groups-sidebar
-                [groups]="rootGroups$ | async"
+                [showPersonal]="showPersonal"
                 [currentGroupId]="currentGroupId$ | async"
-                [hasGroups]="!!(rootGroups$ | async).length"
+                [sharedSidebarItems]="sharedItems$ | async"
+                [personalSidebarItems]="personalItems$ | async"
                 [userEmail]="userEmail"
+                [hasGroups]="!!(allGroups$ | async).length"
                 [ngClass]="{
                     shown: (sidebarSettings.value$ | async)?.showSidebarState
                 }"
@@ -39,20 +41,43 @@
     <div class="cards">
         <nx-pre-loader *ngIf="(loadingState$ | async) === LoadingState.LOADING"></nx-pre-loader>
         <ng-container *ngIf="(loadingState$ | async) === LoadingState.LOADED">
-            <div class="crumbs">
-                <a
-                    routerLink="/groups/"
+            <div class="button-container">
+                <button
+                    (click)="setSharedFilter(true)"
+                    class="btn"
+                    [ngClass]="{
+                        'btn-primary': showPersonal
+                    }"
                     translate
-                    >My Systems</a
                 >
+                    Personal
+                </button>
+                <button
+                    (click)="setSharedFilter(false)"
+                    class="btn"
+                    [ngClass]="{
+                        'btn-primary': !showPersonal
+                    }"
+                    translate
+                >
+                    Shared
+                </button>
+            </div>
+            <div class="crumbs">
+                <a routerLink="/groups/">{{
+                    (showPersonal ? LANG.systemGroups.mySystems : LANG.systemGroups.shared)
+                        | translate
+                }}</a>
                 <ng-container *ngFor="let crumb of crumbs$ | async; trackBy: trackItem">
                     {{ ' / ' }}
                     <a [routerLink]="'/groups/' + crumb.id">{{ crumb.name }}</a>
                 </ng-container>
             </div>
             <nx-groups-cards
-                [groups]="currentGroups$ | async"
-                [systems]="currentSystems$ | async"
+                [showPersonal]="showPersonal"
+                [currentSharedOwner]="currentSharedOwner$ | async"
+                [personalItems]="personalItems$ | async"
+                [sharedItems]="sharedItems$ | async"
             ></nx-groups-cards>
         </ng-container>
         <!-- TODO: Replace with actual placeholder -->

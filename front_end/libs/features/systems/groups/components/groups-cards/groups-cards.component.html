@@ -1,8 +1,29 @@
 <!-- Issue with "Unable to preventDefault inside passive event listener invocation." caused by monitoring? -->
 <!-- https://github.com/angular/components/issues/24979#issuecomment-1203583528 -->
 <div
-    *ngIf="!emptyGroup"
-    class="cards-container"
+    *ngIf="emptyGroup; else showGroups"
+    class="no-systems"
+    translate
+>
+    No systems
+</div>
+
+<ng-template
+    #user
+    let-user
+>
+    <svg-icon
+        nx-add-svg-src
+        [src]="icons.dir + 'user.svg'"
+        [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+    ></svg-icon>
+    {{ user }}
+</ng-template>
+
+<ng-template
+    #cards
+    let-groups="groups"
+    let-systems="systems"
 >
     <div
         *ngFor="let group of groups; trackBy: trackItem"
@@ -41,11 +62,57 @@
         </div>
         <div class="placeholder-shadow"></div>
     </div>
-</div>
-<div
-    *ngIf="emptyGroup"
-    class="no-systems"
-    translate
->
-    No systems
-</div>
+</ng-template>
+
+<ng-template #showGroups>
+    <div
+        *ngIf="showPersonal; else showShared"
+        class="cards-container"
+    >
+        <ng-container
+            *ngTemplateOutlet="
+                cards;
+                context: { groups: personalItems.groups, systems: personalItems.systems }
+            "
+        ></ng-container>
+    </div>
+    <ng-template #showShared>
+        <div *ngIf="!currentSharedOwner; else userFilteredGroups">
+            <div
+                *ngFor="let owner of sharedItems | keyvalue"
+                class="sharedGroups"
+            >
+                <ng-container
+                    *ngTemplateOutlet="user; context: { $implicit: owner.key }"
+                ></ng-container>
+                <div class="cards-container">
+                    <ng-container
+                        *ngTemplateOutlet="
+                            cards;
+                            context: { groups: owner.value.groups, systems: owner.value.systems }
+                        "
+                    ></ng-container>
+                </div>
+            </div>
+        </div>
+
+        <ng-template
+            #userFilteredGroups
+            class="sharedGroups"
+        >
+            <ng-template *ngTemplateOutlet="user; context: { $implicit: currentSharedOwner }"
+                ><ng-template>
+                    <div class="cards-container">
+                        <ng-container
+                            *ngTemplateOutlet="
+                                cards;
+                                context: {
+                                    groups: sharedItems[currentSharedOwner].groups,
+                                    systems: sharedItems[currentSharedOwner].systems
+                                }
+                            "
+                        ></ng-container>
+                    </div>
+                </ng-template>
+            </ng-template> </ng-template></ng-template
+></ng-template>

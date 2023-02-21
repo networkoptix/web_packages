@@ -89,6 +89,21 @@
 
         h2 {
                 width: 75%;
-          }
-      }
-  }
+        }
+    }
+
+    .root {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        align-self: center;
+
+        .close-button {
+            background-color: transparent;
+            padding: 0 10px 0 0 !important;
+        }
+    }
+}

@@ -92,3 +92,11 @@
         text-decoration: none;
     }
 }
+
+.user-level {
+    a {
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}

@@ -7,6 +7,8 @@ const initialState: GroupsState = {
     items: null,
     systemInfo: null,
     currentGroupId: undefined,
+    currentSharedOwner: null,
+    accountEmail: null,
 };
 
 export const groupsReducer = createReducer(
@@ -29,5 +31,18 @@ export const groupsReducer = createReducer(
         (state, { currentGroupId }): GroupsState => ({
             ...state,
             currentGroupId,
-        }))
+        })),
+    on(
+        GroupActions.setCurrentSharedOwner,
+        (state, { currentSharedOwner }): GroupsState => ({
+            ...state,
+            currentSharedOwner
+        })),
+    on(
+        GroupActions.setAccountEmail,
+        (state, { accountEmail }): GroupsState => ({
+            ...state,
+            accountEmail
+        })
+    )
 );

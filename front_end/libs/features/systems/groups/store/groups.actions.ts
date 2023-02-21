@@ -18,3 +18,13 @@ export const setCurrentGroupId = createAction(
     '[System Groups] Set current group ID',
     props<{ currentGroupId: string }>()
 );
+
+export const setCurrentSharedOwner = createAction(
+    '[System Groups] Set user filter',
+    props<{ currentSharedOwner: string }>()
+);
+
+export const setAccountEmail = createAction(
+    '[System Groups] Set account email',
+    props<{ accountEmail: string }>()
+);

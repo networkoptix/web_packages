@@ -1,6 +1,6 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NgModule } from '@angular/core';
-// import { AngularSvgIconModule } from 'angular-svg-icon';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { ComponentsCoreModule } from '@components/components-core.module';
 
@@ -11,9 +11,8 @@ import { NxGroupsCardsComponent } from './groups-cards.component';
 
 @NgModule({
     imports: [
-        // AngularSvgIconModule.forRoot(),
+        AngularSvgIconModule.forRoot(),
         DragDropModule,
-
         ComponentsCoreModule,
         NxGroupCardModule,
         NxSystemCardModule,

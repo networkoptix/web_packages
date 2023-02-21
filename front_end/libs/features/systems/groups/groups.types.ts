@@ -31,6 +31,15 @@ export type BaseGroupsItem = BaseGroupItem | BaseSystemItem;
 
 export type GroupsItem = GroupItem | SystemItem;
 
+export interface BaseItems {
+    groups: GroupItem[];
+    systems: SystemItem[];
+}
+
+export interface SharedItems {
+    [email: string]: BaseItems;
+}
+
 export interface Crumb {
     id: string;
     name: string;

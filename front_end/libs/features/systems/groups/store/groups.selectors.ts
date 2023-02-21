@@ -7,6 +7,7 @@ import type {
     GroupsItem,
     SystemItem,
     Crumb,
+    SharedItems,
 } from '../groups.types';
 import { LoadingState } from '../groups.types';
 
@@ -16,12 +17,22 @@ const selectGroupState = createFeatureSelector<GroupsState>('groups');
 
 const selectBaseGroupsItems = createSelector(
     selectGroupState,
-    state => state.items
+    state => state.items,
 );
 
 const selectSystemInfo = createSelector(
     selectGroupState,
     state => state.systemInfo,
+);
+
+const selectAccountEmail = createSelector(
+    selectGroupState,
+    state => state.accountEmail,
+);
+
+export const selectCurrentSharedOwner = createSelector(
+    selectGroupState,
+    state => state.currentSharedOwner,
 );
 
 const selectSystemInfoMap = createSelector(
@@ -134,6 +145,11 @@ export const selectCurrentIndexes = createSelector(
     }
 );
 
+export const selectHasCurrentIndexes = createSelector(
+    selectCurrentIndexes,
+    indexes => !!indexes?.length
+);
+
 export const selectLoadingState = createSelector(
     selectCurrentIndexes,
     indexes => {
@@ -200,4 +216,90 @@ export const selectCrumbs = createSelector(
         }
         return crumbs;
     }
+);
+
+const createSharedItemsObject = (
+    groups: GroupItem[],
+    systems: SystemItem[],
+): SharedItems => {
+    const result: SharedItems = {};
+
+    for (const group of groups) {
+        if (!result[group.owner_account_email]) {
+            result[group.owner_account_email] = { groups: [], systems: [] };
+        }
+        result[group.owner_account_email].groups.push(group);
+    }
+
+    for (const system of systems) {
+        if (!result[system.ownerAccountEmail]) {
+            result[system.ownerAccountEmail] = { groups: [], systems: [] };
+        }
+        result[system.ownerAccountEmail].systems.push(system);
+    }
+    return result;
+};
+
+export const selectRootPersonalItems = createSelector(
+    selectRootGroupItems,
+    selectRootSystemItems,
+    selectAccountEmail,
+    (groups, systems, email) => {
+        return {
+            groups: groups.filter(group => group.owner_account_email === email),
+            systems: systems.filter(system => system.ownerAccountEmail === email)
+        };
+    },
+);
+
+export const selectRootSharedItems = createSelector(
+    selectRootGroupItems,
+    selectRootSystemItems,
+    selectAccountEmail,
+    (groups, systems, email) => createSharedItemsObject(
+        groups.filter(group => group.owner_account_email !== email),
+        systems.filter(system => system.ownerAccountEmail !== email)
+    )
+);
+
+export const selectPersonalGroupItems = createSelector(
+    selectCurrentGroupItems,
+    selectAccountEmail,
+    (groups, email) =>
+        groups.filter(group => group.owner_account_email === email),
+);
+
+export const selectPersonalSystemItems = createSelector(
+    selectCurrentSystemItems,
+    selectAccountEmail,
+    (systems, email) =>
+        systems.filter(system => system.ownerAccountEmail === email)
+);
+
+export const selectPersonalItems = createSelector(
+    selectPersonalGroupItems,
+    selectPersonalSystemItems,
+    (groups, systems) => {
+        return { groups, systems };
+    },
+);
+
+export const selectSharedGroupItems = createSelector(
+    selectCurrentGroupItems,
+    selectAccountEmail,
+    (groups, email) =>
+        groups.filter(group => group.owner_account_email !== email),
+);
+
+export const selectSharedSystemItems = createSelector(
+    selectCurrentSystemItems,
+    selectAccountEmail,
+    (systems, email) =>
+        systems.filter(system => system.ownerAccountEmail !== email),
+);
+
+export const selectSharedItems = createSelector(
+    selectSharedGroupItems,
+    selectSharedSystemItems,
+    (groups, systems) => createSharedItemsObject(groups, systems),
 );

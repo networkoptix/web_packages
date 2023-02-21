@@ -1,12 +1,14 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { Store } from '@ngrx/store';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { NxAccountService } from '@services/account.service';
 import type { Account } from '@services/account.service/account';
+import { icons } from '@src/app/variables/static-variables';
 
-import { GroupItem, GroupsItem, SystemItem } from '../../groups.types';
+import { BaseItems, GroupsItem, SharedItems } from '../../groups.types';
 import { NxSystemGroupsService } from '../../services/system-groups.service';
+import { selectHasCurrentIndexes } from '../../store/groups.selectors';
 
 @Component({
     selector: 'nx-groups-cards',
@@ -15,29 +17,25 @@ import { NxSystemGroupsService } from '../../services/system-groups.service';
     encapsulation: ViewEncapsulation.None,
     // Need to escape encapsulation to style cdk elements
 })
-export class NxGroupsCardsComponent implements OnInit {
-    @Input() groups: GroupItem[];
-    @Input() systems: SystemItem[];
+export class NxGroupsCardsComponent {
+    @Input() account: Account;
+    @Input() showPersonal: boolean;
+    @Input() personalItems: BaseItems;
+    @Input() sharedItems: SharedItems;
+    @Input() currentSharedOwner: string | null;
+    inRoot$ = this.store.select<boolean>(selectHasCurrentIndexes);
 
     LANG = staticLang;
-
-    account: Account;
+    icons = icons;
 
     get emptyGroup(): boolean {
-        return !this.groups.length && !this.systems.length;
+        return !this.personalItems.groups.length && !this.personalItems.systems.length && !Object.keys(this.sharedItems).length;
     }
 
     constructor(
-        private accountService: NxAccountService,
         private groupsService: NxSystemGroupsService,
-    ) {}
-
-    ngOnInit(): void {
-        this.accountService.get().then(account => {
-            if (account?.email) {
-                this.account = account;
-            }
-        });
+        private store: Store,
+    ) {
     }
 
     trackItem(_index: number, item: GroupsItem): string {

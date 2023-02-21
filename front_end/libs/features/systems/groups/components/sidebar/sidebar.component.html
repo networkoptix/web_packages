@@ -48,7 +48,10 @@
         >
             <h3 class="root">
                 <a routerLink="/groups/">
-                    {{ LANG.systemGroups.mySystems | translate }}
+                    {{
+                        (showPersonal ? LANG.systemGroups.mySystems : LANG.systemGroups.shared)
+                            | translate
+                    }}
                 </a>
 
                 <button (click)="newGroupDialog()">
@@ -61,6 +64,21 @@
             </h3>
         </div>
 
-        <nx-sidebar-level [groups]="groups"></nx-sidebar-level>
+        <nx-sidebar-level
+            *ngIf="showPersonal; else showShared"
+            [groups]="personalSidebarItems.groups"
+        ></nx-sidebar-level>
+        <ng-template #showShared>
+            <div
+                *ngFor="let user of sharedSidebarItems | keyvalue"
+                class="user-level"
+            >
+                <nx-sidebar-level
+                    [groups]="sharedSidebarItems[user.key]?.groups"
+                    [userLevel]="user.key"
+                >
+                </nx-sidebar-level>
+            </div>
+        </ng-template>
     </ng-template>
 </div>

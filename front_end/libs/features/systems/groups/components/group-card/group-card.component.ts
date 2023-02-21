@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -7,6 +8,7 @@ import { icons } from '@lib/variables/static-variables';
 
 import type { GroupItem } from '../../groups.types';
 import { NxSystemGroupsService } from '../../services/system-groups.service';
+import * as GroupActions from '../../store/groups.actions';
 
 @Component({
     selector: 'nx-group-card',
@@ -16,7 +18,7 @@ import { NxSystemGroupsService } from '../../services/system-groups.service';
         'group-card.component.scss',
     ]
 })
-export class NxGroupCardComponent implements OnInit {
+export class NxGroupCardComponent {
     @Input() group: GroupItem;
     @Input() search: string = '';
 
@@ -26,13 +28,14 @@ export class NxGroupCardComponent implements OnInit {
     constructor(
         private router: Router,
         private groupsService: NxSystemGroupsService,
-        private dialogsService: NxDialogsService
-    ) {}
-
-    ngOnInit(): void {}
+        private dialogsService: NxDialogsService,
+        private store: Store
+    ) {
+    }
 
     openGroup(): void {
-        this.router.navigate(['groups', this.group.id]);
+        this.router.navigate(['groups', this.group.id])
+            .then(() => this.store.dispatch(GroupActions.setCurrentSharedOwner({ currentSharedOwner: null })));
     }
 
     deleteGroup(): void {

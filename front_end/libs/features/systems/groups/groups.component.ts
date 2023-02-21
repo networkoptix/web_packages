@@ -1,6 +1,6 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { LocalStorageService } from 'ngx-webstorage';
 
@@ -9,18 +9,18 @@ import { icons } from '@lib/variables/static-variables';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 
-import type { GroupItem, GroupsItem, SystemItem, Crumb } from './groups.types';
+import type { GroupItem, GroupsItem, Crumb, SharedItems, BaseItems } from './groups.types';
 import { LoadingState } from './groups.types';
 import { NxSystemGroupsService } from './services/system-groups.service';
 import * as GroupActions from './store/groups.actions';
 import {
     selectCrumbs,
     selectCurrentGroupId,
-    selectCurrentGroupItems,
-    selectCurrentSystemItems,
+    selectCurrentSharedOwner,
     selectLoadingState,
+    selectPersonalItems,
     selectRootGroupItems,
-    selectRootSystemItems,
+    selectSharedItems,
 } from './store/groups.selectors';
 
 interface sidebarSettings {
@@ -39,33 +39,27 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
     crumbs$ = this.store.select<Crumb[] | null>(selectCrumbs);
     userEmail: string = this.localStorageService.retrieve('loginstate');
     sidebarSettings: CustomAccountProperty<sidebarSettings>;
+    showPersonal: boolean = true;
+    sharedItems$ = this.store.select<SharedItems>(selectSharedItems);
+    personalItems$ = this.store.select<BaseItems>(selectPersonalItems);
+    allGroups$ = this.store.select(selectRootGroupItems);
+    currentSharedOwner$ = this.store.select<string>(selectCurrentSharedOwner);
 
     loadingState$ = this.store.select<LoadingState>(selectLoadingState);
-
+    currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
     rootGroups$ = this.store.select<GroupItem[] | undefined>(
         selectRootGroupItems
     );
-    rootSystems$ = this.store.select<SystemItem[] | undefined>(
-        selectRootSystemItems
-    );
-
-    currentGroups$ = this.store.select<GroupItem[] | null>(
-        selectCurrentGroupItems
-    );
-    currentSystems$ = this.store.select<SystemItem[] | null>(
-        selectCurrentSystemItems
-    );
-    currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
-
     constructor(
         private store: Store,
         private groupsService: NxSystemGroupsService,
         private route: ActivatedRoute,
         private localStorageService: LocalStorageService,
         private cloudApi: NxCloudApiService,
+        private router: Router,
     ) {
         this.groupsService.connect();
-        this.initSidebar();
+        this.init();
     }
 
     ngOnInit(): void {
@@ -76,13 +70,14 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
                 })
             );
         });
+        this.store.dispatch(GroupActions.setAccountEmail({ accountEmail: this.userEmail }));
     }
 
     ngOnDestroy(): void {
         this.groupsService.disconnect();
     }
 
-    initSidebar(): void {
+    init(): void {
         this.sidebarSettings = this.cloudApi.customAccountPropertyFactory('showSidebarState', this.userEmail, { showSidebarState: true });
     }
 
@@ -91,6 +86,14 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
             curr.showSidebarState = !curr.showSidebarState;
             return curr;
         }, true);
+    }
+
+    public setSharedFilter(newState: boolean): void {
+        if (newState === this.showPersonal) {
+            return;
+        }
+        this.router.navigate(['/', 'groups']);
+        this.showPersonal = newState;
     }
 
     trackItem(_index: number, item: Crumb): string {

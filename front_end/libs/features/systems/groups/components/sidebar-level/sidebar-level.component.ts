@@ -1,5 +1,6 @@
 import type { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, Input, OnChanges } from '@angular/core';
+import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 
@@ -8,6 +9,7 @@ import { NgChanges } from '@utils/ng-changes';
 
 import { GroupItem, GroupsItem } from '../../groups.types';
 import { NxSystemGroupsService } from '../../services/system-groups.service';
+import * as GroupActions from '../../store/groups.actions';
 import { selectCurrentGroupId } from '../../store/groups.selectors';
 
 @UntilDestroy()
@@ -18,6 +20,7 @@ import { selectCurrentGroupId } from '../../store/groups.selectors';
 })
 export class NxGroupsSidebarLevelComponent implements OnChanges {
     @Input() groups: GroupItem[];
+    @Input() userLevel: string;
 
     currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
 
@@ -27,6 +30,7 @@ export class NxGroupsSidebarLevelComponent implements OnChanges {
     constructor(
         private groupsService: NxSystemGroupsService,
         private store: Store,
+        private router: Router,
     ) {
         groupsService.sidebarOpenSubject
             .pipe(untilDestroyed(this))
@@ -62,5 +66,10 @@ export class NxGroupsSidebarLevelComponent implements OnChanges {
         }
 
         this.groupsService.onDrop(dragged, droppedOn);
+    }
+
+    selectUserFilter(user: string): void {
+        this.router.navigate(['/', 'groups'])
+            .then(() => this.store.dispatch(GroupActions.setCurrentSharedOwner({ currentSharedOwner: user })));
     }
 }
