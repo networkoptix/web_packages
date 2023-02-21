@@ -12,7 +12,12 @@ import { NxAPIToolSystemService } from '../services/api-tool-system.service';
 import { NxOpenAPIJSONService } from '../services/openapi-json.service';
 import { NxReadonlyAPIService } from '../services/readonly-api.service';
 
-import { findExistingItem, makeDropdownDisplayName, makeReadonlyAPIName, makeSystemName } from './api-tool-dropdown-utils';
+import {
+    findExistingItem,
+    makeDropdownDisplayName,
+    makeReadonlyAPIName,
+    makeSystemName,
+} from './api-tool-dropdown-utils';
 
 interface SystemDropdownItem extends DropdownItem<string> {
     disabled: boolean;

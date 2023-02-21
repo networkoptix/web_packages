@@ -1,12 +1,5 @@
 import { Platform } from '@angular/cdk/platform';
-import {
-    AfterViewInit,
-    Component,
-    Input,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-} from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 
 import { images } from '@lib/variables/static-variables';
 import { NgChanges } from '@utils/ng-changes';

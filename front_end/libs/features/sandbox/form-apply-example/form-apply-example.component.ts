@@ -2,9 +2,7 @@ import { Component, Inject, ViewChild, ViewContainerRef } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
 import { NxMenuService } from '@app/menu/menu.service';
-import type {
-    DropdownItem
-} from '@components/dropdowns/generic/dropdown.component.types';
+import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import type {
     MultiSelectItem
 } from '@components/dropdowns/multi-select/multi-select.component.types';

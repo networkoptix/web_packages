@@ -4,7 +4,11 @@ import { BehaviorSubject } from 'rxjs';
 import type { SearchFilter } from '@components/search/search.component.types';
 import { healthMonitoring } from '@lib/variables/static-variables';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
-import { GridBreakpoints, GRID_PANEL_WIDTH, GRID_SUPER_WIDE_PANEL_WIDTH } from '@styles/theme-variables-common';
+import {
+    GridBreakpoints,
+    GRID_PANEL_WIDTH,
+    GRID_SUPER_WIDE_PANEL_WIDTH,
+} from '@styles/theme-variables-common';
 
 @Injectable({
     providedIn: 'root'

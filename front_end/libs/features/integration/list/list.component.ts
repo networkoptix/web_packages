@@ -1,9 +1,4 @@
-import {
-    Component,
-    OnDestroy,
-    Input,
-    OnChanges
-} from '@angular/core';
+import { Component, OnDestroy, Input, OnChanges } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';

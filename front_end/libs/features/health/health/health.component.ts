@@ -1,11 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import {
-    Component,
-    Inject,
-    OnInit,
-    OnDestroy,
-    ViewEncapsulation
-} from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import FileSaver from 'file-saver';

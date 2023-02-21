@@ -8,9 +8,7 @@ import { NxAccountService } from '@services/account.service';
 import { Watcher } from '@services/apply.service/watcher';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxProcessService } from '@services/process.service';
-import type {
-    NxSystemWithUserInfo
-} from '@services/system.service/system-types';
+import type { NxSystemWithUserInfo } from '@services/system.service/system-types';
 import { NxSystemsService } from '@services/systems.service';
 import { NxUrlProtocolService } from '@services/url-protocol.service';
 import type { LinkSettings } from '@services/url-protocol.service';

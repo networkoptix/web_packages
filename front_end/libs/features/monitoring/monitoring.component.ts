@@ -1,10 +1,6 @@
-import {
-    Component, OnInit,
-} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {
-    UntilDestroy, untilDestroyed,
-} from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 

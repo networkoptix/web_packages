@@ -1,10 +1,4 @@
-import {
-    Component,
-    OnDestroy,
-    OnInit,
-    ViewChild,
-    ViewContainerRef,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
 import staticLang from '@app/language/language_i18n_static.json';
@@ -14,7 +8,7 @@ import { NxPartnersService } from '@pages/channel-partners/partners.service';
 import { NxApplyService } from '@services/apply.service';
 import {
     BrandInfo,
-    UserInfo
+    UserInfo,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 @UntilDestroy()

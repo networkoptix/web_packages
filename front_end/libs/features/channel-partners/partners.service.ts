@@ -4,8 +4,10 @@ import { BehaviorSubject } from 'rxjs';
 
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import {
-    BrandInfo, OrganizationInfo, PartnerInfo,
-    UserInfo
+    BrandInfo,
+    OrganizationInfo,
+    PartnerInfo,
+    UserInfo,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 @Injectable({

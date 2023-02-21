@@ -4,7 +4,17 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual, cloneDeep } from 'lodash-es';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { BehaviorSubject, of, Subject, Subscription } from 'rxjs';
-import { catchError, delay, distinctUntilChanged, filter, finalize, retryWhen, take, tap, timeout } from 'rxjs/operators';
+import {
+    catchError,
+    delay,
+    distinctUntilChanged,
+    filter,
+    finalize,
+    retryWhen,
+    take,
+    tap,
+    timeout,
+} from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 import { apiTool } from '@lib/variables/static-variables';
@@ -24,7 +34,12 @@ import { processLanguageFactory } from '@utils/nx';
 
 import type { APIDoc } from '../api-tool-types';
 
-import type { EmitInfo, IndexDBCacheObject, MarkdownObj, ServerInfo } from './api-tool-service-types';
+import type {
+    EmitInfo,
+    IndexDBCacheObject,
+    MarkdownObj,
+    ServerInfo,
+} from './api-tool-service-types';
 import { NxReadonlyAPIService } from './readonly-api.service';
 
 @UntilDestroy()

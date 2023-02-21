@@ -1,11 +1,4 @@
-import {
-    Component,
-    EventEmitter,
-    Input,
-    OnChanges,
-    Output,
-    OnDestroy,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, OnDestroy } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
 import { NgChanges } from '@utils/ng-changes';

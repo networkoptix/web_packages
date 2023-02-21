@@ -22,7 +22,7 @@ import {
     AboutStructure,
     AboutTemplates,
     AboutNode,
-    AboutStructureNode
+    AboutStructureNode,
 } from './about.component.types';
 
 @UntilDestroy({ checkProperties: true, blackList: ['aboutStructure$'] })

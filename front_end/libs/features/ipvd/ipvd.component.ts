@@ -9,7 +9,7 @@ import {
     OnInit,
     PLATFORM_ID,
     ViewChild,
-    ViewEncapsulation
+    ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
@@ -18,9 +18,7 @@ import { SubscriptionLike } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import type {
-    DropdownItem
-} from '@components/dropdowns/generic/dropdown.component.types';
+import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import type {
     MultiSelectItem
 } from '@components/dropdowns/multi-select/multi-select.component.types';

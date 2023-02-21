@@ -11,7 +11,13 @@ import { FeatureFlagStrings, MenuManifest } from '@services/nx-config/base-confi
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { isUUID } from '@utils/general';
 
-import { addAPIInfoNodesToMenu, mergeAPIDocs, prepareSwaggerAPIDoc, addSeperator, generateMenu } from '../api-file-utils';
+import {
+    addAPIInfoNodesToMenu,
+    mergeAPIDocs,
+    prepareSwaggerAPIDoc,
+    addSeperator,
+    generateMenu,
+} from '../api-file-utils';
 import { APIDoc } from '../api-tool-types';
 
 import type { EmitInfo, Store, ReadOnlyAPIStore, MarkdownObj } from './api-tool-service-types';

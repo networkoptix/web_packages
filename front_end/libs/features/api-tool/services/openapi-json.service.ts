@@ -10,10 +10,28 @@ import type { MenuNode } from '@services/menus.service.types';
 import { MenuManifest, MenuStructure } from '@services/nx-config/base-config';
 import { findMenuNode } from '@utils/nx';
 
-import { addAPIInfoNodesToMenu, addSeperator, generateAPIRouteName, generateMenu, getFirstNode, mergeAPIDocs, prepareSwaggerAPIDoc, queryInDescription } from '../api-file-utils';
+import {
+    addAPIInfoNodesToMenu,
+    addSeperator,
+    generateAPIRouteName,
+    generateMenu,
+    getFirstNode,
+    mergeAPIDocs,
+    prepareSwaggerAPIDoc,
+    queryInDescription,
+} from '../api-file-utils';
 import type { APIDoc, APIInfo } from '../api-tool-types';
 
-import { APIData, Store, EmitInfo, APIType, ServerInfo, ReadOnlyAPIStore, MarkdownObj, FetchedJSONs } from './api-tool-service-types';
+import {
+    APIData,
+    Store,
+    EmitInfo,
+    APIType,
+    ServerInfo,
+    ReadOnlyAPIStore,
+    MarkdownObj,
+    FetchedJSONs,
+} from './api-tool-service-types';
 import { NxAPIToolSystemService } from './api-tool-system.service';
 import { NxReadonlyAPIService } from './readonly-api.service';
 

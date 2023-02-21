@@ -1,8 +1,4 @@
-import {
-    Component,
-    OnDestroy,
-    OnInit,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Params } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import cloneDeep from 'lodash-es/cloneDeep';
@@ -13,7 +9,7 @@ import { environment } from '@environments/environment';
 import { NxPartnersService } from '@pages/channel-partners/partners.service';
 import {
     OrganizationInfo,
-    PartnerInfo
+    PartnerInfo,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxUriService } from '@services/uri.service';
 

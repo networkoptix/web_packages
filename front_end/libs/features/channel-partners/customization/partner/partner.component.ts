@@ -1,10 +1,4 @@
-import {
-    Component,
-    OnDestroy,
-    OnInit,
-    ViewChild,
-    ViewContainerRef,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
@@ -16,7 +10,7 @@ import { NxPartnersService } from '@pages/channel-partners/partners.service';
 import { NxApplyService } from '@services/apply.service';
 import {
     OrganizationInfo,
-    PartnerInfo
+    PartnerInfo,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxMenuService } from '@src/app/menu/menu.service';
 

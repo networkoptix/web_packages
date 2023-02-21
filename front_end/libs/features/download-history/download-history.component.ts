@@ -1,16 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
-import {
-    Component,
-    OnInit,
-    Inject,
-    PLATFORM_ID,
-    Injector
-} from '@angular/core';
-import {
-    ActivatedRoute,
-    ActivationEnd,
-    Router
-} from '@angular/router';
+import { Component, OnInit, Inject, PLATFORM_ID, Injector } from '@angular/core';
+import { ActivatedRoute, ActivationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { startCase } from 'lodash-es';
 import { Subscription } from 'rxjs';

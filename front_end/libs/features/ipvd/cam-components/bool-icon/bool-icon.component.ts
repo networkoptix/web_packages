@@ -1,9 +1,4 @@
-import {
-    Component,
-    Input,
-    OnInit,
-    ViewEncapsulation
-} from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 
 import { NgChanges } from '@utils/ng-changes';
 

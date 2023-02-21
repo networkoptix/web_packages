@@ -7,31 +7,19 @@ import {
     ElementRef,
     Inject,
     OnDestroy,
-    Injector
+    Injector,
 } from '@angular/core';
-import {
-    ActivatedRoute,
-    ActivatedRouteSnapshot,
-    NavigationEnd,
-    Router
-} from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual } from 'lodash-es';
 import { BehaviorSubject, combineLatest, from, Observable, of } from 'rxjs';
-import {
-    switchMap,
-    tap,
-    map,
-    filter,
-    startWith,
-    catchError
-} from 'rxjs/operators';
+import { switchMap, tap, map, filter, startWith, catchError } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import type {
     ClickEvent,
     MenuNodeWithParent,
-    RelatedLinks
+    RelatedLinks,
 } from '@components/developers-menu/developers-menu-types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import type { RibbonAction } from '@components/ribbon/ribbon.types';

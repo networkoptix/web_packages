@@ -5,13 +5,13 @@ import {
     EventEmitter,
     Input,
     Output,
-    ViewChild
+    ViewChild,
 } from '@angular/core';
 
 import {
     InfoBlockSection,
     InfoBlockSections,
-    InfoBlockLine
+    InfoBlockLine,
 } from '@components/info-block/info-block.component.types';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 

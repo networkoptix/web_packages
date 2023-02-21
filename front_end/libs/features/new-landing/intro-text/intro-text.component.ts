@@ -6,7 +6,7 @@ import {
     ElementRef,
     Inject,
     OnDestroy,
-    ViewChild
+    ViewChild,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Observable, Subscription } from 'rxjs';

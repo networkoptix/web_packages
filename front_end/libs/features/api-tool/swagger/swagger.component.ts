@@ -1,12 +1,18 @@
 import { DOCUMENT } from '@angular/common';
 import {
-    Component, ComponentFactoryResolver,
+    Component,
+    ComponentFactoryResolver,
     ComponentRef,
     ElementRef,
-    Inject, Input, OnChanges, OnInit, Renderer2,
+    Inject,
+    Input,
+    OnChanges,
+    OnInit,
+    Renderer2,
     Type,
     ViewChild,
-    ViewContainerRef, ViewEncapsulation
+    ViewContainerRef,
+    ViewEncapsulation,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, fromEvent } from 'rxjs';
@@ -16,9 +22,7 @@ import type { SupportedHTTPMethods, SwaggerUIOptions, SwaggerUIPlugin } from 'sw
 import { v4 as uuid } from 'uuid';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import type {
-    MenuNodeWithParent
-} from '@components/developers-menu/developers-menu-types';
+import type { MenuNodeWithParent } from '@components/developers-menu/developers-menu-types';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { servers, toast } from '@lib/variables/static-variables';
@@ -32,12 +36,8 @@ import { APIDoc } from '../api-tool-types';
 import { NxAPIToolSystemService } from '../services/api-tool-system.service';
 import { NxOpenAPIJSONService } from '../services/openapi-json.service';
 
-import {
-    NxCopyToClipboardComponent
-} from './copy-to-clipboard/copy-to-clipboard.component';
-import {
-    NxSwaggerDropdownComponent
-} from './swagger-dropdown/swagger-dropdown.component';
+import { NxCopyToClipboardComponent } from './copy-to-clipboard/copy-to-clipboard.component';
+import { NxSwaggerDropdownComponent } from './swagger-dropdown/swagger-dropdown.component';
 import { NxSwaggerSpinnerComponent } from './swagger-spinner/swagger-spinner.component';
 import { NxSwaggerTextareaComponent } from './swagger-textarea/swagger-textarea.component';
 import type { componentMap, textareaMap } from './swagger-types';

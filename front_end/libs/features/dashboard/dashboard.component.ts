@@ -1,11 +1,14 @@
-import {
-    CdkDropList,
-    CdkDragEnter,
-    moveItemInArray,
-    CdkDragDrop
-} from '@angular/cdk/drag-drop';
+import { CdkDropList, CdkDragEnter, moveItemInArray, CdkDragDrop } from '@angular/cdk/drag-drop';
 import { HttpClient } from '@angular/common/http';
-import { Component, ViewChildren, QueryList, HostListener, Inject, ElementRef, ViewChild } from '@angular/core';
+import {
+    Component,
+    ViewChildren,
+    QueryList,
+    HostListener,
+    Inject,
+    ElementRef,
+    ViewChild,
+} from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';

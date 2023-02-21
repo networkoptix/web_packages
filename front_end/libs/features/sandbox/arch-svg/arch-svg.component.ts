@@ -1,7 +1,4 @@
-import {
-    Component,
-    OnInit,
-} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { NxMenuService } from '@app/menu/menu.service';
 

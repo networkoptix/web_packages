@@ -1,10 +1,4 @@
-import {
-    Component,
-    EventEmitter,
-    OnDestroy,
-    OnInit,
-    Output
-} from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subscription, timer } from 'rxjs';
 import { startWith } from 'rxjs/operators';

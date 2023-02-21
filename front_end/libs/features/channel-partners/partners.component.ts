@@ -12,7 +12,8 @@ import { NxApplyService } from '@services/apply.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import {
     BrandInfo,
-    OrganizationInfo, PartnerInfo
+    OrganizationInfo,
+    PartnerInfo,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';

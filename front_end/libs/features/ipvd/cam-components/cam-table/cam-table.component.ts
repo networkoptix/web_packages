@@ -12,7 +12,7 @@ import {
     ViewChild,
     HostListener,
     Renderer2,
-    LOCALE_ID
+    LOCALE_ID,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';

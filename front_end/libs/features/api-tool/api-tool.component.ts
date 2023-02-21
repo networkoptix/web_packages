@@ -1,13 +1,5 @@
-import {
-    Component,
-    ElementRef,
-    ViewChild,
-    ViewEncapsulation
-} from '@angular/core';
-import {
-    UntilDestroy,
-    untilDestroyed
-} from '@ngneat/until-destroy';
+import { Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { debounceTime, filter } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';

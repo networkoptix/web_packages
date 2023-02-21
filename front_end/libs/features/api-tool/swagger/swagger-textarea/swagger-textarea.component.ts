@@ -1,12 +1,26 @@
 import { DOCUMENT } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, Inject, Input, OnInit, ViewChild } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    Inject,
+    Input,
+    OnInit,
+    ViewChild,
+} from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { fromEvent } from 'rxjs';
 
 import { NxAPIToolSystemService } from '@pages/api-tool/services/api-tool-system.service';
 import { WINDOW } from '@services/window-provider';
 
-import { findLine, focusPositionMarker, highlightAllCode, highlightLine, setCodeBlockHTML } from '../swagger-utils';
+import {
+    findLine,
+    focusPositionMarker,
+    highlightAllCode,
+    highlightLine,
+    setCodeBlockHTML,
+} from '../swagger-utils';
 
 @UntilDestroy()
 @Component({

@@ -1,15 +1,6 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import {
-    Component,
-    OnInit,
-    Inject,
-    PLATFORM_ID
-} from '@angular/core';
-import {
-    ActivatedRoute,
-    ActivationEnd,
-    Router
-} from '@angular/router';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { ActivatedRoute, ActivationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subscription } from 'rxjs';

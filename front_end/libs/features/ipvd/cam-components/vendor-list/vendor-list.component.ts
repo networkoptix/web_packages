@@ -8,7 +8,7 @@ import {
     OnDestroy,
     OnInit,
     Renderer2,
-    ViewEncapsulation
+    ViewEncapsulation,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ActivationEnd, Router } from '@angular/router';

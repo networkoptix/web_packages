@@ -2,9 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 
 import { NxMenuService } from '@app/menu/menu.service';
-import type {
-    DropdownItem
-} from '@components/dropdowns/generic/dropdown.component.types';
+import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import type {
     MultiSelectItem
 } from '@components/dropdowns/multi-select/multi-select.component.types';

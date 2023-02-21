@@ -10,8 +10,7 @@ import {
     ViewChild,
     ElementRef,
     AfterViewInit,
-    Inject
-
+    Inject,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
