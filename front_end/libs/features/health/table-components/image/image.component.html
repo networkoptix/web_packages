@@ -69,6 +69,12 @@
                 NO IMAGE
             </div>
             <div
+                *ngSwitchCase="'notLoaded'"
+                translate
+            >
+                Cannot load preview
+            </div>
+            <div
                 *ngSwitchCase="'Offline'"
                 translate
             >
@@ -80,11 +86,8 @@
             >
                 AUTHENTICATION REQUIRED
             </div>
-            <div
-                *ngSwitchDefault
-                translate
-            >
-                UNAVAILABLE
+            <div *ngSwitchDefault>
+                {{ unavailableMessage | translate }}
             </div>
         </div>
         <ng-template #noMiniPreview>

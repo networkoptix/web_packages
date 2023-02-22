@@ -185,7 +185,8 @@
                             aspect="override"
                             [preloader]="true"
                             [state]="node.details.status"
-                            [url]="node?.details?.previewUrl"
+                            [unavailableMessage]="'Cannot load preview' | translate"
+                            [url]="node?.details?.previewUrl | async"
                             class="generic"
                         ></nx-health-image>
                     </div>

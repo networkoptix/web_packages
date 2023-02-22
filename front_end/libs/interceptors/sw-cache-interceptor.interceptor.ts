@@ -14,7 +14,7 @@ export class NxSwCacheInterceptor implements HttpInterceptor {
     constructor(private cloudApiService: NxCloudApiService) {}
 
     intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-        if (this.cloudApiService.swBypass) {
+        if (request.url.startsWith('/') && this.cloudApiService.swBypass) {
             const newRequest = request.clone({
                 headers: request.headers.set('ngsw-bypass', 'true')
             });

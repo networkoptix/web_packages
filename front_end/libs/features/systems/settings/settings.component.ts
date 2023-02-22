@@ -144,10 +144,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     private async updateContent(skipPermissions = false): Promise<string> {
         this.menuData$.next({ ...this.content });
-        if (environment.isLocal) {
+        if (environment.isLocal || !this.system) {
             return;
         }
-        if (this.system.userManager?.permissionsUpdated) {
+        if (this.system.userManager.permissionsUpdated) {
             return this.db.personal.menuContent.put(this.content);
         } else if (skipPermissions) {
             this.db.personal.transaction('rw', this.db.personal.menuContent, async () => {

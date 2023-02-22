@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, Output, OnDestroy } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
+import staticLang from '@common/language/language_i18n_static.json';
 import { NgChanges } from '@utils/ng-changes';
 
 @UntilDestroy({ checkProperties: true })
@@ -18,6 +19,7 @@ export class NxImageComponent implements OnChanges, OnDestroy {
     @Input() motionPreview: boolean = false;
     @Input() preloader: boolean = false;
     @Input() aspect: string = 'Auto';
+    @Input() unavailableMessage: string = staticLang.common.cameraStates.unavailable;
     @Output() loaded = new EventEmitter<boolean>();
     show: boolean;
 

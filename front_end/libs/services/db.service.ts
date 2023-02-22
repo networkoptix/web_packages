@@ -11,10 +11,10 @@ import { Account } from './account.service/account';
     providedIn: 'root'
 })
 export class NxDbService {
-    static shared = AppDB.createCreateDb(generateDbName('shared'));
+    static shared = AppDB.createDb(generateDbName('shared'));
 
     // The random DB is just to prevent runtime errors if personal is accessed before it is initialized.
-    static personal = AppDB.createCreateDb(`random-${uuid()}`);
+    static personal = AppDB.createDb(`random-${uuid()}`);
 
     get shared(): typeof NxDbService.shared {
         return NxDbService.shared;
@@ -24,7 +24,7 @@ export class NxDbService {
         return NxDbService.personal;
     }
 
-    updatePersonal(account: Account): ReturnType<typeof AppDB.createCreateDb> {
+    updatePersonal(account: Account): ReturnType<typeof AppDB.createDb> {
         const accountId: string = account?.email || account?.id;
 
         if (!accountId) {
@@ -36,7 +36,7 @@ export class NxDbService {
     }
 
     @memoizeAsyncPersistent
-    private memoizedCreateDb(dbName: string): ReturnType<typeof AppDB.createCreateDb> {
-        return AppDB.createCreateDb(dbName);
+    private memoizedCreateDb(dbName: string): ReturnType<typeof AppDB.createDb> {
+        return AppDB.createDb(dbName);
     }
 }
