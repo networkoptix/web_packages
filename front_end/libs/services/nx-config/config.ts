@@ -132,6 +132,7 @@ export const nxConfig: IConfig = {
         tableHeaders: ['Name', 'Description', 'Default Value']
     },
     headerHeight: 48,
+    moreResultsHeight: 60,
     supportedLanguages: [],
     system: {
         flags: {

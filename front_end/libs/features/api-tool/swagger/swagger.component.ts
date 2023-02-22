@@ -314,6 +314,9 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         const elements = this.document.querySelectorAll<HTMLElement>('pre, .text-area');
         for (const element of elements) {
             if (element.nextSibling?.nodeName !== 'NX-COPY-TO-CLIPBOARD' && !(element.classList.contains('with-line-counter'))) {
+                if (element.classList.contains('curl')) {
+                    element.innerText = element.innerText.replace(/(\r\n|\n|\r|\\)/gm, '');
+                }
                 if (element.parentElement.tagName !== 'DIV' || !element.parentElement.classList.contains('highlight-code')) {
                     const wrapper = this.document.createElement('div');
                     element.parentElement.replaceChild(wrapper, element);
@@ -342,16 +345,18 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         const visibleResponseSections = this.document.querySelectorAll('.btn-group');
         for (const visibleResponseSection of visibleResponseSections) {
             const responsesWrapper = visibleResponseSection.nextElementSibling;
-            const titles = responsesWrapper.querySelectorAll('h4');
-            if (titles[0]) {
-                titles[0].innerText = 'Server Response';
-            }
-            if (titles[3]) {
-                titles[3].classList.add('hidden');
-            }
-            if (titles[4]) {
-                titles[4].innerText = 'Example Response';
-                titles[4].classList.add('example-response');
+            const titles = responsesWrapper?.querySelectorAll('h4');
+            if (titles) {
+                if (titles[0]) {
+                    titles[0].innerText = 'Server Response';
+                }
+                if (titles[3]) {
+                    titles[3].classList.add('hidden');
+                }
+                if (titles[4]) {
+                    titles[4].innerText = 'Example Response';
+                    titles[4].classList.add('example-response');
+                }
             }
         }
     };

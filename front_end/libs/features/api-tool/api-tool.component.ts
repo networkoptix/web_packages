@@ -56,6 +56,12 @@ export class NxAPIToolComponent {
                 }
             }
         });
+
+        this.APIJSONService.searchMoreShowing$.pipe(untilDestroyed(this)).subscribe(() => {
+            if (this.developersMenuRef?.nativeElement) {
+                this.setMenuOffset();
+            }
+        });
     }
 
     ngOnInit(): void {
@@ -66,7 +72,8 @@ export class NxAPIToolComponent {
 
     setMenuOffset(): void {
         if (this.developersMenuRef?.nativeElement) {
-            this.menuOffset = this.developersMenuRef.nativeElement.getBoundingClientRect().top;
+            const moreResultsVisible = this.APIJSONService.searchQuery && (this.APIJSONService.searchMoreShowing$.value);
+            this.menuOffset = this.developersMenuRef.nativeElement.getBoundingClientRect().top + (moreResultsVisible ? this.CONFIG.moreResultsHeight : 0);
         }
     }
 

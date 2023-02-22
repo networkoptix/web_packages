@@ -98,6 +98,15 @@ interface SetupConfig {
 export class WizardStateService {
     currentState$ = new BehaviorSubject<WIZARD_STATE >(undefined);
     icons = icons;
+    appBusyState$ = new BehaviorSubject<boolean>(false);
+
+    set appBusyState(state: boolean) {
+        this.appBusyState$.next(state);
+    }
+
+    get appBusyState(): boolean {
+        return this.appBusyState$.getValue();
+    }
 
     set currentState(state: WIZARD_STATE) {
         this.currentState$.next(state);
@@ -614,6 +623,7 @@ export class WizardStateService {
 
     // Merge with another system
     connectToAnotherSystem(): void {
+        this.appBusyState = true;
         const normalizeUrl = (_url: string): string => {
             if (!_url.includes('//')) {
                 _url = `https://${_url}`;
@@ -636,7 +646,10 @@ export class WizardStateService {
             .pipe(untilDestroyed(this))
             .subscribe(() => {
                 const { remoteLogin, remotePassword } = this.setupConfig;
-                return this.updateCredentials(remoteLogin, remotePassword, false);
+                return this.updateCredentials(remoteLogin, remotePassword, false)
+                    .then(() => {
+                        this.appBusyState = false;
+                    });
             }, () => {
                 this.currentState = WIZARD_STATE.MergeFailure;
             });
@@ -657,6 +670,7 @@ export class WizardStateService {
         if (!this.hasNativeClient) {
             return;
         }
+        this.appBusyState = true;
         // Use the refresh token to set an access token.
         const accessToken = nativeClient.refreshToken(); // Change later to the actual accessToken
         // Then use the access token to get the users email.
@@ -671,9 +685,10 @@ export class WizardStateService {
                     data.authKey,
                     email,
                     this.systemSettings
-                )
-                    .toPromise()
-                    .then(() => {});
+                ).toPromise()
+                    .then(() => {
+                        this.appBusyState = false;
+                    });
             });
     }
 
@@ -684,6 +699,7 @@ export class WizardStateService {
     };
 
     initSystem(): void {
+        this.appBusyState = true;
         const { localPassword, systemName } = this.setupConfig;
         const settings: Partial<SystemConfigSettings> = {};
         // eslint-disable-next-line array-callback-return
@@ -699,6 +715,9 @@ export class WizardStateService {
             .toPromise()
             .then(_ => {
                 return this.updateCredentials(this.setupConfig.localLogin, localPassword, false)
+                    .then(() => {
+                        this.appBusyState = false;
+                    })
                     .catch(this.offlineErrorHandler);
             });
     }
