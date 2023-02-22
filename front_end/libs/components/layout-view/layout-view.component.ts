@@ -362,6 +362,18 @@ export class NxLayoutViewComponent {
                 ? Promise.resolve(layoutId.replace('new', ''))
                 : this.#defaultLayout$,
         ),
+        switchMap(async layoutId => {
+            const queryParams = { ...this.activatedRoute.snapshot.queryParams };
+            queryParams.openNodes ||= [];
+            if (!queryParams.openNodes.includes(layoutId)) {
+                queryParams.openNodes.push(layoutId);
+                await this.router.navigate(
+                    [`${this.router.url.split('layouts')[0]}layouts/${layoutId}`],
+                    { queryParams },
+                );
+            }
+            return layoutId;
+        }),
     );
 
     #selectedLayout$ = combineLatest([
