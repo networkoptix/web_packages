@@ -6,7 +6,7 @@ FRONTEND_REVISION="${1:?First parameter must be a frontend revision}"
 
 : "${API_TOKEN:?Provide manually or from Jenkins credentials}"
 
-if [ "$MERGE_REQUEST_ACTION" ]; then
+if [ -n "${MERGE_REQUEST_ACTION+x}" ]; then
   case "$MERGE_REQUEST_ACTION" in
     open|reopen|update) ;;
     close|approved|unapproved|approval|unapproval|merge)
@@ -20,7 +20,7 @@ if [ "$MERGE_REQUEST_ACTION" ]; then
   esac
 fi
 
-if [ "$MERGE_REQUEST_SOURCE_WEB_URL" ]; then
+if [ -n "${$MERGE_REQUEST_SOURCE_WEB_URL+x}" ]; then
   echo "Testing changes to merge from the repository $MERGE_REQUEST_SOURCE_WEB_URL"
 fi
 
@@ -72,7 +72,7 @@ fi
 
 LETSENCRYPT_STAGE_CERT_REQUIRED=1 \
   PATH="$GOOGLE_CHROME_DIR:$VENV_BIN_DIR:$PATH" \
-  pabot --pabotlib --ordering order.txt --processes 4 -L trace:info \
+  pabot --pabotlib --ordering order.txt --processes 8 -L trace:info \
   -v ENV:"https://$CLOUD_HOST" \
   -v "FROM EMAIL DEFAULT":True \
   --listener NoptixLibrary/FeatureFlagListener.py \
