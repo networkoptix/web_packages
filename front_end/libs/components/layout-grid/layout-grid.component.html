@@ -89,7 +89,6 @@
                 <ng-template #recordingIcon>
                     <svg-icon
                         *ngIf="
-                            preview &&
                             ['recording', 'scheduled', 'archive'].includes(node.details.status)
                                 ? '1'
                                 : '0' as opacity
@@ -98,8 +97,8 @@
                         [svgStyle]="{
                             'width.px': '20',
                             'height.px': '20',
-                            'margin-left.px': '-4',
-                            'margin-right.px': '8',
+                            'margin-left.px': '0',
+                            'margin-right.px': '4',
                             opacity: opacity,
                             display: opacity === '0' && preview && 'none'
                         }"
@@ -133,12 +132,13 @@
                         node.type +
                         (node.details?.status
                             ? '_' +
-                              (node.type !== 'camera'
+                              (node.type !== 'camera' || node.details.status === 'unauthorized'
                                   ? node.details.status
                                   : node.details.online
                                   ? 'online'
                                   : 'offline')
                             : '') +
+                        (node.shared ? '_shared' : '') +
                         '.svg'
                     "
                 >

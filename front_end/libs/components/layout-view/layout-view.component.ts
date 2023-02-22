@@ -177,7 +177,7 @@ export class NxLayoutViewComponent {
     );
 
     layoutItemLookup$ = this.selectedSystem$.pipe(
-        switchMap(({ mediaserver, serverManager, cameraManager }) =>
+        switchMap(({ mediaserver, serverManager, cameraManager, userManager }) =>
             combineLatest([
                 defer(() => cameraManager.getCameras()).pipe(
                     switchMap(cameras =>
@@ -202,113 +202,136 @@ export class NxLayoutViewComponent {
                     : Promise.resolve([] as WebPages),
                 this.#selectedLayout$.pipe(startWith(null)),
                 this.availableLayouts$.pipe(startWith([])),
+                userManager
+                    .getUsersDataFromTheSystem()
+                    .then(
+                        () =>
+                            userManager.users.find(
+                                ({ email }) => email === this.accountService.account.email,
+                            ).id,
+                    ),
             ]),
         ),
-        map(([cameras, servers, webPages, currentLayout, layouts]): LayoutResourceTree => {
-            const aspectRatio = currentLayout?.cellAspectRatio || 0;
-            const parsedCameras = cameras.reduce(
-                (cameras, camera) => ({
-                    ...cameras,
-                    [camera.id]: {
-                        type: ResourceType.CAMERA,
-                        name: camera.name,
-                        details: {
-                            ...camera,
-                            status: camera.status.toLowerCase(),
-                            resourceType:
-                                this.LANG.layouts.titles.resourceTypes[ResourceType.CAMERA],
+        map(
+            ([
+                cameras,
+                servers,
+                webPages,
+                currentLayout,
+                layouts,
+                currentUser,
+            ]): LayoutResourceTree => {
+                const aspectRatio = currentLayout?.cellAspectRatio || 0;
+                const parsedCameras = cameras.reduce(
+                    (cameras, camera) => ({
+                        ...cameras,
+                        [camera.id]: {
+                            type: ResourceType.CAMERA,
+                            name: camera.name,
+                            details: {
+                                ...camera,
+                                status: camera.status.toLowerCase(),
+                                resourceType:
+                                    this.LANG.layouts.titles.resourceTypes[ResourceType.CAMERA],
+                            },
+                            aspectRatio:
+                                camera.parsedAddParams.overrideAr ||
+                                camera.defaultRatio ||
+                                aspectRatio,
                         },
-                        aspectRatio:
-                            camera.parsedAddParams.overrideAr || camera.defaultRatio || aspectRatio,
-                    },
-                }),
-                {} as ResourceLookup<typeof cameras[0]>,
-            );
+                    }),
+                    {} as ResourceLookup<typeof cameras[0]>,
+                );
 
-            const parsedServers = servers.reduce(
-                (servers, server) => ({
-                    ...servers,
-                    [server.id]: {
-                        type: ResourceType.SERVER,
-                        name: server.name,
-                        details: {
-                            ...server,
-                            status: server.status.toLowerCase(),
-                            resourceType:
-                                this.LANG.layouts.titles.resourceTypes[ResourceType.SERVER],
+                const parsedServers = servers.reduce(
+                    (servers, server) => ({
+                        ...servers,
+                        [server.id]: {
+                            type: ResourceType.SERVER,
+                            name: server.name,
+                            details: {
+                                ...server,
+                                status: server.status.toLowerCase(),
+                                resourceType:
+                                    this.LANG.layouts.titles.resourceTypes[ResourceType.SERVER],
+                            },
+                            aspectRatio,
                         },
-                        aspectRatio,
-                    },
-                }),
-                {} as ResourceLookup<typeof servers[0]>,
-            );
+                    }),
+                    {} as ResourceLookup<typeof servers[0]>,
+                );
 
-            const parsedWebPages = webPages.reduce(
-                (webPages, webPage) => ({
-                    ...webPages,
-                    [webPage.id]: {
-                        type: ResourceType.WEB_PAGE,
-                        name: webPage.name,
-                        details: webPage,
-                        aspectRatio,
-                    },
-                }),
-                {} as ResourceLookup<typeof webPages[0]>,
-            );
-            const byName = alphabeticalSort<Pick<Resource, 'name'>>(this.locale, r => r.name || '');
-            const layoutsForTree = layouts
-                .filter(layout => layout.id && layout.id !== 'new')
-                .map(details => ({
-                    name: details.name,
-                    id: details.id,
-                    type: ResourceType.LAYOUT,
-                    details,
-                }));
-            const parsedResources = {
-                ...parsedServers,
-                ...parsedCameras,
-                ...parsedWebPages,
-                ...layoutsForTree.reduce(
-                    (acc, layout) => ({ ...acc, [layout.details.id]: layout }),
-                    {},
-                ),
-            };
-            const serversForTree = Object.values(parsedServers).sort(byName);
-            const camerasForTree = Object.values(parsedCameras).sort(byName);
-            const webPagesForTree = Object.values(parsedWebPages).sort(byName);
+                const parsedWebPages = webPages.reduce(
+                    (webPages, webPage) => ({
+                        ...webPages,
+                        [webPage.id]: {
+                            type: ResourceType.WEB_PAGE,
+                            name: webPage.name,
+                            details: webPage,
+                            aspectRatio,
+                        },
+                    }),
+                    {} as ResourceLookup<typeof webPages[0]>,
+                );
+                const byName = alphabeticalSort<Pick<Resource, 'name'>>(
+                    this.locale,
+                    r => r.name || '',
+                );
+                const layoutsForTree = layouts
+                    .filter(layout => layout.id && layout.id !== 'new')
+                    .map(details => ({
+                        name: details.name,
+                        id: details.id,
+                        shared: currentUser !== details.parentId,
+                        type: ResourceType.LAYOUT,
+                        details,
+                    }));
+                const parsedResources = {
+                    ...parsedServers,
+                    ...parsedCameras,
+                    ...parsedWebPages,
+                    ...layoutsForTree.reduce(
+                        (acc, layout) => ({ ...acc, [layout.details.id]: layout }),
+                        {},
+                    ),
+                };
+                const serversForTree = Object.values(parsedServers).sort(byName);
+                const camerasForTree = Object.values(parsedCameras).sort(byName);
+                const webPagesForTree = Object.values(parsedWebPages).sort(byName);
 
-            return {
-                tree: [
-                    {
-                        name: 'Layouts',
-                        type: ResourceType.LAYOUTS,
-                        children: layoutsForTree,
-                    },
-                    (this.CONFIG.featureFlags.layoutsServers ||
-                        this.CONFIG.featureFlags.layoutsDemo) && {
-                        name: 'Servers',
-                        type: ResourceType.SERVERS,
-                        children: serversForTree.map(server => ({
-                            ...server,
-                            children: [],
-                            // children: camerasForTree.filter(({ details: { parentId } }) => parentId === server.details.id)
-                        })),
-                    },
-                    {
-                        name: 'Cameras',
-                        type: ResourceType.CAMERAS,
-                        children: camerasForTree,
-                    },
-                    (this.CONFIG.featureFlags.layoutsWebpages ||
-                        this.CONFIG.featureFlags.layoutsDemo) && {
-                        name: 'Web Pages',
-                        type: ResourceType.WEB_PAGES,
-                        children: webPagesForTree,
-                    },
-                ].filter(item => !!item),
-                ...parsedResources,
-            };
-        }),
+                return {
+                    tree: [
+                        {
+                            name: 'Layouts',
+                            type: ResourceType.LAYOUTS,
+                            children: layoutsForTree,
+                        },
+                        (this.CONFIG.featureFlags.layoutsServers ||
+                            this.CONFIG.featureFlags.layoutsDemo) && {
+                            name: 'Servers',
+                            type: ResourceType.SERVERS,
+                            children: serversForTree.map(server => ({
+                                ...server,
+                                children: [],
+                                // children: camerasForTree.filter(({ details: { parentId } }) => parentId === server.details.id)
+                            })),
+                        },
+                        {
+                            name: 'Cameras',
+                            type: ResourceType.CAMERAS,
+                            children: camerasForTree,
+                        },
+                        (this.CONFIG.featureFlags.layoutsWebpages ||
+                            this.CONFIG.featureFlags.layoutsDemo) && {
+                            name: 'Web Pages',
+                            type: ResourceType.WEB_PAGES,
+                            children: webPagesForTree,
+                        },
+                    ].filter(item => !!item),
+                    ...parsedResources,
+                };
+            },
+        ),
         filter(lookup => !!lookup),
         shareReplay({
             bufferSize: 1,
