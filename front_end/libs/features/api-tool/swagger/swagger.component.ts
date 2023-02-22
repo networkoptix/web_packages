@@ -347,16 +347,18 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         const visibleResponseSections = this.document.querySelectorAll('.btn-group');
         for (const visibleResponseSection of visibleResponseSections) {
             const responsesWrapper = visibleResponseSection.nextElementSibling;
-            const titles = responsesWrapper.querySelectorAll('h4');
-            if (titles[0]) {
-                titles[0].innerText = 'Server Response';
-            }
-            if (titles[3]) {
-                titles[3].classList.add('hidden');
-            }
-            if (titles[4]) {
-                titles[4].innerText = 'Example Response';
-                titles[4].classList.add('example-response');
+            const titles = responsesWrapper?.querySelectorAll('h4');
+            if (titles) {
+                if (titles[0]) {
+                    titles[0].innerText = 'Server Response';
+                }
+                if (titles[3]) {
+                    titles[3].classList.add('hidden');
+                }
+                if (titles[4]) {
+                    titles[4].innerText = 'Example Response';
+                    titles[4].classList.add('example-response');
+                }
             }
         }
     };
