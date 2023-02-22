@@ -5,7 +5,7 @@ import { icons } from '@lib/variables/static-variables';
 @Component({
     selector: 'nx-alert-counter',
     templateUrl: './alert-counter.component.html',
-    styleUrls: ['./alert-counter.component.scss']
+    styleUrls: ['./alert-counter.component.scss'],
 })
 export class NxAlertCounter {
     @Input() count: number;

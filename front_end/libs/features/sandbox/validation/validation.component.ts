@@ -7,7 +7,7 @@ import { Process } from '@services/process.service/process';
 @Component({
     selector: 'validation',
     templateUrl: 'validation.component.html',
-    styleUrls: ['validation.component.scss']
+    styleUrls: ['validation.component.scss'],
 })
 export class ValidationComponent {
     data = {

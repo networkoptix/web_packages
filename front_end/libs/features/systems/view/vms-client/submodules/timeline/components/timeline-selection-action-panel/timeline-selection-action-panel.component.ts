@@ -34,7 +34,7 @@ type ssRange = { start: number; end: number };
 @Component({
     selector: 'nx-timeline-selection-action-panel',
     templateUrl: './timeline-selection-action-panel.component.html',
-    styleUrls: ['./timeline-selection-action-panel.component.scss']
+    styleUrls: ['./timeline-selection-action-panel.component.scss'],
 })
 export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewInit {
     protected status: TimelineSelectionServiceStatus;

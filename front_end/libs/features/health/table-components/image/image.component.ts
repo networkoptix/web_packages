@@ -7,7 +7,7 @@ import { NgChanges } from '@utils/ng-changes';
 @Component({
     selector: 'nx-health-image',
     templateUrl: './image.component.html',
-    styleUrls: ['./image.component.scss']
+    styleUrls: ['./image.component.scss'],
 })
 export class NxImageComponent implements OnChanges, OnDestroy {
     @Input() isPrimary: boolean;

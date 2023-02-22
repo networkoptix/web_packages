@@ -26,7 +26,7 @@ import { pickFrom } from '@utils/general';
 @Component({
     selector: 'nx-modal-restart-server-content',
     templateUrl: 'restart-server.component.html',
-    styleUrls: []
+    styleUrls: [],
 })
 export class RestartServerModalContent {
     @Input() closable: boolean = true;

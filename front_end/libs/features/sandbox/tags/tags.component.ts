@@ -5,7 +5,7 @@ import { NxMenuService } from '@app/menu/menu.service';
 @Component({
     selector: 'tags',
     templateUrl: 'tags.component.html',
-    styleUrls: ['tags.component.scss']
+    styleUrls: ['tags.component.scss'],
 })
 export class TagsComponent {
     options: { name: string; selected: boolean; type?: string }[];

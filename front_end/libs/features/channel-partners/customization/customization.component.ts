@@ -15,7 +15,7 @@ import {
 @Component({
     selector: 'nx-customization-component',
     templateUrl: 'customization.component.html',
-    styleUrls: ['customization.component.scss']
+    styleUrls: ['customization.component.scss'],
 })
 
 export class NxCustomizationComponent implements OnInit, OnDestroy {

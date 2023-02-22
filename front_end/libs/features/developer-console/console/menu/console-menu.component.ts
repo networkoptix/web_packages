@@ -17,7 +17,7 @@ import type { ConsoleMenuNode } from './console-menu.component.types';
 @Component({
     selector: 'nx-console-menu',
     templateUrl: 'console-menu.component.html',
-    styleUrls: ['console-menu.component.scss']
+    styleUrls: ['console-menu.component.scss'],
 })
 export class NxDevConsoleMenuComponent {
     @Input() menu: ConsoleMenuNode[];

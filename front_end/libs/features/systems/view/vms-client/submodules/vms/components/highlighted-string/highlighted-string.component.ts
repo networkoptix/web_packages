@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 @Component({
     selector: 'nx-highlighted-string',
     templateUrl: 'highlighted-string.component.html',
-    styleUrls: ['highlighted-string.component.scss']
+    styleUrls: ['highlighted-string.component.scss'],
 })
 export class HighlightedStringComponent {
     @Input() string: string;

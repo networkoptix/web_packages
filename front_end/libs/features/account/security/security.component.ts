@@ -22,7 +22,7 @@ import type { NxSystemInfo } from '@services/systems.service.types';
 @Component({
     selector: 'nx-account-security-component',
     templateUrl: 'security.component.html',
-    styleUrls: ['security.component.scss']
+    styleUrls: ['security.component.scss'],
 })
 export class NxAccountSecurityComponent implements OnInit, OnDestroy {
     LANG = staticLang;

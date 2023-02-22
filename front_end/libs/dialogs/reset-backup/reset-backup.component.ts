@@ -10,7 +10,7 @@ import { pickFrom } from '@utils/general';
 @Component({
     selector: 'nx-modal-reset-backup',
     templateUrl: 'reset-backup.component.html',
-    styleUrls: []
+    styleUrls: [],
 })
 export class ResetBackupModalContent {
     @Input() closable: boolean = true;

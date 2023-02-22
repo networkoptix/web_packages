@@ -14,7 +14,7 @@ interface layer {
 @Component({
     selector: 'nx-background-graphic',
     templateUrl: './background-graphic.component.html',
-    styleUrls: ['./background-graphic.component.scss']
+    styleUrls: ['./background-graphic.component.scss'],
 })
 export class NxBackgroundGraphicComponent implements AfterViewInit, OnChanges {
     @Input() scrollPosition: number;

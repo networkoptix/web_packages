@@ -20,7 +20,7 @@ import { pickFrom } from '@utils/general';
 @Component({
     selector: 'nx-modal-rename-content',
     templateUrl: 'update-camera-credentials.component.html',
-    styleUrls: []
+    styleUrls: [],
 })
 export class UpdateCameraCredentialsModalContent implements OnInit {
     @Input() closable = true;

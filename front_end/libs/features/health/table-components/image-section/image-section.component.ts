@@ -26,7 +26,7 @@ interface ThumbNail {
 @Component({
     selector: 'nx-image-section',
     templateUrl: './image-section.component.html',
-    styleUrls: ['./image-section.component.scss']
+    styleUrls: ['./image-section.component.scss'],
 })
 export class NxImageSectionComponent implements OnChanges, AfterViewInit, OnDestroy {
     @Input() cameraInfo;

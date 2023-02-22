@@ -9,7 +9,7 @@ import { Process } from '@services/process.service/process';
 @Component({
     selector: 'section-apply-example',
     templateUrl: 'section-apply-example.component.html',
-    styleUrls: ['section-apply-example.component.scss']
+    styleUrls: ['section-apply-example.component.scss'],
 })
 export class SectionApplyExampleComponent {
     // Refs to use for rendering apply component instances

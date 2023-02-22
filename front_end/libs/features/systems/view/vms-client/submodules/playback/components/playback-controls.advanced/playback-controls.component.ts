@@ -11,7 +11,7 @@ import { PlaybackService } from '../../services/playback.service';
 @Component({
     selector: 'nx-playback-controls',
     templateUrl: './playback-controls.component.html',
-    styleUrls: ['./playback-controls.component.scss']
+    styleUrls: ['./playback-controls.component.scss'],
 })
 export class PlaybackAdvControlsComponent implements OnInit {
     protected subscription: Subscription;

@@ -26,7 +26,7 @@ import {
 @Component({
     selector: 'nx-swagger-textarea',
     templateUrl: './swagger-textarea.component.html',
-    styleUrls: ['./swagger-textarea.component.scss']
+    styleUrls: ['./swagger-textarea.component.scss'],
 })
 export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
     @ViewChild('customTextarea') customTextareaRef : ElementRef;

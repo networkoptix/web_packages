@@ -26,7 +26,7 @@ interface ServerOption extends DropdownItem<string> {
 @Component({
     selector: 'nx-license-new-component',
     templateUrl: 'new.component.html',
-    styleUrls: ['new.component.scss']
+    styleUrls: ['new.component.scss'],
 })
 export class NxLicenseNewComponent implements OnChanges, OnDestroy {
     LANG = staticLang;

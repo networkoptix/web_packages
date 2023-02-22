@@ -5,7 +5,7 @@ import { NxMenuService } from '@app/menu/menu.service';
 @Component({
     selector: 'webgl',
     templateUrl: 'webgl.component.html',
-    styleUrls: ['webgl.component.scss']
+    styleUrls: ['webgl.component.scss'],
 })
 export class WebglComponent {
     data: Array<Record<string, string>>;

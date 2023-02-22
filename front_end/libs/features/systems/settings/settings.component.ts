@@ -56,7 +56,7 @@ import { NxSettingsService } from './settings.service';
 @Component({
     selector: 'nx-system-settings-component',
     templateUrl: 'settings.component.html',
-    styleUrls: ['settings.component.scss']
+    styleUrls: ['settings.component.scss'],
 })
 export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     @Input() uriParamSystemId;

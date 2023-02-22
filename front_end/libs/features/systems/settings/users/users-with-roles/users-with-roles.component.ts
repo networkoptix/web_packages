@@ -18,7 +18,7 @@ import type {
 @Component({
     selector: 'nx-system-user-with-roles-component',
     templateUrl: 'users-with-roles.component.html',
-    styleUrls: ['users-with-roles.component.scss']
+    styleUrls: ['users-with-roles.component.scss'],
 })
 
 export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent {

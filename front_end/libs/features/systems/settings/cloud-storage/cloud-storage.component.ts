@@ -24,7 +24,7 @@ import { NxSettingsService } from '../settings.service';
 @Component({
     selector: 'nx-cloud-storage',
     templateUrl: './cloud-storage.component.html',
-    styleUrls: ['./cloud-storage.component.scss']
+    styleUrls: ['./cloud-storage.component.scss'],
 })
 export class NxCloudStorageComponent implements OnInit {
     @Input() type: string;

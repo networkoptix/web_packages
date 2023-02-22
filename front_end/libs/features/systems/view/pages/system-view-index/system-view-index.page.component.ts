@@ -50,7 +50,7 @@ const MAX_OUT_OF_SYNC_TIME = 60000; // ms
 @Component({
     selector: 'nx-system-view-index-page',
     templateUrl: 'system-view-index.page.component.html',
-    styleUrls: ['system-view-index.page.component.scss']
+    styleUrls: ['system-view-index.page.component.scss'],
 })
 export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     @HostBinding('class.new-header') newHeader: boolean;

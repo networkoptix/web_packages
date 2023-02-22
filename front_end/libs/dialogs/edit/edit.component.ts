@@ -36,7 +36,7 @@ import { NxToastService } from '../toast.service';
 @Component({
     selector: 'nx-modal-edit',
     templateUrl: 'edit.component.html',
-    styleUrls: ['edit.component.scss']
+    styleUrls: ['edit.component.scss'],
 })
 export class EditModalContent {
     heading: string;

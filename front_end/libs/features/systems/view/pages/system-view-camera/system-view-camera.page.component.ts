@@ -53,7 +53,7 @@ const TIMESTAMP_UPDATE_THROTTLE_MS = 1000;
 @Component({
     selector: 'nx-system-view-camera-page',
     templateUrl: 'system-view-camera.page.component.html',
-    styleUrls: ['system-view-camera.page.component.scss']
+    styleUrls: ['system-view-camera.page.component.scss'],
 })
 export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly isMobile: boolean;

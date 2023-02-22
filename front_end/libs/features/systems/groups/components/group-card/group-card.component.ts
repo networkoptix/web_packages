@@ -16,7 +16,7 @@ import * as GroupActions from '../../store/groups.actions';
     styleUrls: [
         '../system-card/system-card.component.scss',
         'group-card.component.scss',
-    ]
+    ],
 })
 export class NxGroupCardComponent {
     @Input() group: GroupItem;

@@ -8,7 +8,7 @@ import { ModalBase } from '@dialogs/modal-base';
 @Component({
     selector: 'nx-client-2fa-warning',
     templateUrl: 'client-2fa-warning.component.html',
-    styleUrls: []
+    styleUrls: [],
 })
 export class Client2faWarningModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;

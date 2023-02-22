@@ -8,7 +8,7 @@ import type { Level2Item } from '../menu.types';
 @Component({
     selector: 'nx-level-2-item',
     templateUrl: 'level-2-item.component.html',
-    styleUrls: ['level-2-item.component.scss']
+    styleUrls: ['level-2-item.component.scss'],
 })
 export class NxLevel2ItemComponent implements OnInit {
     @Input() base: string = '';

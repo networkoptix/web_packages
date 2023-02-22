@@ -9,7 +9,7 @@ import { NxLandingService } from '../landing.service';
 @Component({
     selector: 'nx-mask',
     templateUrl: './mask.component.html',
-    styleUrls: ['./mask.component.scss']
+    styleUrls: ['./mask.component.scss'],
 })
 export class NxMaskComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
     @Input() scrollPosition: number = 820;

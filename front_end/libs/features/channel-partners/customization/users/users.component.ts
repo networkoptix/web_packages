@@ -15,7 +15,7 @@ import {
 @Component({
     selector: 'nx-customization-users',
     templateUrl: 'users.component.html',
-    styleUrls: ['users.component.scss']
+    styleUrls: ['users.component.scss'],
 })
 
 export class NxCustomizationUsersComponent implements OnInit, OnDestroy {

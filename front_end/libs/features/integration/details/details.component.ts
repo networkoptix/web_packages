@@ -31,7 +31,7 @@ import { IntegrationService } from '../integration.service';
 @Component({
     selector: 'nx-integration-detail-component',
     templateUrl: 'details.component.html',
-    styleUrls: ['details.component.scss']
+    styleUrls: ['details.component.scss'],
 })
 
 export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {

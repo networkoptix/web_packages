@@ -25,7 +25,7 @@ type Subject = DropdownItem<string>;
 @Component({
     selector: 'nx-modal-message-content',
     templateUrl: 'message.component.html',
-    styleUrls: []
+    styleUrls: [],
 })
 export class MessageModalContent extends ModalBase<DT['return']> implements OnInit {
     LANG = staticLang;

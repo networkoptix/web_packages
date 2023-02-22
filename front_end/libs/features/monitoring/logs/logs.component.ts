@@ -9,7 +9,7 @@ import { NxSystem } from '@services/system.service/system';
 @Component({
     selector: 'nx-logs',
     templateUrl: 'logs.component.html',
-    styleUrls: ['logs.component.scss']
+    styleUrls: ['logs.component.scss'],
 })
 export class LogsComponent implements OnInit {
     system: NxSystem;

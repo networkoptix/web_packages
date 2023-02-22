@@ -30,7 +30,7 @@ interface sidebarSettings {
 @Component({
     selector: 'nx-groups',
     templateUrl: 'groups.component.html',
-    styleUrls: ['groups.component.scss']
+    styleUrls: ['groups.component.scss'],
 })
 export class NxSystemGroupsComponent implements OnInit, OnDestroy {
     icons = icons;

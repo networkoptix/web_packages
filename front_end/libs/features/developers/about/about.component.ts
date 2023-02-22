@@ -29,7 +29,7 @@ import {
 @Component({
     selector: 'nx-about',
     templateUrl: 'about.component.html',
-    styleUrls: ['about.component.scss']
+    styleUrls: ['about.component.scss'],
 })
 export class NxAboutComponent {
     injector: Injector;

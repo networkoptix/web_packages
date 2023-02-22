@@ -18,7 +18,7 @@ import { WINDOW } from '@services/window-provider';
 @Component({
     selector: 'nx-content-component',
     templateUrl: 'content.component.html',
-    styleUrls: ['content.component.scss']
+    styleUrls: ['content.component.scss'],
 })
 export class NxContentComponent implements OnInit {
     CONFIG: IConfig;

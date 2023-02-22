@@ -23,7 +23,7 @@ import type { Disconnect as DT } from '../dialogs.types';
 @Component({
     selector: 'nx-modal-disconnect-content',
     templateUrl: 'disconnect.component.html',
-    styleUrls: []
+    styleUrls: [],
 })
 export class DisconnectModalContent extends ModalBase<DT['return']> {
     readonly environment: IEnvironment = environment;

@@ -7,7 +7,7 @@ import { NxAPIToolSystemService } from '../services/api-tool-system.service';
 @Component({
     selector: 'nx-version-message',
     templateUrl: './version-message.component.html',
-    styleUrls: ['./version-message.component.scss']
+    styleUrls: ['./version-message.component.scss'],
 })
 export class NxVersionMessageComponent {
     outdatedSystem = false;

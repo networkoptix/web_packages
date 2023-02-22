@@ -27,7 +27,7 @@ import { NxToastService } from '../toast.service';
 @Component({
     selector: 'nx-modal-add-storage',
     templateUrl: 'add-storage.component.html',
-    styleUrls: ['add-storage.component.scss']
+    styleUrls: ['add-storage.component.scss'],
 })
 export class AddStorageModalContent {
     @Input() closable: boolean = true;

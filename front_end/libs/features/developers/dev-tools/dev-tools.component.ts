@@ -18,7 +18,7 @@ import { ErrorStateManager } from '../about/error-state/error-state-manager';
 @Component({
     selector: 'nx-dev-tools',
     templateUrl: 'dev-tools.component.html',
-    styleUrls: ['dev-tools.component.scss']
+    styleUrls: ['dev-tools.component.scss'],
 })
 export class NxDevToolsComponent implements OnInit {
     @Input() devToolsNode: Partial<AboutNode>;

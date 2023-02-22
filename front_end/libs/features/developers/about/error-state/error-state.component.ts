@@ -11,7 +11,7 @@ import { ErrorStateStructure } from '../error-state/error-state-manager';
 @Component({
     selector: 'nx-error-state',
     templateUrl: 'error-state.component.html',
-    styleUrls: ['error-state.component.scss']
+    styleUrls: ['error-state.component.scss'],
 })
 export class NxErrorStateComponent {
     @Input() errors: ErrorStateStructure;

@@ -26,7 +26,7 @@ import { WINDOW } from '@services/window-provider';
 @Component({
     selector: 'nx-intro-text',
     templateUrl: './intro-text.component.html',
-    styleUrls: ['./intro-text.component.scss']
+    styleUrls: ['./intro-text.component.scss'],
 })
 export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
     @ViewChild('createButton') createButtonRef: ElementRef<HTMLElement>;

@@ -162,7 +162,7 @@ function mapStorages(
 @Component({
     selector: 'nx-server-advanced-storage-component',
     templateUrl: 'server-storage-adv.component.html',
-    styleUrls: ['server-storage-adv.component.scss']
+    styleUrls: ['server-storage-adv.component.scss'],
 })
 export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
     @Input() system: NxSystem;

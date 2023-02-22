@@ -72,7 +72,7 @@ class AlexaSettings {
 @Component({
     selector: 'nx-system-standard-admin-component',
     templateUrl: 'standard.component.html',
-    styleUrls: ['standard.component.scss']
+    styleUrls: ['standard.component.scss'],
 })
 
 export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDestroy {

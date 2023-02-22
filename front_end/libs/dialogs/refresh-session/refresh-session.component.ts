@@ -8,7 +8,7 @@ import { NxLoginService } from '@services/login.service';
 @Component({
     selector: 'nx-modal-refresh-session-content',
     templateUrl: 'refresh-session.component.html',
-    styleUrls: []
+    styleUrls: [],
 })
 export class RefreshSessionModalContent extends ModalBase<DT['return']> {
     constructor(

@@ -83,7 +83,7 @@ const getTestEvents = (systemId?: string): NotificationDropdownItem[] => [
 @Component({
     selector: 'nx-email-notifications-component',
     templateUrl: 'email-notifications.component.html',
-    styleUrls: ['email-notifications.component.scss']
+    styleUrls: ['email-notifications.component.scss'],
 })
 export class EmailNotificationsComponent {
     CONFIG: IConfig;

@@ -26,7 +26,7 @@ interface SystemSetting {
 @Component({
     selector: 'nx-system-advanced-admin-component',
     templateUrl: 'advanced.component.html',
-    styleUrls: ['advanced.component.scss']
+    styleUrls: ['advanced.component.scss'],
 })
 
 export class NxSystemAdvancedAdminComponent implements OnDestroy {

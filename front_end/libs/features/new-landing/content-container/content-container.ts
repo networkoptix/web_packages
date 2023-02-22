@@ -21,7 +21,7 @@ interface dataInput {
 @Component({
     selector: 'nx-content-container',
     templateUrl: './content-container.component.html',
-    styleUrls: ['./content-container.component.scss']
+    styleUrls: ['./content-container.component.scss'],
 })
 export class NxContentContainerComponent implements AfterViewInit {
     @ViewChild('content') contentStartRef: ElementRef;

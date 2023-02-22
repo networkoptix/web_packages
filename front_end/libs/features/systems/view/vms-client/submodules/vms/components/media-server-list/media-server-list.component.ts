@@ -12,7 +12,7 @@ import { MediaServer } from '../../datatypes/MediaServer';
 @Component({
     selector: 'nx-media-server-list',
     templateUrl: 'media-server-list.component.html',
-    styleUrls: ['media-server-list.component.scss']
+    styleUrls: ['media-server-list.component.scss'],
 })
 export class MediaServerListComponent implements OnChanges {
     @Input('mediaservers') _mediaservers: Array<MediaServer> = [];

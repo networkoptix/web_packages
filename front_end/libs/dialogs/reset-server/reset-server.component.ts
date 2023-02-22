@@ -23,7 +23,7 @@ import { cleanId, pickFrom } from '@utils/general';
 @Component({
     selector: 'nx-modal-reset-server-content',
     templateUrl: 'reset-server.component.html',
-    styleUrls: []
+    styleUrls: [],
 })
 export class ResetServerModalContent {
     @Input() closable: boolean = true;

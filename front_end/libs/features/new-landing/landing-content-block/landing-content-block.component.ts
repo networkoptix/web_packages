@@ -6,7 +6,7 @@ type InputType = 'small' | 'wide' | 'adaptive';
 @Component({
     selector: 'nx-landing-content-block',
     templateUrl: './landing-content-block.component.html',
-    styleUrls: ['./landing-content-block.component.scss']
+    styleUrls: ['./landing-content-block.component.scss'],
 })
 export class NxContentLandingBlockComponent {
     @Input() type: InputType;

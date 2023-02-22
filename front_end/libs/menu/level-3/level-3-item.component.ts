@@ -20,7 +20,7 @@ import type { Level3Item } from '../menu.types';
 @Component({
     selector: 'nx-level-3-item',
     templateUrl: 'level-3-item.component.html',
-    styleUrls: ['level-3-item.component.scss']
+    styleUrls: ['level-3-item.component.scss'],
 })
 export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
     @Input() base: string = '';

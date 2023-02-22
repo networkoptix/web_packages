@@ -16,7 +16,7 @@ import { selectCurrentGroupId } from '../../store/groups.selectors';
 @Component({
     selector: 'nx-sidebar-level',
     templateUrl: 'sidebar-level.component.html',
-    styleUrls: ['sidebar-level.component.scss']
+    styleUrls: ['sidebar-level.component.scss'],
 })
 export class NxGroupsSidebarLevelComponent implements OnChanges {
     @Input() groups: GroupItem[];

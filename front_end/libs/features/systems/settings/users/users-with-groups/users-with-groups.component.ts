@@ -22,7 +22,7 @@ import { NxSystemUsersBaseComponent } from '../edit-user-base/edit-user-base.com
 @Component({
     selector: 'nx-system-user-with-groups-component',
     templateUrl: 'users-with-groups.component.html',
-    styleUrls: ['users-with-groups.component.scss']
+    styleUrls: ['users-with-groups.component.scss'],
 })
 
 export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent {

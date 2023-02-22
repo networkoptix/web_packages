@@ -18,7 +18,7 @@ import { NxMenuService } from '@src/app/menu/menu.service';
 @Component({
     selector: 'nx-customization-partners',
     templateUrl: 'partner.component.html',
-    styleUrls: ['partner.component.scss']
+    styleUrls: ['partner.component.scss'],
 })
 
 export class NxCustomizationPartnerComponent implements OnInit, OnDestroy {

@@ -9,7 +9,7 @@ import { Process } from '@services/process.service/process';
 @Component({
     selector: 'nx-modal-system-group-settings-content',
     templateUrl: 'system-group-settings.component.html',
-    styleUrls: []
+    styleUrls: [],
 })
 export class SystemGroupSettingsModalContent implements OnInit {
     @ViewChild('systemGroupSettingsForm') form: NgForm;

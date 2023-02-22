@@ -24,7 +24,7 @@ const PRIMARY_WIDTH = 140;
 @Component({
     selector: 'nx-time-under-mouse',
     templateUrl: './time-under-mouse.component.html',
-    styleUrls: ['./time-under-mouse.component.scss']
+    styleUrls: ['./time-under-mouse.component.scss'],
 })
 export class TimeUnderMouseComponent implements OnInit {
     public date: string = '';

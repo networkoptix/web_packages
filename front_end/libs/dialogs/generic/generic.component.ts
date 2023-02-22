@@ -7,7 +7,7 @@ import { ModalBase } from '@dialogs/modal-base';
 @Component({
     selector: 'nx-modal-generic-content',
     templateUrl: 'generic.component.html',
-    styleUrls: ['generic.component.scss']
+    styleUrls: ['generic.component.scss'],
 })
 export class GenericModalContent extends ModalBase<DT['return']> {
     constructor(

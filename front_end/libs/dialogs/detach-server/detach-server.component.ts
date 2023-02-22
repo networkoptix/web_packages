@@ -16,7 +16,7 @@ import { NxToastService } from '../toast.service';
 @Component({
     selector: 'nx-modal-detach-server-content',
     templateUrl: 'detach-server.component.html',
-    styleUrls: []
+    styleUrls: [],
 })
 export class DetachServerModalContent {
     @Input() closable = true;

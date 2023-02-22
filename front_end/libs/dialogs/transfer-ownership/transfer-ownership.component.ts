@@ -25,7 +25,7 @@ interface UserItem extends SearchableDropdownItem {
 @Component({
     selector: 'nx-modal-transfer-ownership-content',
     templateUrl: './transfer-ownership.component.html',
-    styleUrls: ['./transfer-ownership.component.scss']
+    styleUrls: ['./transfer-ownership.component.scss'],
 })
 export class TransferOwnershipModalContent extends ModalBase<DT['return']> implements OnInit {
     @ViewChild('transferOwnershipForm') form: NgForm;

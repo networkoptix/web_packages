@@ -9,7 +9,7 @@ import { NxSystem } from '@services/system.service/system';
 @Component({
     selector: 'nx-graphs',
     templateUrl: 'graphs.component.html',
-    styleUrls: ['graphs.component.scss']
+    styleUrls: ['graphs.component.scss'],
 })
 export class GraphsComponent implements OnInit {
     system: NxSystem;

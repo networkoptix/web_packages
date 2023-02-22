@@ -15,7 +15,7 @@ import { WINDOW } from '@services/window-provider';
 @Component({
     selector: 'nx-landing-component',
     templateUrl: 'landing.component.html',
-    styleUrls: ['landing.component.scss']
+    styleUrls: ['landing.component.scss'],
 })
 
 export class NxLandingComponent implements OnInit {

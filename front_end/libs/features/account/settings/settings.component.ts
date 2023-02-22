@@ -29,7 +29,7 @@ import { WINDOW } from '@services/window-provider';
 @Component({
     selector: 'nx-account-settings-component',
     templateUrl: 'settings.component.html',
-    styleUrls: ['settings.component.scss']
+    styleUrls: ['settings.component.scss'],
 })
 
 export class NxAccountSettingsComponent implements OnInit, OnDestroy {

@@ -19,7 +19,7 @@ import { NgChanges } from '@utils/ng-changes';
 @Component({
     selector: 'nx-license-trial-component',
     templateUrl: 'trial.component.html',
-    styleUrls: ['trial.component.scss']
+    styleUrls: ['trial.component.scss'],
 })
 
 export class NxLicenseTrialComponent implements OnChanges, OnDestroy {

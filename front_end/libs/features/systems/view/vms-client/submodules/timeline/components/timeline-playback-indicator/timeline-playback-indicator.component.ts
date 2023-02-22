@@ -30,7 +30,7 @@ const PRIMARY_WIDTH = 140;
 @Component({
     selector: 'nx-timeline-playback-indicator',
     templateUrl: './timeline-playback-indicator.component.html',
-    styleUrls: ['./timeline-playback-indicator.component.scss']
+    styleUrls: ['./timeline-playback-indicator.component.scss'],
 })
 export class TimelinePlaybackIndicatorComponent implements OnInit {
     public visible: boolean = false;

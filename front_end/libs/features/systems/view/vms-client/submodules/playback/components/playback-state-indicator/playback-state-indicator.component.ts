@@ -11,7 +11,7 @@ import { PlaybackService } from '../../services/playback.service';
 @Component({
     selector: 'nx-playback-state-indicator',
     templateUrl: './playback-state-indicator.component.html',
-    styleUrls: ['./playback-state-indicator.component.scss']
+    styleUrls: ['./playback-state-indicator.component.scss'],
 })
 export class PlaybackStateIndicatorComponent implements OnInit {
     public state: PlaybackState;

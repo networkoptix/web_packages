@@ -50,7 +50,7 @@ interface NxSystemModuleInfo extends NxSystemInfo {
 @Component({
     selector: 'nx-modal-merge-content',
     templateUrl: 'merge.component.html',
-    styleUrls: ['merge.component.scss']
+    styleUrls: ['merge.component.scss'],
 })
 export class MergeModalContent {
     @Input() closable = true;

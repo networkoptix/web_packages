@@ -14,7 +14,7 @@ import type { Apply as DialogTypes } from '../dialogs.types';
 @Component({
     selector: 'nx-modal-apply-content',
     templateUrl: 'apply.component.html',
-    styleUrls: []
+    styleUrls: [],
 })
 export class ApplyModalContent implements OnInit {
     applyFunc: Process;

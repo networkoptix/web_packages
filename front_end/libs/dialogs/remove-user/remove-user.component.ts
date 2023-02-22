@@ -14,7 +14,7 @@ import type { RemoveUser as DT } from '../dialogs.types';
 @Component({
     selector: 'nx-modal-remove-user-content',
     templateUrl: 'remove-user.component.html',
-    styleUrls: []
+    styleUrls: [],
 })
 export class RemoveUserModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;

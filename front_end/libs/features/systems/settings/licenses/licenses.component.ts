@@ -20,7 +20,7 @@ import { getDynamicLicense } from './dynamic-license';
 @Component({
     selector: 'nx-system-licenses',
     templateUrl: 'licenses.component.html',
-    styleUrls: ['licenses.component.scss']
+    styleUrls: ['licenses.component.scss'],
 })
 export class NxSystemLicensesComponent implements OnInit {
     CONFIG: IConfig;

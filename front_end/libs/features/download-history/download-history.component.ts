@@ -22,7 +22,7 @@ import { NxUriService } from '@services/uri.service';
 @Component({
     selector: 'nx-download-history',
     templateUrl: 'download-history.component.html',
-    styleUrls: ['download-history.component.scss']
+    styleUrls: ['download-history.component.scss'],
 })
 
 export class DownloadHistoryComponent implements OnInit {

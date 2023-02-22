@@ -66,7 +66,7 @@ function cssaToStrArray(cssa: string): string[] {
 @Component({
     selector: 'nx-bookmarks-component',
     templateUrl: 'bookmarks.component.html',
-    styleUrls: ['bookmarks.component.scss']
+    styleUrls: ['bookmarks.component.scss'],
 })
 export class NxBookmarksComponent implements OnInit {
     LANG = staticLang;

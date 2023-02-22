@@ -14,7 +14,7 @@ import { ErrorStateManager } from '../error-state/error-state-manager';
 @Component({
     selector: 'nx-integrations',
     templateUrl: 'integrations.component.html',
-    styleUrls: ['integrations.component.scss']
+    styleUrls: ['integrations.component.scss'],
 })
 export class NxIntegrationsComponent implements OnInit {
     @Input() integrationsNode: AboutNode;

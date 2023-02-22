@@ -10,7 +10,7 @@ import { NxPartnersService } from '@pages/channel-partners/partners.service';
 @Component({
     selector: 'nx-modal-add-partner-content',
     templateUrl: 'add-partner.component.html',
-    styleUrls: []
+    styleUrls: [],
 })
 export class AddPartnerModalContent {
     @Input() closable: boolean = true;

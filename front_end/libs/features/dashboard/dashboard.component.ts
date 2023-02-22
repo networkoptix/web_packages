@@ -66,7 +66,7 @@ class DashboardGroup {
 @Component({
     selector: 'nx-dashboard',
     templateUrl: './dashboard.component.html',
-    styleUrls: ['./dashboard.component.scss']
+    styleUrls: ['./dashboard.component.scss'],
 })
 export class NxDashboardComponent implements DashboardGroup {
     readonly CUSTOM_PROPERTY_KEY = 'aggregated-dashboard';

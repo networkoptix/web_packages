@@ -27,7 +27,7 @@ import { PlaybackService } from '../../services/playback.service';
 @Component({
     selector: 'nx-player',
     templateUrl: './player.component.html',
-    styleUrls: ['./player.component.scss']
+    styleUrls: ['./player.component.scss'],
 })
 export class PlayerComponent implements OnInit, AfterViewInit {
     LANG = staticLang;

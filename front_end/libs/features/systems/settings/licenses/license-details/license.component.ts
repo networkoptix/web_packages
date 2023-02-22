@@ -26,7 +26,7 @@ import { getDynamicLicense } from '../dynamic-license';
 @Component({
     selector: 'nx-license-detail-component',
     templateUrl: 'license.component.html',
-    styleUrls: ['license.component.scss']
+    styleUrls: ['license.component.scss'],
 })
 
 export class NxLicenseDetailComponent implements OnChanges, OnDestroy {

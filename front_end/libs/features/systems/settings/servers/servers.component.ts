@@ -28,7 +28,7 @@ import { NxSettingsService } from '../settings.service';
 @Component({
     selector: 'nx-server-component',
     templateUrl: 'servers.component.html',
-    styleUrls: ['servers.component.scss']
+    styleUrls: ['servers.component.scss'],
 })
 
 export class NxSystemServersComponent implements OnInit, OnDestroy {

@@ -7,7 +7,7 @@ import { CVS_OPTIONS } from '@services/csv-export.service.types';
 @Component({
     selector: 'nx-csv-button',
     templateUrl: './csv-button.component.html',
-    styleUrls: ['./csv-button.component.scss']
+    styleUrls: ['./csv-button.component.scss'],
 })
 export class CsvButtonComponent {
     @Input() data: object[];

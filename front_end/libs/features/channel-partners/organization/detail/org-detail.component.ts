@@ -14,7 +14,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 @Component({
     selector: 'nx-partner-org-detail-component',
     templateUrl: 'org-detail.component.html',
-    styleUrls: ['org-detail.component.scss']
+    styleUrls: ['org-detail.component.scss'],
 })
 
 export class NxPartnerOrganizationDetailComponent implements OnInit, OnDestroy {

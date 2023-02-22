@@ -53,7 +53,7 @@ interface Introspect extends Omit<Token, 'refresh_token'> {
 @Component({
     selector: 'nx-modal-connect-cloud-content',
     templateUrl: 'connect-cloud.component.html',
-    styleUrls: []
+    styleUrls: [],
 })
 export class ConnectCloudModalContent extends ModalBase<DT['return']> implements OnInit {
     @ViewChild('connectForm', { static: true }) private connectForm: NgForm;

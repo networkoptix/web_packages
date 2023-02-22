@@ -36,7 +36,7 @@ import type {
 @Component({
     selector: 'nx-timeline-scrollbar',
     templateUrl: './timeline-scrollbar.component.html',
-    styleUrls: ['./timeline-scrollbar.component.scss']
+    styleUrls: ['./timeline-scrollbar.component.scss'],
 })
 export class TimelineScrollbarComponent implements AfterViewInit {
     images = images;

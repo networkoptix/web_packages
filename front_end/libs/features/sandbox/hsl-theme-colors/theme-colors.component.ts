@@ -6,7 +6,7 @@ import { NxMenuService } from '@app/menu/menu.service';
 @Component({
     selector: 'nx-hsl-theme-colors',
     templateUrl: 'theme-colors.component.html',
-    styleUrls: ['theme-colors.component.scss']
+    styleUrls: ['theme-colors.component.scss'],
 })
 export class NxHSLThemeColorsComponent implements OnInit {
     brand = {

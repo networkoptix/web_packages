@@ -11,7 +11,7 @@ type SingleDropdownOption = DropdownItem<string>;
 @Component({
     selector: 'nx-swagger-dropdown',
     templateUrl: './swagger-dropdown.component.html',
-    styleUrls: ['./swagger-dropdown.component.scss']
+    styleUrls: ['./swagger-dropdown.component.scss'],
 })
 export class NxSwaggerDropdownComponent implements OnInit, OnDestroy {
     @Input() swaggerSelect: HTMLSelectElement;

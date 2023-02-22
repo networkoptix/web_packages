@@ -12,7 +12,7 @@ import { Process } from '@services/process.service/process';
 @Component({
     selector: 'nx-modal-create-system-group-content',
     templateUrl: 'create-system-group.component.html',
-    styleUrls: []
+    styleUrls: [],
 })
 export class CreateSystemGroupModalContent implements OnInit {
     LANG = staticLang;

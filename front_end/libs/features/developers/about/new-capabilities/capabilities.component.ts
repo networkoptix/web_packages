@@ -9,7 +9,7 @@ import { ErrorStateManager } from '../error-state/error-state-manager';
 @Component({
     selector: 'nx-new-capabilities',
     templateUrl: './capabilities.component.html',
-    styleUrls: ['./capabilities.component.scss']
+    styleUrls: ['./capabilities.component.scss'],
 })
 export class NxNewCapabilitiesComponent implements OnInit {
     @Input() devCapabilitiesNode: AboutNode;

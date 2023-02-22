@@ -12,7 +12,7 @@ import { IntegrationService } from '../../integration.service';
 @Component({
     selector: 'nx-overview-component',
     templateUrl: 'overview.component.html',
-    styleUrls: ['overview.component.scss']
+    styleUrls: ['overview.component.scss'],
 })
 
 export class NxOverviewComponent implements OnInit, OnDestroy {

@@ -22,7 +22,7 @@ interface IParams<Value = any> {
 @Component({
     selector: 'nx-modal-embed-content',
     templateUrl: 'embed.component.html',
-    styleUrls: []
+    styleUrls: [],
 })
 export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
     @Input() closable = true;

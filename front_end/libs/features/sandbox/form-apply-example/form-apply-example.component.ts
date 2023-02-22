@@ -16,7 +16,7 @@ import { Process } from '@services/process.service/process';
 @Component({
     selector: 'form-apply-example',
     templateUrl: 'form-apply-example.component.html',
-    styleUrls: ['form-apply-example.component.scss']
+    styleUrls: ['form-apply-example.component.scss'],
 })
 export class FormApplyExampleComponent {
     // Refs to use for rendering apply component instances

@@ -13,7 +13,7 @@ import { NxHealthService } from '../health.service';
 @Component({
     selector: 'nx-health-update',
     templateUrl: './update-info.component.html',
-    styleUrls: ['update-info.component.scss']
+    styleUrls: ['update-info.component.scss'],
 })
 export class NxUpdateInfoComponent implements OnInit, OnDestroy {
     @Output() updateHealth = new EventEmitter<boolean>();

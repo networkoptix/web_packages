@@ -10,7 +10,7 @@ import { NgChanges } from '@utils/ng-changes';
 @Component({
     selector: 'nx-integrations-list-component',
     templateUrl: 'list.component.html',
-    styleUrls: ['list.component.scss']
+    styleUrls: ['list.component.scss'],
 })
 
 export class NxIntegrationsListComponent implements OnDestroy, OnChanges {

@@ -26,7 +26,7 @@ import type { IpvdParams } from '../../ipvd.types';
 @Component({
     selector: 'nx-cam-view',
     templateUrl: './cam-view.component.html',
-    styleUrls: ['./cam-view.component.scss']
+    styleUrls: ['./cam-view.component.scss'],
 })
 export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() activeCamera: Cameras;

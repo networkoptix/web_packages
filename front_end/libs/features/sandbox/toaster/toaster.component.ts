@@ -10,7 +10,7 @@ import { NxProcessService } from '@services/process.service';
 @Component({
     selector: 'toaster',
     templateUrl: 'toaster.component.html',
-    styleUrls: ['toaster.component.scss']
+    styleUrls: ['toaster.component.scss'],
 })
 export class ToasterComponent implements OnInit, OnDestroy {
     LANG = staticLang;

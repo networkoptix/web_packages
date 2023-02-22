@@ -16,7 +16,7 @@ import type {
 @Component({
     selector: 'form-elements',
     templateUrl: 'form-elements.component.html',
-    styleUrls: ['form-elements.component.scss']
+    styleUrls: ['form-elements.component.scss'],
 })
 export class FormElementsComponent {
     LANG = staticLang;

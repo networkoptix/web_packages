@@ -14,7 +14,7 @@ import { IntegrationService } from '../../integration.service';
 @Component({
     selector: 'nx-setup-component',
     templateUrl: 'setup.component.html',
-    styleUrls: ['setup.component.scss']
+    styleUrls: ['setup.component.scss'],
 })
 
 export class NxSetupComponent implements OnInit, OnDestroy {

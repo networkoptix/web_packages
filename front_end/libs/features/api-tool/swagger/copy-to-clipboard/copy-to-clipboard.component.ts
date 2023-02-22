@@ -10,7 +10,7 @@ import { icons, toast } from '@lib/variables/static-variables';
 @Component({
     selector: 'nx-copy-to-clipboard',
     templateUrl: './copy-to-clipboard.component.html',
-    styleUrls: ['./copy-to-clipboard.component.scss']
+    styleUrls: ['./copy-to-clipboard.component.scss'],
 })
 export class NxCopyToClipboardComponent {
     LANG = staticLang;

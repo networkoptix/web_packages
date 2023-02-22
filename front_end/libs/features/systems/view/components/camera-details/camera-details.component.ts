@@ -19,7 +19,7 @@ interface ICameraDetails {
 @Component({
     selector: 'nx-camera-details',
     templateUrl: 'camera-details.component.html',
-    styleUrls: ['camera-details.component.scss']
+    styleUrls: ['camera-details.component.scss'],
 })
 export class NxCameraDetailsComponent implements OnChanges {
     @Input() camera: ICamera;

@@ -16,7 +16,7 @@ import { NxSystemService } from '@services/system.service/system.service';
 @Component({
     selector: 'nx-server-documentation-component',
     templateUrl: 'server-documentation.component.html',
-    styleUrls: ['server-documentation.component.scss']
+    styleUrls: ['server-documentation.component.scss'],
 })
 
 export class NxServerDocumentationComponent {

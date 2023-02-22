@@ -17,7 +17,7 @@ import { NxUriService } from '@services/uri.service';
 @Component({
     selector: 'nx-partner-orgs-component',
     templateUrl: 'org-list.component.html',
-    styleUrls: ['org-list.component.scss']
+    styleUrls: ['org-list.component.scss'],
 })
 
 export class NxPartnerOrganizationsListComponent implements OnInit, OnDestroy {

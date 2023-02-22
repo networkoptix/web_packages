@@ -36,7 +36,7 @@ interface TypeDropdownItem extends DropdownItem<number> {
 @Component({
     selector: 'nx-api-tool-dropdowns',
     templateUrl: './api-tool-dropdowns.component.html',
-    styleUrls: ['./api-tool-dropdowns.component.scss']
+    styleUrls: ['./api-tool-dropdowns.component.scss'],
 })
 export class NxAPIToolDropdownsComponent implements OnInit {
     readonly environment = environment;

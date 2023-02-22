@@ -12,7 +12,7 @@ import { ErrorStateManager } from '../error-state/error-state-manager';
 @Component({
     selector: 'nx-supported-tech',
     templateUrl: 'supported-tech.component.html',
-    styleUrls: ['supported-tech.component.scss']
+    styleUrls: ['supported-tech.component.scss'],
 })
 export class NxSupportedTechComponent {
     @Input() supportedTechNode: AboutNode;

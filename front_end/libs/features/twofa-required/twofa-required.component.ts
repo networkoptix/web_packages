@@ -8,7 +8,7 @@ import { NxPageService } from '@services/page.service';
 @Component({
     selector: 'nx-src-twofa-required',
     templateUrl: './twofa-required.component.html',
-    styleUrls: ['./twofa-required.component.scss']
+    styleUrls: ['./twofa-required.component.scss'],
 })
 export class TwofaRequiredComponent implements OnInit {
     injector: Injector;

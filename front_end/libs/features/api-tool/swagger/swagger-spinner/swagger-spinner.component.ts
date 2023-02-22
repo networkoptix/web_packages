@@ -8,7 +8,7 @@ import { icons } from '@lib/variables/static-variables';
 @Component({
     selector: 'nx-swagger-spinner',
     templateUrl: './swagger-spinner.component.html',
-    styleUrls: ['./swagger-spinner.component.scss']
+    styleUrls: ['./swagger-spinner.component.scss'],
 })
 export class NxSwaggerSpinnerComponent implements OnInit, OnDestroy {
     @Input() opblock: HTMLElement;

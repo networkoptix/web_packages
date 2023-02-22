@@ -13,7 +13,7 @@ import { ErrorStateManager } from '../error-state/error-state-manager';
 @Component({
     selector: 'nx-get-started',
     templateUrl: 'get-started.component.html',
-    styleUrls: ['get-started.component.scss']
+    styleUrls: ['get-started.component.scss'],
 })
 export class NxGetStartedComponent implements OnChanges {
     @Input() getStartedNode: AboutNode;

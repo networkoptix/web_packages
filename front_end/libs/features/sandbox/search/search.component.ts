@@ -6,7 +6,7 @@ import type { SearchFilter } from '@components/search/search.component.types';
 @Component({
     selector: 'search',
     templateUrl: 'search.component.html',
-    styleUrls: ['search.component.scss']
+    styleUrls: ['search.component.scss'],
 })
 export class SearchComponent {
     filter: SearchFilter;

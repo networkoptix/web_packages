@@ -18,7 +18,7 @@ type signType = int; // -1 | 0 | 1
 @Component({
     selector: 'nx-zoom-controls',
     templateUrl: './zoom-controls.component.html',
-    styleUrls: ['./zoom-controls.component.scss']
+    styleUrls: ['./zoom-controls.component.scss'],
 })
 export class ZoomControlsComponent implements OnInit {
     protected state: TimelineServiceStatus;

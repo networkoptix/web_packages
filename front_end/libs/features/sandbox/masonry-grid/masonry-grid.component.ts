@@ -5,7 +5,7 @@ import { NxMenuService } from '@app/menu/menu.service';
 @Component({
     selector: 'masonry-grid',
     templateUrl: 'masonry-grid.component.html',
-    styleUrls: ['masonry-grid.component.scss']
+    styleUrls: ['masonry-grid.component.scss'],
 })
 export class MasonryGridComponent {
     constructor(

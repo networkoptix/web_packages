@@ -128,7 +128,7 @@ class KnowledgeNode {
 @Component({
     selector: 'nx-knowledge-base',
     templateUrl: 'knowledge-base.component.html',
-    styleUrls: ['knowledge-base.component.scss']
+    styleUrls: ['knowledge-base.component.scss'],
 })
 export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     @ViewChild('scriptDiv', { read: ElementRef }) private scriptDiv: ElementRef;

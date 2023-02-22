@@ -22,7 +22,7 @@ import { pickFrom } from '@utils/general';
 @Component({
     selector: 'nx-modal-change-password',
     templateUrl: 'change-password.component.html',
-    styleUrls: []
+    styleUrls: [],
 })
 export class ChangePasswordModalContent {
     @Input() closable = true;

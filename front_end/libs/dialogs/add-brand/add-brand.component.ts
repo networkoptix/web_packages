@@ -11,7 +11,7 @@ import { BrandInfo } from '@services/nx-cloud-api/cloud-services/channel-partner
 @Component({
     selector: 'nx-modal-add-partner-brand-content',
     templateUrl: 'add-brand.component.html',
-    styleUrls: []
+    styleUrls: [],
 })
 export class AddPartnerBrandModalContent {
     @Input() closable: boolean = true;

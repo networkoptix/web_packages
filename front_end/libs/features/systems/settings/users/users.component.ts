@@ -16,7 +16,7 @@ import { NxSettingsService } from '../settings.service';
 @Component({
     selector: 'nx-system-user-component',
     templateUrl: 'users.component.html',
-    styleUrls: ['users.component.scss']
+    styleUrls: ['users.component.scss'],
 })
 
 export class NxSystemUsersComponent implements OnInit, OnDestroy {

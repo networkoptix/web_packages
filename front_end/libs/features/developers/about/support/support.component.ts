@@ -15,7 +15,7 @@ import { ErrorStateManager } from '../error-state/error-state-manager';
 @Component({
     selector: 'nx-support',
     templateUrl: 'support.component.html',
-    styleUrls: ['support.component.scss']
+    styleUrls: ['support.component.scss'],
 })
 export class NxSupportComponent implements OnChanges {
     @Input() supportNode: AboutNode;

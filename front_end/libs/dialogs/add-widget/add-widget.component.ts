@@ -25,7 +25,7 @@ type DashboardDropdownItem = DropdownItem<string>;
 @Component({
     selector: 'nx-modal-add-widget-content',
     templateUrl: 'add-widget.component.html',
-    styleUrls: ['add-widget.component.scss']
+    styleUrls: ['add-widget.component.scss'],
 })
 export class AddWidgetModalContent {
     @Input() closable: boolean = true;

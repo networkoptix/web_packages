@@ -82,7 +82,7 @@ type Mode = DropdownItem<string>;
 @Component({
     selector: 'nx-server-storage-component',
     templateUrl: 'server-storage-standard.component.html',
-    styleUrls: ['server-storage-standard.component.scss']
+    styleUrls: ['server-storage-standard.component.scss'],
 })
 export class NxSystemStorageComponent implements OnInit {
     @Input() system: NxSystem;

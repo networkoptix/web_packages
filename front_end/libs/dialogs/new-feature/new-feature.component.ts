@@ -13,7 +13,7 @@ import { LicenseManager } from '@services/system.service/license-manager/licence
 @Component({
     selector: 'nx-modal-new-feature-content',
     templateUrl: 'new-feature.component.html',
-    styleUrls: ['new-feature.component.scss']
+    styleUrls: ['new-feature.component.scss'],
 })
 export class NewFeatureInformationModalContent<T> {
     templateName: string;

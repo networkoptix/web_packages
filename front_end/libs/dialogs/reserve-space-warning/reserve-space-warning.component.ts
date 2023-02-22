@@ -9,7 +9,7 @@ import { Process } from '@services/process.service/process';
 @Component({
     selector: 'nx-reserve-space-warning',
     templateUrl: 'reserve-space-warning.component.html',
-    styleUrls: ['reserve-space-warning.component.scss']
+    styleUrls: ['reserve-space-warning.component.scss'],
 })
 export class ReserveSpaceWarningModalContent implements OnInit {
     LANG = staticLang;

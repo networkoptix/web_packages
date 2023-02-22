@@ -19,7 +19,7 @@ import type { RemoveSystem as DT } from '../dialogs.types';
 @Component({
     selector: 'nx-modal-remove-model-content',
     templateUrl: 'remove-system.component.html',
-    styleUrls: []
+    styleUrls: [],
 })
 export class RemoveSystemModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;

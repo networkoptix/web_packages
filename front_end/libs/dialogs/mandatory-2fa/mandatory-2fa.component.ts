@@ -18,7 +18,7 @@ import { NxToastService } from '../toast.service';
 @Component({
     selector: 'nx-mandatory-2fa',
     templateUrl: 'mandatory-2fa.component.html',
-    styleUrls: []
+    styleUrls: [],
 })
 export class Mandatory2faModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;

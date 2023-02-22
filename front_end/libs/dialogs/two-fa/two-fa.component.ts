@@ -44,7 +44,7 @@ import { TfaAction, T_FA_STEPS } from './two-fa.component.types';
 @Component({
     selector: 'nx-two-fa-modal-content',
     templateUrl: 'two-fa.component.html',
-    styleUrls: ['two-fa.component.scss']
+    styleUrls: ['two-fa.component.scss'],
 })
 export class TwoFAModalContent<A extends TfaAction>
     extends ModalBase<Account2faReturn> implements OnInit, AfterViewInit {

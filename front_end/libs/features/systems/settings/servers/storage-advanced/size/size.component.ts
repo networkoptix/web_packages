@@ -26,7 +26,7 @@ type CachedSizes = Record<string, { vms: number; total: number }>;
 @Component({
     selector: 'nx-storage-size-component',
     templateUrl: 'size.component.html',
-    styleUrls: ['size.component.scss']
+    styleUrls: ['size.component.scss'],
 })
 export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewInit {
     @Input() store: Storage;

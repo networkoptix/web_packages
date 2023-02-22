@@ -12,7 +12,7 @@ import { NxSessionService } from '@services/session.service';
 @Component({
     selector: 'nx-account',
     templateUrl: 'account.component.html',
-    styleUrls: ['account.component.scss']
+    styleUrls: ['account.component.scss'],
 })
 
 export class NxAccountComponent implements OnInit, OnDestroy {

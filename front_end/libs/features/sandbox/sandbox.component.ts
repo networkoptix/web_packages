@@ -8,7 +8,7 @@ import type { Content } from '@app/menu/menu.types';
 @Component({
     selector: 'sandbox-component',
     templateUrl: 'sandbox.component.html',
-    styleUrls: ['sandbox.component.scss']
+    styleUrls: ['sandbox.component.scss'],
 })
 export class NxSandboxComponent {
     content: Content;

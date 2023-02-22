@@ -42,7 +42,7 @@ import type { DropdownStorage } from './server-standard.component.types';
 @Component({
     selector: 'nx-standard-server-component',
     templateUrl: 'server-standard.component.html',
-    styleUrls: ['server-standard.component.scss']
+    styleUrls: ['server-standard.component.scss'],
 })
 export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     @Input() system: NxSystem;

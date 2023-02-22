@@ -24,7 +24,7 @@ import { GridBreakpoints } from '@styles/theme-variables-common';
 @Component({
     selector: 'nx-channel-partners-component',
     templateUrl: 'partners.component.html',
-    styleUrls: ['partners.component.scss']
+    styleUrls: ['partners.component.scss'],
 })
 export class NxChannelPartnersComponent implements OnInit, OnDestroy {
     readonly environment = environment;

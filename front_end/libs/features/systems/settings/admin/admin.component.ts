@@ -47,7 +47,7 @@ interface Settings {
 @Component({
     selector: 'nx-system-admin-component',
     templateUrl: 'admin.component.html',
-    styleUrls: ['admin.component.scss']
+    styleUrls: ['admin.component.scss'],
 })
 export class NxSystemAdminComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;

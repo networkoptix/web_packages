@@ -19,7 +19,7 @@ import type { AddUser as DT } from '../dialogs.types';
 @Component({
     selector: 'nx-modal-add-user-content',
     templateUrl: 'add-user.component.html',
-    styleUrls: []
+    styleUrls: [],
 })
 export class AddUserModalContent extends ModalBase<DT['return']> {
     @ViewChild('addUserForm') private form: NgForm;

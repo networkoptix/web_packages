@@ -106,7 +106,7 @@ const ASPECT_RATIOS = {
 @Component({
     selector: 'nx-cameras-component',
     templateUrl: 'cameras.component.html',
-    styleUrls: ['cameras.component.scss']
+    styleUrls: ['cameras.component.scss'],
 })
 export class NxCamerasComponent implements OnInit, OnDestroy {
     LANG = staticLang;

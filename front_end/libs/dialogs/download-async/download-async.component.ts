@@ -20,7 +20,7 @@ import { PackageHandler } from './package-handler';
 @Component({
     selector: 'nx-modal-download-async',
     templateUrl: 'download-async.component.html',
-    styleUrls: ['download-async.component.scss']
+    styleUrls: ['download-async.component.scss'],
 })
 export class DownloadAsyncModalContent implements ModalContent {
     heading: string;

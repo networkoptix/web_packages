@@ -23,7 +23,7 @@ import { ConsoleMode } from '../console.types';
 @Component({
     selector: 'nx-console-edit',
     templateUrl: 'console-edit.component.html',
-    styleUrls: ['console-edit.component.scss']
+    styleUrls: ['console-edit.component.scss'],
 })
 export class NxDevConsoleEditComponent {
     @Input() contextList: ContextManifest[] = [];

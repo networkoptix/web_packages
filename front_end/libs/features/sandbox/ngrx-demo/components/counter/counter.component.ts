@@ -8,7 +8,7 @@ import { selectCount, selectCountSquared } from '../../store/counter/counter.sel
 @Component({
     selector: 'ngrx-demo-counter',
     templateUrl: 'counter.component.html',
-    styleUrls: ['counter.component.scss']
+    styleUrls: ['counter.component.scss'],
 })
 export class NgrxDemoCounterComponent {
     count$: Observable<number> = this.store.select(selectCount);

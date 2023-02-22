@@ -11,7 +11,7 @@ import { Process } from '@services/process.service/process';
 @Component({
     selector: 'dynamic-form-apply-example',
     templateUrl: 'dynamic-form-apply-example.component.html',
-    styleUrls: ['dynamic-form-apply-example.component.scss']
+    styleUrls: ['dynamic-form-apply-example.component.scss'],
 })
 
 export class DynamicFormApplyExampleComponent {

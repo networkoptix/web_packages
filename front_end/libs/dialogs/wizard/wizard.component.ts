@@ -5,7 +5,7 @@ import { environment } from '@environments/environment';
 @Component({
     selector: 'nx-modal-wizard',
     templateUrl: 'wizard.component.html',
-    styleUrls: []
+    styleUrls: [],
 })
 export class WizardModalContent implements OnInit {
     public inlineUrl: string = '/static/inline.html';

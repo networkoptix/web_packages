@@ -15,7 +15,7 @@ type BtnClassesEnum = 'play' | 'pause';
 @Component({
     selector: 'nx-playback-controls',
     templateUrl: './playback-controls.component.html',
-    styleUrls: ['./playback-controls.component.scss']
+    styleUrls: ['./playback-controls.component.scss'],
 })
 export class PlaybackControlsComponent implements OnInit {
     @Input() enabled: boolean;

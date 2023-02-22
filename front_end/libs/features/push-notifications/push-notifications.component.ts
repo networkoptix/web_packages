@@ -16,7 +16,7 @@ import { WINDOW } from '@services/window-provider';
 @Component({
     selector: 'nx-push-notifications-component',
     templateUrl: 'push-notifications.component.html',
-    styleUrls: ['push-notifications.component.scss']
+    styleUrls: ['push-notifications.component.scss'],
 })
 
 export class PushComponent implements OnInit, OnDestroy {

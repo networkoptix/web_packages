@@ -10,7 +10,7 @@ import { NxPartnersService } from '@pages/channel-partners/partners.service';
 @Component({
     selector: 'nx-modal-add-brand-user-content',
     templateUrl: 'add-customization-user.component.html',
-    styleUrls: []
+    styleUrls: [],
 })
 export class AddCustomizationUserModalContent {
     @Input() closable: boolean = true;
