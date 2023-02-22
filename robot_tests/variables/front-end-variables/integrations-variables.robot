@@ -4,18 +4,18 @@ ${title}      ${VMS_NAME} ${INTEGRATIONS TITLE TEXT} - ${PRODUCT_NAME}
 @{auth}       ${BASE EMAIL}    ${BASE EMAIL PASSWORD}
 
 #Integration Landing Page
-${INTEGRATIONS COMPONENT}             //nx-app//integrations-component/div[@class="intergations"]
+${INTEGRATIONS COMPONENT}             //nx-app//nx-integrations-component/div[@class="intergations"]
 ${INTEGRATIONS SEARCH}                ${INTEGRATIONS COMPONENT}//nx-search[@name="filterModel"]/div[@class="nx-search"]
 ${INTEGRATIONS SEARCH INPUT}          ${INTEGRATIONS SEARCH}//input[contains(@class, "search-input") and contains(@placeholder, "${SEARCH PLACEHOLDER TEXT}")]
 ${INTEGRATIONS SEARCH CLOSE BUTTON}   ${INTEGRATIONS SEARCH}//button[contains(@class, "search-clear")]
 ${INTEGRATIONS SEARCH ICON}           ${INTEGRATIONS SEARCH}//span[contains(@class, "icon-search")]
 ${INTEGRATIONS SEARCH FILTER}         ${INTEGRATIONS SEARCH}//div[contains(@class, "search-tags")]//nav[contains(@aria-label, "table")]/ul[contains(@class, "pagination")]
 ${INTEGRATIONS SEARCH FILTER ITEM}    ${INTEGRATIONS SEARCH FILTER}/li
-${INTEGRATIONS CATALOG}               ${INTEGRATIONS COMPONENT}//integrations-list-component/div[1]
+${INTEGRATIONS CATALOG}               ${INTEGRATIONS COMPONENT}//nx-integrations-list-component
 ${INTEGRATION PREVIEW BANNER}         //nx-ribbon//div[@class="message" and contains(text(),"${INTEGRATION BANNER MESSAGE TEXT}")]/following-sibling::div[@class="action"]/a[contains(text(),"${INTEGRATION BANNER ACTION TEXT}")]
 
 #Integration Tile
-${INTEGRATION TILE}                   ${INTEGRATIONS COMPONENT}//integrations-list-component//nx-block/div[contains(@class, "card")]/../../..
+${INTEGRATION TILE}                   ${INTEGRATIONS COMPONENT}//nx-integrations-list-component//nx-block/div[contains(@class, "card")]/../../..
 ${INTEGRATION TEST INTEGRATION LINK}  ${INTEGRATION TILE}//a
 ${INTEGRATION TILE LOGO}              //div[contains(@class, "card--header-logo")]
 ${INTEGRATION TILE INFO}              //div[contains(@class, "card--header-info")]

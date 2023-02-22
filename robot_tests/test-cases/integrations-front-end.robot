@@ -3,8 +3,8 @@ Resource          ../Resources/front-end-resources/integrations-resource.robot
 Resource          ../variables-env.robot
 
 Suite Setup       Open Browser and go to URL    ${ENV}
-Test Setup        Run Keywords    QA Video Recording Start     Go To    ${ENV}
-Test Teardown     Run Keywords    QA Video Recording Stop      Integrations Test Teardown
+Test Setup        Integrations Test Setup
+Test Teardown     Integrations Test Teardown
 Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        integrations    Threaded 
 
@@ -18,7 +18,7 @@ Force Tags        integrations    Threaded
     Validate Integrations Landing Page
 
 2. Integration Store catalog
-    [Tags]    C54622
+    [Tags]    C54622    smoke    ci
     Go To Integrations Page
     Wait Until Element Is Visible    ${INTEGRATION TILE}
     @{integration tiles}=   Get WebElements    ${INTEGRATION TILE}

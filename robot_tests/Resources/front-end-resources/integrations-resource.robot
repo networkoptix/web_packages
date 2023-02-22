@@ -3,7 +3,12 @@ Resource          ../../resource.robot
 
 *** Keywords ***
 Integrations Test Teardown
+    QA Video Recording Stop
     Run Keyword If Test Failed   Go To Integrations Page
+
+Integrations Test Setup
+    QA Video Recording Start     
+    Go To    ${ENV}
 
 Open Browser and Go To Integrations Page Anonymous
     ${is enabled}=   Integration Store is Enabled    ${auth}

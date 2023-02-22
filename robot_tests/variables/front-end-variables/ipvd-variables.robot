@@ -6,10 +6,10 @@ ${message}              This is an automated test message.
 
 #IPVD
 ${IPVD TITLE}                         //header//li[@class="active"]/a[contains(text(),"${IPVD TITLE TEXT}")]
-${IPVD LANDING PAGE TEXT}             //ipvd//p
+${IPVD LANDING PAGE TEXT}             //nx-ipvd//p
 
 #IPVD Filters
-${IPVD FILTERS}                       //ipvd//nx-search/div/div
+${IPVD FILTERS}                       //nx-ipvd//nx-search/div/div
 ${IPVD FILTER BUTTON}                 //nx-search//span[@class="filter-label"]
 ${IPVD FILTER BUTTON X CLOSE}         ${IPVD FILTER BUTTON}/following-sibling::span[contains(@class, "close-icon"])]
 ${IPVD FILTERS BASIC}                 ${IPVD FILTERS}/div[1]/div
@@ -40,11 +40,11 @@ ${IPVD ADV FEATURES H.265}            ${IPVD ADV FEATURES}//nx-tag/a[contains(te
 ${IPVD ADV FEATURES MULTI SENSOR}     ${IPVD ADV FEATURES}//nx-tag/a[contains(text(),'${IPVD ADV FEATURE MULTI SENSOR}')]/..
 ${IPVD ADV FEATURES CLOSE BUTTON}     //span[contains(@class,'close-button')]
 #IPVD Manufacturers
-${IPVD MANUFACTURERS PANE}            //ipvd//nx-vendor-list/nx-block[@id='vendors']
+${IPVD MANUFACTURERS PANE}            //nx-ipvd//nx-vendor-list/nx-block[@id='vendors']
 ${IPVD MANUFACTURERS PANE ITEM}       ${IPVD MANUFACTURERS PANE}//*[contains(@class,"float-left mr-1 mb-1")]
 ${IPVD AND MORE}                      ${IPVD MANUFACTURERS PANE}//div[@class="manufacture-info"]
 #IPVD Devices
-${IPVD DEVICES PANE}                  //ipvd//nx-vendor-list/nx-block[@id='cameras']
+${IPVD DEVICES PANE}                  //nx-ipvd//nx-vendor-list/nx-block[@id='cameras']
 ${IPVD DEVS FILTER EXTRA HIGH RES CAMERAS}    ${IPVD DEVICES PANE}//nx-tag/a[contains(text(),'${IPVD DEV FILTER EXTRA HIGH RES CAMERAS}')]/..
 ${IPVD DEVS FILTER CAMERAS WITH ADV PTZ}      ${IPVD DEVICES PANE}//nx-tag/a[contains(text(),'${IPVD DEV FILTER CAMERAS WITH ADV PTZ}')]/..
 ${IPVD DEVS FILTER PTZ CAMERAS}               ${IPVD DEVICES PANE}//nx-tag/a[contains(text(),'${IPVD DEV FILTER PTZ CAMERAS}')]/..
@@ -56,10 +56,10 @@ ${IPVD DEVS FILTER MULTI-SENSOR CAMERAS}      ${IPVD DEVICES PANE}//nx-tag/a[con
 ${IPVD DEVS FILTER FISHEYE CAMERAS}           ${IPVD DEVICES PANE}//nx-tag/a[contains(text(),'${IPVD DEV FILTER FISHEYE CAMERAS}')]/..
 ${IPVD DEVS FILTER I/O MODULES}               ${IPVD DEVICES PANE}//nx-tag/a[contains(text(),'${IPVD DEV FILTER I/O MODULES}')]/..
 #IPVD Details
-${IPVD DEVICE DETAILS}                       //ipvd//nx-cam-view
+${IPVD DEVICE DETAILS}                       //nx-ipvd//nx-cam-view
 ${IPVD DEVICE MAKE}                          ${IPVD DEVICE DETAILS}//h4[@class="camera-vendor-model"]//span[1]
 ${IPVD DEVICE MODEL}                         ${IPVD DEVICE DETAILS}//h4[@class="camera-vendor-model"]//span[2]
-${IPVD CLOSE DETAILS BUTTON}                 //ipvd//header//button[contains(@class, "detailsClose")]
+${IPVD CLOSE DETAILS BUTTON}                 //nx-ipvd//header//button[contains(@class, "detailsClose")]
 ${IPVD DEVICE GOOGLE LINK}                   ${IPVD DEVICE DETAILS}//div[contains(@class, "camview-link")]/a[contains(text(), "${IPVD SEARCH IN GOOGLE TEXT}")]
 ${IPVD DEVICE INFO}                          ${IPVD DEVICE DETAILS}//div[contains(@class,'active-camera-info')]
 ${IPVD DEVICE INFO PARAMETER}                ${IPVD DEVICE INFO}/div
@@ -73,7 +73,7 @@ ${IPVD DEVICE COLLAPSE LINK}                 ${IPVD DEVICE FIRMWARE INFO}//a[con
 ${IPVD DEVICE LAST UPDATED INFO}             ${IPVD DEVICE DETAILS}//span[contains(text(), "${IPVD LAST UPDATED TEXT}")]
 
 #IPVD Table
-${IPVD TABLE}                         //ipvd//table
+${IPVD TABLE}                         //nx-ipvd//table
 ${IPVD TABLE HEADING MANUFACTURER}    ${IPVD TABLE}/thead//div[text()='${IPVD ADV FILTER MFR}']
 ${IPVD TABLE HEADING LABEL SORT ARROW}    /../div[2]
 ${IPVD TABLE ROWS}                    ${IPVD TABLE}/tbody/tr[not(@class='table-row-spacer')]
@@ -89,8 +89,8 @@ ${IPVD NEXT PAGE BUTTON}              ${IPVD PAGINATION}/a[@id="paginator-next"]
 ${IPVD EXPORT TO CSV LINK}            //ipvd//div[@class='export-button']/a[contains(text(), "${IPVD EXPORT TO CSV TEXT}")]
 #IPVD Feedback
 ${IPVD SUBMIT A REQUEST LINK}        ${IPVD LANDING PAGE TEXT}//span[@id="request"]
-${IPVD SUBMIT A REQUEST}              //ipvd//span[contains(text(),"${IPVD SUBMIT A REQUEST TEXT}")]
-${IPVD SEND DEVICE FEEDBACK}          //ipvd//a[contains(text(),"${IPVD SEND DEVICE FEEDBACK TEXT}")]
+${IPVD SUBMIT A REQUEST}              //nx-ipvd//span[contains(text(),"${IPVD SUBMIT A REQUEST TEXT}")]
+${IPVD SEND DEVICE FEEDBACK}          //nx-ipvd//a[contains(text(),"${IPVD SEND DEVICE FEEDBACK TEXT}")]
 ${IPVD FEEDBACK}                      //nx-modal-message-content//form[@name='messageForm']
 ${IPVD FEEDBACK TITLE}                ${IPVD FEEDBACK}//h1
 ${IPVD FEEDBACK FORM}                 ${IPVD FEEDBACK}//form[@name='feedbackForm']
