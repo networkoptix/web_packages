@@ -319,6 +319,9 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         const elements = this.document.querySelectorAll<HTMLElement>('pre, .text-area');
         for (const element of elements) {
             if (element.nextSibling?.nodeName !== 'NX-COPY-TO-CLIPBOARD' && !(element.classList.contains('with-line-counter'))) {
+                if (element.classList.contains('curl')) {
+                    element.innerText = element.innerText.replace(/(\r\n|\n|\r|\\)/gm, '');
+                }
                 if (element.parentElement.tagName !== 'DIV' || !element.parentElement.classList.contains('highlight-code')) {
                     const wrapper = this.document.createElement('div');
                     element.parentElement.replaceChild(wrapper, element);
