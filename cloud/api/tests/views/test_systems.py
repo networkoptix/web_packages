@@ -1,13 +1,17 @@
+from importlib import import_module
+
+import requests
+
 from api.views import systems
 from api.views.systems import *
 
 from django.contrib.auth.models import AnonymousUser
 from django.http import QueryDict
 from django.test import RequestFactory
-
 from rest_framework import status
 from rest_framework.test import force_authenticate
 import pytest
+
 
 
 def test_digest():
@@ -49,7 +53,8 @@ class TestSystemViews:
         mock.return_value.__enter__.return_value.tokens = self.tokens
         return mock
 
-    def test_system(self, arf, mocker):
+    @pytest.mark.asyncio
+    async def test_system(self, arf, mocker):
         system_data = {'systems': ['sys1'], 'd2': 'd2Val'}
         system_get_mock = mocker.patch.object(cloud_api.System, 'get')
         system_get_mock.return_value = system_data
@@ -57,14 +62,15 @@ class TestSystemViews:
         request.session = self.session
         request.user = self.user
 
-        response = system(request, self.system_id)
+        response = await system(request, self.system_id)
         system_get_mock.assert_called()
         _, system_id_arg = system_get_mock.call_args.args
         assert system_id_arg == self.system_id
         assert response.status_code == status.HTTP_200_OK
         assert response.data == system_data['systems']
 
-    def test_list_systems(self, arf, mocker):
+    @pytest.mark.asyncio
+    async def test_list_systems(self, arf, mocker):
         system_data = {'systems': ['sys1', 'sys2'], 'd2': 'd2Val'}
         system_list_mock = mocker.patch.object(cloud_api.System, 'list')
         system_list_mock.return_value = system_data
@@ -72,18 +78,125 @@ class TestSystemViews:
         request.session = self.session
         request.user = self.user
 
-        response = list_systems(request)
+        response = await list_systems(request)
         system_list_mock.assert_called()
         assert response.status_code == status.HTTP_200_OK
         assert response.data == system_data['systems']
 
-    def test_sharing_get(self, arf, mocker):
+    @pytest.mark.asyncio
+    async def test_get_code(self, arf, mocker):
+        ret_value = {'code': 'test_code'}
+        get_code_mock = mocker.patch.object(cloud_api.Auth, 'get_code')
+        get_code_mock.return_value = ret_value
+
+        # Unauthorized
+        request = arf.post(f'/api/systems/{self.system_id}/code')
+        request.user = AnonymousUser()
+
+        response = await get_code(request, self.system_id)
+
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+        # No refresh token
+        request = arf.post(f'/api/systems/{self.system_id}/code')
+        request.user = self.user
+        # Todo. change TestCase session to real session class
+        #  to avoid exceptions in logout function
+        engine = import_module(settings.SESSION_ENGINE)
+        request.session = engine.SessionStore()
+
+        response = await get_code(request, self.system_id)
+
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+        # Success
+        request = arf.post(f'/api/systems/{self.system_id}/code', data={'refresh_token': 'token'})
+        request.user = self.user
+        request.session = self.session
+
+        response = await get_code(request, self.system_id)
+
+        get_code_mock.assert_called()
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data['code'] == ret_value['code']
+
+    @pytest.mark.asyncio
+    async def test_get_token(self, arf, mocker):
+        ret_value = {'code': 'test_code', 'refresh_token': 'token'}
+        get_code_mock = mocker.patch.object(cloud_api.Auth, 'get_refresh_token')
+        get_code_mock.return_value = ret_value
+
+        # Unauthorized
+        request = arf.post(f'/api/systems/{self.system_id}/token')
+        request.user = AnonymousUser()
+
+        response = await get_token(request, self.system_id)
+
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+        # No refresh token
+        request = arf.post(f'/api/systems/{self.system_id}/token')
+        request.user = self.user
+        engine = import_module(settings.SESSION_ENGINE)
+        request.session = engine.SessionStore()
+
+        response = await get_token(request, self.system_id)
+
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+        # Success
+        request = arf.post(f'/api/systems/{self.system_id}/token', data={'refresh_token': 'token'})
+        request.user = self.user
+        request.session = self.session
+
+        response = await get_token(request, self.system_id)
+
+        get_code_mock.assert_called()
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data['code'] == ret_value['code']
+        assert 'refresh_token' not in response.data
+
+    @pytest.mark.asyncio
+    async def test_revoke_token(self, arf, mocker):
+        ret_value = {'code': 'test_code', 'token': 'token'}
+        get_code_mock = mocker.patch.object(cloud_api.Auth, 'delete_token')
+        get_code_mock.return_value = ret_value
+
+        # Unauthorized
+        request = arf.post(f'/api/systems/revokeToken')
+        request.user = AnonymousUser()
+
+        response = await revoke_token(request)
+
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+        # No token
+        request = arf.post(f'/api/systems/revokeToken')
+        request.user = self.user
+        engine = import_module(settings.SESSION_ENGINE)
+        request.session = engine.SessionStore()
+
+        response = await revoke_token(request)
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+        # Success
+        request = arf.post(f'/api/systems/revokeToken', data={'token': 'token'})
+        request.user = self.user
+        request.session = self.session
+
+        response = await revoke_token(request)
+
+        get_code_mock.assert_called()
+        assert response.status_code == status.HTTP_200_OK
+
+    @pytest.mark.asyncio
+    async def test_sharing_get(self, arf, mocker):
         # Check unauthorized
         share_data = {'sharing': ['user1', 'user2'], 'd2': 'd2Val'}
         request = arf.get(f'/api/systems/{self.system_id}/users')
         request.user = AnonymousUser()
         request.session = {}
-        response = sharing(request, self.system_id)
+        response = await sharing(request, self.system_id)
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
         assert response.data['resultCode'] == ErrorCodes.not_authorized.value
 
@@ -92,21 +205,23 @@ class TestSystemViews:
         share_mock.return_value = share_data
         request.user = self.user
         request.session = self.session
-        response = sharing(request, self.system_id)
+        response = await sharing(request, self.system_id)
         share_mock.assert_called()
         _, system_id_arg = share_mock.call_args.args
         assert system_id_arg == self.system_id
         assert response.status_code == status.HTTP_200_OK
         assert response.data == share_data['sharing']
 
-    def sharing_post(self, request, share_data, share_mock):
-        response = sharing(request, self.system_id)
+    @pytest.mark.asyncio
+    async def sharing_post(self, request, share_data, share_mock):
+        response = await sharing(request, self.system_id)
         share_mock.assert_called()
         assert response.status_code == status.HTTP_200_OK
         assert response.data == share_data
         return response
 
-    def test_sharing_post(self, arf, mocker, temp_login_mock):
+    @pytest.mark.asyncio
+    async def test_sharing_post(self, arf, mocker, temp_login_mock):
         request_data = {'user_email': self.email2, 'role': 'viewer'}
         share_data = {'sharing': ['user1', 'user2'], 'd2': 'd2Val'}
         share_mock = mocker.patch.object(cloud_api.System, 'share')
@@ -116,7 +231,7 @@ class TestSystemViews:
         request = arf.post(f'/api/systems/{self.system_id}/users', data=request_data)
         request.user = AnonymousUser()
         request.session = {}
-        response = sharing(request, self.system_id)
+        response = await sharing(request, self.system_id)
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
         # Session auth
@@ -124,7 +239,7 @@ class TestSystemViews:
         request.user = self.user
         request.session = self.session
 
-        self.sharing_post(request, share_data, share_mock)
+        await self.sharing_post(request, share_data, share_mock)
         _, system_id_arg, user_email_arg, role_arg = share_mock.call_args.args
         assert system_id_arg == self.system_id
         assert user_email_arg == request_data['user_email']
@@ -135,12 +250,13 @@ class TestSystemViews:
         request = arf.post(f'/api/systems/{self.system_id}/users', data=request_data)
         request.user = AnonymousUser()
         request.session = {}
-        self.sharing_post(request, share_data, share_mock)
+        await self.sharing_post(request, share_data, share_mock)
 
         temp_login_mock.assert_called_with(self.email, self.password)
         share_mock.assert_called_with(self.tokens, self.system_id, request_data['user_email'], request_data['role'])
 
-    def test_get_auth(self, arf, mocker):
+    @pytest.mark.asyncio
+    async def test_get_auth(self, arf, mocker):
         def mock_digest(*args, **kwargs):
             method = kwargs.get('method', '') or (args[4] if len(args) >= 5 else None)
             if method == 'GET':
@@ -165,7 +281,7 @@ class TestSystemViews:
         # request.session = self.session
         request.user = self.user
 
-        response = get_auth(request, self.system_id)
+        response = await get_auth(request, self.system_id)
         _, system_id_arg = nonce_mock.call_args.args
         assert system_id_arg == self.system_id
         assert temp_cred_mock.call_args.kwargs['credential_type'] == 'short'
@@ -175,7 +291,8 @@ class TestSystemViews:
         digest_mock.assert_any_call(temp_creds['login'], temp_creds['password'], 'VMS', nonce_data['nonce'], 'PLAY')
         assert response.data == {'authGet': 'get_key', 'authPost': 'post_key', 'authPlay': 'play_key'}
 
-    def test_rename(self, arf, mocker):
+    @pytest.mark.asyncio
+    async def test_rename(self, arf, mocker):
         rename_mock = mocker.patch.object(cloud_api.System, 'rename')
         rename_mock.return_value = self.sample_data
 
@@ -183,7 +300,7 @@ class TestSystemViews:
         request = arf.post(f'/api/systems/{self.system_id}/name', data=rename_data)
         request.session = self.session
         request.user = self.user
-        response = rename(request, self.system_id)
+        response = await rename(request, self.system_id)
         _, system_id_arg, name_arg = rename_mock.call_args.args
         assert system_id_arg == self.system_id
         assert name_arg == rename_data['name']
@@ -191,7 +308,8 @@ class TestSystemViews:
 
     # TODO: Comeback and update this to handle merging with and without password.
     # Problem was that the internal request object could not be evaluated in the assert
-    def test_merge(self, arf, mocker):
+    @pytest.mark.asyncio
+    async def test_merge(self, arf, mocker):
         merge_mock = mocker.patch.object(cloud_api.System, 'merge')
         merge_mock.return_value = self.sample_data
 
@@ -200,20 +318,21 @@ class TestSystemViews:
         request = arf.post('/api/systems/merge', data=merge_data)
         request.session = self.session
         request.user = self.user
-        response = merge(request)
+        response = await merge(request)
 
         assert response.data == self.sample_data
 
         # Exception handling
         merge_mock.side_effect = APINotAuthorisedException('error_text')
-        response = merge(request)
+        response = await merge(request)
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
         merge_mock.side_effect = APIInternalException('error_text', '2', error_data={'d1': 'd1val'})
-        response = merge(request)
+        response = await merge(request)
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
-    def test_access_roles(self, arf, mocker):
+    @pytest.mark.asyncio
+    async def test_access_roles(self, arf, mocker):
         role_data = {'accessRoles': 'val'}
         access_roles_mock = mocker.patch.object(cloud_api.System, 'access_roles')
         access_roles_mock.return_value = role_data
@@ -221,12 +340,13 @@ class TestSystemViews:
         request = arf.get(f'/api/systems/{self.system_id}/accessRoles')
         request.session = self.session
         request.user = self.user
-        response = access_roles(request, self.system_id)
+        response = await access_roles(request, self.system_id)
         _, system_id_arg = access_roles_mock.call_args.args
         assert system_id_arg == self.system_id
         assert response.data == role_data['accessRoles']
 
-    def test_disconnect(self, arf, mocker, temp_login_mock):
+    @pytest.mark.asyncio
+    async def test_disconnect(self, arf, mocker, temp_login_mock):
         unbind_mock = mocker.patch.object(cloud_api.System, 'unbind')
         disconnect_data = {'password': self.session['password'], 'system_id': self.system_id}
 
@@ -234,7 +354,7 @@ class TestSystemViews:
         request = arf.post(f'/api/systems/disconnect', data=disconnect_data)
         request.session = self.session
         request.user = self.user
-        response = disconnect(request)
+        response = await disconnect(request)
         _, system_id_arg = unbind_mock.call_args.args
         assert system_id_arg == self.system_id
         assert response.status_code == status.HTTP_200_OK
@@ -243,17 +363,18 @@ class TestSystemViews:
         disconnect_data['email'] = self.email
         request = arf.post(f'/api/systems/disconnect', data=disconnect_data)
         request.session = {}
-        response = disconnect(request)
+        response = await disconnect(request)
         temp_login_mock.assert_called_with(self.user.email, self.password)
         unbind_mock.assert_called_with(self.tokens, self.system_id)
         assert response.status_code == status.HTTP_200_OK
 
         # No auth
         unbind_mock.side_effect = APINotAuthorisedException('error_text')
-        response = disconnect(request)
+        response = await disconnect(request)
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
-    def test_connect(self, arf, mocker, temp_login_mock):
+    @pytest.mark.asyncio
+    async def test_connect(self, arf, mocker, temp_login_mock):
         bind_mock = mocker.patch.object(cloud_api.System, 'bind')
         bind_mock.return_value = self.sample_data
         connect_data = {'name': self.system_name, 'password': self.password}
@@ -262,7 +383,7 @@ class TestSystemViews:
         request = arf.post('/api/systems/connect', data=connect_data)
         request.session = self.session
         request.user = self.user
-        response = connect(request)
+        response = await connect(request)
         _, name_arg = bind_mock.call_args.args
         assert name_arg == connect_data['name']
         assert response.data == self.sample_data
@@ -271,12 +392,46 @@ class TestSystemViews:
         connect_data['email'] = self.email
         request = arf.post('/api/systems/connect', data=connect_data)
         request.session = {}
-        response = connect(request)
+        response = await connect(request)
         temp_login_mock.assert_called_with(self.user.email, self.password)
         bind_mock.assert_called_with(self.tokens, connect_data['name'], customization=settings.CUSTOMIZATION)
         assert response.data == self.sample_data
 
-    def test_proxy(self, arf, mocker):
+    @pytest.mark.asyncio
+    async def test_toggle2fa(self, arf, mocker):
+        cur_fa = False
+        system_data = {'systems': [
+            {'id': self.slave_system_id, "system2faEnabled": False},
+            {'id': self.system_id, "system2faEnabled": cur_fa}
+        ]}
+        req_data = {
+            'systemId': self.system_id,
+            'mfaCode': '1234'
+        }
+        response_data = {
+            'system2faEnabled': not cur_fa,
+            'mfaCode': '1234'
+        }
+        system_get_mock = mocker.patch.object(cloud_api.System, 'get')
+        system_get_mock.return_value = system_data
+
+        system_update_mock = mocker.patch.object(cloud_api.System, 'update')
+        system_update_mock.return_value = response_data
+
+        request = arf.post('/api/systems/toggle2fa', data=req_data)
+        request.session = self.session
+        request.user = self.user
+
+        response = await toggle2fa(request)
+
+        system_get_mock.assert_called()
+        system_update_mock.assert_called()
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data['system2faEnabled'] is (not cur_fa)
+        assert response.data['mfaCode'] == req_data['mfaCode']
+
+    @pytest.mark.asyncio
+    async def test_proxy(self, arf, mocker):
         gw_get_mock = mocker.patch.object(systems.cloud_gateway, 'get')
         gw_get_mock.return_value = self.sample_data
         gw_post_mock = mocker.patch.object(systems.cloud_gateway, 'post')
@@ -286,7 +441,7 @@ class TestSystemViews:
         request = arf.get(f'/api/systems/{self.system_id}/proxy/{url}')
         request.user = self.user
         request.session = self.session
-        response = proxy(request, self.system_id, url)
+        response = await proxy(request, self.system_id, url)
         gw_get_mock.assert_called_with(self.system_id, url, email=self.email, password=self.password)
         assert response.data == self.sample_data
 
@@ -294,8 +449,22 @@ class TestSystemViews:
         request = arf.post(f'/api/systems/{self.system_id}/proxy/{url}', data=send_data)
         request.user = self.user
         request.session = self.session
-        response = proxy(request, self.system_id, url)
+        response = await proxy(request, self.system_id, url)
         query_dict = QueryDict(mutable=True)
         query_dict.update(send_data)
         gw_post_mock.assert_called_with(self.system_id, url, query_dict, email=self.email, password=self.password)
         assert response.data == self.sample_data
+
+    # Todo: fix this test
+    @pytest.mark.asyncio
+    async def blocked_test_system_groups_users_management(self, arf, mocker):
+        req_data = {'systems': ['user2'], 'users': [{'email': self.email.upper()}]}
+        mock = mocker.patch.object(cloud_api.System, 'share')
+        mock.return_value = {}
+        request = arf.post('/api/systems/group-users', data=req_data)
+        request.user = self.user
+        request.session = self.session
+        response = await system_groups_users_management(request)
+
+        # assert mock.assert_called()
+        assert response.status_code == status.HTTP_200_OK

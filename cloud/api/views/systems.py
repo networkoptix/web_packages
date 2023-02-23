@@ -1,3 +1,4 @@
+import asyncio
 import hashlib
 import base64
 
@@ -6,10 +7,11 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-
+from asgiref.sync import sync_to_async
 from api.account_backend import get_ip
 from cloud.controllers import cloud_api, cloud_gateway
 from cloud.controllers.cloud_api import Auth
+from cloud.drf_async import async_api_view
 from cloud.helpers.exceptions import api_success, require_params, \
      APINotAuthorisedException, APIRequestException, ErrorCodes, APIException, APIInternalException
 from api.serializers import *
@@ -48,10 +50,10 @@ def get_refresh_from_request(request):
 @swagger_auto_schema(method="GET",  # auto_schema=None,
                      operation_description="If the user has access to the system clouddb will return its info.",
                      manual_parameters=[system_id__route_param])
-@api_view(['GET'])
+@async_api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
-def system(request, system_id):
-    data = cloud_api.System.get(request, system_id)
+async def system(request, system_id):
+    data = await sync_to_async(cloud_api.System.get)(request, system_id)
     return api_success(data['systems'])
 
 
@@ -68,9 +70,12 @@ def system(request, system_id):
                      responses={
                          '200': openapi.Response('LicenseServer', LicenseServerSerializer)
                      })
-@api_view(['GET', 'POST'])
+@async_api_view(['GET', 'POST'])
 @permission_classes((IsAuthenticated, ))
-def license_server(request, system_id):
+async def license_server(request, system_id):
+    # TODO: Add tests for this view.
+    #  Actually, there is no asynchronous stuff.
+    #  I'm not sure about necessity of these changes.
     serializer = LicenseServerSerializer(
         data={**request.data, 'systemId': system_id})
     serializer.is_valid()
@@ -80,10 +85,10 @@ def license_server(request, system_id):
 
 @swagger_auto_schema(method="GET",  # auto_schema=None,
                      operation_description="Returns a list of systems that the user has access to.")
-@api_view(['GET'])
+@async_api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
-def list_systems(request):
-    data = cloud_api.System.list(request)
+async def list_systems(request):
+    data = await sync_to_async(cloud_api.System.list, thread_sensitive=False)(request)
     return api_success(data['systems'])
 
 
@@ -102,15 +107,15 @@ def list_systems(request):
                          },
                          required=["role", "user_email"]
                      ))
-@api_view(['GET', 'POST'])
+@async_api_view(['GET', 'POST'])
 @permission_classes((AllowAny, ))
-def sharing(request, system_id):
+async def sharing(request, system_id):
     if request.method == 'GET':
         if not request.user.is_authenticated:
             raise APINotAuthorisedException(
                 'User is not authorized', ErrorCodes.not_authorized)
         # get authorized user here
-        data = cloud_api.System.users(request, system_id)
+        data = await sync_to_async(cloud_api.System.users, thread_sensitive=False)(request, system_id)
         return api_success(data['sharing'])
 
     elif request.method == 'POST':
@@ -123,15 +128,19 @@ def sharing(request, system_id):
             password = request.data['password']
 
             with cloud_api.TempLogin(login, password) as credentials:
-                data = cloud_api.System.share(credentials.tokens,
-                                              system_id,
-                                              user_email,
-                                              request.data['role'])
+                data = await sync_to_async(cloud_api.System.share, thread_sensitive=False)(
+                    credentials.tokens,
+                    system_id,
+                    user_email,
+                    request.data['role']
+                )
         else:
-            data = cloud_api.System.share(request,
-                                          system_id,
-                                          user_email,
-                                          request.data['role'])
+            data = await sync_to_async(cloud_api.System.share, thread_sensitive=False)(
+                request,
+                system_id,
+                user_email,
+                request.data['role']
+            )
 
         return api_success(data)
 
@@ -160,34 +169,38 @@ def digest(login, password, realm, nonce, method):
                              "refresh_token": openapi.Schema(type=openapi.TYPE_STRING)
                          }
                      ))
-@api_view(["POST"])
+@async_api_view(["POST"])
 @permission_classes((IsAuthenticated, ))
-def get_code(request, system_id):
+async def get_code(request, system_id):
     refresh_token = get_refresh_from_request(request)
     scope = None
     if system_id != "*":
         scope = f"cloudSystemId={system_id}"
-    data = cloud_api.Auth.get_code(email="",
-                                   password="",
-                                   grant_type=cloud_api.Auth.GRANT_TYPE.refresh_token,
-                                   ip=get_ip(request),
-                                   refresh_token=refresh_token,
-                                   scope=scope)
+    data = await sync_to_async(cloud_api.Auth.get_code, thread_sensitive=False)(
+        email="",
+        password="",
+        grant_type=cloud_api.Auth.GRANT_TYPE.refresh_token,
+        ip=get_ip(request),
+        refresh_token=refresh_token,
+        scope=scope
+    )
     return api_success(data)
 
 
 @swagger_auto_schema(method="GET",  # auto_schema=None,
                      operation_description="Returns the auth keys needed to make api requests to a cloud system.",
                      manual_parameters=[system_id__route_param])
-@api_view(['GET'])
+@async_api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
-def get_auth(request, system_id):
+async def get_auth(request, system_id):
     # Todo: Add oauth support when servers get it.
-    data = cloud_api.System.get_nonce(request, system_id)
-    nonce = data["nonce"]
+    data, cred = await asyncio.gather(
+        sync_to_async(cloud_api.System.get_nonce, thread_sensitive=False)(request, system_id),
+        sync_to_async(cloud_api.Account.create_temporary_credentials, thread_sensitive=False)(
+            request, credential_type='short')
+    )
     realm = settings.CLOUD_CONNECT['password_realm']
-    cred = cloud_api.Account.create_temporary_credentials(
-        request, credential_type='short')
+    nonce = data["nonce"]
     login = cred['login']
     password = cred['password']
     return api_success({
@@ -206,14 +219,15 @@ def get_auth(request, system_id):
                              "refresh_token": openapi.Schema(type=openapi.TYPE_STRING)
                          }
                      ))
-@api_view(["POST"])
+@async_api_view(["POST"])
 @permission_classes((IsAuthenticated, ))
-def get_token(request, system_id):
+async def get_token(request, system_id):
     refresh_token = get_refresh_from_request(request)
-    data = cloud_api.\
-        Auth.get_refresh_token(refresh_token,
-                               ip=get_ip(request),
-                               scope=f"cloudSystemId={system_id}")
+    data = await sync_to_async(cloud_api.Auth.get_refresh_token, thread_sensitive=False)(
+        refresh_token,
+        ip=get_ip(request),
+        scope=f"cloudSystemId={system_id}"
+    )
 
     if "refresh_token" in data:
         del data["refresh_token"]
@@ -229,11 +243,12 @@ def get_token(request, system_id):
                              "token": openapi.Schema(type=openapi.TYPE_STRING)
                          }
                      ))
-@api_view(['POST'])
+@async_api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
-def revoke_token(request):
+async def revoke_token(request):
     require_params(request, ("token",))
-    return api_success(Auth.delete_token(request, request.data.get("token")))
+    data = await sync_to_async(Auth.delete_token, thread_sensitive=False)(request, request.data.get("token"))
+    return api_success(data)
 
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,
@@ -245,11 +260,13 @@ def revoke_token(request):
                              'name': system_name__body
                          }
                      ))
-@api_view(['POST'])
+@async_api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
-def rename(request, system_id):
+async def rename(request, system_id):
     require_params(request, ('name',))
-    data = cloud_api.System.rename(request, system_id, request.data['name'])
+    data = await sync_to_async(cloud_api.System.rename, thread_sensitive=False)(
+        request, system_id, request.data['name']
+    )
     return api_success(data)
 
 
@@ -263,15 +280,15 @@ def rename(request, system_id):
                              "password": password__body
                          }
                      ))
-@api_view(['POST'])
+@async_api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
-def merge(request):
+async def merge(request):
     require_params(request, ('master_system_id', 'slave_system_id'))
     master_id = request.data['master_system_id']
     slave_id = request.data['slave_system_id']
     if password := request.data.get('password'):
         try:
-            data = cloud_api.System.merge(
+            data = await sync_to_async(cloud_api.System.merge, thread_sensitive=False)(
                 request, master_id, slave_id, email=request.user.email, password=password)
         except APINotAuthorisedException:
             raise APIRequestException('User action was not allowed.', ErrorCodes.wrong_password,
@@ -283,17 +300,19 @@ def merge(request):
         if not request.session["refresh_token"]:
             require_params(request, ("refresh_token",))
             request.session["refresh_token"] = request.data["refresh_token"]
-        data = cloud_api.System.merge(request, master_id, slave_id)
+        data = await sync_to_async(cloud_api.System.merge, thread_sensitive=False)(
+            request, master_id, slave_id
+        )
     return api_success(data)
 
 
 @swagger_auto_schema(method="GET",  # auto_schema=None,
                      operation_description="Returns the user access roles for the system.",
                      manual_parameters=[system_id__route_param])
-@api_view(['GET'])
+@async_api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
-def access_roles(request, system_id):
-    data = cloud_api.System.access_roles(request, system_id)
+async def access_roles(request, system_id):
+    data = await sync_to_async(cloud_api.System.access_roles, thread_sensitive=False)(request, system_id)
     return api_success(data['accessRoles'])
 
 
@@ -309,18 +328,20 @@ def access_roles(request, system_id):
                          required=["system_id"]
                      ),
                      responses={'200': 'Ok'})
-@api_view(['POST'])
+@async_api_view(['POST'])
 @permission_classes((AllowAny, ))
-def disconnect(request):
+async def disconnect(request):
     require_params(request, ('system_id',))
 
     if request.user.is_authenticated:
-        cloud_api.System.unbind(request, request.data['system_id'])
+        await sync_to_async(cloud_api.System.unbind, thread_sensitive=False)(
+            request, request.data['system_id']
+        )
     else:
         try:
             require_params(request, ('email', 'password'))
             with cloud_api.TempLogin(request.data['email'].lower(), request.data['password']) as credentials:
-                cloud_api.System.unbind(
+                await sync_to_async(cloud_api.System.unbind, thread_sensitive=False)(
                     credentials.tokens, request.data['system_id'])
         except APINotAuthorisedException:
             raise APIRequestException('User action was not allowed.', ErrorCodes.wrong_password,
@@ -343,17 +364,21 @@ def disconnect(request):
                          },
                          required=["name", "system_id"]
                      ))
-@api_view(['POST'])
+@async_api_view(['POST'])
 @permission_classes((AllowAny, ))
-def connect(request):
+async def connect(request):
     require_params(request, ('name',))
     if request.user.is_authenticated:
-        data = cloud_api.System.bind(request, request.data['name'], customization=get_customization(request))
+        data = await sync_to_async(cloud_api.System.bind, thread_sensitive=False)(
+            request, request.data['name'], customization=get_customization(request)
+        )
         return api_success(data)
 
     require_params(request, ('email', 'password'))
     with cloud_api.TempLogin(request.data['email'].lower(), request.data['password']) as credentials:
-        data = cloud_api.System.bind(credentials.tokens, request.data['name'], customization=get_customization(request))
+        data = await sync_to_async(cloud_api.System.bind, thread_sensitive=False)(
+            credentials.tokens, request.data['name'], customization=get_customization(request)
+        )
     return api_success(data)
 
 
@@ -368,15 +393,18 @@ def connect(request):
                          },
                          required=["system_id", "mfaCode"]
                      ))
-@api_view(['POST'])
+@async_api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
-def toggle2fa(request):
+async def toggle2fa(request):
     require_params(request, ('systemId', 'mfaCode'))
     system_id = request.data.get('systemId')
-    systems = cloud_api.System.get(request, system_id).get('systems')
-    target_system = next(filter(lambda s: s['id'] == system_id, systems), None)
+    systems = await sync_to_async(cloud_api.System.get, thread_sensitive=False)(request, system_id)
+    target_system = next(filter(lambda s: s['id'] == system_id, systems.get('systems')), {})
     twofa_enabled = target_system.get('system2faEnabled', False)
-    return api_success(cloud_api.System.update(request, system_id, request.data.get('mfaCode'), not twofa_enabled))
+    data = await sync_to_async(cloud_api.System.update, thread_sensitive=False)(
+        request, system_id, request.data.get('mfaCode'), not twofa_enabled
+    )
+    return api_success(data)
 
 
 @swagger_auto_schema(method="GET", auto_schema=None,
@@ -385,9 +413,9 @@ def toggle2fa(request):
 @swagger_auto_schema(method="POST", auto_schema=None,
                      deprecated=True,
                      operation_description="Old way of sending POST request to systems.")
-@api_view(['GET', 'POST'])
+@async_api_view(['GET', 'POST'])
 @permission_classes((AllowAny, ))
-def proxy(request, system_id, system_url):
+async def proxy(request, system_id, system_url):
     # Todo: Add oauth support when servers get it.
     email = None
     password = None
@@ -402,11 +430,11 @@ def proxy(request, system_id, system_url):
         password = request.session['password']
 
     if request.method == 'GET':
-        data = cloud_gateway.get(
+        data = await sync_to_async(cloud_gateway.get, thread_sensitive=False)(
             system_id, system_url, email=email, password=password)
         return api_success(data)
     elif request.method == 'POST':
-        data = cloud_gateway.post(
+        data = await sync_to_async(cloud_gateway.post, thread_sensitive=False)(
             system_id, system_url, request.data, email=email, password=password)
         return api_success(data)
 
@@ -414,9 +442,9 @@ def proxy(request, system_id, system_url):
 
 
 @swagger_auto_schema(method="POST", auto_schema=None)
-@api_view(['POST'])
+@async_api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
-def system_groups_users_management(request):
+async def system_groups_users_management(request):
     systems = request.data.get('systems', [])
     users = request.data.get('users', [])
     if len(users) == 0:
@@ -424,7 +452,7 @@ def system_groups_users_management(request):
     for system_id in systems:
         for user in users:
             try:
-                cloud_api.System.share(
+                await sync_to_async(cloud_api.System.share)(
                     request, system_id, user.get('email'), user.get('role', ''), enabled=user.get('enabled', True))
             # A broad exception is used here because we don't know why sharing failed.
             except APIException:
