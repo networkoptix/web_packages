@@ -36,7 +36,7 @@ export class WizardComponent implements OnInit {
     ];
 
     constructor(
-        private wizardService: WizardStateService,
+        public wizardService: WizardStateService,
         @Inject(WINDOW) public window: Window
     ) {}
 

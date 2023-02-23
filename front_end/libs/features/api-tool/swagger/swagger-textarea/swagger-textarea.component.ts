@@ -157,7 +157,7 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
     setTextareaText = (): void => {
         const element = this.customTextareaRef.nativeElement;
         let textContent = element.textContent;
-        textContent = textContent.replace(/\s+/g, ''); // remove all spaces
+        textContent = this.removeSpacesNotInQuotes(textContent);
 
         // store HTML with whitespace in textareaMap
         this.textareaMap[this.elementRef.nativeElement.getAttribute('uuid')] = element.innerHTML;
@@ -167,6 +167,16 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
         const setValue = Object.getOwnPropertyDescriptor(this.window.HTMLTextAreaElement?.prototype, 'value')?.set;
         setValue?.call(this.textarea, textContent);
         this.textarea.dispatchEvent(new Event('change', { bubbles: true }));
+    };
+
+    removeSpacesNotInQuotes = (textContent: string) : string => {
+        return textContent.replace(/([^"]+)|("[^"]+")/g, function (_, notInQuotes, wholeString) {
+            if (notInQuotes) {
+                return notInQuotes.replace(/\s/g, '');
+            } else {
+                return wholeString;
+            }
+        });
     };
 
     ngOnDestroy(): void {

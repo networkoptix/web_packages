@@ -84,10 +84,10 @@ export class LocalAccount extends BaseAccount {
     async get(forceUpdate = false): Promise<Account | undefined> {
         if (this.sessionService.loginState || this.storageService.cloudAccessToken) {
             const user = await this.mediaServerApi.getCurrentUser(forceUpdate);
-            if (!user) {
-                return undefined;
+            let account: Account;
+            if (user) {
+                account = newLocalAccount(user);
             }
-            const account = newLocalAccount(user);
             this.account = account;
 
             return account;

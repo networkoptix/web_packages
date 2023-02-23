@@ -75,6 +75,7 @@ export interface BaseConfig {
     defaultLanguage: string;
     supportedLanguages: string[];
     headerHeight: number;
+    moreResultsHeight: number;
     browserNotSupported: boolean;
     metaDefaults: Record<string, Record<string, string>>;
     // loggersConfig: LoggersConfig;
