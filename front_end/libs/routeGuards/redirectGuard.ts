@@ -4,7 +4,7 @@ import {
     ActivatedRouteSnapshot,
     Router,
     RouterStateSnapshot,
-    UrlTree
+    UrlTree,
 } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
@@ -21,19 +21,24 @@ export class RedirectGuard implements CanActivate {
         config: NxConfigService,
         private router: Router,
         private accountService: NxAccountService,
-        private cookieService: CookieService
+        private cookieService: CookieService,
     ) {
         this.CONFIG = config.config;
     }
 
     canActivate(
         route: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot
+        state: RouterStateSnapshot,
     ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         return this.accountService.get().then((account: Account) => {
             // eslint-disable-next-line camelcase
             if (account?.is_authenticated) {
-                this.router.navigate([this.CONFIG.featureFlags.dashboardRedirect || this.cookieService.get('devServer') ? 'dashboard' : 'systems']);
+                this.router.navigate([
+                    this.CONFIG.featureFlags.dashboardRedirect ||
+                    this.cookieService.get('devServer')
+                        ? 'dashboard'
+                        : 'systems',
+                ]);
             } else {
                 return true;
             }

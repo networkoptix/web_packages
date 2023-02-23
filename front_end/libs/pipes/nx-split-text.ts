@@ -1,7 +1,4 @@
-import {
-    Pipe,
-    PipeTransform
-} from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { strSplice } from '@utils/general';
@@ -19,15 +16,9 @@ type extraParams = {
  */
 @Pipe({ name: 'translateAndSplitText' })
 export class TextTransformPipe implements PipeTransform {
-    constructor(
-        private translate : TranslateService
-    ) {}
+    constructor(private translate: TranslateService) {}
 
-    transform(
-        text: string,
-        param: number | extraParams,
-        splitWith: string = '<br/>'
-    ): string {
+    transform(text: string, param: number | extraParams, splitWith: string = '<br/>'): string {
         let transformedText: string;
         let idx = 0;
         let length: number;
@@ -37,17 +28,15 @@ export class TextTransformPipe implements PipeTransform {
             transformedText = this.translate.instant(text);
         } else {
             length = param.length;
-            transformedText = this.translate.instant(
-                text,
-                param.translateParams
-            );
+            transformedText = this.translate.instant(text, param.translateParams);
         }
 
         while (transformedText.slice(idx, idx + length).length === length) {
             const sub = transformedText.slice(idx, idx + length);
-            const pos = transformedText.charAt(idx + sub.length) === ' '
-                ? sub.length
-                : sub.lastIndexOf(' ');
+            const pos =
+                transformedText.charAt(idx + sub.length) === ' '
+                    ? sub.length
+                    : sub.lastIndexOf(' ');
             const breakSpace = idx + pos;
             idx = breakSpace + splitWith.length;
             transformedText = strSplice(transformedText, breakSpace, splitWith);

@@ -4,7 +4,7 @@ import {
     CanActivate,
     Router,
     RouterStateSnapshot,
-    UrlTree
+    UrlTree,
 } from '@angular/router';
 import { Observable } from 'rxjs';
 
@@ -17,16 +17,13 @@ import { redirect } from '../variables/static-variables';
 export class DevelopersGuard implements CanActivate {
     CONFIG: IConfig;
 
-    constructor(
-        configService: NxConfigService,
-        private router: Router
-    ) {
+    constructor(configService: NxConfigService, private router: Router) {
         this.CONFIG = configService.getConfig();
     }
 
     canActivate(
         route: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot
+        state: RouterStateSnapshot,
     ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         if (this.CONFIG.cloudCapabilities.developersEnabled) {
             return true;

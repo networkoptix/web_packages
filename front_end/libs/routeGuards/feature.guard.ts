@@ -7,7 +7,7 @@ import {
     ActivatedRouteSnapshot,
     RouterStateSnapshot,
     UrlTree,
-    Router
+    Router,
 } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
@@ -15,10 +15,14 @@ import { Observable } from 'rxjs';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class FeatureGuard implements CanActivate, CanLoad {
-    constructor(private configService: NxConfigService, private cookieService: CookieService, private router: Router) {}
+    constructor(
+        private configService: NxConfigService,
+        private cookieService: CookieService,
+        private router: Router,
+    ) {}
 
     enabled(route: Route | ActivatedRouteSnapshot): boolean {
         const { flags, override } = route.data;
@@ -29,13 +33,15 @@ export class FeatureGuard implements CanActivate, CanLoad {
 
     canActivate(
         route: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+        state: RouterStateSnapshot,
+    ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         return this.enabled(route);
     }
 
     canLoad(
         route: Route,
-        segments: UrlSegment[]): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+        segments: UrlSegment[],
+    ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         const enabled = this.enabled(route);
 
         if (!enabled && segments[0].path === 'systems') {

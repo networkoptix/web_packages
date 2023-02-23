@@ -10,10 +10,7 @@ import { redirect } from '../variables/static-variables';
 export class BookmarksGuard implements CanActivate {
     CONFIG: IConfig;
 
-    constructor(
-        public configService: NxConfigService,
-        private router: Router
-    ) {
+    constructor(public configService: NxConfigService, private router: Router) {
         this.CONFIG = configService.getConfig();
     }
 

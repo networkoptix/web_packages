@@ -1,10 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import {
-    ActivatedRouteSnapshot,
-    CanActivate,
-    RouterStateSnapshot,
-    UrlTree
-} from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { NxAccountService } from '@services/account.service';
@@ -26,7 +21,7 @@ export class AuthGuard implements CanActivate {
 
     canActivate(
         route: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot
+        state: RouterStateSnapshot,
     ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         // All route to pass account service will handle auth login.
         if (this.CONFIG.newSystem) {
@@ -42,10 +37,8 @@ export class AuthGuard implements CanActivate {
             return false;
         }
 
-        return this.accountService
-            .requireLogin()
-            .then(account => {
-                return account !== undefined;
-            });
+        return this.accountService.requireLogin().then(account => {
+            return account !== undefined;
+        });
     }
 }

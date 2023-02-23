@@ -5,7 +5,7 @@ import {
     SafeResourceUrl,
     SafeScript,
     SafeStyle,
-    SafeUrl
+    SafeUrl,
 } from '@angular/platform-browser';
 
 @Pipe({ name: 'safe' })
@@ -14,7 +14,7 @@ export class NxSafePipe implements PipeTransform {
 
     public transform(
         value: string,
-        type: 'html' | 'style' | 'script' | 'url' | 'resourceUrl'
+        type: 'html' | 'style' | 'script' | 'url' | 'resourceUrl',
     ): SafeHtml | SafeStyle | SafeScript | SafeUrl | SafeResourceUrl {
         switch (type) {
             case 'html':

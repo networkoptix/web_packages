@@ -1,23 +1,16 @@
 import { Inject, Injectable } from '@angular/core';
-import {
-    ActivatedRouteSnapshot,
-    CanActivate,
-    RouterStateSnapshot,
-    UrlTree
-} from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { WINDOW } from '@services/window-provider';
 
 @Injectable()
 export class RedirectAuthGuard implements CanActivate {
-    constructor(
-        @Inject(WINDOW) private window: Window
-    ) {}
+    constructor(@Inject(WINDOW) private window: Window) {}
 
     canActivate(
         route: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot
+        state: RouterStateSnapshot,
     ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         const { url } = state;
         let newUrl = '';

@@ -4,7 +4,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import type { SingleTranslateObject, Translatable, TranslateObject } from './nx-translate.types';
 
 function isSingleTranslate(
-    obj: TranslateObject | SingleTranslateObject
+    obj: TranslateObject | SingleTranslateObject,
 ): obj is SingleTranslateObject {
     return Object.values(obj.params).every(p => typeof p === 'string');
 }
@@ -29,10 +29,13 @@ export class NxTranslatePipe extends TranslatePipe implements PipeTransform {
         } else {
             return super.transform(
                 translatable.value,
-                Object.entries(translatable.params).reduce((params, [param, paramValue]) => ({
-                    ...params,
-                    [param]: this.transform(paramValue)
-                }), {})
+                Object.entries(translatable.params).reduce(
+                    (params, [param, paramValue]) => ({
+                        ...params,
+                        [param]: this.transform(paramValue),
+                    }),
+                    {},
+                ),
             );
         }
     }

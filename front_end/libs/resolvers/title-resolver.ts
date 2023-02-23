@@ -14,7 +14,7 @@ export class NxPageTitleStrategy extends TitleStrategy {
     constructor(
         configService: NxConfigService,
         private translateService: TranslateService,
-        private pageMetaService : NxPageMetaService,
+        private pageMetaService: NxPageMetaService,
     ) {
         super();
 
@@ -36,12 +36,16 @@ export class NxPageTitleStrategy extends TitleStrategy {
                         break;
                     case 'system':
                         title = titleObj.baseTitle
-                            ? `${this.translateService.instant(titleObj.baseTitle)} - ${productName}`
+                            ? `${this.translateService.instant(
+                                  titleObj.baseTitle,
+                              )} - ${productName}`
                             : productName;
                         break;
                     default:
                         const mod = titleObj.modifier
-                            ? `${this.translateService.instant(lang.downloads.groups[titleObj.modifier].label)}`
+                            ? `${this.translateService.instant(
+                                  lang.downloads.groups[titleObj.modifier].label,
+                              )}`
                             : ` - ${productName}`;
                         const baseTitle = `${lang.pageTitles?.[titleObj.baseTitle] || titleObj}`;
                         if (baseTitle) {
