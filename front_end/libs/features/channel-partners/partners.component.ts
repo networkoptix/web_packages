@@ -5,9 +5,10 @@ import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import staticLang from '@app/language/language_i18n_static.json';
 import { NxMenuService } from '@app/menu/menu.service';
 import { Content, ContentToggle, Level1Item } from '@app/menu/menu.types';
-import { menus, ribbonHeight } from '@app/variables/static-variables';
+import { menus } from '@app/variables/static-variables';
 import { environment } from '@environments/environment';
 import { NxPartnersService } from '@pages/channel-partners/partners.service';
+import { ribbonHeight } from '@pages/static-variables-features';
 import { NxApplyService } from '@services/apply.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import {

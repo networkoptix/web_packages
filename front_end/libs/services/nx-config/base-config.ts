@@ -253,15 +253,6 @@ export interface PredefinedRole {
     permissions: string;
 }
 
-export interface Animations {
-    carouselImage: CarouselImage;
-}
-
-export interface CarouselImage {
-    enter: string;
-    leave: string;
-}
-
 export interface ClientMode {
     beta: boolean;
     debug: boolean;

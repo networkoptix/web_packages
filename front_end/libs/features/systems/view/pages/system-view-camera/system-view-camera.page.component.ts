@@ -17,7 +17,8 @@ import { filter, takeUntil, throttleTime } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
-import { icons, pollingTimeout } from '@lib/variables/static-variables';
+import { icons } from '@lib/variables/static-variables';
+import { pollingTimeout } from '@pages/static-variables-features';
 import { FpsMeterService } from '@services/fps-meter.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';

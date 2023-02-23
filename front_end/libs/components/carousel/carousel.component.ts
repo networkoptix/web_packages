@@ -1,7 +1,6 @@
 import { trigger, style, animate, transition } from '@angular/animations';
 import { Component, Input, OnInit } from '@angular/core';
 
-import { animations } from '@lib/variables/static-variables';
 import { mod } from '@utils/general';
 
 @Component({
@@ -15,20 +14,14 @@ import { mod } from '@utils/general';
                     opacity: 1,
                     visibility: 'visible',
                 }),
-                animate(
-                    animations.carouselImage.leave,
-                    style({ opacity: 0, visibility: 'hidden' }),
-                ),
+                animate('0.25s ease-out', style({ opacity: 0, visibility: 'hidden' })),
             ]),
             transition('* => enter', [
                 style({
                     opacity: 0,
                     visibility: 'hidden',
                 }),
-                animate(
-                    animations.carouselImage.enter,
-                    style({ opacity: 1, visibility: 'visible' }),
-                ),
+                animate('0.25s ease-in', style({ opacity: 1, visibility: 'visible' })),
             ]),
         ]),
     ],

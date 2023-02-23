@@ -3,7 +3,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { debounceTime, filter } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { icons, ribbonHeight } from '@lib/variables/static-variables';
+import { icons } from '@lib/variables/static-variables';
+import { ribbonHeight } from '@pages/static-variables-features';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';

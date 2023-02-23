@@ -40,7 +40,8 @@ import type {
 } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
-import { pollingTimeout, icons, toast } from '@lib/variables/static-variables';
+import { icons, toast } from '@lib/variables/static-variables';
+import { pollingTimeout } from '@pages/static-variables-features';
 import { NxApplyService } from '@services/apply.service';
 import { Watcher } from '@services/apply.service/watcher';
 import { NxProcessService } from '@services/process.service';

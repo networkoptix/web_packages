@@ -28,7 +28,7 @@ import { defaultHashFunction, memoizeAsync, memoizeAsyncMedium, memoizeAsyncPers
 import { startWithCache } from '@utils/start-with-cached';
 
 import { SECURITY_LEVEL } from '../../apps/setup-wizard/src/app/types/wizard-state.types';
-import { apiDocURL, apiTool } from '../variables/static-variables';
+import { apiTool } from '../variables/static-variables';
 
 import { NxAppStateService } from './nx-app-state.service';
 import type { APIDocType, MenuManifest } from './nx-config/base-config';
@@ -61,6 +61,12 @@ export class NxSystemRestAPI extends NxSystemAPI {
     readonly sessionFreshnessSec: number = 600;
 
     #vmsToken: string;
+
+    apiDocURL: object = {
+        main: '/swagger-ui/openapi_v1.json',
+        legacy: '/swagger-ui/openapi_legacy.json',
+        deprecated: '/swagger-ui/openapi_deprecated.json'
+    };
 
     constructor(
         http: HttpClient,
@@ -644,7 +650,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     @memoizeAsyncPersistent
     getApiDoc(type: APIDocType = 'main') {
-        return this.get<APIDoc>(apiDocURL[type]).toPromise();
+        return this.get<APIDoc>(this.apiDocURL[type]).toPromise();
     }
 
     @memoizeAsyncPersistent

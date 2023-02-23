@@ -7,7 +7,8 @@ import { distinctUntilChanged, map } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import type { SuggestionSections } from '@components/simple-search/simple-search.types';
-import { icons, pollingTimeout } from '@lib/variables/static-variables';
+import { icons } from '@lib/variables/static-variables';
+import { pollingTimeout } from '@pages/static-variables-features';
 import { NxAccountService } from '@services/account.service';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';

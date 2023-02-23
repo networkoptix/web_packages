@@ -6,7 +6,7 @@ import { BehaviorSubject, combineLatest } from 'rxjs';
 import { accountSelectors } from '@common/store/account';
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { environment } from '@environments/environment';
-import { icons, accountDropdown, accountDropdownStaff } from '@lib/variables/static-variables';
+import { icons, accountDropdown } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { AccountDropdown } from '@services/nx-config/base-config';
@@ -50,7 +50,18 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
         is_staff: false,
         is_superuser: false,
     };
-    accountDropdownStaff: AccountDropdown[];
+    accountDropdownStaff: AccountDropdown[] = [
+        {
+            name: 'Administration',
+            route: '/admin/',
+            newWindow: true,
+        },
+        {
+            name: 'Channel partners',
+            route: '/partners/',
+            newWindow: false,
+        },
+    ];
     accountDropdown: AccountDropdown[];
 
     constructor(
@@ -61,7 +72,6 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
     ) {
         super(configService);
         this.accountDropdown = accountDropdown;
-        this.accountDropdownStaff = accountDropdownStaff;
         this.newHeader = this.CONFIG.featureFlags.newHeader;
         headerService.currentLocation$.pipe(untilDestroyed(this)).subscribe(location => {
             this.isAccountRoute = location?.path?.includes('/account');
