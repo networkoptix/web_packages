@@ -1,11 +1,4 @@
-import {
-    Component,
-    Inject,
-    OnDestroy,
-    LOCALE_ID,
-    Input,
-    OnChanges,
-} from '@angular/core';
+import { Component, Inject, OnDestroy, LOCALE_ID, Input, OnChanges } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';

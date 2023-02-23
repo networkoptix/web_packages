@@ -1,12 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import {
-    Component,
-    Inject,
-    ViewContainerRef,
-    LOCALE_ID,
-    Input,
-    OnInit,
-} from '@angular/core';
+import { Component, Inject, ViewContainerRef, LOCALE_ID, Input, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
     combineLatest,
@@ -35,9 +28,7 @@ import {
 } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import type {
-    DropdownItem
-} from '@components/dropdowns/generic/dropdown.component.types';
+import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { icons, toast } from '@lib/variables/static-variables';
@@ -46,10 +37,7 @@ import { NxApplyService } from '@services/apply.service';
 import { Watcher } from '@services/apply.service/watcher';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import type {
-    ChangedIdReturned,
-    RebuildArchiveResponse
-} from '@services/system-api.types';
+import type { ChangedIdReturned, RebuildArchiveResponse } from '@services/system-api.types';
 import {
     STORAGE_STATUS,
     Storage,
@@ -57,9 +45,7 @@ import {
     CurrentStorageState,
     MODE,
 } from '@services/system.service/storage-manager/storage';
-import {
-    UpdateTriggers
-} from '@services/system.service/storage-manager/storage-state';
+import { UpdateTriggers } from '@services/system.service/storage-manager/storage-state';
 import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
 import { ChildRoutes } from '@services/uri.service.types';

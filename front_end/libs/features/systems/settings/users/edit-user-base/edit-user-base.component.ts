@@ -1,10 +1,4 @@
-import {
-    Component,
-    OnDestroy,
-    OnInit,
-    ViewChild,
-    ViewContainerRef,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { untilDestroyed } from '@ngneat/until-destroy';

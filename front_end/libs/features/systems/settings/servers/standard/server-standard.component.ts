@@ -1,11 +1,4 @@
-import {
-    Component,
-    OnChanges,
-    OnDestroy,
-    Input,
-    Output,
-    EventEmitter,
-} from '@angular/core';
+import { Component, OnChanges, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual } from 'lodash-es';
@@ -14,10 +7,7 @@ import { catchError, filter, skipWhile, takeUntil } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';
-import {
-    InfoBlockSection,
-    InfoBlockLine
-} from '@components/info-block/info-block.component.types';
+import { InfoBlockSection, InfoBlockLine } from '@components/info-block/info-block.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';

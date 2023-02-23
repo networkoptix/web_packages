@@ -1,17 +1,9 @@
-import {
-    Component,
-    OnDestroy,
-    Input,
-    OnChanges,
-    ViewChild,
-} from '@angular/core';
+import { Component, OnDestroy, Input, OnChanges, ViewChild } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { SubscriptionLike } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import type {
-    DropdownItem
-} from '@components/dropdowns/generic/dropdown.component.types';
+import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxProcessService } from '@services/process.service';
 import type { NxSystem } from '@services/system.service/system';

@@ -1,10 +1,4 @@
-import {
-    Component,
-    OnDestroy,
-    OnInit,
-    Inject,
-    ViewContainerRef
-} from '@angular/core';
+import { Component, OnDestroy, OnInit, Inject, ViewContainerRef } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -17,7 +11,7 @@ import {
     throwError,
     of,
     Observable,
-    combineLatest
+    combineLatest,
 } from 'rxjs';
 import {
     filter,
@@ -28,7 +22,7 @@ import {
     retry,
     tap,
     catchError,
-    switchMap
+    switchMap,
 } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
@@ -37,7 +31,7 @@ import {
     InfoBlockColumns,
     InfoBlockSection,
     InfoBlockLine,
-    InfoBlockSize
+    InfoBlockSize,
 } from '@components/info-block/info-block.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { Size } from '@directives/resize/nx-resize.directive.types';

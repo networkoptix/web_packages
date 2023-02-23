@@ -1,9 +1,4 @@
-import {
-    Component,
-    OnDestroy,
-    Input,
-    ViewChild
-} from '@angular/core';
+import { Component, OnDestroy, Input, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { firstValueFrom, Subject } from 'rxjs';

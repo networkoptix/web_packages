@@ -1,7 +1,16 @@
 /** This should be refactored to not be its own service */
 import { Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { BehaviorSubject, catchError, filter, forkJoin, map, Observable, shareReplay, switchMap } from 'rxjs';
+import {
+    BehaviorSubject,
+    catchError,
+    filter,
+    forkJoin,
+    map,
+    Observable,
+    shareReplay,
+    switchMap,
+} from 'rxjs';
 
 import { SystemConfigSettings } from '@services/system-api.types';
 import type { NxSystem } from '@services/system.service/system';

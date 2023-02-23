@@ -1,6 +1,4 @@
-import type {
-    DropdownItem
-} from '@components/dropdowns/generic/dropdown.component.types';
+import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 
 export interface DropdownStorage extends DropdownItem<string> {
     id: string;

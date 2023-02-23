@@ -9,7 +9,7 @@ import {
     HostListener,
     Output,
     EventEmitter,
-    Inject
+    Inject,
 } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { BehaviorSubject, Subject } from 'rxjs';

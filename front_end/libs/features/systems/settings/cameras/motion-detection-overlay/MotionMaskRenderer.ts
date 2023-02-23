@@ -21,7 +21,7 @@ import {
     withLatestFrom,
     takeUntil,
     delay,
-    merge as mergeOperator
+    merge as mergeOperator,
 } from 'rxjs/operators';
 
 import { MotionMaskState } from './MotionMaskState';

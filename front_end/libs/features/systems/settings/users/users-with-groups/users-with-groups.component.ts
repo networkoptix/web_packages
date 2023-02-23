@@ -1,6 +1,4 @@
-import {
-    Component, ViewChild
-} from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 

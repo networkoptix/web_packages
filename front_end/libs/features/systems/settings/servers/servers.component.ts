@@ -1,11 +1,5 @@
 import { Location } from '@angular/common';
-import {
-    Component,
-    OnDestroy,
-    OnInit,
-    ViewContainerRef,
-    Inject,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewContainerRef, Inject } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, Subscription, timer } from 'rxjs';

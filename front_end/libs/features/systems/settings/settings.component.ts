@@ -1,17 +1,5 @@
-import {
-    Component,
-    Inject,
-    Input,
-    LOCALE_ID,
-    OnDestroy,
-    OnInit,
-} from '@angular/core';
-import {
-    ActivatedRoute,
-    Router,
-    NavigationEnd,
-    NavigationStart
-} from '@angular/router';
+import { Component, Inject, Input, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { escape } from 'lodash-es';
 import { firstValueFrom, Observable, Subject, Subscription } from 'rxjs';
@@ -37,15 +25,11 @@ import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
-import type {
-    NxSystemCamera
-} from '@services/system.service/camera-manager/camera-manager-types';
+import type { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
-import type {
-    NxEc2LocalUser
-} from '@services/system.service/user-manager/user-manager-types';
+import type { NxEc2LocalUser } from '@services/system.service/user-manager/user-manager-types';
 import { NxSystemsService } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
 import { GridBreakpoints } from '@styles/theme-variables-common';

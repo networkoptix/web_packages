@@ -1,14 +1,7 @@
-import {
-    Component,
-    Input,
-    OnChanges,
-    ViewEncapsulation,
-} from '@angular/core';
+import { Component, Input, OnChanges, ViewEncapsulation } from '@angular/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import type {
-    DropdownItem
-} from '@components/dropdowns/generic/dropdown.component.types';
+import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { servers } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';

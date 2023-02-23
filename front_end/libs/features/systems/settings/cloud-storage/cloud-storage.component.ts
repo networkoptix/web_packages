@@ -1,9 +1,17 @@
-import {
-    Component, Input, OnInit, TemplateRef, ViewContainerRef,
-} from '@angular/core';
+import { Component, Input, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { startCase, isEqual } from 'lodash-es';
-import { BehaviorSubject, combineLatest, distinctUntilChanged, filter, map, shareReplay, switchMap, take, tap } from 'rxjs';
+import {
+    BehaviorSubject,
+    combineLatest,
+    distinctUntilChanged,
+    filter,
+    map,
+    shareReplay,
+    switchMap,
+    take,
+    tap,
+} from 'rxjs';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';
@@ -13,9 +21,16 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { icons, menus } from '@lib/variables/static-variables';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { CloudStorageManager, CloudStorageUpdate } from '@services/system.service/cloud-storage-manager/cloud-storage-manager';
+import {
+    CloudStorageManager,
+    CloudStorageUpdate,
+} from '@services/system.service/cloud-storage-manager/cloud-storage-manager';
 import { LicenseManager } from '@services/system.service/license-manager/licence-manager';
-import { CLOUD_STORAGE_STATES, KeyTableFieldsKey, ProcessedLicenseKey } from '@services/system.service/license-manager/license-manager.types';
+import {
+    CLOUD_STORAGE_STATES,
+    KeyTableFieldsKey,
+    ProcessedLicenseKey,
+} from '@services/system.service/license-manager/license-manager.types';
 import { NxSystem } from '@services/system.service/system';
 
 import { NxSettingsService } from '../settings.service';
