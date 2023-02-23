@@ -1,10 +1,4 @@
-import {
-    Component,
-    Input,
-    OnInit,
-    OnChanges,
-    OnDestroy
-} from '@angular/core';
+import { Component, Input, OnInit, OnChanges, OnDestroy } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { NxMenuService } from '@app/menu/menu.service';
@@ -34,22 +28,16 @@ export class NxLevel4ItemComponent implements OnInit, OnChanges, OnDestroy {
     search: RegExp;
     icons = icons;
 
-    constructor(
-        private menuService: NxMenuService,
-    ) {}
+    constructor(private menuService: NxMenuService) {}
 
     ngOnInit(): void {
-        this.menuService.navItemSubject
-            .pipe(untilDestroyed(this))
-            .subscribe(() => {
-                this.menuNavItemId = this.menuService.navItemId;
-            });
+        this.menuService.navItemSubject.pipe(untilDestroyed(this)).subscribe(() => {
+            this.menuNavItemId = this.menuService.navItemId;
+        });
 
-        this.menuService.searchRegexSubject
-            .pipe(untilDestroyed(this))
-            .subscribe(search => {
-                this.search = search;
-            });
+        this.menuService.searchRegexSubject.pipe(untilDestroyed(this)).subscribe(search => {
+            this.search = search;
+        });
     }
 
     ngOnDestroy(): void {}
@@ -60,9 +48,8 @@ export class NxLevel4ItemComponent implements OnInit, OnChanges, OnDestroy {
         }
         if (changes.item?.currentValue) {
             this.itemPath = this.base;
-            this.itemPath += (changes.item.currentValue.path !== '')
-                ? `/${changes.item.currentValue.path}`
-                : '';
+            this.itemPath +=
+                changes.item.currentValue.path !== '' ? `/${changes.item.currentValue.path}` : '';
         }
     }
 

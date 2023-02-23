@@ -8,7 +8,7 @@ import type { SearchModel } from '@services/search.service.types';
 import type { Level1Item, Level2Item, Level3Item } from './menu.types';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxMenuService implements OnDestroy {
     selectedSectionSubject = new BehaviorSubject<string>('');
@@ -88,10 +88,7 @@ export class NxMenuService implements OnDestroy {
         }
     }
 
-    filterItemsBy(
-        model: SearchModel,
-        searchSubMenus: boolean = false
-    ): Level1Item[] {
+    filterItemsBy(model: SearchModel, searchSubMenus: boolean = false): Level1Item[] {
         let filteredContent: Level1Item[] = [];
         if (model.query) {
             this.setHighlightPattern(model);
@@ -104,28 +101,18 @@ export class NxMenuService implements OnDestroy {
                                 model,
                                 filteredContent,
                                 node,
-                                subNode
+                                subNode,
                             );
                             if (haveNode?.level3?.length) {
-                                this.addHaveNodeToFilteredContent(
-                                    haveNode,
-                                    filteredContent
-                                );
+                                this.addHaveNodeToFilteredContent(haveNode, filteredContent);
                             }
                         }
                     });
                 }
                 if (node.level3?.length) {
-                    const haveNode = this.filterNodesIntoHaveNode(
-                        model,
-                        filteredContent,
-                        node
-                    );
+                    const haveNode = this.filterNodesIntoHaveNode(model, filteredContent, node);
                     if (haveNode?.level3?.length) {
-                        this.addHaveNodeToFilteredContent(
-                            haveNode,
-                            filteredContent
-                        );
+                        this.addHaveNodeToFilteredContent(haveNode, filteredContent);
                     }
                 }
             });
@@ -137,10 +124,7 @@ export class NxMenuService implements OnDestroy {
         return filteredContent;
     }
 
-    addHaveNodeToFilteredContent(
-        haveNode: Level1Item,
-        filteredContent: Level1Item[]
-    ): void {
+    addHaveNodeToFilteredContent(haveNode: Level1Item, filteredContent: Level1Item[]): void {
         // remove separator if last in search result
         if (haveNode.level3[haveNode.level3.length - 1].horizontal) {
             haveNode.level3.pop();
@@ -152,11 +136,9 @@ export class NxMenuService implements OnDestroy {
         model: SearchModel,
         filteredContent: Level1Item[],
         node: Level1Item,
-        subNode?: Level2Item
+        subNode?: Level2Item,
     ): Level1Item {
-        let haveNode = filteredContent.find(filtered =>
-            filtered.id === (subNode || node).id
-        );
+        let haveNode = filteredContent.find(filtered => filtered.id === (subNode || node).id);
 
         (subNode || node).level3.forEach(item => {
             if (item.id) {
@@ -164,9 +146,7 @@ export class NxMenuService implements OnDestroy {
 
                 let searchAggregate = item.label || '';
                 searchAggregate += additionalLabel ? ` ${additionalLabel}` : '';
-                searchAggregate += (model.query.length > 10 && item.id)
-                    ? ` ${item.id}`
-                    : '';
+                searchAggregate += model.query.length > 10 && item.id ? ` ${item.id}` : '';
 
                 if (this.searchService.findMatch(searchAggregate, model)) {
                     if (!haveNode) {
@@ -213,7 +193,7 @@ export class NxMenuService implements OnDestroy {
             model.queryEndsWith,
             model.queryStartsWith,
             model.queryOrMatch,
-            model.queryAndMatch
+            model.queryAndMatch,
         ].find(m => Array.isArray(m)) as string[];
 
         this.searchRegexSubject.next(new RegExp(`(${match.join('|')})`, 'i'));

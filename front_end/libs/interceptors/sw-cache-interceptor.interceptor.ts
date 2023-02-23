@@ -1,9 +1,4 @@
-import {
-    HttpRequest,
-    HttpHandler,
-    HttpEvent,
-    HttpInterceptor
-} from '@angular/common/http';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -16,7 +11,7 @@ export class NxSwCacheInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
         if (request.url.startsWith('/') && this.cloudApiService.swBypass) {
             const newRequest = request.clone({
-                headers: request.headers.set('ngsw-bypass', 'true')
+                headers: request.headers.set('ngsw-bypass', 'true'),
             });
             return next.handle(newRequest);
         }

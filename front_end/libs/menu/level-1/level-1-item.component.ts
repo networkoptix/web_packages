@@ -1,11 +1,4 @@
-import {
-    Component,
-    EventEmitter,
-    Input,
-    OnChanges,
-    OnInit,
-    Output,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { NxMenuService } from '@app/menu/menu.service';
@@ -38,36 +31,29 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
     _searchableItemsLength: number;
     icons = icons;
 
-    constructor(
-        private router: Router,
-        private menuService: NxMenuService
-    ) {}
+    constructor(private router: Router, private menuService: NxMenuService) {}
 
     ngOnInit(): void {
         this.itemPath = this.base;
-        this.itemPath += (this.item.path !== '') ? `/${this.item.path}` : '';
+        this.itemPath += this.item.path !== '' ? `/${this.item.path}` : '';
         this._toggle = this.item.toggle || false;
     }
 
     ngOnChanges(changes: NgChanges<NxLevel1ItemComponent>): void {
         if (changes.base?.currentValue) {
             this.itemPath = changes.base.currentValue;
-            this.itemPath += (this.item.path !== '')
-                ? `/${this.item.path}`
-                : '';
+            this.itemPath += this.item.path !== '' ? `/${this.item.path}` : '';
         }
 
         if (changes.searchMode?.currentValue) {
-            this._type = changes.searchMode?.currentValue
-                ? 'arrow_collapse'
-                : 'arrow_expand';
+            this._type = changes.searchMode?.currentValue ? 'arrow_collapse' : 'arrow_expand';
         }
 
         if (changes.item?.currentValue) {
             if (this.searchMode) {
-                this._searchableItemsLength = changes.item.currentValue.level3
-                    .filter(itm => !itm.horizontal)
-                    .length;
+                this._searchableItemsLength = changes.item.currentValue.level3.filter(
+                    itm => !itm.horizontal,
+                ).length;
                 this._toggle = changes.item.currentValue.toggle;
             }
         }
@@ -78,10 +64,7 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
             this.menuService.section = sectionId;
             if (this.itemPath) {
                 this.router
-                    .navigate(
-                        [this.itemPath],
-                        { queryParams: { search: this.item.query } }
-                    )
+                    .navigate([this.itemPath], { queryParams: { search: this.item.query } })
                     .catch(ex => console.error(ex));
             }
         } else {

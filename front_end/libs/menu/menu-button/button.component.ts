@@ -12,15 +12,14 @@ import type { Level2Button } from '../menu.types';
 
 @Component({
     selector: 'nx-menu-button',
-    template: `
-        <button
-            *ngIf="!environment.isLocal || CONFIG.cloudSystemId"
-            class="inset btn btn-menu btn-clear"
-            [disabled]="button.disabled"
-            (click)="action()"
-        >{{
-            button.label | translate
-        }}</button>`
+    template: `<button
+        *ngIf="!environment.isLocal || CONFIG.cloudSystemId"
+        class="inset btn btn-menu btn-clear"
+        [disabled]="button.disabled"
+        (click)="action()"
+    >
+        {{ button.label | translate }}
+    </button>`,
 })
 export class NxMenuButtonComponent {
     @Input() button: Level2Button;
@@ -33,7 +32,7 @@ export class NxMenuButtonComponent {
         private dialogs: NxDialogsService,
         private uriService: NxUriService,
         private menuService: NxMenuService,
-        configService: NxConfigService
+        configService: NxConfigService,
     ) {
         this.CONFIG = configService.config;
     }
@@ -44,41 +43,44 @@ export class NxMenuButtonComponent {
         switch (this.button.id) {
             case 'addUser':
                 // Handling promise to satisfy the linter.
-                this.dialogs.addUser(this.system).then(userId => {
-                    if (userId) {
-                        const systemId = this.system.id;
-                        userId = this.system.mediaserver.cleanId(userId);
-                        this.menuService.detail = userId;
-                        this.uriService
-                            .updateURI(this.uriService.getSystemSettingsRoute({
-                                systemId,
-                                userId
-                            }))
-                            .catch(error => console.error(error));
-                    }
-                }).catch(err => console.error(err));
-                break;
-            case 'addCustomization':
-                this.dialogs.addPartnerBrand()
-                    .then((customizationId: string) => {
-                        if (customizationId) {
-                            this.menuService.detail = customizationId;
+                this.dialogs
+                    .addUser(this.system)
+                    .then(userId => {
+                        if (userId) {
+                            const systemId = this.system.id;
+                            userId = this.system.mediaserver.cleanId(userId);
+                            this.menuService.detail = userId;
                             this.uriService
-                                .updateURI('/partners/' + customizationId, {})
+                                .updateURI(
+                                    this.uriService.getSystemSettingsRoute({
+                                        systemId,
+                                        userId,
+                                    }),
+                                )
                                 .catch(error => console.error(error));
                         }
-                    });
+                    })
+                    .catch(err => console.error(err));
+                break;
+            case 'addCustomization':
+                this.dialogs.addPartnerBrand().then((customizationId: string) => {
+                    if (customizationId) {
+                        this.menuService.detail = customizationId;
+                        this.uriService
+                            .updateURI('/partners/' + customizationId, {})
+                            .catch(error => console.error(error));
+                    }
+                });
                 break;
             case 'addPartner':
-                this.dialogs.addBrandPartner()
-                    .then((partnerId: string) => {
-                        if (partnerId) {
-                            this.menuService.detail = partnerId;
-                            // this.uriService
-                            //     .updateURI('/partners/' + customizationId, {})
-                            //     .catch(error => console.error(error));
-                        }
-                    });
+                this.dialogs.addBrandPartner().then((partnerId: string) => {
+                    if (partnerId) {
+                        this.menuService.detail = partnerId;
+                        // this.uriService
+                        //     .updateURI('/partners/' + customizationId, {})
+                        //     .catch(error => console.error(error));
+                    }
+                });
         }
     }
 }

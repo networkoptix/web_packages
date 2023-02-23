@@ -1,9 +1,4 @@
-import {
-    HttpEvent,
-    HttpHandler,
-    HttpInterceptor,
-    HttpRequest
-} from '@angular/common/http';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
 import { throwError, timer, Observable } from 'rxjs';
 import { catchError, flatMap } from 'rxjs/operators';
@@ -21,9 +16,7 @@ export class CloudUnavailableInterceptor implements HttpInterceptor {
     retryTimeout: number;
     private readonly whiteList: string[] = ['/storage/usageStats'];
 
-    constructor(
-        injector: Injector
-    ) {
+    constructor(injector: Injector) {
         this.error = interceptor.cloudUnavailable.error;
         this.retryTimeout = interceptor.cloudUnavailable.timeout;
         setTimeout(() => {
@@ -31,25 +24,30 @@ export class CloudUnavailableInterceptor implements HttpInterceptor {
         });
     }
 
-    intercept(
-        req: HttpRequest<unknown>,
-        next: HttpHandler
-    ): Observable<HttpEvent<unknown>> {
+    intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
         return next.handle(req).pipe(
             catchError(response => {
                 const { url } = response;
-                if (response.error?.resultCode === this.error && !this.whiteList.some(ignoreUrl => url.includes(ignoreUrl))) {
+                if (
+                    response.error?.resultCode === this.error &&
+                    !this.whiteList.some(ignoreUrl => url.includes(ignoreUrl))
+                ) {
                     return timer(this.retryTimeout).pipe(
-                        flatMap(() => next.handle(req)
-                            .pipe(catchError(response => {
-                                this.dialogService.notify(
-                                    this.LANG.toastMessage.cloudUnavailable,
-                                    'danger'
-                                );
-                                return throwError(response);
-                            }))));
+                        flatMap(() =>
+                            next.handle(req).pipe(
+                                catchError(response => {
+                                    this.dialogService.notify(
+                                        this.LANG.toastMessage.cloudUnavailable,
+                                        'danger',
+                                    );
+                                    return throwError(response);
+                                }),
+                            ),
+                        ),
+                    );
                 }
                 return throwError(response);
-            }));
+            }),
+        );
     }
 }

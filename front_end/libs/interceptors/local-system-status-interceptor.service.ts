@@ -4,7 +4,7 @@ import {
     HttpRequest,
     HttpResponse,
     HttpErrorResponse,
-    HttpEvent
+    HttpEvent,
 } from '@angular/common/http';
 import { Injectable, Inject } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -28,29 +28,28 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
         configService: NxConfigService,
         private appState: NxAppStateService,
         private dialogs: NxDialogsService,
-        @Inject(WINDOW) private window: Window
+        @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.config;
     }
 
     public intercept(
         httpRequest: HttpRequest<unknown>,
-        handler: HttpHandler
+        handler: HttpHandler,
     ): Observable<HttpEvent<unknown>> {
         if (!environment.isLocal || httpRequest.headers.get('X-Server-Guid')) {
             return handler.handle(httpRequest);
         }
-        return handler.handle(httpRequest)
-            .pipe(
-                tap(
-                    (res: HttpResponse<unknown>) => {
-                        this.checkIfSystemAvailable(res);
-                    },
-                    (err: HttpErrorResponse) => {
-                        this.checkIfSystemAvailable(err);
-                    }
-                )
-            );
+        return handler.handle(httpRequest).pipe(
+            tap(
+                (res: HttpResponse<unknown>) => {
+                    this.checkIfSystemAvailable(res);
+                },
+                (err: HttpErrorResponse) => {
+                    this.checkIfSystemAvailable(err);
+                },
+            ),
+        );
     }
 
     // appState.systemAvailable for webadmin, overlay-modal.component
@@ -73,16 +72,13 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
         }
 
         // replace OR as "0 || undefined" makes offline status "false"
-        const status = res.status !== undefined ? res.status : res.type !== undefined ? res.type : 0;
+        const status =
+            res.status !== undefined ? res.status : res.type !== undefined ? res.type : 0;
 
         const offlineStatus = [504, 502, 0].includes(status);
         const errorStatus = [504, 502, 0].includes(this.appState.lastErrorStatus$.value);
 
-        if (
-            res instanceof HttpErrorResponse &&
-            offlineStatus &&
-            offlineStatus !== errorStatus
-        ) {
+        if (res instanceof HttpErrorResponse && offlineStatus && offlineStatus !== errorStatus) {
             // Don't show overlay if we're showing session dialog
             if (this.isDialogActive) {
                 return;
@@ -91,9 +87,11 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
             this.appState.lastErrorStatus$.next(status);
             this.appState.systemAvailable$.next(false);
         } else if (
-            res instanceof HttpErrorResponse &&
-            (status === 401 || status === 422 && res.url.includes('rest/v1/login/sessions') &&
-                res.error?.errorId === servers.errors.oldSessionErrorId) ||
+            (res instanceof HttpErrorResponse &&
+                (status === 401 ||
+                    (status === 422 &&
+                        res.url.includes('rest/v1/login/sessions') &&
+                        res.error?.errorId === servers.errors.oldSessionErrorId))) ||
             (status === 0 && res.url?.includes('oauth/token'))
         ) {
             // Session expired
@@ -103,8 +101,7 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
             // remove overlay if visible
             this.appState.systemAvailable$.next(true);
             this.isDialogActive = true;
-            this.dialogs.expiredSession()
-                .then(() => this.window.location.reload());
+            this.dialogs.expiredSession().then(() => this.window.location.reload());
         } else if (
             res instanceof HttpResponse &&
             this.appState.systemAvailable$.value === false &&

@@ -113,57 +113,49 @@ export class NxMenuComponent implements OnInit, OnChanges {
     ) {}
 
     ngOnInit(): void {
-        this.route.queryParams
-            .pipe(untilDestroyed(this))
-            .subscribe(params => {
-                if (this.searchable) {
-                    this.transition = true;
-                    this.searchMode = this.menuModel.query !== '';
-                    this.menuModel.query = params?.search || '';
-                    this.searchService.getMatchPatterns(this.menuModel);
-                    this.modelChanged(this.menuModel);
-                }
-            });
+        this.route.queryParams.pipe(untilDestroyed(this)).subscribe(params => {
+            if (this.searchable) {
+                this.transition = true;
+                this.searchMode = this.menuModel.query !== '';
+                this.menuModel.query = params?.search || '';
+                this.searchService.getMatchPatterns(this.menuModel);
+                this.modelChanged(this.menuModel);
+            }
+        });
 
-        this.searchService.navDirectionSubject
-            .pipe(untilDestroyed(this))
-            .subscribe(() => {
-                if (this.navItems.length) {
+        this.searchService.navDirectionSubject.pipe(untilDestroyed(this)).subscribe(() => {
+            if (this.navItems.length) {
+                this.menuService.navItemId = this.assignItemId();
+                // skip selected item
+                if (this.menuService.navItemId === this.selectedLevel3) {
                     this.menuService.navItemId = this.assignItemId();
-                    // skip selected item
-                    if (this.menuService.navItemId === this.selectedLevel3) {
-                        this.menuService.navItemId = this.assignItemId();
-                    }
                 }
-            });
+            }
+        });
 
-        this.searchService.navSelectionSubject
-            .pipe(untilDestroyed(this))
-            .subscribe(() => {
-                const item = this.menuService.getItemBy(
-                    this.navItems[this.navItemIdx].id
-                );
-                if (item) {
-                    this.navItemIdx = (this.navItemIdx < this.navItems.length - 1)
-                        ? this.navItemIdx + 1
-                        : 0;
-                    this.menuService.navItemId = this.navItems[this.navItemIdx].id;
-                    this.router
-                        .navigate(
-                            [`${this.content.base}/${item.path}`],
-                            { queryParams: { search: this.menuModel.query } }
-                        ).catch(ex => {
-                            console.error(ex);
-                        });
-                }
-            });
+        this.searchService.navSelectionSubject.pipe(untilDestroyed(this)).subscribe(() => {
+            const item = this.menuService.getItemBy(this.navItems[this.navItemIdx].id);
+            if (item) {
+                this.navItemIdx =
+                    this.navItemIdx < this.navItems.length - 1 ? this.navItemIdx + 1 : 0;
+                this.menuService.navItemId = this.navItems[this.navItemIdx].id;
+                this.router
+                    .navigate([`${this.content.base}/${item.path}`], {
+                        queryParams: { search: this.menuModel.query },
+                    })
+                    .catch(ex => {
+                        console.error(ex);
+                    });
+            }
+        });
 
         fromEvent<Event>(this.window, 'resize')
             .pipe(
                 untilDestroyed(this),
                 map(event => (event.target as Window).innerHeight),
-                startWith(this.window.innerHeight)
-            ).subscribe(height => {
+                startWith(this.window.innerHeight),
+            )
+            .subscribe(height => {
                 this.totalWindowHeight = height;
                 if (this.ribbonShown) {
                     this.windowHeight = this.windowHeight - this.elmRibbon.offsetHeight;
@@ -172,10 +164,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
             });
 
         this.appStateService.ribbonSubject
-            .pipe(
-                distinctUntilChanged(),
-                untilDestroyed(this)
-            )
+            .pipe(distinctUntilChanged(), untilDestroyed(this))
             .subscribe(state => {
                 if (state) {
                     this.elmRibbon = this.renderer?.selectRootElement('nx-ribbon', true);
@@ -200,11 +189,9 @@ export class NxMenuComponent implements OnInit, OnChanges {
             }
             // Avoid unnecessary update and overwrite user choices
             const filtered = this.menuService.cleanMenuContent(
-                this.menuService.filterItemsBy(this.menuModel)
+                this.menuService.filterItemsBy(this.menuModel),
             );
-            const cleanMenuContent = this.menuService.cleanMenuContent(
-                this.menuContent
-            );
+            const cleanMenuContent = this.menuService.cleanMenuContent(this.menuContent);
             if (
                 filtered.length !== this.menuContent.length ||
                 !isEqual(filtered, cleanMenuContent)
@@ -214,7 +201,8 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 setTimeout(() => {
                     if (
                         this.scrollArea &&
-                        this.scrollArea.nativeElement.scrollHeight > this.scrollArea.nativeElement.clientHeight
+                        this.scrollArea.nativeElement.scrollHeight >
+                            this.scrollArea.nativeElement.clientHeight
                     ) {
                         this.scrollArea.nativeElement.scrollTop = scroll;
                     }
@@ -296,15 +284,18 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 : 0;
 
             this.containerHeight = this.scrollArea
-                ? (this.scrollArea.nativeElement // .scroll-area
-                    .parentNode // .level-3-items
-                    .parentNode as HTMLDivElement) // .level-1-container
-                    .getBoundingClientRect().height
+                ? (this.scrollArea.nativeElement.parentNode.parentNode as HTMLDivElement)
+                      // .scroll-area => .level-3-items => .level-1-container
+                      .getBoundingClientRect().height
                 : 0;
             try {
-                this.elmMenuL1 = this.renderer.selectRootElement('.level-1-container:not(.selected)', true);
+                this.elmMenuL1 = this.renderer.selectRootElement(
+                    '.level-1-container:not(.selected)',
+                    true,
+                );
                 // this.menuService.content.length - 1 -> the number of other level1 nodes
-                this.permHeight = (this.menuService.content.length - 1) * this.elmMenuL1.offsetHeight +
+                this.permHeight =
+                    (this.menuService.content.length - 1) * this.elmMenuL1.offsetHeight +
                     (this.containerHeight - this.scrollHeight);
             } catch (_) {
                 // element does not exist
@@ -313,13 +304,22 @@ export class NxMenuComponent implements OnInit, OnChanges {
     }
 
     resizeMenu(): void {
-        if (this.elmHeader && this.elmMenuSearch && this.autoFit && this.scrollArea && !this.searchMode) {
+        if (
+            this.elmHeader &&
+            this.elmMenuSearch &&
+            this.autoFit &&
+            this.scrollArea &&
+            !this.searchMode
+        ) {
             setTimeout(() => {
                 let windowHeightFit: number;
                 this.menuOverflow = 'hidden';
-                this.windowHeight = this.totalWindowHeight - this.elmHeader.offsetHeight - this.stdPadding;
+                this.windowHeight =
+                    this.totalWindowHeight - this.elmHeader.offsetHeight - this.stdPadding;
 
-                const actualSearchHeight = !this.searchable ? 0 : this.elmMenuSearch.offsetHeight + this.stdPadding / 2;
+                const actualSearchHeight = !this.searchable
+                    ? 0
+                    : this.elmMenuSearch.offsetHeight + this.stdPadding / 2;
                 if (this.windowHeight < this.menuHeight + actualSearchHeight) {
                     // TODO: might want to subtract more if ribbon exists
                     windowHeightFit = this.windowHeight - actualSearchHeight - this.stdPadding;
@@ -332,21 +332,19 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 if (this.scrollArea.nativeElement.scrollHeight > SCROLL_AREA_LIMIT) {
                     const heightFit = Math.max(
                         SCROLL_AREA_LIMIT,
-                        (windowHeightFit - this.permHeight)
+                        windowHeightFit - this.permHeight,
                     );
                     this.scrollHeightFit = `${heightFit}px`;
                 } else {
-                    this.scrollHeightFit =
-                        this.scrollArea.nativeElement.scrollHeight.toString();
+                    this.scrollHeightFit = this.scrollArea.nativeElement.scrollHeight.toString();
                 }
 
                 // set scrollbar if needed but only after resizing finishes
                 clearTimeout(this.menuOverflowCalc);
                 this.menuOverflowCalc = this.window.setTimeout(() => {
                     const magicNumberToAdd = actualSearchHeight + 2 * this.stdPadding; // bottom and top padding
-                    this.menuOverflow = (windowHeightFit + magicNumberToAdd > this.windowHeight)
-                        ? 'auto'
-                        : 'hidden';
+                    this.menuOverflow =
+                        windowHeightFit + magicNumberToAdd > this.windowHeight ? 'auto' : 'hidden';
                 }, 250);
             });
         }
@@ -364,28 +362,24 @@ export class NxMenuComponent implements OnInit, OnChanges {
 
     private assignItemId(): string {
         if (this.menuService.hoverItemId) {
-            this.navItemIdx = this.navItems.findIndex(item =>
-                item.id === this.menuService.hoverItemId
+            this.navItemIdx = this.navItems.findIndex(
+                item => item.id === this.menuService.hoverItemId,
             );
             // remove info for hovered item
             this.menuService.hoverItemId = undefined;
         }
 
         if (this.searchService.navDirection === ButtonArrowType.up) {
-            this.navItemIdx = (this.navItemIdx > 0)
-                ? this.navItemIdx - 1
-                : this.navItems.length - 1;
+            this.navItemIdx = this.navItemIdx > 0 ? this.navItemIdx - 1 : this.navItems.length - 1;
         } else {
-            this.navItemIdx = (this.navItemIdx < this.navItems.length - 1)
-                ? this.navItemIdx + 1
-                : 0;
+            this.navItemIdx = this.navItemIdx < this.navItems.length - 1 ? this.navItemIdx + 1 : 0;
         }
 
         return this.navItems[this.navItemIdx].id;
     }
 
     modelChanged(model: SearchModel, resetLayout = true): void {
-        this.searchMode = (this.searchable && this.menuModel.query !== '');
+        this.searchMode = this.searchable && this.menuModel.query !== '';
         this.menuSearchMode.emit(this.searchMode);
         this.transition = true;
         this.menuModel = model;
@@ -405,14 +399,16 @@ export class NxMenuComponent implements OnInit, OnChanges {
 
         this.navItems = [];
         if (this.searchMode) {
-            setTimeout(() => { // Avoid selection before filter finishes
+            // Avoid selection before filter finishes
+            setTimeout(() => {
                 // reset height auto fit
                 this.menuHeightFit = '100%';
                 this.scrollHeightFit = '100%';
                 this.menuOverflow = 'auto';
                 this.navItems = Array.from(
-                    this.menuWrapper.nativeElement
-                        .querySelectorAll<HTMLAnchorElement>('.menu-level-3')
+                    this.menuWrapper.nativeElement.querySelectorAll<HTMLAnchorElement>(
+                        '.menu-level-3',
+                    ),
                 );
             });
         } else {
@@ -428,8 +424,8 @@ export class NxMenuComponent implements OnInit, OnChanges {
     subLevelItemsFor(item: Level1Item): Level2Item[] {
         // To avoid complicated code this cover only level2 for now ...
         // as only level2 have complex structure
-        const levelItems = item.level2?.filter(subSection =>
-            subSection.id !== menus.systemSettings.buttons.id
+        const levelItems = item.level2?.filter(
+            subSection => subSection.id !== menus.systemSettings.buttons.id,
         );
 
         return levelItems ?? [];
@@ -438,17 +434,14 @@ export class NxMenuComponent implements OnInit, OnChanges {
     subLevelButtonsFor(item: Level1Item): Level2Button[] {
         // To avoid complicated code this cover only level2 for now ...
         // as only level2 have complex structure
-        const level2Item = item.level2?.find(subSection =>
-            subSection.id === menus.systemSettings.buttons.id
+        const level2Item = item.level2?.find(
+            subSection => subSection.id === menus.systemSettings.buttons.id,
         );
 
         return level2Item?.items ?? [];
     }
 
-    trackItem(
-        _index: number,
-        item: Level1Item | Level2Item | Level3Item,
-    ): string | undefined {
+    trackItem(_index: number, item: Level1Item | Level2Item | Level3Item): string | undefined {
         return item ? item.id : undefined;
     }
 
