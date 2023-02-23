@@ -189,7 +189,7 @@ function run_mediaserver() {
     do
         echo "Starting mediaserver $PORT"
         # See here for multi port support, but you can only spin up one at a time.
-        docker run -d -p $PORT:$PORT --env PORT=$PORT --env CLOUD_HOST=$CLOUD_HOST --name "auto-nx-server-$PORT" --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro "mediaserver:$VERSION"
+        docker run --restart=always -d -p $PORT:$PORT --env PORT=$PORT --env CLOUD_HOST=$CLOUD_HOST --name "auto-nx-server-$PORT" --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro "mediaserver:$VERSION"
         if [[ -e $EMAIL ]]; then
             pushd cloud
                 python manage.py bindsystem $EMAIL $PASSWORD "auto-nx-server-$PORT" http://localhost:$PORT
