@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { permissions } from '@lib/variables/static-variables';
+import { permissions } from '@pages/static-variables-features';
 import { NxAccountService } from '@services/account.service';
 import { isAccount } from '@services/account.service/account';
 import { NxAppStateService } from '@services/nx-app-state.service';

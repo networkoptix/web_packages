@@ -50,7 +50,7 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
         is_staff: false,
         is_superuser: false,
     };
-    accountDropdownStaff: AccountDropdown[] = [
+    readonly accountDropdownStaff: AccountDropdown[] = [
         {
             name: 'Administration',
             route: '/admin/',

@@ -62,7 +62,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     #vmsToken: string;
 
-    apiDocURL: object = {
+    readonly apiDocURL: object = {
         main: '/swagger-ui/openapi_v1.json',
         legacy: '/swagger-ui/openapi_legacy.json',
         deprecated: '/swagger-ui/openapi_deprecated.json'

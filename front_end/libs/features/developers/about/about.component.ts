@@ -7,12 +7,12 @@ import { filter, tap } from 'rxjs/operators';
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import type { RibbonAction } from '@components/ribbon/ribbon.types';
-import { developers } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxMenusService } from '@services/menus.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { DOC_TYPES } from '@services/nx-cloud-api/nx-cloud-api.types';
+import { Developers } from '@services/nx-config/base-config';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
@@ -40,6 +40,11 @@ export class NxAboutComponent {
     aboutCases = AboutTemplates;
     baseName = '';
     menuName = '';
+    readonly developers: Developers = {
+        landing: {
+            adminLink: '/admin/cms/menu/%ID%/change/'
+        }
+    };
 
     accountSubscription: SubscriptionLike;
 
@@ -212,7 +217,7 @@ export class NxAboutComponent {
             {
                 type: 'link',
                 text: this.LANG.ribbon.integration.backToEditText,
-                value: developers.landing.adminLink.replace('%ID%', id)
+                value: this.developers.landing.adminLink.replace('%ID%', id)
             }
         ];
         this.ribbonService.show(

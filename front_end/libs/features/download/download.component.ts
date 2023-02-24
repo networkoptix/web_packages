@@ -7,7 +7,8 @@ import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { images, permissions } from '@lib/variables/static-variables';
+import { images } from '@lib/variables/static-variables';
+import { permissions } from '@pages/static-variables-features';
 import { NxAccountService } from '@services/account.service';
 import { isAccount } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';

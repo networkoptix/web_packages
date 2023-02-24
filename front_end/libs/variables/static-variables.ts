@@ -93,12 +93,6 @@ export const apiTool: configTypes.APIToolSettings = {
     ]
 };
 
-export const cameraSettings: configTypes.CameraSettings = {
-    sensitivityColors: [
-        '#FFFFFF', '#627CD6', '#23A4CB', '#31BAA2', '#79BC66', '#B8BC37', '#FBA405', '#E97119', '#D24729', '#C22626'
-    ]
-};
-
 export const clientMode: configTypes.ClientMode = {
     beta: false,
     debug: false
@@ -112,12 +106,6 @@ export const credentialsValidation: configTypes.CredentialsValidation = {
         minLength: 8,
         requiredRegex: '^[\x21-\x7E]$|^[\x21-\x7E][\x20-\x7E]*[\x21-\x7E]$',
         strongClassesCount: 3
-    }
-};
-
-export const developers: configTypes.Developers = {
-    landing: {
-        adminLink: '/admin/cms/menu/%ID%/change/'
     }
 };
 
@@ -235,22 +223,6 @@ export const images: configTypes.Images = {
     dirLandingGraphic: `/${staticBase}/images/landing/main_screen/`,
     dirHeader: `/${staticBase}/images/header/`,
     dirTheme: `/${staticBase}/images/themes/`
-};
-
-export const interceptor = {
-    cloudUnavailable: {
-        error: 'cloudInvalidResponse',
-        timeout: 5 * 1000
-    }
-};
-
-export const layout: configTypes.Layout = {
-    table: {
-        rows: 10
-    },
-    tableLarge: {
-        rows: 20
-    }
 };
 
 export const meta: configTypes.Meta = {
@@ -504,10 +476,6 @@ export const menus: configTypes.Menus = {
 export const oauthStore: configTypes.OauthStoreFlags = {
     code: 'code',
     verify2fa: 'verify2fa'
-};
-
-export const permissions: configTypes.Permissions = {
-    canViewRelease: 'can_view_release'
 };
 
 export const redirect: configTypes.Redirect = {

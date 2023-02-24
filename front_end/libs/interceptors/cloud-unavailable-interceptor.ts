@@ -6,19 +6,24 @@ import { catchError, flatMap } from 'rxjs/operators';
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 
-import { interceptor } from '../variables/static-variables';
-
 @Injectable()
 export class CloudUnavailableInterceptor implements HttpInterceptor {
     LANG = staticLang;
     dialogService: NxDialogsService;
     error: string;
     retryTimeout: number;
+    readonly interceptor = {
+        cloudUnavailable: {
+            error: 'cloudInvalidResponse',
+            timeout: 5 * 1000,
+        },
+    };
+
     private readonly whiteList: string[] = ['/storage/usageStats'];
 
     constructor(injector: Injector) {
-        this.error = interceptor.cloudUnavailable.error;
-        this.retryTimeout = interceptor.cloudUnavailable.timeout;
+        this.error = this.interceptor.cloudUnavailable.error;
+        this.retryTimeout = this.interceptor.cloudUnavailable.timeout;
         setTimeout(() => {
             this.dialogService = injector.get(NxDialogsService);
         });

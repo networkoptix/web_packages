@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
-import { layout } from '@lib/variables/static-variables';
+import { layout } from '@pages/static-variables-features';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 
 import { NxHealthService } from './health.service';

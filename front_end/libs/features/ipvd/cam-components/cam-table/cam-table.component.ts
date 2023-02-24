@@ -21,7 +21,8 @@ import { Subject, SubscriptionLike } from 'rxjs';
 import { debounceTime, delay } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { icons, layout, search } from '@lib/variables/static-variables';
+import { icons, search } from '@lib/variables/static-variables';
+import { layout } from '@pages/static-variables-features';
 import type { Cameras } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';

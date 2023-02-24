@@ -14,7 +14,7 @@ import {
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { BehaviorSubject, Subject } from 'rxjs';
 
-import { cameraSettings } from '@lib/variables/static-variables';
+import { CameraSettings } from '@services/nx-config/base-config';
 import { WINDOW } from '@services/window-provider';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -40,6 +40,11 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
     unsub$: Subject<boolean> = new Subject();
     motionMask: MotionMaskState;
     motionMaskRenderer: MotionMaskRenderer;
+    readonly cameraSettings: CameraSettings = {
+        sensitivityColors: [
+            '#FFFFFF', '#627CD6', '#23A4CB', '#31BAA2', '#79BC66', '#B8BC37', '#FBA405', '#E97119', '#D24729', '#C22626'
+        ]
+    };
 
     @Output() updateMask: EventEmitter<string> = new EventEmitter();
 
@@ -106,7 +111,7 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
     private initRenderer(): void {
         this.motionMaskRenderer = new MotionMaskRenderer(
             this.motionMask,
-            cameraSettings.sensitivityColors,
+            this.cameraSettings.sensitivityColors,
             this.unsub$,
             this.sensitivityButtons$,
             this.deviceService.isMobile() || this.deviceService.isTablet(),
