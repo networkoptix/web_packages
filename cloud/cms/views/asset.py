@@ -342,7 +342,9 @@ def publish_review(request, target_review, target_customization='', message=True
             if flag_is_active(request, FLAGS.zendesk_sync) and request.user.is_superuser:
                 from cms.tasks import async_zendesk_push_article
                 async_zendesk_push_article.apply_async(
-                    args=[asset.id, target_customization], kwargs={'customization': helpers.get_customization(request)}, queue='broadcast-notifications')
+                    args=[asset.id],
+                    kwargs={'customization': target_customization},
+                    queue='broadcast-notifications')
         if message:
             return 'success', f"Version {target_review.version.id} has been accepted"
     return None, None
