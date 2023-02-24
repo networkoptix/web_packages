@@ -62,6 +62,8 @@ class ErrorCodes(Enum):
     deserialization_error = 'deserializationError'
     not_acceptable = 'notAcceptable'
 
+    too_many_requests = 'tooManyRequests'
+
     def log_level(self):
         if self in info_level_errors:
             return logging.INFO
@@ -231,6 +233,14 @@ class APINotAuthorisedException(APIException):
                                                         error_code,
                                                         error_data=error_data,
                                                         status_code=status.HTTP_401_UNAUTHORIZED)
+
+class APITooManyRequestsException(APIException):
+    # 429 error - too many requests
+    def __init__(self, error_text, error_code=ErrorCodes.too_many_requests, error_data=None):
+        super(APITooManyRequestsException, self).__init__(error_text,
+                                                          error_code,
+                                                          error_data=error_data,
+                                                          status_code=status.HTTP_429_TOO_MANY_REQUESTS)
 
 
 class APIRequestException(APIException):

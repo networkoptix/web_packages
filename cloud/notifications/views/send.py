@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.shortcuts import redirect
 
 from rest_framework.response import Response
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, throttle_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from drf_yasg import openapi
@@ -23,6 +23,7 @@ from notifications import notifications_api
 from notifications.models import *
 from notifications.tasks import send_to_all_users
 from util.helpers import get_customization
+from util.throttling import NotificationRateThrottle
 
 logger = logging.getLogger(__name__)
 
@@ -234,7 +235,7 @@ def send_notification(request):
         if validation_error:
             raise APIRequestException('Not enough parameters in request', ErrorCodes.wrong_parameters,
                                       error_data=error_data)
-
+        NotificationRateThrottle.is_allowed(request=request)
         # Clouddb doesn't always return a full name so try to get it from cloud portal
         if 'userFullName' not in request.data['message'] or not request.data['message']['userFullName']:
             user_account = Account.objects.filter(
