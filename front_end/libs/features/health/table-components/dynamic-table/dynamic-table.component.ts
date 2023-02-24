@@ -505,7 +505,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             queryParams.page = undefined;
             queryParams.sortBy = groupId + ',' + paramId;
             queryParams.sortBy += (this.sortOrderASC) ? ',ASC' : ',DESC';
-            this.params.sortBy = queryParams.sortBy;
+            this.params = queryParams;
 
             this.uri
                 .updateURI(undefined, queryParams)
