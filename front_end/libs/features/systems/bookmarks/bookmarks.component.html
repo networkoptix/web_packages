@@ -1,79 +1,90 @@
-<div class="sidebar">
-    <nx-date-and-time-filter
-        [(dateRange)]="dateFilter"
-        (dateRangeChange)="updateParam('date')"
-        [timeRange]="timeFilter"
-        (timeRangeChange)="updateParam('time')"
-    ></nx-date-and-time-filter>
-    <nx-device-filter
-        [items]="devices"
-        [selection]="deviceFilter"
-        (selectionChange)="updateParam('devices')"
-    ></nx-device-filter>
-    <nx-tag-filter
-        [tags]="tags"
-        [selection]="tagFilter"
-        (selectionChange)="updateParam('tags')"
-    ></nx-tag-filter>
-</div>
-<div class="body">
-    <nx-alert-block
-        *ngIf="(newCreationCutOffTimeMS$ | async) !== (creationCutOffTimeMS$ | async)"
-        type="info"
-        [iconSrc]="icons.dirNonStandard + 'info-alerts.svg'"
-        [line1]="'New Bookmarks available' | translate"
-        [btnIconSrc]="icons.dirTextButtons + 'reload.svg'"
-        [btnCaption]="'Refresh'"
-        (onAction)="refreshBookmarks()"
-    >
-    </nx-alert-block>
+<nx-page-placeholder
+    *ngIf="system && !system.isOnline; else page"
+    type="OFFLINE"
+    class="page-placeholder"
+>
+</nx-page-placeholder>
 
-    <nx-simple-search
-        [(ngModel)]="search"
-        (ngModelChange)="updateParam('search')"
-        [suggestions]="suggestions"
-    ></nx-simple-search>
-    <ng-template #stillLoading>
-        <nx-pre-loader class="bookmarks-preloader"></nx-pre-loader>
-    </ng-template>
-    <ng-template #noBookmarks>
-        <div
-            *ngIf="doneLoading; else stillLoading"
-            class="no-bookmarks"
-        >
-            <svg-icon
-                nx-add-svg-src
-                [src]="noBksImgSrc"
-            >
-            </svg-icon>
-            <h2
-                class="no-bookmarks-text"
-                [ngClass]="{
-                    'no-bookmarks-text-dark': CONFIG.isDarkTheme
-                }"
-                translate
-            >
-                You don't have any Bookmarks yet.
-            </h2>
+<ng-template #page>
+    <div class="page">
+        <div class="sidebar">
+            <nx-date-and-time-filter
+                [(dateRange)]="dateFilter"
+                (dateRangeChange)="updateParam('date')"
+                [timeRange]="timeFilter"
+                (timeRangeChange)="updateParam('time')"
+            ></nx-date-and-time-filter>
+            <nx-device-filter
+                [items]="devices"
+                [selection]="deviceFilter"
+                (selectionChange)="updateParam('devices')"
+            ></nx-device-filter>
+            <nx-tag-filter
+                [tags]="tags"
+                [selection]="tagFilter"
+                (selectionChange)="updateParam('tags')"
+            ></nx-tag-filter>
         </div>
-    </ng-template>
-    <div
-        class="bookmarks"
-        *ngIf="bookmarks$ | async as bookmarks; else noBookmarks"
-    >
-        <div
-            *ngFor="let bookmark of bookmarks; trackBy: trackBookmarkById"
-            class="bookmarks-container"
-            [nxTooltip]="bookmark.name"
-            alternateStyle
-            horizontal
-            [alternativeTargetRef]="targetThis"
-        >
+        <div class="body">
+            <nx-alert-block
+                *ngIf="(newCreationCutOffTimeMS$ | async) !== (creationCutOffTimeMS$ | async)"
+                type="info"
+                [iconSrc]="icons.dirNonStandard + 'info-alerts.svg'"
+                [line1]="'New Bookmarks available' | translate"
+                [btnIconSrc]="icons.dirTextButtons + 'reload.svg'"
+                [btnCaption]="'Refresh'"
+                (onAction)="refreshBookmarks()"
+            >
+            </nx-alert-block>
+
+            <nx-simple-search
+                [(ngModel)]="search"
+                (ngModelChange)="updateParam('search')"
+                [suggestions]="suggestions"
+            ></nx-simple-search>
+            <ng-template #stillLoading>
+                <nx-pre-loader class="bookmarks-preloader"></nx-pre-loader>
+            </ng-template>
+            <ng-template #noBookmarks>
+                <div
+                    *ngIf="doneLoading; else stillLoading"
+                    class="no-bookmarks"
+                >
+                    <svg-icon
+                        nx-add-svg-src
+                        [src]="noBksImgSrc"
+                    >
+                    </svg-icon>
+                    <h2
+                        class="no-bookmarks-text"
+                        [ngClass]="{
+                            'no-bookmarks-text-dark': CONFIG.isDarkTheme
+                        }"
+                        translate
+                    >
+                        You don't have any Bookmarks yet.
+                    </h2>
+                </div>
+            </ng-template>
             <div
-                #targetThis
-                class="bookmarks-tooltip"
-            ></div>
-            <nx-bookmarks-card [bookmark]="bookmark"></nx-bookmarks-card>
+                class="bookmarks"
+                *ngIf="bookmarks$ | async as bookmarks; else noBookmarks"
+            >
+                <div
+                    *ngFor="let bookmark of bookmarks; trackBy: trackBookmarkById"
+                    class="bookmarks-container"
+                    [nxTooltip]="bookmark.name"
+                    alternateStyle
+                    horizontal
+                    [alternativeTargetRef]="targetThis"
+                >
+                    <div
+                        #targetThis
+                        class="bookmarks-tooltip"
+                    ></div>
+                    <nx-bookmarks-card [bookmark]="bookmark"></nx-bookmarks-card>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+</ng-template>

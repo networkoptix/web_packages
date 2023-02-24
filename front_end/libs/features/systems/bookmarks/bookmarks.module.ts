@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { AlertBlockModule } from '@components/content-block/alert/block.module';
+import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { NxSimpleSearchModule } from '@components/simple-search/simple-search.module';
 import { DirectivesModule } from '@directives/directives.module';
@@ -41,6 +42,7 @@ const appRoutes: Routes = [
         NxSimpleSearchModule,
         AlertBlockModule,
         PreLoaderModule,
+        PagePlaceHolderModule,
     ],
     providers: [],
     declarations: [

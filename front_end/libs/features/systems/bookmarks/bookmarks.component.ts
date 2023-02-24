@@ -75,7 +75,7 @@ export class NxBookmarksComponent implements OnInit {
     icons = icons;
     noBksImgSrc: string;
 
-    private system: NxSystem;
+    system: NxSystem;
 
     _bookmarks: Bookmark[] = [];
     bookmarks$: Observable<Bookmark[]>;
