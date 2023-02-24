@@ -49,17 +49,13 @@
     [ngStyle]="{ height: 'calc(480px - ' + createHeader.offsetHeight + 'px)' }"
 >
     <form
-        #accountForm
         #createAccountForm="ngForm"
         class="form"
-        [ngClass]="{ 'too-tall': tooTall }"
         [ngStyle]="{
-            height:
-                'calc(480px - ' + (createHeader.offsetHeight + createFooter.offsetHeight) + 'px)'
+            height: 'calc(480px - ' + createHeader.offsetHeight + 'px)'
         }"
     >
         <div
-            #rowEmail
             class="create-row"
             *ngIf="!existingEmail"
         >
@@ -133,101 +129,7 @@
                 </ng-container>
             </div>
         </div>
-        <div
-            #rowName
-            class="create-row"
-        >
-            <div
-                class="first-name mr-3"
-                [ngClass]="{
-                    hasError: firstName.invalid && (firstName.dirty || firstName.touched)
-                }"
-            >
-                <label
-                    for="firstName"
-                    translate
-                    >First Name</label
-                >
-                <input
-                    type="text"
-                    id="firstName"
-                    name="firstName"
-                    class="fs-mask form-control"
-                    [disabled]="createAccountProcess?.processing"
-                    [ngClass]="{
-                        'invalid-state':
-                            firstName.invalid &&
-                            (firstName.dirty || firstName.touched) &&
-                            firstName.errors.required
-                    }"
-                    [(ngModel)]="createFirstName"
-                    #firstName="ngModel"
-                    autocomplete="given-name"
-                    maxlength="255"
-                    required
-                    nxFocusMe
-                    [setFocus]="!!existingEmail"
-                    (change)="createFirstName = createFirstName.trim()"
-                />
-                <p
-                    *ngIf="
-                        firstName.invalid &&
-                        (firstName.dirty || firstName.touched) &&
-                        firstName.errors.required
-                    "
-                    class="error-label mt-2 mb-0"
-                    id="firstNameRequiredError"
-                    translate
-                >
-                    Required
-                </p>
-            </div>
-            <div
-                class="last-name"
-                [ngClass]="{ hasError: lastName.invalid && (lastName.dirty || lastName.touched) }"
-            >
-                <label
-                    for="lastName"
-                    translate
-                    >Last Name</label
-                >
-                <input
-                    type="text"
-                    id="lastName"
-                    name="lastName"
-                    class="fs-mask form-control"
-                    [disabled]="createAccountProcess?.processing"
-                    [ngClass]="{
-                        'invalid-state':
-                            lastName.invalid &&
-                            (lastName.dirty || lastName.touched) &&
-                            lastName.errors.required
-                    }"
-                    [(ngModel)]="createLastName"
-                    #lastName="ngModel"
-                    autocomplete="family-name"
-                    maxlength="255"
-                    required
-                    (change)="createLastName = createLastName.trim()"
-                />
-                <p
-                    *ngIf="
-                        lastName.invalid &&
-                        (lastName.dirty || lastName.touched) &&
-                        lastName.errors.required
-                    "
-                    class="error-label mt-2 mb-0"
-                    id="lastNameRequiredError"
-                    translate
-                >
-                    Required
-                </p>
-            </div>
-        </div>
-        <div
-            #rowPassword
-            class="create-row"
-        >
+        <div class="create-row">
             <div
                 class="password"
                 [ngClass]="{ hasError: weakPassword }"
@@ -260,11 +162,8 @@
                 </div>
             </div>
         </div>
-        <div
-            #rowTerms
-            class="d-flex flex-column"
-        >
-            <div class="d-flex justify-content-start">
+        <div class="d-flex flex-column">
+            <div class="d-flex justify-content-start align-items-center">
                 <nx-checkbox
                     [color]="['desktop', 'mobile'].includes(viewType) && 'desktop'"
                     name="termsAndConditions"
@@ -319,7 +218,6 @@
         </div>
     </form>
     <footer
-        #createFooter
         [ngClass]="{
             'footer-w': viewType === 'web',
             'footer-d': viewType === 'desktop',

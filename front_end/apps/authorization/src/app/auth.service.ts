@@ -112,7 +112,7 @@ export class AuthService {
         return this.post(endpoints.reactivate, { email });
     }
 
-    register(email: string, password: string, firstName: string, lastName: string, customization: string, code?: string): Observable<ApiData> {
+    register(email: string, password: string, customization: string, code?: string): Observable<ApiData> {
         let headers = new HttpHeaders();
         if (code) {
             const [token] = atob(code).split(':');
@@ -121,8 +121,7 @@ export class AuthService {
         const data = {
             customization,
             email,
-            password,
-            fullName: `${firstName} ${lastName}`
+            password
         };
         return this.post(`${code ? endpoints.update : endpoints.register}`, data, headers);
     }
