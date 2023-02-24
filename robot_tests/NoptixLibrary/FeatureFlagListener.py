@@ -17,6 +17,10 @@ class FeatureFlagListener:
         start_time = time.monotonic()
         while True:
             cloud_settings = cloud.get_cloud_settings()
+            print(cloud_settings["featureFlags"])
+            print("\n")
+            print(expected_settings_converted)
+            print("\n")
             if cloud_settings["featureFlags"] == expected_settings_converted:
                 break
             if time.monotonic() - start_time > 120:
