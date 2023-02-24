@@ -2,8 +2,8 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit } from '@angular/core';
 import { DateRange } from '@angular/material/datepicker';
 import { ActivatedRoute, Router, Params } from '@angular/router';
-import { BehaviorSubject, combineLatest, take, switchMap, Observable, timer, zip } from 'rxjs';
-import { distinctUntilChanged, map } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, switchMap, Observable, timer, zip } from 'rxjs';
+import { distinctUntilChanged, map, take } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import type { SuggestionSections } from '@components/simple-search/simple-search.types';
@@ -16,7 +16,7 @@ import type { Bookmark as BookmarkResp, BookmarksParams, BookmarksTags, Device }
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
-import { cleanId, paramSortFunc } from '@utils/general';
+import { caseInsenstiveSearch, cleanId, paramSortFunc } from '@utils/general';
 
 import type { Bookmark, TimeRange } from './bookmarks.types';
 
@@ -83,12 +83,13 @@ export class NxBookmarksComponent implements OnInit {
     newCreationCutOffTimeMS$ = new BehaviorSubject<number>(0);
     devices: string[] = [];
     tags: string[] = [];
+    names: string[] = [];
 
     search: string = '';
     suggestions: SuggestionSections = {
         DEVICE: [],
         TAGS: [],
-        // TITLE: [],
+        TITLE: [],
     };
 
     dateFilter: DateRange<Date> = null;
@@ -151,10 +152,11 @@ export class NxBookmarksComponent implements OnInit {
                         );
                     }
                 }
+
                 this.accountService.get().then(account => {
                     this.system = this.systemService.createSystem(
                         account.email,
-                        params.systemId
+                        params.systemId,
                     );
                     this.bookmarksPoll();
                 });
@@ -170,10 +172,18 @@ export class NxBookmarksComponent implements OnInit {
     }
 
     updateDevices(devices: Device[]): void {
-        this.devices = devices.filter(d => !!d.model).map(d => d.model);
+        this.devices = devices.filter(d => !!d.name).map(d => d.name);
         this.suggestions = {
             ...this.suggestions,
             DEVICE: this.devices,
+        };
+    }
+
+    updateTitles(names: string[]): void {
+        this.names = names;
+        this.suggestions = {
+            ...this.suggestions,
+            TITLE: this.names,
         };
     }
 
@@ -190,6 +200,7 @@ export class NxBookmarksComponent implements OnInit {
             map(([bks, tags, devices]) => {
                 this.updateTags(tags);
                 this.updateDevices(devices);
+                this.updateTitles(bks.map(bk => bk.name));
                 return bks.map((bk: BookmarkResp): Bookmark => ({
                     ...bk,
                     src: this.system.mediaserver.getExportUrl({
@@ -197,7 +208,7 @@ export class NxBookmarksComponent implements OnInit {
                         duration: Math.floor(bk.durationMs / 1000),
                         endPos: bk.startTimeMs + bk.durationMs,
                         pos: bk.startTimeMs,
-                        transport: 'mp4'
+                        transport: 'mkv'
                     }),
                     thumbnail: this.system.serverManager.getPreviewUrl(
                         bk.deviceId,
@@ -228,11 +239,57 @@ export class NxBookmarksComponent implements OnInit {
                     this._bookmarks = this.mergeBookmarks(this._bookmarks, bks);
                 }
                 return this._bookmarks;
-            }));
-        this.bookmarks$ = combineLatest([this.creationCutOffTimeMS$, bookmarksPoll$]).pipe(
-            map(([creationCutOffTimeMS, bks]) => bks.filter(bk => creationCutOffTimeMS > bk.creationTimeMs)),
+            }),
+        );
+        this.bookmarks$ = combineLatest([this.creationCutOffTimeMS$, bookmarksPoll$, this.route.queryParams]).pipe(
+            map(([creationCutOffTimeMS, bks, _]) => bks.filter(bk => creationCutOffTimeMS > bk.creationTimeMs)),
+            map(bks => {
+                if (this.queryParams.devices) {
+                    bks = bks.filter(bk => this.queryParams.devices.includes(bk.deviceName));
+                }
+
+                if (this.queryParams.tags) {
+                    const tags = this.queryParams.tags.split(',');
+                    bks = bks.filter(bk => tags.every(tag => bk.tags.includes(tag)));
+                }
+
+                if (this.queryParams.startTime || this.queryParams.endTime || this.queryParams.startDate || this.queryParams.endDate) {
+                    // Get date, then set the specific time via setHours
+                    const getWindowOfTime = (startTime: number, endTime: number, startDate: number, endDate: number): [number, number] => {
+                        const addTimeToNow = (base: number, time: number):number => new Date(base).setHours(...this.parsedTime(time));
+                        const baseDate = new Date().getTime(); // If there's no selected date, it'll use today's date
+                        return [addTimeToNow(startDate || baseDate, startTime), addTimeToNow(endDate || baseDate, endTime)];
+                    };
+                    const { startTime, endTime, startDate, endDate } = this.queryParams;
+                    const [startTimeMs, endTimeMs] = getWindowOfTime(
+                        startTime ? parseInt(startTime) : 0,
+                        endTime ? parseInt(endTime) : 86399999, // If they didn't pass a date use 23:59 and 999 ms
+                        startDate ? parseInt(startDate) : 0,
+                        endDate ? parseInt(endDate) : 0,
+                    );
+                    bks = bks.filter(bk => bk.startTimeMs >= startTimeMs &&
+                        bk.startTimeMs <= endTimeMs + 59999); // Add 59999 to cover anything between the current minute and right before the next
+                }
+                if (this.queryParams.search) {
+                    bks = bks.filter(bk => caseInsenstiveSearch(bk.name, this.queryParams.search) ||
+                        caseInsenstiveSearch(bk.deviceName, this.queryParams.search) ||
+                        this.queryParams.search.toLowerCase().split(' ').some(tag => tag !== '' && bk.tags.includes(tag))
+                    );
+                }
+
+                return bks;
+            }),
             distinctUntilChanged()
         );
+    }
+
+    parsedTime(time: number): [number, number, number, number] {
+        time = Math.floor(time);
+        const ms = time % 1000;
+        const seconds = (time / 1000) % 60;
+        const minutes = (time / 1000 / 60) % 60;
+        const hours = (time / 1000 / 60 / 60) % 24;
+        return [hours, minutes, seconds, ms];
     }
 
     findNewestBookmark(bks: Bookmark[]): Bookmark {
@@ -240,11 +297,18 @@ export class NxBookmarksComponent implements OnInit {
     }
 
     mergeBookmarks(bookmarks: Bookmark[], newBookmarks: Bookmark[]): Bookmark[] {
+        const oldBookmarksLen = bookmarks.length;
+        const newBookmarksLen = newBookmarks.length;
+        // Use same Bookmarks if both Bookmark Lists are the exact same
+        if (oldBookmarksLen === newBookmarksLen && bookmarks.every((bk, i) => {
+            return bk === newBookmarks[i];
+        })) {
+            return bookmarks;
+        }
+
         let currentBookmarks: Bookmark[] = [];
         let oldBookInc = 0;
         let newBookInc = 0;
-        const oldBookmarksLen = bookmarks.length;
-        const newBookmarksLen = newBookmarks.length;
         while (oldBookInc < oldBookmarksLen && newBookInc < newBookmarksLen) {
             const oldBookmark = bookmarks[oldBookInc];
             const newBookmark = newBookmarks[newBookInc];
