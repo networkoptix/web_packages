@@ -38,7 +38,7 @@
     </ng-template>
     <ng-template #noBookmarks>
         <div
-            *ngIf="newCreationCutOffTimeMS$ | async; else stillLoading"
+            *ngIf="doneLoading; else stillLoading"
             class="no-bookmarks"
         >
             <svg-icon
