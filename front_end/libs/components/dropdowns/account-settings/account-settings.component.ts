@@ -4,9 +4,10 @@ import { Store } from '@ngrx/store';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 
 import { accountSelectors } from '@common/store/account';
+import { accountDropdown } from '@components/static-variables-components';
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { environment } from '@environments/environment';
-import { icons, accountDropdown } from '@lib/variables/static-variables';
+import { icons } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { AccountDropdown } from '@services/nx-config/base-config';

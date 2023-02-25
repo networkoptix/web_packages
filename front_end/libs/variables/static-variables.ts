@@ -12,8 +12,6 @@ import {
 } from '@pages/developer-console/console/edit/console-edit.component.types';
 import * as configTypes from '@services/nx-config/base-config';
 
-// const apiTool: configTypes.APIToolSettings = {
-
 export const alertTimeout: number = 3 * 1000; // Alerts are shown for 3 seconds
 export const longAlertTimeout: number = 6 * 1000; // Alerts are shown for 6 seconds
 export const apiBase: string = '/api';
@@ -26,24 +24,6 @@ export const openClientError: string = 'notVisited';
 export const openMobileClientTimeout: number = 300;
 export const responseOk: string = 'ok';
 export const updateInterval: number = 30 * 1000;
-
-export const accountDropdown = [
-    {
-        name: 'Account Settings',
-        route: '/account/',
-        newWindow: false
-    },
-    {
-        name: 'Change Password',
-        route: '/account/password/',
-        newWindow: false
-    },
-    {
-        name: 'Security',
-        route: '/account/security/',
-        newWindow: false
-    }
-];
 
 export const apiTool: configTypes.APIToolSettings = {
     manualSystemChangeCooldown: 5000,
@@ -520,10 +500,6 @@ export const toast: configTypes.Toast = {
     warning: 'warning',
     danger: 'danger',
     info: 'info'
-};
-
-export const debug: configTypes.Debug = {
-    chunksOnTimeline: false // timeline.js - draw debug events
 };
 
 export const webclient: configTypes.Webclient = {

@@ -4,7 +4,8 @@ import { cloneDeep } from 'lodash-es';
 import { filter } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { accountDropdown, icons, images } from '@lib/variables/static-variables';
+import { accountDropdown } from '@components/static-variables-components';
+import { icons, images } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
