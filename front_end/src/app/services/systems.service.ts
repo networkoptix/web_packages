@@ -215,7 +215,7 @@ export class NxSystemsService implements OnDestroy {
     private processSystems(systems: NxSystemWithUserInfo[]): void {
         this.systems = this.sortSystems(systems, this.currentUser);
         this.systems.forEach(system => {
-            system.name = system.name || system.systemName;
+            system.name = system.name || system.systemName || '';
             system.isMine = system.ownerAccountEmail === this.currentUser || system.currentUser?.isLocalOwner;
             system.canMerge = system.isMine &&
             (system.capabilities?.cloudMerge ||
