@@ -9,8 +9,8 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual } from 'lodash-es';
-import { of, SubscriptionLike, Subject } from 'rxjs';
-import { catchError, filter, skipWhile, takeUntil } from 'rxjs/operators';
+import { of, SubscriptionLike, Subject, timer } from 'rxjs';
+import { catchError, delay, filter, retry, switchMap, takeUntil, tap, timeout } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';
@@ -79,7 +79,6 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     resetDisabled: boolean;
     portChangeDisabled: boolean;
     serverUnavailable: boolean;
-    serverRestarting: boolean;
     serverOffline: boolean;
     certError: boolean;
     fullInfoPath: string;
@@ -123,8 +122,6 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.resetDisabled = true;
         this.portChangeDisabled = true;
         this.serverUnavailable = true;
-        this.serverRestarting = false;
-        // this.debugMode = clientMode.debug;
         this.menuService.section = 'servers';
         this.fullInfoPath = '';
 
@@ -145,6 +142,55 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.servers = servers;
 
         this.setupDefaults();
+        this.initializeBusyServerWatcher();
+    }
+
+    private initializeBusyServerWatcher(): void {
+        const serverTimers = {
+            checkMs: 10000,
+            requestTimeoutMs: 5000,
+            retryDelayMs: 5000, // Retry time is doubled each attempt. Currently, it retries at 5s, 10s, 20s.
+        };
+        let fetchingServersLock = false;
+        timer(0, serverTimers.checkMs).pipe(
+            filter(() => this.system?.currentBusyServerIds.size > 0 && !fetchingServersLock),
+            delay(1000), // small delay in case the tick happens in the middle of restarting.
+            tap(() => { fetchingServersLock = true; }),
+            switchMap(() => this.system.serverManager.getForceServers(false)
+                .pipe(
+                    timeout(serverTimers.requestTimeoutMs),
+                    // count means additional attempts
+                    retry({
+                        count: 2,
+                        delay: (error, attempt) => {
+                            if (error?.status !== 502) { // Do not retry unauthorized attempts.
+                                throw Error('Something went wrong...');
+                            }
+                            return timer(serverTimers.retryDelayMs * 2 ** attempt);
+                        }
+                    }),
+                    // Return an empty array so the subscription doesn't complete.
+                    catchError(() => of([]))
+                )
+            ),
+            tap(() => { fetchingServersLock = false; }),
+            filter((servers: NxSystemServer[]) => servers.length > 0),
+            untilDestroyed(this)
+        ).subscribe((servers: NxSystemServer[]) => {
+            Array.from(this.system.currentBusyServerIds.values())
+                .map(serverId => servers.find(({ id }) => id === serverId))
+                .filter((server: NxSystemServer) => server.status?.toLowerCase() === this.servers.status.online)
+                .forEach((server: NxSystemServer) => {
+                    this.system.currentBusyServerIds.delete(server.id);
+                    if (server.id === this.selectedServer.id) {
+                        this.setStatus('');
+                        this.toastService.notify(
+                            this.LANG.servers.restartSuccessful,
+                            toast.success
+                        );
+                    }
+                });
+        });
     }
 
     ngOnChanges(changes: NgChanges<NxSystemStandardServerComponent>): void {
@@ -341,16 +387,10 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             servers.status.checking
         ].includes(this.internalStatus);
 
-        this.serverUnavailable = this.serverOffline || (
-            !this.system.currentServerNotBusy &&
-            this.system.currentBusyServerIds.has(this.selectedServer.id)
-        );
+        this.serverUnavailable = this.serverOffline || this.system.currentBusyServerIds.has(this.selectedServer.id);
 
         if (
-            !this.serverOffline && (
-                !this.system.currentServerNotBusy &&
-                this.system.currentBusyServerIds.has(this.selectedServer.id)
-            )
+            !this.serverOffline && this.system.currentBusyServerIds.has(this.selectedServer.id)
         ) {
             this.internalStatus = servers.status.restarting;
         }
@@ -418,13 +458,11 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
 
     restartServer(): Promise<void> {
         const { id, name } = this.selectedServer;
-        this.serverRestarting = true;
 
         return this.dialogs
             .restartServer(this.system, id, name)
             .then((res: string) => {
                 if (!res) {
-                    this.serverRestarting = false;
                     return; // Dialog was canceled
                 }
                 this.system.isAvailable = false;
@@ -438,34 +476,12 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                         )
                         .subscribe(status => {
                             if (status) {
-                                this.serverRestarting = false;
                                 this.destroyRestartTake$.next(true);
                                 this.accountService.logout(false);
                             }
                         });
-                } else {
-                    this.system.infoSubject
-                        .pipe(
-                            untilDestroyed(this),
-                            skipWhile(system => system.isOnline),
-                            takeUntil(this.destroyRestartTake$))
-                        .subscribe(() => {
-                            if (this.system.isOnline) {
-                                this.system.currentServerNotBusy = true;
-                                this.system.currentBusyServerIds.delete(id);
-                                this.system.isAvailable = true;
-                                this.serverRestarting = false;
-                                this.setStatus('');
-                                this.destroyRestartTake$.next(true);
-                                this.toastService.notify(
-                                    this.LANG.servers.restartSuccessful,
-                                    toast.success
-                                );
-                            }
-                        });
                 }
             }, (err: never) => {
-                this.serverRestarting = false;
                 console.error('Failed to restart server: ', err);
             });
     }

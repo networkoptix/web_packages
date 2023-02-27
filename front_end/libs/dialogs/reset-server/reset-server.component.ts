@@ -147,7 +147,6 @@ export class ResetServerModalContent {
                             )
                             .subscribe(
                                 () => {
-                                    this.system.currentServerNotBusy = true;
                                     this.system.systemInfo = this.system;
                                     this.close();
                                     const successMessage = {
@@ -161,7 +160,6 @@ export class ResetServerModalContent {
                                 },
                                 err => {
                                     console.error('error in reset-server dialog', err);
-                                    this.system.currentServerNotBusy = true;
                                     return handleResetFailError('getModule post restart', err);
                                 }
                             );

@@ -64,7 +64,6 @@ export function setupTest41System(): Partial<NxSystem> {
         stateMessage: '',
         subscriberCount: 2,
         show404: false,
-        currentServerNotBusy: true,
         currentUserEmail: 'noptixautoqa+owner@gmail.com'
     };
 }
@@ -134,7 +133,6 @@ export function setupTest50System(): Partial<NxSystem> {
         stateMessage: '',
         subscriberCount: 2,
         show404: false,
-        currentServerNotBusy: true,
         currentUserEmail: 'noptixautoqa+owner@gmail.com'
     };
 }

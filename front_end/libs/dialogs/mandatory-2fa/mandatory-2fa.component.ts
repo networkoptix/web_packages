@@ -72,7 +72,6 @@ export class Mandatory2faModalContent {
                     badRequest: notAuthorizedHandler
                 }
             }, () => {
-                this.system.currentServerNotBusy = true;
                 this.close('success');
                 const successMessage = this.system2faEnabled
                     ? this.LANG.dialogs.message.system2faEnabled
@@ -84,7 +83,6 @@ export class Mandatory2faModalContent {
                 // });
             }, err => {
                 if (!err.resultCode) {
-                    this.system.currentServerNotBusy = true;
                     this.showError = true;
                 }
             });

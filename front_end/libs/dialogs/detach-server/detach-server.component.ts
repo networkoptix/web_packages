@@ -52,7 +52,6 @@ export class DetachServerModalContent {
                 ).toPromise(),
                 { ignoreError: true },
                 () => {
-                    this.system.currentServerNotBusy = true;
                     this.close('success');
                     this.toastService.notify(
                         this.LANG.servers.detachSystemSuccess,
@@ -82,7 +81,6 @@ export class DetachServerModalContent {
                         return this.dialogs.expiredSession().then(() => this.window.location.reload());
                     } else {
                         this.close();
-                        this.system.currentServerNotBusy = true;
                         this.toastService.notify(
                             this.LANG.servers.detachSystemFailed,
                             toast.warning,
