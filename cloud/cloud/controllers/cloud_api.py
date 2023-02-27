@@ -1030,9 +1030,9 @@ class Auth(object):
 
 class OwnershipTransfer(object):
     @staticmethod
+    @sync_to_async
     @validate_response
     @auto_refresh_token
-    @sync_to_async
     def act_on(request, system_id, offered_status='', comment='', headers=None):
         data = {}
 
@@ -1044,23 +1044,23 @@ class OwnershipTransfer(object):
         return put_wrapper(f'{CLOUD_DB_URL}/offered-systems/{system_id}', json=data, headers=headers)
 
     @staticmethod
+    @sync_to_async
     @validate_response
     @auto_refresh_token
-    @sync_to_async
     def cancel(request, system_id, headers=None):
         return delete_wrapper(f'{CLOUD_DB_URL}/offered-systems/{system_id}', headers=headers)
 
     @staticmethod
+    @sync_to_async
     @validate_response
     @auto_refresh_token
-    @sync_to_async
     def list(request, headers=None):
         return get_wrapper(f'{CLOUD_DB_URL}/offered-systems', headers=headers)
 
     @staticmethod
+    @sync_to_async
     @validate_response
     @auto_refresh_token
-    @sync_to_async
     def start(request, system_id, new_owner, headers=None):
         data = {
             "toAccount": new_owner,
