@@ -18,18 +18,17 @@ export class StateManager<State, GetStateArgs> {
     constructor(
         private getState: (args: GetStateArgs) => Observable<State>,
         getStateArguments$?: Observable<GetStateArgs>,
-        initialState: State = null
+        initialState: State = null,
     ) {
         this._state$.next(initialState);
-        getStateArguments$
-            .pipe(takeUntil(this.tearDown$))
-            .subscribe(this._args$);
+        getStateArguments$.pipe(takeUntil(this.tearDown$)).subscribe(this._args$);
         this._args$
             .pipe(
                 filter(args => args !== null),
                 switchMap(args => this.getState(args)),
-                takeUntil(this.tearDown$)
-            ).subscribe(this._state$);
+                takeUntil(this.tearDown$),
+            )
+            .subscribe(this._state$);
     }
 
     /**

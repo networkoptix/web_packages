@@ -1,41 +1,11 @@
-const BYTE_UNITS = [
-    'B',
-    'kB',
-    'MB',
-    'GB',
-    'TB',
-    'PB',
-    'EB',
-    'ZB',
-    'YB',
-] as const;
+const BYTE_UNITS = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'] as const;
 
 export type Byte = typeof BYTE_UNITS[number];
 
-const BIT_UNITS = [
-    'b',
-    'kbit',
-    'Mbit',
-    'Gbit',
-    'Tbit',
-    'Pbit',
-    'Ebit',
-    'Zbit',
-    'Ybit',
-] as const;
+const BIT_UNITS = ['b', 'kbit', 'Mbit', 'Gbit', 'Tbit', 'Pbit', 'Ebit', 'Zbit', 'Ybit'] as const;
 type Bit = typeof BIT_UNITS[number];
 
-const BPS_UNITS = [
-    'bps',
-    'kbps',
-    'Mbps',
-    'Gbps',
-    'Tbps',
-    'Pbps',
-    'Ebps',
-    'Zbps',
-    'Ybps',
-] as const;
+const BPS_UNITS = ['bps', 'kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Ebps', 'Zbps', 'Ybps'] as const;
 // type Bps = typeof BPS_UNITS[number];
 
 const unitLists = {
@@ -60,10 +30,7 @@ interface IFromBytesOptions {
  * - If locale is `true`, the system default locale is used for translation.
  * - If no value for locale is specified, the number is returned unmodified.
  */
-function numberToLocaleString(
-    number: number,
-    locale?: string | boolean
-): string | number {
+function numberToLocaleString(number: number, locale?: string | boolean): string | number {
     if (typeof locale === 'string') {
         return number.toLocaleString(locale);
     } else if (locale) {
@@ -73,10 +40,7 @@ function numberToLocaleString(
     }
 }
 
-export function bitsToString(
-    number: number,
-    options?: IFromBytesOptions
-): string {
+export function bitsToString(number: number, options?: IFromBytesOptions): string {
     const defaultOptions: IFromBytesOptions = { unitType: 'byte' };
     // round to GB / 10 bits
     options = { ...defaultOptions, ...options };
@@ -120,7 +84,5 @@ export function bitsToString(
     return `${prefix}${numberString} ${UNITS[exponent]}`;
 }
 
-export const bytesToString = (
-    number: number,
-    options?: IFromBytesOptions
-): string => bitsToString(number * 8, options);
+export const bytesToString = (number: number, options?: IFromBytesOptions): string =>
+    bitsToString(number * 8, options);

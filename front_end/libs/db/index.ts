@@ -1,4 +1,3 @@
-
 import { dexieRxjs } from '@pvermeer/dexie-rxjs-addon';
 import Dexie from 'dexie';
 import { applyEncryptionMiddleware, clearAllTables, NON_INDEXED_FIELDS } from 'dexie-encrypted';
@@ -17,13 +16,7 @@ import { definition as unstructured } from './models/unstructured';
 
 // When adding a model, the definition should be imported here.
 // Currently we're mapping table defs seperately because of type issues but we should update to map from definitions in the future.
-const definitions = [
-    example,
-    cachedRequest,
-    systems,
-    menuContent,
-    unstructured
-];
+const definitions = [example, cachedRequest, systems, menuContent, unstructured];
 
 // TODO: Figure out how to type this when mapping from a list of objects instead of hard coded like this.
 const tableDefs = {
@@ -31,13 +24,15 @@ const tableDefs = {
     ...example.tableDef,
     ...systems.tableDef,
     ...menuContent.tableDef,
-    ...unstructured.tableDef
+    ...unstructured.tableDef,
 } as const;
 
 const schemas = definitions.map(({ schema }) => schema);
 
 const obscure = (segments: string[]): string => {
-    const obscuredSegments = segments.map(val => [btoa, btoa, btoa, btoa, md5].reduce((acc, fn) => fn(acc), val));
+    const obscuredSegments = segments.map(val =>
+        [btoa, btoa, btoa, btoa, md5].reduce((acc, fn) => fn(acc), val),
+    );
     const chunked = obscuredSegments.map(segment => chunk(segment.split(''), 8));
     const zipped = zip(...chunked).flat(2);
     const to32 = zipped.filter((_, index) => index % 3 === 0);
@@ -53,19 +48,12 @@ const getStatic = async (): Promise<string> => {
 
 const generateKey = async (dbName: string): Promise<Uint8Array> => {
     const val = await getStatic();
-    const keyString = obscure([
-        dbName,
-        location.origin,
-        val
-    ]);
+    const keyString = obscure([dbName, location.origin, val]);
     return new TextEncoder().encode(keyString);
 };
 
 export const generateDbName = (dbName?: string): string => {
-    const segments = [
-        dbName || getUser(),
-        stringify(definitions)
-    ];
+    const segments = [dbName || getUser(), stringify(definitions)];
     return obscure(segments);
 };
 
@@ -83,23 +71,21 @@ export class AppDB extends Dexie {
         return new AppDB(dbName) as AppDB & typeof tableDefs;
     }
     constructor(dbName: string) {
-        super(
-            dbName,
-            {
-                addons: [dexieRxjs],
-            }
-        );
+        super(dbName, {
+            addons: [dexieRxjs],
+        });
         applyEncryptionMiddleware(
             this,
             generateKey(dbName),
-            Object.keys(tableDefs).reduce((acc, key) => ({ ...acc, [key]: NON_INDEXED_FIELDS }), {}),
-            clearAllTables
+            Object.keys(tableDefs).reduce(
+                (acc, key) => ({ ...acc, [key]: NON_INDEXED_FIELDS }),
+                {},
+            ),
+            clearAllTables,
         );
         // TODO: Currently we're keeping the version 1. If the schema changes we create new Db's.
         // If we ever add remote sync we'll need to add migration handlers and properly version.
-        this.version(1).stores(
-            Object.assign({}, ...schemas)
-        );
+        this.version(1).stores(Object.assign({}, ...schemas));
         this.on('populate', () => this.populate());
     }
 

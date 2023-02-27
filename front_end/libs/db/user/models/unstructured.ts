@@ -24,16 +24,16 @@ const indexDef = 'key';
 // ****** Don't change the part below. It's used to provide type safety for the table definitions. ******
 
 const tableDef = {
-    [key as typeof key]!: null as TableDef
+    [key as typeof key]: null as TableDef,
 };
 
 const schema = {
-    [key]: indexDef
+    [key]: indexDef,
 };
 
 // this is the definition that will be used in the db/index.ts file
 // Currently we're definiting the tables and schema, eventually we'll add things like migration handlers.
 export const definition = {
     tableDef,
-    schema
+    schema,
 };

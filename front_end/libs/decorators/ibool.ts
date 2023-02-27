@@ -22,13 +22,13 @@ export function IBool(): PropertyDecorator {
         const hiddenKey = Symbol();
 
         Object.defineProperty(target, propertyKey, {
-        // function used over fat arrow syntax to preserve the value of `this`
+            // function used over fat arrow syntax to preserve the value of `this`
             get: function (): boolean | undefined {
                 return this[hiddenKey];
             },
             set: function (extValue: CoercedBoolInput): void {
                 this[hiddenKey] = extValue === true || extValue === '';
-            }
+            },
         });
     };
 }

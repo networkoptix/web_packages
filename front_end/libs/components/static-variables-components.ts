@@ -2,16 +2,16 @@ export const accountDropdown = [
     {
         name: 'Account Settings',
         route: '/account/',
-        newWindow: false
+        newWindow: false,
     },
     {
         name: 'Change Password',
         route: '/account/password/',
-        newWindow: false
+        newWindow: false,
     },
     {
         name: 'Security',
         route: '/account/security/',
-        newWindow: false
-    }
+        newWindow: false,
+    },
 ];

@@ -16,7 +16,8 @@ export class Destroyable {
      * @param source Observable<T>
      * @returns Observable<T>
      */
-    public onDestroyed = <T>(source: Observable<T>): Observable<T> => source.pipe(takeUntil(this.#destroy$));
+    public onDestroyed = <T>(source: Observable<T>): Observable<T> =>
+        source.pipe(takeUntil(this.#destroy$));
 
     /**
      * Triggers subject to clean up observables.

@@ -1,9 +1,6 @@
 type Callback = () => void;
 
-function createHiddenIframe(
-    target: HTMLElement,
-    uri: string,
-): HTMLIFrameElement {
+function createHiddenIframe(target: HTMLElement, uri: string): HTMLIFrameElement {
     const iframe = document.createElement('iframe');
     iframe.src = uri;
     iframe.id = 'hiddenIframe';
@@ -48,7 +45,8 @@ function openUriWithHiddenFrame(
     failCb: Callback,
     timeout: number,
 ): void {
-    const iframe = document.querySelector<HTMLIFrameElement>('#hiddenIframe') ??
+    const iframe =
+        document.querySelector<HTMLIFrameElement>('#hiddenIframe') ??
         createHiddenIframe(document.body, 'about:blank');
 
     addBlurListener(window, successCb, failCb, timeout);
@@ -92,12 +90,7 @@ function isDesktopSafari(): boolean {
 }
 
 function isMobile(): boolean {
-    return [
-        'Android',
-        'iPhone',
-        'iPad',
-        'iPod',
-    ].some(agent => navigator.userAgent.includes(agent));
+    return ['Android', 'iPhone', 'iPad', 'iPod'].some(agent => navigator.userAgent.includes(agent));
 }
 
 /**

@@ -4,7 +4,7 @@ enum LogLevel {
     ERROR = 'error',
     INFO = 'info',
     LOG = 'log',
-    NONE = ''
+    NONE = '',
 }
 
 const defaultConfig = {
@@ -12,7 +12,7 @@ const defaultConfig = {
     logIdentifier: 'No logIdentifier provided in config',
     logLevel: LogLevel.LOG,
     logLoggerObject: false,
-    prettyPrint: true
+    prettyPrint: true,
 };
 
 export class LoggerConfig {
@@ -52,22 +52,18 @@ export class NxLogger<T> {
     logged: T;
     stack: string;
 
-    constructor(
-        config: Partial<LoggerConfig>,
-        errorOrAnyToLog: T
-    ) {
+    constructor(config: Partial<LoggerConfig>, errorOrAnyToLog: T) {
         this.config = new LoggerConfig(config);
         const { logProduction, logLevel, logLoggerObject, prettyPrint } = this.config;
-        if (environment.production && !logProduction || !logLevel) {
+        if ((environment.production && !logProduction) || !logLevel) {
             // Prevents logging in production
             return;
         }
         this.logIdentifier = config.logIdentifier;
         const isError = errorOrAnyToLog instanceof Error;
-        this.logged = isError ? (<unknown>errorOrAnyToLog as any).message : errorOrAnyToLog;
-        this.stack = (isError
-            ? <unknown>errorOrAnyToLog as Error
-            : new Error(this.config.logIdentifier)
+        this.logged = isError ? ((<unknown>errorOrAnyToLog) as any).message : errorOrAnyToLog;
+        this.stack = (
+            isError ? ((<unknown>errorOrAnyToLog) as Error) : new Error(this.config.logIdentifier)
         ).stack.replace('Error:', 'Logger Trace:');
         const log = console[logLevel];
 
@@ -84,9 +80,15 @@ export class NxLogger<T> {
         const toLog = { logged: this.logged, trace: this.stack };
 
         if (!prettyPrint) {
-            log(`%c Start of ${this.logIdentifier}`, 'background: green; color: white; padding: 0 200px;');
+            log(
+                `%c Start of ${this.logIdentifier}`,
+                'background: green; color: white; padding: 0 200px;',
+            );
             log(toLog);
-            log(`%c End of ${this.logIdentifier}`, 'background: green; color: white; padding: 0 200px;');
+            log(
+                `%c End of ${this.logIdentifier}`,
+                'background: green; color: white; padding: 0 200px;',
+            );
         } else {
             this.#prettyPrint(toLog, logLevel, this.config.logIdentifier);
         }
@@ -99,11 +101,10 @@ export class NxLogger<T> {
      * Optionally you can override the logIdentifier from the config.
      * Useful if you wanted to reuse a config but update the identifier.
      */
-    static logCustom = (
-        config: Partial<LoggerConfig> = new LoggerConfig()
-    ) => <T>(
-        errorOrAnyToLog: T, logIdentifier = config.logIdentifier
-    ) => new NxLogger<T>({ ...config, logIdentifier }, errorOrAnyToLog);
+    static logCustom =
+        (config: Partial<LoggerConfig> = new LoggerConfig()) =>
+        <T>(errorOrAnyToLog: T, logIdentifier = config.logIdentifier) =>
+            new NxLogger<T>({ ...config, logIdentifier }, errorOrAnyToLog);
 
     // Helpers
 
@@ -111,33 +112,39 @@ export class NxLogger<T> {
         const logBackground = {
             error: 'red',
             info: 'green',
-            log: 'cyan'
+            log: 'cyan',
         };
 
         const logColor = {
             error: 'white',
             info: 'white',
-            log: 'navy'
+            log: 'navy',
         };
         const background = logBackground[logLevel];
         const color = logColor[logLevel];
         const headingFooterStyle = `font-size: 1.5em; background: ${background}; color: ${color}; `;
         const secondaryHeadingStyle = `font-size: 1.25em; background: ${color}; color: ${background}; padding: 1em 144px; `;
-        const prettyHeading = [`%c ______ Start "${identifier}" ______`, headingFooterStyle + 'padding: 2.5em 72px 1em 72px; '];
+        const prettyHeading = [
+            `%c ______ Start "${identifier}" ______`,
+            headingFooterStyle + 'padding: 2.5em 72px 1em 72px; ',
+        ];
         const prettyLoggedHeading = ['%c ______  Logged ______', secondaryHeadingStyle];
         const prettyLogged = [`%c ${JSON.stringify(logged, null, 4)}`, 'padding: 18px 36px; '];
         const prettyTraceHeading = ['%c ______  Stack Trace ______', secondaryHeadingStyle];
-        const prettyTrace = trace.split(/\r?\n/g).map((line, index) => [
-            `%c ${line}`,
-            `font-size: ${
-                !index ? '1.5em' : '1em'
-            }; color: ${
-                !index ? 'white' : 'black'
-            }; background: ${
-                !index ? 'black' : index % 2 ? 'white' : '#ddd'
-            }; margin: 0; padding: 0.25em ${index ? '16px' : '72px'}; `
-        ]);
-        const prettyFooter = [`%c ^^^^^^ End "${identifier}" ^^^^^^`, headingFooterStyle + 'padding: 1em 72px 2.5em 72px; '];
+        const prettyTrace = trace
+            .split(/\r?\n/g)
+            .map((line, index) => [
+                `%c ${line}`,
+                `font-size: ${!index ? '1.5em' : '1em'}; color: ${
+                    !index ? 'white' : 'black'
+                }; background: ${
+                    !index ? 'black' : index % 2 ? 'white' : '#ddd'
+                }; margin: 0; padding: 0.25em ${index ? '16px' : '72px'}; `,
+            ]);
+        const prettyFooter = [
+            `%c ^^^^^^ End "${identifier}" ^^^^^^`,
+            headingFooterStyle + 'padding: 1em 72px 2.5em 72px; ',
+        ];
         const logWithStyles = (styled: [string, string]) => console[logLevel](...styled);
         [
             prettyHeading,
@@ -145,7 +152,7 @@ export class NxLogger<T> {
             prettyLogged,
             prettyTraceHeading,
             ...prettyTrace,
-            prettyFooter
+            prettyFooter,
         ].forEach(logWithStyles);
     };
 }

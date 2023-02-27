@@ -12,12 +12,16 @@ export function cleanId(id: unknown): string | undefined {
 }
 
 export function cleanIp(ip: string): string {
-    const checkIpv6 = /^(?:(?:(?:[0-9A-Fa-f]{0,4}:){7}[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){6}:[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){5}:(?:[0-9A-Fa-f]{0,4}:)?[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){4}:(?:[0-9A-Fa-f]{0,4}:){0,2}[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){3}:(?:[0-9A-Fa-f]{0,4}:){0,3}[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){2}:(?:[0-9A-Fa-f]{0,4}:){0,4}[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){6}(?:(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2}))\.){3}(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2})))|(?:(?:[0-9A-Fa-f]{0,4}:){0,5}:(?:(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2}))\.){3}(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2})))|(?:::(?:[0-9A-Fa-f]{0,4}:){0,5}(?:(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2}))\.){3}(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2})))|(?:[0-9A-Fa-f]{0,4}::(?:[0-9A-Fa-f]{0,4}:){0,5}[0-9A-Fa-f]{0,4})|(?:::(?:[0-9A-Fa-f]{0,4}:){0,6}[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){1,7}:))$/;
+    const checkIpv6 =
+        /^(?:(?:(?:[0-9A-Fa-f]{0,4}:){7}[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){6}:[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){5}:(?:[0-9A-Fa-f]{0,4}:)?[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){4}:(?:[0-9A-Fa-f]{0,4}:){0,2}[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){3}:(?:[0-9A-Fa-f]{0,4}:){0,3}[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){2}:(?:[0-9A-Fa-f]{0,4}:){0,4}[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){6}(?:(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2}))\.){3}(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2})))|(?:(?:[0-9A-Fa-f]{0,4}:){0,5}:(?:(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2}))\.){3}(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2})))|(?:::(?:[0-9A-Fa-f]{0,4}:){0,5}(?:(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2}))\.){3}(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2})))|(?:[0-9A-Fa-f]{0,4}::(?:[0-9A-Fa-f]{0,4}:){0,5}[0-9A-Fa-f]{0,4})|(?:::(?:[0-9A-Fa-f]{0,4}:){0,6}[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){1,7}:))$/;
     return (ip.match(checkIpv6) || ip.split(':'))[0];
 }
 
 export function isUUID(value: string): boolean {
-    const uuidRegex = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}', 'i');
+    const uuidRegex = new RegExp(
+        '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}',
+        'i',
+    );
     return uuidRegex.test(value);
 }
 
@@ -29,8 +33,7 @@ export function highlight(text: string, start?: number, end?: number): string {
     start = start ?? 0;
     end = end ?? text.length;
     const head = text.slice(0, start);
-    const highlighted =
-        `<strong class="highlighted">${text.slice(start, end)}</strong>`;
+    const highlighted = `<strong class="highlighted">${text.slice(start, end)}</strong>`;
     const tail = text.slice(end);
     return `${head}${highlighted}${tail}`;
 }
@@ -40,11 +43,7 @@ export function highlightAll(text: string, target: string): string {
     return text.replace(regex, `<strong class="highlighted">${target}</strong>`);
 }
 
-export function strSplice(
-    text: string,
-    index: number,
-    replacement: string
-): string {
+export function strSplice(text: string, index: number, replacement: string): string {
     return text.slice(0, index) + replacement + text.slice(index);
 }
 
@@ -61,18 +60,14 @@ export function wrapWithPercent(
     numerator: number,
     denominator: number,
     wrappedValue: string | number,
-    precision = 2
+    precision = 2,
 ): string {
     const percentage = (numerator / denominator) * 100;
     return `${precision ? percentage.toPrecision(precision) : percentage}% (${wrappedValue})`;
 }
 
 /* Array */
-export function moveArrayElem<T>(
-    arr: T[],
-    oldIndex: number,
-    newIndex: number
-): T[] {
+export function moveArrayElem<T>(arr: T[], oldIndex: number, newIndex: number): T[] {
     while (oldIndex < 0) {
         oldIndex += arr.length;
     }
@@ -81,7 +76,7 @@ export function moveArrayElem<T>(
     }
     if (newIndex >= arr.length) {
         let k = newIndex - arr.length;
-        while ((k--) + 1) {
+        while (k-- + 1) {
             arr.push(undefined);
         }
     }
@@ -95,14 +90,14 @@ export function moveArrayElem<T>(
  */
 export function paramSortFunc<Param>(
     fn: (param: Param) => number,
-    ascendingOrder: boolean = true
+    ascendingOrder: boolean = true,
 ): (a: Param, b: Param) => number {
     return (a, b) => {
         if (fn(a) < fn(b)) {
-            return (ascendingOrder) ? -1 : 1;
+            return ascendingOrder ? -1 : 1;
         }
         if (fn(a) > fn(b)) {
-            return (ascendingOrder) ? 1 : -1;
+            return ascendingOrder ? 1 : -1;
         }
         return 0;
     };
@@ -127,12 +122,10 @@ export function alphabeticalSort<P>(
 /* Object */
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function isObject(obj: unknown): obj is Object {
-    return (!!obj) && (obj.constructor === Object);
+    return !!obj && obj.constructor === Object;
 }
 
-export function mapValuesToStrings(
-    obj: Record<string, unknown>
-): Record<string, string> {
+export function mapValuesToStrings(obj: Record<string, unknown>): Record<string, string> {
     Object.entries(obj).forEach(([key, value]) => {
         if (Array.isArray(value)) {
             obj[key] = value.map(String).join(',');
@@ -158,38 +151,25 @@ export function mapValuesToStrings(
  * @param {Record<string, any>} target Specifies the object to be updated with  extracted properties
  * @param {boolean} updateTarget
  */
-export function pickFrom<
-    S extends Record<string, any>,
-    O extends Record<string, any>,
-    >(
-        source: S,
-        keys: (keyof S)[],
+export function pickFrom<S extends Record<string, any>, O extends Record<string, any>>(
+    source: S,
+    keys: (keyof S)[],
 ): O;
 export function pickFrom<
     S extends Record<string, any>,
     T extends Record<string, any>,
     O extends T = T,
-    >(
-        source: S,
-        keys: (keyof S & keyof O)[],
-        target: T,
-        updateTarget?: boolean
-    ): O;
+>(source: S, keys: (keyof S & keyof O)[], target: T, updateTarget?: boolean): O;
 export function pickFrom<
     S extends Record<string, any>,
     T extends Record<string, any>,
-    O extends Record<string, any>
->(
-    source: S,
-    keys: (keyof S)[],
-    target: T,
-    updateTarget: false
-): Record<keyof T | keyof O, any>;
+    O extends Record<string, any>,
+>(source: S, keys: (keyof S)[], target: T, updateTarget: false): Record<keyof T | keyof O, any>;
 export function pickFrom(
     source: Record<string, any>,
     keys: string[],
     target: Record<string, any> = {},
-    updateTarget: boolean = true
+    updateTarget: boolean = true,
 ): Record<string, any> {
     return keys.reduce((acc, key) => {
         if (updateTarget) {
@@ -209,10 +189,9 @@ export function pickFrom(
  */
 export function delayInitial<Source>(
     source: Observable<Source> | Promise<Source>,
-    msDelay = 750
+    msDelay = 750,
 ): Observable<Source> {
-    return combineLatest([source, timer(msDelay)])
-        .pipe(map(([source]) => source));
+    return combineLatest([source, timer(msDelay)]).pipe(map(([source]) => source));
 }
 
 /* TypeScript */
@@ -246,5 +225,5 @@ export function staticImplements<T>() {
  * Source: https://stackoverflow.com/a/63553761
  */
 export type KeyFilter<T, F> = {
-    [K in keyof T]: T[K] extends F ? K : never
+    [K in keyof T]: T[K] extends F ? K : never;
 }[keyof T];
