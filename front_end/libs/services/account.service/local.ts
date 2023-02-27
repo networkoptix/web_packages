@@ -16,7 +16,6 @@ import { NxBootstrapProvider } from '../nx-bootstrap-provider';
 import { NxCloudApiService } from '../nx-cloud-api';
 import { NxConfigService } from '../nx-config/nx-config.service';
 import { OauthService } from '../oauth.service';
-import { NxPollService } from '../poll.service';
 import { NxSessionService } from '../session.service';
 import { NxStorageService } from '../storage.service';
 import { NxSystemAPIService } from '../system-api.service';
@@ -43,7 +42,6 @@ export class LocalAccount extends BaseAccount {
         protected storageService: NxStorageService,
         protected router: Router,
         protected appStateService: NxAppStateService,
-        protected pollService: NxPollService,
         injector: Injector,
         protected nxSystemAPIService: NxSystemAPIService,
         protected loginService: NxLoginService,
@@ -64,7 +62,6 @@ export class LocalAccount extends BaseAccount {
             storageService,
             router,
             appStateService,
-            pollService,
             injector,
             nxSystemAPIService,
             loginService,
@@ -162,6 +159,9 @@ export class LocalAccount extends BaseAccount {
             .finally(() => {
                 this.loginDialogActive = false;
             });
+    }
+    redirectAuthorised(): void {
+        this.get().catch(err => console.error(err));
     }
 
     requireLogin(): Promise<string | boolean | Account | undefined> {
