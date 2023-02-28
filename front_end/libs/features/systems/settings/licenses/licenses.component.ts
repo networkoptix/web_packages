@@ -71,13 +71,11 @@ export class NxSystemLicensesComponent implements OnInit {
     //             takeUntil(this.resetSystem$),
     //         )
     //         .subscribe(() => {
-    //             if (this.system.currentServerNotBusy) {
-    //                 this.system.serverManager
-    //                     .initSystemMediaServers()
-    //                     .catch(error => {
-    //                         console.error(error);
-    //                     });
-    //             }
+    //             this.system.serverManager
+    //                 .initSystemMediaServers()
+    //                 .catch(error => {
+    //                     console.error(error);
+    //                 });
     //         });
     // }
 
@@ -273,11 +271,9 @@ export class NxSystemLicensesComponent implements OnInit {
     }
 
     private getServerInfo(): void {
-        if (this.system.currentServerNotBusy) {
-            this.system.getAggregateLicenseInfo().subscribe(info => {
-                this.buildLicensesInfo(info);
-            });
-        }
+        this.system.getAggregateLicenseInfo().subscribe(info => {
+            this.buildLicensesInfo(info);
+        });
     }
 
     private getLicenses(): void {

@@ -351,6 +351,12 @@ CACHES = {
         "LOCATION": REDIS_CACHE['LOCATION'] + '/13',
         "KEY_PREFIX": 'requests'
     },
+    "rate_limits": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "TIMEOUT": REDIS_CACHE['TIMEOUT'],
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/16',
+        "KEY_PREFIX": 'rate_limits'
+    },
     "local": {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         'LOCATION': 'local'

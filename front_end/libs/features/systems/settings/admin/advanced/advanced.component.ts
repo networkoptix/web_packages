@@ -59,14 +59,12 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
             )
             .pipe(take(1))
             .subscribe(() => {
-                if (this.system.currentServerNotBusy) {
-                    if (
-                        this.system &&
-                        this.system.servers &&
-                        this.system.servers.length
-                    ) {
-                        this.getAdvancedSettings();
-                    }
+                if (
+                    this.system &&
+                    this.system.servers &&
+                    this.system.servers.length
+                ) {
+                    this.getAdvancedSettings();
                 }
             });
 

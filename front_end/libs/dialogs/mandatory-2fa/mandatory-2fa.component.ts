@@ -75,7 +75,6 @@ export class Mandatory2faModalContent extends ModalBase<DT['return']> {
                     badRequest: notAuthorizedHandler
                 }
             }, () => {
-                this.system.currentServerNotBusy = true;
                 this.close(true);
                 const successMessage = !this.system2faEnabled
                     ? this.LANG.dialogs.message.system2faEnabled
@@ -87,7 +86,6 @@ export class Mandatory2faModalContent extends ModalBase<DT['return']> {
             }, err => {
                 this.unlock();
                 if (!err.resultCode) {
-                    this.system.currentServerNotBusy = true;
                     this.accountTotpExists = false;
                 }
             });

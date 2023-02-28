@@ -32,6 +32,7 @@
                 Cancel
             </button>
             <button
+                tabindex="-1"
                 *ngIf="fsm?.back"
                 class="btn btn-default-clear btn-backward"
                 (click)="back()"

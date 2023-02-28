@@ -1,4 +1,5 @@
 import pytest
+import waffle
 from model_bakery import baker
 from uuid import uuid4
 from random import randint, choice
@@ -6,6 +7,7 @@ from django.conf import settings
 from unittest.mock import call
 from django.core.files.uploadedfile import SimpleUploadedFile
 
+from cms.tasks import async_zendesk_push_article
 from cms.views.asset import *
 
 
@@ -423,7 +425,7 @@ def test_handle_publish_single_customization(mocker, arf, account_factory, db):
     assert deferred() == published_result
 
 
-def test_handle_publish_all_customizations(arf, account_factory, db, default_portal):
+def test_handle_publish_all_customizations(arf, account_factory, db, default_portal, mocker):
     user = account_factory()
     customizations_with_portal = Customization.objects.filter(asset__asset_type__type=AssetType.ASSET_TYPES.cloud_portal)
     asset_reviews = []
@@ -456,6 +458,34 @@ def test_handle_publish_all_customizations(arf, account_factory, db, default_por
     review_state = AssetCustomizationReview.objects.get(
         id=asset_reviews[0].id).state
     assert review_state == AssetCustomizationReview.REVIEW_STATES.accepted
+
+    # Test documentation asset
+
+    doc_type = AssetType.objects.get(type=AssetType.ASSET_TYPES.documentation)
+    user = account_factory()
+    flags_mock = mocker.patch('cms.views.asset.flag_is_active', return_value=True)
+    async_zendesk_push_article_mock = mocker.patch.object(async_zendesk_push_article, 'apply_async', return_value=None)
+    asset_to_review = baker.make(Asset, customizations=customizations_with_portal,
+                                 asset_type=doc_type)
+    asset_reviews = []
+    for customization in customizations_with_portal:
+        asset_reviews.append(
+            baker.make(AssetCustomizationReview, customization=customization,
+                       version__created_by=user, version__asset=asset_to_review)
+        )
+
+    deferred = handle_publish_all_customizations(
+        request, asset_reviews[0], True, True)
+    deferred()
+    rev = AssetCustomizationReview.objects.filter(
+        id__in=[ar.id for ar in asset_reviews])[0]
+    assert rev.state == AssetCustomizationReview.REVIEW_STATES.accepted
+    assert async_zendesk_push_article_mock.call_args == mocker.call(
+                    args=[asset_to_review.id],
+                    kwargs={'customization': customizations_with_portal[0].name},
+                    queue='broadcast-notifications'
+    )
+
 
 @pytest.mark.slow
 def test_handle_revoke(arf, account_factory, db):

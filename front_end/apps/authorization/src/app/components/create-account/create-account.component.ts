@@ -9,7 +9,6 @@ import {
     Output,
     ViewChild,
     Inject,
-    ElementRef,
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
@@ -38,27 +37,20 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
     @Input() accountInfo: {
         email: string;
         password: string;
-        firstName: string;
-        lastName: string;
     };
 
     @Output() accountInfoChange = new EventEmitter<{
         email: string;
         password: string;
-        firstName: string;
-        lastName: string;
     }>();
 
     @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
 
     existingEmail: string;
     createEmail: string;
-    createFirstName: string;
-    createLastName: string;
     createPassword: string;
     termsUrl: string;
     privacyUrl: string;
-    tooTall = false;
 
     @Input() errorCode: [inputType: string, errorCode: string];
     hideErrors: boolean;
@@ -69,11 +61,6 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
     onCreateSubmit: () => void;
 
     @ViewChild('createAccountForm', { static: false }) createForm: NgForm;
-    @ViewChild('accountForm', { static: false }) accountForm: ElementRef<HTMLFormElement>;
-    @ViewChild('rowEmail', { static: false }) rowEmail: ElementRef<HTMLDivElement>;
-    @ViewChild('rowName', { static: false }) rowName: ElementRef<HTMLDivElement>;
-    @ViewChild('rowPassword', { static: false }) rowPassword: ElementRef<HTMLDivElement>;
-    @ViewChild('rowTerms', { static: false }) rowTerms: ElementRef<HTMLElement>;
 
     constructor(
         @Inject(WINDOW) private window: Window
@@ -92,8 +79,6 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
         this.onCreateSubmit = () => {
             this.accountInfoChange.emit({
                 email: this.existingEmail || this.createEmail,
-                firstName: this.createFirstName,
-                lastName: this.createLastName,
                 password: this.createPassword
             });
         };
@@ -114,13 +99,6 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
                 }
             });
         }
-        setTimeout(() => {
-            const insideHeight = this.rowEmail.nativeElement.offsetHeight +
-                this.rowName.nativeElement.offsetHeight +
-                this.rowPassword.nativeElement.offsetHeight +
-                this.rowTerms.nativeElement.offsetHeight;
-            this.tooTall = this.accountForm.nativeElement.offsetHeight < insideHeight;
-        });
     }
 
     ngOnDestroy(): void { }

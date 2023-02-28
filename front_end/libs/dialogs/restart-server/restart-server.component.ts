@@ -195,17 +195,12 @@ export class RestartServerModalContent {
                     .subscribe(() => {
                         this.system.isAvailable = true;
                         this.ribbonService.hide();
-                        if (this.system.currentBusyServerIds.has(this.serverId)) {
-                            this.system.currentServerNotBusy = true;
-                            this.system.currentBusyServerIds.delete(this.serverId);
-                        }
                         this.system.systemInfo = this.system;
 
                         serverSubscription.unsubscribe();
                     });
             },
             err => {
-                this.system.currentServerNotBusy = true;
                 this.system.currentBusyServerIds.delete(this.serverId);
                 this.system.isAvailable = true;
                 let message = this.LANG.servers.restartFailed;

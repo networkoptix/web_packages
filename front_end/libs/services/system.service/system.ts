@@ -94,7 +94,6 @@ export class NxSystem {
     show404 = false;
     currentUserEmail: string;
     mediaserver: NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2 | NxSystemRestAPI3;
-    currentServerNotBusy: boolean = true;
     currentBusyServerIds = new Set();
     systemIdInit: string;
     serverIdInit: string;
@@ -1128,18 +1127,6 @@ export class NxSystem {
         return this.serverManager.renameServer(serverId, serverName)
             .then(() => this.update())
             .catch(err => Promise.reject(err));
-    }
-
-    /**
-     * @deprecated Method should be referenced from serverManager instead of directly from system.
-     */
-    restartServer(serverId: string) {
-        this.currentServerNotBusy = false;
-        return this.serverManager.restartServer(serverId)
-            .catch(err => {
-                this.currentServerNotBusy = true;
-                return Promise.reject(err);
-            });
     }
 
     /**

@@ -57,6 +57,9 @@ export class NxTextEditableComponent implements OnInit, ControlValueAccessor {
 
     @HostListener('blur')
     callOnTouched(): void {
+        // set caret to beginning of the input so no weird ellipses
+        this.el.nativeElement.scrollLeft = 0;
+
         if (this.required && !this.el.nativeElement.textContent) {
             this.el.nativeElement.textContent = this._initialValue;
             this.el.nativeElement.classList.remove(this.errorClass);

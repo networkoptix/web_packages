@@ -189,10 +189,8 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
 
     init(): void {
         this.loading = true;
-        if (this.system.currentServerNotBusy) {
-            if (this.system?.serverManager.servers?.length) {
-                this.updateAndGetStorage();
-            }
+        if (this.system?.serverManager.servers?.length) {
+            this.updateAndGetStorage();
         }
     }
 

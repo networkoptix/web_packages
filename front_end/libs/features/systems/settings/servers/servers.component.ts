@@ -138,16 +138,14 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                     retryWhen(err => err.pipe(delay(1000)))
                 )),
                 switchMap(async () => {
-                    if (this.system.currentServerNotBusy) {
-                        this.system.serverManager
-                            .initSystemMediaServers()
-                            .then(() => {
-                                this.setServer(false);
-                            })
-                            .catch(error => {
-                                console.error(error);
-                            });
-                    }
+                    this.system.serverManager
+                        .initSystemMediaServers()
+                        .then(() => {
+                            this.setServer(false);
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        });
                 }),
                 untilDestroyed(this)
             ).subscribe();

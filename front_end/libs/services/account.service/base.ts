@@ -5,14 +5,12 @@ import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
 import { LocalStorageService } from 'ngx-webstorage';
-import { Observable, of, Subscription } from 'rxjs';
-import { catchError, debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { accountActions, accountSelectors } from '@common/store/account';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { environment } from '@environments/environment';
-import { oauthStore, redirect, updateInterval } from '@lib/variables/static-variables';
+import { oauthStore, redirect } from '@lib/variables/static-variables';
 import { NxDbService } from '@services/db.service';
 import { NxLoginService } from '@services/login.service';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
@@ -26,7 +24,6 @@ import { memoizeAsyncPersistent } from '@utils/memoize';
 import { NxApplyService } from '../apply.service';
 import { NxAppStateService } from '../nx-app-state.service';
 import { NxCloudApiService } from '../nx-cloud-api';
-import { NxPollService } from '../poll.service';
 import { NxSessionService } from '../session.service';
 import { NxStorageService } from '../storage.service';
 import { NxSystemAPIService } from '../system-api.service';
@@ -50,11 +47,6 @@ export abstract class BaseAccount implements OnDestroy {
     protected localStorage: any;
     protected tokens: any;
 
-    protected accountPoll: Observable<Account | string>;
-    protected accountPollSubscription: Subscription;
-    protected loginSubscription: Subscription;
-    protected queryParamSubscription: Subscription;
-
     private _account: Account;
 
     // Declare services that cause circular dependencies here instead of injecting in constructor
@@ -67,6 +59,7 @@ export abstract class BaseAccount implements OnDestroy {
     abstract logoutHelper(doNotRedirect?: boolean, skipReload?: boolean): void;
     abstract get(forceUpdate?: boolean): Promise<Account>;
     abstract login(email: string, password: string, remember?: boolean, navigateHome?: boolean): any;
+    abstract redirectAuthorised(): void;
     abstract requireLogin(): Promise<any>;
     abstract showLogin(
         keepPage?: boolean,
@@ -87,7 +80,6 @@ export abstract class BaseAccount implements OnDestroy {
         protected storageService: NxStorageService,
         protected router: Router,
         protected appStateService: NxAppStateService,
-        protected pollService: NxPollService,
         injector: Injector,
         protected nxSystemAPIService: NxSystemAPIService,
         protected loginService: NxLoginService,
@@ -112,35 +104,16 @@ export abstract class BaseAccount implements OnDestroy {
                 this._account = account;
             });
 
-        // Distinct until changed is used to prevent the logout function from looping.
-        this.loginSubscription = this.sessionService.loginStateSubject
-            .pipe(debounceTime(1000), distinctUntilChanged())
-            .subscribe(loginState => {
-                if (loginState !== '' && !environment.isLocal) {
-                    if (loginState) {
-                        this.startAccountPoll();
-                    } else {
-                        this.clearLoginState();
-                    }
-                }
-            });
-
-        if (!environment.isLocal) {
-            this.accountPoll = this.pollService.createPoll(
-                () => this.cloudApi.account(true),
-                updateInterval
-            );
-        }
-
         // Imperatively inject any services that cause circular dependencies here instead of passing in constructor
         // setTimeout(() => {
         this.applyService = injector.get(NxApplyService);
         this.loginService.accountService = this;
 
         this.localStorage = injector.get(LocalStorageService);
-        this.localStorage.observe(oauthStore.verify2fa).pipe(
-            filter(() => !!this.tokens)
-        ).subscribe(accessToken => {
+        this.localStorage.observe(oauthStore.verify2fa).subscribe(accessToken => {
+            if (!this.tokens) {
+                return;
+            }
             if (this.tokens.access_token !== accessToken) {
                 return this.dialogs.notify(this.LANG.errorCodes.wrongAuthCode, 'danger', true);
             }
@@ -162,8 +135,6 @@ export abstract class BaseAccount implements OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.loginSubscription && this.loginSubscription.unsubscribe();
-        this.queryParamSubscription.unsubscribe();
     }
 
     // Methods shared between local and cloud versions of account service.
@@ -213,21 +184,7 @@ export abstract class BaseAccount implements OnDestroy {
     }
 
     protected clearLoginState(): void {
-        this.stopAccountPoll();
         this.sessionService.invalidateSession();
-    }
-
-    redirectAuthorised(): void {
-        this.get()
-            .then((account: Account) => {
-                if (account && !environment.isLocal) {
-                    this.router
-                        .navigate([(this.CONFIG.featureFlags.dashboardRedirect || this.cookieService.get('devServer')) ? '/dashboard' : redirect.authorised])
-                        .catch(error => {
-                            console.error(error);
-                        });
-                }
-            });
     }
 
     redirectToHome() {
@@ -434,7 +391,6 @@ export abstract class BaseAccount implements OnDestroy {
         if (!account || !account.is_authenticated) {
             return this.cloudApi.loginCode(code)
                 .then(res => {
-                    this.loginSubscription && this.loginSubscription.unsubscribe();
                     this.sessionService.loginState = res.email;
                     this.clearCodeFromUri();
                     this.window.location.reload();
@@ -474,7 +430,6 @@ export abstract class BaseAccount implements OnDestroy {
                 }
             });
             if (res) {
-                this.stopAccountPoll();
                 return this.loginTokens(tokens);
             }
             return logoutTokens(tokens, true);
@@ -516,30 +471,6 @@ export abstract class BaseAccount implements OnDestroy {
             return this.requireLogin();
         } finally {
             this.appStateService.ready = true;
-        }
-    }
-
-    // TODO: Need to refine return value
-    protected startAccountPoll(): void {
-        this.stopAccountPoll();
-        this.accountPollSubscription = this.accountPoll
-            .pipe(
-                distinctUntilChanged(),
-                catchError(res => {
-                    if (res?.error?.resultCode === 'badUsername') {
-                        return this.dialogs.expiredSession()
-                            .then(() => this.logoutHelper(true));
-                    }
-                    return of(undefined);
-                })
-            ).subscribe((account: Account) => {
-                this.account = account;
-            });
-    }
-
-    protected stopAccountPoll(): void {
-        if (this.accountPollSubscription) {
-            this.accountPollSubscription.unsubscribe();
         }
     }
 }

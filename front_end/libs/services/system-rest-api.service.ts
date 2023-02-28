@@ -277,20 +277,19 @@ export class NxSystemRestAPI extends NxSystemAPI {
                     if (attempt === 0) {
                         const storageService = this.storageService;
                         const refreshToken = storageService.refreshToken;
+                        const expiredSession = error.status === 422 && error?.error?.errorId === 'sessionExpired';
+                        const authorizationError = error.status >= 400 && error.status < 500 && error.status !== 422 || error.resultCode === 'forbidden';
 
-                        if (!refreshToken && (
-                            error.status === 401 ||
-                            error.status === 403 ||
-                            error.resultCode === 'forbidden')
-                        ) {
-                            return from(this.unauthorizedCallback(error));
-                        } else if (error.status === 503) {
-                            // Repeat the request once again for 503 error
+                        if (error.status === 503) {
                             return of('');
-                        } else if (error.status === 422) {
-                            this.accessToken = undefined;
-                            this.clearTokens();
-                        } else if (error?.error?.errorId !== 'sessionExpired' && refreshToken && error.status < 500) {
+                        } else if (!refreshToken) {
+                            if (expiredSession) {
+                                this.accessToken = undefined;
+                                this.clearTokens();
+                            } else if (authorizationError) {
+                                return from(this.unauthorizedCallback(error));
+                            }
+                        } else if (expiredSession || authorizationError) {
                             return this.refreshTokens(refreshToken, true).pipe(
                                 catchError(error => {
                                     this.clearTokens();

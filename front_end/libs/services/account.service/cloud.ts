@@ -4,10 +4,11 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
-import { firstValueFrom } from 'rxjs';
+import { combineLatest, distinctUntilChanged, firstValueFrom, of, timer } from 'rxjs';
+import { catchError, debounceTime, filter, map, shareReplay, switchMap } from 'rxjs/operators';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { redirect, responseOk } from '@lib/variables/static-variables';
+import { redirect, responseOk, updateInterval } from '@lib/variables/static-variables';
 import { NxDbService } from '@services/db.service';
 import { NxLoginService } from '@services/login.service';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
@@ -16,7 +17,6 @@ import { OauthService } from '@services/oauth.service';
 
 import { NxAppStateService } from '../nx-app-state.service';
 import { NxCloudApiService } from '../nx-cloud-api';
-import { NxPollService } from '../poll.service';
 import { NxSessionService } from '../session.service';
 import { NxStorageService } from '../storage.service';
 import { NxSystemAPIService } from '../system-api.service';
@@ -40,7 +40,6 @@ export class CloudAccount extends BaseAccount {
         protected storageService: NxStorageService,
         protected router: Router,
         protected appStateService: NxAppStateService,
-        protected pollService: NxPollService,
         injector: Injector,
         protected nxSystemAPIService: NxSystemAPIService,
         protected loginService: NxLoginService,
@@ -63,7 +62,6 @@ export class CloudAccount extends BaseAccount {
             storageService,
             router,
             appStateService,
-            pollService,
             injector,
             nxSystemAPIService,
             loginService,
@@ -75,6 +73,45 @@ export class CloudAccount extends BaseAccount {
             db
         );
         this.account = this.CONFIG.preloadedAccount as Account;
+        const loginState$ = this.sessionService.loginStateSubject.pipe(
+            debounceTime(1000),
+            distinctUntilChanged(),
+            shareReplay({ bufferSize: 1, refCount: true })
+        );
+
+        // Distinct until changed is used to prevent the logout function from looping.
+        loginState$.subscribe(loginState => {
+            if (loginState !== '') {
+                if (!loginState) {
+                    this.clearLoginState();
+                }
+            }
+        });
+
+        combineLatest([timer(0, updateInterval), loginState$]).pipe(
+            filter(([_, loginState]) => !!loginState),
+            switchMap(() => this.cloudApi.account(true)),
+            distinctUntilChanged(),
+            map((account: Account) => {
+                if (!account?.is_authenticated) {
+                    throw Error('unauthorized');
+                }
+                return account;
+            }),
+            catchError(res => {
+                if (res?.error?.resultCode === 'badUsername' || res?.message === 'unauthorized') {
+                    // Ensures that we logout if the user tries to leave the page.
+                    this.window.onbeforeunload = () => {
+                        this.sessionService.invalidateSession();
+                    };
+                    return this.dialogs.expiredSession()
+                        .then(() => this.logoutHelper(true));
+                }
+                return of(undefined);
+            })
+        ).subscribe((account: Account) => {
+            this.account = account;
+        });
     }
 
     get(forceUpdate = false): Promise<Account> {
@@ -182,6 +219,19 @@ export class CloudAccount extends BaseAccount {
                 }
 
                 this.redirectAfterLogout(doNotRedirect, skipReload);
+            });
+    }
+
+    redirectAuthorised(): void {
+        this.get()
+            .then((account: Account) => {
+                if (account) {
+                    this.router
+                        .navigate([(this.CONFIG.featureFlags.dashboardRedirect || this.cookieService.get('devServer')) ? '/dashboard' : redirect.authorised])
+                        .catch(error => {
+                            console.error(error);
+                        });
+                }
             });
     }
 
