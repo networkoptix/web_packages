@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, concatMap, filter, firstValueFrom, Observable, tap } from 'rxjs';
+import { BehaviorSubject, catchError, concatMap, filter, firstValueFrom, Observable, tap } from 'rxjs';
 
 import { memoizeAsyncPersistent } from '@utils/memoize';
 
@@ -121,6 +121,7 @@ export class LicenseServerAPI extends BaseCloudServiceAPI {
         return this.licenseRequestUpdater$.pipe(
             filter(updatedId => !updatedId || updatedId === systemId),
             concatMap(() => this.get<LicenseInfo[]>(`/license/cloud/licenses${systemId ? `/${systemId}` : ''}`)),
+            catchError(() => Promise.resolve([]))
         );
     }
 
