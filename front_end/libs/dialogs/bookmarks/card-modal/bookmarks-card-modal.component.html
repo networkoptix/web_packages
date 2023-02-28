@@ -21,11 +21,22 @@
             </nx-clip>
         </div>
         <div class="date">{{ date }} • {{ time }}</div>
-        <div class="deviceId">{{ bookmark.deviceId }}</div>
+        <div class="deviceName">{{ bookmark.deviceName }}</div>
         <h2 class="name">{{ bookmark.name }}</h2>
-        <p class="description">
+        <p
+            class="description"
+            *ngIf="bookmark.description; else noDescription"
+        >
             {{ bookmark.description }}
         </p>
+        <ng-template #noDescription>
+            <p
+                class="description"
+                translate
+            >
+                No description has been added. You may add one through %VMS_NAME%.
+            </p>
+        </ng-template>
         <div class="tags">
             <span *ngFor="let tag of bookmark.tags">#{{ tag }}</span>
         </div>
