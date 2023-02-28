@@ -106,7 +106,7 @@ export abstract class BaseAccount implements OnDestroy {
 
         this.localStorage = injector.get(LocalStorageService);
         this.localStorage.observe(oauthStore.verify2fa).subscribe(accessToken => {
-            if (this.tokens) {
+            if (!this.tokens) {
                 return;
             }
             if (this.tokens.access_token !== accessToken) {
