@@ -2,6 +2,8 @@ import { AfterViewInit, Component, HostListener, ViewChild } from '@angular/core
 import { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+import { icons } from '@app/variables/static-variables';
+
 import { WizardStateService } from '../../services/wizard-state.service';
 
 @UntilDestroy()
@@ -11,6 +13,7 @@ import { WizardStateService } from '../../services/wizard-state.service';
     styleUrls: ['./local-login.component.scss']
 })
 export class LocalLoginComponent implements AfterViewInit {
+    icons = icons;
     @ViewChild('setAdminPasswordForm', { static: false }) setAdminPasswordForm: NgForm;
 
     passwordToggle: boolean = true;
@@ -22,13 +25,13 @@ export class LocalLoginComponent implements AfterViewInit {
         this.wizardService.setupConfig.localPassword = password;
     }
 
-    // get confirmedPassword(): string {
-    //     return this.wizardService.setupConfig.localPasswordConfirmation;
-    // }
-    //
-    // set confirmedPassword(password: string) {
-    //     this.wizardService.setupConfig.localPasswordConfirmation = password;
-    // }
+    get confirmedPassword(): string {
+        return this.wizardService.setupConfig.localPasswordConfirmation;
+    }
+
+    set confirmedPassword(password: string) {
+        this.wizardService.setupConfig.localPasswordConfirmation = password;
+    }
 
     constructor(
         public wizardService: WizardStateService
@@ -54,11 +57,11 @@ export class LocalLoginComponent implements AfterViewInit {
             });
     }
 
-    // checkPasswords(): void {
-    //     if (this.confirmedPassword !== this.password) {
-    //         this.setAdminPasswordForm.controls.confirmPassword.setErrors({ dontMatch: true });
-    //     }
-    // }
+    checkPasswords(): void {
+        if (this.confirmedPassword !== this.password) {
+            this.setAdminPasswordForm.controls.confirmPassword.setErrors({ dontMatch: true });
+        }
+    }
 
     @HostListener('document:keypress', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent): void {
