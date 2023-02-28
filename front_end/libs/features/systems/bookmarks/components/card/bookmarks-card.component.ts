@@ -1,7 +1,9 @@
-import { Component, Inject, Input, LOCALE_ID } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons } from '@lib/variables/static-variables';
+import { getLangCode } from '@utils/nx';
 
 import { Bookmark } from '../../bookmarks.types';
 
@@ -10,33 +12,42 @@ import { Bookmark } from '../../bookmarks.types';
     templateUrl: 'bookmarks-card.component.html',
     styleUrls: ['bookmarks-card.component.scss'],
 })
-export class NxBookmarksCardComponent {
+export class NxBookmarksCardComponent implements OnInit {
     @Input() bookmark: Bookmark;
     DATE_FORMAT = 'mmm dd, yyyy';
     icons = icons;
     workingThumbnail = true;
 
-    constructor(
-        @Inject(LOCALE_ID) private locale: string,
-        private dialogs: NxDialogsService,
-    ) {}
+    private langLocale: string;
+    startTime: string;
+    startDate: string;
+    duration: string;
 
-    timeMsToDate(startTimeMs: number): string {
-        const time = new Date(startTimeMs).toLocaleString(this.locale, { timeStyle: 'short' });
-        const date = new Date(startTimeMs).toLocaleString(this.locale, { dateStyle: 'medium' });
-        return `${date} • ${time}`;
+    constructor(
+        cookieService: CookieService,
+        private dialogs: NxDialogsService,
+    ) {
+        this.langLocale = getLangCode(cookieService);
     }
 
-    durationMsToTime(durationMs: number): string {
-        const seconds = Math.floor((durationMs / 1000) % 60);
-        const minutes = Math.floor((durationMs / (1000 * 60)) % 60);
-        const hours = Math.floor((durationMs / (1000 * 60 * 60)) % 24);
-        const includeHours = hours !== 0 ? hours.toString().padStart(2, '0') + ':' : '';
+    ngOnInit(): void {
+        const startDate = new Date(this.bookmark.startTimeMs);
+        const timeFormat = Intl.DateTimeFormat(this.langLocale, {
+            hour: 'numeric',
+            minute: 'numeric',
+            numberingSystem: 'latn',
+        });
+        this.startTime = timeFormat.format(startDate);
+        this.startDate = startDate.toLocaleString(this.langLocale, { dateStyle: 'medium' });
 
-        return `${includeHours}${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        const seconds = Math.floor((this.bookmark.durationMs / 1000) % 60);
+        const minutes = Math.floor((this.bookmark.durationMs / (1000 * 60)) % 60);
+        const hours = Math.floor((this.bookmark.durationMs / (1000 * 60 * 60)) % 24);
+        const includeHours = hours !== 0 ? hours.toString().padStart(2, '0') + ':' : '';
+        this.duration = `${includeHours}${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }
 
     openBookmarkModal(): void {
-        this.dialogs.bookmarkDetails(this.bookmark);
+        this.dialogs.bookmarkDetails(this);
     }
 }

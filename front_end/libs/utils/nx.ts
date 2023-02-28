@@ -2,6 +2,7 @@
 primitives it should probaly go in general.ts intead.  */
 
 import { zip } from 'lodash-es';
+import type { CookieService } from 'ngx-cookie-service';
 import type { IStepOption } from 'ngx-ui-tour-md-menu';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -60,6 +61,11 @@ export function setServerIpAndPort(
     }
 
     return { ...server, ip, port };
+}
+
+// e.g. en_US => en-US
+export function getLangCode(cookieService: CookieService): string {
+    return cookieService.get('language').replace('_', '-');
 }
 
 type TranslatableStep = Omit<IStepOption, 'title' | 'content'> & {

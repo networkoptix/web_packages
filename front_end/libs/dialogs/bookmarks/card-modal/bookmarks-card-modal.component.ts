@@ -1,6 +1,7 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
-import { Component, LOCALE_ID, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 
+import type { Bookmark } from '@pages/systems/bookmarks/bookmarks.types';
 import { icons } from '@src/app/variables/static-variables';
 
 import { BookmarkDetails as DT } from '../../dialogs.types';
@@ -13,19 +14,18 @@ import { BookmarkDetails as DT } from '../../dialogs.types';
 export class NxBookmarksCardModalComponent {
     icons = icons;
     exportName: string;
+    bookmark: Bookmark;
     time: string;
     date: string;
 
     constructor(
         public dialogRef: DialogRef<DT['return']>,
-        @Inject(LOCALE_ID) private locale: string,
-        @Inject(DIALOG_DATA) public bookmark: DT['data'],
-    ) {}
-
-    ngOnInit(): void {
-        this.exportName = `${this.bookmark.deviceId}.mp4`;
-        this.time = new Date(this.bookmark.startTimeMs).toLocaleString(this.locale, { timeStyle: 'short' });
-        this.date = new Date(this.bookmark.startTimeMs).toLocaleString(this.locale, { dateStyle: 'medium' });
+        @Inject(DIALOG_DATA) { bookmark, startTime, startDate }: DT['data'],
+    ) {
+        this.bookmark = bookmark;
+        this.exportName = `${bookmark.deviceId}.mp4`;
+        this.time = startTime;
+        this.date = startDate;
     }
 
     close(): void {

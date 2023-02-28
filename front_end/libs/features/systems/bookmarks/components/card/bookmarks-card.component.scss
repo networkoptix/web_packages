@@ -74,6 +74,10 @@
         &-timestamp {
             font-size: 14px;
             margin: 5px 0 10px;
+
+            // Puts date first in RTL
+            display: flex;
+            gap: 5px;
         }
 
         &-title {

@@ -145,4 +145,11 @@ export type MoreTags = DialogType<
     },
     void
 >;
-export type BookmarkDetails = DialogType<Bookmark, void>;
+export type BookmarkDetails = DialogType<
+    {
+        bookmark: Bookmark;
+        startTime: string;
+        startDate: string;
+    },
+    void
+>;

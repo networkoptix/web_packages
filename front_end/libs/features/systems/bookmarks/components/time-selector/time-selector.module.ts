@@ -1,3 +1,4 @@
+import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -11,6 +12,7 @@ import { NxTimeSelectorComponent } from './time-selector.component';
         FormsModule,
         AngularSvgIconModule.forRoot(),
         // TranslateModule,
+        CdkMenuModule,
     ],
     declarations: [
         NxTimeSelectorComponent,

@@ -1,60 +1,107 @@
 import {
     Component,
-    Inject,
-    LOCALE_ID,
     OnInit,
     Input,
     Output,
     EventEmitter,
+    ViewChild,
+    ElementRef,
 } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { icons } from '@src/app/variables/static-variables';
+import { getLangCode } from '@utils/nx';
+
+const MIN_MS = 1000 * 60;
+const HR_MS = MIN_MS * 60;
 
 const oneToTwelve = '(0?[1-9])|(1[0-2])';
 const zeroToTwentyfour = '(0?\\d)|(1\\d)|(2[0-4])';
 const zerozeroToFiftynine = '[0-5]\\d';
 
-const hour12Regex = new RegExp(
-    `^\\s*(${oneToTwelve}):${zerozeroToFiftynine}\\s*$`
-);
-const hour24Regex = new RegExp(
-    `^\\s*(${zeroToTwentyfour}):${zerozeroToFiftynine}\\s*$`
-);
+class DateTimeHelper {
+    parts: Intl.DateTimeFormatPart[];
+    static readonly dayStart = new Date(2000, 0, 0, 0, 0);
+    static readonly dayEnd = new Date(2000, 0, 0, 23, 59);
 
-const MIN_MS = 1000 * 60;
-const HR_MS = MIN_MS * 60;
-
-function msToHour24(ms: number): string {
-    const hours = Math.floor(ms / HR_MS);
-    const minutes = ((ms - hours * HR_MS) / MIN_MS)
-        .toString()
-        .padStart(2, '0');
-    return `${hours.toString().padStart(2, '0')}:${minutes}`;
-}
-
-function msToHour12(ms: number): [time: string, PM: boolean] {
-    const hours = Math.floor(ms / HR_MS);
-    const minutes = ((ms - hours * HR_MS) / MIN_MS)
-        .toString()
-        .padStart(2, '0');
-    if (hours === 0) {
-        return [`12:${minutes}`, false]; // 00:00 => 12 AM
-    } else if (hours > 0 && hours < 12) {
-        return [`${hours}:${minutes}`, false];
-    } else if (hours === 12) {
-        return [`${hours}:${minutes}`, true]; // 12:00 = 12 PM
-    } else if (hours > 12) {
-        return [`${hours - 12}:${minutes}`, true];
+    constructor(private dtf: Intl.DateTimeFormat) {
+        this.parts = dtf.formatToParts(new Date());
     }
-}
 
-function timeStrToMs(time: string, PM = false): number {
-    let [hours, minutes] = time.split(':').map(Number);
-    if (PM) {
-        hours += 12;
+    numericalForm(date: Date): string {
+        // Hour, separator, minute
+        const parts = this.dtf.formatToParts(date);
+        const hourIndex = parts.findIndex(p => p.type === 'hour');
+        return parts.slice(hourIndex, hourIndex + 3).map(p => p.value).join('');
     }
-    return HR_MS * hours + MIN_MS * minutes;
+
+    get hour12Regex(): RegExp {
+        return new RegExp(
+            `^\\s*(${oneToTwelve})${this.separator}${zerozeroToFiftynine}\\s*$`
+        );
+    }
+
+    get hour24Regex(): RegExp {
+        return new RegExp(
+            `^\\s*(${zeroToTwentyfour})${this.separator}${zerozeroToFiftynine}\\s*$`
+        );
+    }
+
+    get postPeriod(): boolean {
+        // Might be preperiod e.g. ko => 오후 5:55
+        return this.partIndex('hour') < this.partIndex('dayPeriod');
+    }
+
+    get separator(): string {
+        // Separator might not be ":" e.g. da => 16.20
+        return this.parts[this.partIndex('hour') + 1].value;
+    }
+
+    get dayPeriods(): [string, string] {
+        const AM = this.dtf.formatToParts(DateTimeHelper.dayStart)
+            .find(p => p.type === 'dayPeriod').value;
+        const PM = this.dtf.formatToParts(DateTimeHelper.dayEnd)
+            .find(p => p.type === 'dayPeriod').value;
+        return [AM, PM];
+    }
+
+    get hour12(): boolean {
+        return this.dtf.resolvedOptions().hour12;
+    }
+
+    get timeRegex(): RegExp {
+        return this.hour12 ? this.hour12Regex : this.hour24Regex;
+    }
+
+    partByType(type: Intl.DateTimeFormatPartTypes): Intl.DateTimeFormatPart {
+        return this.parts.find(p => p.type === type);
+    }
+
+    partIndex(type: Intl.DateTimeFormatPartTypes): number {
+        return this.parts.findIndex(p => p.type === type);
+    }
+
+    partValue(type: Intl.DateTimeFormatPartTypes): string {
+        return this.partByType(type).value;
+    }
+
+    msToHour24(ms: number): string {
+        const hours = Math.floor(ms / HR_MS);
+        const minutes = (ms - hours * HR_MS) / MIN_MS;
+        const date = new Date();
+        date.setHours(hours);
+        date.setMinutes(minutes);
+        return this.numericalForm(date);
+    }
+
+    msToHour12(ms: number): [time: string, PM: boolean] {
+        const hours = Math.floor(ms / HR_MS);
+        const minutes = (ms - hours * HR_MS) / MIN_MS;
+        const date = new Date();
+        date.setHours(hours);
+        date.setMinutes(minutes);
+        return [this.numericalForm(date), hours >= 12];
+    }
 }
 
 @Component({
@@ -66,38 +113,78 @@ export class NxTimeSelectorComponent implements OnInit {
     @Input() time: number | null;
     @Output() timeChange = new EventEmitter<number | null>();
 
+    @Input() point: 'start' | 'end' = 'start';
+
+    @ViewChild('periodBtn') periodBtn: ElementRef<HTMLDivElement>;
+
     icons = icons;
-    AM = staticLang.view.timeline.timeNames.AM;
-    PM = staticLang.view.timeline.timeNames.PM;
+    AM: string;
+    PM: string;
 
     hour12: boolean;
     value: string = '';
     timeRegex: RegExp;
-    period: string = this.AM;
+    period: string;
     placeholder: string;
     lastValidValue: string | null = null;
+    postPeriod: boolean = true;
 
-    constructor(@Inject(LOCALE_ID) locale: string) {
-        // https://stackoverflow.com/a/63736713
-        this.hour12 = Intl.DateTimeFormat(locale, { hour: 'numeric' }).resolvedOptions().hour12;
-
-        this.timeRegex = this.hour12 ? hour12Regex : hour24Regex;
-        this.placeholder = this.hour12 ? '12:00' : '00:00';
-    }
+    constructor(private cookieService: CookieService) {}
 
     ngOnInit(): void {
-        // Time is sent up as ms for easier calculations
-        if (this.time) {
+        const dtFormat = Intl.DateTimeFormat(getLangCode(this.cookieService), {
+            hour: 'numeric',
+            minute: 'numeric',
+            numberingSystem: 'latn', // Avoid Arabic/other non-latin numbers
+        });
+
+        const dtHelper = new DateTimeHelper(dtFormat);
+
+        this.placeholder = dtHelper.numericalForm(
+            this.point === 'start' ? DateTimeHelper.dayStart : DateTimeHelper.dayEnd
+        );
+        this.timeRegex = dtHelper.timeRegex;
+
+        this.hour12 = dtHelper.hour12;
+        if (this.hour12) {
+            [this.AM, this.PM] = dtHelper.dayPeriods;
+            this.period = this.point === 'start' ? this.AM : this.PM;
+            this.postPeriod = dtHelper.postPeriod;
+        }
+
+        if (this.time !== null) {
             if (this.hour12) {
-                const [time, PM] = msToHour12(this.time);
+                const [time, PM] = dtHelper.msToHour12(this.time);
                 this.value = time;
                 this.lastValidValue = time;
                 this.period = PM ? this.PM : this.AM;
             } else {
-                this.value = msToHour24(this.time);
+                this.value = dtHelper.msToHour24(this.time);
                 this.lastValidValue = this.value;
             }
         }
+    }
+
+    h24StrToMs(time: string): number {
+        let [hours, minutes] = time.match(/(\d+)\D+(\d+)/).slice(1).map(Number);
+        if (!hours && !minutes && this.point === 'end') {
+            hours += 24;
+        }
+        return HR_MS * hours + MIN_MS * minutes;
+    }
+
+    h12StrToMs(time: string): number {
+        let [hours, minutes] = time.match(/(\d+)\D+(\d+)/).slice(1).map(Number);
+        if (hours < 12 && this.period === this.PM) {
+            hours += 12;
+        } else if (hours === 12 && !minutes && this.period === this.AM) {
+            if (this.point === 'start') {
+                hours -= 12;
+            } else {
+                hours += 12;
+            }
+        }
+        return HR_MS * hours + MIN_MS * minutes;
     }
 
     emitValue(value: string = this.value): void {
@@ -106,7 +193,7 @@ export class NxTimeSelectorComponent implements OnInit {
         if (validValue) {
             this.lastValidValue = trimmed;
             this.timeChange.emit(
-                timeStrToMs(trimmed, this.hour12 && this.period === this.PM)
+                this.hour12 ? this.h12StrToMs(trimmed) : this.h24StrToMs(trimmed)
             );
         } else if (!trimmed) {
             this.lastValidValue = null;

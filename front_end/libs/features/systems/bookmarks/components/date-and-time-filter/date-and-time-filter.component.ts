@@ -8,10 +8,13 @@ import {
     ViewChild,
     Inject,
 } from '@angular/core';
+import { DateAdapter } from '@angular/material/core';
 import { DateRange as DR, MatCalendar } from '@angular/material/datepicker';
+import { CookieService } from 'ngx-cookie-service';
 
 import { icons } from '@lib/variables/static-variables';
 import { WINDOW } from '@services/window-provider';
+import { getLangCode } from '@utils/nx';
 
 import type { TimeRange } from '../../bookmarks.types';
 
@@ -82,7 +85,13 @@ export class NxDateAndTimeFilterComponent {
         return new DR(thirtyDaysAgo, now);
     }
 
-    constructor(@Inject(WINDOW) private window: Window) {}
+    constructor(
+        dateAdapter: DateAdapter<Date>,
+        cookieService: CookieService,
+        @Inject(WINDOW) private window: Window,
+    ) {
+        dateAdapter.setLocale(getLangCode(cookieService));
+    }
 
     /* <mat-calendar> doesn't include a way to detect when a cell is
     hovered over, so we have to manually check with mouseover/mouseout */

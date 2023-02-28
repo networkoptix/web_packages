@@ -64,6 +64,7 @@
             <nx-time-selector
                 [time]="timeRange.start"
                 (timeChange)="setStartTime($event)"
+                point="start"
             ></nx-time-selector>
         </div>
         <div>
@@ -71,6 +72,7 @@
             <nx-time-selector
                 [time]="timeRange.end"
                 (timeChange)="setEndTime($event)"
+                point="end"
             ></nx-time-selector>
         </div>
     </div>

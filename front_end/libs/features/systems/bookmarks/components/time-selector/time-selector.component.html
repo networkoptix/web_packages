@@ -1,28 +1,56 @@
-<input
-    [(ngModel)]="value"
-    (ngModelChange)="emitValue($event)"
-    [pattern]="timeRegex"
-    [placeholder]="placeholder"
-    maxlength="5"
-    class="form-control"
-    [ngClass]="{ 'not-empty': value }"
-    (blur)="onBlur()"
-/>
+<div
+    class="input-wrapper"
+    [ngStyle]="{ order: postPeriod ? 0 : 1 }"
+>
+    <input
+        [(ngModel)]="value"
+        (ngModelChange)="emitValue($event)"
+        [pattern]="timeRegex"
+        [placeholder]="placeholder"
+        maxlength="5"
+        class="form-control"
+        [ngClass]="{ 'not-empty': value }"
+        (blur)="onBlur()"
+    />
+    <button
+        *ngIf="value"
+        class="clear-btn"
+        (click)="value = ''; emitValue('')"
+    >
+        <svg-icon
+            nx-add-svg-src
+            [src]="icons.dirTextButtons + 'close.svg'"
+            [svgStyle]="{ 'width.rem': '0.9', 'height.rem': '0.9' }"
+        ></svg-icon>
+    </button>
+</div>
 <button
+    #periodBtn
     class="period"
-    *ngIf="hour12 && value"
-    (click)="period = this.period === AM ? PM : AM; emitValue()"
+    *ngIf="hour12"
+    [cdkMenuTriggerFor]="periods"
 >
-    {{ period }}
+    <span>{{ period }}</span>
 </button>
-<button
-    *ngIf="value"
-    class="clear-btn"
-    (click)="value = ''; emitValue('')"
->
-    <svg-icon
-        nx-add-svg-src
-        [src]="icons.dirTextButtons + 'close.svg'"
-        [svgStyle]="{ 'width.rem': '0.9', 'height.rem': '0.9' }"
-    ></svg-icon>
-</button>
+<ng-template #periods>
+    <div
+        class="periods-menu"
+        cdkMenu
+        [ngStyle]="{ 'min-width.px': periodBtn.nativeElement.offsetWidth }"
+    >
+        <button
+            cdkMenuItem
+            [ngClass]="{ selected: period === AM }"
+            (cdkMenuItemTriggered)="period = AM; emitValue()"
+        >
+            {{ AM }}
+        </button>
+        <button
+            cdkMenuItem
+            [ngClass]="{ selected: period === PM }"
+            (cdkMenuItemTriggered)="period = PM; emitValue()"
+        >
+            {{ PM }}
+        </button>
+    </div>
+</ng-template>

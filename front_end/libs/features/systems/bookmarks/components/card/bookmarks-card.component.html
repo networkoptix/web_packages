@@ -6,7 +6,7 @@
 >
     <div class="bookmarks-image-wrapper">
         <span class="bookmarks-duration">
-            {{ durationMsToTime(bookmark.durationMs) }}
+            {{ duration }}
         </span>
         <div class="bookmarks-image">
             <div
@@ -38,7 +38,7 @@
     </div>
     <div class="bookmarks-info">
         <span class="bookmarks-info-timestamp">
-            {{ timeMsToDate(bookmark.startTimeMs) }}
+            <span>{{ startDate }}</span> • <span>{{ startTime }}</span>
         </span>
         <h2 class="bookmarks-info-title">
             {{ bookmark.name }}

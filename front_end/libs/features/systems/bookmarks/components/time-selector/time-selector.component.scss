@@ -1,32 +1,52 @@
 :host {
-    position: relative;
     height: 2rem;
+    display: flex;
 
-    input {
-        background: transparent !important;
+    .input-wrapper {
+        position: relative;
+        flex: 0 0 4.125rem;
 
-        &.not-empty {
-            background-color: var(--bookmarks-time-input-active-bg) !important;
+        &:only-child {
+            flex-grow: 1;
         }
 
-        &::placeholder {
-            font-size: 0.875rem;
+        input {
+            background: transparent !important;
+
+            &.not-empty {
+                background-color: var(--bookmarks-time-input-active-bg) !important;
+            }
+
+            &::placeholder {
+                font-size: 0.875rem;
+            }
+
+            border-color: var(--bookmarks-input-border-color) !important;
         }
 
-        border-color: var(--bookmarks-input-border-color) !important;
+        .clear-btn {
+            position: absolute;
+            right: 0.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+
+            padding: 0 !important;
+            width: 1rem;
+            height: 1rem !important;
+            background-color: transparent !important;
+
+            svg-icon {
+                display: flex;
+            }
+        }
     }
 
     .period {
-        position: absolute;
-        right: 1.5rem;
-        top: 50%;
-        transform: translateY(-50%);
+        flex-grow: 1;
 
-        font-size: 0.875rem !important;
-
-        padding: 0.1rem !important;
-        height: 1.25rem !important;
-        line-height: 1.25rem;
+        padding: 0.25rem !important;
+        height: 2rem !important;
+        line-height: 2rem;
         background-color: transparent !important;
         border: 1px solid transparent;
         color: var(--body-text-color);
@@ -35,21 +55,28 @@
             background-color: var(--bookmarks-text-highlight-bg) !important;
             border-color: var(--bookmarks-filter-header-bg);
         }
+
+        span {
+            white-space: nowrap;
+            overflow: hidden;
+        }
+    }
+}
+
+.cdk-menu-item {
+    border-radius: 0 !important;
+    background-color: var(--bookmarks-filter-button-bg);
+    color: var(--body-text-color);
+    width: 100%;
+    max-width: unset;
+    padding: 0.25rem !important;
+
+    &:hover {
+        background-color: var(--bookmarks-text-highlight-bg);
     }
 
-    .clear-btn {
-        position: absolute;
-        right: 0.25rem;
-        top: 50%;
-        transform: translateY(-50%);
-
-        padding: 0 !important;
-        width: 1rem;
-        height: 1rem !important;
-        background-color: transparent !important;
-
-        svg-icon {
-            display: flex;
-        }
+    &.selected {
+        background-color: var(--brand-core);
+        color: var(--bookmarks-filter-filled-text);
     }
 }
