@@ -2,6 +2,9 @@ import { AfterViewInit, Component, HostListener, ViewChild } from '@angular/core
 import { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+import { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
+
 import { WizardStateService } from '../../services/wizard-state.service';
 
 @UntilDestroy()
@@ -12,6 +15,9 @@ import { WizardStateService } from '../../services/wizard-state.service';
 })
 export class LocalLoginComponent implements AfterViewInit {
     @ViewChild('setAdminPasswordForm', { static: false }) setAdminPasswordForm: NgForm;
+
+    CONFIG: IConfig;
+    passwordToggle: boolean = true;
 
     get password(): string {
         return this.wizardService.setupConfig.localPassword;
@@ -28,7 +34,12 @@ export class LocalLoginComponent implements AfterViewInit {
         this.wizardService.setupConfig.localPasswordConfirmation = password;
     }
 
-    constructor(public wizardService: WizardStateService) { }
+    constructor(
+        configService: NxConfigService,
+        public wizardService: WizardStateService,
+    ) {
+        this.CONFIG = configService.getConfig();
+    }
 
     ngAfterViewInit(): void {
         this.setAdminPasswordForm.statusChanges
@@ -60,7 +71,7 @@ export class LocalLoginComponent implements AfterViewInit {
     handleKeyboardEvent(event: KeyboardEvent): void {
         if (event.key === 'Enter') {
             if (this.setAdminPasswordForm.form.valid) {
-                this.wizardService.finish();
+                this.wizardService.next();
             }
         }
     }
