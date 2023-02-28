@@ -16,19 +16,82 @@
                 />
             </div>
             <div class="form-group">
-                <nx-mat-like-password-input
+                <nx-password-input
                     name="createPassword"
                     componentId="createPassword"
-                    class="fs-exclude"
-                    [label]="'Password' | translate"
-                    [confirmation]="true"
-                    [validation]="true"
+                    class="form-component fs-exclude"
                     [(ngModel)]="password"
-                    [form]="setAdminPasswordForm"
+                    [placeholder]="'Password' | translate"
                     [component]="createPassword"
-                    [setFocus]="true"
+                    [form]="setAdminPasswordForm"
                     #createPassword="ngModel"
-                ></nx-mat-like-password-input>
+                    [setFocus]="true"
+                ></nx-password-input>
+            </div>
+            <div class="form-group">
+                <div class="position-relative">
+                    <input
+                        name="confirmPassword"
+                        id="confirmedPassword"
+                        class="form-control"
+                        type="{{ passwordToggle ? 'password' : 'text' }}"
+                        [(ngModel)]="confirmedPassword"
+                        [placeholder]="'Repeat Password' | translate"
+                        (blur)="checkPasswords()"
+                        #confirmPassword="ngModel"
+                        required
+                    />
+                    <span
+                        class="input-group-addon position-absolute"
+                        (click)="passwordToggle = !passwordToggle"
+                        style="cursor: pointer"
+                    >
+                        <svg-icon
+                            nx-add-svg-src
+                            *ngIf="passwordToggle"
+                            [src]="icons.dirTextButtons + 'eye_closed.svg'"
+                            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                            [applyClass]="true"
+                        ></svg-icon>
+                        <svg-icon
+                            nx-add-svg-src
+                            *ngIf="!passwordToggle"
+                            [src]="icons.dirTextButtons + 'eye.svg'"
+                            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                            [applyClass]="true"
+                        ></svg-icon>
+                    </span>
+                </div>
+
+                <div class="mt-2">
+                    <nx-password-input-validation
+                        [forElement]="createPassword"
+                        [value]="password"
+                    >
+                    </nx-password-input-validation>
+                    <ng-container
+                        *ngIf="
+                            confirmPassword.invalid &&
+                            ((confirmPassword.dirty && !confirmPassword.errors?.pattern) ||
+                                confirmPassword.touched)
+                        "
+                    >
+                        <div
+                            class="input-error"
+                            *ngIf="confirmPassword.errors.required"
+                            translate
+                        >
+                            Password confirmation is required
+                        </div>
+                        <div
+                            class="input-error"
+                            *ngIf="confirmPassword.errors?.dontMatch"
+                            translate
+                        >
+                            Passwords do not match
+                        </div>
+                    </ng-container>
+                </div>
             </div>
         </form>
     </div>

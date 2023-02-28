@@ -13,6 +13,8 @@ import { WizardStateService } from '../../services/wizard-state.service';
 export class LocalLoginComponent implements AfterViewInit {
     @ViewChild('setAdminPasswordForm', { static: false }) setAdminPasswordForm: NgForm;
 
+    passwordToggle: boolean = true;
+
     get password(): string {
         return this.wizardService.setupConfig.localPassword;
     }
@@ -62,7 +64,7 @@ export class LocalLoginComponent implements AfterViewInit {
     handleKeyboardEvent(event: KeyboardEvent): void {
         if (event.key === 'Enter') {
             if (this.setAdminPasswordForm.form.valid) {
-                this.wizardService.finish();
+                this.wizardService.next();
             }
         }
     }
