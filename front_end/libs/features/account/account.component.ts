@@ -14,7 +14,6 @@ import { NxSessionService } from '@services/session.service';
     templateUrl: 'account.component.html',
     styleUrls: ['account.component.scss'],
 })
-
 export class NxAccountComponent implements OnInit, OnDestroy {
     LANG = staticLang;
 
@@ -27,14 +26,12 @@ export class NxAccountComponent implements OnInit, OnDestroy {
         private sessionService: NxSessionService,
         private menuService: NxMenuService,
     ) {
-        this.translateService.onTranslationChange
-            .pipe(untilDestroyed(this))
-            .subscribe(() => {
-                setTimeout(() => {
-                    this.initMenu();
-                    this.content = { ...this.content }; // trigger onChange
-                });
+        this.translateService.onTranslationChange.pipe(untilDestroyed(this)).subscribe(() => {
+            setTimeout(() => {
+                this.initMenu();
+                this.content = { ...this.content }; // trigger onChange
             });
+        });
     }
 
     ngOnDestroy(): void {}
@@ -61,39 +58,39 @@ export class NxAccountComponent implements OnInit, OnDestroy {
 
         this.initMenu();
 
-        this.menuService.selectedDetailsSection
-            .pipe(untilDestroyed(this))
-            .subscribe(selection => {
-                this.content.selectedDetailsSection = selection;
-                this.content = { ...this.content }; // trigger onChange
-                this.menuReady = true;
-            });
+        this.menuService.selectedDetailsSection.pipe(untilDestroyed(this)).subscribe(selection => {
+            this.content.selectedDetailsSection = selection;
+            this.content = { ...this.content }; // trigger onChange
+            this.menuReady = true;
+        });
     }
 
     private initMenu(): void {
         const accountMenu = menus.account;
-        this.content.level1 = [{
-            id: accountMenu.settings.id,
-            svg: accountMenu.icon,
-            label: this.userEmail,
-            path: accountMenu.settings.path,
-            level3: [
-                {
-                    id: accountMenu.settings.id,
-                    label: this.LANG.account.accountSettings,
-                    path: accountMenu.settings.path
-                },
-                {
-                    id: accountMenu.password.id,
-                    label: this.LANG.account.changePassword,
-                    path: accountMenu.password.path
-                },
-                {
-                    id: accountMenu.security.id,
-                    label: this.LANG.account.security,
-                    path: accountMenu.security.path
-                }
-            ]
-        }];
+        this.content.level1 = [
+            {
+                id: accountMenu.settings.id,
+                svg: accountMenu.icon,
+                label: this.userEmail,
+                path: accountMenu.settings.path,
+                level3: [
+                    {
+                        id: accountMenu.settings.id,
+                        label: this.LANG.account.accountSettings,
+                        path: accountMenu.settings.path,
+                    },
+                    {
+                        id: accountMenu.password.id,
+                        label: this.LANG.account.changePassword,
+                        path: accountMenu.password.path,
+                    },
+                    {
+                        id: accountMenu.security.id,
+                        label: this.LANG.account.security,
+                        path: accountMenu.security.path,
+                    },
+                ],
+            },
+        ];
     }
 }

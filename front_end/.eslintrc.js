@@ -571,6 +571,8 @@ module.exports = {
                 'libs/db/**/*.ts',
                 'libs/decorators/**/*.ts',
                 'libs/directives/**/*.ts',
+                'libs/features/[0-9]*/**/*.ts',
+                'libs/features/[a][a-c]*/**/*.ts',
                 'libs/interceptors/**/*.ts',
                 'libs/menu/**/*.ts',
                 'libs/pipes/**/*.ts',

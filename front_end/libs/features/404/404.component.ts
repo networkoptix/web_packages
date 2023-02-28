@@ -15,7 +15,7 @@ import { WINDOW } from '@services/window-provider';
 @Component({
     selector: 'nx-404',
     styleUrls: ['404.component.scss'],
-    templateUrl: '404.component.html'
+    templateUrl: '404.component.html',
 })
 export class Nx404Component {
     LANG = staticLang;
@@ -25,14 +25,13 @@ export class Nx404Component {
     message = '';
 
     constructor(
-
         private router: Router,
         private route: ActivatedRoute,
         private location: Location,
         private toastService: NxToastService,
         private translate: TranslateService,
         @Inject(WINDOW) private window: Window,
-        configService: NxConfigService
+        configService: NxConfigService,
     ) {
         this.CONFIG = configService.config;
 
@@ -46,8 +45,10 @@ export class Nx404Component {
 
     getAdditionalMessage(key: string): string {
         const defaultKey = 'redirects.defaultMessage';
-        const additionalMessages: Record<string, string> =
-            this.translate.instant([key, defaultKey]);
+        const additionalMessages: Record<string, string> = this.translate.instant([
+            key,
+            defaultKey,
+        ]);
         const translatedCustom = additionalMessages[key];
         const translatedDefault = additionalMessages[defaultKey];
 
@@ -55,12 +56,17 @@ export class Nx404Component {
     }
 
     routeChecker = (url: string): RouteCheckTuple => {
-        return this.CONFIG.webadminRoutesLookup.find(routeTuple => {
-            const [checker] = routeTuple;
-            return checker.test(
-                url.split('/').filter(segment => segment).join('/')
-            );
-        }) || [];
+        return (
+            this.CONFIG.webadminRoutesLookup.find(routeTuple => {
+                const [checker] = routeTuple;
+                return checker.test(
+                    url
+                        .split('/')
+                        .filter(segment => segment)
+                        .join('/'),
+                );
+            }) || []
+        );
     };
 
     handleRedirect(url: string): void {
@@ -82,21 +88,25 @@ export class Nx404Component {
                     return;
                 }
             }
-            this.router.navigate([redirectUrl], { relativeTo: this.route, replaceUrl: true, queryParams: { redirected: url } }).then(_ => {
-                const { origin } = this.window.location;
-                const redirectMessage = this.translate.instant(
-                    'redirects.message',
-                    {
+            this.router
+                .navigate([redirectUrl], {
+                    relativeTo: this.route,
+                    replaceUrl: true,
+                    queryParams: { redirected: url },
+                })
+                .then(_ => {
+                    const { origin } = this.window.location;
+                    const redirectMessage = this.translate.instant('redirects.message', {
                         url: `${origin}/#${url}`,
-                        redirectUrl: translatedLink || `${origin}/#${redirectUrl}`
+                        redirectUrl: translatedLink || `${origin}/#${redirectUrl}`,
                     });
-                const additionalMessage = this.getAdditionalMessage(customMessage);
-                this.toastService.notify(
-                    `${redirectMessage} ${additionalMessage}`,
-                    toast.info,
-                    longAlertTimeout,
-                );
-            });
+                    const additionalMessage = this.getAdditionalMessage(customMessage);
+                    this.toastService.notify(
+                        `${redirectMessage} ${additionalMessage}`,
+                        toast.info,
+                        longAlertTimeout,
+                    );
+                });
         }
     }
 }

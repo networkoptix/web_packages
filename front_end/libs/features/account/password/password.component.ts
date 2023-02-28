@@ -17,9 +17,9 @@ import { Process } from '@services/process.service/process';
     templateUrl: 'password.component.html',
     styleUrls: ['password.component.scss'],
 })
-
 export class NxAccountPasswordComponent implements OnInit, OnDestroy {
-    @ViewChild('pageApply', { read: ViewContainerRef, static: true }) private pageApply: ViewContainerRef;
+    @ViewChild('pageApply', { read: ViewContainerRef, static: true })
+    private pageApply: ViewContainerRef;
     @ViewChild('passwordForm', { read: NgForm }) private passwordForm: NgForm;
 
     LANG = staticLang;
@@ -38,7 +38,7 @@ export class NxAccountPasswordComponent implements OnInit, OnDestroy {
         private dialogs: NxDialogsService,
         private menuService: NxMenuService,
         private applyService: NxApplyService,
-        private toastService: NxToastService
+        private toastService: NxToastService,
     ) {
         this.menuService.detail = 'password';
     }
@@ -46,55 +46,58 @@ export class NxAccountPasswordComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.applyService.initPageFormsWatcher(this.pageApply);
 
-        this.changePassword = this.processService.createProcess(() => {
-            const { password: oldPass, newPassword: newPass } = this.pass;
-            const verifySession = async (): Promise<string> => {
-                return this.dialogs.account2faPasswordChange(oldPass, newPass)
-                    .then(res => res === 'canceled'
-                        ? Promise.reject({ resultCode: res })
-                        : res
-                    );
-            };
-            if (this.account.account2faEnabled) {
-                return this.cloudApiService.verify(oldPass).then(
-                    verifySession,
-                    ({ error }) => error?.resultCode === 'forbidden'
-                        ? verifySession()
-                        : Promise.reject(error)
-                );
-            } else {
-                return this.cloudApiService.changePassword(newPass, oldPass);
-            }
-        }, {
-            errorCodes: {
-                notAuthorized: this.LANG.errorCodes.oldPasswordMistmatch,
-                wrongOldPassword: this.LANG.errorCodes.oldPasswordMistmatch,
-                badRequest: this.LANG.errorCodes.oldPasswordMistmatch,
-                canceled: () => {} // User closed 2fa dialog
-            },
-            errorPrefix: this.LANG.errorCodes.cantChangePasswordPrefix,
-            ignoreUnauthorized: true
-        }, () => {
-            this.toastService.notify(this.LANG.account.passwordChangedSuccess, 'success');
-            this.hideErrors = true;
-            this.passwordForm.reset();
-        });
-
-        this.accountService
-            .get()
-            .then(account => {
-                if (account) {
-                    this.account = account;
-
-                    setTimeout(() => {
-                        this.applyService.createFormWatcher(
-                            'passwordForm',
-                            this.passwordForm,
-                            this.changePassword
+        this.changePassword = this.processService.createProcess(
+            () => {
+                const { password: oldPass, newPassword: newPass } = this.pass;
+                const verifySession = async (): Promise<string> => {
+                    return this.dialogs
+                        .account2faPasswordChange(oldPass, newPass)
+                        .then(res =>
+                            res === 'canceled' ? Promise.reject({ resultCode: res }) : res,
                         );
-                    });
+                };
+                if (this.account.account2faEnabled) {
+                    return this.cloudApiService
+                        .verify(oldPass)
+                        .then(verifySession, ({ error }) =>
+                            error?.resultCode === 'forbidden'
+                                ? verifySession()
+                                : Promise.reject(error),
+                        );
+                } else {
+                    return this.cloudApiService.changePassword(newPass, oldPass);
                 }
-            });
+            },
+            {
+                errorCodes: {
+                    notAuthorized: this.LANG.errorCodes.oldPasswordMistmatch,
+                    wrongOldPassword: this.LANG.errorCodes.oldPasswordMistmatch,
+                    badRequest: this.LANG.errorCodes.oldPasswordMistmatch,
+                    canceled: () => {}, // User closed 2fa dialog
+                },
+                errorPrefix: this.LANG.errorCodes.cantChangePasswordPrefix,
+                ignoreUnauthorized: true,
+            },
+            () => {
+                this.toastService.notify(this.LANG.account.passwordChangedSuccess, 'success');
+                this.hideErrors = true;
+                this.passwordForm.reset();
+            },
+        );
+
+        this.accountService.get().then(account => {
+            if (account) {
+                this.account = account;
+
+                setTimeout(() => {
+                    this.applyService.createFormWatcher(
+                        'passwordForm',
+                        this.passwordForm,
+                        this.changePassword,
+                    );
+                });
+            }
+        });
     }
 
     ngOnDestroy(): void {

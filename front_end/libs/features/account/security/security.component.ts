@@ -54,15 +54,12 @@ export class NxAccountSecurityComponent implements OnInit, OnDestroy {
         this.account2faEnabledCheck = this.account.account2faEnabled;
         this.totpExistsForAccount = this.account.totpExistsForAccount;
 
-        this.systemsService.systemsSubject
-            .pipe(untilDestroyed(this))
-            .subscribe(systems => {
-                this.twoFaSystems = systems.filter(sys => sys.system2faEnabled);
-                /* If the system doesn't have a version useRest will be false.
-                This should only happen on non-prod instances where mediator is out of date.
-                 */
-                this.subV5Systems = systems.filter(sys => !sys.useRest);
-            });
+        this.systemsService.systemsSubject.pipe(untilDestroyed(this)).subscribe(systems => {
+            this.twoFaSystems = systems.filter(sys => sys.system2faEnabled);
+            /* If the system doesn't have a version useRest will be false.
+            This should only happen on non-prod instances where mediator is out of date. */
+            this.subV5Systems = systems.filter(sys => !sys.useRest);
+        });
     }
 
     ngOnDestroy(): void {
@@ -75,15 +72,13 @@ export class NxAccountSecurityComponent implements OnInit, OnDestroy {
             // or click happened during initialization
             return;
         }
-        this.dialogs
-            .account2faCodeToggle(value)
-            .then(action => {
-                if (action !== 'canceled') {
-                    this.account2faEnabled = (action === 'enabled');
-                    this.accountService.get(true).catch(e => {});
-                }
-                this.account2faEnabledCheck = this.account2faEnabled;
-            });
+        this.dialogs.account2faCodeToggle(value).then(action => {
+            if (action !== 'canceled') {
+                this.account2faEnabled = action === 'enabled';
+                this.accountService.get(true).catch(e => {});
+            }
+            this.account2faEnabledCheck = this.account2faEnabled;
+        });
     }
 
     showPopoverWithTemplate(template: TemplateRef<unknown>, target: HTMLElement): void {
@@ -96,7 +91,7 @@ export class NxAccountSecurityComponent implements OnInit, OnDestroy {
             {
                 panelClass: 'system-popover',
             },
-            this._viewContainerRef
+            this._viewContainerRef,
         );
     }
 
@@ -111,29 +106,25 @@ export class NxAccountSecurityComponent implements OnInit, OnDestroy {
         this.totpExistsForAccount = targetState;
         // Combine success handler; Do in releases_21.1_hotfix after 21.1 release
         if (targetState) {
-            this.dialogs
-                .account2faEnable()
-                .then(action => {
-                    const newState = (action === 'enabled');
+            this.dialogs.account2faEnable().then(action => {
+                const newState = action === 'enabled';
+                this.account2faEnabled = newState;
+                this.totpExistsForAccount = newState;
+                this.account2faEnabledCheck = this.account2faEnabled;
+                this.accountService.get(true).catch(_ => {});
+            });
+        } else {
+            this.dialogs.account2faDisable(this.twoFaSystems.length).then(action => {
+                if (action !== 'canceled') {
+                    const newState = !(action === 'disabled');
                     this.account2faEnabled = newState;
                     this.totpExistsForAccount = newState;
                     this.account2faEnabledCheck = this.account2faEnabled;
                     this.accountService.get(true).catch(_ => {});
-                });
-        } else {
-            this.dialogs
-                .account2faDisable(this.twoFaSystems.length)
-                .then(action => {
-                    if (action !== 'canceled') {
-                        const newState = !(action === 'disabled');
-                        this.account2faEnabled = newState;
-                        this.totpExistsForAccount = newState;
-                        this.account2faEnabledCheck = this.account2faEnabled;
-                        this.accountService.get(true).catch(_ => {});
-                    } else {
-                        this.totpExistsForAccount = true; // revert value on cancel
-                    }
-                });
+                } else {
+                    this.totpExistsForAccount = true; // revert value on cancel
+                }
+            });
         }
     }
 

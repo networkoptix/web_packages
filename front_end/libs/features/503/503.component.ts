@@ -9,7 +9,7 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 @Component({
     selector: 'nx-503',
     styleUrls: ['503.component.scss'],
-    template: '<div [innerHTML]="compTemplate"></div>'
+    template: '<div [innerHTML]="compTemplate"></div>',
 })
 export class Nx503Component implements OnInit {
     compTemplate: SafeHtml;
@@ -20,7 +20,7 @@ export class Nx503Component implements OnInit {
         private router: Router,
         private sanitizer: DomSanitizer,
         private apiService: NxCloudApiService,
-        private bootstrapProvider: NxBootstrapProvider
+        private bootstrapProvider: NxBootstrapProvider,
     ) {
         this.appState.footerVisibility = false;
         this.appState.headerVisibility = false;
@@ -31,24 +31,22 @@ export class Nx503Component implements OnInit {
             .getStatic('/static/503.html')
             .toPromise()
             .then(result => {
-                this.compTemplate =
-                    this.sanitizer.bypassSecurityTrustHtml(result);
-            }).catch(ex => {
+                this.compTemplate = this.sanitizer.bypassSecurityTrustHtml(result);
+            })
+            .catch(ex => {
                 console.error(ex);
             });
     }
 
     ngAfterViewInit(): void {
         setTimeout(() => {
-            this.bootstrapProvider
-                .load()
-                .then(() => {
-                    if (this.bootstrapProvider.loaded) {
-                        this.router.navigate(['/']).catch(() =>
-                            console.error('Error navigating to the index')
-                        );
-                    }
-                });
+            this.bootstrapProvider.load().then(() => {
+                if (this.bootstrapProvider.loaded) {
+                    this.router
+                        .navigate(['/'])
+                        .catch(() => console.error('Error navigating to the index'));
+                }
+            });
         }, this.maintenanceTimeout);
     }
 }

@@ -6,14 +6,12 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 @Component({
     selector: 'nx-500',
     styleUrls: ['500.component.scss'],
-    templateUrl: '500.component.html'
+    templateUrl: '500.component.html',
 })
 export class Nx500Component {
     CONFIG: IConfig;
 
-    constructor(
-        configService: NxConfigService,
-    ) {
+    constructor(configService: NxConfigService) {
         this.CONFIG = configService.getConfig();
     }
 }

@@ -31,9 +31,9 @@ import { WINDOW } from '@services/window-provider';
     templateUrl: 'settings.component.html',
     styleUrls: ['settings.component.scss'],
 })
-
 export class NxAccountSettingsComponent implements OnInit, OnDestroy {
-    @ViewChild('pageApply', { read: ViewContainerRef, static: true }) private pageApply: ViewContainerRef;
+    @ViewChild('pageApply', { read: ViewContainerRef, static: true })
+    private pageApply: ViewContainerRef;
     @ViewChild('accountForm', { read: NgForm }) private accountForm: NgForm;
 
     CONFIG: IConfig;
@@ -63,20 +63,18 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
         private toastService: NxToastService,
         private store: Store,
         @Inject(WINDOW) protected window: Window,
-        private db: NxDbService
+        private db: NxDbService,
     ) {
         this.CONFIG = configService.getConfig();
         this.menuService.detail = 'settings';
         this.icons = icons;
 
-        translateService.onTranslationChange
-            .pipe(untilDestroyed(this))
-            .subscribe(() => {
-                setTimeout(() => {
-                    this.pageService.pageTitle(this.LANG.pageTitles.account);
-                    this.initProcess();
-                });
+        translateService.onTranslationChange.pipe(untilDestroyed(this)).subscribe(() => {
+            setTimeout(() => {
+                this.pageService.pageTitle(this.LANG.pageTitles.account);
+                this.initProcess();
             });
+        });
     }
 
     ngOnInit(): void {
@@ -84,28 +82,30 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
 
         this.initProcess();
 
-        this.db.personal.unstructured.$.get('account').pipe(
-            filter(({ value }) => !!value),
-            map(({ value }) => value as Account),
-            // Eventually update to also update realtime. Right now having issues with clearing apply service on changes.
-            take(1)
-        ).subscribe(async account => {
-            if (account?.email) {
-                this.account = { ...account };
-                this.isUserASystemOwner();
-                await firstValueFrom(this.systemsService.forceUpdateSystems());
+        this.db.personal.unstructured.$.get('account')
+            .pipe(
+                filter(({ value }) => !!value),
+                map(({ value }) => value as Account),
+                // Eventually update to also update realtime. Right now having issues with clearing apply service on changes.
+                take(1),
+            )
+            .subscribe(async account => {
+                if (account?.email) {
+                    this.account = { ...account };
+                    this.isUserASystemOwner();
+                    await firstValueFrom(this.systemsService.forceUpdateSystems());
 
-                setTimeout(() => {
-                    // both form are inside *ngIf="account"
-                    // otherwise they should be in ngAfterViewInit
-                    this.applyService.createFormWatcher(
-                        'accountForm',
-                        this.accountForm,
-                        this.saveAccount
-                    );
-                });
-            }
-        });
+                    setTimeout(() => {
+                        // both form are inside *ngIf="account"
+                        // otherwise they should be in ngAfterViewInit
+                        this.applyService.createFormWatcher(
+                            'accountForm',
+                            this.accountForm,
+                            this.saveAccount,
+                        );
+                    });
+                }
+            });
     }
 
     ngOnDestroy(): void {
@@ -114,38 +114,37 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
 
     private initProcess(): void {
         this.saveAccount = undefined;
-        this.saveAccount = this.processService.createProcess(() => {
-            // Optimistic update
-            // const { first_name, last_name } = this.account;
-            // this.store.dispatch(
-            //     accountActions.updateCurrentUser({
-            //         update: { first_name, last_name }
-            //     })
-            // );
-            return this.cloudApiService.accountPost(this.account);
-        }, {
-            errorPrefix: this.LANG.errorCodes.cantChangeAccountPrefix,
-            logoutForbidden: true
-        }, (res: AccountEdit) => {
-            const { first_name, last_name } = res;
-            this.store.dispatch(
-                accountActions.updateCurrentUser({
-                    update: { first_name, last_name }
-                })
-            );
-            this.toastService.notify(
-                this.LANG.account.accountSavedSuccess,
-                toast.success,
-            );
-        }, () => {
-        });
+        this.saveAccount = this.processService.createProcess(
+            () => {
+                // Optimistic update
+                // const { first_name, last_name } = this.account;
+                // this.store.dispatch(
+                //     accountActions.updateCurrentUser({
+                //         update: { first_name, last_name }
+                //     })
+                // );
+                return this.cloudApiService.accountPost(this.account);
+            },
+            {
+                errorPrefix: this.LANG.errorCodes.cantChangeAccountPrefix,
+                logoutForbidden: true,
+            },
+            (res: AccountEdit) => {
+                const { first_name, last_name } = res;
+                this.store.dispatch(
+                    accountActions.updateCurrentUser({
+                        update: { first_name, last_name },
+                    }),
+                );
+                this.toastService.notify(this.LANG.account.accountSavedSuccess, toast.success);
+            },
+            () => {},
+        );
     }
 
     changeLanguage(langCode: string): void {
         this.langCode = langCode;
-        this.store.dispatch(
-            accountActions.updateCurrentUser({ update: { language: langCode } })
-        );
+        this.store.dispatch(accountActions.updateCurrentUser({ update: { language: langCode } }));
     }
 
     private isUserASystemOwner(): void {
