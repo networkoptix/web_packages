@@ -145,7 +145,9 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         timer(0, serverTimers.checkMs).pipe(
             filter(() => this.system?.currentBusyServerIds.size > 0 && !fetchingServersLock),
             delay(1000), // small delay in case the tick happens in the middle of restarting.
-            tap(() => { fetchingServersLock = true; }),
+            tap(() => {
+                fetchingServersLock = true;
+            }),
             switchMap(() => this.system.serverManager.getForceServers(false)
                 .pipe(
                     timeout(serverTimers.requestTimeoutMs),
@@ -163,7 +165,9 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                     catchError(() => of([]))
                 )
             ),
-            tap(() => { fetchingServersLock = false; }),
+            tap(() => {
+                fetchingServersLock = false;
+            }),
             filter((servers: NxSystemServer[]) => servers.length > 0),
             untilDestroyed(this)
         ).subscribe((servers: NxSystemServer[]) => {
