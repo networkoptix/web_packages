@@ -100,6 +100,9 @@
                     [selected]="subjects[0]"
                     [items]="subjects"
                     (onSelected)="setSubject($event)"
+                    [forcePosition]="{
+                        top: 30
+                    }"
                 ></nx-select>
             </div>
             <div class="form-group">
