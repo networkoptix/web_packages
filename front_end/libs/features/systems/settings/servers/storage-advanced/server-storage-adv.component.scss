@@ -24,7 +24,7 @@
 
     th,
     td {
-        overflow: hidden;
+        overflow: visible; // do not change - otherwise gropdown list will "hide"
         text-overflow: ellipsis;
         white-space: nowrap;
     }
