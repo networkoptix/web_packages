@@ -6,9 +6,10 @@ import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { NxHealthService } from '@pages/health/health.service';
-import { SettingsConfig } from '@services/nx-config/base-config';
 import { NxSystemUser } from '@services/system.service/user-manager/user-manager-types.bak';
 
+import { addUserRestV2 } from './mediaserver-apis/endpoints/add-user';
+import { wizardGetSystemSettingsRestV2 } from './mediaserver-apis/endpoints/wizard-get-system-settings';
 import { NxAppStateService } from './nx-app-state.service';
 import { IConfig } from './nx-config/config-types';
 import * as t from './system-api.types';
@@ -89,6 +90,7 @@ interface ModuleInfoRest extends t.ModuleInformationReply {
 }
 
 export class NxSystemRestAPI2 extends NxSystemRestAPI {
+    static VERSION = 5.1;
     readonly version: number;
 
     private readonly defaultLogLevel = 'info';
@@ -121,7 +123,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
             appState,
             injector
         );
-        this.version = 5.1;
+        this.version = NxSystemRestAPI2.VERSION;
     }
 
     private responseWrapper = (data): t.NormalResponse<any> => ({
@@ -166,9 +168,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
             .pipe(map(this.parseLogData));
     }
     // Setup wizard calls
-    wizardGetSystemSettings(): Observable<SettingsConfig> {
-        return this.get('/rest/v2/system/settings?_keepDefault');
-    }
+    wizardGetSystemSettings = wizardGetSystemSettingsRestV2;
 
     setupCloudSystem(
         systemName: string,
@@ -283,7 +283,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
     }
 
     configureServer(configureParams: t.ConfigureParams): Promise<any> {
-        return this.patch('/rest/v2/servers/this/runtimeInfo', configureParams).toPromise();
+        return this.patch('/rest/v2/servers/this/runtimeInfo', configureParams as Record<string, string>).toPromise();
     }
 
     rebuildArchive(
@@ -308,15 +308,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
             .pipe(map(res => this.responseWrapper(res)));
     }
 
-    addUser(user: NxSystemUser): Observable<ChangedIdReturned> {
-        user.type = user.isCloud ? 'cloud' : 'local'; // TODO: add LDAP
-        user.isHttpDigestEnabled = !user.isCloud;
-
-        return this.post<t.ChangedIdReturned>(
-            '/rest/v1/users',
-            this.cleanUserObject(user)
-        );
-    }
+    addUser = addUserRestV2;
 
     // Health Monitoring
     // private getMetricsHealth(metricType: string): any {

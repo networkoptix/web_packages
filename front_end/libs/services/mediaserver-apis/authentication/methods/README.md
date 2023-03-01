@@ -1,0 +1,1 @@
+These classes will handle different forms of authentication we might use with a mediaserver such as cookie login or bearer token.

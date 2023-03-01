@@ -25,6 +25,16 @@ import { startWithCache } from '@utils/start-with-cached';
 import { apiTool, healthMonitoring } from '../variables/static-variables';
 
 import { Account } from './account.service/account';
+import { MediaserverLegacyConnection } from './mediaserver-apis/connections/adapters/adapter-target-types';
+import type { addUserRestV2 } from './mediaserver-apis/endpoints/add-user';
+import { createEventLegacyV1 } from './mediaserver-apis/endpoints/create-event';
+import { getNonceLegacyV1 } from './mediaserver-apis/endpoints/get-nonce';
+import { getSystemSettingsLegacyV1 } from './mediaserver-apis/endpoints/get-system-settings';
+import { notImplementedCustomMessage } from './mediaserver-apis/endpoints/not-implemented';
+import { proxyLegacyV1 } from './mediaserver-apis/endpoints/proxy';
+import { removeStorageLegacyV1 } from './mediaserver-apis/endpoints/remove-storage';
+import { saveStorageLegacyV1 } from './mediaserver-apis/endpoints/save-storage';
+import { wizardGetSystemSettingsRestV2 } from './mediaserver-apis/endpoints/wizard-get-system-settings';
 import { NxAppStateService } from './nx-app-state.service';
 import type { APIDocType, MenuManifest } from './nx-config/base-config';
 import type { IConfig } from './nx-config/config-types';
@@ -39,7 +49,7 @@ interface IParams<Value = any> {
     [key: string]: Value;
 }
 
-export class NxSystemAPI {
+export class NxSystemAPI extends MediaserverLegacyConnection {
     /*
      * System API is a unified service for making API requests to media servers
      *
@@ -74,7 +84,7 @@ export class NxSystemAPI {
     readonly version: number;
     protected readonly emptyId = '{00000000-0000-0000-0000-000000000000}';
     protected readonly forbiddenMsg = 'Using legacy API calls for owner actions are forbidden.';
-    private readonly notImplementedMsg = 'Not implemented in the legacy api.';
+    protected readonly notImplementedMsg = 'Not implemented in the legacy api.';
     public readonly requiresPassword: boolean = true;
 
     protected CONFIG: IConfig;
@@ -108,6 +118,7 @@ export class NxSystemAPI {
         appState: NxAppStateService,
         injector: Injector,
     ) {
+        super();
         this.version = 0;
         this.http = http;
         this.CONFIG = configService;
@@ -334,6 +345,8 @@ export class NxSystemAPI {
         return this.get<AggregatedType>(url, {}, {}, requestTimeout);
     }
 
+    protected proxy = proxyLegacyV1;
+
     init(
         userEmail: string,
         systemId: string,
@@ -418,19 +431,7 @@ export class NxSystemAPI {
         throw Error(this.notImplementedMsg);
     }
 
-    protected getNonce(login: string, url?: string) {
-        const params: any = {
-            userName: login
-        };
-        if (url) {
-            if (!url.includes('http')) {
-                url = 'http://' + url;
-            }
-            params.url = url;
-        }
-        const nonceType = url ? 'getRemoteNonce' : 'getNonce';
-        return this.get(`/api/${nonceType}`, params);
-    }
+    protected getNonce = getNonceLegacyV1;
 
     @memoizeAsyncLong
     protected getRolePermissions(roleId: string) {
@@ -528,11 +529,7 @@ export class NxSystemAPI {
 
     @memoizeAsyncMedium
     getSystemSettings() {
-        return this.get<t.Param[]>('/ec2/getSettings')
-            .toPromise()
-            .then(params => {
-                return new t.SystemConfigSettings(params);
-            });
+        return getSystemSettingsLegacyV1.apply(this) as ReturnType<typeof getSystemSettingsLegacyV1>;
     }
 
     changeSystemName(systemName: string) {
@@ -606,9 +603,7 @@ export class NxSystemAPI {
             : this.getModuleInfo().toPromise();
     }
 
-    createEvent(params: t.EventParams) {
-        return this.get('/api/createEvent', params).toPromise();
-    }
+    createEvent = createEventLegacyV1;
 
     getEvents(
         from: number,
@@ -757,13 +752,9 @@ export class NxSystemAPI {
         );
     }
 
-    saveStorage(updateParams: IParams) {
-        return this.post<any>('/ec2/saveStorage', updateParams, {}, 60000);
-    }
+    saveStorage = saveStorageLegacyV1;
 
-    removeStorage(updateParams: IParams) {
-        return this.post<any>('/ec2/removeStorage', updateParams);
-    }
+    removeStorage = removeStorageLegacyV1;
 
     updateStorages(updateParams: IParams, customTimeout = 8000) {
         return this.post<any>(
@@ -1436,11 +1427,7 @@ export class NxSystemAPI {
         throw new Error('should only be using rest v2 version');
     }
 
-    wizardGetSystemSettings(): Observable<unknown> {
-        throw new Error('should only be using rest v2 version');
-    }
+    wizardGetSystemSettings = notImplementedCustomMessage('should only be using rest v2 version') as typeof wizardGetSystemSettingsRestV2;
 
-    addUser<U extends t.ec2SaveUser>(user: U): Observable<t.ChangedIdReturned> {
-        throw new Error('should only be using rest v2 version');
-    }
+    addUser = notImplementedCustomMessage('should only be using rest v2 version') as typeof addUserRestV2;
 }

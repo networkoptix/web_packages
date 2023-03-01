@@ -55,6 +55,7 @@ const PROXY_CONFIG = [
             '/swagger-ui',
             '/web',
             '/webrtc-tracker',
+            '/josnrpc',
             '/static/openapi_v1.json',
             '/static/openapi_manifest.json',
             '/static/openapi_legacy.json',

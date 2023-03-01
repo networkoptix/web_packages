@@ -1,7 +1,6 @@
 import { Location } from '@angular/common';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injector } from '@angular/core';
-import { pick } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
 import { SessionStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, combineLatest, firstValueFrom, from, Observable, of, throwError } from 'rxjs';
@@ -30,6 +29,16 @@ import { startWithCache } from '@utils/start-with-cached';
 import { SECURITY_LEVEL } from '../../apps/setup-wizard/src/app/types/wizard-state.types';
 import { apiTool } from '../variables/static-variables';
 
+import { MediaserverRestConnection } from './mediaserver-apis/connections/adapters/adapter-target-types';
+import { getServerInfoRestV1 } from './mediaserver-apis/endpoints/get-server-info';
+import { createLayoutRestV1 } from './mediaserver-apis/endpoints/layout/create-layout';
+import { deleteLayoutRestV1 } from './mediaserver-apis/endpoints/layout/delete-layout';
+import { getLayoutRestV1 } from './mediaserver-apis/endpoints/layout/get-layout';
+import { getLayoutsRestV1 } from './mediaserver-apis/endpoints/layout/get-layouts';
+import { putLayoutRestV1 } from './mediaserver-apis/endpoints/layout/put-layout';
+import { cleanUserObjectRest } from './mediaserver-apis/utils/clean-user-object';
+import { useJsonRpc } from './mediaserver-apis/utils/use-json-rpc';
+import { withSystemBusUpdates } from './mediaserver-apis/utils/with-system-bus-updates';
 import { NxAppStateService } from './nx-app-state.service';
 import type { APIDocType, MenuManifest } from './nx-config/base-config';
 import type { IConfig } from './nx-config/config-types';
@@ -51,7 +60,7 @@ import { NxUriCacheService } from './uri-cache.service';
  *
  * Ideally, methods on NxSystemAPI with be labeled as deprecated with the last supported version noted.
  */
-export class NxSystemRestAPI extends NxSystemAPI {
+export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConnection {
     readonly version: number;
     public readonly requiresPassword: boolean = false;
     private readonly cloudToken = 'cloudAccessToken';
@@ -135,21 +144,6 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     public get vmsToken() {
         return this.#vmsToken;
-    }
-
-    protected proxy(method, protocol, serverAddress, requestUrl, data, coercedEnglishError?: boolean) {
-        const url = `/proxy/${protocol}/${serverAddress}/${requestUrl}`;
-
-        const headers = {};
-        if (coercedEnglishError) {
-            headers['Accept-Language'] = 'en-US';
-        }
-        if (method === 'get') {
-            return this.get(url, data, headers);
-        } else if (method === 'post') {
-            return this.post(url, data, headers);
-        }
-        throwError(new Error('Invalid http method type was passed.'));
     }
 
     setupSystem(
@@ -296,7 +290,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
                                     return throwError(error);
                                 }),
                                 switchMap(res => {
-                                    this.setTokens(res, true).subscribe(() => {});
+                                    this.setTokens(res, true).subscribe(() => { });
                                     return of('');
                                 })
                             );
@@ -359,10 +353,11 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     #getHeaders = (customHttpHeaders: Record<string, string>, url = '') => from(this.accessToken ? Promise.resolve(this.accessToken) : this.unauthorizedCallback(true)).pipe(map(() => this.buildHeader(customHttpHeaders, this.requiresToken(url))));
 
+    @useJsonRpc
     protected delete<ResponseType = any>(
         url: string,
-        params?: any,
-        customHttpHeaders: IParams<string> = {},
+        params?: Record<string, unknown>,
+        customHttpHeaders: Record<string, unknown> = {},
         requestTimeout = 60000
     ) {
         params = params || {};
@@ -371,8 +366,8 @@ export class NxSystemRestAPI extends NxSystemAPI {
             url = `/web${url}`;
         }
         const fullUrl = `${this.urlBase}${url}`;
-        return this.#getHeaders(customHttpHeaders, url).pipe(
-            switchMap(headers => this.http.delete<ResponseType>(fullUrl, { headers, params })),
+        return this.#getHeaders(customHttpHeaders as Record<string, string>, url).pipe(
+            switchMap(headers => this.http.delete<ResponseType>(fullUrl, { headers, params: params as Record<string, string> })),
             retryWhen(request => this.retryHandler(request)),
             timeout(requestTimeout),
             tap(undefined, error => {
@@ -388,6 +383,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         () => false,
         1000
     )
+    @useJsonRpc
     protected get<ResponseType = any>(
         url: string,
         params?: any,
@@ -413,6 +409,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         );
     }
 
+    @useJsonRpc
     protected post<ResponseType = any>(
         url: string,
         data?: any,
@@ -437,10 +434,11 @@ export class NxSystemRestAPI extends NxSystemAPI {
             );
     }
 
+    @useJsonRpc
     protected put<ResponseType = any>(
         url: string,
-        data?: any,
-        paramsToAdd = {},
+        data?: Record<string, unknown>,
+        paramsToAdd: Record<string, unknown> = {},
         customTimeout = 60000
     ) {
         data = data || {};
@@ -451,7 +449,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
         let params = new HttpParams();
         Object.keys(paramsToAdd).forEach(key => {
-            params = params.append(key, paramsToAdd[key]);
+            params = params.append(key, paramsToAdd[key] as string);
         });
 
         url = `${this.urlBase}${url}`;
@@ -464,10 +462,11 @@ export class NxSystemRestAPI extends NxSystemAPI {
             );
     }
 
-    protected patch<ResponseType = any>(
+    @useJsonRpc
+    protected patch<ResponseType = unknown>(
         url: string,
-        data?: any,
-        paramsToAdd = {},
+        data?: Record<string, unknown>,
+        paramsToAdd: Record<string, unknown> = {},
         customTimeout = 60000
     ) {
         data = data || {};
@@ -478,7 +477,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
         let params = new HttpParams();
         Object.keys(paramsToAdd).forEach(key => {
-            params = params.append(key, paramsToAdd[key]);
+            params = params.append(key, paramsToAdd[key] as string);
         });
 
         url = `${this.urlBase}${url}`;
@@ -607,7 +606,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
                     );
                 }),
                 tap(systemTokens => {
-                    !skipSetting && this.setTokens(systemTokens, true).subscribe(() => {});
+                    !skipSetting && this.setTokens(systemTokens, true).subscribe(() => { });
                 })
             );
     }
@@ -789,16 +788,9 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     // serverId can be a server id, this, or *
-    getServerInfo(serverId: '*'): Observable<t.ModuleInformationReply[]>;
-    getServerInfo(serverId: string): Observable<t.ModuleInformationReply>;
-    getServerInfo(serverId: string) {
-        return this.get(`/rest/v1/servers/${serverId}/info`);
-    }
+    getServerInfo = getServerInfoRestV1;
 
-    getRemoteServerInfo(remoteEndpoint: string) {
-        remoteEndpoint = remoteEndpoint.replace(/https?:\/\/(?:.*@)?/, '');
-        return this.proxy('get', 'https', remoteEndpoint, 'rest/v1/servers/this/info', {});
-    }
+    getRemoteServerInfo = getServerInfoRestV1;
 
     mergeSystems(
         remoteEndpoint: string,
@@ -945,25 +937,16 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.get('/rest/v1/webPages', params);
     }
 
-    getLayouts(params: Record<string, unknown> = { _keepDefault: true }): Observable<t.Layouts> {
-        return this.get('/rest/v1/layouts', params);
-    }
+    // Layouts
 
-    getLayout(layoutId: string, params: Record<string, unknown> = { _keepDefault: true }): Observable<t.Layout> {
-        return this.get(`/rest/v1/layouts/${layoutId}`, params);
+    @withSystemBusUpdates(({ transaction }) => ['saveLayout', 'removeLayout'].includes(transaction.command))
+    getLayouts(): ReturnType<typeof getLayoutsRestV1> {
+        return getLayoutsRestV1.bind(this)();
     }
-
-    putLayout(layoutId: string, data: Partial<t.Layout>): Observable<t.Layout> {
-        return this.put(`/rest/v1/layouts/${layoutId}`, data);
-    }
-
-    createLayout(data: Omit<t.Layout, 'id' | 'systemId'>): Observable<t.Layout> {
-        return this.post('/rest/v1/layouts/', data);
-    }
-
-    deleteLayout(layoutId: string): Observable<unknown> {
-        return this.delete(`/rest/v1/layouts/${layoutId}`);
-    }
+    getLayout = getLayoutRestV1;
+    putLayout = putLayoutRestV1;
+    createLayout = createLayoutRestV1;
+    deleteLayout = deleteLayoutRestV1;
 
     @memoizeAsyncMedium
     getLicenseSummaries(): Observable<any> {
@@ -1034,29 +1017,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return `${url}${url.includes('?') ? '&' : '?'}${params}`;
     }
 
-    createEvent(params: t.EventParams) {
-        return this.post('/api/createEvent', params).toPromise();
-    }
-
-    protected override cleanUserObject<U extends t.RestV1SaveUser>(user: U): t.RestV1SaveUser {
-        const supportedFields: (keyof t.RestV1SaveUser)[] = [
-            'id',
-            'email',
-            'name',
-            'fullName',
-            'userId',
-            'userRoleId',
-            'permissions',
-            'isCloud',
-            'isEnabled',
-            'password',
-            'type',
-            'isOwner',
-            'accessibleResources',
-            'isHttpDigestEnabled',
-        ];
-        return pick(user, supportedFields);
-    }
+    protected override cleanUserObject = cleanUserObjectRest;
 
     /** Not Implemented functions **/
     updateLogLevel(logLevel: unknown): Observable<unknown> {

@@ -76,6 +76,8 @@ class FLAGS(metaclass=_FlagType):
     layouts_ptz_control = ('Layouts PTZ Control', 'layoutsPtz', '%LAYOUTS_PTZ_ENABLED%')
     layouts_demo = ('Layouts Demo', 'layoutsDemo', '%LAYOUTS_DEMO_ENABLED%')
 
+    use_json_rpc = ('Use Json Rpc', 'useJsonRpc', '%USE_JSON_RPC%')
+
     system_groups = ('System Groups', 'systemGroups', '%SYSTEM_GROUPS_ENABLED%')
     channel_partners = ('Chanel Partners', 'channelPartners', '%CHANNEL_PARTNERS_ENABLED%')
 

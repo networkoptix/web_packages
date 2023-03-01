@@ -171,7 +171,8 @@ const FeatureFlagKeys = [
     'layoutsDemo',
     'channelPartners',
     'requestCaching',
-    'requestCachingRemoteSync'
+    'requestCachingRemoteSync',
+    'useJsonRpc'
 ] as const;
 
 export type FeatureFlagType = typeof FeatureFlagKeys[number];
@@ -199,7 +200,7 @@ export interface APIToolSettings {
         deprecated: APIType;
     };
     defaultManifest: MenuManifest;
-    legacyManifest : MenuManifest;
+    legacyManifest: MenuManifest;
 }
 
 export interface ManifestItem {
@@ -752,7 +753,7 @@ export interface SettingsConfig {
     disabledVendors: Setting;
     ec2AliveUpdateIntervalSec: Setting;
     ec2ConnectionKeepAliveTimeoutSec: Setting;
-    ec2KeepAliveProbeCount:Setting;
+    ec2KeepAliveProbeCount: Setting;
     emailFrom: Setting;
     emailSignature: Setting;
     emailSupportEmail: Setting;
@@ -764,9 +765,9 @@ export interface SettingsConfig {
     autoDiscoveryEnabled: Setting;
     smtpConnectionType: Setting;
     smtpHost: Setting;
-    smtpPort:Setting;
+    smtpPort: Setting;
     smtpSimple: Setting;
-    smtpTimeout:Setting;
+    smtpTimeout: Setting;
     smtpPassword: Setting;
     smtpUser: Setting;
     updateNotificationsEnabled: Setting;
@@ -774,7 +775,7 @@ export interface SettingsConfig {
     backupNewCamerasByDefault: Setting;
     statisticsAllowed: Setting;
     backupQualities: Setting;
-    serverDiscoveryPingTimeoutSec:Setting;
+    serverDiscoveryPingTimeoutSec: Setting;
     cloudAccountName: Setting;
     cloudHost: Setting;
     cloudAuthKey: Setting;
@@ -782,14 +783,14 @@ export interface SettingsConfig {
     systemName: Setting;
     licenseServer: Setting;
     newSystem: Setting;
-    proxyConnectTimeoutSec:Setting;
+    proxyConnectTimeoutSec: Setting;
     crossdomainEnabled: Setting;
     maxRtspConnectDurationSec: Setting;
     statisticsReportLastNumber: Setting;
     statisticsReportLastTime: Setting;
     statisticsReportLastVersion: Setting;
     statisticsReportServerApi: Setting;
-    statisticsReportTimeCycle:Setting;
+    statisticsReportTimeCycle: Setting;
     localSystemId: Setting;
     systemId: Setting;
     systemNameForId: Setting;
@@ -801,11 +802,11 @@ export interface SettingsConfig {
     watermarkSettings: Setting;
     timeSynchronizationEnabled: Setting;
     primaryTimeServer: Setting;
-    osTimeChangeCheckPeriodMs:Setting;
-    syncTimeExchangePeriod:Setting;
-    syncTimeEpsilon:Setting;
-    maxVirtualCameraArchiveSynchronizationThreads:Setting;
-    maxEventLogRecords:Setting;
+    osTimeChangeCheckPeriodMs: Setting;
+    syncTimeExchangePeriod: Setting;
+    syncTimeEpsilon: Setting;
+    maxVirtualCameraArchiveSynchronizationThreads: Setting;
+    maxEventLogRecords: Setting;
     forceLiveCacheForPrimaryStream: Setting;
 }
 

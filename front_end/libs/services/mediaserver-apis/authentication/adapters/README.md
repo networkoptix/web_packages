@@ -1,0 +1,1 @@
+I'm not sure how necessary adapters will be for auth. We should focus first on keeping the method implementations clean and reusable then figure out how we plug it.
