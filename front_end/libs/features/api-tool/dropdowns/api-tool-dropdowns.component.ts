@@ -41,22 +41,22 @@ interface TypeDropdownItem extends DropdownItem<number> {
 export class NxAPIToolDropdownsComponent implements OnInit {
     readonly environment = environment;
 
-    system : SystemDropdownItem;
+    system: SystemDropdownItem;
     systems: SystemDropdownItem[] = [];
     hasSeparator = false;
     hasSystems = false;
 
-    server : ServerDropdownItem;
+    server: ServerDropdownItem;
     servers: ServerDropdownItem[] = [];
     serverDropdownEnabled = false; // current design has server dropdown permanently disabled
 
-    type : TypeDropdownItem;
+    type: TypeDropdownItem;
     types: TypeDropdownItem[] = [];
 
     constructor(
         public APIToolSystemService: NxAPIToolSystemService,
         private openAPIJSONService: NxOpenAPIJSONService,
-        public readonlyAPIService: NxReadonlyAPIService
+        public readonlyAPIService: NxReadonlyAPIService,
     ) {
         this.APIToolSystemService.systems.forEach(system => {
             const disabled = !this.APIToolSystemService.systemIsOnline(system);
@@ -66,27 +66,42 @@ export class NxAPIToolDropdownsComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.APIToolSystemService.systemEmitter$.pipe(untilDestroyed(this), filter(systemInfo => !!systemInfo)).subscribe(({ info: system, disabled, error }) => {
-            this.addSystemToDropdown(system as NxSystemInfo, disabled, error);
-        });
+        this.APIToolSystemService.systemEmitter$
+            .pipe(
+                untilDestroyed(this),
+                filter(systemInfo => !!systemInfo),
+            )
+            .subscribe(({ info: system, disabled, error }) => {
+                this.addSystemToDropdown(system as NxSystemInfo, disabled, error);
+            });
 
-        this.APIToolSystemService.serverEmitter$.pipe(untilDestroyed(this), filter(serverInfo => !!serverInfo)).subscribe(({ info: serverInfo, disabled, error }) => {
-            const { server } = serverInfo;
-            const existingItem = this.servers.find(serverItem => serverItem.value === server.id);
-            const displayName = makeDropdownDisplayName(server.name, error);
-            if (existingItem) {
-                existingItem.name = displayName;
-                existingItem.disabled = disabled;
-            } else {
-                this.servers.push({
-                    value: server.id,
-                    name: displayName,
-                    disabled
-                });
-            }
-        });
+        this.APIToolSystemService.serverEmitter$
+            .pipe(
+                untilDestroyed(this),
+                filter(serverInfo => !!serverInfo),
+            )
+            .subscribe(({ info: serverInfo, disabled, error }) => {
+                const { server } = serverInfo;
+                const existingItem = this.servers.find(
+                    serverItem => serverItem.value === server.id,
+                );
+                const displayName = makeDropdownDisplayName(server.name, error);
+                if (existingItem) {
+                    existingItem.name = displayName;
+                    existingItem.disabled = disabled;
+                } else {
+                    this.servers.push({
+                        value: server.id,
+                        name: displayName,
+                        disabled,
+                    });
+                }
+            });
 
-        this.openAPIJSONService.APITypeEmitter.pipe(untilDestroyed(this), filter(APIType => !!APIType)).subscribe(({ info: APIType, disabled }) => {
+        this.openAPIJSONService.APITypeEmitter.pipe(
+            untilDestroyed(this),
+            filter(APIType => !!APIType),
+        ).subscribe(({ info: APIType, disabled }) => {
             const existingItem = findExistingItem(this.types, APIType.type);
             if (existingItem) {
                 existingItem.disabled = disabled;
@@ -94,62 +109,88 @@ export class NxAPIToolDropdownsComponent implements OnInit {
                 this.types.push({
                     value: APIType.type,
                     name: APIType.displayName,
-                    disabled
+                    disabled,
                 });
                 if (this.openAPIJSONService.currentType === APIType.type) {
                     this.type = this.types[this.types.length - 1];
                 }
                 if (!this.type) {
-                    this.type = findExistingItem(this.types, this.openAPIJSONService.defaultTypeValue);
+                    this.type = findExistingItem(
+                        this.types,
+                        this.openAPIJSONService.defaultTypeValue,
+                    );
                 }
             }
         });
 
-        this.readonlyAPIService.readonlyAPIEmitter$.pipe(untilDestroyed(this)).subscribe(({ info: api, disabled }) => {
-            const existingItem = findExistingItem(
-                this.systems,
-                api.id.toString()
-            );
-            const displayName = makeReadonlyAPIName(api);
-            if (existingItem) {
-                existingItem.disabled = disabled;
-            } else {
-                if (!this.hasSeparator && this.hasSystems) {
-                    this.systems.push(
-                        { name: 'seperator' } as SystemDropdownItem
-                    );
-                    this.hasSeparator = true;
+        this.readonlyAPIService.readonlyAPIEmitter$
+            .pipe(untilDestroyed(this))
+            .subscribe(({ info: api, disabled }) => {
+                const existingItem = findExistingItem(this.systems, api.id.toString());
+                const displayName = makeReadonlyAPIName(api);
+                if (existingItem) {
+                    existingItem.disabled = disabled;
+                } else {
+                    if (!this.hasSeparator && this.hasSystems) {
+                        this.systems.push({ name: 'seperator' } as SystemDropdownItem);
+                        this.hasSeparator = true;
+                    }
+                    // Readonly APIs are displayed in the system dropdown
+                    this.systems.push({
+                        value: api.id.toString(),
+                        name: displayName,
+                        disabled,
+                        icon: icons.dirNonStandard + 'api.svg',
+                    });
                 }
-                this.systems.push({ // Readonly APIs are displayed in the system dropdown
-                    value: api.id.toString(),
-                    name: displayName,
-                    disabled,
-                    icon: icons.dirNonStandard + 'api.svg'
-                });
-            }
-        });
+            });
 
         this.APIToolSystemService.loading$.pipe(untilDestroyed(this)).subscribe(loading => {
-            if (!loading) { // set dropdowns after changing system/first load
-                const systemToFind = this.APIToolSystemService.currentSystemId || this.readonlyAPIService.currentReadonlyAPI?.api?.id.toString();
+            if (!loading) {
+                // set dropdowns after changing system/first load
+                const systemToFind =
+                    this.APIToolSystemService.currentSystemId ||
+                    this.readonlyAPIService.currentReadonlyAPI?.api?.id.toString();
                 this.system = findExistingItem(this.systems, systemToFind);
-                this.server = findExistingItem(this.servers, this.APIToolSystemService.currentServerId);
-                this.type = findExistingItem(this.types, this.openAPIJSONService.currentType || this.openAPIJSONService.defaultTypeValue) || this.types[0];
+                this.server = findExistingItem(
+                    this.servers,
+                    this.APIToolSystemService.currentServerId,
+                );
+                this.type =
+                    findExistingItem(
+                        this.types,
+                        this.openAPIJSONService.currentType ||
+                            this.openAPIJSONService.defaultTypeValue,
+                    ) || this.types[0];
             }
         });
 
-        this.APIToolSystemService.currentSystemId$.pipe(untilDestroyed(this), filter(systemId => !!systemId)).subscribe(() => {
-            const systemToFind = this.APIToolSystemService.currentSystemId || this.readonlyAPIService.currentReadonlyAPI?.api?.id.toString();
-            this.system = findExistingItem(this.systems, systemToFind);
-            this.resetDropdowns();
-        });
+        this.APIToolSystemService.currentSystemId$
+            .pipe(
+                untilDestroyed(this),
+                filter(systemId => !!systemId),
+            )
+            .subscribe(() => {
+                const systemToFind =
+                    this.APIToolSystemService.currentSystemId ||
+                    this.readonlyAPIService.currentReadonlyAPI?.api?.id.toString();
+                this.system = findExistingItem(this.systems, systemToFind);
+                this.resetDropdowns();
+            });
 
-        this.readonlyAPIService.currentReadonlyAPI$.pipe(untilDestroyed(this), filter(readonlyAPI => !!readonlyAPI)).subscribe(readonlyAPI => {
-            const readonlyAPIToFind = readonlyAPI?.api?.id.toString() || this.readonlyAPIService.currentReadonlyAPI?.api?.id.toString();
-            this.system = findExistingItem(this.systems, readonlyAPIToFind);
-            this.type = this.types[0];
-            this.openAPIJSONService.currentType = 1;
-        });
+        this.readonlyAPIService.currentReadonlyAPI$
+            .pipe(
+                untilDestroyed(this),
+                filter(readonlyAPI => !!readonlyAPI),
+            )
+            .subscribe(readonlyAPI => {
+                const readonlyAPIToFind =
+                    readonlyAPI?.api?.id.toString() ||
+                    this.readonlyAPIService.currentReadonlyAPI?.api?.id.toString();
+                this.system = findExistingItem(this.systems, readonlyAPIToFind);
+                this.type = this.types[0];
+                this.openAPIJSONService.currentType = 1;
+            });
     }
 
     onSystemChange(system: SystemDropdownItem): void {
@@ -190,7 +231,7 @@ export class NxAPIToolDropdownsComponent implements OnInit {
                 value: system.id,
                 name: displayName,
                 disabled,
-                icon: icons.dirTextButtons + 'storage_cloud.svg'
+                icon: icons.dirTextButtons + 'storage_cloud.svg',
             });
         }
     }

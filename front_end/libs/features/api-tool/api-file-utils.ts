@@ -30,10 +30,13 @@ const URLSAFEREGEX = new RegExp('[^a-zA-Z0-9/_-]');
 
 /**
  * Example: rest/v1/users becomes rest-v1-users-get
-*/
-export const generateNodeURL = (endpoint :string, requestType: string) => {
+ */
+export const generateNodeURL = (endpoint: string, requestType: string) => {
     // Remove characters that aren't valid in URL, replace / with -, add request type to the end
-    const modifiedEndpoint = endpoint.slice(1).toLowerCase().split(URLSAFEREGEX).join('').split('/').join('-') + '-' + requestType.toLowerCase();
+    const modifiedEndpoint =
+        endpoint.slice(1).toLowerCase().split(URLSAFEREGEX).join('').split('/').join('-') +
+        '-' +
+        requestType.toLowerCase();
     return appendBaseAPIToolRoute(modifiedEndpoint);
 };
 
@@ -44,7 +47,7 @@ export const generateSubMenuNodeURL = (tagName: string) => {
 
 /**
  * Add placeholder if description is blank
-*/
+ */
 const checkMethodResponseDescription = method => {
     if (method.responses?.default?.description === '') {
         method.responses.default.description = 'succesful operation';
@@ -68,7 +71,9 @@ export const addAPITypeToTags = (api: APIDoc, type: number | string) => {
             checkMethodResponseDescription(method[1]);
             api.paths[endpoint][method[0]].tags[0] = modifiedTag;
             // Adds the endpoint/summary itself as a tag so that swagger can filter for just the endpoint
-            api.paths[endpoint][method[0]].tags.push(generateAPIRouteName(endpoint, endpoint === RTSPRoute ? RTSPMethod : method[0]));
+            api.paths[endpoint][method[0]].tags.push(
+                generateAPIRouteName(endpoint, endpoint === RTSPRoute ? RTSPMethod : method[0]),
+            );
         });
     });
     return api;
@@ -80,7 +85,7 @@ export const addAPITypeToTags = (api: APIDoc, type: number | string) => {
  * Example: /rest/v1/devices/{deviceId}/bookmarks/{id} - GET
  *
  * Becomes: { path: /rest/v1/devices/{deviceId}/bookmarks/{id}, method: GET}
-*/
+ */
 export const getPathAndMethodFromNodeName = (name: string) => {
     const seperatorIndex = name.indexOf(' -');
     let path;
@@ -100,10 +105,12 @@ export const cleanJSON = (api: APIDoc) => {
     Object.keys(api.paths).forEach(path => {
         const apiPath = api.paths[path];
         Object.keys(apiPath).forEach(requestType => {
-            if (apiPath[requestType].deprecated) { // Remove this so that swagger's built in styling for deprecated endpoints doesn't trigger
+            if (apiPath[requestType].deprecated) {
+                // Remove this so that swagger's built in styling for deprecated endpoints doesn't trigger
                 delete apiPath[requestType].deprecated;
             }
-            if (apiPath[requestType].description?.slice(0, 17) === '<p><b>Proprietary') { // Remove properietary endpoints
+            if (apiPath[requestType].description?.slice(0, 17) === '<p><b>Proprietary') {
+                // Remove properietary endpoints
                 delete apiPath[requestType];
             }
         });
@@ -121,7 +128,8 @@ export const prepareSwaggerAPIDoc = (APIDoc: APIDoc, type: number | string) => {
 
 export const mergeAPIDocs = (mainAPI: APIDoc, mergingAPI: APIDoc) => {
     mainAPI.tags = [...mainAPI.tags, ...mergingAPI.tags];
-    for (const path of Object.keys(mainAPI.paths)) { // Duplicate paths on different APIs that get merged need to have their tags merged as well
+    for (const path of Object.keys(mainAPI.paths)) {
+        // Duplicate paths on different APIs that get merged need to have their tags merged as well
         const mergingRoute = mergingAPI.paths[path];
         if (mergingRoute) {
             for (const requestType of Object.keys(mainAPI.paths[path])) {
@@ -169,7 +177,11 @@ export const getFirstNode = (menuNodes: MenuNodeWithParent[]) => {
 /**
     Adds an API file to the main developers-menu content with a seperator
  */
-export const addSeperatedAPIMenu = (API: APIDoc, menuNodes: MenuNodeWithParent[], seperator: string) => {
+export const addSeperatedAPIMenu = (
+    API: APIDoc,
+    menuNodes: MenuNodeWithParent[],
+    seperator: string,
+) => {
     menuNodes.push(new MenuNode(`${seperator}-seperator`, '', seperator));
 
     generateMenuNodesFromCategoryTags(API, menuNodes);
@@ -184,7 +196,11 @@ const generateMenuNodesFromCategoryTags = (API: APIDoc, menuNodes: MenuNodeWithP
         API.tags.forEach(tag => {
             if (!tag.name.includes('Proprietary')) {
                 const url = generateSubMenuNodeURL(tag.name);
-                const tagNode: MenuNodeWithParent = new MenuNode(tag.name, url, tag.name.slice(0, -2));
+                const tagNode: MenuNodeWithParent = new MenuNode(
+                    tag.name,
+                    url,
+                    tag.name.slice(0, -2),
+                );
                 // tagNode.parentNode = menuNodes;
                 menuNodes.push(tagNode);
             }
@@ -207,7 +223,11 @@ const generateMenuNodesFromEndpoints = (API: APIDoc, parentMenuNodes: MenuNodeWi
 
                 const url = generateNodeURL(endpoint, HTTPMethod);
                 const APIRouteName = generateAPIRouteName(endpoint, HTTPMethod);
-                const methodNode: MenuNodeWithParent = new MenuNode(APIRouteName, url, method[1].summary || APIRouteName);
+                const methodNode: MenuNodeWithParent = new MenuNode(
+                    APIRouteName,
+                    url,
+                    method[1].summary || APIRouteName,
+                );
                 methodNode.parentNode = subMenuNode;
                 subMenuNode?.nodes.push(methodNode);
             }
@@ -215,16 +235,29 @@ const generateMenuNodesFromEndpoints = (API: APIDoc, parentMenuNodes: MenuNodeWi
     });
 };
 
-export const addAPIInfoNodesToMenu = (API: APIDoc, menuNodes: MenuNodeWithParent[], restAPIInfo: boolean = false) => {
-    if (!menuNodes.length || (menuNodes && !['APIInformation', 'APIPreamble'].includes(menuNodes[0].name))) {
+export const addAPIInfoNodesToMenu = (
+    API: APIDoc,
+    menuNodes: MenuNodeWithParent[],
+    restAPIInfo: boolean = false,
+) => {
+    if (
+        !menuNodes.length ||
+        (menuNodes && !['APIInformation', 'APIPreamble'].includes(menuNodes[0].name))
+    ) {
         if (restAPIInfo) {
-            menuNodes.unshift(new MenuNode('APIChangelog', appendBaseAPIToolRoute('changelog'), 'API Changelog'));
-            menuNodes.unshift(new MenuNode('APIPreamble', appendBaseAPIToolRoute('main'), 'API Information'));
+            menuNodes.unshift(
+                new MenuNode('APIChangelog', appendBaseAPIToolRoute('changelog'), 'API Changelog'),
+            );
+            menuNodes.unshift(
+                new MenuNode('APIPreamble', appendBaseAPIToolRoute('main'), 'API Information'),
+            );
             return;
         }
 
         if (API?.info?.description) {
-            menuNodes.unshift(new MenuNode('APIInformation', appendBaseAPIToolRoute('main'), 'API Information'));
+            menuNodes.unshift(
+                new MenuNode('APIInformation', appendBaseAPIToolRoute('main'), 'API Information'),
+            );
         }
     }
 };

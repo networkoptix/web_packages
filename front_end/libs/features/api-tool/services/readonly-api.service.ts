@@ -47,7 +47,8 @@ export class NxReadonlyAPIService {
     constructor(
         private configService: NxConfigService,
         private api: NxCloudApiService,
-        private _route: ActivatedRoute) {
+        private _route: ActivatedRoute,
+    ) {
         this.isEnabled = this.configService.flagsEnabled(FeatureFlagStrings.readonlyAPIs);
         this._route.queryParams.pipe(untilDestroyed(this)).subscribe(params => {
             this.queryParams = params;
@@ -94,12 +95,16 @@ export class NxReadonlyAPIService {
                         break;
                 }
             }
-            const preparedReadOnlyAPI = this.prepareReadonlyAPI(manifest, readonlyAPI, !!(APIPreamble && APIChangelog));
+            const preparedReadOnlyAPI = this.prepareReadonlyAPI(
+                manifest,
+                readonlyAPI,
+                !!(APIPreamble && APIChangelog),
+            );
             let markdown: MarkdownObj;
             if (APIPreamble && APIChangelog) {
                 markdown = {
                     APIPreamble,
-                    APIChangelog
+                    APIChangelog,
                 };
             }
             if (preparedReadOnlyAPI) {
@@ -107,7 +112,7 @@ export class NxReadonlyAPIService {
                 this.readonlyAPIStore[readonlyAPI.id] = {
                     api: apiStoreObject,
                     menus: preparedReadOnlyAPI.menus,
-                    markdown
+                    markdown,
                 };
                 this.currentReadonlyAPI = this.readonlyAPIStore[readonlyAPI.id];
                 return true;
@@ -116,7 +121,11 @@ export class NxReadonlyAPIService {
         return false;
     }
 
-    prepareReadonlyAPI(manifest: MenuManifest, readonlyAPI: ReadOnlyAPIDetail, hasMarkdown: boolean) {
+    prepareReadonlyAPI(
+        manifest: MenuManifest,
+        readonlyAPI: ReadOnlyAPIDetail,
+        hasMarkdown: boolean,
+    ) {
         let combinedJSON: APIDoc;
         const menus = {};
         for (let i = 0; i < manifest.length; i++) {
@@ -127,7 +136,12 @@ export class NxReadonlyAPIService {
                 if (section.name) {
                     addSeperator(menu, section.name);
                 }
-                const json: APIDoc = JSON.parse(cloneDeep(readonlyAPI.files.find(file => file.filename === section.scheme).content as string));
+                const json: APIDoc = JSON.parse(
+                    cloneDeep(
+                        readonlyAPI.files.find(file => file.filename === section.scheme)
+                            .content as string,
+                    ),
+                );
                 prepareSwaggerAPIDoc(json, type);
                 if (!combinedJSON) {
                     combinedJSON = json;
@@ -141,7 +155,7 @@ export class NxReadonlyAPIService {
         }
         return {
             json: combinedJSON,
-            menus
+            menus,
         };
     }
 

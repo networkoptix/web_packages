@@ -87,7 +87,7 @@ export class NxOpenAPIJSONService {
     menuSubject = new BehaviorSubject<MenuStructure>({
         title: 'API', // title and description not used
         description: '', // MenuStructure type is used for compatibility with developers-menu
-        nodes: undefined // undefined triggers preloader
+        nodes: undefined, // undefined triggers preloader
     });
 
     activeAssetIdSubject = new BehaviorSubject<string>('');
@@ -110,49 +110,78 @@ export class NxOpenAPIJSONService {
         this.menuSubject.next({
             title: 'API',
             description: '',
-            nodes: content
+            nodes: content,
         });
     }
 
-    constructor(private APIToolService: NxAPIToolSystemService,
-                private readonlyAPIService: NxReadonlyAPIService,
-                private router: Router) {
+    constructor(
+        private APIToolService: NxAPIToolSystemService,
+        private readonlyAPIService: NxReadonlyAPIService,
+        private router: Router,
+    ) {
         this.currentType = parseInt(this.APIToolService.queryParams.type) || this.defaultTypeValue;
 
-        this.APIToolService.serverEmitter$.pipe(untilDestroyed(this)).subscribe(({ info, disabled, error }) => {
-            if (!disabled && !error) {
-                this.handleNewServer(info);
-            }
-        });
+        this.APIToolService.serverEmitter$
+            .pipe(untilDestroyed(this))
+            .subscribe(({ info, disabled, error }) => {
+                if (!disabled && !error) {
+                    this.handleNewServer(info);
+                }
+            });
 
-        this.APIToolService.currentServerId$.pipe(untilDestroyed(this), filter(serverID => !!serverID)).subscribe(serverID => {
-            this.isReadOnly = false;
-            if (this.APIStore[serverID]) {
-                this.changeServer(serverID);
-            } else {
-                this.queuedServerChange = serverID;
-            }
-        });
+        this.APIToolService.currentServerId$
+            .pipe(
+                untilDestroyed(this),
+                filter(serverID => !!serverID),
+            )
+            .subscribe(serverID => {
+                this.isReadOnly = false;
+                if (this.APIStore[serverID]) {
+                    this.changeServer(serverID);
+                } else {
+                    this.queuedServerChange = serverID;
+                }
+            });
 
-        this.APIToolService.outDatedSystem$.pipe(untilDestroyed(this), filter(outdated => !!outdated)).subscribe(() => {
-            this.menuNodes = [];
-        });
-        this.APIToolService.loading$.pipe(untilDestroyed(this), filter(loading => !!loading)).subscribe(() => {
-            this.menuNodes = undefined; // trigger preloader
-        });
+        this.APIToolService.outDatedSystem$
+            .pipe(
+                untilDestroyed(this),
+                filter(outdated => !!outdated),
+            )
+            .subscribe(() => {
+                this.menuNodes = [];
+            });
+        this.APIToolService.loading$
+            .pipe(
+                untilDestroyed(this),
+                filter(loading => !!loading),
+            )
+            .subscribe(() => {
+                this.menuNodes = undefined; // trigger preloader
+            });
 
-        this.readonlyAPIService.currentReadonlyAPI$.pipe(untilDestroyed(this), filter(api => !!api)).subscribe(api => {
-            this.APIToolService.useBrandingVariables(api.api);
-            this.APIToolService.useBrandingVariables(api.markdown);
-            this.setReadonlyAPI(api);
-        });
+        this.readonlyAPIService.currentReadonlyAPI$
+            .pipe(
+                untilDestroyed(this),
+                filter(api => !!api),
+            )
+            .subscribe(api => {
+                this.APIToolService.useBrandingVariables(api.api);
+                this.APIToolService.useBrandingVariables(api.markdown);
+                this.setReadonlyAPI(api);
+            });
 
-        this.router.events.pipe(untilDestroyed(this), filter(event => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
-            const urlWithoutQueryParams = event.url.split('?')[0];
-            if (this.activeNode && urlWithoutQueryParams !== this.activeNode.url) {
-                this.navigateToMenuNodeFromURL();
-            }
-        });
+        this.router.events
+            .pipe(
+                untilDestroyed(this),
+                filter(event => event instanceof NavigationEnd),
+            )
+            .subscribe((event: NavigationEnd) => {
+                const urlWithoutQueryParams = event.url.split('?')[0];
+                if (this.activeNode && urlWithoutQueryParams !== this.activeNode.url) {
+                    this.navigateToMenuNodeFromURL();
+                }
+            });
     }
 
     async handleNewServer(serverInfo: ServerInfo): Promise<void> {
@@ -198,14 +227,15 @@ export class NxOpenAPIJSONService {
     }
 
     /**
-        * Returns an object that maps routes -> promises
-        * The purpose is to trigger a fetch for each needed JSON simultaneously
-    */
+     * Returns an object that maps routes -> promises
+     * The purpose is to trigger a fetch for each needed JSON simultaneously
+     */
     fetchAllJSONsInManifest(manifest: MenuManifest) {
         const jsons: FetchedJSONs = {};
         for (const item of manifest) {
             for (const section of item.sections) {
-                if (!jsons[section.scheme]) { // Avoids duplicate requests
+                if (!jsons[section.scheme]) {
+                    // Avoids duplicate requests
                     jsons[section.scheme] = this.APIToolService.fetchJSON(section.scheme);
                 }
             }
@@ -248,7 +278,7 @@ export class NxOpenAPIJSONService {
         this.APIStore[serverID] = {
             json: {} as APIDoc,
             menus: {},
-            infos: {}
+            infos: {},
         };
     }
 
@@ -322,7 +352,10 @@ export class NxOpenAPIJSONService {
             for (const requestType of Object.keys(route)) {
                 if (queryInDescription(route[requestType], this.searchQuery)) {
                     const tag = generateAPIRouteName(path, requestType);
-                    const node = findMenuNode(this.menuSubject.value.nodes, node => node.name === tag);
+                    const node = findMenuNode(
+                        this.menuSubject.value.nodes,
+                        node => node.name === tag,
+                    );
                     if (node) {
                         searchMoreNodes.push(node);
                     }

@@ -42,15 +42,15 @@ export interface APIInfo {
 }
 
 export interface APIDoc {
-    info? : APIInfo;
-    tags : {
-                name: string;
-                description?: string;
-                [key:string]: any;
-            }[];
-    paths : {
-        [key:string]: {
-            [key:string]: MethodInfo;
+    info?: APIInfo;
+    tags: {
+        name: string;
+        description?: string;
+        [key: string]: any;
+    }[];
+    paths: {
+        [key: string]: {
+            [key: string]: MethodInfo;
         };
     };
     servers?: { url: string }[];
@@ -67,7 +67,7 @@ export enum requestTypes {
     PUT = 'put',
     DELETE = 'delete',
     PATCH = 'patch',
-    OPTIONS = 'options'
+    OPTIONS = 'options',
 }
 
 export type Markdown = string;

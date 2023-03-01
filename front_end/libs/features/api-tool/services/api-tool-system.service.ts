@@ -59,7 +59,7 @@ export class NxAPIToolSystemService {
     getServers = {
         updating: false,
         errorCount: 0,
-        errorCountLimit: 2
+        errorCountLimit: 2,
     };
 
     currentServerId$ = new BehaviorSubject<string>(null);
@@ -71,7 +71,13 @@ export class NxAPIToolSystemService {
         this.systemEmitter$.next({ info: system, disabled, error });
     }
 
-    emitServer(server: NxSystemServer, json: APIDoc, disabled = false, error = '', markdown = null): void {
+    emitServer(
+        server: NxSystemServer,
+        json: APIDoc,
+        disabled = false,
+        error = '',
+        markdown = null,
+    ): void {
         this.serverEmitter$.next({ info: { server, json, markdown }, disabled, error });
     }
 
@@ -133,22 +139,32 @@ export class NxAPIToolSystemService {
             this.queryParams = params;
         });
 
-        this.currentSystemId$.pipe(untilDestroyed(this), filter(system => !!system)).subscribe(system => {
-            this.currentServerId = null;
-            this.setQueryParams('system', system);
-            this.getServers.errorCount = 0;
-            this.serversLoading$.next(true);
-            this.outDatedSystem$.next(false);
-            this.loading$.next(true);
-            this.handleSystemChange();
-            this.disableManualSystemChanging();
-        });
+        this.currentSystemId$
+            .pipe(
+                untilDestroyed(this),
+                filter(system => !!system),
+            )
+            .subscribe(system => {
+                this.currentServerId = null;
+                this.setQueryParams('system', system);
+                this.getServers.errorCount = 0;
+                this.serversLoading$.next(true);
+                this.outDatedSystem$.next(false);
+                this.loading$.next(true);
+                this.handleSystemChange();
+                this.disableManualSystemChanging();
+            });
 
-        this.readonlyAPIService.currentReadonlyAPI$.pipe(untilDestroyed(this), filter(api => !!api)).subscribe(({ api }) => {
-            this.systemVersion = api.version;
-            this.setQueryParams('system', api.id.toString());
-            this.loading$.next(false);
-        });
+        this.readonlyAPIService.currentReadonlyAPI$
+            .pipe(
+                untilDestroyed(this),
+                filter(api => !!api),
+            )
+            .subscribe(({ api }) => {
+                this.systemVersion = api.version;
+                this.setQueryParams('system', api.id.toString());
+                this.loading$.next(false);
+            });
 
         this.serversLoading$.pipe(untilDestroyed(this)).subscribe(loaded => {
             if (!loaded) {
@@ -185,14 +201,17 @@ export class NxAPIToolSystemService {
             return;
         }
 
-        const systemByQueryParam = systems.find(system => this.systemIsOnline(system) && system.id === this.queryParams.system);
+        const systemByQueryParam = systems.find(
+            system => this.systemIsOnline(system) && system.id === this.queryParams.system,
+        );
 
         const onlineSystem = systemByQueryParam || this.findOnlineSystem(systems);
         if (onlineSystem) {
             this.currentSystem = await this.systemService.createSystem('', onlineSystem.id);
             return;
         }
-        if (!environment.isLocal && await this.readonlyAPIService.setReadonlyAPI()) { // Get any readonlyAPI
+        if (!environment.isLocal && (await this.readonlyAPIService.setReadonlyAPI())) {
+            // Get any readonlyAPI
             return;
         }
         this.showError();
@@ -210,7 +229,7 @@ export class NxAPIToolSystemService {
             }
             return;
         }
-        if (this.currentSystemId && (this.currentSystemId !== this.currentSystem?.id)) {
+        if (this.currentSystemId && this.currentSystemId !== this.currentSystem?.id) {
             this.currentSystem = await this.systemService.createSystem('', this.currentSystemId);
         }
         const systemInfo = await this.currentSystem.getInfo();
@@ -246,7 +265,7 @@ export class NxAPIToolSystemService {
                         this.tryNextSystem();
                     }
                     this.manualSystemChange = false;
-                })
+                }),
             )
             .subscribe(_system => {
                 if (!this.getServers.updating) {
@@ -264,29 +283,39 @@ export class NxAPIToolSystemService {
         let validServerFound = false;
         this.getServers.updating = true;
         await this.getMenuManifest();
-        const cachedFiles = await this.getJSONFromCache('main', this.currentSystemId, this.systemVersion);
-        this.currentSystem.serverManager.getServers().pipe(
-            timeout(2500),
-            take(1),
-            catchError(err => {
-                console.error(err);
-                return of([] as NxSystemServer[]);
-            }),
-            tap(servers => {
-                if (!servers?.length) {
-                    this.handleServerGetError();
-                }
-            }),
-            untilDestroyed(this))
+        const cachedFiles = await this.getJSONFromCache(
+            'main',
+            this.currentSystemId,
+            this.systemVersion,
+        );
+        this.currentSystem.serverManager
+            .getServers()
+            .pipe(
+                timeout(2500),
+                take(1),
+                catchError(err => {
+                    console.error(err);
+                    return of([] as NxSystemServer[]);
+                }),
+                tap(servers => {
+                    if (!servers?.length) {
+                        this.handleServerGetError();
+                    }
+                }),
+                untilDestroyed(this),
+            )
             .subscribe(servers => {
                 servers.forEach(server => {
-                    if (!validServerFound) { // Loop skips all other servers after a single valid server is found
+                    if (!validServerFound) {
+                        // Loop skips all other servers after a single valid server is found
                         if (server.status !== 'Offline') {
                             if (cachedFiles) {
                                 const { json, markdown } = cachedFiles;
                                 this.setRequestURL(json);
                                 this.currentServerId = server.id;
-                                markdown ? this.emitServer(server, json, false, '', markdown) : this.emitServer(server, json);
+                                markdown
+                                    ? this.emitServer(server, json, false, '', markdown)
+                                    : this.emitServer(server, json);
                                 validServerFound = true;
                                 this.serversFinishedLoading();
                             } else {
@@ -294,10 +323,13 @@ export class NxAPIToolSystemService {
                                     .then(async (response: APIDoc) => {
                                         await this.handleSuccessfulAPIDocGet(server, response);
                                         validServerFound = true;
-                                    }).catch(err => {
-                                        const typeOfError = err.status === 404 ? 'Incompatible' : 'Error';
+                                    })
+                                    .catch(err => {
+                                        const typeOfError =
+                                            err.status === 404 ? 'Incompatible' : 'Error';
                                         this.emitServer(server, {} as APIDoc, true, typeOfError);
-                                    }).finally(() => {
+                                    })
+                                    .finally(() => {
                                         if (validServerFound) {
                                             this.serversFinishedLoading();
                                         }
@@ -321,7 +353,7 @@ export class NxAPIToolSystemService {
 
     async handleSuccessfulAPIDocGet(server: NxSystemServer, json: APIDoc): Promise<void> {
         let markdown = await this.getAPIInfoMarkdown(server.id);
-        markdown = (markdown.APIPreamble && markdown.APIChangelog) ? markdown : null;
+        markdown = markdown.APIPreamble && markdown.APIChangelog ? markdown : null;
         this.cacheJSON('main', this.currentSystem.id, this.systemVersion, json, markdown);
         this.setRequestURL(json);
         this.currentServerId = this.currentServerId || server.id;
@@ -333,15 +365,21 @@ export class NxAPIToolSystemService {
             if (!account) {
                 this.router.navigate(['/']);
             }
-            const localSystem = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
+            const localSystem = this.systemService.createLocalSystem(
+                this.accountService.mediaServerApi,
+                account.id,
+                account.email,
+            );
             await localSystem.update().catch(() => {});
             this.currentSystem = localSystem;
         });
     }
 
     findOnlineSystem = (systems: NxSystemInfo[]) => {
-        const onlineSystem = this.headerService.lastActive && this.systemIsOnline(this.headerService.lastActive)
-            ? this.headerService.lastActive : systems.find(system => this.systemIsOnline(system));
+        const onlineSystem =
+            this.headerService.lastActive && this.systemIsOnline(this.headerService.lastActive)
+                ? this.headerService.lastActive
+                : systems.find(system => this.systemIsOnline(system));
 
         return onlineSystem;
     };
@@ -352,9 +390,14 @@ export class NxAPIToolSystemService {
             this.showError();
         } else {
             this.emitSystem(this.currentSystem, true, 'Error');
-            this.validSystems = this.validSystems.filter(system => system.id !== this.currentSystem.id);
+            this.validSystems = this.validSystems.filter(
+                system => system.id !== this.currentSystem.id,
+            );
             if (this.validSystems.length) {
-                this.currentSystem = await this.systemService.createSystem('', this.validSystems[0].id);
+                this.currentSystem = await this.systemService.createSystem(
+                    '',
+                    this.validSystems[0].id,
+                );
                 return;
             }
             if (this.readonlyAPIService.isEnabled) {
@@ -387,7 +430,9 @@ export class NxAPIToolSystemService {
 
     showError = (): void => {
         this.loadingFailure$.next(true);
-        this.loadingErrorType = environment.isLocal ? 'SYSTEM_FAILED_TO_LOAD_API_TOOL' : 'NO_SYSTEM_FOUND_API_TOOL';
+        this.loadingErrorType = environment.isLocal
+            ? 'SYSTEM_FAILED_TO_LOAD_API_TOOL'
+            : 'NO_SYSTEM_FOUND_API_TOOL';
         this.serverSubscription?.unsubscribe();
     };
 
@@ -409,7 +454,8 @@ export class NxAPIToolSystemService {
             systemsSubjectSubscription = this.systemsService.systemsSubject
                 .pipe(
                     distinctUntilChanged((a, b) => isEqual(a, b)),
-                    untilDestroyed(this))
+                    untilDestroyed(this),
+                )
                 .subscribe(systems => {
                     this.initSystems(systems);
                 });
@@ -418,7 +464,8 @@ export class NxAPIToolSystemService {
         }
 
         this.accountService.get().then(account => {
-            if (!account) { // Anonymous user init, try to get readonly APIs
+            if (!account) {
+                // Anonymous user init, try to get readonly APIs
                 this.initSystems([]);
                 systemsSubjectSubscription?.unsubscribe();
             }
@@ -446,12 +493,12 @@ export class NxAPIToolSystemService {
     systemIsOnline = (system: NxSystemInfo) => system.stateOfHealth === 'online';
 
     private getAPIDoc(type: APIDocType) {
-        return this.currentSystem.serverManager
-            .getApiDoc(type);
+        return this.currentSystem.serverManager.getApiDoc(type);
     }
 
     async fetchJSON(route: string) {
-        let JSON = (await this.getJSONFromCache(route, this.currentSystem.id, this.systemVersion))?.json;
+        let JSON = (await this.getJSONFromCache(route, this.currentSystem.id, this.systemVersion))
+            ?.json;
         if (!JSON) {
             JSON = await this.currentSystem.serverManager.fetchApiToolJSON(route);
             this.cacheJSON(route, this.currentSystem.id, this.systemVersion, JSON);
@@ -463,13 +510,19 @@ export class NxAPIToolSystemService {
         let APIPreamble;
         let APIChangelog;
         if (this.isRestAPI(serverID)) {
-            const changeLog = this.currentSystem.serverManager.getApiChangelog()?.then((api: any) => {
-                APIChangelog = api;
-            }).catch(() => {});
+            const changeLog = this.currentSystem.serverManager
+                .getApiChangelog()
+                ?.then((api: any) => {
+                    APIChangelog = api;
+                })
+                .catch(() => {});
 
-            const preamble = this.currentSystem.serverManager.getApiPreamble()?.then((api: any) => {
-                APIPreamble = api;
-            }).catch(() => {});
+            const preamble = this.currentSystem.serverManager
+                .getApiPreamble()
+                ?.then((api: any) => {
+                    APIPreamble = api;
+                })
+                .catch(() => {});
 
             await changeLog;
             await preamble;
@@ -486,7 +539,7 @@ export class NxAPIToolSystemService {
             '%CLOUD_NAME%': this.CONFIG.cloudName,
             '%VMS_NAME%': this.CONFIG.vmsName,
             '%SUPPORT_LINK%': this.CONFIG.company.links.website,
-            '%COMPANY_NAME%': this.CONFIG.company.name
+            '%COMPANY_NAME%': this.CONFIG.company.name,
         };
         const processLanguage = processLanguageFactory(customStrings);
         return processLanguage(data);
@@ -497,40 +550,64 @@ export class NxAPIToolSystemService {
         return systemId + '-api-tool-file-' + scheme;
     };
 
-    async getJSONFromCache(route: string, systemId: string, systemVersion: string): Promise<IndexDBCacheObject> {
+    async getJSONFromCache(
+        route: string,
+        systemId: string,
+        systemVersion: string,
+    ): Promise<IndexDBCacheObject> {
         if (this.queryParams.disableCache) {
             return null;
         }
-        const cachedObject = await this.indexedDbService.getByKey('jsons', this.makeCacheKey(systemId, route)).pipe(take(1)).toPromise() as IndexDBCacheObject;
-        if (!cachedObject) { // Not cached
+        const cachedObject = (await this.indexedDbService
+            .getByKey('jsons', this.makeCacheKey(systemId, route))
+            .pipe(take(1))
+            .toPromise()) as IndexDBCacheObject;
+        if (!cachedObject) {
+            // Not cached
             return null;
         }
 
         const { version, key } = cachedObject;
-        if (systemVersion !== version) { // System version has changed, invalidate cache
-            this.indexedDbService.deleteByKey('jsons', key).pipe(take(1)).subscribe(() => {});
+        if (systemVersion !== version) {
+            // System version has changed, invalidate cache
+            this.indexedDbService
+                .deleteByKey('jsons', key)
+                .pipe(take(1))
+                .subscribe(() => {});
             return null;
         }
         return cachedObject;
     }
 
-    cacheJSON(route: string, systemId: string, systemVersion: string, json: APIDoc, markdown: MarkdownObj = null) : void {
+    cacheJSON(
+        route: string,
+        systemId: string,
+        systemVersion: string,
+        json: APIDoc,
+        markdown: MarkdownObj = null,
+    ): void {
         if (this.queryParams.disableCache) {
-            this.indexedDbService.deleteByKey('jsons', this.makeCacheKey(systemId, route)).pipe(take(1)).subscribe(() => {});
+            this.indexedDbService
+                .deleteByKey('jsons', this.makeCacheKey(systemId, route))
+                .pipe(take(1))
+                .subscribe(() => {});
             return null;
         }
-        this.indexedDbService.add('jsons', {
-            json,
-            version: systemVersion,
-            markdown,
-            key: this.makeCacheKey(systemId, route)
-        }).pipe(take(1)).subscribe(() => {});
+        this.indexedDbService
+            .add('jsons', {
+                json,
+                version: systemVersion,
+                markdown,
+                key: this.makeCacheKey(systemId, route),
+            })
+            .pipe(take(1))
+            .subscribe(() => {});
     }
 
     private disableManualSystemChanging = (): void => {
         this.systemChangeLockout = true;
         setTimeout(() => {
             this.systemChangeLockout = false;
-        }, (apiTool.manualSystemChangeCooldown));
+        }, apiTool.manualSystemChangeCooldown);
     };
 }

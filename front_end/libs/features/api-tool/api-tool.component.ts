@@ -41,14 +41,16 @@ export class NxAPIToolComponent {
         this.CONFIG = this.configService.getConfig();
 
         // We listen to window resize and measure header height to know how much to offset the fixed menu by
-        this.scrollMechanicsService.windowSizeSubject.pipe(untilDestroyed(this), debounceTime(25)).subscribe(({ width }) => {
-            if (width >= GridBreakpoints.MD) {
-                this.setHeaderHeight();
-                if (this.developersMenuRef?.nativeElement) {
-                    this.setMenuOffset();
+        this.scrollMechanicsService.windowSizeSubject
+            .pipe(untilDestroyed(this), debounceTime(25))
+            .subscribe(({ width }) => {
+                if (width >= GridBreakpoints.MD) {
+                    this.setHeaderHeight();
+                    if (this.developersMenuRef?.nativeElement) {
+                        this.setMenuOffset();
+                    }
                 }
-            }
-        });
+            });
 
         this.APIJSONService.searchMoreShowing$.pipe(untilDestroyed(this)).subscribe(() => {
             if (this.developersMenuRef?.nativeElement) {
@@ -58,15 +60,23 @@ export class NxAPIToolComponent {
     }
 
     ngOnInit(): void {
-        this.APIToolService.serversLoading$.pipe(untilDestroyed(this), filter(loading => !loading)).subscribe(() => {
-            this.setMenuOffset();
-        });
+        this.APIToolService.serversLoading$
+            .pipe(
+                untilDestroyed(this),
+                filter(loading => !loading),
+            )
+            .subscribe(() => {
+                this.setMenuOffset();
+            });
     }
 
     setMenuOffset(): void {
         if (this.developersMenuRef?.nativeElement) {
-            const moreResultsVisible = this.APIJSONService.searchQuery && (this.APIJSONService.searchMoreShowing$.value);
-            this.menuOffset = this.developersMenuRef.nativeElement.getBoundingClientRect().top + (moreResultsVisible ? this.CONFIG.moreResultsHeight : 0);
+            const moreResultsVisible =
+                this.APIJSONService.searchQuery && this.APIJSONService.searchMoreShowing$.value;
+            this.menuOffset =
+                this.developersMenuRef.nativeElement.getBoundingClientRect().top +
+                (moreResultsVisible ? this.CONFIG.moreResultsHeight : 0);
         }
     }
 
@@ -75,6 +85,8 @@ export class NxAPIToolComponent {
     }
 
     setHeaderHeight(): void {
-        this.headerHeight = this.appStateService.ribbonVisibility ? this.CONFIG.headerHeight + ribbonHeight : this.CONFIG.headerHeight;
+        this.headerHeight = this.appStateService.ribbonVisibility
+            ? this.CONFIG.headerHeight + ribbonHeight
+            : this.CONFIG.headerHeight;
     }
 }

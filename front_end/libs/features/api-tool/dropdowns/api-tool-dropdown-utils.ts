@@ -19,8 +19,9 @@ export const makeDropdownDisplayName = (name: string, error: string) => {
     return error ? name + ' - ' + error : name;
 };
 
-export const findExistingItem = <
-    Item extends DropdownItem<unknown>
->(dropdownList: Item[], itemValue: Item['value']): Item => {
+export const findExistingItem = <Item extends DropdownItem<unknown>>(
+    dropdownList: Item[],
+    itemValue: Item['value'],
+): Item => {
     return dropdownList.find(dropdownItem => dropdownItem.value === itemValue);
 };
