@@ -44,7 +44,7 @@
     <nx-section nonPadded>
         <div class="storage-container">
             <form
-                class="form form-horizontal"
+                class="form"
                 (scroll)="handleScroll($event)"
                 role="form"
                 name="storageSettings"
@@ -122,15 +122,10 @@
                                             [style.paddingLeft.px]="8"
                                         >
                                             <nx-select
-                                                [type]="'clear-fit force-position'"
+                                                [type]="'clear-fit'"
                                                 [items]="getModes(store)"
                                                 [selected]="selectMode(store)"
                                                 (onSelected)="changeMode(store, $event)"
-                                                [forcePosition]="{
-                                                    left: dropdownOffsetCalc$ | async,
-                                                    width: ddWidth,
-                                                    offsetTop: 8
-                                                }"
                                                 [hrMargin]="true"
                                             ></nx-select>
                                             <svg-icon

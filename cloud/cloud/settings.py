@@ -354,7 +354,7 @@ CACHES = {
     "rate_limits": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": REDIS_CACHE['TIMEOUT'],
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/16',
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/13',
         "KEY_PREFIX": 'rate_limits'
     },
     "local": {
