@@ -9,13 +9,23 @@
         novalidete
     >
         <div class="row col-5">
-            <div class="col-12 p-0">
-                <div class="input-label col-12">HEX Brand Color</div>
+            <div class="col-6 p-0">
+                <div class="input-label col-12">HEX Brand</div>
                 <div class="col-12">
                     <input
                         #brandInput
                         class="form-control"
                         (keyup)="changeBrandColor($event)"
+                    />
+                </div>
+            </div>
+            <div class="col-6 p-0">
+                <div class="input-label col-12">HEX Background</div>
+                <div class="col-12">
+                    <input
+                        #backgroundInput
+                        class="form-control"
+                        (keyup)="changeBackgroundColor($event)"
                     />
                 </div>
             </div>
@@ -67,31 +77,40 @@
             <div class="col-12 p-3">
                 <div
                     class="row col-12"
-                    *ngFor="let i of hexError"
-                >
-                    <div class="col-2 color error-{{ i.label }}"></div>
-                    <div class="col-10 color">{{ i.hex }} - error {{ i.label }}</div>
-                </div>
-
-                <br /><br /><br /><br />
-
-                <div
-                    class="row col-12"
                     *ngFor="let i of hexBrand"
                 >
                     <div class="col-2 color brand-{{ i.label }}"></div>
                     <div class="col-10 color">{{ i.hex }} - brand {{ i.label }}</div>
                 </div>
 
-                <br /><br /><br /><br />
+                <br /><br />
 
-                <div class="row col-12">
-                    <div class="col-2 color brand-dimmed"></div>
-                    <div class="col-10 color">brand dimmed</div>
+                <div
+                    class="row col-12"
+                    *ngFor="let i of hexError"
+                >
+                    <div class="col-2 color error-{{ i.label }}"></div>
+                    <div class="col-10 color">{{ i.hex }} - error {{ i.label }}</div>
                 </div>
-                <div class="row col-12">
-                    <div class="col-2 color brand-inverted"></div>
-                    <div class="col-10 color">brand inverted</div>
+
+                <br /><br />
+
+                <div
+                    class="row col-12"
+                    *ngFor="let i of hexGreen"
+                >
+                    <div class="col-2 color green-{{ i.label }}"></div>
+                    <div class="col-10 color">{{ i.hex }} - green {{ i.label }}</div>
+                </div>
+
+                <br /><br />
+
+                <div
+                    class="row col-12"
+                    *ngFor="let i of hexYellow"
+                >
+                    <div class="col-2 color yellow-{{ i.label }}"></div>
+                    <div class="col-10 color">{{ i.hex }} - yellow {{ i.label }}</div>
                 </div>
             </div>
         </div>
@@ -155,7 +174,7 @@
                 />
             </div>
 
-            <div class="col-6 p-3">
+            <div class="col-6 px-3">
                 <div class="row col-12">
                     <div class="col-2 color light0"></div>
                     <div class="col-10 color">&nbsp;</div>
@@ -169,7 +188,7 @@
                 </div>
             </div>
 
-            <div class="col-6 p-3">
+            <div class="col-6 px-3">
                 <div class="row col-12">
                     <div class="col-2 color dark0"></div>
                     <div class="col-10 color">&nbsp;</div>

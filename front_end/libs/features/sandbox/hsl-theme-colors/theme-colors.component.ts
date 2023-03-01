@@ -9,6 +9,12 @@ import { NxMenuService } from '@app/menu/menu.service';
     styleUrls: ['theme-colors.component.scss'],
 })
 export class NxHSLThemeColorsComponent implements OnInit {
+    backgroundColor: string;
+    background = {
+        hue: 0,
+        saturation: 0,
+        luminosity: 0,
+    };
     brand = {
         hue: 0,
         saturation: 0,
@@ -26,11 +32,14 @@ export class NxHSLThemeColorsComponent implements OnInit {
     hexLight: Array<string> = [];
     hexDark: Array<string> = [];
     hexError: Array<Record<string, string>> = [];
+    hexGreen: Array<Record<string, string>> = [];
+    hexYellow: Array<Record<string, string>> = [];
     hexBrand: Array<Record<string, string>> = [];
 
     @ViewChild('frmTheme', { static: true }) public frmTheme: NgForm;
     @ViewChild('brandInput', { static: true }) public brandInput: ElementRef<HTMLInputElement>;
     @ViewChild('colorInput', { static: true }) public colorInput: ElementRef<HTMLInputElement>;
+    @ViewChild('backgroundInput', { static: true }) public backgroundInput: ElementRef<HTMLInputElement>;
 
     constructor(
         private self: ElementRef<HTMLElement>,
@@ -42,6 +51,8 @@ export class NxHSLThemeColorsComponent implements OnInit {
         this.menuService.detail = 'themeHSL';
 
         this.rs = getComputedStyle(this.self.nativeElement);
+
+        this.backgroundColor = this.rs.getPropertyValue('--new-body-bg');
 
         this.brand.hue = parseInt(this.rs.getPropertyValue('--brand-h'));
         this.brand.saturation = parseInt(this.rs.getPropertyValue('--brand-s'));
@@ -57,8 +68,15 @@ export class NxHSLThemeColorsComponent implements OnInit {
         this.colorNumbers.shift();
 
         this.calcHexBaseColors();
-        this.calcErrorColors();
-        this.calcBrandColors();
+        this.setColors();
+
+        this.setBackgroundInput();
+    }
+
+    setBackgroundInput(): void {
+        this.backgroundInput.nativeElement.value = this.hslToHex(
+            this.toHSLObject(this.rs.getPropertyValue('--new-body-bg'))
+        ).toUpperCase();
     }
 
     setBrandInput(): void {
@@ -76,24 +94,21 @@ export class NxHSLThemeColorsComponent implements OnInit {
         this.brand.hue = +value;
         this.self.nativeElement.style.setProperty('--brand-h', `${this.brand.hue}`);
         this.setBrandInput();
-        this.calcErrorColors();
-        this.calcBrandColors();
+        this.setColors();
     }
 
     setBrandSaturation(value: number): void {
         this.brand.saturation = +value;
         this.self.nativeElement.style.setProperty('--brand-s', `${this.brand.saturation}%`);
         this.setBrandInput();
-        this.calcErrorColors();
-        this.calcBrandColors();
+        this.setColors();
     }
 
     setBrandLuminosity(value: number): void {
         this.brand.luminosity = +value;
         this.self.nativeElement.style.setProperty('--brand-l', `${this.brand.luminosity}%`);
         this.setBrandInput();
-        this.calcErrorColors();
-        this.calcBrandColors();
+        this.setColors();
     }
 
     setColorHue(value: number): void {
@@ -197,6 +212,30 @@ export class NxHSLThemeColorsComponent implements OnInit {
         }
     }
 
+    calcGreenColors(): void {
+        const availGreenColors = ['dark', 'core', 'light'];
+        for (const idx in availGreenColors) {
+            this.hexGreen[idx] = {
+                label: availGreenColors[idx],
+                hex: this.hslToHex(
+                    this.toHSLObject(this.rs.getPropertyValue('--new-green-' + availGreenColors[idx]))
+                ).toUpperCase()
+            };
+        }
+    }
+
+    calcYellowColors(): void {
+        const availYellowColors = ['dark', 'core', 'light'];
+        for (const idx in availYellowColors) {
+            this.hexYellow[idx] = {
+                label: availYellowColors[idx],
+                hex: this.hslToHex(
+                    this.toHSLObject(this.rs.getPropertyValue('--new-yellow-' + availYellowColors[idx]))
+                ).toUpperCase()
+            };
+        }
+    }
+
     calcBrandColors(): void {
         const availBrandColors = ['l4', 'l3', 'l2', 'l1', 'core', 'd1', 'd2', 'd3', 'd4', 'd5'];
         for (const idx in availBrandColors) {
@@ -209,6 +248,13 @@ export class NxHSLThemeColorsComponent implements OnInit {
         }
     }
 
+    setColors(): void {
+        this.calcErrorColors();
+        this.calcGreenColors();
+        this.calcYellowColors();
+        this.calcBrandColors();
+    }
+
     changeBrandColor(event: KeyboardEvent): void {
         const value = (event.target as HTMLInputElement).value;
         if (value.startsWith('#') && value.length === 7) {
@@ -217,7 +263,7 @@ export class NxHSLThemeColorsComponent implements OnInit {
             this.setBrandSaturation(sat);
             this.setBrandLuminosity(lum);
 
-            this.calcErrorColors();
+            this.setColors();
 
             this.setColorHue(hue);
             this.setColorSaturation(sat);
@@ -233,6 +279,20 @@ export class NxHSLThemeColorsComponent implements OnInit {
             this.setColorHue(hue);
             this.setColorSaturation(sat);
             // this.setBrandLuminosity(lum);
+        }
+    }
+
+    setBackground(hex: string): void {
+        const { hue, sat, lum } = this.hexToHSL(hex);
+        this.self.nativeElement.style.setProperty('--background-h', `${hue}`);
+        this.self.nativeElement.style.setProperty('--background-s', `${sat}%`);
+        this.self.nativeElement.style.setProperty('--background-l', `${lum}%`);
+    }
+
+    changeBackgroundColor(event: KeyboardEvent): void {
+        const value = (event.target as HTMLInputElement).value.trim();
+        if (value.startsWith('#') && value.length === 7) {
+            this.setBackground(value);
         }
     }
 }
