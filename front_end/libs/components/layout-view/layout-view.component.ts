@@ -387,6 +387,9 @@ export class NxLayoutViewComponent {
         ),
         switchMap(async layoutId => {
             const queryParams = { ...this.activatedRoute.snapshot.queryParams };
+            if (typeof queryParams.openNodes === 'string') {
+                queryParams.openNodes = [queryParams.openNodes];
+            }
             queryParams.openNodes ||= [];
             if (!queryParams.openNodes.includes(layoutId)) {
                 queryParams.openNodes.push(layoutId);
