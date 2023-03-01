@@ -83,7 +83,6 @@ export class NxAboutComponent {
         private route: ActivatedRoute,
         public router: Router,
         private ribbonService: NxRibbonService,
-
         private menusService: NxMenusService,
         private pageService: NxPageService,
         private accountService: NxAccountService,

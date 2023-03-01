@@ -34,7 +34,7 @@ export class NxDevToolsComponent implements OnInit {
         private cloudApi: NxCloudApiService,
         public headerService: NxHeaderService,
         private route: ActivatedRoute,
-        @Inject(WINDOW) private window: Window
+        @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.config;
         this.errorManager = new ErrorStateManager(this.window);

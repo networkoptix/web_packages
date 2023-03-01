@@ -23,10 +23,7 @@ export class MultiSelectComponent {
     itemsSearchableDDSingle: DropdownItem<string>[];
     selectedSearchableDDItem: DropdownItem<string>;
 
-    constructor(
-        private menuService: NxMenuService,
-        @Inject(DOCUMENT) private document: Document,
-    ) {}
+    constructor(private menuService: NxMenuService, @Inject(DOCUMENT) private document: Document) {}
 
     ngOnInit(): void {
         this.menuService.section = 'components';

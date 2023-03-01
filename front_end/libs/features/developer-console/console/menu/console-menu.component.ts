@@ -33,10 +33,7 @@ export class NxDevConsoleMenuComponent {
     cancel$ = new Subject<'cancel'>();
     icons = icons;
 
-    constructor(
-        configService: NxConfigService,
-        private menusService: NxMenusService
-    ) {
+    constructor(configService: NxConfigService, private menusService: NxMenusService) {
         this.CONFIG = configService.config;
     }
 

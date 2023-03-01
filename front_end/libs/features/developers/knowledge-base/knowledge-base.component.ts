@@ -58,7 +58,7 @@ class KnowledgeNode {
         public script: string,
         public cardClass: CardClasses,
         public cardIcon?: string,
-        public cardLead?: string
+        public cardLead?: string,
     ) {}
 
     // Factory methods

@@ -16,7 +16,7 @@ export class OsResolver implements Resolve<never> {
     constructor(
         private configService: NxConfigService,
         private router: Router,
-        private deviceService: DeviceDetectorService
+        private deviceService: DeviceDetectorService,
     ) {
         this.deviceInfo = this.deviceService.getDeviceInfo();
         const configDownloads = this.configService.getConfig().downloads;

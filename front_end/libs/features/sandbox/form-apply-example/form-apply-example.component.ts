@@ -57,7 +57,7 @@ export class FormApplyExampleComponent {
         private processService: NxProcessService,
         private toastService: NxToastService,
         private menuService: NxMenuService,
-        @Inject(ViewContainerRef) public applyContainerRef: ViewContainerRef
+        @Inject(ViewContainerRef) public applyContainerRef: ViewContainerRef,
     ) {
         this.show1 = false;
         this.show2 = false;

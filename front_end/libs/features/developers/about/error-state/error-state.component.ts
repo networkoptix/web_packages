@@ -20,11 +20,7 @@ export class NxErrorStateComponent {
 
     currentUser$ = this.store.select<Account>(selectCurrentUser);
 
-    constructor(
-
-        private route: ActivatedRoute,
-        private store: Store,
-    ) {
+    constructor(private route: ActivatedRoute, private store: Store) {
 
     }
 

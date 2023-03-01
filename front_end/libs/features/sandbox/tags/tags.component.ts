@@ -10,9 +10,7 @@ import { NxMenuService } from '@app/menu/menu.service';
 export class TagsComponent {
     options: { name: string; selected: boolean; type?: string }[];
 
-    constructor(
-        private menuService: NxMenuService,
-    ) {}
+    constructor(private menuService: NxMenuService) {}
 
     ngOnInit(): void {
         this.menuService.section = 'components';

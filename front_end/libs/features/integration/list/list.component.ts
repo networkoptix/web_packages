@@ -22,10 +22,7 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
     gridColumnLookup: { [key: string]: string } = {};
     ready = new BehaviorSubject(false);
 
-    constructor(
-        configService: NxConfigService,
-        private ribbonService: NxRibbonService
-    ) {
+    constructor(configService: NxConfigService, private ribbonService: NxRibbonService) {
         this.CONFIG = configService.getConfig();
     }
 

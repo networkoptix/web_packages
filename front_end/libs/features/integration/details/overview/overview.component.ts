@@ -26,7 +26,7 @@ export class NxOverviewComponent implements OnInit, OnDestroy {
     constructor(
         private pageService: NxPageService,
         private integrationService: IntegrationService,
-        private menuService: NxMenuService
+        private menuService: NxMenuService,
     ) {
         this.setupDefaults();
     }

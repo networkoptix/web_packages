@@ -8,9 +8,7 @@ import { NxMenuService } from '@app/menu/menu.service';
     styleUrls: ['masonry-grid.component.scss'],
 })
 export class MasonryGridComponent {
-    constructor(
-        private menuService: NxMenuService,
-    ) {}
+    constructor(private menuService: NxMenuService) {}
 
     ngOnInit(): void {
         this.menuService.section = 'components';

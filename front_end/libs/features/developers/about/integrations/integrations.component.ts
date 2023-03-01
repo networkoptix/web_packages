@@ -89,7 +89,7 @@ export class NxIntegrationsComponent implements OnInit {
         @Inject(WINDOW) private window: Window,
         private translateService: TranslateService,
         private cloudApi: NxCloudApiService,
-        private sanitizer: DomSanitizer
+        private sanitizer: DomSanitizer,
     ) {
         this.errorManager = new ErrorStateManager(this.window);
     }

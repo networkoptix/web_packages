@@ -31,7 +31,7 @@ export class NxServerDocumentationComponent {
         settingsService: NxSettingsService,
         accountService: NxAccountService,
         systemService: NxSystemService,
-        router: Router
+        router: Router,
     ) {
         this.CONFIG = configService.getConfig();
         this.accessibleAt = {

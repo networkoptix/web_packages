@@ -20,10 +20,7 @@ export class NxSupportedTechComponent {
     errorManager: ErrorStateManager;
     images = images;
 
-    constructor(
-        public router: Router,
-        @Inject(WINDOW) private window: Window
-    ) {
+    constructor(public router: Router, @Inject(WINDOW) private window: Window) {
         this.errorManager = new ErrorStateManager(this.window);
     }
 

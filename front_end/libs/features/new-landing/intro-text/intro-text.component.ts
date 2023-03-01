@@ -42,13 +42,13 @@ export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
     images = images;
 
     constructor(
-
         configService: NxConfigService,
         scrollMechanics: NxScrollMechanicsService,
         public headerService: NxHeaderService,
         public platform: Platform,
         @Inject(DOCUMENT) private document: Document,
-        @Inject(WINDOW) private window: Window) {
+        @Inject(WINDOW) private window: Window,
+    ) {
         this.CONFIG = configService.getConfig();
 
         // real-time scroll calculation for less jittery transition of

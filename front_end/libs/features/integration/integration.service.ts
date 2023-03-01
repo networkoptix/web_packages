@@ -34,7 +34,7 @@ export class IntegrationService implements OnDestroy {
     constructor(
         configService: NxConfigService,
         private api: NxCloudApiService,
-        private accountService: NxAccountService
+        private accountService: NxAccountService,
     ) {
         this.CONFIG = configService.getConfig();
 

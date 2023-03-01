@@ -156,7 +156,7 @@ export class NxHealthLayoutService {
     constructor(
         private ribbonService: NxRibbonService,
         private healthService: NxHealthService,
-        private scrollMechanicsService: NxScrollMechanicsService
+        private scrollMechanicsService: NxScrollMechanicsService,
     ) {
         this.pageSize = layout.tableLarge.rows;
 

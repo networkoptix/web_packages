@@ -40,9 +40,7 @@ export class NxCustomColorsComponent implements OnInit {
         { name: '--brand-d7', hex: '#6B3516' },
     ];
 
-    constructor(
-        private menuService: NxMenuService,
-    ) {}
+    constructor(private menuService: NxMenuService) {}
 
     ngOnInit(): void {
         this.menuService.section = 'colors';

@@ -44,7 +44,7 @@ class DashboardGroup {
         public dashboardGroupName: string,
         public menu?: DashboardConfiguration[],
         public activeId?: string,
-        public dragEnabled = true
+        public dragEnabled = true,
     ) {
         const systemsWidget = FirstPartyWidget.getConfig(
             NxSystemsListWidgetComponent as typeof FirstPartyWidget
@@ -517,7 +517,6 @@ export class NxDashboardComponent implements DashboardGroup {
     }
 
     constructor(
-
         configService: NxConfigService,
         private cloudApi: NxCloudApiService,
         private sanitizer: DomSanitizer,
@@ -529,7 +528,7 @@ export class NxDashboardComponent implements DashboardGroup {
         private pageService: NxPageService,
         private accountService: NxAccountService,
         @Inject(WINDOW) private window: Window,
-        private cookieService: CookieService
+        private cookieService: CookieService,
     ) {
         this.CONFIG = configService.config;
         this.dashboardCustomProperty = this.cloudApi.customAccountPropertyFactory(this.CUSTOM_PROPERTY_KEY, new DashboardGroup(`${this.accountService.account.first_name}'s Dashboards`));

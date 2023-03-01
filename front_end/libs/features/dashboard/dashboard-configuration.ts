@@ -6,6 +6,6 @@ export class DashboardConfiguration {
     constructor(
         public dashboardName = 'New Dashboard',
         public cards: WidgetCard[] = [],
-        public id = uuid()
+        public id = uuid(),
     ) {}
 }

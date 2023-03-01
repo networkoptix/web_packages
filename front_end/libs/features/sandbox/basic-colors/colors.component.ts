@@ -75,9 +75,7 @@ export class NxBasicColorsComponent implements OnInit {
         { name: '$light17', hex: '#5F7F8F' },
     ];
 
-    constructor(
-        private menuService: NxMenuService,
-    ) {}
+    constructor(private menuService: NxMenuService) {}
 
     ngOnInit(): void {
         this.menuService.section = 'colors';

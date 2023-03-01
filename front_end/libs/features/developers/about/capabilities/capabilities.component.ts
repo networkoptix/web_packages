@@ -18,9 +18,7 @@ export class NxCapabilitiesComponent {
     icons = icons;
     images = images;
 
-    constructor(
-        @Inject(WINDOW) private window: Window
-    ) {
+    constructor(@Inject(WINDOW) private window: Window) {
         this.errorManager = new ErrorStateManager(this.window);
     }
 

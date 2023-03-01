@@ -25,10 +25,7 @@ export class NxSupportComponent implements OnChanges {
     errorManager: ErrorStateManager;
     images = images;
 
-    constructor(
-        private sanitizer: DomSanitizer,
-        @Inject(WINDOW) private window: Window
-    ) {
+    constructor(private sanitizer: DomSanitizer, @Inject(WINDOW) private window: Window) {
         this.errorManager = new ErrorStateManager(this.window);
     }
 

@@ -36,10 +36,7 @@ export class NxPartnerOrganizationsListComponent implements OnInit, OnDestroy {
         name: 'Cool partner'
     };
 
-    constructor(
-        private uri: NxUriService,
-        private partnersService: NxPartnersService,
-    ) {}
+    constructor(private uri: NxUriService, private partnersService: NxPartnersService) {}
 
     ngOnInit(): void {
         this.uri.getParams()

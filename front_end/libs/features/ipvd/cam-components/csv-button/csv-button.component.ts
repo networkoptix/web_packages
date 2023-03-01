@@ -14,9 +14,7 @@ export class CsvButtonComponent {
     @Input() filename: string;
     @Input() options: CVS_OPTIONS;
 
-    constructor(
-        private extractService: NxCsvExtractService
-    ) {}
+    constructor(private extractService: NxCsvExtractService) {}
 
     downloadCSV(): void {
         this.extractService.exportToCsv(this.data, this.filename, this.options);

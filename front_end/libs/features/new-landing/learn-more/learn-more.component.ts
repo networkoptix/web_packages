@@ -27,7 +27,7 @@ export class NxLearnMoreComponent implements OnChanges {
         public landingService: NxLandingService,
         private platform: Platform,
         private scrollMechanics: NxScrollMechanicsService,
-        @Inject(WINDOW) private window: Window
+        @Inject(WINDOW) private window: Window,
     ) {}
 
     ngOnInit(): void {

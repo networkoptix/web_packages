@@ -11,9 +11,7 @@ import type { SearchFilter } from '@components/search/search.component.types';
 export class SearchComponent {
     filter: SearchFilter;
 
-    constructor(
-        private menuService: NxMenuService,
-    ) {}
+    constructor(private menuService: NxMenuService) {}
 
     ngOnInit(): void {
         this.menuService.section = 'components';

@@ -220,7 +220,7 @@ export class EmailNotificationsComponent {
         private accountService: NxAccountService,
         private systemsService: NxSystemsService,
         private cloudApi: NxCloudApiService,
-        private ngZone: NgZone
+        private ngZone: NgZone,
     ) {
         this.CONFIG = configService.config;
         this.endpoint = `POST ${this.CONFIG.cloudHost}${this.apiBase}/notifications/email_notification`;

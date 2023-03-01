@@ -25,9 +25,7 @@ export class NxSingleEntityComponent implements OnChanges {
     entityName: string;
     sections: SectionLookup;
 
-    constructor(
-        private healthService: NxHealthService
-    ) {}
+    constructor(private healthService: NxHealthService) {}
 
     ngOnChanges(): void {
         this.copyParams = { ...this.params };

@@ -41,9 +41,7 @@ export class NxHealthService {
     ready: boolean;
     lastUpdate: number;
 
-    constructor(
-        private scrollMechanicsService: NxScrollMechanicsService
-    ) {
+    constructor(private scrollMechanicsService: NxScrollMechanicsService) {
         this.importedData = false;
     }
 

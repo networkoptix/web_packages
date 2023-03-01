@@ -17,7 +17,7 @@ export class CloudOwnerAuthorizationComponent implements OnInit {
         @Inject(WINDOW) protected window: Window,
         private oauthService: OauthService,
         private storageService: LocalStorageService,
-        private activatedRoute: ActivatedRoute
+        private activatedRoute: ActivatedRoute,
     ) {}
 
     handleCode(code: string): void {

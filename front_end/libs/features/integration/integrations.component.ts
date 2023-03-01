@@ -43,7 +43,8 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
         this.allElements = [];
     }
 
-    constructor(configService: NxConfigService,
+    constructor(
+        configService: NxConfigService,
         private uri: NxUriService,
         private integrations: IntegrationService,
         private accountService: NxAccountService,

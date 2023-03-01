@@ -88,7 +88,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         private location: Location,
         private menuService: NxMenuService,
         private uri: NxUriService,
-        private scrollMechanicsService: NxScrollMechanicsService
+        private scrollMechanicsService: NxScrollMechanicsService,
     ) {
         this.pageService.pageTitle(this.LANG.pageTitles.information);
     }

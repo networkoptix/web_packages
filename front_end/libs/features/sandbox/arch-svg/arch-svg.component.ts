@@ -8,9 +8,7 @@ import { NxMenuService } from '@app/menu/menu.service';
     styleUrls: ['arch-svg.component.scss'],
 })
 export class NxArchSvgComponent implements OnInit {
-    constructor(
-        private menuService: NxMenuService,
-    ) {}
+    constructor(private menuService: NxMenuService) {}
 
     ngOnInit(): void {
         this.menuService.section = 'components';

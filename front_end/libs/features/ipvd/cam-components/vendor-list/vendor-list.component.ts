@@ -71,7 +71,6 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
 
     constructor(
         configService: NxConfigService,
-
         private uri: NxUriService,
         private router: Router,
         private renderer: Renderer2,

@@ -9,9 +9,7 @@ import { NxMenuService } from '@app/menu/menu.service';
 })
 export class WebglComponent {
     data: Array<Record<string, string>>;
-    constructor(
-        private menuService: NxMenuService,
-    ) {
+    constructor(private menuService: NxMenuService) {
         this.initData();
     }
 

@@ -62,7 +62,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
         private cloudApiService: NxCloudApiService,
         private uriService: NxUriService,
         private location: Location,
-        @Inject(WINDOW) private window: Window
+        @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
 

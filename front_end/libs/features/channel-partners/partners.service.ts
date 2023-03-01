@@ -20,9 +20,7 @@ export class NxPartnersService implements OnDestroy {
     partnersSubject = new BehaviorSubject<PartnerInfo[]>([]);
     organizationsSubject = new BehaviorSubject<OrganizationInfo[]>([]);
 
-    constructor(
-        private cloudApi: NxCloudApiService,
-    ) {}
+    constructor(private cloudApi: NxCloudApiService) {}
 
     private addTo(
         subject: BehaviorSubject<unknown[]>,

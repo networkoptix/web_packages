@@ -31,7 +31,7 @@ export class NxSetupComponent implements OnInit, OnDestroy {
         private translateService: TranslateService,
         private pageService: NxPageService,
         private integrationService: IntegrationService,
-        private menuService: NxMenuService
+        private menuService: NxMenuService,
     ) {
         this.setupDefaults();
     }

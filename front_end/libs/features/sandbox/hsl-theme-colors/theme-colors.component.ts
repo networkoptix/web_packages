@@ -41,10 +41,7 @@ export class NxHSLThemeColorsComponent implements OnInit {
     @ViewChild('colorInput', { static: true }) public colorInput: ElementRef<HTMLInputElement>;
     @ViewChild('backgroundInput', { static: true }) public backgroundInput: ElementRef<HTMLInputElement>;
 
-    constructor(
-        private self: ElementRef<HTMLElement>,
-        private menuService: NxMenuService,
-    ) {}
+    constructor(private self: ElementRef<HTMLElement>, private menuService: NxMenuService) {}
 
     ngOnInit(): void {
         this.menuService.section = 'colors';

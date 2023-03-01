@@ -57,9 +57,8 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     constructor(
         configService: NxConfigService,
-
         private scrollMechanicsService: NxScrollMechanicsService,
-        private uri: NxUriService
+        private uri: NxUriService,
     ) {
         this.CONFIG = configService.getConfig();
     }

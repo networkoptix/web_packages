@@ -40,7 +40,7 @@ export class NxDynamicTablePanelComponent implements AfterContentInit {
     constructor(
         public healthService: NxHealthService,
         public healthLayoutService: NxHealthLayoutService,
-        private scrollMechanicsService: NxScrollMechanicsService
+        private scrollMechanicsService: NxScrollMechanicsService,
     ) {
         this.name = '';
     }

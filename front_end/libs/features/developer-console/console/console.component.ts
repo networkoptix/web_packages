@@ -34,7 +34,7 @@ export class NxDevConsoleComponent {
         _route: ActivatedRoute,
         private router: Router,
         private cloudApi: NxCloudApiService,
-        private headerService: NxHeaderService
+        private headerService: NxHeaderService,
     ) {
         _route.params.pipe(
             map(this.mapRoute),

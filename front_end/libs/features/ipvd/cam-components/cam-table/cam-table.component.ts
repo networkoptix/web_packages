@@ -132,7 +132,6 @@ export class CamTableComponent implements OnChanges, OnInit, AfterViewInit {
 
     constructor(
         configService: NxConfigService,
-
         private route: ActivatedRoute,
         private uri: NxUriService,
         private scrollMechanicsService: NxScrollMechanicsService,

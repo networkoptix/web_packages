@@ -21,9 +21,7 @@ export class NxNewCapabilitiesComponent implements OnInit {
     };
     icons = icons;
 
-    constructor(
-        @Inject(WINDOW) private window: Window
-    ) {
+    constructor(@Inject(WINDOW) private window: Window) {
         this.errorManager = new ErrorStateManager(this.window);
     }
 

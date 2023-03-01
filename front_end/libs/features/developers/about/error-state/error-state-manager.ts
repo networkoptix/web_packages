@@ -38,9 +38,7 @@ export class ErrorStateManager {
      *
      * @param window - Injected window from angular
      */
-    constructor(
-        private window?: Window
-    ) {}
+    constructor(private window?: Window) {}
 
     private _errors: ErrorStateStructure = {};
 

@@ -28,7 +28,7 @@ export class DynamicFormApplyExampleComponent {
         private formBuilder: FormBuilder,
         private applyService: NxApplyService,
         private processService: NxProcessService,
-        private toastService: NxToastService
+        private toastService: NxToastService,
     ) {}
 
     ngOnInit(): void {

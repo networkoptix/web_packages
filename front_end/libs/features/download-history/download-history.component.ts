@@ -47,7 +47,6 @@ export class DownloadHistoryComponent implements OnInit {
 
     constructor(
         configService: NxConfigService,
-
         private cloudApiService: NxCloudApiService,
         private accountService: NxAccountService,
         private route: ActivatedRoute,
@@ -56,7 +55,7 @@ export class DownloadHistoryComponent implements OnInit {
         private uriService: NxUriService,
         public appStateService: NxAppStateService,
         @Inject(PLATFORM_ID) private platformId: object,
-        injector: Injector
+        injector: Injector,
     ) {
         this.CONFIG = configService.getConfig();
 

@@ -23,10 +23,7 @@ export class NxMaskComponent implements OnInit, OnChanges, AfterViewInit, OnDest
         maskCoefficient: 2.4
     };
 
-    constructor(
-        platform: Platform,
-        public landingService: NxLandingService
-    ) {
+    constructor(platform: Platform, public landingService: NxLandingService) {
         this.isSafari = platform.SAFARI;
     }
 

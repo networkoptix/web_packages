@@ -41,7 +41,7 @@ export class NxLandingComponent implements OnInit {
         private sessionService: NxSessionService,
         @Inject(WINDOW) private window: Window,
         private router: Router,
-        private cookieService: CookieService
+        private cookieService: CookieService,
     ) {
         this.setupDefaults(this.configService);
         this.startUrl = this.router.url;

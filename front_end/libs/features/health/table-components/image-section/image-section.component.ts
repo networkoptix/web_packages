@@ -39,10 +39,7 @@ export class NxImageSectionComponent implements OnChanges, AfterViewInit, OnDest
 
     fromEventSubscription: Subscription;
 
-    constructor(
-        private healthService: NxHealthService,
-        @Inject(WINDOW) private window: Window,
-    ) {
+    constructor(private healthService: NxHealthService, @Inject(WINDOW) private window: Window) {
         this.thumbnails = [];
         this.ready = false;
     }

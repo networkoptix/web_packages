@@ -47,7 +47,7 @@ export class NxDevConsoleEditComponent {
         private cloudApi: NxCloudApiService,
         private headerService: NxHeaderService,
         private consoleService: NxConsoleService,
-        private location: Location
+        private location: Location,
     ) {}
 
     ngOnInit(): void {

@@ -14,9 +14,7 @@ export class NxSandboxComponent {
     content: Content;
     menuReady = false;
 
-    constructor(
-        private menuService: NxMenuService,
-    ) {}
+    constructor(private menuService: NxMenuService) {}
 
     ngOnInit(): void {
         this.content = {

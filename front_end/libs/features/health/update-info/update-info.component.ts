@@ -24,10 +24,7 @@ export class NxUpdateInfoComponent implements OnInit, OnDestroy {
     timerSubscription: Subscription;
     icons = icons;
 
-    constructor(
-        private healthService: NxHealthService,
-        private ribbonService: NxRibbonService
-    ) {}
+    constructor(private healthService: NxHealthService, private ribbonService: NxRibbonService) {}
 
     ngOnDestroy(): void {}
 

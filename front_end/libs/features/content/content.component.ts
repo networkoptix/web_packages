@@ -50,7 +50,6 @@ export class NxContentComponent implements OnInit {
     constructor(
         injector: Injector,
         configService: NxConfigService,
-
         private route: ActivatedRoute,
         private http: HttpClient,
         private pageService: NxPageService,
