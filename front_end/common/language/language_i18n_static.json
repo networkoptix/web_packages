@@ -392,7 +392,7 @@
             "noFormat": "This browser does not support video playback from this camera.",
             "offline": "Offline",
             "ubuntuNX": "This browser does not support video from ARM-based servers. Please, use Chromium browser instead.",
-            "unauthorized": "Authentication required",
+            "unauthorized": "UNAUTHORIZED",
             "websocket": "Error establishing webRTC peer connection",
             "unavailable": "UNAVAILABLE"
         },

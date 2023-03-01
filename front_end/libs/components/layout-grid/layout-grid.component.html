@@ -378,211 +378,240 @@
                     layout
                 </p>
             </div>
-            <ng-container *ngFor="let item of layout.items; trackBy: itemId">
-                <div
-                    *ngIf="layoutItemLookup"
-                    cdkDropList
-                    [cdkDropListDisabled]="layout.locked"
-                    [cdkDropListEnterPredicate]="preventDrop"
-                    [cdkDropListData]="item"
-                    [ngStyle]="item.renderConfig"
-                    [style.transform]="(highlightState$ | async)?.[item.id]?.transform || 'translate(0, 0)'"
-                    [style.transform-origin]="(highlightState$ | async)?.[item.id]?.transformOrigin || 'top left'"
-                    class="layout-item-wrapper"
-                    (resize)="calculateItemSize($event, item, layoutItemLookup[item.resourceId])"
-                >
+            <div
+                *ngIf="
+                    layout?.items.length === 1 &&
+                        !layoutItemLookup[layout.items[0].resourceId] &&
+                        layout.items[0].resourceId === layout.items[0].id;
+                    else showLayoutItems
+                "
+                class="no-layout-placeholder"
+            >
+                <svg-icon
+                    nx-add-svg-src
+                    [svgStyle]="{
+                        'width.px': '64',
+                        'height.px': '64'
+                    }"
+                    [src]="icons.dirLayouts + 'layouts_placeholder.svg'"
+                ></svg-icon>
+                <h3 translate>Layout has been deleted</h3>
+            </div>
+            <ng-template #showLayoutItems>
+                <ng-container *ngFor="let item of layout.items; trackBy: itemId">
                     <div
-                        cdkDrag
-                        [cdkDragDisabled]="layout.locked"
-                        [cdkDragData]="item"
-                        (cdkDragReleased)="dragging = false; moveItem(item)"
-                        (cdkDragStarted)="dragging = true"
-                        (cdkDragMoved)="updateBackground($event, item, 'move')"
-                        class="layout-item"
-                        [ngStyle]="(collisions$ | async)[item.id] || item.renderConfig.child"
+                        *ngIf="layoutItemLookup"
+                        cdkDropList
+                        [cdkDropListDisabled]="layout.locked"
+                        [cdkDropListEnterPredicate]="preventDrop"
+                        [cdkDropListData]="item"
+                        [ngStyle]="item.renderConfig"
+                        [style.transform]="(highlightState$ | async)?.[item.id]?.transform || 'translate(0, 0)'"
+                        [style.transform-origin]="(highlightState$ | async)?.[item.id]?.transformOrigin || 'top left'"
+                        class="layout-item-wrapper"
+                        (resize)="
+                            calculateItemSize($event, item, layoutItemLookup[item.resourceId])
+                        "
                     >
-                        <header
-                            cdkDragHandle
-                            [cdkDragHandleDisabled]="layout.locked"
+                        <div
+                            cdkDrag
+                            [cdkDragDisabled]="layout.locked"
+                            [cdkDragData]="item"
+                            (cdkDragReleased)="dragging = false; moveItem(item)"
+                            (cdkDragStarted)="dragging = true"
+                            (cdkDragMoved)="updateBackground($event, item, 'move')"
+                            class="layout-item"
+                            [ngStyle]="(collisions$ | async)[item.id] || item.renderConfig.child"
                         >
-                            <span>{{
-                                layoutItemLookup[item.resourceId]?.name || 'Not Supported'
-                            }}</span>
-                            <div *ngIf="!layout.locked">
-                                <svg-icon
-                                    nx-add-svg-src
-                                    (click)="removeItem(item)"
-                                    [src]="icons.dirTextButtons + 'close.svg'"
-                                    [svgStyle]="{ 'width.px': '18', 'height.px': '18' }"
-                                    class="close-svg"
-                                    [applyClass]="true"
-                                ></svg-icon>
-                            </div>
-                        </header>
-                        <ng-template #notSupported>
-                            <div
-                                class="not-supported"
-                                translate
+                            <header
+                                cdkDragHandle
+                                [cdkDragHandleDisabled]="layout.locked"
                             >
-                                Not supported
-                            </div>
-                        </ng-template>
-                        <!-- <div
-                            cdkDragHandle
-                            [cdkDragHandleDisabled]="layout.locked"
-                            class="drag-overlay"
-                        ></div> -->
-                        <ng-container
-                            *ngIf="
-                                layoutItemLookup[item.resourceId] as itemDetail;
-                                else notSupported
-                            "
-                        >
-                            <ng-template
-                                #showError
-                                let-status="status"
-                            >
+                                <span>{{
+                                    layoutItemLookup[item.resourceId]?.name || 'Not Supported'
+                                }}</span>
+                                <div *ngIf="!layout.locked">
+                                    <svg-icon
+                                        nx-add-svg-src
+                                        (click)="removeItem(item)"
+                                        [src]="icons.dirTextButtons + 'close.svg'"
+                                        [svgStyle]="{ 'width.px': '18', 'height.px': '18' }"
+                                        class="close-svg"
+                                        [applyClass]="true"
+                                    ></svg-icon>
+                                </div>
+                            </header>
+                            <ng-template #notSupported>
                                 <div
-                                    *ngIf="
-                                        status ||
-                                        errors[itemDetail.details.id] ||
-                                        (itemDetail.details.status !== 'archive'
-                                            ? itemDetail.details.status
-                                            : 'offline') as status
-                                    "
-                                    cdkDragHandle
-                                    class="item-error drag-container"
+                                    class="not-supported"
+                                    translate
                                 >
-                                    <div class="item-error">
-                                        <svg-icon
-                                            nx-add-svg-src
-                                            [svgStyle]="{
-                                                'max-width.px': '64',
-                                                'max-height.px': '64',
-                                                'margin.px': '16',
-                                                width: '100%',
-                                                height: '100%'
-                                            }"
-                                            [src]="
-                                                icons.dirLayouts +
-                                                itemDetail.type +
-                                                (status !== RESOURCE_TYPE.WEB_PAGE ? '_' : '') +
-                                                (['online', 'offline', 'unauthorized'].includes(
-                                                    status
-                                                )
-                                                    ? status
-                                                    : status !== RESOURCE_TYPE.WEB_PAGE
-                                                    ? 'offline'
-                                                    : '') +
-                                                '.svg'
-                                            "
-                                        >
-                                        </svg-icon>
-                                        <h3>
-                                            {{
-                                                LANG.common.cameraStates[status] ||
-                                                    LANG.layouts.errors[status] ||
-                                                    status | translate
-                                            }}
-                                        </h3>
-                                    </div>
-                                    <h4
-                                        *ngIf="
-                                            additionalErrorMessages[
-                                                itemDetail.details.id
-                                            ] as additionalMessage
-                                        "
-                                    >
-                                        {{ additionalMessage }}
-                                    </h4>
+                                    Not supported
                                 </div>
                             </ng-template>
-                            <div
-                                *ngIf="
-                                    !errors[itemDetail.details.id] &&
-                                        ((itemDetail.details.online &&
-                                            !itemDetail.details.status) ||
-                                            ['online', 'recording'].includes(
-                                                itemDetail.details.status
-                                            ));
-                                    else showError
-                                "
+                            <!-- <div
                                 cdkDragHandle
-                                class="drag-container"
-                                [ngSwitch]="itemDetail.type"
+                                [cdkDragHandleDisabled]="layout.locked"
+                                class="drag-overlay"
+                            ></div> -->
+                            <ng-container
+                                *ngIf="
+                                    layoutItemLookup[item.resourceId] as itemDetail;
+                                    else notSupported
+                                "
                             >
-                                <ng-container *ngSwitchCase="RESOURCE_TYPE.CAMERA">
-                                    <nx-video-player
-                                        cdkDragHandle
-                                        [cdkDragHandleDisabled]="layout.locked"
-                                        [camera]="itemDetail.details"
-                                        [rotation]="item.rotation"
-                                        (showError)="
-                                            itemDetail.details.online = false;
-                                            errors[itemDetail.details.id] = $event
-                                        "
-                                        (showPtz)="showPtz.emit($event)"
-                                    >
-                                    </nx-video-player>
-                                </ng-container>
-                                <ng-container *ngSwitchCase="RESOURCE_TYPE.SERVER">
-                                    <nx-monitoring-graph
-                                        [systemId]="layout.systemId"
-                                        [noFrame]="true"
-                                        [selectedServerId]="itemDetail.details.id"
-                                    ></nx-monitoring-graph>
-                                </ng-container>
-                                <ng-container *ngSwitchCase="RESOURCE_TYPE.WEB_PAGE">
-                                    <ng-template #webpagesNotSupported>
-                                        <div class="not-supported">
-                                            <h3 translate>Webpages not currently supported</h3>
-                                            <p translate>
-                                                Support will be added in a future version of cloud
-                                                layouts
-                                            </p>
-                                        </div>
-                                    </ng-template>
-                                    <ng-container
+                                <ng-template
+                                    #showError
+                                    let-status="status"
+                                >
+                                    <div
                                         *ngIf="
-                                            CONFIG.featureFlags.layoutsWebpages ||
-                                                CONFIG.featureFlags.layoutsDemo;
-                                            else webpagesNotSupported
+                                            status ||
+                                            errors[itemDetail.details.id] ||
+                                            (itemDetail.details.status !== 'archive'
+                                                ? itemDetail.details.status
+                                                : 'offline') as status
                                         "
+                                        cdkDragHandle
+                                        class="item-error drag-container"
                                     >
-                                        <nx-pre-loader></nx-pre-loader>
-                                        <iframe
-                                            #webpage
-                                            cdkDragHandle
-                                            (load)="
-                                                checkIframeContent(itemDetail.details.id, webpage)
+                                        <div class="item-error">
+                                            <svg-icon
+                                                nx-add-svg-src
+                                                [svgStyle]="{
+                                                    'max-width.px': '64',
+                                                    'max-height.px': '64',
+                                                    'margin.px': '16',
+                                                    width: '100%',
+                                                    height: '100%'
+                                                }"
+                                                [src]="
+                                                    icons.dirLayouts +
+                                                    itemDetail.type +
+                                                    (status !== RESOURCE_TYPE.WEB_PAGE ? '_' : '') +
+                                                    (['online', 'offline', 'unauthorized'].includes(
+                                                        status
+                                                    )
+                                                        ? status
+                                                        : status !== RESOURCE_TYPE.WEB_PAGE
+                                                        ? 'offline'
+                                                        : '') +
+                                                    '.svg'
+                                                "
+                                            >
+                                            </svg-icon>
+                                            <h3>
+                                                {{
+                                                    LANG.common.cameraStates[status] ||
+                                                        LANG.layouts.errors[status] ||
+                                                        status | translate
+                                                }}
+                                            </h3>
+                                        </div>
+                                        <h4
+                                            *ngIf="
+                                                additionalErrorMessages[
+                                                    itemDetail.details.id
+                                                ] as additionalMessage
                                             "
-                                            [src]="itemDetail.details.url | safe: 'resourceUrl'"
-                                            frameBorder="0"
-                                        ></iframe>
+                                        >
+                                            {{ additionalMessage }}
+                                        </h4>
+                                    </div>
+                                </ng-template>
+                                <div
+                                    *ngIf="
+                                        !errors[itemDetail.details.id] &&
+                                            ((itemDetail.details.online &&
+                                                !itemDetail.details.status) ||
+                                                ['online', 'recording'].includes(
+                                                    itemDetail.details.status
+                                                ));
+                                        else showError
+                                    "
+                                    cdkDragHandle
+                                    class="drag-container"
+                                    [ngSwitch]="itemDetail.type"
+                                >
+                                    <ng-container *ngSwitchCase="RESOURCE_TYPE.CAMERA">
+                                        <nx-video-player
+                                            cdkDragHandle
+                                            [cdkDragHandleDisabled]="layout.locked"
+                                            [camera]="itemDetail.details"
+                                            [rotation]="item.rotation"
+                                            (showError)="
+                                                itemDetail.details.online = false;
+                                                errors[itemDetail.details.id] = $event
+                                            "
+                                            (showPtz)="showPtz.emit($event)"
+                                        >
+                                        </nx-video-player>
                                     </ng-container>
-                                </ng-container>
-                                <ng-container *ngSwitchCaseDefault>
-                                    <ng-container *ngTemplateOutlet="notSupported"></ng-container>>
-                                </ng-container>
-                            </div>
-                        </ng-container>
-                        <div
-                            cdkDropList
-                            [cdkDropListDisabled]="layout.locked"
-                            [cdkDropListConnectedTo]="[]"
-                        >
+                                    <ng-container *ngSwitchCase="RESOURCE_TYPE.SERVER">
+                                        <nx-monitoring-graph
+                                            [systemId]="layout.systemId"
+                                            [noFrame]="true"
+                                            [selectedServerId]="itemDetail.details.id"
+                                        ></nx-monitoring-graph>
+                                    </ng-container>
+                                    <ng-container *ngSwitchCase="RESOURCE_TYPE.WEB_PAGE">
+                                        <ng-template #webpagesNotSupported>
+                                            <div class="not-supported">
+                                                <h3 translate>Webpages not currently supported</h3>
+                                                <p translate>
+                                                    Support will be added in a future version of
+                                                    cloud layouts
+                                                </p>
+                                            </div>
+                                        </ng-template>
+                                        <ng-container
+                                            *ngIf="
+                                                CONFIG.featureFlags.layoutsWebpages ||
+                                                    CONFIG.featureFlags.layoutsDemo;
+                                                else webpagesNotSupported
+                                            "
+                                        >
+                                            <nx-pre-loader></nx-pre-loader>
+                                            <iframe
+                                                #webpage
+                                                cdkDragHandle
+                                                (load)="
+                                                    checkIframeContent(
+                                                        itemDetail.details.id,
+                                                        webpage
+                                                    )
+                                                "
+                                                [src]="itemDetail.details.url | safe: 'resourceUrl'"
+                                                frameBorder="0"
+                                            ></iframe>
+                                        </ng-container>
+                                    </ng-container>
+                                    <ng-container *ngSwitchCaseDefault>
+                                        <ng-container
+                                            *ngTemplateOutlet="notSupported"
+                                        ></ng-container
+                                        >>
+                                    </ng-container>
+                                </div>
+                            </ng-container>
                             <div
-                                cdkDrag
-                                [cdkDragDisabled]="layout.locked"
-                                [cdkDragData]="item"
-                                (cdkDragMoved)="updateBackground($event, item, 'resize')"
-                                (cdkDragReleased)="moveItem(item)"
-                                class="resize-handle"
-                            ></div>
+                                cdkDropList
+                                [cdkDropListDisabled]="layout.locked"
+                                [cdkDropListConnectedTo]="[]"
+                            >
+                                <div
+                                    cdkDrag
+                                    [cdkDragDisabled]="layout.locked"
+                                    [cdkDragData]="item"
+                                    (cdkDragMoved)="updateBackground($event, item, 'resize')"
+                                    (cdkDragReleased)="moveItem(item)"
+                                    class="resize-handle"
+                                ></div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </ng-container>
+                </ng-container>
+            </ng-template>
         </ng-container>
     </div>
 </div>

@@ -1,8 +1,12 @@
 :host,
-vm-player, video {
+vm-player,
+video {
     width: 100%;
     height: 100%;
     position: relative;
+    &::-webkit-media-controls-enclosure {
+        display: none !important;
+    }
 }
 
 .overlay {
