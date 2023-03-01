@@ -71,6 +71,7 @@ html[data-theme="dark-gray"] {
     --svg-std-icon-fill : #888888; //$dark_gray_18;
     --svg-path-light-color : #404040; //$dark_gray_9;
     --svg-path-dark-color  : #E8E8E8; //$light_gray_4;
+    --svg-path-accent-color : var(--svg-path-dark-color);
 
     --svg-confirmations-color  : #B8B8B8; //$light_gray_10;
 

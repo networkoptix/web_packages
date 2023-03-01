@@ -32,19 +32,39 @@
 .sidebar-wrapper {
     height: 100%;
     width: 0px;
-    position: relative;
     transition-property: width, background;
     transition-duration: 150ms;
     transition-timing-function: ease-in-out;
     background: var(--header-bg);
     z-index: 2;
     --column-width: calc(100vw / 12);
-    --base-width: calc(var(--column-width) * 3);
+
+    // Responsive menu positioned on the grid
+    position: relative;
+    --columns: 2;
+
+    @media (max-width: 1920px) {
+        --columns: 3;
+    }
+
+    @media (max-width: 992px) {
+        --columns: 4;
+    }
+
+
+    // Responsive menu positioned overlaying the grid
+    @media (max-width: 768px) {
+        --columns: 6;
+        position: absolute;
+    }
+
+    @media (max-width: 576px) {
+        --columns: 8;
+    }
+
+    --base-width: calc(var(--column-width) * var(--columns));
     --tab-size: 25px;
 
-    @include bootstrap.media-breakpoint-down(lg) {
-        --base-width: max(calc(var(--column-width) * 6), 300px);
-    }
     --sidebar-width: calc(var(--base-width) + var(--tab-size));
 
     &.open-menu {
@@ -422,6 +442,10 @@ iframe {
     & .st0 {
         stroke: var(--body-text-color);
         fill: var(--body-text-color);
+    }
+
+    & .st1 {
+        fill: var(--svg-path-accent-color);
     }
 }
 

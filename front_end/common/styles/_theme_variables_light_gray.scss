@@ -73,6 +73,7 @@ html[data-theme="light-gray"] {
 
     --svg-std-icon-fill : #{$light_gray_16};
     --svg-path-light-color: #{$light_gray_4};
+    --svg-path-accent-color : var(--svg-path-light-color);
     --svg-path-dark-color: #{$dark_gray_9};
 
     --svg-placeholder-elm1-color : #2B383F; // $dark_gray_9

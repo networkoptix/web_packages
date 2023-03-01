@@ -79,6 +79,7 @@ html[data-theme="dark"] {
     --svg-std-icon-fill : #587785; //$dark18;
     --svg-path-light-color : #2B383F; //$dark9;
     --svg-path-dark-color  : #E1E7EA; //$light4;
+    --svg-path-accent-color : var(--svg-path-dark-color);
 
     --svg-confirmations-color  : #A5B7C0; //$light10;
 
