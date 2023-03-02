@@ -10,7 +10,7 @@
 </nx-alert-block>
 
 <nx-standard-server-component
-    *ngIf="system"
+    *ngIf="system && selectedServer$ | async as selectedServer"
     (loaded)="serverLoaded = $event"
     [isOffline]="isOffline"
     [system]="system"
@@ -25,7 +25,7 @@
 >
 </nx-server-storage-component>
 
-<ng-container *ngIf="serverLoaded && system && selectedServer?.id">
+<ng-container *ngIf="serverLoaded && system && (serverId$ | async) as serverId">
     <nx-cloud-storage
         *ngIf="!environment.isLocal && system?.canUserViewCloudStorage()"
         layout="simple"
@@ -45,13 +45,13 @@
 
         <nx-server-advanced-storage-component
             [system]="system"
-            [serverId]="selectedServer?.id"
+            [serverId]="serverId"
         >
         </nx-server-advanced-storage-component>
 
         <nx-server-logger-component
             [system]="system"
-            [serverId]="selectedServer?.id"
+            [serverId]="serverId"
         >
         </nx-server-logger-component>
     </ng-container>
