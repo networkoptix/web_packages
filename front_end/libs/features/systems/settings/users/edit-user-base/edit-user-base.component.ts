@@ -25,7 +25,7 @@ import { cleanId } from '@utils/general';
 import { NxSettingsService } from '../../settings.service';
 
 @Component({
-    template: ''
+    template: '',
 })
 export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy {
     protected abstract setUser();

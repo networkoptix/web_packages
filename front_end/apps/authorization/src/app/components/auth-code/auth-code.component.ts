@@ -27,7 +27,7 @@ import { setupText, TemplateText } from '../setupText';
 @Component({
     selector: 'nx-authorize-auth-code-component',
     templateUrl: 'auth-code.component.html',
-    styleUrls: ['auth-code.component.scss']
+    styleUrls: ['auth-code.component.scss'],
 })
 export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestroy {
     LANG = staticLang;

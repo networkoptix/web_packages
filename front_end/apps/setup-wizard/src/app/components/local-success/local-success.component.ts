@@ -7,7 +7,7 @@ import { WizardStateService } from '../../services/wizard-state.service';
 @Component({
     selector: 'nx-local-success',
     templateUrl: './local-success.component.html',
-    styleUrls: ['./local-success.component.scss']
+    styleUrls: ['./local-success.component.scss'],
 })
 export class LocalSuccessComponent implements OnInit {
     address: string;

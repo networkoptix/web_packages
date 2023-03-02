@@ -7,7 +7,7 @@ import { WizardStateService } from '../../services/wizard-state.service';
 @Component({
     selector: 'nx-init-failure',
     templateUrl: './init-failure.component.html',
-    styleUrls: ['./init-failure.component.scss']
+    styleUrls: ['./init-failure.component.scss'],
 })
 export class InitFailureComponent implements OnInit {
     icons = icons;

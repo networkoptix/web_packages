@@ -5,7 +5,7 @@ import { WizardStateService } from '../../services/wizard-state.service';
 @Component({
     selector: 'nx-system-name',
     templateUrl: './system-name.component.html',
-    styleUrls: ['./system-name.component.scss']
+    styleUrls: ['./system-name.component.scss'],
 })
 export class SystemNameComponent implements OnInit {
     get systemName(): string {

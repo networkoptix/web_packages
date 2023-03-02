@@ -24,7 +24,7 @@ import type { AuthorizeStateType } from '../authorize.component.types';
 @Component({
     selector: 'nx-authorize-create-account-component',
     templateUrl: 'create-account.component.html',
-    styleUrls: ['create-account.component.scss']
+    styleUrls: ['create-account.component.scss'],
 })
 export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnDestroy {
     icons = icons;

@@ -12,7 +12,7 @@ import { iState, WIZARD_STATE } from '../types/wizard-state.types';
 @Component({
     selector: 'nx-wizard',
     templateUrl: './wizard.component.html',
-    styleUrls: ['./wizard.component.scss']
+    styleUrls: ['./wizard.component.scss'],
 })
 export class WizardComponent implements OnInit {
     icons = icons;

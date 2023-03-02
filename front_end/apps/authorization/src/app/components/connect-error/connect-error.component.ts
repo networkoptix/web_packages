@@ -16,7 +16,7 @@ import type { AuthorizeStateType } from '../authorize.component.types';
 @Component({
     selector: 'nx-authorize-connect-error-component',
     templateUrl: 'connect-error.component.html',
-    styleUrls: ['connect-error.component.scss']
+    styleUrls: ['connect-error.component.scss'],
 })
 export class NxAuthorizeConnectErrorComponent implements OnInit {
     LANG = staticLang;

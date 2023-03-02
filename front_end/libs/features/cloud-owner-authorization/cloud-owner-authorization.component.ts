@@ -9,7 +9,7 @@ import { WINDOW } from '@services/window-provider';
 
 @Component({
     selector: 'nx-cloud-owner-authorization',
-    template: ''
+    template: '',
 })
 export class CloudOwnerAuthorizationComponent implements OnInit {
     LANG = staticLang;

@@ -5,7 +5,7 @@ import { WizardStateService } from '../../services/wizard-state.service';
 @Component({
     selector: 'nx-start',
     templateUrl: './start.component.html',
-    styleUrls: ['./start.component.scss']
+    styleUrls: ['./start.component.scss'],
 })
 export class StartComponent implements OnInit {
     constructor(private wizardService: WizardStateService) { }

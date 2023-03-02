@@ -7,7 +7,7 @@ import { WizardStateService } from '../../services/wizard-state.service';
 @Component({
     selector: 'nx-broken-system',
     templateUrl: './broken-system.component.html',
-    styleUrls: ['./broken-system.component.scss']
+    styleUrls: ['./broken-system.component.scss'],
 })
 export class BrokenSystemComponent implements OnInit {
     icons = icons;

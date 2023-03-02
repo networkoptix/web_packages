@@ -14,7 +14,7 @@ import { AuthorizeParams, ClientType } from '../components/authorize.component.t
 @Component({
     selector: 'nx-oauth-redirect-component',
     templateUrl: './oauth-redirect.component.html',
-    styleUrls: ['./oauth-redirect.component.scss']
+    styleUrls: ['./oauth-redirect.component.scss'],
 })
 
 export class NxOAuthRedirectComponent implements OnInit {

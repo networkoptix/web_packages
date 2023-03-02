@@ -12,7 +12,7 @@ import type { DeleteCloudUser as DT } from '../dialogs.types';
 
 @Component({
     selector: 'nx-modal-delete-cloud-user-content',
-    templateUrl: 'delete-cloud-user.component.html'
+    templateUrl: 'delete-cloud-user.component.html',
 })
 export class DeleteCloudUserModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;

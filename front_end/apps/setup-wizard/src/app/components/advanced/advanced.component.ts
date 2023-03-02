@@ -10,7 +10,7 @@ import { SECURITY_LEVEL } from '../../types/wizard-state.types';
 @Component({
     selector: 'nx-advanced-component',
     templateUrl: 'advanced.component.html',
-    styleUrls: ['advanced.component.scss']
+    styleUrls: ['advanced.component.scss'],
 })
 export class AdvancedComponent {
     stringBool: { string: boolean };

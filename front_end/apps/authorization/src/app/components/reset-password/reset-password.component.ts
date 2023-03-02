@@ -20,7 +20,7 @@ import type { AuthorizeStateType } from '../authorize.component.types';
 @Component({
     selector: 'nx-authorize-reset-password-component',
     templateUrl: 'reset-password.component.html',
-    styleUrls: ['reset-password.component.scss']
+    styleUrls: ['reset-password.component.scss'],
 })
 export class NxAuthorizeResetPasswordComponent implements OnInit, OnChanges, OnDestroy {
     icons = icons;

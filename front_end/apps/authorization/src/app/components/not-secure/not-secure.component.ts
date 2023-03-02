@@ -14,7 +14,7 @@ import type { AuthorizeStateType } from '../authorize.component.types';
 @Component({
     selector: 'nx-authorize-not-secure-component',
     templateUrl: 'not-secure.component.html',
-    styleUrls: ['not-secure.component.scss']
+    styleUrls: ['not-secure.component.scss'],
 })
 
 export class NxAuthorizeNotSecureComponent {

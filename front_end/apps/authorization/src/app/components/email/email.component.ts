@@ -23,7 +23,7 @@ import { setupText, TemplateText } from '../setupText';
 @Component({
     selector: 'nx-authorize-email-component',
     templateUrl: 'email.component.html',
-    styleUrls: ['email.component.scss']
+    styleUrls: ['email.component.scss'],
 })
 export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
     readonly environment = environment;

@@ -13,7 +13,7 @@ import { icons } from '@lib/variables/static-variables';
 @Component({
     selector: 'nx-authorize-confirmation-component',
     templateUrl: 'confirmation.component.html',
-    styleUrls: ['confirmation.component.scss']
+    styleUrls: ['confirmation.component.scss'],
 })
 export class NxAuthorizeConfirmationComponent implements OnInit, OnDestroy {
     LANG = staticLang;

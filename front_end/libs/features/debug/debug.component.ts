@@ -17,7 +17,7 @@ import { openClientTimeout, openMobileClientTimeout } from '@src/app/variables/s
 
 @Component({
     selector: 'nx-debug',
-    templateUrl: 'debug.component.html'
+    templateUrl: 'debug.component.html',
 })
 export class NxDebugComponent {
     LANG = staticLang;

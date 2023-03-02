@@ -27,7 +27,7 @@ import { setupText, TemplateText } from '../setupText';
 @Component({
     selector: 'nx-authorize-backup-code-component',
     templateUrl: 'backup-code.component.html',
-    styleUrls: ['backup-code.component.scss']
+    styleUrls: ['backup-code.component.scss'],
 })
 export class NxAuthorizeBackupCodeComponent implements OnInit, OnChanges, OnDestroy {
     CONFIG: IConfig;

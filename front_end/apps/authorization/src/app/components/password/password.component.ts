@@ -23,7 +23,7 @@ import { setupText, TemplateText } from '../setupText';
 @Component({
     selector: 'nx-authorize-password-component',
     templateUrl: 'password.component.html',
-    styleUrls: ['password.component.scss']
+    styleUrls: ['password.component.scss'],
 })
 export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestroy {
     readonly environment = environment;

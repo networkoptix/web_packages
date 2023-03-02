@@ -7,7 +7,7 @@ import { WizardStateService } from '../../services/wizard-state.service';
 @Component({
     selector: 'nx-local-failure',
     templateUrl: './local-failure.component.html',
-    styleUrls: ['./local-failure.component.scss']
+    styleUrls: ['./local-failure.component.scss'],
 })
 export class LocalFailureComponent implements OnInit {
     icons = icons;

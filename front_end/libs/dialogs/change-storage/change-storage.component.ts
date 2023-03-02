@@ -11,7 +11,7 @@ import type { NxSystem } from '@services/system.service/system';
 @UntilDestroy({ checkProperties: true })
 @Component({
     selector: 'nx-modal-change-storage',
-    templateUrl: 'change-storage.component.html'
+    templateUrl: 'change-storage.component.html',
 })
 export class ChangeStorageModalContent {
     @Input() closable: boolean = true;

@@ -10,7 +10,7 @@ import { WizardStateService } from '../../services/wizard-state.service';
 @Component({
     selector: 'nx-local-login',
     templateUrl: './local-login.component.html',
-    styleUrls: ['./local-login.component.scss']
+    styleUrls: ['./local-login.component.scss'],
 })
 export class LocalLoginComponent implements AfterViewInit {
     icons = icons;
