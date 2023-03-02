@@ -51,6 +51,11 @@ export function caseInsenstiveSearch(text: string, search: string): boolean {
     return text.toLowerCase().includes(search.toLowerCase());
 }
 
+export function spaceSplitSearch(items: string[], search: string): string[] {
+    const searches = search.trim().split(/\s+/);
+    return items.filter(item => searches.some(search => caseInsenstiveSearch(item, search)));
+}
+
 /* Number */
 export function mod(n: number, m: number): number {
     return ((n % m) + m) % m;

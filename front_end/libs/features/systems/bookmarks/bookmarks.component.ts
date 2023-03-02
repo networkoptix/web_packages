@@ -280,10 +280,11 @@ export class NxBookmarksComponent implements OnInit {
                         bk.startTimeMs <= endTimeMs + 59999); // Add 59999 to cover anything between the current minute and right before the next
                 }
                 if (this.queryParams.search) {
-                    bks = bks.filter(bk => caseInsenstiveSearch(bk.name, this.queryParams.search) ||
-                        caseInsenstiveSearch(bk.deviceName, this.queryParams.search) ||
-                        this.queryParams.search.toLowerCase().split(' ').some(tag => tag !== '' && bk.tags.includes(tag))
-                    );
+                    const searches = this.queryParams.search.trim().split(/\s+/);
+                    bks = bks.filter(bk => searches.some(s => caseInsenstiveSearch(bk.name, s) ||
+                        caseInsenstiveSearch(bk.deviceName, s) ||
+                        bk.tags.some(t => caseInsenstiveSearch(t, s))
+                    ));
                 }
 
                 return bks;

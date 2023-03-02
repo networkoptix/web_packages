@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { caseInsenstiveSearch } from '@utils/general';
+import { spaceSplitSearch } from '@utils/general';
 
 @Component({
     standalone: true,
@@ -13,6 +13,6 @@ export class SearchBaseComponent {
     get searchMatches(): string[] {
         return !this.search
             ? this.items
-            : this.items.filter(item => caseInsenstiveSearch(item, this.search));
+            : spaceSplitSearch(this.items, this.search);
     }
 }

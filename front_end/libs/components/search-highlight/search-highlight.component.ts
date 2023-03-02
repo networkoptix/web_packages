@@ -12,7 +12,8 @@ import type { NgChanges } from '@utils/ng-changes';
  * substrings are the matches to highlight.
  *
  * IMPORTANT: When creating the search expression, the entire expression should
- * be one group, with no groups inside (e.g. /(searchterm)/).
+ * be one capturing group, with no other capturing groups inside e.g. `/(searchterm)/`
+ * (non-capturing groups are okay).
  *
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split#splitting_with_a_regexp_to_include_parts_of_the_separator_in_the_result
  */

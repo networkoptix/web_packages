@@ -47,25 +47,40 @@
         background: var(--dropdown-menu-bg);
         box-shadow: var(--dropdown-menu-shadow);
 
-        padding: 0.5rem 0;
+        $dropdown-vertical-padding: 0.5rem;
+        $suggestion-height: 1.5rem;
+        $section-name-height: 2rem;
+
+        padding:$dropdown-vertical-padding 0;
         font-size: 0.85rem;
+        overflow-y: auto;
 
         hr {
             margin: 0 0.5rem;
         }
 
+        &--list {
+            max-height: $dropdown-vertical-padding * 2
+                + 10 * $suggestion-height;
+        }
+        &--sections {
+            max-height: $dropdown-vertical-padding * 2
+                + 3 * ($section-name-height + 4 * $suggestion-height);
+        }
+        // Limiting to 10 suggestions/3x4 sections for now
+
         .suggestion {
             &__section-name {
                 display: block;
-                height: 2rem;
-                line-height: 2rem;
+                height: $section-name-height;
+                line-height: $section-name-height;
                 padding: 0 0.75rem;
             }
 
             &__item,
             &__no-matches {
-                height: 1.5rem;
-                line-height: 1.5rem;
+                height: $suggestion-height;
+                line-height: $suggestion-height;
                 padding: 0 0.75rem;
 
                 cursor: default;

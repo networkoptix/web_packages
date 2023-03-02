@@ -26,6 +26,10 @@
 </button>
 <ul
     class="suggestions"
+    [ngClass]="{
+        'suggestions--list': matchList,
+        'suggestions--sections': matchSections
+    }"
     *ngIf="suggestions && search && dropdownOpen"
 >
     <ng-container *ngIf="matchList">
@@ -37,7 +41,7 @@
         >
             <nx-search-highlight
                 [text]="match"
-                [search]="search"
+                [search]="searchRegex"
                 bold
             ></nx-search-highlight>
         </li>
@@ -55,7 +59,7 @@
                 >
                     <nx-search-highlight
                         [text]="match"
-                        [search]="search"
+                        [search]="searchRegex"
                         bold
                     ></nx-search-highlight>
                 </li>

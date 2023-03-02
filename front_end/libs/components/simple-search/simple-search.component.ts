@@ -1,10 +1,10 @@
 import { Component, OnInit, forwardRef, Input, OnChanges, HostListener } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { escape } from 'lodash-es';
+import { escape, escapeRegExp } from 'lodash-es';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { icons } from '@lib/variables/static-variables';
-import { caseInsenstiveSearch } from '@utils/general';
+import { spaceSplitSearch } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
 import type { SuggestionList, Suggestions } from './simple-search.types';
@@ -27,6 +27,7 @@ export class NxSimpleSearchComponent implements ControlValueAccessor, OnInit, On
     @Input() noMatchMsg?: string;
 
     search: string = '';
+    searchRegex: RegExp;
 
     LANG = staticLang;
     icons = icons;
@@ -38,13 +39,13 @@ export class NxSimpleSearchComponent implements ControlValueAccessor, OnInit, On
     matchSections: [string, string[]][];
     matchIndexes: [number, number | undefined];
 
-    private _matchSections(search: string): this['matchSections'] | undefined {
+    private _matchSections(): this['matchSections'] | undefined {
         if (!this.suggestions || Array.isArray(this.suggestions)) {
             return;
         }
         const matches: this['matchSections'] = [];
         Object.entries(this.suggestions).forEach(([sectionName, sectionList]) => {
-            const sectionMatches = sectionList.filter(sg => caseInsenstiveSearch(sg, search));
+            const sectionMatches = spaceSplitSearch(sectionList, this.search);
             if (sectionMatches.length) {
                 matches.push([sectionName, sectionMatches]);
             }
@@ -53,11 +54,11 @@ export class NxSimpleSearchComponent implements ControlValueAccessor, OnInit, On
         return matches;
     }
 
-    private _matchList(search: string): SuggestionList | undefined {
+    private _matchList(): SuggestionList | undefined {
         if (!this.suggestions || !Array.isArray(this.suggestions)) {
             return;
         }
-        return this.suggestions.filter(sg => caseInsenstiveSearch(sg, search));
+        return spaceSplitSearch(this.suggestions, this.search);
     }
 
     @HostListener('document:click', ['$event.target'])
@@ -79,8 +80,8 @@ export class NxSimpleSearchComponent implements ControlValueAccessor, OnInit, On
     ngOnChanges({ suggestions }: NgChanges<NxSimpleSearchComponent>): void {
         if (suggestions.currentValue) {
             this.matchIndexes = undefined;
-            this.matchList = this._matchList(this.search);
-            this.matchSections = this._matchSections(this.search);
+            this.matchList = this._matchList();
+            this.matchSections = this._matchSections();
         } else {
             this.matchIndexes = undefined;
             this.matchList = undefined;
@@ -98,6 +99,7 @@ export class NxSimpleSearchComponent implements ControlValueAccessor, OnInit, On
             this.dropdownOpen = false;
             this.matchList = undefined;
             this.matchSections = undefined;
+            this.searchRegex = undefined;
         } else {
             // Close before updating and update before opening to avoid
             // content change flashes
@@ -106,8 +108,14 @@ export class NxSimpleSearchComponent implements ControlValueAccessor, OnInit, On
                 this.matchIndexes = undefined;
             }
             if (this.suggestions) {
-                this.matchList = this._matchList(value);
-                this.matchSections = this._matchSections(value);
+                this.matchList = this._matchList();
+                this.matchSections = this._matchSections();
+                const searches = this.search
+                    .trim()
+                    .split(/\s+/)
+                    .map(s => `(?:${escapeRegExp(s)})`)
+                    .join('|');
+                this.searchRegex = new RegExp(`(${searches})`, 'i');
             }
             if (open) {
                 this.matchIndexes = undefined;
