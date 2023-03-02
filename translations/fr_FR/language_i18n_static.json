@@ -606,7 +606,7 @@
                 "label": "Windows"
             },
             "universal": {
-                "label": "Universal"
+                "label": "Universel"
             }
         },
         "mobile": {
@@ -811,7 +811,7 @@
         "account": "Paramètres du compte",
         "activate": "Activer compte",
         "activateCode": "Activer compte",
-        "activateSuccess": "Account activated",
+        "activateSuccess": "Compte activé",
         "articleTitle": "{ARTICLE_TITLE} pour {VMS_NAME}",
         "auth": "Autorisation",
         "changePassword": "Changer mot de passe",
@@ -828,14 +828,14 @@
         "register": "Créer compte dans",
         "registerSuccess": "Bienvenue sur",
         "restorePassword": "Réinitialiser mot de passe",
-        "restorePasswordSuccess": "Password saved",
+        "restorePasswordSuccess": "Mot de passe enregistré",
         "supportedDevices": "Périphériques supportés",
         "system": "Système",
-        "systemShare": "Share System",
+        "systemShare": "Partager le système",
         "systems": "Systèmes",
         "template": "{title} - %CLOUD_NAME%",
         "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
-        "view": "View cameras",
+        "view": "Voir les caméras",
         "apiTool": "Outil de test d'API",
         "security": "Sécurité",
         "twofaRequired": "Authentification à deux facteurs requise",
@@ -911,7 +911,7 @@
         },
         "newVersionAvailable": {
             "notification": "Une nouvelle version de %CLOUD_NAME% est disponible",
-            "installButton": "Refresh to Update"
+            "installButton": "Rafraîchir pour mettre à jour"
         },
         "systemOffline": "Le système est hors ligne. Certains paramètres peuvent ne pas être disponibles.",
         "systemsMerging": "Ce système est actuellement impliqué dans une opération de fusion."
