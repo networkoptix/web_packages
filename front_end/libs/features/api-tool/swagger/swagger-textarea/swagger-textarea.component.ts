@@ -29,17 +29,19 @@ import {
     styleUrls: ['./swagger-textarea.component.scss'],
 })
 export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
-    @ViewChild('customTextarea') customTextareaRef : ElementRef;
+    @ViewChild('customTextarea') customTextareaRef: ElementRef;
     @Input() textarea: HTMLTextAreaElement;
     @Input() textareaMap;
     isDisabled = true;
     isInvalid = false;
     attributeMutationObserver: MutationObserver;
 
-    constructor(@Inject(WINDOW) private window: any,
-                @Inject(DOCUMENT) private document: Document,
-                private APIToolService: NxAPIToolSystemService,
-                private elementRef: ElementRef) {}
+    constructor(
+        @Inject(WINDOW) private window: any,
+        @Inject(DOCUMENT) private document: Document,
+        private APIToolService: NxAPIToolSystemService,
+        private elementRef: ElementRef,
+    ) {}
 
     ngOnInit(): void {
         this.isDisabled = this.textarea.getAttribute('disabled') === '';
@@ -53,7 +55,10 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
             const text = this.textarea.innerText.split(' ').join('&nbsp;');
             element.innerText = text;
             if (element.textContent.length) {
-                element.innerHTML = element.innerText.split('\n').map(div => `<div class='line'>${div}</div>`).join('\n');
+                element.innerHTML = element.innerText
+                    .split('\n')
+                    .map(div => `<div class='line'>${div}</div>`)
+                    .join('\n');
             } else {
                 element.innerHTML = '<div class="line"><br></div>';
             }
@@ -81,10 +86,11 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
                     originalSelection.getRangeAt(0).insertNode(node);
                     const line = findLine(originalSelection.anchorNode);
                     if (line) {
-                    // always exists unless the textarea is empty
+                        // always exists unless the textarea is empty
                         highlightLine(line);
                     }
-                    if (event.inputType !== 'insertParagraph') { // not enter key
+                    if (event.inputType !== 'insertParagraph') {
+                        // not enter key
                         this.setTextareaFocusPosition(element);
                     }
                     this.insertLineBreaks();
@@ -98,7 +104,11 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
                 this.APIToolService.preventNextChangeDetection = true;
 
                 event.preventDefault();
-                this.document.execCommand('inserttext', false, event.clipboardData.getData('text/plain'));
+                this.document.execCommand(
+                    'inserttext',
+                    false,
+                    event.clipboardData.getData('text/plain'),
+                );
                 const element = this.customTextareaRef.nativeElement;
 
                 for (const child of element.childNodes) {
@@ -124,7 +134,7 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
         });
         this.attributeMutationObserver.observe(this.textarea, {
             attributes: true,
-            attributeOldValue: true
+            attributeOldValue: true,
         });
     }
 
@@ -138,9 +148,9 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
     };
 
     /**
-      * Focus the swagger-textarea's focus position to the right position
-      * This is neccessary because the position is lost after styling elements are inserted by highlightLine
-    */
+     * Focus the swagger-textarea's focus position to the right position
+     * This is neccessary because the position is lost after styling elements are inserted by highlightLine
+     */
     setTextareaFocusPosition = (element: HTMLElement): void => {
         const selection = this.document.getSelection();
         const range = this.document.createRange();
@@ -164,12 +174,15 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
 
         // React overrides value setter so you can't simply do: this.textarea.value = 'text''
         // This code properly triggers the onChange handler in swagger's react code
-        const setValue = Object.getOwnPropertyDescriptor(this.window.HTMLTextAreaElement?.prototype, 'value')?.set;
+        const setValue = Object.getOwnPropertyDescriptor(
+            this.window.HTMLTextAreaElement?.prototype,
+            'value',
+        )?.set;
         setValue?.call(this.textarea, textContent);
         this.textarea.dispatchEvent(new Event('change', { bubbles: true }));
     };
 
-    removeSpacesNotInQuotes = (textContent: string) : string => {
+    removeSpacesNotInQuotes = (textContent: string): string => {
         return textContent.replace(/([^"]+)|("[^"]+")/g, function (_, notInQuotes, wholeString) {
             if (notInQuotes) {
                 return notInQuotes.replace(/\s/g, '');

@@ -31,7 +31,7 @@ export class NxSwaggerSpinnerComponent implements OnInit, OnDestroy {
         });
         this.classMutationObserver.observe(this.opblock, {
             attributes: true,
-            attributeOldValue: true
+            attributeOldValue: true,
         });
         this.isVisible = this.initialIsVisible && this.opblock.classList.contains('is-open');
 
@@ -41,12 +41,15 @@ export class NxSwaggerSpinnerComponent implements OnInit, OnDestroy {
     }
 
     checkVisible = (value: boolean): void => {
-        if (this.cachedLoading && value) { // Cache value to avoid doing a queryselect unnecessarily
+        if (this.cachedLoading && value) {
+            // Cache value to avoid doing a queryselect unnecessarily
             const isOpen = this.opblock.classList.contains('is-open');
             this.isVisible = isOpen;
             this.cachedLoading = isOpen ? this.cachedLoading : null;
         } else {
-            const loadingAnimationElement = this.opblock.querySelector('.opblock-loading-animation');
+            const loadingAnimationElement = this.opblock.querySelector(
+                '.opblock-loading-animation',
+            );
             if (loadingAnimationElement && this.opblock.classList.contains('is-open')) {
                 this.cachedLoading = loadingAnimationElement;
                 this.isVisible = true;

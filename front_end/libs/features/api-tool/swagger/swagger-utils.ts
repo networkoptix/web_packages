@@ -13,20 +13,21 @@ export const focusPositionMarker = '^$@^(';
 const createSpan = (className: string) => {
     return {
         startingTag: `<span class=${className}>`,
-        endingTag: '</span>'
+        endingTag: '</span>',
     };
 };
 
 /**
-  * Highlight all JSON in a code-block/swagger-textarea
-  * Runs on each code-block/swagger-textarea re-render, like when code line counters are added
+ * Highlight all JSON in a code-block/swagger-textarea
+ * Runs on each code-block/swagger-textarea re-render, like when code line counters are added
  */
 export const highlightAllCode = (element: HTMLElement) => {
     const lines = element.querySelectorAll('div');
     if (!lines.length || !brackets.includes(lines[0].innerText[0])) {
         return;
     } // not json
-    if (lines.length > 1000) { // Don't highlight, override swagger highlighting with css
+    if (lines.length > 1000) {
+        // Don't highlight, override swagger highlighting with css
         element.classList.add('no-highlight');
         return;
     }
@@ -36,8 +37,8 @@ export const highlightAllCode = (element: HTMLElement) => {
 };
 
 /**
-  * Find the focusPositionMarker and insert a span with the focus-position class at it's position
-  * This span is later used in swagger-textarea to put the cursor's focus in the right place
+ * Find the focusPositionMarker and insert a span with the focus-position class at it's position
+ * This span is later used in swagger-textarea to put the cursor's focus in the right place
  */
 export const insertFocusPositionElement = (line: HTMLElement) => {
     const html = line.innerHTML;
@@ -59,10 +60,11 @@ export const highlightLine = (line: HTMLElement) => {
 };
 
 /**
-  * Highlight a line in a code-block/swagger-textarea
+ * Highlight a line in a code-block/swagger-textarea
  */
 const highlight = (line: HTMLElement) => {
-    if (!line.textContent.length) { // empty line;
+    if (!line.textContent.length) {
+        // empty line;
         line.innerHTML = '<br>';
         return;
     }
@@ -87,7 +89,9 @@ const highlight = (line: HTMLElement) => {
                     addTag = false;
                 }
                 if (addTag) {
-                    text = text.slice(0, i).concat(startingTag, text.slice(i, j + 1), endingTag, text.slice(j + 1));
+                    text = text
+                        .slice(0, i)
+                        .concat(startingTag, text.slice(i, j + 1), endingTag, text.slice(j + 1));
                     i = j + 2;
                 } else {
                     i = j;
@@ -101,7 +105,9 @@ const highlight = (line: HTMLElement) => {
                 while (i < text.length && !isNaN(parseInt(text[i])) && text[i] !== ',') {
                     i++;
                 }
-                text = text.slice(0, startInd).concat(startingTag, text.slice(startInd, i), endingTag, text.slice(i));
+                text = text
+                    .slice(0, startInd)
+                    .concat(startingTag, text.slice(startInd, i), endingTag, text.slice(i));
                 i = i + 2;
             }
             loopCounter++;
@@ -112,7 +118,7 @@ const highlight = (line: HTMLElement) => {
 };
 
 /**
-  * Find the line the element is contained in in a code-block/swagger-textarea
+ * Find the line the element is contained in in a code-block/swagger-textarea
  */
 export const findLine = element => {
     if (element?.classList?.contains('line')) {
@@ -125,9 +131,13 @@ export const findLine = element => {
 };
 
 /**
-  * Get the html with white-space from the textareaMap and apply it to the codeblock/swagger-textarea
+ * Get the html with white-space from the textareaMap and apply it to the codeblock/swagger-textarea
  */
-export const setCodeBlockHTML = (element: HTMLElement, textareaMap: textareaMap, elementType: 'codeblock' | 'textarea') => {
+export const setCodeBlockHTML = (
+    element: HTMLElement,
+    textareaMap: textareaMap,
+    elementType: 'codeblock' | 'textarea',
+) => {
     const uuid = element.closest('[uuid]')?.getAttribute('uuid');
     const html = textareaMap[uuid];
     if (html) {

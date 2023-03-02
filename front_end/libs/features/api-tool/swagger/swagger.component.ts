@@ -78,7 +78,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         private renderer2: Renderer2,
         private componentFactoryResolver: ComponentFactoryResolver,
         private toastService: NxToastService,
-        @Inject(DOCUMENT) private document: Document
+        @Inject(DOCUMENT) private document: Document,
     ) {}
 
     ngOnInit(): void {
@@ -103,27 +103,31 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         const title = selection.slice(0, -2);
         let description;
         if (expand === 'list') {
-            description = this.openAPIJSONService.currentAPIDoc.tags.find(item => item.name === selection)?.description || '';
+            description =
+                this.openAPIJSONService.currentAPIDoc.tags.find(item => item.name === selection)
+                    ?.description || '';
         }
         if (expand === 'full') {
             const info = getPathAndMethodFromNodeName(node.name);
             const path = this.openAPIJSONService.currentAPIDoc.paths[info.path];
             // If the method is in the node's name, then use method. Otherwise, grab the first method and use that instead (only one should exist in this case)
             if (info.method) {
-                description = path[info.method?.toLowerCase()]?.description || path[Object.keys(path)[0]].description;
+                description =
+                    path[info.method?.toLowerCase()]?.description ||
+                    path[Object.keys(path)[0]].description;
             } else {
                 description = path[Object.keys(path)[0]].description;
             }
         }
         this.swaggerMenuDescription = {
             title,
-            description
+            description,
         };
     }
 
-    #swaggerUI: ((opts: SwaggerUIOptions) => SwaggerUI);
+    #swaggerUI: (opts: SwaggerUIOptions) => SwaggerUI;
 
-    private async getSwagger(): Promise<((opts: SwaggerUIOptions) => SwaggerUI)> {
+    private async getSwagger(): Promise<(opts: SwaggerUIOptions) => SwaggerUI> {
         this.#swaggerUI ||= await import('swagger-ui').then(m => m.default);
         return this.#swaggerUI;
     }
@@ -158,11 +162,14 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
                     return request;
                 },
                 responseInterceptor: response => {
-                    if (response.status === 403 && response?.obj?.errorId === servers.errors.oldSessionErrorId) {
+                    if (
+                        response.status === 403 &&
+                        response?.obj?.errorId === servers.errors.oldSessionErrorId
+                    ) {
                         this.handleOldSession();
                     }
                     return response;
-                }
+                },
             });
             if (this.openAPIJSONService.isInfoNode) {
                 this.modifyCodeBlocksAndTextareas();
@@ -187,7 +194,8 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
 
     private handlePotentialRTSPRoute = (request): void => {
         const urlPath = new URL(request.url).pathname.slice(1);
-        const isRTSP = isUUID(urlPath) || // The only route that starts with uuid is an RTSP route.
+        const isRTSP =
+            isUUID(urlPath) || // The only route that starts with uuid is an RTSP route.
             (!this.APIToolSystemService.isRestAPI() && request.method === 'TRACE'); // Only one TRACE request exists in below 5.0 APIs, and it is RTSP
 
         if (isRTSP) {
@@ -200,13 +208,12 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
 
     private handleOldSession = (): void => {
         this.loginService.currentSystem = this.APIToolSystemService.currentSystem;
-        this.loginService.updateSession('renewWeb')
-            .then(ready => {
-                const { sessionRenewed, failedToUpdateSession } = this.LANG.toastMessage;
-                const { success, danger } = toast;
-                const toastMessage = ready ? sessionRenewed : failedToUpdateSession;
-                this.toastService.notify(toastMessage, ready ? success : danger);
-            });
+        this.loginService.updateSession('renewWeb').then(ready => {
+            const { sessionRenewed, failedToUpdateSession } = this.LANG.toastMessage;
+            const { success, danger } = toast;
+            const toastMessage = ready ? sessionRenewed : failedToUpdateSession;
+            this.toastService.notify(toastMessage, ready ? success : danger);
+        });
     };
 
     private handleRTSPRequest = (request): void => {
@@ -215,7 +222,8 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     };
 
     private authenticateRequest = (request): void => {
-        const headers = this.APIToolSystemService.currentSystem.serverManager.mediaserver.generateHeaders();
+        const headers =
+            this.APIToolSystemService.currentSystem.serverManager.mediaserver.generateHeaders();
         if (headers) {
             // 5.0 and up
             for (const key of headers.keys()) {
@@ -230,7 +238,8 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     private setAuthParam = (request): void => {
         const Url = new URL(request.url);
         const authParamType = request.method === 'GET' ? 'authGet' : 'authPost';
-        const authParam = this.APIToolSystemService.currentSystem.serverManager.mediaserver[authParamType];
+        const authParam =
+            this.APIToolSystemService.currentSystem.serverManager.mediaserver[authParamType];
         const potentialAmpersand = Url.search ? '&' : '';
         Url.search += potentialAmpersand + 'auth=' + authParam;
         request.url = Url.toString();
@@ -239,16 +248,18 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     // swagger-ui plugin system
     private OnResponsesRenderPlugin: SwaggerUIPlugin = () => ({
         wrapComponents: {
-            responses: (Responses, { React }) => props => {
-                const responses = React.createElement(Responses, props);
-                if (this.APIToolSystemService.preventNextChangeDetection) {
-                    this.APIToolSystemService.preventNextChangeDetection = false;
-                } else if (!this.customComponentsRendering) {
-                    this.addCustomChanges();
-                }
-                return responses;
-            }
-        }
+            responses:
+                (Responses, { React }) =>
+                props => {
+                    const responses = React.createElement(Responses, props);
+                    if (this.APIToolSystemService.preventNextChangeDetection) {
+                        this.APIToolSystemService.preventNextChangeDetection = false;
+                    } else if (!this.customComponentsRendering) {
+                        this.addCustomChanges();
+                    }
+                    return responses;
+                },
+        },
     });
 
     private addCustomChanges = (): void => {
@@ -265,7 +276,10 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
             this.moveExampleResponse();
             this.modifyTitlesInResponse();
             this.addLabelToRequest();
-            if (this.openAPIJSONService.searchQuery && !this.openAPIJSONService.searchMoreShowing$.getValue()) {
+            if (
+                this.openAPIJSONService.searchQuery &&
+                !this.openAPIJSONService.searchMoreShowing$.getValue()
+            ) {
                 this.highlightSearchMoreQuery();
             }
             this.customComponentsRendering = false;
@@ -290,20 +304,25 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         // Clicking on execute or try-it-out/cancel button triggers a rerender
         const buttons = this.document.querySelectorAll('.try-out__btn, .opblock-control__btn');
         for (const button of buttons) {
-            fromEvent<MouseEvent>(button, 'click').pipe(take(1), untilDestroyed(this)).subscribe(event => {
-                if ((event?.target as HTMLButtonElement)?.classList.contains('execute')) {
-                    const clearBtn: HTMLButtonElement = this.document.querySelector('.btn-clear');
-                    clearBtn?.click(); // CLOUD-8423, clear the response if the previous one is showing, then generate a new one
-                }
-                if (!this.customComponentsRendering) {
-                    this.addCustomChanges();
-                }
-            });
+            fromEvent<MouseEvent>(button, 'click')
+                .pipe(take(1), untilDestroyed(this))
+                .subscribe(event => {
+                    if ((event?.target as HTMLButtonElement)?.classList.contains('execute')) {
+                        const clearBtn: HTMLButtonElement =
+                            this.document.querySelector('.btn-clear');
+                        clearBtn?.click(); // CLOUD-8423, clear the response if the previous one is showing, then generate a new one
+                    }
+                    if (!this.customComponentsRendering) {
+                        this.addCustomChanges();
+                    }
+                });
         }
     };
 
     private changeRequestBodyText = (): void => {
-        const requestBody: HTMLElement = this.document.querySelector('.opblock-title.parameter__name');
+        const requestBody: HTMLElement = this.document.querySelector(
+            '.opblock-title.parameter__name',
+        );
         if (requestBody) {
             requestBody.innerText = 'Body';
         }
@@ -312,11 +331,17 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     private modifyCodeBlocksAndTextareas = (): void => {
         const elements = this.document.querySelectorAll<HTMLElement>('pre, .text-area');
         for (const element of elements) {
-            if (element.nextSibling?.nodeName !== 'NX-COPY-TO-CLIPBOARD' && !(element.classList.contains('with-line-counter'))) {
+            if (
+                element.nextSibling?.nodeName !== 'NX-COPY-TO-CLIPBOARD' &&
+                !element.classList.contains('with-line-counter')
+            ) {
                 if (element.classList.contains('curl')) {
                     element.innerText = element.innerText.replace(/(\r\n|\n|\r|\\)/gm, '');
                 }
-                if (element.parentElement.tagName !== 'DIV' || !element.parentElement.classList.contains('highlight-code')) {
+                if (
+                    element.parentElement.tagName !== 'DIV' ||
+                    !element.parentElement.classList.contains('highlight-code')
+                ) {
                     const wrapper = this.document.createElement('div');
                     element.parentElement.replaceChild(wrapper, element);
                     wrapper.appendChild(element);
@@ -361,10 +386,9 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     };
 
     private addCustomTextareas(): void {
-        const textareas = this.document.body
-            .querySelectorAll<HTMLTextAreaElement>(
-                'textarea:not(.custom-textarea):not([readonly])'
-            );
+        const textareas = this.document.body.querySelectorAll<HTMLTextAreaElement>(
+            'textarea:not(.custom-textarea):not([readonly])',
+        );
         for (const textarea of textareas) {
             const sibling = textarea.previousElementSibling;
             if (sibling?.tagName === 'NX-SWAGGER-TEXTAREA') {
@@ -374,7 +398,9 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
             }
             const { componentRef, element } = this.generateComponent(NxSwaggerTextareaComponent);
             // storing the uuid on the parent element and reapplying it to textareas/code-blocks that get recreated
-            const parentEl = textarea.closest('.parameters-col_description, .opblock-description-wrapper');
+            const parentEl = textarea.closest(
+                '.parameters-col_description, .opblock-description-wrapper',
+            );
             const uuid = parentEl?.getAttribute('uuid');
             if (!uuid) {
                 const { uuid } = this.addComponentToComponentMap(componentRef, element);
@@ -391,7 +417,8 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
 
     private generateRequestTypeLabel = () => {
         const label = this.document.createElement('label');
-        label.innerHTML = '<div class="media-type-wrapper"><div class="media-type">application/json</div></div>';
+        label.innerHTML =
+            '<div class="media-type-wrapper"><div class="media-type">application/json</div></div>';
         return label;
     };
 
@@ -424,9 +451,10 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         }
     };
 
-    generateComponent<C>(
-        componentClass: Type<C>
-    ): { componentRef: ComponentRef<C>; element: HTMLElement } {
+    generateComponent<C>(componentClass: Type<C>): {
+        componentRef: ComponentRef<C>;
+        element: HTMLElement;
+    } {
         const factory = this.componentFactoryResolver.resolveComponentFactory(componentClass);
         const componentRef = this.VCR.createComponent(factory);
         const element = componentRef.location.nativeElement as HTMLElement;
@@ -460,7 +488,8 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         }
         const el = parent.firstElementChild?.tagName === 'CODE' ? parent.firstElementChild : parent;
         const lines = el.innerHTML.split('\n').map(div => `<div class='line'>${div}</div>`);
-        if (lines.length > 1) { // Don't show line counters if only one line
+        if (lines.length > 1) {
+            // Don't show line counters if only one line
             parent.innerHTML = lines.join('\n');
             let contentFound = false;
             for (const child of parent.childNodes as any) {
@@ -481,7 +510,9 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     };
 
     private addLabelToRequest = (): void => {
-        const requestModelExample = this.document.querySelector('.opblock-description-wrapper .model-example:not(.with-label)');
+        const requestModelExample = this.document.querySelector(
+            '.opblock-description-wrapper .model-example:not(.with-label)',
+        );
         if (requestModelExample) {
             const label = this.generateRequestTypeLabel();
             requestModelExample.insertBefore(label, requestModelExample.firstChild);
@@ -490,7 +521,9 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     };
 
     private insertCustomDropdown = (): void => {
-        const selects = this.document.body.querySelectorAll<HTMLSelectElement>('select:not(.custom-dropdown):not(.content-type)');
+        const selects = this.document.body.querySelectorAll<HTMLSelectElement>(
+            'select:not(.custom-dropdown):not(.content-type)',
+        );
 
         for (const select of selects) {
             // The original select is hidden and an nx-select is inserted
@@ -503,13 +536,23 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     };
 
     highlightSearchMoreQuery() {
-        const description = this.document.querySelector('.swagger-description')?.querySelector('.mt-3');
+        const description = this.document
+            .querySelector('.swagger-description')
+            ?.querySelector('.mt-3');
         if (description) {
-            description.innerHTML = highlightAll(description.innerHTML, this.openAPIJSONService.searchQuery);
+            description.innerHTML = highlightAll(
+                description.innerHTML,
+                this.openAPIJSONService.searchQuery,
+            );
         }
-        const paramsDescriptions = this.document.querySelectorAll('.parameters-col_description > .renderedMarkdown > p');
+        const paramsDescriptions = this.document.querySelectorAll(
+            '.parameters-col_description > .renderedMarkdown > p',
+        );
         for (const paramDescription of paramsDescriptions) {
-            paramDescription.innerHTML = highlightAll(paramDescription.innerHTML, this.openAPIJSONService.searchQuery);
+            paramDescription.innerHTML = highlightAll(
+                paramDescription.innerHTML,
+                this.openAPIJSONService.searchQuery,
+            );
         }
     }
 

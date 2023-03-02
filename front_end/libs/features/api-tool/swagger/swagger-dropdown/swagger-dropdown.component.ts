@@ -1,9 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
-import type {
-    MultiSelectItem
-} from '@components/dropdowns/multi-select/multi-select.component.types';
+import type { MultiSelectItem } from '@components/dropdowns/multi-select/multi-select.component.types';
 import { NxAPIToolSystemService } from '@pages/api-tool/services/api-tool-system.service';
 
 type SingleDropdownOption = DropdownItem<string>;
@@ -48,13 +46,13 @@ export class NxSwaggerDropdownComponent implements OnInit, OnDestroy {
                 if (option.innerText !== '--') {
                     this.multiDropdownOptions.push({
                         label: option.innerText,
-                        id: option.value
+                        id: option.value,
                     });
                 }
             } else {
                 this.singleDropdownOptions.push({
                     name: option.innerText,
-                    value: option.value
+                    value: option.value,
                 });
             }
         }
@@ -80,7 +78,7 @@ export class NxSwaggerDropdownComponent implements OnInit, OnDestroy {
         });
         this.disabledMutationObserver.observe(this.swaggerSelect, {
             attributes: true,
-            attributeOldValue: true
+            attributeOldValue: true,
         });
     }
 
