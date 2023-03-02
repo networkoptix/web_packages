@@ -1,23 +1,26 @@
-<ul>
-    <h3
-        *ngIf="userLevel"
-        class="user-level"
-    >
-        <svg-icon
-            nx-add-svg-src
-            [src]="
-                icons.dir + (openState[userLevel] ? 'triangle_opened.svg' : 'triangle_closed.svg')
-            "
-            [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
-            svgClass="triangle"
-        ></svg-icon>
-        <svg-icon
-            nx-add-svg-src
-            [src]="icons.dir + 'user.svg'"
-            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-        ></svg-icon>
-        <a (click)="selectUserFilter(userLevel)"> {{ userLevel }} </a>
-    </h3>
+<h3
+    *ngIf="userLevel"
+    class="user-level"
+>
+    <svg-icon
+        (click)="toggleOpenState(userLevel)"
+        nx-add-svg-src
+        [src]="icons.dir + (openGroups[userLevel] ? 'triangle_opened.svg' : 'triangle_closed.svg')"
+        [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
+        svgClass="triangle"
+    ></svg-icon>
+    <svg-icon
+        nx-add-svg-src
+        [src]="icons.dir + 'user.svg'"
+        [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+    ></svg-icon>
+    <a (click)="selectUserFilter(userLevel)"> {{ userLevel }} </a>
+</h3>
+<ul
+    [ngClass]="{
+        'closed-level': userLevel ? !openGroups[userLevel] : groupId ? !openGroups[groupId] : false
+    }"
+>
     <li *ngFor="let group of groups; trackBy: trackItem">
         <div
             class="group-drop-list"
@@ -31,23 +34,24 @@
             (cdkDropListDropped)="onDrop($event)"
         >
             <svg-icon
-                (click)="openState[group.id] = !openState[group.id]"
+                (click)="toggleOpenState(group.id)"
                 *ngIf="group.groups.length"
                 nx-add-svg-src
                 [src]="
                     icons.dir +
-                    (openState[group.id] ? 'triangle_opened.svg' : 'triangle_closed.svg')
+                    (openGroups[group.id] ? 'triangle_opened.svg' : 'triangle_closed.svg')
                 "
                 [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
                 svgClass="triangle"
             ></svg-icon>
             <svg-icon
                 nx-add-svg-src
-                [src]="icons.dir + (openState[group.id] ? 'folder_open.svg' : 'folder.svg')"
+                [src]="icons.dir + (openGroups[group.id] ? 'folder_open.svg' : 'folder.svg')"
                 [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
                 svgClass="folder"
             ></svg-icon>
             <h3
+                (click)="toggleOpenState(group.id)"
                 cdkDrag
                 [cdkDragData]="group"
                 cdkDragBoundary=".sidebar"
@@ -62,8 +66,9 @@
         </div>
         <nx-sidebar-level
             *ngIf="group.groups.length"
-            [ngClass]="{ 'closed-level': !openState[group.id] }"
             [groups]="group.groups"
+            [groupId]="group.id"
+            [openGroups]="openGroups"
         ></nx-sidebar-level>
     </li>
 </ul>

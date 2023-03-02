@@ -9,15 +9,17 @@ import { icons } from '@lib/variables/static-variables';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 
-import type { GroupItem, GroupsItem, Crumb, SharedItems, BaseItems } from './groups.types';
-import { LoadingState } from './groups.types';
+import { GroupItem, GroupsItem, Crumb, SharedItems, BaseItems, OpenGroups, LoadingState, GroupPath } from './groups.types';
 import { NxSystemGroupsService } from './services/system-groups.service';
 import * as GroupActions from './store/groups.actions';
 import {
     selectCrumbs,
     selectCurrentGroupId,
+    selectCurrentGroupOwner,
+    selectCurrentPath,
     selectCurrentSharedOwner,
     selectLoadingState,
+    selectOpenGroups,
     selectPersonalItems,
     selectRootGroupItems,
     selectSharedItems,
@@ -36,7 +38,9 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
     icons = icons;
     LoadingState = LoadingState;
     LANG = staticLang;
+    openGroups$ = this.store.select<OpenGroups>(selectOpenGroups);
     crumbs$ = this.store.select<Crumb[] | null>(selectCrumbs);
+    currentPath$ = this.store.select<GroupPath[]>(selectCurrentPath);
     userEmail: string = this.localStorageService.retrieve('loginstate');
     sidebarSettings: CustomAccountProperty<sidebarSettings>;
     showPersonal: boolean = true;
@@ -44,6 +48,7 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
     personalItems$ = this.store.select<BaseItems>(selectPersonalItems);
     allGroups$ = this.store.select(selectRootGroupItems);
     currentSharedOwner$ = this.store.select<string>(selectCurrentSharedOwner);
+    currentGroupOwner$ = this.store.select<string>(selectCurrentGroupOwner);
 
     loadingState$ = this.store.select<LoadingState>(selectLoadingState);
     currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
@@ -91,6 +96,9 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
     public setSharedFilter(newState: boolean): void {
         if (newState === this.showPersonal) {
             return;
+        }
+        if (!newState) {
+            this.store.dispatch(GroupActions.setCurrentSharedOwner({ currentSharedOwner: null }));
         }
         this.router.navigate(['/', 'groups']);
         this.showPersonal = newState;

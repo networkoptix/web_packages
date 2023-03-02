@@ -1,13 +1,12 @@
 import type { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 
 import { icons } from '@lib/variables/static-variables';
-import { NgChanges } from '@utils/ng-changes';
 
-import { GroupItem, GroupsItem } from '../../groups.types';
+import { GroupItem, GroupsItem, OpenGroups } from '../../groups.types';
 import { NxSystemGroupsService } from '../../services/system-groups.service';
 import * as GroupActions from '../../store/groups.actions';
 import { selectCurrentGroupId } from '../../store/groups.selectors';
@@ -18,13 +17,14 @@ import { selectCurrentGroupId } from '../../store/groups.selectors';
     templateUrl: 'sidebar-level.component.html',
     styleUrls: ['sidebar-level.component.scss'],
 })
-export class NxGroupsSidebarLevelComponent implements OnChanges {
+export class NxGroupsSidebarLevelComponent {
     @Input() groups: GroupItem[];
     @Input() userLevel: string;
+    @Input() openGroups: OpenGroups;
+    @Input() groupId: string;
 
     currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
 
-    openState: Record<string, boolean> = {};
     icons = icons;
 
     constructor(
@@ -32,30 +32,10 @@ export class NxGroupsSidebarLevelComponent implements OnChanges {
         private store: Store,
         private router: Router,
     ) {
-        groupsService.sidebarOpenSubject
-            .pipe(untilDestroyed(this))
-            .subscribe(state => this.setAll(state));
-    }
-
-    ngOnChanges({ groups }: NgChanges<NxGroupsSidebarLevelComponent>): void {
-        if (groups.currentValue) {
-            this.openState = Object.fromEntries(
-                groups.currentValue.map(g => [
-                    g.id,
-                    this.openState[g.id] ?? false
-                ])
-            );
-        }
     }
 
     trackItem(_index: number, item: GroupsItem): string {
         return item.id;
-    }
-
-    private setAll(state: boolean): void {
-        Object.keys(this.openState).forEach(k => {
-            this.openState[k] = state;
-        });
     }
 
     onDrop(event: CdkDragDrop<GroupsItem, GroupsItem, GroupsItem>): void {
@@ -71,5 +51,22 @@ export class NxGroupsSidebarLevelComponent implements OnChanges {
     selectUserFilter(user: string): void {
         this.router.navigate(['/', 'groups'])
             .then(() => this.store.dispatch(GroupActions.setCurrentSharedOwner({ currentSharedOwner: user })));
+    }
+
+    toggleOpenState(groupId?: string): boolean | void {
+        const updatedState: OpenGroups = {};
+
+        if (!groupId) {
+            updatedState[this.groupId] = true;
+        }
+        // exists in open groups already
+        if (this.openGroups[groupId] !== undefined) {
+            updatedState[groupId] = !this.openGroups[groupId];
+        } else {
+            updatedState[groupId] = true;
+        }
+
+        this.openGroups = { ...this.openGroups, ...updatedState };
+        this.store.dispatch(GroupActions.setOpenGroups({ openGroups: updatedState }));
     }
 }

@@ -100,19 +100,19 @@
             #userFilteredGroups
             class="sharedGroups"
         >
-            <ng-template *ngTemplateOutlet="user; context: { $implicit: currentSharedOwner }"
-                ><ng-template>
-                    <div class="cards-container">
-                        <ng-container
-                            *ngTemplateOutlet="
-                                cards;
-                                context: {
-                                    groups: sharedItems[currentSharedOwner].groups,
-                                    systems: sharedItems[currentSharedOwner].systems
-                                }
-                            "
-                        ></ng-container>
-                    </div>
-                </ng-template>
-            </ng-template> </ng-template></ng-template
-></ng-template>
+            <ng-template *ngTemplateOutlet="user; context: { $implicit: currentSharedOwner }">
+            </ng-template>
+            <div class="cards-container">
+                <ng-container
+                    *ngTemplateOutlet="
+                        cards;
+                        context: {
+                            groups: sharedItems[currentSharedOwner].groups,
+                            systems: sharedItems[currentSharedOwner].systems
+                        }
+                    "
+                ></ng-container>
+            </div>
+        </ng-template>
+    </ng-template>
+</ng-template>

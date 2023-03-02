@@ -45,6 +45,15 @@ export interface Crumb {
     name: string;
 }
 
+export interface GroupPath {
+    id: string;
+    name: string;
+}
+
+export interface OpenGroups {
+    [systemId: string]: boolean;
+}
+
 export enum LoadingState {
     LOADING = 0,
     LOADED = 1,

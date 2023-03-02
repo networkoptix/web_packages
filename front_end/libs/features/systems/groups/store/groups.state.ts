@@ -1,4 +1,4 @@
-import type { BaseGroupsItem, SystemInfo } from '../groups.types';
+import type { BaseGroupsItem, OpenGroups, SystemInfo } from '../groups.types';
 
 export interface GroupsState {
     items: BaseGroupsItem[] | null;
@@ -6,4 +6,5 @@ export interface GroupsState {
     currentGroupId: string;
     currentSharedOwner: string;
     accountEmail: string;
+    openGroups: OpenGroups;
 }

@@ -35,7 +35,7 @@ export class NxGroupCardComponent {
 
     openGroup(): void {
         this.router.navigate(['groups', this.group.id])
-            .then(() => this.store.dispatch(GroupActions.setCurrentSharedOwner({ currentSharedOwner: null })));
+            .then(() => this.store.dispatch(GroupActions.setOpenGroups({ openGroups: { [this.group.id]: true } })));
     }
 
     deleteGroup(): void {

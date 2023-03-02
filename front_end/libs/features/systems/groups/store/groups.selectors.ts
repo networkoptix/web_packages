@@ -25,6 +25,11 @@ const selectSystemInfo = createSelector(
     state => state.systemInfo,
 );
 
+export const selectOpenGroups = createSelector(
+    selectGroupState,
+    state => state.openGroups,
+);
+
 const selectAccountEmail = createSelector(
     selectGroupState,
     state => state.accountEmail,
@@ -218,6 +223,26 @@ export const selectCrumbs = createSelector(
     }
 );
 
+// Same as above to prevent unexpected changes for crumbs
+export const selectCurrentPath = createSelector(
+    selectCurrentIndexes,
+    selectRootGroupItems,
+    (indexes, rootGroups) => {
+        if (!indexes) {
+            return null;
+        }
+        const crumbs: Crumb[] = [];
+        if (indexes.length) {
+            let groups = rootGroups;
+            indexes.forEach(i => {
+                crumbs.push({ id: groups[i].id, name: groups[i].name });
+                groups = groups[i].groups;
+            });
+        }
+        return crumbs;
+    }
+);
+
 const createSharedItemsObject = (
     groups: GroupItem[],
     systems: SystemItem[],
@@ -302,4 +327,15 @@ export const selectSharedItems = createSelector(
     selectSharedGroupItems,
     selectSharedSystemItems,
     (groups, systems) => createSharedItemsObject(groups, systems),
+);
+
+export const selectCurrentGroupOwner = createSelector(
+    selectCurrentIndexes,
+    selectRootGroupItems,
+    (indexes, groups) => {
+        if (!indexes?.length) {
+            return;
+        }
+        return groups[indexes[0]].owner_account_email;
+    }
 );

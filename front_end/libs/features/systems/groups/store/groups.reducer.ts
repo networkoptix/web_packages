@@ -9,6 +9,7 @@ const initialState: GroupsState = {
     currentGroupId: undefined,
     currentSharedOwner: null,
     accountEmail: null,
+    openGroups: {},
 };
 
 export const groupsReducer = createReducer(
@@ -43,6 +44,16 @@ export const groupsReducer = createReducer(
         (state, { accountEmail }): GroupsState => ({
             ...state,
             accountEmail
+        })
+    ),
+    on(
+        GroupActions.setOpenGroups,
+        (state, { openGroups }): GroupsState => ({
+            ...state,
+            openGroups: {
+                ...state.openGroups,
+                ...openGroups
+            }
         })
     )
 );

@@ -28,10 +28,11 @@
             <nx-groups-sidebar
                 [showPersonal]="showPersonal"
                 [currentGroupId]="currentGroupId$ | async"
-                [sharedSidebarItems]="sharedItems$ | async"
-                [personalSidebarItems]="personalItems$ | async"
+                [currentGroupOwner]="currentGroupOwner$ | async"
                 [userEmail]="userEmail"
                 [hasGroups]="!!(allGroups$ | async).length"
+                [currentPath]="currentPath$ | async"
+                [openGroups]="openGroups$ | async"
                 [ngClass]="{
                     shown: (sidebarSettings.value$ | async)?.showSidebarState
                 }"
