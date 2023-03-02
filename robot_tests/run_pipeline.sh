@@ -20,7 +20,7 @@ if [ -n "${MERGE_REQUEST_ACTION+x}" ]; then
   esac
 fi
 
-if [ -n "${$MERGE_REQUEST_SOURCE_WEB_URL+x}" ]; then
+if [ -n "${MERGE_REQUEST_SOURCE_WEB_URL+x}" ]; then
   echo "Testing changes to merge from the repository $MERGE_REQUEST_SOURCE_WEB_URL"
 fi
 
