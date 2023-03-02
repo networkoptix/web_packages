@@ -606,7 +606,7 @@
                 "label": "Windows"
             },
             "universal": {
-                "label": "Universal"
+                "label": "Universel"
             }
         },
         "mobile": {
@@ -714,10 +714,10 @@
         "systemList": "Liste Système",
         "headerMenuNodes": {
             "welcome": {
-                "displayName": "welcome",
+                "displayName": "bienvenu",
                 "nodes": [
                     {
-                        "displayName": "Welcome To %CLOUD_NAME%"
+                        "displayName": "Bienvenue sur %CLOUD_NAME%"
                     }
                 ]
             },
@@ -837,7 +837,7 @@
         "account": "Paramètres du compte",
         "activate": "Activer compte",
         "activateCode": "Activer compte",
-        "activateSuccess": "Account activated",
+        "activateSuccess": "Compte activé",
         "articleTitle": "{ARTICLE_TITLE} pour {VMS_NAME}",
         "auth": "Autorisation",
         "changePassword": "Changer mot de passe",
@@ -854,14 +854,14 @@
         "register": "Créer compte dans",
         "registerSuccess": "Bienvenue sur",
         "restorePassword": "Réinitialiser mot de passe",
-        "restorePasswordSuccess": "Password saved",
+        "restorePasswordSuccess": "Mot de passe enregistré",
         "supportedDevices": "Périphériques supportés",
         "system": "Système",
-        "systemShare": "Share System",
+        "systemShare": "Partager le système",
         "systems": "Systèmes",
         "template": "{title} - %CLOUD_NAME%",
         "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
-        "view": "View cameras",
+        "view": "Voir les caméras",
         "apiTool": "Outil de test d'API",
         "security": "Sécurité",
         "twofaRequired": "Authentification à deux facteurs requise",
@@ -937,7 +937,7 @@
         },
         "newVersionAvailable": {
             "notification": "Une nouvelle version de %CLOUD_NAME% est disponible",
-            "installButton": "Refresh to Update"
+            "installButton": "Rafraîchir pour mettre à jour"
         },
         "systemOffline": "Le système est hors ligne. Certains paramètres peuvent ne pas être disponibles.",
         "systemsMerging": "Ce système est actuellement impliqué dans une opération de fusion."
@@ -1002,8 +1002,8 @@
             "localSuccess": "Système prêt à l’emploi",
             "merge": "Connectez le serveur au système existant",
             "mergeFailure": "Impossible de fusionner les systèmes",
-            "mergeProcess": "Merging Systems",
-            "start": "Get Started with %VMS_NAME%",
+            "mergeProcess": "Fusionner les systèmes",
+            "start": "Commencer avec %VMS_NAME%",
             "systemName": "Entrez le nom du système"
         },
         "advancedSettings": {
@@ -1036,7 +1036,7 @@
         "status": {
             "offline": "System Hors ligne",
             "unavailable": "Le système est inaccessible",
-            "outOfTimeSync": "Time on one or more servers is out of sync."
+            "outOfTimeSync": "L'heure sur un ou plusieurs serveurs est désynchronisée."
         },
         "users": {
             "cloudDelete": "Supprimer Utilisateur",
@@ -1082,8 +1082,8 @@
     },
     "systemGroups": {
         "root": "root",
-        "groupCount": "{count, plural, =0{# GROUPS} one{# GROUP} other{# GROUPS}}",
-        "systemCount": "{count, plural, =0{# SYSTEMS} one{# SYSTEM} other{# SYSTEMS}}",
+        "groupCount": "{count, plural, =0{# GROUPE} one{# GROUPE} other{# GROUPES}}",
+        "systemCount": "{count, plural, =0{# SYSTEME} one{# SYSTEME} other{# SYSTEMES}}",
         "connectionLost": "Connexion perdue, reconnexion...",
         "connectionRestored": "Connexion restaurée",
         "couldNotReconnect": "Impossible de restaurer la connexion",
@@ -1112,7 +1112,7 @@
         "unavailable": "non disponible"
     },
     "serverDocumentation": {
-        "accessibleAt": "For Windows in registry key: { windowsPath } Media Server \n For all other platforms it is placed in a config file: {defaultPath} To temporarily comment out some setting, add the underscore symbol (\"_\") to the begining of its name, e.g. \"absoluteRtcpTimestamps=false\" converts to \"_absoluteRtcpTimestamps=false\"."
+        "accessibleAt": "Pour Windows dans la clé de registre : { windowsPath } Media Server \n Pour toutes les autres plates-formes, il est placé dans un fichier de configuration : {defaultPath} Pour commenter temporairement un paramètre, ajouter le symbole de tiret bas (\"_\") au début de son nom. . \"absoluteRtcpTimestamps=false\" convertit en \"_absoluteRtcpTimestamps=false\"."
     },
     "toastMessage": {
         "cloudUnavailable": "Une erreur s'est produite. Veuillez actualiser la page dans environ 30 secondes.",
