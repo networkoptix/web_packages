@@ -91,6 +91,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     private unsub$ = new Subject<string>();
     public isLocal: boolean = false;
     public cameraDetailsShown: boolean = false;
+    public isNvr: boolean = false;
 
     constructor(
         configService: NxConfigService,
@@ -540,7 +541,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.unsub$.next('done');
         this.getRecordsInProgress = this.id;
         this.previewUrl = `url(${this.system.getPreviewUrl(this.id, null)})`;
-        if (!this.vms.selectedCamera.hasArchive) {
+        const camera = this.system.cameraManager.cameras.find(({ id }) => id?.includes(this.id));
+        this.isNvr = camera?.deviceType?.toLowerCase() === 'nvr';
+        if (!this.vms.selectedCamera.hasArchive && !this.vms.selectedCamera.isScheduleEnabled) {
             this.getRecordsInProgress = undefined;
             this._initSelectedCamera();
             this._restorePlayback();

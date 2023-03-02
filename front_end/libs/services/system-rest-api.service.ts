@@ -251,13 +251,15 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return request.pipe(
             mergeMap(
                 (
-                    error: { status: number; resultCode: string, error: { error: string, errorId: string } },
+                    error: { status: number; resultCode: string, error: { error: string, errorId: string }, url: string },
                     attempt: number
                 ) => {
                     if (attempt === 0) {
                         const storageService = this.storageService;
                         const refreshToken = storageService.refreshToken;
-                        const expiredSession = error.status === 422 && error?.error?.errorId === 'sessionExpired';
+                        const errorId = error?.error?.errorId;
+                        const expiredSession = error.status === 422 && errorId === 'sessionExpired' ||
+                            error.status === 400 && errorId === 'badRequest' && error.url.includes('/rest/v1/login/sessions/');
                         const authorizationError = error.status >= 400 && error.status < 500 && error.status !== 422 || error.resultCode === 'forbidden';
 
                         if (error.status === 503) {
@@ -664,14 +666,14 @@ export class NxSystemRestAPI extends NxSystemAPI {
         const endpoint = '/rest/v1/devices';
         const params = {
             _keepDefault: true,
-            _with: 'id,name,serverId,status,url,schedule.isEnabled'
+            _with: 'id,name,serverId,status,url,schedule.isEnabled,deviceType'
         };
         return this.get<PartialCameraRest[]>(
             endpoint,
             params
         ).pipe(map(cameras => cameras
-            .map(({ id, name, schedule, serverId, status, url }) => (
-                { id, name, status, url, scheduleEnabled: schedule.isEnabled, parentId: serverId }
+            .map(({ deviceType, id, name, schedule, serverId, status, url }) => (
+                { deviceType, id, name, status, url, scheduleEnabled: schedule.isEnabled, parentId: serverId }
             ))));
     }
 
