@@ -76,8 +76,8 @@ export class LocalAccount extends BaseAccount {
             let account: Account;
             if (user) {
                 account = new Account(user);
+                this.account = account;
             }
-            this.account = account;
 
             return account;
         }

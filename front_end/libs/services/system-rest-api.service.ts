@@ -250,13 +250,15 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return request.pipe(
             mergeMap(
                 (
-                    error: { status: number; resultCode: string, error: { error: string, errorId: string } },
+                    error: { status: number; resultCode: string, error: { error: string, errorId: string }, url: string },
                     attempt: number
                 ) => {
                     if (attempt === 0) {
                         const storageService = this.storageService;
                         const refreshToken = storageService.refreshToken;
-                        const expiredSession = error.status === 422 && error?.error?.errorId === 'sessionExpired';
+                        const errorId = error?.error?.errorId;
+                        const expiredSession = error.status === 422 && errorId === 'sessionExpired' ||
+                            error.status === 400 && errorId === 'badRequest' && error.url.includes('/rest/v1/login/sessions/');
                         const authorizationError = error.status >= 400 && error.status < 500 && error.status !== 422 || error.resultCode === 'forbidden';
 
                         if (error.status === 503) {
