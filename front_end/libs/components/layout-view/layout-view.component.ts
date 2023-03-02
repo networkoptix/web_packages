@@ -202,14 +202,13 @@ export class NxLayoutViewComponent {
                     : Promise.resolve([] as WebPages),
                 this.#selectedLayout$.pipe(startWith(null)),
                 this.availableLayouts$.pipe(startWith([])),
-                userManager
-                    .getUsersDataFromTheSystem()
-                    .then(
-                        () =>
-                            userManager.users.find(
-                                ({ email }) => email === this.accountService.account.email,
-                            ).id,
-                    ),
+                userManager.getUsersDataFromTheSystem().then(() => {
+                    const currentUser = userManager.users.find(
+                        ({ email }) => email === this.accountService.account.email,
+                    );
+                    const isOwner = userManager.isOwner(currentUser);
+                    return { id: currentUser.id, isOwner };
+                }),
             ]),
         ),
         map(
@@ -219,7 +218,7 @@ export class NxLayoutViewComponent {
                 webPages,
                 currentLayout,
                 layouts,
-                currentUser,
+                { id: currentUser, isOwner },
             ]): LayoutResourceTree => {
                 const aspectRatio = currentLayout?.cellAspectRatio || 0;
                 const parsedCameras = cameras.reduce(
@@ -279,6 +278,15 @@ export class NxLayoutViewComponent {
                 );
                 const layoutsForTree = layouts
                     .filter(layout => layout.id && layout.id !== 'new')
+                    .filter(
+                        layout =>
+                            !(
+                                isOwner &&
+                                ![currentUser, '{00000000-0000-0000-0000-000000000000}'].includes(
+                                    layout.parentId,
+                                )
+                            ),
+                    )
                     .map(details => ({
                         name: details.name,
                         id: details.id,
