@@ -127,7 +127,7 @@ export class NxUrlProtocolService {
     }> {
         return Promise.all([
             linkSettings.useOauth ? Promise.resolve('') : this.accountService.authKey(),
-            this.cloudApiService.getCode('*').toPromise()
+            environment.isLocal ? Promise.resolve() : this.cloudApiService.getCode('*').toPromise()
         ]).then(([data, { code }]) => {
             if (linkSettings.useOauth) {
                 linkSettings.code = code;

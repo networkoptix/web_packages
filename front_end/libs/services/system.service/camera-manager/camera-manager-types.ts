@@ -61,6 +61,7 @@ export interface ICamera {
 }
 
 export interface IPartialCamera {
+    deviceType: string;
     id: string;
     name: string;
     parentId: string;
@@ -70,6 +71,7 @@ export interface IPartialCamera {
 }
 
 export interface PartialCameraRest {
+    deviceType: string;
     id: string;
     name: string;
     schedule: {

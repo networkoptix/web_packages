@@ -668,14 +668,14 @@ export class NxSystemRestAPI extends NxSystemAPI {
         const endpoint = '/rest/v1/devices';
         const params = {
             _keepDefault: true,
-            _with: 'id,name,serverId,status,url,schedule.isEnabled'
+            _with: 'id,name,serverId,status,url,schedule.isEnabled,deviceType'
         };
         return this.get<PartialCameraRest[]>(
             endpoint,
             params
         ).pipe(map(cameras => cameras
-            .map(({ id, name, schedule, serverId, status, url }) => (
-                { id, name, status, url, scheduleEnabled: schedule.isEnabled, parentId: serverId }
+            .map(({ deviceType, id, name, schedule, serverId, status, url }) => (
+                { deviceType, id, name, status, url, scheduleEnabled: schedule.isEnabled, parentId: serverId }
             ))));
     }
 
