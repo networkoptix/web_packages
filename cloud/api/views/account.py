@@ -322,16 +322,16 @@ async def index(request):
                 current_version = str(uuid4())
                 caches['requests'].set(request.user.email, current_version)
             return redirect(f'{reverse("account")}?cached={current_version}')
-        serializer = AccountSerializer(request, many=False)
+        serializer = await sync_to_async(lambda: AccountSerializer(request, many=False))()
 
         return api_success(await sync_to_async(AccountSerializer.data.fget)(serializer), additional_headers={'Cache-Control': f'max-age={60**2 * 24}'})
 
-    serializer = AccountUpdateSerializer(request, data=request.data)
+    serializer = await sync_to_async(lambda: AccountUpdateSerializer(request, data=request.data))()
 
-    if not serializer.is_valid():
+    if not (await sync_to_async(serializer.is_valid)()):
         raise APIRequestException('Wrong form parameters',
-                                    ErrorCodes.wrong_parameters,
-                                    error_data=serializer.errors)
+                                  ErrorCodes.wrong_parameters,
+                                  error_data=serializer.errors)
 
     await sync_to_async(Account.update)(
         request, request.data['first_name'], request.data['last_name'])
