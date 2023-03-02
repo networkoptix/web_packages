@@ -96,7 +96,6 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     protected currentUser: t.ec2User | t.CurrentUser;
     protected userEmail: string;
     protected userRequest: Promise<t.ec2User | t.CurrentUser>;
-    urlBase: string;
     unauthorizedCallback: (params: unknown) => Promise<any>;
     cacheService: NxUriCacheService;
     cookieService: CookieService;
@@ -147,6 +146,10 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         return false;
     }
 
+    public get urlBase() {
+        return this.getUrlBase();
+    }
+
     public setAccessTokenAsCookie(): void {
         throw new Error(this.notImplementedMsg);
     }
@@ -180,6 +183,9 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     }
 
     protected getUrlBase(protocol = this.window.location.protocol) {
+        const getCurrentRelayHost = () => this.currentRelayHost || this.CONFIG.trafficRelayHost
+            .replace('{host}', this.window.location.host)
+            .replace('{systemId}', this.systemId);
         let urlBase = protocol !== this.window.location.protocol ? `${protocol}//${this.window.location.host}` : '';
         if (this.systemId) {
             const localProxy = this.cookieService.get('cors_bypass') || '';
@@ -190,9 +196,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
                 localProxy +
                 protocol +
                 '//' +
-                this.CONFIG.trafficRelayHost
-                    .replace('{host}', this.window.location.host)
-                    .replace('{systemId}', this.systemId);
+                getCurrentRelayHost();
         }
         return urlBase;
     }
@@ -346,6 +350,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     }
 
     protected proxy = proxyLegacyV1;
+    currentRelayHost = '';
 
     init(
         userEmail: string,
@@ -358,7 +363,21 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         this.systemId = systemId;
         this.serverId = serverId;
         this.unauthorizedCallback = unauthorizedCallback;
-        this.urlBase = this.getUrlBase();
+        this.currentRelayHost = this.urlBase.split('://').pop();
+        firstValueFrom(this.getResolvedRelay());
+    }
+
+    /**
+     * Pings the server. This allows the NxCurrentRelayInterceptor interceptor to inspect the response.
+     *
+     * This updated the currentRelayHost property which is then returned.
+     *
+     * This is mostly needed for websocket connections since they don't follow 307 redirects.
+     *
+     * @returns Actual resolved current relay host.
+     */
+    public getResolvedRelay(): Observable<string> {
+        return this.ping().pipe(map(() => this.currentRelayHost));
     }
 
     cleanId(id: string) {

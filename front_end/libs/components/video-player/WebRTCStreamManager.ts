@@ -5,8 +5,9 @@
  * Once the the api's with the mediaserver are stabilized and WebRTCStreamManager has been been updated to handle updating position and performance tuning we'll look into moving and publishing.
  */
 
-import { Observable, BehaviorSubject, timer } from 'rxjs';
-import { filter, shareReplay, switchMap, take, map, delay } from 'rxjs/operators';
+import { Observable, BehaviorSubject, timer, Subject } from 'rxjs';
+import { filter, shareReplay, switchMap, take, map, delay, takeUntil } from 'rxjs/operators';
+import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
 const removeAuth = (webRtcUrl: string): string => webRtcUrl.split('&auth=')[0].split('&pos=')[0];
 
@@ -64,6 +65,24 @@ type PlaybackDetails = Record<string, { fps: number; players: number }>;
 
 type StreamHandler = (stream: MediaStream) => unknown;
 
+interface IceCandidate {
+    ice: RTCIceCandidate;
+}
+
+interface SdpInit {
+    sdp: RTCSessionDescriptionInit;
+}
+
+interface IceInit {
+    ice: RTCIceCandidateInit;
+}
+
+interface ErrorMsg {
+    error: unknown;
+}
+
+type SignalingMessage = SdpInit | IceInit | IceCandidate | ErrorMsg;
+
 export enum ConnectionError {
     websocket = 'websocket',
 }
@@ -71,22 +90,26 @@ export enum ConnectionError {
 class MediaServerPeerConnection extends RTCPeerConnection {
     onicecandidate = (event: RTCPeerConnectionIceEvent): void => {
         if (event.candidate) {
-            this.wsConnection.send(JSON.stringify({ ice: event.candidate }));
+            this.wsConnection.next({ ice: event.candidate });
         }
     };
 
     oniceconnectionstatechange = (): void => {
         console.log('peerConnection ice state ' + this.iceConnectionState);
         if (this.iceConnectionState === 'connected') {
-            this.wsConnection.close();
+            this.closeWebsocket();
         }
     };
 
-    private get wsConnection(): WebSocket {
+    private get wsConnection(): WebSocketSubject<SignalingMessage> {
         return this.getWebSocket();
     }
 
-    constructor(private getWebSocket: () => WebSocket, trackHandler: StreamHandler) {
+    constructor(
+        private getWebSocket: () => WebSocketSubject<SignalingMessage>,
+        private closeWebsocket: () => void,
+        trackHandler: StreamHandler,
+    ) {
         super({
             iceServers: [
                 { urls: 'stun:stun.stunprotocol.org:3478' },
@@ -195,7 +218,7 @@ export class WebRTCStreamManager {
     /** Internal */
 
     #peerConnection: MediaServerPeerConnection;
-    #wsConnection: WebSocket;
+    #wsConnection: WebSocketSubject<SignalingMessage>;
     #videoElements: HTMLVideoElement[] = [];
     #frameTracker = new FrameTracker();
 
@@ -284,13 +307,15 @@ export class WebRTCStreamManager {
         this.#frameTracker.players = this.#videoElements.length;
     };
 
+    #closeWsConnection = new Subject<string>();
+
     /** Peer Connection Helpers */
 
     /**
      * Handles cleaning up connections when no longer in use.
      */
     #close = (): void => {
-        this.#wsConnection?.close();
+        this.#closeWsConnection.next('close');
         this.#peerConnection?.close();
         delete WebRTCStreamManager.EXISTING_CONNECTIONS[this.webRtcUrlFactory()];
     };
@@ -300,12 +325,10 @@ export class WebRTCStreamManager {
      *
      * @param message MessageEvent<string>
      */
-    #gotMessageFromServer = (message: MessageEvent<string>): void => {
+    #gotMessageFromServer = (signal: SdpInit | IceInit): void => {
         this.#initPeerConnection();
 
-        const signal = JSON.parse(message.data);
-
-        if (signal.sdp) {
+        if ('sdp' in signal) {
             this.#peerConnection
                 .setRemoteDescription(new RTCSessionDescription(signal.sdp))
                 .then(() => {
@@ -338,9 +361,7 @@ export class WebRTCStreamManager {
         this.#peerConnection
             .setLocalDescription(description)
             .then(() => {
-                this.#wsConnection.send(
-                    JSON.stringify({ sdp: this.#peerConnection.localDescription }),
-                );
+                this.#wsConnection.next({ sdp: this.#peerConnection.localDescription });
             })
             .catch(this.#errorHandler);
     };
@@ -352,7 +373,7 @@ export class WebRTCStreamManager {
     #errorHandler(error: unknown): void {
         console.log(error);
         this.#initPeerConnection();
-        this.#wsConnection.send(JSON.stringify({ error }));
+        this.#wsConnection.next({ error });
     }
 
     /**
@@ -360,11 +381,8 @@ export class WebRTCStreamManager {
      *
      * @returns WebSocket
      */
-    #getOpenWebSocketConnection = (): WebSocket => {
-        if (
-            !this.#wsConnection ||
-            [WebSocket.CLOSED, WebSocket.CLOSING].includes(this.#wsConnection.readyState)
-        ) {
+    #getOpenWebSocketConnection = (): WebSocketSubject<SignalingMessage> => {
+        if (!this.#wsConnection) {
             this.#initWebSocket();
         }
         return this.#wsConnection;
@@ -378,14 +396,17 @@ export class WebRTCStreamManager {
     #initWebSocket = (): void => {
         this.#peerConnection?.close();
         this.#peerConnection = null;
-        this.#wsConnection = new WebSocket(
+        this.#wsConnection = webSocket(
             this.webRtcUrlFactory({ position: WebRTCStreamManager.position }),
         );
-        this.#wsConnection.onerror = () => {
-            this.mediaStream$.next([null, ConnectionError.websocket]);
-            this.#close();
-        };
-        this.#wsConnection.onmessage = this.#gotMessageFromServer;
+
+        this.#wsConnection.pipe(takeUntil(this.#closeWsConnection)).subscribe({
+            next: this.#gotMessageFromServer,
+            error: () => {
+                this.mediaStream$.next([null, ConnectionError.websocket]);
+                this.#close();
+            },
+        });
     };
 
     /**
@@ -407,6 +428,7 @@ export class WebRTCStreamManager {
     #initPeerConnection = (): void => {
         this.#peerConnection ||= new MediaServerPeerConnection(
             () => this.#getOpenWebSocketConnection(),
+            () => this.#closeWsConnection.next('close'),
             stream => {
                 console.log(stream);
                 this.mediaStream$.next([stream, null]);

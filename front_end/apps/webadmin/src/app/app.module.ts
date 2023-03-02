@@ -45,6 +45,7 @@ import { DevelopersGuard } from '@guards/developersGuard';
 import { ManualAccessGuard } from '@guards/manualAccessGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { CloudUnavailableInterceptor } from '@interceptors/cloud-unavailable-interceptor';
+import { NxCurrentRelayInterceptor } from '@interceptors/current-relay-interceptor';
 import { FeatureInterceptor } from '@interceptors/feature-interceptor';
 import { LocalSystemStatusInterceptor } from '@interceptors/local-system-status-interceptor.service';
 import { NxUriCachingInterceptor } from '@interceptors/uri-cache-interceptor.service';
@@ -121,6 +122,11 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         {
             provide: HTTP_INTERCEPTORS,
             useClass: FeatureInterceptor,
+            multi: true
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: NxCurrentRelayInterceptor,
             multi: true
         },
         NxConfigService,

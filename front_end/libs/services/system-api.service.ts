@@ -4,6 +4,7 @@ import { Injectable, Injector } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 
 import { environment } from '@environments/environment';
+import { NxCurrentRelayInterceptor } from '@interceptors/current-relay-interceptor';
 import { NxHealthService } from '@pages/health/health.service';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { memoizeAsyncPersistent } from '@utils/memoize';
@@ -63,8 +64,8 @@ export class NxSystemAPIService {
             return this.localApi as S;
         }
         const useRest = Math.floor(version) > 4;
+        let serverApi;
         if (useRest || environment.isLocal) {
-            let serverApi;
             if (version >= 5.2 && this.CONFIG.featureFlags.usersWithGroups) {
                 serverApi = new NxSystemRestAPI3(
                     this.http,
@@ -118,9 +119,8 @@ export class NxSystemAPIService {
                     (serverApi as NxSystemRestAPI)?.setVmsToken((this.localApi as NxSystemRestAPI)?.vmsToken);
                 }
             }
-            return serverApi;
         } else {
-            return new NxSystemAPI(
+            serverApi = new NxSystemAPI(
                 this.http,
                 this.CONFIG,
                 this.location,
@@ -135,5 +135,7 @@ export class NxSystemAPIService {
                 this.injector,
             ) as S;
         }
+        NxCurrentRelayInterceptor.currentRelays[serverApi.currentRelayHost] = serverApi;
+        return serverApi;
     }
 }
