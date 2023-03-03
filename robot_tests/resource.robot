@@ -1265,9 +1265,9 @@ Log Out via API
     ${cookies}=   Get Cookies    as_dict = True
     ${status}=   API Log Out    ${cookies}[sessionid]    ${cookies}[csrftoken]
     Should Be Equal as Strings    ${status}    200
-    Reload Page
-    Sleep    3
     Go To    ${ENV}
+    Wait Until Element is visible    //nx-modal-generic-content
+    Reload Page
     Run Keyword If    ${validate}    Validate Log Out
     [Return]    ${status}
 
