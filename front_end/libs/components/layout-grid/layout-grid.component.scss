@@ -43,8 +43,14 @@
     position: relative;
     --columns: 2;
 
+    // Limit the width of the menu to not be smaller than next media breakpoint.
+    --container-limit: 1920px;
+    --column-limit: 3;
+
     @media (max-width: 1920px) {
         --columns: 3;
+        --container-limit: 992px;
+        --column-limit: 4;
     }
 
     @media (max-width: 992px) {
@@ -54,27 +60,30 @@
 
     // Responsive menu positioned overlaying the grid
     @media (max-width: 768px) {
-        --columns: 6;
+        --columns: 8;
+        --container-limit: min(576px, 100vw);
+        --column-limit: 10;
         position: absolute;
     }
 
     @media (max-width: 576px) {
-        --columns: 8;
+        --columns: 10;
     }
 
     --base-width: calc(var(--column-width) * var(--columns));
     --tab-size: 25px;
 
     --sidebar-width: calc(var(--base-width) + var(--tab-size));
+    --min-sidebar-width: calc(var(--container-limit) / 12 * var(--column-limit) + var(--tab-size));
 
     &.open-menu {
         border-right: 1px solid var(--border-color);
         padding: 24px 0 24px 24px;
-        width: var(--sidebar-width);
+        width: max(var(--sidebar-width), var(--min-sidebar-width));
     }
 
     .cdk-tree {
-        width: calc(var(--sidebar-width) - 48px);
+        width: calc(max(var(--sidebar-width), var(--min-sidebar-width)) - 48px);
 
         .cdk-tree-node {
             display: flex;
@@ -299,7 +308,9 @@ cdk-tree,
 }
 
 .drag-container {
-    &, & > nx-pre-loader {
+
+    &,
+    &>nx-pre-loader {
         width: 100%;
         height: 100%;
         display: flex;
@@ -404,6 +415,7 @@ iframe {
         flex-direction: column;
         justify-content: center;
         align-items: center;
+
         h3 {
             margin-bottom: 8px;
         }
@@ -607,6 +619,7 @@ iframe {
                 background: transparent;
                 border: 1px solid var(--brand-core);
                 border-radius: 24px !important;
+
                 &:hover {
                     background: var(--brand-core);
                     border-color: var(--left-menu-l3-selected-color) !important;
@@ -617,7 +630,8 @@ iframe {
 
 }
 
-.no-camera-placeholder, .no-layout-placeholder {
+.no-camera-placeholder,
+.no-layout-placeholder {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -649,4 +663,8 @@ iframe {
     & .st0 {
         fill: var(--body-text-color);
     }
+}
+
+.ellipsis {
+    line-height: inherit;
 }
