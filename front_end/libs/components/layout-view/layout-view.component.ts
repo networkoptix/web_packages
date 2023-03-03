@@ -203,11 +203,11 @@ export class NxLayoutViewComponent {
                 this.#selectedLayout$.pipe(startWith(null)),
                 this.availableLayouts$.pipe(startWith([])),
                 userManager.getUsersDataFromTheSystem().then(() => {
-                    const currentUser = userManager.users.find(
+                    const { currentOwner, users } = userManager;
+                    const currentUser = users.find(
                         ({ email }) => email === this.accountService.account.email,
                     );
-                    const isOwner = userManager.isOwner(currentUser);
-                    return { id: currentUser.id, isOwner };
+                    return { currentUser, currentOwner };
                 }),
             ]),
         ),
@@ -218,7 +218,7 @@ export class NxLayoutViewComponent {
                 webPages,
                 currentLayout,
                 layouts,
-                { id: currentUser, isOwner },
+                { currentUser, currentOwner },
             ]): LayoutResourceTree => {
                 const aspectRatio = currentLayout?.cellAspectRatio || 0;
                 const parsedCameras = cameras.reduce(
@@ -278,19 +278,15 @@ export class NxLayoutViewComponent {
                 );
                 const layoutsForTree = layouts
                     .filter(layout => layout.id && layout.id !== 'new')
-                    .filter(
-                        layout =>
-                            !(
-                                isOwner &&
-                                ![currentUser, '{00000000-0000-0000-0000-000000000000}'].includes(
-                                    layout.parentId,
-                                )
-                            ),
+                    .filter(layout =>
+                        [currentUser.id, '{00000000-0000-0000-0000-000000000000}'].includes(
+                            layout.parentId,
+                        ),
                     )
                     .map(details => ({
                         name: details.name,
                         id: details.id,
-                        shared: currentUser !== details.parentId,
+                        shared: details.parentId === '{00000000-0000-0000-0000-000000000000}',
                         type: ResourceType.LAYOUT,
                         details,
                     }));
