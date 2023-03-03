@@ -25,59 +25,58 @@
     let-groups="groups"
     let-systems="systems"
 >
-    <div
-        *ngFor="let group of groups; trackBy: trackItem"
-        class="group-card"
-        cdkDropList
-        cdkDropListSortingDisabled
-        [cdkDropListData]="group"
-        (cdkDropListDropped)="onDrop($event)"
-    >
+    <div class="px-3 cards-container">
         <div
-            cdkDrag
-            [cdkDragData]="group"
+            *ngFor="let group of groups; trackBy: trackItem"
+            class="group-card"
+            cdkDropList
+            cdkDropListSortingDisabled
+            [cdkDropListData]="group"
+            (cdkDropListDropped)="onDrop($event)"
         >
-            <div *cdkDragPlaceholder></div>
-            <nx-group-card [group]="group"></nx-group-card>
+            <div
+                cdkDrag
+                [cdkDragData]="group"
+            >
+                <div *cdkDragPlaceholder></div>
+                <nx-group-card [group]="group"></nx-group-card>
+            </div>
+            <div class="placeholder-shadow"></div>
         </div>
-        <div class="placeholder-shadow"></div>
-    </div>
-    <div
-        *ngFor="let system of systems; trackBy: trackItem"
-        class="system-card"
-        cdkDropList
-        cdkDropListSortingDisabled
-        [cdkDropListData]="system"
-    >
         <div
-            cdkDrag
-            [cdkDragData]="system"
+            *ngFor="let system of systems; trackBy: trackItem"
+            class="system-card"
+            cdkDropList
+            cdkDropListSortingDisabled
+            [cdkDropListData]="system"
         >
-            <div *cdkDragPlaceholder></div>
-            <nx-system-card
-                [system]="system"
-                [search]="''"
-                [account]="account"
-            ></nx-system-card>
+            <div
+                cdkDrag
+                [cdkDragData]="system"
+            >
+                <div *cdkDragPlaceholder></div>
+                <nx-system-card
+                    [system]="system"
+                    [search]="''"
+                    [account]="account"
+                ></nx-system-card>
+            </div>
+            <div class="placeholder-shadow"></div>
         </div>
-        <div class="placeholder-shadow"></div>
     </div>
 </ng-template>
 
 <ng-template #showGroups>
-    <div
-        *ngIf="showPersonal; else showShared"
-        class="cards-container"
-    >
+    <ng-container *ngIf="showPersonal; else showShared">
         <ng-container
             *ngTemplateOutlet="
                 cards;
                 context: { groups: personalItems.groups, systems: personalItems.systems }
             "
         ></ng-container>
-    </div>
+    </ng-container>
     <ng-template #showShared>
-        <div *ngIf="!currentSharedOwner; else userFilteredGroups">
+        <ng-container *ngIf="!currentSharedOwner; else userFilteredGroups">
             <div
                 *ngFor="let owner of sharedItems | keyvalue"
                 class="sharedGroups"
@@ -85,34 +84,30 @@
                 <ng-container
                     *ngTemplateOutlet="user; context: { $implicit: owner.key }"
                 ></ng-container>
-                <div class="cards-container">
-                    <ng-container
-                        *ngTemplateOutlet="
-                            cards;
-                            context: { groups: owner.value.groups, systems: owner.value.systems }
-                        "
-                    ></ng-container>
-                </div>
+                <ng-container
+                    *ngTemplateOutlet="
+                        cards;
+                        context: { groups: owner.value.groups, systems: owner.value.systems }
+                    "
+                ></ng-container>
             </div>
-        </div>
-
+        </ng-container>
         <ng-template
             #userFilteredGroups
             class="sharedGroups"
         >
-            <ng-template *ngTemplateOutlet="user; context: { $implicit: currentSharedOwner }">
-            </ng-template>
-            <div class="cards-container">
-                <ng-container
-                    *ngTemplateOutlet="
-                        cards;
-                        context: {
-                            groups: sharedItems[currentSharedOwner].groups,
-                            systems: sharedItems[currentSharedOwner].systems
-                        }
-                    "
-                ></ng-container>
-            </div>
+            <ng-template
+                *ngTemplateOutlet="user; context: { $implicit: currentSharedOwner }"
+            ></ng-template>
+            <ng-container
+                *ngTemplateOutlet="
+                    cards;
+                    context: {
+                        groups: sharedItems[currentSharedOwner].groups,
+                        systems: sharedItems[currentSharedOwner].systems
+                    }
+                "
+            ></ng-container>
         </ng-template>
     </ng-template>
 </ng-template>
