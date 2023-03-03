@@ -1,5 +1,5 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject, ViewEncapsulation } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 
@@ -24,7 +24,9 @@ interface UserItem extends SearchableDropdownItem {
 @Component({
     selector: 'nx-modal-transfer-ownership-content',
     templateUrl: './transfer-ownership.component.html',
-    styleUrls: ['./transfer-ownership.component.scss']
+    styleUrls: ['./transfer-ownership.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    // Need to escape encapsulation to style dialog
 })
 export class TransferOwnershipModalContent implements OnInit {
     @ViewChild('transferOwnershipForm') form: NgForm;

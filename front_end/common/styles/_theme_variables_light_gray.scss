@@ -384,6 +384,7 @@ html[data-theme="light-gray"] {
     --dialog-bg : #{$light_gray_1};
     --dialog-border-color : #{$additional_light8};
     --dialog-header-bg : #{$additional_gray_light1};
+    --dialog-header-color: var(--dark17);
 
     --svg-legend-bg : #{$additional_gray_light1};
     --svg-legend-border-color : #{$additional_light8};
