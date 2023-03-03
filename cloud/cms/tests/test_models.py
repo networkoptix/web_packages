@@ -10,6 +10,7 @@ from model_bakery import baker, seq
 from django.test import TestCase
 from django_mock_queries.query import MockSet
 from cms.models import *
+from conftest import get_asset_type
 
 
 class TestModelFunctions:
@@ -1908,6 +1909,21 @@ class TestReadOnlyAPIFile:
         self.readonly_api = baker.make(ReadOnlyAPI, name=self.readonly_api_name)
         self.file_count = 2
         self.readonly_api_files = baker.make(ReadOnlyAPIFile, _quantity=self.file_count, readonly_api=self.readonly_api)
+        self.vars_substitutions = {
+            "id": "%id%",
+            "vmsName": "%vmsName%",
+            "vmsId": "%vmsId%",
+            "contact": {
+                "licensingAddress": "%contact.licensingAddress%",
+                "systemWebPages": {
+                    "homePage": "%contact.systemWebPages.homePage%",
+                }
+            },
+        }
+        self.vms_content = '{"@customization.vmsName@":"@customization.contact.systemWebPages.homePage@", ' \
+                           '"@notExisting@":"@advanced.NotExistingToo@"}'
+        self.replaced_content = '{"%vmsName%":"%contact.systemWebPages.homePage%", ' \
+                                '"@notExisting@":"@advanced.NotExistingToo@"}'
 
     def test_content(self):
         content = self.readonly_api_files[0]._meta.get_field('content')
@@ -1952,6 +1968,19 @@ class TestReadOnlyAPIFile:
         second_readonly = baker.make(ReadOnlyAPIFile, type=file_type, readonly_api=self.readonly_api)
         with pytest.raises(ValidationError):
             second_readonly.validate_unique(self)
+
+    def test_vars_replacement(self):
+        assert vms_vars_replacement(self.vms_content, self.vars_substitutions) == self.replaced_content
+
+    def test_vars_replacement_on_save(self):
+        ctx = baker.make(Context, asset_type=get_asset_type(AssetType.ASSET_TYPES.vms), name="General information")
+        template = baker.make(ContextTemplate, context=ctx, template=json.dumps(self.vars_substitutions))
+        api_file = baker.make(ReadOnlyAPIFile, content=self.vms_content,
+                              readonly_api=self.readonly_api,
+                              filename='openapi_v1.json')
+        api_file.save()
+        api_file.clean()
+        assert api_file.content == self.replaced_content
 
 class TestDataStructure:
     @pytest.fixture(autouse=True)

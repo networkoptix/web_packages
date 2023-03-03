@@ -9,6 +9,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 
 from cms.tasks import async_zendesk_push_article
 from cms.views.asset import *
+from conftest import get_asset_type
 
 
 def test_make_package_name(db):
@@ -703,8 +704,11 @@ def test_make_preview(mocker, arf, account_factory, default_customization, db):
     mock_error.assert_not_called()
 
     # Test can't preview on portal
+    asset_type = get_asset_type(AssetType.ASSET_TYPES.integration)
+    asset_type.can_preview = False
+    asset_type.save()
     mock_asset = baker.make(
-        Asset, asset_type=AssetType.objects.filter(can_preview=False).first())
+        Asset, asset_type=asset_type)
     mock_asset.customizations.add(default_customization)
 
     mock_content_version.asset = mock_asset

@@ -3304,6 +3304,32 @@ class ReadOnlyAPI(models.Model):
     def __str__(self):
         return f"{self.name} - {self.version}"
 
+
+def vms_vars_replacement(content, replacements=None):
+    def get_dot_notated(d: dict, name: str):
+        if name.startswith('customization.'):
+            name = name.replace('customization.', '')
+        keys = name.split('.', 1)
+        if not (val := d.get(keys[0])) or len(keys) == 1:
+            return val
+        return get_dot_notated(val, keys[-1])
+
+    if replacements is None:
+        # Getting substitution info form VMS - General Information template
+        ctx = Context.objects.filter(asset_type__type=AssetType.ASSET_TYPES.vms,
+                                     name="General information", deprecated=False).last()
+
+        if ctx and (ctx_template := ContextTemplate.objects.filter(context=ctx).last()):
+            replacements = json.loads(ctx_template.template or "{}")
+    if not replacements:
+        return content
+    for match in re.findall(r'@[-_.0-9A-Za-z]+@', content):
+        replacement = get_dot_notated(replacements, match.replace('@', ''))
+        if replacement:
+            content = content.replace(match, replacement)
+    return content
+
+
 class ReadOnlyAPIFile(models.Model):
     class Meta:
         verbose_name = "Readonly API file"
@@ -3332,7 +3358,7 @@ class ReadOnlyAPIFile(models.Model):
                 raise ValidationError({'content': 'Error parsing manifest to validate file name'})
             if not filename_found:
                 raise ValidationError({'content': 'File name does not exist in manifest'})
-
+        self.content = vms_vars_replacement(self.content)
 
     def validate_unique(self, exclude=None):
         if self.type in [self.FILE_TYPES.preamble_markdown, self.FILE_TYPES.changelog_markdown]:
