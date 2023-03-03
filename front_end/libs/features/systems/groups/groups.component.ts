@@ -1,5 +1,5 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { LocalStorageService } from 'ngx-webstorage';
@@ -33,6 +33,8 @@ interface sidebarSettings {
     selector: 'nx-groups',
     templateUrl: 'groups.component.html',
     styleUrls: ['groups.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    // Need to escape encapsulation to style menu
 })
 export class NxSystemGroupsComponent implements OnInit, OnDestroy {
     icons = icons;

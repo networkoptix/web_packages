@@ -1,6 +1,18 @@
 @use 'components/sidebar-level/sidebar-level.component.scss' as *;
 @use 'bootstrap_utils' as bootstrap;
 
+.cdk-overlay-pane {
+    margin: 0 !important;
+
+    .no-groups {
+        width: 299px !important;
+    }
+}
+
+.mainContainer {
+    padding-bottom: 0 !important;
+}
+
 #groups {
     display: flex;
     height: 100%;

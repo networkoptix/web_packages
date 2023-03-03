@@ -28,6 +28,7 @@
             <input
                 #groupName="ngModel"
                 class="form-control"
+                [ngClass]="{ 'no-groups': !hasGroups }"
                 id="groupName"
                 name="groupName"
                 [(ngModel)]="newGroupName"

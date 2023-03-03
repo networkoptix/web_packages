@@ -40,10 +40,11 @@
         justify-content: center;
         align-items: center;
         text-align: center;
+        height: 100%;
         width: 100%;
         gap: 20%;
 
-        padding: 6vh 20px 1rem 20px;
+        padding: 6vh 20px 32px 20px;
 
         .intro-container{
             height: 100%;
@@ -76,9 +77,7 @@
             justify-content: center;
 
             button {
-                position: absolute;
                 background: transparent;
-                bottom: 0;
                 color: var(--groups-sidebar-intro-text-color);
 
                 p {
