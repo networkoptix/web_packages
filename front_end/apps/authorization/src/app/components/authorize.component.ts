@@ -95,7 +95,10 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     accountInfo: {
         email: string;
         password: string;
+        firstName: string;
+        lastName: string;
     };
+
     createErrorCode: [inputType: string, errorCode: string];
 
     // activated
@@ -201,7 +204,6 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         if (state === 'email' && this.clientType === ClientType.create) {
             this.clientType = environment.isLocal ? ClientType.loginWebadmin : ClientType.loginCloud;
         }
-
         this.currentState = AuthorizeState[state];
     }
 
@@ -550,6 +552,8 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             () => lastValueFrom(this.authService.register(
                 this.accountInfo.email,
                 this.accountInfo.password,
+                this.accountInfo.firstName,
+                this.accountInfo.lastName,
                 this.CONFIG.customization,
                 this.loginCode))
             , { ignoreError: true, timeoutMs },
