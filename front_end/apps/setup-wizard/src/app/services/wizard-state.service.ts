@@ -3,7 +3,8 @@ import { Inject, Injectable, LOCALE_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, from, Observable, of, Subject, timer } from 'rxjs';
+import { switchMap, takeUntil } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import type { SearchableDropdownItem as Item } from '@components/dropdowns/searchable/searchable.component.types';
@@ -622,7 +623,7 @@ export class WizardStateService {
                 this.server.setVmsToken(userData.token);
                 return userData;
             })
-            .then(this.checkSystem, () => {}); // log error
+            .then(this.checkSystem);
     }
 
     // Error Handlers
@@ -742,25 +743,25 @@ export class WizardStateService {
     }
 
     checkIfSystemIsReady(): void {
-        const systemReadyInterval = setInterval(() => {
-            this.getServerInfoWithFlags().then(data => {
-                if (!data?.flags.cleanSystem) {
-                    this.setupConfig.systemName = data.name.replace(/^Server\s/, '');
-                    if (data.cloudSystemId) {
-                        this.setupConfig.cloudSystemID = data.cloudSystemId;
-                        // make portal links
-                        this.currentState = WIZARD_STATE.CloudSuccess;
-                    } else {
-                        this.networkInfo.port = data.port;
-                        this.currentState = WIZARD_STATE.LocalSuccess;
-                    }
+        const finishedChecking: Subject<boolean> = new Subject<boolean>();
+        timer(0, alertTimeout).pipe(
+            switchMap(() => from(this.getServerInfoWithFlags())),
+            takeUntil(finishedChecking)
+        ).subscribe(data => {
+            if (!data?.flags.cleanSystem) {
+                this.setupConfig.systemName = data.name.replace(/^Server\s/, '');
+                if (data.cloudSystemId) {
+                    this.setupConfig.cloudSystemID = data.cloudSystemId;
+                    // make portal links
+                    this.currentState = WIZARD_STATE.CloudSuccess;
+                } else {
+                    this.networkInfo.port = data.port;
+                    this.currentState = WIZARD_STATE.LocalSuccess;
                 }
-                this.setupConfig.localPassword = '';
-                clearInterval(systemReadyInterval);
-
-                // this.currentState$.next(WIZARD_STATE.MergeProcess);
-            });
-        }, alertTimeout);
+            }
+            this.setupConfig.localPassword = '';
+            finishedChecking.next(true);
+        });
     }
 
     // Initializers
@@ -834,27 +835,29 @@ export class WizardStateService {
 
     initWizard = (): void => {
         this.currentState = undefined;
+        this.checkIfSystemIsReady();
         this.updateCredentials(
             this.setupConfig.localLogin,
             this.setupConfig.localPassword,
-            false,
-        )
-            .then(() => {
-                Promise.all([
-                    this.getAdvancedSettings(),
-                    this.discoverSystems()
-                ]).catch(() => {});
-                this.checkIfSystemIsReady();
-            }).catch(_ => {
-                const params = new URLSearchParams(this.window.location.search);
-                if (params.get('retry')) {
-                    this.currentState = WIZARD_STATE.InitFailure;
-                } else {
-                    params.set('retry', 'true');
-                    this.window.location.search = params.toString();
-                    setTimeout(() => this.window.location.reload(), 1000);
-                }
-            });
+            false
+        ).then(() => {
+            Promise.all([
+                this.getAdvancedSettings(),
+                this.discoverSystems()
+            ]).catch(() => {});
+        }).catch(_ => {
+            const params = new URLSearchParams(this.window.location.search);
+            if ([WIZARD_STATE.CloudSuccess, WIZARD_STATE.LocalSuccess].includes(this.currentState)) {
+                return;
+            }
+            if (params.get('retry')) {
+                this.currentState = WIZARD_STATE.InitFailure;
+            } else {
+                params.set('retry', 'true');
+                this.window.location.search = params.toString();
+                setTimeout(() => this.window.location.reload(), 1000);
+            }
+        });
     };
 
     init(): void {

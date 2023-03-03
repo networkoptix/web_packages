@@ -1265,9 +1265,8 @@ Log Out via API
     ${cookies}=   Get Cookies    as_dict = True
     ${status}=   API Log Out    ${cookies}[sessionid]    ${cookies}[csrftoken]
     Should Be Equal as Strings    ${status}    200
-    Sleep    2
     Reload Page
-    Sleep    1
+    Sleep    3
     Go To    ${ENV}
     Run Keyword If    ${validate}    Validate Log Out
     [Return]    ${status}
