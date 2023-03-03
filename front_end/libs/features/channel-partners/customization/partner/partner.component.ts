@@ -20,7 +20,6 @@ import { NxMenuService } from '@src/app/menu/menu.service';
     templateUrl: 'partner.component.html',
     styleUrls: ['partner.component.scss'],
 })
-
 export class NxCustomizationPartnerComponent implements OnInit, OnDestroy {
     readonly environment = environment;
     LANG = staticLang;
@@ -28,7 +27,8 @@ export class NxCustomizationPartnerComponent implements OnInit, OnDestroy {
     public partner: PartnerInfo;
     public organizations: OrganizationInfo[];
 
-    @ViewChild('pageApply', { read: ViewContainerRef, static: true }) private pageApply: ViewContainerRef;
+    @ViewChild('pageApply', { read: ViewContainerRef, static: true })
+    private pageApply: ViewContainerRef;
 
     constructor(
         private applyService: NxApplyService,
@@ -43,20 +43,17 @@ export class NxCustomizationPartnerComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.applyService.initPageFormsWatcher(this.pageApply);
 
-        this.partnersService.organizationsSubject
-            .subscribe(organizations => {
-                this.organizations = organizations;
-            });
+        this.partnersService.organizationsSubject.subscribe(organizations => {
+            this.organizations = organizations;
+        });
 
-        this.route.paramMap
-            .pipe(untilDestroyed(this))
-            .subscribe(paramMap => {
-                const partnerId = paramMap.get('partnerId');
-                this.partner = this.partnersService.getPartner(parseInt(partnerId));
-                this.menuService.detail = partnerId;
+        this.route.paramMap.pipe(untilDestroyed(this)).subscribe(paramMap => {
+            const partnerId = paramMap.get('partnerId');
+            this.partner = this.partnersService.getPartner(parseInt(partnerId));
+            this.menuService.detail = partnerId;
 
-                this.partnersService.getOrganizations(this.partner);
-            });
+            this.partnersService.getOrganizations(this.partner);
+        });
     }
 
     ngOnDestroy(): void {

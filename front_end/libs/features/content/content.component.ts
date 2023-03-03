@@ -64,45 +64,48 @@ export class NxContentComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.staticContent = JSON.parse(
-            this.sessionStorage.retrieve('staticContent')
-        ) || {};
+        this.staticContent = JSON.parse(this.sessionStorage.retrieve('staticContent')) || {};
 
         // Clear staticContent on reload so we can try to fetch from db again
         this.window.onbeforeunload = event => {
             this.sessionStorage.clear('staticContent');
         };
 
-        this.agreeProcess = this.processService.createProcess(() => {
-            return this.cloudApiService.acceptAgreement(
-                this.agreementDetails.review_id
-            );
-        }, {
-            successMessage: this.LANG.account.agreementAccepted
-        }).then(() => {
-            this.showAgree = false;
-            if (this.account.is_staff) {
-                this.window.location.href = decodeURIComponent(
-                    this.route.snapshot.queryParams.next
-                        ? this.route.snapshot.queryParams.next
-                        : '/admin/'
-                );
-            }
-        });
+        this.agreeProcess = this.processService
+            .createProcess(
+                () => {
+                    return this.cloudApiService.acceptAgreement(this.agreementDetails.review_id);
+                },
+                {
+                    successMessage: this.LANG.account.agreementAccepted,
+                },
+            )
+            .then(() => {
+                this.showAgree = false;
+                if (this.account.is_staff) {
+                    this.window.location.href = decodeURIComponent(
+                        this.route.snapshot.queryParams.next
+                            ? this.route.snapshot.queryParams.next
+                            : '/admin/',
+                    );
+                }
+            });
     }
 
     ngAfterViewInit(): void {
-        this.accountService.get().then(account => {
-            if (account) {
-                this.account = account;
-            }
-        }).finally(() => this.subscribeParams());
+        this.accountService
+            .get()
+            .then(account => {
+                if (account) {
+                    this.account = account;
+                }
+            })
+            .finally(() => this.subscribeParams());
     }
 
     subscribeParams(): void {
         this.route.paramMap.subscribe(paramMap => {
-            this.agreement =
-                this.route.snapshot.parent.routeConfig.path === 'agreement';
+            this.agreement = this.route.snapshot.parent.routeConfig.path === 'agreement';
             this.state = this.route.snapshot.queryParamMap.get('state');
             this.id = this.route.snapshot.queryParamMap.get('id');
             this.title = '';
@@ -112,7 +115,8 @@ export class NxContentComponent implements OnInit {
             this.articleParam = paramMap.get('article_param');
             if (this.articleParam === 'temp_url' && this.state === 'draft') {
                 // Internal no need to translate
-                const message = 'No saved content to preview. Please save draft or submit for review to view preview.';
+                const message =
+                    'No saved content to preview. Please save draft or submit for review to view preview.';
                 this.injector.get(NxPageService).redirect404(message);
 
                 return;
@@ -139,8 +143,8 @@ export class NxContentComponent implements OnInit {
         } else {
             uri = `${this.apiBase}/cms/article/${this.articleParam}/?`;
         }
-        const state = (this.state) ? this.state : '';
-        const id = (this.id) ? this.id : '';
+        const state = this.state ? this.state : '';
+        const id = this.id ? this.id : '';
         const params = new HttpParams().set('state', state).set('id', id);
         let headers = new HttpHeaders().set('ngsw-bypass', 'true');
         if (this.account && this.account.is_staff) {
@@ -159,9 +163,7 @@ export class NxContentComponent implements OnInit {
                     this.agreementDetails.review_id = data.review_id;
                     this.agreementDetails.accepted = data.accepted;
                     this.agreementDetails.preview = data.preview;
-                    this.showAgree = !this.state &&
-                        this.account &&
-                        !this.agreementDetails.accepted;
+                    this.showAgree = !this.state && this.account && !this.agreementDetails.accepted;
                 }
             },
             () => {
@@ -170,12 +172,12 @@ export class NxContentComponent implements OnInit {
                 } else {
                     this.injector.get(NxPageService).redirect404();
                 }
-            });
+            },
+        );
     }
 
     loadStaticContent(): void {
-        const templateUrl =
-            `/${this.CONFIG.viewsDir}static/${this.articleParam}.html`;
+        const templateUrl = `/${this.CONFIG.viewsDir}static/${this.articleParam}.html`;
 
         this.cloudApiService
             .getStatic(templateUrl)
@@ -185,18 +187,15 @@ export class NxContentComponent implements OnInit {
                 const parser = new DOMParser();
                 const content = parser.parseFromString(result, 'text/html');
                 this.pageService.pageTitle(
-                    content.querySelector('h1')?.innerText ||
-                    this.LANG.productName
+                    content.querySelector('h1')?.innerText || this.LANG.productName,
                 );
                 this.loaded = true;
                 /* If content was successfully compiled from static files,
                     add to staticContent so we don't do an API call each time we switch pages */
                 this.staticContent[this.articleParam] = true;
-                this.sessionStorage.store(
-                    'staticContent',
-                    JSON.stringify(this.staticContent)
-                );
-            }).catch(e => {
+                this.sessionStorage.store('staticContent', JSON.stringify(this.staticContent));
+            })
+            .catch(e => {
                 if (e.status === 404) {
                     this.injector.get(NxPageService).redirect404();
                 }

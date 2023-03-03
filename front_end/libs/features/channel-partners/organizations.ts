@@ -36,7 +36,7 @@ export const cloudPartnersRoutes: Routes = [
         path: ':id',
         component: NxPartnerOrganizationDetailComponent,
         canActivate: [AuthGuard, TwofaGuard],
-    }
+    },
 ];
 
 @NgModule({
@@ -55,18 +55,9 @@ export const cloudPartnersRoutes: Routes = [
         NxPartnerOrganizationDetailModule,
         SearchModule,
     ],
-    providers: [
-    ],
-    declarations: [
-        NxPartnerOrganizationsListComponent,
-        NxPartnerOrganizationDetailComponent,
-    ],
-    bootstrap: [
-    ],
-    exports: [
-        NxPartnerOrganizationsListComponent,
-        NxPartnerOrganizationDetailComponent,
-    ]
+    providers: [],
+    declarations: [NxPartnerOrganizationsListComponent, NxPartnerOrganizationDetailComponent],
+    bootstrap: [],
+    exports: [NxPartnerOrganizationsListComponent, NxPartnerOrganizationDetailComponent],
 })
-export class NxPartnerOrganizationsModule {
-}
+export class NxPartnerOrganizationsModule {}

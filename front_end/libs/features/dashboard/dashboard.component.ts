@@ -47,7 +47,7 @@ class DashboardGroup {
         public dragEnabled = true,
     ) {
         const systemsWidget = FirstPartyWidget.getConfig(
-            NxSystemsListWidgetComponent as typeof FirstPartyWidget
+            NxSystemsListWidgetComponent as typeof FirstPartyWidget,
         );
         systemsWidget.size = systemsWidget.sizes[2];
         if (!this.menu || !this.menu.length) {
@@ -122,7 +122,12 @@ export class NxDashboardComponent implements DashboardGroup {
         if (!this.dragEnabled || this.activeCellIndex === -1 || !(moveForward || moveBackward)) {
             if (event.key === 'Tab') {
                 event.preventDefault();
-                const nextCell = this.activeCellIndex < 0 ? (event.shiftKey ? this.cards.length - 1 : 0) : this.activeCellIndex + (event.shiftKey ? -1 : 1);
+                const nextCell =
+                    this.activeCellIndex < 0
+                        ? event.shiftKey
+                            ? this.cards.length - 1
+                            : 0
+                        : this.activeCellIndex + (event.shiftKey ? -1 : 1);
                 this.activeCellIndex = nextCell >= this.cards.length ? 0 : nextCell;
                 this.showActive();
             }
@@ -150,7 +155,7 @@ export class NxDashboardComponent implements DashboardGroup {
         const active = this.dropsQuery.find(({ data }) => data === this.activeCellIndex);
         const activeElement = active?.element?.nativeElement;
         const { top, bottom } = activeElement?.getBoundingClientRect?.() || {};
-        if (activeElement && top < 0 || bottom > this.window.innerHeight) {
+        if ((activeElement && top < 0) || bottom > this.window.innerHeight) {
             activeElement.scrollIntoView({ behavior: 'smooth' });
         }
     }
@@ -186,9 +191,18 @@ export class NxDashboardComponent implements DashboardGroup {
     }
 
     adjustGridHeight({ width }: any): void {
-        const calculatedColumns = Math.floor(width / this.MIN_GRID_SIZE / this.MIN_COLUMNS) * this.MIN_COLUMNS;
-        this.gridColumns = Math.min(Math.max(this.showSidePanel ? calculatedColumns : calculatedColumns - 4, this.MIN_COLUMNS), this.MAX_COLUMNS);
-        this.gridSize = Math.ceil((width - (this.gridColumns * (this.GRID_GAP || 1))) / this.gridColumns);
+        const calculatedColumns =
+            Math.floor(width / this.MIN_GRID_SIZE / this.MIN_COLUMNS) * this.MIN_COLUMNS;
+        this.gridColumns = Math.min(
+            Math.max(
+                this.showSidePanel ? calculatedColumns : calculatedColumns - 4,
+                this.MIN_COLUMNS,
+            ),
+            this.MAX_COLUMNS,
+        );
+        this.gridSize = Math.ceil(
+            (width - this.gridColumns * (this.GRID_GAP || 1)) / this.gridColumns,
+        );
     }
 
     /**
@@ -197,14 +211,21 @@ export class NxDashboardComponent implements DashboardGroup {
      */
     getPreparedConfig(config?): DashboardGroup {
         const { dashboardGroupName, dragEnabled, menu, activeId } = config || this;
-        return { dashboardGroupName, dragEnabled, activeId, menu: menu.map(({ id, ...menu }) => ({ ...menu, id: id || uuid() })) };
+        return {
+            dashboardGroupName,
+            dragEnabled,
+            activeId,
+            menu: menu.map(({ id, ...menu }) => ({ ...menu, id: id || uuid() })),
+        };
     }
 
     /**
      * Triggers saving changes to cloud. Subject is used to rate limit saves
      */
     updatePersistedConfig() {
-        this.menu = this.menu.map(dashboard => dashboard.id === this.activeDashboard.id ? this.activeDashboard : dashboard);
+        this.menu = this.menu.map(dashboard =>
+            dashboard.id === this.activeDashboard.id ? this.activeDashboard : dashboard,
+        );
         this.updatePersisted$.next('updated');
         return this.updated$.toPromise();
     }
@@ -225,15 +246,20 @@ export class NxDashboardComponent implements DashboardGroup {
         }
 
         // Used to prevent cors issue when developing locally
-        const dashboardUrlCleaned = this.environment.isLocal ? dashboardUrl : last(dashboardUrl.split(this.environment.cloudHost));
+        const dashboardUrlCleaned = this.environment.isLocal
+            ? dashboardUrl
+            : last(dashboardUrl.split(this.environment.cloudHost));
 
-        const downloaded = await this.http.get(dashboardUrlCleaned).toPromise().catch(_ => {
-            this.toastService.show(
-                'Unable to download dashboard requested dashboard, please check link and try again. If you keep having issues try downloading the dashboard first and applying config directly.',
-                toast.danger,
-            );
-            return false as const;
-        }) as Promise<Record<any, any>>;
+        const downloaded = (await this.http
+            .get(dashboardUrlCleaned)
+            .toPromise()
+            .catch(_ => {
+                this.toastService.show(
+                    'Unable to download dashboard requested dashboard, please check link and try again. If you keep having issues try downloading the dashboard first and applying config directly.',
+                    toast.danger,
+                );
+                return false as const;
+            })) as Promise<Record<any, any>>;
         return downloaded;
     }
 
@@ -241,7 +267,17 @@ export class NxDashboardComponent implements DashboardGroup {
         this.prepareConfigDownload(currentDashboard);
         const date = new Date().toLocaleDateString().replace(/\//g, '_');
         const fileName = `${this.CUSTOM_PROPERTY_KEY}-${date}-settings-backup.dsh`;
-        const message = `<p>Your dashboard <b>"${currentDashboard.dashboardName}"</b> is being updated to downloaded dashboard${downloadedDashboard.dashboardName ? ' <b>"' + downloadedDashboard.dashboardName + '"</b>' : ''}.</p><p>This dashboard was downloaded from <b>"${url}"</b>.</p> <div class="mt-3 d-flex justify-content-center"><a href="${this.backupDownloadLink}" download="${fileName}">Download backup of <b>"${currentDashboard.dashboardName} dashboard"</b></a></div>`;
+        const message = `<p>Your dashboard <b>"${
+            currentDashboard.dashboardName
+        }"</b> is being updated to downloaded dashboard${
+            downloadedDashboard.dashboardName
+                ? ' <b>"' + downloadedDashboard.dashboardName + '"</b>'
+                : ''
+        }.</p><p>This dashboard was downloaded from <b>"${url}"</b>.</p> <div class="mt-3 d-flex justify-content-center"><a href="${
+            this.backupDownloadLink
+        }" download="${fileName}">Download backup of <b>"${
+            currentDashboard.dashboardName
+        } dashboard"</b></a></div>`;
         const state = await this.dialogs.confirm({
             title: 'Confirm dashboard update?',
             message,
@@ -249,7 +285,7 @@ export class NxDashboardComponent implements DashboardGroup {
             footer: {
                 actionLabel: 'Update dashboard',
                 cancelLabel: "Don't update",
-            }
+            },
         });
 
         return state ? downloadedDashboard : currentDashboard;
@@ -259,21 +295,36 @@ export class NxDashboardComponent implements DashboardGroup {
      * Retrieves existing dashboard from cloud
      */
     getPersistedConfig = async (): Promise<void> => {
-        const { widgetUrl, dashboardUrl, devServer = this.cookieService.get('devServer') } = this.route.snapshot.queryParams;
+        const {
+            widgetUrl,
+            dashboardUrl,
+            devServer = this.cookieService.get('devServer'),
+        } = this.route.snapshot.queryParams;
         const downloadedDashboard = await this.updateDashboard(dashboardUrl);
         const currentDashboard = DashboardGroup.validateDashboard(
             await this.dashboardCustomProperty.get(false, true),
-            `${this.accountService.account.first_name}'s Dashboards`
+            `${this.accountService.account.first_name}'s Dashboards`,
         );
         const beingUpdated = downloadedDashboard && downloadedDashboard?.cards.length;
 
         // Update logic to replace or add to dashboard
-        const dashboard = beingUpdated ? await this.confirmDashboardUpdate(downloadedDashboard, currentDashboard, dashboardUrl) : currentDashboard;
-        const { dragEnabled = true, menu = [], dashboardGroupName = 'Drag and Drop Dashboard', activeId = '' } = dashboard;
+        const dashboard = beingUpdated
+            ? await this.confirmDashboardUpdate(downloadedDashboard, currentDashboard, dashboardUrl)
+            : currentDashboard;
+        const {
+            dragEnabled = true,
+            menu = [],
+            dashboardGroupName = 'Drag and Drop Dashboard',
+            activeId = '',
+        } = dashboard;
         const dashboardId = this.route.snapshot.queryParams?.dashboardId || activeId;
-        this.router.navigate([], { relativeTo: this.route, queryParams: { widgetUrl, dashboardUrl: '', dashboardId }, queryParamsHandling: 'merge' });
+        this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: { widgetUrl, dashboardUrl: '', dashboardId },
+            queryParamsHandling: 'merge',
+        });
         this.menu = menu;
-        this.dragEnabled = Boolean(widgetUrl || dragEnabled && menu.length);
+        this.dragEnabled = Boolean(widgetUrl || (dragEnabled && menu.length));
         this.dashboardGroupName = menu.length ? dashboardGroupName : this.LANG.pageTitles.systems;
         this.pageService.pageTitle(this.dashboardGroupName);
 
@@ -290,7 +341,10 @@ export class NxDashboardComponent implements DashboardGroup {
         }
     };
 
-    updateSelectedDashboard = (dashboardId, dashboardToAddIfNotExisting?: DashboardConfiguration): void => {
+    updateSelectedDashboard = (
+        dashboardId,
+        dashboardToAddIfNotExisting?: DashboardConfiguration,
+    ): void => {
         if (!this.menu.find(({ id }) => id === dashboardId) && dashboardToAddIfNotExisting) {
             this.menu.push(dashboardToAddIfNotExisting);
         }
@@ -301,15 +355,20 @@ export class NxDashboardComponent implements DashboardGroup {
     private updateCards(activeId: string, menu: DashboardConfiguration[] = this.menu): void {
         // Default to show systems widget if not configured
         const systemsWidget = FirstPartyWidget.getConfig(
-            NxSystemsListWidgetComponent as typeof FirstPartyWidget
+            NxSystemsListWidgetComponent as typeof FirstPartyWidget,
         );
         systemsWidget.size = systemsWidget.sizes[2];
-        this.activeDashboard = menu.find(({ id }) => id === activeId) || menu.find(({ cards }) => cards.length);
+        this.activeDashboard =
+            menu.find(({ id }) => id === activeId) || menu.find(({ cards }) => cards.length);
         const hasCards = this.menu.length || !!this.activeDashboard?.cards?.length;
         this.activeId = hasCards ? this.activeDashboard.id : uuid();
 
         if (!hasCards) {
-            this.activeDashboard = { id: this.activeId, dashboardName: 'Systems', cards: [systemsWidget] };
+            this.activeDashboard = {
+                id: this.activeId,
+                dashboardName: 'Systems',
+                cards: [systemsWidget],
+            };
             menu = [this.activeDashboard];
         }
 
@@ -325,9 +384,11 @@ export class NxDashboardComponent implements DashboardGroup {
             this.activeAction = null;
         }
 
-        await this.router.navigate(route, options).then(_ => updatedDashboard && this.getPersistedConfig());
+        await this.router
+            .navigate(route, options)
+            .then(_ => updatedDashboard && this.getPersistedConfig());
         this.hidePreview = true;
-        if (options.queryParams.widgetUrl && await this.addWidget()) {
+        if (options.queryParams.widgetUrl && (await this.addWidget())) {
             this.activeAction = null;
         }
         this.hidePreview = false;
@@ -339,7 +400,14 @@ export class NxDashboardComponent implements DashboardGroup {
             return;
         }
         const brokenRoute = ['/systems', '/developers'].some(route => action.url.startsWith(route));
-        const url = action.url + '?' + Object.entries(action.params || {}).reduce((params, [key, val]) => `${params}&${key}=${val}`, '') + `${action.params && !brokenRoute ? '&' : ''}${brokenRoute ? '' : 'adminPreview=true'}`;
+        const url =
+            action.url +
+            '?' +
+            Object.entries(action.params || {}).reduce(
+                (params, [key, val]) => `${params}&${key}=${val}`,
+                '',
+            ) +
+            `${action.params && !brokenRoute ? '&' : ''}${brokenRoute ? '' : 'adminPreview=true'}`;
         const label = action.label || action.name;
         if (brokenRoute) {
             this.window.open(url, 'dashboard_tab');
@@ -351,7 +419,11 @@ export class NxDashboardComponent implements DashboardGroup {
     async openPage(newWindow = false): Promise<void> {
         this.loading = !newWindow;
         const url = this.activeAction.url.replace('adminPreview=true', '');
-        if (!newWindow && this.activeAction.url.startsWith('/') && !this.activeAction.url.startsWith('/admin')) {
+        if (
+            !newWindow &&
+            this.activeAction.url.startsWith('/') &&
+            !this.activeAction.url.startsWith('/admin')
+        ) {
             await this.router.navigateByUrl(url);
         } else {
             this.window.open(url, 'dashboard_tab');
@@ -385,10 +457,14 @@ export class NxDashboardComponent implements DashboardGroup {
             firstPartyWidgets,
             [...this.menu, newDashboard],
             this.activeDashboard,
-            this.updateSelectedDashboard
+            this.updateSelectedDashboard,
         );
         if (card) {
-            this.router.navigate([], { relativeTo: this.route, queryParams: { widgetUrl: '' }, queryParamsHandling: 'merge' });
+            this.router.navigate([], {
+                relativeTo: this.route,
+                queryParams: { widgetUrl: '' },
+                queryParamsHandling: 'merge',
+            });
             const activeMatchingId = this.menu.findIndex(({ id }) => id === this.activeId);
             let activeIndex;
 
@@ -424,7 +500,7 @@ export class NxDashboardComponent implements DashboardGroup {
             footer: {
                 actionLabel: 'Remove',
                 cancelLabel: 'Cancel',
-            }
+            },
         });
         if (!result) {
             return;
@@ -441,7 +517,10 @@ export class NxDashboardComponent implements DashboardGroup {
 
     addDashboard(): void {
         const newDashboard = new DashboardConfiguration();
-        const existingNewDashboard = this.menu.find(({ dashboardName, cards }) => dashboardName === newDashboard.dashboardName && !cards.length);
+        const existingNewDashboard = this.menu.find(
+            ({ dashboardName, cards }) =>
+                dashboardName === newDashboard.dashboardName && !cards.length,
+        );
         if (!existingNewDashboard) {
             this.menu.push(newDashboard);
         }
@@ -468,7 +547,9 @@ export class NxDashboardComponent implements DashboardGroup {
         const settingsFile = files.item(0);
         const fileReader = new FileReader();
         fileReader.onload = e => {
-            const { menu, dragEnabled, dashboardGroupName, activeId } = JSON.parse(fileReader.result as string);
+            const { menu, dragEnabled, dashboardGroupName, activeId } = JSON.parse(
+                fileReader.result as string,
+            );
             if (!menu) {
                 return;
             }
@@ -506,11 +587,13 @@ export class NxDashboardComponent implements DashboardGroup {
                 this.updateSelectedDashboard(dashboardId);
             }
         });
-        this.updatePersisted$.pipe(
-            debounceTime(250),
-            switchMap(_ => this.dashboardCustomProperty.save(this.getPreparedConfig())),
-            untilDestroyed(this)
-        ).subscribe(this.updated$);
+        this.updatePersisted$
+            .pipe(
+                debounceTime(250),
+                switchMap(_ => this.dashboardCustomProperty.save(this.getPreparedConfig())),
+                untilDestroyed(this),
+            )
+            .subscribe(this.updated$);
         this.getPersistedConfig();
         const date = new Date().toLocaleDateString().replace(/\//g, '_');
         this.downloadFileName = `${this.CUSTOM_PROPERTY_KEY}-${date}-settings.dsh`;
@@ -531,6 +614,9 @@ export class NxDashboardComponent implements DashboardGroup {
         private cookieService: CookieService,
     ) {
         this.CONFIG = configService.config;
-        this.dashboardCustomProperty = this.cloudApi.customAccountPropertyFactory(this.CUSTOM_PROPERTY_KEY, new DashboardGroup(`${this.accountService.account.first_name}'s Dashboards`));
+        this.dashboardCustomProperty = this.cloudApi.customAccountPropertyFactory(
+            this.CUSTOM_PROPERTY_KEY,
+            new DashboardGroup(`${this.accountService.account.first_name}'s Dashboards`),
+        );
     }
 }

@@ -19,7 +19,6 @@ import { NxUriService } from '@services/uri.service';
     templateUrl: 'org-list.component.html',
     styleUrls: ['org-list.component.scss'],
 })
-
 export class NxPartnerOrganizationsListComponent implements OnInit, OnDestroy {
     readonly environment = environment;
     LANG = staticLang;
@@ -33,41 +32,37 @@ export class NxPartnerOrganizationsListComponent implements OnInit, OnDestroy {
         customization: 1,
         parent_channel_partner: 1,
         id: 1,
-        name: 'Cool partner'
+        name: 'Cool partner',
     };
 
     constructor(private uri: NxUriService, private partnersService: NxPartnersService) {}
 
     ngOnInit(): void {
-        this.uri.getParams()
+        this.uri
+            .getParams()
             .pipe(untilDestroyed(this))
             .subscribe(params => {
                 this.params = { ...params };
                 this.filterModel.query = this.params.search || '';
             });
 
-        this.partnersService.organizationsSubject
-            .subscribe(organizations => {
-                this.allElements = organizations;
-                // this.setTags();
-                this.setFilter();
-            });
+        this.partnersService.organizationsSubject.subscribe(organizations => {
+            this.allElements = organizations;
+            // this.setTags();
+            this.setFilter();
+        });
 
         this.partnersService.getOrganizations(this.partner);
     }
 
     setFilter(): void {
-        const SEARCH_KEYS = [
-            'name',
-        ];
+        const SEARCH_KEYS = ['name'];
         const searchBy = (item: unknown, query: string): string => {
             return Object.keys(item).find(key => {
                 if (!item[key] || !SEARCH_KEYS.includes(key)) {
                     return false;
                 }
-                return item[key]
-                    .toLowerCase()
-                    .includes(query);
+                return item[key].toLowerCase().includes(query);
             });
         };
 

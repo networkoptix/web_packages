@@ -17,7 +17,6 @@ import {
     templateUrl: 'users.component.html',
     styleUrls: ['users.component.scss'],
 })
-
 export class NxCustomizationUsersComponent implements OnInit, OnDestroy {
     readonly environment = environment;
     LANG = staticLang;
@@ -25,7 +24,8 @@ export class NxCustomizationUsersComponent implements OnInit, OnDestroy {
     public currentCustomization: BrandInfo;
     public users: UserInfo[] = [];
 
-    @ViewChild('pageApply', { read: ViewContainerRef, static: true }) private pageApply: ViewContainerRef;
+    @ViewChild('pageApply', { read: ViewContainerRef, static: true })
+    private pageApply: ViewContainerRef;
 
     constructor(
         private applyService: NxApplyService,
@@ -36,10 +36,9 @@ export class NxCustomizationUsersComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.applyService.initPageFormsWatcher(this.pageApply);
 
-        this.partnersService.usersSubject
-            .subscribe(users => {
-                this.users = users;
-            });
+        this.partnersService.usersSubject.subscribe(users => {
+            this.users = users;
+        });
     }
 
     ngOnDestroy(): void {

@@ -11,21 +11,18 @@ import {
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxPartnersService implements OnDestroy {
     customizationsSubject = new BehaviorSubject<BrandInfo[]>([]);
-    currentCustomization:BrandInfo;
+    currentCustomization: BrandInfo;
     usersSubject = new BehaviorSubject<UserInfo[]>([]);
     partnersSubject = new BehaviorSubject<PartnerInfo[]>([]);
     organizationsSubject = new BehaviorSubject<OrganizationInfo[]>([]);
 
     constructor(private cloudApi: NxCloudApiService) {}
 
-    private addTo(
-        subject: BehaviorSubject<unknown[]>,
-        toAdd: unknown
-    ): void {
+    private addTo(subject: BehaviorSubject<unknown[]>, toAdd: unknown): void {
         const values = subject.getValue();
         values.push(toAdd);
         subject.next(values);
@@ -33,7 +30,8 @@ export class NxPartnersService implements OnDestroy {
 
     loadCustomizations(): void {
         this.cloudApi.cloudChannelPartnersApi
-            .getCustomisations().toPromise()
+            .getCustomisations()
+            .toPromise()
             .then(customizations => {
                 this.customizationsSubject.next(customizations);
             });
@@ -47,7 +45,8 @@ export class NxPartnersService implements OnDestroy {
 
     addBrand(customization: BrandInfo): void {
         this.cloudApi.cloudChannelPartnersApi
-            .addCustomization(customization).toPromise()
+            .addCustomization(customization)
+            .toPromise()
             .then((response: BrandInfo) => {
                 this.addTo(this.customizationsSubject, response);
             });
@@ -59,7 +58,8 @@ export class NxPartnersService implements OnDestroy {
 
     getPartners(): void {
         this.cloudApi.cloudChannelPartnersApi
-            .getPartners(this.currentCustomization.id).toPromise()
+            .getPartners(this.currentCustomization.id)
+            .toPromise()
             .then((response: PartnerInfo[]) => {
                 this.partnersSubject.next(response);
             });
@@ -67,7 +67,8 @@ export class NxPartnersService implements OnDestroy {
 
     addPartner(partner: PartnerInfo): void {
         this.cloudApi.cloudChannelPartnersApi
-            .addCustomizationPartner(this.currentCustomization.id, partner).toPromise()
+            .addCustomizationPartner(this.currentCustomization.id, partner)
+            .toPromise()
             .then((response: PartnerInfo) => {
                 this.addTo(this.partnersSubject, response);
             });
@@ -76,7 +77,8 @@ export class NxPartnersService implements OnDestroy {
     getOrganizations(partner: PartnerInfo): void {
         const customizationId = this.currentCustomization?.id || partner.customization;
         this.cloudApi.cloudChannelPartnersApi
-            .getOrganizations(customizationId, partner).toPromise()
+            .getOrganizations(customizationId, partner)
+            .toPromise()
             .then((response: OrganizationInfo[]) => {
                 this.organizationsSubject.next(response);
             });
@@ -88,7 +90,8 @@ export class NxPartnersService implements OnDestroy {
 
     getUsers(): void {
         this.cloudApi.cloudChannelPartnersApi
-            .getUsers(this.currentCustomization.id).toPromise()
+            .getUsers(this.currentCustomization.id)
+            .toPromise()
             .then((response: UserInfo[]) => {
                 this.usersSubject.next(response);
             });
@@ -96,7 +99,8 @@ export class NxPartnersService implements OnDestroy {
 
     addUser(user: UserInfo): void {
         this.cloudApi.cloudChannelPartnersApi
-            .addCustomizationUser(this.currentCustomization.id, user).toPromise()
+            .addCustomizationUser(this.currentCustomization.id, user)
+            .toPromise()
             .then((response: UserInfo) => {
                 this.addTo(this.usersSubject, response);
             });

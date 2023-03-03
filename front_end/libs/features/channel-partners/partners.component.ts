@@ -68,50 +68,30 @@ export class NxChannelPartnersComponent implements OnInit, OnDestroy {
             selectedSection: '',
             selectedSubSection: '', // updated by selectedSubSectionSubject
             base: menus.customization.baseUrl,
-            level1: []
+            level1: [],
         };
 
         this.updateMenu();
 
-        this.menuService
-            .selectedSectionSubject
-            .pipe(
-                untilDestroyed(this),
-                distinctUntilChanged()
-            )
+        this.menuService.selectedSectionSubject
+            .pipe(untilDestroyed(this), distinctUntilChanged())
             .subscribe(selection => {
-                this.canNavMenu(
-                    this.origSelectedSection,
-                    'selectedSection',
-                    selection
-                );
+                this.canNavMenu(this.origSelectedSection, 'selectedSection', selection);
             });
 
-        this.menuService
-            .selectedSubSectionSubject
-            .pipe(
-                untilDestroyed(this),
-                distinctUntilChanged()
-            )
+        this.menuService.selectedSubSectionSubject
+            .pipe(untilDestroyed(this), distinctUntilChanged())
             .subscribe(selection => {
-                this.canNavMenu(
-                    this.origSelectedSubSection,
-                    'selectedSubSection',
-                    selection
-                );
+                this.canNavMenu(this.origSelectedSubSection, 'selectedSubSection', selection);
             });
 
-        this.menuService
-            .selectedDetailsSection
-            .pipe(
-                untilDestroyed(this),
-                distinctUntilChanged()
-            )
+        this.menuService.selectedDetailsSection
+            .pipe(untilDestroyed(this), distinctUntilChanged())
             .subscribe(selection => {
                 this.canNavMenu(
                     this.origSelectedDetailSection,
                     'selectedDetailsSection',
-                    selection
+                    selection,
                 );
             });
 
@@ -123,23 +103,20 @@ export class NxChannelPartnersComponent implements OnInit, OnDestroy {
                 }
             });
 
-        this.partnersService.customizationsSubject
-            .subscribe(customizations => {
-                this.customizations = customizations;
-                this.updateMenu();
-            });
+        this.partnersService.customizationsSubject.subscribe(customizations => {
+            this.customizations = customizations;
+            this.updateMenu();
+        });
 
-        this.partnersService.partnersSubject
-            .subscribe(partners => {
-                this.partners = partners;
-                this.updateMenu();
-            });
+        this.partnersService.partnersSubject.subscribe(partners => {
+            this.partners = partners;
+            this.updateMenu();
+        });
 
-        this.partnersService.organizationsSubject
-            .subscribe(organizations => {
-                this.organizations = organizations;
-                this.updateMenu();
-            });
+        this.partnersService.organizationsSubject.subscribe(organizations => {
+            this.organizations = organizations;
+            this.updateMenu();
+        });
     }
 
     updateMenu(): void {
@@ -157,12 +134,12 @@ export class NxChannelPartnersComponent implements OnInit, OnDestroy {
                         {
                             id: 'addCustomization',
                             label: this.LANG['Add Customization'] || 'Add Customization',
-                            disabled: false
-                        }
+                            disabled: false,
+                        },
                     ],
-                    level3: []
-                }
-            ]
+                    level3: [],
+                },
+            ],
         };
         this.content.level1.push(customizationNode);
 
@@ -181,16 +158,18 @@ export class NxChannelPartnersComponent implements OnInit, OnDestroy {
                     svg: menus.customization.icon,
                     label: customization.name,
                     path: '/customizations/' + customization.id,
-                    level2: [{
-                        id: menus.customization.buttons.id,
-                        items: [
-                            {
-                                id: 'addPartner',
-                                label: this.LANG['Add Partner'] || 'Add Partner',
-                                disabled: false
-                            }
-                        ],
-                    }],
+                    level2: [
+                        {
+                            id: menus.customization.buttons.id,
+                            items: [
+                                {
+                                    id: 'addPartner',
+                                    label: this.LANG['Add Partner'] || 'Add Partner',
+                                    disabled: false,
+                                },
+                            ],
+                        },
+                    ],
                     level3: [],
                 };
 
@@ -216,9 +195,7 @@ export class NxChannelPartnersComponent implements OnInit, OnDestroy {
             : this.CONFIG.headerHeight;
     }
 
-    ngOnDestroy(): void {
-
-    }
+    ngOnDestroy(): void {}
 
     contentToggle(event: ContentToggle): void {
         this.content.level1.find(node => {
@@ -233,23 +210,21 @@ export class NxChannelPartnersComponent implements OnInit, OnDestroy {
 
     private canNavMenu(
         origTargetValue: string,
-        contentTarget: 'selectedSection' |
-            'selectedSubSection' |
-            'selectedDetailsSection',
+        contentTarget: 'selectedSection' | 'selectedSubSection' | 'selectedDetailsSection',
         selection: string,
     ): void {
         if (this.applyService.locked) {
             origTargetValue = selection;
 
             this.cancelPrevious$.next(true);
-            this.applyService.applyOnNavSubject.pipe(
-                takeUntil(this.cancelPrevious$)
-            ).subscribe(status => {
-                if (!['', 'canceled'].includes(status)) {
-                    this.content[contentTarget] = origTargetValue;
-                    this.content = { ...this.content }; // trigger onChange
-                }
-            });
+            this.applyService.applyOnNavSubject
+                .pipe(takeUntil(this.cancelPrevious$))
+                .subscribe(status => {
+                    if (!['', 'canceled'].includes(status)) {
+                        this.content[contentTarget] = origTargetValue;
+                        this.content = { ...this.content }; // trigger onChange
+                    }
+                });
         } else {
             this.content[contentTarget] = selection;
             this.content = { ...this.content }; // trigger onChange
