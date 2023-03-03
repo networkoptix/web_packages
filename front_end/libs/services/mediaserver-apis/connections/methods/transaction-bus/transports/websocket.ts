@@ -1,7 +1,7 @@
 import { map, shareReplay } from 'rxjs';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
-import { SystemBusMessage } from '../types';
+import { SystemBusMessage } from '../types/base/system-bus-message';
 
 import { TransactionBusTransport } from './base';
 

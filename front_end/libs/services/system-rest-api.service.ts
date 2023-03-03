@@ -30,6 +30,7 @@ import { SECURITY_LEVEL } from '../../apps/setup-wizard/src/app/types/wizard-sta
 import { apiTool } from '../variables/static-variables';
 
 import { MediaserverRestConnection } from './mediaserver-apis/connections/adapters/adapter-target-types';
+import { assertTransaction } from './mediaserver-apis/connections/methods/transaction-bus/types/transactions';
 import { getServerInfoRestV1 } from './mediaserver-apis/endpoints/get-server-info';
 import { createLayoutRestV1 } from './mediaserver-apis/endpoints/layout/create-layout';
 import { deleteLayoutRestV1 } from './mediaserver-apis/endpoints/layout/delete-layout';
@@ -941,7 +942,13 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
 
     // Layouts
 
-    @withSystemBusUpdates(({ transaction }) => ['saveLayout', 'removeLayout'].includes(transaction.command))
+    @withSystemBusUpdates(({ transaction }) => [
+        assertTransaction.saveLayout,
+        assertTransaction.saveLayouts,
+        assertTransaction.removeLayout
+    ].some(
+        assert => assert(transaction)
+    ))
     getLayouts(): ReturnType<typeof getLayoutsRestV1> {
         return getLayoutsRestV1.bind(this)();
     }

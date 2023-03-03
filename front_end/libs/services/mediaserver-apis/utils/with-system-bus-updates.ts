@@ -1,15 +1,16 @@
 import { filter, Observable, switchMap, tap } from 'rxjs';
 
-import { NxSystemRestAPI } from '@services/system-rest-api.service';
+import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 
-import { SystemTransaction, TransactionBusHandler } from '../connections/methods/transaction-bus';
+import { TransactionBusHandler } from '../connections/methods/transaction-bus';
+import { SystemBusTransaction } from '../connections/methods/transaction-bus/types/base/system-bus-transaction';
 
 import { jsonRpcEnabled } from './json-rpc-enabled';
 
 interface PredicateCallbackArgs {
     originalArgs: unknown;
     lastResponse: unknown;
-    transaction: SystemTransaction;
+    transaction: SystemBusTransaction;
 }
 
 export type PredicateCallback = ({
