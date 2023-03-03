@@ -30,7 +30,7 @@
 
 <div class="panel-body text-center panel-body-big" ng-if="stepIs('start')">
     <div>
-        <h2>Get Started with {{Config.productName}}</h2>
+        <h2>開始使用 {{Config.productName}}</h2>
         <p class="master-description">請先設定伺服器.<br>
             選擇一個選項.</p>
         <div class="spacer" ng-if="!settings.liteClient"><br><br><br></div>
@@ -160,11 +160,11 @@
     </div>
     <h2>{{Config.cloud.productName}} 帳號</h2>
     <p class="master-description">
-        An account is required to use the cloud System {{Config.cloud.productName}}
+        使用Cloud系統{{Config.cloud.productName}}前，請先註冊一個Cloud帳號
     </p>
     <p class="master-controls">
-        <button class="btn btn-primary" ng-click="createAccount()" auto-focus>Create a new account</button>&nbsp;&nbsp;
-        <button class="btn btn-default" ng-click="next('cloudLogin', true)">Use existing</button>
+        <button class="btn btn-primary" ng-click="createAccount()" auto-focus>註冊新帳號</button>&nbsp;&nbsp;
+        <button class="btn btn-default" ng-click="next('cloudLogin', true)">登入現有帳號</button>
     </p>
 </div>
 
@@ -184,7 +184,7 @@
 <div class="panel-body text-center" ng-if="stepIs('cloudLogin')">
     <div class="master-icon"><span class="icon-cloud"></span></div>
 
-    <h2>Login to <span class="product-name add-version">{{Config.cloud.productName}}</span></h2>
+    <h2>登入至 <span class="product-name add-version">{{Config.cloud.productName}}</span></h2>
 
     <form class="master-controls" name="forms.cloudForm" novalidate ng-class="{'has-error':settings.cloudError}" ng-submit="next()">
         <input type="submit" hidden>
@@ -214,7 +214,7 @@
                     </span>
             </label>
             <label class="control-label mb-0" for="stayLoggedIn">
-                <span>Stay logged in</span>
+                <span>保存登入狀態</span>
             </label>
         </div>
 
@@ -229,7 +229,7 @@
              ng-if="forms.cloudForm.cloudEmail.$touched && forms.cloudForm.cloudEmail.$error.required ||
                     forms.cloudForm.cloudPassword.$touched && forms.cloudForm.cloudPassword.$error.required">
             <div class="help-block">
-                Email and password are required
+                電子郵件與密碼為必填欄位
             </div>
         </div>
 
@@ -241,7 +241,7 @@
 
         <div class="form-group" ng-if="settings.liteClient">
             <p class="help-block">
-                To create an account please visit {{portalUrl}}
+                請至 {{portalUrl}} 來註冊帳號
             </p>
         </div>
     </form>
@@ -406,7 +406,7 @@
 
 <div class="panel-body text-center" ng-if="stepIs('mergeTemporaryFailure')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>System was successfully merged, but is not ready yet.</h2>
+    <h2>系統已成功合併，但尚未就緒。</h2>
     <p class="master-description">
         {{settings.remoteError}}
     </p>
@@ -417,14 +417,14 @@
 
 <div class="panel-body text-center" ng-if="stepIs('cloudProcess')">
     <div class="master-icon"><span class="preloader"></span></div>
-    <h2>Connecting to {{Config.cloud.productName}} ...</h2>
-    <p class="master-description">It may take several moments</p>
+    <h2>正在連線至 {{Config.cloud.productName}}...</h2>
+    <p class="master-description">這可能需要一些時間</p>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('cloudSuccess')">
     <div class="master-icon"><span class="icon-success"></span></div>
-    <h2>System is ready for use</h2>
-    <p>Login</p>
+    <h2>系統已準備就緒</h2>
+    <p>登入</p>
     <h4>{{settings.cloudEmail}}</h4>
     <p>Sharing and account settings</p>
     <h4><a class="external" ng-href="{{portalSystemLink}}"  title="open {{Config.cloud.productName}}"

@@ -2,7 +2,7 @@
     "language_name": "English(US)",
     "language": "en_US",
     "dialogs": {
-        "okButton": "Ok",
+        "okButton": "確定",
         "openLink": "Visit this link",
         "openLinkWithTitle": "To {{title}} visit this link"
     },
