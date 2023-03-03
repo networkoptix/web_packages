@@ -36,8 +36,8 @@ def test_get_cloud_capabilities_from_cache(mocker, cloud_capabilities, settings)
     assert cache_capabilities == expected
 
 
-def test_get_settings_from_cache(mocker, customization_config, settings_from_cache, settings):
-    cache_mock = mocker.patch.object(utils, 'cloud_portal_customization_cache')
+def test_get_settings_from_cache(mocker, customization_config, settings_from_cache, settings, db):
+    cache_mock = mocker.patch.object(utils, 'cloud_portal_customization_cache_async')
     cache_mock.return_value = settings_from_cache
 
     settings_dict = utils.get_settings_from_cache(customization=settings.CUSTOMIZATION)

@@ -7,7 +7,7 @@ from django.urls import reverse
 from py import process
 from uuid import uuid4
 
-from asgiref.sync import sync_to_async
+from asgiref.sync import sync_to_async, async_to_sync
 import requests
 from django.core.cache import cache, caches
 from django.conf import settings
@@ -26,7 +26,7 @@ from cloud.helpers.exceptions import api_success, handle_exceptions, require_par
 from cloud.drf_async import async_api_view as api_view
 from api.serializers import CustomizationCacheSerializer, SettingsSerializer, IpvdSerializer
 from cms.models import Customization, cloud_portal_customization_cache, get_cached_menu, UserGroupsToAssetPermissions, \
-    cached_doc_menu_map, LicenseType
+    cached_doc_menu_map, LicenseType, cloud_portal_customization_cache_async
 from cms.feature_flags import *
 
 logger = logging.getLogger(__name__)
@@ -58,8 +58,12 @@ def get_cloud_capabilities_from_cache(*, customization=None, request=None):
 
 
 def get_settings_from_cache(*, customization=None, request=None):
+    return async_to_sync(get_settings_from_cache_async)(customization=customization, request=request)
+
+
+async def get_settings_from_cache_async(*, customization=None, request=None):
     customization = customization or get_customization(request)
-    customization_cache = cloud_portal_customization_cache(
+    customization_cache = await cloud_portal_customization_cache_async(
         customization, 'config')
     serializer = CustomizationCacheSerializer(data=customization_cache)
     serializer.is_valid()
