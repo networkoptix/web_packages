@@ -14,7 +14,8 @@ import { primaryRulerDateFormats } from './dateformats/primary_ruler_date_format
 import { IrregularLengthInterval } from './intervals/IrregularLengthInterval';
 import {
     MAX_WEIGHT,
-    MIN_WEIGHT, MIN_WIDTHS_FOR_INTERVALS
+    MIN_WEIGHT,
+    MIN_WIDTHS_FOR_INTERVALS,
 } from './intervals/cfg/MIN_WIDTH_FOR_INTERVALS';
 import { irregularLengthIntervals } from './intervals/irregularLengthIntervals';
 import {

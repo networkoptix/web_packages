@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import {
-    PrimaryRuler, RecordsConfig, TopRuler
+    PrimaryRuler,
+    RecordsConfig,
+    TopRuler,
 } from '@vms-client/submodules/timeline/services/canvas-renderer/drawingConfigs/drowingConfigs.service.types';
 
 import { colors } from './colors';

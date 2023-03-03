@@ -20,13 +20,9 @@ import { NxSystemService } from '@services/system.service/system.service';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 
 import { TimeRange } from '../../services/TimeRange';
-import {
-    TimelineSelectionService,
-} from '../../services/timeline.selection.service';
+import { TimelineSelectionService } from '../../services/timeline.selection.service';
 import { TimelineService } from '../../services/timeline.service';
-import type {
-    TimelineSelectionServiceStatus,
-} from '../../services/timeline.services.types';
+import type { TimelineSelectionServiceStatus } from '../../services/timeline.services.types';
 
 type ssRange = { start: number; end: number };
 

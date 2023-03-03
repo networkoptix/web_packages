@@ -14,7 +14,7 @@ import {
     createInitialStoppedState,
     createInitialArchiveState,
     createInitialLiveState,
-    ArchivePlaybackState
+    ArchivePlaybackState,
 } from '../datatypes/PlaybackState';
 
 @UntilDestroy()

@@ -5,9 +5,7 @@ import { calcOffsetX } from '@vms-client/utils/calculate-coordinates';
 import { float, ms, px, sign } from '@vms-client/utils/type-aliases';
 
 import { TimelineService } from './timeline.service';
-import type {
-    TimelineScrollbarRelativeServiceStatus
-} from './timeline.services.types';
+import type { TimelineScrollbarRelativeServiceStatus } from './timeline.services.types';
 
 // const SCROLL_TRESHOLD_MS = 10;
 

@@ -3,7 +3,8 @@ import {
     OnInit,
     OnDestroy,
     ElementRef,
-    HostListener, Renderer2,
+    HostListener,
+    Renderer2,
     HostBinding,
     Inject,
 } from '@angular/core';
@@ -32,7 +33,11 @@ import { WINDOW } from '@services/window-provider';
 import { cleanId } from '@utils/general';
 import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
 import { Camera } from '@vms-client/submodules/vms/datatypes/Camera';
-import { CAMERA_STATUS, ICamera, SimpleTimeRange } from '@vms-client/submodules/vms/datatypes/ICamera';
+import {
+    CAMERA_STATUS,
+    ICamera,
+    SimpleTimeRange,
+} from '@vms-client/submodules/vms/datatypes/ICamera';
 import type { IMediaServer } from '@vms-client/submodules/vms/datatypes/IMediaServer';
 import { MediaServer } from '@vms-client/submodules/vms/datatypes/MediaServer';
 import { VmsState, VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsState';

@@ -10,10 +10,7 @@ import { ms, px } from '@vms-client/utils/type-aliases';
 import { TimeRange } from './TimeRange';
 import { TimelineScrollbarRelativeService } from './timeline.scrollbarRelative.service';
 import { TimelineService } from './timeline.service';
-import type {
-    PixelRange,
-    TimelineSelectionServiceStatus
-} from './timeline.services.types';
+import type { PixelRange, TimelineSelectionServiceStatus } from './timeline.services.types';
 import { SELECTION_DRAG_MODE } from './timeline.services.types';
 
 const MIN_SELECTION_WIDTH_PX = 5;

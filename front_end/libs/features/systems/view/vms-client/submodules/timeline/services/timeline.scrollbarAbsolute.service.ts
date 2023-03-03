@@ -4,13 +4,9 @@ import { BehaviorSubject } from 'rxjs';
 import { calcClientX } from '@vms-client/utils/calculate-coordinates';
 import { px } from '@vms-client/utils/type-aliases';
 
-import {
-    TimelineScrollbarRelativeService,
-} from './timeline.scrollbarRelative.service';
+import { TimelineScrollbarRelativeService } from './timeline.scrollbarRelative.service';
 import { TimelineService } from './timeline.service';
-import type {
-    TimelineScrollbarAbsoluteServiceStatus
-} from './timeline.services.types';
+import type { TimelineScrollbarAbsoluteServiceStatus } from './timeline.services.types';
 
 const MIN_BAR_WIDTH_PX = 50;
 

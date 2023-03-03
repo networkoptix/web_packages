@@ -7,12 +7,8 @@ import { VideoManagementSystemService } from '@vms-client/submodules/vms/service
 import { px } from '@vms-client/utils/type-aliases';
 
 import { TimelineService } from '../../services/timeline.service';
-import type {
-    TimelineTimeUnderMouseServiceStatus
-} from '../../services/timeline.services.types';
-import {
-    TimelineTimeUnderMouseService,
-} from '../../services/timeline.time-under-mouse.service';
+import type { TimelineTimeUnderMouseServiceStatus } from '../../services/timeline.services.types';
+import { TimelineTimeUnderMouseService } from '../../services/timeline.time-under-mouse.service';
 
 const MARGIN = 5;
 const ARROW_WIDTH = 10;

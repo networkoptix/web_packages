@@ -4,7 +4,7 @@ import {
     HOUR,
     DAY,
     ROUGH_YEAR,
-    ROUGH_MONTH
+    ROUGH_MONTH,
 } from '../intervals/regularLengthIntervals';
 
 import { LABEL_FORMATS as LF } from './label_formats';

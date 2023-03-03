@@ -3,7 +3,16 @@ import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual } from 'lodash-es';
 import { of, SubscriptionLike, Subject, timer } from 'rxjs';
-import { catchError, delay, filter, retry, switchMap, takeUntil, tap, timeout } from 'rxjs/operators';
+import {
+    catchError,
+    delay,
+    filter,
+    retry,
+    switchMap,
+    takeUntil,
+    tap,
+    timeout,
+} from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';

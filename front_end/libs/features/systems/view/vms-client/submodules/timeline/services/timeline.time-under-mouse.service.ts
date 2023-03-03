@@ -5,9 +5,7 @@ import { calcOffsetX } from '@vms-client/utils/calculate-coordinates';
 import { ms, px } from '@vms-client/utils/type-aliases';
 
 import { TimelineService } from './timeline.service';
-import type {
-    TimelineTimeUnderMouseServiceStatus
-} from './timeline.services.types';
+import type { TimelineTimeUnderMouseServiceStatus } from './timeline.services.types';
 
 @Injectable({
     providedIn: 'root'

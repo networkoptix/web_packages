@@ -9,7 +9,16 @@ import { icons } from '@lib/variables/static-variables';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 
-import { GroupItem, GroupsItem, Crumb, SharedItems, BaseItems, OpenGroups, LoadingState, GroupPath } from './groups.types';
+import {
+    GroupItem,
+    GroupsItem,
+    Crumb,
+    SharedItems,
+    BaseItems,
+    OpenGroups,
+    LoadingState,
+    GroupPath,
+} from './groups.types';
 import { NxSystemGroupsService } from './services/system-groups.service';
 import * as GroupActions from './store/groups.actions';
 import {

@@ -1,12 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import {
-    Component,
-    OnInit,
-    AfterViewInit,
-    Output,
-    EventEmitter,
-    ElementRef,
-} from '@angular/core';
+import { Component, OnInit, AfterViewInit, Output, EventEmitter, ElementRef } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import staticLang from '@common/language/language_i18n_static.json';

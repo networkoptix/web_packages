@@ -1,10 +1,4 @@
-import {
-    Component,
-    AfterViewInit,
-    ElementRef,
-    ViewChild,
-    HostListener
-} from '@angular/core';
+import { Component, AfterViewInit, ElementRef, ViewChild, HostListener } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { animationFrameScheduler, interval } from 'rxjs';
@@ -12,7 +6,7 @@ import { animationFrameScheduler, interval } from 'rxjs';
 import { images } from '@lib/variables/static-variables';
 import {
     PlaybackState,
-    PLAYBACK_MODE
+    PLAYBACK_MODE,
 } from '@vms-client/submodules/playback/datatypes/PlaybackState';
 import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
 import { float, px } from '@vms-client/utils/type-aliases';
@@ -21,9 +15,7 @@ import {
     TimelineScrollbarAbsoluteService,
 } from '../../services/timeline.scrollbarAbsolute.service';
 import { TimelineScrollbarRelativeService } from '../../services/timeline.scrollbarRelative.service';
-import {
-    TimelineSelectionService,
-} from '../../services/timeline.selection.service';
+import { TimelineSelectionService } from '../../services/timeline.selection.service';
 import { TimelineService } from '../../services/timeline.service';
 import type {
     TimelineScrollbarAbsoluteServiceStatus,

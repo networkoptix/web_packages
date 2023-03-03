@@ -1,16 +1,11 @@
-import {
-    Component,
-    OnInit,
-    ElementRef,
-    HostListener,
-} from '@angular/core';
+import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import dateFormat from 'dateformat';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import {
     PlaybackState,
-    PLAYBACK_MODE
+    PLAYBACK_MODE,
 } from '@vms-client/submodules/playback/datatypes/PlaybackState';
 import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
@@ -18,9 +13,7 @@ import { assertNever } from '@vms-client/utils';
 import type { ms, px } from '@vms-client/utils/type-aliases';
 
 import { TimelineService } from '../../services/timeline.service';
-import type {
-    TimelineServiceStatus
-} from '../../services/timeline.services.types';
+import type { TimelineServiceStatus } from '../../services/timeline.services.types';
 
 const MARGIN = 5;
 const ARROW_WIDTH = 10;

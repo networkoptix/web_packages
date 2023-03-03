@@ -12,7 +12,15 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { animationFrameScheduler, BehaviorSubject, interval, Observable, of, Subject, timer } from 'rxjs';
+import {
+    animationFrameScheduler,
+    BehaviorSubject,
+    interval,
+    Observable,
+    of,
+    Subject,
+    timer,
+} from 'rxjs';
 import { filter, takeUntil, throttleTime } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -25,7 +33,10 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { NxSystem } from '@services/system.service/system';
 import { WINDOW } from '@services/window-provider';
 import { PlaybackQuality, PlaybackTransport } from '@view/view.types';
-import { PLAYBACK_MODE, PlaybackState } from '@vms-client/submodules/playback/datatypes/PlaybackState';
+import {
+    PLAYBACK_MODE,
+    PlaybackState,
+} from '@vms-client/submodules/playback/datatypes/PlaybackState';
 import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
 import { TimelineExtendToNowService } from '@vms-client/submodules/timeline/services/timeline.extend-to-now.service';
 import { TimelineSelectionService } from '@vms-client/submodules/timeline/services/timeline.selection.service';

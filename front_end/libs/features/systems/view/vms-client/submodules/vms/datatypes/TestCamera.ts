@@ -1,12 +1,7 @@
 import { ms, int } from '@vms-client/utils/type-aliases';
 
 import { BirdViewTree } from './BirdViewTree';
-import {
-    ICamera,
-    ISimpleTimeRange,
-    CAMERA_STATUS,
-    CameraArchive
-} from './ICamera';
+import { ICamera, ISimpleTimeRange, CAMERA_STATUS, CameraArchive } from './ICamera';
 import { _getNextRecord, _isThereRecord } from './utils';
 
 export class TestCamera implements ICamera {

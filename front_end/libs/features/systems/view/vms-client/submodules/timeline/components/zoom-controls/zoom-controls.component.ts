@@ -8,9 +8,7 @@ import { VideoManagementSystemService } from '@vms-client/submodules/vms/service
 import { float, int, ms } from '@vms-client/utils/type-aliases';
 
 import { TimelineService } from '../../services/timeline.service';
-import type {
-    TimelineServiceStatus,
-} from '../../services/timeline.services.types';
+import type { TimelineServiceStatus } from '../../services/timeline.services.types';
 
 type signType = int; // -1 | 0 | 1
 

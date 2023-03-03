@@ -1,11 +1,6 @@
 import { int, ms } from '@vms-client/utils/type-aliases';
 
-import {
-    CameraArchive,
-    ISimpleTimeRange,
-    IRecord,
-    SimpleTimeRange
-} from './ICamera';
+import { CameraArchive, ISimpleTimeRange, IRecord, SimpleTimeRange } from './ICamera';
 import { _getNextRecord } from './utils';
 
 export interface SubrangeIndicies {

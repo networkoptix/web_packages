@@ -7,15 +7,14 @@ import {
     Output,
     EventEmitter,
     ViewEncapsulation,
-    OnChanges, inject
+    OnChanges,
+    inject,
 } from '@angular/core';
 import { LocalStorageService, SessionStorageService } from 'ngx-webstorage';
 import type videojs from 'video.js';
 
 import { NgChanges } from '@utils/ng-changes';
-import {
-    BASE64_SINGLE_TRANSPARENT_PIXEL
-} from '@vms-client/utils';
+import { BASE64_SINGLE_TRANSPARENT_PIXEL } from '@vms-client/utils';
 
 import { PLAYBACK_MODE } from '../../../datatypes/PlaybackState';
 

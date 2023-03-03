@@ -18,11 +18,7 @@ import { NxSystemService } from '@services/system.service/system.service';
 import { WINDOW } from '@services/window-provider';
 import { WebClientUxService } from '@view/services/webclient-ux.service';
 import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
-import {
-    calcScreenX,
-    calcOffsetX,
-    calcOffsetY,
-} from '@vms-client/utils/calculate-coordinates';
+import { calcScreenX, calcOffsetX, calcOffsetY } from '@vms-client/utils/calculate-coordinates';
 import { px, ms } from '@vms-client/utils/type-aliases';
 
 import { TimelineCanvasRendererService } from '../../services/canvas-renderer/timeline.canvas-renderer.service';

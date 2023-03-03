@@ -1,9 +1,7 @@
 import { Injectable, isDevMode } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-import type {
-    ServerTimeInfo
-} from '@services/system.service/system-types';
+import type { ServerTimeInfo } from '@services/system.service/system-types';
 import { GUID, ms } from '@vms-client/utils/type-aliases';
 
 import { ICamera, CameraArchive } from '../datatypes/ICamera';
@@ -13,7 +11,7 @@ import {
     VMS_MODE,
     createNotInitializedState,
     createCameraNotSelectedState,
-    createCameraSelectedState
+    createCameraSelectedState,
 } from '../datatypes/VmsState';
 // import testMediaServers from '../testMediaServers'
 

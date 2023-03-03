@@ -9,7 +9,7 @@ import {
     ISimpleTimeRange,
     CAMERA_STATUS,
     CameraArchive,
-    MediaStreamInfo
+    MediaStreamInfo,
 } from './ICamera';
 
 interface NameValue {

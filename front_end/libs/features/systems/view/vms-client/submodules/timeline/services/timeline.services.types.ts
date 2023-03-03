@@ -1,9 +1,4 @@
-import type {
-    float,
-    ms,
-    px,
-    CanvasGeometry,
-} from '@vms-client/utils/type-aliases';
+import type { float, ms, px, CanvasGeometry } from '@vms-client/utils/type-aliases';
 
 import type { TimeRange } from './TimeRange';
 

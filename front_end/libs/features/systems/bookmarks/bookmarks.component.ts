@@ -13,7 +13,12 @@ import { pollingTimeout } from '@pages/static-variables-features';
 import { NxAccountService } from '@services/account.service';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import type { Bookmark as BookmarkResp, BookmarksParams, BookmarksTags, Device } from '@services/system-api.types';
+import type {
+    Bookmark as BookmarkResp,
+    BookmarksParams,
+    BookmarksTags,
+    Device,
+} from '@services/system-api.types';
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
