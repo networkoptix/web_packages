@@ -401,7 +401,9 @@ def log_error(request, error, log_level):
         error_text = f"{error.error_text}({error.error_code})"
         if error.error_data:
             clean_passwords(error.error_data)
-        error_formatted = f"Status: {error.status_code}, Message: {error.error_text}, Result code: {error.error_code}, Data: {json.dumps(error.error_data, indent=4, separators=(',', ': '))}"
+        error_formatted = f"Status: {error.status_code}, Message: {error.error_text}, " \
+                          f"Result code: {error.error_code}, " \
+                          f"Data: {json.dumps(error.error_data, indent=4, separators=(',', ': '))}"
     else:
         error_text = 'unknown'
         error_formatted = 'Unexpected error'
@@ -409,9 +411,14 @@ def log_error(request, error, log_level):
     clean_passwords(request_data)
 
     if log_level == logging.INFO:
-        error_formatted = f'{error.__class__.__name__}:{error_text}\nUser: {user_name} Login: {login_type} Session Time: {session_time} IP: {ip}\n{page_url} Request: {request_data}'
+        error_formatted = f'{error.__class__.__name__}:{error_text}\nUser: {user_name} ' \
+                          f'Login: {login_type} Session Time: {session_time} ' \
+                          f'IP: {ip}\n{page_url} Request: {request_data}'
     else:
-        error_formatted = f'{error.__class__.__name__}:{error_text}\nUser: {user_name} Login: {login_type} Session Time: {session_time} IP: {ip}\n{page_url} Request: {request_data}\n{error_formatted}\nCall Stack: \n{traceback.format_exc().replace("Traceback", "")}'
+        error_formatted = f'{error.__class__.__name__}:{error_text}\nUser: {user_name} ' \
+                          f'Login: {login_type} Session Time: {session_time} IP: {ip}\n{page_url} ' \
+                          f'Request: {request_data}\n{error_formatted}\n' \
+                          f'Call Stack: \n{"".join(traceback.format_exception(type(error), error, error.__traceback__)).replace("Traceback", "")}'
     # Explicit check so that it will not affect superusers.
     if request.user.is_authenticated and request.user.pk and 'ignore_exceptions' in request.user.global_permissions:
         log_level = logging.INFO
