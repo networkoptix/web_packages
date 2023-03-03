@@ -315,6 +315,7 @@ export interface ec2Camera {
     backupQuality: string;
     backupType?: string;
     controlEnabled: boolean;
+    deviceType: string;
     dewarpingParams: string;
     disableDualStreaming: boolean;
     failoverPriority: string;
