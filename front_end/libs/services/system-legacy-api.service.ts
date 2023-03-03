@@ -364,7 +364,6 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         this.serverId = serverId;
         this.unauthorizedCallback = unauthorizedCallback;
         this.currentRelayHost = this.urlBase.split('://').pop();
-        firstValueFrom(this.getResolvedRelay());
     }
 
     /**
