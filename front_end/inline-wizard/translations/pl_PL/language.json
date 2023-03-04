@@ -3,11 +3,11 @@
     "language": "en_US",
     "dialogs": {
         "okButton": "Ok",
-        "openLink": "Visit this link",
-        "openLinkWithTitle": "To {{title}} visit this link"
+        "openLink": "Otwórz ten link",
+        "openLinkWithTitle": "Aby {{title}} odwiedzić ten link"
     },
     "setup": {
-        "createAccount": "create account",
+        "createAccount": "utwórz konto",
         "errorNoHDD": "This device is intended to work with hard disk drive installed.<br>Please turn off the device and install a hard disk drive.",
         "errorNoNetwork": "This device needs network connection to work.<br>Please connect it to the local network or Internet"
     },
@@ -15,26 +15,26 @@
         "minLengthMessage": "Password must be at least 8 characters long",
         "requiredMessage": "Only latin letters, numbers and keyboard symbols are allowed",
         "weakMessage": "Password should contain different types of symbols",
-        "strongMessage": "Strong password!",
-        "commonMessage": "This password is in list of most popular passwords"
+        "strongMessage": "Silne hasło!",
+        "commonMessage": "To hasło znajduje się na liście najpopularniejszych haseł"
     },
     "settings": {
         "tabs": {
-            "server": "Server",
+            "server": "Serwer",
             "system": "System",
-            "device": "Device"
+            "device": "Urządzenie"
         },
-        "confirmRestart": "Restart server?",
-        "couldntCheckInternet": "Could not check cloud connection",
+        "confirmRestart": "Zrestartować serwer?",
+        "couldntCheckInternet": "Nie można sprawdzić połączenia do chmury",
         "confirmRestoreDefault": "Clear database and settings? This process will take some time and server will be restarted afterwards.",
         "confirmRestoreDefaultTitle": "Restore factory defaults",
         "unexpectedError": "Failed: unexpected error has happened",
-        "connnetionError": "Connection error",
-        "wrongPassword": "Wrong password.",
-        "error": "Error: ",
-        "restartNeeded": "Changes saved. Restart server to apply new settings?",
-        "settingsSaved": "Settings saved",
-        "confirmHardwareRestart": "Restart server operation System?",
+        "connnetionError": "Błąd połączenia",
+        "wrongPassword": "Nieprawidłowe hasło.",
+        "error": "Błąd: ",
+        "restartNeeded": "Zmiany zostały zapisane. Uruchomić ponownie serwer używając nowych ustawień?",
+        "settingsSaved": "Ustawienia zostały zapisane",
+        "confirmHardwareRestart": "Uruchomić ponownie system operacyjny serwera?",
         "confirmRestoreSettings": "Restore all server settings? Archive will be saved, but network settings will be reset.",
         "confirmRestoreSettingsNotNetwork": "Reset server configuration? Archive and network settings will be saved.",
         "unavailable": "Unavailable",
