@@ -403,7 +403,7 @@ html[data-theme="dark"] {
     --dialog-border-color : #35464F; //$dark11;
     --dialog-header-bg : #1C2327; //$dark6;
     --dialog-header-color: var(--dark17);
-    // --dialog-overlay-bg
+    --dialog-overlay-bg: rgba(var(--dark1--rgb), 0.5);
 
     --svg-legend-bg : #171C1F; //$dark5;
     --svg-legend-border-color : #35464F; //$dark11;
