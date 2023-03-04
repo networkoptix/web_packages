@@ -1,13 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { LocalStorageService } from 'ngx-webstorage';
 import {
     Subject,
     BehaviorSubject,
     interval,
-    empty,
-    Subscription
+    empty
 } from 'rxjs';
 import { distinctUntilChanged, switchMap } from 'rxjs/operators';
 
@@ -24,7 +23,7 @@ import type { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { WINDOW } from '@services/window-provider';
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector: 'nx-overlay-modal',
     templateUrl: 'overlay-modal.component.html',
@@ -48,9 +47,9 @@ export class NxOverlayModalComponent implements OnInit {
     checking$ = new BehaviorSubject(false);
     private refresh$ = new Subject<'refresh' | false>();
 
-    routeSubscription: Subscription;
-    systemAvailableSubscription: Subscription;
-    checkingSubscription: Subscription;
+    // routeSubscription: Subscription;
+    // systemAvailableSubscription: Subscription;
+    // checkingSubscription: Subscription;
 
     constructor(
         configService: NxConfigService,
@@ -70,22 +69,26 @@ export class NxOverlayModalComponent implements OnInit {
         if (this.localStorage.retrieve('resetServer') === true) {
             setTimeout(() => this.window.location.reload(), 2000);
         }
-        this.systemAvailableSubscription = this.appState.systemAvailable$.subscribe(async state => {
-            if (!state && this.system?.serverManager.servers.length > 1) {
-                // mainServer.status is unreliable ...
-                // if system availability state was changed to FALSE -> check if current server is available
-                !this.showOverlay && await this.checkIfOnline().catch(
-                    () => {
-                        this.showOverlay = true;
-                    });
-            } else {
-                this.showOverlay = !state;
-            }
-        });
+        this.appState.systemAvailable$
+            .pipe(untilDestroyed(this))
+            .subscribe(async state => {
+                if (!state && this.system?.serverManager.servers.length > 1) {
+                    // mainServer.status is unreliable ...
+                    // if system availability state was changed to FALSE -> check if current server is available
+                    !this.showOverlay && await this.checkIfOnline().catch(
+                        () => {
+                            this.showOverlay = true;
+                        });
+                } else {
+                    this.showOverlay = !state;
+                }
+            });
 
-        this.checkingSubscription = this.checking$.subscribe(state => {
-            this.refreshMessage = this.LANG?.servers[state ? 'refreshing' : 'refresh']();
-        });
+        this.checking$
+            .pipe(untilDestroyed(this))
+            .subscribe(state => {
+                this.refreshMessage = this.LANG?.servers[state ? 'refreshing' : 'refresh']();
+            });
 
         this.accountService.get().then(account => {
             if (!account) {
@@ -103,11 +106,13 @@ export class NxOverlayModalComponent implements OnInit {
                 this.serverId = (environment.isLocal)
                     ? this.CONFIG.localServerId
                     : this.system.moduleInfo.id;
-                this.routeSubscription = this.router.events.subscribe(route => {
-                    if (route instanceof NavigationEnd) {
-                        this.currentRoute = `/#${route.url}`;
-                    }
-                });
+                this.router.events
+                    .pipe(untilDestroyed(this))
+                    .subscribe(route => {
+                        if (route instanceof NavigationEnd) {
+                            this.currentRoute = `/#${route.url}`;
+                        }
+                    });
             });
         });
 
@@ -122,45 +127,50 @@ export class NxOverlayModalComponent implements OnInit {
                     ? empty()
                     : this.appState.systemAvailable$.value ? empty() : interval(1000);
             })
-        ).subscribe(() => {
-            const untilRefresh = this.timeoutUntilRefresh$.value;
+        )
+            .pipe(untilDestroyed(this))
+            .subscribe(() => {
+                const untilRefresh = this.timeoutUntilRefresh$.value;
 
-            if (!this.oneCheckAtATime && untilRefresh < 1) {
-                this.checkIfOnline()
-                    .then(res => {
-                        this.oneCheckAtATime = false;
-                        // restarts the interval after checkIfOnline
-                        if (!res.reply && this.nextInterval <= 60) {
-                            this.timeoutUntilRefresh$.next(this.nextInterval);
-                            this.nextInterval += 5;
-                            this.refresh$.next('refresh');
-                        } else {
-                            this.refresh$.next(false);
+                if (!this.oneCheckAtATime && untilRefresh < 1) {
+                    this.checkIfOnline()
+                        .then(res => {
+                            this.oneCheckAtATime = false;
+                            // restarts the interval after checkIfOnline
+                            if (!res.reply && this.nextInterval <= 60) {
+                                this.timeoutUntilRefresh$.next(this.nextInterval);
+                                this.nextInterval += 5;
+                                this.refresh$.next('refresh');
+                            } else {
+                                this.refresh$.next(false);
 
-                            if (res.reply) {
-                                this.appState.systemAvailable$.next(true);
-                                this.system.startPoll();
+                                if (res.reply) {
+                                    this.appState.systemAvailable$.next(true);
+                                    this.system.startPoll();
                                 // poll subscription is lost when server goes offline
+                                }
                             }
-                        }
-                    })
-                    .catch(err => {
-                        console.error('Server still offline: ', err);
-                    })
-                    .finally(() => {
-                        this.checking$.next(false);
-                        this.refresh$.next(false);
-                    });
-            } else if (!this.oneCheckAtATime) {
-                this.timeoutUntilRefresh$.next(untilRefresh - 1);
-                if (untilRefresh === 1) {
-                    this.checking$.next(true);
+                        })
+                        .catch(err => {
+                            console.error('Server still offline: ', err);
+                        })
+                        .finally(() => {
+                            this.checking$.next(false);
+                            this.refresh$.next(false);
+                        });
+                } else if (!this.oneCheckAtATime) {
+                    this.timeoutUntilRefresh$.next(untilRefresh - 1);
+                    if (untilRefresh === 1) {
+                        this.checking$.next(true);
+                    }
                 }
-            }
-        });
+            });
 
         this.appState.systemAvailable$
-            .pipe(distinctUntilChanged())
+            .pipe(
+                distinctUntilChanged(),
+                untilDestroyed(this)
+            )
             .subscribe(systemAvailable => {
                 if (
                     !systemAvailable &&

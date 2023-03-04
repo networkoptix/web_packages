@@ -85,7 +85,7 @@ export class AppComponent implements AfterViewInit {
     // isInIframe: boolean;
     newSystem: boolean;
     newHeader: boolean = false;
-    loading: boolean;
+    loading: boolean = false;
     reauthorizing: boolean;
     headerHeight: number;
 
