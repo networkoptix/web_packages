@@ -680,6 +680,20 @@ export class NxSystemRestAPI extends NxSystemAPI {
                 { deviceType, id, name, status, url, scheduleEnabled: schedule.isEnabled, parentId: serverId }
             ))));
     }
+    getMediaServersAndCameras(): Observable<t.NormalResponse<t.AggregatedServersAndCameras>> {
+        const cameras = this.get<t.GetCameras>('/ec2/getCamerasEx');
+        const servers = this.getMediaServers(true);
+        return combineLatest([servers, cameras]).pipe(
+            map<any, t.NormalResponse<t.AggregatedServersAndCameras>>(([mediaServers, cameras]) => ({
+                error: '0',
+                errorId: 'ok',
+                errorString: '',
+                reply: {
+                    '/ec2/getMediaServers': mediaServers,
+                    'ec2/getCamerasEx': cameras
+                }
+            })));
+    }
 
     updateSystemServersCameras() {
         const routes = [

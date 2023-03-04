@@ -372,7 +372,7 @@ export interface GetMediaServers {
 interface ec2GetMediaServers extends Array<GetMediaServers> {}
 interface ec2GetCameras extends Array<GetCameras> {}
 export interface AggregatedServersAndCameras {
-    'ec2/getMediaServersEx': ec2GetMediaServers,
+    '/ec2/getMediaServers': ec2GetMediaServers,
     'ec2/getCamerasEx': ec2GetCameras
 }
 

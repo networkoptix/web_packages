@@ -1019,10 +1019,10 @@ export class NxSystemAPI {
         );
     }
 
-    getMediaServersAndCameras() {
+    getMediaServersAndCameras(): Observable<t.NormalResponse<t.AggregatedServersAndCameras>> {
         const routes = ['/ec2/getMediaServers', 'ec2/getCamerasEx'];
         return this.getRequestAggregator<
-            t.NormalResponse<[t.GetMediaServers, t.GetCameras]>
+            t.NormalResponse<t.AggregatedServersAndCameras>
         >(routes);
     }
 
