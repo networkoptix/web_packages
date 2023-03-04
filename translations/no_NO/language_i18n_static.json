@@ -606,7 +606,7 @@
                 "label": "Vindu"
             },
             "universal": {
-                "label": "Universal"
+                "label": "Universell"
             }
         },
         "mobile": {
@@ -833,11 +833,11 @@
         }
     },
     "pageTitles": {
-        "about": "About",
+        "about": "Om",
         "account": "Kontoinnstillinger",
-        "activate": "Activate account",
-        "activateCode": "Activate account",
-        "activateSuccess": "Account activated",
+        "activate": "Aktiver konto",
+        "activateCode": "Aktiver konto",
+        "activateSuccess": "Konto aktivert",
         "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
         "auth": "Autorisasjon",
         "changePassword": "Bytt passord",
@@ -845,32 +845,32 @@
         "default": "%CLOUD_NAME%",
         "download": "Last ned %VMS_NAME%",
         "downloadPlatform": "Last ned %VMS_NAME% for ",
-        "failedToAccess2FA": "Failed to access \"{systemName}\" system",
+        "failedToAccess2FA": "Kunne ikke få tilgang til \"{systemName}\"-systemet",
         "failedToAccessSystem": "Kunne ikke få tilgang til systemet",
-        "failedToAccessCamera": "Failed to access camera",
-        "integrations": "%VMS_NAME% Integrations",
+        "failedToAccessCamera": "Kunne ikke få tilgang til kameraet",
+        "integrations": "%VMS_NAME% Integrasjoner",
         "login": "Logg Inn",
         "pageNotFound": "Siden ble ikke funnet",
         "register": "Opprett konto i",
         "registerSuccess": "Velkommen til",
-        "restorePassword": "Reset password",
-        "restorePasswordSuccess": "Password saved",
+        "restorePassword": "Tilbakestill passord",
+        "restorePasswordSuccess": "Passord lagret",
         "supportedDevices": "Støttede enheter",
         "system": "System",
-        "systemShare": "Share System",
+        "systemShare": "Del system",
         "systems": "Systemer",
         "template": "{title} - %CLOUD_NAME%",
         "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
-        "view": "View cameras",
-        "apiTool": "API testing tool",
+        "view": "Se kameraer",
+        "apiTool": "API-testverktøy",
         "security": "Sikkerhet",
-        "twofaRequired": "Two-factor authentication required",
+        "twofaRequired": "Tofaktorautentisering kreves",
         "information": "Informasjon",
         "monitoring": "Overvåking"
     },
     "pageDescriptions": {
-        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
-        "integrationSetup": "Setup instructions for {PLUGIN_NAME}. {PLUGIN_SHORT_DESCRIPTION}",
+        "integrations": "Integrations Marketplace er et sentralisert økosystem av produkter som integreres sømløst med VMS-produkter som %VMS_NAME%, alt tilgjengelig i %CLOUD_NAME% slik at du kan finne løsninger for å bygge og tilpasse ditt IP-videosystem.",
+        "integrationSetup": "Oppsettinstruksjoner for {PLUGIN_NAME}. {PLUGIN_SHORT_DESCRIPTION}",
         "integrationDetails": "{PLUGIN_NAME} for {PLUGIN_SHORT_DESCRIPTION}"
     },
     "passwordRequirements": {
@@ -894,7 +894,7 @@
             "message": "Forsikre deg om at serverne dine er online og prøv igjen."
         },
         "merge": {
-            "title": "This system is being merged to {systemName}.",
+            "title": "Dette systemet blir slått sammen til {systemName}.",
             "message": {
                 "dependingOnSize": "Avhengig av størrelsen på databasen, kan dette ta opptil flere timer.",
                 "untilFinished": "Inntil fusjonen er ferdig kan du logge inn på dette systemet og se på video, men kan ikke endre noen innstillinger.",
@@ -906,17 +906,17 @@
             "message": "Systemet er offline og servere er derfor ikke tilgjengelige."
         },
         "noSystemApiTool": {
-            "title": "No Valid System Found",
+            "title": "Finner ikke noe gyldig system",
             "message": ""
         },
         "systemLoadFailureApiTool": {
-            "title": "System failed to load",
+            "title": "Systemet kunne ikke lastes inn",
             "message": ""
         }
     },
     "pleaseSelect": "Vennligst velg...",
     "privacyPolicy": {
-        "integration": "You will find the {INTEGRATION_COMPANY} privacy policy <a href=\"{INTEGRATION_PRIVACY_POLICY}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
+        "integration": "Du finner {INTEGRATION_COMPANY} personvernreglene <a href=\"{INTEGRATION_PRIVACY_POLICY}\" target=\"_blank\">her</a>. %COMPANY_NAME% personvernreglene, som inkluderer instruksjoner om hvordan du kan trekke tilbake samtykket ditt, er tilgjengelig <a href=\"%PRIVACY_LINK%\" target=\"_blank\">her</a>.",
         "ipvd": "Ved å sende inn dette skjemaet samtykker du til å bli kontaktet av %COMPANY_NAME%.\nDu finner %COMPANY_NAME% personvernregler <a href=\"%PRIVACY_LINK%\" target=\"_blank\">her</a> som inkluderer instruksjoner om hvordan du kan trekke tilbake ditt samtykke."
     },
     "registration": {
@@ -933,11 +933,11 @@
             "reject": "Avvis",
             "backToEditText": "Tilbake til redigeringsgrensesnittene",
             "previewRibbon": "Denne siden er en forhåndsvisning av de siste endringene, og den samsvarer ikke med offentlig tilgjengelig versjon.",
-            "publishedRibbon": "This page is the live version that is publicly available."
+            "publishedRibbon": "Denne siden er liveversjonen som er offentlig tilgjengelig."
         },
         "newVersionAvailable": {
             "notification": "Ny versjon av %CLOUD_NAME% er tilgjengelig",
-            "installButton": "Refresh to Update"
+            "installButton": "Oppfrisk for å oppdatere"
         },
         "systemOffline": "Systemet er frakoblet. Noen innstillinger er kanskje ikke tilgjengelige.",
         "systemsMerging": "Dette systemet er for tiden involvert i en sammenslåingsoperasjon."
@@ -947,23 +947,23 @@
         "Search": "Søk",
         "analytics": "Analyser",
         "analyticsSelected": "analysehendelser",
-        "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
+        "appliedFilters": "{count, plural, =0{# filtre} one{# filter} other{# filtre}} anvendt",
         "hardwareType": "Skriv",
         "hardwareTypes": "Typer",
         "minResolution": "Minimum oppløsning",
         "search_ipvd": "Søk etter modell eller produsent",
-        "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
+        "selected": "{count, plural, =0{# valgt} one{# valgt} other{# valgt}}",
         "vendor": "Produsent",
         "vendors": "Produsenter",
-        "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
+        "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} funnet",
         "noMatches": "Ingen treff",
         "userNotFound": "<span class=\"error\">Bruker ikke funnet</span>"
     },
     "servers": {
-        "analyticsDataPolicyError": "Error deleting or keeping analytics data",
-        "autoRefresh": "auto refresh in {time}s...",
+        "analyticsDataPolicyError": "Feil ved sletting eller lagring av analysedata",
+        "autoRefresh": "automatisk oppdatering om {time}s...",
         "beginDetach": "Serveren kobles fra nå",
-        "beginReset": "Server is now resetting.",
+        "beginReset": "Serveren tilbakestilles nå.",
         "detachSystemFailed": "Kunne ikke fjerne serveren fra systemet. Kontroller om passordet du oppga er riktig, og serveren er online, og prøv igjen.",
         "detachSystemSuccess": "Serveren ble koblet fra systemet.",
         "portWarning": "Portnummere mindre enn 1024 er begrenset. Serveren kan bli utilgjengelig.",
@@ -971,7 +971,7 @@
         "refreshing": "Oppdaterer...",
         "removeMediaserverFailed": "Kunne ikke fjerne serveren fra systemet.",
         "resetFailed": "Kunne ikke tilbakestille serveren. Kontroller om passordet du oppga er riktig, og serveren er online, og prøv igjen.",
-        "resetSuccessful": "Server {serverName} has been reset to defaults.",
+        "resetSuccessful": "Server {serverName} er tilbakestilt til standardinnstillingene.",
         "restartFailed": "Det oppstod et problem med å starte serveren på nytt.",
         "restartSuccessful": "Serveren har startet på nytt.",
         "serverOffline": "Serveren er frakoblet.",
@@ -979,7 +979,7 @@
         "status": {
             "checking": "kontrollerer...",
             "offline": "offline",
-            "resetting": "resetting...",
+            "resetting": "tilbakestiller...",
             "restarting": "restarter..."
         },
         "successRename": "Servernavn lagret."
@@ -1016,8 +1016,8 @@
     },
     "system": {
         "connected": "Tilkoblet",
-        "not_connected": "Not connected",
-        "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
+        "not_connected": "Ikke tilkoblet",
+        "MERGE_FINISHES": "Når sammenslåingen er fullført, vil alle brukere og kameraer fra dette systemet bli tilgjengelig i <strong>{targetSystemName}</strong> systemet, og dette systemet vil bli slettet.",
         "mergeUnknownName": "Ukjent navn for system (forårsaket av cloud-sammenslåing)",
         "mySystemSearch": "IMeMyMine",
         "settings": {
@@ -1069,11 +1069,11 @@
                 "help": "(logg all tilgjengelig informasjon)"
             }
         },
-        "loggerDropdownLabel": "{ loggerName } log level",
+        "loggerDropdownLabel": "{ loggerName } loggnivå",
         "storageToolTips": {
             "local": "Lokal",
             "usb": "USB",
-            "network": "Network, added through OS",
+            "network": "Nettverk, lagt til via OS",
             "smb": "Nettverk (smb), lagt til via VMS",
             "cloud": "Cloud"
         },
@@ -1115,12 +1115,12 @@
         "accessibleAt": "For Windows i registernøkkel: { windowsPath } Media Server \n For alle andre plattformer er den plassert i en konfigurasjonsfil: {defaultPath} For midlertidig å kommentere noen innstilling, legg til understreksymbolet (\"_\") i begynnelsen av navnet, f.eks. \"absoluteRtcpTimestamps= false\" konverterer til \"_absoluteRtcpTimestamps=false\"."
     },
     "toastMessage": {
-        "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
-        "nameFail": "Failed to change {type} name",
+        "cloudUnavailable": "Noe gikk galt. Oppdater siden om ca. 30 sekunder.",
+        "nameFail": "Kunne ikke endre {type} navn",
         "noConnection": "Gjenopprett tilkoblingen til %CLOUD_NAME% og prøv igjen.",
-        "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
+        "noInternet": "%CLOUD_NAME% er for øyeblikket utilgjengelig. Prøv igjen senere.",
         "userChangesFail": "Kunne ikke bruke endringene",
-        "reviewAccepted": "The review has been accepted",
+        "reviewAccepted": "Anmeldelsen er akseptert",
         "system": {
             "deleted": {
                 "success": "Systemet {systemName} er slettet fra kontoen din"
@@ -1345,9 +1345,9 @@
         "twoFa": {
             "twoFADescription": "For øyeblikket har du <span id=\"target2FaSystems\">{count, plural, =0{# such systems} one{# such system} other{# such systems}}</span>.",
             "systemsRemainder": "og {count} mer...",
-            "v5Warning": "You have <span id=\"targetV5\">{count, plural, =0{# systems} one{# system} other{# systems}}</span> with software version lower than 5.0. {count, plural, =0{These systems} one{This system} other{These systems}} will be inaccessible via <strong>%VMS_NAME% Client</strong> since earlier versions of %VMS_NAME% Client do not support two-factor authentication.",
-            "v5WarningExplanation": "To make {count, plural, =0{these systems} one{this system} other{these systems}} fully accessible upgrade {count, plural, =0{them} one{it} other{them}} to software version 5.0 or uncheck the checkbox.",
-            "disableWarning": "You have {count, plural, one{# system} other{# systems}} that {count, plural, one{requires} other{require}} two-factor authentication. You will not be able to log in to {count, plural, one{this system} other{these systems}}."
+            "v5Warning": "Du har <span id=\"targetV5\">{count, plural, =0{# systemer} one{# system} other{# systemer}}</span> med programvareversjon lavere enn 5.0. {count, plural, =0{Disse systemene} one{Dette systemet} other{Disse systemene}} vil være utilgjengelig via <strong>%VMS_NAME% klient</strong> siden tidligere versjoner av %VMS_NAME% klient ikke støtter tofaktorautentisering.",
+            "v5WarningExplanation": "Å lage {count, plural, =0{disse systemene} one{dette systemet} other{disse systemene}} fullt tilgjengelig oppgradering {count, plural, =0{dem} one{det} other{dem}} til programvareversjon 5.0 eller fjern merket i boksen.",
+            "disableWarning": "Du har {count, plural, one{# system} other{# systemer}} det {count, plural, one{krever} other{krever}} to-faktor autentisering. Du vil ikke kunne logge inn på {count, plural, one{dette systemet} other{disse systemene}}."
         }
     },
     "storage": {
@@ -1375,7 +1375,7 @@
         "storageDeleted": "Lagring {url} slettet",
         "failedRemove": "Kunne ikke slette ekstern lagring {url}",
         "reservedTooSmallTooltip": "Denne lagringsplassen kan ikke brukes til opptak fordi den er for liten, og det finnes andre større lagringsplasser tilgjengelig for opptak.",
-        "reservedSystemTooltip": "This storage location cannot be used for recording because it’s system storage and there are other larger storage locations available for recording.",
+        "reservedSystemTooltip": "Denne lagringsplassen kan ikke brukes til opptak fordi det er systemlagring og det er andre større lagringsplasser tilgjengelig for opptak.",
         "serverOffline": "Kunne ikke legge til ekstern lagring - serveren svarer ikke",
         "success": "Ekstern lagring lagt til",
         "urlPlaceholder": "//<Computer Name>/<Folder>"
@@ -1383,20 +1383,20 @@
     "metaDefaults": {
         "default": {
             "site_name": "%CLOUD_NAME%",
-            "title": "%CLOUD_NAME% - Cloud Portal",
-            "description": "%CLOUD_NAME%, a simple way to connect to, manage and expand %VMS_NAME% Systems."
+            "title": "%CLOUD_NAME% - Skyportal",
+            "description": "%CLOUD_NAME%, en enkel måte å koble til, administrere og utvide %VMS_NAME% -systemer."
         },
         "/systems": {
-            "title": "Systems - %CLOUD_NAME%"
+            "title": "Systemer - %CLOUD_NAME%"
         },
         "/integrations": {
-            "title": "%VMS_NAME% Integrations - %CLOUD_NAME%"
+            "title": "%VMS_NAME% Integrasjoner - %CLOUD_NAME%"
         },
         "/docs": {
-            "title": "%VMS_NAME% Documentation - %CLOUD_NAME%"
+            "title": "%VMS_NAME% Dokumentasjon - %CLOUD_NAME%"
         },
         "/ipvd": {
-            "title": "Supported Devices - %CLOUD_NAME%"
+            "title": "Støttede enheter - %CLOUD_NAME%"
         }
     },
     "metaDefaultsWebadmin": {
@@ -1418,50 +1418,50 @@
         }
     },
     "maintenance": {
-        "description": "We are working on some improvements and brand new features."
+        "description": "Vi jobber med noen forbedringer og helt nye funksjoner."
     },
     "view": {
         "timeline": {
             "dayNames": {
-                "Sun": "Sun",
-                "Mon": "Mon",
-                "Tue": "Tue",
-                "Wed": "Wed",
-                "Thu": "Thu",
-                "Fri": "Fri",
-                "Sat": "Sat",
-                "Sunday": "Sunday",
-                "Monday": "Monday",
-                "Tuesday": "Tuesday",
-                "Wednesday": "Wednesday",
-                "Thursday": "Thursday",
-                "Friday": "Friday",
-                "Saturday": "Saturday"
+                "Sun": "Søn",
+                "Mon": "Man",
+                "Tue": "Tir",
+                "Wed": "Ons",
+                "Thu": "Tor",
+                "Fri": "Fre",
+                "Sat": "Lør",
+                "Sunday": "Søndag",
+                "Monday": "Mandag",
+                "Tuesday": "Tirsdag",
+                "Wednesday": "Onsdag",
+                "Thursday": "Torsdag",
+                "Friday": "Fredag",
+                "Saturday": "Lørdag"
             },
             "monthNames": {
                 "Jan": "Jan",
                 "Feb": "Feb",
                 "Mar": "Mar",
                 "Apr": "Apr",
-                "May": "May",
+                "May": "Mai",
                 "Jun": "Jun",
                 "Jul": "Jul",
                 "Aug": "Aug",
                 "Sep": "Sep",
-                "Oct": "Oct",
+                "Oct": "Okt",
                 "Nov": "Nov",
-                "Dec": "Dec",
-                "January": "January",
-                "February": "February",
-                "March": "March",
+                "Dec": "Des",
+                "January": "Januar",
+                "February": "Februar",
+                "March": "Mars",
                 "April": "April",
-                "June": "June",
-                "July": "July",
+                "June": "Juni",
+                "July": "Juli",
                 "August": "August",
                 "September": "September",
-                "October": "October",
+                "October": "Oktober",
                 "November": "November",
-                "December": "December"
+                "December": "Desember"
             },
             "timeNames": {
                 "a": "a",
