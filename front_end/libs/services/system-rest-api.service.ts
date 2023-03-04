@@ -647,7 +647,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         const endpoint = '/rest/v1/servers';
         const params = {
             _keepDefault: true,
-            _with: 'id,name,status,version,osInfo,endpoints'
+            _with: 'id,name,status,version,osInfo,endpoints,url'
         };
         return this.get<t.GetMediaServers[]>(
             endpoint,
