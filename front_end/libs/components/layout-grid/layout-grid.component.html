@@ -522,11 +522,9 @@
                                 <div
                                     *ngIf="
                                         !errors[itemDetail.details.id] &&
-                                            ((itemDetail.details.online &&
-                                                !itemDetail.details.status) ||
-                                                ['online', 'recording'].includes(
-                                                    itemDetail.details.status
-                                                ));
+                                            (itemDetail.type === RESOURCE_TYPE.CAMERA
+                                                ? itemDetail.details.online
+                                                : !itemDetail.details.status);
                                         else showError
                                     "
                                     cdkDragHandle

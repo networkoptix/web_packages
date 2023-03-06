@@ -6,7 +6,7 @@
  */
 
 import { Observable, BehaviorSubject, timer, Subject } from 'rxjs';
-import { filter, shareReplay, switchMap, take, map, delay, takeUntil } from 'rxjs/operators';
+import { filter, shareReplay, switchMap, take, map, delay, takeUntil, skip } from 'rxjs/operators';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
 const removeAuth = (webRtcUrl: string): string => webRtcUrl.split('&auth=')[0].split('&pos=')[0];
@@ -205,14 +205,20 @@ export class WebRTCStreamManager {
 
     static updatePosition(position = 0): void {
         WebRTCStreamManager.position = Math.round(position);
-        Object.values(WebRTCStreamManager.EXISTING_CONNECTIONS).forEach(connection =>
-            connection.updatePosition(),
-        );
+        Object.values(WebRTCStreamManager.EXISTING_CONNECTIONS).forEach(connection => {
+            if (connection.getPlayerCount()) {
+                connection.updatePosition(position);
+            }
+        });
     }
 
-    updatePosition(): void {
-        this.mediaStream$.next([null, null]);
-        this.#initWebSocket();
+    #position$ = new BehaviorSubject(0);
+
+    updatePosition(position: number, clearStream = false): void {
+        if (clearStream) {
+            this.mediaStream$.next([null, null]);
+        }
+        this.#position$.next(position);
     }
 
     /** Internal */
@@ -305,6 +311,19 @@ export class WebRTCStreamManager {
 
         this.#videoElements.push(videoElement);
         this.#frameTracker.players = this.#videoElements.length;
+        const root = videoElement.getRootNode();
+
+        const observer = new MutationObserver(() => {
+            if (!root.contains(element)) {
+                this.#videoElements.splice(this.#videoElements.indexOf(element), 1);
+                this.#frameTracker.players = this.#videoElements.length;
+                // if (!this.#frameTracker.players) {
+                //     this.#close();
+                // }
+            }
+        });
+        observer.observe(root, { childList: true, subtree: true });
+        this.updatePosition(this.#position$.value);
     };
 
     #closeWsConnection = new Subject<string>();
@@ -346,7 +365,7 @@ export class WebRTCStreamManager {
                 .addIceCandidate(new RTCIceCandidate(signal.ice))
                 .catch(this.#errorHandler);
         } else if (signal.ice === null) {
-            this.#initWebSocket();
+            this.start();
         }
     };
 
@@ -383,7 +402,7 @@ export class WebRTCStreamManager {
      */
     #getOpenWebSocketConnection = (): WebSocketSubject<SignalingMessage> => {
         if (!this.#wsConnection) {
-            this.#initWebSocket();
+            this.start();
         }
         return this.#wsConnection;
     };
@@ -393,7 +412,7 @@ export class WebRTCStreamManager {
     /**
      * Initializes websocket connection for negotating peer connection.
      */
-    #initWebSocket = (): void => {
+    start = (retries = 3): void => {
         this.#peerConnection?.close();
         this.#peerConnection = null;
         this.#wsConnection = webSocket(
@@ -403,8 +422,12 @@ export class WebRTCStreamManager {
         this.#wsConnection.pipe(takeUntil(this.#closeWsConnection)).subscribe({
             next: this.#gotMessageFromServer,
             error: () => {
-                this.mediaStream$.next([null, ConnectionError.websocket]);
                 this.#close();
+                if (retries) {
+                    this.start(--retries);
+                } else {
+                    this.mediaStream$.next([null, ConnectionError.websocket]);
+                }
             },
         });
     };
@@ -442,7 +465,8 @@ export class WebRTCStreamManager {
      * @param webRtcUrlFactory (params: Record<string, unknown>) => string
      */
     constructor(public webRtcUrlFactory: (params?: Record<string, unknown>) => string) {
-        this.#initWebSocket();
+        this.start();
+        this.#position$.pipe(skip(1)).subscribe(() => this.start());
         this.#initPeerConnectionCleanup();
     }
 }

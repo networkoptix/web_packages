@@ -19,10 +19,15 @@ export class NxCurrentRelayInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
         return next.handle(request).pipe(
             tap(event => {
+                if (request.url.startsWith('/')) {
+                    return;
+                }
+
                 const initialRelay = this.getBase(request.url);
+
                 if (
                     event instanceof HttpResponse &&
-                    event.status === 307 &&
+                    event.url !== request.url &&
                     initialRelay in NxCurrentRelayInterceptor.currentRelays
                 ) {
                     const resolvedRelay = this.getBase(event.url);
