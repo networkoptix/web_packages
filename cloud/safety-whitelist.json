@@ -109,5 +109,9 @@
   "52495": {
     "name": "setuptools",
     "note": "Setuptools 65.5.1 includes a fix for CVE-2022-40897: Python Packaging Authority (PyPA) setuptools before 65.5.1 allows remote attackers to cause a denial of service via HTML in a crafted package or custom PackageIndex page. There is a Regular Expression Denial of Service (ReDoS) in package_index.py.https://pyup.io/posts/pyup-discovers-redos-vulnerabilities- in-top-python-packages CVE-2022-40897 For more information, please visit https://pyup.io/v/52495/f17"
+  },
+  "52945": {
+    "name": "django",
+    "note": "Django 3.2.17, 4.0.9 and 4.1.6 includes a fix for CVE-2023-23969: In Django 3.2 before 3.2.17, 4.0 before 4.0.9, and 4.1 before 4.1.6, the parsed values of Accept-Language headers are cached in order to avoid repetitive parsing. This leads to a potential denial-of-service vector via excessive memory usage if the raw value of Accept-Language headers is very large.https://www.djangoproject.com/weblog/2023/feb/01/security-releases CVE-2023-23969 For more information, please visit https://pyup.io/v/52945/f17"
   }
 }

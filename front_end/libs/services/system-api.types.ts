@@ -427,7 +427,7 @@ export interface ec2MediaServer {
 }
 
 export type AggregatedServersAndCameras = NormalResponse<{
-    '/ec2/getMediaServersEx': ec2MediaServer[],
+    '/ec2/getMediaServers': ec2MediaServer[],
     'ec2/getCamerasEx': ec2Camera[]
 }>;
 

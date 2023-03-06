@@ -13,3 +13,4 @@
 # this is just for build process ...
 # actual browser limitation is in app.component (browserBlacklist)
 Chrome >= 61
+iOS >= 12

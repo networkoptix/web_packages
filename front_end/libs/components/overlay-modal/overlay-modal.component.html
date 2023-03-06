@@ -1,6 +1,6 @@
 <div
     class="modal-container d-flex flex-column align-items-center"
-    *ngIf="showOverlay"
+    [ngStyle]="{ visibility: showOverlay ? 'visible' : 'hidden' }"
 >
     <div class="d-flex flex-column align-items-center overlay-modal-header">
         <div class="placeholder-icon">
