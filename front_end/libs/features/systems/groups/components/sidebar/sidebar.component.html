@@ -54,7 +54,10 @@
                     }}
                 </a>
 
-                <button (click)="newGroupDialog()">
+                <button
+                    *ngIf="showPersonal"
+                    (click)="newGroupDialog()"
+                >
                     <svg-icon
                         nx-add-svg-src
                         [src]="icons.dir + 'plus.svg'"
