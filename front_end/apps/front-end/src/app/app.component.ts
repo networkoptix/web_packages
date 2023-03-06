@@ -337,7 +337,8 @@ export class AppComponent implements OnInit {
                 this.initComponents();
                 this.initScroll();
             });
-        });
+        },
+        () => {});
     }
 
     headerResize(size: { width: number, height: number }): void {

@@ -1,3 +1,4 @@
+/* eslint nx/ban-global-variables: 0 */
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
@@ -31,7 +32,12 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
     imports: [
         CommonModule,
         BrowserModule,
-        BrowserAnimationsModule,
+        BrowserAnimationsModule.withConfig({
+            // Disable animations if not supported (on iPhone 6 / Safari 13)
+            disableAnimations:
+                !('animate' in document.documentElement) ||
+                (navigator && /iPhone OS (8|9|10|11|12|13)_/.test(navigator.userAgent)),
+        }),
         AppRoutingModule,
         FormsModule,
         ReactiveFormsModule,

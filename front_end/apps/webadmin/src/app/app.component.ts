@@ -376,7 +376,10 @@ export class AppComponent implements AfterViewInit {
             });
 
         if (this.CONFIG.featureFlags.themesEnabled) {
-            this.themeService.initTheme().then();
+            this.themeService.initTheme().then(
+                () => {}, // weird Safari 12
+                () => {}
+            );
         }
     }
 

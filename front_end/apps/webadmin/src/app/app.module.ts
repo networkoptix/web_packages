@@ -1,3 +1,4 @@
+/* eslint nx/ban-global-variables: 0 */
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import {
     Location,
@@ -61,7 +62,12 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
 @NgModule({
     imports: [
         BrowserModule,
-        BrowserAnimationsModule,
+        BrowserAnimationsModule.withConfig({
+            // Disable animations if not supported (on iPhone 6 / Safari 13)
+            disableAnimations:
+                !('animate' in document.documentElement) ||
+                (navigator && /iPhone OS (8|9|10|11|12|13)_/.test(navigator.userAgent)),
+        }),
         ...(!environment.production ? [StoreDevtoolsModule.instrument()] : []),
         HttpClientModule,
         HttpClientXsrfModule.withOptions({
