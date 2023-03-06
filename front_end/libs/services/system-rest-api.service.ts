@@ -640,7 +640,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.get('/rest/v1/system/settings').toPromise();
     }
 
-    getMediaServers(useCache: boolean) {
+    getMediaServers(useCache: boolean): Observable<t.ec2MediaServer[]> {
         const endpoint = '/rest/v1/servers';
         const params = {
             _keepDefault: true,
@@ -677,11 +677,11 @@ export class NxSystemRestAPI extends NxSystemAPI {
                 { deviceType, id, name, status, url, scheduleEnabled: schedule.isEnabled, parentId: serverId }
             ))));
     }
-    getMediaServersAndCameras(): Observable<t.NormalResponse<t.AggregatedServersAndCameras>> {
-        const cameras = this.get<t.GetCameras>('/ec2/getCamerasEx');
+    getMediaServersAndCameras(): Observable<t.AggregatedServersAndCameras> {
+        const cameras = this.get<t.ec2Camera[]>('/ec2/getCamerasEx');
         const servers = this.getMediaServers(true);
-        return combineLatest([servers, cameras]).pipe(
-            map<any, t.NormalResponse<t.AggregatedServersAndCameras>>(([mediaServers, cameras]) => ({
+        return combineLatest<[t.ec2MediaServer[], t.ec2Camera[]]>([servers, cameras]).pipe(
+            map<[t.ec2MediaServer[], t.ec2Camera[]], t.AggregatedServersAndCameras>(([mediaServers, cameras]) => ({
                 error: '0',
                 errorId: 'ok',
                 errorString: '',
