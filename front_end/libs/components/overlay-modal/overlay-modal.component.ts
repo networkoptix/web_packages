@@ -88,7 +88,7 @@ export class NxOverlayModalComponent implements OnInit {
         this.checking$
             .pipe(untilDestroyed(this))
             .subscribe(state => {
-                this.refreshMessage = this.LANG?.servers[state ? 'refreshing' : 'refresh']();
+                this.refreshMessage = this.LANG?.servers[state ? 'refreshing' : 'refresh'];
             });
 
         if (this.CONFIG.newSystem) {
