@@ -65,26 +65,23 @@ export class NxOverlayModalComponent implements OnInit {
                 this.window.location.reload();
             }, 2000);
         }
-        this.appState.systemAvailable$
-            .pipe(untilDestroyed(this))
-            .subscribe(async state => {
-                if (!state && this.system?.serverManager.servers.length > 1) {
-                    // mainServer.status is unreliable ...
-                    // if system availability state was changed to FALSE -> check if current server is available
-                    !this.showOverlay &
-                        (await this.checkIfOnline().catch(() => {
-                            this.showOverlay = true;
-                        }));
-                } else {
-                    this.showOverlay = !state;
+        this.appState.systemAvailable$.pipe(untilDestroyed(this)).subscribe(async state => {
+            if (!state && this.system?.serverManager.servers.length > 1) {
+                // mainServer.status is unreliable ...
+                // if system availability state was changed to FALSE -> check if current server is available
+                if (!this.showOverlay) {
+                    await this.checkIfOnline().catch(() => {
+                        this.showOverlay = true;
+                    });
                 }
-            });
+            } else {
+                this.showOverlay = !state;
+            }
+        });
 
-        this.checking$
-            .pipe(untilDestroyed(this))
-            .subscribe(state => {
-                this.refreshMessage = this.LANG?.servers[state ? 'refreshing' : 'refresh'];
-            });
+        this.checking$.pipe(untilDestroyed(this)).subscribe(state => {
+            this.refreshMessage = this.LANG?.servers[state ? 'refreshing' : 'refresh'];
+        });
 
         if (this.CONFIG.newSystem) {
             return;
@@ -105,13 +102,11 @@ export class NxOverlayModalComponent implements OnInit {
                 this.serverId = environment.isLocal
                     ? this.CONFIG.localServerId
                     : this.system.moduleInfo.id;
-                this.router.events
-                    .pipe(untilDestroyed(this))
-                    .subscribe(route => {
-                        if (route instanceof NavigationEnd) {
-                            this.currentRoute = `/#${route.url}`;
-                        }
-                    });
+                this.router.events.pipe(untilDestroyed(this)).subscribe(route => {
+                    if (route instanceof NavigationEnd) {
+                        this.currentRoute = `/#${route.url}`;
+                    }
+                });
             });
         });
 
@@ -169,21 +164,15 @@ export class NxOverlayModalComponent implements OnInit {
             });
 
         this.appState.systemAvailable$
-            .pipe(
-                distinctUntilChanged(),
-                untilDestroyed(this)
-            )
+            .pipe(distinctUntilChanged(), untilDestroyed(this))
             .subscribe(systemAvailable => {
-                if (
-                    !systemAvailable &&
-                    this.appState.lastErrorStatus$.value === 504
-                ) {
+                if (!systemAvailable && this.appState.lastErrorStatus$.value === 504) {
                     this.system.stopPoll();
                 }
 
-            this.timeoutUntilRefresh$.next(5);
-            this.refresh$.next('refresh');
-        });
+                this.timeoutUntilRefresh$.next(5);
+                this.refresh$.next('refresh');
+            });
     }
 
     getServers(): void {
