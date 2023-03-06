@@ -40,8 +40,14 @@ export class NxVideoPlayerComponent {
     loading = true;
     streamManager = WebRTCStreamManager;
 
-    enterFullscreen(): void {
-        this.webRtcPlayerRef.nativeElement.requestFullscreen({ navigationUI: 'hide' })
+    document = document;
+
+    toggleFullScreen(): void {
+        if (document.fullscreenElement) {
+            document.exitFullscreen();
+        } else {
+            this.elRef.nativeElement.requestFullscreen({ navigationUI: 'hide' })
+        }
     }
 
     handleLoad(success = false): void {
@@ -49,7 +55,8 @@ export class NxVideoPlayerComponent {
     }
 
     constructor(
-        configService: NxConfigService
+        configService: NxConfigService,
+        private elRef: ElementRef
     ) {
         this.CONFIG = configService.config;
         this.playerId = uuid();

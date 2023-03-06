@@ -16,10 +16,21 @@
 
 <div
     class="full-screen parent-hover"
-    (click)="enterFullscreen()"
-    translate
+    [ngClass]="{ 'is-full-screen': document.fullscreenElement }"
+    (click)="toggleFullScreen()"
 >
-    Full Screen
+    <ng-template
+        #close
+        translate
+    >
+        Close Full Screen
+    </ng-template>
+    <ng-container
+        *ngIf="!document.fullscreenElement; else close"
+        translate
+    >
+        Full Screen
+    </ng-container>
 </div>
 
 <div

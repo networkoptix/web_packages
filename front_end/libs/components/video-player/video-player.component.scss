@@ -4,11 +4,6 @@ video {
     width: 100%;
     height: 100%;
     position: relative;
-    &::-webkit-media-controls {
-        &-play-button, &-timeline, &-current-time-display, &-mute-button, &-volume-slider, &-toggle-closed-captions-button {
-            display: none !important;
-        }
-    }
 }
 
 .overlay {
@@ -54,4 +49,8 @@ img.poster {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.is-full-screen {
+    visibility: visible !important;
 }
