@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { LocalStorageService } from 'ngx-webstorage';
-import { Subject, BehaviorSubject, interval, empty, Subscription } from 'rxjs';
+import { Subject, BehaviorSubject, interval, empty } from 'rxjs';
 import { distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -17,7 +17,7 @@ import type { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { WINDOW } from '@services/window-provider';
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector: 'nx-overlay-modal',
     templateUrl: 'overlay-modal.component.html',
@@ -41,9 +41,9 @@ export class NxOverlayModalComponent implements OnInit {
     checking$ = new BehaviorSubject(false);
     private refresh$ = new Subject<'refresh' | false>();
 
-    routeSubscription: Subscription;
-    systemAvailableSubscription: Subscription;
-    checkingSubscription: Subscription;
+    // routeSubscription: Subscription;
+    // systemAvailableSubscription: Subscription;
+    // checkingSubscription: Subscription;
 
     constructor(
         configService: NxConfigService,
@@ -65,22 +65,26 @@ export class NxOverlayModalComponent implements OnInit {
                 this.window.location.reload();
             }, 2000);
         }
-        this.systemAvailableSubscription = this.appState.systemAvailable$.subscribe(async state => {
-            if (!state && this.system?.serverManager.servers.length > 1) {
-                // mainServer.status is unreliable ...
-                // if system availability state was changed to FALSE -> check if current server is available
-                !this.showOverlay &&
-                    (await this.checkIfOnline().catch(() => {
-                        this.showOverlay = true;
-                    }));
-            } else {
-                this.showOverlay = !state;
-            }
-        });
+        this.appState.systemAvailable$
+            .pipe(untilDestroyed(this))
+            .subscribe(async state => {
+                if (!state && this.system?.serverManager.servers.length > 1) {
+                    // mainServer.status is unreliable ...
+                    // if system availability state was changed to FALSE -> check if current server is available
+                    !this.showOverlay &
+                        (await this.checkIfOnline().catch(() => {
+                            this.showOverlay = true;
+                        }));
+                } else {
+                    this.showOverlay = !state;
+                }
+            });
 
-        this.checkingSubscription = this.checking$.subscribe(state => {
-            this.refreshMessage = this.LANG?.servers[state ? 'refreshing' : 'refresh'];
-        });
+        this.checking$
+            .pipe(untilDestroyed(this))
+            .subscribe(state => {
+                this.refreshMessage = this.LANG?.servers[state ? 'refreshing' : 'refresh'];
+            });
 
         if (this.CONFIG.newSystem) {
             return;
@@ -101,11 +105,13 @@ export class NxOverlayModalComponent implements OnInit {
                 this.serverId = environment.isLocal
                     ? this.CONFIG.localServerId
                     : this.system.moduleInfo.id;
-                this.routeSubscription = this.router.events.subscribe(route => {
-                    if (route instanceof NavigationEnd) {
-                        this.currentRoute = `/#${route.url}`;
-                    }
-                });
+                this.router.events
+                    .pipe(untilDestroyed(this))
+                    .subscribe(route => {
+                        if (route instanceof NavigationEnd) {
+                            this.currentRoute = `/#${route.url}`;
+                        }
+                    });
             });
         });
 
@@ -124,6 +130,7 @@ export class NxOverlayModalComponent implements OnInit {
                         : interval(1000);
                 }),
             )
+            .pipe(untilDestroyed(this))
             .subscribe(() => {
                 const untilRefresh = this.timeoutUntilRefresh$.value;
 
@@ -161,10 +168,18 @@ export class NxOverlayModalComponent implements OnInit {
                 }
             });
 
-        this.appState.systemAvailable$.pipe(distinctUntilChanged()).subscribe(systemAvailable => {
-            if (!systemAvailable && this.appState.lastErrorStatus$.value === 504) {
-                this.system.stopPoll();
-            }
+        this.appState.systemAvailable$
+            .pipe(
+                distinctUntilChanged(),
+                untilDestroyed(this)
+            )
+            .subscribe(systemAvailable => {
+                if (
+                    !systemAvailable &&
+                    this.appState.lastErrorStatus$.value === 504
+                ) {
+                    this.system.stopPoll();
+                }
 
             this.timeoutUntilRefresh$.next(5);
             this.refresh$.next('refresh');

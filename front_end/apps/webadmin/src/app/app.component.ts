@@ -87,7 +87,7 @@ export class AppComponent implements AfterViewInit {
     browserBlacklist: Record<string, number>;
     newSystem: boolean;
     newHeader: boolean = false;
-    loading: boolean;
+    loading: boolean = false;
     reauthorizing: boolean;
     headerHeight: number;
     CONFIG: IConfig;
@@ -379,7 +379,10 @@ export class AppComponent implements AfterViewInit {
             });
 
         if (this.CONFIG.featureFlags.themesEnabled) {
-            this.themeService.initTheme().then();
+            this.themeService.initTheme().then(
+                () => {}, // weird Safari 12
+                () => {}
+            );
         }
     }
 

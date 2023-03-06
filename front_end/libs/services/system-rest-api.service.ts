@@ -273,16 +273,17 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                         const storageService = this.storageService;
                         const refreshToken = storageService.refreshToken;
                         const errorId = error?.error?.errorId;
-                        const expiredSession = error.status === 422 && errorId === 'sessionExpired' ||
-                            error.status === 400 && errorId === 'badRequest' && error.url.includes('/rest/v1/login/sessions/');
-                        const authorizationError = error.status >= 400 && error.status < 500 && error.status !== 422 || error.resultCode === 'forbidden';
+                        const isLoginRequest = error.url.includes('/rest/v1/login/sessions/');
+                        const expiredSession = isLoginRequest &&
+                            (error.status === 422 && ['sessionExpired', 'invalidParameter'].includes(errorId) ||
+                                error.status === 400 && errorId === 'badRequest');
+                        const authorizationError = !isLoginRequest && error.status >= 400 && error.status < 500 || error.resultCode === 'forbidden';
 
                         if (error.status === 503) {
                             return of('');
                         } else if (!refreshToken) {
                             if (expiredSession) {
-                                this.accessToken = undefined;
-                                this.clearTokens();
+                                return this.logout();
                             } else if (authorizationError) {
                                 return from(this.unauthorizedCallback(error));
                             }
@@ -326,7 +327,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     // Checks if the url does not have swagger-ui in it.
     private requiresWeb(url) {
         // Leaving this method incase we remember what it was used for.
-        return false;
+        return true;
     }
 
     // Legacy api requires runtime in the header of the request.
@@ -690,11 +691,11 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         );
     }
 
-    getMediaServers(useCache: boolean) {
+    getMediaServers(useCache: boolean): Observable<t.ec2MediaServer[]> {
         const endpoint = '/rest/v1/servers';
         const params = {
             _keepDefault: true,
-            _with: 'id,name,status,version,osInfo,endpoints'
+            _with: 'id,name,status,version,osInfo,endpoints,url'
         };
         return this.get<t.ec2MediaServer[]>(
             endpoint,
@@ -726,6 +727,20 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             .map(({ deviceType, id, name, schedule, serverId, status, url }) => (
                 <ec2Camera>({ deviceType, id, name, status, url, scheduleEnabled: schedule.isEnabled, parentId: serverId })
             ))));
+    }
+    getMediaServersAndCameras(): Observable<t.AggregatedServersAndCameras> {
+        const cameras = this.get<t.ec2Camera[]>('/ec2/getCamerasEx');
+        const servers = this.getMediaServers(true);
+        return combineLatest<[t.ec2MediaServer[], t.ec2Camera[]]>([servers, cameras]).pipe(
+            map<[t.ec2MediaServer[], t.ec2Camera[]], t.AggregatedServersAndCameras>(([mediaServers, cameras]) => ({
+                error: '0',
+                errorId: 'ok',
+                errorString: '',
+                reply: {
+                    '/ec2/getMediaServers': mediaServers,
+                    'ec2/getCamerasEx': cameras
+                }
+            })));
     }
 
     updateSystemServersCameras(): Observable<t.CameraManagerUpdate> {

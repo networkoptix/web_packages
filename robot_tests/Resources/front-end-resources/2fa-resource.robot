@@ -74,6 +74,7 @@ Turn off 2fa Functionality
     IF    "${logged in}" == "False"
         Log In    ${login user}    ${password}    2fa=${True}   api=${False}
     END
+    Wait Until Element Is Not Visible    //div[contains(@class, "cdk-overlay-backdrop")]
     Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
     Click Element    ${ACCOUNT DROPDOWN}
     Wait Until Element is Visible    ${SECURITY DROPDOWN}

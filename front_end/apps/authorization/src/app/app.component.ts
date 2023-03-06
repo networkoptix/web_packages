@@ -18,7 +18,10 @@ export class AppComponent {
     ) {
         const CONFIG = this.configService.getConfig();
         if (CONFIG.featureFlags.themesEnabled) {
-            this.themeService.initTheme().then();
+            this.themeService.initTheme().then(
+                () => {}, // weird Safari 12
+                () => {}
+            );
         } else {
             this.window.document.documentElement.setAttribute('data-theme', CONFIG.themeConfig.light);
         }

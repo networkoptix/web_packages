@@ -612,7 +612,7 @@ export class NxSystem {
                         console.error('error getting mediaservers and cameras');
                         return [];
                     }
-                    return this.processMediaServersAndCameras(response.reply);
+                    return this.processMediaServersAndCameras(response);
                 },
                 err => {
                     console.error('getMediaServersAndCameras failure', err);
@@ -623,7 +623,7 @@ export class NxSystem {
     }
 
     protected processMediaServersAndCameras(
-        apiReply: AggregatedServersAndCameras['reply']
+        apiReply: AggregatedServersAndCameras
     ): NxMediaServer[] {
         const msIds: KeyFilter<ec2MediaServer, string>[] = [
             'authKey',
@@ -641,13 +641,13 @@ export class NxSystem {
         // ID properties with enclosing brackets {} that we want to trim
         // while ignoring JSON strings
 
-        const mediaServers = apiReply['/ec2/getMediaServers'].map(ms => {
+        const mediaServers = apiReply.reply['/ec2/getMediaServers'].map(ms => {
             msIds.forEach(id => {
                 ms[id] = cleanId(ms[id]);
             });
             return ms;
         });
-        const cameras = apiReply['ec2/getCamerasEx'].map(cam => {
+        const cameras = apiReply.reply['ec2/getCamerasEx'].map(cam => {
             camIds.forEach(id => {
                 cam[id] = cleanId(cam[id]);
             });

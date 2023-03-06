@@ -621,7 +621,8 @@ export class NxDialogsService extends DialogBase {
     );
 
     transferOwnership = this.dialogV2Factory<Dt.TransferOwnership>(
-        () => import('./transfer-ownership/transfer-ownership.component').then(m => m.TransferOwnershipModalContent)
+        () => import('./transfer-ownership/transfer-ownership.component').then(m => m.TransferOwnershipModalContent),
+        { width: '420px' }
     );
 
     /* Cameras */

@@ -1102,12 +1102,12 @@ export class MergeModalContent {
         this.primarySystem = system;
         this.primarySystem.stateOfHealth = this.primarySystem.stateOfHealth ||
             this.primarySystem.info && this.primarySystem.info.stateOfHealth;
-        this.primaryName = escape(this.primarySystem.name || this.primarySystem?.info.systemName || this.primarySystem?.info.name);
+        this.primaryName = escape(this.primarySystem.name || this.primarySystem?.info?.systemName || this.primarySystem?.info?.name);
     }
 
     getSecondaryName(): void {
         let name: string = this.secondarySystem.name || this.secondarySystem.systemName ||
-            this.secondarySystem?.info.name || this.secondarySystem?.info.systemName;
+            this.secondarySystem?.info?.name || this.secondarySystem?.info?.systemName;
         if (name === this.LANG.dialogs.merge.otherSystem) {
             name = this.translateService.instant(
                 'dialogs.merge.serverAtUrl',

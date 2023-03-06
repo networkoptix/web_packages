@@ -87,12 +87,10 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
             this.appState.lastErrorStatus$.next(status);
             this.appState.systemAvailable$.next(false);
         } else if (
-            (res instanceof HttpErrorResponse &&
-                (status === 401 ||
-                    (status === 422 &&
-                        res.url.includes('rest/v1/login/sessions') &&
-                        res.error?.errorId === servers.errors.oldSessionErrorId))) ||
-            (status === 0 && res.url?.includes('oauth/token'))
+            res instanceof HttpErrorResponse &&
+            ([400, 401, 422].includes(status) && res.url.includes('rest/v1/login/sessions') &&
+                res.error?.errorId !== servers.errors.invalidParameter ||
+            (status === 0 && res.url?.includes('oauth/token')))
         ) {
             // Session expired
             if (this.isDialogActive) {

@@ -403,6 +403,7 @@ html[data-theme="light"] {
     --dialog-bg : #{$light1};
     --dialog-border-color : #{$additional_light8};
     --dialog-header-bg : #{$additional_light1};
+    --dialog-header-color: var(--dark17);
     --dialog-overlay-bg: rgba(var(--dark15--rgb), 0.2);
 
     --svg-legend-bg : #{$additional_light1};

@@ -149,10 +149,13 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     private updateSettings(forceMergeState?: boolean): void {
+        const isMergeTimeOver24hrs = (time: string): boolean => new Date().getTime() - parseInt(time) > 86400000;
         this.merging = this.system && typeof this.system.mergeInfo !== 'undefined' ||
             forceMergeState;
         this.settings = {
-            disconnectDisabled: this.merging,
+            disconnectDisabled: this.merging &&
+                this.system?.mergeInfo?.startTime &&
+                !isMergeTimeOver24hrs(this.system.mergeInfo.startTime),
             renameDisabled: this.merging &&
                 this.system.mergeInfo &&
                 this.system.mergeInfo.role !== 'master'
