@@ -22,6 +22,7 @@ import { Process } from '@services/process.service/process';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
 import { NxUriService } from '@services/uri.service';
+import { caseInsenstiveSearch } from '@utils/general';
 
 type Endpoint = Partial<{
     ipvd: boolean;
@@ -145,21 +146,20 @@ export class NxSystemsListComponent implements OnInit {
         return item?.id;
     }
 
-    hasMatch(str: string, search: string): boolean {
-        return str.toLowerCase().includes(search.toLowerCase());
-    }
-
     searchSystems(): void {
         const search = this.search.value;
 
         if (search) {
             this.filteredSystems = this.systems.filter(system => {
-                return !search ||
-                    this.hasMatch(this.LANG.system.mySystemSearch, search) &&
-                    (system.ownerAccountEmail === this.accountService.email) ||
-                    this.hasMatch(system.name, search) ||
-                    this.hasMatch(system.ownerFullName, search) ||
-                    this.hasMatch(system.ownerAccountEmail, search);
+                const ownerText = this.systemsService.getSystemOwnerName(
+                    system,
+                    this.account.email,
+                );
+                return (
+                    caseInsenstiveSearch(system.name, search) ||
+                    (ownerText !== this.LANG.system.yourSystem &&
+                        caseInsenstiveSearch(ownerText, search))
+                );
             });
         } else {
             this.filteredSystems = this.systems;

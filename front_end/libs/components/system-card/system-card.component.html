@@ -9,9 +9,16 @@
                 [search]="search"
             ></nx-search-highlight>
         </h2>
-        <span class="fs-mask user-name">
+        <span
+            class="fs-mask user-name"
+            *ngIf="getSystemOwnerName() as ownerName"
+        >
+            <ng-container *ngIf="ownerName === LANG.system.yourSystem">{{
+                LANG.system.yourSystem | translate
+            }}</ng-container>
             <nx-search-highlight
-                [text]="getSystemOwnerName() | translate"
+                *ngIf="ownerName !== LANG.system.yourSystem"
+                [text]="ownerName"
                 [search]="search"
             ></nx-search-highlight
         ></span>
