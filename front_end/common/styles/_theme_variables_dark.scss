@@ -405,6 +405,7 @@ html[data-theme="dark"] {
     --dialog-header-bg : #1C2327; //$dark6;
     --dialog-header-color: var(--dark17);
     --dialog-overlay-bg: rgba(var(--dark1--rgb), 0.5);
+    --dialog-box-shadow: 0px 16px 32px rgba(var(--dark15--rgb), 0.2);
 
     --svg-legend-bg : #171C1F; //$dark5;
     --svg-legend-border-color : #35464F; //$dark11;

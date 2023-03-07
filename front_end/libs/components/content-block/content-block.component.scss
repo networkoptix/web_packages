@@ -2,17 +2,6 @@
 @use "theme_variables_common" as *;
 @use "bootstrap_utils" as bootstrap;
 
-// CSS for system settings is overriden when navigating from groups, overwrites wrong styles
-.settings-card {
-    height: unset;
-    width: unset;
-
-    .system-owner {
-        line-height: unset;
-        height: unset;
-        position: unset;
-    }
-}
 
 .card {
     box-shadow: none;

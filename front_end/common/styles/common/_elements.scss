@@ -196,6 +196,7 @@ span.marked {
     border: 1px solid var(--dialog-border-color);
     max-width: none;
     max-height: none;
+    box-shadow: var(--dialog-box-shadow);
 
     >* {
         width: 100%;
@@ -223,7 +224,9 @@ span.marked {
     background-color: var(--dialog-overlay-bg) !important;
 }
 
-// <p> has bottom margin which can create a gap between the body and footer
 .cdk-dialog-container {
+    // <p> has bottom margin which can create a gap between the body and footer
     background-color: var(--dialog-bg);
+
+    box-shadow: var(--dialog-box-shadow);
 }

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -18,8 +18,6 @@ import type { SystemItem } from '../../groups.types';
     selector: 'nx-system-card',
     templateUrl: 'system-card.component.html',
     styleUrls: ['system-card.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    // Need to escape encapsulation to style menu
 })
 export class NxSystemCardComponent implements OnInit {
     @Input() system: SystemItem;

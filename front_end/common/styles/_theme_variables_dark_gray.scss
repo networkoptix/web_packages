@@ -397,6 +397,7 @@ html[data-theme="dark-gray"] {
     --dialog-header-bg : #282828; //$dark_gray_6;
     --dialog-header-color: var(--dark17);
     --dialog-overlay-bg: rgba(var(--dark1--rgb), 0.5);
+    --dialog-box-shadow: 0px 16px 32px rgba(var(--dark15--rgb), 0.2);
 
     --svg-legend-bg : #202020; //$dark_gray_5;
     --svg-legend-border-color : #505050; //$dark_gray_11;

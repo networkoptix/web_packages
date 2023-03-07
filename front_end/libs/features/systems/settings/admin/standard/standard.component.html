@@ -1,6 +1,6 @@
 <nx-block
     *ngIf="CONFIG.cloudCapabilities.alexaIntegrationEnabled"
-    type="mt-3 settings-card"
+    type="mt-3"
 >
     <header><h4 translate>Alexa Settings</h4></header>
     <nx-section>
@@ -118,7 +118,7 @@
     #systemAndSecuritySettingsForm="ngForm"
     novalidate
 >
-    <nx-block type="mt-3 settings-card">
+    <nx-block type="mt-3">
         <header><h4 translate>System Settings</h4></header>
         <nx-section-placeholder
             *ngIf="(system && settings === false) || !system.isOnline; else systemSettingsTemplate"
@@ -127,6 +127,7 @@
             [translatedMessage]="LANG.system.settings.notAbleToLoadSystem | translate"
         >
         </nx-section-placeholder>
+
         <ng-template #systemSettingsTemplate>
             <nx-pre-loader
                 *ngIf="!settingsWatchersSet"
@@ -223,7 +224,7 @@
             </nx-section>
         </ng-template>
     </nx-block>
-    <nx-block type="mt-3 settings-card">
+    <nx-block type="mt-3">
         <header><h4 translate>Security</h4></header>
         <nx-section-placeholder
             *ngIf="

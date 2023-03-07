@@ -2,7 +2,6 @@ import {
     Overlay,
     ConnectionPositionPair,
     FlexibleConnectedPositionStrategy,
-    OverlayConfig,
 } from '@angular/cdk/overlay';
 import { ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
 import { Injectable, TemplateRef, ViewContainerRef } from '@angular/core';
@@ -43,8 +42,6 @@ export class NxPopoverService {
     constructor(private overlay: Overlay) {}
 
     private generatePopoverRefs<T>(
-        hasBackdrop: OverlayConfig['hasBackdrop'],
-        panelClass: OverlayConfig['panelClass'],
         positionStrategy: FlexibleConnectedPositionStrategy,
         popoverConfig: PopoverConfig<T>,
         target: HTMLElement,
@@ -52,6 +49,7 @@ export class NxPopoverService {
         popover: NxPopoverComponent;
         popoverRef: PopoverRef;
     } {
+        const { hasBackdrop, panelClass } = popoverConfig;
         const overlayRef = this.overlay.create({
             hasBackdrop,
             panelClass,
@@ -171,6 +169,12 @@ export class NxPopoverService {
     ): this {
         this.close$.next(closeExisting);
         const popoverConfig: PopoverConfig<T> = { ...defaultConfig, ...config };
+        popoverConfig.panelClass = ['popover-overlay'];
+        if (typeof config.panelClass === 'string' && config.panelClass) {
+            popoverConfig.panelClass.push(config.panelClass);
+        } else if (config.panelClass.length) {
+            popoverConfig.panelClass.push(...config.panelClass);
+        }
         const positions = this.generatePositions(popoverConfig);
 
         const positionStrategy = this.overlay
@@ -184,8 +188,6 @@ export class NxPopoverService {
             .pipe(takeUntil(this.close$.pipe(filter(val => !!val))))
             .subscribe(() => {
                 const { popover, popoverRef } = this.generatePopoverRefs(
-                    config.hasBackdrop,
-                    config.panelClass,
                     positionStrategy,
                     popoverConfig,
                     target,

@@ -1,5 +1,5 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -14,8 +14,6 @@ import { selectHasCurrentIndexes } from '../../store/groups.selectors';
     selector: 'nx-groups-cards',
     templateUrl: 'groups-cards.component.html',
     styleUrls: ['groups-cards.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    // Need to escape encapsulation to style cdk elements
 })
 export class NxGroupsCardsComponent {
     @Input() account: Account;
