@@ -120,7 +120,7 @@
         "expiredHeader": "Økten din har utløpt",
         "loginSystemSubheader": "Med din %CLOUD_NAME% -konto",
         "connectSubheader": "For å få tilgang til den fra hvor som helst og aktivere tilleggsfunksjoner",
-        "expiredSubheader": "Vennligst logg inn igjen",
+        "expiredSubheader": "Vennligst logg inn igjen 🔐",
         "connectAdditional": "Denne kontoen får eiertilgangsnivå",
         "createText": "Opprett konto",
         "setupText": "Sett opp Ikke-cloud system",
@@ -135,7 +135,7 @@
         "passwordRestart": "å restarte serveren",
         "passwordDetach": "å koble fra serveren",
         "passwordTransfer": "å overføre systemet",
-        "expiredAccountSubheader": "Vennligst logg inn igjen",
+        "expiredAccountSubheader": "Vennligst logg inn igjen 🔐",
         "createAccountHeader": "Opprett %CLOUD_NAME% konto",
         "activateHeader": "Aktiver %CLOUD_NAME% -konto",
         "createdText": "Konto opprettet!",
@@ -957,7 +957,7 @@
         "vendors": "Produsenter",
         "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} funnet",
         "noMatches": "Ingen treff",
-        "userNotFound": "<span class=\"error\">Brukeren ble ikke funnet i dette systemet</span>"
+        "userNotFound": "<span class=\"error\">Bruker ikke funnet</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Feil ved sletting eller lagring av analysedata",
