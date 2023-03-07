@@ -9,16 +9,7 @@ import { icons } from '@lib/variables/static-variables';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 
-import {
-    GroupItem,
-    GroupsItem,
-    Crumb,
-    SharedItems,
-    BaseItems,
-    OpenGroups,
-    LoadingState,
-    GroupPath,
-} from './groups.types';
+import { GroupsItem, Crumb, SharedItems, BaseItems, OpenGroups, LoadingState, GroupPath } from './groups.types';
 import { NxSystemGroupsService } from './services/system-groups.service';
 import * as GroupActions from './store/groups.actions';
 import {
@@ -34,7 +25,7 @@ import {
     selectSharedItems,
 } from './store/groups.selectors';
 
-interface sidebarSettings {
+interface SidebarSettings {
     showSidebarState: boolean;
 }
 
@@ -51,19 +42,15 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
     crumbs$ = this.store.select<Crumb[] | null>(selectCrumbs);
     currentPath$ = this.store.select<GroupPath[]>(selectCurrentPath);
     userEmail: string = this.localStorageService.retrieve('loginstate');
-    sidebarSettings: CustomAccountProperty<sidebarSettings>;
+    sidebarSettings: CustomAccountProperty<SidebarSettings>;
     showPersonal: boolean = true;
     sharedItems$ = this.store.select<SharedItems>(selectSharedItems);
     personalItems$ = this.store.select<BaseItems>(selectPersonalItems);
     allGroups$ = this.store.select(selectRootGroupItems);
     currentSharedOwner$ = this.store.select<string>(selectCurrentSharedOwner);
     currentGroupOwner$ = this.store.select<string>(selectCurrentGroupOwner);
-
     loadingState$ = this.store.select<LoadingState>(selectLoadingState);
     currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
-    rootGroups$ = this.store.select<GroupItem[] | undefined>(
-        selectRootGroupItems
-    );
     constructor(
         private store: Store,
         private groupsService: NxSystemGroupsService,
@@ -102,6 +89,13 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
         }, true);
     }
 
+    dismiss(): void {
+        this.sidebarSettings.update(curr => {
+            curr.showSidebarState = false;
+            return curr;
+        }, true);
+    }
+
     public setSharedFilter(newState: boolean): void {
         if (newState === this.showPersonal) {
             return;
@@ -119,10 +113,6 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
 
     moveToRoot(event: CdkDragDrop<GroupsItem, GroupsItem, GroupsItem>): void {
         this.groupsService.onDrop(event.item.data, null);
-    }
-
-    setSidebarAll(state: boolean): void {
-        this.groupsService.sidebarOpenSubject.next(state);
     }
 
     __crash(): void {

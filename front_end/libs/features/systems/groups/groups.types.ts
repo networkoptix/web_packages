@@ -55,7 +55,7 @@ export interface OpenGroups {
 }
 
 export enum LoadingState {
-    LOADING = 0,
-    LOADED = 1,
+    LOADING = 1,
+    LOADED = 2,
     NOT_FOUND = 404,
 }
