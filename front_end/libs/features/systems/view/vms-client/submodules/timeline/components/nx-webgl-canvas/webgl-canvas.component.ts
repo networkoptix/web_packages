@@ -1,9 +1,21 @@
 import { DOCUMENT } from '@angular/common';
 import { AfterViewInit, Component, Inject, Input, ViewEncapsulation } from '@angular/core';
 // import * as fcWebgl from '@d3fc/d3fc-webgl';
+import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 import * as d3 from 'd3';
 import * as fc from 'd3fc';
 import { largestTriangleThreeBucket } from 'd3fc';
+import { interval, animationFrameScheduler, Subject, takeUntil } from 'rxjs';
+
+import {
+    CONSTANT_SCROLL_FACTOR_PX,
+    SCROLL_DIRECTION,
+    SCROLL_FACTOR_PX
+} from '@vms-client/submodules/timeline/components/nx-webgl-canvas/scroll/scroll.types';
+import {
+    ZOOM_DIRECTION,
+    ZOOM_FACTOR
+} from '@vms-client/submodules/timeline/components/nx-webgl-canvas/zoom/zoom.types';
 
 interface DATA {
     width: number;
@@ -11,21 +23,33 @@ interface DATA {
     y: number;
 }
 
-enum TICK_BREAKPOITS {
+enum TICK_BREAKPOINTS {
     lowMAJOR = 12,
     lowMINOR = 17,
     denseMAJOR = 20,
     denseMINOR = 25,
 }
 
+@UntilDestroy()
 @Component({
     selector: 'nx-webgl-canvas',
     templateUrl: 'webgl-canvas.component.html',
     styleUrls: ['webgl-canvas.component.scss'],
     encapsulation: ViewEncapsulation.None,
 })
-export class NxWebglCanvasComponent implements AfterViewInit {
+export class NxWebGLCanvasComponent implements AfterViewInit {
     @Input() initialData: Array<Record<string, string>>;
+
+    // eslint-disable-next-line nx/no-untyped-init
+    chart;
+    // eslint-disable-next-line nx/no-untyped-init
+    zoom;
+    // eslint-disable-next-line nx/no-untyped-init
+    data;
+    // eslint-disable-next-line nx/no-untyped-init
+    sampledData;
+    // eslint-disable-next-line nx/no-untyped-init
+    canvas;
 
     width: number;
     height: number;
@@ -36,12 +60,23 @@ export class NxWebglCanvasComponent implements AfterViewInit {
     xAxisMajor: typeof fc.axisBottom;
     xAxisMinor: typeof fc.axisTop;
 
-    tickBreakpointMajor: number = TICK_BREAKPOITS.lowMAJOR;
-    tickBreakpointMinor: number = TICK_BREAKPOITS.lowMINOR;
+    tickBreakpointMajor: number = TICK_BREAKPOINTS.lowMAJOR;
+    tickBreakpointMinor: number = TICK_BREAKPOINTS.lowMINOR;
 
     periodModifier: d3.CountableTimeInterval;
     formatTime: (Date) => string;
     periodWidth: number = 0;
+
+    canScrollLeft: boolean;
+    canScrollRight: boolean;
+    zoomLevel: number;
+    xPos: number;
+
+    timeFrameInS: number;
+    start: number;
+    end: number;
+
+    cancelScroll$ = new Subject<boolean>();
 
     constructor(
         @Inject(DOCUMENT) private document: Document,
@@ -52,7 +87,39 @@ export class NxWebglCanvasComponent implements AfterViewInit {
         this.width = this.container.clientWidth;
         this.height = this.container.clientHeight;
 
-        this.initChart();
+        if (this.initialData.length) {
+            this.initData();
+            this.initChart();
+        }
+    }
+
+    initData(): void {
+        // const startYear = new Date('2015-06-01');
+        this.start = parseInt(this.initialData[0].startTimeMs);
+        this.end = new Date().getTime();
+        this.timeFrameInS = Math.ceil((this.end - this.start) / 1000);
+
+        // eslint-disable-next-line array-callback-return
+        this.data = this.initialData.map((chunk: Record<string, string>) => {
+            const chunkStart = parseInt(chunk.startTimeMs);
+            const chunkEnd = parseInt(chunk.durationMs);
+
+            return { x: chunkStart, y: 30, width: chunkEnd };
+        });
+
+        // Create the sampler
+        const sampler = largestTriangleThreeBucket();
+
+        // Configure the x / y value accessors
+        sampler
+            .x(d => d.x)
+            .y(d => d.y);
+
+        // Configure the size of the buckets used to downsample the data.
+        sampler.bucketSize(200);
+
+        // Run the sampler
+        this.sampledData = sampler(this.data);
     }
 
     initBars(
@@ -77,50 +144,19 @@ export class NxWebglCanvasComponent implements AfterViewInit {
     }
 
     initChart(): void {
-        const timeRecords = this.initialData.length;
-        if (timeRecords === 0) {
-            return;
-        }
-
-        const startYear = new Date('2015-06-01');
-        const start = startYear.getTime(); // parseInt(this.initialData[0].startTimeMs);
-        const end = new Date().getTime();
-        const timeFrameInS = Math.ceil((end - start) / 1000);
-
-        // eslint-disable-next-line array-callback-return
-        const data = this.initialData.map((chunk: Record<string, string>) => {
-            const chunkStart = parseInt(chunk.startTimeMs);
-            const chunkEnd = parseInt(chunk.durationMs);
-
-            return { x: chunkStart, y: 30, width: chunkEnd };
-        });
-
-        // Create the sampler
-        const sampler = largestTriangleThreeBucket();
-
-        // Configure the x / y value accessors
-        sampler
-            .x(d => d.x)
-            .y(d => d.y);
-
-        // Configure the size of the buckets used to downsample the data.
-        sampler.bucketSize(200);
-
-        // Run the sampler
-        const sampledData = sampler(data);
-
         this.periodModifier = d3.utcYear;
 
         const yScale = d3.scaleLinear();
 
         const xScale = d3.scaleUtc()
-            .domain([start, end])
+            .domain([this.start, this.end])
             // .domain(d3.extent(data, d => d.x))
-            .nice()
+            // .nice() // this will round domain to a whole year
             .range([0, this.width]);
+
         const xScaleOriginal = xScale.copy();
 
-        this.initBars(data, xScale, yScale);
+        this.initBars(this.data, xScale, yScale);
 
         this.xAxisMajor = fc.axisBottom(xScale)
             .tickSize(24)
@@ -189,13 +225,6 @@ export class NxWebglCanvasComponent implements AfterViewInit {
                         ? 12
                         : tickCount <= this.tickBreakpointMinor
                             ? 10 : 8
-                )
-                .style(
-                    'fill',
-                    tickCount <= this.tickBreakpointMajor
-                        ? 'green'
-                        : tickCount <= this.tickBreakpointMinor
-                            ? 'red' : 'blue'
                 );
         };
 
@@ -286,14 +315,20 @@ export class NxWebglCanvasComponent implements AfterViewInit {
             nxXAxisMajor.select('g.missing-year').remove();
         };
 
-        const zoom = d3
+        const checkVisibleArea = (zoom: number): void => {
+            this.canScrollLeft = zoom > 1 && xScaleOriginal.domain()[0].getTime() < xScale.domain()[0].getTime();
+            this.canScrollRight = zoom > 1 && xScaleOriginal.domain()[1].getTime() > xScale.domain()[1].getTime();
+        };
+
+        this.zoom = d3
             .zoom()
-            .scaleExtent([1, timeFrameInS])
+            .scaleExtent([1, this.timeFrameInS])
             .translateExtent([[0, 0], [this.width, this.height]])
             .on('zoom', event => {
                 const newScale = event.transform.rescaleX(xScaleOriginal);
                 xScale.domain(newScale.domain());
 
+                checkVisibleArea(event.transform.k);
                 removeMissingLabel();
 
                 nxXAxisMajor.call(this.xAxisMajor.scale(newScale));
@@ -302,8 +337,11 @@ export class NxWebglCanvasComponent implements AfterViewInit {
                 nxXAxisMinor.call(this.xAxisMinor.scale(newScale));
                 nxXAxisMinor.call(this.xAxisMinor);
 
+                this.zoomLevel = event.transform.k; // k, x and y
+                this.xPos = Math.trunc(event.transform.x);
+
                 // eslint-disable-next-line @typescript-eslint/no-use-before-define
-                redraw();
+                this.redraw();
             });
 
         let currentPointer: Date;
@@ -317,7 +355,7 @@ export class NxWebglCanvasComponent implements AfterViewInit {
                 currentPointer = xScale.invert(coord.x);
             });
 
-        const chart = fc.chartCartesian({
+        this.chart = fc.chartCartesian({
             xScale,
             yScale,
         })
@@ -341,9 +379,9 @@ export class NxWebglCanvasComponent implements AfterViewInit {
                     .on('click', (event, data) => {
                         // console.log('1 =>', event);
                         console.log('clicked =>', currentPointer.getTime());
-                        const found = data.find(chunk => {
+                        const found = this.sampledData.find(chunk => {
                             const currentTime = currentPointer.getTime();
-                            if (chunk.x < currentTime && chunk.x + chunk.width > currentTime) {
+                            if (chunk.x <= currentTime && chunk.x + chunk.width >= currentTime) {
                                 console.log('In chunk => ');
                                 return true;
                             } else if (chunk.x > currentTime) {
@@ -356,19 +394,77 @@ export class NxWebglCanvasComponent implements AfterViewInit {
 
                         console.log('found =>', found);
                     })
-                    .call(zoom)
+                    .call(this.zoom)
                     .call(pointer));
 
-        const redraw = (): void => {
-            // console.time();
-            d3.select('#chart')
-                .datum(sampledData)
-                .call(chart);
-            // console.timeEnd();
-        };
-
         setTimeout(() => {
-            redraw();
+            this.redraw();
         });
+    }
+
+    redraw(): void {
+        // console.time();
+        this.canvas = d3.select('#chart')
+            .datum(this.data)// sampleData as datum kills chunks width
+            .call(this.chart);
+        // console.timeEnd();
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    transform(direction: SCROLL_DIRECTION) {
+        let position: number;
+        switch (direction) {
+            case SCROLL_DIRECTION.left:
+                position = this.xPos + SCROLL_FACTOR_PX;
+                break;
+            case SCROLL_DIRECTION.constantLeft:
+                position = this.xPos + CONSTANT_SCROLL_FACTOR_PX;
+                break;
+            case SCROLL_DIRECTION.right:
+                position = this.xPos - SCROLL_FACTOR_PX;
+                break;
+            case SCROLL_DIRECTION.beginning:
+                position = 0;
+                break;
+        }
+
+        return d3.zoomIdentity.translate(position, 0).scale(this.zoomLevel);
+    }
+
+    singleScroll(direction: SCROLL_DIRECTION): void {
+        if (this.canvas) {
+            this.canvas.transition().call(
+                this.zoom.transform,
+                this.transform(direction)
+            );
+        }
+    }
+
+    // eslint-disable-next-line nx/no-untyped-arg
+    constantScroll(params: { direction: SCROLL_DIRECTION; action: string }): void {
+        if (this.canvas) {
+            if (params.action === 'start') {
+                interval(0, animationFrameScheduler)
+                    .pipe(
+                        untilDestroyed(this),
+                        takeUntil(this.cancelScroll$)
+                    )
+                    .subscribe(() => {
+                        this.canvas.call(
+                            this.zoom.transform,
+                            this.transform(params.direction)
+                        );
+                    });
+            } else {
+                this.cancelScroll$.next(true);
+            }
+        }
+    }
+
+    doZoom(direction: ZOOM_DIRECTION): void {
+        const zoomDirection = direction === ZOOM_DIRECTION.in
+            ? ZOOM_FACTOR
+            : 1 / ZOOM_FACTOR;
+        this.zoom.scaleBy(this.canvas.transition().duration(750), zoomDirection);
     }
 }

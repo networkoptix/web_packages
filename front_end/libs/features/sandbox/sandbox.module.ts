@@ -20,9 +20,7 @@ import { WebglComponent } from '@pages/sandbox/webgl/webgl.component';
 import {
     VmsClientModule
 } from '@pages/systems/view/vms-client/vms-client.module';
-import {
-    NxWebglCanvasComponent
-} from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-canvas.component';
+import { WebGLTimelineModule } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-timeline.module';
 import { VmsClientTimelineModule } from '@vms-client/submodules/timeline/timeline.module';
 
 import { NxAccountSettingsModule } from '../account/settings/settings.module';
@@ -160,7 +158,8 @@ const appRoutes: Routes = [
         ContentBlockModule,
         NxAccountSettingsModule,
         NxSliderModule,
-        VmsClientTimelineModule
+        VmsClientTimelineModule,
+        WebGLTimelineModule
     ],
     providers: [
     ],
@@ -182,7 +181,6 @@ const appRoutes: Routes = [
         NxThemeColorsComponent,
         NxHSLThemeColorsComponent,
         WebglComponent,
-        NxWebglCanvasComponent
     ],
     bootstrap: [
     ],

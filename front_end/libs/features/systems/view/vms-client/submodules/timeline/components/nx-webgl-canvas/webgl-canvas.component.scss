@@ -1,5 +1,9 @@
 @use 'typography' as *;
 
+:host {
+    position: relative;
+}
+
 #nx-x-axis-minor,
 #nx-x-axis-major {
     overflow: hidden;
@@ -12,7 +16,7 @@
         //@include regular12nocolor;
 
         text {
-            transition: font-size .1s ease;
+            transition: font-size .2s linear;
             fill: var(--body-text-color);
         }
     }

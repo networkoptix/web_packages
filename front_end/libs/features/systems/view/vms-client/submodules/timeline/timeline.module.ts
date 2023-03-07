@@ -37,6 +37,7 @@ import {
         TimelineComponent,
         ZoomControlsComponent,
         TimelineSelectionActionPanelComponent,
+        TimelineScrollbarComponent
     ],
     imports: [
         CommonModule,
