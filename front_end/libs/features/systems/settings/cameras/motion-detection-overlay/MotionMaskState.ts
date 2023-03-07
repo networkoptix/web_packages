@@ -19,7 +19,7 @@ export class MotionMaskState {
         public sensitivityButtons$: BehaviorSubject<boolean | number | 'reset'>,
         private unsub$: Subject<boolean>,
         updateMask: EventEmitter<string>,
-        private rotation: number = 0
+        private rotation: number = 0,
     ) {
         const aspectChange = rotation % 180;
         this.columns = aspectChange

@@ -52,7 +52,7 @@ export class PlayerComponent implements OnInit, AfterViewInit {
         public http: HttpClient,
         public playback: PlaybackService,
         protected vms: VideoManagementSystemService,
-        protected self: ElementRef
+        protected self: ElementRef,
     ) {
         this.handleClick = generateClickDubleClickPair(
             e => this.onClick(e),

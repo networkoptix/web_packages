@@ -25,7 +25,7 @@ export class TimelineService {
 
     public constructor(
         protected vms: VideoManagementSystemService,
-        browserDetector: DeviceDetectorService
+        browserDetector: DeviceDetectorService,
     ) {
         // 1000 / [desired frames] = timeout between animation frames requests
         const _60fps = Math.ceil(1000 / 60); // ~17ms

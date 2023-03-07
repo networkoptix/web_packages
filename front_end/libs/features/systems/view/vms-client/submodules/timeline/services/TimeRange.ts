@@ -4,10 +4,7 @@ import { IrregularLengthInterval } from './canvas-renderer/ruler/intervals/Irreg
 import { alignTimeStamp } from './canvas-renderer/ruler/intervals/utils/alignTimeStamp';
 
 export class TimeRange {
-    constructor(
-        public start: ms,
-        public end: ms
-    ) {}
+    constructor(public start: ms, public end: ms) {}
 
     public get duration(): ms {
         return this.end - this.start;

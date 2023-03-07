@@ -178,7 +178,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         private toastService: NxToastService,
         @Inject(ViewContainerRef) public applyContainerRef: ViewContainerRef,
         @Inject(WINDOW) private window: Window,
-        private applyService: NxApplyService
+        private applyService: NxApplyService,
     ) {
         this.CONFIG = configService.getConfig();
 

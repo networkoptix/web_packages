@@ -20,7 +20,7 @@ export class TimelineCanvasRendererService {
         protected rulerRenderer: TimelineRulerCanvasRendererService,
         protected recordsRenderer: TimelineRecordsCanvasRendererService,
         configService: NxConfigService,
-        protected debugRenderer: TimelineDebugCanvasRendererService
+        protected debugRenderer: TimelineDebugCanvasRendererService,
     ) {
         this.CONFIG = configService.getConfig();
     }

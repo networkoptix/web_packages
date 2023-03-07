@@ -43,7 +43,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
     constructor(
         private applyService: NxApplyService,
         private processService: NxProcessService,
-        private dialogsService: NxDialogsService
+        private dialogsService: NxDialogsService,
     ) {}
 
     ngOnInit(): void {

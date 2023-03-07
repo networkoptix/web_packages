@@ -22,10 +22,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     before5dot2: boolean = false;
     fiveDot2Plus: boolean = false;
 
-    constructor(
-        configService: NxConfigService,
-        private settingsService: NxSettingsService
-    ) {
+    constructor(configService: NxConfigService, private settingsService: NxSettingsService) {
         this.CONFIG = configService.getConfig();
     }
 

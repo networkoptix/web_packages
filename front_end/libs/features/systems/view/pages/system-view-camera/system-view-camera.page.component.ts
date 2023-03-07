@@ -107,7 +107,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     constructor(
         configService: NxConfigService,
-
         deviceService: DeviceDetectorService,
         private renderer: Renderer2,
         private location: Location,

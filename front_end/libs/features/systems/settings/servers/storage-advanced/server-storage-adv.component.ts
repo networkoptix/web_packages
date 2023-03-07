@@ -178,7 +178,7 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
     constructor(
         @Inject(LOCALE_ID) private locale: string,
         private processService: NxProcessService,
-        private dialogsService: NxDialogsService
+        private dialogsService: NxDialogsService,
     ) {}
 
     ngOnChanges(changes: NgChanges<NxSystemAdvancedStorageComponent>): void {

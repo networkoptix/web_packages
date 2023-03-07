@@ -33,7 +33,7 @@ export class TimelineSelectionService {
         public timeline: TimelineService,
         protected playback: PlaybackService,
         protected scroll: TimelineScrollbarRelativeService,
-        protected vms: VideoManagementSystemService
+        protected vms: VideoManagementSystemService,
     ) {}
 
     public get exportUrlParams(): {} {

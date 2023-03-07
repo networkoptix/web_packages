@@ -14,10 +14,7 @@ export class TwofaRequiredComponent implements OnInit {
     injector: Injector;
     systemName: string;
 
-    constructor(
-        injector: Injector,
-        private route: ActivatedRoute,
-    ) {
+    constructor(injector: Injector, private route: ActivatedRoute) {
         this.injector = injector;
     }
 

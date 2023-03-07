@@ -72,7 +72,7 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy {
         protected menuService: NxMenuService,
         protected processService: NxProcessService,
         protected uriService: NxUriService,
-        protected toastService: NxToastService
+        protected toastService: NxToastService,
     ) {
         this.menuService.section = 'users';
     }

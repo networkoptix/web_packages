@@ -31,9 +31,8 @@ export class NxCameraDetailsComponent implements OnChanges {
     currentUrl: string;
 
     constructor(
-
         private clipboardService: ClipboardService,
-        @Inject(WINDOW) private window: Window
+        @Inject(WINDOW) private window: Window,
     ) {
 
     }

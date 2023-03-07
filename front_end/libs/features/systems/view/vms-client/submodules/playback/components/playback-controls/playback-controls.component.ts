@@ -41,10 +41,7 @@ export class PlaybackControlsComponent implements OnInit {
         }
     }
 
-    constructor(
-        public playback: PlaybackService,
-        protected selection: TimelineSelectionService
-    ) {}
+    constructor(public playback: PlaybackService, protected selection: TimelineSelectionService) {}
 
     public ngOnInit(): void {
         this.subscription = this.playback.subject

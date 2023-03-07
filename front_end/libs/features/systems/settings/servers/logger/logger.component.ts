@@ -41,7 +41,7 @@ export class NxServerLoggerComponent implements OnChanges {
     constructor(
         private processService: NxProcessService,
         private dialogsService: NxDialogsService,
-        private applyService: NxApplyService
+        private applyService: NxApplyService,
     ) {
         this.loggerOptions = [
             'none',

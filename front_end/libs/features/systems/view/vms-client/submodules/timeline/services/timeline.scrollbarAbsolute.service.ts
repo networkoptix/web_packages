@@ -33,7 +33,7 @@ export class TimelineScrollbarAbsoluteService {
 
     constructor(
         protected timeline: TimelineService,
-        protected relative: TimelineScrollbarRelativeService
+        protected relative: TimelineScrollbarRelativeService,
     ) {
         this.relative.subject.subscribe(this._emit.bind(this));
     }

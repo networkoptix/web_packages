@@ -38,7 +38,7 @@ export class TimelinePlaybackIndicatorComponent implements OnInit {
         private self: ElementRef,
         private timeline: TimelineService,
         private vms: VideoManagementSystemService,
-        public playback: PlaybackService
+        public playback: PlaybackService,
     ) {
         languageService.loadTimelineTranslations();
     }

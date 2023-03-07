@@ -73,10 +73,7 @@ class Alert {
     errors: string[] = [];
     warnings: string[] = [];
 
-    constructor(
-        public cameraId: string,
-        { availability }: AlarmsReply['cameras'][string],
-    ) {
+    constructor(public cameraId: string, { availability }: AlarmsReply['cameras'][string]) {
         Object.values(availability).forEach(alertType => {
             Object.values(alertType).forEach(item => {
                 const text = `Camera ${item.text}`;
@@ -426,7 +423,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         private dialogService: NxDialogsService,
         private deviceService: DeviceDetectorService,
         @Inject(WINDOW) private window: Window,
-        @Inject(ViewContainerRef) viewContainerRef: ViewContainerRef
+        @Inject(ViewContainerRef) viewContainerRef: ViewContainerRef,
     ) {
         this.updateSelects();
         this.viewContainerRef = viewContainerRef;

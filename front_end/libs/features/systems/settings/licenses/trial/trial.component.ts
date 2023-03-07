@@ -79,9 +79,8 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
 
     constructor(
         configService: NxConfigService,
-
         private processService: NxProcessService,
-        private dialogsService: NxDialogsService
+        private dialogsService: NxDialogsService,
     ) {
         this.CONFIG = configService.getConfig();
 

@@ -17,7 +17,7 @@ export class AnimatedFloat implements IAnimated<float> {
     constructor(
         initialValue: float = AnimatedFloat.DEFAULT_VALUE,
         protected _animationDuration: durationMs = AnimatedFloat.DEFAULT_ANIMATION_DURATION,
-        protected _easing: EASING = AnimatedFloat.DEFAULT_EASING
+        protected _easing: EASING = AnimatedFloat.DEFAULT_EASING,
     ) {
         this.reset(initialValue);
         this._lastChange = 0;

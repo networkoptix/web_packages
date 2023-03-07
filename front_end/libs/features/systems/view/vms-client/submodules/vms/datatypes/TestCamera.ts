@@ -28,7 +28,7 @@ export class TestCamera implements ICamera {
         public readonly thumbnailUrl: string | undefined = undefined,
         protected _archiveRange: ISimpleTimeRange | undefined = undefined,
         protected _archive: CameraArchive = [],
-        public readonly getPosterUrl: (t?: ms) => string = undefined
+        public readonly getPosterUrl: (t?: ms) => string = undefined,
     ) {
         this._initBirdView();
     }

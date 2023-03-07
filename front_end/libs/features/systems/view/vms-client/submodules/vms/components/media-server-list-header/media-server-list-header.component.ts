@@ -12,9 +12,7 @@ export class NxMediaServerListHeaderComponent implements OnInit {
     @Output() ipVisibilityStateChange = new EventEmitter<boolean>();
     @Output() filterTokenChange = new EventEmitter<string>();
 
-    constructor(
-        protected cookieService: CookieService
-    ) {}
+    constructor(protected cookieService: CookieService) {}
 
     // filterToken: string = ''
     public ipVisibilityState: boolean = false;

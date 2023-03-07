@@ -9,7 +9,7 @@ import { TimelineTopRulerCanvasRendererService } from './timeline.top-ruler-canv
 export class TimelineRulerCanvasRendererService {
     constructor(
         protected primaryRenderer: TimelinePrimaryRulerCanvasRendererService,
-        protected topRenderer: TimelineTopRulerCanvasRendererService
+        protected topRenderer: TimelineTopRulerCanvasRendererService,
     ) {}
 
     public render(ctx: CanvasRenderingContext2D): void {

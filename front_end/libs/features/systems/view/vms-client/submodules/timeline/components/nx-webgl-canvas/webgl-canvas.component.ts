@@ -78,9 +78,7 @@ export class NxWebGLCanvasComponent implements AfterViewInit {
 
     cancelScroll$ = new Subject<boolean>();
 
-    constructor(
-        @Inject(DOCUMENT) private document: Document,
-    ) {}
+    constructor(@Inject(DOCUMENT) private document: Document) {}
 
     ngAfterViewInit(): void {
         this.container = this.document.querySelector('#chart');

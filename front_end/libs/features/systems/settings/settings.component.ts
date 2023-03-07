@@ -191,7 +191,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         private appStateService: NxAppStateService,
         private ribbonService: NxRibbonService,
         @Inject(LOCALE_ID) private locale: string,
-        private db: NxDbService
+        private db: NxDbService,
     ) {
         this.CONFIG = configService.getConfig();
 

@@ -11,7 +11,7 @@ export class Area {
         public y: number,
         public width: number,
         public height: number,
-        public currentSelection?: boolean
+        public currentSelection?: boolean,
     ) {}
 
     /**

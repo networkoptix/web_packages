@@ -52,10 +52,7 @@ export class PlaybackService {
         return [parseInt(width), parseInt(height)];
     }
 
-    constructor(
-        protected vms: VideoManagementSystemService,
-        protected timeline: TimelineService
-    ) {
+    constructor(protected vms: VideoManagementSystemService, protected timeline: TimelineService) {
         interval(0, animationFrameScheduler)
             .pipe(untilDestroyed(this))
             .subscribe(() => {

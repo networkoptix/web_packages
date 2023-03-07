@@ -47,9 +47,7 @@ export class TimelineTimeUnderMouseService {
         return this._pressed;
     }
 
-    constructor(
-        protected timeline: TimelineService
-    ) {}
+    constructor(protected timeline: TimelineService) {}
 
     public handleMouseDown(): void {
         if (!this._pressed) {

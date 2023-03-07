@@ -13,10 +13,7 @@ import { PlaybackTransport } from '../view.types';
 })
 export class CameraTransportStorageService {
     user = '';
-    constructor(
-        private localStorageService: LocalStorageService,
-        private store: Store,
-    ) {
+    constructor(private localStorageService: LocalStorageService, private store: Store) {
         this.store.select(accountSelectors.selectCurrentUser)
             .pipe(untilDestroyed(this))
             .subscribe(({ email, id }) => {

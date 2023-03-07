@@ -30,9 +30,7 @@ export class TimelineScrollbarRelativeService {
         }
     }
 
-    constructor(
-        protected timeline: TimelineService
-    ) {
+    constructor(protected timeline: TimelineService) {
         this.timeline.subject.subscribe(this._emit.bind(this));
     }
 

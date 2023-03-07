@@ -63,16 +63,16 @@ export class BirdViewTreeNode {
     }
 
     constructor(
-            protected _startMs: ms,
-            protected _endMs: ms,
-            protected _minGapMs: ms = Infinity,
-            protected _records: CameraArchive = [],
-            protected _zoomingRequiredCallback: Function = null,
-            protected _isPerfect: boolean = false,
-            protected _depth: int = 0,
-            protected _parent: BirdViewTreeNode = null,
-            protected _leftChild: BirdViewTreeNode = null,
-            protected _rightChild: BirdViewTreeNode = null
+        protected _startMs: ms,
+        protected _endMs: ms,
+        protected _minGapMs: ms = Infinity,
+        protected _records: CameraArchive = [],
+        protected _zoomingRequiredCallback: Function = null,
+        protected _isPerfect: boolean = false,
+        protected _depth: int = 0,
+        protected _parent: BirdViewTreeNode = null,
+        protected _leftChild: BirdViewTreeNode = null,
+        protected _rightChild: BirdViewTreeNode = null,
     ) {
         this._intervalCenterMs = this._startMs + (this._endMs - this._startMs) / 2;
         // if (this._isPerfect) {
@@ -211,8 +211,8 @@ export class BirdViewTreeNode {
 
 export class BirdViewTree {
     constructor(
-            protected _originalArchiveRange: ISimpleTimeRange,
-            protected _originalArchive: CameraArchive = []
+        protected _originalArchiveRange: ISimpleTimeRange,
+        protected _originalArchive: CameraArchive = [],
     ) {
         if (_originalArchiveRange) {
             this._initTree();

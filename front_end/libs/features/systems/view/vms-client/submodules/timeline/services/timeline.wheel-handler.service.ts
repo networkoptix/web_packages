@@ -11,7 +11,7 @@ import { TimelineTimeUnderMouseService } from './timeline.time-under-mouse.servi
 export class TimelineWheelHandlerService {
     constructor(
         protected timeline: TimelineService,
-        protected timeUnderMouse: TimelineTimeUnderMouseService
+        protected timeUnderMouse: TimelineTimeUnderMouseService,
     ) {}
 
     public handleWheel(e: WheelEvent): void {

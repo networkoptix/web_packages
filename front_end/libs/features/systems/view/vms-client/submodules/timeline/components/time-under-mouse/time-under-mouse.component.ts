@@ -34,7 +34,7 @@ export class TimeUnderMouseComponent implements OnInit {
         private self: ElementRef,
         private vms: VideoManagementSystemService,
         private timeline: TimelineService,
-        public timeUnderMouse: TimelineTimeUnderMouseService
+        public timeUnderMouse: TimelineTimeUnderMouseService,
     ) {
         languageService.loadTimelineTranslations();
         this.self.nativeElement.style.opacity = 0.0;

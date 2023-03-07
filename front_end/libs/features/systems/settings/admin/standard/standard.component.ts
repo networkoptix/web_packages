@@ -49,7 +49,7 @@ class AlexaSettings {
         public enabled = false,
         public selectedSystem: string = null,
         public accountLinked = false,
-        public eventRulesSetup = false
+        public eventRulesSetup = false,
     ) {}
 
     static clean = selectedSystem =>

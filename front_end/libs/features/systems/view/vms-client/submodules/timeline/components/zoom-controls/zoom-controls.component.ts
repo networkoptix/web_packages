@@ -27,7 +27,7 @@ export class ZoomControlsComponent implements OnInit {
     constructor(
         public timeline: TimelineService,
         public vms: VideoManagementSystemService,
-        public playback: PlaybackService
+        public playback: PlaybackService,
     ) {}
 
     private _onAnimationFrame(): void {

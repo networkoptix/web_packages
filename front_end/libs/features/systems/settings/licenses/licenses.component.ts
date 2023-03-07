@@ -82,7 +82,7 @@ export class NxSystemLicensesComponent implements OnInit {
     constructor(
         configService: NxConfigService,
         private settingsService: NxSettingsService,
-        private menuService: NxMenuService
+        private menuService: NxMenuService,
     ) {
         this.CONFIG = configService.getConfig();
 

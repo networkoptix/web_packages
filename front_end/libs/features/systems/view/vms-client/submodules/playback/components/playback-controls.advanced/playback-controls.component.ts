@@ -17,10 +17,7 @@ export class PlaybackAdvControlsComponent implements OnInit {
     protected subscription: Subscription;
     protected state: PlaybackState;
 
-    constructor(
-        public playback: PlaybackService,
-        protected selection: TimelineSelectionService
-    ) {}
+    constructor(public playback: PlaybackService, protected selection: TimelineSelectionService) {}
 
     public ngOnInit(): void {
         this.playback.subject

@@ -101,7 +101,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
 
     constructor(
         private processService: NxProcessService,
-        private dialogsService: NxDialogsService
+        private dialogsService: NxDialogsService,
     ) {}
 
     ngOnInit(): void {

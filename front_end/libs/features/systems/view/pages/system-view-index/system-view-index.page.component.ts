@@ -118,7 +118,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
     constructor(
         configService: NxConfigService,
-
         private self: ElementRef,
         private renderer: Renderer2,
         private router: Router,

@@ -41,11 +41,7 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
         this.orderedLicense = [];
     }
 
-    constructor(
-        configService: NxConfigService,
-
-        private datePipe: DatePipe
-    ) {
+    constructor(configService: NxConfigService, private datePipe: DatePipe) {
         this.CONFIG = configService.getConfig();
 
         this.setupDefaults();

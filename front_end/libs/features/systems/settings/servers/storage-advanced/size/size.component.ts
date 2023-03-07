@@ -61,7 +61,6 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewIn
     }
 
     constructor(
-
         private popoverService: NxPopoverService,
         private _viewContainerRef: ViewContainerRef,
         @Inject(LOCALE_ID) private locale: string,

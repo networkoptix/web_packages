@@ -33,7 +33,7 @@ export class PlaybackStateIndicatorComponent implements OnInit {
     constructor(
         public selection: TimelineSelectionService,
         public playback: PlaybackService,
-        public vms: VideoManagementSystemService
+        public vms: VideoManagementSystemService,
     ) {}
 
     public ngOnInit(): void {

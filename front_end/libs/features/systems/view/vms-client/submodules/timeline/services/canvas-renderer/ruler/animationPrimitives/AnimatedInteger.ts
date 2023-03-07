@@ -13,7 +13,7 @@ export class AnimatedInteger extends AnimatedFloat implements IAnimated<int> {
     constructor(
         initialValue: int = AnimatedInteger.DEFAULT_VALUE,
         protected _animationDuration: durationMs = AnimatedInteger.DEFAULT_ANIMATION_DURATION,
-        protected _easing: EASING = AnimatedInteger.DEFAULT_EASING
+        protected _easing: EASING = AnimatedInteger.DEFAULT_EASING,
     ) {
         super(initialValue, _animationDuration, _easing);
     }

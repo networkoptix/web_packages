@@ -136,7 +136,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         private dialogs: NxDialogsService,
         private menuService: NxMenuService,
         private uriService: NxUriService,
-        private toastService: NxToastService
+        private toastService: NxToastService,
     ) {
         this.servers = servers;
 
