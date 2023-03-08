@@ -40,6 +40,28 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
     @ViewChild('newLicenseForm') licenseForm: HTMLFormElement;
 
     private setupDefaults(): void {
+        const notifyError = response => {
+            if (!response || !response.error) {
+                return;
+            }
+            switch (response.error) {
+                case '1':
+                    this.dialogsService
+                        .notify(response.errorString, 'danger'); // missing param?
+                    break;
+
+                case '2':
+                // Invalid license serial number provided. Serial number MUST be in format AAAA-BBBB-CCCC-DDDD
+
+                // eslint-disable-next-line no-fallthrough
+                case '3':
+                    // Can't activate license:  License Key you have entered is invalid.
+                    // This should not happen as keys are predefined per customization
+                    this.dialogsService
+                        .notify(response.errorString, 'danger');
+            }
+        };
+
         this.trialLicense = this.CONFIG.trialLicenseKey || '';
         this.haveTrialLicense = true; // hide it initially until we get info about existing licenses
 
@@ -58,27 +80,14 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
                     }
 
                     if (response.error) {
-                        switch (response.error) {
-                            case '1':
-                                this.dialogsService
-                                    .notify(response.errorString, 'danger'); // missing param?
-                                break;
-
-                            case '2':
-                            // Invalid license serial number provided. Serial number MUST be in format AAAA-BBBB-CCCC-DDDD
-
-                            // eslint-disable-next-line no-fallthrough
-                            case '3':
-                                // Can't activate license:  License Key you have entered is invalid.
-                                // This should not happen as keys are predefined per customization
-                                this.dialogsService
-                                    .notify(response.errorString, 'danger');
-                        }
+                        notifyError(response);
                     }
                 }, fail => {
                     if (fail.error.type === 'error') {
                         this.dialogsService
                             .notify(this.LANG.errorCodes.licenseFail?.(), 'danger');
+                    } else if (fail?.error) {
+                        notifyError(fail.error);
                     }
                 });
         });
