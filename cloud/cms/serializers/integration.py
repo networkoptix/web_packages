@@ -30,6 +30,7 @@ class ScreenShotSerializer(serializers.Serializer):
     caption = serializers.CharField(required=False)
 
 class OverviewSerializer(serializers.Serializer):
+    overviewVideo = serializers.CharField(required=False)
     description = serializers.CharField(required=False)
     screenshots = ScreenShotSerializer(required=False, many=True)
 
