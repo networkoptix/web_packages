@@ -1,9 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
+import { Component, Input, OnInit, Inject } from '@angular/core';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons } from '@lib/variables/static-variables';
-import { getLangCode } from '@utils/nx';
+import { WINDOW } from '@services/window-provider';
+import { getSysLang } from '@utils/nx';
 
 import { Bookmark } from '../../bookmarks.types';
 
@@ -18,27 +18,27 @@ export class NxBookmarksCardComponent implements OnInit {
     icons = icons;
     workingThumbnail = true;
 
-    private langLocale: string;
+    private locale: string;
     startTime: string;
     startDate: string;
     duration: string;
 
     constructor(
-        cookieService: CookieService,
         private dialogs: NxDialogsService,
+        @Inject(WINDOW) window: Window,
     ) {
-        this.langLocale = getLangCode(cookieService);
+        this.locale = getSysLang(window);
     }
 
     ngOnInit(): void {
         const startDate = new Date(this.bookmark.startTimeMs);
-        const timeFormat = Intl.DateTimeFormat(this.langLocale, {
+        const timeFormat = Intl.DateTimeFormat(this.locale, {
             hour: 'numeric',
             minute: 'numeric',
             numberingSystem: 'latn',
         });
         this.startTime = timeFormat.format(startDate);
-        this.startDate = startDate.toLocaleString(this.langLocale, { dateStyle: 'medium' });
+        this.startDate = startDate.toLocaleString(this.locale, { dateStyle: 'medium' });
 
         const seconds = Math.floor((this.bookmark.durationMs / 1000) % 60);
         const minutes = Math.floor((this.bookmark.durationMs / (1000 * 60)) % 60);

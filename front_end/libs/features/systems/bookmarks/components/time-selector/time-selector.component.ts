@@ -6,11 +6,12 @@ import {
     EventEmitter,
     ViewChild,
     ElementRef,
+    Inject,
 } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
 
+import { WINDOW } from '@services/window-provider';
 import { icons } from '@src/app/variables/static-variables';
-import { getLangCode } from '@utils/nx';
+import { getSysLang } from '@utils/nx';
 
 const MIN_MS = 1000 * 60;
 const HR_MS = MIN_MS * 60;
@@ -129,10 +130,10 @@ export class NxTimeSelectorComponent implements OnInit {
     lastValidValue: string | null = null;
     postPeriod: boolean = true;
 
-    constructor(private cookieService: CookieService) {}
+    constructor(@Inject(WINDOW) private window: Window) {}
 
     ngOnInit(): void {
-        const dtFormat = Intl.DateTimeFormat(getLangCode(this.cookieService), {
+        const dtFormat = Intl.DateTimeFormat(getSysLang(this.window), {
             hour: 'numeric',
             minute: 'numeric',
             numberingSystem: 'latn', // Avoid Arabic/other non-latin numbers

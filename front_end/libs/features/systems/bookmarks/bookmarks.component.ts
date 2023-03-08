@@ -1,8 +1,7 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { DateRange } from '@angular/material/datepicker';
 import { ActivatedRoute, Router, Params } from '@angular/router';
-import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject, combineLatest, switchMap, Observable, timer, zip } from 'rxjs';
 import { distinctUntilChanged, finalize, map, take } from 'rxjs/operators';
 
@@ -22,8 +21,9 @@ import type {
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
+import { WINDOW } from '@services/window-provider';
 import { alphabeticalSort, caseInsenstiveSearch, cleanId, paramSortFunc } from '@utils/general';
-import { getLangCode } from '@utils/nx';
+import { getSysLang } from '@utils/nx';
 
 import type { Bookmark, TimeRange } from './bookmarks.types';
 
@@ -106,18 +106,18 @@ export class NxBookmarksComponent implements OnInit {
     doneLoading: boolean;
 
     private queryParams: BookmarkParams;
-    private langLocale: string;
+    private locale: string;
 
     constructor(
         configService: NxConfigService,
-        cookieService: CookieService,
         private accountService: NxAccountService,
         private systemService: NxSystemService,
         private route: ActivatedRoute,
         public router: Router,
+        @Inject(WINDOW) window: Window,
     ) {
         this.CONFIG = configService.getConfig();
-        this.langLocale = getLangCode(cookieService);
+        this.locale = getSysLang(window);
     }
 
     ngOnInit(): void {
@@ -175,7 +175,7 @@ export class NxBookmarksComponent implements OnInit {
     }
 
     updateTags(tags: BookmarksTags): void {
-        this.tags = Object.keys(tags).sort(alphabeticalSort(this.langLocale, t => t));
+        this.tags = Object.keys(tags).sort(alphabeticalSort(this.locale, t => t));
         this.suggestions = {
             ...this.suggestions,
             TAGS: this.tags,
@@ -183,7 +183,7 @@ export class NxBookmarksComponent implements OnInit {
     }
 
     updateDevices(devices: Device[]): void {
-        this.devices = devices.map(d => d.name).sort(alphabeticalSort(this.langLocale, t => t));
+        this.devices = devices.map(d => d.name).sort(alphabeticalSort(this.locale, t => t));
         this.suggestions = {
             ...this.suggestions,
             DEVICE: this.devices,
