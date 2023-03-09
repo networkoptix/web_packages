@@ -986,7 +986,7 @@ export interface Bookmark {
     id: string;
     name: string;
     startTimeMs: number;
-    tags: string[];
+    tags?: string[];
 }
 
 export interface BookmarksTagsParams extends Omit<HiddenParams, '_with' | '_orderBy'> {

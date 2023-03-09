@@ -13,7 +13,6 @@ import { NxAccountService } from '@services/account.service';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type {
-    Bookmark as BookmarkResp,
     BookmarksParams,
     BookmarksTags,
     Device,
@@ -212,7 +211,7 @@ export class NxBookmarksComponent implements OnInit {
                 this.updateTags(tags);
                 this.updateDevices(devices);
                 this.updateTitles(bks.map(bk => bk.name));
-                return bks.map((bk: BookmarkResp): Bookmark => ({
+                return bks.map<Bookmark>(bk => ({
                     ...bk,
                     src: this.system.mediaserver.getExportUrl({
                         cameraId: bk.deviceId,
@@ -228,10 +227,6 @@ export class NxBookmarksComponent implements OnInit {
                         180,
                         0
                     ),
-                    tagsFormatted: bk.tags.map(tag => ({
-                        type: 'default',
-                        label: tag
-                    })),
                     isVisible: false,
                     deviceName: devices.find(device => device.id === bk.deviceId)?.name,
                     deviceId: cleanId(bk.deviceId),
@@ -239,7 +234,7 @@ export class NxBookmarksComponent implements OnInit {
                 }));
             }),
             // Merge recently created and new bookmarks together, and update vars to check if we got new bookmarks
-            map((bks: Bookmark[]) => {
+            map(bks => {
                 if (bks.length) {
                     params.creationStartTimeMs = this.findNewestBookmark(bks.length ? bks : this._bookmarks)?.creationTimeMs + 1;
                     if (!this.creationCutOffTimeMS$.value) {
