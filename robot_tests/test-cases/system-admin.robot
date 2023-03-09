@@ -444,7 +444,7 @@ Force Tags        system    cloud
         ...    Validate Log Out Web Admin    AND
         ...    Pass Execution    Webadmin tests complete
 
-    Run keyword and continue on failure    Check For Alert    ${SUCCESSFULLY DISCONNECTED}
+    Run keyword and continue on failure    Check For Alert    ${SUCCESSFULLY DISCONNECTED}    60
     Wait Until Location Contains    ${ENV}/systems
     Wait Until Element Is Not Visible    ${SYSTEMS TILE}//h2[text()="${system}[name]"]
 

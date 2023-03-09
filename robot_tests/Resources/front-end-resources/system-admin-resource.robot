@@ -33,9 +33,6 @@ System Admin Test Restart
     Close Modal If There
     ${logged in}=   Run keyword and return status    Wait until element is visible    ${ACCOUNT DROPDOWN}
     Run Keyword If    ${logged in}    Log Out
-    Sleep    1
-    ${logged in}=   Run keyword and return status    Wait until element is visible    ${ACCOUNT DROPDOWN}
-    Run Keyword If    ${logged in}    Log Out via API
 
     Run Keyword If Test Failed    Run Keywords
         ...    Start Docker Server    ${system}[id]
