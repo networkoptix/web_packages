@@ -230,7 +230,7 @@
                 <li *ngFor="let server of servers">
                     <a
                         target="_blank"
-                        [href]="server.url + currentRoute"
+                        [href]="server.url + currentRoute | safe: 'url'"
                     >
                         <svg
                             version="1.1"
