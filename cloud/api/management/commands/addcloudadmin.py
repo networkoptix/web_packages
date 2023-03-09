@@ -1,3 +1,4 @@
+from time import sleep
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
@@ -61,15 +62,27 @@ class Command(BaseCommand):
         if not (password := options.get('password', '')):
             raise ValueError("Missing password!")
 
+        is_not_in_clouddb = False
+        has_been_activated = False
         account, created = Account.objects.get_or_create(email=email)
+        if not created:
+            try:
+                data = cloud_api.Account.check_account(email)
+                has_been_activated = data.get('statusCode') == "activated"
+            except APINotFoundException:
+                is_not_in_clouddb = True
 
-        if created:
+        if created or is_not_in_clouddb:
             self.create_and_register(account, email, password)
+            timeout = 10
+            self.stdout.write(self.style.SUCCESS(
+                f"waiting for {timeout}s"))
+            sleep(timeout)
         else:
             self.stdout.write(self.style.NOTICE(
                 f"Account with {email} already exists. Skipping registration."))
 
-        if not account.activated_date:
+        if not account.activated_date or not has_been_activated:
             self.activate_account(account)
         else:
             self.stdout.write(self.style.NOTICE(
