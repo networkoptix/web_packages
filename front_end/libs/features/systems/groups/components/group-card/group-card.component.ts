@@ -43,6 +43,9 @@ export class NxGroupCardComponent {
     }
 
     addGroup(): void {
-        this.dialogsService.createSystemGroup(this.group.id, this.group.name);
+        this.dialogsService.createSystemGroup({
+            targetId: this.group.id,
+            targetName: this.group.name
+        });
     }
 }

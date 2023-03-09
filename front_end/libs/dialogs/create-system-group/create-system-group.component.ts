@@ -1,11 +1,14 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
+import { Component, Inject, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
+import type { CreateSystemGroup as DT } from '@dialogs/dialogs.types';
+import { ModalBase } from '@dialogs/modal-base';
 import { NxSystemGroupsService } from '@pages/systems/groups/services/system-groups.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
+import { pickFrom } from '@utils/general';
 
 // type GroupNameOption = DropdownItem<string>;
 
@@ -14,7 +17,7 @@ import { Process } from '@services/process.service/process';
     templateUrl: 'create-system-group.component.html',
     styleUrls: ['create-system-group.component.scss'],
 })
-export class CreateSystemGroupModalContent implements OnInit {
+export class CreateSystemGroupModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;
 
     @ViewChild('createSystemGroupForm') form: NgForm;
@@ -32,30 +35,23 @@ export class CreateSystemGroupModalContent implements OnInit {
 
     constructor(
         private processService: NxProcessService,
-        public dialogRef: DialogRef,
+        protected dialogRef: DialogRef<DT['return']>,
         // private store: Store,
-        @Inject(DIALOG_DATA) dialogData: {
-            targetId?: string;
-            targetName?: string;
-            hasGroups?: boolean;
-        },
+        @Inject(DIALOG_DATA) private dialogData: DT['data'],
         private groupsService: NxSystemGroupsService,
     ) {
-        [this.targetId, this.targetName, this.hasGroups] = [dialogData.targetId, dialogData.targetName, dialogData.hasGroups];
+        super(dialogRef);
     }
 
     ngOnInit(): void {
+        pickFrom(this.dialogData, ['targetId', 'targetName', 'hasGroups'], this);
         this.createSystemGroupProcess = this.processService.createProcess(
             () => {
                 this.groupsService.createGroup(this.newGroupName, this.targetId);
                 return Promise.resolve();
             },
             {},
-            () => this.dialogRef.close()
+            () => this.close()
         );
     }
-
-    close = (): void => {
-        this.dialogRef.close();
-    };
 }

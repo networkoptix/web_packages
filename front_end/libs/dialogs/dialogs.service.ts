@@ -396,23 +396,6 @@ export class NxDialogsService extends DialogBase {
             .afterClosed();
     }
 
-    // eslint-disable-next-line camelcase
-    public async createSystemGroup(targetId?: string, targetName?: string, hasGroups?: boolean): Promise<void> {
-        const config: Partial<DialogConfig> = {
-            data: {
-                targetId,
-                targetName,
-                hasGroups
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-        const component = await import('./create-system-group/create-system-group.component').then(m => m.CreateSystemGroupModalContent);
-
-        return this.open(component, dialogConfig).afterClosed();
-    }
-
     public async reserveSpaceWarning(): Promise<string | void> {
         const config: Partial<DialogConfig> = {};
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
@@ -600,6 +583,10 @@ export class NxDialogsService extends DialogBase {
     /* Systems */
 
     /* Groups */
+    createSystemGroup = this.dialogV2Factory<Dt.CreateSystemGroup>(
+        () => import('./create-system-group/create-system-group.component').then(m => m.CreateSystemGroupModalContent),
+        { autoFocus: 'input' },
+    );
 
     /* Admin */
     connectLocalToCloud = this.dialogV2Factory<Dt.ConnectLocalToCloud>(

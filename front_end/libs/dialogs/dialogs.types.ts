@@ -99,6 +99,14 @@ export type Account2faReturn = string;
 /* Systems */
 
 /* Groups */
+export type CreateSystemGroup = DialogType<
+    {
+        targetId?: string;
+        targetName?: string;
+        hasGroups?: boolean;
+    },
+    void
+>;
 
 /* Admin */
 export type ConnectLocalToCloud = DialogType<NxSystem, boolean>;

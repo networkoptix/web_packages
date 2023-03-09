@@ -38,7 +38,7 @@ import { CloudStorageDeleteModalContent } from './cloud-storage/delete/cloud-sto
 import { CloudStorageModifyModalContent } from './cloud-storage/modify/cloud-storage-modify.component';
 import { CloudStorageMoveModalContent } from './cloud-storage/move/cloud-storage-move.component';
 import { ConnectCloudModalModule } from './connect-cloud/connect-cloud.module';
-import { CreateSystemGroupModalContent } from './create-system-group/create-system-group.component';
+import { CreateSystemGroupModalModule } from './create-system-group/create-system-group.module';
 import { DeleteCloudUserModalModule } from './delete-cloud-user/delete-cloud-user.module';
 import { DetachServerModalContent } from './detach-server/detach-server.component';
 import { DisconnectModalModule } from './disconnect/disconnect.module';
@@ -106,6 +106,7 @@ import { WizardModalContent } from './wizard/wizard.component';
         DisconnectModalModule,
         RemoveSystemModalModule,
         Mandatory2faModalModule,
+        CreateSystemGroupModalModule
     ],
     declarations: [
         AddPartnerBrandModalContent,
@@ -130,7 +131,6 @@ import { WizardModalContent } from './wizard/wizard.component';
         AddWidgetModalContent,
         SelectTimeRangeModalContent,
         ReserveSpaceWarningModalContent,
-        CreateSystemGroupModalContent,
         NewFeatureInformationModalContent,
         CloudStorageActivateModalContent,
         CloudStorageModifyModalContent,
