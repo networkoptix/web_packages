@@ -312,7 +312,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     // Checks if the url does not have swagger-ui in it.
     private requiresWeb(url) {
         // Leaving this method incase we remember what it was used for.
-        return true;
+        return environment.isLocal;
     }
 
     // Legacy api requires runtime in the header of the request.
