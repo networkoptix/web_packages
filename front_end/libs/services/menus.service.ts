@@ -2,12 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
-import {
-    BehaviorSubject,
-    from,
-    combineLatest,
-    Observable
-} from 'rxjs';
+import { BehaviorSubject, from, combineLatest, Observable } from 'rxjs';
 import { filter, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';

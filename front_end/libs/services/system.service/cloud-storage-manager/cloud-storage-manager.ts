@@ -1,9 +1,22 @@
-import { BehaviorSubject, switchMap, filter, catchError, shareReplay, Observable, from, map, throwError } from 'rxjs';
+import {
+    BehaviorSubject,
+    switchMap,
+    filter,
+    catchError,
+    shareReplay,
+    Observable,
+    from,
+    map,
+    throwError,
+} from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { Translatable, TranslateObject } from '@pipes/nx-translate.types';
 import { uuid } from '@services/nx-cloud-api/cloud-services/base-cloud-service-api.types';
-import { BoundSystem, StorageInfo } from '@services/nx-cloud-api/cloud-services/cloud-storage/cloud-storage-api.types';
+import {
+    BoundSystem,
+    StorageInfo,
+} from '@services/nx-cloud-api/cloud-services/cloud-storage/cloud-storage-api.types';
 import { Destroyable } from '@utils/Destroyable';
 import { bitsToString } from '@utils/bits-to-string';
 

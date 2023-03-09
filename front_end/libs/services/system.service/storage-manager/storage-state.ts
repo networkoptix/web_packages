@@ -1,13 +1,5 @@
 import { combineLatest, Observable, Subject } from 'rxjs';
-import {
-    filter,
-    map,
-    retry,
-    startWith,
-    switchMap,
-    takeUntil,
-    catchError,
-} from 'rxjs/operators';
+import { filter, map, retry, startWith, switchMap, takeUntil, catchError } from 'rxjs/operators';
 
 // import { NxLogger } from '@utils/logger';
 import { StateManager } from '@utils/state-manager';

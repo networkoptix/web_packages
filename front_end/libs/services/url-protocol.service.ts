@@ -6,7 +6,11 @@ import { environment } from '@environments/environment';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { protocolCheck } from '@utils/protocolcheck';
 
-import { openClientError, openClientTimeout, openMobileClientTimeout } from '../variables/static-variables';
+import {
+    openClientError,
+    openClientTimeout,
+    openMobileClientTimeout,
+} from '../variables/static-variables';
 
 import { NxAccountService } from './account.service';
 import type { LinkSettings } from './url-protocol.service.types';

@@ -4,10 +4,23 @@ import { BehaviorSubject, filter, Observable, switchMap } from 'rxjs';
 import { memoizeAsyncPersistent } from '@utils/memoize';
 
 import { WithFreshSession } from '../../nx-cloud-api.types';
-import { BaseCloudServiceAPI, CreateApiFactory, disabledMethod, implementsCloudServiceApi } from '../base-cloud-service-api';
+import {
+    BaseCloudServiceAPI,
+    CreateApiFactory,
+    disabledMethod,
+    implementsCloudServiceApi,
+} from '../base-cloud-service-api';
 import { uuid } from '../base-cloud-service-api.types';
 
-import { BoundSystem, SlaveStorageId, StorageCreate, StorageCredentials, StorageId, StorageInfo, StorageStatistics } from './cloud-storage-api.types';
+import {
+    BoundSystem,
+    SlaveStorageId,
+    StorageCreate,
+    StorageCredentials,
+    StorageId,
+    StorageInfo,
+    StorageStatistics,
+} from './cloud-storage-api.types';
 
 @implementsCloudServiceApi
 export class CloudStorageAPI extends BaseCloudServiceAPI {

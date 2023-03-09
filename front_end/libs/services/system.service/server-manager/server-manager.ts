@@ -4,9 +4,7 @@ import stringify from 'safe-stable-stringify';
 
 import { environment } from '@environments/environment';
 import { APIDoc } from '@pages/api-tool/api-tool-types';
-import type {
-    Logger
-} from '@pages/systems/settings/servers/logger/logger.component.types';
+import type { Logger } from '@pages/systems/settings/servers/logger/logger.component.types';
 import type { APIDocType, MenuManifest } from '@services/nx-config/base-config';
 import type { LogLevel, RebuildArchiveResponse } from '@services/system-api.types';
 import * as t from '@services/system-api.types';

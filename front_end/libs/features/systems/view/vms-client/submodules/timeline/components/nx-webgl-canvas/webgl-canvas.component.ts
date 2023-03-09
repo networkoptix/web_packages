@@ -10,11 +10,11 @@ import { interval, animationFrameScheduler, Subject, takeUntil } from 'rxjs';
 import {
     CONSTANT_SCROLL_FACTOR_PX,
     SCROLL_DIRECTION,
-    SCROLL_FACTOR_PX
+    SCROLL_FACTOR_PX,
 } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/scroll/scroll.types';
 import {
     ZOOM_DIRECTION,
-    ZOOM_FACTOR
+    ZOOM_FACTOR,
 } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/zoom/zoom.types';
 
 interface DATA {

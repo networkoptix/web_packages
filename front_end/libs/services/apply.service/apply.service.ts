@@ -1,27 +1,11 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { DOCUMENT } from '@angular/common';
-import {
-    ComponentRef,
-    Injectable,
-    ViewContainerRef,
-    Inject,
-} from '@angular/core';
+import { ComponentRef, Injectable, ViewContainerRef, Inject } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual, cloneDeep, isArray } from 'lodash-es';
-import {
-    BehaviorSubject,
-    combineLatest as combineLatestFrom,
-    firstValueFrom,
-    Subject,
-} from 'rxjs';
-import {
-    combineLatest,
-    distinctUntilChanged,
-    map,
-    startWith,
-    takeUntil
-} from 'rxjs/operators';
+import { BehaviorSubject, combineLatest as combineLatestFrom, firstValueFrom, Subject } from 'rxjs';
+import { combineLatest, distinctUntilChanged, map, startWith, takeUntil } from 'rxjs/operators';
 
 import { NxApplyComponent } from '@components/apply/apply.component';
 import { ApplyModalContent } from '@dialogs/apply/apply.component';

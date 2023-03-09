@@ -1,6 +1,14 @@
 import { Inject, Injectable, Injector, LOCALE_ID } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { of, Observable, BehaviorSubject, timer, firstValueFrom, combineLatest, identity } from 'rxjs';
+import {
+    of,
+    Observable,
+    BehaviorSubject,
+    timer,
+    firstValueFrom,
+    combineLatest,
+    identity,
+} from 'rxjs';
 import { first, map, shareReplay, switchMap } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';

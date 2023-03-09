@@ -8,9 +8,7 @@
 // These functions will throw an error if the JSON doesn't
 // match the expected interface, even if the JSON is valid.
 
-import type {
-    DropdownItem
-} from '@components/dropdowns/generic/dropdown.component.types';
+import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import type {
     MultiSelectItem
 } from '@components/dropdowns/multi-select/multi-select.component.types';

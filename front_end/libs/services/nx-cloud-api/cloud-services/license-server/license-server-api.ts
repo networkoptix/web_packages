@@ -1,13 +1,38 @@
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, catchError, concatMap, filter, firstValueFrom, Observable, tap } from 'rxjs';
+import {
+    BehaviorSubject,
+    catchError,
+    concatMap,
+    filter,
+    firstValueFrom,
+    Observable,
+    tap,
+} from 'rxjs';
 
 import { memoizeAsyncPersistent } from '@utils/memoize';
 
 import { LicenseServerInfo, WithFreshSession } from '../../nx-cloud-api.types';
-import { BaseCloudServiceAPI, CreateApiFactory, implementsCloudServiceApi } from '../base-cloud-service-api';
+import {
+    BaseCloudServiceAPI,
+    CreateApiFactory,
+    implementsCloudServiceApi,
+} from '../base-cloud-service-api';
 import { uuid } from '../base-cloud-service-api.types';
 
-import { CloudLicenseChange, CloudLicenseUpdate, CloudSystemId, CloudSystemIds, LicenseInfo, StorageActivation, StorageBase, StorageEventParams, SystemLicenseInfo, SystemStorage, UsageReportRequest, ValidateSystemLicense } from './license-server-api.types';
+import {
+    CloudLicenseChange,
+    CloudLicenseUpdate,
+    CloudSystemId,
+    CloudSystemIds,
+    LicenseInfo,
+    StorageActivation,
+    StorageBase,
+    StorageEventParams,
+    SystemLicenseInfo,
+    SystemStorage,
+    UsageReportRequest,
+    ValidateSystemLicense,
+} from './license-server-api.types';
 
 function updateCachedLicenseServer(targetProperty: string) {
     return function (target: unknown, propertyKey: string, descriptor: PropertyDescriptor) {

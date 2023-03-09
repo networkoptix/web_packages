@@ -1,6 +1,4 @@
-import {
-    Component, EventEmitter, Input, Output
-} from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
 import { ZOOM_DIRECTION } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/zoom/zoom.types';

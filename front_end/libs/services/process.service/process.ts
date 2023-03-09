@@ -1,9 +1,4 @@
-import {
-    Observable,
-    Subject,
-    race,
-    timer
-} from 'rxjs';
+import { Observable, Subject, race, timer } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';

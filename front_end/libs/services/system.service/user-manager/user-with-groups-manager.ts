@@ -7,11 +7,7 @@ import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { cleanId } from '@utils/general';
 
 import { UserManager } from './user-manager';
-import {
-    SystemPermissions,
-    NxUserGroup,
-    NxSystemUser,
-} from './user-manager-types.bak';
+import { SystemPermissions, NxUserGroup, NxSystemUser } from './user-manager-types.bak';
 
 export class UserWithGroupsManager extends UserManager {
     CONFIG: IConfig;

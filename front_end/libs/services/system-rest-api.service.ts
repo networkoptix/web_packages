@@ -3,7 +3,15 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injector } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { SessionStorageService } from 'ngx-webstorage';
-import { BehaviorSubject, combineLatest, firstValueFrom, from, Observable, of, throwError } from 'rxjs';
+import {
+    BehaviorSubject,
+    combineLatest,
+    firstValueFrom,
+    from,
+    Observable,
+    of,
+    throwError,
+} from 'rxjs';
 import {
     catchError,
     filter,
@@ -15,7 +23,7 @@ import {
     switchMap,
     tap,
     throttleTime,
-    timeout
+    timeout,
 } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
@@ -23,7 +31,12 @@ import type { APIDoc } from '@pages/api-tool/api-tool-types';
 import { NxHealthService } from '@pages/health/health.service';
 import { NxStorageService } from '@services/storage.service';
 import { PartialCameraRest } from '@services/system.service/camera-manager/camera-manager-types';
-import { defaultHashFunction, memoizeAsync, memoizeAsyncMedium, memoizeAsyncPersistent } from '@utils/memoize';
+import {
+    defaultHashFunction,
+    memoizeAsync,
+    memoizeAsyncMedium,
+    memoizeAsyncPersistent,
+} from '@utils/memoize';
 import { startWithCache } from '@utils/start-with-cached';
 
 import { SECURITY_LEVEL } from '../../apps/setup-wizard/src/app/types/wizard-state.types';

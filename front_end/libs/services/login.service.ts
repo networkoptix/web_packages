@@ -9,9 +9,7 @@ import { Subject } from 'rxjs';
 import { switchMap, take, takeUntil } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import {
-    LoginWebadminModalContent
-} from '@components/login-webadmin/login-webadmin.component';
+import { LoginWebadminModalContent } from '@components/login-webadmin/login-webadmin.component';
 import { DialogBase } from '@dialogs/dialog-base';
 import { DialogConfig } from '@dialogs/dialog-config';
 import { defaultConfig, DIALOG_SIZE } from '@dialogs/dialog-ref';

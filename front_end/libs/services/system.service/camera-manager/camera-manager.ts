@@ -1,5 +1,15 @@
 import { isEqual } from 'lodash-es';
-import { animationFrameScheduler, distinctUntilChanged, firstValueFrom, interval, map, Observable, scan, switchMap, timer } from 'rxjs';
+import {
+    animationFrameScheduler,
+    distinctUntilChanged,
+    firstValueFrom,
+    interval,
+    map,
+    Observable,
+    scan,
+    switchMap,
+    timer,
+} from 'rxjs';
 
 import type {
     ec2Camera,

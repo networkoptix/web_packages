@@ -1,10 +1,25 @@
 import { chunk } from 'lodash-es';
-import { BehaviorSubject, map, Observable, shareReplay, switchMap, filter, tap, catchError, combineLatest, take } from 'rxjs';
+import {
+    BehaviorSubject,
+    map,
+    Observable,
+    shareReplay,
+    switchMap,
+    filter,
+    tap,
+    catchError,
+    combineLatest,
+    take,
+} from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { Translatable, TranslateObject } from '@pipes/nx-translate.types';
-import { CloudLicenseUpdate, LicenseInfo, LicenseState } from '@services/nx-cloud-api/cloud-services/license-server/license-server-api.types';
+import {
+    CloudLicenseUpdate,
+    LicenseInfo,
+    LicenseState,
+} from '@services/nx-cloud-api/cloud-services/license-server/license-server-api.types';
 import { NxSystemsService } from '@services/systems.service';
 import { Destroyable } from '@utils/Destroyable';
 import { bitsToString } from '@utils/bits-to-string';
@@ -14,7 +29,13 @@ import { LicenseServerAPI } from '../../nx-cloud-api/cloud-services/license-serv
 import { NxSystem } from '../system';
 
 import { mapLicenseKeyInfo } from './license-manager-utils';
-import { ProcessedLicenseKey, CLOUD_STORAGE_STATES, LicenseTagInfo, LicenseTranslationBaseKeys, LicenseKeyInfo } from './license-manager.types';
+import {
+    ProcessedLicenseKey,
+    CLOUD_STORAGE_STATES,
+    LicenseTagInfo,
+    LicenseTranslationBaseKeys,
+    LicenseKeyInfo,
+} from './license-manager.types';
 
 export class LicenseManager extends Destroyable {
     #updater$ = new BehaviorSubject<string[]>(['system', 'user']);

@@ -5,21 +5,18 @@ import { pick } from 'lodash-es';
 import md5 from 'md5';
 import { CookieService } from 'ngx-cookie-service';
 import { from, of, throwError, Observable, BehaviorSubject, firstValueFrom } from 'rxjs';
-import {
-    flatMap,
-    map,
-    mergeMap,
-    retryWhen,
-    timeout,
-    tap,
-    share,
-    switchMap
-} from 'rxjs/operators';
+import { flatMap, map, mergeMap, retryWhen, timeout, tap, share, switchMap } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
 import { NxHealthService } from '@pages/health/health.service';
-import { memoizeAsync, memoizeAsyncLong, memoizeAsyncMedium, memoizeAsyncPersistent, defaultHashFunction } from '@utils/memoize';
+import {
+    memoizeAsync,
+    memoizeAsyncLong,
+    memoizeAsyncMedium,
+    memoizeAsyncPersistent,
+    defaultHashFunction,
+} from '@utils/memoize';
 import { startWithCache } from '@utils/start-with-cached';
 
 import { apiTool, healthMonitoring } from '../variables/static-variables';

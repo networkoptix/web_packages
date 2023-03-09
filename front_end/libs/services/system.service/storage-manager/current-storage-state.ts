@@ -2,12 +2,7 @@ import { cleanId } from '@utils/general';
 
 import { ServerManager } from '../server-manager/server-manager';
 
-import {
-    StorageResponses,
-    StorageDataStructure,
-    Storage,
-    CurrentStorageState
-} from './storage';
+import { StorageResponses, StorageDataStructure, Storage, CurrentStorageState } from './storage';
 
 /**
  * The storageFactory take the StorageResponses array handles munging the data together.

@@ -2,7 +2,11 @@ import { CdkDrag, CdkDragMove, CdkDragStart } from '@angular/cdk/drag-drop';
 import {
     Component,
     ElementRef,
-    ViewChild, Input, Output, EventEmitter, OnChanges
+    ViewChild,
+    Input,
+    Output,
+    EventEmitter,
+    OnChanges,
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 

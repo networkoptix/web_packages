@@ -1,6 +1,10 @@
 import type staticLang from '@common/language/language_i18n_static.json';
 import { Translatable } from '@pipes/nx-translate.types';
-import { CloudStorageSize, LicenseKey, LicenseStateInfo } from '@services/nx-cloud-api/cloud-services/license-server/license-server-api.types';
+import {
+    CloudStorageSize,
+    LicenseKey,
+    LicenseStateInfo,
+} from '@services/nx-cloud-api/cloud-services/license-server/license-server-api.types';
 
 export enum CLOUD_STORAGE_STATES {
     LOADING = 'loading',

@@ -8,7 +8,11 @@ import { WINDOW } from '@services/window-provider';
 import { memoizeAsyncMedium } from '@utils/memoize';
 
 import { CloudResponse, CloudUser, System, WithFreshSession } from '../../nx-cloud-api.types';
-import { BaseCloudServiceAPI, CreateApiFactory, implementsCloudServiceApi } from '../base-cloud-service-api';
+import {
+    BaseCloudServiceAPI,
+    CreateApiFactory,
+    implementsCloudServiceApi,
+} from '../base-cloud-service-api';
 
 enum NonSystemIdEndpoint {
     getCloudUsers = 'getCloudUsers',

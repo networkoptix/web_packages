@@ -1,11 +1,5 @@
 import { Router } from '@angular/router';
-import {
-    BehaviorSubject,
-    Subscription,
-    Observable,
-    forkJoin,
-    firstValueFrom
-} from 'rxjs';
+import { BehaviorSubject, Subscription, Observable, forkJoin, firstValueFrom } from 'rxjs';
 import { auditTime, catchError, map, shareReplay, switchMap } from 'rxjs/operators';
 import stringify from 'safe-stable-stringify';
 import { v4 as uuid } from 'uuid';
@@ -35,7 +29,7 @@ import {
     ec2MediaServer,
     PtzCommand,
     RawRule,
-    SystemConfigSettings
+    SystemConfigSettings,
 } from '../system-api.types';
 import { NxSystemAPI } from '../system-legacy-api.service';
 import { NxSystemsService } from '../systems.service';
@@ -47,7 +41,11 @@ import { ServerManager } from './server-manager/server-manager';
 import { StorageManager } from './storage-manager/storage-manager';
 import type { NxMediaServer, ServerTimeInfo } from './system-types';
 import { UserManager } from './user-manager/user-manager';
-import type { NxEc2LocalUser, NxUser, PreprocessCloudUser } from './user-manager/user-manager-types';
+import type {
+    NxEc2LocalUser,
+    NxUser,
+    PreprocessCloudUser,
+} from './user-manager/user-manager-types';
 import { UserWithGroupsManager } from './user-manager/user-with-groups-manager';
 
 /**

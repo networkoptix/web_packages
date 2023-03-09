@@ -2,13 +2,9 @@
 import { HttpClient } from '@angular/common/http';
 import { v4 as uuid } from 'uuid';
 
-import type {
-    PackageStatus
-} from '@dialogs/download-async/download-async.component.types';
+import type { PackageStatus } from '@dialogs/download-async/download-async.component.types';
 import { apiBase } from '@lib/variables/static-variables';
-import {
-    NxConsoleService
-} from '@pages/developer-console/console/console.service';
+import { NxConsoleService } from '@pages/developer-console/console/console.service';
 
 import type * as t from './nx-cloud-api.types';
 

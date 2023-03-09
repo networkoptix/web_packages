@@ -2,12 +2,18 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import {
-    BrandInfo, OrganizationInfo, PartnerInfo,
-    UserInfo
+    BrandInfo,
+    OrganizationInfo,
+    PartnerInfo,
+    UserInfo,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 import { WithFreshSession } from '../../nx-cloud-api.types';
-import { BaseCloudServiceAPI, CreateApiFactory, implementsCloudServiceApi } from '../base-cloud-service-api';
+import {
+    BaseCloudServiceAPI,
+    CreateApiFactory,
+    implementsCloudServiceApi,
+} from '../base-cloud-service-api';
 
 // function updateCachedLicenseServer(targetProperty: string) {
 //     return function (target: unknown, propertyKey: string, descriptor: PropertyDescriptor) {
