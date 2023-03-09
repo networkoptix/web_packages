@@ -5,7 +5,7 @@ import { filter } from 'rxjs/operators';
 import type { TargetState } from './console.types';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxConsoleService {
     #targetStateSubject$ = new BehaviorSubject<TargetState>(undefined);

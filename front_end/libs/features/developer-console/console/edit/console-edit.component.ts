@@ -52,26 +52,19 @@ export class NxDevConsoleEditComponent {
 
     ngOnInit(): void {
         const getMethod = (action: string) => {
-            const [subAPI, method] = ({
+            const [subAPI, method] = {
                 [ConsoleSection.CUSTOM_CLIENTS]: {
                     create: ['customClient', 'create'],
-                    save: ['customClient', 'partialUpdate']
-                }
-            })[this.route.snapshot.params.section][action];
+                    save: ['customClient', 'partialUpdate'],
+                },
+            }[this.route.snapshot.params.section][action];
             return this.cloudApi[subAPI][method];
         };
         this.saveContext = this.processService.createProcess(
-            () => this.asset.unsaved
-                ? getMethod('create')(
-                    this.asset.name,
-                    this.asset.base_vms,
-                    this.asset.values
-                )
-                : getMethod('save')(
-                    this.asset.id,
-                    this.asset.name,
-                    this.asset
-                ),
+            () =>
+                this.asset.unsaved
+                    ? getMethod('create')(this.asset.name, this.asset.base_vms, this.asset.values)
+                    : getMethod('save')(this.asset.id, this.asset.name, this.asset),
             { ignoreError: true },
             res => {
                 const tempId = this.asset.id;
@@ -79,86 +72,91 @@ export class NxDevConsoleEditComponent {
                 const isUUID = isNaN(parseInt(tempId) - tempId);
 
                 if (isUUID) {
-                    this.location.replaceState(
-                        this.router.url.replace(tempId, this.asset.id)
-                    );
+                    this.location.replaceState(this.router.url.replace(tempId, this.asset.id));
                 }
                 const [_, params = ''] = this.router.url.split('?');
                 this.consoleService.targetState = {
                     id: this.asset.id,
-                    download: this.downloadClick
+                    download: this.downloadClick,
                 };
                 this.router.navigateByUrl(
-                    `/developers/${this.route.snapshot.params.section}${params ? '?' + params : ''}`
+                    `/developers/${this.route.snapshot.params.section}${
+                        params ? '?' + params : ''
+                    }`,
                 );
             },
             ({ values: errors }) => {
                 this.errors = errors;
                 this.hasErrors = true;
-            }
+            },
         );
     }
 
-    ngOnChanges(
-        { contextList: { currentValue, previousValue, firstChange } }: NgChanges<NxDevConsoleEditComponent>
-    ) {
+    ngOnChanges({
+        contextList: { currentValue, previousValue, firstChange },
+    }: NgChanges<NxDevConsoleEditComponent>) {
         if (firstChange || currentValue !== previousValue) {
             if (!this.asset) {
                 const { section, id, context } = this.route.snapshot.params;
                 if (!this.contextList.length) {
                     return;
                 }
-                const foundContext = this.contextList
-                    .find(({ name }) => name === context);
+                const foundContext = this.contextList.find(({ name }) => name === context);
                 this.context = foundContext || this.contextList[0];
                 const baseEditUrl = this.router.url.split(`/${context}`)[0];
                 if (!foundContext) {
                     const [target, params = ''] = this.router.url.split('?');
                     this.router.navigateByUrl(
-                        `${context ? baseEditUrl : target}/${this.context.name}${params ? '?' + params : ''}`,
-                        { replaceUrl: true }
+                        `${context ? baseEditUrl : target}/${this.context.name}${
+                            params ? '?' + params : ''
+                        }`,
+                        { replaceUrl: true },
                     );
                 }
 
                 const unsavedAsset = this.consoleService.unsavedAssets[id];
                 if (unsavedAsset) {
                     this.asset = unsavedAsset;
-                    this.asset.values = this.context.fields
-                        .reduce((values, field) => ({
+                    this.asset.values = this.context.fields.reduce(
+                        (values, field) => ({
                             ...values,
-                            [field.name]: values[field.name] || ''
-                        }), this.asset.values);
+                            [field.name]: values[field.name] || '',
+                        }),
+                        this.asset.values,
+                    );
                     this.headerService.addDynamicDevConsoleNode(
                         this.asset,
                         baseEditUrl.split(`/${this.asset.id}`)[0],
                         this.contextList,
-                        this.router.url
+                        this.router.url,
                     );
                 } else {
-                    (this.cloudApi
-                        .getSubAPI(section)
-                        .retrieve(id) as Observable<any>
-                    ).pipe(
-                        untilDestroyed(this)
-                    ).subscribe(asset => {
-                        if (asset && asset.values) {
-                            this.asset = asset;
-                            this.headerService.addDynamicDevConsoleNode(
-                                asset,
-                                baseEditUrl.split(`/${asset.id}`)[0],
-                                this.contextList,
-                                this.router.url
-                            );
-                        } else {
-                            // Navigate up a level
-                        }
-                    }, () => {
-                        const [current, params = ''] = this.router.url.split('?');
-                        this.router.navigateByUrl(
-                            `${current.split('/' + ConsoleMode.EDIT)}${params ? '?' + params : ''}`,
-                            { replaceUrl: true }
+                    (this.cloudApi.getSubAPI(section).retrieve(id) as Observable<any>)
+                        .pipe(untilDestroyed(this))
+                        .subscribe(
+                            asset => {
+                                if (asset && asset.values) {
+                                    this.asset = asset;
+                                    this.headerService.addDynamicDevConsoleNode(
+                                        asset,
+                                        baseEditUrl.split(`/${asset.id}`)[0],
+                                        this.contextList,
+                                        this.router.url,
+                                    );
+                                } else {
+                                    // Navigate up a level
+                                }
+                            },
+                            () => {
+                                const [current, params = ''] = this.router.url.split('?');
+                                this.router.navigateByUrl(
+                                    `${current.split('/' + ConsoleMode.EDIT)}${
+                                        params ? '?' + params : ''
+                                    }`,
+                                    { replaceUrl: true },
+                                );
+                            },
                         );
-                    });
                 }
             }
         }
@@ -172,7 +170,7 @@ export class NxDevConsoleEditComponent {
         this.consoleService.targetState = { id: this.asset.id, download: false };
         const [_, params = ''] = this.router.url.split('?');
         this.router.navigateByUrl(
-            `/developers/${this.route.snapshot.params.section}${params ? '?' + params : ''}`
+            `/developers/${this.route.snapshot.params.section}${params ? '?' + params : ''}`,
         );
     };
 

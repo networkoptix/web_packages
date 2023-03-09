@@ -38,33 +38,33 @@ export class NxDevConsoleMenuComponent {
     }
 
     ngOnInit(): void {
-        this.showAdditionalLinks = ![
-            ConsoleSection.CUSTOM_CLIENTS
-        ].includes(this.sectionParam);
+        this.showAdditionalLinks = ![ConsoleSection.CUSTOM_CLIENTS].includes(this.sectionParam);
     }
 
     ngOnChanges(changes: NgChanges<NxDevConsoleMenuComponent>): void {
         const {
-            menu: { currentValue: menu }
+            menu: { currentValue: menu },
         } = changes;
         this.cancel$.next('cancel');
 
-        this.menusService.getMenu('configuration').pipe(
-            untilDestroyed(this),
-            takeUntil(this.cancel$),
-        ).subscribe(config => {
-            const consoleCmsConfig = (config?.nodes || []).find(({ url }) => url === this.base);
-            for (const section in manifest) {
-                const sectionConfig = this.menu.find(({ url }) => url === section);
-                if (sectionConfig) {
-                    const cmsTitle = consoleCmsConfig.nodes.find(({ url }) =>
-                        (url.startsWith('/') ? url : '/' + url) === `${this.base}/${sectionConfig.url}`
-                    )?.name;
-                    sectionConfig.title = cmsTitle || sectionConfig.title;
+        this.menusService
+            .getMenu('configuration')
+            .pipe(untilDestroyed(this), takeUntil(this.cancel$))
+            .subscribe(config => {
+                const consoleCmsConfig = (config?.nodes || []).find(({ url }) => url === this.base);
+                for (const section in manifest) {
+                    const sectionConfig = this.menu.find(({ url }) => url === section);
+                    if (sectionConfig) {
+                        const cmsTitle = consoleCmsConfig.nodes.find(
+                            ({ url }) =>
+                                (url.startsWith('/') ? url : '/' + url) ===
+                                `${this.base}/${sectionConfig.url}`,
+                        )?.name;
+                        sectionConfig.title = cmsTitle || sectionConfig.title;
+                    }
                 }
-            }
 
-            this.loading = !menu.length;
-        });
+                this.loading = !menu.length;
+            });
     }
 }

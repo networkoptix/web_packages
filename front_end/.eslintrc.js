@@ -573,6 +573,7 @@ module.exports = {
                 'libs/directives/**/*.ts',
                 'libs/features/[0-c]*/**/*.ts',
                 'libs/features/[d][a]*/**/*.ts',
+                'libs/features/developer-console/**/*.ts',
                 'libs/interceptors/**/*.ts',
                 'libs/menu/**/*.ts',
                 'libs/pipes/**/*.ts',
