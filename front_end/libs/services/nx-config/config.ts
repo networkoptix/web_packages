@@ -173,9 +173,7 @@ export const nxConfig: IConfig = {
     },
     cloudMonitoring: {
         fullStory: '',
-        isFullStoryActive: false,
-        isLogRocketActive: false,
-        logRocket: ''
+        isFullStoryActive: false
     },
     cloudName: '',
     cloudHost: '',

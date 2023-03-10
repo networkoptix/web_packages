@@ -21,6 +21,7 @@ import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { WINDOW } from '@services/window-provider';
+import { setServerIpAndPort } from '@utils/nx';
 
 @UntilDestroy()
 @Component({
@@ -191,7 +192,12 @@ export class NxOverlayModalComponent implements OnInit {
     getServers(): void {
         this.system.serverManager.getServers().toPromise()
             .then(res => {
-                this.servers = (res || []).filter(({ id }) => id !== this.serverId);
+                this.servers = (res || []).filter(({ id }) => id !== this.serverId)
+                    .map(server => {
+                        server = setServerIpAndPort(server);
+                        server.url = `//${server.ip}${server.port ? ':' + server.port : ''}`;
+                        return server;
+                    });
             })
             .catch(err => console.error(err));
     }

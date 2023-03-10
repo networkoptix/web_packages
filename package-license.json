@@ -9447,14 +9447,6 @@
             "path": "cloud_portal/front_end/node_modules/logform",
             "licenseFile": "cloud_portal/front_end/node_modules/logform/LICENSE"
         },
-        "logrocket@3.0.1": {
-            "licenses": "MIT",
-            "publisher": "LogRocket",
-            "email": "support@logrocket.com",
-            "url": "https://logrocket.com/",
-            "path": "cloud_portal/front_end/node_modules/logrocket",
-            "licenseFile": "cloud_portal/front_end/node_modules/logrocket/README.md"
-        },
         "long@4.0.0": {
             "licenses": "Apache-2.0",
             "repository": "https://github.com/dcodeIO/long.js",

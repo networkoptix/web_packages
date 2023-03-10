@@ -236,21 +236,23 @@
                     ></nx-pre-loader>
                     <ng-template #noArchive>
                         <div class="no-archive-message">
-                            <ng-template #nvr>
-                                <div translate>No license active for this camera</div>
-                                <div>
-                                    <span translate>Enable in %VMS_NAME% to view archive</span>
-                                    <nx-client-button
-                                        [system]="system"
-                                        [textOnly]="true"
-                                    ></nx-client-button>
-                                </div>
-                            </ng-template>
-                            <span
-                                *ngIf="canViewArchives && !isNvr; else nvr"
-                                translate
-                                >No Archive</span
-                            >
+                            <ng-container *ngIf="canViewArchives">
+                                <ng-template #nvr>
+                                    <div translate>No license active for this camera</div>
+                                    <div>
+                                        <span translate>Enable in %VMS_NAME% to view archive</span>
+                                        <nx-client-button
+                                            [system]="system"
+                                            [textOnly]="true"
+                                        ></nx-client-button>
+                                    </div>
+                                </ng-template>
+                                <span
+                                    *ngIf="!isNvr; else nvr"
+                                    translate
+                                    >No Archive</span
+                                >
+                            </ng-container>
                         </div>
                     </ng-template>
                 </ng-template>
