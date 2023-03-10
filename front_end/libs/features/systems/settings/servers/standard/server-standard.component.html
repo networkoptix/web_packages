@@ -2,7 +2,7 @@
     <nx-page-placeholder
         class="placeholder-section"
         type="NO_SETTINGS"
-        *ngIf="(isOffline || !system.isAvailable) && !selectedServer"
+        *ngIf="!selectedServer"
     ></nx-page-placeholder>
     <nx-alert-block
         *ngIf="certError"
