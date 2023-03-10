@@ -500,10 +500,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     await findCamerasWithArchive();
 
                     cachedMediaServers = mediaServers.map(ms => ({
-                        id: ms.id,
-                        name: ms.name,
-                        networkAddresses: ms.networkAddresses,
-                        status: ms.status,
+                        ...ms,
                         cameras: ms.cameras.map(c => processCameras(c, ms)),
                     }));
 
