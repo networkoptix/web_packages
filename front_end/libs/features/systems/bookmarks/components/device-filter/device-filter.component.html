@@ -16,7 +16,7 @@
     <nx-simple-search [(ngModel)]="search"></nx-simple-search>
     <div class="devices">
         <label
-            *ngFor="let device of searchMatches | slice: 0:7"
+            *ngFor="let device of searchMatches | slice: 0:displayLimit"
             [ngClass]="{ selected: selection.isSelected(device) }"
         >
             <nx-checkbox
@@ -28,7 +28,7 @@
     </div>
     <div>
         <button
-            *ngIf="items.length > 7"
+            *ngIf="items.length > displayLimit"
             translate
             (click)="moreDevicesDialog()"
         >

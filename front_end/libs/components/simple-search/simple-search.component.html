@@ -52,7 +52,7 @@
             <hr />
             <ul>
                 <li
-                    *ngFor="let match of matchEntry[1]; index as j"
+                    *ngFor="let match of matchEntry[1] | slice: 0:5; index as j"
                     class="suggestion__item"
                     [class.suggestion__item--selected]="i === matchIndexes?.[0] && j === matchIndexes?.[1]"
                     (click)="writeValue(match)"

@@ -65,9 +65,9 @@
         }
         &--sections {
             max-height: $dropdown-vertical-padding * 2
-                + 3 * ($section-name-height + 4 * $suggestion-height);
+                + 3 * ($section-name-height + 5 * $suggestion-height);
         }
-        // Limiting to 10 suggestions/3x4 sections for now
+        // Limiting to 10 suggestions/3x5 sections for now
 
         .suggestion {
             &__section-name {

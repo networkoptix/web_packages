@@ -78,6 +78,9 @@ export class NxSimpleSearchComponent implements ControlValueAccessor, OnInit, On
     }
 
     ngOnChanges({ suggestions }: NgChanges<NxSimpleSearchComponent>): void {
+        if (!suggestions) {
+            return;
+        }
         if (suggestions.currentValue) {
             this.matchIndexes = undefined;
             this.matchList = this._matchList();

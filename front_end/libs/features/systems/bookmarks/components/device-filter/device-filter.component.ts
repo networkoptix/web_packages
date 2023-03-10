@@ -16,6 +16,7 @@ export class NxDeviceFilterComponent extends SearchBaseComponent {
     @Output() selectionChange = new EventEmitter<void>();
 
     icons = icons;
+    displayLimit = 7;
 
     constructor(private dialogs: NxDialogsService) {
         super();
