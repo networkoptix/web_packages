@@ -143,11 +143,11 @@ ${YOUR ACCESS LEVEL}                  ${SYSTEM USER DETAILS}//nx-section//span[c
 
 ${DISCONNECT FROM MY ACCOUNT}         //button[@data-testid="disconnectAccountBtn" and contains(text(),'${DISCONNECT FROM MY ACCOUNT TEXT}')]
 
-${ACCESS LEVEL DROPDOWN}              ${SYSTEM USER DETAILS}//nx-section//button[@data-testid='componentId']
+${ACCESS LEVEL DROPDOWN}              ${SYSTEM USER DETAILS}//nx-section//button[@id='componentId']
 ${ACCESS LEVEL DROPDOWN MENU}         ${SYSTEM USER DETAILS}//nx-section//ul[contains(@class, "dropdown-menu")]
 ${HELP BLOCK}                         ${SYSTEM USER DETAILS}//nx-section//span[contains(@class,'help-block')]
 ${REMOVE USER BUTTON}                 ${SYSTEM USER DETAILS}//button[contains(text(),'${REMOVE USER BUTTON TEXT}')]
-${DISABLE USER SWITCH}                ${SYSTEM USER DETAILS}//input[@data-testid='user-active-status-switch']
+${DISABLE USER SWITCH}                ${SYSTEM USER DETAILS}//input[@id='user-active-status-switch']
 ${USER DISABLED MSG}                  ${SYSTEM USER DETAILS}//span[contains(@class,'text-danger')]
 
 ${REMOVE USER MODAL}                  //nx-modal-remove-user-content
@@ -302,13 +302,13 @@ ${COMMON PASSWORD}      qweasd123
 
 #Local User in System Users
 ${LOCAL USER LOGIN}                  //h2
-${LOCAL USER NAME}                   //input[@data-testid='fullName']
-${LOCAL USER EMAIL}                  //input[@data-testid='email']
+${LOCAL USER NAME}                   //input[@id='fullName']
+${LOCAL USER EMAIL}                  //input[@id='email']
 ${LOCAL USER CHANGE PASSWORD BUTTON}     //button[contains(text(), "${CHANGE PASSWORD BUTTON TEXT}")]
 ${LOCAL USER CHANGE PASSWORD SAVE}    //form[@name="changePasswordForm"]//button[contains(text(), "${SAVE BUTTON TEXT}")]
 ${LOCAL USER CHANGE PASSWORD CANCEL}    //form[@name="changePasswordForm"]//button[text()="${CANCEL BUTTON TEXT}"]
-${LOCAL USER PASSWORD INPUT}         //input[@data-testid="newPassword"]
-${LOCAL USER DELETE BUTTON}          //button[text()="${DELETE USER TEXT}"]
+${LOCAL USER PASSWORD INPUT}          //input[@id="newPassword"]
+${LOCAL USER DELETE BUTTON}           //button[contains(text(),"${DELETE USER TEXT}")]
 ${LOCAL USER DELETE CONFIRM BUTTON}   //div[@class="process-button"]/button
 ${LOCAL USER DELETE CANCEL BUTTON}    //button[contains(text(), "${CANCEL BUTTON TEXT}")]
 ${USER CANCEL}                        //nx-apply//nx-cancel-button/button[@type="reset"]

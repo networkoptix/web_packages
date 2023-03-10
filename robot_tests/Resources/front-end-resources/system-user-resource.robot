@@ -24,7 +24,7 @@ Users Suite Setup
     END
 
 Web Admin Suite Setup
-    Open Browser and go to URL    https://${QA BURBANK IP}:${server 1['port']}
+    Open Browser and go to URL    https://${QA BURBANK IP}:${servers}[0][port][0]
 
 Cloud Suite Setup
     Go To    ${url}
@@ -170,11 +170,11 @@ Verify In Local Users UI
     FOR    ${user}    IN    @{new local users}
         Sleep  2
         Wait Until Elements Are Visible
-        ...    //span[text()="Local+${user}"]
-        ...    //span[text()="Local+${user}"]//preceding-sibling::${LOCAL USER ICON}
-        Element Should Contain    //span[text()="Local+${user}"]/following-sibling::span    ${role names}[${user}]
-        Run Keyword If    '${mode}'=='cloud'    Element Should Not Be Visible     //span[text()="${email}"]//preceding-sibling::${LOCAL USER ICON}
-        Click Element    //span[text()="Local+${user}"]
+        ...    //span/nx-search-highlight[text()="Local+${user}"]
+        ...    //span/nx-search-highlight[text()="Local+${user}"]//parent::span//preceding-sibling::${LOCAL USER ICON}
+        Element Should Contain    //span/nx-search-highlight[text()="Local+${user}"]//parent::span/following-sibling::span/nx-search-highlight   ${role names}[${user}]
+        Run Keyword If    '${mode}'=='cloud'    Element Should Not Be Visible     //span/nx-search-highlight[text()="${email}"]//parent::span//preceding-sibling::${LOCAL USER ICON}
+        Click Element    //span/nx-search-highlight[text()="Local+${user}"]
 # commented out because of CLOUD-6854
         ${status} =    Run Keyword and Return Status    Wait Until Element Is Visible   ${EDITABLE TITLE}    5
         ${status2} =    Run Keyword and Return Status    Wait Until Element Is Visible   ${LOCAL USER LOGIN}    5
@@ -182,7 +182,7 @@ Verify In Local Users UI
         Wait Until Elements Are Visible
 	    ...    ${LOCAL USER NAME}
 	    ...    ${LOCAL USER EMAIL}
-        IF    '${email}' != '${server 1['cloud users']}[cloudAdmin]' and '${role names}[${user}]' != '${ADMIN TEXT}'
+        IF    '${email}' != '${servers}[0][cloudUsers][cloudAdmin]' and '${role names}[${user}]' != '${ADMIN TEXT}'
             Wait Until Elements Are Visible
             ...    ${DISABLE USER SWITCH}/..
 	        ...    ${LOCAL USER DELETE BUTTON}
@@ -197,14 +197,15 @@ Verify In Local Users UI
         Capture Element Screenshot    ${LOCAL USER NAME}
 	    Wait Until Textfield Contains    ${LOCAL USER NAME}    Local User
 	    Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_${user}@gmail.com
+        Wait Until Element Is Enabled    ${LOCAL USER NAME}
         log    ${email}
         log    ${user}
         # log    ${users['cloudAdmin']}
-        IF    '${email}' == '${server 1['owner']}'
+        IF    '${email}' == '${servers}[0][cloudOwner]'
             Element Text Should Be    //*[@id="componentId"]/span    ${role names}[${user}]
-        ELSE IF    '${email}' == '${server 1['cloud users']}[cloudAdmin]' and '${user}' != 'cloudAdmin'
+        ELSE IF    '${email}' == '${servers}[0][cloudUsers][cloudAdmin]' and '${user}' != 'cloudAdmin'
             Element Text Should Be    //*[@id="componentId"]/span    ${role names}[${user}]
-        ELSE IF    '${email}' == '${server 1}[local users][cloudAdmin][login]' and '${user}' != 'cloudAdmin'
+        ELSE IF    '${email}' == '${servers}[0][localUsers][cloudAdmin][login]' and '${user}' != 'cloudAdmin'
 	        Element Text Should Be    //*[@id="componentId"]/span    ${role names}[${user}]
         ELSE IF    '${email}' == 'admin'
 	        Element Text Should Be    //*[@id="componentId"]/span    ${role names}[${user}]
@@ -221,7 +222,7 @@ Modify Local Users via Cloud UI
     Pop From Dictionary    ${local users limited}    cloudAdmin
     FOR    ${user}    IN    @{local users limited}
 # commented out because of CLOUD-6854
-        #Click Element    //span[text()="Local+${user}"]
+        #Click Element    //span/nx-search-highlight[text()="Local+${user}"]
         #Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
         #${new login} =    Change Login for Local User    Local+${user}_changed
         ${new full name} =    Change Full Name for Local User     Changed User
@@ -239,7 +240,7 @@ Modify Local Users via Cloud UI
 	    #Wait Until Element Contains    ${EDITABLE TITLE}    ${new login}
 	    Wait Until Textfield Contains    ${LOCAL USER NAME}    ${new full name}
 	    Wait Until Textfield Contains    ${LOCAL USER EMAIL}    ${new local user email}
-        #Wait Until Element is Visible    //span[text()="Local+${user}"]/following-sibling::span[text()="${new permission}"]
+        #Wait Until Element is Visible    //span/nx-search-highlight[text()="Local+${user}"]/following-sibling::span[text()="${new permission}"]
         Log    Change password for ${user}
         Click Button    ${LOCAL USER CHANGE PASSWORD BUTTON}
         Wait Until Elements Are Visible    //input[@id="newPassword"]    ${LOCAL USER CHANGE PASSWORD SAVE}
@@ -379,10 +380,10 @@ Get Custom Permissions
     END
 
 Change All Local Users Login
-    &{local users limited}=    Create Dictionary    &{server 1}[local users]
+    &{local users limited}=    Create Dictionary    &{servers}[0][localUsers]
     Pop From Dictionary    ${local users limited}    cloudAdmin
     FOR    ${user}    IN    @{local users limited}
-        Click Element    //span[text()="Local+${user}"]
+        Click Element    //span/nx-search-highlight[text()="Local+${user}"]
 # commented out because of CLOUD-6854
         #Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
 	    ${new login}=    Change Login for Local User    Local+${user}_changed
@@ -398,10 +399,10 @@ Change All Local Users Login
     END
 
 Change All Local Users Full Name
-    &{local users limited}=    Create Dictionary    &{server 1}[local users]
+    &{local users limited}=    Create Dictionary    &{servers}[0][localUsers]
     Pop From Dictionary    ${local users limited}    cloudAdmin
     FOR    ${user}    IN    @{local users limited}
-        Click Element    //span[text()="Local+${user}"]
+        Click Element    //span/nx-search-highlight[text()="Local+${user}"]
         Wait Until Elements Are Visible    ${LOCAL USER NAME}
 	    ${new full name} =    Change Full Name for Local User     Changed User
         Wait Until Elements Are Visible    ${ACCOUNT SAVE}
@@ -414,10 +415,10 @@ Change All Local Users Full Name
     END
 
 Change All Local Users Email
-    &{local users limited}=    Create Dictionary    &{server 1}[local users]
+    &{local users limited}=    Create Dictionary    &{servers}[0][localUsers]
     Pop From Dictionary    ${local users limited}    cloudAdmin
     FOR    ${user}    IN    @{local users limited}
-        Click Element    //span[text()="Local+${user}"]
+        Click Element    //span/nx-search-highlight[text()="Local+${user}"]
         Wait Until Element Is Visible    ${LOCAL USER EMAIL}
         ${new local user email} =     Change Email for Local User    ${EMAIL VIEWER}
         Wait Until Elements Are Visible    ${ACCOUNT SAVE}
@@ -429,17 +430,17 @@ Change All Local Users Email
     END
 
 Change All Local User Permissions
-    &{local users limited}=    Create Dictionary    &{server 1}[local users]
+    &{local users limited}=    Create Dictionary    &{servers}[0][localUsers]
     Pop From Dictionary    ${local users limited}    cloudAdmin
     FOR    ${user}    IN    @{local users limited}
-        Click Element    //span[text()="Local+${user}"]
+        Click Element    //span/nx-search-highlight[text()="Local+${user}"]
 # commented out because of CLOUD-6854
         #Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
-        ${new permission} =    Change Permission Level for Local User    ${user}    ${server 1['owner']}
+        ${new permission} =    Change Permission Level for Local User    ${user}    ${servers}[0][cloudOwner]
         Wait Until Elements Are Visible    ${ACCOUNT SAVE}
         Click Button    ${ACCOUNT SAVE}
         Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
-        Wait Until Element is Visible    //span[text()="Local+${user}"]/following-sibling::span/span[text()="${new permission}"]
+        Wait Until Element is Visible    //span/nx-search-highlight[text()="Local+${user}"]/following-sibling::span/span[text()="${new permission}"]
 	    ${reverse permission} =    Get Key from Value    ${role names}    ${new permission}
         ${email} =    Convert To Lowercase    noptixautoqa+local_${user}@gmail.com
         ${name} =   Convert To Lowercase    Local+${user}
@@ -448,11 +449,11 @@ Change All Local User Permissions
     END
 
 Change All Local User Password
-    &{local users limited}=    Create Dictionary    &{server 1}[local users]
+    &{local users limited}=    Create Dictionary    &{servers}[0][localUsers]
     Pop From Dictionary    ${local users limited}    cloudAdmin
     FOR    ${user}    IN    @{local users limited}
         Log    Change password for ${user}
-        Click Element    //span[text()="Local+${user}"]
+        Click Element    //span/nx-search-highlight[text()="Local+${user}"]
 # commented out because of CLOUD-6854
         #Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
         Click Button    ${LOCAL USER CHANGE PASSWORD BUTTON}
@@ -463,22 +464,22 @@ Change All Local User Password
         Sleep    5
         ${user} =    Convert To Lowercase    ${user}
         @{old auth} =    Create List    local+${user}     ${BASE PASSWORD}
-        Run Keyword and Expect Error    *    Get Cameras    ${old auth}    https://${QA BURBANK IP}:${server 1['port']}
+        Run Keyword and Expect Error    *    Get Cameras    ${old auth}    https://${QA BURBANK IP}:${servers}[0][port][0]
         @{new auth} =    Create List    local+${user}     ${ALT PASSWORD}
-        ${response} =    Get Cameras    ${new auth}    https://${QA BURBANK IP}:${server 1['port']}
+        ${response} =    Get Cameras    ${new auth}    https://${QA BURBANK IP}:${servers}[0][port][0]
     END
 
 Change All Local User Info
-    &{local users limited}=    Create Dictionary    &{server 1}[local users]
+    &{local users limited}=    Create Dictionary    &{servers}[0][localUsers]
     Pop From Dictionary    ${local users limited}    cloudAdmin
     FOR    ${user}    IN    @{local users limited}
         Go to Users List
-        Click Element    //span[text()="Local+${user}"]
+        Click Element    //span/nx-search-highlight[text()="Local+${user}"]
         Wait Until Element Is Visible    ${LOCAL USER NAME}
 	    ${user role} =    Get Text    //span[contains(text(),"Local+${user}")]/following-sibling::span
 	    ${contains} =    Run Keyword And Return Status    Should Contain    ${user role}    ${ADMIN TEXT}
-	    Run Keyword If    ${contains} == ${False}    Modify All Local User Info    ${user}    ${server 1}[cloud users][cloudAdmin]
-        ...    ELSE    Run Keyword and Expect Error    *    Modify All Local User Info    ${user}    ${server 1}[cloud users][cloudAdmin]
+	    Run Keyword If    ${contains} == ${False}    Modify All Local User Info    ${user}    ${servers}[0][cloudUsers][cloudAdmin]
+        ...    ELSE    Run Keyword and Expect Error    *    Modify All Local User Info    ${user}    ${servers}[0][cloudUsers][cloudAdmin]
         Run Keyword If    ${contains} == ${False}    Wait Until Elements Are Visible    ${DISABLE USER SWITCH}/..    ${LOCAL USER DELETE BUTTON}
         ...    ELSE    Elements Should Not Be Visible      ${DISABLE USER SWITCH}/..     ${LOCAL USER DELETE BUTTON}
     END
@@ -495,7 +496,7 @@ Get Local User Id By Name
 
 User Should Not Exist
     [Arguments]    ${deleted user}
-    @{users} =    Get Users     ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
+    @{users} =    Get Users     ${servers}[0][localAuth]    https://${QA BURBANK IP}:${servers}[0][port][0]
     FOR    ${user}    IN    @{users}
         Run Keyword If   '${deleted user}' in '${user}[name]'   Fail    A local user "${user}[name]" was found on server
     END
@@ -503,7 +504,7 @@ User Should Not Exist
 Get Local Users
     [Arguments]
     ${locals}=   Create List
-    @{users} =    Get Users     ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
+    @{users} =    Get Users     ${servers}[0][localAuth]    https://${QA BURBANK IP}:${servers}[0][port][0]
     FOR    ${node}    IN    @{users}
         ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ocal+
         ${isCloud key} =    Run Keyword and Return Status   Dictionary Should Contain Key    ${node}    isCloud

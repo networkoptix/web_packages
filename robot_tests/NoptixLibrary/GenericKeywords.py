@@ -883,14 +883,14 @@ class GenericKeywords(object):
                         self.server_api.save_user(
                             server["token"],
                             f"https://{self.docker_host_ip}:{server['port'][0]}",
-                            "Local"+user, 
+                            "Local+"+user, 
                             permissions[user], 
-                            f"noptixautoqa+local{user}@gmail.com",
+                            f"noptixautoqa+local_{user}@gmail.com",
                             "Local User",
                             self.password,
                             isCloud=False
                             )
-                        localUsers.update({user:{"login":"Local"+user, "email": f"noptixautoqa+local{user}@gmail.com"}})
+                        localUsers.update({user:{"login":"Local"+user, "email": f"noptixautoqa+local_{user}@gmail.com"}})
                     server.update({"localUsers":localUsers})
 
             # Register, Activate, and Share cloud users if required

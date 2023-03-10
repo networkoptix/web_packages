@@ -1,46 +1,39 @@
 *** Settings ***
 Resource          ../../resource.robot
 Resource          systems-page-resource.robot
+Resource          system-server-resource.robot
 
 *** Keywords ***
 # Setups & Teardowns
 Header Suite Setup
     Open Browser and go to URL    ${ENV}
+    ${random} =   Generate Random String      length=5
+    Set Suite Variable    ${random}
+    ${systems} =    Create Systems
+    Set Suite Variable    ${systems}
+    Set Suite Variable    ${main system}    ${systems}[0]
 
     ${zero systems owner}=   Register and activate account with random email    No    Systems    ${BASE PASSWORD}
     Set Suite Variable    ${zero systems owner}
-    Sleep    0.5
-    ${one system owner}=   Register and activate account with random email    One    System    ${BASE PASSWORD}
-    Set Suite Variable    ${one system owner}
-    Sleep    0.5
-    ${many systems owner}=   Register and activate account with random email    Many    Systems    ${BASE PASSWORD}
-    Set Suite Variable    ${many systems owner}
+    Set Suite Variable    ${one system owner}    ${main system}[cloudOwner]
+    Set Suite Variable    ${many systems owner}    ${systems}[1][cloudOwner]
+ 
     FOR    ${user}    IN    ${zero systems owner}    ${one system owner}    ${many systems owner}
         Append To List    ${HEADER TMP USERS}    ${user}
     END
 
-    ${rand}=   Generate Random String      length=5
-    ${main system}=   Create Base System    header_main_sys_${rand}    owner=${one system owner}
-    Set Suite Variable    ${main system}
-
     Run Keyword If   '''${mode}''' == '''webadmin'''    Pass Execution    Webadmin mode: suite setup finished
     ${offline systems}=   Create List
-    ${rand}=   Generate Random String      length=5
+    ${random}=   Generate Random String      length=5
     FOR    ${i}    IN RANGE    1    17
-        ${system}=   Create Base System    header_offline_${rand}_${i}    owner=${many systems owner}    add users=${False}
-        Sleep    2
-        Append To List    ${offline systems}    ${system}
-        Delete Docker Server    ${system}[id]
+        Append To List    ${offline systems}    ${systems}[${i}]
+        Delete Docker Server    ${systems}[${i}][name]
     END
     Set Suite Variable    ${offline systems}
 
 Header Suite Teardown
     Close All Browsers
-    Delete Base System    ${main system}
-    Run Keyword If   '''${mode}''' == '''webadmin'''    Pass Execution    Webadmin mode tests complete
-    FOR    ${system}    IN    @{offline systems}
-        Delete Base System    ${system}
-    END
+    Teardown Servers    ${systems}
 
 Header Test Setup
     Skip If Irrelevant

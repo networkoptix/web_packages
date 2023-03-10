@@ -117,12 +117,14 @@ Set Language Anonymous
 #    Sleep    5    #to wait for language to fully change before continuing.  This caused issues with login.
 
 Log In
-    [arguments]    ${user}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}    ${exists}=${True}    ${reset}=${False}    ${2fa}=${False}    ${2fa backup code}=${EMPTY}   ${api}=${True}
+    [arguments]    ${user}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}    ${exists}=${True}    ${reset}=${False}    ${2fa}=${False}    ${2fa backup code}=${EMPTY}   ${api}=${False}
     IF    '''${mode}'''=='''cloud'''
         IF   ${api}
             ${access} =    Get Access Code    ${user}     ${password}
             Set User Theme    ${user}    ${password}    ${THEME}
             Go To   ${access}[link]
+            # Run Keyword And Warn on Failure    Wait Until Element is Visible    //span[contains(text(), "Code is expired or incorrect")]    timeout=10
+            Capture Page Screenshot
             Sleep   3
             Run Keyword If   ${validate}     Validate Log In    ${user}    password=${password}
         ELSE
@@ -478,6 +480,7 @@ Restore Password using API
 
 Go to Users List
     Wait Until Element is Visible    ${USERS LIST LINK}
+    Sleep    2
     Wait Until Keyword Succeeds    10    0.5    Click Element    ${USERS LIST LINK}
 
 Go to System Administration
@@ -998,7 +1001,7 @@ Delete Base System
     [Arguments]     ${system}    ${password}=${BASE PASSWORD}
     [Documentation]    Wipe out all resources related to the system
     Run Keyword If    $system['owner']    Disconnect    ${system}[owner]    ${password}    ${system}[cloud id]
-    Run Keyword If    $system['cloud users']    Delete Accounts    ${system['cloud users'].values()}
+    Run Keyword If    $system['cloud users']    Delete Account    ${system['cloud users'].values()}
 
     Delete Docker Server    ${system}[id]
 
@@ -1265,9 +1268,17 @@ Log Out via API
     ${cookies}=   Get Cookies    as_dict = True
     ${status}=   API Log Out    ${cookies}[sessionid]    ${cookies}[csrftoken]
     Should Be Equal as Strings    ${status}    200
-    Go To    ${ENV}
+    # Delete Cookie    csrftoken
+    # Delete Cookie    sessionid
+    # Go To    ${ENV}
     Wait Until Element is visible    //nx-modal-generic-content
-    Reload Page
+    Click Button    //button[contains(text(), "OK")]
+    Delete Cookie    csrftoken
+    Delete Cookie    sessionid
+    Sleep    2
+    Go To    ${ENV}
+    # Wait Until Location Is    ${ENV}
+    # Reload Page
     Run Keyword If    ${validate}    Validate Log Out
     [Return]    ${status}
 

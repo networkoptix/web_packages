@@ -1,7 +1,7 @@
 
 [
     {   
-        "addUsers":false,
+        "addUsers":true,
         "cloudOwner":"",
         "cloudOwnerId":0,
         "cloudUsers":{},
@@ -13,7 +13,7 @@
         "serverId":""
     },  
     {
-        "addUsers":false,
+        "addUsers":true,
         "cloudOwner":"",
         "cloudOwnerId":1,
         "cloudUsers":{},

@@ -210,6 +210,7 @@ class CloudPortalAPI(object):
     def get_code_from_api(self, email, message_type):
         with self._session(self.baseEmail, self.password) as s:
             s.headers.update({"referer": f"{self.env}/authorize"})
+            logger.trace(message_type)
             r = s.post(
                 f'{self.env}/api/robot/get_code',
                 json={'email': email, 'type': message_type})
