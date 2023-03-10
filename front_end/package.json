@@ -125,7 +125,6 @@
     "file-saver": "2.0.5",
     "firebase": "9.8.4",
     "lodash-es": "^4.17.21",
-    "logrocket": "^3.0.1",
     "marked": "^4.0.17",
     "md5": "2.2.1",
     "messageformat": "2.3.0",

@@ -3,7 +3,6 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import * as FullStory from '@fullstory/browser';
-import LogRocket from 'logrocket';
 import { EMPTY, of, from, BehaviorSubject, throwError } from 'rxjs';
 import type { Observable } from 'rxjs';
 import { catchError, concatMap, switchMap, map, tap } from 'rxjs/operators';
@@ -433,10 +432,8 @@ export class NxCloudApiService {
         return this.http.get<any>(url);
     }
 
-    private logRocketIdentifyUser = tap((account: Account) => {
-        const { isLogRocketActive, isFullStoryActive } = this.CONFIG.cloudMonitoring;
-        if ((isLogRocketActive || isFullStoryActive) && account.email) {
-            // Type is only user here and comes from LogRocket
+    private logIdentifyUser = tap((account: Account) => {
+        if (this.CONFIG.cloudMonitoring.isFullStoryActive && account.email) {
             const userInfo: { [propName: string]: string | number | boolean } = {
                 email: account.email,
             };
@@ -448,12 +445,7 @@ export class NxCloudApiService {
             } else if (account.last_name) {
                 userInfo.name = account.last_name;
             }
-            if (isLogRocketActive) {
-                LogRocket.identify(account.email, userInfo);
-            }
-            if (isFullStoryActive) {
-                FullStory.identify(account.email, userInfo);
-            }
+            FullStory.identify(account.email, userInfo);
         }
     });
 
@@ -465,14 +457,14 @@ export class NxCloudApiService {
             password,
             remember,
             timezone: (Intl && Intl.DateTimeFormat().resolvedOptions().timeZone) || ''
-        }).pipe(this.logRocketIdentifyUser).toPromise();
+        }).pipe(this.logIdentifyUser).toPromise();
     }
 
     @swClear('apiFresh', '/account', true)
     loginCode(code: string) {
         return this.http.post(this.CONFIG.apiBase + '/account/loginCode', { code }).pipe(
             tap((account: Account) => { this.currentAccount = account; }),
-            this.logRocketIdentifyUser
+            this.logIdentifyUser
         ).toPromise();
     }
 
@@ -484,7 +476,7 @@ export class NxCloudApiService {
             }
         };
         return this.http.post(this.CONFIG.apiBase + '/account/loginTokens', tokensInfo, options).pipe(
-            this.logRocketIdentifyUser
+            this.logIdentifyUser
         ).toPromise();
     }
 
@@ -512,7 +504,7 @@ export class NxCloudApiService {
                     this.currentAccount = account;
                     return account;
                 },
-                tap(this.logRocketIdentifyUser))
+                tap(this.logIdentifyUser))
             );
     };
 
