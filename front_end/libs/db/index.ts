@@ -39,21 +39,18 @@ const obscure = (segments: string[]): string => {
     return to32.join('');
 };
 
-let versionFile: string;
-
-const getStatic = async (): Promise<string> => {
-    versionFile ||= await fetch('/static/version.txt').then(res => res.text());
-    return versionFile;
-};
-
-const generateKey = async (dbName: string): Promise<Uint8Array> => {
-    const val = await getStatic();
-    const keyString = obscure([dbName, location.origin, val]);
+const generateKey = (dbName: string): Uint8Array => {
+    /**
+     * Not sure if we'll need to to invalidate DB keys when the app version changes.
+     *
+     * If we do, then using envsubst on this file to replace $VERSION with the app version should work.
+     */
+    const keyString = obscure([dbName, location.origin, '$VERSION']);
     return new TextEncoder().encode(keyString);
 };
 
 export const generateDbName = (dbName?: string): string => {
-    const segments = [dbName || getUser(), stringify(definitions)];
+    const segments = [dbName || getUser(), stringify(definitions), '$VERSION'];
     return obscure(segments);
 };
 
