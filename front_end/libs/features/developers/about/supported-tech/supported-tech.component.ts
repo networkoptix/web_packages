@@ -33,20 +33,17 @@ export class NxSupportedTechComponent {
                 nodes: nodes.map(({ url, assetId, ...node }) => ({
                     ...node,
                     assetId,
-                    url: url || (assetId ? `/docs/content/${assetId}` : '')
-                }))
-            }))
+                    url: url || (assetId ? `/docs/content/${assetId}` : ''),
+                })),
+            })),
         };
         const supportedTechConfig = this.errorManager.buildConfig(
             ['title', 'nodes'],
             this.errorManager.buildConfig(
                 ['title', 'nodes', 'icon'],
-                this.errorManager.buildConfig(['title'])
-            )
+                this.errorManager.buildConfig(['title']),
+            ),
         );
-        this.errorManager.checkAboutNode(
-            this.supportedTechNode,
-            supportedTechConfig
-        );
+        this.errorManager.checkAboutNode(this.supportedTechNode, supportedTechConfig);
     }
 }

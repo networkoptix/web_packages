@@ -39,7 +39,7 @@ export class NxIntegrationsComponent implements OnInit {
         const more = { url: '/integrations' };
         const getPluginsToShow = () => {
             switch (true) {
-                case (this.currentWindowWidth > 1048):
+                case this.currentWindowWidth > 1048:
                     return { maxPlugins: 7, perRow: 4 };
                 // case (this.currentWindowWidth > 1048):
                 //     return { maxPlugins: 5, perRow: 3 };
@@ -52,16 +52,13 @@ export class NxIntegrationsComponent implements OnInit {
         const translatedCount = this.sanitizer.bypassSecurityTrustHtml(
             this.translateService.instant(this.LANG.common.morePlugins, {
                 count: this.pluginCount - show,
-                startTag: '<strong style="font-size: 24px; line-height: 30px; display: block; text-align: center;">',
-                endTag: '</strong>'
-            })
+                startTag:
+                    '<strong style="font-size: 24px; line-height: 30px; display: block; text-align: center;">',
+                endTag: '</strong>',
+            }),
         );
         const plugins = allPlugins.slice(0, show);
-        const getColSpan = (
-            numPlugins: number,
-            maxPlugins: number,
-            perRow: number
-        ) => {
+        const getColSpan = (numPlugins: number, maxPlugins: number, perRow: number) => {
             let variant = numPlugins - maxPlugins - 1;
             while (Math.abs(variant) > perRow) {
                 variant += perRow;
@@ -72,11 +69,7 @@ export class NxIntegrationsComponent implements OnInit {
             plugins,
             more,
             translatedCount,
-            moreStart: `more-span more-span${getColSpan(
-                plugins.length,
-                maxPlugins,
-                perRow
-            )}`
+            moreStart: `more-span more-span${getColSpan(plugins.length, maxPlugins, perRow)}`,
         };
     }
 
@@ -95,30 +88,28 @@ export class NxIntegrationsComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.cloudApi.getIntegrationsCount()
+        this.cloudApi
+            .getIntegrationsCount()
             .pipe(untilDestroyed(this))
             .subscribe(data => {
                 this.pluginCount = data.count || 0;
                 this.integrations = this.integrationsDetails();
             });
         this.currentWindowWidth = this.window.innerWidth;
-        this.integrationsShortDescription =
-            (this.integrationsNode?.nodes?.[0]?.asset?.shortDescription || '')
-                .split('\n')
-                .reduce((prev, paragraph) => `${prev}<p>${paragraph}</p>`, '');
+        this.integrationsShortDescription = (
+            this.integrationsNode?.nodes?.[0]?.asset?.shortDescription || ''
+        )
+            .split('\n')
+            .reduce((prev, paragraph) => `${prev}<p>${paragraph}</p>`, '');
 
         const integrationsConfig = this.errorManager.buildConfig(
             ['title'],
             this.errorManager.buildConfig(
                 ['title'],
                 null,
-                this.errorManager.buildConfig(
-                    ['title', 'shortDescription', 'blocks']
-                ))
+                this.errorManager.buildConfig(['title', 'shortDescription', 'blocks']),
+            ),
         );
-        this.errorManager.checkAboutNode(
-            this.integrationsNode,
-            integrationsConfig
-        );
+        this.errorManager.checkAboutNode(this.integrationsNode, integrationsConfig);
     }
 }

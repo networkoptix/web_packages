@@ -1,27 +1,27 @@
 export enum AboutTemplates {
-  INTRO = 'intro',
-  CAPABILITIES = 'capabilities',
-  DEV_CAPABILITIES = 'devCapabilities',
-  SUPPORTED_TECH = 'supportedTech',
-  GET_STARTED = 'getStarted',
-  DEV_TOOLS = 'devTools',
-  INTEGRATIONS = 'integrations',
-  SUPPORT = 'support'
+    INTRO = 'intro',
+    CAPABILITIES = 'capabilities',
+    DEV_CAPABILITIES = 'devCapabilities',
+    SUPPORTED_TECH = 'supportedTech',
+    GET_STARTED = 'getStarted',
+    DEV_TOOLS = 'devTools',
+    INTEGRATIONS = 'integrations',
+    SUPPORT = 'support',
 }
 
 export interface AboutNode {
-  title: string;
-  subtitle: string;
-  displayName: string;
-  assetId: number;
-  asset: any;
-  url: string;
-  icon: string;
-  newWindow?: boolean;
-  nodes?: AboutNode[];
+    title: string;
+    subtitle: string;
+    displayName: string;
+    assetId: number;
+    asset: any;
+    url: string;
+    icon: string;
+    newWindow?: boolean;
+    nodes?: AboutNode[];
 
-  aniIcon?: string;
-  currentIcon?: string;
+    aniIcon?: string;
+    currentIcon?: string;
 }
 
 export type AboutStructureNode = { template: AboutTemplates; node: AboutNode };

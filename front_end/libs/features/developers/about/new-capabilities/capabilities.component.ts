@@ -17,7 +17,7 @@ export class NxNewCapabilitiesComponent implements OnInit {
     errorManager: ErrorStateManager;
     svg = {
         width: '72',
-        height: '76'
+        height: '76',
     };
     icons = icons;
 
@@ -28,13 +28,8 @@ export class NxNewCapabilitiesComponent implements OnInit {
     ngOnInit(): void {
         const capabilitiesConfig = this.errorManager.buildConfig(
             ['displayName', 'icon', 'title', 'nodes'],
-            this.errorManager.buildConfig(
-                ['title', 'displayName', 'asset', 'icon'],
-                null)
+            this.errorManager.buildConfig(['title', 'displayName', 'asset', 'icon'], null),
         );
-        this.errorManager.checkAboutNode(
-            this.devCapabilitiesNode,
-            capabilitiesConfig
-        );
+        this.errorManager.checkAboutNode(this.devCapabilitiesNode, capabilitiesConfig);
     }
 }

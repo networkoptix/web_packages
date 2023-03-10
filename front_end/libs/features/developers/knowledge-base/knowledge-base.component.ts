@@ -46,7 +46,7 @@ enum CardClasses {
     NORMAL = 'text',
     CONTENT = 'content',
     SIDE = 'side',
-    ARTICLE = 'article'
+    ARTICLE = 'article',
 }
 
 class KnowledgeNode {
@@ -68,16 +68,9 @@ class KnowledgeNode {
         content: string,
         cardClass = CardClasses.NORMAL,
         nodes: KnowledgeNode[] = [],
-        script = ''
+        script = '',
     ) {
-        return new KnowledgeNode(
-            title,
-            url,
-            content,
-            nodes,
-            script,
-            cardClass
-        );
+        return new KnowledgeNode(title, url, content, nodes, script, cardClass);
     }
 
     // These additional card type nodes were on some original mockups
@@ -159,9 +152,10 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     filterRelatedLinks([assetId, relatedLinks]: [string, RelatedLinks]) {
         if (this.kbService.menuName) {
             if (relatedLinks.type === 'next') {
-                const currentIndex = relatedLinks.nodes
-                    .findIndex(({ asset_id: id }) => id === assetId);
-                if (currentIndex === (relatedLinks.nodes.length - 1)) {
+                const currentIndex = relatedLinks.nodes.findIndex(
+                    ({ asset_id: id }) => id === assetId,
+                );
+                if (currentIndex === relatedLinks.nodes.length - 1) {
                     return [];
                 } else {
                     return [relatedLinks.nodes[currentIndex + 1]];
@@ -187,9 +181,11 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             const prefetchLookup = {
                 state: click.node?.draft ? 'draft' : click.node?.pending ? 'pending' : null,
                 assetId: click.node?.asset_id,
-                version: click.node?.version
+                version: click.node?.version,
             };
-            const prefetched = this.kbService.prefetchedDocuments.find(doc => isEqual(doc, prefetchLookup));
+            const prefetched = this.kbService.prefetchedDocuments.find(doc =>
+                isEqual(doc, prefetchLookup),
+            );
             const routeChanged = click.node?.url !== this.kbService.activeNode?.url;
             this.loading = routeChanged && !prefetched;
             this.clearSearch();
@@ -219,10 +215,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     }
 
     private updateSearchResults = (results): void => {
-        this.searchResults$.next([
-            ...this.searchResults$.value,
-            ...this.parseResults(results)
-        ]);
+        this.searchResults$.next([...this.searchResults$.value, ...this.parseResults(results)]);
         this.loadingNext = false;
     };
 
@@ -232,33 +225,35 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         }
         this.loadingNext = true;
         this.currentSearchResultPage += 1;
-        this.fetchSearchHandler(
-            { ...this.searchQuery$.value, page: this.currentSearchResultPage }
-        ).pipe(
-            untilDestroyed(this)
-        ).subscribe(this.updateSearchResults);
+        this.fetchSearchHandler({ ...this.searchQuery$.value, page: this.currentSearchResultPage })
+            .pipe(untilDestroyed(this))
+            .subscribe(this.updateSearchResults);
     };
 
     fetchSearchHandler({ query, page }) {
         return from(
             // Using a promise so that request completes and can be cached
-            this.cloudApi.documentationInstantSearch(this.kbService.menuNameSubject.value, query.trim(), { page }).toPromise()
+            this.cloudApi
+                .documentationInstantSearch(this.kbService.menuNameSubject.value, query.trim(), {
+                    page,
+                })
+                .toPromise(),
         ).pipe(
             catchError(err => {
                 console.error(
                     err.message === 'Instant search feature not enabled'
                         ? err
                         : new Error(
-                            `Error using instance search fallback to legacy search: ${err.message}`
-                        )
+                              `Error using instance search fallback to legacy search: ${err.message}`,
+                          ),
                 );
                 return this.cloudApi.getDocumentation(
                     this.kbService.menuNameSubject.value,
                     DOC_TYPES.knowledgebase,
-                    { query, page }
+                    { query, page },
                 );
             }),
-            map(results => ({ ...results, query }))
+            map(results => ({ ...results, query })),
         );
     }
 
@@ -287,15 +282,16 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         if (this.kbService.contentAssetId) {
             return;
         }
-        this.cloudApi.getDocumentation(
-            this.kbService.menuName,
-            DOC_TYPES.knowledgebase,
-            assetId,
-            state,
-            version
-        ).pipe(
-            untilDestroyed(this)
-        ).subscribe(() => this.kbService.prefetchedDocuments.push({ assetId, version, state }));
+        this.cloudApi
+            .getDocumentation(
+                this.kbService.menuName,
+                DOC_TYPES.knowledgebase,
+                assetId,
+                state,
+                version,
+            )
+            .pipe(untilDestroyed(this))
+            .subscribe(() => this.kbService.prefetchedDocuments.push({ assetId, version, state }));
     }
 
     parseResults({ docs, totalResults, query }) {
@@ -306,23 +302,17 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             titleMatchStart,
             titleMatchEnd,
             doc_id: docId,
-            shortDescription
+            shortDescription,
         }) => {
             const {
                 content = '',
                 matchStart = 0,
-                matchEnd = 0
+                matchEnd = 0,
             } = snippets?.length ? snippets[0] : {};
             return {
                 docId,
-                snippet: content
-                    ? highlight(content, matchStart, matchEnd)
-                    : shortDescription,
-                title: highlight(
-                    title,
-                    titleMatchStart,
-                    titleMatchEnd
-                )
+                snippet: content ? highlight(content, matchStart, matchEnd) : shortDescription,
+                title: highlight(title, titleMatchStart, titleMatchEnd),
             };
         };
 
@@ -336,10 +326,13 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             return `${addToStart}${snippet}${addToEnd}`;
         };
 
-        const processInstantSearch =
-            ({ id: docId, title, body: snippet }) => ({ docId, title, snippet: addEllipses(snippet) });
+        const processInstantSearch = ({ id: docId, title, body: snippet }) => ({
+            docId,
+            title,
+            snippet: addEllipses(snippet),
+        });
         return (docs || []).map(doc =>
-            (doc.snippets ? processLegacySearch : processInstantSearch)(doc)
+            (doc.snippets ? processLegacySearch : processInstantSearch)(doc),
         );
     }
 
@@ -348,11 +341,12 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             {
                 type: 'link',
                 text: this.LANG.ribbon.integration.backToEditText,
-                value: this.CONFIG.integration.adminLink.replace('%ID%', id) +
+                value:
+                    this.CONFIG.integration.adminLink.replace('%ID%', id) +
                     this.router.url.split('?')[0] +
                     encodeURIComponent('?state=draft'),
-                external: true
-            }
+                external: true,
+            },
         ];
         const message = state
             ? this.LANG.ribbon.integration.previewRibbon
@@ -365,30 +359,24 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
 
     private acceptedReviewRedirect = (): void => {
         const url = this.uriService.getURL();
-        this.router.navigateByUrl(
-            '/', { skipLocationChange: true }
-        ).then(_ => {
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(_ => {
             this.router.navigateByUrl(url);
         });
         this.ribbonService.hide();
     };
 
-    private addReviewActions(
-        reviewId: number,
-        draftActions: RibbonAction[]
-    ): RibbonAction[] {
-        const process = this.processService.createProcess(() => {
-            return this.cloudApi.acceptReview(reviewId);
-        }, {
-            successMessage: this.LANG.toastMessage.reviewAccepted
-        },
-        this.acceptedReviewRedirect
+    private addReviewActions(reviewId: number, draftActions: RibbonAction[]): RibbonAction[] {
+        const process = this.processService.createProcess(
+            () => {
+                return this.cloudApi.acceptReview(reviewId);
+            },
+            {
+                successMessage: this.LANG.toastMessage.reviewAccepted,
+            },
+            this.acceptedReviewRedirect,
         );
 
-        return [
-            ...this.getReviewActions(process, reviewId),
-            ...draftActions
-        ];
+        return [...this.getReviewActions(process, reviewId), ...draftActions];
     }
 
     private getReviewActions(process: Process, reviewId: number): RibbonAction[] {
@@ -396,33 +384,35 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             {
                 type: 'process-button',
                 text: this.LANG.ribbon.integration.accept,
-                value: process
+                value: process,
             },
             {
                 type: 'link',
                 text: this.LANG.ribbon.integration.reject,
                 value: `/admin/cms/assetcustomizationreview/${reviewId}/change/`,
-                external: true
-            }
+                external: true,
+            },
         ];
     }
 
     findKBWithArticle(assetId, assetParam) {
         return this.cloudApi.findArticleKB(assetId).subscribe(({ base, kb_name }) => {
-            this.router.navigate(['/'], { skipLocationChange: true }).then(_ =>
-                this.router.navigate([`/docs/${base}/${kb_name}/${assetParam}`])
-            );
+            this.router
+                .navigate(['/'], { skipLocationChange: true })
+                .then(_ => this.router.navigate([`/docs/${base}/${kb_name}/${assetParam}`]));
         });
     }
 
     setupRouteSubscription(): void {
-        this.router.events.pipe(
-            filter(event => event instanceof NavigationEnd),
-            startWith(''),
-            switchMap(this.initializeMenu),
-            switchMap(this.updateDisplayedDoc),
-            untilDestroyed(this)
-        ).subscribe();
+        this.router.events
+            .pipe(
+                filter(event => event instanceof NavigationEnd),
+                startWith(''),
+                switchMap(this.initializeMenu),
+                switchMap(this.updateDisplayedDoc),
+                untilDestroyed(this),
+            )
+            .subscribe();
     }
 
     private updateDisplayedDoc = (firstNode?: any) => {
@@ -434,30 +424,22 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             if (!this.kbService.menuName && !this.kbService.activeAssetId) {
                 this.injector.get(NxPageService).redirect404();
             }
-            return this.cloudApi.getDocumentation(
-                this.kbService.menuName,
-                DOC_TYPES.knowledgebase,
-                this.kbService.activeAssetId,
-                state,
-                this.kbService.versionLookup[this.kbService.activeAssetId] || 0
-            ).pipe(
-                tap(this.renderDoc(state))
-            );
+            return this.cloudApi
+                .getDocumentation(
+                    this.kbService.menuName,
+                    DOC_TYPES.knowledgebase,
+                    this.kbService.activeAssetId,
+                    state,
+                    this.kbService.versionLookup[this.kbService.activeAssetId] || 0,
+                )
+                .pipe(tap(this.renderDoc(state)));
         }
     };
 
-    private renderDoc = state =>
-        ({
-            title: originalTitle,
-            blocks,
-            contentHTML,
-            script,
-            shortDescription,
-            reviewId
-        }) => {
-            const title = originalTitle
-                ? `<h2>${originalTitle}</h2>`
-                : originalTitle;
+    private renderDoc =
+        state =>
+        ({ title: originalTitle, blocks, contentHTML, script, shortDescription, reviewId }) => {
+            const title = originalTitle ? `<h2>${originalTitle}</h2>` : originalTitle;
             if (state || this.kbService.account?.is_superuser) {
                 this.showRibbon(this.kbService.activeAssetId, state, reviewId);
             }
@@ -467,7 +449,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
                 title,
                 contentHTML,
                 blocks,
-                script
+                script,
             );
             setTimeout(() => {
                 // Fixes some random edge case where doc gets stuck loading
@@ -510,7 +492,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         title: any,
         contentHTML: any,
         blocks: any,
-        script: any
+        script: any,
     ): void {
         this.search = { ...this.search };
         this.pageService.pageTitle(originalTitle);
@@ -521,9 +503,9 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             contentHTML,
             CardClasses.NORMAL,
             (blocks || []).map(({ contentHTML, title, type }) =>
-                KnowledgeNode.normalHeader(title, '', contentHTML, type)
+                KnowledgeNode.normalHeader(title, '', contentHTML, type),
             ),
-            script
+            script,
         );
     }
 
@@ -531,7 +513,8 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         const assetParam = this.route.snapshot.paramMap.get('level1');
         const assetId = assetParam && parseInt(assetParam.split('-')[0]);
 
-        const newAssetId = assetId ||
+        const newAssetId =
+            assetId ||
             this.headerService.currentLocation.assetId ||
             firstNode?.asset_id ||
             this.kbService.contentAssetId;
@@ -552,7 +535,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         ) {
             this.router.navigate(
                 ['docs', this.kbService.basePath, this.kbService.kbName, newAssetId],
-                { replaceUrl: true, queryParams: { state } }
+                { replaceUrl: true, queryParams: { state } },
             );
         }
 
@@ -566,8 +549,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         while (!snapshot.paramMap.get('kb-name')) {
             snapshot = snapshot.parent;
         }
-        this.kbService.kbName =
-            snapshot.paramMap.get('kb-name') || this.kbService.kbName;
+        this.kbService.kbName = snapshot.paramMap.get('kb-name') || this.kbService.kbName;
         while (!snapshot.paramMap.get('name')) {
             snapshot = snapshot.parent;
         }
@@ -576,13 +558,8 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         return <[ActivatedRouteSnapshot, boolean]>[snapshot, isContentType];
     }
 
-    private updateSelectedMenu(
-        snapshot: ActivatedRouteSnapshot,
-        isContentType: boolean
-    ): void {
-        const menuName = this.CONFIG
-            .docMenuMap[this.kbService.basePath]
-            ?.[this.kbService.kbName];
+    private updateSelectedMenu(snapshot: ActivatedRouteSnapshot, isContentType: boolean): void {
+        const menuName = this.CONFIG.docMenuMap[this.kbService.basePath]?.[this.kbService.kbName];
         if (this.kbService.menuName !== menuName || !this.kbService.menuName) {
             this.loading = true;
             this.kbService.menuName = menuName;
@@ -626,15 +603,10 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     };
 
     private getFirstDoc = () => {
-        const traverseToFirst = (
-            [first, ...remaining]: MenuNode[] = []
-        ): MenuNode =>
+        const traverseToFirst = ([first, ...remaining]: MenuNode[] = []): MenuNode =>
             !first
                 ? undefined
-                : (
-                    (first.asset_id && first) ||
-                    traverseToFirst([...remaining, ...first.nodes])
-                );
+                : (first.asset_id && first) || traverseToFirst([...remaining, ...first.nodes]);
 
         if (this.kbService.contentAssetId) {
             return of(undefined);
@@ -643,59 +615,77 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         return this.kbService.getMenuObservable().pipe(
             filter(menu => menu?.nodes.length > 0),
             tap(this.updateAssetIdsForMenu),
-            map(menu => traverseToFirst(menu.nodes))
+            map(menu => traverseToFirst(menu.nodes)),
         );
     };
 
     ngOnInit(): void {
         this.relatedLinksFiltered$ = combineLatest([
             this.kbService.activeAssetIdSubject,
-            this.relatedLinks$
-        ]).pipe(
-            map(latest => this.filterRelatedLinks(latest))
-        );
+            this.relatedLinks$,
+        ]).pipe(map(latest => this.filterRelatedLinks(latest)));
 
         this.setupRouteSubscription();
 
-        this.searchQuery$.pipe(
-            switchMap(({ query = '' }) => {
-                const previous = this.previousQuery || '';
-                const startsWithPrevious = query.startsWith(previous);
-                const startsWithCurrent = previous.startsWith(query);
-                this.searchMode = !!query;
-                this.searchLoading = this.searchMode;
+        this.searchQuery$
+            .pipe(
+                switchMap(({ query = '' }) => {
+                    const previous = this.previousQuery || '';
+                    const startsWithPrevious = query.startsWith(previous);
+                    const startsWithCurrent = previous.startsWith(query);
+                    this.searchMode = !!query;
+                    this.searchLoading = this.searchMode;
 
-                if (!query) {
-                    return Promise.resolve([]);
-                }
+                    if (!query) {
+                        return Promise.resolve([]);
+                    }
 
-                if (!startsWithPrevious && !startsWithCurrent) {
-                    this.searchResults$.next([]);
-                }
+                    if (!startsWithPrevious && !startsWithCurrent) {
+                        this.searchResults$.next([]);
+                    }
 
-                if (previous !== query) {
-                    const queryRegex = new RegExp(`(${query.split(' ').filter(word => word).map(word => word.replace(/[-\/\\^$*+?.()|[\]{}]/g, match => `\\${match}`)).join('|')})`, 'gi');
-                    const start = '<strong class="highlighted">';
-                    const end = '</strong>';
+                    if (previous !== query) {
+                        const queryRegex = new RegExp(
+                            `(${query
+                                .split(' ')
+                                .filter(word => word)
+                                .map(word =>
+                                    word.replace(/[-\/\\^$*+?.()|[\]{}]/g, match => `\\${match}`),
+                                )
+                                .join('|')})`,
+                            'gi',
+                        );
+                        const start = '<strong class="highlighted">';
+                        const end = '</strong>';
 
-                    const updateHighlight = val => val.replaceAll(start, '').replaceAll(end, '').replaceAll(queryRegex, match => `${start}${match}${end}`);
+                        const updateHighlight = val =>
+                            val
+                                .replaceAll(start, '')
+                                .replaceAll(end, '')
+                                .replaceAll(queryRegex, match => `${start}${match}${end}`);
 
-                    const results = this.searchResults$.value.map(doc => Object.entries(doc).reduce((acc, [key, val]) => ({ ...acc, [key]: updateHighlight(val) }), {}));
-                    this.searchResults$.next(results);
-                }
+                        const results = this.searchResults$.value.map(doc =>
+                            Object.entries(doc).reduce(
+                                (acc, [key, val]) => ({ ...acc, [key]: updateHighlight(val) }),
+                                {},
+                            ),
+                        );
+                        this.searchResults$.next(results);
+                    }
 
-                this.currentSearchResultPage = 1;
-                return this.fetchSearchHandler({
-                    query,
-                    page: this.currentSearchResultPage
-                });
-            }),
-            untilDestroyed(this)
-        ).subscribe((results: any) => {
-            this.totalSearchResultPages = results.totalPages;
-            this.searchLoading = false;
-            this.searchResults$.next(this.parseResults(results));
-        });
+                    this.currentSearchResultPage = 1;
+                    return this.fetchSearchHandler({
+                        query,
+                        page: this.currentSearchResultPage,
+                    });
+                }),
+                untilDestroyed(this),
+            )
+            .subscribe((results: any) => {
+                this.totalSearchResultPages = results.totalPages;
+                this.searchLoading = false;
+                this.searchResults$.next(this.parseResults(results));
+            });
     }
 
     ngOnDestroy(): void {

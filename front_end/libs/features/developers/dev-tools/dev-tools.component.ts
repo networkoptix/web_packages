@@ -45,8 +45,7 @@ export class NxDevToolsComponent implements OnInit {
         while (!snapshot.paramMap.get('name')) {
             snapshot = snapshot.parent;
         }
-        this.menuName =
-            this.CONFIG.docMenuMap[snapshot.paramMap.get('name')]['dev-tools'];
+        this.menuName = this.CONFIG.docMenuMap[snapshot.paramMap.get('name')]['dev-tools'];
 
         if (!this.devToolsNode) {
             const mapToDevToolsNode = ({
@@ -58,7 +57,7 @@ export class NxDevToolsComponent implements OnInit {
                 asset,
                 url,
                 icon,
-                nodes
+                nodes,
             }): AboutNode => ({
                 title: displayName || name || asset?.title,
                 subtitle,
@@ -68,35 +67,32 @@ export class NxDevToolsComponent implements OnInit {
                 assetId,
                 asset,
                 icon,
-                newWindow
+                newWindow,
             });
-            this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.struct)
+            this.cloudApi
+                .getDocumentation(this.menuName, DOC_TYPES.struct)
                 .pipe(takeWhile(_ => !this.devToolsNode))
                 .subscribe(({ nodes: devTools }) => {
                     this.devToolsNode = {
-                        nodes: devTools.map(mapToDevToolsNode)
+                        nodes: devTools.map(mapToDevToolsNode),
                     };
                 });
         } else {
             this.devToolsNode = {
                 ...this.devToolsNode,
-                nodes: this.devToolsNode.nodes.map(({
-                    url, ...node
-                }) => ({ ...node, url: url || `/docs/content/${node.assetId}` }))
+                nodes: this.devToolsNode.nodes.map(({ url, ...node }) => ({
+                    ...node,
+                    url: url || `/docs/content/${node.assetId}`,
+                })),
             };
         }
 
         const devToolsConfig = this.errorManager.buildConfig(
             ['nodes'],
-            this.errorManager.buildConfig(
-                ['title', 'url']
-            )
+            this.errorManager.buildConfig(['title', 'url']),
         );
         if (this.devToolsNode) {
-            this.errorManager.checkAboutNode(
-                this.devToolsNode as AboutNode,
-                devToolsConfig
-            );
+            this.errorManager.checkAboutNode(this.devToolsNode as AboutNode, devToolsConfig);
         }
     }
 }

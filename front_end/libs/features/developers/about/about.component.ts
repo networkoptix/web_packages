@@ -42,8 +42,8 @@ export class NxAboutComponent {
     menuName = '';
     readonly developers: Developers = {
         landing: {
-            adminLink: '/admin/cms/menu/%ID%/change/'
-        }
+            adminLink: '/admin/cms/menu/%ID%/change/',
+        },
     };
 
     accountSubscription: SubscriptionLike;
@@ -60,20 +60,19 @@ export class NxAboutComponent {
         return this.router.url.split('?')[0];
     }
 
-    getInvalidTemplateError({
-        template, node: { title }
-    }: { template: string; node: AboutNode }) {
+    getInvalidTemplateError({ template, node: { title } }: { template: string; node: AboutNode }) {
         const helper = template
             ? `Template name "${template}" is not a valid template`
             : 'Template name is required';
         return {
             name: title,
-            [helper]: Object.values(AboutTemplates).reduce((
-                rest, cur, ind, arr
-            ) => `${rest}"${cur}"${arr.length === 1
-                    ? ''
-                    : ind === arr.length - 2 ? ', and ' : ', '}`,
-            'Valid templates are ')
+            [helper]: Object.values(AboutTemplates).reduce(
+                (rest, cur, ind, arr) =>
+                    `${rest}"${cur}"${
+                        arr.length === 1 ? '' : ind === arr.length - 2 ? ', and ' : ', '
+                    }`,
+                'Valid templates are ',
+            ),
         };
     }
 
@@ -94,12 +93,14 @@ export class NxAboutComponent {
         this.injector = injector;
 
         this.loadMenu(this.route.snapshot.paramMap.get('name'));
-        this.router.events.pipe(
-            filter(event => event instanceof NavigationEnd),
-            untilDestroyed(this)
-        ).subscribe((event: any) => {
-            this.loadMenu(event?.snapshot?.params?.name);
-        });
+        this.router.events
+            .pipe(
+                filter(event => event instanceof NavigationEnd),
+                untilDestroyed(this),
+            )
+            .subscribe((event: any) => {
+                this.loadMenu(event?.snapshot?.params?.name);
+            });
     }
 
     private getMenuNameFromConfig = baseName => {
@@ -119,12 +120,15 @@ export class NxAboutComponent {
     };
 
     private updatePageMeta = (): void => {
-        this.menusService.getMenu(this.menuName).pipe(
-            tap(menu => {
-                this.pageService.pageTitle(menu.title, menu.description);
-            }),
-            untilDestroyed(this)
-        ).toPromise();
+        this.menusService
+            .getMenu(this.menuName)
+            .pipe(
+                tap(menu => {
+                    this.pageService.pageTitle(menu.title, menu.description);
+                }),
+                untilDestroyed(this),
+            )
+            .toPromise();
     };
 
     private mapToAboutNode = ({
@@ -137,9 +141,9 @@ export class NxAboutComponent {
         assetKB,
         url,
         icon,
-        nodes
+        nodes,
     }): AboutNode => {
-        return ({
+        return {
             title: displayName || name || asset.title,
             subtitle,
             displayName: displayName || name,
@@ -148,35 +152,31 @@ export class NxAboutComponent {
             assetId,
             asset,
             icon,
-            newWindow
-        });
+            newWindow,
+        };
     };
 
-    private mapToAboutStructure = (
-        node
-    ): AboutStructureNode => ({
+    private mapToAboutStructure = (node): AboutStructureNode => ({
         template: node.icon.split(' ')[0],
-        node: this.mapToAboutNode(node)
+        node: this.mapToAboutNode(node),
     });
 
-    private mapDocToNodes = state => ({
-        nodes: about, id
-    }) => {
-        this.aboutStructure = (about || []).map(this.mapToAboutStructure);
-        if (state || this.account?.is_superuser) {
-            this.showRibbon(id, state);
-        }
-    };
+    private mapDocToNodes =
+        state =>
+        ({ nodes: about, id }) => {
+            this.aboutStructure = (about || []).map(this.mapToAboutStructure);
+            if (state || this.account?.is_superuser) {
+                this.showRibbon(id, state);
+            }
+        };
 
     private fetchUpdatedDocs = (): void => {
         const { state } = this.route.snapshot.queryParams;
 
-        this.cloudApi.getDocumentation(
-            this.menuName, DOC_TYPES.struct, '', state
-        ).pipe(
-            untilDestroyed(this),
-            tap(this.mapDocToNodes(state))
-        ).toPromise();
+        this.cloudApi
+            .getDocumentation(this.menuName, DOC_TYPES.struct, '', state)
+            .pipe(untilDestroyed(this), tap(this.mapDocToNodes(state)))
+            .toPromise();
     };
     // Not quiet sure what this was originally doing, probably handles if a user was logged out or session gets invalidated
     // private checkAccount = (
@@ -203,7 +203,8 @@ export class NxAboutComponent {
 
         this.updatePageMeta();
 
-        this.accountService.get()
+        this.accountService
+            .get()
             .then(account => {
                 this.account = account;
             })
@@ -216,14 +217,14 @@ export class NxAboutComponent {
             {
                 type: 'link',
                 text: this.LANG.ribbon.integration.backToEditText,
-                value: this.developers.landing.adminLink.replace('%ID%', id)
-            }
+                value: this.developers.landing.adminLink.replace('%ID%', id),
+            },
         ];
         this.ribbonService.show(
             state
                 ? this.LANG.ribbon.integration.previewRibbon
                 : this.LANG.ribbon.integration.publishedRibbon,
-            ribbonActions
+            ribbonActions,
         );
     }
 

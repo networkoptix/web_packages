@@ -33,21 +33,15 @@ export class NxSupportComponent implements OnChanges {
         const supportConfig = this.errorManager.buildConfig(
             ['displayName', 'icon', 'title'],
             null,
-            this.errorManager.buildConfig(
-                ['shortDescription']
-            )
+            this.errorManager.buildConfig(['shortDescription']),
         );
-        this.errorManager.checkAboutNode(
-            this.supportNode,
-            supportConfig
-        );
+        this.errorManager.checkAboutNode(this.supportNode, supportConfig);
     }
 
     ngOnChanges(changes: NgChanges<NxSupportComponent>): void {
         this.cleanSupportNode = cloneDeep(changes.supportNode.currentValue);
-        this.cleanSupportNode.asset.shortDescription =
-            this.sanitizer.bypassSecurityTrustHtml(
-                this.cleanSupportNode.asset.shortDescription
-            );
+        this.cleanSupportNode.asset.shortDescription = this.sanitizer.bypassSecurityTrustHtml(
+            this.cleanSupportNode.asset.shortDescription,
+        );
     }
 }

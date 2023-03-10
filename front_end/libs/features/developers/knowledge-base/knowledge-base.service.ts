@@ -10,7 +10,7 @@ import { MenuNode } from '@services/menus.service.types';
 import { MenuStructure } from '@services/nx-config/base-config';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxKnowledgebaseService {
     menuNameSubject = new BehaviorSubject('');
@@ -63,12 +63,9 @@ export class NxKnowledgebaseService {
     mapParentNodeAndUrl(currentNode, parentNode?): void {
         currentNode.parentNode = parentNode;
         if (!currentNode.url && currentNode.asset_id && this.baseRoute) {
-            currentNode.url =
-                this.baseRoute + (currentNode.urlified || currentNode.asset_id);
+            currentNode.url = this.baseRoute + (currentNode.urlified || currentNode.asset_id);
         }
-        currentNode.nodes.forEach(childNode =>
-            this.mapParentNodeAndUrl(childNode, currentNode)
-        );
+        currentNode.nodes.forEach(childNode => this.mapParentNodeAndUrl(childNode, currentNode));
     }
 
     getMenuObservable(): Observable<MenuStructure> {
@@ -79,7 +76,7 @@ export class NxKnowledgebaseService {
                     return this.menusService.getMenu(
                         this.menuName || '',
                         false,
-                        account?.is_superuser
+                        account?.is_superuser,
                     );
                 }),
                 tap(menu => {
@@ -92,7 +89,7 @@ export class NxKnowledgebaseService {
                     }
                     this.menuSubject.next(menu);
                     this.loadingMenu = false;
-                })
+                }),
             );
         } else {
             return this.menuSubject;
