@@ -201,7 +201,11 @@
                 </div>
             </ng-template>
             <nx-timeline-selection-action-panel
-                *ngIf="archiveSelectionEnabled && ux.state.isTimelineShown"
+                *ngIf="
+                    archiveSelectionEnabled &&
+                    ux.state.isTimelineShown &&
+                    system?.userManager.permissions.exportArchives
+                "
             ></nx-timeline-selection-action-panel>
         </div>
 
@@ -228,7 +232,10 @@
             <div class="controls">
                 <nx-playback-controls [enabled]="enableControls"></nx-playback-controls>
                 <nx-zoom-controls *ngIf="camera.hasArchive && canViewArchives"></nx-zoom-controls>
-                <nx-timeline *ngIf="showTimeline; else noArchiveYet"></nx-timeline>
+                <nx-timeline
+                    *ngIf="showTimeline; else noArchiveYet"
+                    [canExport]="system.userManager.permissions.exportArchives"
+                ></nx-timeline>
                 <ng-template #noArchiveYet>
                     <nx-pre-loader
                         class="loading-archive-indicator"

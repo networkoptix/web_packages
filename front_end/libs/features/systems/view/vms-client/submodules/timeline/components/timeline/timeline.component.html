@@ -27,7 +27,7 @@
         }"
     ></nx-timeline-playback-indicator>
     <nx-timeline-selection
-        *ngIf="archiveSelectionEnabled"
+        *ngIf="archiveSelectionEnabled && canExport"
         [ngStyle]="{ visibility: ux.state.isTimelineShown ? 'visible' : 'hidden' }"
     ></nx-timeline-selection>
 </div>
