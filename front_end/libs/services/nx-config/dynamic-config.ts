@@ -144,7 +144,6 @@ export class DynamicConfig {
 
             nxConfig.cloudName = data.cloudName;
             nxConfig.googleTagManagerId = data.googleTagManagerId;
-            nxConfig.cloudMonitoring.logRocket = data.logRocket;
             nxConfig.cloudMonitoring.fullStory = data.fullStory;
             nxConfig.pushConfig = data.pushConfig;
             nxConfig.testedOperatingSystems = data.testedOperatingSystems;
