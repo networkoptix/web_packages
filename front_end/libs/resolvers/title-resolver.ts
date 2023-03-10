@@ -43,10 +43,10 @@ export class NxPageTitleStrategy extends TitleStrategy {
                         const mod = titleObj.modifier
                             ? `${this.translateService.instant(lang.downloads.groups[titleObj.modifier].label)}`
                             : ` - ${productName}`;
-                        const baseTitle = `${lang.pageTitles?.[titleObj.baseTitle] || titleObj}`;
-                        if (baseTitle) {
-                            title = this.translateService.instant(baseTitle) + mod;
-                        }
+                        const baseTitle = lang.pageTitles?.[titleObj.baseTitle];
+                        title = baseTitle
+                            ? this.translateService.instant(baseTitle) + mod
+                            : productName;
                         break;
                 }
 
