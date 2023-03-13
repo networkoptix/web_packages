@@ -112,9 +112,10 @@ export class UserManager {
         const permissions: SystemPermissions = {
             editAdmins: isMine,
             editUsers: isAdmin,
+            exportArchives: isAdmin,
             isAdmin,
             editCameras: isAdmin,
-            viewArchives: isAdmin
+            viewArchives: isAdmin,
         };
 
         if (!isAdmin && this.currentUser) {
@@ -123,6 +124,9 @@ export class UserManager {
             );
             permissions.editCameras = this.currentUser.permissions.includes(
                 this.CONFIG.accessRoles.editCameraPermissionFlag
+            );
+            permissions.exportArchives = this.currentUser.permissions.includes(
+                this.CONFIG.accessRoles.exportPermissionFlag
             );
             permissions.viewArchives = this.currentUser.permissions.includes(
                 this.CONFIG.accessRoles.viewArchivesPermissionFlag

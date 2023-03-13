@@ -106,6 +106,7 @@ export class UserWithGroupsManager extends UserManager {
         const permissions: SystemPermissions = {
             editAdmins: isMine,
             editUsers: isAdmin,
+            exportArchives: isAdmin,
             isAdmin,
             editCameras: isAdmin,
             viewArchives: isAdmin
@@ -117,6 +118,9 @@ export class UserWithGroupsManager extends UserManager {
             );
             permissions.editCameras = this.currentUser.permissions.includes(
                 this.CONFIG.accessRoles.editCameraPermissionFlag
+            );
+            permissions.exportArchives = this.currentUser.permissions.includes(
+                this.CONFIG.accessRoles.exportPermissionFlag
             );
             permissions.viewArchives = this.currentUser.permissions.includes(
                 this.CONFIG.accessRoles.viewArchivesPermissionFlag

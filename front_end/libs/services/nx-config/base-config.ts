@@ -155,7 +155,6 @@ const FeatureFlagKeys = [
     'paginatorExperimental',
     'newHeader',
     'cloudStorage',
-    'logRocket',
     'fullStory',
     'layouts',
     'layoutsEditable',
@@ -223,6 +222,7 @@ export interface AccessRoles {
     custom: string;
     editUserPermissionFlag: string;
     editCameraPermissionFlag: string;
+    exportPermissionFlag: string,
     globalAdminPermissionFlag: string;
     allMediaPermissionFlag: string;
     viewArchivesPermissionFlag: string;
@@ -277,8 +277,6 @@ export interface CloudCapabilities {
 export interface CloudMonitoring {
     fullStory: string;
     isFullStoryActive: boolean;
-    isLogRocketActive: boolean;
-    logRocket: string;
 }
 
 export interface Company {

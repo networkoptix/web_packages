@@ -9,14 +9,22 @@
 >
 </nx-alert-block>
 
-<nx-standard-server-component
-    *ngIf="system && selectedServer$ | async as selectedServer"
-    (loaded)="serverLoaded = $event"
-    [isOffline]="isOffline"
-    [system]="system"
-    [selectedServer]="selectedServer"
->
-</nx-standard-server-component>
+<nx-page-placeholder
+    class="placeholder-section"
+    type="NO_SETTINGS"
+    *ngIf="isOffline || !system.isAvailable; else showServer"
+></nx-page-placeholder>
+
+<ng-template #showServer>
+    <nx-standard-server-component
+        *ngIf="system && selectedServer$ | async as selectedServer"
+        (loaded)="serverLoaded = $event"
+        [isOffline]="isOffline"
+        [system]="system"
+        [selectedServer]="selectedServer"
+    >
+    </nx-standard-server-component>
+</ng-template>
 
 <nx-server-storage-component
     *ngIf="!isOffline && serverLoaded && system && (serverId$ | async)"

@@ -146,7 +146,9 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         if (this.newHeader) {
             this.lazyLoadNewHeader();
         }
-        this.getMenu();
+        setTimeout(() => {
+            this.getMenu();
+        });
         // Updates windowWidth$ behavior subject on window resize
         fromEvent<Event>(this.window, 'resize')
             .pipe(

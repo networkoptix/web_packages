@@ -1186,7 +1186,6 @@
         "not_connected": "Not connected",
         "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
         "mergeUnknownName": "Unknown Name for System (Caused by cloud merge)",
-        "mySystemSearch": "IMeMyMine",
         "settings": {
             "notAbleToLoadStorageInfo": "Not able to load storage information.",
             "notAbleToLoadSecurity": "Not able to load security settings.",

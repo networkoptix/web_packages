@@ -201,7 +201,11 @@
                 </div>
             </ng-template>
             <nx-timeline-selection-action-panel
-                *ngIf="archiveSelectionEnabled && ux.state.isTimelineShown"
+                *ngIf="
+                    archiveSelectionEnabled &&
+                    ux.state.isTimelineShown &&
+                    system?.userManager.permissions.exportArchives
+                "
             ></nx-timeline-selection-action-panel>
         </div>
 
@@ -228,7 +232,10 @@
             <div class="controls">
                 <nx-playback-controls [enabled]="enableControls"></nx-playback-controls>
                 <nx-zoom-controls *ngIf="camera.hasArchive && canViewArchives"></nx-zoom-controls>
-                <nx-timeline *ngIf="showTimeline; else noArchiveYet"></nx-timeline>
+                <nx-timeline
+                    *ngIf="showTimeline; else noArchiveYet"
+                    [canExport]="system.userManager.permissions.exportArchives"
+                ></nx-timeline>
                 <ng-template #noArchiveYet>
                     <nx-pre-loader
                         class="loading-archive-indicator"
@@ -236,21 +243,23 @@
                     ></nx-pre-loader>
                     <ng-template #noArchive>
                         <div class="no-archive-message">
-                            <ng-template #nvr>
-                                <div translate>No license active for this camera</div>
-                                <div>
-                                    <span translate>Enable in %VMS_NAME% to view archive</span>
-                                    <nx-client-button
-                                        [system]="system"
-                                        [textOnly]="true"
-                                    ></nx-client-button>
-                                </div>
-                            </ng-template>
-                            <span
-                                *ngIf="canViewArchives && !isNvr; else nvr"
-                                translate
-                                >No Archive</span
-                            >
+                            <ng-container *ngIf="canViewArchives">
+                                <ng-template #nvr>
+                                    <div translate>No license active for this camera</div>
+                                    <div>
+                                        <span translate>Enable in %VMS_NAME% to view archive</span>
+                                        <nx-client-button
+                                            [system]="system"
+                                            [textOnly]="true"
+                                        ></nx-client-button>
+                                    </div>
+                                </ng-template>
+                                <span
+                                    *ngIf="!isNvr; else nvr"
+                                    translate
+                                    >No Archive</span
+                                >
+                            </ng-container>
                         </div>
                     </ng-template>
                 </ng-template>

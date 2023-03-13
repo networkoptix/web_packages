@@ -113,5 +113,9 @@
   "52945": {
     "name": "django",
     "note": "Django 3.2.17, 4.0.9 and 4.1.6 includes a fix for CVE-2023-23969: In Django 3.2 before 3.2.17, 4.0 before 4.0.9, and 4.1 before 4.1.6, the parsed values of Accept-Language headers are cached in order to avoid repetitive parsing. This leads to a potential denial-of-service vector via excessive memory usage if the raw value of Accept-Language headers is very large.https://www.djangoproject.com/weblog/2023/feb/01/security-releases CVE-2023-23969 For more information, please visit https://pyup.io/v/52945/f17"
+  },
+  "53048": {
+    "name": "cryptography",
+    "note": "Cryptography 39.0.1 includes a fix for CVE-2023-23931: In affected versions 'Cipher.update_into' would accept Python objects which implement the buffer protocol, but provide only immutable buffers. This would allow immutable objects (such as 'bytes') to be mutated, thus violating fundamental rules of Python and resulting in corrupted output. This issue has been present since 'update_into' was originally introduced in cryptography 1.8.https://github.com/pyca/cryptography/security/advisories/GHSA-w7pp-m8wf- vj6r CVE-2023-23931 For more information, please visit https://pyup.io/v/53048/f17"
   }
 }

@@ -175,9 +175,7 @@ export const nxConfig: IConfig = {
     },
     cloudMonitoring: {
         fullStory: '',
-        isFullStoryActive: false,
-        isLogRocketActive: false,
-        logRocket: ''
+        isFullStoryActive: false
     },
     cloudName: '',
     cloudHost: '',
@@ -213,6 +211,7 @@ export const nxConfig: IConfig = {
         custom: 'custom',
         editUserPermissionFlag: 'GlobalAdminPermission',
         editCameraPermissionFlag: 'GlobalEditCamerasPermission',
+        exportPermissionFlag: 'GlobalExportPermission',
         globalAdminPermissionFlag: 'GlobalAdminPermission',
         allMediaPermissionFlag: 'GlobalAccessAllMediaPermission',
         viewArchivesPermissionFlag: 'GlobalViewArchivePermission',
