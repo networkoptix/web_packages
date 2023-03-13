@@ -201,39 +201,6 @@ export class NxDialogsService extends DialogBase {
         () => import('./cloud-storage/move/cloud-storage-move.component').then(m => m.CloudStorageMoveModalContent)
     );
 
-    public async addPartnerBrand() {
-        const config: Partial<DialogConfig> = {};
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-        const component = await import('./add-brand/add-brand.component').then(m => m.AddPartnerBrandModalContent);
-
-        return this.open(component, dialogConfig)
-            .afterClosed();
-    }
-
-    public async addBrandUser() {
-        const config: Partial<DialogConfig> = {};
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-        const component = await import('./add-customization-user/add-customization-user.component').then(m => m.AddCustomizationUserModalContent);
-
-        return this.open(component, dialogConfig)
-            .afterClosed();
-    }
-
-    public async addBrandPartner() {
-        const config: Partial<DialogConfig> = {};
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-        const component = await import('./add-partner/add-partner.component').then(m => m.AddPartnerModalContent);
-
-        return this.open(component, dialogConfig)
-            .afterClosed();
-    }
-
     public async restartServer(system: NxSystem, serverId: string, serverName: string) {
         const config: Partial<DialogConfig> = {
             data: {
@@ -643,5 +610,20 @@ export class NxDialogsService extends DialogBase {
 
     bookmarkDetails = this.dialogV2Factory<Dt.BookmarkDetails>(
         () => import('./bookmarks/card-modal/bookmarks-card-modal.component').then(m => m.NxBookmarksCardModalComponent),
+    );
+
+    /* Partners */
+    addPartnerBrand = this.dialogV2Factory<Dt.AddPartnerBrand>(
+        () => import('./add-brand/add-brand.component').then(m => m.AddPartnerBrandModalContent),
+        { autoFocus: 'input' },
+    );
+
+    addBrandUser = this.dialogV2Factory<Dt.AddCustomizationUser>(
+        () => import('./add-customization-user/add-customization-user.component').then(m => m.AddCustomizationUserModalContent),
+    );
+
+    addBrandPartner = this.dialogV2Factory<Dt.AddPartner>(
+        () => import('./add-partner/add-partner.component').then(m => m.AddPartnerModalContent),
+        { autoFocus: 'input' },
     );
 }

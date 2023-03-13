@@ -63,19 +63,20 @@ export class NxMenuButtonComponent {
                     .catch(err => console.error(err));
                 break;
             case 'addCustomization':
-                this.dialogs.addPartnerBrand().then((customizationId: string) => {
+                this.dialogs.addPartnerBrand().then(customizationId => {
                     if (customizationId) {
-                        this.menuService.detail = customizationId;
+                        const idStr = customizationId.toString();
+                        this.menuService.detail = idStr;
                         this.uriService
-                            .updateURI('/partners/' + customizationId, {})
+                            .updateURI('/partners/' + idStr, {})
                             .catch(error => console.error(error));
                     }
                 });
                 break;
             case 'addPartner':
-                this.dialogs.addBrandPartner().then((partnerId: string) => {
+                this.dialogs.addBrandPartner().then(partnerId => {
                     if (partnerId) {
-                        this.menuService.detail = partnerId;
+                        this.menuService.detail = partnerId.toString();
                         // this.uriService
                         //     .updateURI('/partners/' + customizationId, {})
                         //     .catch(error => console.error(error));

@@ -1,10 +1,9 @@
-import {
-    Component,
-    Input
-} from '@angular/core';
+import { DialogRef } from '@angular/cdk/dialog';
+import { Component } from '@angular/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { DialogRef } from '@dialogs/dialog-ref';
+import type { AddPartner as DT } from '@dialogs/dialogs.types';
+import { ModalBase } from '@dialogs/modal-base';
 import { NxPartnersService } from '@pages/channel-partners/partners.service';
 
 @Component({
@@ -12,17 +11,17 @@ import { NxPartnersService } from '@pages/channel-partners/partners.service';
     templateUrl: 'add-partner.component.html',
     styleUrls: [],
 })
-export class AddPartnerModalContent {
-    @Input() closable: boolean = true;
-
+export class AddPartnerModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;
 
     name: string;
 
     constructor(
-        private dialogRef: DialogRef,
+        dialogRef: DialogRef<DT['return']>,
         private partnerService: NxPartnersService,
-    ) {}
+    ) {
+        super(dialogRef);
+    }
 
     ngOnInit(): void {}
 
@@ -34,8 +33,4 @@ export class AddPartnerModalContent {
 
         this.close();
     }
-
-    close = (id?: number): void => {
-        this.dialogRef.close(id);
-    };
 }

@@ -161,3 +161,8 @@ export type BookmarkDetails = DialogType<
     },
     void
 >;
+
+/* Partners */
+export type AddPartnerBrand = DialogType<void, number>;
+export type AddCustomizationUser = DialogType<void, number>;
+export type AddPartner = DialogType<void, number>;

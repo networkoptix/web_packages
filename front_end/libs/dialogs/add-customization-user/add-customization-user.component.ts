@@ -1,10 +1,9 @@
-import {
-    Component,
-    Input
-} from '@angular/core';
+import { DialogRef } from '@angular/cdk/dialog';
+import { Component } from '@angular/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { DialogRef } from '@dialogs/dialog-ref';
+import type { AddCustomizationUser as DT } from '@dialogs/dialogs.types';
+import { ModalBase } from '@dialogs/modal-base';
 import { NxPartnersService } from '@pages/channel-partners/partners.service';
 
 @Component({
@@ -12,17 +11,17 @@ import { NxPartnersService } from '@pages/channel-partners/partners.service';
     templateUrl: 'add-customization-user.component.html',
     styleUrls: [],
 })
-export class AddCustomizationUserModalContent {
-    @Input() closable: boolean = true;
-
+export class AddCustomizationUserModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;
 
     public email: string;
 
     constructor(
-        private dialogRef: DialogRef,
+        dialogRef: DialogRef<DT['return']>,
         private partnerService: NxPartnersService,
-    ) {}
+    ) {
+        super(dialogRef);
+    }
 
     ngOnInit(): void {}
 
@@ -31,8 +30,4 @@ export class AddCustomizationUserModalContent {
 
         this.close();
     }
-
-    close = (id?: number): void => {
-        this.dialogRef.close(id);
-    };
 }

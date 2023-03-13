@@ -1,10 +1,9 @@
-import {
-    Component,
-    Input
-} from '@angular/core';
+import { DialogRef } from '@angular/cdk/dialog';
+import { Component } from '@angular/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { DialogRef } from '@dialogs/dialog-ref';
+import type { AddPartnerBrand as DT } from '@dialogs/dialogs.types';
+import { ModalBase } from '@dialogs/modal-base';
 import { NxPartnersService } from '@pages/channel-partners/partners.service';
 import { BrandInfo } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
@@ -13,9 +12,7 @@ import { BrandInfo } from '@services/nx-cloud-api/cloud-services/channel-partner
     templateUrl: 'add-brand.component.html',
     styleUrls: [],
 })
-export class AddPartnerBrandModalContent {
-    @Input() closable: boolean = true;
-
+export class AddPartnerBrandModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;
 
     newBrand: BrandInfo = {
@@ -38,9 +35,11 @@ export class AddPartnerBrandModalContent {
     };
 
     constructor(
-        private dialogRef: DialogRef,
+        dialogRef: DialogRef<DT['return']>,
         private partnerService: NxPartnersService,
-    ) {}
+    ) {
+        super(dialogRef);
+    }
 
     ngOnInit(): void {}
 
@@ -55,8 +54,4 @@ export class AddPartnerBrandModalContent {
 
         this.close(this.newBrand.id);
     }
-
-    close = (id?: number): void => {
-        this.dialogRef.close(id);
-    };
 }

@@ -18,11 +18,11 @@ import { InfoBlockModule } from '@components/info-block/info-block.module';
 import { LoginWebadminModule } from '@components/login-webadmin/login-webadmin.module';
 import { TagModule } from '@components/tag/tag.module';
 import { ThirdsPartyWidgetModule } from '@components/widgets/third-party/third-party-widget.module';
-import { AddCustomizationUserModalContent } from '@dialogs/add-customization-user/add-customization-user.component';
-import { AddPartnerModalContent } from '@dialogs/add-partner/add-partner.component';
 import { DirectivesModule } from '@directives/directives.module';
 
-import { AddPartnerBrandModalContent } from './add-brand/add-brand.component';
+import { AddPartnerBrandModalModule } from './add-brand/add-brand.module';
+import { AddCustomizationUserModalModule } from './add-customization-user/add-customization-user.module';
+import { AddPartnerModalModule } from './add-partner/add-partner.module';
 import { AddStorageModalContent } from './add-storage/add-storage.component';
 import { AddUserModalModule } from './add-user/add-user.module';
 import { AddWidgetModalContent } from './add-widget/add-widget.component';
@@ -106,12 +106,12 @@ import { WizardModalContent } from './wizard/wizard.component';
         DisconnectModalModule,
         RemoveSystemModalModule,
         Mandatory2faModalModule,
-        CreateSystemGroupModalModule
+        CreateSystemGroupModalModule,
+        AddPartnerBrandModalModule,
+        AddCustomizationUserModalModule,
+        AddPartnerModalModule,
     ],
     declarations: [
-        AddPartnerBrandModalContent,
-        AddCustomizationUserModalContent,
-        AddPartnerModalContent,
         AddStorageModalContent,
         ChangeStorageModalContent,
         MergeModalContent,
