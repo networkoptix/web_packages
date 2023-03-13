@@ -38,6 +38,7 @@ export class UserManager {
         editUsers: false,
         isAdmin: false,
         editCameras: false,
+        exportArchives: false,
         viewArchives: false,
     };
     users: NxUser[];

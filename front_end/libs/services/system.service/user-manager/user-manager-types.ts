@@ -73,6 +73,6 @@ export interface SystemPermissions {
     editUsers: boolean;
     isAdmin: boolean;
     editCameras: boolean;
-    exportArchives:boolean;
+    exportArchives: boolean;
     viewArchives: boolean;
 }
