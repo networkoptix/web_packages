@@ -21,10 +21,10 @@
     "emailSubject": "Kamera Sayfası Geribildirimi{{#message.asset}} for {{{message.asset}}}{{/message.asset}}"
   },
   "ownership_transfer_invite": {
-    "emailSubject": "Ownership transfer for {{message.system_name}}"
+    "emailSubject": "Sistem {{message.system_name}} sahiplik devri"
   },
   "ownership_transfer_response": {
-    "emailSubject": "Ownership transfer for {{message.system_name}} - {{message.status}}"
+    "emailSubject": "Sistem sahiplik devri {{message.system_name}} - {{message.status}} durumu"
   },
   "review_version": {
     "emailSubject": "{{message.asset_type}}:{{{message.asset}} incelemesi gereken yeni bir sürümü var"
