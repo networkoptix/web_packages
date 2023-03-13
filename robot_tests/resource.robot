@@ -1046,29 +1046,53 @@ Create Docker Server
     &{server}=   Create Dictionary
     ${mac}=   Get Random MAC
     Acquire Lock   create_server_lock
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    IF    '5.0' not in $image
-        Set Local Variable   ${vms}    old
+    IF    "${ENV}" != "localhost"
+        Open Connection    ${QA BURBANK IP}
+        SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+        IF    '5.0' not in $image
+            Set Local Variable   ${vms}    old
+        ELSE
+            Set Local Variable    ${vms}    new
+        END
+        IF    not $customPort
+            ${port}=   Get Random Available Port
+        ELSE
+            ${port}=   Set Variable    ${customPort}
+        END
+        ${ENV NO HTTP}=   Replace String    ${ENV}    https://    ${EMPTY}
+        ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --name=${name} --restart=always -e VMS=${vms} -e PORT=${port} -e CLOUD_HOST=${ENV NO HTTP} --privileged --network=${network} --cap-add=NET_ADMIN ${storage string} ${image}
+                      ...    ELSE    Execute Command    docker run -d --name=${name} --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 -e CLOUD_HOST=${ENV NO HTTP} --privileged --network=${network} --cap-add=NET_ADMIN ${storage string} ${image}
+        ${id}=   Evaluate    $full_id[:12]
+        Set to Dictionary    ${server}    id=${id}
+        Set to Dictionary    ${server}    port=${port}
+        ${name}=   Execute Command    docker ps --format "{{.Names}}" -f "id=${id}"
+        Set to Dictionary    ${server}    name=${name}
+        ${timeout kill er} =   Execute Command    echo "docker container stop ${server}[name]" | at now +90min    return_stdout=${False}   return_stderr=${True}
+        Close Connection
     ELSE
-        Set Local Variable    ${vms}    new
+        IF    '5.0' not in $image
+            Set Local Variable   ${vms}    old
+        ELSE
+            Set Local Variable    ${vms}    new
+        END
+        IF    not $customPort
+            ${port}=   Get Random Available Port
+        ELSE
+            ${port}=   Set Variable    ${customPort}
+        END
+        ${ENV NO HTTP}=   Replace String    ${ENV}    https://    ${EMPTY}
+        ${full id}=   Run Keyword If    "${network}"=="host"    Run    docker run -d --name=${name} --restart=always -e VMS=${vms} -e PORT=${port} -e CLOUD_HOST=${ENV NO HTTP} --privileged --network=${network} --cap-add=NET_ADMIN ${storage string} ${image}
+                      ...    ELSE    Run    docker run -d --name=${name} --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 -e CLOUD_HOST=${ENV NO HTTP} --privileged --network=${network} --cap-add=NET_ADMIN ${storage string} ${image}
+        ${id}=   Evaluate    $full_id[:12]
+        Set to Dictionary    ${server}    id=${id}
+        Set to Dictionary    ${server}    port=${port}
+        ${name}=   Run    docker ps --format "{{.Names}}" -f "id=${id}"
+        Set to Dictionary    ${server}    name=${name}
+        ${timeout kill er} =   Execute Command    echo "docker container stop ${server}[name]" | at now +90min    return_stdout=${False}   return_stderr=${True}
+        Close Connection
     END
-    IF    not $customPort
-        ${port}=   Get Random Available Port
-    ELSE
-        ${port}=   Set Variable    ${customPort}
-    END
-    ${ENV NO HTTP}=   Replace String    ${ENV}    https://    ${EMPTY}
-    ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --name=${name} --restart=always -e VMS=${vms} -e PORT=${port} -e CLOUD_HOST=${ENV NO HTTP} --privileged --network=${network} --cap-add=NET_ADMIN ${storage string} ${image}
-                  ...    ELSE    Execute Command    docker run -d --name=${name} --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 -e CLOUD_HOST=${ENV NO HTTP} --privileged --network=${network} --cap-add=NET_ADMIN ${storage string} ${image}
-    ${id}=   Evaluate    $full_id[:12]
-    Set to Dictionary    ${server}    id=${id}
-    Set to Dictionary    ${server}    port=${port}
-    ${name}=   Execute Command    docker ps --format "{{.Names}}" -f "id=${id}"
-    Set to Dictionary    ${server}    name=${name}
-    ${timeout kill er} =   Execute Command    echo "docker container stop ${server}[name]" | at now +90min    return_stdout=${False}   return_stderr=${True}
-    Close Connection
     Release Lock   create_server_lock
+
     [Return]    ${server}
 
 Create Base System
