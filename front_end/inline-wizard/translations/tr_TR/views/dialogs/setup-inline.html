@@ -7,7 +7,7 @@
 
 <div class="panel-body text-center" ng-if="stepIs('initFailure')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>Cannot initialize System</h2>
+    <h2>Sistem başlatılamıyor</h2>
     <p class="master-description">
         Yetkilendirme başarısız oldu.
     </p>
@@ -19,8 +19,8 @@
 
 <div class="panel-body text-center" ng-if="stepIs('brokenSystem')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>Cannot setup System</h2>
-    <p class="master-description">The System cannot be configured. <br>
+    <h2>Sistem kurulamıyor</h2>
+    <p class="master-description">Sistem konfigüre edilemedi. <br>
         <span ng-bind-html="settings.localError"></span>
     </p>
     <p class="master-controls">
@@ -48,7 +48,7 @@
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('systemName')">
-    <h2>Enter System Name</h2>
+    <h2>Sistem ismini girin</h2>
     <p class="master-description">
         It will help to identify or find System.
     </p>
@@ -72,7 +72,7 @@
 
 
 <div class="panel-body text-center" ng-if="stepIs('advanced')">
-    <h2>Advanced System settings</h2>
+    <h2>Gelişmiş Sistem Ayarları</h2>
     <form class="master-controls wide text-left" name="forms.advancedSettings" novalidate ng-submit="next('systemName', true)">
         <div class="form-group" ng-repeat="(setting, value) in systemSettings">
             <div class="new-style-checkbox" ng-if="Config.settingsConfig[setting].type == 'checkbox' ">
@@ -190,11 +190,11 @@
         <input type="submit" hidden>
         <div class="form-group" validate-field>
             <input ng-model="settings.cloudEmail" name="cloudEmail" class="form-control"
-                   type="email" placeholder="Email" autocomplete="new-password" required auto-focus ng-change="clearCloudError()">
+                   type="email" placeholder="E-posta" autocomplete="new-password" required auto-focus ng-change="clearCloudError()">
         </div>
         <div class="form-group" validate-field>
             <input ng-model="settings.cloudPassword" name="cloudPassword" class="form-control"
-                   type="password" autocomplete="new-password" required placeholder="Password" ng-change="clearCloudError()">
+                   type="password" autocomplete="new-password" required placeholder="Şifre" ng-change="clearCloudError()">
         </div>
 
         <div class="new-style-checkbox" ng-if="settings.thickClient">
@@ -314,7 +314,7 @@
                     forms.localForm.localPasswordConfirmation.$touched &&
                     forms.localForm.localPasswordConfirmation.$error.required)">
             <div class="help-block">
-                All fields are required
+                Tüm alanlar gereklidir
             </div>
         </div>
 
@@ -329,7 +329,7 @@
 </div>
 
 <div class="panel-body text-center" ng-hide="!stepIs('merge')">
-    <h2>Connect the server to the existing System</h2>
+    <h2>Sunucuyu mevcut sisteme bağlayın</h2>
     <form class="master-controls wide text-left" name="forms.remoteSystemForm" novalidate disable-autocomplete ng-submit="next()">
         <input type="submit" hidden>
         <div class="form-group" validate-field>
@@ -341,7 +341,7 @@
                    uib-typeahead-show-hint="true"
                    uib-typeahead-focus-first="false"
                    uib-typeahead-focus
- placeholder="Existing System URL (https://host:port)"
+ placeholder="Mevcut Sistem URL’si (https: // AnaSunucu: port)"
                    ng-change="clearRemoteError()"
                    required
  class="form-control">
@@ -381,13 +381,13 @@
 
 <div class="panel-body text-center" ng-if="stepIs('mergeProcess')">
     <div class="master-icon"><span class="preloader"></span></div>
-    <h2>Merging Systems ...</h2>
+    <h2>Sistemler Birleştiriliyor ...</h2>
     <p class="master-description">Bu işlem birkaç dakika sürebilir</p>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('retryMergeCredentials')">
     <div class="master-icon"><span class="preloader"></span></div>
-    <h2>Merging Systems ...</h2>
+    <h2>Sistemler Birleştiriliyor ...</h2>
     <p class="master-description">Trying to connect to the System</p>
 </div>
 
@@ -446,7 +446,7 @@
     <network-settings settings="networkSettings[0]" ></network-settings>
 
     <p class="vertical-bottom">
-        <button class="btn btn-primary" ng-click="retry()">Save settings and reboot device</button>
+        <button class="btn btn-primary" ng-click="retry()">Ayarları kaydet ve cihazı yeniden başlat</button>
     </p>
 </div>
 
@@ -455,7 +455,7 @@
     <network-settings settings="networkSettings[0]" ></network-settings>
 
     <p class="vertical-bottom">
-        <button class="btn btn-primary" ng-click="retry()">Save settings and reboot device</button>
+        <button class="btn btn-primary" ng-click="retry()">Ayarları kaydet ve cihazı yeniden başlat</button>
     </p>
 </div>
 
@@ -478,7 +478,7 @@
 <div class="panel-body text-center" ng-if="stepIs('noInternetOnClient')">
     <h2>Cannot connect to {{Config.cloud.productName}}</h2>
     <p class="master-description">
-        Check the Internet connection.
+        Internet bağlantısını kontrol edin.
     </p>
     <p class="master-controls">
         <button class="btn btn-default" ng-click="retry()">Try again</button>
@@ -501,7 +501,7 @@
 <div class="panel-body text-center" ng-if="stepIs('localFailure')">
     <div class="master-icon"><span class="icon-fail"></span></div>
     <h2>Sistem kurulamıyor</h2>
-    <p class="master-description">Something went totally wrong. <br>
+    <p class="master-description">Bir şeyler yanlış gitti. <br>
         Error description: {{settings.localError}}
     </p>
     <p class="master-controls">
@@ -517,12 +517,12 @@
     </p>
     <div class="row">
         <div class="col-xs-6">
-            <div class="text-center"><b>Using web browser</b></div>
+            <div class="text-center"><b>Web tarayıcı kullanılıyor</b></div>
             <div class="col-xs-4 text-right">Adres</div><div class="col-xs-8 text-left"><b>https://{{IP}}:{{port}}</b></div>
         </div>
         <div class="col-xs-6">
             <div class="text-center"><b>Using {{Config.productName}} application</b></div>
-            <div class="col-xs-6 text-right">Host</div><div class="col-xs-6 text-left"><b>{{IP}}</b></div>
+            <div class="col-xs-6 text-right">Ana bilgisayar</div><div class="col-xs-6 text-left"><b>{{IP}}</b></div>
             <div class="col-xs-6 text-right">Port</div><div class="col-xs-6 text-left"><b>{{port}}</b></div>
             <div class="col-xs-6 text-right">Giriş</div><div class="col-xs-6 text-left"><b>{{Config.defaultLogin}}</b></div>
             <div class="col-xs-6 text-right">Şifre</div><div class="col-xs-6 text-left"><b>{{Config.defaultPassword}}</b></div>
