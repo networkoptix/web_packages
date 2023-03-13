@@ -26,7 +26,7 @@ export class NxUrlProtocolService {
         private translateService: TranslateService,
         @Inject(WINDOW) private window: Window,
         private accountService: NxAccountService,
-        private cloudApiService: NxCloudApiService
+        private cloudApiService: NxCloudApiService,
     ) {}
 
     private parseSource() {

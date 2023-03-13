@@ -51,7 +51,7 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         serverUrl: string,
         cloudHost: () => string,
         http: HttpClient,
-        withFreshSession: WithFreshSession
+        withFreshSession: WithFreshSession,
     ) {
         super(
             serverUrl,

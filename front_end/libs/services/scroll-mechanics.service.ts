@@ -20,9 +20,7 @@ export class NxScrollMechanicsService {
     public static HEADER_OFFSET: number = 48;
     public static SCROLL_OFFSET: number = 48 + 16; // header + padding
 
-    constructor(
-        @Inject(WINDOW) private window: Window
-    ) {}
+    constructor(@Inject(WINDOW) private window: Window) {}
 
     set elementTableWidth(width: number) {
         this.elementTableWidthSubject.next(width);

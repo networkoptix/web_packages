@@ -24,7 +24,7 @@ export class NxConfigService {
     constructor(
         @Inject(WINDOW) private window?: Window,
         private session?: LocalStorageService,
-        dynamicConfig?: DynamicConfig
+        dynamicConfig?: DynamicConfig,
     ) {
         // These properties will be injected on config *******************
         // viewsDir: 'static/views/', //'static/lang_' + lang + '/views/';

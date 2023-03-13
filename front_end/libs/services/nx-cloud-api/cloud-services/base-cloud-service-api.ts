@@ -59,7 +59,7 @@ export abstract class BaseCloudServiceAPI {
         private apiBase: string,
         public hostOrCustomization: () => string,
         protected http: HttpClient,
-        private withFreshSession: WithFreshSession
+        private withFreshSession: WithFreshSession,
     ) {
         if (this.serverUrl.endsWith('/') && this.apiBase.startsWith('/')) {
             this.serverUrl = this.serverUrl.slice(0, -1);

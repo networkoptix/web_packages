@@ -41,7 +41,7 @@ export class NxMenusService {
         public configService: NxConfigService,
         private translate: TranslateService,
         private sessionService: NxSessionService,
-        private http: HttpClient
+        private http: HttpClient,
     ) {
         this.CONFIG = configService.getConfig();
         this.updateMenu();

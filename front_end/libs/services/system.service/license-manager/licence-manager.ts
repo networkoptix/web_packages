@@ -237,7 +237,11 @@ export class LicenseManager extends Destroyable {
         );
     };
 
-    constructor(private licenseServerApi: LicenseServerAPI, private system: NxSystem, private systemsService: NxSystemsService) {
+    constructor(
+        private licenseServerApi: LicenseServerAPI,
+        private system: NxSystem,
+        private systemsService: NxSystemsService,
+    ) {
         super();
         this.systemsService = systemsService;
     }

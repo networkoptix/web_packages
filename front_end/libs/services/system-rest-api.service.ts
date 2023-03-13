@@ -103,7 +103,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         cookieService: CookieService,
         healthService: NxHealthService,
         appState: NxAppStateService,
-        injector: Injector
+        injector: Injector,
     ) {
         super(
             http,

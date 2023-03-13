@@ -107,7 +107,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
         cookieService: CookieService,
         healthService: NxHealthService,
         appState: NxAppStateService,
-        injector: Injector
+        injector: Injector,
     ) {
         super(
             http,

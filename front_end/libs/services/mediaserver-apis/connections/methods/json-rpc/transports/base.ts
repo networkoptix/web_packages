@@ -52,7 +52,7 @@ export abstract class JsonRpcMessageTransport {
     constructor(
         stateOrHandler: HandlerState | JsonRpcMessageTransport,
         send?: (message: JsonRpcRequest) => HandlerState,
-        close?: () => void
+        close?: () => void,
     ) {
         if (stateOrHandler instanceof Observable) {
             this.state$ = stateOrHandler;

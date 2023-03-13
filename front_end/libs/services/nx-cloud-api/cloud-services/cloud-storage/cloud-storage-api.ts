@@ -44,7 +44,12 @@ export class CloudStorageAPI extends BaseCloudServiceAPI {
         return CloudStorageAPI.INSTANCES[serverUrl];
     };
 
-    constructor(serverUrl: string, cloudHost: () => string, http: HttpClient, withFreshSession: WithFreshSession) {
+    constructor(
+        serverUrl: string,
+        cloudHost: () => string,
+        http: HttpClient,
+        withFreshSession: WithFreshSession,
+    ) {
         super(serverUrl, CloudStorageAPI.API_BASE, cloudHost, http, withFreshSession);
     }
 

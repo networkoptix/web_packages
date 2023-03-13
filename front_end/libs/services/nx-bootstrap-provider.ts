@@ -23,7 +23,7 @@ export class NxBootstrapProvider {
         private configService: NxConfigService,
         private languageService: NxLanguageProviderService,
         private http: HttpClient,
-        @Inject(WINDOW) private window: Window
+        @Inject(WINDOW) private window: Window,
     ) {
         this.#init();
     }

@@ -19,7 +19,7 @@ export class OauthService {
         configService: NxConfigService,
         private http: HttpClient,
         private storage: NxStorageService,
-        @Inject(WINDOW) protected window: Window
+        @Inject(WINDOW) protected window: Window,
     ) {
         this.CONFIG = configService.getConfig();
     }

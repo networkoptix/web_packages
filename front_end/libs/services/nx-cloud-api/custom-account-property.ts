@@ -35,7 +35,7 @@ export class CustomAccountProperty<T> {
         property: string,
         initialValue: T,
         username: string,
-        targetInstance: string
+        targetInstance: string,
     ) {
         this.#endpoint = `${targetInstance}${apiBase}/custom-properties/${property}${username ? '/' + username : ''}`;
         const updater$ = new Subject<T>();

@@ -6,10 +6,7 @@ import { SystemBusTransaction } from '../types/base/system-bus-transaction';
  * An abstract class that defines the interface for a TransactionBusTransport.
  */
 export abstract class TransactionBusTransport {
-    constructor(
-        public state$: Observable<SystemBusTransaction>,
-        public close: () => void
-    ) { }
+    constructor(public state$: Observable<SystemBusTransaction>, public close: () => void) { }
 }
 
 export interface TransactionBusTransportConstructor<T = TransactionBusTransport> {

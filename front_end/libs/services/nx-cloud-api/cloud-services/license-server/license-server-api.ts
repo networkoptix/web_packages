@@ -66,7 +66,12 @@ export class LicenseServerAPI extends BaseCloudServiceAPI {
         return LicenseServerAPI.INSTANCES[serverUrl].update();
     };
 
-    constructor(serverUrl: string, cloudHost: () => string, http: HttpClient, withFreshSession: WithFreshSession) {
+    constructor(
+        serverUrl: string,
+        cloudHost: () => string,
+        http: HttpClient,
+        withFreshSession: WithFreshSession,
+    ) {
         super(serverUrl, LicenseServerAPI.API_BASE, cloudHost, http, withFreshSession);
     }
 

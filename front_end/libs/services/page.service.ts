@@ -17,10 +17,7 @@ export class NxPageService {
         }
     };
 
-    constructor(
-        private router: Router,
-        private metaService: NxPageMetaService,
-    ) {}
+    constructor(private router: Router, private metaService: NxPageMetaService) {}
 
     public pageTitle(title: string, description: string = '') {
         this.metaService.setMetaProperties(this.router.url, { title, description });

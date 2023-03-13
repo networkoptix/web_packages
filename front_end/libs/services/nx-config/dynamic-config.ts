@@ -197,9 +197,7 @@ export class DynamicConfig {
         return nxConfig;
     }
 
-    constructor(
-        dynamicProperties: unknown
-    ) {
+    constructor(dynamicProperties: unknown) {
         this.mapPropertiesToConfig(dynamicProperties);
     }
 

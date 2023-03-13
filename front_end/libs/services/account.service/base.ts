@@ -88,7 +88,7 @@ export abstract class BaseAccount implements OnDestroy {
         protected bootstrapProviderService: NxBootstrapProvider,
         protected store: Store,
         protected dialogs: NxDialogsService,
-        protected db: NxDbService
+        protected db: NxDbService,
     ) {
         this.CONFIG = configService.getConfig();
         // language provider will be ready at this point

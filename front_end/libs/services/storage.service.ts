@@ -7,9 +7,7 @@ import { LocalStorageService } from 'ngx-webstorage';
 export class NxStorageService {
     private storage: LocalStorageService;
 
-    constructor(
-        localStorageService: LocalStorageService
-    ) {
+    constructor(localStorageService: LocalStorageService) {
         this.storage = localStorageService;
     }
 

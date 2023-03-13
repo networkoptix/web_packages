@@ -130,11 +130,7 @@ export class CurrentStorageState {
         return this.#serverManager.updateResource(this.currentAnalyticsDbLocation.serverId, { metadataStorageId });
     }
 
-    constructor(
-        state: Partial<CurrentStorageState>,
-        analytics: any,
-        serverManager: ServerManager
-    ) {
+    constructor(state: Partial<CurrentStorageState>, analytics: any, serverManager: ServerManager) {
         this.#serverManager = serverManager;
         state.locations.forEach(location => {
             location.currentStorageState = this;

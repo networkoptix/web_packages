@@ -113,9 +113,7 @@ export class StorageManager extends StorageState {
         return this.serverManager.mediaserver.saveStorage({ ...updateParams, typeId });
     }
 
-    constructor(
-        public system: NxSystem
-    ) {
+    constructor(public system: NxSystem) {
         super(system.serverManager);
     }
 }

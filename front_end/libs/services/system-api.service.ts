@@ -33,7 +33,7 @@ export class NxSystemAPIService {
         protected cookieService: CookieService,
         protected healthService: NxHealthService,
         protected appState: NxAppStateService,
-        protected injector: Injector
+        protected injector: Injector,
     ) {
         this.CONFIG = configService.getConfig();
         // this.systemConnections = {};

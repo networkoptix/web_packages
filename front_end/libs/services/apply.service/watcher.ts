@@ -68,7 +68,7 @@ export class SectionWatcher {
     constructor(
         public watchers: Watcher<any>[],
         public owner: any = null,
-        identifier = 'Section Watcher'
+        identifier = 'Section Watcher',
     ) {
         this.watchers.forEach(watcher => {
             watcher.valueSubject.subscribe(_ => {
@@ -117,11 +117,7 @@ export class FormWatcher {
         return this.valueSubject.value;
     }
 
-    constructor(
-        private form: NgForm,
-        public owner: any = null,
-        identifier = 'Form Watcher'
-    ) {
+    constructor(private form: NgForm, public owner: any = null, identifier = 'Form Watcher') {
         form.valueChanges.subscribe(change => {
             if (
                 !this.originalValue ||

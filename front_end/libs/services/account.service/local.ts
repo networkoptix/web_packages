@@ -50,7 +50,7 @@ export class LocalAccount extends BaseAccount {
         protected bootstrapProviderService: NxBootstrapProvider,
         protected store: Store,
         protected dialogs: NxDialogsService,
-        protected db: NxDbService
+        protected db: NxDbService,
     ) {
         super(
             configService,

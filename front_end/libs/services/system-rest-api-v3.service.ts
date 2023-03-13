@@ -30,7 +30,7 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
         cookieService: CookieService,
         healthService: NxHealthService,
         appState: NxAppStateService,
-        injector: Injector
+        injector: Injector,
     ) {
         super(
             http,

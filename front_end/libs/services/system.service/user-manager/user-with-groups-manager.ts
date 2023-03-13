@@ -31,7 +31,7 @@ export class UserWithGroupsManager extends UserManager {
         mediaserver: NxSystemRestAPI3,
         currentUserEmail: string,
         userId: string,
-        protected locale: string
+        protected locale: string,
     ) {
         super(
             config,

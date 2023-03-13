@@ -26,7 +26,7 @@ export class NxSessionService {
         private localStorageService: LocalStorageService,
         private nxCache: NxSwCacheService,
         private db: NxDbService,
-        @Inject(WINDOW) private window: Window
+        @Inject(WINDOW) private window: Window,
     ) {
         this.session = this.localStorageService;
 

@@ -131,7 +131,7 @@ export class NxCloudApiService {
         private oauthService: OauthService,
         private cookieService: CookieService,
         @Inject(WINDOW) private window: Window,
-        private db: NxDbService
+        private db: NxDbService,
     ) {
         this.CONFIG = configService.getConfig();
 

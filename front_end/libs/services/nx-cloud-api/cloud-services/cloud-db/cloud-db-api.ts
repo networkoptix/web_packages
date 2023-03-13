@@ -61,7 +61,13 @@ export class CloudDbAPI extends BaseCloudServiceAPI {
     #refreshToken$: Observable<string>;
     window = getWindow();
 
-    constructor(serverUrl: string, hostOrCustomization: () => string, http: HttpClient, withFreshSession: WithFreshSession, refreshToken: Observable<string>) {
+    constructor(
+        serverUrl: string,
+        hostOrCustomization: () => string,
+        http: HttpClient,
+        withFreshSession: WithFreshSession,
+        refreshToken: Observable<string>,
+    ) {
         super(serverUrl, CloudDbAPI.API_BASE, hostOrCustomization, http, withFreshSession);
         this.#refreshToken$ = refreshToken;
     }

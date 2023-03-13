@@ -48,7 +48,7 @@ export class CloudAccount extends BaseAccount {
         protected bootstrapProviderService: NxBootstrapProvider,
         protected store: Store,
         protected dialogs: NxDialogsService,
-        protected db: NxDbService
+        protected db: NxDbService,
     ) {
         super(
             configService,

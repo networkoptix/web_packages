@@ -53,10 +53,7 @@ export class CameraManager {
     cameras: NxSystemCamera[];
     moduleInfo: ModuleInfo;
 
-    constructor(
-        private system: NxSystem,
-        private locale: string,
-    ) {
+    constructor(private system: NxSystem, private locale: string) {
         this.serverManager = this.system.serverManager;
     }
 

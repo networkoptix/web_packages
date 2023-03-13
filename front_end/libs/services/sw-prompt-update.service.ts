@@ -23,7 +23,7 @@ export class NxSwPromptUpdateService {
         updates: SwUpdate,
         appRef: ApplicationRef,
         injector: Injector,
-        @Inject(WINDOW) private window: Window
+        @Inject(WINDOW) private window: Window,
     ) {
         const languageSet$ = translateService.onTranslationChange.pipe(
             filter(translations => translations !== null),
