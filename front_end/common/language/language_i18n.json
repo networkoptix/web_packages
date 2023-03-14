@@ -247,6 +247,7 @@
     "Enabling it will allow you to set up \"motion only\" and \"motion + low-res\" recording types, but may increase the CPU usage.": "Enabling it will allow you to set up \"motion only\" and \"motion + low-res\" recording types, but may increase the CPU usage.",
     "Encrypt video traffic to desktop and mobile clients": "Encrypt video traffic to desktop and mobile clients",
     "End": "End",
+    "End time is earlier than start time": "End time is earlier than start time",
     "Enter \"Public User\" credentials:": "Enter \"Public User\" credentials:",
     "Enter a verification code from your authentication app or a backup code to continue": "Enter a verification code from your authentication app or a backup code to continue",
     "Enter a verification code from your authentication app or a backup code to continue.": "Enter a verification code from your authentication app or a backup code to continue.",

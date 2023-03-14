@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-/* General-purpose utility functions. If a function/type involves in-house or
+/* General-purpose utilities. If a function/type involves in-house or
 third party data/types it should probably go in nx.ts instead. */
 
 import { last } from 'lodash-es';
@@ -69,6 +69,14 @@ export function wrapWithPercent(
 ): string {
     const percentage = (numerator / denominator) * 100;
     return `${precision ? percentage.toPrecision(precision) : percentage}% (${wrappedValue})`;
+}
+
+export enum MS {
+    ms = 1,
+    s = 1000,
+    min = MS.s * 60,
+    hr = MS.min * 60,
+    day = MS.hr * 24,
 }
 
 /* Array */

@@ -9,7 +9,7 @@
         [placeholder]="placeholder"
         maxlength="5"
         class="form-control"
-        [ngClass]="{ 'not-empty': value }"
+        [ngClass]="{ 'not-empty': value, error: point === 'end' && error$ | async }"
         (blur)="onBlur()"
     />
     <button
@@ -27,6 +27,7 @@
 <button
     #periodBtn
     class="period"
+    [ngClass]="{ error: point === 'end' && error$ | async }"
     *ngIf="hour12"
     [cdkMenuTriggerFor]="periods"
 >

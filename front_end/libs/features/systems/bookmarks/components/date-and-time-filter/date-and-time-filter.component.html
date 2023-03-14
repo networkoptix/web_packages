@@ -1,7 +1,7 @@
 <div class="dtf-header">
     <span translate>Date and Time</span>
     <button
-        *ngIf="dateRange"
+        *ngIf="dateRange || timeRange.start !== null || timeRange.end !== null"
         class="clear"
         (click)="clear()"
     >
@@ -63,7 +63,7 @@
             <span translate>From</span>
             <nx-time-selector
                 [time]="timeRange.start"
-                (timeChange)="setStartTime($event)"
+                (timeChange)="setTimePoint('start', $event)"
                 point="start"
             ></nx-time-selector>
         </div>
@@ -71,9 +71,18 @@
             <span translate>To</span>
             <nx-time-selector
                 [time]="timeRange.end"
-                (timeChange)="setEndTime($event)"
+                (timeChange)="setTimePoint('end', $event)"
                 point="end"
+                [error$]="timeRangeError$"
             ></nx-time-selector>
         </div>
+    </div>
+    <div
+        *ngIf="timeRangeError$ | async"
+        id="datetime-warning"
+        class="mt-2 error-label"
+        translate
+    >
+        End time is earlier than start time
     </div>
 </div>

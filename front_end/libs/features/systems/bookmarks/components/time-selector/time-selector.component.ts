@@ -7,17 +7,19 @@ import {
     ViewChild,
     ElementRef,
     Inject,
+    OnChanges,
 } from '@angular/core';
+import { escapeRegExp } from 'lodash-es';
+import type { BehaviorSubject } from 'rxjs';
 
 import { WINDOW } from '@services/window-provider';
 import { icons } from '@src/app/variables/static-variables';
+import { MS } from '@utils/general';
+import type { NgChanges } from '@utils/ng-changes';
 import { getSysLang } from '@utils/nx';
 
-const MIN_MS = 1000 * 60;
-const HR_MS = MIN_MS * 60;
-
-const oneToTwelve = '(0?[1-9])|(1[0-2])';
-const zeroToTwentyfour = '(0?\\d)|(1\\d)|(2[0-4])';
+const oneToTwelve = '((0?[1-9])|(1[0-2]))';
+const zeroToTwentythree = '((0?\\d)|(1\\d)|(2[0-3]))';
 const zerozeroToFiftynine = '[0-5]\\d';
 
 class DateTimeHelper {
@@ -38,13 +40,13 @@ class DateTimeHelper {
 
     get hour12Regex(): RegExp {
         return new RegExp(
-            `^\\s*(${oneToTwelve})${this.separator}${zerozeroToFiftynine}\\s*$`
+            `^\\s*${oneToTwelve}${this.separator}${zerozeroToFiftynine}\\s*$`
         );
     }
 
     get hour24Regex(): RegExp {
         return new RegExp(
-            `^\\s*(${zeroToTwentyfour})${this.separator}${zerozeroToFiftynine}\\s*$`
+            `^\\s*${zeroToTwentythree}${this.separator}${zerozeroToFiftynine}\\s*$`
         );
     }
 
@@ -55,7 +57,7 @@ class DateTimeHelper {
 
     get separator(): string {
         // Separator might not be ":" e.g. da => 16.20
-        return this.parts[this.partIndex('hour') + 1].value;
+        return escapeRegExp(this.parts[this.partIndex('hour') + 1].value);
     }
 
     get dayPeriods(): [string, string] {
@@ -87,8 +89,8 @@ class DateTimeHelper {
     }
 
     msToHour24(ms: number): string {
-        const hours = Math.floor(ms / HR_MS);
-        const minutes = (ms - hours * HR_MS) / MIN_MS;
+        const hours = Math.floor(ms / MS.hr);
+        const minutes = (ms - hours * MS.hr) / MS.min;
         const date = new Date();
         date.setHours(hours);
         date.setMinutes(minutes);
@@ -96,8 +98,8 @@ class DateTimeHelper {
     }
 
     msToHour12(ms: number): [time: string, PM: boolean] {
-        const hours = Math.floor(ms / HR_MS);
-        const minutes = (ms - hours * HR_MS) / MIN_MS;
+        const hours = Math.floor(ms / MS.hr);
+        const minutes = (ms - hours * MS.hr) / MS.min;
         const date = new Date();
         date.setHours(hours);
         date.setMinutes(minutes);
@@ -110,11 +112,12 @@ class DateTimeHelper {
     templateUrl: 'time-selector.component.html',
     styleUrls: ['time-selector.component.scss'],
 })
-export class NxTimeSelectorComponent implements OnInit {
+export class NxTimeSelectorComponent implements OnInit, OnChanges {
     @Input() time: number | null;
     @Output() timeChange = new EventEmitter<number | null>();
 
     @Input() point: 'start' | 'end' = 'start';
+    @Input() error$?: BehaviorSubject<boolean>; // Only for endpoint
 
     @ViewChild('periodBtn') periodBtn: ElementRef<HTMLDivElement>;
 
@@ -164,29 +167,37 @@ export class NxTimeSelectorComponent implements OnInit {
         }
     }
 
+    ngOnChanges({ time }: NgChanges<NxTimeSelectorComponent>): void {
+        if (!time.firstChange && time.currentValue === null) {
+            // Clear from main filter
+            this.value = '';
+        }
+    }
+
     h24StrToMs(time: string): number {
         let [hours, minutes] = time.match(/(\d+)\D+(\d+)/).slice(1).map(Number);
         if (!hours && !minutes && this.point === 'end') {
             hours += 24;
         }
-        return HR_MS * hours + MIN_MS * minutes;
+        return MS.hr * hours + MS.min * minutes;
     }
 
     h12StrToMs(time: string): number {
         let [hours, minutes] = time.match(/(\d+)\D+(\d+)/).slice(1).map(Number);
         if (hours < 12 && this.period === this.PM) {
             hours += 12;
-        } else if (hours === 12 && !minutes && this.period === this.AM) {
-            if (this.point === 'start') {
-                hours -= 12;
-            } else {
+        } else if (hours === 12 && this.period === this.AM) {
+            if (this.point === 'end' && !minutes) {
                 hours += 12;
+            } else {
+                hours -= 12;
             }
         }
-        return HR_MS * hours + MIN_MS * minutes;
+        return MS.hr * hours + MS.min * minutes;
     }
 
     emitValue(value: string = this.value): void {
+        this.error$?.next(false);
         const trimmed = value.trim();
         const validValue = this.timeRegex.test(trimmed);
         if (validValue) {

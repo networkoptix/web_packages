@@ -21,7 +21,7 @@ import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { WINDOW } from '@services/window-provider';
-import { alphabeticalSort, caseInsenstiveSearch, cleanId, paramSortFunc } from '@utils/general';
+import { alphabeticalSort, caseInsenstiveSearch, cleanId, MS, paramSortFunc } from '@utils/general';
 import { getSysLang } from '@utils/nx';
 
 import type { Bookmark, TimeRange } from './bookmarks.types';
@@ -262,23 +262,25 @@ export class NxBookmarksComponent implements OnInit {
                     bks = bks.filter(bk => tags.every(tag => bk.tags.includes(tag)));
                 }
 
-                if (this.queryParams.startTime || this.queryParams.endTime || this.queryParams.startDate || this.queryParams.endDate) {
-                    // Get date, then set the specific time via setHours
-                    const getWindowOfTime = (startTime: number, endTime: number, startDate: number, endDate: number): [number, number] => {
-                        const addTimeToNow = (base: number, time: number):number => new Date(base).setHours(...this.parsedTime(time));
-                        const baseDate = new Date().getTime(); // If there's no selected date, it'll use today's date
-                        return [addTimeToNow(startDate || baseDate, startTime), addTimeToNow(endDate || baseDate, endTime)];
-                    };
-                    const { startTime, endTime, startDate, endDate } = this.queryParams;
-                    const [startTimeMs, endTimeMs] = getWindowOfTime(
-                        startTime ? parseInt(startTime) : 0,
-                        endTime ? parseInt(endTime) : 86399999, // If they didn't pass a date use 23:59 and 999 ms
-                        startDate ? parseInt(startDate) : 0,
-                        endDate ? parseInt(endDate) : 0,
+                if (this.queryParams.startDate) {
+                    let startDatetime = Number(this.queryParams.startDate);
+                    let endDatetime = Number(this.queryParams.endDate);
+
+                    if (this.queryParams.startTime) {
+                        const startTime = Number(this.queryParams.startTime);
+                        const endTime = Number(this.queryParams.endTime);
+                        startDatetime += startTime;
+                        endDatetime += endTime;
+                    } else {
+                        endDatetime += MS.day;
+                    }
+
+                    bks = bks.filter(bk =>
+                        bk.startTimeMs >= startDatetime &&
+                        bk.startTimeMs < endDatetime
                     );
-                    bks = bks.filter(bk => bk.startTimeMs >= startTimeMs &&
-                        bk.startTimeMs <= endTimeMs + 59999); // Add 59999 to cover anything between the current minute and right before the next
                 }
+
                 if (this.queryParams.search) {
                     const searches = this.queryParams.search.trim().split(/\s+/);
                     bks = bks.filter(bk => searches.some(s => caseInsenstiveSearch(bk.name, s) ||
@@ -291,15 +293,6 @@ export class NxBookmarksComponent implements OnInit {
             }),
             distinctUntilChanged()
         );
-    }
-
-    parsedTime(time: number): [number, number, number, number] {
-        time = Math.floor(time);
-        const ms = time % 1000;
-        const seconds = (time / 1000) % 60;
-        const minutes = (time / 1000 / 60) % 60;
-        const hours = (time / 1000 / 60 / 60) % 24;
-        return [hours, minutes, seconds, ms];
     }
 
     findNewestBookmark(bks: Bookmark[]): Bookmark {

@@ -514,6 +514,7 @@
     "Encrypting video traffic will significantly increase CPU usage.": "Encrypting video traffic will significantly increase CPU usage.",
     "End": "End",
     "End Tour": "End Tour",
+    "End time is earlier than start time": "End time is earlier than start time",
     "Enter \"Public User\" credentials:": "Enter \"Public User\" credentials:",
     "Enter System Name": "Enter System Name",
     "Enter a code from your authentication app to confirm it's really you trying to {suffix}": "Enter a code from your authentication app to confirm it's really you trying to {suffix}",

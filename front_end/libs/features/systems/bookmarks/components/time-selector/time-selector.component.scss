@@ -22,6 +22,11 @@
             }
 
             border-color: var(--bookmarks-input-border-color) !important;
+
+            &.error {
+                border-color: var(--error) !important;
+                color: var(--error) !important;
+            }
         }
 
         .clear-btn {
@@ -59,6 +64,10 @@
         span {
             white-space: nowrap;
             overflow: hidden;
+        }
+
+        &.error {
+            color: var(--error);
         }
     }
 }

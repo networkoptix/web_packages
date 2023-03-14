@@ -10,14 +10,14 @@ import {
 } from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
 import { DateRange as DR, MatCalendar } from '@angular/material/datepicker';
+import { BehaviorSubject } from 'rxjs';
 
 import { icons } from '@lib/variables/static-variables';
 import { WINDOW } from '@services/window-provider';
+import { MS } from '@utils/general';
 import { getSysLang } from '@utils/nx';
 
 import type { TimeRange } from '../../bookmarks.types';
-
-const DAY_MS = 1000 * 60 * 60 * 24;
 
 type DateRange = DR<Date>;
 
@@ -36,6 +36,8 @@ export class NxDateAndTimeFilterComponent {
     @Output() timeRangeChange = new EventEmitter<TimeRange>();
 
     @ViewChild('matCalendar') private matCalendar: MatCalendar<Date>;
+
+    timeRangeError$ = new BehaviorSubject<boolean>(false);
 
     icons = icons;
 
@@ -74,13 +76,13 @@ export class NxDateAndTimeFilterComponent {
 
     get last7Days(): DateRange {
         const now = new Date();
-        const sevenDaysAgo = new Date(now.getTime() - 7 * DAY_MS);
+        const sevenDaysAgo = new Date(now.getTime() - 7 * MS.day);
         return new DR(sevenDaysAgo, now);
     }
 
     get last30Days(): DateRange {
         const now = new Date();
-        const thirtyDaysAgo = new Date(now.getTime() - 30 * DAY_MS);
+        const thirtyDaysAgo = new Date(now.getTime() - 30 * MS.day);
         return new DR(thirtyDaysAgo, now);
     }
 
@@ -139,38 +141,82 @@ export class NxDateAndTimeFilterComponent {
     }
 
     quickSelect(selected: DateRange): void {
-        this.dateRangeChange.emit(selected);
+        if (!this.invalidTimeRange(selected)) {
+            this.dateRangeChange.emit(selected);
+            this.hoveredDate = null;
+            this.timeRangeError$.next(false);
+        } else {
+            this.dateRange = selected;
+            this.timeRangeError$.next(true);
+        }
     }
 
     selectedChange(selected: Date): void {
+        let newRange: DateRange;
         if (!this.dateRange) {
-            this.dateRangeChange.emit(new DR(selected, selected));
+            newRange = new DR(selected, selected);
         } else if (
             this.singleDayRange &&
             selected.toString() !== this.dateRange.start.toString()
         ) {
-            const newRange = selected.getTime() > this.dateRange.start.getTime()
+            newRange = selected.getTime() > this.dateRange.start.getTime()
                 ? new DR(this.dateRange.start, selected)
                 : new DR(selected, this.dateRange.start);
-            this.dateRangeChange.emit(newRange);
         } else {
-            this.dateRangeChange.emit(new DR(selected, selected));
+            newRange = new DR(selected, selected);
         }
-        this.hoveredDate = null;
+        if (!this.invalidTimeRange(newRange)) {
+            this.dateRangeChange.emit(newRange);
+            this.hoveredDate = null;
+            this.timeRangeError$.next(false);
+        } else {
+            this.dateRange = newRange;
+            // Change calendar selection, but don't emit update for invalid range
+            this.timeRangeError$.next(true);
+        }
     }
 
     clear(): void {
         this.dateRangeChange.emit(null);
+        this.timeRange.start = null;
+        this.timeRange.end = null;
+        this.timeRangeChange.emit(this.timeRange);
         this.hoveredDate = null;
+        this.timeRangeError$.next(false);
     }
 
-    setStartTime(time: number | null): void {
-        this.timeRange.start = time;
-        this.timeRangeChange.emit(this.timeRange);
+    setTimePoint(point: 'start' | 'end', time: number | null): void {
+        this.timeRange[point] = time;
+
+        if (this.invalidTimeRange()) {
+            this.timeRangeError$.next(true);
+            return;
+        } else if ((this.timeRange.start !== null && this.timeRange.end !== null)) {
+            this.timeRangeChange.emit(this.timeRange);
+            if (!this.dateRange) {
+                const now = new Date();
+                const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                this.dateRangeChange.emit(new DR(todayStart, todayStart));
+            } else {
+                this.dateRangeChange.emit(this.dateRange);
+                // In case invalid time change stopped original date range emit
+            }
+        } else if (this.timeRange.start === null && this.timeRange.end === null) {
+            this.timeRangeChange.emit(this.timeRange);
+            this.dateRangeChange.emit(this.dateRange);
+        }
+        this.timeRangeError$.next(false);
     }
 
-    setEndTime(time: number | null): void {
-        this.timeRange.end = time;
-        this.timeRangeChange.emit(this.timeRange);
+    /** Check for invalid datetime range.
+     *
+     * - Oct 12 4PM - Oct 13 2AM ✔️
+     * - Oct 12 4PM - Oct 12 2AM ❌
+     */
+    private invalidTimeRange(dateRange = this.dateRange): boolean {
+        return (this.timeRange.start ?? Number.NEGATIVE_INFINITY) >
+            (this.timeRange.end ?? Number.POSITIVE_INFINITY) && (
+            !dateRange || dateRange.start.toString() === dateRange.end.toString()
+        );
     }
 }
