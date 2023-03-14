@@ -1038,7 +1038,11 @@ Add Cloud Users
     END
 
 Get Random Available Port
-    ${port}=   Execute Command    comm -23 <(seq 30000 65535 | sort) <(ss -Htan | awk '{print $4}' | cut -d':' -f2 | sort -u) | shuf | head -n 1
+    IF    "${QA BURBANK IP}" != "localhost"    
+        ${port}=   Execute Command    comm -23 <(seq 30000 65535 | sort) <(ss -Htan | awk '{print $4}' | cut -d':' -f2 | sort -u) | shuf | head -n 1
+    ELSE
+        ${port}=   Get Random Available Port Local
+    END
     [Return]    ${port}
 
 Create Docker Server
@@ -1046,29 +1050,52 @@ Create Docker Server
     &{server}=   Create Dictionary
     ${mac}=   Get Random MAC
     Acquire Lock   create_server_lock
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    IF    '5.0' not in $image
-        Set Local Variable   ${vms}    old
+    IF    "${QA BURBANK IP}" != "localhost"
+        Open Connection    ${QA BURBANK IP}
+        SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+        IF    '5.0' not in $image
+            Set Local Variable   ${vms}    old
+        ELSE
+            Set Local Variable    ${vms}    new
+        END
+        IF    not $customPort
+            ${port}=   Get Random Available Port
+        ELSE
+            ${port}=   Set Variable    ${customPort}
+        END
+        ${ENV NO HTTP}=   Replace String    ${ENV}    https://    ${EMPTY}
+        ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --name=${name} --restart=always -e VMS=${vms} -e PORT=${port} -e CLOUD_HOST=${ENV NO HTTP} --privileged --network=${network} --cap-add=NET_ADMIN ${storage string} ${image}
+                      ...    ELSE    Execute Command    docker run -d --name=${name} --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 -e CLOUD_HOST=${ENV NO HTTP} --privileged --network=${network} --cap-add=NET_ADMIN ${storage string} ${image}
+        ${id}=   Evaluate    $full_id[:12]
+        Set to Dictionary    ${server}    id=${id}
+        Set to Dictionary    ${server}    port=${port}
+        ${name}=   Execute Command    docker ps --format "{{.Names}}" -f "id=${id}"
+        Set to Dictionary    ${server}    name=${name}
+        ${timeout kill er} =   Execute Command    echo "docker container stop ${server}[name]" | at now +90min    return_stdout=${False}   return_stderr=${True}
+        Close Connection
     ELSE
-        Set Local Variable    ${vms}    new
+        IF    '5.0' not in $image
+            Set Local Variable   ${vms}    old
+        ELSE
+            Set Local Variable    ${vms}    new
+        END
+        IF    not $customPort
+            ${port}=   Get Random Available Port
+        ELSE
+            ${port}=   Set Variable    ${customPort}
+        END
+        ${ENV NO HTTP}=   Replace String    ${ENV}    https://    ${EMPTY}
+        ${full id}=   Run Keyword If    "${network}"=="host"    Run    docker run -d --name=${name} --restart=always -e VMS=${vms} -e PORT=${port} -e CLOUD_HOST=${ENV NO HTTP} --privileged --network=${network} --cap-add=NET_ADMIN ${storage string} ${image}
+                      ...    ELSE    Run    docker run -d --name=${name} --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 -e CLOUD_HOST=${ENV NO HTTP} --privileged --network=${network} --cap-add=NET_ADMIN ${storage string} ${image}
+        ${id}=   Evaluate    $full_id[:12]
+        Set to Dictionary    ${server}    id=${id}
+        Set to Dictionary    ${server}    port=${port}
+        ${name}=   Run    docker ps --format "{{.Names}}" -f "id=${id}"
+        Set to Dictionary    ${server}    name=${name}
+        ${timeout kill er} =   Run    echo "docker container stop ${server}[name]" | at now +90min
     END
-    IF    not $customPort
-        ${port}=   Get Random Available Port
-    ELSE
-        ${port}=   Set Variable    ${customPort}
-    END
-    ${ENV NO HTTP}=   Replace String    ${ENV}    https://    ${EMPTY}
-    ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --name=${name} --restart=always -e VMS=${vms} -e PORT=${port} -e CLOUD_HOST=${ENV NO HTTP} --privileged --network=${network} --cap-add=NET_ADMIN ${storage string} ${image}
-                  ...    ELSE    Execute Command    docker run -d --name=${name} --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 -e CLOUD_HOST=${ENV NO HTTP} --privileged --network=${network} --cap-add=NET_ADMIN ${storage string} ${image}
-    ${id}=   Evaluate    $full_id[:12]
-    Set to Dictionary    ${server}    id=${id}
-    Set to Dictionary    ${server}    port=${port}
-    ${name}=   Execute Command    docker ps --format "{{.Names}}" -f "id=${id}"
-    Set to Dictionary    ${server}    name=${name}
-    ${timeout kill er} =   Execute Command    echo "docker container stop ${server}[name]" | at now +90min    return_stdout=${False}   return_stderr=${True}
-    Close Connection
     Release Lock   create_server_lock
+
     [Return]    ${server}
 
 Create Base System
@@ -1148,33 +1175,57 @@ Create Custom Network
     ${ip range}=   Set Variable    192.28.${num}.0/24
     ${gateway}=    Set Variable    192.28.${num}.254
     ${cmd}=   Set Variable    docker network create --driver=${driver} --subnet=${subnet} --ip-range=${ip range} --gateway=${gateway} ${name}
-    ${net id}=   Execute Command Remotely    ${cmd}    ${host}
+    IF    "${QA BURBANK IP}" != "localhost"
+        ${net id}=   Execute Command Remotely    ${cmd}    ${host}
+    ELSE
+        ${net id}=   Run    ${cmd}
+    END
     [Return]    ${net id}
 
 Remove Custom Network
     [Arguments]    ${net id}    ${host}=${QA BURBANK IP}
-    Execute Command Remotely    docker network rm ${net id}    ${host}
+    IF    "${QA BURBANK IP}" != "localhost"
+        Execute Command Remotely    docker network rm ${net id}    ${host}
+    ELSE
+        Run    docker network rm ${net id}
+    END
     [Return]    ${net id}
 
 Delete Docker Server
     [Arguments]    ${name}
-    Execute Command Remotely    docker rm -f ${name}
+    IF    "${QA BURBANK IP}" != "localhost"
+        Execute Command Remotely    docker rm -f ${name}
+    ELSE
+        Run    docker rm -f ${name}
+    END
     [Return]    ${False}
 
 Start Docker Server
     [Arguments]    ${name}
-    Execute Command Remotely    docker start ${name}
+    IF    "${QA BURBANK IP}" != "localhost"
+        Execute Command Remotely    docker start ${name}
+    ELSE
+        Run    docker start ${name}
+    END
 
 Stop Docker Server
     [Arguments]    ${name}
-    Execute Command Remotely    docker stop ${name}
+    IF    "${QA BURBANK IP}" != "localhost"
+        Execute Command Remotely    docker stop ${name}
+    ELSE
+        Run    docker stop ${name}
+    END
 
 Restart Docker Servers
     [Arguments]    @{names}
     FOR    ${name}    IN    @{names}
-        ${result} =    Execute Command Remotely    docker restart ${name}
+        IF    "${QA BURBANK IP}" != "localhost"
+            ${result} =    Execute Command Remotely    docker restart ${name}
+        ELSE
+            ${result} =    Run    docker restart ${name}
         Run Keyword and Warn on Failure    Should Be Equal As Strings     ${result}    ${name}
         Sleep    1
+        
     END
     
     # [Arguments]    ${port}    ${name}    ${auth}

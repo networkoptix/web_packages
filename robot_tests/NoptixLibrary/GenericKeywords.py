@@ -412,7 +412,8 @@ class GenericKeywords(object):
     def check_file_exists(self, url):
         linkInfo = head(url)
         print(linkInfo)
-        if int(linkInfo.status_code) == 200 and 'Content-Length' in linkInfo.headers.keys() and int(linkInfo.headers['Content-Length']) > 1000:
+        if int(linkInfo.status_code) == 200 and 'Content-Length' in linkInfo.headers.keys() and int(
+                linkInfo.headers['Content-Length']) > 1000:
             return
         else:
             raise Exception("File does not appear to be available.")
@@ -659,8 +660,8 @@ class GenericKeywords(object):
     @keyword
     def get_tiles_to_show(self, systemCount, maxSystems):
         return systemCount if systemCount == maxSystems else min(systemCount, maxSystems - 1)
-       
-    @keyword 
+
+    @keyword
     def check_grid_size(self, gridSize, tileSize, columns):
         return gridSize > (tileSize * columns)
 
@@ -710,15 +711,15 @@ class GenericKeywords(object):
     @keyword
     def dictionary_should_contain(self, dictionary, expected):
         for item in dictionary:
-            if item==expected:
+            if item == expected:
                 return
-            
+
     @keyword
     def remove_user_by_email(self, auth, serverUrl, email, image):
         if image == '4.2':
             users = ServerAPI.get_users(self, auth, serverUrl)
             for user in users:
-                if user['email']==email:
+                if user['email'] == email:
                     ServerAPI.remove_user(self, auth, serverUrl, user['id'])
         else:
             users = ServerAPI5.get_users(self, auth, serverUrl)
@@ -730,3 +731,10 @@ class GenericKeywords(object):
     def detect_language(self, text):
         detected_langs = str(Translator().detect(text))
         return detected_langs
+
+    @keyword
+    def get_random_available_port_local(self):
+        sock = socket.socket()
+        sock.bind(('', 0))
+        port = sock.getsockname()[1]
+        return port
