@@ -27,7 +27,6 @@ COPY stage/cloud /app/app
 
 WORKDIR /app/app
 
-RUN python ./safety-check.py
 RUN CUSTOMIZATION=default ./manage.py collectstatic --noinput && rm -rf node_modules
 RUN if ! ./manage.py makemigrations --dry-run --check ; then echo Missing above migrations && exit 1 ; fi
 RUN if ! ./manage.py check; then echo "Please notify web team" && exit 1 ; fi
