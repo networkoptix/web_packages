@@ -26,11 +26,9 @@ export class OsResolver implements Resolve<never> {
 
     resolve(): typeof empty {
         this.platform = this.platformMatch[this.deviceInfo.os.toLowerCase()] || this.windows;
-        this.router
-            .navigate(['/download/' + this.platform.toLowerCase()])
-            .catch(error => {
-                console.error(error);
-            });
+        this.router.navigate(['/download/' + this.platform.toLowerCase()]).catch(error => {
+            console.error(error);
+        });
         return empty;
     }
 }

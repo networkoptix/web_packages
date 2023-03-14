@@ -24,7 +24,6 @@ import { NxUriService } from '@services/uri.service';
     templateUrl: 'download-history.component.html',
     styleUrls: ['download-history.component.scss'],
 })
-
 export class DownloadHistoryComponent implements OnInit {
     private sub: Subscription;
     readonly releases = 'releases';
@@ -65,7 +64,7 @@ export class DownloadHistoryComponent implements OnInit {
             this.router.events
                 .pipe(
                     untilDestroyed(this),
-                    filter(event => event instanceof ActivationEnd)
+                    filter(event => event instanceof ActivationEnd),
                 )
                 .subscribe((event: ActivationEnd) => {
                     if (event.snapshot.params.type) {
@@ -92,33 +91,35 @@ export class DownloadHistoryComponent implements OnInit {
     private getData(): void {
         this.cloudApiService
             .getDownloadsHistory(this.build)
-            .then(data => {
-                this.linkbase = data.updatesPrefix;
-                if (!this.isSingleBuild(data)) {
-                    this.downloadsData = data;
-                    if (!(this.section in data)) {
-                        this.section = this.releases;
+            .then(
+                data => {
+                    this.linkbase = data.updatesPrefix;
+                    if (!this.isSingleBuild(data)) {
+                        this.downloadsData = data;
+                        if (!(this.section in data)) {
+                            this.section = this.releases;
+                        }
+                        this.activeBuilds = data[this.section];
+                        this.getAvailableDownloadTypes(data);
+                    } else {
+                        this.activeBuilds = [data];
+                        this.noteTypes = [data.type];
+                        this.downloadsData = {
+                            [data.type]: this.activeBuilds,
+                        };
                     }
-                    this.activeBuilds = data[this.section];
-                    this.getAvailableDownloadTypes(data);
-                } else {
-                    this.activeBuilds = [data];
-                    this.noteTypes = [data.type];
-                    this.downloadsData = {
-                        [data.type]: this.activeBuilds,
-                    };
-                }
 
-                if (!this.currentTab && !this.build) {
-                    this.pageService.pageTitle(startCase(this.noteTypes[0]));
-                }
+                    if (!this.currentTab && !this.build) {
+                        this.pageService.pageTitle(startCase(this.noteTypes[0]));
+                    }
 
-                setTimeout(() => {
-                    this.tabsVisible = true;
-                });
-            }, () => {
-                this.injector.get(NxPageService).redirect404();
-            }
+                    setTimeout(() => {
+                        this.tabsVisible = true;
+                    });
+                },
+                () => {
+                    this.injector.get(NxPageService).redirect404();
+                },
             )
             .finally(() => {
                 this.sub.unsubscribe();
@@ -126,12 +127,11 @@ export class DownloadHistoryComponent implements OnInit {
     }
 
     private getDataAuthorized(): void {
-        this.accountService.requireLogin()
-            .then(account => {
-                if (isAccount(account)) {
-                    this.getData();
-                }
-            });
+        this.accountService.requireLogin().then(account => {
+            if (isAccount(account)) {
+                this.getData();
+            }
+        });
     }
 
     ngOnInit(): void {
@@ -157,22 +157,18 @@ export class DownloadHistoryComponent implements OnInit {
             }
 
             if (!this.CONFIG.cloudCapabilities.publicReleases) {
-                this.accountService
-                    .requireLogin()
-                    .then(account => {
-                        this.canViewRelease = isAccount(account) && (
-                            account.is_superuser ||
-                            account.permissions.includes(
-                                permissions.canViewRelease
-                            )
-                        );
+                this.accountService.requireLogin().then(account => {
+                    this.canViewRelease =
+                        isAccount(account) &&
+                        (account.is_superuser ||
+                            account.permissions.includes(permissions.canViewRelease));
 
-                        if (this.canViewRelease) {
-                            this.getData();
-                        } else {
-                            this.injector.get(NxPageService).redirect404();
-                        }
-                    });
+                    if (this.canViewRelease) {
+                        this.getData();
+                    } else {
+                        this.injector.get(NxPageService).redirect404();
+                    }
+                });
             } else if (this.appStateService.ready) {
                 this.canViewRelease = true;
                 if (this.build === undefined) {
@@ -181,13 +177,15 @@ export class DownloadHistoryComponent implements OnInit {
                     this.getDataAuthorized();
                 }
             } else {
-                this.appStateService.readySubject.pipe(
-                    filter(ready => ready),
-                    take(1),
-                ).subscribe(() => {
-                    this.canViewRelease = true;
-                    this.getDataAuthorized();
-                });
+                this.appStateService.readySubject
+                    .pipe(
+                        filter(ready => ready),
+                        take(1),
+                    )
+                    .subscribe(() => {
+                        this.canViewRelease = true;
+                        this.getDataAuthorized();
+                    });
             }
         });
     }
@@ -196,11 +194,9 @@ export class DownloadHistoryComponent implements OnInit {
         this.currentTab = name;
         this.activeBuilds = this.downloadsData[name];
 
-        this.uriService
-            .updateURI('/downloads/' + name, {})
-            .catch(error => {
-                console.error(error);
-            });
+        this.uriService.updateURI('/downloads/' + name, {}).catch(error => {
+            console.error(error);
+        });
         return false;
     }
 }

@@ -7,11 +7,9 @@ export class TypeResolver implements Resolve<never> {
     constructor(private router: Router) {}
 
     resolve(): typeof empty {
-        this.router
-            .navigate(['/downloads/releases'])
-            .catch(error => {
-                console.error(error);
-            });
+        this.router.navigate(['/downloads/releases']).catch(error => {
+            console.error(error);
+        });
         return empty;
     }
 }

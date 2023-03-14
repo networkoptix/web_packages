@@ -34,7 +34,7 @@ export class NxDebugComponent {
         apiCall: 'web/ec2/saveUser',
         data: '{}',
         success: undefined,
-        result: ''
+        result: '',
     };
 
     linkSettings: LinkSettings = {
@@ -45,13 +45,13 @@ export class NxDebugComponent {
         systemId: undefined,
         action: undefined,
         actionParameters: undefined, // Object with parameters
-        auth: undefined // true for request, undefined for skipping, string for specific value
+        auth: undefined, // true for request, undefined for skipping, string for specific value
     };
 
     mergeSettings = {
         masterSystemId: '',
         slaveSystemId: '',
-        result: ''
+        result: '',
     };
 
     message = JSON.stringify({ code: 'test_code' }, undefined, '\t');
@@ -101,51 +101,57 @@ export class NxDebugComponent {
     }
 
     private init(): void {
-        this.systemsService.systemsSubject
-            .subscribe((systems: NxSystemWithUserInfo[]) => {
-                this.systems = systems;
-                if (!this.debugProxySettings.systemId.value && this.systems[0]) {
-                    this.debugProxySettings.systemId.value = this.systems[0].id;
-                    this.system = this.systems[0];
-                }
-            });
-        this.debugProxySettings.systemId.valueSubject.pipe(
-            filter(systemId => systemId !== undefined)
-        ).subscribe((systemId: string) => {
-            this.system = this.systems.find(system => system.id === systemId);
-            this.cloudApiService.getSystemAuth(systemId)
-                .subscribe(authKeys => {
+        this.systemsService.systemsSubject.subscribe((systems: NxSystemWithUserInfo[]) => {
+            this.systems = systems;
+            if (!this.debugProxySettings.systemId.value && this.systems[0]) {
+                this.debugProxySettings.systemId.value = this.systems[0].id;
+                this.system = this.systems[0];
+            }
+        });
+        this.debugProxySettings.systemId.valueSubject
+            .pipe(filter(systemId => systemId !== undefined))
+            .subscribe((systemId: string) => {
+                this.system = this.systems.find(system => system.id === systemId);
+                this.cloudApiService.getSystemAuth(systemId).subscribe(authKeys => {
                     this.debugProxySettings.authGet = authKeys.authGet;
                     this.debugProxySettings.authPost = authKeys.authPost;
                 });
-        });
-
-        const debugProcess = this.processService.createProcess(() => {
-            return new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    if (this.debugProcess.success) {
-                        resolve({
-                            data: {
-                                resultCode: this.LANG.errorCodes.ok
-                            }
-                        });
-                    } else {
-                        reject(false);
-                    }
-                }, 2000);
             });
-        }, {
-            successMessage: 'Success!',
-            errorPrefix: 'Fail!'
-        }).then(res => {
-            console.log(res);
-        }, error => {
-            console.error(error);
-        });
+
+        const debugProcess = this.processService
+            .createProcess(
+                () => {
+                    return new Promise((resolve, reject) => {
+                        setTimeout(() => {
+                            if (this.debugProcess.success) {
+                                resolve({
+                                    data: {
+                                        resultCode: this.LANG.errorCodes.ok,
+                                    },
+                                });
+                            } else {
+                                reject(false);
+                            }
+                        }, 2000);
+                    });
+                },
+                {
+                    successMessage: 'Success!',
+                    errorPrefix: 'Fail!',
+                },
+            )
+            .then(
+                res => {
+                    console.log(res);
+                },
+                error => {
+                    console.error(error);
+                },
+            );
 
         this.debugProcess = {
             success: true,
-            process: debugProcess
+            process: debugProcess,
         };
         // Handling promise to satisfy the linter.
         this.systemsService.forceUpdateSystemsAsPromise().then(() => {});
@@ -162,19 +168,23 @@ export class NxDebugComponent {
         } else {
             request = this.http.post(this.debugProxyUrl(), { data });
         }
-        request.subscribe(result => {
-            this.debugProxySettings.success = true;
-            this.debugProxySettings.result = JSON.stringify(result, undefined, 2);
-        }, error => {
-            this.debugProxySettings.success = false;
-            this.debugProxySettings.result = JSON.stringify(error, undefined, 2);
-        });
+        request.subscribe(
+            result => {
+                this.debugProxySettings.success = true;
+                this.debugProxySettings.result = JSON.stringify(result, undefined, 2);
+            },
+            error => {
+                this.debugProxySettings.success = false;
+                this.debugProxySettings.result = JSON.stringify(error, undefined, 2);
+            },
+        );
     }
 
     debugProxyUrl() {
-        const auth = (this.debugProxySettings.method === 'GET')
-            ? this.debugProxySettings.authGet
-            : this.debugProxySettings.authPost;
+        const auth =
+            this.debugProxySettings.method === 'GET'
+                ? this.debugProxySettings.authGet
+                : this.debugProxySettings.authPost;
         const protocol = this.window.location.protocol;
         const systemId = this.debugProxySettings.systemId.value;
         const proxyUrl = this.debugProxySettings.proxyUrl;
@@ -188,60 +198,65 @@ export class NxDebugComponent {
 
     generateLink() {
         this.parseActionParams();
-        return this.urlProtocol.generateLink(
-            this.clearEmptyStrings(this.linkSettings)
-        );
+        return this.urlProtocol.generateLink(this.clearEmptyStrings(this.linkSettings));
     }
 
     getTempKey(): void {
-        this.accountService.authKey().then(authKey => {
-            this.linkSettings.auth = authKey;
-        }, noAccount => {
-            console.error(`Couldn't retrieve temporary auth_key from cloud_portal ${noAccount}`);
-            this.linkSettings.auth = 'couldn\'t retrieve temporary auth_key from cloud_portal';
-        });
+        this.accountService.authKey().then(
+            authKey => {
+                this.linkSettings.auth = authKey;
+            },
+            noAccount => {
+                console.error(
+                    `Couldn't retrieve temporary auth_key from cloud_portal ${noAccount}`,
+                );
+                this.linkSettings.auth = "couldn't retrieve temporary auth_key from cloud_portal";
+            },
+        );
     }
 
     mergeSystems(): void {
         this.mergeSettings.result = 'working';
-        this.cloudApiService.merge(
-            this.mergeSettings.masterSystemId,
-            this.mergeSettings.slaveSystemId,
-            this.password
-        ).then(success => {
-            this.mergeSettings.result = JSON.stringify(success, undefined, 2);
-        }, error => {
-            this.mergeSettings.result = JSON.stringify(error, undefined, 2);
-        });
+        this.cloudApiService
+            .merge(
+                this.mergeSettings.masterSystemId,
+                this.mergeSettings.slaveSystemId,
+                this.password,
+            )
+            .then(
+                success => {
+                    this.mergeSettings.result = JSON.stringify(success, undefined, 2);
+                },
+                error => {
+                    this.mergeSettings.result = JSON.stringify(error, undefined, 2);
+                },
+            );
     }
 
     notify(): void {
         const states = Object.values(toast);
         const type = states[Math.floor(Math.random() * states.length)];
         const hold = Math.random() > 0.9;
-        this.dialogsService.notify(
-            `${this.notifyCounter++}: ${type}: ${hold}`, type, hold
-        );
+        this.dialogsService.notify(`${this.notifyCounter++}: ${type}: ${hold}`, type, hold);
     }
 
     openLink(): void {
         this.parseActionParams();
-        this.urlProtocol.getLink(this.clearEmptyStrings(this.linkSettings))
-            .then((data: any) => {
-                const link = data.link;
-                // @ts-expect-error
-                this.window.protocolCheck(
-                    link,
-                    openClientTimeout,
-                    openMobileClientTimeout,
-                    () => {
-                        alert('Protocol not recognized');
-                    },
-                    () => {
-                        alert('Ok - protocol is working');
-                    }
-                );
-            });
+        this.urlProtocol.getLink(this.clearEmptyStrings(this.linkSettings)).then((data: any) => {
+            const link = data.link;
+            // @ts-expect-error
+            this.window.protocolCheck(
+                link,
+                openClientTimeout,
+                openMobileClientTimeout,
+                () => {
+                    alert('Protocol not recognized');
+                },
+                () => {
+                    alert('Ok - protocol is working');
+                },
+            );
+        });
     }
 
     testNotification(): void {
@@ -253,16 +268,17 @@ export class NxDebugComponent {
             this.result = 'Message is not a valid JSON object';
             console.warn(`Message is not json ${message}`);
         }
-        this.cloudApiService.notificationSend(this.userEmail, this.type, message)
-            .then((res: any) => {
+        this.cloudApiService.notificationSend(this.userEmail, this.type, message).then(
+            (res: any) => {
                 this.notificationError = false;
                 this.result = this.formatJSON(res.data);
                 console.warn(res);
-            }, (error: any) => {
+            },
+            (error: any) => {
                 this.notificationError = true;
                 this.result = error.data.errorText;
                 console.error(error);
-            }
-            );
+            },
+        );
     }
 }

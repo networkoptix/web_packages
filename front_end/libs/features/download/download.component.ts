@@ -24,7 +24,6 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
     templateUrl: 'download.component.html',
     styleUrls: ['download.component.scss'],
 })
-
 export class DownloadComponent implements OnInit {
     private sub: Subscription;
     private platform: string;
@@ -66,7 +65,7 @@ export class DownloadComponent implements OnInit {
             this.router.events
                 .pipe(
                     untilDestroyed(this),
-                    filter(event => event instanceof ActivationEnd)
+                    filter(event => event instanceof ActivationEnd),
                 )
                 .subscribe((event: ActivationEnd) => {
                     this.paramPlatform = event.snapshot.params.platform;
@@ -74,7 +73,7 @@ export class DownloadComponent implements OnInit {
                     if (this.paramPlatform && this.sortedPlatforms?.length) {
                         this.calcDisplayedPackages(this.paramPlatform);
                         this.activePlatform = this.sortedPlatforms.find(
-                            platform => platform.name === this.paramPlatform
+                            platform => platform.name === this.paramPlatform,
                         );
                     }
                     // }
@@ -83,9 +82,7 @@ export class DownloadComponent implements OnInit {
     }
 
     private calcDisplayedPackages(platformName: string): void {
-        const platform = this.sortedPlatforms.find(platform =>
-            platform.name === platformName
-        );
+        const platform = this.sortedPlatforms.find(platform => platform.name === platformName);
         this.downloadButton = undefined;
         this.otherPackages = [];
         if (platform !== undefined) {
@@ -93,13 +90,11 @@ export class DownloadComponent implements OnInit {
                 this.otherPackages = platform.files;
             } else {
                 // Ensures the first client found is always selected for the download button.
-                const client = platform.files.find(({ appType }) =>
-                    appType === 'client'
-                );
+                const client = platform.files.find(({ appType }) => appType === 'client');
                 this.downloadButton = client;
                 // Remove the download button from the other packages.
-                this.otherPackages = platform.files.filter(({ fileName }) =>
-                    fileName !== client.fileName
+                this.otherPackages = platform.files.filter(
+                    ({ fileName }) => fileName !== client.fileName,
                 );
             }
         }
@@ -129,24 +124,23 @@ export class DownloadComponent implements OnInit {
             // Sorts platforms based on order defined in nx-config service
             Object.values(this.CONFIG.downloads.groups).forEach((checkPlatform: Arm) => {
                 const platform = this.downloadsData?.platforms.find(
-                    downloadsPlatform => downloadsPlatform.name === checkPlatform.name
+                    downloadsPlatform => downloadsPlatform.name === checkPlatform.name,
                 );
                 if (!platform) {
                     return;
                 }
                 platform.files = platform.files
                     .filter(installer =>
-                        this
-                            .CONFIG
-                            .downloads
-                            .groups[platform.name as keyof Groups]
-                            .appTypes
-                            .includes(installer.appType)
+                        this.CONFIG.downloads.groups[
+                            platform.name as keyof Groups
+                        ].appTypes.includes(installer.appType),
                     )
                     .map(installer => {
                         if (!installer.niceName) {
-                            const translatedPlatform = this.LANG.downloads.platforms[installer.platform];
-                            const translatedAppType = this.LANG.downloads.appTypes[installer.appType];
+                            const translatedPlatform =
+                                this.LANG.downloads.platforms[installer.platform];
+                            const translatedAppType =
+                                this.LANG.downloads.appTypes[installer.appType];
                             if (platform.name === 'sdk' && translatedAppType) {
                                 installer.niceName = translatedAppType;
                             } else if (translatedPlatform && translatedAppType) {
@@ -166,10 +160,14 @@ export class DownloadComponent implements OnInit {
             if (!this.sortedPlatforms.some(platform => platform.name === this.platform)) {
                 const configDownloads = this.CONFIG.downloads;
                 const detectedOS = this.deviceService.getDeviceInfo().os.toLowerCase();
-                this.platform = configDownloads.platformMatch[detectedOS] || configDownloads.groups.windows.name;
+                this.platform =
+                    configDownloads.platformMatch[detectedOS] ||
+                    configDownloads.groups.windows.name;
             }
             this.calcDisplayedPackages(this.platform);
-            this.activePlatform = this.sortedPlatforms.find(platform => platform.name === this.platform);
+            this.activePlatform = this.sortedPlatforms.find(
+                platform => platform.name === this.platform,
+            );
             this.checkedDownloads = true;
 
             this.sub.unsubscribe();
@@ -177,28 +175,21 @@ export class DownloadComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.accountService.get()
-            .then(account => {
-                this.canSeeHistory = (
-                    !!this.CONFIG.cloudCapabilities.publicReleases ||
-                    account && (
-                        account.is_superuser ||
-                        account.permissions.includes(
-                            permissions.canViewRelease
-                        )
-                    )
-                );
-            });
+        this.accountService.get().then(account => {
+            this.canSeeHistory =
+                !!this.CONFIG.cloudCapabilities.publicReleases ||
+                (account &&
+                    (account.is_superuser ||
+                        account.permissions.includes(permissions.canViewRelease)));
+        });
 
         if (!this.CONFIG.cloudCapabilities.publicDownloads) {
-            this.accountService
-                .requireLogin()
-                .then(result => {
-                    if (isAccount(result)) {
-                        this.canViewDownloads = true;
-                        this.getDownloads();
-                    }
-                });
+            this.accountService.requireLogin().then(result => {
+                if (isAccount(result)) {
+                    this.canViewDownloads = true;
+                    this.getDownloads();
+                }
+            });
         } else {
             this.canViewDownloads = true;
             this.getDownloads();
@@ -206,7 +197,9 @@ export class DownloadComponent implements OnInit {
     }
 
     installerName(platformName: string): string {
-        return this.LANG.downloads.groups[platformName].shortLabel ||
-            this.LANG.downloads.groups[platformName].label;
+        return (
+            this.LANG.downloads.groups[platformName].shortLabel ||
+            this.LANG.downloads.groups[platformName].label
+        );
     }
 }

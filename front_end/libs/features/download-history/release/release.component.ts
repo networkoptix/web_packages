@@ -18,8 +18,6 @@ export class ReleaseComponent implements OnInit {
     cardExpanded: Record<string, boolean>;
 
     ngOnInit(): void {
-        this.cardExpanded = Object.fromEntries(
-            this.release.platforms.map(p => [p.name, false])
-        );
+        this.cardExpanded = Object.fromEntries(this.release.platforms.map(p => [p.name, false]));
     }
 }
