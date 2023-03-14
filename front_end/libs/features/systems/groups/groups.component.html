@@ -29,7 +29,7 @@
                 [currentGroupId]="currentGroupId$ | async"
                 [currentGroupOwner]="currentGroupOwner$ | async"
                 [userEmail]="userEmail"
-                [hasGroups]="!!(allGroups$ | async).length"
+                [hasGroups]="hasGroups$ | async"
                 [currentPath]="currentPath$ | async"
                 [openGroups]="openGroups$ | async"
                 (dismiss)="dismiss()"
@@ -62,6 +62,14 @@
                         Shared
                     </button>
                 </div>
+                <button
+                    *ngIf="showPersonal"
+                    (click)="newGroupDialog()"
+                    class="btn btn-default"
+                    translate
+                >
+                    + Add Group
+                </button>
                 <div class="crumbs">
                     <a routerLink="/groups/">{{
                         (showPersonal ? LANG.systemGroups.mySystems : LANG.systemGroups.shared)

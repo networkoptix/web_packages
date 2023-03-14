@@ -101,9 +101,9 @@ export type Account2faReturn = string;
 /* Groups */
 export type CreateSystemGroup = DialogType<
     {
-        targetId?: string;
-        targetName?: string;
-        hasGroups?: boolean;
+        targetId: string;
+        parentGroup: string;
+        hasGroups: boolean;
     },
     void
 >;

@@ -98,6 +98,11 @@ export const selectRootGroupItems = createSelector(
     items => items?.filter(item => item.type === 'group') as GroupItem[]
 );
 
+export const selectHasGroups = createSelector(
+    selectRootGroupItems,
+    groups => !!groups?.length
+);
+
 export const selectRootSystemItems = createSelector(
     selectGroupsItems,
     items => items?.filter(item => item.type === 'system') as SystemItem[]

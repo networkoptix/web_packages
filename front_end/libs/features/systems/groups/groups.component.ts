@@ -3,8 +3,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { LocalStorageService } from 'ngx-webstorage';
+import { forkJoin, take } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons } from '@lib/variables/static-variables';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
@@ -26,10 +28,10 @@ import {
     selectCurrentGroupOwner,
     selectCurrentPath,
     selectCurrentSharedOwner,
+    selectHasGroups,
     selectLoadingState,
     selectOpenGroups,
     selectPersonalItems,
-    selectRootGroupItems,
     selectSharedItems,
 } from './store/groups.selectors';
 
@@ -54,11 +56,12 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
     showPersonal: boolean = true;
     sharedItems$ = this.store.select<SharedItems>(selectSharedItems);
     personalItems$ = this.store.select<BaseItems>(selectPersonalItems);
-    allGroups$ = this.store.select(selectRootGroupItems);
+    hasGroups$ = this.store.select(selectHasGroups);
     currentSharedOwner$ = this.store.select<string>(selectCurrentSharedOwner);
     currentGroupOwner$ = this.store.select<string>(selectCurrentGroupOwner);
     loadingState$ = this.store.select<LoadingState>(selectLoadingState);
     currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
+
     constructor(
         private store: Store,
         private groupsService: NxSystemGroupsService,
@@ -66,6 +69,7 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
         private localStorageService: LocalStorageService,
         private cloudApi: NxCloudApiService,
         private router: Router,
+        private dialogsService: NxDialogsService,
     ) {
         this.groupsService.connect();
         this.init();
@@ -113,6 +117,17 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
         }
         this.router.navigate(['/', 'groups']);
         this.showPersonal = newState;
+    }
+
+    newGroupDialog(): void {
+        const currentGroupId$ = this.currentGroupId$.pipe(take(1));
+        const hasGroups$ = this.hasGroups$.pipe(take(1));
+        forkJoin([currentGroupId$, hasGroups$])
+            .subscribe(([currentGroupId, hasGroups]) => this.dialogsService.createSystemGroup({
+                targetId: currentGroupId,
+                hasGroups,
+                parentGroup: null
+            }));
     }
 
     trackItem(_index: number, item: Crumb): string {

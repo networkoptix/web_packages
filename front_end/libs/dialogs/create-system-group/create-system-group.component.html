@@ -45,10 +45,10 @@
             <ng-template #subsequentGroups>
                 <p class="modal-paragraph-light">
                     {{
-                        (targetName
+                        (parentGroup
                             ? LANG.dialogs.systemGroups.createdInsideSelectedGroup
                             : LANG.dialogs.systemGroups.createdInCurrentGroup
-                        ) | translate: { targetName: targetName }
+                        ) | translate: { parentGroup }
                     }}
                 </p>
             </ng-template>

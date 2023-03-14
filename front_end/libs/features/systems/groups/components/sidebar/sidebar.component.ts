@@ -60,7 +60,8 @@ export class NxSystemGroupsSidebarComponent implements OnInit {
     newGroupDialog(): void {
         this.dialogsService.createSystemGroup({
             targetId: this.currentGroupId,
-            hasGroups: this.hasGroups
+            parentGroup: null,
+            hasGroups: false
         });
     }
 }

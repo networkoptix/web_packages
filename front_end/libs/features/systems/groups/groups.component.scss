@@ -54,6 +54,10 @@
         flex-direction: column;
         gap: 1rem;
 
+        .btn-default {
+            width: 8rem;
+        }
+
         .crumbs {
             font-size: 1rem;
             color: var(--body-text-color);

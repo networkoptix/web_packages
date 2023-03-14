@@ -690,7 +690,7 @@
             "createFirstGroup" : "Enter a new group name",
             "createdInRoot": "New group will be created in root",
             "createdInCurrentGroup": "New group will be created in current group",
-            "createdInsideSelectedGroup": "New group will be created in {targetName}"
+            "createdInsideSelectedGroup": "New group will be created in {parentGroup}"
         },
         "transferOwnership": {
             "userNotFound": "{ newOwnerEmail } is not a user in the system"

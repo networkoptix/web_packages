@@ -4,6 +4,7 @@
     "(change)": "(change)",
     "(copy)": "(copy)",
     "(if %VMS_NAME% has been already setup)": "(if %VMS_NAME% has been already setup)",
+    "+ Add Group": "+ Add Group",
     "1 professional license channel will be used": "1 professional license channel will be used",
     "A simple way to connect to, manage and expand any %VMS_NAME% System.": "A simple way to connect to, manage and expand any %VMS_NAME% System.",
     "API Documentation": "API Documentation",
