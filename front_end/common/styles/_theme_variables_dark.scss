@@ -1,3 +1,4 @@
+@use "utils" as *;
 @import "./native-theme/theme_palette";
 @import "_theme_palette";
 
@@ -608,32 +609,32 @@ html[data-theme="dark"] {
     --inactive-license-text: var(--yellow_d2);
 
     // System groups TODO
-    // --groups-sidebar-bg: #{$light5};
-    // @include generateVarAndRgb(--groups-sidebar-highlight, $light16);
-    // --groups-sidebar-highlight-color: #{$light1};
-    // --groups-sidebar-triangle-icon-fill: #{$dark17};
-    // --groups-sidebar-triangle-icon-highlight-fill: #{$light4};
-    // --groups-sidebar-folder-icon-fill: #{$dark17};
-    // --groups-sidebar-folder-icon-highlight-fill: #{$light1};
+    --groups-sidebar-bg: var(--dark4);
+    @include generateVarAndRgb(--groups-sidebar-highlight, $dark18);
+    --groups-sidebar-highlight-color: var(--light4);
+    --groups-sidebar-triangle-icon-fill: var(--dark17);
+    --groups-sidebar-triangle-icon-highlight-fill: var(--dark6);
+    --groups-sidebar-folder-icon-fill: var(--dark17);
+    --groups-sidebar-folder-icon-highlight-fill: var(--dark1);
 
-    // --group-card-folder-icon-body-fill: #{$light10};
-    // --group-card-folder-icon-tab-fill: #{$light13};
-    // --group-card-bg-grad0: #{$light3};
-    // --group-card-bg-grad100: #{$light5};
-    // --group-card-border-color: #{$light7};
+    --group-card-folder-icon-body-fill: var(--dark11);
+    --group-card-folder-icon-tab-fill: var(--dark13);
+    --group-card-bg-grad0: var(--dark5);
+    --group-card-bg-grad100: var(--dark7);
+    --group-card-border-color: var(--dark10);
 
-    // @include generateVarAndRgb(--system-card-bg-grad0, $light1);
-    // @include generateVarAndRgb(--system-card-bg-grad100, $light3);
-    // --system-card-offline-color: #{$light16};
-    // --system-card-border-color: #{$light5};
+    @include generateVarAndRgb(--system-card-bg-grad0, $dark4);
+    @include generateVarAndRgb(--system-card-bg-grad100, $dark5);
+    --system-card-offline-color: var(--light4);
+    --system-card-border-color: var(--dark8);
 
-    // --card-subtext-color: #{$light16};
-    // --card-menu-dots-fill: #{$light16};
-    // --card-placeholder-shadow: inset 0 0.25rem 0.5rem rgba(var(--dark15--rgb), 0.2);
-    // --card-drag-shadow: 0 1rem 2rem rgba(var(--dark15--rgb), 0.2);
+    --card-subtext-color: var(--light4);
+    --card-menu-dots-fill: var(--light4);
+    --card-placeholder-shadow: inset 0 0.25rem 0.5rem rgba(var(--light6--rgb), 0.2);
+    --card-drag-shadow: 0 1rem 2rem rgba(var(--light6--rgb), 0.2);
 
-    // --card-context-bg: #{$light4};
-    // --card-context-shadow: 0 1rem 2rem rgba(var(--dark15--rgb), 0.4);
+    --card-context-bg: var(--dark9);
+    --card-context-shadow: 0 1rem 2rem rgba(var(--light6--rgb), 0.4);
 
     /*  */
     --new-feature-gradient: linear-gradient(242.24deg, var(--dark2) 0.43%, var(--brand-d4) 122.68%);

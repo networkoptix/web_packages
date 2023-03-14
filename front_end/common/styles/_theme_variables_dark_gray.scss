@@ -1,3 +1,4 @@
+@use "utils" as *;
 @import "./native-theme/theme_palette";
 @import "_theme_palette";
 
@@ -595,6 +596,35 @@ html[data-theme="dark-gray"] {
 
     --active-license-text: var(--green_main);
     --inactive-license-text: var(--yellow_d2);
+
+    // System groups
+    --groups-sidebar-bg: var(--dark_gray_11);
+    @include generateVarAndRgb(--groups-sidebar-highlight, $dark_gray_18);
+    --groups-sidebar-highlight-color: var(--dark_gray_1);
+    --groups-sidebar-triangle-icon-fill: var(--dark17);
+    --groups-sidebar-triangle-icon-highlight-fill: var(--dark_gray_13);
+    --groups-sidebar-folder-icon-fill: var(--dark17);
+    --groups-sidebar-folder-icon-highlight-fill: var(--dark_gray_1);
+    --groups-sidebar-intro-text-color: var(--dark_gray_18); 
+
+    --group-card-folder-icon-body-fill: var(--dark_gray_12);
+    --group-card-folder-icon-tab-fill: var(--dark_gray_13);
+    --group-card-bg-grad0: var(--dark_gray_11);
+    --group-card-bg-grad100: var(--dark_gray_9);
+    --group-card-border-color: var(--dark_gray_14);
+
+    @include generateVarAndRgb(--system-card-bg-grad0, $dark_gray_1);
+    @include generateVarAndRgb(--system-card-bg-grad100, $dark_gray_11);
+    --system-card-offline-color: var(--dark_gray_18);
+    --system-card-border-color: var(--dark_gray_9);
+
+    --card-subtext-color: var(--dark_gray_18);
+    --card-menu-dots-fill: var(--dark_gray_18);
+    --card-placeholder-shadow: inset 0 0.25rem 0.5rem rgba(var(--dark_gray_1--rgb), 0.2);
+    --card-drag-shadow: 0 1rem 2rem rgba(var(--dark_gray_1--rgb), 0.2);
+
+    --card-context-bg: var(--dark_gray_9);
+    --card-context-shadow: 0 1rem 2rem rgba(var(--dark_gray_1--rgb), 0.4);
 
     /* Bookmarks */
     --bookmarks-calendar-today-border: rgba(255, 255, 255, 0.38);

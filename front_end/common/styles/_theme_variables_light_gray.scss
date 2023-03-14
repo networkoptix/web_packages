@@ -582,9 +582,33 @@ html[data-theme="light-gray"] {
     --inactive-license-text: var(--yellow_d2);
 
     // System groups
-    --folder-svg: #{$dark_gray_12};
-    --opened-triangle-svg: #{$dark_gray_12};
-    --closed-triangle-svg: #{$dark_gray_12};
+    --groups-sidebar-bg: var(--light_gray_2);
+    @include generateVarAndRgb(--groups-sidebar-highlight, $light_gray_16);
+    --groups-sidebar-highlight-color: var(--light_gray_1);
+    --groups-sidebar-triangle-icon-fill: var(--dark17);
+    --groups-sidebar-triangle-icon-highlight-fill: var(--light_gray_4);
+    --groups-sidebar-folder-icon-fill: var(--dark17);
+    --groups-sidebar-folder-icon-highlight-fill: var(--light_gray_1);
+    --groups-sidebar-intro-text-color: var(--light_gray_16);
+
+    --group-card-folder-icon-body-fill: var(--light_gray_10);
+    --group-card-folder-icon-tab-fill: var(--light_gray_13);
+    --group-card-bg-grad0: var(--light_gray_3);
+    --group-card-bg-grad100: var(--light_gray_5);
+    --group-card-border-color: var(--light_gray_7);
+
+    @include generateVarAndRgb(--system-card-bg-grad0, $light_gray_1);
+    @include generateVarAndRgb(--system-card-bg-grad100, $light_gray_3);
+    --system-card-offline-color: var(--light_gray_16);
+    --system-card-border-color: var(--light_gray_5);
+
+    --card-subtext-color: var(--light_gray_16);
+    --card-menu-dots-fill: var(--light_gray_16);
+    --card-placeholder-shadow: inset 0 0.25rem 0.5rem rgba(var(--dark_gray_15--rgb), 0.2);
+    --card-drag-shadow: 0 1rem 2rem rgba(var(--dark_gray_15--rgb), 0.2);
+
+    --card-context-bg: var(--light_gray_4);//
+    --card-context-shadow: 0 1rem 2rem rgba(var(--dark_gray_15--rgb), 0.4);
 
     /* Bookmarks */
     --bookmarks-calendar-today-border: rgba(0, 0, 0, 0.38);
