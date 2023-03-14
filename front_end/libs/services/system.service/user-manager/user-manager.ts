@@ -297,7 +297,7 @@ export class UserManager {
         user.userRoleId = role.id || '';
         user.permissions = role.permissions || '';
 
-        if (this.mediaserver.version > 5.1) {
+        if (this.mediaserver.version > 5.0) {
             user.permissions = user.permissions.replace(this.CONFIG.accessRoles.customPermission.permissions, this.CONFIG.accessRoles.globalCustomUserPermission);
         }
 
