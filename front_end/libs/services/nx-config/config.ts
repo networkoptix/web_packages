@@ -211,6 +211,7 @@ export const nxConfig: IConfig = {
         editCameraPermissionFlag: 'GlobalEditCamerasPermission',
         exportPermissionFlag: 'GlobalExportPermission',
         globalAdminPermissionFlag: 'GlobalAdminPermission',
+        globalCustomUserPermission: 'GlobalCustomUserPermission',
         allMediaPermissionFlag: 'GlobalAccessAllMediaPermission',
         viewArchivesPermissionFlag: 'GlobalViewArchivePermission',
         customPermission: {

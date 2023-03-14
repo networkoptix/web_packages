@@ -297,6 +297,10 @@ export class UserManager {
         user.userRoleId = role.id || '';
         user.permissions = role.permissions || '';
 
+        if (this.mediaserver.version > 5.1) {
+            user.permissions = user.permissions.replace(this.CONFIG.accessRoles.customPermission.permissions, this.CONFIG.accessRoles.globalCustomUserPermission);
+        }
+
         // The mediaserver doesn't like any attempts to change admin's permissions
         if (user.isLocalOwner) {
             delete user.name;
