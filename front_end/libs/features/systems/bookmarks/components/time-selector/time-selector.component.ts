@@ -141,15 +141,13 @@ export class NxTimeSelectorComponent implements OnInit {
 
         const dtHelper = new DateTimeHelper(dtFormat);
 
-        this.placeholder = dtHelper.numericalForm(
-            this.point === 'start' ? DateTimeHelper.dayStart : DateTimeHelper.dayEnd
-        );
+        this.placeholder = dtHelper.numericalForm(DateTimeHelper.dayStart);
         this.timeRegex = dtHelper.timeRegex;
 
         this.hour12 = dtHelper.hour12;
         if (this.hour12) {
             [this.AM, this.PM] = dtHelper.dayPeriods;
-            this.period = this.point === 'start' ? this.AM : this.PM;
+            this.period = this.AM;
             this.postPeriod = dtHelper.postPeriod;
         }
 
