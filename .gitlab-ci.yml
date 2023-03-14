@@ -195,6 +195,7 @@ django-checks:
     USE_SQLITE: "true"
   script:
     - cd cloud
+    - if ! python safety-check.py ; then echo PIP packages need to be updated && exit 1 ; fi
     - if ! python manage.py makemigrations --dry-run --check ; then echo Missing above migrations && exit 1 ; fi
     - if ! python manage.py check ; then echo System check failed && exit 1 ; fi
 
