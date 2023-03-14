@@ -131,7 +131,7 @@
                             class="btn btn-default"
                             (click)="detachServer()"
                             [disabled]="detachDisabled || serverUnavailable"
-                            *ngIf="system.servers.length > 1"
+                            *ngIf="system.serverManager.servers.length > 1"
                         >
                             <span
                                 class="ellipsis"

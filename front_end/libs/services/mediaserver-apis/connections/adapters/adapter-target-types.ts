@@ -24,4 +24,4 @@ export abstract class MediaserverLegacyConnection extends MediaserverBaseConnect
  *
  * Once the classes are decoupled we can update these classes to have the correct typing.
  */
-export abstract class MediaserverRestConnection extends MediaserverLegacyConnection implements Required<MediaserverBaseConnection> {}
+export abstract class MediaserverRestConnection extends MediaserverLegacyConnection implements Required<MediaserverBaseConnection> { }

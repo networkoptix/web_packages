@@ -10,7 +10,7 @@
 <div *ngIf="system?.isOnline">
     <nx-license-new-component
         [system]="system"
-        [servers]="system?.servers"
+        [servers]="system?.serverManager.servers"
         [licenses]="licenses"
     >
     </nx-license-new-component>

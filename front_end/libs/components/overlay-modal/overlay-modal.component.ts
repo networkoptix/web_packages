@@ -102,7 +102,7 @@ export class NxOverlayModalComponent implements OnInit {
                 this.getServers();
                 this.serverId = environment.isLocal
                     ? this.CONFIG.localServerId
-                    : this.system.moduleInfo.id;
+                    : this.system.serverManager.moduleInfo.id;
                 this.router.events.pipe(untilDestroyed(this)).subscribe(route => {
                     if (route instanceof NavigationEnd) {
                         this.currentRoute = `/#${route.url}`;
@@ -181,7 +181,8 @@ export class NxOverlayModalComponent implements OnInit {
             .getServers()
             .toPromise()
             .then(res => {
-                this.servers = (res || []).filter(({ id }) => id !== this.serverId)
+                this.servers = (res || [])
+                    .filter(({ id }) => id !== this.serverId)
                     .map(server => {
                         server = setServerIpAndPort(server);
                         server.url = `//${server.ip}${server.port ? ':' + server.port : ''}`;

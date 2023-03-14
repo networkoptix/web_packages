@@ -693,7 +693,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             } else {
                 usersNode.level2 = [];
             }
-            if (this.system && this.system.users?.length > 0) {
+            if (this.system && this.system.userManager.users?.length > 0) {
                 const cloudUsers: Level3Item[] = [];
                 const localUsers: Level3Item[] = [];
                 // TODO: Reconcile UserManager types
@@ -847,7 +847,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     getCameraStatusIcon({ id, status, scheduleEnabled, parentId }: NxSystemCamera): string {
-        const parentServer = this.system.servers.find(s => s.id === parentId);
+        const parentServer = this.system.serverManager.servers.find(s => s.id === parentId);
         if (parentServer?.status === 'Offline') {
             return menus.systemSettings.cameras.statusIcons.offline;
         }

@@ -294,7 +294,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             let newPort: number;
 
             if (this.serverNameWatcher.changed) {
-                await this.system.renameServer(
+                await this.system.serverManager.renameServer(
                     this.selectedServer.id,
                     this.serverNameWatcher.value
                 ).then(() => {

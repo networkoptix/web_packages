@@ -19,10 +19,10 @@ import type {
     ChangedIdReturned,
 } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
+import { NxSystemOldModule } from '@services/system/modules/nx-system-old-module';
 import { alphabeticalSort, cleanId, KeyFilter, paramSortFunc } from '@utils/general';
 
-import { ServerManager } from '../server-manager/server-manager';
-import { NxSystem } from '../system';
+import type { ServerManager } from '../server-manager/server-manager';
 import { ModuleInfo } from '../system-types';
 
 import type * as APT from './add-params.types';
@@ -39,6 +39,8 @@ import {
     SaveCameraUserAttributes,
 } from './camera-manager-types';
 
+type PartialSystem = Pick<NxSystemOldModule, 'serverManager' | 'locale' | 'version'>;
+
 const updateDuration = (chunk: Pick<Partial<TimeDetail>, 'durationMs'> & Omit<TimeDetail, 'durationMs'>): TimeDetail => {
     chunk.durationMs = chunk.endTimeMs - chunk.startTimeMs;
     return chunk as TimeDetail;
@@ -49,12 +51,17 @@ export class CameraManager {
     private camerasHealth: any = {};
     private serverManager: ServerManager;
     private serverTimes: ServerTime[];
+    private locale: string;
+
     servers: ec2MediaServer[];
     cameras: NxSystemCamera[];
     moduleInfo: ModuleInfo;
 
-    constructor(private system: NxSystem, private locale: string) {
+    constructor(
+        private system: PartialSystem,
+    ) {
         this.serverManager = this.system.serverManager;
+        this.locale = system.locale;
     }
 
     async updateSystemServersCameras(): Promise<void> {

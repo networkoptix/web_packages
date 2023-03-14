@@ -10,6 +10,7 @@ import type { LogLevel, RebuildArchiveResponse } from '@services/system-api.type
 import * as t from '@services/system-api.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
+import { NxSystemOldModule } from '@services/system/modules/nx-system-old-module';
 import { alphabeticalSort } from '@utils/general';
 import { memoizeAsyncPersistent, memoizeDecorator } from '@utils/memoize';
 import { setServerIpAndPort } from '@utils/nx';
@@ -17,8 +18,10 @@ import { setServerIpAndPort } from '@utils/nx';
 import { NxCloudApiService } from '../../nx-cloud-api';
 import { NxSystemAPIService } from '../../system-api.service';
 import { NxSystemAPI } from '../../system-legacy-api.service';
-import { NxSystem } from '../system';
 import { NxSystemServer, ModuleInfo } from '../system-types';
+
+type PartialSystem = Pick<NxSystemOldModule, 'mediaserver' | 'systemApiService' | 'currentUserEmail' | 'id' | 'cloudApi' | 'locale' | 'useRest' | 'version'>;
+
 export class ServerManager {
     static memoizeByServersAndConnections = memoizeDecorator(function (this: ServerManager) {
         return stringify({
@@ -42,15 +45,23 @@ export class ServerManager {
     moduleInfo: ModuleInfo;
     serverSubscription: Observable<NxSystemServer[]>;
 
-    constructor(
-        public mediaserver: NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2,
-        private systemApiService: NxSystemAPIService,
-        private currentUserEmail: string,
-        private systemId: string,
-        private cloudApi: NxCloudApiService,
-        private system: NxSystem,
-        private locale: string,
-    ) {}
+    public mediaserver: NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2;
+    private systemApiService: NxSystemAPIService;
+    private currentUserEmail: string;
+    private systemId: string;
+    private cloudApi: NxCloudApiService;
+    private system: PartialSystem;
+    private locale: string;
+
+    constructor(system: PartialSystem) {
+        this.mediaserver = system.mediaserver;
+        this.systemApiService = system.systemApiService;
+        this.currentUserEmail = system.currentUserEmail;
+        this.systemId = system.id;
+        this.cloudApi = system.cloudApi;
+        this.system = system;
+        this.locale = system.locale;
+    }
 
     @ServerManager.memoizeByServersAndConnections
     handleInitSystemMediaServers(): Record<string, NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2> {
@@ -66,7 +77,7 @@ export class ServerManager {
                         ? () => this.cloudApi.getSystemToken(this.systemId).toPromise().then(tokens => {
                             (<NxSystemRestAPI> this.mediaserver)
                                 .setTokens(tokens, true)
-                                .subscribe(() => {});
+                                .subscribe(() => { });
                             return Promise.resolve(true);
                         })
                         : () => this.cloudApi.getSystemAuth(this.systemId).toPromise().then(authKeys => {
@@ -128,10 +139,10 @@ export class ServerManager {
     getPreviewUrl(
         cameraId: string,
         time: number | string,
-        width: number,
-        height: number,
-        rotate: number,
-        auth?: string
+        width: number = 640,
+        height: number = 480,
+        rotate: number = 0,
+        auth: string = ''
     ): Observable<string> {
         return this.mediaserver.previewUrl(cameraId, time, width, height, rotate, auth);
     }

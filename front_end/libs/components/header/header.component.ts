@@ -429,10 +429,10 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                     this.singleSystem = true;
                     this.systemCounter = 1;
                     this.system.infoSubject.pipe(untilDestroyed(this)).subscribe(system => {
-                        this.systems = [system];
+                        this.systems = [system as NxSystem];
                         this.updateActiveSystem();
                         this.updateActive();
-                        this.headerService.activeSystem = system?.moduleInfo;
+                        this.headerService.activeSystem = system?.serverManager.moduleInfo;
                     });
                 });
             });

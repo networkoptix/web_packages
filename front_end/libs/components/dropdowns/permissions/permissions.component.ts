@@ -78,7 +78,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
                 const adminLevel = (role as PredefinedRole | UserRole).isAdmin;
                 // Don't allow owner level in dropdown
                 // Don't allow admin level if not owner
-                return !ownerLevel && !(adminLevel && !this.system.isMine);
+                return !ownerLevel && !(adminLevel && !this.system.userManager.isMine);
             })
             .map(role => ({
                 ...role,

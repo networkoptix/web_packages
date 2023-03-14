@@ -61,8 +61,8 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
             .subscribe(() => {
                 if (
                     this.system &&
-                    this.system.servers &&
-                    this.system.servers.length
+                    this.system.serverManager.servers &&
+                    this.system.serverManager.servers.length
                 ) {
                     this.getAdvancedSettings();
                 }

@@ -222,7 +222,7 @@ export interface AccessRoles {
     custom: string;
     editUserPermissionFlag: string;
     editCameraPermissionFlag: string;
-    exportPermissionFlag: string,
+    exportPermissionFlag: string;
     globalAdminPermissionFlag: string;
     allMediaPermissionFlag: string;
     viewArchivesPermissionFlag: string;

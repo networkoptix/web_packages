@@ -66,7 +66,7 @@ export class RestartServerModalContent {
 
         this.restartServer = this.processService
             .createProcess(() => {
-                const haveOnlineServers = this.system.servers
+                const haveOnlineServers = this.system.serverManager.servers
                     .some(({ status, id }) =>
                         status === 'Online' && id !== this.serverId
                     );

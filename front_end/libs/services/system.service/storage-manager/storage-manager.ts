@@ -1,8 +1,8 @@
 import { firstValueFrom, Observable } from 'rxjs';
 
 import type { RebuildArchiveResponse } from '@services/system-api.types';
-
-import { NxSystem } from '../system';
+import { NxSystemOldModule } from '@services/system/modules/nx-system-old-module';
+import { ServerManagerModule } from '@services/system/modules/resource-managers/server-manager';
 
 import { StorageState } from './storage-state';
 
@@ -113,7 +113,9 @@ export class StorageManager extends StorageState {
         return this.serverManager.mediaserver.saveStorage({ ...updateParams, typeId });
     }
 
-    constructor(public system: NxSystem) {
+    constructor(
+        public system: Pick<NxSystemOldModule & ServerManagerModule, 'serverManager' | 'cameraManager' | 'updateOrGetSystemSettings'>
+    ) {
         super(system.serverManager);
     }
 }

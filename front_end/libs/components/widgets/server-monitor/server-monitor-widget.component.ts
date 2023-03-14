@@ -123,7 +123,7 @@ export class NxServerMonitorWidgetComponent extends FirstPartyWidget<
         await system.update();
         // await system.serverManager.initSystemMediaServers();
         const systemName = system.info.name;
-        const activeServer = system.servers.find(
+        const activeServer = system.serverManager.servers.find(
             ({ id }) => id === this.card.config.selectedServer,
         );
         this.isOnline = activeServer?.status === 'Online';

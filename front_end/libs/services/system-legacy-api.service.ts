@@ -47,6 +47,7 @@ interface IParams<Value = any> {
 }
 
 export class NxSystemAPI extends MediaserverLegacyConnection {
+    // Exclude V5.2 since we should try to remove all legacy calls at that point.
     /*
      * System API is a unified service for making API requests to media servers
      *

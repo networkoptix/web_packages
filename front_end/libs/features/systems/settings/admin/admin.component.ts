@@ -240,7 +240,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                             this.system && !this.system.isAvailable &&
                             system && system.isAvailable
                         ) {
-                            this.system = system;
+                            this.system = system as NxSystem;
                         }
                         this.updateSettings(this.currentlyMerging);
                         this.syncMergeAlerts();
@@ -376,7 +376,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                             console.error(error);
                         });
                 }
-                if (this.system.currentUser?.isCloud) {
+                if (this.system.userManager.currentUser?.isCloud) {
                     return this.accountService.logout();
                 }
                 // give the user chance to read the toaster
@@ -452,7 +452,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     };
 
     delete() {
-        if (!this.system.isMine) {
+        if (!this.system.userManager.isMine) {
             // User is not owner. Deleting means he'll lose access to it
             if (this.environment.isLocal) {
                 return this.dialogs.removeSystem(this.system)

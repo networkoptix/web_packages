@@ -206,7 +206,7 @@ export class NxSystemLicensesComponent implements OnInit {
                 });
 
                 const server: NxSystemServer | any = (boundServer)
-                    ? this.system.servers.find(server => server.id === boundServer.serverId) || {}
+                    ? this.system.serverManager.servers.find(server => server.id === boundServer.serverId) || {}
                     : {};
 
                 if (Object.keys(server).length) {
@@ -282,8 +282,8 @@ export class NxSystemLicensesComponent implements OnInit {
             .pipe(
                 map(system => {
                     if (
-                        !system.servers ||
-                        system.servers.length === 0
+                        !system.serverManager.servers ||
+                        system.serverManager.servers.length === 0
                     ) {
                         throw new Error();
                     }

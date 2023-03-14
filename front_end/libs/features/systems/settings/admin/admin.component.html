@@ -138,7 +138,7 @@
                 </div>
             </header>
 
-            <nx-section *ngIf="system.isMine">
+            <nx-section *ngIf="system.userManager.isMine">
                 <div class="row m-0">
                     <div class="col-xl-7 pl-0">
                         <div class="float-left mr-2">
@@ -175,7 +175,7 @@
                     </div>
                 </div>
             </nx-section>
-            <nx-section *ngIf="!system.isMine">
+            <nx-section *ngIf="!system.userManager.isMine">
                 <span class="system-owner"
                     ><span
                         translate
@@ -244,12 +244,12 @@
             <nx-section
                 *ngIf="
                     system.userManager.permissions.isAdmin &&
-                    ((system.isMine && !CONFIG.cloudSystemId) || CONFIG.cloudSystemId)
+                    ((system.userManager.isMine && !CONFIG.cloudSystemId) || CONFIG.cloudSystemId)
                 "
             >
                 <div class="row m-0">
                     <div class="col-12 pl-0">
-                        <div *ngIf="system.isMine && !CONFIG.cloudSystemId">
+                        <div *ngIf="system.userManager.isMine && !CONFIG.cloudSystemId">
                             <nx-process-button
                                 actionType="default"
                                 [buttonText]="'Connect to %CLOUD_NAME%' | translate"
@@ -260,12 +260,12 @@
                             <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
                             <span>
                                 <span
-                                    *ngIf="system.isMine"
+                                    *ngIf="system.userManager.isMine"
                                     class="system-header-bold"
                                     translate
                                     >you</span
                                 >
-                                <span *ngIf="!system.isMine">
+                                <span *ngIf="!system.userManager.isMine">
                                     <span class="system-header-bold">{{
                                         system.info.ownerFullName
                                     }}</span>
@@ -274,7 +274,7 @@
                             </span>
                             <div class="mt-3">
                                 <nx-process-button
-                                    *ngIf="system.isMine"
+                                    *ngIf="system.userManager.isMine"
                                     class="mt-3"
                                     actionType="default"
                                     [buttonText]="'Disconnect from %CLOUD_NAME%' | translate"
@@ -289,7 +289,7 @@
         </nx-block>
 
         <nx-system-standard-admin-component
-            *ngIf="system.isAdmin"
+            *ngIf="system.userManager.permissions.isAdmin"
             [system]="system"
             [settings]="settingsForSystem$ | async"
         >
@@ -297,7 +297,7 @@
 
         <nx-alert-block
             class="d-block mt-3"
-            *ngIf="system.currentUser?.isAdmin && advanced"
+            *ngIf="system.userManager.currentUser?.isAdmin && advanced"
             [iconSrc]="icons.dirNonStandard + 'error.svg'"
             [line1]="'Settings displayed below are advanced.' | translate"
             [line2]="'Changing them may cause server to work incorrectly.' | translate"
@@ -308,7 +308,7 @@
         </nx-alert-block>
 
         <nx-system-advanced-admin-component
-            *ngIf="system.currentUser?.isAdmin && advanced"
+            *ngIf="system.userManager.currentUser?.isAdmin && advanced"
             [system]="system"
         >
         </nx-system-advanced-admin-component>

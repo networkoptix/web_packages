@@ -1,4 +1,4 @@
-<nx-pre-loader *ngIf="!system || !system.users || !selectedUser"></nx-pre-loader>
+<nx-pre-loader *ngIf="!system || !system.userManager.users || !selectedUser"></nx-pre-loader>
 
 <div
     *ngIf="system"
@@ -68,7 +68,7 @@
                             name="permissionsSelect"
                             [disabled]="!systemAvailable"
                             [system]="system"
-                            [roles]="system.accessRoles"
+                            [roles]="system.userManager.accessRoles"
                             [ngModel]="selectedUser.role"
                             (ngModelChange)="setPermission($event)"
                         >
