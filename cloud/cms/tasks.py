@@ -209,6 +209,6 @@ def async_initialize_doc_cache(customization, cache_key=None):
 @shared_task
 def async_generate_menus(customization, cache_key):
     from cms.models import Menu, MENU_CACHE
-    MENU_CACHE[customization] = Menu.generate_menus(customization)
+    MENU_CACHE[customization] = Menu.generate_menus(customization=customization)
     if cache_key:
         cache.delete(cache_key)
