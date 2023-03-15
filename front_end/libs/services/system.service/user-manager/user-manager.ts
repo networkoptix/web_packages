@@ -363,7 +363,7 @@ export class UserManager {
         }
 
         if (userData?.permissions?.includes('NoPermission')) {
-            userData.permissions = '';
+            userData.permissions = this.CONFIG.accessRoles.globalCustomUserPermission;
         }
 
         const saveAction = !('id' in user) && this.mediaserver.version === 5.1
