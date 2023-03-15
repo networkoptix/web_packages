@@ -1202,7 +1202,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "Время",
-            "Trial": "Временная",
+            "Trial": "Время",
             "Professional": "Полная",
             "Analog": "Аналоговая",
             "Edge": "Edge",
@@ -1234,7 +1234,7 @@
             "required": "Нужно еще {number}",
             "activated": "Лицензионный ключ активирован",
             "inuse": "Лицензионный ключ уже активирован и привязан к серверу с идентификатором оборудования {hwid} в другой системе",
-            "trialActivated": "Активирована пробная лицензия. Начиная с сегодняшнего дня, можно записывать до 4 камер в течение 30 дней."
+            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "redirects": {

@@ -1202,7 +1202,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "Idő",
-            "Trial": "Próba",
+            "Trial": "Idő",
             "Professional": "Professzionális",
             "Analog": "Analóg",
             "Edge": "Edge",
@@ -1234,7 +1234,7 @@
             "required": "További {number} szükséges",
             "activated": "A licenckulcs aktiválva",
             "inuse": "A licenckulcsot már aktiválták és egy másik rendszer {hwid} -os hardverazonosítójú szerveréhez regisztrálták",
-            "trialActivated": "A próba licenc aktiválva. Ma kezdve akár 4 kamerát is felvehet 30 napig."
+            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "redirects": {

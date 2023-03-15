@@ -1202,7 +1202,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "Tid",
-            "Trial": "Provperiod",
+            "Trial": "Tid",
             "Professional": "Professionell",
             "Analog": "Analog",
             "Edge": "Edge",
@@ -1234,7 +1234,7 @@
             "required": "{number} krävs",
             "activated": "Licensnyckel aktiverad",
             "inuse": "Licensnyckel har redan aktiverats och bundits till server med hårdvaru-ID {hwid} i ett annat system",
-            "trialActivated": "Testlicens aktiverad. Från idag kan du spela in upp till 4 kameror under 30 dagar."
+            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "redirects": {

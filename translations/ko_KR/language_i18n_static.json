@@ -1202,7 +1202,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "시간",
-            "Trial": "기간한정",
+            "Trial": "시간",
             "Professional": "Professional",
             "Analog": "아날로그",
             "Edge": "Edge",
@@ -1234,7 +1234,7 @@
             "required": "{number} 더 필요",
             "activated": "라이선스 키 활성화 되었습니다.",
             "inuse": "라이선스 키가 이미 활성화되어 있으며, 다른 시스템의 서버 하드웨어 ID {hwid}에 귀속 되었습니다.",
-            "trialActivated": "체험용 라이선스가 활성화 되었습니다. 오늘부터 30 일 동안 최대 4 대의 카메라를 녹화 할 수 있습니다."
+            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "redirects": {

@@ -1202,7 +1202,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "Orario",
-            "Trial": "Prova",
+            "Trial": "Orario",
             "Professional": "Professionale",
             "Analog": "Analogico",
             "Edge": "Edge",
@@ -1234,7 +1234,7 @@
             "required": "{number} più richiesti",
             "activated": "Licenza attivata",
             "inuse": "La chiave di licenza è già stata attivata e associata al server con ID hardware {hwid} in un altro sistema",
-            "trialActivated": "Licenza di prova attivata. A partire da oggi, puoi registrare fino a 4 telecamere per 30 giorni."
+            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "redirects": {

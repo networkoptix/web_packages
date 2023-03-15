@@ -1202,7 +1202,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "Hora",
-            "Trial": "Prueba",
+            "Trial": "Hora",
             "Professional": "Profesional",
             "Analog": "Análogo",
             "Edge": "Edge",
@@ -1234,7 +1234,7 @@
             "required": "{number} más requeridos",
             "activated": "Clave de licencia activada",
             "inuse": "La clave de licencia ya ha sido activada y vinculada al servidor con el ID de hardware {hwid} en otro sistema",
-            "trialActivated": "Licencia de prueba activada. A partir de hoy, puede grabar hasta 4 cámaras durante 30 días."
+            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "redirects": {

@@ -1202,7 +1202,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "Čas",
-            "Trial": "Zkušební verze",
+            "Trial": "Čas",
             "Professional": "Profesionální",
             "Analog": "Analog",
             "Edge": "Edge",
@@ -1234,7 +1234,7 @@
             "required": "{number} více požadovaných",
             "activated": "Licenční klíč aktivován",
             "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
-            "trialActivated": "Zkušební licence byla aktivována. Počínaje dnem, můžete zaznamenávat až 4 kamery po dobu 30 dní."
+            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "redirects": {

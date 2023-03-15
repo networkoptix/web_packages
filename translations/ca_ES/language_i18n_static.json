@@ -1202,7 +1202,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "Temporal",
-            "Trial": "Prova",
+            "Trial": "Temporal",
             "Professional": "Professional",
             "Analog": "Analògic",
             "Edge": "Edge",
@@ -1234,7 +1234,7 @@
             "required": "{number} més obligatoris",
             "activated": "Clau de llicència activada",
             "inuse": "La clau de llicència ja s'ha activat i s'ha enllaçat al servidor amb ID de maquinari {hwid} en un altre sistema",
-            "trialActivated": "S'ha activat la llicència de prova. A partir d'avui podeu enregistrar fins a 4 càmeres durant 30 dies."
+            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "redirects": {

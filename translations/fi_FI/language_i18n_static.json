@@ -1202,7 +1202,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "Aika",
-            "Trial": "Trial",
+            "Trial": "Aika",
             "Professional": "Professional",
             "Analog": "Analoginen",
             "Edge": "Edge",
@@ -1234,7 +1234,7 @@
             "required": "{number} enemmän tarvitaan",
             "activated": "License key activated",
             "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
-            "trialActivated": "Trial license activated. Starting today, you can record up to 4 cameras for 30 days."
+            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "redirects": {

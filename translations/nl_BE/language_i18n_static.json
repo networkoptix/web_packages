@@ -1202,7 +1202,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "Tijd",
-            "Trial": "Test",
+            "Trial": "Tijd",
             "Professional": "Professional",
             "Analog": "Analoog",
             "Edge": "Edge",
@@ -1234,7 +1234,7 @@
             "required": "{number} meer vereist",
             "activated": "Licentie geactiveerd",
             "inuse": "Licentiesleutel is al geactiveerd en gekoppeld aan server met hardware ID {hwid} in een ander systeem",
-            "trialActivated": "Proeflicentie geactiveerd. Vanaf vandaag kunt u gedurende 30 dagen tot 4 camera's opnemen."
+            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "redirects": {

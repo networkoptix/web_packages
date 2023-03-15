@@ -1202,7 +1202,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "เวลา",
-            "Trial": "ทดลอง",
+            "Trial": "เวลา",
             "Professional": "มืออาชีพ",
             "Analog": "อนาล๊อก",
             "Edge": "ขอบ",
@@ -1234,7 +1234,7 @@
             "required": "ต้องการอีก {number}",
             "activated": "เปิดใช้งานใบอนุญาตแล้ว",
             "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
-            "trialActivated": "เปิดใช้งานใบอนุญาตทดลองใช้แล้ว วันนี้คุณสามารถบันทึกได้สูงสุด 4 กล้องเป็นเวลา 30 วัน"
+            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "redirects": {

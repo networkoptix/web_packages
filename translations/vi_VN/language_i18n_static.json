@@ -1202,7 +1202,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "Thời gian",
-            "Trial": "thử",
+            "Trial": "Thời gian",
             "Professional": "Đặc trưng",
             "Analog": "Phép loại suy",
             "Edge": "Biên",
@@ -1234,7 +1234,7 @@
             "required": "Yêu cầu thêm {number}",
             "activated": "Khóa giấy phép đã được kích hoạt",
             "inuse": "Khóa giấy phép đã được kích hoạt và liên kết với máy chủ có ID phần cứng {hwid} trong hệ thống khác",
-            "trialActivated": "Giấy phép dùng thử kích hoạt. Bắt đầu từ hôm nay, bạn có thể ghi lại tới 4 camera trong 30 ngày."
+            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "redirects": {

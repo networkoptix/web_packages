@@ -1202,7 +1202,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "זמן",
-            "Trial": "נסיון",
+            "Trial": "זמן",
             "Professional": "מקצועי",
             "Analog": "אנלוגי",
             "Edge": "קצה",
@@ -1234,7 +1234,7 @@
             "required": "נדרשים עוד {number}",
             "activated": "הרשיון הופעל",
             "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
-            "trialActivated": "רישיון ניסיון הופעל. החל מהיום תוכלו להקליט עד 4 מצלמות למשך 30 יום."
+            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "redirects": {

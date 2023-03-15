@@ -1202,7 +1202,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "Zaman",
-            "Trial": "Deneme",
+            "Trial": "Zaman",
             "Professional": "Profesyonel",
             "Analog": "Analog",
             "Edge": "Uç",
@@ -1234,7 +1234,7 @@
             "required": "{number} daha gerekli",
             "activated": "Lisans deaktif edildi",
             "inuse": "Lisans anahtarı zaten etkinleştirildi ve başka bir sistemde donanım kimliği {hwid} olan sunucuya bağlı",
-            "trialActivated": "Deneme lisansı etkinleştirildi. Bugünden itibaren 30 gün boyunca 4 adede kadar kamera kaydedebilirsiniz."
+            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "redirects": {
