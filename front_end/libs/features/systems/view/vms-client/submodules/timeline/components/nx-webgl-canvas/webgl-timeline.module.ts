@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { DirectivesModule } from '@directives/directives.module';
 import {
     TimelineScrollComponent
 } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/scroll/timeline-scroll.component';
@@ -28,7 +29,8 @@ import {
         CommonModule,
         AngularSvgIconModule.forRoot(),
         TranslateModule,
-        DragDropModule
+        DragDropModule,
+        DirectivesModule,
     ],
     providers: []
 })

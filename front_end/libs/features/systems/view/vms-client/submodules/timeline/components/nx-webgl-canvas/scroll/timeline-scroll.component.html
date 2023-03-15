@@ -2,9 +2,10 @@
     class="button left"
     #left
     [ngClass]="{ enabled: canScrollLeft && !disabled }"
-    (mousedown)="mouseDown(0)"
-    (mouseup)="mouseUp(0)"
-    (dblclick)="scrollTo(2)"
+    (nxClick)="scrollTo(SCROLL_DIRECTION.left)"
+    (nxDblClick)="scrollTo(SCROLL_DIRECTION.beginning)"
+    (nxHoldStart)="scrollTo(SCROLL_DIRECTION.constantLeft)"
+    (nxHoldStop)="scrollStop(SCROLL_DIRECTION.left)"
 >
     <svg-icon
         nx-add-svg-src
@@ -57,8 +58,10 @@
     class="button right"
     #right
     [ngClass]="{ enabled: canScrollRight && !disabled }"
-    (mousedown)="mouseDown(1)"
-    (mouseup)="mouseUp(1)"
+    (nxClick)="scrollTo(SCROLL_DIRECTION.right)"
+    (nxDblClick)="scrollTo(SCROLL_DIRECTION.end)"
+    (nxHoldStart)="scrollTo(SCROLL_DIRECTION.constantRight)"
+    (nxHoldStop)="scrollStop(SCROLL_DIRECTION.right)"
 >
     <svg-icon
         nx-add-svg-src

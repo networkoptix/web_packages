@@ -1,11 +1,9 @@
 <div class="d-flex">
     <div>
         <nx-timeline-zoom
-            [canZoomIn]="zoomLevel >= 1"
-            [canZoomOut]="zoomLevel > 1"
             (onZoom)="doZoom($event)"
-        >
-        </nx-timeline-zoom>
+            (constantZoom)="constantZoom($event)"
+        ></nx-timeline-zoom>
     </div>
     <div class="d-block position-relative w-100">
         <div id="custom"></div>
@@ -17,9 +15,6 @@
         <div id="nx-x-axis-major"></div>
 
         <nx-timeline-scroll
-            [zoomLevel]="zoomLevel"
-            [canScrollLeft]="canScrollLeft"
-            [canScrollRight]="canScrollRight"
             (singleScroll)="singleScroll($event)"
             (constantScroll)="constantScroll($event)"
         >

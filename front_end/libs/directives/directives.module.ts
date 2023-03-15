@@ -2,6 +2,8 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { NgModule } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { NxClickDoubleDirective } from '@directives/nx-single-double-click.directive';
+
 import { NxAddSvgSrc } from './add-data.directive';
 import { FeatureFlagDirective } from './feature.directive';
 import { NxArrowNavDirective } from './nx-arrow-nav';
@@ -39,7 +41,8 @@ import { RotateModule } from './rotate/rotate.module';
         NxProjectedCodeBlock,
         NxTooltipDirective,
         NxMatchHeightDirective,
-        FeatureFlagDirective
+        FeatureFlagDirective,
+        NxClickDoubleDirective
     ],
     exports: [
         NxArrowNavDirective,
@@ -56,6 +59,7 @@ import { RotateModule } from './rotate/rotate.module';
         NxTooltipDirective,
         NxMatchHeightDirective,
         FeatureFlagDirective,
+        NxClickDoubleDirective,
         ResizeModule,
         RotateModule
     ]

@@ -4,7 +4,7 @@ export enum SCROLL_DIRECTION {
     right,
     constantRight,
     beginning,
-    end
+    end,
 }
 
 export const SCROLL_FACTOR_PX = 100;

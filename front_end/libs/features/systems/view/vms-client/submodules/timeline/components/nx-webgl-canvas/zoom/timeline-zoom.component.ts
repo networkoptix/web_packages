@@ -1,7 +1,10 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-import { ZOOM_DIRECTION } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/zoom/zoom.types';
+import { NxWebGLService } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/services/webgl.service';
+import {
+    ZOOM_DIRECTION
+} from '@vms-client/submodules/timeline/components/nx-webgl-canvas/zoom/zoom.types';
 
 @UntilDestroy()
 @Component({
@@ -10,36 +13,48 @@ import { ZOOM_DIRECTION } from '@vms-client/submodules/timeline/components/nx-we
     styleUrls: ['./timeline-zoom.component.scss']
 })
 export class TimelineZoomComponent {
-    @Input('canZoomIn') canZoomIn: boolean = false;
-    @Input('canZoomOut') canZoomOut: boolean = false;
-
     @Output() onZoom = new EventEmitter<ZOOM_DIRECTION>();
+    @Output() constantZoom = new EventEmitter<{
+        direction: ZOOM_DIRECTION;
+        action: string;
+    }>();
 
-    ZOOM_DIRECTION: ZOOM_DIRECTION;
+    canZoomIn: boolean = false;
+    canZoomOut: boolean = false;
+    continuousZoom: boolean = false;
 
-    public startZooming($event: MouseEvent, direction: ZOOM_DIRECTION): void {
+    ZOOM_DIRECTION = ZOOM_DIRECTION;
+
+    constructor(
+        webglService: NxWebGLService,
+    ) {
+        webglService.canZoom$
+            .pipe(untilDestroyed(this))
+            .subscribe(subject => {
+                this.canZoomIn = subject.in;
+                this.canZoomOut = subject.out;
+            });
+    }
+
+    doZoom(direction: ZOOM_DIRECTION): void {
+        if (direction === ZOOM_DIRECTION.constantIn || direction === ZOOM_DIRECTION.constantOut) {
+            this.continuousZoom = true;
+            this.constantZoom.emit({
+                direction,
+                action: 'start'
+            });
+            return;
+        }
         this.onZoom.emit(direction);
-        // if ($event.button !== 0) {
-        //
-        // }
-        // this._zoomingSign = sign;
-        // this._zoomingStartedTimestamp = Date.now();
     }
 
-    public stopZooming(): void {
-        // const sinceZoomingStarted = Date.now() - this._zoomingStartedTimestamp;
-        // const fastClickEdge: ms = 200;
-        // if (sinceZoomingStarted < fastClickEdge) {
-        //     this.wheelZoom(40 * this._zoomingSign);
-        // }
-        // this._zoomingSign = 0;
-    }
-
-    public fullZoomOut(): void {
-        // this.timeline.fullZoomOut();
-    }
-
-    public strongZoomIn(): void {
-        // this.wheelZoom(80);
+    stopZoom(direction: ZOOM_DIRECTION): void {
+        if (this.continuousZoom) {
+            this.continuousZoom = false;
+            this.constantZoom.emit({
+                direction,
+                action: 'stop'
+            });
+        }
     }
 }

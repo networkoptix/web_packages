@@ -12,9 +12,12 @@ import {
     SCROLL_DIRECTION,
     SCROLL_FACTOR_PX,
 } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/scroll/scroll.types';
+import { NxWebGLService } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/services/webgl.service';
 import {
-    ZOOM_DIRECTION,
-    ZOOM_FACTOR,
+    CONSTANT_ZOOM_FACTOR,
+    FORCE_ZOOM_FACTOR,
+    ZOOM_DIRECTION, ZOOM_DURATION,
+    ZOOM_FACTOR
 } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/zoom/zoom.types';
 
 interface DATA {
@@ -67,9 +70,6 @@ export class NxWebGLCanvasComponent implements AfterViewInit {
     formatTime: (Date) => string;
     periodWidth: number = 0;
 
-    canScrollLeft: boolean;
-    canScrollRight: boolean;
-    zoomLevel: number;
     xPos: number;
 
     timeFrameInS: number;
@@ -77,8 +77,12 @@ export class NxWebGLCanvasComponent implements AfterViewInit {
     end: number;
 
     cancelScroll$ = new Subject<boolean>();
+    cancelZoom$ = new Subject<boolean>();
 
-    constructor(@Inject(DOCUMENT) private document: Document) {}
+    constructor(
+        private webglService: NxWebGLService,
+        @Inject(DOCUMENT) private document: Document,
+    ) {}
 
     ngAfterViewInit(): void {
         this.container = this.document.querySelector('#chart');
@@ -314,8 +318,10 @@ export class NxWebGLCanvasComponent implements AfterViewInit {
         };
 
         const checkVisibleArea = (zoom: number): void => {
-            this.canScrollLeft = zoom > 1 && xScaleOriginal.domain()[0].getTime() < xScale.domain()[0].getTime();
-            this.canScrollRight = zoom > 1 && xScaleOriginal.domain()[1].getTime() > xScale.domain()[1].getTime();
+            this.webglService.canScroll$.next({
+                left: zoom > 1 && xScaleOriginal.domain()[0].getTime() < xScale.domain()[0].getTime(),
+                right: zoom > 1 && xScaleOriginal.domain()[1].getTime() > xScale.domain()[1].getTime()
+            });
         };
 
         this.zoom = d3
@@ -335,7 +341,13 @@ export class NxWebGLCanvasComponent implements AfterViewInit {
                 nxXAxisMinor.call(this.xAxisMinor.scale(newScale));
                 nxXAxisMinor.call(this.xAxisMinor);
 
-                this.zoomLevel = event.transform.k; // k, x and y
+                this.webglService.levelZoom$.next(event.transform.k); // k, x and y
+
+                this.webglService.canZoom$.next({
+                    in: this.webglService.levelZoom$.value >= 1,
+                    out: this.webglService.levelZoom$.value > 1
+                });
+
                 this.xPos = Math.trunc(event.transform.x);
 
                 // eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -426,7 +438,9 @@ export class NxWebGLCanvasComponent implements AfterViewInit {
                 break;
         }
 
-        return d3.zoomIdentity.translate(position, 0).scale(this.zoomLevel);
+        return d3.zoomIdentity
+            .translate(position, 0)
+            .scale(this.webglService.levelZoom$.value);
     }
 
     singleScroll(direction: SCROLL_DIRECTION): void {
@@ -438,7 +452,6 @@ export class NxWebGLCanvasComponent implements AfterViewInit {
         }
     }
 
-    // eslint-disable-next-line nx/no-untyped-arg
     constantScroll(params: { direction: SCROLL_DIRECTION; action: string }): void {
         if (this.canvas) {
             if (params.action === 'start') {
@@ -460,9 +473,51 @@ export class NxWebGLCanvasComponent implements AfterViewInit {
     }
 
     doZoom(direction: ZOOM_DIRECTION): void {
-        const zoomDirection = direction === ZOOM_DIRECTION.in
-            ? ZOOM_FACTOR
-            : 1 / ZOOM_FACTOR;
-        this.zoom.scaleBy(this.canvas.transition().duration(750), zoomDirection);
+        const currentK = this.webglService.levelZoom$.value || 1;
+        let zoomK: number;
+
+        switch (direction) {
+            case ZOOM_DIRECTION.in:
+                zoomK = currentK * ZOOM_FACTOR;
+                break;
+            case ZOOM_DIRECTION.forceZoomIn:
+                zoomK = currentK * FORCE_ZOOM_FACTOR;
+                break;
+            case ZOOM_DIRECTION.out:
+                zoomK = currentK * (1 / ZOOM_FACTOR);
+                break;
+            case ZOOM_DIRECTION.forceZoomOut:
+                zoomK = 1; // k = 1
+                break;
+        }
+
+        this.canvas
+            .transition()
+            .duration(ZOOM_DURATION)
+            .call(
+                this.zoom.transform,
+                d3.zoomIdentity.scale(zoomK)
+            );
+    }
+
+    constantZoom(params: { direction: ZOOM_DIRECTION; action: string }): void {
+        if (this.canvas) {
+            if (params.action === 'start') {
+                interval(0, animationFrameScheduler)
+                    .pipe(
+                        untilDestroyed(this),
+                        takeUntil(this.cancelZoom$)
+                    )
+                    .subscribe(() => {
+                        const currentK = this.webglService.levelZoom$.value || 1;
+                        this.canvas.call(
+                            this.zoom.transform,
+                            d3.zoomIdentity.scale(currentK + CONSTANT_ZOOM_FACTOR)
+                        );
+                    });
+            } else {
+                this.cancelZoom$.next(true);
+            }
+        }
     }
 }
