@@ -1,6 +1,6 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { LocalStorageService } from 'ngx-webstorage';
 import { forkJoin, take } from 'rxjs';
@@ -68,7 +68,6 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private localStorageService: LocalStorageService,
         private cloudApi: NxCloudApiService,
-        private router: Router,
         private dialogsService: NxDialogsService,
     ) {
         this.groupsService.connect();
@@ -76,7 +75,14 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.route.url.subscribe(url => {
+            this.showPersonal = url[0].path !== 'shared';
+        });
+
         this.route.params.subscribe(params => {
+            if (params.groupId === 'shared') {
+                return;
+            }
             this.store.dispatch(
                 GroupActions.setCurrentGroupId({
                     currentGroupId: params.groupId
@@ -106,17 +112,6 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
             curr.showSidebarState = false;
             return curr;
         }, true);
-    }
-
-    public setSharedFilter(newState: boolean): void {
-        if (newState === this.showPersonal) {
-            return;
-        }
-        if (!newState) {
-            this.store.dispatch(GroupActions.setCurrentSharedOwner({ currentSharedOwner: null }));
-        }
-        this.router.navigate(['/', 'groups']);
-        this.showPersonal = newState;
     }
 
     newGroupDialog(): void {

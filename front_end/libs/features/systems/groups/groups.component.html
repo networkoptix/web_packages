@@ -40,28 +40,6 @@
         <ng-container [ngSwitch]="loadingState">
             <nx-pre-loader *ngSwitchCase="LoadingState.LOADING"></nx-pre-loader>
             <ng-container *ngSwitchCase="LoadingState.LOADED">
-                <div class="button-container">
-                    <button
-                        (click)="setSharedFilter(true)"
-                        class="btn"
-                        [ngClass]="{
-                            'btn-primary': showPersonal
-                        }"
-                        translate
-                    >
-                        Personal
-                    </button>
-                    <button
-                        (click)="setSharedFilter(false)"
-                        class="btn"
-                        [ngClass]="{
-                            'btn-primary': !showPersonal
-                        }"
-                        translate
-                    >
-                        Shared
-                    </button>
-                </div>
                 <button
                     *ngIf="showPersonal"
                     (click)="newGroupDialog()"

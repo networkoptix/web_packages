@@ -278,6 +278,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                     } else {
                         nodes.unshift(this.menusService.makeSystemMenuNode());
                         nodes.push(this.menusService.makeAccountSettingsNode());
+                        nodes.push(this.menusService.makeSystemGroupsNode());
                     }
                 }
                 this.headerService.nodes = nodes;
@@ -390,8 +391,10 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                             }
                             const systemNode = this.menusService.makeSystemMenuNode();
                             const accountNode = this.menusService.makeAccountSettingsNode();
+                            const systemGroupsNode = this.menusService.makeSystemGroupsNode();
                             this.headerService.nodes.unshift(systemNode);
                             this.headerService.nodes.push(accountNode);
+                            this.headerService.nodes.push(systemGroupsNode);
                         }
                     }
                     if (!this.environment.isLocal) {

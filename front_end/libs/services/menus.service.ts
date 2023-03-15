@@ -250,6 +250,15 @@ export class NxMenusService {
         return accountNode;
     }
 
+    makeSystemGroupsNode() {
+        const systemGroupsLang = this.LANG.appHeader.headerMenuNodes.systemGroups;
+        const groupsNode = new MenuNode(systemGroupsLang.displayName, '/groups');
+        groupsNode.invisible = true;
+        groupsNode.nodes.push(new MenuNode(systemGroupsLang.nodes.personal.displayName, '/groups'));
+        groupsNode.nodes.push(new MenuNode(systemGroupsLang.nodes.shared.displayName, '/groups/shared'));
+        return groupsNode;
+    }
+
     makeWelcomeNode() {
         const welcomeLang = this.LANG.appHeader.headerMenuNodes.welcome;
         const welcomeNode = new MenuNode(welcomeLang.displayName, 'content/about');

@@ -895,6 +895,17 @@
                         "displayName": "My Systems"
                     }
                 ]
+            },
+            "systemGroups" : {
+                "displayName": "System Groups",
+                "nodes": {
+                    "personal" : {
+                        "displayName" : "My System"
+                    },
+                    "shared" : {
+                        "displayName" : "Shared"
+                    }
+                }
             }
         }
     },
