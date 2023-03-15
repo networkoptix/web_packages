@@ -133,7 +133,7 @@ export class NxCloudApiService {
         this.licenseServerApiFactory = LicenseServerAPI.createApiFactory(this.http, this.#withFreshSession);
         const targetInstance = this.cookieService.get('cloud_instance') || '';
         this.cloudStorageApi = CloudStorageAPI.createApiFactory(this.http, this.#withFreshSession)(targetInstance, () => '');
-        const refreshToken = defer(() => this.getTokensFromCloud('session', 'refresh_token', 'code')).pipe(map(({ code }) => code), shareReplay({ refCount: true, bufferSize: 1 }));
+        const refreshToken = defer(() => this.getTokensFromCloud('session', 'refresh_token', 'code')).pipe(map(({ code }) => code));
         this.cloudDbApi = CloudDbAPI.createApiFactory(this.http, this.#withFreshSession, refreshToken)(targetInstance, () => this.CONFIG.customization);
 
         // TODO: Remove it
