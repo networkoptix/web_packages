@@ -27,7 +27,10 @@
                     <tr class="table-row-spacer"></tr>
                     <tr *ngFor="let license of licenses; index as i">
                         <td>
-                            {{ (LANG.license.licenseTypeTitles[license.type] || license.type) | translate }}
+                            {{
+                                LANG.license.licenseTypeTitles[license.type] || license.type
+                                    | translate
+                            }}
                         </td>
                         <td>{{ license.count }}</td>
                         <td>{{ license.countAvail }}</td>
