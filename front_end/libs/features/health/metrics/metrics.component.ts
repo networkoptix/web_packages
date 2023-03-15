@@ -108,22 +108,25 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
 
         this.locationSubscription = this.location.subscribe((event: PopStateEvent) => {
             // force view component update without URI update
-            this.locationReadySubscription = of('').pipe(delay(0)).subscribe(() => {
-                const params = { ...this.route.snapshot.queryParams };
-                if (params.id) {
-                    this.fromBrowserNav = true;
-                    // Avoid selecting and entity from non updated selectItems
-                    this.elementReadySubscription = of('').pipe(delay(0)).subscribe(() => {
-                        this.setActiveEntity(params.id);
-                    });
-                } else {
-                    this.resetActiveEntity(false);
-                }
-            });
+            this.locationReadySubscription = of('')
+                .pipe(delay(0))
+                .subscribe(() => {
+                    const params = { ...this.route.snapshot.queryParams };
+                    if (params.id) {
+                        this.fromBrowserNav = true;
+                        // Avoid selecting and entity from non updated selectItems
+                        this.elementReadySubscription = of('')
+                            .pipe(delay(0))
+                            .subscribe(() => {
+                                this.setActiveEntity(params.id);
+                            });
+                    } else {
+                        this.resetActiveEntity(false);
+                    }
+                });
         });
 
-        this.selectedSubscription = this.menuService
-            .selectedSectionSubject
+        this.selectedSubscription = this.menuService.selectedSectionSubject
             .pipe(throttleTime(1000))
             .subscribe(selection => {
                 setTimeout(() => {
@@ -137,91 +140,90 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                 }
             });
 
-        this.routeSubscription = this.route
-            .params.pipe(delay(0))
-            .subscribe((params: any) => {
-                this.metricId = params.metric;
-                this.metricName = this.healthService.manifest[this.metricId].name;
-                this.menuService.section = this.metricId;
-                this.selectedData = this.healthService.tableHeaders[this.metricId];
-                this.selectedPanelData = this.healthService.panelParams[this.metricId];
-                this.healthLayoutService.metricsValuesCount =
-                    this.metricId in this.healthService.values
-                        ? Object.values(this.healthService.values[this.metricId]).length
-                        : 0;
+        this.routeSubscription = this.route.params.pipe(delay(0)).subscribe((params: any) => {
+            this.metricId = params.metric;
+            this.metricName = this.healthService.manifest[this.metricId].name;
+            this.menuService.section = this.metricId;
+            this.selectedData = this.healthService.tableHeaders[this.metricId];
+            this.selectedPanelData = this.healthService.panelParams[this.metricId];
+            this.healthLayoutService.metricsValuesCount =
+                this.metricId in this.healthService.values
+                    ? Object.values(this.healthService.values[this.metricId]).length
+                    : 0;
 
-                if (!this.fromBrowserNav) {
-                    this.resetActiveEntity(false);
-                } else {
-                    this.fromBrowserNav = false;
-                }
+            if (!this.fromBrowserNav) {
+                this.resetActiveEntity(false);
+            } else {
+                this.fromBrowserNav = false;
+            }
 
-                if (!searchParam || !searchParam.length) {
-                    this.filterModel.query = '';
-                    this.selectedValues = this.healthService.values[this.metricId] || {};
+            if (!searchParam || !searchParam.length) {
+                this.filterModel.query = '';
+                this.selectedValues = this.healthService.values[this.metricId] || {};
 
-                    // server returns IPv6 address with appended interface name (IPv6%IName)
-                    // ... but we need only the address
-                    if (this.metricId === 'networkInterfaces') {
-                        for (const adapter in this.selectedValues) {
-                            if (this.selectedValues[adapter].info.otherAddresses) {
-                                this.selectedValues[adapter].info.otherAddresses.text =
-                                    this.selectedValues[adapter].info.otherAddresses.text?.split('%')[0] || '_';
-                            }
+                // server returns IPv6 address with appended interface name (IPv6%IName)
+                // ... but we need only the address
+                if (this.metricId === 'networkInterfaces') {
+                    for (const adapter in this.selectedValues) {
+                        if (this.selectedValues[adapter].info.otherAddresses) {
+                            this.selectedValues[adapter].info.otherAddresses.text =
+                                this.selectedValues[adapter].info.otherAddresses.text?.split(
+                                    '%',
+                                )[0] || '_';
                         }
                     }
-
-                    this.handleInitialId();
-                } else {
-                    this.filterModel.query = searchParam;
-                    searchParam = undefined;
-                    this.search();
                 }
 
-                this.setLayout();
-            });
+                this.handleInitialId();
+            } else {
+                this.filterModel.query = searchParam;
+                searchParam = undefined;
+                this.search();
+            }
 
-        this.windowSizeSubscription =
-            this.scrollMechanicsService.windowSizeSubject
-                .subscribe(({ width }) => {
-                    if (this.scrollMechanicsService.mediaQueryMax(GridBreakpoints.LG)) {
-                        this.healthLayoutService.mobileDetailMode =
-                            this.healthLayoutService.activeEntity !== undefined;
-                    } else {
-                        this.healthLayoutService.mobileDetailMode = false;
-                    }
-                    this.setLayout();
-                });
+            this.setLayout();
+        });
+
+        this.windowSizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(
+            ({ width }) => {
+                if (this.scrollMechanicsService.mediaQueryMax(GridBreakpoints.LG)) {
+                    this.healthLayoutService.mobileDetailMode =
+                        this.healthLayoutService.activeEntity !== undefined;
+                } else {
+                    this.healthLayoutService.mobileDetailMode = false;
+                }
+                this.setLayout();
+            },
+        );
     }
 
     ngAfterViewInit(): void {
         this.healthLayoutService.dimensions = [];
 
-        this.elementReadySubscription = of('').pipe(delay(0)).subscribe(() => {
-            this.healthLayoutService.searchTableArea = this.areaElement;
-            this.healthLayoutService.searchElement = this.searchElement;
-        });
+        this.elementReadySubscription = of('')
+            .pipe(delay(0))
+            .subscribe(() => {
+                this.healthLayoutService.searchTableArea = this.areaElement;
+                this.healthLayoutService.searchElement = this.searchElement;
+            });
 
-        this.fixedLayoutClassSubscription =
-            this.healthLayoutService.fixedLayoutClassSubject
-                .pipe(delay(0))
-                .subscribe((className: string) => {
-                    this.fixedLayoutClass = className;
-                });
+        this.fixedLayoutClassSubscription = this.healthLayoutService.fixedLayoutClassSubject
+            .pipe(delay(0))
+            .subscribe((className: string) => {
+                this.fixedLayoutClass = className;
+            });
 
-        this.layoutReadySubscription =
-            this.healthLayoutService.layoutReadySubject
-                .pipe(delay(0))
-                .subscribe((value: boolean) => {
-                    this.layoutReady = value;
-                });
+        this.layoutReadySubscription = this.healthLayoutService.layoutReadySubject
+            .pipe(delay(0))
+            .subscribe((value: boolean) => {
+                this.layoutReady = value;
+            });
 
-        this.activeEntitySubscription =
-            this.healthLayoutService.activeEntitySubject
-                .pipe(delay(0))
-                .subscribe(() => {
-                    this.setLayout();
-                });
+        this.activeEntitySubscription = this.healthLayoutService.activeEntitySubject
+            .pipe(delay(0))
+            .subscribe(() => {
+                this.setLayout();
+            });
     }
 
     ngOnDestroy(): void {
@@ -245,7 +247,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     search(): void {
         this.selectedValues = this.healthService.itemsSearch(
             this.healthService.values[this.metricId],
-            this.filterModel
+            this.filterModel,
         );
 
         this.handleInitialId();
@@ -271,20 +273,16 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                     queryParams.id = entity;
                 }
 
-                this.uri
-                    .updateURI(undefined, queryParams)
-                    .catch(error => {
-                        console.error(error);
-                    });
+                this.uri.updateURI(undefined, queryParams).catch(error => {
+                    console.error(error);
+                });
             } else {
                 this.healthLayoutService.activeEntity = entity;
                 queryParams.id = entity.id;
 
-                this.uri
-                    .updateURI(undefined, queryParams)
-                    .catch(error => {
-                        console.error(error);
-                    });
+                this.uri.updateURI(undefined, queryParams).catch(error => {
+                    console.error(error);
+                });
             }
             if (this.scrollMechanicsService.mediaQueryMax(GridBreakpoints.LG)) {
                 this.healthLayoutService.mobileDetailMode = true;
@@ -302,11 +300,9 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
             const queryParams: Params = {};
             queryParams.id = undefined;
 
-            this.uri
-                .updateURI(undefined, queryParams)
-                .catch(error => {
-                    console.error(error);
-                });
+            this.uri.updateURI(undefined, queryParams).catch(error => {
+                console.error(error);
+            });
         }
         this.healthLayoutService.resetActiveEntity();
     }

@@ -99,7 +99,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
     private sortAlertsFunc() {
         return elm => {
-            const isError = (elm._.alarm.icon === 'error');
+            const isError = elm._.alarm.icon === 'error';
             switch (elm.metric) {
                 // We can adjust sorting here
                 // currently errors are shown first then warnings
@@ -145,7 +145,10 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         this.initializeHeader();
         this.processAlerts();
 
-        this.alerts = this.healthService.alertsSearch(this.healthService.alertsValues, this.filterModel);
+        this.alerts = this.healthService.alertsSearch(
+            this.healthService.alertsValues,
+            this.filterModel,
+        );
         this.alerts.sort(paramSortFunc(this.sortAlertsFunc()));
         this.countAlerts();
 
@@ -156,19 +159,22 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             this.setActiveEntity(alarm, false);
         }
 
-        this.windowSizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({ width }) => {
-            if (this.scrollMechanicsService.mediaQueryMax(GridBreakpoints.LG)) {
-                this.healthLayoutService.mobileDetailMode = (this.healthLayoutService.activeEntity !== undefined);
-            } else {
-                this.healthLayoutService.mobileDetailMode = false;
-            }
+        this.windowSizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(
+            ({ width }) => {
+                if (this.scrollMechanicsService.mediaQueryMax(GridBreakpoints.LG)) {
+                    this.healthLayoutService.mobileDetailMode =
+                        this.healthLayoutService.activeEntity !== undefined;
+                } else {
+                    this.healthLayoutService.mobileDetailMode = false;
+                }
 
-            this.smallDesktopMode =
-                this.scrollMechanicsService.mediaQueryMin(GridBreakpoints.LG) &&
-                this.scrollMechanicsService.mediaQueryMax(GridBreakpoints.XL);
+                this.smallDesktopMode =
+                    this.scrollMechanicsService.mediaQueryMin(GridBreakpoints.LG) &&
+                    this.scrollMechanicsService.mediaQueryMax(GridBreakpoints.XL);
 
-            this.setLayout();
-        });
+                this.setLayout();
+            },
+        );
 
         this.locationSubscription = this.location.subscribe((event: PopStateEvent) => {
             // force view component update without URI update
@@ -177,7 +183,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
                 if (params.id) {
                     const alarm = this.healthService.alertsValues.find(alert => {
-                        return (alert.metric === params.metric && alert.entity === params.id);
+                        return alert.metric === params.metric && alert.entity === params.id;
                     });
 
                     if (alarm) {
@@ -189,8 +195,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             });
         });
 
-        this.selectedSubscription = this.menuService
-            .selectedSectionSubject
+        this.selectedSubscription = this.menuService.selectedSectionSubject
             .pipe(throttleTime(1000))
             .subscribe(selection => {
                 // when user click same section in the menu - we need to reset table and entity
@@ -199,7 +204,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                     this.resetFilterModel();
                     this.alerts = this.healthService.alertsSearch(
                         this.healthService.alertsValues,
-                        this.filterModel
+                        this.filterModel,
                     );
                 } else {
                     // short circuit first subscription
@@ -210,11 +215,13 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
     ngAfterViewInit(): void {
         this.healthLayoutService.dimensions = [];
-        this.elementReadySubscription = of('').pipe(delay(0)).subscribe(() => {
-            this.healthLayoutService.tilesElement = this.tilesElement;
-            this.healthLayoutService.searchElement = this.searchElement;
-            this.healthLayoutService.searchTableArea = this.areaElement;
-        });
+        this.elementReadySubscription = of('')
+            .pipe(delay(0))
+            .subscribe(() => {
+                this.healthLayoutService.tilesElement = this.tilesElement;
+                this.healthLayoutService.searchElement = this.searchElement;
+                this.healthLayoutService.searchTableArea = this.areaElement;
+            });
 
         this.fixedLayoutClassSubscription = this.healthLayoutService.fixedLayoutClassSubject
             .pipe(delay(0))
@@ -244,13 +251,11 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     modelChanged(model: SearchFilter): void {
-        if (!isEqual(this.filterModel, model)) { // avoid unnecessary trips
+        if (!isEqual(this.filterModel, model)) {
+            // avoid unnecessary trips
             this.healthService.tableReady = false;
             this.filterModel = cloneDeep(model);
-            this.alerts = this.healthService.alertsSearch(
-                this.healthService.alertsValues,
-                model
-            );
+            this.alerts = this.healthService.alertsSearch(this.healthService.alertsValues, model);
             this.countAlerts();
 
             if (this.alerts.length) {
@@ -274,21 +279,20 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         const alertItems = [
             { value: '0', name: this.LANG.alertFilters.all },
             { value: 'warning', name: this.LANG.alertFilters.warning },
-            { value: 'error', name: this.LANG.alertFilters.error }
+            { value: 'error', name: this.LANG.alertFilters.error },
         ];
 
         const selected = alertItems.filter(item => {
             return this.params.alertType === item.value;
         })[0];
 
-        this.filterModel.selects.push(
-            {
-                id: 'alertType',
-                label: '',
-                css: 'col-12 col-lg-3 mr-0 mr-lg-2 p-0',
-                items: alertItems,
-                selected: selected || alertItems[0]
-            });
+        this.filterModel.selects.push({
+            id: 'alertType',
+            label: '',
+            css: 'col-12 col-lg-3 mr-0 mr-lg-2 p-0',
+            items: alertItems,
+            selected: selected || alertItems[0],
+        });
     }
 
     addFilterTypes(): void {
@@ -298,7 +302,10 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         for (const [key, value] of Object.entries(this.healthService.manifest)) {
             const val: any = value;
             if (val.resource !== '' && key in this.healthService.values) {
-                const item = { value: val.resource, name: this.LANG.deviceTypes[val.id] || val.resource };
+                const item = {
+                    value: val.resource,
+                    name: this.LANG.deviceTypes[val.id] || val.resource,
+                };
                 typesItems.push(item);
 
                 if (this.params.deviceType === val.resource) {
@@ -309,14 +316,13 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
         typesItems.unshift({ value: '0', name: this.LANG.deviceTypes['All Device Types'] });
 
-        this.filterModel.selects.push(
-            {
-                id: 'deviceType',
-                label: '',
-                css: 'col-12 col-lg-3 mr-0 mr-lg-2 p-0',
-                items: typesItems,
-                selected: selected || typesItems[0]
-            });
+        this.filterModel.selects.push({
+            id: 'deviceType',
+            label: '',
+            css: 'col-12 col-lg-3 mr-0 mr-lg-2 p-0',
+            items: typesItems,
+            selected: selected || typesItems[0],
+        });
     }
 
     addFilterServers(): void {
@@ -335,22 +341,20 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
         serverItems.unshift({ value: '0', name: this.LANG['All Servers'] });
 
-        this.filterModel.selects.push(
-            {
-                id: 'server',
-                label: '',
-                css: 'col-12 col-lg-4 mr-0 mr-lg-2 p-0',
-                items: serverItems,
-                selected: selected || serverItems[0]
-            });
+        this.filterModel.selects.push({
+            id: 'server',
+            label: '',
+            css: 'col-12 col-lg-4 mr-0 mr-lg-2 p-0',
+            items: serverItems,
+            selected: selected || serverItems[0],
+        });
     }
 
     isFilterEmpty() {
         let singleSelect = false;
         if (this.filterModel.selects) {
             this.filterModel.selects.forEach(select => {
-                singleSelect = singleSelect ||
-                    (select.selected.value !== '0'); // 0 is default choice
+                singleSelect = singleSelect || select.selected.value !== '0'; // 0 is default choice
             });
         }
 
@@ -369,36 +373,43 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
          * { resourceType: {alarmLevel: count} } => [{resourceType: name,  alarms : [{alarmLevel: count}]}]
          * Note: alarm levels are sorted alphabetically
          */
-        const alarmTypes: any = Object.values(this.healthService.manifest).filter((resource: any) => {
-            return resource.id !== 'systems' && resource.id in this.healthService.values;
-        }).reduce((obj: any, item: any) => {
-            obj[item.id] = {
-                alarms: {
-                    error: 0,
-                    warning: 0
-                },
-                name: item.name
-            };
-            return obj;
-        }, {});
-        this.healthService.alertsValues.filter((value: any) => {
-            return value.metric !== 'systems';
-        }).forEach(item => {
-            if (alarmTypes[item.metric]) {
-                alarmTypes[item.metric].alarms[item._.alarm.icon] += 1;
-            }
-        });
+        const alarmTypes: any = Object.values(this.healthService.manifest)
+            .filter((resource: any) => {
+                return resource.id !== 'systems' && resource.id in this.healthService.values;
+            })
+            .reduce((obj: any, item: any) => {
+                obj[item.id] = {
+                    alarms: {
+                        error: 0,
+                        warning: 0,
+                    },
+                    name: item.name,
+                };
+                return obj;
+            }, {});
+        this.healthService.alertsValues
+            .filter((value: any) => {
+                return value.metric !== 'systems';
+            })
+            .forEach(item => {
+                if (alarmTypes[item.metric]) {
+                    alarmTypes[item.metric].alarms[item._.alarm.icon] += 1;
+                }
+            });
         this.alertCards = Object.values(alarmTypes).map((alarmType: any) => {
             return {
-                alerts: Object.entries(alarmType.alarms).map(([level, count]) => {
-                    // If level is error and type is server convert to offline. Otherwise, return level.
-                    const name = level === 'error' && alarmType.name === 'Servers'
-                        ? this.LANG.alarmLevels.offline
-                        : this.LANG.alarmLevels[level] || `${level}s`;
+                alerts: Object.entries(alarmType.alarms)
+                    .map(([level, count]) => {
+                        // If level is error and type is server convert to offline. Otherwise, return level.
+                        const name =
+                            level === 'error' && alarmType.name === 'Servers'
+                                ? this.LANG.alarmLevels.offline
+                                : this.LANG.alarmLevels[level] || `${level}s`;
 
-                    return { count, level, name };
-                }).sort(alphabeticalSort(this.locale, a => a.level)),
-                name: this.LANG.alarmTypes[alarmType.name] || alarmType.name
+                        return { count, level, name };
+                    })
+                    .sort(alphabeticalSort(this.locale, a => a.level)),
+                name: this.LANG.alarmTypes[alarmType.name] || alarmType.name,
             };
         });
         this.alertCardCount = Object.keys(this.alertCards).length;
@@ -407,34 +418,36 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     initializeHeader(): void {
         this.tableHeaders = {
             id: 'alerts',
-            values: [{
-                id: '_',
-                name: '',
-                values: [
-                    {
-                        display: 'table',
-                        name: '',
-                        id: 'alarm'
-                    },
-                    {
-                        display: 'table',
-                        name: this.LANG.tableHeaders.type,
-                        id: 'type',
-                        formatClass: 'text'
-                    },
-                    {
-                        display: 'table',
-                        name: this.LANG.tableHeaders.server,
-                        id: 'server',
-                        formatClass: 'long-text'
-                    },
-                    {
-                        display: 'table',
-                        name: this.LANG.tableHeaders.alert,
-                        id: 'message'
-                    }
-                ]
-            }]
+            values: [
+                {
+                    id: '_',
+                    name: '',
+                    values: [
+                        {
+                            display: 'table',
+                            name: '',
+                            id: 'alarm',
+                        },
+                        {
+                            display: 'table',
+                            name: this.LANG.tableHeaders.type,
+                            id: 'type',
+                            formatClass: 'text',
+                        },
+                        {
+                            display: 'table',
+                            name: this.LANG.tableHeaders.server,
+                            id: 'server',
+                            formatClass: 'long-text',
+                        },
+                        {
+                            display: 'table',
+                            name: this.LANG.tableHeaders.alert,
+                            id: 'message',
+                        },
+                    ],
+                },
+            ],
         };
     }
 
@@ -454,19 +467,16 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                 queryParams.id = alarm.entity;
                 queryParams.metric = alarm.metric;
 
-                this.uriService
-                    .updateURI(undefined, queryParams)
-                    .catch(error => {
-                        console.error(error);
-                    });
+                this.uriService.updateURI(undefined, queryParams).catch(error => {
+                    console.error(error);
+                });
             }
 
             if (this.scrollMechanicsService.mediaQueryMax(GridBreakpoints.LG)) {
                 this.healthLayoutService.mobileDetailMode = true;
             }
 
-            this.layoutReady =
-                Object.keys(this.healthLayoutService.activeEntity).length > 0;
+            this.layoutReady = Object.keys(this.healthLayoutService.activeEntity).length > 0;
         } else {
             this.resetActiveEntity();
         }
@@ -478,11 +488,9 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             queryParams.id = undefined;
             queryParams.metric = undefined;
 
-            this.uriService
-                .updateURI(undefined, queryParams)
-                .catch(error => {
-                    console.error(error);
-                });
+            this.uriService.updateURI(undefined, queryParams).catch(error => {
+                console.error(error);
+            });
         }
         this.healthLayoutService.resetActiveEntity();
     }

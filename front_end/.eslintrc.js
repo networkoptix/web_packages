@@ -572,7 +572,7 @@ module.exports = {
                 'libs/decorators/**/*.ts',
                 'libs/directives/**/*.ts',
                 'libs/features/[0-f]*/**/*.ts',
-                // 'libs/features/[d][a]*/**/*.ts',
+                'libs/features/health/[a-m]*/**/*.ts',
                 'libs/interceptors/**/*.ts',
                 'libs/menu/**/*.ts',
                 'libs/pipes/**/*.ts',
