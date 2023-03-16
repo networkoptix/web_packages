@@ -80,9 +80,9 @@ export class NxReadonlyAPIService {
                         break;
                 }
             }
-            const preparedReadOnlyAPI = this.prepareReadonlyAPI(manifest, readonlyAPI, !!(APIPreamble && APIChangelog));
+            const preparedReadOnlyAPI = this.prepareReadonlyAPI(manifest, readonlyAPI, !!(APIPreamble || APIChangelog));
             let markdown: MarkdownObj;
-            if (APIPreamble && APIChangelog) {
+            if (APIPreamble || APIChangelog) {
                 markdown = {
                     APIPreamble,
                     APIChangelog
