@@ -82,7 +82,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
             })
             .map(role => ({
                 ...role,
-                optionLabel: this.LANG.accessRoles[role.name].label || role.name,
+                optionLabel: this.LANG.accessRoles[role.name]?.label || role.name,
             }));
     }
 
