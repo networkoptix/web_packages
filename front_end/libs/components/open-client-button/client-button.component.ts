@@ -1,9 +1,11 @@
 import { Component, OnInit, Input, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { accountSelectors } from '@common/store/account';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -11,6 +13,7 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxUrlProtocolService } from '@services/url-protocol.service';
 
+@UntilDestroy()
 @Component({
     selector: 'nx-client-button',
     templateUrl: 'client-button.component.html',
@@ -37,8 +40,8 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
         private processService: NxProcessService,
         private urlProtocol: NxUrlProtocolService,
         private dialogs: NxDialogsService,
-        private accountService: NxAccountService,
         private router: Router,
+        private store: Store
     ) {
         this.location = location;
         this.CONFIG = configService.getConfig();
@@ -49,11 +52,11 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.accountService.get().then((account: Account) => {
-            if (account) {
+        this.store.select(accountSelectors.selectCurrentUser)
+            .pipe(untilDestroyed(this))
+            .subscribe(account => {
                 this.account = account;
-            }
-        });
+            });
 
         this.modalActive = false;
         this.canceled = false;
