@@ -1234,7 +1234,7 @@
             "required": "追加で {number} ライセンス必要",
             "activated": "ライセンスキーが有効化されました",
             "inuse": "ライセンスキーは既に有効化されており、別のシステムでハードウェアID {hwid} を持つサーバーに登録されています。",
-            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
+            "trialActivated": "期限付きライセンスが有効になりました。本日より、最大 4 台のカメラを 30 日間録画できます。"
         }
     },
     "redirects": {

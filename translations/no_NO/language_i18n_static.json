@@ -1234,7 +1234,7 @@
             "required": "{number} mer kreves",
             "activated": "Lisensnøkkel aktivert",
             "inuse": "Lisensnøkkel er allerede aktivert og bundet til server med maskinvare-ID {hwid} i et annet system",
-            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
+            "trialActivated": "Tidslisens aktivert. Fra i dag kan du ta oppttak på opptil 4 kameraer i 30 dager."
         }
     },
     "redirects": {
