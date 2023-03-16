@@ -12,7 +12,6 @@ import { NxSystemAPIService } from '@services/system-api.service';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { nxSystemFactory } from '@services/system/factories/initial-system-factory';
-import { NxSystemOldModule } from '@services/system/modules/nx-system-old-module';
 import { NxSystemsService } from '@services/systems.service';
 import { memoizeAsyncPersistent } from '@utils/memoize';
 
@@ -76,9 +75,6 @@ export class NxSystemService {
                 cloudSystemInfo?.version
             );
 
-            if ((system as NxSystem<true>).implements(NxSystemOldModule)) {
-                console.log('works');
-            }
             if (cloudSystemInfo?.version) {
                 this.systemsCache[id] = system;
             }

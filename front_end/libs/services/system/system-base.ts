@@ -8,40 +8,6 @@ interface GenericConstructor<T = {}> {
     new(...args: any[]): T;
 }
 
-function * getProtoChain(obj: object): Generator<object> {
-    let proto = Object.getPrototypeOf(obj);
-    while (![null, Object.prototype].includes(proto)) {
-        yield proto;
-        proto = Object.getPrototypeOf(proto);
-    }
-}
-
-const getBaseProto = (obj: object): object => [...getProtoChain(obj)].pop();
-
-/**
- * Handles removing prototypes from prototype chain.
- *
- * With the way module instances are mixed in there's a possibility that the prototype chain will contain the same prototype multiple times.
- * This will remove the prototypes from the prototype chain.
- *
- * Currently we're just removing NxSystemModuleBase from the prototype chain. We'll add any more prototypes to remove as needed.
- * The reason for not getting the prototypes from the target instance directly is to be able to see what kind of conflicts we might have while we're doing the refactor.
- *
- * @param obj - object to remove prototypes from prototype chain.
- * @param prototypes - prototypes to remove from the prototype chain
- * @returns - object with removed prototypes from prototype chain.
- */
-const removeCyclicPrototypes = <T extends object>(obj: T, prototypes = [NxSystemModuleBase]): T => {
-    const updatedProtoChain = [...getProtoChain(obj)].filter(proto => prototypes.every(ProtoClass => proto.constructor !== ProtoClass));
-    updatedProtoChain.push(Object.prototype);
-    let currentProto: unknown = obj;
-    for (const proto of updatedProtoChain) {
-        Object.setPrototypeOf(currentProto, proto);
-        currentProto = proto;
-    }
-    return obj;
-};
-
 /**
  * Base class used to handle dynamic system modules.
  *
@@ -76,6 +42,9 @@ const removeCyclicPrototypes = <T extends object>(obj: T, prototypes = [NxSystem
  */
 export abstract class NxSystemBase implements SystemVersionBase {
     abstract readonly version: SystemVersion;
+    static readonly PROXIES = new Map<SystemVersionBase, SystemVersionBase>();
+
+    systemModules: NxSystemModuleBase[] = [];
 
     /**
      * This is a type safe way to add a system module to the system. It returns the system instance updated with the system module and updated types.
@@ -100,9 +69,37 @@ export abstract class NxSystemBase implements SystemVersionBase {
      * @returns - The system instance extended with the system module.
      */
     with<U extends NxSystemModuleBase, T extends SystemVersionBase<U['supportedVersions'][number]>>(this: T, systemModule: U & Partial<{ [key in keyof Omit<T, keyof (NxSystemModuleBase & NxSystemBase & SupportedVersionsBase)>]: never }>): T & U {
-        this[systemModule.getModuleSymbol()] = true;
-        Object.setPrototypeOf(getBaseProto(this), removeCyclicPrototypes(systemModule));
-        return this as T & U;
+        (this as unknown as NxSystemBase).systemModules.push(systemModule);
+
+        if (!NxSystemBase.PROXIES.has(this)) {
+            NxSystemBase.PROXIES.set(
+                this,
+                new Proxy(this, {
+                    get: (target, prop) => {
+                        const modules = (target as unknown as NxSystemBase).systemModules;
+                        for (const module of modules) {
+                            if (prop in module) {
+                                return module[prop];
+                            }
+                        }
+                        return target[prop];
+                    },
+                    set: (target, prop, value) => {
+                        const modules = (target as unknown as NxSystemBase).systemModules;
+                        for (const module of modules) {
+                            if (prop in module) {
+                                module[prop] = value;
+                                return true;
+                            }
+                        }
+                        target[prop] = value;
+                        return true;
+                    }
+                })
+            );
+        }
+
+        return NxSystemBase.PROXIES.get(this) as T & U;
     }
 
     /**
