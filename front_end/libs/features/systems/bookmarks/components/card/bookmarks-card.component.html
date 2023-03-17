@@ -9,40 +9,44 @@
             {{ duration }}
         </span>
         <div class="bookmarks-image">
-            <div
-                *ngIf="workingThumbnail; else noThumbnail"
-                class="bookmarks-image-loaded"
-            >
-                <svg-icon
-                    nx-add-svg-src
-                    [src]="icons.dir + 'play.svg'"
-                    [svgStyle]="{ 'width.px': '40', 'height.px': '40' }"
-                    class="bookmarks-image-playIcon"
-                ></svg-icon>
-                <img
-                    *ngIf="bookmark.isVisible && (bookmark.thumbnail | async) as thumbnail"
-                    [src]="thumbnail | safe: 'resourceUrl'"
-                    [alt]="'thumbnail of ' + bookmark.name"
-                    (error)="workingThumbnail = false"
-                />
+            <div class="bookmarks-image-loaded">
+                <ng-container *ngIf="bookmark.isVisible">
+                    <nx-pre-loader *ngIf="loading"></nx-pre-loader>
+                    <div [class]="{ 'd-none': loading }">
+                        <svg-icon
+                            *ngIf="thumbnail$ | async"
+                            nx-add-svg-src
+                            [src]="icons.dir + 'play.svg'"
+                            [svgStyle]="{ 'width.px': '40', 'height.px': '40' }"
+                            class="bookmarks-image-playIcon"
+                        ></svg-icon>
+                        <img
+                            [src]="
+                                (thumbnail$ | async)
+                                    ? (thumbnail$ | async | safe: 'resourceUrl')
+                                    : icons.dirNonStandardView +
+                                      'cameras_list_placeholder_offline.svg'
+                            "
+                            [alt]="'thumbnail of ' + bookmark.name"
+                        />
+                    </div>
+                </ng-container>
             </div>
-            <ng-template #noThumbnail>
-                <svg-icon
-                    nx-add-svg-src
-                    class="bookmarks-image-noImage"
-                    [src]="icons.dirNonStandardView + 'cameras_list_placeholder_offline.svg'"
-                    [svgStyle]="{ 'width.px': '200' }"
-                ></svg-icon>
-            </ng-template>
         </div>
     </div>
     <div class="bookmarks-info">
         <span class="bookmarks-info-timestamp">
             <span>{{ startDate }}</span> • <span>{{ startTime }}</span>
         </span>
-        <h2 class="bookmarks-info-title">
+        <nx-ml-ellipsis
+            class="bookmarks-info-title"
+            gradientOnly
+            [viewHeight]="40"
+            [viewLineHeight]="19"
+            [viewLines]="2"
+        >
             {{ bookmark.name }}
-        </h2>
+        </nx-ml-ellipsis>
         <p class="bookmarks-info-name">{{ bookmark.deviceName }}</p>
     </div>
 </div>

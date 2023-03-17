@@ -1,0 +1,54 @@
+@use "theme_variables_common" as *;
+
+.ellipsis {
+    overflow   : hidden;
+    white-space: unset;
+    // these are set in the controller
+    //height      : 75px;
+    //line-height : 25px;
+    
+    .before {
+        content : "";
+        float   : left;
+        width   : 5px;
+        // this is set in the controller
+        //height  : 75px;
+    }
+    
+    .after {
+        box-sizing         : content-box;
+        
+        float              : right;
+        position           : relative;
+        // this is set in the controller
+        //top                : -25px;
+        // *****************************
+        left               : 100%;
+        width              : 10em;
+        margin-left        : -10em;
+        padding-right      : 5px;
+        
+        text-align         : right;
+        font-size          : inherit;
+        font-family        : inherit;
+        font-weight        : bold;
+        
+        cursor             : pointer;
+
+        background: var(--ellipsis-gradient);
+        
+        // if different is needed for different screen sizes
+        //@include respond-to(xs) {
+        //	background : linear-gradient(to right, rgba(255, 255, 255, 0), $brand-dark 40%, $brand-dark)
+        //}
+    }
+    
+    .body {
+        float       : right;
+        width       : 100%;
+        margin-left : -5px;
+        font-size   : inherit;
+        font-family : inherit;
+    }
+    
+}

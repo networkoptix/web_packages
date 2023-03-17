@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 
+import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { icons } from '@lib/variables/static-variables';
 
 @Component({
@@ -10,6 +11,7 @@ import { icons } from '@lib/variables/static-variables';
 export class ClipComponent {
     @Input() sourceUrl: string;
     @Input() posterUrl: string;
+    @IBool() @Input() disableDownload: CoercedBoolInput;
 
     readonly internalPoster: string;
     posterLoadingError = false;

@@ -17,6 +17,7 @@ import { FooterModule } from './footer/footer.module';
 import { HtmlInputModule } from './html-input/html-input.module';
 import { LandingDisplayModule } from './landing-display/landing-display.module';
 import { LoggerModule } from './logger/logger.module';
+import { MultiLineEllipsisModule } from './multi-line-ellipsis/mle.module';
 import { NavFooterModule } from './nav-footer/nav-footer.module';
 import { NumericModule } from './numeric-input/numeric.module';
 import { ClientButtonModule } from './open-client-button/client-button.module';
@@ -65,6 +66,7 @@ import { UpdateWebadminSessionModule } from './update-webadmin-session/update-we
         TagModule,
         TooltipModule,
         UpdateWebadminSessionModule,
+        MultiLineEllipsisModule,
     ],
     exports: [
         ActiveSystemModule,
@@ -98,6 +100,7 @@ import { UpdateWebadminSessionModule } from './update-webadmin-session/update-we
         TagModule,
         TooltipModule,
         UpdateWebadminSessionModule,
+        MultiLineEllipsisModule,
     ]
 })
 

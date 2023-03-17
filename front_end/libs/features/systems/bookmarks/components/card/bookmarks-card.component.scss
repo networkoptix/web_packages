@@ -1,5 +1,6 @@
-:host {
+@use "theme_variables_common" as *;
 
+nx-bookmarks-card {
     &:hover,
     &:active,
     &:focus-within {
@@ -11,82 +12,88 @@
                 background-color: var(--bookmarks-card-background-color-hover);
             }
         }
-    }
-}
 
-.bookmarks {
-
-    &-image {
-        background-color: var(--light4);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-
-        &-wrapper {
-            position: relative;
+        nx-ml-ellipsis .ellipsis-after {
+            background: var(--bookmarks-card-title-gradient-hover);
         }
+    }
 
-        &-loaded {
-            display: block;
-            width: 100%;
-            height: 0px;
-            position: relative;
-            padding-bottom: 56.25%; // 16:9 video ratio
+    .bookmarks {
 
-            img {
-                position: absolute;
-                top: 0;
-                left: 0;
+        &-image {
+            background-color: var(--light4);
+    
+            &-wrapper {
+                position: relative;
+            }
+    
+            &-loaded {
+                display: block;
                 width: 100%;
-                height: 100%;
+                height: 0px;
+                position: relative;
+                padding-bottom: 56.25%; // 16:9 video ratio
+    
+                img {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+    
+            &-playIcon,
+            &-noImage {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+                z-index: 1;
             }
         }
-
-        &-playIcon {
+    
+        &-duration {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%,-50%);
+            top: 17px;
+            left: 17px;
             z-index: 1;
+            color: white;
+            background-color: var(--bookmarks-duration-bg);
+            padding: 2px 4px;
         }
-    }
-
-    &-duration {
-        position: absolute;
-        top: 17px;
-        left: 17px;
-        z-index: 1;
-        color: white;
-        background-color: var(--bookmarks-duration-bg);
-        padding: 2px 4px;
-    }
-
-    &-info {
-        display: flex;
-        flex-direction: column;
-        padding: 15px;
-        height: 140px;
-        border: 1px solid var(--border-color);
-        border-top: none;
-        background-color: var(--bookmarks-card-background-color);
-
-        &-timestamp {
-            font-size: 14px;
-            margin: 5px 0 10px;
-
-            // Puts date first in RTL
+    
+        &-info {
             display: flex;
-            gap: 5px;
+            flex-direction: column;
+            padding: 15px;
+            height: 140px;
+            border: 1px solid var(--border-color);
+            border-top: none;
+            background-color: var(--bookmarks-card-background-color);
+    
+            &-timestamp {
+                font-size: 14px;
+                margin: 5px 0 10px;
+    
+                // Puts date first in RTL
+                display: flex;
+                gap: 5px;
+            }
+    
+            &-title {
+                font-size: 15px !important;
+                font-family: $font-family-medium;
+            }
+    
+            &-name {
+                font-size: 14px;
+                margin-top: auto;
+            }
         }
+    }
 
-        &-title {
-            font-size: 18px !important;
-        }
-
-        &-name {
-            font-size: 14px;
-            margin-top: auto;
-        }
+    nx-ml-ellipsis .ellipsis-after {
+        background: var(--bookmarks-card-title-gradient);
     }
 }

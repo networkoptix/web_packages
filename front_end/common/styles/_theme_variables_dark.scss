@@ -657,12 +657,17 @@ html[data-theme="dark"] {
     --bookmarks-filter-filled-text: var(--light2);
     --bookmarks-text-highlight-bg: var(--dark12);
     --bookmarks-duration-bg: rgba(0, 0, 0, .5);
-    --bookmarks-card-background-color: #181c20;
+    --bookmarks-card-background-color: var(--dark5);
     --bookmarks-card-background-color-hover: var(--dark7);
     --bookmarks-card-border-color: inherit;
+    --bookmarks-card-title-gradient: linear-gradient(to right, rgba(var(--dark5--rgb), 0), rgba(var(--dark5--rgb), 1)); 
+    --bookmarks-card-title-gradient-hover: linear-gradient(to right, rgba(var(--dark7--rgb), 0), rgba(var(--dark7--rgb), 1)); 
 
     --tour-background: rgba(var(--dark9--rgb), 0.4);
 
     /* System Admin */
     --system-admin-info-text: #E1E7EA; //$light4;
+
+    /* Ellipsis */
+    --ellipsis-gradient: linear-gradient(to right, rgba(255, 0, 0, 0), rgba(255, 255, 255, 1)); 
 }

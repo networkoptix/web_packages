@@ -1,4 +1,5 @@
-import { Component, Input, OnInit, Inject } from '@angular/core';
+import { Component, Input, OnInit, Inject, ViewEncapsulation } from '@angular/core';
+import { map, Observable } from 'rxjs';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons } from '@lib/variables/static-variables';
@@ -11,17 +12,20 @@ import { Bookmark } from '../../bookmarks.types';
     selector: 'nx-bookmarks-card',
     templateUrl: 'bookmarks-card.component.html',
     styleUrls: ['bookmarks-card.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class NxBookmarksCardComponent implements OnInit {
     @Input() bookmark: Bookmark;
     DATE_FORMAT = 'mmm dd, yyyy';
     icons = icons;
-    workingThumbnail = true;
+    loadedThumbnail: boolean = true;
 
     private locale: string;
     startTime: string;
     startDate: string;
     duration: string;
+    thumbnail$: Observable<string>;
+    loading: boolean = true;
 
     constructor(
         private dialogs: NxDialogsService,
@@ -45,6 +49,13 @@ export class NxBookmarksCardComponent implements OnInit {
         const hours = Math.floor((this.bookmark.durationMs / (1000 * 60 * 60)) % 24);
         const includeHours = hours !== 0 ? hours.toString().padStart(2, '0') + ':' : '';
         this.duration = `${includeHours}${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+        this.thumbnail$ = this.bookmark.thumbnail.pipe(
+            map(thumbnailUrl => {
+                this.loading = false;
+                return thumbnailUrl;
+            })
+        );
     }
 
     openBookmarkModal(): void {

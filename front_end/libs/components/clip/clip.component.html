@@ -1,10 +1,12 @@
 <video
     [ngClass]="{ 'd-none': posterLoadingError && false }"
     [src]="sourceUrl"
-    [poster]="posterLoadingError ? internalPoster : posterUrl"
+    [poster]="posterLoadingError ? internalPoster : (posterUrl | safe: 'resourceUrl')"
     (error)="handler($event)"
     (loadeddata)="handler($event)"
-    preload="none"
+    preload="auto"
     playsinline
+    loop
     controls
+    [controlsList]="disableDownload ? 'nodownload' : ''"
 ></video>

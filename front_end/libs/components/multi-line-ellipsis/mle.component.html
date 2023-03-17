@@ -1,0 +1,23 @@
+<div
+    class="ellipsis"
+    [style.height]="viewHeight + 'px'"
+    [style.line-height]="viewLineHeight + 'px'"
+>
+    <div
+        class="before"
+        [style.height]="viewHeight + 'px'"
+    ></div>
+    <div class="body">
+        <ng-content></ng-content>
+    </div>
+
+    <div
+        class="after"
+        [style.top]="'-' + viewLineHeight + 'px'"
+        [style.height]="viewLineHeight + 'px'"
+        (click)="viewMoreDescr()"
+        *ngIf="!more"
+    >
+        {{ !gradientOnly ? '...' : '' }}
+    </div>
+</div>
