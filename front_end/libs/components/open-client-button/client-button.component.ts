@@ -41,7 +41,7 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
         private urlProtocol: NxUrlProtocolService,
         private dialogs: NxDialogsService,
         private router: Router,
-        private store: Store
+        private store: Store,
     ) {
         this.location = location;
         this.CONFIG = configService.getConfig();
@@ -52,7 +52,8 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.store.select(accountSelectors.selectCurrentUser)
+        this.store
+            .select(accountSelectors.selectCurrentUser)
             .pipe(untilDestroyed(this))
             .subscribe(account => {
                 this.account = account;
