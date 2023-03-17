@@ -259,7 +259,7 @@ export class NxBookmarksComponent implements OnInit {
 
                 if (this.queryParams.tags) {
                     const tags = this.queryParams.tags.split(',');
-                    bks = bks.filter(bk => tags.every(tag => bk.tags.includes(tag)));
+                    bks = bks.filter(bk => bk.tags && tags.every(tag => bk.tags.includes(tag)));
                 }
 
                 if (this.queryParams.startDate) {

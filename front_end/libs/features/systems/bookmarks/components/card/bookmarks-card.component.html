@@ -48,5 +48,23 @@
             {{ bookmark.name }}
         </nx-ml-ellipsis>
         <p class="bookmarks-info-name">{{ bookmark.deviceName }}</p>
+        <!-- FOR DEV DEBUGGING ONLY -->
+        <!-- <div
+            [ngStyle]="{
+                display: 'flex',
+                gap: '0.5rem'
+            }"
+        >
+            <span
+                *ngFor="let tag of bookmark.tags"
+                [ngStyle]="{
+                    background: 'var(--bookmarks-filter-button-bg)',
+                    padding: '0 0.5rem',
+                    border: '1px solid var(--border-color)'
+                }"
+                >{{ tag }}</span
+            >
+        </div> -->
+        <!-- /FOR DEV DEBUGGING ONLY -->
     </div>
 </div>
