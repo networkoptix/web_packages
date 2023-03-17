@@ -397,7 +397,7 @@ export class NxCloudApiService {
         });
     }
 
-    @memoizeAsyncLong
+    @memoizeAsyncShort
     systems(systemId?: string) {
         return this.cloudDbApi.systems(systemId);
     }

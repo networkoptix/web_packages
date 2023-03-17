@@ -1,6 +1,6 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { Component, Inject } from '@angular/core';
-import { of } from 'rxjs';
+import { of, Subject, takeUntil } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -30,7 +30,7 @@ export class DisconnectModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;
     needsUpdate: boolean;
     disconnect: Process;
-    disconnectInterval: number;
+    unsub$ = new Subject<boolean>();
 
     constructor(
         private processService: NxProcessService,
@@ -54,20 +54,20 @@ export class DisconnectModalContent extends ModalBase<DT['return']> {
             if (this.environment.isLocal) {
                 return this.disconnectLocal();
             }
-            clearInterval(this.disconnectInterval);
             return new Promise<void>((resolve, reject) => {
                 this.account.disconnect(this.system.id).then(() => {
+                    this.systemsService.systemsSubject
+                        .pipe(
+                            takeUntil(this.unsub$)
+                        )
+                        .subscribe(systems => {
+                            if (!systems.find(sys => sys.id === this.system.id)) {
+                                this.unsub$.next(true);
+                                resolve();
+                            }
+                        });
                     this.systemsService.userDisconnectSystem = true;
-                    this.disconnectInterval = this.window.setInterval(() => {
-                        this.systemsService
-                            .forceUpdateSystemsAsPromise()
-                            .then(systems => {
-                                if (!systems.find(sys => sys.id === this.system.id)) {
-                                    clearInterval(this.disconnectInterval);
-                                    resolve();
-                                }
-                            });
-                    }, 2000);
+                    this.systemsService.forceUpdateSystemsAsPromise().then(() => {});
                 }).catch(e => reject(e));
             });
         }, {
@@ -98,7 +98,6 @@ export class DisconnectModalContent extends ModalBase<DT['return']> {
     }
 
     override close = (msg?: DT['return']): void => {
-        clearInterval(this.disconnectInterval);
         this.dialogRef.close(msg);
     };
 

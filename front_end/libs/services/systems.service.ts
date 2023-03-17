@@ -15,6 +15,7 @@ import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
+import { nxConfig } from '@services/nx-config/config';
 import { alphabeticalSort, paramSortFunc } from '@utils/general';
 import { memoizeAsyncPersistent } from '@utils/memoize';
 
@@ -53,7 +54,8 @@ export class NxSystemsService {
     systemsSubject = this.currentUser$.pipe(
         switchMap(() => environment.isLocal ? Promise.resolve([]) : this._getSystems()),
         map(systems => this.processSystems(systems)),
-        environment.isLocal ? identity : switchMap(systems => {
+        !nxConfig.featureFlags.requestCaching || environment.isLocal ? identity : switchMap(systems => {
+            this.db.personal.systems.clear();
             this.db.personal.systems.bulkPut(systems);
             return this.db.personal.systems.$.toArray();
         }),
@@ -97,7 +99,7 @@ export class NxSystemsService {
         @Inject(LOCALE_ID) private locale: string,
     ) {
         this.CONFIG = configService.getConfig();
-        this.db.personal.systems.$.toArray().subscribe(systems => {
+        this.systemsSubject.subscribe(systems => {
             this.#systems = systems;
         });
 
