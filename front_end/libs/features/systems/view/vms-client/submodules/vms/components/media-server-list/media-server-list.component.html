@@ -96,15 +96,16 @@
                             class="fs-exclude"
                             *ngIf="
                                 isCameraVisible[camera.id] &&
-                                (camera.thumbnailUrl | async) as thumbnail
+                                (camera.thumbnailUrl | async) !== undefined
                             "
-                            [src]="thumbnail | safe: 'resourceUrl'"
+                            [src]="camera.thumbnailUrl | async | safe: 'resourceUrl'"
                             (load)="handlePreviewLoaded(camera.id)"
                             (error)="handlePreviewError(camera.id)"
                         />
                         <svg-icon
                             nx-add-svg-src
                             *ngIf="
+                                (camera.thumbnailUrl | async) === undefined ||
                                 !camera.isAuthorized ||
                                 previewLoaded[camera.id] === -1 ||
                                 !camera.isOnline

@@ -985,8 +985,11 @@ export class NxSystemRestAPI extends NxSystemAPI {
             data.rotate = rotate;
         }
 
-        return this.get(endpoint, data, { responseType: 'blob' })
-            .pipe(map(blob => blob ? URL.createObjectURL(blob) : undefined), share());
+        return this.get(endpoint, data, { responseType: 'blob' }).pipe(
+            catchError(e => undefined),
+            map(blob => blob ? URL.createObjectURL(blob) : undefined),
+            share()
+        );
     }
 
     protected generateGetUrl(url: string, data: IParams, absUrl?: boolean) {
