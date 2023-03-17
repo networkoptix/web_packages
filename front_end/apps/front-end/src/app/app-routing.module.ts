@@ -46,7 +46,7 @@ const lazyRoutes: Routes = [
         path: 'systems/:systemId/layouts',
         loadChildren: () => import('@pages/systems/layout-view/layout-view.module').then(m => m.NxLayoutViewModule),
         canLoad: [FeatureGuard],
-        canActivate: [SystemGuard],
+        canActivate: [AuthGuard, SystemGuard, TwofaGuard],
         data: {
             flags: FeatureFlagStrings.layouts
         },
