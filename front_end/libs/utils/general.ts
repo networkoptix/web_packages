@@ -71,12 +71,65 @@ export function wrapWithPercent(
     return `${precision ? percentage.toPrecision(precision) : percentage}% (${wrappedValue})`;
 }
 
+/* Datetime */
+export function offsetDate(
+    base: Date | number,
+    offset: {
+        year?: number;
+        month?: number;
+        day?: number;
+        hr?: number;
+        min?: number;
+        s?: number;
+        ms?: number;
+    },
+): Date {
+    const date = base instanceof Date ? base : new Date(base);
+
+    const { year, month, day, hr, min, s, ms } = offset;
+    if (year) {
+        date.setFullYear(date.getFullYear() + year);
+    }
+    if (month) {
+        date.setMonth(date.getMonth() + month);
+    }
+    if (day) {
+        date.setDate(date.getDate() + day);
+    }
+    if (hr) {
+        date.setHours(date.getHours() + hr);
+    }
+    if (min) {
+        date.setMinutes(date.getMinutes() + min);
+    }
+    if (s) {
+        date.setSeconds(date.getSeconds() + s);
+    }
+    if (ms) {
+        date.setMilliseconds(date.getMilliseconds() + ms);
+    }
+    return date;
+}
+
 export enum MS {
     ms = 1,
     s = 1000,
     min = MS.s * 60,
     hr = MS.min * 60,
     day = MS.hr * 24,
+}
+
+type MsParts = { ms: number } & { [k in Exclude<keyof typeof MS, 'ms'>]?: number };
+export function msToParts(ms: number, maxUnit: Exclude<keyof typeof MS, 'ms'> = 'hr'): MsParts {
+    let keys: (keyof typeof MS)[] = ['day', 'hr', 'min', 's', 'ms'];
+    keys = keys.slice(keys.indexOf(maxUnit));
+    return Object.fromEntries(
+        keys.map(k => {
+            const value = Math.floor(ms / MS[k]);
+            ms -= value * MS[k];
+            return [k, value];
+        }),
+    ) as MsParts;
 }
 
 /* Array */

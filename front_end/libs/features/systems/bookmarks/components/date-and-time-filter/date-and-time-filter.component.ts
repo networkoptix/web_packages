@@ -14,7 +14,7 @@ import { BehaviorSubject } from 'rxjs';
 
 import { icons } from '@lib/variables/static-variables';
 import { WINDOW } from '@services/window-provider';
-import { MS } from '@utils/general';
+import { offsetDate } from '@utils/general';
 import { getSysLang } from '@utils/nx';
 
 import type { TimeRange } from '../../bookmarks.types';
@@ -69,21 +69,26 @@ export class NxDateAndTimeFilterComponent {
             : this.dateRange.start;
     }
 
-    get lastDay(): DateRange {
+    get todayStart(): Date {
         const now = new Date();
-        return new DR(now, now);
+        return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    }
+
+    get lastDay(): DateRange {
+        const today = this.todayStart;
+        return new DR(today, today);
     }
 
     get last7Days(): DateRange {
-        const now = new Date();
-        const sevenDaysAgo = new Date(now.getTime() - 7 * MS.day);
-        return new DR(sevenDaysAgo, now);
+        const today = this.todayStart;
+        const sevenDaysAgo = offsetDate(today.getTime(), { day: -7 });
+        return new DR(sevenDaysAgo, today);
     }
 
     get last30Days(): DateRange {
-        const now = new Date();
-        const thirtyDaysAgo = new Date(now.getTime() - 30 * MS.day);
-        return new DR(thirtyDaysAgo, now);
+        const today = this.todayStart;
+        const thirtyDaysAgo = offsetDate(today.getTime(), { day: -30 });
+        return new DR(thirtyDaysAgo, today);
     }
 
     constructor(
@@ -194,9 +199,8 @@ export class NxDateAndTimeFilterComponent {
         } else if ((this.timeRange.start !== null && this.timeRange.end !== null)) {
             this.timeRangeChange.emit(this.timeRange);
             if (!this.dateRange) {
-                const now = new Date();
-                const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-                this.dateRangeChange.emit(new DR(todayStart, todayStart));
+                const today = this.todayStart;
+                this.dateRangeChange.emit(new DR(today, today));
             } else {
                 this.dateRangeChange.emit(this.dateRange);
                 // In case invalid time change stopped original date range emit

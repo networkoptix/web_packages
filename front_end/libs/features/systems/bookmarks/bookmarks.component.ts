@@ -21,7 +21,7 @@ import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { WINDOW } from '@services/window-provider';
-import { alphabeticalSort, caseInsenstiveSearch, cleanId, MS, paramSortFunc } from '@utils/general';
+import { alphabeticalSort, caseInsenstiveSearch, cleanId, msToParts, offsetDate, paramSortFunc } from '@utils/general';
 import { getSysLang } from '@utils/nx';
 
 import type { Bookmark, TimeRange } from './bookmarks.types';
@@ -269,10 +269,10 @@ export class NxBookmarksComponent implements OnInit {
                     if (this.queryParams.startTime) {
                         const startTime = Number(this.queryParams.startTime);
                         const endTime = Number(this.queryParams.endTime);
-                        startDatetime += startTime;
-                        endDatetime += endTime;
+                        startDatetime = offsetDate(startDatetime, msToParts(startTime)).getTime();
+                        endDatetime = offsetDate(endDatetime, msToParts(endTime)).getTime();
                     } else {
-                        endDatetime += MS.day;
+                        endDatetime = offsetDate(endDatetime, { day: 1 }).getTime();
                     }
 
                     bks = bks.filter(bk =>

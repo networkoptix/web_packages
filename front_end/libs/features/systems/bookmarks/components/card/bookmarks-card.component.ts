@@ -4,6 +4,7 @@ import { map, Observable } from 'rxjs';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons } from '@lib/variables/static-variables';
 import { WINDOW } from '@services/window-provider';
+import { msToParts } from '@utils/general';
 import { getSysLang } from '@utils/nx';
 
 import { Bookmark } from '../../bookmarks.types';
@@ -44,9 +45,7 @@ export class NxBookmarksCardComponent implements OnInit {
         this.startTime = timeFormat.format(startDate);
         this.startDate = startDate.toLocaleString(this.locale, { dateStyle: 'medium' });
 
-        const seconds = Math.floor((this.bookmark.durationMs / 1000) % 60);
-        const minutes = Math.floor((this.bookmark.durationMs / (1000 * 60)) % 60);
-        const hours = Math.floor((this.bookmark.durationMs / (1000 * 60 * 60)) % 24);
+        const { s: seconds, min: minutes, hr: hours } = msToParts(this.bookmark.durationMs);
         const includeHours = hours !== 0 ? hours.toString().padStart(2, '0') + ':' : '';
         this.duration = `${includeHours}${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
