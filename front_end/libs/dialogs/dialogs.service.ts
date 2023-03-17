@@ -12,8 +12,6 @@ import { Translatable } from '@pipes/nx-translate.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
-import { CloudStorageManager } from '@services/system.service/cloud-storage-manager/cloud-storage-manager';
-import { LicenseManager } from '@services/system.service/license-manager/licence-manager';
 import { StorageManager } from '@services/system.service/storage-manager/storage-manager';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxUser } from '@services/system.service/user-manager/user-manager-types';
@@ -26,7 +24,7 @@ import { toast } from '../variables/static-variables';
 import { DialogBase } from './dialog-base';
 import { DialogConfig } from './dialog-config';
 import { DIALOG_SIZE as DIALOG_SIZE_V2 } from './dialog-config-v2';
-import { DIALOG_SIZE, defaultConfig, infoDialogConfig, cloudStorageActionDialogConfig } from './dialog-ref';
+import { DIALOG_SIZE, defaultConfig, infoDialogConfig } from './dialog-ref';
 import * as Dt from './dialogs.types';
 import { NxToastService } from './toast.service';
 import { TfaAction } from './two-fa/two-fa.component.types';
@@ -179,27 +177,6 @@ export class NxDialogsService extends DialogBase {
         return this.open(component, dialogConfig)
             .afterClosed();
     }
-
-    #cloudStorageActionMethodFactory = <T>(modalContent: () => Promise<ComponentType<T>>) => async (licenseManager: LicenseManager, cloudStorageManager?: CloudStorageManager) => {
-        const component = await modalContent();
-        return this.open(component, { ...cloudStorageActionDialogConfig, data: { licenseManager, cloudStorageManager } }).afterClosed();
-    };
-
-    public cloudStorageActivate = this.#cloudStorageActionMethodFactory(
-        () => import('./cloud-storage/activate/cloud-storage-activate.component').then(m => m.CloudStorageActivateModalContent)
-    );
-
-    public cloudStorageUpdate = this.#cloudStorageActionMethodFactory(
-        () => import('./cloud-storage/modify/cloud-storage-modify.component').then(m => m.CloudStorageModifyModalContent)
-    );
-
-    public cloudStorageDelete = this.#cloudStorageActionMethodFactory(
-        () => import('./cloud-storage/delete/cloud-storage-delete.component').then(m => m.CloudStorageDeleteModalContent)
-    );
-
-    public cloudStorageMigrate = this.#cloudStorageActionMethodFactory(
-        () => import('./cloud-storage/move/cloud-storage-move.component').then(m => m.CloudStorageMoveModalContent)
-    );
 
     public async restartServer(system: NxSystem, serverId: string, serverName: string) {
         const config: Partial<DialogConfig> = {
@@ -492,6 +469,11 @@ export class NxDialogsService extends DialogBase {
         return this.openV2(component, dialogConfig);
     }
 
+    message = this.dialogV2Factory<Dt.Message>(
+        () => import('./message/message.component').then(m => m.MessageModalContent),
+        { autoFocus: '#message' },
+    );
+
     /* Auth */
     async expiredSession(): Promise<Dt.Confirm['return']> {
         return this.confirm({
@@ -557,11 +539,6 @@ export class NxDialogsService extends DialogBase {
         });
     }
 
-    message = this.dialogV2Factory<Dt.Message>(
-        () => import('./message/message.component').then(m => m.MessageModalContent),
-        { autoFocus: '#message' },
-    );
-
     /* Systems */
 
     /* Groups */
@@ -592,6 +569,38 @@ export class NxDialogsService extends DialogBase {
     transferOwnership = this.dialogV2Factory<Dt.TransferOwnership>(
         () => import('./transfer-ownership/transfer-ownership.component').then(m => m.TransferOwnershipModalContent),
         { width: '420px' }
+    );
+
+    /* Cloud storage */
+    private cloudStorageFactory<CT>(
+        componentPromise: () => Promise<ComponentType<CT>>,
+        customConfig: CdkDialogConfig<never> = {},
+    ): (data: Dt.CloudStorage['data']) => Promise<Dt.CloudStorage['return']> {
+        return async data => {
+            const component = await componentPromise();
+            const configWithData: CdkDialogConfig<Dt.CloudStorage['data']> = {
+                width: DIALOG_SIZE_V2.ACTION,
+                ...customConfig,
+                data
+            };
+            return this.openV2(component, configWithData);
+        };
+    }
+
+    cloudStorageActivate = this.cloudStorageFactory(
+        () => import('./cloud-storage/activate/cloud-storage-activate.component').then(m => m.CloudStorageActivateModalContent)
+    );
+
+    cloudStorageUpdate = this.cloudStorageFactory(
+        () => import('./cloud-storage/modify/cloud-storage-modify.component').then(m => m.CloudStorageModifyModalContent)
+    );
+
+    cloudStorageDelete = this.cloudStorageFactory(
+        () => import('./cloud-storage/delete/cloud-storage-delete.component').then(m => m.CloudStorageDeleteModalContent)
+    );
+
+    cloudStorageMigrate = this.cloudStorageFactory(
+        () => import('./cloud-storage/move/cloud-storage-move.component').then(m => m.CloudStorageMoveModalContent)
     );
 
     /* Cameras */

@@ -33,10 +33,7 @@ import { NxMoreTagsModule } from './bookmarks/more-tags/more-tags.module';
 import { ChangePasswordModalContent } from './change-password/change-password.component';
 import { ChangeStorageModalContent } from './change-storage/change-storage.component';
 import { Client2faWarningModalModule } from './client-2fa-warning/client-2fa-warning.module';
-import { CloudStorageActivateModalContent } from './cloud-storage/activate/cloud-storage-activate.component';
-import { CloudStorageDeleteModalContent } from './cloud-storage/delete/cloud-storage-delete.component';
-import { CloudStorageModifyModalContent } from './cloud-storage/modify/cloud-storage-modify.component';
-import { CloudStorageMoveModalContent } from './cloud-storage/move/cloud-storage-move.component';
+import { CloudStorageModule } from './cloud-storage/cloud-storage.module';
 import { ConnectCloudModalModule } from './connect-cloud/connect-cloud.module';
 import { CreateSystemGroupModalModule } from './create-system-group/create-system-group.module';
 import { DeleteCloudUserModalModule } from './delete-cloud-user/delete-cloud-user.module';
@@ -112,6 +109,7 @@ import { WizardModalContent } from './wizard/wizard.component';
         AddPartnerBrandModalModule,
         AddCustomizationUserModalModule,
         AddPartnerModalModule,
+        CloudStorageModule,
     ],
     declarations: [
         AddStorageModalContent,
@@ -123,8 +121,6 @@ import { WizardModalContent } from './wizard/wizard.component';
         ResetServerModalContent,
         ChangePasswordModalContent,
         WizardModalContent,
-        CloudStorageDeleteModalContent,
-        CloudStorageMoveModalContent,
         UpdateCameraCredentialsModalContent,
         ResetBackupModalContent,
         AddStorageModalContent,
@@ -134,8 +130,6 @@ import { WizardModalContent } from './wizard/wizard.component';
         SelectTimeRangeModalContent,
         ReserveSpaceWarningModalContent,
         NewFeatureInformationModalContent,
-        CloudStorageActivateModalContent,
-        CloudStorageModifyModalContent,
     ],
     providers: [],
     exports: [

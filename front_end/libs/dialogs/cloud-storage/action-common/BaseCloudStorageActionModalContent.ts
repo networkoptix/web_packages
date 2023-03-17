@@ -2,6 +2,8 @@ import { map, Observable } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import type { CloudStorage as DT } from '@dialogs/dialogs.types';
+import { ModalBase } from '@dialogs/modal-base';
 import { Translatable } from '@pipes/nx-translate.types';
 import { LicenseState } from '@services/nx-cloud-api/cloud-services/license-server/license-server-api.types';
 import { IConfig } from '@services/nx-config/config-types';
@@ -18,15 +20,14 @@ export enum CloudStorageActionType {
     DELETE = 'delete'
 }
 
-export class BaseCloudStorageActionModalContent {
+export class BaseCloudStorageActionModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;
     CONFIG: IConfig;
     actionProcess: Process;
     actionType: CloudStorageActionType;
     licenseManager: LicenseManager;
     cloudStorageManager: CloudStorageManager;
-    protected dialogData: Record<string, unknown>;
-    close: () => void;
+    protected dialogData: DT['data'];
     targetSystem: DropdownItem<string>;
     targetSystems$: Observable<DropdownItem<string>[]>;
     processConfig: Partial<ProcessSettings> = { ignoreError: true, ignoreUnauthorized: true };
@@ -89,6 +90,7 @@ export class BaseCloudStorageActionModalContent {
         }
 
         this.success = true;
+        this.unlock();
     };
 
     showErrors = ({
@@ -148,6 +150,7 @@ export class BaseCloudStorageActionModalContent {
         errors.push(...userId.map(k => this.licenseManager.translateMessage(k)));
 
         this.errors = errors;
+        this.unlock();
     };
 
     init = (): void => {

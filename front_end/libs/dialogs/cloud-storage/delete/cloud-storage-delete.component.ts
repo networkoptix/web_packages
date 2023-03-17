@@ -1,3 +1,4 @@
+import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import {
     Component,
     Renderer2,
@@ -5,10 +6,7 @@ import {
 } from '@angular/core';
 import { defer } from 'rxjs';
 
-import {
-    DIALOG_DATA,
-    DialogRef
-} from '@dialogs/dialog-ref';
+import type { CloudStorage as DT } from '@dialogs/dialogs.types';
 import { icons } from '@lib/variables/static-variables';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
@@ -26,18 +24,23 @@ export class CloudStorageDeleteModalContent extends BaseCloudStorageActionModalC
 
     constructor(
         configService: NxConfigService,
-
         public renderer: Renderer2,
-        private dialogRef: DialogRef,
+        dialogRef: DialogRef<DT['return']>,
         private processService: NxProcessService,
-        @Inject(DIALOG_DATA) protected dialogData: Record<string, unknown>,
+        @Inject(DIALOG_DATA) protected dialogData: DT['data'],
     ) {
-        super();
+        super(dialogRef);
         this.init();
         this.CONFIG = configService.getConfig();
 
-        this.actionProcess = this.processService.createProcess(defer(() => this.licenseManager.deactivate(this.password, this.license)), this.processConfig, this.showSuccess, this.showErrors);
+        this.actionProcess = this.processService.createProcess(
+            defer(() => {
+                this.lock();
+                return this.licenseManager.deactivate(this.password, this.license);
+            }),
+            this.processConfig,
+            this.showSuccess,
+            this.showErrors,
+        );
     }
-
-    close = (): void => this.dialogRef.close();
 }

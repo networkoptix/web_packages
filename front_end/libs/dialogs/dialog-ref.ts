@@ -28,11 +28,6 @@ export const infoDialogConfig: DialogConfig = {
     width: DIALOG_SIZE.INFO,
 };
 
-export const cloudStorageActionDialogConfig: DialogConfig = {
-    ...defaultConfig,
-    width: DIALOG_SIZE.ACTION,
-};
-
 /**
  * A reference to the dialog itself.
  * Can be injected into the component added to the overlay and then used to close itself.

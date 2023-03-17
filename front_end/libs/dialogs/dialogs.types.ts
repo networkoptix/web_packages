@@ -2,10 +2,12 @@ import type { SelectionModel } from '@angular/cdk/collections';
 import type { EventEmitter } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
-import { Bookmark } from '@pages/systems/bookmarks/bookmarks.types';
+import type { Bookmark } from '@pages/systems/bookmarks/bookmarks.types';
 import type { Translatable } from '@pipes/nx-translate.types';
 import type { CloudResponse, SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { Process } from '@services/process.service/process';
+import type { CloudStorageManager } from '@services/system.service/cloud-storage-manager/cloud-storage-manager';
+import type { LicenseManager } from '@services/system.service/license-manager/licence-manager';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxUser } from '@services/system.service/user-manager/user-manager-types';
 
@@ -120,6 +122,15 @@ interface Mandatory2faData {
 export type Mandatory2fa = DialogType<Mandatory2faData, boolean>;
 
 export type TransferOwnership = DialogType<NxSystem, SystemTransferInfo>;
+
+/* Cloud storage */
+export type CloudStorage = DialogType<
+    {
+        licenseManager: LicenseManager;
+        cloudStorageManager?: CloudStorageManager;
+    },
+    void
+>;
 
 /* Cameras */
 
