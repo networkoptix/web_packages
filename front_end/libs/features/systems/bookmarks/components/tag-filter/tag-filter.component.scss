@@ -27,6 +27,12 @@ $tag-gap: 0.5rem;
                 background-color: var(--brand-core);
                 color: var(--bookmarks-filter-filled-text);
             }
+
+            span {
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+            }
         }
     }
 }
@@ -44,6 +50,10 @@ $tag-gap: 0.5rem;
 
         .tags {
             margin-bottom: 0.5rem;
+
+            .tag {
+                max-width: 6.75rem !important;
+            }
         }
 
         button {

@@ -12,7 +12,7 @@
                 *ngFor="let tag of searchMatches"
                 (click)="dialogData.selection.toggle(tag); dialogData.emitter.emit()"
             >
-                {{ tag }}
+                <span>{{ tag }}</span>
             </button>
         </div>
     </ng-container>

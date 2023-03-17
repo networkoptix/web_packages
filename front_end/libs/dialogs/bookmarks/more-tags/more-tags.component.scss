@@ -10,4 +10,8 @@ nx-simple-search {
     height: (tag.$tag-height + tag.$tag-gap) * 18;
     overflow-y: auto;
     align-content: flex-start;
+
+    .tag {
+        max-width: unset;
+    }
 }

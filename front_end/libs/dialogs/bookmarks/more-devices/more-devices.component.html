@@ -11,7 +11,7 @@
                     [ngModel]="dialogData.selection.isSelected(device)"
                     (ngModelChange)="selectionChange(device, $event)"
                 ></nx-checkbox>
-                {{ device }}
+                <span>{{ device }}</span>
             </label>
         </div>
     </ng-container>

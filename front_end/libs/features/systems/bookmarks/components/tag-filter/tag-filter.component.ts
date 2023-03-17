@@ -15,7 +15,7 @@ export class NxTagFilterComponent {
     @Output() selectionChange = new EventEmitter<void>();
 
     icons = icons;
-    displayLimit = 7;
+    displayLimit = 15;
 
     constructor(private dialogs: NxDialogsService) {}
 
