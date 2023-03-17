@@ -1,3 +1,5 @@
+import { Injector } from '@angular/core';
+
 import { NxSystemModuleBase } from './system-module';
 import { SystemVersion } from './system-version';
 import { SupportedVersionsBase, StaticModule, SystemVersionBase } from './types';
@@ -41,6 +43,8 @@ interface GenericConstructor<T = {}> {
  *
  */
 export abstract class NxSystemBase implements SystemVersionBase {
+    static INJECTOR: Injector;
+
     abstract readonly version: SystemVersion;
     static readonly PROXIES = new Map<SystemVersionBase, SystemVersionBase>();
 

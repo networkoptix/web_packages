@@ -3,6 +3,7 @@
 /* eslint-disable nx/no-untyped-arg */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
+import { Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import {
     BehaviorSubject,
@@ -17,11 +18,11 @@ import { v4 as uuid } from 'uuid';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
-import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
-import { toast, updateInterval } from '@lib/variables/static-variables';
+import { updateInterval } from '@lib/variables/static-variables';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { CloudStorageAPI } from '@services/nx-cloud-api/cloud-services/cloud-storage/cloud-storage-api';
+import { nxConfig } from '@services/nx-config/config';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxPollService } from '@services/poll.service';
 import { NxSystemAPIService } from '@services/system-api.service';
@@ -52,8 +53,10 @@ import { NxSystem } from '../../system.service/system';
 import { NxMediaServer, ServerTimeInfo } from '../../system.service/system-types';
 import { UserManager } from '../../system.service/user-manager/user-manager';
 import { NxEc2LocalUser, NxUser, PreprocessCloudUser } from '../../system.service/user-manager/user-manager-types';
-import { UserWithGroupsManager } from '../../system.service/user-manager/user-with-groups-manager';
 import { NxSystemsService } from '../../systems.service';
+import { NxSystemBase } from '../system-base';
+
+import { UserManagerModule } from './resource-managers/user-manager';
 
 /**
  * @deprecated
@@ -126,9 +129,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     currentUserEmail: string;
     mediaserver: NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2 | NxSystemRestAPI3;
     currentBusyServerIds = new Set();
-    systemIdInit: string;
-    serverIdInit: string;
-    userIdInit: string;
+
     useRest: boolean;
     readonly apiRequestAttempts: number = 4;
 
@@ -187,16 +188,15 @@ export class NxSystemOldModule extends NxSystemModuleBase {
             .then(({ specificFeatures }) => specificFeatures);
     }
 
+    private cloudApi: NxCloudApiService;
+    private systemApiService: NxSystemAPIService;
+    private pollService: NxPollService;
+    private systemsService: NxSystemsService;
+    private ribbonService: NxRibbonService;
+    private router: Router;
+    public injector: Injector;
+
     constructor(
-        CONFIG: IConfig,
-        public cloudApi: NxCloudApiService,
-        public systemApiService: NxSystemAPIService,
-        private pollService: NxPollService,
-        private systemsService: NxSystemsService,
-        private ribbonService: NxRibbonService,
-        private toastService: NxToastService,
-        private router: Router,
-        public locale: string,
         currentUserEmail: string,
         systemId?: string,
         serverId?: string,
@@ -204,7 +204,15 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         version?: number
     ) {
         super();
-        this.CONFIG = CONFIG;
+        const injector = NxSystemBase.INJECTOR;
+        this.cloudApi = injector.get(NxCloudApiService);
+        this.systemApiService = injector.get(NxSystemAPIService);
+        this.pollService = injector.get(NxPollService);
+        this.systemsService = injector.get(NxSystemsService);
+        this.ribbonService = injector.get(NxRibbonService);
+        this.router = injector.get(Router);
+
+        this.CONFIG = nxConfig;
         // Sometimes newly connected systems don't report version correctly
         this.version = version;
         this.useRest = Math.floor(this.version) > 4;
@@ -226,9 +234,6 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     }
 
     initSystem = (currentUserEmail: string, systemId?: string, serverId?: string, userId?: string): void => {
-        this.systemIdInit = systemId;
-        this.serverIdInit = serverId;
-        this.userIdInit = userId;
         this.id = systemId || serverId;
         this.info = { name: '' };
         this.mergeInfo = {};
@@ -251,9 +256,12 @@ export class NxSystemOldModule extends NxSystemModuleBase {
             unauthorizedCallback(true).then(() => { });
         }
 
-        this.userManager = (this.version >= 5.2 && this.CONFIG.featureFlags.usersWithGroups)
-            ? new UserWithGroupsManager(this.CONFIG, this.mediaserver as NxSystemRestAPI3, currentUserEmail, userId, this.locale)
-            : new UserManager(this.CONFIG, this.mediaserver, currentUserEmail, userId, this.locale);
+        /**
+         * We're temporarily using UserManagerModule this way until the mediaserver has been refactored out of NxSystemOldModule.
+         */
+        const userManagerModule = new UserManagerModule(this.version, this.mediaserver as NxSystemRestAPI3, currentUserEmail, userId);
+        this.userManager = userManagerModule.userManager;
+
         this.systemPoll = this.pollService.createPoll<any>(() => this.update(), updateInterval);
     };
 
@@ -470,14 +478,6 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         }
     }
 
-    isSomewhereInTime(really = false) {
-        really && this.toastService.show(
-            this.LANG.system.status.outOfTimeSync,
-            toast.danger,
-            { autohide: true }
-        );
-    }
-
     update = (): Promise<any> => {
         if (!this.updatePromise) {
             this.updatePromise = this.getInfo(true, false, true)
@@ -515,65 +515,6 @@ export class NxSystemOldModule extends NxSystemModuleBase {
 
     updateOrGetSystemSettings(updateParams = {}) {
         return this.mediaserver.updateOrGetSettings(updateParams);
-    }
-
-    /**
-     * Method moved to storageManager.
-     * @deprecated
-     */
-    getStorageStatus(queryParams) {
-        return this.mediaserver.getStorageStatus(queryParams);
-    }
-
-    /**
-     * Method moved to storageManager.
-     * @deprecated
-     */
-    saveStorage<T>(updateParams?: T) {
-        const typeId = '{f8544a40-880e-9442-b78a-9da6db6862b4}';
-        return this.mediaserver.saveStorage({ ...updateParams, typeId });
-    }
-
-    removeStorage<T>(updateParams?: T) {
-        return this.mediaserver.removeStorage(updateParams);
-    }
-
-    getStorages<T>(queryParams?: T) {
-        return this.mediaserver.getStoragesInfo(queryParams);
-    }
-
-    getRemoteServerInfo(remoteEndpoint: string) {
-        return this.mediaserver.getRemoteServerInfo(remoteEndpoint);
-    }
-
-    mergeSystems(url: string, targetSystemId: string, dryRun: boolean, currentPassword?: string, takeRemoteSettings = false) {
-        return this.mediaserver.mergeSystems(url, targetSystemId, dryRun, currentPassword, takeRemoteSettings);
-    }
-
-    checkMergeStatus(forceReload = true) {
-        return this.mediaserver.checkMergeStatus(forceReload);
-    }
-
-    getPeerSystems() {
-        return this.mediaserver.getPeerSystems();
-    }
-
-    getHardwareIdsOfServers() {
-        return this.mediaserver
-            .getHardwareIdsOfServers()
-            .toPromise();
-    }
-
-    getLicenses() {
-        return this.mediaserver
-            .getLicenses()
-            .toPromise();
-    }
-
-    getLicenseSummaries() {
-        return this.mediaserver
-            .getLicenseSummaries()
-            .toPromise();
     }
 
     authPromise: Promise<any>;
@@ -681,20 +622,12 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         return this.mediaserver.getPlaybackUrl(cameraId, transport, resolution, position);
     }
 
-    public getCameraHistoryItems() {
-        return this.mediaserver.getCameraHistoryItems();
-    }
-
     public getCameraRecords(cameraId, startTime?, endTime?, detail?, limit?, label?, periodsType?) {
         return this.ensureSystemAuth().then(
             () => this.mediaserver.getRecords(
                 cameraId, startTime, endTime, detail, limit, label, periodsType
             ).toPromise()
         );
-    }
-
-    public getExportUrl(params) {
-        return this.mediaserver.getExportUrl(params);
     }
 
     public getServerTimes(): Promise<Array<ServerTimeInfo>> {
@@ -931,8 +864,8 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         return this.updateLicenses$.pipe(
             switchMap(() => forkJoin({
                 times: this.getServerTimes(),
-                hardwareIds: this.getHardwareIdsOfServers(),
-                licensesInfo: this.getLicenses()
+                hardwareIds: this.mediaserver.getHardwareIdsOfServers(),
+                licensesInfo: this.mediaserver.getLicenses()
             })),
             shareReplay({ bufferSize: 1, refCount: false, windowTime: 10 * 60 * 1000 })
         );

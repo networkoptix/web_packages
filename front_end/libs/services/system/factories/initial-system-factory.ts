@@ -1,15 +1,6 @@
-import { Router } from '@angular/router';
-
-import { NxRibbonService } from '@components/ribbon/ribbon.service';
-import { NxToastService } from '@dialogs/toast.service';
-import { NxCloudApiService } from '@services/nx-cloud-api';
-import { IConfig } from '@services/nx-config/config-types';
-import { NxPollService } from '@services/poll.service';
-import { NxSystemAPIService } from '@services/system-api.service';
 import { NxSystemOldModule } from '@services/system/modules/nx-system-old-module';
 import { NxSystemBase } from '@services/system/system-base';
 import { SystemVersion } from '@services/system/system-version';
-import { NxSystemsService } from '@services/systems.service';
 
 import { CameraManagerModule } from '../modules/resource-managers/camera-manager';
 import { ServerManagerModule } from '../modules/resource-managers/server-manager';
@@ -54,15 +45,6 @@ type SystemClasses = ReturnType<typeof getBaseSystem>;
  * This is a temporary factory function to create a NxSystem instance. It will be replaced with proper factory by version instance once we start refactoring system modules.
  */
 export function nxSystemFactory(
-    CONFIG: IConfig,
-    cloudApi: NxCloudApiService,
-    systemApiService: NxSystemAPIService,
-    pollService: NxPollService,
-    systemsService: NxSystemsService,
-    ribbonService: NxRibbonService,
-    toastService: NxToastService,
-    router: Router,
-    locale: string,
     currentUserEmail: string,
     systemId?: string,
     serverId?: string,
@@ -70,7 +52,8 @@ export function nxSystemFactory(
     version?: number
 ): SystemClasses & BaseModules {
     version ||= 5.1;
-    const nxSystemOld = new NxSystemOldModule(CONFIG, cloudApi, systemApiService, pollService, systemsService, ribbonService, toastService, router, locale, currentUserEmail, systemId, serverId, userId, version);
+
+    const nxSystemOld = new NxSystemOldModule(currentUserEmail, systemId, serverId, userId, version);
     const baseSystem = getBaseSystem(version as SystemVersion).with(nxSystemOld);
 
     /**

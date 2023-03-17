@@ -11,8 +11,8 @@ export class CameraManagerModule extends NxSystemModuleBase {
     supportedVersions = AllSystemVersions;
     cameraManager: CameraManager;
 
-    constructor(system: ConstructorParameters<typeof CameraManager>[0]) {
+    constructor(...args: ConstructorParameters<typeof CameraManager>) {
         super();
-        this.cameraManager = new CameraManager(system);
+        this.cameraManager = new CameraManager(...args);
     }
 }

@@ -1,3 +1,4 @@
+import { LOCALE_ID } from '@angular/core';
 import { isEqual } from 'lodash-es';
 import {
     animationFrameScheduler,
@@ -20,6 +21,7 @@ import type {
 } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystemOldModule } from '@services/system/modules/nx-system-old-module';
+import { NxSystemBase } from '@services/system/system-base';
 import { alphabeticalSort, cleanId, KeyFilter, paramSortFunc } from '@utils/general';
 
 import type { ServerManager } from '../server-manager/server-manager';
@@ -39,7 +41,7 @@ import {
     SaveCameraUserAttributes,
 } from './camera-manager-types';
 
-type PartialSystem = Pick<NxSystemOldModule, 'serverManager' | 'locale' | 'version'>;
+type PartialSystem = Pick<NxSystemOldModule, 'serverManager' | 'version'>;
 
 const updateDuration = (chunk: Pick<Partial<TimeDetail>, 'durationMs'> & Omit<TimeDetail, 'durationMs'>): TimeDetail => {
     chunk.durationMs = chunk.endTimeMs - chunk.startTimeMs;
@@ -60,8 +62,8 @@ export class CameraManager {
     constructor(
         private system: PartialSystem,
     ) {
+        this.locale = NxSystemBase.INJECTOR.get(LOCALE_ID);
         this.serverManager = this.system.serverManager;
-        this.locale = system.locale;
     }
 
     async updateSystemServersCameras(): Promise<void> {
@@ -102,7 +104,7 @@ export class CameraManager {
     private async processCameras({
         serverTimes,
         cameras,
-    } : {
+    }: {
         serverTimes: ServerTime[];
         cameras: ec2Camera[];
     }): Promise<NxSystemCamera[]> {
@@ -167,7 +169,7 @@ export class CameraManager {
             numKeys
                 .filter(k => addParams[k] !== undefined)
                 .map(k => [k, Number(addParams[k])])
-                // Empty strings will be converted to 0
+            // Empty strings will be converted to 0
         ));
 
         const jsonKeys: KeyFilter<APT.ParsedAddParams, object>[] = [

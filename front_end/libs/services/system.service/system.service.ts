@@ -1,17 +1,11 @@
-import { Inject, Injectable, LOCALE_ID } from '@angular/core';
-import { Router } from '@angular/router';
+import { Injectable, Injector } from '@angular/core';
 
-import { NxRibbonService } from '@components/ribbon/ribbon.service';
-import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
-import { NxCloudApiService } from '@services/nx-cloud-api';
-import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxPollService } from '@services/poll.service';
-import { NxSystemAPIService } from '@services/system-api.service';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { nxSystemFactory } from '@services/system/factories/initial-system-factory';
+import { NxSystemBase } from '@services/system/system-base';
 import { NxSystemsService } from '@services/systems.service';
 import { memoizeAsyncPersistent } from '@utils/memoize';
 
@@ -21,22 +15,15 @@ import { NxSystem } from './system';
     providedIn: 'root'
 })
 export class NxSystemService {
-    CONFIG: IConfig;
     private system: NxSystem;
     private systemsCache: { [systemId: string]: NxSystem } = {};
 
     constructor(
         configService: NxConfigService,
-        private cloudApi: NxCloudApiService,
-        private systemApiService: NxSystemAPIService,
-        private pollService: NxPollService,
+        injector: Injector,
         private systemsService: NxSystemsService,
-        private router: Router,
-        private ribbonService: NxRibbonService,
-        private toastService: NxToastService,
-        @Inject(LOCALE_ID) private locale: string,
     ) {
-        this.CONFIG = configService.getConfig();
+        NxSystemBase.INJECTOR ||= injector;
     }
 
     getCurrentSystem(): NxSystem {
@@ -59,15 +46,6 @@ export class NxSystemService {
             system = this.systemsCache[id];
         } else {
             system = nxSystemFactory(
-                this.CONFIG,
-                this.cloudApi,
-                this.systemApiService,
-                this.pollService,
-                this.systemsService,
-                this.ribbonService,
-                this.toastService,
-                this.router,
-                this.locale,
                 currentUserEmail,
                 systemId,
                 serverId,
@@ -108,15 +86,6 @@ export class NxSystemService {
     createLocalSystem(mediaServer: NxSystemRestAPI | NxSystemRestAPI2, userId: string, userEmail = ''): NxSystem {
         if (this.system === undefined) {
             this.system = nxSystemFactory(
-                this.CONFIG,
-                this.cloudApi,
-                this.systemApiService,
-                this.pollService,
-                this.systemsService,
-                this.ribbonService,
-                this.toastService,
-                this.router,
-                this.locale,
                 userEmail,
                 '',
                 '',

@@ -12,8 +12,8 @@ export class ServerManagerModule extends NxSystemModuleBase {
 
     serverManager: ServerManager;
 
-    constructor(system: ConstructorParameters<typeof ServerManager>[0]) {
+    constructor(...args: ConstructorParameters<typeof ServerManager>) {
         super();
-        this.serverManager = new ServerManager(system);
+        this.serverManager = new ServerManager(...args);
     }
 }

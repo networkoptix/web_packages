@@ -712,7 +712,7 @@ export class NxSystemStorageComponent implements OnInit {
             }
         }).then(response => {
             if (response) {
-                this.system
+                this.system.mediaserver
                     .removeStorage({ id: storage.storageId })
                     .toPromise()
                     .then(async response => {

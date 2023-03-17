@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual } from 'lodash-es';
+import { firstValueFrom } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -67,7 +68,7 @@ export class NxLicenseSummaryComponent implements OnInit, OnChanges {
 
     getLicenses(): void {
         if (this.system.useRest) {
-            this.system.getLicenseSummaries().then(
+            firstValueFrom(this.system.mediaserver.getLicenseSummaries()).then(
                 response => {
                     if (response && Object.keys(response).length) {
                         this.setLicenses(response);

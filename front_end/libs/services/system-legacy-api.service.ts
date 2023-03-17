@@ -695,7 +695,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         return this.settingsUpdater$.pipe(switchMap(() => this.get<t.NormalResponse<t.SystemSettings>>('/api/systemSettings')));
     }
 
-    public updateOrGetSettings(updateParams: Partial<t.Settings>) {
+    public updateOrGetSettings(updateParams: Partial<t.Settings> = {}) {
         const update = Object.keys(updateParams).length > 0;
         return update
             ? this.get<t.NormalResponse<t.SystemSettings>>(

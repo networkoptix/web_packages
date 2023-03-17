@@ -1,5 +1,7 @@
+import { LOCALE_ID } from '@angular/core';
+
 import { environment } from '@environments/environment';
-import type { IConfig } from '@services/nx-config/config-types';
+import { nxConfig } from '@services/nx-config/config';
 import type {
     ec2User,
     ChangedIdReturned,
@@ -8,6 +10,7 @@ import type {
     ec2UserRole,
 } from '@services/system-api.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
+import { NxSystemBase } from '@services/system/system-base';
 
 import { NxSystemAPI } from '../../system-legacy-api.service';
 import { NxSystemRestAPI } from '../../system-rest-api.service';
@@ -43,13 +46,15 @@ export class UserManager {
     };
     users: NxUser[];
 
+    protected CONFIG = nxConfig;
+    protected locale: string;
+
     constructor(
-        protected CONFIG: IConfig,
         protected mediaserver: NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2,
         public currentUserEmail: string,
-        private userId: string,
-        protected locale: string,
+        private userId: string
     ) {
+        this.locale = NxSystemBase.INJECTOR.get(LOCALE_ID);
         this.accessRoles = this.CONFIG.accessRoles.predefinedRoles;
     }
 

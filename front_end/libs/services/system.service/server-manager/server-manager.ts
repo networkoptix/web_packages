@@ -1,3 +1,4 @@
+import { LOCALE_ID } from '@angular/core';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import stringify from 'safe-stable-stringify';
@@ -11,6 +12,7 @@ import * as t from '@services/system-api.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystemOldModule } from '@services/system/modules/nx-system-old-module';
+import { NxSystemBase } from '@services/system/system-base';
 import { alphabeticalSort } from '@utils/general';
 import { memoizeAsyncPersistent, memoizeDecorator } from '@utils/memoize';
 import { setServerIpAndPort } from '@utils/nx';
@@ -20,7 +22,7 @@ import { NxSystemAPIService } from '../../system-api.service';
 import { NxSystemAPI } from '../../system-legacy-api.service';
 import { NxSystemServer, ModuleInfo } from '../system-types';
 
-type PartialSystem = Pick<NxSystemOldModule, 'mediaserver' | 'systemApiService' | 'currentUserEmail' | 'id' | 'cloudApi' | 'locale' | 'useRest' | 'version'>;
+type PartialSystem = Pick<NxSystemOldModule, 'mediaserver' | 'currentUserEmail' | 'id' | 'useRest' | 'version'>;
 
 export class ServerManager {
     static memoizeByServersAndConnections = memoizeDecorator(function (this: ServerManager) {
@@ -54,13 +56,14 @@ export class ServerManager {
     private locale: string;
 
     constructor(system: PartialSystem) {
+        const injector = NxSystemBase.INJECTOR;
         this.mediaserver = system.mediaserver;
-        this.systemApiService = system.systemApiService;
+        this.systemApiService = injector.get(NxSystemAPIService);
         this.currentUserEmail = system.currentUserEmail;
         this.systemId = system.id;
-        this.cloudApi = system.cloudApi;
+        this.cloudApi = injector.get(NxCloudApiService);
         this.system = system;
-        this.locale = system.locale;
+        this.locale = injector.get(LOCALE_ID);
     }
 
     @ServerManager.memoizeByServersAndConnections

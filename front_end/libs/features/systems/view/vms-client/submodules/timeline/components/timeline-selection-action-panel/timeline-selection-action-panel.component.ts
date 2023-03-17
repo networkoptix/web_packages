@@ -96,7 +96,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
             transport = 'mkv';
         }
         this.exportLink = this.system
-            ? this.system.getExportUrl(this.selection.exportUrlParams)
+            ? this.system.mediaserver.getExportUrl(this.selection.exportUrlParams as Parameters<typeof this.system.mediaserver.getExportUrl>[0])
             : '';
 
         this.exportName = `${this.selection.cameraId}.${transport}`;

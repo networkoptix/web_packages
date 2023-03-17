@@ -1,0 +1,20 @@
+import { nxConfig } from '@services/nx-config/config';
+import { UserManager } from '@services/system.service/user-manager/user-manager';
+import { UserWithGroupsManager } from '@services/system.service/user-manager/user-with-groups-manager';
+import { NxSystemModuleBase } from '@services/system/system-module';
+import { AllSystemVersions } from '@services/system/system-version';
+
+@NxSystemModuleBase.checkStatic
+export class UserManagerModule extends NxSystemModuleBase {
+    static moduleSymbol = Symbol('UserManager');
+
+    getModuleSymbol = (): symbol => UserManagerModule.moduleSymbol;
+
+    supportedVersions = AllSystemVersions;
+    userManager: UserManager;
+
+    constructor(version: number, ...args: ConstructorParameters<typeof UserWithGroupsManager>) {
+        super();
+        this.userManager = version >= 5.2 && nxConfig.featureFlags.usersWithGroups ? new UserWithGroupsManager(...args) : new UserManager(...args);
+    }
+}

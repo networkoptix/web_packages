@@ -1,16 +1,17 @@
+import { LOCALE_ID } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
-import type { IConfig } from '@services/nx-config/config-types';
+import { nxConfig } from '@services/nx-config/config';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
+import { NxSystemBase } from '@services/system/system-base';
 import { cleanId } from '@utils/general';
 
 import { UserManager } from './user-manager';
 import { SystemPermissions, NxUserGroup, NxSystemUser } from './user-manager-types.bak';
 
 export class UserWithGroupsManager extends UserManager {
-    CONFIG: IConfig;
     LANG = staticLang;
 
     protected mediaserver: NxSystemRestAPI3;
@@ -20,27 +21,26 @@ export class UserWithGroupsManager extends UserManager {
     };
     protected _ownerEmail: string;
     protected _userId: string;
+    protected locale: string;
     isMine: boolean;
     currentUser: NxSystemUser;
     currentUserEmail: string;
     permissions: SystemPermissions;
     users: NxSystemUser[];
 
+    protected CONFIG = nxConfig;
+
     constructor(
-        config: IConfig,
         mediaserver: NxSystemRestAPI3,
         currentUserEmail: string,
-        userId: string,
-        protected locale: string,
+        userId: string
     ) {
         super(
-            config,
             mediaserver,
             currentUserEmail,
-            userId,
-            locale,
+            userId
         );
-        this.CONFIG = config;
+        this.locale = NxSystemBase.INJECTOR.get(LOCALE_ID);
         this.mediaserver = mediaserver;
         this.currentUserEmail = currentUserEmail;
         this._userId = userId;

@@ -360,7 +360,7 @@ export class MergeModalContent {
     }
 
     getPeerSystems() {
-        return this.system.getPeerSystems().toPromise()
+        return this.system.mediaserver.getPeerSystems().toPromise()
             .then((res: DiscoveredPeers) => {
                 this.peerSystems = res.reply
                     .filter(peer => this.environment.isLocal ? this.system.id !== peer.localSystemId : !peer.cloudSystemId)
@@ -518,7 +518,7 @@ export class MergeModalContent {
                     this.machine.transition(this.confirmMerge);
                     return Promise.resolve();
                 } else {
-                    return this.system.mergeSystems(
+                    return this.system.mediaserver.mergeSystems(
                         this.serverUrl,
                         this.targetSystem.id,
                         true,
@@ -609,7 +609,7 @@ export class MergeModalContent {
                     const bothAreCloud = this.primarySystem?.mediaserver?.isSessionOauth && !!this.secondarySystem?.cloudSystemId ||
                         this.secondarySystem?.mediaserver?.isSessionOauth && !!this.primarySystem?.cloudSystemId;
                     return this.dryRunAvailable
-                        ? this.system.mergeSystems(this.serverUrl, bothAreCloud ? '' : this.targetSystem.id, false, password, takeRemoteSettings).toPromise()
+                        ? this.system.mediaserver.mergeSystems(this.serverUrl, bothAreCloud ? '' : this.targetSystem.id, false, password, takeRemoteSettings).toPromise()
                         : this.deprecatedMergeSystems(password, takeRemoteSettings);
                 } else {
                     return this.cloudApi.merge(this.primarySystem.id, this.secondarySystem.id, password);
@@ -806,7 +806,7 @@ export class MergeModalContent {
             if (!this.targetSystem.id) {
                 let secondarySystem: any;
                 if (this.system.useRest) {
-                    secondarySystem = await this.system.getRemoteServerInfo(this.serverUrl).toPromise()
+                    secondarySystem = await this.system.mediaserver.getRemoteServerInfo(this.serverUrl).toPromise()
                         .catch(err => {
                             if (err.status === 504) {
                                 throw Error(this.noServerFound);

@@ -1,3 +1,5 @@
+import { Injector } from '@angular/core';
+
 import { staticImplements } from '@utils/general';
 
 import { SystemVersion } from './system-version';
@@ -42,4 +44,6 @@ export abstract class NxSystemModuleBase implements SupportedVersionsBase {
      * The checkStatic decorator ensures that the derived class implements the correct static properties and methods.
      */
     static checkStatic = staticImplements<StaticModule>();
+
+    public injector: Injector;
 }

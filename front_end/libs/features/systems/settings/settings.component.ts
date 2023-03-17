@@ -116,7 +116,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     private updateArchivesPresent(): void {
-        this.system.getCameraHistoryItems().toPromise().then(response => {
+        this.system.mediaserver.getCameraHistoryItems().toPromise().then(response => {
             this.archivesPresent = {};
             this.archivesPresent = (response || {}).reduce((acc, server) => {
                 server.archivedCameras.forEach(c => {
@@ -508,7 +508,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         if (this.checkMergeSubscription) {
             this.checkMergeSubscription.unsubscribe();
         }
-        this.checkMergeSubscription = this.system.checkMergeStatus(true)
+        this.checkMergeSubscription = this.system.mediaserver.checkMergeStatus(true)
             .subscribe({
                 next: res => {
                     const mergeInProgress = res?.reply?.mergeInProgress;

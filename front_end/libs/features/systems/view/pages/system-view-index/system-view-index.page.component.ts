@@ -17,8 +17,9 @@ import { distinctUntilChanged, filter, take, takeUntil } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
+import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
-import { icons } from '@lib/variables/static-variables';
+import { icons, toast } from '@lib/variables/static-variables';
 import { NxSettingsService } from '@pages/systems/settings/settings.service';
 import { NxAccountService } from '@services/account.service';
 import { IConfig } from '@services/nx-config/config-types';
@@ -133,6 +134,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         private ribbonService: NxRibbonService,
         private settingsService: NxSettingsService,
         @Inject(WINDOW) private window: Window,
+        private toastService: NxToastService,
     ) {
         this.CONFIG = configService.getConfig();
 
@@ -418,7 +420,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         mediaServers: NxMediaServer[],
         archiveRanges: Record<string, SimpleTimeRange>
     ): Promise<void> {
-        return this.system.getCameraHistoryItems().toPromise().then(result => {
+        return this.system.mediaserver.getCameraHistoryItems().toPromise().then(result => {
             if (!result?.length) {
                 return;
             }
@@ -472,7 +474,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
                     processingMediaServers = true;
                     const serverTimeInfos =
-                            await this.system.getServerTimes();
+                        await this.system.getServerTimes();
                     this.vms.serverTimes = serverTimeInfos;
                     serverTimeInfos.forEach(sti => {
                         const mediaServer = mediaServers?.find(
@@ -482,7 +484,13 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                             const serverAndLocalTimeDiff = Math.abs(new Date().getTime() - sti.vmsTime);
                             // fixes issue https://www.youtube.com/watch?v=sRqGfIbdJyI
                             const timeDiff = serverAndLocalTimeDiff > MAX_OUT_OF_SYNC_TIME;
-                            this.system.isSomewhereInTime(timeDiff);
+                            if (timeDiff) {
+                                this.toastService.show(
+                                    this.LANG.system.status.outOfTimeSync,
+                                    toast.danger,
+                                    { autohide: true }
+                                );
+                            }
                         }
                     });
 

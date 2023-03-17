@@ -342,7 +342,7 @@ export class NxMergeComponent implements OnInit, OnDestroy {
     }
 
     async webadminSetup(): Promise<void> {
-        const peerSystems: DiscoveredPeersReply[] = (await this.system.getPeerSystems().toPromise()).reply
+        const peerSystems: DiscoveredPeersReply[] = (await this.system.mediaserver.getPeerSystems().toPromise()).reply
             .filter((peer: DiscoveredPeersReply) => this.system.id !== peer.localSystemId);
         this.mergeSystems = peerSystems
             .map((peer: DiscoveredPeersReply) => (
@@ -451,7 +451,7 @@ export class NxMergeComponent implements OnInit, OnDestroy {
                     this.setCurrentState('confirm');
                     return Promise.resolve();
                 } else {
-                    return lastValueFrom(this.system.mergeSystems(
+                    return lastValueFrom(this.system.mediaserver.mergeSystems(
                         this.serverUrl,
                         this.targetSystem.id,
                         true,
@@ -509,7 +509,7 @@ export class NxMergeComponent implements OnInit, OnDestroy {
                     const takeRemoteSettings = this.system.id === this.secondarySystem.id;
                     const bothAreCloud = this.isSessionOauth && !!this.targetSystem.cloudSystemId;
                     return this.dryRunAvailable
-                        ? this.system.mergeSystems(this.serverUrl, bothAreCloud ? '' : this.targetSystem.id, false, password, takeRemoteSettings).toPromise()
+                        ? this.system.mediaserver.mergeSystems(this.serverUrl, bothAreCloud ? '' : this.targetSystem.id, false, password, takeRemoteSettings).toPromise()
                         : this.deprecatedMergeSystems(password, takeRemoteSettings);
                 } else {
                     return this.cloudApi.merge(this.primarySystem.id, this.secondarySystem.id, password);
@@ -612,7 +612,7 @@ export class NxMergeComponent implements OnInit, OnDestroy {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let serverInfo: any;
         if (this.system.useRest) {
-            serverInfo = await this.system.getRemoteServerInfo(serverUrl).toPromise();
+            serverInfo = await this.system.mediaserver.getRemoteServerInfo(serverUrl).toPromise();
         } else {
             serverInfo = (await this.system.serverManager.getModuleInfoUsingUrl(serverUrl).toPromise()).reply;
         }
@@ -648,7 +648,7 @@ export class NxMergeComponent implements OnInit, OnDestroy {
                 let secondarySystem: any;
                 try {
                     if (this.system.useRest) {
-                        secondarySystem = await this.system.getRemoteServerInfo(this.serverUrl).toPromise();
+                        secondarySystem = await this.system.mediaserver.getRemoteServerInfo(this.serverUrl).toPromise();
                     } else {
                         secondarySystem = (await this.system.serverManager.getModuleInfoUsingUrl(this.serverUrl).toPromise()).reply;
                     }
@@ -666,7 +666,7 @@ export class NxMergeComponent implements OnInit, OnDestroy {
                 // using .init(), but little value received, so removed to reduce complexity
                 return this.targetSystem.isMergeable ? { error: '0' } : 'skip';
             }
-            const res = await lastValueFrom(this.system.mergeSystems(this.serverUrl, this.targetSystem.id, true));
+            const res = await lastValueFrom(this.system.mediaserver.mergeSystems(this.serverUrl, this.targetSystem.id, true));
             if (res.error && res.error !== '0') {
                 throw Error(MergeServerErrorCodes[res.error] || 'unknownError');
             }
