@@ -251,6 +251,7 @@ export class NxLayoutViewComponent {
                             details: {
                                 ...server,
                                 status: server.status.toLowerCase(),
+                                online: server.status === 'Online',
                                 resourceType:
                                     this.LANG.layouts.titles.resourceTypes[ResourceType.SERVER],
                             },

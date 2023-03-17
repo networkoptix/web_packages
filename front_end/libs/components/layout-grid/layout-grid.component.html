@@ -522,7 +522,9 @@
                                 <div
                                     *ngIf="
                                         !errors[itemDetail.details.id] &&
-                                            (itemDetail.type === RESOURCE_TYPE.CAMERA
+                                            ([RESOURCE_TYPE.CAMERA, RESOURCE_TYPE.SERVER].includes(
+                                                itemDetail.type
+                                            )
                                                 ? itemDetail.details.online
                                                 : !itemDetail.details.status);
                                         else showError
