@@ -1,4 +1,6 @@
-import type { ec2Camera, ec2MediaServer } from '../system-api.types';
+import type { ParsedNetworkAddresses } from '@utils/nx';
+
+import type { ec2CameraEx, ec2MediaServer, ec2MediaServerEx, RestPartialServer } from '../system-api.types';
 
 export interface AddResponseTypeHere extends IParams {}
 
@@ -6,10 +8,8 @@ export interface IParams<Value = any> {
     [key: string]: Value;
 }
 
-export interface NxSystemServer extends ec2MediaServer {
-    port: string;
-    ip: string;
-}
+export type NxSystemServer = ParsedNetworkAddresses<ec2MediaServerEx> |
+    ParsedNetworkAddresses<RestPartialServer>;
 
 export interface ModuleInfo {
     brand: string;
@@ -48,10 +48,8 @@ export interface ServerTimeInfo {
     timeZoneOffset: number;
 }
 
-export interface NxMediaServer extends ec2MediaServer {
-    ip: string;
-    port: string;
-    cameras: ec2Camera[];
+export interface NxMediaServer extends ParsedNetworkAddresses<ec2MediaServer> {
+    cameras: ec2CameraEx[];
 }
 
 export interface Condition {

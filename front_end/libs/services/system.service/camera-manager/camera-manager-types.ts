@@ -1,10 +1,10 @@
 import { Observable } from 'rxjs';
 
-import type { ec2Camera, Task } from '@services/system-api.types';
+import type { ec2CameraEx, Task } from '@services/system-api.types';
 
 import type { ParsedAddParams } from './add-params.types';
 
-export interface NxSystemCamera extends Omit<ec2Camera, 'addParams'> {
+export interface NxSystemCamera extends Omit<ec2CameraEx, 'addParams'> {
     addParams: Record<string, string>; // Unpacked array of name/value objects
     backupType: string; // Always defined
     motionType: MotionType; // Specific strings

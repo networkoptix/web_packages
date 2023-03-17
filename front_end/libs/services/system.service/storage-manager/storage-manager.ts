@@ -72,10 +72,10 @@ export class StorageManager extends StorageState {
             const { quality, backupNewCameras } = JSON.parse((<any>settings).backupSettings);
             await this.system.cameraManager.updateSystemServersCameras();
             const backup = this.system.cameraManager.cameras.some(
-                ({ backupPolicy }: any) => ['byDefault', 'on'].includes(backupPolicy)
+                ({ backupPolicy }) => ['byDefault', 'on'].includes(backupPolicy)
             );
             const camerasHaveDefaults = this.system.cameraManager.cameras.every(
-                ({ backupPolicy, backupQuality, backupType, backupContentType }: any) => (
+                ({ backupPolicy, backupQuality, backupType, backupContentType }) => (
                     ['on', 'CameraBackupDefault', 'byDefault'].includes(backupPolicy) &&
                     ['CameraBackupBoth', 'CameraBackupDefault'].includes(backupQuality) &&
                     ['CameraBackupBoth', 'CameraBackupDefault'].includes(backupType) &&

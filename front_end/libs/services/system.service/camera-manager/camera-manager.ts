@@ -13,7 +13,7 @@ import {
 } from 'rxjs';
 
 import type {
-    ec2Camera,
+    ec2CameraEx,
     ec2MediaServer,
     ServerTime,
     Task,
@@ -106,7 +106,7 @@ export class CameraManager {
         cameras,
     }: {
         serverTimes: ServerTime[];
-        cameras: ec2Camera[];
+        cameras: ec2CameraEx[];
     }): Promise<NxSystemCamera[]> {
         this.serverTimes = serverTimes;
         try {
@@ -121,7 +121,7 @@ export class CameraManager {
         return mappedCameras;
     }
 
-    parseCamera(camera: ec2Camera): NxSystemCamera {
+    parseCamera(camera: ec2CameraEx): NxSystemCamera {
         const backupType = camera.backupType || camera.backupQuality;
         const serverTime = this.serverTimes.find(({ serverId }) => serverId === camera.parentId);
 
@@ -140,7 +140,8 @@ export class CameraManager {
         }
 
         if (!camera.addParams) {
-            return camera as unknown as NxSystemCamera;
+            /* @ts-expect-error TODO: Figure out how to handle processing for rest cameras  */
+            return camera;
         }
 
         const addParams = Object.fromEntries(
@@ -345,7 +346,7 @@ export class CameraManager {
     }
 
     private recordingScheduleForType(
-        { scheduleTasks }: ec2Camera,
+        { scheduleTasks }: ec2CameraEx,
         types: RecordingType[]
     ): RecordingModes['value'] {
         let scheduled = 0;
@@ -367,7 +368,7 @@ export class CameraManager {
     }
 
     private parseCameraStatus(
-        { status, scheduleEnabled, scheduleTasks }: ec2Camera,
+        { status, scheduleEnabled, scheduleTasks }: ec2CameraEx,
         { dayOfWeek, secondsToday }: Pick<NxSystemCamera, 'dayOfWeek' | 'secondsToday'>
     ): string {
         if (status !== 'Online' || !scheduleEnabled) {

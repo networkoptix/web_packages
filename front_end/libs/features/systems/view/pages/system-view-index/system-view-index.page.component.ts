@@ -24,7 +24,7 @@ import { NxSettingsService } from '@pages/systems/settings/settings.service';
 import { NxAccountService } from '@services/account.service';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import type { ec2Camera } from '@services/system-api.types';
+import type { ec2CameraEx } from '@services/system-api.types';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxMediaServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
@@ -345,6 +345,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             const cachedServer = cachedServers.find(cached =>
                 cached.id === server.id
             );
+            // @ts-expect-error: Legacy non-Ex server doesn't include status,
+            // worth the tradeoff for the lighter network request
             if (!cachedServer || server.status !== cachedServer.status) {
                 return true;
             }
@@ -373,7 +375,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     }
 
     private processCameras(
-        c: ec2Camera,
+        c: ec2CameraEx,
         ms: NxMediaServer,
         archiveRanges: Record<string, SimpleTimeRange>
     ): Camera {
@@ -385,6 +387,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             c.name,
             c.model,
             c.url,
+            // @ts-expect-error: See note in .mediaServerChanged()
             ms.status === 'Offline'
                 ? 'Offline'
                 : (
@@ -502,6 +505,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
                     await this.findCamerasWithArchive(mediaServers, archiveRanges);
 
+                    // @ts-expect-error: See note in .mediaServerChanged()
                     cachedMediaServers = mediaServers.map(ms => ({
                         ...ms,
                         cameras: ms.cameras.map(c =>

@@ -30,7 +30,6 @@ import { environment } from '@environments/environment';
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
 import { NxHealthService } from '@pages/health/health.service';
 import { NxStorageService } from '@services/storage.service';
-import { PartialCameraRest } from '@services/system.service/camera-manager/camera-manager-types';
 import {
     defaultHashFunction,
     memoizeAsync,
@@ -57,7 +56,7 @@ import { NxAppStateService } from './nx-app-state.service';
 import type { APIDocType, MenuManifest } from './nx-config/base-config';
 import type { IConfig } from './nx-config/config-types';
 import * as t from './system-api.types';
-import { ec2Camera, SystemConfigSettings } from './system-api.types';
+import { SystemConfigSettings } from './system-api.types';
 import { NxSystemAPI } from './system-legacy-api.service';
 import type { IParams } from './system.service/system-types';
 import { NxUriCacheService } from './uri-cache.service';
@@ -704,48 +703,64 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         );
     }
 
-    getMediaServers(useCache: boolean): Observable<t.ec2MediaServer[]> {
+    getMediaServers(useCache: boolean): Observable<t.RestPartialServer[]> {
         const endpoint = '/rest/v1/servers';
         const params = {
             _keepDefault: true,
-            _with: 'id,name,status,version,osInfo,endpoints,url'
+            _with: t.getRestServerKeys.toString(),
         };
-        return this.get<t.ec2MediaServer[]>(
+        return this.get<t.GetRestServer[]>(
             endpoint,
             params,
             { [useCache ? 'cache-request' : 'reset-cache']: 'true' }
         ).pipe(
-            map(servers => {
-                servers.forEach(server => {
-                    if (typeof server.osInfo !== 'string') {
-                        server.osInfo = JSON.stringify(server.osInfo);
-                    }
-                    server.networkAddresses = server.endpoints.join(';');
+            map(res => {
+                const servers = res.map(server => {
+                    return {
+                        ...server,
+                        // Reconstruct network addresses from endpoints for now
+                        networkAddresses: server.endpoints.join(';'),
+                        // Revert to string for consistency with ec2 for now
+                        osInfo: typeof server.osInfo !== 'string'
+                            ? JSON.stringify(server.osInfo)
+                            : server.osInfo,
+                    };
                 });
-                return servers;
+                return servers as t.RestPartialServer[];
             })
         );
     }
 
-    getCameras(): Observable<ec2Camera[]> {
+    getCameras(): Observable<t.RestCamera[]> {
         const endpoint = '/rest/v1/devices';
         const params = {
             _keepDefault: true,
-            _with: 'id,name,serverId,status,url,schedule.isEnabled,deviceType'
+            _with: [
+                ...t.getRestCameraKeys,
+                ...Object.entries(t.getRestCameraNestedKeys).flatMap(([key, nKeys]) => {
+                    return nKeys.map(nk => `${key}.${nk}`);
+                })
+            ].toString(),
         };
-        return this.get<PartialCameraRest[]>(
+        return this.get<t.GetRestCamera[]>(
             endpoint,
             params
-        ).pipe(map(cameras => cameras
-            .map(({ deviceType, id, name, schedule, serverId, status, url }) => (
-                <ec2Camera>({ deviceType, id, name, status, url, scheduleEnabled: schedule.isEnabled, parentId: serverId })
-            ))));
+        ).pipe(
+            map(cameras => cameras
+                .map(({ schedule, serverId, ...rest }) => ({
+                    ...rest,
+                    scheduleEnabled: schedule.isEnabled,
+                    parentId: serverId,
+                }) as t.RestCamera)
+            )
+        );
     }
     getMediaServersAndCameras(): Observable<t.AggregatedServersAndCameras> {
-        const cameras = this.get<t.ec2Camera[]>('/ec2/getCamerasEx');
+        const cameras = this.get<t.ec2CameraEx[]>('/ec2/getCamerasEx');
         const servers = this.getMediaServers(true);
-        return combineLatest<[t.ec2MediaServer[], t.ec2Camera[]]>([servers, cameras]).pipe(
-            map<[t.ec2MediaServer[], t.ec2Camera[]], t.AggregatedServersAndCameras>(([mediaServers, cameras]) => ({
+        // TODO: Use correct RestPartialServer type eventually once the system/API are refactored
+        return combineLatest<[t.ec2MediaServer[], t.ec2CameraEx[]]>([servers, cameras]).pipe(
+            map<[t.ec2MediaServer[], t.ec2CameraEx[]], t.AggregatedServersAndCameras>(([mediaServers, cameras]) => ({
                 error: '0',
                 errorId: 'ok',
                 errorString: '',
@@ -756,17 +771,17 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             })));
     }
 
-    updateSystemServersCameras(): Observable<t.CameraManagerUpdate> {
+    updateSystemServersCameras(): Observable<t.CameraManagerRestUpdate> {
         const routes = [
             '/api/moduleInformation',
             '/ec2/getMediaServers',
             'ec2/getTimeOfServers'
         ];
-        const aggregator = this.getRequestAggregator<t.CameraManagerUpdateResp>(routes)
+        const aggregator = this.getRequestAggregator<t.CameraManagerUpdateRestResp>(routes)
             .pipe(
                 map(({ reply }) => ({
                     moduleInfo: reply['/api/moduleInformation'].reply,
-                    servers: reply['/ec2/getMediaServersEx'],
+                    servers: reply['/ec2/getMediaServers'],
                     serverTimes: reply['ec2/getTimeOfServers'].reply
                 }))
             );

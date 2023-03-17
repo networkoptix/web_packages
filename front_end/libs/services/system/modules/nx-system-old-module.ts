@@ -38,11 +38,11 @@ import {
     AggregatedServersAndCameras,
     EventRule,
     EventTypes,
-    ec2Camera,
     ec2MediaServer,
     PtzCommand,
     RawRule,
-    SystemConfigSettings
+    SystemConfigSettings,
+    ec2CameraEx
 } from '../../system-api.types';
 import { NxSystemAPI } from '../../system-legacy-api.service';
 import { CameraManager } from '../../system.service/camera-manager/camera-manager';
@@ -582,10 +582,10 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         const msIds: KeyFilter<ec2MediaServer, string>[] = [
             'authKey',
             'id',
-            'metadataStorageId',
+            // 'metadataStorageId',
             'typeId',
         ];
-        const camIds: KeyFilter<ec2Camera, string>[] = [
+        const camIds: KeyFilter<ec2CameraEx, string>[] = [
             'id',
             'parentId',
             'preferredServerId',

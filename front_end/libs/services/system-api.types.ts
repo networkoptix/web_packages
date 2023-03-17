@@ -308,6 +308,22 @@ export interface Task {
 }
 
 export interface ec2Camera {
+    groupId: string;
+    groupName: string;
+    id: string;
+    mac: string;
+    manuallyAdded: boolean;
+    model: string;
+    name: string;
+    parentId: string;
+    physicalId: string;
+    statusFlags: string;
+    typeId: string;
+    url: string;
+    vendor: string;
+}
+
+export interface ec2CameraEx extends ec2Camera {
     addParams: Param[];
     audioEnabled: boolean;
     backupContentType: string;
@@ -319,93 +335,155 @@ export interface ec2Camera {
     dewarpingParams: string;
     disableDualStreaming: boolean;
     failoverPriority: string;
-    groupId: string;
-    groupName: string;
-    id: string;
     licenseUsed: boolean;
     logicalId: string;
-    mac: string;
-    manuallyAdded: boolean;
     maxArchiveDays: number;
     maxArchivePeriodS: number;
     minArchiveDays: number;
     minArchivePeriodS: number;
-    model: string;
     motionMask: string;
     motionType: string;
-    name: string;
-    parentId: string;
-    physicalId: string;
     preferredServerId: string;
     recordAfterMotionSec: number;
     recordBeforeMotionSec: number;
     scheduleEnabled: boolean;
     scheduleTasks: Task[];
     status: string;
-    statusFlags: string;
-    typeId: string;
-    url: string;
     userDefinedGroupName: string;
-    vendor: string;
 }
 
-export interface EmptyObjectReturned {}
+// Only works one level of nesting deep but should be fine for now
+export const getRestCameraKeys = [
+    'id',
+    'deviceType',
+    'name',
+    'serverId',
+    'status',
+    'url',
+] as const;
+export const getRestCameraNestedKeys = {
+    schedule: ['isEnabled'],
+} as const;
+export type GetRestCamera = Pick<Device, typeof getRestCameraKeys[number]> &
+    {
+        -readonly [key in keyof typeof getRestCameraNestedKeys]: {
+            [nKey in (typeof getRestCameraNestedKeys[key])[number]]: Device[key][nKey]
+        }
+    };
+export type RestCamera =
+    { [key in keyof Omit<
+        ec2CameraEx,
+        keyof Omit<GetRestCamera, 'schedule' | 'serverId'> | 'scheduleEnabled' | 'parentId'
+    >]: never; } &
+    Omit<GetRestCamera, 'schedule' | 'serverId'> &
+    Pick<ec2CameraEx, 'scheduleEnabled' | 'parentId'>;
+
+export type EmptyObjectReturned = Record<string, never>;
 
 export interface ec2MediaServer {
-    addParams: Param[];
-    allowAutoRedundancy: boolean;
     authKey: string;
-    // backupBitrate: number,
-    // backupDaysOfTheWeek: string,
-    // backupDuration: number,
-    // backupStart: number,
-    backupBitrateBytesPerSecond: unknown[];
-    backupType?: string;
-    endpoints?: string[];
     flags: string;
     id: string;
-    locationId: number;
-    maxCameras: number;
-    metadataStorageId?: string;
     name: string;
     networkAddresses: string;
     osInfo: string;
     parentId: string;
-    status: string;
-    storages: ec2Storage[];
     systemInfo: string;
     typeId: string;
     url: string;
     version: string;
 }
 
+export interface ec2MediaServerEx extends ec2MediaServer {
+    addParams: Param[];
+    allowAutoRedundancy: boolean;
+    // backupBitrate: number,
+    // backupDaysOfTheWeek: string,
+    // backupDuration: number,
+    // backupStart: number,
+    backupBitrateBytesPerSecond: unknown[];
+    backupType?: string;
+    locationId: number;
+    maxCameras: number;
+    metadataStorageId?: string;
+    status: string;
+    storages: ec2Storage[];
+}
+
+type RestServerSharedKeys =
+    'flags' |
+    'id' |
+    'maxCameras' |
+    'metadataStorageId' |
+    'name' |
+    'status' |
+    'storages' |
+    'url' |
+    'version';
+export interface RestServer extends Pick<ec2MediaServerEx, RestServerSharedKeys> {
+    endpoints: string[];
+    osInfo: {
+        platform: string;
+        variant: string;
+        variantVersion: string;
+    };
+    parameters: Record<string, unknown>;
+}
+
+// Only get specific properties for lighter requests
+export const getRestServerKeys = [
+    'id',
+    'endpoints',
+    'name',
+    'osInfo',
+    'status',
+    'version',
+] as const;
+export type GetRestServer = Pick<RestServer, typeof getRestServerKeys[number]>;
+export type RestPartialServer =
+    { [key in keyof Omit<ec2MediaServerEx, keyof GetRestServer | 'networkAddresses'>]: never; } &
+    // Because of the API inheritance, we still need all of the type properties from ec2Ex
+    // on the rest server type for now
+    Omit<GetRestServer, 'osInfo'> &
+    Pick<ec2MediaServer, 'osInfo' | 'networkAddresses'>;
+    // Compatibility patch for now
+
 export type AggregatedServersAndCameras = NormalResponse<{
     '/ec2/getMediaServers': ec2MediaServer[];
-    'ec2/getCamerasEx': ec2Camera[];
+    'ec2/getCamerasEx': ec2CameraEx[];
 }>;
 
 export type CameraManagerUpdateResp = NormalResponse<{
     '/api/moduleInformation': NormalResponse<ModuleInformationReply>;
     '/ec2/getMediaServers': ec2MediaServer[];
     'ec2/getTimeOfServers': NormalResponse<ServerTime[]>;
-    'ec2/getCamerasEx': ec2Camera[];
+    'ec2/getCamerasEx': ec2CameraEx[];
 }>;
 
 export interface CameraManagerUpdate {
     moduleInfo: ModuleInformationReply;
     servers: ec2MediaServer[];
     serverTimes: ServerTime[];
-    cameras: ec2Camera[];
+    cameras: ec2CameraEx[];
+}
+
+export type CameraManagerUpdateRestResp = NormalResponse<{
+    '/api/moduleInformation': NormalResponse<ModuleInformationReply>;
+    '/ec2/getMediaServers': ec2MediaServer[];
+    'ec2/getTimeOfServers': NormalResponse<ServerTime[]>;
+}>;
+export interface CameraManagerRestUpdate extends Omit<CameraManagerUpdate, 'cameras'> {
+    cameras: RestCamera[];
 }
 
 export type TimeAndCamerasResp = NormalResponse<{
     'ec2/getTimeOfServers': NormalResponse<ServerTime[]>;
-    'ec2/getCamerasEx': ec2Camera[];
+    'ec2/getCamerasEx': ec2CameraEx[];
 }>;
 
 export interface TimeAndCameras {
     serverTimes: ServerTime[];
-    cameras: ec2Camera[];
+    cameras: ec2CameraEx[];
 }
 
 interface ResourceTypes {
@@ -1026,7 +1104,7 @@ export interface Device {
         }[];
     };
     serverId: string;
-    status?: string;
+    status: string;
     typeId: string;
     url: string;
     vendor: string;

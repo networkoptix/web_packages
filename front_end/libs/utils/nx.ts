@@ -35,9 +35,10 @@ export function findMenuNode(
     return foundNode;
 }
 
-export function setServerIpAndPort(
-    server: ec2MediaServer,
-): ec2MediaServer & { ip: string; port: string } {
+export type ParsedNetworkAddresses<S> = S & { ip: string; port: string };
+export function setServerIpAndPort<S extends Pick<ec2MediaServer, 'networkAddresses'>>(
+    server: S,
+): ParsedNetworkAddresses<S> {
     const ipv4Addresses: string[] = []; // 192.168.5.1:7001
     const ipv6Addresses: string[] = []; // [fe80::e58b:1151:3859:a75a%2]:7001
     server.networkAddresses.split(';').forEach(addr => {

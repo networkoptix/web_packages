@@ -981,10 +981,10 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     /* End of Working with users */
     /* Cameras and Servers */
     @memoizeAsyncMedium
-    getCamera(id?: string) {
-        const params = id ? { id: this.cleanId(id) } : {};
-        return this.get<t.ec2Camera>('/ec2/getCamerasEx', params)
-            .pipe(map(camera => camera[0]));
+    getCamera(id: string): Observable<t.ec2CameraEx> {
+        const params = { id: this.cleanId(id) };
+        return this.get<t.ec2CameraEx[]>('/ec2/getCamerasEx', params)
+            .pipe(map(cameras => cameras[0]));
     }
 
     @memoizeAsyncMedium
@@ -1023,9 +1023,9 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         useCache => !useCache,
         60 * 1000
     )
-    getMediaServers(useCache: boolean): Observable<t.ec2MediaServer[]> {
+    getMediaServers(useCache: boolean): Observable<t.ec2MediaServerEx[]> {
         const endpoint = '/ec2/getMediaServersEx';
-        return this.get<t.ec2MediaServer[]>(
+        return this.get<t.ec2MediaServerEx[]>(
             endpoint,
             {},
             { [useCache ? 'cache-request' : 'reset-cache']: 'true' }
@@ -1054,7 +1054,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
             .pipe(
                 map(({ reply }) => ({
                     moduleInfo: reply['/api/moduleInformation'].reply,
-                    servers: reply['/ec2/getMediaServersEx'],
+                    servers: reply['/ec2/getMediaServers'],
                     serverTimes: reply['ec2/getTimeOfServers'].reply,
                     cameras: reply['ec2/getCamerasEx'],
                 }))

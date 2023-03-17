@@ -925,7 +925,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             }) + this.parsedCameraId;
             this.menuService.detail = this.parsedCameraId;
 
-            this.selectedCamera = await this.system.cameraManager.parseCamera(await this.system.mediaserver.getCamera(this.parsedCameraId).toPromise());
+            this.selectedCamera = this.system.cameraManager.parseCamera(
+                await this.system.mediaserver.getCamera(this.parsedCameraId).toPromise()
+            );
             const {
                 vendor,
                 model,
