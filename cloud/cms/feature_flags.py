@@ -55,6 +55,7 @@ class FLAGS(metaclass=_FlagType):
     bookmarks = ('View Bookmarks', 'bookmarks', '%BOOKMARKS_ENABLED%')
     dashboard = ('Dashboard', 'dashboard', '%DASHBOARD_ENABLED%')
     dashboard_redirect = ('Dashboard Redirect', 'dashboardRedirect', '%DASHBOARD_REDIRECT_ENABLED%')
+    merge_refactor = ('Merge Refactor', 'mergeRefactorEnabled')
     archive_selection = ('Archive Selection', 'archiveSelection', '%ARCHIVE_SELECTION_ENABLED%')
     view_camera_details = ('View Camera Details', 'viewCameraDetails', '%VIEW_CAMERA_DETAILS_ENABLED%')
     themes_enabled = ('Enable themes', 'themesEnabled', '%THEMES_ENABLED%')

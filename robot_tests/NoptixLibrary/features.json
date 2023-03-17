@@ -5,6 +5,7 @@
 "bookmarks": false,
 "dashboard": false,
 "dashboardRedirect": false,
+"mergeRefactorEnabled": false,
 "archiveSelection": true,
 "viewCameraDetails": false,
 "themesEnabled": true,

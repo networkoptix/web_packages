@@ -1,0 +1,95 @@
+<form
+    #checkMergeForm="ngForm"
+    name="checkMergeForm"
+>
+    <main class="modal-body">
+        <ng-container *ngIf="noOtherSystems; else normalCheckMerge">
+            <p translate>
+                Enter address of any server in the system you want to merge with this one.
+            </p>
+        </ng-container>
+        <ng-template #normalCheckMerge>
+            <p translate>Merge current system with</p>
+            <nx-select
+                #checkMergeDropdown
+                class="mb-2 d-block"
+                id="system"
+                [merge]="true"
+                [stillLoading]="!systemsProcessed"
+                [items]="processedSystems"
+                [selected]="selectedSystem"
+                (onSelected)="setTargetSystem($event)"
+                required
+            ></nx-select>
+        </ng-template>
+        <div
+            *ngIf="isLocal"
+            class="d-flex flex-column server-url add-specificity"
+            [ngClass]="{
+                'mb-4': !(selectedSystem.status || serverUrlInputValidationErrorText)
+            }"
+        >
+            <label
+                class="server-url-label"
+                for="serverUrl"
+                translate
+                >Server URL</label
+            >
+            <input
+                class="mb-2 form-control"
+                #serverUrlInput="ngModel"
+                #checkMergeUrlInput
+                name="serverUrl"
+                id="serverUrl"
+                type="url"
+                [readonly]="checking"
+                placeholder="host:port"
+                [ngModel]="serverUrl"
+                (ngModelChange)="serverUrlUpdate(serverUrlInput)"
+                (blur)="serverUrlUpdate(serverUrlInput)"
+                nxUrlValidator
+                required
+            />
+            <label
+                *ngIf="serverUrlInputValidationErrorText"
+                [innerHTML]="serverUrlInputValidationErrorText"
+                class="error-label"
+                for="serverUrl"
+            >
+            </label>
+        </div>
+        <p
+            *ngIf="!selectedSystem.status || checking"
+            class="light-text"
+        >
+            <span
+                *ngIf="checking"
+                translate
+                >Checking...</span
+            >
+            <span
+                *ngIf="!checking && !isLocal"
+                translate
+            >
+                You can only merge Systems where you are the owner
+            </span>
+        </p>
+        <p
+            *ngIf="selectedSystem.status && !checking"
+            [ngClass]="{ 'error-text-margin': serverUrlInput }"
+            [innerHTML]="selectedSystem.status"
+            class="error-label"
+        ></p>
+    </main>
+    <footer class="modal-footer float-right next-button">
+        <nx-process-button
+            [clickFn]="checkMergeabilityFunction"
+            [process]="selectSystemProcess"
+            [form]="checkMergeForm"
+            actionType="primary"
+            [buttonDisabled]="!systemsProcessed || !!serverUrlInputValidationErrorText"
+            [svg]="{ src: 'arrow_right' }"
+            [buttonText]="checkMergeButtonText"
+        ></nx-process-button>
+    </footer>
+</form>

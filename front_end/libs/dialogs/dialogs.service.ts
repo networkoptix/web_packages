@@ -292,7 +292,22 @@ export class NxDialogsService extends DialogBase {
 
         await this.preloadDialogsModule();
         const component = await import('./merge/merge.component').then(m => m.MergeModalContent);
+        return this.open(component, dialogConfig)
+            .afterClosed();
+    }
 
+    public async mergeRefactored(system: NxSystem, systems: NxSystemInfo[]) {
+        const config: Partial<DialogConfig> = {
+            data: {
+                system,
+                systems,
+            }
+        };
+        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
+
+        await this.preloadDialogsModule();
+
+        const component = await import('./merge/merge.refactor.component').then(m => m.NxMergeComponent);
         return this.open(component, dialogConfig)
             .afterClosed();
     }

@@ -133,7 +133,7 @@ export class DynamicConfig {
                 cloudStorageSize,
                 customClientsEnabled,
                 alexaIntegrationEnabled: featureFlags.alexaIntegration && alexaIntegrationEnabled,
-                bookmarksEnabled: featureFlags.bookmarks && bookmarksEnabled
+                bookmarksEnabled: featureFlags.bookmarks && bookmarksEnabled,
             };
 
             const {

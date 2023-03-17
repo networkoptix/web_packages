@@ -48,6 +48,7 @@ import { EmbedModalContent } from './embed/embed.component';
 import { GenericDialogModule } from './generic/generic.module';
 import { Mandatory2faModalModule } from './mandatory-2fa/mandatory-2fa.module';
 import { MergeModalContent } from './merge/merge.component';
+import { NxMergeModule } from './merge/merge.refactor.module';
 import { MessageModalModule } from './message/message.module';
 import { NewFeatureInformationModalContent } from './new-feature/new-feature.component';
 import { RefreshSessionModalModule } from './refresh-session/refresh-session.module';
@@ -91,6 +92,7 @@ import { WizardModalContent } from './wizard/wizard.component';
 
         LoginWebadminModule,
         TransferOwnershipModule,
+        NxMergeModule,
         NxMoreDevicesModule,
         NxMoreTagsModule,
         NxBookmarksCardModalModule,

@@ -1,0 +1,63 @@
+<!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
+<form
+    #choosePrimaryForm="ngForm"
+    name="choosePrimaryForm"
+>
+    <div class="modal-body">
+        <p translate>Take system name and settings from</p>
+        <div>
+            <div class="radio-group">
+                <nx-radio
+                    name="choosePrimary"
+                    [value]="system.id"
+                    tabindex="0"
+                    autofocus
+                    #primaryRadio
+                    [label]="system.info.name"
+                    componentId="firstSystem"
+                    [(ngModel)]="primarySystemId"
+                    (ngModelChange)="isCurrentSystemPrimary()"
+                ></nx-radio>
+            </div>
+            <div class="radio-group">
+                <nx-radio
+                    name="choosePrimary"
+                    [value]="targetSystem.id"
+                    tabindex="0"
+                    [label]="targetSystem.name"
+                    componentId="secondSystem"
+                    [(ngModel)]="primarySystemId"
+                    (ngModelChange)="isCurrentSystemPrimary()"
+                ></nx-radio>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button
+            class="btn btn-default svg-icon"
+            (click)="setCurrentState.emit()"
+            type="button"
+        >
+            <svg-icon
+                nx-add-svg-src
+                [src]="icons.dir + 'arrow_left.svg'"
+                class="mr-1"
+                [applyClass]="true"
+            ></svg-icon>
+            <ng-container>{{ 'Back' | translate }}</ng-container>
+        </button>
+        <button
+            class="btn btn-primary svg-icon next-button"
+            type="button"
+            (click)="setCurrentState.emit('confirm')"
+        >
+            <ng-container>{{ 'Next' | translate }}</ng-container>
+            <svg-icon
+                nx-add-svg-src
+                [src]="icons.dir + 'arrow_right.svg'"
+                class="ml-1"
+                [applyClass]="true"
+            ></svg-icon>
+        </button>
+    </div>
+</form>

@@ -14,6 +14,7 @@ export interface NxSystemServer extends ec2MediaServer {
 export interface ModuleInfo {
     brand: string;
     cloudHost: string;
+    cloudOwnerId?: string;
     cloudSystemId: string;
     customization: string;
     ecDbReadOnly: boolean;

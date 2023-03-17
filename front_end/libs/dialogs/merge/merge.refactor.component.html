@@ -1,0 +1,103 @@
+<!-- <nx-app-toasts
+    aria-live="polite"
+    aria-atomic="true"
+>
+</nx-app-toasts> -->
+<div
+    class="merge-main"
+    id="mergeMain"
+>
+    <div class="modal-header">
+        <h1 class="modal-title">
+            <ng-template #defaultTitle>
+                <span translate>Merge Systems</span>
+            </ng-template>
+
+            <span *ngIf="this.failedToFindAnySystem; else defaultTitle">{{
+                LANG.dialogs.merge.failedToFindAnySystemHeader | translate
+            }}</span>
+        </h1>
+        <!-- check close functionality -->
+        <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="close()"
+        >
+            <div class="close-content"></div>
+        </button>
+    </div>
+    <div
+        class="merge-window"
+        [ngSwitch]="!updateSession && currentState"
+    >
+        <nx-merge-select-system-component
+            *ngSwitchCase="MergeState.select"
+            [selectSystemProcess]="selectSystemProcess"
+            [mergeSystems]="mergeSystems"
+            [system]="system"
+            [isLocal]="isLocal"
+            [cloudHost]="cloudHost"
+            [(targetSystem)]="targetSystem"
+            [(otherSystem)]="otherSystem"
+            [(serverUrl)]="serverUrl"
+            [cleanUpUrl]="cleanUpUrl"
+            [existingSystems]="systemUrls"
+            [checking]="checking"
+            [checkedOnce]="checkedMergeabilityOnce"
+            [noOtherSystems]="noOtherSystems"
+            [getSystemInfo]="getSystemInfo"
+            [errorCode]="selectSystemErrorCode"
+            (setCurrentState)="setCurrentState($event)"
+        ></nx-merge-select-system-component>
+        <nx-merge-admin-password-component
+            *ngSwitchCase="MergeState.admin"
+            [adminPasswordProcess]="adminPasswordProcess"
+            [(password)]="adminPassword"
+            [targetSystem]="targetSystem"
+            [isSessionOauth]="isSessionOauth"
+            [errorCode]="adminPasswordErrorCode"
+            (setCurrentState)="setCurrentState($event)"
+        ></nx-merge-admin-password-component>
+        <nx-merge-choose-primary-component
+            *ngSwitchCase="MergeState.primary"
+            [system]="system"
+            [targetSystem]="targetSystem"
+            [(currentSystemIsPrimary)]="currentSystemIsPrimary"
+            [errorCode]="choosePrimaryErrorCode"
+            (setCurrentState)="setCurrentState($event)"
+        ></nx-merge-choose-primary-component>
+        <nx-merge-confirm-merge-component
+            *ngSwitchCase="MergeState.confirm"
+            [confirmMergeProcess]="confirmMergeProcess"
+            [primaryName]="primaryName"
+            [secondaryName]="secondaryName"
+            [tooManyServers]="tooManyServers"
+            [maxServers]="maxServers"
+            [supportLink]="CONFIG.company.links.support"
+            [isLocal]="isLocal"
+            [isSessionOauth]="isSessionOauth"
+            [(password)]="confirmPassword"
+            [errorCode]="confirmMergeErrorCode"
+            (setCurrentState)="setCurrentState($event)"
+        ></nx-merge-confirm-merge-component>
+        <nx-merge-generic-merge-component
+            *ngSwitchCase="MergeState.generic"
+            [genericMergeProcess]="genericMergeProcess"
+            [thisSystemHasOutdatedServer]="thisSystemHasOutdatedServer"
+            [failedToFindAnySystem]="failedToFindAnySystem"
+            [serverUrlErrorText]="serverUrlErrorText"
+            [errorCode]="genericMergeErrorCode"
+            (close)="close()"
+            (setCurrentState)="setCurrentState($event)"
+        ></nx-merge-generic-merge-component>
+        <nx-update-webadmin-session
+            *ngSwitchCase="false"
+            (loginSuccess)="updateSession = false; currentProcess.run()"
+            [noConnectionMsg]="'Failed to the check current system\'s password.' | translate"
+            [dialogRef]="dialogRef"
+            [system]="system"
+        ></nx-update-webadmin-session>
+    </div>
+</div>

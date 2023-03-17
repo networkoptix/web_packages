@@ -1,0 +1,17 @@
+.svg-icon {
+    min-height: 24px;
+    min-width: 24px;
+    svg {
+        height: 24px;
+        width: 24px;
+    }
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: space-between !important;
+}
+
+.modal-body p {
+    margin-bottom: 12px;
+}

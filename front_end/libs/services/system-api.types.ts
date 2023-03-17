@@ -623,9 +623,10 @@ export interface AggregatedHealthReportReply {
 
 export interface AggregatedHealthReport extends NormalResponse<AggregatedHealthReportReply> {}
 
-interface DiscoveredPeersReply {
+export interface DiscoveredPeersReply {
     brand: string;
     cloudHost: string;
+    cloudOwnerId: string;
     cloudSystemId: string;
     customization: string;
     ecDbReadOnly: boolean;
