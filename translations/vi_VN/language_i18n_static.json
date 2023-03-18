@@ -1234,7 +1234,7 @@
             "required": "Yêu cầu thêm {number}",
             "activated": "Khóa giấy phép đã được kích hoạt",
             "inuse": "Khóa giấy phép đã được kích hoạt và liên kết với máy chủ có ID phần cứng {hwid} trong hệ thống khác",
-            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
+            "trialActivated": "Giấy phép giới hạn thời gian được kích hoạt. Bắt đầu từ hôm nay, bạn có thể ghi tối đa 4 camera trong 30 ngày."
         }
     },
     "redirects": {
