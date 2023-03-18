@@ -379,7 +379,7 @@ export class NxLayoutViewComponent {
                     { queryParams },
                 );
             }
-            return layoutId;
+            return layoutId || '';
         }),
         distinctUntilChanged(),
     );
@@ -396,7 +396,7 @@ export class NxLayoutViewComponent {
                 queryParams.openNodes = [queryParams.openNodes];
             }
             queryParams.openNodes ||= [];
-            if (!queryParams.openNodes.includes(layoutId)) {
+            if (layoutId && !queryParams.openNodes.includes(layoutId)) {
                 queryParams.openNodes.push(layoutId);
                 await this.router.navigate(
                     [`${this.router.url.split('layouts')[0]}layouts/${layoutId}`],
