@@ -10,11 +10,11 @@ nx-bookmarks-card {
             &-info,
             &-image-wrapper {
                 background-color: var(--bookmarks-card-background-color-hover);
-            }
-        }
 
-        nx-ml-ellipsis .ellipsis-after {
-            background: var(--bookmarks-card-title-gradient-hover);
+                nx-ml-ellipsis .after {
+                    background: var(--bookmarks-card-title-gradient-hover);
+                }
+            }
         }
     }
 
@@ -93,7 +93,7 @@ nx-bookmarks-card {
         }
     }
 
-    nx-ml-ellipsis .ellipsis-after {
+    nx-ml-ellipsis .after {
         background: var(--bookmarks-card-title-gradient);
     }
 }

@@ -50,7 +50,7 @@ export class NxMultiLineEllipsisComponent implements OnChanges {
     }
 
     viewMoreDescr(): void {
-        if (this.gradientOnly || !this.viewMore) {
+        if (!this.viewMore) {
             return;
         }
         this.more = true;
