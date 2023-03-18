@@ -45,47 +45,43 @@ export class NxDynamicTablePanelComponent implements AfterContentInit {
         this.name = '';
     }
 
-    ngAfterContentInit(): void { // AfterViewInit causes detection change error
+    ngAfterContentInit(): void {
+        // AfterViewInit causes detection change error
         this.healthLayoutService.activeEntitySubject.subscribe((activeEntity: any) => {
             this.scrollMechanicsService.panelVisible = true;
             this.name = activeEntity ? this.healthService.findEntityName(activeEntity) : '';
             if (this.panelParams && activeEntity) {
                 const paramGroups = this.panelParams.values.filter(({ id }) => id !== '_');
-                this.sections = paramGroups
-                    .map(({ description, name, id: paramGroupId, values }) => {
-                        const lines = values.map(({ id, name }) => new InfoBlockLine(
-                            name || id,
-                            (
-                                (
+                this.sections = paramGroups.map(
+                    ({ description, name, id: paramGroupId, values }) => {
+                        const lines = values.map(
+                            ({ id, name }) =>
+                                new InfoBlockLine(
+                                    name || id,
+                                    (activeEntity[paramGroupId] &&
+                                        activeEntity[paramGroupId][id] &&
+                                        activeEntity[paramGroupId][id].text) ||
+                                        '_',
                                     activeEntity[paramGroupId] &&
-                                    activeEntity[paramGroupId][id] &&
-                                    activeEntity[paramGroupId][id].text
-                                ) || '_'
-                            ),
-                            (
-                                activeEntity[paramGroupId] &&
-                                activeEntity[paramGroupId][id] &&
-                                activeEntity[paramGroupId][id].class
-                            ),
-                            (
-                                activeEntity[paramGroupId] &&
-                                activeEntity[paramGroupId][id] &&
-                                activeEntity[paramGroupId][id].icon
-                            ),
-                            true,
-                            (
-                                activeEntity[paramGroupId] &&
-                                activeEntity[paramGroupId][id] &&
-                                activeEntity[paramGroupId][id].tooltip
-                            )
-                        ));
+                                        activeEntity[paramGroupId][id] &&
+                                        activeEntity[paramGroupId][id].class,
+                                    activeEntity[paramGroupId] &&
+                                        activeEntity[paramGroupId][id] &&
+                                        activeEntity[paramGroupId][id].icon,
+                                    true,
+                                    activeEntity[paramGroupId] &&
+                                        activeEntity[paramGroupId][id] &&
+                                        activeEntity[paramGroupId][id].tooltip,
+                                ),
+                        );
                         const maxParamWidthPercentage = 58;
                         return new InfoBlockSection(
                             lines,
                             description || name || paramGroupId,
-                            maxParamWidthPercentage
+                            maxParamWidthPercentage,
                         );
-                    });
+                    },
+                );
             }
         });
     }

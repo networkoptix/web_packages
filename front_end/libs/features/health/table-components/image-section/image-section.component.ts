@@ -74,11 +74,10 @@ export class NxImageSectionComponent implements OnChanges, AfterViewInit, OnDest
                 return {
                     loaded: false,
                     time,
-                    url: this.healthService.system.mediaserver.previewUrl(
-                        this.cameraId, time
-                    )
+                    url: this.healthService.system.mediaserver.previewUrl(this.cameraId, time),
                 };
-            }).sort((a: any, b: any) => {
+            })
+            .sort((a: any, b: any) => {
                 if (a.time === 'now') {
                     return -1;
                 } else if (b.time === 'now') {

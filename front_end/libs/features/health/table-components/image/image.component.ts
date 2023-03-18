@@ -49,11 +49,10 @@ export class NxImageComponent implements OnChanges, OnDestroy {
 
     ngOnChanges(changes: NgChanges<NxImageComponent>): void {
         if (!(Object.keys(changes).length === 1 && changes.state)) {
-            const firstChange = Object.values(changes)
-                .reduce(
-                    (noChanges, { firstChange }) => noChanges && firstChange,
-                    true
-                );
+            const firstChange = Object.values(changes).reduce(
+                (noChanges, { firstChange }) => noChanges && firstChange,
+                true,
+            );
             if (!firstChange) {
                 this.show = false;
             }
@@ -63,11 +62,10 @@ export class NxImageComponent implements OnChanges, OnDestroy {
         }
         if (
             this.state.toLowerCase() === 'Unauthorized'.toLowerCase() ||
-            changes.state && ![
-                'Online',
-                'Recording',
-                'Scheduled'
-            ].map(state => state.toLowerCase()).includes(changes.state.currentValue.toLowerCase())
+            (changes.state &&
+                !['Online', 'Recording', 'Scheduled']
+                    .map(state => state.toLowerCase())
+                    .includes(changes.state.currentValue.toLowerCase()))
         ) {
             this.url = '';
             this.loaded.emit(true);

@@ -49,8 +49,7 @@ export class NxUpdateInfoComponent implements OnInit, OnDestroy {
         this.lastUpdate = '0 min ago';
 
         const minute = 60 * 1000;
-        const currentHmAge =
-            (Date.now() - this.healthService.lastUpdate) / minute | 0;
+        const currentHmAge = ((Date.now() - this.healthService.lastUpdate) / minute) | 0;
         this.timerSubscription = timer(0, minute)
             .pipe(startWith(currentHmAge))
             .subscribe(minutes => {
@@ -59,15 +58,13 @@ export class NxUpdateInfoComponent implements OnInit, OnDestroy {
                         this.LANG.common.viewingOutdatedReport,
                         [{ type: 'link', text: 'Refresh', value: '' }],
                         'alert',
-                        this.refreshHealth
+                        this.refreshHealth,
                     );
                 } else {
                     this.ribbonService.hide();
                 }
                 if (minutes) {
-                    const time = this.healthService.secondsToTime(
-                        minutes * 60, 'updateTime'
-                    );
+                    const time = this.healthService.secondsToTime(minutes * 60, 'updateTime');
                     this.lastUpdate = `${time.replace(/m/, ' min')} ago`;
                 }
             });

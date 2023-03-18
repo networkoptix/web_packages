@@ -102,27 +102,23 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
                     id: 'alerts',
                     label: 'Alerts',
                     path: 'alerts',
-                    svg: 'alerts'
-                }
-            ]
+                    svg: 'alerts',
+                },
+            ],
         };
 
-        this.menuService.selectedSectionSubject
-            .pipe(untilDestroyed(this))
-            .subscribe(selection => {
-                if (this.menu.selectedSection !== selection) {
-                    this.menu.selectedSection = selection;
-                    this.menu = { ...this.menu }; // trigger onChang
-                }
-            });
+        this.menuService.selectedSectionSubject.pipe(untilDestroyed(this)).subscribe(selection => {
+            if (this.menu.selectedSection !== selection) {
+                this.menu.selectedSection = selection;
+                this.menu = { ...this.menu }; // trigger onChang
+            }
+        });
 
         const currentRoute = this.router.url;
         if (currentRoute.endsWith('health')) {
-            this.uriService
-                .updateURI(`${currentRoute}/alerts`, {}, true)
-                .catch(error => {
-                    console.error(error);
-                });
+            this.uriService.updateURI(`${currentRoute}/alerts`, {}, true).catch(error => {
+                console.error(error);
+            });
         }
 
         // We listen to window resize and measure header height to know how much to offset the fixed menu by
@@ -147,8 +143,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
     }
 
     setHeaderHeight(): void {
-        this.headerHeight =
-            this.document.getElementsByClassName('headerContainer')[0].scrollHeight;
+        this.headerHeight = this.document.getElementsByClassName('headerContainer')[0].scrollHeight;
     }
 
     ngOnDestroy(): void {}
@@ -180,27 +175,26 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
                 this.healthService.values[asset] &&
                 Object.keys(this.healthService.values[asset]).length
             ) {
-                const svgName = asset === 'cameras'
-                    ? 'camera'
-                    : asset === 'systems' ? 'system' : asset;
+                const svgName =
+                    asset === 'cameras' ? 'camera' : asset === 'systems' ? 'system' : asset;
 
                 menu.level1.push({
                     id: asset,
                     label: this.healthService.manifest[asset].name,
                     path: asset,
-                    svg: svgName
+                    svg: svgName,
                 });
             }
         });
         menu.level1[0].alerts = [
             {
                 count: this.healthService.alertsCount.error,
-                type: 'error'
+                type: 'error',
             },
             {
                 count: this.healthService.alertsCount.warning,
-                type: 'warning'
-            }
+                type: 'warning',
+            },
         ];
         this.menu = { ...menu };
         // Allow time for change detection so child components can reinitialize
@@ -214,7 +208,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
         let counter = 0;
         metric.values = metric.values.map(group => {
             if (group.id !== '_') {
-                group.colorClass = `group-${counter++ % 6 + 1}`;
+                group.colorClass = `group-${(counter++ % 6) + 1}`;
             }
             return group;
         });
@@ -240,7 +234,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
             if (!this.healthService.tableHeaders[metric].values._) {
                 this.healthService.tableHeaders[metric].values._ = {
                     id: '_',
-                    values: {}
+                    values: {},
                 };
             }
             this.healthService.tableHeaders[metric].values.unshift({
@@ -250,9 +244,9 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
                     {
                         display: 'table',
                         id: 'alarm',
-                        name: ''
-                    }
-                ]
+                        name: '',
+                    },
+                ],
             });
         });
     }
@@ -286,7 +280,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
             Object.entries(entities).forEach(([entity, groups]) => {
                 const alarmCount = {
                     warning: 0,
-                    error: 0
+                    error: 0,
                 };
                 let highestAlarm;
 
@@ -296,32 +290,47 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
                 this.healthService.manifest[metric].values.forEach(group => {
                     if (this.healthService.values[metric][entity][group.id] !== undefined) {
                         group.values.forEach(header => {
-                            if (this.healthService.values[metric][entity][group.id][header.id] !== undefined) {
-                                const alarms = this.healthService.alarms[metric] && this.healthService.alarms[metric][entity] &&
+                            if (
+                                this.healthService.values[metric][entity][group.id][header.id] !==
+                                undefined
+                            ) {
+                                const alarms =
+                                    this.healthService.alarms[metric] &&
+                                    this.healthService.alarms[metric][entity] &&
                                     this.healthService.alarms[metric][entity][group.id] &&
                                     this.healthService.alarms[metric][entity][group.id][header.id];
                                 let alarm;
                                 if (alarms) {
                                     alarm = this.highestAlarm(alarms);
-                                    if (!highestAlarm || alarm.level === 'error' && highestAlarm.level === 'warning') {
+                                    if (
+                                        !highestAlarm ||
+                                        (alarm.level === 'error' &&
+                                            highestAlarm.level === 'warning')
+                                    ) {
                                         highestAlarm = alarm;
                                     }
                                     alarmCount[alarm.level]++;
                                 }
 
                                 const formattedVal: any = this.healthService.formatValue(
-                                    header, this.healthService.values[metric][entity][group.id][header.id]
+                                    header,
+                                    this.healthService.values[metric][entity][group.id][header.id],
                                 );
 
                                 this.healthService.values[metric][entity][group.id][header.id] = {
                                     ...formattedVal,
                                     class: alarm ? alarm.level : '',
-                                    tooltip: alarm ? this.getAlertText(metric, entity, alarm.text) : '',
-                                    icon: alarm ? alarm.level : ''
+                                    tooltip: alarm
+                                        ? this.getAlertText(metric, entity, alarm.text)
+                                        : '',
+                                    icon: alarm ? alarm.level : '',
                                 };
 
-                                if (header.display) { // Search by displayed fields
-                                    this.healthService.values[metric][entity].searchTags += (formattedVal.text + ' ').toLowerCase();
+                                if (header.display) {
+                                    // Search by displayed fields
+                                    this.healthService.values[metric][entity].searchTags += (
+                                        formattedVal.text + ' '
+                                    ).toLowerCase();
                                 }
                             }
                         });
@@ -332,7 +341,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
                     this.healthService.values[metric][entity]._ = {};
                 }
                 this.healthService.values[metric][entity]._.alarm = {
-                    text: ' '
+                    text: ' ',
                 };
 
                 if (highestAlarm) {
@@ -344,7 +353,9 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
                     const count = alarmCount[level];
 
                     if (count > 1) {
-                        let name = this.healthService.findEntityName(this.healthService.values[metric][entity]);
+                        let name = this.healthService.findEntityName(
+                            this.healthService.values[metric][entity],
+                        );
                         name = name ? `${name} ` : '';
                         const resourceName = this.healthService.manifest[metric].resource;
                         const tooltip = `${resourceName} ${name}has ${count} different ${level}s`;
@@ -355,9 +366,11 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
                         this.healthService.values[metric][entity]._.alarm.tooltip = tooltip;
                     } else {
                         if (this.healthService.values[metric][entity]._.name) {
-                            this.healthService.values[metric][entity]._.name.tooltip = this.getAlertText(metric, entity, highestAlarm.text);
+                            this.healthService.values[metric][entity]._.name.tooltip =
+                                this.getAlertText(metric, entity, highestAlarm.text);
                         }
-                        this.healthService.values[metric][entity]._.alarm.tooltip = this.getAlertText(metric, entity, highestAlarm.text);
+                        this.healthService.values[metric][entity]._.alarm.tooltip =
+                            this.getAlertText(metric, entity, highestAlarm.text);
                     }
                 }
             });
@@ -367,7 +380,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
     getAlertText(metric, entity, message) {
         const resourceName = this.healthService.manifest[metric].resource;
         const entityName = this.healthService.findEntityName(
-            this.healthService.values[metric][entity]
+            this.healthService.values[metric][entity],
         );
         if (resourceName && entityName !== '−') {
             return `${resourceName} ${entityName} ${message}`;
@@ -390,7 +403,10 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
                             const alert: any = { _: {} };
                             const server = this.healthService.values[metric][entity].info.server;
                             if (!server && metric === 'servers') {
-                                alert._.server = { text: this.healthService.values.servers[entity]._.name.text, id: entity };
+                                alert._.server = {
+                                    text: this.healthService.values.servers[entity]._.name.text,
+                                    id: entity,
+                                };
                             } else if (server) {
                                 alert._.server = { text: server.text, id: server.value };
                             } else {
@@ -398,8 +414,10 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
                             }
                             alert._.server.formatClass = 'long-text';
                             alert._.type = {
-                                text: this.healthService.manifest[metric].resource || this.healthService.manifest[metric].name,
-                                formatClass: 'text'
+                                text:
+                                    this.healthService.manifest[metric].resource ||
+                                    this.healthService.manifest[metric].name,
+                                formatClass: 'text',
                             };
                             alert._.message = { text: alarm.text, formatClass: unset };
                             alert._.alarm = { icon: alarm.level };
@@ -408,9 +426,15 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
                             alert.entity = entity;
 
                             const resourceName = this.healthService.manifest[metric].resource;
-                            const entityName = this.healthService.findEntityName(this.healthService.values[metric][entity]);
+                            const entityName = this.healthService.findEntityName(
+                                this.healthService.values[metric][entity],
+                            );
                             if (resourceName && entityName !== '−') {
-                                alert._.message.text = this.getAlertText(metric, entity, alert._.message.text);
+                                alert._.message.text = this.getAlertText(
+                                    metric,
+                                    entity,
+                                    alert._.message.text,
+                                );
                             }
                             this.healthService.alertsValues.push(alert);
                             this.healthService.alertsCount[alarm.level]++;
@@ -431,7 +455,8 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
             headers[metric.id] = metric;
             headers[metric.id].values.forEach((headerGroup, index) => {
                 headers[metric.id].values[index].values = headerGroup.values.filter(header => {
-                    header.formatClass = healthMonitoring.classFormats[header.format] || 'no-format';
+                    header.formatClass =
+                        healthMonitoring.classFormats[header.format] || 'no-format';
                     return header.display.includes(displayFilter);
                 });
             });
@@ -471,11 +496,9 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
         this.healthService.importedData = true;
 
         // move away so page|data will be reloaded w/ .navigate([this.menu.base + '/alerts'])
-        this.router
-            .navigate([this.menu.base])
-            .catch(error => {
-                console.error(error);
-            });
+        this.router.navigate([this.menu.base]).catch(error => {
+            console.error(error);
+        });
 
         if (files[0]?.fileEntry) {
             file = files[0].fileEntry as FileSystemFileEntry;
@@ -489,17 +512,16 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
                 const data = JSON.parse(fileReader.result as string);
                 this.setupReport(data);
 
-                this.router
-                    .navigate([this.menu.base + '/alerts'])
-                    .catch(error => {
-                        console.error(error);
-                    });
+                this.router.navigate([this.menu.base + '/alerts']).catch(error => {
+                    console.error(error);
+                });
 
                 const systemName = this.translateService.instant(
                     this.LANG.headerLabels.healthReportForSystem,
                     {
-                        systemName: data.system || ''
-                    });
+                        systemName: data.system || '',
+                    },
+                );
                 this.headerService.currentLocation = {
                     isSystem: false,
                     parentNode: {
@@ -517,13 +539,13 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
                                 new_window: false,
                                 nodes: undefined,
                                 order: 0,
-                                url: 'health-report/viewer'
-                            }
-                        ]
+                                url: 'health-report/viewer',
+                            },
+                        ],
                     },
                     order: 1,
                     url: '',
-                    path: 'health-report/viewer'
+                    path: 'health-report/viewer',
                 };
 
                 let time = '-';
@@ -533,7 +555,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
                 this.importedData = {
                     imported: true,
                     system: data.system || '-',
-                    time
+                    time,
                 };
             };
             if (typeof file.file === 'function') {
@@ -550,22 +572,26 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
 
     updateValues(forceUpdate = false): void {
         this.healthService.ready = false;
-        this.system.mediaserver.getAggregateHealthReport(forceUpdate).pipe(
-            untilDestroyed(this),
-            flatMap(result => this.setupReport(result))
-        ).subscribe(() => {}, () => {
-            if (!this.system.id) {
-                !this.window.parent
-                    ? this.window.location.reload()
-                    : this.window.parent.location.reload();
-            }
-            this.hasServerError = this.system.isOnline;
-        });
+        this.system.mediaserver
+            .getAggregateHealthReport(forceUpdate)
+            .pipe(
+                untilDestroyed(this),
+                flatMap(result => this.setupReport(result)),
+            )
+            .subscribe(
+                () => {},
+                () => {
+                    if (!this.system.id) {
+                        !this.window.parent
+                            ? this.window.location.reload()
+                            : this.window.parent.location.reload();
+                    }
+                    this.hasServerError = this.system.isOnline;
+                },
+            );
     }
 
     canShowOffline() {
-        return !this.healthService.ready &&
-            !this.hasServerError &&
-            !this.outdatedVersion;
+        return !this.healthService.ready && !this.hasServerError && !this.outdatedVersion;
     }
 }

@@ -43,33 +43,32 @@ export class NxSingleEntityComponent implements OnChanges {
         this.entityName = this.healthService.findEntityName(this.entity);
         if (this.copyParams) {
             const paramGroups = this.copyParams.values.filter(({ id }) => id !== '_');
-            this.sections = paramGroups
-                .reduce((reduced: SectionLookup, { id: paramGroupId, values }) => {
+            this.sections = paramGroups.reduce(
+                (reduced: SectionLookup, { id: paramGroupId, values }) => {
                     if (!this.entity[paramGroupId]) {
-                        this.copyParams.values = this.copyParams.values
-                            .filter(params => params.id !== paramGroupId);
+                        this.copyParams.values = this.copyParams.values.filter(
+                            params => params.id !== paramGroupId,
+                        );
                         return reduced;
                     }
                     const lines = values.map(({ id, name }) => {
-                        const param = (
-                            this.entity[paramGroupId][id] &&
-                            this.entity[paramGroupId][id]
-                        ) || {};
+                        const param =
+                            (this.entity[paramGroupId][id] && this.entity[paramGroupId][id]) || {};
                         return new InfoBlockLine(
                             name || id,
                             param.text || '_',
                             param.class,
-                            param.icon
+                            param.icon,
                         );
                     });
                     const maxParamWidthPercentage = 42;
-                    reduced[paramGroupId] = [new InfoBlockSection(
-                        lines,
-                        undefined,
-                        maxParamWidthPercentage
-                    )];
+                    reduced[paramGroupId] = [
+                        new InfoBlockSection(lines, undefined, maxParamWidthPercentage),
+                    ];
                     return reduced;
-                }, {});
+                },
+                {},
+            );
         }
     }
 }

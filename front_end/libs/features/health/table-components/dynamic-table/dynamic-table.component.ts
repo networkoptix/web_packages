@@ -40,17 +40,10 @@ interface Params {
 const ALARM_ORDER = {
     error: 2,
     warning: 1,
-    '': 0
+    '': 0,
 };
 
-const TEXT_FORMATS = [
-    'longText',
-    'long-text',
-    'shortText',
-    'short-text',
-    'text',
-    'no-max-width'
-];
+const TEXT_FORMATS = ['longText', 'long-text', 'shortText', 'short-text', 'text', 'no-max-width'];
 const GROUP_ID = 0;
 const PARAM_ID = 1;
 const SORT_DIR = 2;
@@ -133,37 +126,35 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         this.healthService.tableReady = false;
         this.showHorizontalTooltip = false;
 
-        this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject
-            .subscribe(() => {
-                this.mobileDetailMode = this.healthLayoutService.activeEntity &&
-                    this.scrollMechanicsService.mediaQueryMax(GridBreakpoints.LG);
-                if (this.tableElement) {
-                    this.healthLayoutService.tableWidth =
-                        this.tableElement.nativeElement.offsetWidth;
+        this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(() => {
+            this.mobileDetailMode =
+                this.healthLayoutService.activeEntity &&
+                this.scrollMechanicsService.mediaQueryMax(GridBreakpoints.LG);
+            if (this.tableElement) {
+                this.healthLayoutService.tableWidth = this.tableElement.nativeElement.offsetWidth;
+            }
+
+            this.setPagerSize();
+        });
+
+        this.locationSubscription = this.location.subscribe((event: PopStateEvent) => {
+            // force view component update without URI update
+            setTimeout(() => {
+                this.params = { ...this.route.snapshot.queryParams };
+
+                this.startIndex = this.params.index || 0;
+
+                if (this.params.sortBy) {
+                    this.sortBy(this.params.sortBy);
+                } else {
+                    this.sortOrderASC = true;
+                    this.selectedGroup = undefined;
+                    this.selectedHeader = undefined;
                 }
 
-                this.setPagerSize();
+                this.selectPage(undefined, this.startIndex);
             });
-
-        this.locationSubscription = this.location
-            .subscribe((event: PopStateEvent) => {
-            // force view component update without URI update
-                setTimeout(() => {
-                    this.params = { ...this.route.snapshot.queryParams };
-
-                    this.startIndex = this.params.index || 0;
-
-                    if (this.params.sortBy) {
-                        this.sortBy(this.params.sortBy);
-                    } else {
-                        this.sortOrderASC = true;
-                        this.selectedGroup = undefined;
-                        this.selectedHeader = undefined;
-                    }
-
-                    this.selectPage(undefined, this.startIndex);
-                });
-            });
+        });
 
         this.queryParamSubscription = this.uri
             .getParams()
@@ -189,8 +180,10 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         if (this.healthLayoutService.activeEntity) {
             this.setPagerSize();
             this.startIndex = this._elements.findIndex(elem => {
-                return this.healthLayoutService.activeEntity === elem ||
-                    this.healthLayoutService.activeEntity.id === elem.entity;
+                return (
+                    this.healthLayoutService.activeEntity === elem ||
+                    this.healthLayoutService.activeEntity.id === elem.entity
+                );
             });
             if (this.startIndex !== -1) {
                 this.selectedEntity = this._elements[this.startIndex];
@@ -201,11 +194,9 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         }
         this.healthService.tableReady = true;
 
-        this.ribbonSubscription = this.ribbonService
-            .contextSubject
-            .subscribe(() => {
-                this.setTableDimensions();
-            });
+        this.ribbonSubscription = this.ribbonService.contextSubject.subscribe(() => {
+            this.setTableDimensions();
+        });
     }
 
     initLayoutService(): void {
@@ -213,8 +204,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         this.healthLayoutService.tableTitleElement = this.tableTitleElement;
         this.healthLayoutService.tableElement = this.tableElement;
 
-        this.pageSubscription = this.healthLayoutService
-            .pageSizeSubject
+        this.pageSubscription = this.healthLayoutService.pageSizeSubject
             .pipe(delay(0))
             .subscribe(pageSize => {
                 this.pageSize = pageSize;
@@ -226,18 +216,15 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                 }
             });
 
-        this.healthLayoutService.activeEntitySubject
-            .subscribe((activeEntity: any) => {
-                this.setActiveEntity(activeEntity);
-            });
+        this.healthLayoutService.activeEntitySubject.subscribe((activeEntity: any) => {
+            this.setActiveEntity(activeEntity);
+        });
     }
 
     private setPagerSize(): void {
         if (
-            this.scrollMechanicsService.mediaQueryMax(GridBreakpoints.MD) || (
-                this.scrollMechanicsService.mediaQueryMax(GridBreakpoints.XL) &&
-                    this.selectedEntity
-            )
+            this.scrollMechanicsService.mediaQueryMax(GridBreakpoints.MD) ||
+            (this.scrollMechanicsService.mediaQueryMax(GridBreakpoints.XL) && this.selectedEntity)
         ) {
             this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSizeMedium;
             this.pagerEllipses = false;
@@ -250,8 +237,10 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     private setActiveEntity(activeEntity): void {
         if (activeEntity) {
             this.selectedEntity = this._elements.find(elem => {
-                return this.healthLayoutService.activeEntity === elem ||
-                    this.healthLayoutService.activeEntity.id === elem.entity;
+                return (
+                    this.healthLayoutService.activeEntity === elem ||
+                    this.healthLayoutService.activeEntity.id === elem.entity
+                );
             });
         } else {
             this.selectedEntity = activeEntity;
@@ -278,11 +267,9 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         if (changes.headers) {
             this.selectedHeader = undefined;
 
-            if (changes.headers.previousValue !== undefined &&
-                !isEqual(
-                    changes.headers.previousValue,
-                    changes.headers.currentValue
-                )
+            if (
+                changes.headers.previousValue !== undefined &&
+                !isEqual(changes.headers.previousValue, changes.headers.currentValue)
             ) {
                 resetURI = true;
             }
@@ -312,12 +299,10 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                 queryParams.page = undefined;
                 queryParams.index = undefined;
 
-                this.uri
-                    .updateURI(undefined, queryParams)
-                    .then(() => {
-                        this.sortOrderASC = true;
-                        this.selectedHeader = undefined;
-                    });
+                this.uri.updateURI(undefined, queryParams).then(() => {
+                    this.sortOrderASC = true;
+                    this.selectedHeader = undefined;
+                });
             });
         }
     }
@@ -350,17 +335,11 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
 
     sortBy(param): void {
         const sortBy = param.split(',');
-        this.sortOrderASC = (sortBy[SORT_DIR] === 'ASC');
+        this.sortOrderASC = sortBy[SORT_DIR] === 'ASC';
         this.selectedGroup = sortBy[GROUP_ID];
         this.selectedHeader = sortBy[PARAM_ID];
 
-        this.toggleSort(
-            sortBy[GROUP_ID],
-            sortBy[PARAM_ID],
-            false,
-            undefined,
-            true
-        );
+        this.toggleSort(sortBy[GROUP_ID], sortBy[PARAM_ID], false, undefined, true);
     }
 
     setClickedRow(element): void {
@@ -399,10 +378,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
 
     setPage(page: number, startIndex?, fromComponent = false): void {
         // TODO: possible optimization - we may not need snapshot params here
-        if (
-            this.mobileDetailMode ||
-            startIndex === 0 && this.params.index === undefined
-        ) {
+        if (this.mobileDetailMode || (startIndex === 0 && this.params.index === undefined)) {
             return;
         }
 
@@ -410,8 +386,8 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         this.selectPage(page, startIndex);
 
         this.params = { ...this.route.snapshot.queryParams };
-        const index = (this.startIndex === 0) ? undefined : this.startIndex;
-        const pageParam = this.params && parseInt(this.params.index, 10) || undefined;
+        const index = this.startIndex === 0 ? undefined : this.startIndex;
+        const pageParam = (this.params && parseInt(this.params.index, 10)) || undefined;
 
         if (pageParam !== index) {
             const queryParams: Params = {};
@@ -419,19 +395,16 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                 queryParams.id = undefined;
                 this.healthLayoutService.activeEntity = undefined;
             }
-            queryParams.index = (this.currentPage === 1) ? undefined : this.startIndex;
+            queryParams.index = this.currentPage === 1 ? undefined : this.startIndex;
 
-            this.uri
-                .updateURI(this.uri.getURL(), queryParams)
-                .catch(error => {
-                    console.error(error);
-                });
+            this.uri.updateURI(this.uri.getURL(), queryParams).catch(error => {
+                console.error(error);
+            });
         }
     }
 
     getCleanTitle(text: string): string {
-        return text.replace(/\<br\>/g, ' ')
-            .replace(/\<\/?span\>/g, '');
+        return text.replace(/\<br\>/g, ' ').replace(/\<\/?span\>/g, '');
     }
 
     isBoolean(x: any): boolean {
@@ -450,15 +423,14 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                 case 'alarm':
                     return elm => {
                         return (
-                            elm[groupId]?.[paramId] &&
-                            ALARM_ORDER[elm[groupId][paramId].icon]
-                        ) || '';
+                            (elm[groupId]?.[paramId] && ALARM_ORDER[elm[groupId][paramId].icon]) ||
+                            ''
+                        );
                     };
                 case 'resolution':
                     return elm => {
                         if (elm[groupId]?.[paramId]?.value) {
-                            const res = elm[groupId][paramId]
-                                .value.toLowerCase().split('x');
+                            const res = elm[groupId][paramId].value.toLowerCase().split('x');
 
                             if (res.length === 2) {
                                 return res[0] * res[1];
@@ -471,7 +443,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                     };
                 case 'displayAddress':
                     return elm => {
-                        if (!(elm[groupId]?.[paramId])) {
+                        if (!elm[groupId]?.[paramId]) {
                             return Number.NEGATIVE_INFINITY;
                             // metric does not exist - visual representation is "-"
                         }
@@ -480,7 +452,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                     };
                 default:
                     return elm => {
-                        if (!(elm[groupId]?.[paramId])) {
+                        if (!elm[groupId]?.[paramId]) {
                             return Number.NEGATIVE_INFINITY;
                             // metric does not exist - visual representation is "-"
                         }
@@ -496,7 +468,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             }
         }
 
-        this.sortOrderASC = (byParam) ? this.sortOrderASC : !this.sortOrderASC;
+        this.sortOrderASC = byParam ? this.sortOrderASC : !this.sortOrderASC;
         this._elements.sort(paramSortFunc(sortFunc(), this.sortOrderASC));
 
         if (updateURI || updateURI === undefined) {
@@ -504,14 +476,12 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
 
             queryParams.page = undefined;
             queryParams.sortBy = groupId + ',' + paramId;
-            queryParams.sortBy += (this.sortOrderASC) ? ',ASC' : ',DESC';
+            queryParams.sortBy += this.sortOrderASC ? ',ASC' : ',DESC';
             this.params = queryParams;
 
-            this.uri
-                .updateURI(undefined, queryParams)
-                .catch(error => {
-                    console.error(error);
-                });
+            this.uri.updateURI(undefined, queryParams).catch(error => {
+                console.error(error);
+            });
 
             setTimeout(() => this.setPage(1));
         }
@@ -520,8 +490,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     getTitle(item, headerGroupId, headerId) {
         let title;
         if (item?.[headerGroupId]?.[headerId]) {
-            title = item[headerGroupId][headerId].tooltip ||
-                item[headerGroupId][headerId].text;
+            title = item[headerGroupId][headerId].tooltip || item[headerGroupId][headerId].text;
         }
         if (title === undefined) {
             title = '';

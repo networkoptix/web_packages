@@ -10,7 +10,7 @@ import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxHealthService } from './health.service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxHealthLayoutService {
     private static ELEMENT_SEARCH_HEIGHT = 40; // px
@@ -227,11 +227,8 @@ export class NxHealthLayoutService {
         // to report 0 height initially and screw pageSize calc.
         //
         if (
-            !table || (
-                table.offsetLeft === 0 &&
-                tableHeader?.innerText.length &&
-                !tableHeader.offsetHeight
-            )
+            !table ||
+            (table.offsetLeft === 0 && tableHeader?.innerText.length && !tableHeader.offsetHeight)
         ) {
             // short circuit single entity - this was going until metric w/ page is loaded -- TT
             if (this.metricsValuesCount > 1) {
@@ -250,7 +247,13 @@ export class NxHealthLayoutService {
         const RIBBON_HEIGHT = 34;
         const ROW_HEIGHT = 26;
 
-        let availSpace = windowSize.height - 4 * PADDING - ELEMENTS_HEIGHT - THEAD_HEIGHT - 48 - PAGINATION_HEIGHT;
+        let availSpace =
+            windowSize.height -
+            4 * PADDING -
+            ELEMENTS_HEIGHT -
+            THEAD_HEIGHT -
+            48 -
+            PAGINATION_HEIGHT;
 
         const isRibbon = this.ribbonService.contextSubject.getValue();
         if (isRibbon.visibility) {
@@ -282,10 +285,12 @@ export class NxHealthLayoutService {
         this.tableWidth = table ? table.offsetWidth : 0;
 
         if (this.activeEntity && !this.mobileDetailMode) {
-            const areaWidth = this.searchTableArea ? this.searchTableArea.nativeElement.offsetWidth : 0;
+            const areaWidth = this.searchTableArea
+                ? this.searchTableArea.nativeElement.offsetWidth
+                : 0;
             const widthPanel = this.healthService.getPanelWidth();
-            const isTableFit = (areaWidth > this.tableWidth + widthPanel + 16); // +gutter
-            this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--with-panel';
+            const isTableFit = areaWidth > this.tableWidth + widthPanel + 16; // +gutter
+            this.fixedLayoutClass = isTableFit ? '' : 'fixedLayout--with-panel';
 
             if (!cannotSearchStyle && this.searchElement) {
                 this.searchElement.nativeElement.style.width = 'auto';

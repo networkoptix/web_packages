@@ -11,7 +11,7 @@ import {
 } from '@styles/theme-variables-common';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxHealthService {
     private static ALERTS = 'alertType';
@@ -33,7 +33,7 @@ export class NxHealthService {
     alertsValues;
     alertsCount = {
         warning: 0,
-        error: 0
+        error: 0,
     };
 
     resourceNames = {};
@@ -167,7 +167,7 @@ export class NxHealthService {
             text: retValue,
             format: header.format || '',
             formatClass: healthMonitoring.classFormats[header.format] || 'no-format',
-            value
+            value,
         };
     }
 
@@ -178,7 +178,7 @@ export class NxHealthService {
             return queryTerms.every(queryTerm => {
                 if (queryTerm.includes('-')) {
                     // If dash in query -> perform exact match
-                    return (c.searchTags.includes(queryTerm));
+                    return c.searchTags.includes(queryTerm);
                 } else {
                     // If no dash in query -> include results with and without dash
                     return c.searchTags.replace(/-/g, '').includes(queryTerm);
@@ -190,7 +190,8 @@ export class NxHealthService {
             items = values;
         } else {
             const query = filter.query.toLowerCase();
-            const queryTerms = query.trim()
+            const queryTerms = query
+                .trim()
                 .split(/[\s\+]+/)
                 .filter(elm => {
                     return elm !== '';
@@ -211,49 +212,31 @@ export class NxHealthService {
         let types;
         let servers;
 
-        const typeAlert = filter.selects?.find(x =>
-            x.id === NxHealthService.ALERTS
-        );
+        const typeAlert = filter.selects?.find(x => x.id === NxHealthService.ALERTS);
         if (typeAlert !== undefined) {
             alarms = typeAlert.selected;
         }
 
-        const typeTypes = filter.selects?.find(x =>
-            x.id === NxHealthService.TYPES
-        );
+        const typeTypes = filter.selects?.find(x => x.id === NxHealthService.TYPES);
         if (typeTypes !== undefined) {
             types = typeTypes.selected;
         }
 
-        const typeServers = filter.selects?.find(x =>
-            x.id === NxHealthService.SERVERS
-        );
+        const typeServers = filter.selects?.find(x => x.id === NxHealthService.SERVERS);
         if (typeServers !== undefined) {
             servers = typeServers.selected;
         }
 
         return values.filter(alert => {
-            if (
-                servers &&
-                servers.value !== '0' &&
-                alert._.server.id !== servers.value
-            ) {
+            if (servers && servers.value !== '0' && alert._.server.id !== servers.value) {
                 return false;
             }
 
-            if (
-                types &&
-                types.value !== '0' &&
-                alert._.type.text !== types.value
-            ) {
+            if (types && types.value !== '0' && alert._.type.text !== types.value) {
                 return false;
             }
 
-            return !(
-                alarms &&
-                alarms.value !== '0' &&
-                alert._.alarm.icon !== alarms.value
-            );
+            return !(alarms && alarms.value !== '0' && alert._.alarm.icon !== alarms.value);
         });
     }
 
