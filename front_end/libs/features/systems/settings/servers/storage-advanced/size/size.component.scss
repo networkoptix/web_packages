@@ -131,10 +131,17 @@ $stripes : var(--storage-size-reserved);
                     fill: var(--storage-size-available);
                     stroke: var(--light3);
                 }
+            }
 
-                &.reserved {
+            &.stripes-svg {
+                border-radius: 3px;
+        
+                .dark-stripe {
                     fill: var(--storage-size-reserved-border);
-                    stroke: var(--light5);
+                }
+                
+                .light-stripe {
+                    fill: var(--storage-size-available);
                 }
             }
         }
