@@ -32,7 +32,6 @@ import { cleanId } from '@utils/general';
 import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
 import { Camera } from '@vms-client/submodules/vms/datatypes/Camera';
 import { CAMERA_STATUS, ICamera, SimpleTimeRange } from '@vms-client/submodules/vms/datatypes/ICamera';
-import type { IMediaServer } from '@vms-client/submodules/vms/datatypes/IMediaServer';
 import { MediaServer } from '@vms-client/submodules/vms/datatypes/MediaServer';
 import { VmsState, VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsState';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
@@ -340,7 +339,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         };
 
         let processingMediaServers = false;
-        let cachedMediaServers: IMediaServer[] = [];
+        let cachedMediaServers: NxMediaServer[] = [];
         const firstLoad = new Subject();
 
         firstLoad.pipe(take(1)).subscribe(() => {
@@ -379,7 +378,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                                     (
                                         camera.status !== matchCamera.status &&
                                         !(camera.status === 'Online' && matchCamera.status === 'Live') // remapped param "status"
-                                    ) || camera.scheduleEnabled !== matchCamera.isScheduleEnabled // remapped param "scheduleEnabled"
+                                    ) || camera.scheduleEnabled !== matchCamera.scheduleEnabled // remapped param "scheduleEnabled"
                                 );
                             });
                         }
@@ -396,10 +395,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                         return;
                     }
 
-                    let mediaServers = this.system.mediaservers;
-                    if (mediaServers === null) {
-                        mediaServers = await this.system.getMediaServersAndCameras(true);
-                    }
+                    const mediaServers = await this.system.getMediaServersAndCameras(true);
                     // mediaServers length is 0 when getMediaServersAndCameras fails. No system can ever have 0 servers.
                     if (
                         this.initialized && !mediaServerChanged(mediaServers) ||
@@ -407,6 +403,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     ) {
                         return;
                     }
+                    cachedMediaServers = mediaServers;
 
                     processingMediaServers = true;
                     const serverTimeInfos =
@@ -499,13 +496,13 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
                     await findCamerasWithArchive();
 
-                    cachedMediaServers = mediaServers.map(ms => ({
+                    const processedMediaServers = mediaServers.map(ms => ({
                         ...ms,
                         cameras: ms.cameras.map(c => processCameras(c, ms)),
                     }));
 
-                    this.vms.setMediaServers(this.systemId, cachedMediaServers);
-                    this.mediaservers = cachedMediaServers;
+                    this.vms.setMediaServers(this.systemId, processedMediaServers);
+                    this.mediaservers = processedMediaServers;
                     processingMediaServers = false;
 
                     firstLoad.next(true);
