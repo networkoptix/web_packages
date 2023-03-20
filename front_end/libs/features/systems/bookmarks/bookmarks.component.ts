@@ -89,13 +89,11 @@ export class NxBookmarksComponent implements OnInit {
     newCreationCutOffTimeMS$ = new BehaviorSubject<number>(0);
     devices: string[] = [];
     tags: string[] = [];
-    names: string[] = [];
 
     search: string = '';
     suggestions: SuggestionSections = {
         DEVICE: [],
         TAGS: [],
-        TITLE: [],
     };
 
     dateFilter: DateRange<Date> = null;
@@ -189,14 +187,6 @@ export class NxBookmarksComponent implements OnInit {
         };
     }
 
-    updateTitles(names: string[]): void {
-        this.names = names;
-        this.suggestions = {
-            ...this.suggestions,
-            TITLE: this.names,
-        };
-    }
-
     bookmarksPoll(): void {
         const mediaserver = this.system.mediaserver as NxSystemRestAPI;
         const params: BookmarksParams = {
@@ -210,7 +200,6 @@ export class NxBookmarksComponent implements OnInit {
             map(([bks, tags, devices]) => {
                 this.updateTags(tags);
                 this.updateDevices(devices);
-                this.updateTitles(bks.map(bk => bk.name));
                 return bks.map<Bookmark>(bk => ({
                     ...bk,
                     src: this.system.mediaserver.getExportUrl({
