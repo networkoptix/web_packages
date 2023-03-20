@@ -98,10 +98,10 @@ export class NxReadonlyAPIService {
             const preparedReadOnlyAPI = this.prepareReadonlyAPI(
                 manifest,
                 readonlyAPI,
-                !!(APIPreamble && APIChangelog),
+                !!(APIPreamble || APIChangelog),
             );
             let markdown: MarkdownObj;
-            if (APIPreamble && APIChangelog) {
+            if (APIPreamble || APIChangelog) {
                 markdown = {
                     APIPreamble,
                     APIChangelog,

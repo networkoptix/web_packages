@@ -108,18 +108,45 @@
             <tr>
                 <td class="table-legend-marker">
                     <svg
+                        class="stripes-svg"
                         width="16"
                         height="16"
                     >
+                        <defs>
+                            <pattern
+                                id="reserved-stripes"
+                                patternTransform="rotate(135)"
+                                width="100%"
+                                height="8"
+                                x="0"
+                                y="0"
+                                patternUnits="userSpaceOnUse"
+                            >
+                                <g>
+                                    <rect
+                                        x="0"
+                                        y="0"
+                                        width="100%"
+                                        height="4"
+                                        class="light-stripe"
+                                    ></rect>
+                                    <rect
+                                        x="0"
+                                        y="4"
+                                        width="100%"
+                                        height="4"
+                                        class="dark-stripe"
+                                    ></rect>
+                                </g>
+                            </pattern>
+                        </defs>
                         <rect
-                            class="box reserved"
                             x="0"
                             y="0"
-                            rx="4"
-                            ry="4"
-                            width="16"
-                            height="16"
-                        />
+                            width="100%"
+                            height="100%"
+                            fill="url(#reserved-stripes)"
+                        ></rect>
                     </svg>
                 </td>
                 <td

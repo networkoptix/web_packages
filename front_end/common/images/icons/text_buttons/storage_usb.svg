@@ -5,9 +5,9 @@
 <style type="text/css">
 	.st0{fill:#2B383F;}
 </style>
-<path class="st0" d="M15.5,13H15V5.5C15,4.7,14.3,4,13.5,4h-7C5.7,4,5,4.7,5,5.5V13H4.5C3.7,13,3,13.7,3,14.5v3
+<path class="st0" stroke="transparent" stroke-width=".25" d="M15.5,13H15V5.5C15,4.7,14.3,4,13.5,4h-7C5.7,4,5,4.7,5,5.5V13H4.5C3.7,13,3,13.7,3,14.5v3
 	C3,17.8,3.2,18,3.5,18S4,17.8,4,17.5v-3C4,14.2,4.2,14,4.5,14h11c0.3,0,0.5,0.2,0.5,0.5v3c0,0.3,0.2,0.5,0.5,0.5s0.5-0.2,0.5-0.5v-3
 	C17,13.7,16.3,13,15.5,13z M6,5.5C6,5.2,6.2,5,6.5,5h7C13.8,5,14,5.2,14,5.5V13H6V5.5z"/>
-<rect x="7" y="8" class="st0" width="2" height="2"/>
-<rect x="10.9" y="8" class="st0" width="2" height="2"/>
+<rect x="7" y="8" class="st0" width="2" height="2" stroke="transparent" stroke-width=".25"/>
+<rect x="10.9" y="8" class="st0" width="2" height="2" stroke="transparent" stroke-width=".25"/>
 </svg>

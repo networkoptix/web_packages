@@ -335,7 +335,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
     private mediaServerChanged(
         mediaServers: NxMediaServer[],
-        cachedServers: IMediaServer[],
+        cachedServers: NxMediaServer[],
     ): boolean {
         if (mediaServers.length !== cachedServers.length) {
             return true;
@@ -368,7 +368,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     (
                         camera.status !== cachedCamera.status &&
                         !(camera.status === 'Online' && cachedCamera.status === 'Live') // remapped param "status"
-                    ) || camera.scheduleEnabled !== cachedCamera.isScheduleEnabled // remapped param "scheduleEnabled"
+                    ) || camera.scheduleEnabled !== cachedCamera.scheduleEnabled // remapped param "scheduleEnabled"
                 );
             });
         });
@@ -443,7 +443,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         this.vms.reset();
 
         let processingMediaServers = false;
-        let cachedMediaServers: IMediaServer[] = [];
+        let cachedMediaServers: NxMediaServer[] = [];
         const firstLoad = new Subject();
 
         firstLoad.pipe(take(1)).subscribe(() => {
@@ -474,6 +474,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     ) {
                         return;
                     }
+                    cachedMediaServers = mediaServers;
 
                     processingMediaServers = true;
                     const serverTimeInfos =
@@ -506,15 +507,15 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     await this.findCamerasWithArchive(mediaServers, archiveRanges);
 
                     // @ts-expect-error: See note in .mediaServerChanged()
-                    cachedMediaServers = mediaServers.map(ms => ({
+                    const processedMediaServers: IMediaServer[] = mediaServers.map(ms => ({
                         ...ms,
                         cameras: ms.cameras.map(c =>
                             this.processCameras(c, ms, archiveRanges)
                         ),
                     }));
 
-                    this.vms.setMediaServers(this.systemId, cachedMediaServers);
-                    this.mediaservers = cachedMediaServers;
+                    this.vms.setMediaServers(this.systemId, processedMediaServers);
+                    this.mediaservers = processedMediaServers;
                     processingMediaServers = false;
 
                     firstLoad.next(true);
