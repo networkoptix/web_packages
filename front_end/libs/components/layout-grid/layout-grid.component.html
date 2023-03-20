@@ -488,21 +488,42 @@
                                                 [src]="
                                                     icons.dirLayouts +
                                                     itemDetail.type +
-                                                    (status !== RESOURCE_TYPE.WEB_PAGE ? '_' : '') +
-                                                    (['online', 'offline', 'unauthorized'].includes(
-                                                        status
-                                                    )
-                                                        ? status
-                                                        : status !== RESOURCE_TYPE.WEB_PAGE
+                                                    (itemDetail.type !== RESOURCE_TYPE.WEB_PAGE
+                                                        ? '_'
+                                                        : '') +
+                                                    ([
+                                                        'online',
+                                                        'offline',
+                                                        'unauthorized',
+                                                        'defaultPassword'
+                                                    ].includes(status)
+                                                        ? status.replace(
+                                                              'defaultPassword',
+                                                              'unauthorized'
+                                                          )
+                                                        : itemDetail.type !== RESOURCE_TYPE.WEB_PAGE
                                                         ? 'offline'
                                                         : '') +
                                                     '.svg'
                                                 "
                                             >
                                             </svg-icon>
-                                            <h3>
+                                            <h3
+                                                (click)="
+                                                    system.userManager.permissions.editCameras &&
+                                                        openCameraSettings(itemDetail.details.id)
+                                                "
+                                                [ngClass]="{
+                                                    'default-password':
+                                                        system.userManager.permissions
+                                                            .editCameras &&
+                                                        status === 'defaultPassword'
+                                                }"
+                                            >
                                                 {{
-                                                    LANG.common.cameraStates[status] ||
+                                                    (itemDetail.type === RESOURCE_TYPE.CAMERA
+                                                        ? LANG.common.cameraStates
+                                                        : LANG.common.serverStates)[status] ||
                                                         LANG.layouts.errors[status] ||
                                                         status | translate
                                                 }}
@@ -522,11 +543,7 @@
                                 <div
                                     *ngIf="
                                         !errors[itemDetail.details.id] &&
-                                            ([RESOURCE_TYPE.CAMERA, RESOURCE_TYPE.SERVER].includes(
-                                                itemDetail.type
-                                            )
-                                                ? itemDetail.details.online
-                                                : !itemDetail.details.status);
+                                            playable.includes(itemDetail.details.status);
                                         else showError
                                     "
                                     cdkDragHandle
@@ -539,10 +556,7 @@
                                             [cdkDragHandleDisabled]="layout.locked"
                                             [camera]="itemDetail.details"
                                             [rotation]="item.rotation"
-                                            (showError)="
-                                                itemDetail.details.online = false;
-                                                errors[itemDetail.details.id] = $event
-                                            "
+                                            (showError)="handleVideoError(itemDetail, $event)"
                                             (showPtz)="showPtz.emit($event)"
                                         >
                                         </nx-video-player>

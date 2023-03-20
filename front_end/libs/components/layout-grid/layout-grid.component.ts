@@ -1,7 +1,8 @@
 import { ArrayDataSource } from '@angular/cdk/collections';
 import { CdkDrag, CdkDragEnter, CdkDropList } from '@angular/cdk/drag-drop';
 import { NestedTreeControl } from '@angular/cdk/tree';
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep, isEqual, omit } from 'lodash-es';
@@ -33,6 +34,7 @@ import { v4 as uuid } from 'uuid';
 import staticLang from '@common/language/language_i18n_static.json';
 import { ConfigType } from '@components/console-table/console-table.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { environment } from '@environments/environment';
 import { icons } from '@lib/variables/static-variables';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
@@ -42,6 +44,7 @@ import { Layout, LayoutItem, LayoutItems } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
+import { WINDOW } from '@services/window-provider';
 import { cleanId, pickFrom } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -414,6 +417,7 @@ export class NxLayoutGridComponent {
 
     LANG = staticLang;
     CONFIG: IConfig;
+    playable: string[] = ['online'];
 
     constructor(
         configService: NxConfigService,
@@ -423,8 +427,12 @@ export class NxLayoutGridComponent {
         private dialogsService: NxDialogsService,
         public tourService: TourService,
         private cloudApi: NxCloudApiService,
+        @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.config;
+        if (this.CONFIG.featureFlags.layoutsTimeline) {
+            this.playable.push('archive');
+        }
         this.layoutSettings = this.cloudApi.customAccountPropertyFactory(
             `layouts_${activatedRoute.snapshot.params.systemId}`,
             { openMenu: 'left', previousOpenMenu: null },
@@ -901,6 +909,43 @@ export class NxLayoutGridComponent {
             this.additionalErrorMessages = {};
             this.layoutChanged.emit(id);
         }
+    }
+
+    handleVideoError(
+        itemDetail: ResourceNode<{
+            id: string;
+            online: boolean;
+            previewUrl: Observable<unknown>;
+            status: string;
+        }>,
+        error: string,
+    ): void {
+        const showOfflineError = (): void => {
+            itemDetail.details.online = false;
+            this.errors[itemDetail.details.id] = 'offline';
+        };
+
+        const showDefaultPasswordError = (): void => {
+            this.errors[itemDetail.details.id] = 'defaultPassword';
+        };
+
+        itemDetail.details.previewUrl.subscribe({
+            next: showOfflineError,
+            error: (previewError: HttpErrorResponse) => {
+                if (previewError.status === 403) {
+                    showDefaultPasswordError();
+                } else {
+                    showOfflineError();
+                }
+            },
+        });
+    }
+
+    openCameraSettings(cameraId: string): void {
+        const base = environment.isLocal
+            ? '/settings/cameras'
+            : `/systems/${this.system.id}/cameras`;
+        this.window.open(`${base}/${cleanId(cameraId)}`, '_blank');
     }
 
     generateLayoutItem = (
