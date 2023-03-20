@@ -1234,7 +1234,7 @@
             "required": "{number} daha gerekli",
             "activated": "Lisans deaktif edildi",
             "inuse": "Lisans anahtarı zaten etkinleştirildi ve başka bir sistemde donanım kimliği {hwid} olan sunucuya bağlı",
-            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
+            "trialActivated": "Deneme lisansı etkinleştirildi. Bugünden itibaren 30 gün boyunca 4 kamera kaydedebilirsiniz."
         }
     },
     "redirects": {
