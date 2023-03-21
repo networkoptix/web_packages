@@ -81,7 +81,7 @@ export class NxNewHeaderComponent {
             .select(accountSelectors.selectCurrentUser)
             .pipe(untilDestroyed(this))
             .subscribe(account => {
-                if (account) {
+                if (account?.is_authenticated) {
                     this.loggedIn = true;
                 } else {
                     this.loggedIn = false;

@@ -1,5 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
+
+import { GridBreakpoints } from '@styles/theme-variables-common';
 
 import { WINDOW } from './window-provider';
 
@@ -16,6 +18,7 @@ export class NxScrollMechanicsService {
 
     // trigger offset change
     offsetSubject = new BehaviorSubject<boolean>(undefined);
+    isMobile$ = this.windowSizeSubject.pipe(map(({ width }) => width < GridBreakpoints.MD));
 
     public static HEADER_OFFSET: number = 48;
     public static SCROLL_OFFSET: number = 48 + 16; // header + padding

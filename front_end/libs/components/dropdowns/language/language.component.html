@@ -4,12 +4,15 @@
         'dropdown-show': show,
         short: short,
         'alt-style': altStyle,
-        'in-header': inHeader
+        'in-header': inHeader,
+        'in-footer': inFooter
     }"
     (nxClickElsewhere)="show = false"
 >
+    <ng-template *ngIf="inHeader; then newHeaderLangDropdown"></ng-template>
+    <ng-template *ngIf="inFooter; then newFooterLangDropdown"></ng-template>
     <button
-        *ngIf="!newHeader || (newHeader && !inHeader); else newHeaderLangDropdown"
+        *ngIf="!newHeader || (!inHeader && !inFooter)"
         class="btn btn-dropdown-toggle dropdown-toggle"
         (click)="show = !show"
         type="button"
@@ -72,7 +75,7 @@
 
     <ul
         class="dropdown-menu multi-column columns-2"
-        [ngClass]="{ 'new-header': newHeader }"
+        [ngClass]="{ 'new-header': newHeader, 'in-footer': inFooter }"
         *ngIf="languages?.length > 12"
         [nxArrowNav]="show"
         [style.display]="show ? 'inline-block' : 'none'"
@@ -82,7 +85,7 @@
             <ng-container *ngFor="let col of langColumns">
                 <div
                     class="p-0"
-                    [ngClass]="!!inHeader ? 'col-6' : 'col-4'"
+                    [ngClass]="!!(inHeader || inFooter) ? 'col-6' : 'col-4'"
                 >
                     <ul class="multi-column-dropdown">
                         <li
@@ -151,5 +154,22 @@
                 [src]="icons.dirHeader + 'profile_dropdown_arrow.svg'"
             ></svg-icon>
         </div>
+    </button>
+</ng-template>
+
+<ng-template #newFooterLangDropdown>
+    <button
+        type="button"
+        id="dropdownMenuButton"
+        (click)="show = !show"
+        data-toggle="dropdown"
+        class="btn-dropdown-toggle new-header-lang"
+    >
+        <svg-icon
+            class="language-icon"
+            nx-add-svg-src
+            [src]="images.dirHeader + 'language.svg'"
+        ></svg-icon>
+        <span id="activeLang">{{ activeLanguage?.name.slice(0, 2) | uppercase }}</span>
     </button>
 </ng-template>

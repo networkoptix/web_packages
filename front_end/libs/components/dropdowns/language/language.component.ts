@@ -30,6 +30,7 @@ class BaseLanguageDropdown extends BaseDropdown {
     @Input() short;
     @Input() altStyle;
     @IBool() @Input() inHeader: CoercedBoolInput = false;
+    @IBool() @Input() inFooter: CoercedBoolInput = false;
     @Output() langChange = new EventEmitter<string>();
 
     currentLang: string;
@@ -62,7 +63,7 @@ class BaseLanguageDropdown extends BaseDropdown {
 
     private splitLanguages(): void {
         if (this.languages.length > 12) {
-            if (this.inHeader) {
+            if (this.inHeader || this.inFooter) {
                 const halfWayThough = Math.ceil(this.languages.length / 2);
                 this.langColumns.push(this.languages.slice(0, halfWayThough));
                 this.langColumns.push(this.languages.slice(halfWayThough, this.languages.length));
