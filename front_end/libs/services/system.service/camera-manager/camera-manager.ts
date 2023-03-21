@@ -375,7 +375,7 @@ export class CameraManager {
             return status;
         }
         const recording = scheduleTasks.some(task => (
-            task.recordingType !== RecordingType.NEVER &&
+            ![RecordingType.NEVER, RecordingType.META_NEVER].includes(task.recordingType as RecordingType) &&
             task.dayOfWeek === dayOfWeek &&
             task.startTime < secondsToday &&
             secondsToday < task.endTime

@@ -91,6 +91,7 @@ export enum RecordingType {
     NEVER = 'RT_Never',
 
     // Rest API
+    META_NEVER = 'never',
     META_ALWAYS = 'always',
     META_ONLY = 'metadataOnly',
     META_LOW = 'metadataAndLowQuality'
