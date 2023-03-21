@@ -20,7 +20,7 @@ interface Platform {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class IntegrationService implements OnDestroy {
     CONFIG: IConfig;
@@ -38,11 +38,15 @@ export class IntegrationService implements OnDestroy {
     ) {
         this.CONFIG = configService.getConfig();
 
-        this.accountService.get().then(account => {
-            this.account = account;
-        }).then(_ => {
-            this.integrationSubscription = this.getIntegrations(this.account && this.account.is_staff)
-                .subscribe(result => {
+        this.accountService
+            .get()
+            .then(account => {
+                this.account = account;
+            })
+            .then(_ => {
+                this.integrationSubscription = this.getIntegrations(
+                    this.account && this.account.is_staff,
+                ).subscribe(result => {
                     const plugins = result?.data || [];
 
                     plugins.forEach(plugin => {
@@ -51,20 +55,26 @@ export class IntegrationService implements OnDestroy {
                         }
 
                         plugin.versionDetails = {
-                            version: (plugin.versionDetails) ? this.formatVersion(plugin.versionDetails.version) || '1.0' : '1.0'
+                            version: plugin.versionDetails
+                                ? this.formatVersion(plugin.versionDetails.version) || '1.0'
+                                : '1.0',
                         };
                         this.formatRequirementsAndCompatibility(plugin);
 
                         plugin.information.logo = plugin.information.logo || icons.default;
 
-                        plugin.state = (plugin.pending) ? 'pending' : (plugin.draft) ? 'draft' : undefined;
+                        plugin.state = plugin.pending
+                            ? 'pending'
+                            : plugin.draft
+                            ? 'draft'
+                            : undefined;
 
                         plugin.link = '/integrations/' + (plugin.urlified || plugin.id);
                         plugin.queryParams = plugin.state ? { state: plugin.state } : {};
                     });
                     this.pluginsSubject.next(plugins);
                 });
-        });
+            });
     }
 
     private getIntegrations(ignoreSW): Observable<any> {
@@ -72,8 +82,8 @@ export class IntegrationService implements OnDestroy {
     }
 
     formatVersion(elm) {
-        if (!elm || elm && elm !== '' && !elm.startsWith('v.')) {
-            elm = (elm) ? 'v.&nbsp;' + elm : '';
+        if (!elm || (elm && elm !== '' && !elm.startsWith('v.'))) {
+            elm = elm ? 'v.&nbsp;' + elm : '';
         }
 
         return elm;
@@ -95,7 +105,8 @@ export class IntegrationService implements OnDestroy {
             }
 
             switch (section.testedVersions.length) {
-                case 0: break;
+                case 0:
+                    break;
                 case 1:
                     section.testedVersionsString = section.testedVersions[0];
                     break;
@@ -112,7 +123,8 @@ export class IntegrationService implements OnDestroy {
                     if (this.haveCustomBuild) {
                         section.testedVersionsString = section.testedVersions[0] + ',&nbsp;...';
                     } else {
-                        section.testedVersionsString = section.testedVersions.slice(0, 2).join(',&nbsp;') + ',&nbsp;...';
+                        section.testedVersionsString =
+                            section.testedVersions.slice(0, 2).join(',&nbsp;') + ',&nbsp;...';
                     }
             }
 
@@ -131,7 +143,7 @@ export class IntegrationService implements OnDestroy {
                     id: processed.length + 1,
                     value: screenshot.screenshot,
                     sortKey: processed.length + 1,
-                    caption: screenshot.caption
+                    caption: screenshot.caption,
                 });
             });
             section.screenshots = processed;
@@ -145,17 +157,21 @@ export class IntegrationService implements OnDestroy {
             return;
         }
 
-        processed.push(...(plugin.overview.screenshots.map(screenshot => ({
-            id: processed.length + 1,
-            value: screenshot.screenshot,
-            sortKey: processed.length + 1,
-            caption: screenshot.caption
-        }))));
+        processed.push(
+            ...plugin.overview.screenshots.map(screenshot => ({
+                id: processed.length + 1,
+                value: screenshot.screenshot,
+                sortKey: processed.length + 1,
+                caption: screenshot.caption,
+            })),
+        );
 
         if (processed.length) {
-            processed.sort(paramSortFunc((elm: any) => {
-                return elm.sortKey;
-            }));
+            processed.sort(
+                paramSortFunc((elm: any) => {
+                    return elm.sortKey;
+                }),
+            );
 
             plugin.overview.screenshots = processed;
         }
@@ -165,12 +181,10 @@ export class IntegrationService implements OnDestroy {
         const platformIcons = [];
 
         icons.platforms.forEach(icon => {
-            const platform = plugin.requirementsAndCompatibility
-                .platforms
-                .find(platform => {
-                    // 32 or 64 bit? ... it doesn't matter :)
-                    return platform.toLowerCase().includes(icon.name);
-                });
+            const platform = plugin.requirementsAndCompatibility.platforms.find(platform => {
+                // 32 or 64 bit? ... it doesn't matter :)
+                return platform.toLowerCase().includes(icon.name);
+            });
             if (platform) {
                 platformIcons.push({ name: platform, src: icon.src });
             }
@@ -186,14 +200,22 @@ export class IntegrationService implements OnDestroy {
 
             for (const platformName in downloadPlatforms) {
                 // If there is no file url, or it's the name for an additional field skip
-                if (typeof downloadPlatforms[platformName] !== 'string' ||
+                if (
+                    typeof downloadPlatforms[platformName] !== 'string' ||
                     !downloadPlatforms[platformName] ||
                     platformName.match(/-file-[\d]+-name/) ||
-                    platformName.match(/external-link-name/)) {
+                    platformName.match(/external-link-name/)
+                ) {
                     continue;
                 }
 
-                const platform: Platform = { file: '', name: '', order: '', url: '', noFollow: false };
+                const platform: Platform = {
+                    file: '',
+                    name: '',
+                    order: '',
+                    url: '',
+                    noFollow: false,
+                };
                 // If the platformName is additional file we replace it with the correct name
                 if (platformName.match(/-file-[\d]+/) || platformName.match(/external-link/)) {
                     platform.name = downloadPlatforms[`${platformName}-name`];
@@ -224,16 +246,17 @@ export class IntegrationService implements OnDestroy {
         }
 
         if (plugin.versionDetails) {
-            plugin.versionDetails.version = this.formatVersion(escape(plugin.versionDetails.version));
+            plugin.versionDetails.version = this.formatVersion(
+                escape(plugin.versionDetails.version),
+            );
         } else {
             plugin.versionDetails = {
-                version: '&nbsp;'
+                version: '&nbsp;',
             };
         }
 
         if (plugin.requirementsAndCompatibility?.platforms) {
-            plugin.requirementsAndCompatibility.platforms.icons =
-                this.setPlatformIcons(plugin);
+            plugin.requirementsAndCompatibility.platforms.icons = this.setPlatformIcons(plugin);
         }
 
         this.formatScreenshots(plugin.instructions);

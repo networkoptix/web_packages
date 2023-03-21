@@ -33,7 +33,6 @@ import { IntegrationService } from '../integration.service';
     templateUrl: 'details.component.html',
     styleUrls: ['details.component.scss'],
 })
-
 export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     injector: Injector;
     CONFIG: IConfig;
@@ -73,7 +72,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
         combineLatest(this.route.params, this.route.queryParams)
             .pipe(
                 map(results => ({ params: results[0], query: results[1] })),
-                untilDestroyed(this)
+                untilDestroyed(this),
             )
             .subscribe(results => {
                 if (results.params.id) {
@@ -99,20 +98,21 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                         label: this.LANG['How it works'],
                                         // path  : 'how-it-works',
                                         path: '',
-                                        query
+                                        query,
                                     },
                                     {
                                         id: 'how-to-setup',
                                         label: this.LANG['How to setup?'],
                                         path: 'how-to-setup',
-                                        query
-                                    }
-                                ]
-                            }
-                        ]
+                                        query,
+                                    },
+                                ],
+                            },
+                        ],
                     };
 
-                    this.integrationService.getIntegrationBy(assetid, results.query.state)
+                    this.integrationService
+                        .getIntegrationBy(assetid, results.query.state)
                         .pipe(untilDestroyed(this))
                         .subscribe(result => {
                             if (result.length) {
@@ -120,7 +120,8 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
 
                                 this.content.base += this.plugin.urlified || assetid;
                                 const childPath = this.route.snapshot.firstChild.routeConfig.path;
-                                const newUrl = this.content.base + (childPath ? '/' + childPath : '');
+                                const newUrl =
+                                    this.content.base + (childPath ? '/' + childPath : '');
                                 let queryParams = '';
                                 if (query) {
                                     queryParams = new URLSearchParams(query).toString();
@@ -128,31 +129,47 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                 this.location.replaceState(newUrl, queryParams);
 
                                 // eslint-disable-next-line camelcase
-                                if (this.plugin.pending || this.plugin.draft || this.plugin.canEdit || this.account?.can_publish_integration) {
+                                if (
+                                    this.plugin.pending ||
+                                    this.plugin.draft ||
+                                    this.plugin.canEdit ||
+                                    this.account?.can_publish_integration
+                                ) {
                                     const ribbonActions: RibbonAction[] = [];
 
                                     // eslint-disable-next-line camelcase
-                                    if (this.plugin.pending && this.account?.can_publish_integration) {
-                                        this.acceptProcess = this.processService.createProcess(() => {
-                                            return this.cloudApiService.acceptReview(this.plugin.review_id);
-                                        }, {
-                                            successMessage: this.LANG.account.agreementAccepted
-                                        }).then(() => {
-                                            this.router.navigate([this.uriService.getURL()]);
-                                            this.ribbonService.hide();
-                                        });
+                                    if (
+                                        this.plugin.pending &&
+                                        this.account?.can_publish_integration
+                                    ) {
+                                        this.acceptProcess = this.processService
+                                            .createProcess(
+                                                () => {
+                                                    return this.cloudApiService.acceptReview(
+                                                        this.plugin.review_id,
+                                                    );
+                                                },
+                                                {
+                                                    successMessage:
+                                                        this.LANG.account.agreementAccepted,
+                                                },
+                                            )
+                                            .then(() => {
+                                                this.router.navigate([this.uriService.getURL()]);
+                                                this.ribbonService.hide();
+                                            });
 
                                         ribbonActions.push(
                                             {
                                                 type: 'process-button',
                                                 text: this.LANG.ribbon.integration.accept,
-                                                value: this.acceptProcess
+                                                value: this.acceptProcess,
                                             },
                                             {
                                                 type: 'link',
                                                 text: this.LANG.ribbon.integration.reject,
-                                                value: `/admin/cms/assetcustomizationreview/${this.plugin.review_id}/change/`
-                                            }
+                                                value: `/admin/cms/assetcustomizationreview/${this.plugin.review_id}/change/`,
+                                            },
                                         );
                                     }
 
@@ -160,14 +177,19 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                         ribbonActions.push({
                                             type: 'link',
                                             text: this.LANG.ribbon.integration.backToEditText,
-                                            value: this.CONFIG.integration.adminLink.replace('%ID%', this.plugin.id)
+                                            value: this.CONFIG.integration.adminLink.replace(
+                                                '%ID%',
+                                                this.plugin.id,
+                                            ),
                                         });
                                     }
 
                                     const preview = this.plugin.pending || this.plugin.draft;
                                     this.ribbonService.show(
-                                        preview ? this.LANG.ribbon.integration.previewRibbon : this.LANG.ribbon.integration.publishedRibbon,
-                                        ribbonActions
+                                        preview
+                                            ? this.LANG.ribbon.integration.previewRibbon
+                                            : this.LANG.ribbon.integration.publishedRibbon,
+                                        ribbonActions,
                                     );
                                 }
 
@@ -176,13 +198,15 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                         this.LANG.pageDescriptions.integrationDetails,
                                         {
                                             PLUGIN_NAME: this.plugin.information.name,
-                                            PLUGIN_SHORT_DESCRIPTION: this.CONFIG.vmsName
-                                        })
+                                            PLUGIN_SHORT_DESCRIPTION: this.CONFIG.vmsName,
+                                        },
+                                    ),
                                 );
 
                                 this.integrationService.setIntegrationPlugin(this.plugin);
                             }
-                        }).add(() => {
+                        })
+                        .add(() => {
                             if (!this.plugin) {
                                 this.injector.get(NxPageService).redirect404();
                             }
@@ -193,15 +217,12 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.pageService.setDesktopLayout();
-        this.menuService
-            .selectedDetailsSection
-            .pipe(untilDestroyed(this))
-            .subscribe(selection => {
-                if (this.content) {
-                    this.content.selectedDetailsSection = selection;
-                    this.content = { ...this.content }; // trigger onChange
-                }
-            });
+        this.menuService.selectedDetailsSection.pipe(untilDestroyed(this)).subscribe(selection => {
+            if (this.content) {
+                this.content.selectedDetailsSection = selection;
+                this.content = { ...this.content }; // trigger onChange
+            }
+        });
 
         this.accountService.get().then(account => {
             if (account) {
@@ -225,11 +246,11 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                 value: this.LANG.privacyPolicy.integration,
                 params: {
                     INTEGRATION_COMPANY: this.plugin.information.companyName,
-                    INTEGRATION_PRIVACY_POLICY: this.plugin.information.companyPrivacyPolicyLink
-                }
+                    INTEGRATION_PRIVACY_POLICY: this.plugin.information.companyPrivacyPolicyLink,
+                },
             },
             assetId: this.plugin.id,
-            asset: this.plugin.information.name
+            asset: this.plugin.information.name,
         };
         this.dialogs.message({ messageType: dialogs.message.type.integration, data });
     }
@@ -258,7 +279,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
             footer: {
                 actionLabel: 'Add to dashboard',
                 cancelLabel: 'Download file',
-            }
+            },
         });
         const queryParams = { widgetUrl: url };
         this.handleDashboardOpen(open, queryParams, url);
@@ -271,7 +292,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
             footer: {
                 actionLabel: 'Update dashboard',
                 cancelLabel: 'Download file',
-            }
+            },
         });
         const queryParams = { dashboardUrl: url };
         this.handleDashboardOpen(open, queryParams, url);

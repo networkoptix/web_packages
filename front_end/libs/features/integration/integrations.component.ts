@@ -19,7 +19,6 @@ import { IntegrationService } from './integration.service';
     templateUrl: 'integrations.component.html',
     styleUrls: ['integrations.component.scss'],
 })
-
 export class NxIntegrationsComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG = staticLang;
@@ -34,7 +33,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
         analytics: false,
         cameras: false,
         home: false,
-        psim: false
+        psim: false,
     };
 
     private setupDefaults(configService): void {
@@ -58,19 +57,20 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         // Example URI
         // /integrations?search=node
-        this.uri.getParams()
+        this.uri
+            .getParams()
             .pipe(untilDestroyed(this))
             .subscribe(params => {
                 this.params = { ...params };
                 this.filterModel.query = this.params.search || '';
             });
 
-        this.integrations.pluginsSubject
-            .pipe(untilDestroyed(this))
-            .subscribe((result: any) => {
+        this.integrations.pluginsSubject.pipe(untilDestroyed(this)).subscribe(
+            (result: any) => {
                 if (result) {
                     if (!this.CONFIG.cloudCapabilities.integrationStore) {
-                        this.accountService.requireLogin()
+                        this.accountService
+                            .requireLogin()
                             .then(() => {
                                 this.setIntegrations(result);
                             })
@@ -81,10 +81,12 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
                 } else {
                     this.elements = undefined;
                 }
-            }, error => {
+            },
+            error => {
                 console.error('Integration plugins error -> ', error);
                 this.show404();
-            });
+            },
+        );
     }
 
     private show404(): any {
@@ -115,7 +117,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
                 this.filterModel.tags.push({
                     id: item.id,
                     label: item.name,
-                    value: false
+                    value: false,
                 });
             }
         });
@@ -125,22 +127,14 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
     }
 
     setFilter() {
-        const IGNORE_KEYS = [
-            'downloadFilesOrder',
-            'id',
-            'lastModified',
-            'link',
-            'mine'
-        ];
+        const IGNORE_KEYS = ['downloadFilesOrder', 'id', 'lastModified', 'link', 'mine'];
         const searchBy = (item, query) => {
             return Object.keys(item).find(key => {
                 // Ignore values that are undefined or that dont help the search.
                 if (!item[key] || IGNORE_KEYS.includes(key)) {
                     return false;
                 }
-                return JSON.stringify(Object.values(item[key]))
-                    .toLowerCase()
-                    .includes(query);
+                return JSON.stringify(Object.values(item[key])).toLowerCase().includes(query);
             });
         };
 
@@ -173,9 +167,6 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
 
     markMatch(item, text): void {
         const pattern = new RegExp(text, 'gm');
-        item.name = item.name.replace(
-            pattern,
-            '<span class="marked">' + text + '</span>'
-        );
+        item.name = item.name.replace(pattern, '<span class="marked">' + text + '</span>');
     }
 }

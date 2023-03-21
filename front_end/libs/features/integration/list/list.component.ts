@@ -12,7 +12,6 @@ import { NgChanges } from '@utils/ng-changes';
     templateUrl: 'list.component.html',
     styleUrls: ['list.component.scss'],
 })
-
 export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
     @Input() list;
 
@@ -32,8 +31,9 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
 
     ngOnChanges(changes: NgChanges<NxIntegrationsListComponent>): void {
         if (changes.list.currentValue) {
-            const haveInReviewOrDraft = changes.list.currentValue
-                .some(plugin => plugin.pending || plugin.draft);
+            const haveInReviewOrDraft = changes.list.currentValue.some(
+                plugin => plugin.pending || plugin.draft,
+            );
 
             if (haveInReviewOrDraft) {
                 this.showRibbon();
@@ -54,13 +54,12 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
     }
 
     private showRibbon(): void {
-        this.ribbonService.show(
-            this.LANG.ribbon.integration.previewRibbon,
-            [{
+        this.ribbonService.show(this.LANG.ribbon.integration.previewRibbon, [
+            {
                 type: 'link',
                 text: this.LANG.ribbon.integration.backToEditText,
-                value: this.CONFIG.integration.adminLink.replace('%ID%/pages/', '')
-            }]
-        );
+                value: this.CONFIG.integration.adminLink.replace('%ID%/pages/', ''),
+            },
+        ]);
     }
 }

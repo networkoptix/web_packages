@@ -16,7 +16,6 @@ import { IntegrationService } from '../../integration.service';
     templateUrl: 'setup.component.html',
     styleUrls: ['setup.component.scss'],
 })
-
 export class NxSetupComponent implements OnInit, OnDestroy {
     LANG = staticLang;
 
@@ -37,17 +36,16 @@ export class NxSetupComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.pluginSubscription = this.integrationService.pluginSubject
-            .subscribe(plugin => {
-                this.plugin = plugin;
-                this.pageService.pageDescription = this.translateService.instant(
-                    this.LANG.pageDescriptions.integrationSetup,
-                    {
-                        PLUGIN_NAME: this.plugin.information?.name,
-                        PLUGIN_SHORT_DESCRIPTION:
-                            this.plugin.information?.shortDescription
-                    });
-            });
+        this.pluginSubscription = this.integrationService.pluginSubject.subscribe(plugin => {
+            this.plugin = plugin;
+            this.pageService.pageDescription = this.translateService.instant(
+                this.LANG.pageDescriptions.integrationSetup,
+                {
+                    PLUGIN_NAME: this.plugin.information?.name,
+                    PLUGIN_SHORT_DESCRIPTION: this.plugin.information?.shortDescription,
+                },
+            );
+        });
     }
 
     ngOnDestroy(): void {}

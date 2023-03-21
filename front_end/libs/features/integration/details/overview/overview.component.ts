@@ -14,7 +14,6 @@ import { IntegrationService } from '../../integration.service';
     templateUrl: 'overview.component.html',
     styleUrls: ['overview.component.scss'],
 })
-
 export class NxOverviewComponent implements OnInit, OnDestroy {
     plugin: Partial<Integration>;
     pluginSubscription: SubscriptionLike;
@@ -32,12 +31,10 @@ export class NxOverviewComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.pluginSubscription = this.integrationService.pluginSubject
-            .subscribe(plugin => {
-                this.plugin = plugin;
-                this.pageService.pageDescription =
-                    this.plugin.information?.shortDescription;
-            });
+        this.pluginSubscription = this.integrationService.pluginSubject.subscribe(plugin => {
+            this.plugin = plugin;
+            this.pageService.pageDescription = this.plugin.information?.shortDescription;
+        });
     }
 
     ngOnDestroy(): void {}
