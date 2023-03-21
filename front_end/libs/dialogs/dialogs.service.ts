@@ -1,7 +1,7 @@
 import { Dialog, DialogConfig as CdkDialogConfig } from '@angular/cdk/dialog';
 import { ComponentType, Overlay } from '@angular/cdk/overlay';
 import { Location } from '@angular/common';
-import { Injectable, Injector, TemplateRef } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { SubscriptionLike, firstValueFrom } from 'rxjs';
 
@@ -24,8 +24,9 @@ import { toast } from '../variables/static-variables';
 import { DialogBase } from './dialog-base';
 import { DialogConfig } from './dialog-config';
 import { DIALOG_SIZE as DIALOG_SIZE_V2 } from './dialog-config-v2';
-import { DIALOG_SIZE, defaultConfig, infoDialogConfig } from './dialog-ref';
+import { DIALOG_SIZE, defaultConfig } from './dialog-ref';
 import * as Dt from './dialogs.types';
+import { NewFeatureTemplate } from './new-feature/new-feature.component.types';
 import { NxToastService } from './toast.service';
 import { TfaAction } from './two-fa/two-fa.component.types';
 
@@ -365,33 +366,6 @@ export class NxDialogsService extends DialogBase {
         return this.open(component, dialogConfig).afterClosed();
     }
 
-    // New Feature Info ModalContent
-
-    /**
-     * Factory to create method for the new feature information modal.
-     *
-     * For hard coded views use the template name, for dynamic view then pass a TemplateRef.
-     *
-     * @param template: string | TemplateRef<T>
-     * @returns: () => Promise<any>
-     */
-    #newFeatureMethodFactory = <T>(
-        template: string | TemplateRef<T>
-    ) => async (data?: Record<string, unknown>) => {
-        await this.preloadDialogsModule();
-        const component = await import('./new-feature/new-feature.component').then(m => m.NewFeatureInformationModalContent);
-
-        return this.open(
-            component, {
-                ...infoDialogConfig,
-                data: { ...data, template }
-            }).afterClosed();
-    };
-
-    public cloudStorageInfo = this.#newFeatureMethodFactory('cloudStorage');
-
-    public cloudLayoutsInfo = this.#newFeatureMethodFactory('cloudLayouts');
-
     /* ANGULAR CDK DIALOGS */
     /* General steps for migrating a dialog to angular CDK
     1. Add data and return types to dialogs.types.ts.
@@ -650,4 +624,29 @@ export class NxDialogsService extends DialogBase {
         () => import('./add-partner/add-partner.component').then(m => m.AddPartnerModalContent),
         { autoFocus: 'input' },
     );
+
+    /* New feature */
+    /**
+     * Factory to create method for the new feature information modal.
+     *
+     * For hard coded views use the template enum, for dynamic view pass a TemplateRef.
+     */
+    private newFeatureFactory<D extends Dt.NewFeatureData>(
+        content: D['content'],
+        customConfig: CdkDialogConfig<never> = {},
+    ): (otherData: D['data']) => Promise<Dt.NewFeature['return']> {
+        return async otherData => {
+            const component = await import('./new-feature/new-feature.component').then(m => m.NewFeatureInformationModalContent);
+            const data = { content, data: otherData } as D;
+            const configWithData: CdkDialogConfig<D> = {
+                width: DIALOG_SIZE_V2.INFO,
+                ...customConfig,
+                data,
+            };
+            return this.openV2(component, configWithData);
+        };
+    }
+
+    cloudStorageInfo = this.newFeatureFactory<Dt.CloudStorageInfoData>(NewFeatureTemplate.CloudStorage);
+    cloudLayoutsInfo = this.newFeatureFactory<Dt.CloudLayoutsInfoData>(NewFeatureTemplate.CloudLayouts);
 }

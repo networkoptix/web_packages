@@ -23,11 +23,6 @@ export const defaultConfig: DialogConfig = {
     width: DIALOG_SIZE.NORMAL,
 };
 
-export const infoDialogConfig: DialogConfig = {
-    ...defaultConfig,
-    width: DIALOG_SIZE.INFO,
-};
-
 /**
  * A reference to the dialog itself.
  * Can be injected into the component added to the overlay and then used to close itself.

@@ -1,3 +1,4 @@
+import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import {
     Component,
     Inject,
@@ -5,36 +6,43 @@ import {
 } from '@angular/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { DialogRef, DIALOG_DATA } from '@dialogs/dialog-ref';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import type { NewFeature as DT } from '@dialogs/dialogs.types';
+import { ModalBase } from '@dialogs/modal-base';
 import { icons } from '@lib/variables/static-variables';
 import { LicenseManager } from '@services/system.service/license-manager/licence-manager';
+
+import { NewFeatureTemplate } from './new-feature.component.types';
 
 @Component({
     selector: 'nx-modal-new-feature-content',
     templateUrl: 'new-feature.component.html',
     styleUrls: ['new-feature.component.scss'],
 })
-export class NewFeatureInformationModalContent<T> {
+export class NewFeatureInformationModalContent extends ModalBase<DT['return']> {
+    NewFeatureTemplate = NewFeatureTemplate;
+    licenseManager?: LicenseManager;
+
     templateName: string;
-    dynamicTemplate: TemplateRef<T>;
+    dynamicTemplate: TemplateRef<unknown>;
     icons = icons;
 
     LANG = staticLang;
     constructor(
         public dialogsService: NxDialogsService,
-        private dialogRef: DialogRef,
-        @Inject(DIALOG_DATA) public dialogData: {
-            template: string | TemplateRef<T>;
-            licenseManager?: LicenseManager;
-        }
+        protected dialogRef: DialogRef<DT['return']>,
+        @Inject(DIALOG_DATA) dialogData: DT['data'],
     ) {
-        if (dialogData.template instanceof TemplateRef) {
-            this.dynamicTemplate = dialogData.template;
+        super(dialogRef);
+        if (dialogData.content instanceof TemplateRef) {
+            this.dynamicTemplate = dialogData.content;
         } else {
-            this.templateName = dialogData.template;
+            this.templateName = dialogData.content;
+            if (dialogData.content === NewFeatureTemplate.CloudStorage) {
+                this.licenseManager = dialogData.data;
+            }
         }
     }
 
-    close = (startTour = false): void => this.dialogRef.close(startTour);
+    override close = (startTour: DT['return'] = false): void => this.dialogRef.close(startTour);
 }

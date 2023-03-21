@@ -164,7 +164,7 @@ export class NxCloudStorageComponent implements OnInit {
 
     ngOnInit(): void {
         if (this.type !== 'servers') {
-            this.cloudApi.checkFeatureNotice('cloudStorage', () => this.dialogService.cloudStorageInfo({ licenseManager: this.licenseManager })).toPromise();
+            this.cloudApi.checkFeatureNotice('cloudStorage', () => this.dialogService.cloudStorageInfo(this.licenseManager)).toPromise();
             this.menuService.section = menus.systemSettings.admin.id;
             this.menuService.detail = menus.systemSettings.cloudStorage.id;
         }

@@ -1,5 +1,5 @@
 import type { SelectionModel } from '@angular/cdk/collections';
-import type { EventEmitter } from '@angular/core';
+import type { EventEmitter, TemplateRef } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
 import type { Bookmark } from '@pages/systems/bookmarks/bookmarks.types';
@@ -11,6 +11,7 @@ import type { LicenseManager } from '@services/system.service/license-manager/li
 import type { NxSystem } from '@services/system.service/system';
 import type { NxUser } from '@services/system.service/user-manager/user-manager-types';
 
+import { NewFeatureTemplate } from './new-feature/new-feature.component.types';
 import { TfaAction } from './two-fa/two-fa.component.types';
 
 export interface DialogType<D = unknown, R = unknown> {
@@ -177,3 +178,19 @@ export type BookmarkDetails = DialogType<
 export type AddPartnerBrand = DialogType<void, number>;
 export type AddCustomizationUser = DialogType<void, number>;
 export type AddPartner = DialogType<void, number>;
+
+/* New feature */
+export interface NewFeatureDynamicData {
+    content: TemplateRef<unknown>;
+    data: void ;
+}
+export interface CloudStorageInfoData {
+    content: NewFeatureTemplate.CloudStorage;
+    data: LicenseManager;
+}
+export interface CloudLayoutsInfoData {
+    content: NewFeatureTemplate.CloudLayouts;
+    data: void;
+}
+export type NewFeatureData = NewFeatureDynamicData | CloudStorageInfoData | CloudLayoutsInfoData;
+export type NewFeature = DialogType<NewFeatureData, boolean>;

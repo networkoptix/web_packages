@@ -27,7 +27,7 @@
 <!-- Modal Content -->
 <ng-template #hardCodedTemplate>
     <ng-container [ngSwitch]="templateName">
-        <div *ngSwitchCase="'cloudStorage'">
+        <div *ngSwitchCase="NewFeatureTemplate.CloudStorage">
             <div class="heading">
                 <svg-icon
                     nx-add-svg-src
@@ -70,15 +70,13 @@
                 translate
                 (click)="
                     close();
-                    dialogsService.cloudStorageActivate({
-                        licenseManager: dialogData.licenseManager
-                    })
+                    dialogsService.cloudStorageActivate({ licenseManager })
                 "
             >
                 Activate Cloud Storage
             </button>
         </div>
-        <div *ngSwitchCase="'cloudLayouts'">
+        <div *ngSwitchCase="NewFeatureTemplate.CloudLayouts">
             <div class="heading cloud-layouts">
                 <svg-icon
                     nx-add-svg-src

@@ -47,7 +47,7 @@ import { Mandatory2faModalModule } from './mandatory-2fa/mandatory-2fa.module';
 import { MergeModalContent } from './merge/merge.component';
 import { NxMergeModule } from './merge/merge.refactor.module';
 import { MessageModalModule } from './message/message.module';
-import { NewFeatureInformationModalContent } from './new-feature/new-feature.component';
+import { NewFeatureInformationModalModule } from './new-feature/new-feature.module';
 import { RefreshSessionModalModule } from './refresh-session/refresh-session.module';
 import { RemoveSystemModalModule } from './remove-system/remove-system.module';
 import { RemoveUserModalModule } from './remove-user/remove-user.module';
@@ -110,6 +110,7 @@ import { WizardModalContent } from './wizard/wizard.component';
         AddCustomizationUserModalModule,
         AddPartnerModalModule,
         CloudStorageModule,
+        NewFeatureInformationModalModule,
     ],
     declarations: [
         AddStorageModalContent,
@@ -129,7 +130,6 @@ import { WizardModalContent } from './wizard/wizard.component';
         AddWidgetModalContent,
         SelectTimeRangeModalContent,
         ReserveSpaceWarningModalContent,
-        NewFeatureInformationModalContent,
     ],
     providers: [],
     exports: [
