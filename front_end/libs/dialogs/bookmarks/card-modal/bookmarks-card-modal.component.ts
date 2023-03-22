@@ -17,6 +17,7 @@ export class NxBookmarksCardModalComponent {
     bookmark: Bookmark;
     time: string;
     date: string;
+    videoError: boolean;
 
     constructor(
         public dialogRef: DialogRef<DT['return']>,

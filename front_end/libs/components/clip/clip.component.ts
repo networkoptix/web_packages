@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { icons } from '@lib/variables/static-variables';
@@ -12,6 +12,7 @@ export class ClipComponent {
     @Input() sourceUrl: string;
     @Input() posterUrl: string;
     @IBool() @Input() disableDownload: CoercedBoolInput;
+    @Output() error = new EventEmitter<void>();
 
     readonly internalPoster: string;
     posterLoadingError = false;
@@ -24,6 +25,7 @@ export class ClipComponent {
         switch (e.type) {
             case 'error':
                 this.posterLoadingError = true;
+                this.error.emit();
                 break;
             case 'loadeddata':
                 this.posterLoadingError = false;

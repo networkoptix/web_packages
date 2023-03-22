@@ -1324,6 +1324,7 @@
     "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
     "The user is disabled. Please contact your system administrator.": "The user is disabled. Please contact your system administrator.",
     "The user was not found in this system": "The user was not found in this system",
+    "The video format for this bookmark is not supported by your browser. Please download it to view locally": "The video format for this bookmark is not supported by your browser. Please download it to view locally",
     "Themes": "Themes",
     "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server\u2019s local network to make them discoverable, or ask the system administrator to change your access level.": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server\u2019s local network to make them discoverable, or ask the system administrator to change your access level.",
     "There are no other users on the system besides you. Add them to system to be able to transfer rights": "There are no other users on the system besides you. Add them to system to be able to transfer rights",

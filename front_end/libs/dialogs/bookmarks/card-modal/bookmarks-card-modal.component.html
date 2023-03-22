@@ -18,8 +18,21 @@
                 [sourceUrl]="bookmark.src"
                 [posterUrl]="bookmark.thumbnail | async"
                 disableDownload
+                (error)="videoError = true"
             >
             </nx-clip>
+        </div>
+        <div
+            class="error"
+            [ngClass]="{ 'error--visible': videoError }"
+        >
+            <p
+                class="error__text"
+                translate
+            >
+                The video format for this bookmark is not supported by your browser. Please download
+                it to view locally
+            </p>
         </div>
         <div class="date">{{ date }} • {{ time }}</div>
         <div class="deviceName">{{ bookmark.deviceName }}</div>

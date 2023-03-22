@@ -14,6 +14,28 @@
     .modal-body {
         padding: 10px !important;
 
+        .error {
+            height: 0px;
+            opacity: 0;
+            visibility: hidden;
+            transition: visibility 0.50s ease 0.2s,
+                opacity 0.50s ease 0.2s,
+                height 0.50s ease 0.2s,
+                margin-top 0.50s ease 0.2s;
+            
+            &--visible {
+                visibility: visible;
+                opacity: 1;
+                height: 42px;
+                margin-top: 5px;
+            }
+
+            &__text {
+                font-size: 14px;
+                margin: 0;
+            }
+        }
+
         .date {
             font-family: $font-family-medium;
             font-size: 14px;
