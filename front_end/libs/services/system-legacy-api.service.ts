@@ -11,7 +11,8 @@ import {
     retryWhen,
     timeout,
     tap,
-    share
+    share,
+    catchError
 } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
@@ -1113,8 +1114,11 @@ export class NxSystemAPI {
         }
 
         const url = this.generateGetUrl(endpoint, data).replace(this.urlBase, '');
-        return this.get(url, undefined, { responseType: 'blob' })
-            .pipe(map(blob => blob ? URL.createObjectURL(blob) : undefined), share());
+        return this.get(url, undefined, { responseType: 'blob' }).pipe(
+            catchError(e => of(new Blob())),
+            map(blob => URL.createObjectURL(blob || new Blob())),
+            share()
+        );
     }
 
     hlsUrl(cameraId: string, position: string = 'now', resolution: string = '') {
