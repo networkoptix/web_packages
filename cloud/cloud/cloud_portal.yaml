@@ -24,6 +24,9 @@ cloud_storages:
 trafficRelay:
     host: 'relay-bur.vmsproxy.hdw.mx'
 
+updates:
+    url: '$UPDATES_URL'
+
 bucket: 'cloud-portal'
 
 smtp:

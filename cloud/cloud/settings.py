@@ -835,9 +835,10 @@ BROADCAST_NOTIFICATIONS_SUPERUSERS_ONLY = 'debug' in conf and conf['debug']
 NOTIFICATIONS_AUTO_SUBSCRIBE = False
 
 IPVD_CONNECT = 'https://cameras.networkoptix.com/api/v1/cacameras/'
-UPDATE_JSON = 'https://updates.networkoptix.com/updates.json'
-DOWNLOADS_JSON = 'https://updates.networkoptix.com/{{customization}}/downloads.json'
-DOWNLOADS_VERSION_JSON = 'https://updates.networkoptix.com/{{customization}}/{{build}}/downloads.json'
+UPDATES_URL_BASE = conf['updates'].get('url') or 'https://updates.networkoptix.com'
+UPDATE_JSON = f'{UPDATES_URL_BASE}/updates.json'
+DOWNLOADS_JSON = UPDATES_URL_BASE + '/{{customization}}/downloads.json'
+DOWNLOADS_VERSION_JSON = UPDATES_URL_BASE + '/{{customization}}/{{build}}/downloads.json'
 
 MAX_RETRIES = conf['max_retries']
 CLEAR_HISTORY_RECORDS_OLDER_THAN_X_DAYS = 15
