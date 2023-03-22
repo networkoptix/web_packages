@@ -679,7 +679,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
     getMediaServersAndCameras(): Observable<t.AggregatedServersAndCameras> {
         const cameras = this.get<t.ec2Camera[]>('/ec2/getCamerasEx');
-        const servers = this.getMediaServers(true);
+        const servers = this.getMediaServers(false);
         return combineLatest<[t.ec2MediaServer[], t.ec2Camera[]]>([servers, cameras]).pipe(
             map<[t.ec2MediaServer[], t.ec2Camera[]], t.AggregatedServersAndCameras>(([mediaServers, cameras]) => ({
                 error: '0',
