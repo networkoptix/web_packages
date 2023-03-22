@@ -191,7 +191,7 @@ export class NxBookmarksComponent implements OnInit {
         const mediaserver = this.system.mediaserver as NxSystemRestAPI;
         const params: BookmarksParams = {
             order: 'desc',
-            _orderBy: 'creationTimeMs'
+            _orderBy: 'startTimeMs'
         };
         const bookmarksPoll$: Observable<Bookmark[]> = timer(0, pollingTimeout).pipe(
             // Promise.all for Observables.
@@ -230,7 +230,7 @@ export class NxBookmarksComponent implements OnInit {
                         this.creationCutOffTimeMS$.next(params.creationStartTimeMs);
                     }
                     this.newCreationCutOffTimeMS$.next(params.creationStartTimeMs);
-                    bks = bks.sort(paramSortFunc(b => b.creationTimeMs));
+                    bks = bks.sort(paramSortFunc(b => b.startTimeMs));
                     this._bookmarks = this.mergeBookmarks(this._bookmarks, bks);
                 }
                 return this._bookmarks;
