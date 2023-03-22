@@ -17,7 +17,7 @@ class Command(BaseCommand):
         exit_code = 0
         now = datetime.now()
 
-        unsent_emails_for_today = Message.objects.filter(created_date=now.date(), send_date=None)
+        unsent_emails_for_today = Message.objects.filter(created_date__gte=now.date(), send_date=None)
         unsent_emails_for_today_count = unsent_emails_for_today.count()
 
         if unsent_emails_for_today_count > 0:
@@ -26,7 +26,7 @@ class Command(BaseCommand):
                 exit_code = EMAIL_WAIT_TIME_THRESHOLD < time_for_last_email
             else:
                 oldest_waiting_email = unsent_emails_for_today.order_by('created_date').first()
-                waiting_time_for_oldest_email = int((now - oldest_waiting_email.first().create_date).total_seconds())
+                waiting_time_for_oldest_email = int((now - oldest_waiting_email.create_date).total_seconds())
                 exit_code = EMAIL_WAIT_TIME_THRESHOLD < waiting_time_for_oldest_email
             msg = f"Emails are in queue and are {'not ' if exit_code else ''}being sent. " \
                   f"The queue currently has {unsent_emails_for_today_count} unsent emails."
