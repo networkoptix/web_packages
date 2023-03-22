@@ -178,6 +178,8 @@ export type BookmarkDetails = DialogType<
 export type AddPartnerBrand = DialogType<void, number>;
 export type AddCustomizationUser = DialogType<void, number>;
 export type AddPartner = DialogType<void, number>;
+export type AddOrgUser = DialogType<void, void>;
+export type EditOrgUser = DialogType<void, void>;
 
 /* New feature */
 export interface NewFeatureDynamicData {

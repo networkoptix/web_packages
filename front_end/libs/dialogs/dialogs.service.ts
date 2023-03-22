@@ -625,6 +625,14 @@ export class NxDialogsService extends DialogBase {
         { autoFocus: 'input' },
     );
 
+    addOrgUser = this.dialogV2Factory<Dt.AddOrgUser>(
+        () => import('./add-org-user/add-org-user.component').then(m => m.NxAddOrgUserModalContent),
+    );
+
+    editOrgUser = this.dialogV2Factory<Dt.AddOrgUser>(
+        () => import('./edit-org-user/edit-org-user.component').then(m => m.NxEditOrgUserModalContent),
+    );
+
     /* New feature */
     /**
      * Factory to create method for the new feature information modal.

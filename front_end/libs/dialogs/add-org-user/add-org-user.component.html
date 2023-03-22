@@ -1,0 +1,84 @@
+<form
+    #addUserForm="ngForm"
+    name="addUserForm"
+    novalidate
+>
+    <div class="modal-header">
+        <h1
+            class="modal-title"
+            translate
+        >
+            Add User
+        </h1>
+        <button
+            *ngIf="closable"
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="close()"
+        >
+            <span class="close-content"></span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label
+                for="userEmail"
+                translate
+                >Email</label
+            >
+            <nx-email-input
+                class="fs-mask form-component"
+                id="userEmail"
+                name="userEmail"
+                componentId="userEmail"
+                [(ngModel)]="email"
+                [setFocus]="true"
+                #userEmail="ngModel"
+            >
+            </nx-email-input>
+        </div>
+        <div class="form-group">
+            <label
+                for="targetGroup"
+                translate
+                >Groups</label
+            >
+            <nx-select
+                id="targetGroup"
+                name="targetGroup"
+                [items]="groups"
+                [selected]="selectedGroup"
+                [(ngModel)]="selectedGroup"
+                canSearch
+            ></nx-select>
+        </div>
+        <div class="form-group">
+            <label
+                for="permissions"
+                translate
+                >Access Level</label
+            >
+            <nx-multi-select
+                id="permissions"
+                name="permissions"
+                [items]="permissions"
+                [ngModel]="selectedPermissions"
+                (ngModelChange)="updatePermissions($event)"
+            ></nx-multi-select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <nx-process-button
+            [form]="addUserForm"
+            [process]="addProcess"
+            [buttonText]="'Add' | translate"
+        ></nx-process-button>
+        <nx-cancel-button
+            [process]="addProcess"
+            [cancelFn]="unlock"
+            [discardFn]="close"
+        ></nx-cancel-button>
+    </div>
+</form>

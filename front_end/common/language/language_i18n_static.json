@@ -729,6 +729,9 @@
             "title": "Two factor is required!",
             "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
             "unsupportedSystem": "To log in to this system disable \"Ask for verification code on every login with %CLOUD_NAME% account\" in your <a href=\"/account/security\">account settings</a>."
+        },
+        "editOrgUser": {
+            "title": "Edit user - {user}"
         }
     },
     "downloads": {

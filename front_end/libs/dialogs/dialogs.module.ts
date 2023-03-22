@@ -22,6 +22,7 @@ import { DirectivesModule } from '@directives/directives.module';
 
 import { AddPartnerBrandModalModule } from './add-brand/add-brand.module';
 import { AddCustomizationUserModalModule } from './add-customization-user/add-customization-user.module';
+import { NxAddOrgUserModule } from './add-org-user/add-org-user.module';
 import { AddPartnerModalModule } from './add-partner/add-partner.module';
 import { AddStorageModalContent } from './add-storage/add-storage.component';
 import { AddUserModalModule } from './add-user/add-user.module';
@@ -40,6 +41,7 @@ import { DeleteCloudUserModalModule } from './delete-cloud-user/delete-cloud-use
 import { DetachServerModalContent } from './detach-server/detach-server.component';
 import { DisconnectModalModule } from './disconnect/disconnect.module';
 import { DownloadAsyncModalContent } from './download-async/download-async.component';
+import { NxEditOrgUserModule } from './edit-org-user/edit-org-user.module';
 import { EditModalContent } from './edit/edit.component';
 import { EmbedModalContent } from './embed/embed.component';
 import { GenericDialogModule } from './generic/generic.module';
@@ -111,6 +113,8 @@ import { WizardModalContent } from './wizard/wizard.component';
         AddPartnerModalModule,
         CloudStorageModule,
         NewFeatureInformationModalModule,
+        NxAddOrgUserModule,
+        NxEditOrgUserModule,
     ],
     declarations: [
         AddStorageModalContent,
