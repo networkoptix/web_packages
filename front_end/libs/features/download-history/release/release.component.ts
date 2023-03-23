@@ -22,6 +22,9 @@ export class ReleaseComponent implements OnInit {
     cardExpanded: Record<string, boolean>;
 
     ngOnInit(): void {
+        this.release.platforms.forEach(({ files }, i) => {
+            this.release.platforms[i].files = files.filter(({ appType }) => !['_benchmark', '_debug', '_refs', '_update'].some(partialAppType => appType.includes(partialAppType)));
+        });
         this.cardExpanded = Object.fromEntries(
             this.release.platforms.map(p => [p.name, false])
         );
