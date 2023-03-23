@@ -277,6 +277,7 @@
             <br /><br />
 
             <nx-slider
+                [ngModelOptions]="{ standalone: true }"
                 [range]="{ start: 0, end: 360 }"
                 [(ngModel)]="sliderValue"
                 (onDrag)="sliderValue = $event"

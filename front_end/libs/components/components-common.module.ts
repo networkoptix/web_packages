@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 
+import { NxTableModule } from '@components/table/table.module';
+
 import { ApplyModule } from './apply/apply.module';
 import { CarouselModule } from './carousel/carousel.module';
 import { CheckboxModule } from './checkbox/checkbox.module';
@@ -67,6 +69,7 @@ import { UpdateWebadminSessionModule } from './update-webadmin-session/update-we
         TooltipModule,
         UpdateWebadminSessionModule,
         MultiLineEllipsisModule,
+        NxTableModule,
     ],
     exports: [
         ActiveSystemModule,
@@ -101,6 +104,7 @@ import { UpdateWebadminSessionModule } from './update-webadmin-session/update-we
         TooltipModule,
         UpdateWebadminSessionModule,
         MultiLineEllipsisModule,
+        NxTableModule,
     ]
 })
 

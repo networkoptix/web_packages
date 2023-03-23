@@ -1,0 +1,42 @@
+@use "typography" as *;
+
+:host {
+    //.nx-table {
+    //    display: grid;
+    //
+    //    border: 1px solid var(--border-color);
+    //    background-color: var(--body-bg);
+    //
+    //    &--header {
+    //        background-color: var(--card-header-bg);
+    //        border-bottom: 1px solid var(--border-color);
+    //        grid-template-columns: 50px repeat(4, auto);
+    //
+    //        &-cell {
+    //            @include medium13nocolor;
+    //            color: var(--card-header-text) !important;
+    //            padding: 0.5rem 0;
+    //            text-transform: none;
+    //            overflow-wrap: break-word;
+    //            cursor: pointer;
+    //            border: none;
+    //        }
+    //    }
+    //
+    //    &--body {
+    //        background-color: var(--card-body-bg);
+    //
+    //        &-row {
+    //            &-cell {
+    //                @include regular13nocolor;
+    //                color: var(--label-color) !important;
+    //                padding: 0.5rem 0;
+    //                display: table-cell;
+    //                vertical-align: middle;
+    //                line-height: 1rem;
+    //                border: none;
+    //            }
+    //        }
+    //    }
+    //}
+}

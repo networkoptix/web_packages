@@ -16,6 +16,7 @@ import { NxSliderModule } from '@components/slider/slider.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
+import { TableComponent } from '@pages/sandbox/table/table.component';
 import { WebglComponent } from '@pages/sandbox/webgl/webgl.component';
 import {
     VmsClientModule
@@ -123,6 +124,10 @@ const appRoutes: Routes = [
                 component: ValidationComponent,
             },
             {
+                path: 'table',
+                component: TableComponent,
+            },
+            {
                 path: 'tags',
                 component: TagsComponent,
             },
@@ -174,6 +179,7 @@ const appRoutes: Routes = [
         MasonryGridComponent,
         FormElementsComponent,
         TagsComponent,
+        TableComponent,
         ValidationComponent,
         NxArchSvgComponent,
         NxBasicColorsComponent,

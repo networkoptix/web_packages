@@ -1,0 +1,38 @@
+<div
+    class="mb-3 row m-0 p-3"
+    style="border: 1px solid lightgray"
+>
+    <nx-table [data]="records">
+        <ng-template #headers>
+            <th>
+                <nx-checkbox
+                    name="checkAll"
+                    componentId="checkAll"
+                    (onClick)="selectAll()"
+                >
+                </nx-checkbox>
+            </th>
+            <th>Login</th>
+            <th>Full Name</th>
+            <th>Access Level</th>
+            <th>Groups</th>
+        </ng-template>
+        <ng-template
+            #rows
+            let-row
+        >
+            <td>
+                <nx-checkbox
+                    name="check{{ row.email }}"
+                    componentId="check{{ row.email }}"
+                    (onClick)="selectRecord(row)"
+                >
+                </nx-checkbox>
+            </td>
+            <td>{{ row.email }}</td>
+            <td>{{ row.fullName }}</td>
+            <td>{{ row.accessLevel }}</td>
+            <td>{{ row.group }}</td>
+        </ng-template>
+    </nx-table>
+</div>

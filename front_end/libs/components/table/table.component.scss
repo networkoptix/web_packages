@@ -1,0 +1,18 @@
+// CSS cannot apply to projected markup
+// use _table.scss --TT
+
+:host {
+    width: 100%;
+
+    .nx-table {
+        width: 100%;
+    }
+
+    .big-row {
+        height: 2.5rem;
+
+        &:nth-child(even) {
+            background-color: var(--card-header-bg);
+        }
+    }
+}

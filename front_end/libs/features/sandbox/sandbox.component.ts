@@ -20,7 +20,7 @@ export class NxSandboxComponent {
         this.content = {
             base: '/sandbox',
             selectedSection: 'components',
-            selectedSubSection: 'formComponents',
+            selectedSubSection: 'table',
             level1: [
                 {
                     id: 'colors',
@@ -88,6 +88,10 @@ export class NxSandboxComponent {
                             id: 'validation',
                             label: 'Validation',
                             path: '/validation'
+                        }, {
+                            id: 'table',
+                            label: 'Table',
+                            path: '/table'
                         }, {
                             id: 'tags',
                             label: 'Tags',
