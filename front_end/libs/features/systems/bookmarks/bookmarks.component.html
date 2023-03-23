@@ -45,11 +45,11 @@
             <ng-template #stillLoading>
                 <nx-pre-loader class="bookmarks-preloader"></nx-pre-loader>
             </ng-template>
-            <ng-template #noBookmarks>
-                <div
-                    *ngIf="doneLoading; else stillLoading"
-                    class="no-bookmarks"
-                >
+            <div
+                [class]="bookmarks.length ? 'bookmarks' : 'no-bookmarks'"
+                *ngIf="bookmarks$ | async as bookmarks; else stillLoading"
+            >
+                <ng-container *ngIf="!bookmarks.length">
                     <svg-icon
                         nx-add-svg-src
                         [src]="noBksImgSrc"
@@ -64,12 +64,7 @@
                     >
                         You don't have any Bookmarks yet.
                     </h2>
-                </div>
-            </ng-template>
-            <div
-                class="bookmarks"
-                *ngIf="bookmarks$ | async as bookmarks; else noBookmarks"
-            >
+                </ng-container>
                 <div
                     *ngFor="let bookmark of bookmarks; trackBy: trackBookmarkById"
                     class="bookmarks-container"

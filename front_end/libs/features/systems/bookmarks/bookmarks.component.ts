@@ -3,7 +3,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { DateRange } from '@angular/material/datepicker';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { BehaviorSubject, combineLatest, switchMap, Observable, timer, zip } from 'rxjs';
-import { distinctUntilChanged, finalize, map, take } from 'rxjs/operators';
+import { distinctUntilChanged, map, take } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import type { SuggestionSections } from '@components/simple-search/simple-search.types';
@@ -100,7 +100,6 @@ export class NxBookmarksComponent implements OnInit {
     timeFilter: TimeRange = { start: null, end: null };
     deviceFilter = new SelectionModel<string>(true, []);
     tagFilter = new SelectionModel<string>(true, []);
-    doneLoading: boolean;
 
     private queryParams: BookmarkParams;
     private locale: string;
@@ -234,9 +233,6 @@ export class NxBookmarksComponent implements OnInit {
                     this._bookmarks = this.mergeBookmarks(this._bookmarks, bks);
                 }
                 return this._bookmarks;
-            }),
-            finalize(() => {
-                this.doneLoading = true; // Detects if there are Bookmarks or not
             })
         );
         this.bookmarks$ = combineLatest([this.creationCutOffTimeMS$, bookmarksPoll$, this.route.queryParams]).pipe(
