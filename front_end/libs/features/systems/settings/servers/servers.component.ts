@@ -112,20 +112,6 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                         this.system = system;
                     }
                 }),
-                tap(() => {
-                    if (!this.system.isAvailable) {
-                        this.isOffline = true;
-                    }
-                    if (this.system && !this.system.userManager.permissions?.isAdmin || !this.system.userManager.currentUser?.isAdmin) {
-                        this.uriService
-                            .navigateSystem(
-                                `${menus.systemSettings.baseUrl}SYSTEM_ID`,
-                                this.system
-                            ).catch(error => {
-                                console.error(error);
-                            });
-                    }
-                }),
                 switchMap(() => this.system.infoSubject.pipe(
                     map(system => {
                         if (
@@ -147,6 +133,18 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                         .catch(error => {
                             console.error(error);
                         });
+                }),
+                tap(() => {
+                    this.isOffline = !this.system.isAvailable;
+                    if (this.system && !this.system.userManager.permissions.isAdmin) {
+                        this.uriService
+                            .navigateSystem(
+                                `${menus.systemSettings.baseUrl}SYSTEM_ID`,
+                                this.system
+                            ).catch(error => {
+                                console.error(error);
+                            });
+                    }
                 }),
                 untilDestroyed(this)
             ).subscribe();
