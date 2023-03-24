@@ -93,6 +93,10 @@ class Foo {
         const href = document.location.href;
     }
 }`;
+export const success13 = `
+@Decorator(window)
+class Foo {}
+`;
 
 export const fail1a = `
 class Foo {

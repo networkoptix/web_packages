@@ -23,6 +23,7 @@ ruleTester.run('ban-global-variables', rule, {
         { code: cases.success10, options: [['window']] },
         { code: cases.success11, options: [['window']] },
         { code: cases.success12, options: [['window']] },
+        { code: cases.success13, options: [['window']] },
     ],
     invalid: [
         {

@@ -1,13 +1,13 @@
 {
     "name": "eslint-plugin-nx",
     "version": "0.1.0",
-    "main": "dist/index.js",
+    "main": "build/index.js",
     "license": "ISC",
     "scripts": {
         "watch": "tsc -w",
         "test": "npx ts-mocha src/tests/*.test.ts",
         "build": "tsc",
-        "build-check": "mv ./dist ./dist-copy; npm run build; distdiff=$(diff -r ./dist ./dist-copy); if [ ! -z \"$distdiff\" ]; then exit 1; fi"
+        "build-check": "mv ./build ./build-copy; npm run build; build_diff=$(diff -r ./build ./build-copy); if [ ! -z \"$build_diff\" ]; then exit 1; fi"
     },
     "devDependencies": {
         "mocha": "^10.0.0",
