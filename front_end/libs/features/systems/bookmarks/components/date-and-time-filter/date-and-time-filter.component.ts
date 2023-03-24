@@ -81,13 +81,15 @@ export class NxDateAndTimeFilterComponent {
 
     get last7Days(): DateRange {
         const today = this.todayStart;
-        const sevenDaysAgo = offsetDate(today.getTime(), { day: -7 });
+        /* MM/DD - MM/DD is already one day on the calendar,
+        so for two day range MM/(DD-1) - MM/DD we subtract only one */
+        const sevenDaysAgo = offsetDate(today.getTime(), { day: -6 });
         return new DR(sevenDaysAgo, today);
     }
 
     get last30Days(): DateRange {
         const today = this.todayStart;
-        const thirtyDaysAgo = offsetDate(today.getTime(), { day: -30 });
+        const thirtyDaysAgo = offsetDate(today.getTime(), { day: -29 });
         return new DR(thirtyDaysAgo, today);
     }
 
