@@ -27,7 +27,7 @@ export class NxThemeService {
     darkThemeMq: MediaQueryList;
     themeSelected: string;
     userTheme: string;
-    viewType = 'web' || 'desktop' || 'mobile';
+    viewType: 'web' | 'desktop' | 'mobile';
 
     themeCustomProperty: CustomAccountProperty<{ theme: AvailableThemes }>;
 
