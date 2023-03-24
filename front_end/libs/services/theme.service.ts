@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { CookieService } from 'ngx-cookie-service';
 import { SessionStorageService } from 'ngx-webstorage';
@@ -26,6 +27,7 @@ export class NxThemeService {
     darkThemeMq: MediaQueryList;
     themeSelected: string;
     userTheme: string;
+    viewType = 'web' || 'desktop' || 'mobile';
 
     themeCustomProperty: CustomAccountProperty<{ theme: AvailableThemes }>;
 
@@ -37,10 +39,12 @@ export class NxThemeService {
         private sessionStorage: SessionStorageService,
         private sessionService: NxSessionService,
         private cookieService: CookieService,
+        private route: ActivatedRoute,
         @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
         this.themeCustomProperty = this.cloudApi.customAccountPropertyFactory('theme', { theme: this.CONFIG.themeConfig.default as AvailableThemes });
+        this.viewType = this.route.snapshot.queryParams.view_type || 'web';
 
         this.sessionStorage.observe('theme')
             .pipe(untilDestroyed(this))
@@ -56,7 +60,9 @@ export class NxThemeService {
         this.sessionService.loginStateSubject
             .pipe(untilDestroyed(this))
             .subscribe(async (loginState: string) => {
-                if (loginState) {
+                if (this.viewType !== 'web') {
+                    this.themeSelected = this.CONFIG.themeConfig.dark;
+                } else if (loginState) {
                     await this.themeCustomProperty.get(false, true)
                         .then(result => {
                             this.themeSelected = result.theme || this.CONFIG.themeConfig.default;
@@ -74,6 +80,10 @@ export class NxThemeService {
     }
 
     async initTheme(): Promise<void> {
+        // Don't initialize theme as desktop and mobile use ONLY dark mode
+        if (this.viewType !== 'web') {
+            return;
+        }
         if (this.CONFIG.themeConfig) {
             // set availThemes //
             Object.assign(this.availThemes, {
@@ -125,7 +135,10 @@ export class NxThemeService {
         }
         const docTheme = this.window.document.documentElement.getAttribute('data-theme');
         let { themesEnabled } = this.CONFIG.featureFlags;
-        if (username === 'setup') {
+        if (
+            username === 'setup' ||
+            this.viewType !== 'web'
+        ) {
             themesEnabled = true;
         }
 
@@ -161,6 +174,7 @@ export class NxThemeService {
 
         username &&
         username !== 'setup' &&
+        this.viewType === 'web' &&
         await this.themeCustomProperty.update(
             curr => {
                 curr.theme = this.themeSelected as AvailableThemes;
