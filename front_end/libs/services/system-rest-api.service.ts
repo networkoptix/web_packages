@@ -29,6 +29,8 @@ import {
 import { environment } from '@environments/environment';
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
 import { NxHealthService } from '@pages/health/health.service';
+import { getUserRolesRestV1 } from '@services/mediaserver-apis/endpoints/get-user-roles';
+import { getUsersRestV1 } from '@services/mediaserver-apis/endpoints/get-users';
 import { NxStorageService } from '@services/storage.service';
 import {
     defaultHashFunction,
@@ -1078,4 +1080,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     updateLogLevel(logLevel: unknown): Observable<unknown> {
         throw new Error('should only be using rest v2 version');
     }
+
+    getUsers = getUsersRestV1;
+    getUserRoles = getUserRolesRestV1;
 }

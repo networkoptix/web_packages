@@ -257,6 +257,10 @@ export interface ec2User {
     userRoleIds: string[];
 }
 
+export interface restUser extends ec2User {
+    accessibleResources: string[];
+}
+
 export interface UserSession {
   username: string;
   token: string;

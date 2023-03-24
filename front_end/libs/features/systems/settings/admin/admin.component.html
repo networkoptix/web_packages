@@ -137,8 +137,36 @@
                     </button>
                 </div>
             </header>
-
-            <nx-section *ngIf="system.userManager.isMine">
+            <ng-template #notMine>
+                <nx-section>
+                    <span class="system-owner"
+                        ><span
+                            translate
+                            data-testid="accessLevelText"
+                            >Your access level</span
+                        ><span>&nbsp;– </span>
+                        <span
+                            class="name"
+                            [innerText]="updateUserRole() | translate"
+                        ></span>
+                    </span>
+                    <div
+                        class="mt-2"
+                        *ngIf="!environment.isLocal || user?.isCloud"
+                    >
+                        <button
+                            [disabled]="settings.disconnectDisabled"
+                            class="btn btn-default"
+                            data-testid="disconnectAccountBtn"
+                            (click)="delete()"
+                            translate
+                        >
+                            Disconnect from My Account
+                        </button>
+                    </div>
+                </nx-section>
+            </ng-template>
+            <nx-section *ngIf="system.userManager.isMine; else notMine">
                 <div class="row m-0">
                     <div class="col-xl-7 pl-0">
                         <div class="float-left mr-2">
@@ -173,33 +201,6 @@
                             </nx-process-button>
                         </div>
                     </div>
-                </div>
-            </nx-section>
-            <nx-section *ngIf="!system.userManager.isMine">
-                <span class="system-owner"
-                    ><span
-                        translate
-                        data-testid="accessLevelText"
-                        >Your access level</span
-                    ><span>&nbsp;– </span>
-                    <span
-                        class="name"
-                        [innerText]="updateUserRole() | translate"
-                    ></span>
-                </span>
-                <div
-                    class="mt-2"
-                    *ngIf="!environment.isLocal || user?.isCloud"
-                >
-                    <button
-                        [disabled]="settings.disconnectDisabled"
-                        class="btn btn-default"
-                        data-testid="disconnectAccountBtn"
-                        (click)="delete()"
-                        translate
-                    >
-                        Disconnect from My Account
-                    </button>
                 </div>
             </nx-section>
         </nx-block>
@@ -287,31 +288,28 @@
                 </div>
             </nx-section>
         </nx-block>
+        <ng-container *ngIf="system.userManager.permissions.isAdmin">
+            <nx-system-standard-admin-component
+                [system]="system"
+                [settings]="settingsForSystem$ | async"
+            >
+            </nx-system-standard-admin-component>
+            <ng-container *ngIf="advanced$ | async">
+                <nx-alert-block
+                    class="d-block mt-3"
+                    [iconSrc]="icons.dirNonStandard + 'error.svg'"
+                    [line1]="'Settings displayed below are advanced.' | translate"
+                    [line2]="'Changing them may cause server to work incorrectly.' | translate"
+                    [btnIconSrc]="icons.dir + 'eye_closed.svg'"
+                    [btnCaption]="'Hide Advanced Settings' | translate"
+                    (onAction)="hideAdvancedSettings()"
+                >
+                </nx-alert-block>
 
-        <nx-system-standard-admin-component
-            *ngIf="system.userManager.permissions.isAdmin"
-            [system]="system"
-            [settings]="settingsForSystem$ | async"
-        >
-        </nx-system-standard-admin-component>
-
-        <nx-alert-block
-            class="d-block mt-3"
-            *ngIf="system.userManager.currentUser?.isAdmin && advanced"
-            [iconSrc]="icons.dirNonStandard + 'error.svg'"
-            [line1]="'Settings displayed below are advanced.' | translate"
-            [line2]="'Changing them may cause server to work incorrectly.' | translate"
-            [btnIconSrc]="icons.dir + 'eye_closed.svg'"
-            [btnCaption]="'Hide Advanced Settings' | translate"
-            (onAction)="hideAdvancedSettings()"
-        >
-        </nx-alert-block>
-
-        <nx-system-advanced-admin-component
-            *ngIf="system.userManager.currentUser?.isAdmin && advanced"
-            [system]="system"
-        >
-        </nx-system-advanced-admin-component>
+                <nx-system-advanced-admin-component [system]="system">
+                </nx-system-advanced-admin-component>
+            </ng-container>
+        </ng-container>
     </div>
 </div>
 

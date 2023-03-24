@@ -1,4 +1,6 @@
 import { LOCALE_ID } from '@angular/core';
+import { combineLatest, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 import { nxConfig } from '@services/nx-config/config';
@@ -9,6 +11,8 @@ import type {
     ec2PredefinedRole,
     ec2UserRole,
 } from '@services/system-api.types';
+import { restUser } from '@services/system-api.types';
+import * as t from '@services/system-api.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemBase } from '@services/system/system-base';
 
@@ -187,8 +191,27 @@ export class UserManager {
         return role as NxUserRole;
     }
 
+    private getAggregatedUsersData(): Observable<t.AggregatedUsers> {
+        if (this.mediaserver.version === 0) {
+            return this.mediaserver.getAggregatedUsersData();
+        }
+        const mediaserver = <NxSystemRestAPI | NxSystemRestAPI2> this.mediaserver;
+        return combineLatest([mediaserver.getUsers(), mediaserver.getUserRoles()]).pipe(
+            map<[restUser[], ec2UserRole[]], t.AggregatedUsers>(([users, roles]) => ({
+                error: '0',
+                errorId: 'ok',
+                errorString: '',
+                reply: {
+                    'ec2/getUsers': users,
+                    'ec2/getPredefinedRoles': [],
+                    'ec2/getUserRoles': roles.filter(({ name }) => name !== 'Owner'), // hide the owner role
+                    'ec2/getAccessRights': users.map(({ id, accessibleResources }) => ({ userId: id, resourceIds: accessibleResources ?? [] }))
+                }
+            })));
+    }
+
     getUsersDataFromTheSystem(): Promise<void> {
-        return this.mediaserver.getAggregatedUsersData().toPromise().then(result => {
+        return this.getAggregatedUsersData().toPromise().then(result => {
             if (!result) {
                 return Promise.reject(`Aggregated request to server has failed ${result}`);
             }
@@ -222,7 +245,7 @@ export class UserManager {
         );
         const processed = users.map<NxUser>((user: ec2User | PreprocessCloudUser) => {
             const fullName = 'fullName' in user ? user.fullName : user.accountFullName;
-            user.permissions = this.normalizePermissionString(user.permissions);
+            user.permissions = this.normalizePermissionString(user?.permissions || '');
             const role = this.getUserRole(user);
             // Update default permissions with role permissions
             user.permissions = this.normalizePermissionString(

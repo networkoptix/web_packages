@@ -55,7 +55,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     emptyName = false;
 
-    advanced: boolean;
+    advanced$: Observable<boolean>;
     userDisconnectSystem;
     currentlyMerging = false;
     debugMode: boolean;
@@ -105,19 +105,13 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     private setupDefaults(): void {
-        this.advanced = (this.router.url.includes('/advanced') ||
-            this.route.snapshot.routeConfig.path === 'advanced');
         this.debugMode = clientMode.debug;
         this.betaMode = clientMode.beta;
         this.menuService.section = menus.systemSettings.admin.id;
         this.menuService.detail = menus.systemSettings.general.id;
 
-        this.route.queryParams.subscribe(params => {
-            this.advanced = (this.router.url.includes('/advanced') ||
-                this.route.snapshot.routeConfig.path === 'advanced' ||
-                params.advanced !== undefined);
-
-            if (params.advanced !== undefined) {
+        this.advanced$ = this.route.queryParams.pipe(map(({ advanced }) => {
+            if (advanced !== undefined) {
                 if (this.environment.isLocal) {
                     this.router.navigate(
                         ['settings/advanced'],
@@ -130,7 +124,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     );
                 }
             }
-        });
+            return (this.router.url.includes('/advanced') || this.route.snapshot.routeConfig.path === 'advanced' || advanced !== undefined);
+        }));
     }
 
     private setNameAndTitle(): void {

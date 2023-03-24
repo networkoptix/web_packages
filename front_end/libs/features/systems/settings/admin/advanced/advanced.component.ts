@@ -51,7 +51,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
             .pipe(
                 untilDestroyed(this),
                 map((system: any) => {
-                    if (!system.servers || system.servers.length === 0) {
+                    if (!system.serverManager.servers?.length) {
                         throw system;
                     }
                 }),
@@ -61,8 +61,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
             .subscribe(() => {
                 if (
                     this.system &&
-                    this.system.serverManager.servers &&
-                    this.system.serverManager.servers.length
+                    this.system.serverManager.servers?.length
                 ) {
                     this.getAdvancedSettings();
                 }

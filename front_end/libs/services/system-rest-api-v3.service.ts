@@ -5,6 +5,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
 
 import { NxHealthService } from '@pages/health/health.service';
+import { getUsersRestV3 } from '@services/mediaserver-apis/endpoints/get-users';
 
 import { NxAppStateService } from './nx-app-state.service';
 import { IConfig } from './nx-config/config-types';
@@ -50,9 +51,7 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
     }
 
     // getUsers
-    getUsers(): Observable<NxSystemUser[]> {
-        return this.get('/rest/v3/users?_keepDefault=true');
-    }
+    getUsers = getUsersRestV3;
 
     // getUser
     // getUser(id: string) {
