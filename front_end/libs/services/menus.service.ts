@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { BehaviorSubject, from, combineLatest, Observable } from 'rxjs';
 import { filter, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 
@@ -42,6 +43,7 @@ export class NxMenusService {
         private translate: TranslateService,
         private sessionService: NxSessionService,
         private http: HttpClient,
+        private deviceService: DeviceDetectorService,
     ) {
         this.CONFIG = configService.getConfig();
         this.updateMenu();
@@ -327,7 +329,13 @@ export class NxMenusService {
             nodes.push(layoutsNode);
         }
 
-        if (this.configService.flagsEnabled('bookmarks')) {
+        /* This conditition should be kept in sync with the access condition
+        in bookmarksGuard.ts */
+        if (
+            this.configService.flagsEnabled('bookmarks') &&
+            activeSystem.accessRole !== 'liveViewer' &&
+            !this.deviceService.isMobile()
+        ) {
             const bookmarksNode = new MenuNode(
                 'Bookmarks',
                 this.getUrl(activeSystem.id, { bookmarks: true }),
