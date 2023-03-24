@@ -394,7 +394,7 @@
             "ubuntuNX": "This browser does not support video from ARM-based servers. Please, use Chromium browser instead.",
             "unauthorized": "UNAUTHORIZED",
             "defaultPassword": "Please set up camera password",
-            "websocket": "Error establishing webRTC peer connection",
+            "websocket": "Can't connect to the camera",
             "unavailable": "UNAVAILABLE"
         },
         "serverStates": {

@@ -197,7 +197,7 @@ export class CameraManager {
         const liveUrl = this.serverManager.mediaserver.getPlaybackUrl(camera.id, 'hls');
         const webRtcUrl = this.system.version >= 5.1
             ? ({ position } = { position: null }): string => {
-                return this.serverManager.mediaserver.getPlaybackUrl(camera.id, 'webRtc', 'low', position);
+                return this.serverManager.mediaserverConnections[camera.parentId].getPlaybackUrl(camera.id, 'webRtc', 'low', position);
             }
             : null;
         const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });

@@ -183,7 +183,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     protected getUrlBase(protocol = this.window.location.protocol) {
         const getCurrentRelayHost = () => this.currentRelayHost || this.CONFIG.trafficRelayHost
             .replace('{host}', this.window.location.host)
-            .replace('{systemId}', this.systemId);
+            .replace('{systemId}', this.serverId ? `${this.cleanId(this.serverId)}.${this.systemId}` : this.systemId);
         let urlBase = protocol !== this.window.location.protocol ? `${protocol}//${this.window.location.host}` : '';
         if (this.systemId) {
             const localProxy = this.cookieService.get('cors_bypass') || '';
