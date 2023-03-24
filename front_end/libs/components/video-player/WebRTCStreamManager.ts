@@ -85,6 +85,7 @@ type SignalingMessage = SdpInit | IceInit | IceCandidate | ErrorMsg;
 
 export enum ConnectionError {
     websocket = 'websocket',
+    authorization = 'authorization',
 }
 
 class MediaServerPeerConnection extends RTCPeerConnection {

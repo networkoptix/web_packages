@@ -33,6 +33,7 @@ import { v4 as uuid } from 'uuid';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { ConfigType } from '@components/console-table/console-table.component.types';
+import { ConnectionError } from '@components/video-player/WebRTCStreamManager';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { icons } from '@lib/variables/static-variables';
@@ -417,7 +418,7 @@ export class NxLayoutGridComponent {
 
     LANG = staticLang;
     CONFIG: IConfig;
-    playable: string[] = ['online'];
+    playable: string[] = ['online', 'recording'];
 
     constructor(
         configService: NxConfigService,
@@ -929,16 +930,27 @@ export class NxLayoutGridComponent {
             this.errors[itemDetail.details.id] = 'defaultPassword';
         };
 
-        itemDetail.details.previewUrl.subscribe({
-            next: showOfflineError,
-            error: (previewError: HttpErrorResponse) => {
-                if (previewError.status === 403) {
-                    showDefaultPasswordError();
-                } else {
-                    showOfflineError();
-                }
-            },
-        });
+        if (error === ConnectionError.authorization) {
+            /**
+             * This error is explicitly emitted by the nx-video-player component by checking that the previewUrl loads before trying to establish a connection.
+             *
+             * There seems to be a bug on initiating the WebRTC connection from the server side that allows the connection to be established even if the credentials are wrong.
+             *
+             * We could probably remove this check once the bug is fixed but it also doesn't really hurt to have it here.
+             */
+            showDefaultPasswordError();
+        } else {
+            itemDetail.details.previewUrl.subscribe({
+                next: showOfflineError,
+                error: (previewError: HttpErrorResponse) => {
+                    if (previewError.status === 403) {
+                        showDefaultPasswordError();
+                    } else {
+                        showOfflineError();
+                    }
+                },
+            });
+        }
     }
 
     openCameraSettings(cameraId: string): void {

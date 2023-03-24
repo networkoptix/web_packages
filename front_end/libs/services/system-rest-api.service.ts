@@ -1051,8 +1051,9 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         }
 
         return this.get(endpoint, data, { responseType: 'blob' }).pipe(
-            catchError(e => undefined),
-            map(blob => blob ? URL.createObjectURL(blob) : undefined),
+            // This is kind of hacky but we need a way handle 403 error without throwing an error.
+            catchError(e => Promise.resolve(e.status === 403 ? '' : undefined)),
+            map(blob => blob ? URL.createObjectURL(blob) : blob),
             share()
         );
     }
