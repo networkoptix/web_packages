@@ -197,12 +197,12 @@
             "This license is already activated": "Bu lisans zaten etkinleştirilmiş",
             "This license is not activated": "Bu lisans etkinleştirilmemiş",
             "This license has already expired": "Bu lisansın süresi zaten dolmuş",
-            "Already has a cloud storage license active": "Already has a cloud storage license active",
-            "Cloud System ID does not match credentials used": "Cloud System ID does not match credentials used",
+            "Already has a cloud storage license active": "Halihazırda etkin bir bulut depolama lisansı var",
+            "Cloud System ID does not match credentials used": "Bulut Sistemi Kimliği, kullanılan kimlik bilgileriyle eşleşmiyor",
             "Not Authorized for cloud system": "Bulut sistemi için Yetkili değil",
             "This license is not currently activated": "Bu lisans etkinleştirilmemiş",
             "This license has no deactivations remaining": "This license has no deactivations remaining",
-            "Cloud system Id does not match license activation": "Cloud system Id does not match license activation",
+            "Cloud system Id does not match license activation": "Bulut sistemi kimliği, lisans aktivasyonuyla eşleşmiyor",
             "used": "{used} of {total} ({percent}%) is used",
             "available": "Kullanılabilir",
             "usedSpace": "{usageSpace} ({percentage}%)"
@@ -312,7 +312,7 @@
     },
     "components": {
         "widgets": {
-            "lastUpdated": "Last Updated { date }",
+            "lastUpdated": "Son Güncelleme { date }",
             "updatingIn": "Updating in { time } seconds"
         }
     },
@@ -532,8 +532,8 @@
             "title": "Oturumunun süresi dolu"
         },
         "systemGroups": {
-            "createdInRoot": "New group will be created in root",
-            "createdInCurrentGroup": "New group will be created in current group"
+            "createdInRoot": "Kökte yeni grup oluşturulacak",
+            "createdInCurrentGroup": "Mevcut grupta yeni grup oluşturulacak"
         },
         "transferOwnership": {
             "userNotFound": "{ newOwnerEmail } is not a user in the system"
@@ -799,11 +799,11 @@
             "menuNodeContainsErrors": "Menu node <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> contains errors"
         },
         "downloadHistory": {
-            "published": "PUBLISHED { date }"
+            "published": "YAYINLANAN { date }"
         },
         "health": {
-            "importedSystem": "System: { system }",
-            "importedTime": "Generated: { time }"
+            "importedSystem": "Sistem: { system }",
+            "importedTime": "Oluşturulan: { time }"
         }
     },
     "pageTitles": {
@@ -911,7 +911,7 @@
         },
         "newVersionAvailable": {
             "notification": "New version of %CLOUD_NAME% is available",
-            "installButton": "Refresh to Update"
+            "installButton": "Güncellemek için Yenile"
         },
         "systemOffline": "Sistem çevrimdışı. Bazı ayarlara erişim olmayabilir.",
         "systemsMerging": "Bu sistem şu anda bir birleştirme işleminde yer almaktadır."
@@ -930,7 +930,7 @@
         "vendor": "Üretici",
         "vendors": "Üreticiler",
         "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
-        "noMatches": "No matches",
+        "noMatches": "Eşleşme yok",
         "userNotFound": "<span class=\"error\">The user was not found in this system</span>"
     },
     "servers": {
@@ -1020,7 +1020,7 @@
                 "help": "(Detaylar: Kullanılabilir tüm bilgileri günlükle)"
             }
         },
-        "loggerDropdownLabel": "{ loggerName } log level",
+        "loggerDropdownLabel": "{ loggerName } günlük seviyesi",
         "storageToolTips": {
             "local": "Yerel",
             "usb": "USB",
@@ -1037,18 +1037,18 @@
         "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}",
         "connectionLost": "Bağlantı kesildi, yeniden bağlanılıyor...",
         "connectionRestored": "Bağlantı geri yüklendi",
-        "couldNotReconnect": "Could not restore connection",
+        "couldNotReconnect": "Bağlantı geri yüklenemedi",
         "noConnection": "Bağlantı yok",
         "groupAlreadyIn": "Group { srcName } is already in { destName }",
         "systemAlreadyIn": "System { srcName } is already in { destName }",
-        "addGroupToSelf": "You cannot add a group to itself",
+        "addGroupToSelf": "Grubu kendisine ekleyemezsin",
         "errorMsg": {
-            "You can only delete groups that you own": "You can only delete groups that you own",
-            "You can only move systems that you own.": "You can only move systems that you own.",
-            "You can only move systems into groups that you own.": "You can only move systems into groups that you own.",
-            "You cannot add a group to itself": "You cannot add a group to itself",
-            "You cannot add a parent group to its child.": "You cannot add a parent group to its child.",
-            "You can only move groups that you own.": "You can only move groups that you own.",
+            "You can only delete groups that you own": "Yalnızca sahibi olduğunuz grupları silebilirsiniz",
+            "You can only move systems that you own.": "Yalnızca sahip olduğunuz sistemleri taşıyabilirsiniz.",
+            "You can only move systems into groups that you own.": "Sistemleri yalnızca sahibi olduğunuz gruplara taşıyabilirsiniz.",
+            "You cannot add a group to itself": "Grubu kendisine ekleyemezsin",
+            "You cannot add a parent group to its child.": "Alt gruba bir üst grup ekleyemezsiniz.",
+            "You can only move groups that you own.": "Yalnızca sahibi olduğunuz grupları taşıyabilirsiniz.",
             "Adding src group to dst group would create a cycle in tree.": "Adding src group to dst group would create a cycle in tree.",
             "User does not exist in group": "Kullanıcı grupta mevcut değil"
         }
@@ -1092,7 +1092,7 @@
         "twoFaRequired": "Bu hesap için iki faktörlü kimlik doğrulama etkinleştirildi. Lütfen açılır pencereye doğrulama kodunuzu girin.",
         "loggingIn": "Oturum açılıyor. Lütfen bekleyin.",
         "sessionRenewed": "Oturum yenilendi.",
-        "failedToUpdateSession": "Updating the session failed."
+        "failedToUpdateSession": "Oturum güncellenemedi."
     },
     "healthMonitor": {
         "groups": {
@@ -1145,7 +1145,7 @@
         }
     },
     "headerLabels": {
-        "healthReportForSystem": "Health Report For System {systemName}"
+        "healthReportForSystem": "Sistem {systemName} İçin Sağlık Raporu"
     },
     "license": {
         "licenseTypeTitles": {
