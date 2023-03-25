@@ -48,12 +48,14 @@ interface TagFilter {
     templateUrl: 'vendor-list.component.html',
     styleUrls: ['vendor-list.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    providers: [{
-        provide: NG_VALUE_ACCESSOR,
-        // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        useExisting: forwardRef(() => NxVendorListComponent),
-        multi: true
-    }]
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            // eslint-disable-next-line @typescript-eslint/no-use-before-define
+            useExisting: forwardRef(() => NxVendorListComponent),
+            multi: true,
+        },
+    ],
 })
 export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
     @Input() vendors: Vendors[];
@@ -79,64 +81,65 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
         this.CONFIG = configService.getConfig();
 
         this.topXByVolume = {
-            value: this.CONFIG.ipvd.vendorsShown
+            value: this.CONFIG.ipvd.vendorsShown,
         };
 
         this.tagFilters = [
             {
                 label: this.LANG.cameraFilters.highRes,
                 select: { id: 'resolution', value: '8000000' },
-                multiselect: { id: 'hardwareTypes', value: 'camera' }
+                multiselect: { id: 'hardwareTypes', value: 'camera' },
             },
             {
                 label: this.LANG.cameraFilters.aptz,
                 tagId: 'isAptzSupported',
-                multiselect: { id: 'hardwareTypes', value: 'camera' }
+                multiselect: { id: 'hardwareTypes', value: 'camera' },
             },
             {
                 label: this.LANG.cameraFilters.ptz,
                 tagId: 'isPtzSupported',
-                multiselect: { id: 'hardwareTypes', value: 'camera' }
+                multiselect: { id: 'hardwareTypes', value: 'camera' },
             },
             {
                 label: this.LANG.cameraFilters.audio,
                 tagId: 'isAudioSupported',
-                multiselect: { id: 'hardwareTypes', value: 'camera' }
+                multiselect: { id: 'hardwareTypes', value: 'camera' },
             },
             {
                 label: this.LANG.cameraFilters.H265,
                 tagId: 'isH265',
-                multiselect: { id: 'hardwareTypes', value: 'camera' }
+                multiselect: { id: 'hardwareTypes', value: 'camera' },
             },
             {
                 label: this.LANG.cameraFilters.encoder,
-                multiselect: { id: 'hardwareTypes', value: 'encoder' }
+                multiselect: { id: 'hardwareTypes', value: 'encoder' },
             },
             {
                 label: this.LANG.cameraFilters.TwWayAudio,
-                tagId: 'isTwAudioSupported'
+                tagId: 'isTwAudioSupported',
             },
             {
                 label: this.LANG.cameraFilters.multiSensor,
-                multiselect: { id: 'hardwareTypes', value: 'multiSensorCamera' }
+                multiselect: { id: 'hardwareTypes', value: 'multiSensorCamera' },
             },
             {
                 label: this.LANG.cameraFilters.fisheye,
                 tagId: 'isFisheye',
-                multiselect: { id: 'hardwareTypes', value: 'camera' }
+                multiselect: { id: 'hardwareTypes', value: 'camera' },
             },
             {
                 label: this.LANG.cameraFilters.IO,
                 tagId: 'isIoSupported',
-                multiselect: { id: 'hardwareTypes', value: 'other' }
-            }
+                multiselect: { id: 'hardwareTypes', value: 'other' },
+            },
         ];
     }
 
     ngOnDestroy(): void {}
 
     ngOnInit(): void {
-        this.uri.getParams()
+        this.uri
+            .getParams()
             .pipe(untilDestroyed(this))
             .subscribe(params => {
                 this.debug = params.debug !== undefined;
@@ -145,7 +148,7 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
         this.router.events
             .pipe(
                 untilDestroyed(this),
-                filter(event => event instanceof ActivationEnd)
+                filter(event => event instanceof ActivationEnd),
             )
             .subscribe((event: ActivationEnd) => {
                 this.searchFilter.multiselects
@@ -175,7 +178,8 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     setVendorsShown(vendors: Vendors[]): void {
-        this.vendors = vendors.sort(paramSortFunc(elm => elm.count, false)) // Desc count
+        this.vendors = vendors
+            .sort(paramSortFunc(elm => elm.count, false)) // Desc count
             .slice(0, this.CONFIG.ipvd.vendorsShown)
             .sort(alphabeticalSort(this.locale, elm => elm.name)); // Asc name
     }
@@ -186,7 +190,7 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
             this.renderer.setProperty(
                 element,
                 'innerText',
-                `Show Top ${this.CONFIG.ipvd.vendorsShown}`
+                `Show Top ${this.CONFIG.ipvd.vendorsShown}`,
             );
         } else {
             this.setVendorsShown(this.allVendors);
@@ -218,8 +222,8 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
         if (tagFilter.select) {
             this.searchFilter.selects.find(select => {
                 if (select.id === tagFilter.select.id) {
-                    select.selected = select.items.find(item =>
-                        item.value === tagFilter.select.value
+                    select.selected = select.items.find(
+                        item => item.value === tagFilter.select.value,
                     );
                     queryParams.resolution = select.selected.value;
                     return true;
@@ -245,9 +249,7 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
             this.searchFilter.multiselects.find(select => {
                 if (select.id === tagFilter.multiselect.id) {
                     select.selected.push(
-                        select.items.find(item =>
-                            item.id === tagFilter.multiselect.value
-                        ).id
+                        select.items.find(item => item.id === tagFilter.multiselect.value).id,
                     );
                     queryParams.hardwareTypes = select.selected.toString();
                     return true;
@@ -257,11 +259,9 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
             });
         }
 
-        this.uri
-            .updateURI('/ipvd', queryParams)
-            .catch(error => {
-                console.error(error);
-            });
+        this.uri.updateURI('/ipvd', queryParams).catch(error => {
+            console.error(error);
+        });
 
         // Propagate component's value attribute (model)
         this.propagateChange({ ...this.searchFilter });

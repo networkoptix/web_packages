@@ -22,11 +22,7 @@ export class BoolIconComponent implements OnInit {
             this.value = changes.value.currentValue;
             this.additional = '';
 
-            if (
-                this.value &&
-                changes.param &&
-                changes.param.currentValue === 'isAptzSupported'
-            ) {
+            if (this.value && changes.param && changes.param.currentValue === 'isAptzSupported') {
                 this.additional = 'Adv.';
             }
 
@@ -41,20 +37,16 @@ export class BoolIconComponent implements OnInit {
             // maxResolution and sndResolution (secondary stream) are not boolean - we need to overwrite '0x0'
             if (
                 (this.value === '0x0' || this.value === '0') &&
-                changes.param && (
-                    changes.param.currentValue === 'maxResolution' ||
-                    changes.param.currentValue === 'sndResolution'
-                )
+                changes.param &&
+                (changes.param.currentValue === 'maxResolution' ||
+                    changes.param.currentValue === 'sndResolution')
             ) {
                 this.value = null;
                 this.align = 'left';
             }
 
             // maxFps is not boolean - we need to overwrite '0'
-            if (!this.value &&
-                changes.param &&
-                changes.param.currentValue === 'maxFps'
-            ) {
+            if (!this.value && changes.param && changes.param.currentValue === 'maxFps') {
                 this.value = null;
             }
         }

@@ -78,20 +78,20 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
             { title: this.LANG.ipvd.isDualStreamingSupported, param: 'isDualStreamingSupported' },
             { title: this.LANG.ipvd.sndResolution, param: 'sndResolution' },
             { title: this.LANG.ipvd.isMultiSensor, param: 'isMultiSensor' },
-            { title: this.LANG.ipvd.isAnalyticsSupported, param: 'isAnalyticsSupported' }
+            { title: this.LANG.ipvd.isAnalyticsSupported, param: 'isAnalyticsSupported' },
         ];
-        this.uri.getParams()
+        this.uri
+            .getParams()
             .pipe(untilDestroyed(this))
             .subscribe(params => {
                 this.params = params;
-                this.debug = (params.debug !== undefined);
-                this.beta = (params.beta !== undefined);
+                this.debug = params.debug !== undefined;
+                this.beta = params.beta !== undefined;
 
-                this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents ||
-                    this.debug ||
-                    this.beta;
-                this.showCameraAnalytics = this.showAnalytics &&
-                    this.activeCamera.isAnalyticsSupported;
+                this.showAnalytics =
+                    this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta;
+                this.showCameraAnalytics =
+                    this.showAnalytics && this.activeCamera.isAnalyticsSupported;
             });
 
         this.firmwaresToShow = this.CONFIG.ipvd.firmwaresToShow;
@@ -108,17 +108,12 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
             this.calcElementScrollMechanics();
         });
 
-        this.scrollMechanicsService.windowScrollSubject
-            .pipe(untilDestroyed(this))
-            .subscribe(() => {
-                this.calcElementScrollMechanics();
-            });
+        this.scrollMechanicsService.windowScrollSubject.pipe(untilDestroyed(this)).subscribe(() => {
+            this.calcElementScrollMechanics();
+        });
 
         this.scrollMechanicsService.searchViewHeightSubject
-            .pipe(
-                untilDestroyed(this),
-                delay(0)
-            )
+            .pipe(untilDestroyed(this), delay(0))
             .subscribe(() => {
                 this.scrollHeight =
                     this.scrollMechanicsService.searchViewHeight +
@@ -128,8 +123,8 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngOnChanges(changes: NgChanges<CamViewComponent>): void {
         if (changes.activeCamera.currentValue) {
-            this.showCameraAnalytics = this.showAnalytics &&
-                changes.activeCamera.currentValue.isAnalyticsSupported;
+            this.showCameraAnalytics =
+                this.showAnalytics && changes.activeCamera.currentValue.isAnalyticsSupported;
             this.firmwares = changes.activeCamera.currentValue.firmwares || [];
             this.showAllFirmware = false;
             this.showAllEvents = false;
@@ -147,9 +142,7 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     calcElementScrollMechanics(): void {
-        const {
-            height: windowHeight
-        } = this.scrollMechanicsService.windowSizeSubject.getValue();
+        const { height: windowHeight } = this.scrollMechanicsService.windowSizeSubject.getValue();
         const { windowScroll } = this.scrollMechanicsService;
 
         const { clientHeight } = this.cameraView.nativeElement;
@@ -157,13 +150,11 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
         const { SCROLL_OFFSET } = NxScrollMechanicsService;
 
-        this.viewScrollFixedTop = (
+        this.viewScrollFixedTop =
             clientHeight < windowHeight - searchViewHeight &&
-            windowScroll >= this.scrollHeight - SCROLL_OFFSET
-        );
-        this.viewScrollFixedBottom = (
+            windowScroll >= this.scrollHeight - SCROLL_OFFSET;
+        this.viewScrollFixedBottom =
             clientHeight > windowHeight - SCROLL_OFFSET - 8 &&
-            (clientHeight - windowHeight + 18) < (windowScroll - this.scrollHeight)
-        );
+            clientHeight - windowHeight + 18 < windowScroll - this.scrollHeight;
     }
 }

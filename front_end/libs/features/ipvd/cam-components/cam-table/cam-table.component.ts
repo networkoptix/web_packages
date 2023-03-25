@@ -118,7 +118,7 @@ export class CamTableComponent implements OnChanges, OnInit, AfterViewInit {
             'Advanced PTZ',
             'Fisheye',
             'Motion',
-            'I/O'
+            'I/O',
         ],
         showTitle: true,
         title: 'Camera List',
@@ -141,10 +141,7 @@ export class CamTableComponent implements OnChanges, OnInit, AfterViewInit {
     ) {
         this.CONFIG = configService.getConfig();
 
-        this.serviceHeaders = [
-            this.LANG.ipvd.count,
-            this.LANG.ipvd.resolutionArea
-        ];
+        this.serviceHeaders = [this.LANG.ipvd.count, this.LANG.ipvd.resolutionArea];
 
         this.cameraHeaders = [
             this.LANG.ipvd.vendor,
@@ -160,7 +157,7 @@ export class CamTableComponent implements OnChanges, OnInit, AfterViewInit {
             this.LANG.ipvd.isIoSupported,
             this.LANG.ipvd.isAnalyticsSupported,
             this.LANG.ipvd.count,
-            this.LANG.ipvd.resolutionArea
+            this.LANG.ipvd.resolutionArea,
         ];
 
         this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSize;
@@ -168,28 +165,25 @@ export class CamTableComponent implements OnChanges, OnInit, AfterViewInit {
 
         this.disclaimerParams = {
             companyName: this.CONFIG.company.name,
-            vmsName: this.CONFIG.vmsName
+            vmsName: this.CONFIG.vmsName,
         };
     }
 
     ngOnInit(): void {
         this._elements = this.elements;
 
-        this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject
-            .subscribe(() => {
-                this.setPagerSize();
-            });
+        this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(() => {
+            this.setPagerSize();
+        });
 
         this.params = this.route.snapshot.queryParams;
         this.setDebugAndBetaMode();
 
-        this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents ||
-            this.debug ||
-            this.beta;
+        this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta;
         if (!this.showAnalytics) {
             this.filterAllowedParams(
                 [this.LANG.ipvd.isAnalyticsSupported],
-                ['isAnalyticsSupported']
+                ['isAnalyticsSupported'],
             );
         } else {
             this.csvOptions.headers.push('Analytics');
@@ -205,24 +199,18 @@ export class CamTableComponent implements OnChanges, OnInit, AfterViewInit {
                 this.params = params;
                 this.setDebugAndBetaMode();
 
-                this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents ||
-                    this.debug ||
-                    this.beta;
+                this.showAnalytics =
+                    this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta;
 
                 this.showHeaders = this.cameraHeaders;
 
                 if (this.params.sortBy) {
                     const sortBy = this.params.sortBy.split(',');
-                    const direction = (sortBy[1] === 'ASC');
-                    const column = this.cameraHeaders.find(x =>
-                        x === this.LANG.ipvd[sortBy[0]]
-                    );
+                    const direction = sortBy[1] === 'ASC';
+                    const column = this.cameraHeaders.find(x => x === this.LANG.ipvd[sortBy[0]]);
 
                     // do not sort if sorted
-                    if (
-                        this.sortOrderASC !== direction ||
-                        column !== this.selectedHeader
-                    ) {
+                    if (this.sortOrderASC !== direction || column !== this.selectedHeader) {
                         this.sortOrderASC = direction;
                         this.toggleSort(sortBy[0], true);
                     }
@@ -231,44 +219,45 @@ export class CamTableComponent implements OnChanges, OnInit, AfterViewInit {
                 this.setPage(parseInt(this.params.page) || 1);
 
                 if (this.params.camera) {
-                    const camera = this.pagedItems.find(camera =>
-                        camera.model === this.params.camera
+                    const camera = this.pagedItems.find(
+                        camera => camera.model === this.params.camera,
                     );
                     this.setClickedRow(camera);
                 }
             });
 
-        this.clickSubscription = this.clicks.pipe(
-            debounceTime(0) // avoid fast change of selected camera row
-        ).subscribe(element => {
-            this.uri.pageOffset = this.window.pageYOffset;
-            if (this.selectedCamera === element.sortKey) {
-                this.onRowClick.emit(element);
-            }
-        });
+        this.clickSubscription = this.clicks
+            .pipe(
+                debounceTime(0), // avoid fast change of selected camera row
+            )
+            .subscribe(element => {
+                this.uri.pageOffset = this.window.pageYOffset;
+                if (this.selectedCamera === element.sortKey) {
+                    this.onRowClick.emit(element);
+                }
+            });
     }
 
     ngAfterViewInit(): void {
         this.calcElementScrollMechanics();
 
-        this.windowScrollSubscription = this.scrollMechanicsService
-            .windowScrollSubject
-            .subscribe(() => {
+        this.windowScrollSubscription = this.scrollMechanicsService.windowScrollSubject.subscribe(
+            () => {
                 this.calcElementScrollMechanics();
-            });
+            },
+        );
 
-        this.elementTableWidthSubscription = this.scrollMechanicsService
-            .elementTableWidthSubject
-            .subscribe(() => {
+        this.elementTableWidthSubscription =
+            this.scrollMechanicsService.elementTableWidthSubject.subscribe(() => {
                 const width = this.scrollMechanicsService.elementTableWidth;
-                this.elementWidth = (width > 0) ? width + 'px' : '100%';
+                this.elementWidth = width > 0 ? width + 'px' : '100%';
             });
 
-        this.searchViewHeightSubscription = this.scrollMechanicsService
-            .searchViewHeightSubject.pipe(delay(0))
+        this.searchViewHeightSubscription = this.scrollMechanicsService.searchViewHeightSubject
+            .pipe(delay(0))
             .subscribe(() => {
-                const searchViewHeight = this.scrollMechanicsService
-                    .searchViewHeightSubject.getValue();
+                const searchViewHeight =
+                    this.scrollMechanicsService.searchViewHeightSubject.getValue();
                 const { HEADER_OFFSET } = NxScrollMechanicsService;
                 this.scrollHeight = searchViewHeight + HEADER_OFFSET;
             });
@@ -278,10 +267,8 @@ export class CamTableComponent implements OnChanges, OnInit, AfterViewInit {
         if (changes.elements) {
             const { elements } = changes;
             if (
-                elements.firstChange || (
-                    !elements.firstChange &&
-                    !isEqual(elements.currentValue, elements.previousValue)
-                )
+                elements.firstChange ||
+                (!elements.firstChange && !isEqual(elements.currentValue, elements.previousValue))
             ) {
                 this.sortOrderASC = !this.CONFIG.ipvd.sortSupportedDevicesByPopularity;
                 this._elements = elements.currentValue;
@@ -320,26 +307,21 @@ export class CamTableComponent implements OnChanges, OnInit, AfterViewInit {
     }
 
     toggleHeaderSort(param: string): void {
-        const filter = Object.keys(this.LANG.ipvd).find(key =>
-            this.LANG.ipvd[key] === param
-        );
+        const filter = Object.keys(this.LANG.ipvd).find(key => this.LANG.ipvd[key] === param);
 
-        this.sortOrderASC = (this.LANG.ipvd[filter] === this.selectedHeader)
-            ? !this.sortOrderASC
-            : true;
+        this.sortOrderASC =
+            this.LANG.ipvd[filter] === this.selectedHeader ? !this.sortOrderASC : true;
         this.toggleSort(filter, false);
         /* reset camera and page params in uri */
 
         const queryParams: IpvdParams = {
             page: undefined,
-            sortBy: `${filter},${this.sortOrderASC ? 'ASC' : 'DESC'}`
+            sortBy: `${filter},${this.sortOrderASC ? 'ASC' : 'DESC'}`,
         };
 
-        this.uri
-            .updateURI('/ipvd', queryParams)
-            .catch(error => {
-                console.error(error);
-            });
+        this.uri.updateURI('/ipvd', queryParams).catch(error => {
+            console.error(error);
+        });
     }
 
     toggleSort(param: string, keepURI: boolean): void {
@@ -422,19 +404,13 @@ export class CamTableComponent implements OnChanges, OnInit, AfterViewInit {
             this.setPage(1);
         }
 
-        this.selectedHeader = this.cameraHeaders.find(x =>
-            x === this.LANG.ipvd[param]
-        );
+        this.selectedHeader = this.cameraHeaders.find(x => x === this.LANG.ipvd[param]);
     }
 
     filterAllowedParams(headers: string[], params: string[]): void {
         // filter 'service' params
-        this.allowedParameters = this.allowedParameters.filter(el =>
-            !params.includes(el)
-        );
-        this.cameraHeaders = this.cameraHeaders.filter(el =>
-            !headers.includes(el)
-        );
+        this.allowedParameters = this.allowedParameters.filter(el => !params.includes(el));
+        this.cameraHeaders = this.cameraHeaders.filter(el => !headers.includes(el));
         this.showHeaders = this.cameraHeaders;
     }
 
@@ -448,9 +424,7 @@ export class CamTableComponent implements OnChanges, OnInit, AfterViewInit {
         idxToBeRemoved = showParameters.indexOf(param);
         showParameters.splice(idxToBeRemoved, 1);
 
-        param = item.isTwAudioSupported
-            ? 'isAudioSupported'
-            : 'isTwAudioSupported';
+        param = item.isTwAudioSupported ? 'isAudioSupported' : 'isTwAudioSupported';
         idxToBeRemoved = showParameters.indexOf(param);
         showParameters.splice(idxToBeRemoved, 1);
 
@@ -458,8 +432,7 @@ export class CamTableComponent implements OnChanges, OnInit, AfterViewInit {
     }
 
     calcElementScrollMechanics(): void {
-        const windowSize = this.scrollMechanicsService
-            .windowSizeSubject.getValue();
+        const windowSize = this.scrollMechanicsService.windowSizeSubject.getValue();
         const windowScroll = this.scrollMechanicsService.windowScroll;
 
         const { clientHeight } = this.camerasTable.nativeElement;
@@ -486,9 +459,7 @@ export class CamTableComponent implements OnChanges, OnInit, AfterViewInit {
     setPage(page: number): void {
         this.currentPage = page;
 
-        const pageParam = (this.currentPage === 1)
-            ? undefined
-            : this.currentPage;
+        const pageParam = this.currentPage === 1 ? undefined : this.currentPage;
         // preserve window offset
         this.uri.pageOffset = this.window.pageYOffset;
 
@@ -503,17 +474,15 @@ export class CamTableComponent implements OnChanges, OnInit, AfterViewInit {
         }
 
         if (this.params && parseInt(this.params.page) !== pageParam) {
-            this.uri
-                .updateURI('/ipvd', { page: pageParam })
-                .catch(error => {
-                    console.error(error);
-                });
+            this.uri.updateURI('/ipvd', { page: pageParam }).catch(error => {
+                console.error(error);
+            });
         }
     }
 
     getCsvData(): CsvData {
         return this._elements.map(camera => {
-            const csv: Partial<csvData> = ({
+            const csv: Partial<csvData> = {
                 Vendor: camera.vendor,
                 Model: camera.model,
                 Type: camera.hardwareType,
@@ -526,8 +495,8 @@ export class CamTableComponent implements OnChanges, OnInit, AfterViewInit {
                 'Advanced PTZ': yesNo(camera.isAptzSupported),
                 Fisheye: yesNo(camera.isFisheye),
                 Motion: yesNo(camera.isMdSupported),
-                'I/O': yesNo(camera.isIoSupported)
-            });
+                'I/O': yesNo(camera.isIoSupported),
+            };
 
             if (this.showAnalytics) {
                 csv.Analytics = yesNo(camera.isAnalyticsSupported);
@@ -546,18 +515,10 @@ export class CamTableComponent implements OnChanges, OnInit, AfterViewInit {
     @HostListener('mousewheel', ['$event'])
     onMouseWheel(event: MouseEvent): void {
         if (this.tableScrollFixed) {
-            this.renderer.setStyle(
-                this.scrollWrapper.nativeElement,
-                'z-index',
-                '-1'
-            );
+            this.renderer.setStyle(this.scrollWrapper.nativeElement, 'z-index', '-1');
             clearTimeout(this.revert);
             this.revert = this.window.setTimeout(() => {
-                this.renderer.setStyle(
-                    this.scrollWrapper.nativeElement,
-                    'z-index',
-                    '1'
-                );
+                this.renderer.setStyle(this.scrollWrapper.nativeElement, 'z-index', '1');
                 clearTimeout(this.revert);
             }, 100);
         }
@@ -567,13 +528,11 @@ export class CamTableComponent implements OnChanges, OnInit, AfterViewInit {
         let sortByColumn: string;
         if (this.params.sortBy) {
             const sortBy = this.params.sortBy.split(',');
-            this.sortOrderASC = (sortBy[1] === 'ASC');
+            this.sortOrderASC = sortBy[1] === 'ASC';
             sortByColumn = sortBy[0];
         } else {
             // If sort by popularity is set in CMS or default sorting 'Vendor-Model'
-            sortByColumn = this.CONFIG.ipvd.sortSupportedDevicesByPopularity
-                ? 'count'
-                : 'sortKey';
+            sortByColumn = this.CONFIG.ipvd.sortSupportedDevicesByPopularity ? 'count' : 'sortKey';
         }
 
         this.toggleSort(sortByColumn, keepURI);
@@ -584,8 +543,8 @@ export class CamTableComponent implements OnChanges, OnInit, AfterViewInit {
     }
 
     private setDebugAndBetaMode(): void {
-        this.debug = (this.params.debug !== undefined);
-        this.beta = (this.params.beta !== undefined);
+        this.debug = this.params.debug !== undefined;
+        this.beta = this.params.beta !== undefined;
 
         if (!this.debug && !this.beta) {
             this.filterAllowedParams(this.serviceHeaders, this.serviceParams);
