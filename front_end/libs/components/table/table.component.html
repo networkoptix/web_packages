@@ -1,4 +1,4 @@
-<table class="nx-table">
+<table class="nx-new-table">
     <thead>
         <tr>
             <ng-container
@@ -11,6 +11,7 @@
         <tr
             *ngFor="let row of data"
             class="big-row"
+            (click)="onRowClick($event)"
         >
             <ng-container
                 *ngTemplateOutlet="rows || defaultRowTemplate; context: { $implicit: row }"

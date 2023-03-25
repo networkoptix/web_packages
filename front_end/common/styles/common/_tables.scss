@@ -4,7 +4,7 @@
 // @import 'styles/theme_palette';
 // @use 'theme_variables_common' as variables;
 
-.nx-table {
+.nx-table, .nx-new-table {
     table-layout: auto;
     white-space: nowrap;
     margin-bottom: 0;
@@ -73,8 +73,7 @@
                 background-color: unset !important;
 
                 td {
-                    color: var(--card-header-text) !important;
-                    ;
+                    color: var(--card-header-text) !important;;
                     background: var(--table-row-hover-bg);
                 }
             }
@@ -95,6 +94,14 @@
 
                 &:first-of-type {
                     padding-left: .5rem;
+                }
+
+                svg {
+                    float: right;
+
+                    .st0 {
+                        fill: var(--input-color) !important;
+                    }
                 }
             }
         }
@@ -119,6 +126,60 @@
     }
 }
 
+.nx-new-table {
+    thead tr th:nth-child(2) {
+        padding-left: 25px;
+    }
+
+    tbody tr {
+        position: relative;
+
+        td {
+            position: relative;
+            color: var(--input-color) !important;
+            vertical-align: top;
+
+            &:first-of-type {
+                width: 50px;
+            }
+
+            &:last-of-type {
+                width: 200px;
+            }
+
+            &:nth-child(2) {
+                padding-left: 25px;
+
+                svg-icon {
+                    position : absolute;
+                    left: 0;
+                    top : 10px;
+                    transform: rotate(-90deg);
+                }
+
+                &.expanded svg-icon {
+                    transform: none;
+                }
+            }
+
+            &:not(:has(> div)) {
+                padding-top: 12px;
+            }
+
+            div.td-container {
+                line-height: 2rem;
+                position: relative;
+
+                svg {
+                    position: absolute;
+                    right: 16px;
+                    top: 4px;
+                }
+            }
+        }
+    }
+}
+
 .table-wrapper {
     overflow-x: scroll;
     box-shadow: none;
@@ -131,7 +192,6 @@
 
     &::-webkit-scrollbar-thumb {
         background-color: var(--scrollbar-thumb-bg);
-        ;
         border: 2px solid var(--scrollbar-thumb-border-color) !important;
     }
 }

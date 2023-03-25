@@ -2,7 +2,19 @@
     class="mb-3 row m-0 p-3"
     style="border: 1px solid lightgray"
 >
-    <nx-table [data]="records">
+    <div class="pl-2 py-3">
+        <nx-checkbox
+            name="showSubLevels"
+            componentId="showSubLevels"
+            [labelText]="'Include sub-levels'"
+            (onClick)="showSubLevels($event)"
+        >
+        </nx-checkbox>
+    </div>
+    <nx-table
+        [data]="records"
+        (onRowExpand)="expandRow($event)"
+    >
         <ng-template #headers>
             <th>
                 <nx-checkbox
@@ -21,7 +33,7 @@
             #rows
             let-row
         >
-            <td>
+            <td data-id="{{ row.id }}">
                 <nx-checkbox
                     name="check{{ row.email }}"
                     componentId="check{{ row.email }}"
@@ -29,10 +41,106 @@
                 >
                 </nx-checkbox>
             </td>
-            <td>{{ row.email }}</td>
-            <td>{{ row.fullName }}</td>
-            <td>{{ row.accessLevel }}</td>
-            <td>{{ row.group }}</td>
+            <td
+                data-id="{{ row.id }}"
+                [ngClass]="row.id === expandRowId ? 'expanded' : ''"
+            >
+                {{ row.email }}
+                <svg-icon
+                    *ngIf="subLevels && (row.group.length > 1 || row.accessLevel.length > 1)"
+                    nx-add-svg-src
+                    [src]="icons.dirTextButtons + 'arrow_expand.svg'"
+                    [applyClass]="true"
+                    [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+                ></svg-icon>
+            </td>
+            <td data-id="{{ row.id }}">{{ row.fullName }}</td>
+
+            <td
+                data-id="{{ row.id }}"
+                *ngIf="row.accessLevel.length === 1"
+            >
+                {{ row.accessLevel[0].name }}
+            </td>
+            <td
+                data-id="{{ row.id }}"
+                *ngIf="row.accessLevel.length > 1"
+            >
+                <div
+                    class="td-container"
+                    *ngIf="!subLevels"
+                >
+                    {{ row.accessLevel[0].name }}
+                </div>
+                <div
+                    class="td-container"
+                    *ngIf="subLevels"
+                >
+                    <i>{{ row.accessLevel.length }} folders</i>
+                </div>
+                <div *ngIf="subLevels && row.id === expandRowId">
+                    <div
+                        style="line-height: 2rem"
+                        *ngFor="let level of row.accessLevel"
+                    >
+                        {{ level.name }}
+                    </div>
+                </div>
+            </td>
+
+            <td
+                data-id="{{ row.id }}"
+                *ngIf="row.group.length === 1"
+            >
+                <div class="td-container">
+                    {{ row.group[0].name }}
+                    <svg-icon
+                        nx-add-svg-src
+                        [src]="icons.dir + 'delete.svg'"
+                        [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+                    ></svg-icon>
+                </div>
+            </td>
+            <td
+                data-id="{{ row.id }}"
+                *ngIf="row.group.length > 1"
+            >
+                <div
+                    class="td-container"
+                    *ngIf="!subLevels"
+                >
+                    {{ row.group[0].name }}
+                    <svg-icon
+                        nx-add-svg-src
+                        [src]="icons.dir + 'delete.svg'"
+                        [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+                    ></svg-icon>
+                </div>
+                <div
+                    class="td-container"
+                    *ngIf="subLevels"
+                >
+                    <i>multiple groups</i>
+                    <svg-icon
+                        nx-add-svg-src
+                        [src]="icons.dir + 'delete.svg'"
+                        [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+                    ></svg-icon>
+                </div>
+                <div *ngIf="subLevels && row.id === expandRowId">
+                    <div
+                        class="td-container"
+                        *ngFor="let group of row.group"
+                    >
+                        {{ group.name }}
+                        <svg-icon
+                            nx-add-svg-src
+                            [src]="icons.dir + 'delete.svg'"
+                            [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+                        ></svg-icon>
+                    </div>
+                </div>
+            </td>
         </ng-template>
     </nx-table>
 </div>

@@ -1,4 +1,4 @@
-import { Component, ContentChild, Input, TemplateRef } from '@angular/core';
+import { Component, ContentChild, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
 
 /* USAGE
  <nx-table [data]='records'></nx-table>
@@ -13,8 +13,15 @@ import { Component, ContentChild, Input, TemplateRef } from '@angular/core';
     styleUrls: ['table.component.scss'],
 })
 export class NxTableComponent {
-    @Input() data: Record<string, string | boolean>[];
+    @Input() data: Record<string, string | boolean | Record<string, string>[]>[];
+    @Output() onRowExpand = new EventEmitter<string>();
 
     @ContentChild('headers') headers: TemplateRef<never>;
     @ContentChild('rows') rows: TemplateRef<never>;
+
+    expand: boolean = false;
+
+    onRowClick(event: MouseEvent): void {
+        this.onRowExpand.emit((event.target as HTMLTableElement).id);
+    }
 }

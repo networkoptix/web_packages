@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 // import { NxWebGLComponent } from '@components/../systems/view/components/webgl/webgl.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { MenuModule } from '@app/menu/menu.module';
 import { PipesModule } from '@app/pipes/pipes.module';
@@ -164,7 +165,8 @@ const appRoutes: Routes = [
         NxAccountSettingsModule,
         NxSliderModule,
         VmsClientTimelineModule,
-        WebGLTimelineModule
+        WebGLTimelineModule,
+        AngularSvgIconModule
     ],
     providers: [
     ],
