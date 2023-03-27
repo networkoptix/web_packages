@@ -74,7 +74,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     userEmail: string;
     canSeeInfo: boolean;
     system: NxSystem;
-    systems: NxSystemInfo[] | [NxSystem];
+    systems: NxSystemInfo[];
     systemId: any;
     active: any = {};
     singleSystem: any = {};
@@ -432,7 +432,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                     this.singleSystem = true;
                     this.systemCounter = 1;
                     this.system.infoSubject.pipe(untilDestroyed(this)).subscribe(system => {
-                        this.systems = [system as NxSystem];
+                        this.systems = [system as any]; // TODO: Not sure what is happening with this type, either this.systems should not be assigned to the value that comes out of infoSubject or the NxSystemOldModule type should be updated
                         this.updateActiveSystem();
                         this.updateActive();
                         this.headerService.activeSystem = system?.serverManager.moduleInfo;
@@ -515,7 +515,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             this.headerService.activeSystem = this.systems[0];
         } else if (this.systemId) {
             // Will only have multiple systems on cloud
-            this.headerService.activeSystem = (this.systems as NxSystemInfo[]).find(system => {
+            this.headerService.activeSystem = this.systems.find(system => {
                 return this.systemId === system.id;
             });
         } else {

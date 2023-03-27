@@ -8,15 +8,8 @@ import { environment } from '@environments/environment';
 import { NxMenusService } from './menus.service';
 import { MenuNode } from './menus.service.types';
 import { ContextManifest } from './nx-cloud-api/nx-cloud-api.types';
+import { activeSystemType, createButtonType, MenuNodeNavProps } from './nx-header.service.types';
 import { WINDOW } from './window-provider';
-
-type createButtonType = 'default' | 'primary';
-interface MenuNodeNavProps {
-    url: string;
-    // eslint-disable-next-line camelcase
-    new_window: boolean;
-    queryParamsHandling?;
-}
 
 @UntilDestroy({ checkProperties: true })
 @Injectable({
@@ -24,7 +17,7 @@ interface MenuNodeNavProps {
 })
 export class NxHeaderService {
     public showSubject = new BehaviorSubject(false);
-    public activeSystem$ = new BehaviorSubject(null);
+    public activeSystem$ = new BehaviorSubject<activeSystemType>(null);
     public lastActive$ = new BehaviorSubject(null);
     public nodes$ = new BehaviorSubject<MenuNode[]>([]);
     public currentLocation$ = new BehaviorSubject<any>({});
