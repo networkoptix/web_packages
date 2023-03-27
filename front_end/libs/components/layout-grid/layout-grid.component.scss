@@ -288,22 +288,35 @@ cdk-tree,
         background: rgba($brand_core, .1);
         outline: 2px solid var(--brand-core);
     }
+}
 
-    .item-error {
-        display: flex;
-        flex-direction: column;
-        flex-wrap: wrap;
-        justify-content: center;
-        align-items: center;
+.item-error {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    max-width: 100%;
 
-        &>.item-error {
-            flex-direction: row;
-        }
+    &>.item-error {
+        flex-direction: row;
+    }
 
-        h4 {
-            text-align: center;
-            color: var(--error) !important;
-        }
+    h4, p {
+        @include mixins.ellipsis;
+    }
+
+    .text-block {
+        max-width: calc(100% - 2em);
+    }
+
+    h4 {
+        text-align: center;
+        color: var(--error) !important;
+    }
+
+    p {
+        text-align: center;
     }
 }
 

@@ -543,7 +543,8 @@
                                 <div
                                     *ngIf="
                                         !errors[itemDetail.details.id] &&
-                                            playable.includes(itemDetail.details.status);
+                                            (playable.includes(itemDetail.details.status) ||
+                                                itemDetail.type === RESOURCE_TYPE.WEB_PAGE);
                                         else showError
                                     "
                                     cdkDragHandle
@@ -571,12 +572,30 @@
                                     </ng-container>
                                     <ng-container *ngSwitchCase="RESOURCE_TYPE.WEB_PAGE">
                                         <ng-template #webpagesNotSupported>
-                                            <div class="not-supported">
-                                                <h3 translate>Webpages not currently supported</h3>
-                                                <p translate>
-                                                    Support will be added in a future version of
-                                                    cloud layouts
-                                                </p>
+                                            <div class="item-error">
+                                                <div class="item-error">
+                                                    <svg-icon
+                                                        nx-add-svg-src
+                                                        [svgStyle]="{
+                                                            'max-width.px': '64',
+                                                            'max-height.px': '64',
+                                                            'margin.px': '16',
+                                                            width: '100%',
+                                                            height: '100%'
+                                                        }"
+                                                        [src]="icons.dirLayouts + 'webpage.svg'"
+                                                    >
+                                                    </svg-icon>
+                                                    <div class="text-block">
+                                                        <h4 translate>
+                                                            Webpages not currently supported
+                                                        </h4>
+                                                        <p translate>
+                                                            Support will be added in a future
+                                                            version of cloud layouts
+                                                        </p>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </ng-template>
                                         <ng-container
