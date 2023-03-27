@@ -43,6 +43,7 @@ export interface LayoutItemRenderConfig {
         'max-height': string;
         'max-width': string;
     };
+    showTooltip: boolean;
 }
 
 export interface ParsedLayoutItem extends LayoutItem {

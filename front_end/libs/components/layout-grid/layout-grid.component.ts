@@ -675,6 +675,7 @@ export class NxLayoutGridComponent {
         { renderConfig }: ParsedLayoutItem,
         item: ResourceNode,
     ): void => {
+        renderConfig.showTooltip = width < 360;
         if (item?.type !== ResourceType.CAMERA) {
             return;
         }

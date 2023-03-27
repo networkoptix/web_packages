@@ -477,7 +477,51 @@
                                         class="item-error drag-container"
                                     >
                                         <div class="item-error">
+                                            <ng-template #errorMsg>
+                                                <h3
+                                                    (click)="
+                                                        system.userManager.permissions
+                                                            .editCameras &&
+                                                            openCameraSettings(
+                                                                itemDetail.details.id
+                                                            )
+                                                    "
+                                                    [ngClass]="{
+                                                        'default-password':
+                                                            system.userManager.permissions
+                                                                .editCameras &&
+                                                            status === 'defaultPassword'
+                                                    }"
+                                                >
+                                                    {{
+                                                        (itemDetail.type === RESOURCE_TYPE.CAMERA
+                                                            ? LANG.common.cameraStates
+                                                            : LANG.common.serverStates)[status] ||
+                                                            LANG.layouts.errors[status] ||
+                                                            status | translate
+                                                    }}
+                                                </h3>
+                                                <h4
+                                                    *ngIf="
+                                                        additionalErrorMessages[
+                                                            itemDetail.details.id
+                                                        ] as additionalMessage
+                                                    "
+                                                >
+                                                    {{ additionalMessage }}
+                                                </h4>
+                                            </ng-template>
+                                            <ng-template #errorTooltip>
+                                                <div class="tooltip-error-wrapper">
+                                                    <ng-container
+                                                        [ngTemplateOutlet]="errorMsg"
+                                                    ></ng-container>
+                                                </div>
+                                            </ng-template>
                                             <svg-icon
+                                                [nxTooltip]="
+                                                    item.renderConfig.showTooltip && errorTooltip
+                                                "
                                                 nx-add-svg-src
                                                 [svgStyle]="{
                                                     'max-width.px': '64',
@@ -509,36 +553,11 @@
                                                 "
                                             >
                                             </svg-icon>
-                                            <h3
-                                                (click)="
-                                                    system.userManager.permissions.editCameras &&
-                                                        openCameraSettings(itemDetail.details.id)
-                                                "
-                                                [ngClass]="{
-                                                    'default-password':
-                                                        system.userManager.permissions
-                                                            .editCameras &&
-                                                        status === 'defaultPassword'
-                                                }"
-                                            >
-                                                {{
-                                                    (itemDetail.type === RESOURCE_TYPE.CAMERA
-                                                        ? LANG.common.cameraStates
-                                                        : LANG.common.serverStates)[status] ||
-                                                        LANG.layouts.errors[status] ||
-                                                        status | translate
-                                                }}
-                                            </h3>
+                                            <ng-container
+                                                *ngIf="!item.renderConfig.showTooltip"
+                                                [ngTemplateOutlet]="errorMsg"
+                                            ></ng-container>
                                         </div>
-                                        <h4
-                                            *ngIf="
-                                                additionalErrorMessages[
-                                                    itemDetail.details.id
-                                                ] as additionalMessage
-                                            "
-                                        >
-                                            {{ additionalMessage }}
-                                        </h4>
                                     </div>
                                 </ng-template>
                                 <div
@@ -576,7 +595,27 @@
                                         <ng-template #webpagesNotSupported>
                                             <div class="item-error">
                                                 <div class="item-error">
+                                                    <ng-template #errorMsg>
+                                                        <h3 translate>
+                                                            Webpages not currently supported
+                                                        </h3>
+                                                        <h4 translate>
+                                                            Support will be added in a future
+                                                            version of cloud layouts
+                                                        </h4>
+                                                    </ng-template>
+                                                    <ng-template #errorTooltip>
+                                                        <div class="tooltip-error-wrapper">
+                                                            <ng-container
+                                                                [ngTemplateOutlet]="errorMsg"
+                                                            ></ng-container>
+                                                        </div>
+                                                    </ng-template>
                                                     <svg-icon
+                                                        [nxTooltip]="
+                                                            item.renderConfig.showTooltip &&
+                                                            errorTooltip
+                                                        "
                                                         nx-add-svg-src
                                                         [svgStyle]="{
                                                             'max-width.px': '64',
@@ -585,17 +624,19 @@
                                                             width: '100%',
                                                             height: '100%'
                                                         }"
-                                                        [src]="icons.dirLayouts + 'webpage.svg'"
+                                                        [src]="
+                                                            icons.dirNonStandardView +
+                                                            'placeholder_preview_alert.svg'
+                                                        "
                                                     >
                                                     </svg-icon>
-                                                    <div class="text-block">
-                                                        <h4 translate>
-                                                            Webpages not currently supported
-                                                        </h4>
-                                                        <p translate>
-                                                            Support will be added in a future
-                                                            version of cloud layouts
-                                                        </p>
+                                                    <div
+                                                        *ngIf="!item.renderConfig.showTooltip"
+                                                        class="text-block"
+                                                    >
+                                                        <ng-container
+                                                            [ngTemplateOutlet]="errorMsg"
+                                                        ></ng-container>
                                                     </div>
                                                 </div>
                                             </div>
