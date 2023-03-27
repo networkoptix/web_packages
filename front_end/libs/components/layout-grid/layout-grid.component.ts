@@ -28,6 +28,7 @@ import {
     debounceTime,
     takeUntil,
     startWith,
+    catchError,
 } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 
@@ -1114,6 +1115,13 @@ export class NxLayoutGridComponent {
     tooltipTarget$ = new BehaviorSubject<string>('');
 
     updateTooltipTarget = (id: string): void => this.tooltipTarget$.next(id);
+
+    pingServer =
+        ({ parentId: serverId }: { parentId: string }) =>
+        (): Observable<unknown> =>
+            this.system.serverManager.mediaserverConnections[serverId]
+                .ping()
+                .pipe(catchError(() => Promise.resolve()));
 
     serverStats$ = this.tooltipTarget$.pipe(
         filter(id => !!id),

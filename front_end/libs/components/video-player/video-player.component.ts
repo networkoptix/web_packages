@@ -8,7 +8,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ConnectionError, WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';
-import { filter, map, switchMap, tap } from 'rxjs';
+import { filter, map, Observable, switchMap, tap } from 'rxjs';
 
 @UntilDestroy()
 @Component({
@@ -19,6 +19,10 @@ import { filter, map, switchMap, tap } from 'rxjs';
 export class NxVideoPlayerComponent {
     @Input() camera: NxSystemCamera;
     @Input() rotation: number;
+    /**
+     * Pings the server to allow NxCurrentRelayInterceptor to map to resolved relay instance.
+     */
+    @Input() pingServer: () => Observable<unknown>;
     @IBool() @Input() controls: CoercedBoolInput = false;
     @IBool() @Input() autoplay: CoercedBoolInput = false;
     @IBool() @Input() autopause: CoercedBoolInput = false;
@@ -67,7 +71,8 @@ export class NxVideoPlayerComponent {
     }
 
     ngAfterViewInit(): void {
-        const stream$ = WebRTCStreamManager.connect(this.camera.webRtcUrl, this.webRtcPlayerRef.nativeElement).pipe(
+        const stream$ = this.pingServer().pipe(
+            switchMap(() => WebRTCStreamManager.connect(this.camera.webRtcUrl, this.webRtcPlayerRef.nativeElement)),
             tap(([stream, error]) => {
                 if (stream) {
                     this.webRtcPlayerRef.nativeElement.srcObject = stream;

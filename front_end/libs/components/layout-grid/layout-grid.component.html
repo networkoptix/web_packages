@@ -555,6 +555,7 @@
                                             cdkDragHandle
                                             [cdkDragHandleDisabled]="layout.locked"
                                             [camera]="itemDetail.details"
+                                            [pingServer]="pingServer(itemDetail.details)"
                                             [rotation]="item.rotation"
                                             (showError)="handleVideoError(itemDetail, $event)"
                                             (showPtz)="showPtz.emit($event)"
