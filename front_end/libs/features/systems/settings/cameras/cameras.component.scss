@@ -345,6 +345,7 @@ nx-block .card {
 .disabled-audio-label {
     opacity: 0.3;
     cursor: default;
+    color: var(--checkbox-color) !important;
 }
 
 .control-label {

@@ -109,22 +109,6 @@
         }
     }
 
-    &[disabled] {
-        opacity: .3;
-
-        .tick {
-            cursor: default;
-        }
-
-        input:hover~.tick {
-
-            svg polygon.box,
-            svg polyline.box {
-                stroke: $halfChecked  !important;
-            }
-        }
-    }
-
     label {
         &:hover:not([disabled]) {
             color: $hover;
@@ -186,12 +170,29 @@ nx-checkbox {
         }
 
         &:not(.desktop) {
-            @include checkboxSvgStateColors(var(--checkbox-hover-color),
-                var(--checkbox-active-color),
-                var(--checkbox-active-hover-color),
-                var(--checkbox-active-color),
-                var(--checkbox-hover-check-color),
-            );
+            &:not([disabled]) {
+                @include checkboxSvgStateColors(var(--checkbox-hover-color),
+                    var(--checkbox-active-color),
+                    var(--checkbox-active-hover-color),
+                    var(--checkbox-active-color),
+                    var(--checkbox-hover-check-color),
+                );
+            }
+            &[disabled] {
+                opacity: .3;
+
+                .tick {
+                    cursor: default;
+                }
+
+                input:hover~.tick {
+
+                    svg polygon.box,
+                    svg polyline.box {
+                        stroke: var(--checkbox-color)  !important;
+                    }
+                }
+            }
         }
 
         &+label {
