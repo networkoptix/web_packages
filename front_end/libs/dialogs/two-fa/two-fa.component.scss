@@ -24,7 +24,7 @@
                     margin-left: 0;
 
                     svg path {
-                        fill: $dark9;
+                        fill: var(--btn-default-color) !important;;
                         stroke: none !important;
                     }
                 }
