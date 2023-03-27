@@ -4,6 +4,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { CookieService } from 'ngx-cookie-service';
 import { SessionStorageService } from 'ngx-webstorage';
 
+import { AuthorizeParams } from '@authorization/src/app/components/authorize.component.types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -27,7 +28,7 @@ export class NxThemeService {
     darkThemeMq: MediaQueryList;
     themeSelected: string;
     userTheme: string;
-    viewType: 'web' | 'desktop' | 'mobile';
+    viewType: string;
 
     themeCustomProperty: CustomAccountProperty<{ theme: AvailableThemes }>;
 
@@ -45,6 +46,15 @@ export class NxThemeService {
         this.CONFIG = configService.getConfig();
         this.themeCustomProperty = this.cloudApi.customAccountPropertyFactory('theme', { theme: this.CONFIG.themeConfig.default as AvailableThemes });
         this.viewType = this.route.snapshot.queryParams.view_type || 'web';
+
+        this.route.queryParams
+            .pipe(untilDestroyed(this))
+            .subscribe(async (params: AuthorizeParams) => {
+                if (!params.view_type) {
+                    this.viewType = this.window.document.documentElement.getAttribute('data-platform');
+                }
+                this.viewType ||= 'web';
+            });
 
         this.sessionStorage.observe('theme')
             .pipe(untilDestroyed(this))
