@@ -8,6 +8,7 @@ from robot.api.deco import keyword, library
 class DockerApi(object):
     def __init__(self):
         self.docker_host_ip = BuiltIn().get_variable_value("${QA BURBANK IP}")
+        self.docker_host_port = BuiltIn().get_variable_value("${QA DOCKER HOST PORT}")
         self.docker_image = BuiltIn().get_variable_value("${IMAGE}")
 
     @keyword
@@ -32,34 +33,34 @@ class DockerApi(object):
                 "Privileged": True
             }
         }
-        r = requests.post(f'http://{self.docker_host_ip}:5555/containers/create?name={name}', json=payload)
+        r = requests.post(f'http://{self.docker_host_ip}:{self.docker_host_port}/containers/create?name={name}', json=payload)
         logger.trace(r.json)
         assert r.status_code == 201 
         return r.json()['Id']
 
     @keyword    
     def start_container(self, id):
-        r = requests.post(f'http://{self.docker_host_ip}:5555/containers/{id}/start')
+        r = requests.post(f'http://{self.docker_host_ip}:{self.docker_host_port}/containers/{id}/start')
         assert r.status_code == 204 
 
 
     @keyword    
     def stop_container(self, id):
-        r = requests.post(f'http://{self.docker_host_ip}:5555/containers/{id}/stop')
+        r = requests.post(f'http://{self.docker_host_ip}:{self.docker_host_port}/containers/{id}/stop')
         assert r.status_code == 204 
 
     @keyword    
     def delete_container(self, id):
-        r = requests.delete(f'http://{self.docker_host_ip}:5555/containers/{id}?force=true')
+        r = requests.delete(f'http://{self.docker_host_ip}:{self.docker_host_port}/containers/{id}?force=true')
         assert r.status_code == 204 
 
     @keyword    
     def list_containers(self):
-        r = requests.get(f'http://{self.docker_host_ip}:5555/containers/json')
+        r = requests.get(f'http://{self.docker_host_ip}:{self.docker_host_port}/containers/json')
         assert r.status_code == 200
         return r.json()
     
     @keyword
     def prune_containers(self):
-        r = requests.post(f'http://{self.docker_host_ip}:5555/containers/prune')
+        r = requests.post(f'http://{self.docker_host_ip}:{self.docker_host_port}/containers/prune')
         assert r.status_code == 200
