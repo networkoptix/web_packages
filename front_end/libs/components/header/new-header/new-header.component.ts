@@ -40,6 +40,12 @@ export class NxNewHeaderComponent {
         systemsService: NxSystemsService,
         private store: Store,
     ) {
+        if (router.url.includes('/systems/')) {
+            menusService.updateActiveSystemMenu(
+                this.headerService.activeSystem || this.headerService.lastActive$.value,
+            );
+        }
+
         router.events
             .pipe(
                 filter(event => event instanceof NavigationEnd),
