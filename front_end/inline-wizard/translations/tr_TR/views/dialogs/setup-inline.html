@@ -30,27 +30,27 @@
 
 <div class="panel-body text-center panel-body-big" ng-if="stepIs('start')">
     <div>
-        <h2>Get Started with {{Config.productName}}</h2>
-        <p class="master-description">Please configure the server first.<br>
-            Choose an option.</p>
+        <h2>{{Config.productName}} ile Başlayın</h2>
+        <p class="master-description">Lütfen önce sunucuyu yapılandırın.<br>
+            Bir seçenek belirleyin.</p>
         <div class="spacer" ng-if="!settings.liteClient"><br><br><br></div>
         <button class="btn btn-primary" autofocus ng-click="next()">Yeni Sistem Kur</button>
 
         <div class="horisontal-line-text">
             <span class="line"></span>
-            <span class="text">or</span>
+            <span class="text">veya</span>
             <span class="line"></span>
         </div>
-        <button class="btn btn-default" ng-click="skip()">Add to Existing System</button><br>
-        <small class="text">(if {{Config.productName}} has been already setup)</small><br>
+        <button class="btn btn-default" ng-click="skip()">Mevcut Sisteme Ekle</button><br>
+        <small class="text">(eğer {{Config.productName}} zaten ayarlanmışsa)</small><br>
         <small ng-if="!settings.liteClient">&nbsp;</small>
     </div>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('systemName')">
-    <h2>Sistem ismini girin</h2>
+    <h2>Sistem Adını Girin</h2>
     <p class="master-description">
-        It will help to identify or find System.
+        Sistemin tanımlanmasına veya bulunmasına yardımcı olacaktır.
     </p>
     <form class="master-controls" name="forms.systemNameForm" novalidate ng-submit="next()">
         <div class="form-group" validate-field>
@@ -127,8 +127,8 @@
                 <div class="master-icon"><span class="icon-localSystem"></span></div>
                 <h3>Yerel</h3>
                 <p>
-                    Works in local networks only<br>
-                    Does not require Internet connection
+                    Yalnızca yerel ağlarda çalışır<br>
+                    İnternet bağlantısı gerektirmez
                 </p>
             </div>
         </div>
@@ -140,16 +140,16 @@
                 <div class="master-icon"><span class="icon-cloud"></span></div>
                 <h3>Bulut</h3>
                 <p>
-                    Available from everywhere<br>
-                    Requires Internet connection
+                    Her yerden erişilebilir<br>
+                    İnternet bağlantısı gerektirir
                 </p>
             </div>
         </div>
     </div>
     <p class="vertical-bottom">
         <a ng-if="!settings.liteClient" class="external" ng-href="{{portalUrl}}" title="learn more about {{Config.cloud.productName}}"
-           target="_blank" ng-click="openLink($event)">Help me decide</a>
-        <span ng-if="settings.liteClient">Learn more: {{portalUrl}}</span>
+           target="_blank" ng-click="openLink($event)">Karar vermeme yardım et</a>
+        <span ng-if="settings.liteClient">Daha fazlasını öğren: {{portalUrl}}</span>
     </p>
 </div>
 
@@ -158,33 +158,33 @@
     <div class="master-icon">
         <span class="icon-account"></span>
     </div>
-    <h2>{{Config.cloud.productName}} account</h2>
+    <h2>{{Config.cloud.productName}} hesap</h2>
     <p class="master-description">
-        An account is required to use the cloud System {{Config.cloud.productName}}
+        Bulut Sistemi {{Config.cloud.productName}}kullanmak için bir hesap gereklidir
     </p>
     <p class="master-controls">
-        <button class="btn btn-primary" ng-click="createAccount()" auto-focus>Create a new account</button>&nbsp;&nbsp;
-        <button class="btn btn-default" ng-click="next('cloudLogin', true)">Use existing</button>
+        <button class="btn btn-primary" ng-click="createAccount()" auto-focus>Yeni bir hesap oluştur</button>&nbsp;&nbsp;
+        <button class="btn btn-default" ng-click="next('cloudLogin', true)">Hesabım var</button>
     </p>
 </div>
 
 
 <div class="panel-body text-center" ng-if="stepIs('cloudAuthorizedIntro')">
-    <p>System will be connected to</p>
+    <p>Bağlanılacak sistem</p>
 
     <div class="master-icon"><span class="icon-cloud"></span></div>
 
     <h2>{{settings.presetCloudEmail}}</h2>
 
     <p class="vertical-bottom">
-        <a href="" ng-click="next('cloudLogin', true)">Connect to another account</a>
+        <a href="" ng-click="next('cloudLogin', true)">Başka bir hesaba bağlan</a>
     </p>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('cloudLogin')">
     <div class="master-icon"><span class="icon-cloud"></span></div>
 
-    <h2>Login to <span class="product-name add-version">{{Config.cloud.productName}}</span></h2>
+    <h2>Giriş<span class="product-name add-version">{{Config.cloud.productName}}</span></h2>
 
     <form class="master-controls" name="forms.cloudForm" novalidate ng-class="{'has-error':settings.cloudError}" ng-submit="next()">
         <input type="submit" hidden>
@@ -214,14 +214,14 @@
                     </span>
             </label>
             <label class="control-label mb-0" for="stayLoggedIn">
-                <span>Stay logged in</span>
+                <span>Oturum açık kalsın</span>
             </label>
         </div>
 
         <div class="form-group has-error"
              ng-if="forms.cloudForm.cloudEmail.$touched && forms.cloudForm.cloudEmail.$error.email">
             <div class="help-block">
-                Please, enter a valid email
+                Lütfen geçerli bir E-posta girin
             </div>
         </div>
 
@@ -229,7 +229,7 @@
              ng-if="forms.cloudForm.cloudEmail.$touched && forms.cloudForm.cloudEmail.$error.required ||
                     forms.cloudForm.cloudPassword.$touched && forms.cloudForm.cloudPassword.$error.required">
             <div class="help-block">
-                Email and password are required
+                E-posta ve şifre gerekli
             </div>
         </div>
 
@@ -241,14 +241,14 @@
 
         <div class="form-group" ng-if="settings.liteClient">
             <p class="help-block">
-                To create an account please visit {{portalUrl}}
+                Bir hesap oluşturmak için lütfen {{portalUrl}} adresini ziyaret edin
             </p>
         </div>
     </form>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('localLogin')">
-    <h2>Set up an administrator password</h2>
+    <h2>Bir yönetici parolası ayarlayın</h2>
     <form class="master-controls" name="forms.localForm" novalidate disable-autocomplete ng-submit="next()">
         <input type="submit" hidden>
         <div class="form-group" validate-field>
@@ -282,7 +282,7 @@
                     </span>
             </label>
             <label class="control-label mb-0" for="savePassword">
-                <span>Save password</span>
+                <span>Şifreyi kaydet</span>
             </label>
         </div>
 
@@ -291,7 +291,7 @@
                      !forms.localForm.passwordInput.$dirty &&
                      !forms.localForm.localPasswordConfirmation.$touched">
             <div class="help-block">
-                Password must contain different types of characters and have at least 8 symbols
+                Parola farklı türde karakterler içermeli ve en az 8 sembol içermelidir
             </div>
         </div>
         <div class="form-group has-error" ng-if="!forms.localForm.passwordInput.password.$valid">
@@ -388,7 +388,7 @@
 <div class="panel-body text-center" ng-if="stepIs('retryMergeCredentials')">
     <div class="master-icon"><span class="preloader"></span></div>
     <h2>Sistemler Birleştiriliyor ...</h2>
-    <p class="master-description">Trying to connect to the System</p>
+    <p class="master-description">Sisteme bağlanmaya çalışılıyor</p>
 </div>
 
 
@@ -399,14 +399,14 @@
         {{settings.remoteError}}
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-click="retry()">Try again</button>
-        <button class="btn btn-default" ng-click="skip()">Setup a separate System</button>
+        <button class="btn btn-default" ng-click="retry()">Tekrar deneyin</button>
+        <button class="btn btn-default" ng-click="skip()">Ayrı bir Sistem kurun</button>
     </p>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('mergeTemporaryFailure')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>System was successfully merged, but is not ready yet.</h2>
+    <h2>Sistem başarıyla birleştirildi, ancak henüz hazır değil.</h2>
     <p class="master-description">
         {{settings.remoteError}}
     </p>
@@ -417,7 +417,7 @@
 
 <div class="panel-body text-center" ng-if="stepIs('cloudProcess')">
     <div class="master-icon"><span class="preloader"></span></div>
-    <h2>Connecting to {{Config.cloud.productName}} ...</h2>
+    <h2>{{Config.cloud.productName}} bağlanılıyor...</h2>
     <p class="master-description">Bu işlem birkaç dakika sürebilir</p>
 </div>
 
@@ -427,7 +427,7 @@
     <p>Giriş</p>
     <h4>{{settings.cloudEmail}}</h4>
     <p>Paylaşım ve hesap ayarları</p>
-    <h4><a class="external" ng-href="{{portalSystemLink}}"  title="open {{Config.cloud.productName}}"
+    <h4><a class="external" ng-href="{{portalSystemLink}}"  title="{{Config.cloud.productName}} aç"
            ng-click="openLink($event)">{{portalShortLink}}</a></h4>
 </div>
 
@@ -442,7 +442,7 @@
 
 
 <div class="panel-body text-center" ng-if="stepIs('configureWrongNetwork')">
-    <p><b>Please configure network settings first</b></p>
+    <p><b>Lütfen önce ağ ayarlarını yapılandırın</b></p>
     <network-settings settings="networkSettings[0]" ></network-settings>
 
     <p class="vertical-bottom">
@@ -451,7 +451,7 @@
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('configureNetworkForInternet')">
-    <p><b>Configure the network to set up Internet connection</b></p>
+    <p><b>İnternet bağlantısı için ağ ayarlarını yapılandırın</b></p>
     <network-settings settings="networkSettings[0]" ></network-settings>
 
     <p class="vertical-bottom">
@@ -463,11 +463,11 @@
 <div class="panel-body text-center" ng-if="stepIs('noInternetOnServer')">
     <h2>Sunucuyu İnternete bağlayın</h2>
     <p class="master-description">
-        Set up Internet connection on the server to be able <br> to connect to it anywhere using {{Config.cloud.productName}}.
+        <br> {{Config.cloud.productName}}herhangi bir yere bağlanabilmek için sunucuda İnternet bağlantısı kurun.
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-click="retry()">Try again</button>
-        <button class="btn btn-default" ng-click="skip()">Setup local System</button>
+        <button class="btn btn-default" ng-click="retry()">Tekrar deneyin</button>
+        <button class="btn btn-default" ng-click="skip()">Yerel Sistem kurun</button>
     </p>
     <p ng-if="serverInfo.flags.canSetupNetwork" class="vertical-bottom">
         <a href="" ng-click="next('configureNetworkForInternet')">Ağ ayarlarını yapılandırın</a>
@@ -476,25 +476,25 @@
 
 
 <div class="panel-body text-center" ng-if="stepIs('noInternetOnClient')">
-    <h2>Cannot connect to {{Config.cloud.productName}}</h2>
+    <h2>{{Config.cloud.productName}}bağlanılamıyor</h2>
     <p class="master-description">
         Internet bağlantısını kontrol edin.
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-click="retry()">Try again</button>
-        <button class="btn btn-default" ng-click="skip()">Setup local System</button>
+        <button class="btn btn-default" ng-click="retry()">Tekrar deneyin</button>
+        <button class="btn btn-default" ng-click="skip()">Yerel Sistem kurun</button>
     </p>
 </div>
 
 <div class="panel-body text-center" ng-if="stepIs('cloudFailure')">
     <div class="master-icon"><span class="icon-fail"></span></div>
-    <h2>Cannot connect to {{Config.cloud.productName}}</h2>
+    <h2>{{Config.cloud.productName}}bağlanılamıyor</h2>
     <p class="master-description">
         {{cloudError}}
     </p>
     <p class="master-controls">
-        <button class="btn btn-default" ng-click="retry()">Try again</button>
-        <button class="btn btn-default" ng-click="skip()">Setup local System</button>
+        <button class="btn btn-default" ng-click="retry()">Tekrar deneyin</button>
+        <button class="btn btn-default" ng-click="skip()">Yerel Sistem kurun</button>
     </p>
 </div>
 
@@ -502,7 +502,7 @@
     <div class="master-icon"><span class="icon-fail"></span></div>
     <h2>Sistem kurulamıyor</h2>
     <p class="master-description">Bir şeyler yanlış gitti. <br>
-        Error description: {{settings.localError}}
+        Hata açıklaması: {{settings.localError}}
     </p>
     <p class="master-controls">
         <button class="btn btn-default" ng-click="retry()">Tekrar deneyin</button>
@@ -512,8 +512,8 @@
 
 <div class="panel-footer lite-client-instruction" ng-if="settings.liteClient && stepIs('start')">
     <p>
-        It is possible to set it up from another computer by connecting<br>
-        to this device by one of the following ways:
+        <br>
+        aşağıdaki yollardan biriyle bu cihaza bağlayarak başka bir bilgisayardan kurmak mümkündür:
     </p>
     <div class="row">
         <div class="col-xs-6">
@@ -521,7 +521,7 @@
             <div class="col-xs-4 text-right">Adres</div><div class="col-xs-8 text-left"><b>https://{{IP}}:{{port}}</b></div>
         </div>
         <div class="col-xs-6">
-            <div class="text-center"><b>Using {{Config.productName}} application</b></div>
+            <div class="text-center"><b>{{Config.productName}} uygulama kullanılıyor</b></div>
             <div class="col-xs-6 text-right">Ana bilgisayar</div><div class="col-xs-6 text-left"><b>{{IP}}</b></div>
             <div class="col-xs-6 text-right">Port</div><div class="col-xs-6 text-left"><b>{{port}}</b></div>
             <div class="col-xs-6 text-right">Giriş</div><div class="col-xs-6 text-left"><b>{{Config.defaultLogin}}</b></div>
@@ -535,17 +535,17 @@
             ng-if="activeStep.next"
             ng-disabled="lockNextButton"
             auto-focus
- ng-click="next()">Next <span class="glyphicon glyphicon-arrow-right"></span></button>
+ ng-click="next()">Sonraki <span class="glyphicon glyphicon-arrow-right"></span></button>
     <button class="btn btn-primary pull-right"
             ng-if="activeStep.finish"
             ng-disabled="lockNextButton"
             auto-focus
- ng-click="finish()">Finish
+ ng-click="finish()">Bitir
     </button>
     <button class="btn btn-default pull-left"
             ng-if="activeStep.cancel"
             ng-disabled="lockNextButton"
-            ng-click="cancel()">Cancel</button>
+            ng-click="cancel()">İptal</button>
     <button class="btn btn-default pull-left"
             ng-if="activeStep.back"
             ng-disabled="lockNextButton"
