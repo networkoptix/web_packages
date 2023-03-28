@@ -1234,7 +1234,7 @@
             "required": "{number} más requeridos",
             "activated": "Clave de licencia activada",
             "inuse": "La clave de licencia ya ha sido activada y vinculada al servidor con el ID de hardware {hwid} en otro sistema",
-            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
+            "trialActivated": "Licencia de tiempo activada. A partir de hoy, puede grabar hasta 4 cámaras durante 30 días."
         }
     },
     "redirects": {

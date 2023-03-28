@@ -9,33 +9,33 @@
     "Privacy": "Gizlilik",
     "Support": "Destek",
     "Terms": "Şartlar",
-    "Developers Console": "Developers Console",
+    "Developers Console": "Geliştirici Konsolu",
     "productName": "",
     "monitoring": {
-        "unavailable": "Make sure the specified server is online and try again."
+        "unavailable": "Belirtilen sunucunun çevrimiçi olduğundan emin olun ve tekrar deneyin."
     },
     "alarmTypes": {
         "Servers": "Sunucular",
         "Cameras": "Kameralar",
         "Storage Locations": "Depolama konumları",
-        "Network Interfaces": "Network Interfaces"
+        "Network Interfaces": "Ağ Arabirimleri"
     },
     "alarmLevels": {
         "offline": "Çevrimdışı",
-        "error": "Errors",
-        "warning": "Warnings"
+        "error": "Hatalar",
+        "warning": "Uyarılar"
     },
     "alertFilters": {
-        "all": "All Alerts",
-        "warning": "Only Warnings",
-        "error": "Only Errors"
+        "all": "Tüm Alarmlar",
+        "warning": "Yalnızca Uyarılar",
+        "error": "Yalnızca Hatalar"
     },
     "deviceTypes": {
-        "All Device Types": "All Device Types",
+        "All Device Types": "Tüm Cihaz Türleri",
         "servers": "Sunucu",
         "cameras": "Kameralar",
-        "storages": "Storages",
-        "networkInterfaces": "Interface"
+        "storages": "Depolama",
+        "networkInterfaces": "Arayüz"
     },
     "accessRoles": {
         "Administrator": {
@@ -97,7 +97,7 @@
     },
     "account": {
         "account": "Hesap",
-        "key": "Key",
+        "key": "Anahtar",
         "accountSavedSuccess": "Hesabınız başarıyla kaydedildi",
         "accountSettings": "Hesap Ayarları",
         "activationLinkSent": "Aktivasyon linki gönderildi",
@@ -120,10 +120,10 @@
         "expiredHeader": "Oturumunun süresi dolu",
         "loginSystemSubheader": "With your %CLOUD_NAME% Account",
         "connectSubheader": "To access it from anywhere and enable additional features",
-        "expiredSubheader": "Please, log in again",
-        "connectAdditional": "This account will get owner access level",
+        "expiredSubheader": "Lütfen tekrar giriş yapın",
+        "connectAdditional": "Bu hesap sahip erişim düzeyi alacak",
         "createText": "Hesap oluştur",
-        "setupText": "Setup Non-cloud System",
+        "setupText": "Bulut Olmayan Sistem Kurun",
         "asAccountSubheader": "As",
         "toAccountSubheader": "Kime",
         "forAccountSubheader": "For {accountEmail}",
@@ -134,7 +134,7 @@
         "passwordReset": "to reset server",
         "passwordRestart": "to restart server",
         "passwordDetach": "to detach server",
-        "passwordTransfer": "to transfer system",
+        "passwordTransfer": "sistemine transfer",
         "expiredAccountSubheader": "Lütfen tekrar giriş yapın",
         "createAccountHeader": "%CLOUD_NAME% hesabı oluştur",
         "activateHeader": "Activate %CLOUD_NAME% Account",
@@ -154,9 +154,9 @@
         "setupErrorAdditional": "<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>",
         "connectedText": "Sistem %CLOUD_NAME% e bağlı",
         "setupConnectedText": "Sistem bağlandı",
-        "stayLoggedInHelpText": "Checkbox for staying logged in",
+        "stayLoggedInHelpText": "Oturumu açık tutmak için onay kutusu",
         "termsAndConditionsHelpText": "Checkbox agreeing to terms and conditions and the privacy policy",
-        "copiedToClipboard": "Copied to clipboard",
+        "copiedToClipboard": "Panoya kopyalandı",
         "authCode": {
             "message": "Enter a code from your authentication app to confirm it's really you trying to {suffix}",
             "newPass": "yeni şifre belirle",
@@ -183,14 +183,14 @@
             "state": "Durum",
             "system": "Sistem",
             "expires": "Bitiş tarihi",
-            "key": "Key"
+            "key": "Anahtar"
         },
         "fromServer": {
             "ACTIVE": "Aktif",
             "INACTIVE": "Pasif",
             "Unassigned": "Atanmamış",
-            "until": "{size} until {expires}",
-            "This license was deactivated more than once AND was reactivated less than 24 hours ago": "This license was deactivated more than once AND was reactivated less than 24 hours ago",
+            "until": "{size} - {expires}",
+            "This license was deactivated more than once AND was reactivated less than 24 hours ago": "Bu lisans birden çok kez devre dışı bırakıldı ve 24 saatten kısa bir süre önce yeniden etkinleştirildi",
             "License key is already activated": "Lisans zaten etkinleştirildi",
             "Maximum number of items is 10000": "Maksimum öğe sayısı 10000'dir",
             "This Cloud license does not exist": "Bu Bulut lisansı mevcut değil",
@@ -201,13 +201,13 @@
             "Cloud System ID does not match credentials used": "Bulut Sistemi Kimliği, kullanılan kimlik bilgileriyle eşleşmiyor",
             "Not Authorized for cloud system": "Bulut sistemi için Yetkili değil",
             "This license is not currently activated": "Bu lisans etkinleştirilmemiş",
-            "This license has no deactivations remaining": "This license has no deactivations remaining",
+            "This license has no deactivations remaining": "Bu lisansta devre dışı bırakma hakkı kalmadı",
             "Cloud system Id does not match license activation": "Bulut sistemi kimliği, lisans aktivasyonuyla eşleşmiyor",
-            "used": "{used} of {total} ({percent}%) is used",
+            "used": "{used} - {total} (%{percent}) kullanıldı",
             "available": "Kullanılabilir",
             "usedSpace": "{usageSpace} ({percentage}%)"
         },
-        "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
+        "notUsedWarning": "Bulut depolama kayıt için kullanılmadı. Yapılandırmak için <a href=\"{serverSettings}\">Sunucu ayarları</a> gidin."
     },
     "common": {
         "account": {
@@ -244,7 +244,7 @@
             "unauthorized": "Kimlik doğrulaması gerekli"
         },
         "chromeCastWarning": "Chromecast kaynak kullanımını arttırabilir ve sunucunuzda sorunlara neden olabilir.",
-        "copiedToClipboard": "Copied to clipboard",
+        "copiedToClipboard": "Panoya kopyalandı",
         "login": "giriş",
         "recordingSettingsWarning": "Lütfen eksik kayıt ayarlarını güncelleyin.",
         "disableMotionWarning": "Kayıt modu \"Her zaman kaydet\" olarak değiştirilecek",
@@ -262,12 +262,12 @@
             "low": "Düşük"
         },
         "intervals": {
-            "yearS": "{count, plural, =0{# years} one{# year} other{# years}}",
-            "monthS": "{count, plural, =0{# months} one{# month} other{# months}}",
-            "weekS": "{count, plural, =0{# weeks} one{# week} other{# weeks}}",
-            "dayS": "{count, plural, =0{# days} one{# day} other{# days}}",
-            "hourS": "{count, plural, =0{# hours} one{# hour} other{# hours}}",
-            "minuteS": "{count, plural, =0{# minutes} one{# minute} other{# minutes}}"
+            "yearS": "{count, plural, =0{# yıl} one{# yıl} other{# yıl}}",
+            "monthS": "{count, plural, =0{# ay} one{# ay} other{# ay}}",
+            "weekS": "{count, plural, =0{# haftalar} one{# hafta} other{# haftalar}}",
+            "dayS": "{count, plural, =0{# gün} one{# gün} other{# gün}}",
+            "hourS": "{count, plural, =0{# saat} one{# saat} other{# saat}}",
+            "minuteS": "{count, plural, =0{# dakika} one{# dakika} other{# dakika}}"
         },
         "general": "Genel",
         "generalError": "Bir hata oluştu, daha sonra tekrar deneyin. Sorun devam ederse, lütfen destek ekibinize başvurun.",
@@ -313,13 +313,13 @@
     "components": {
         "widgets": {
             "lastUpdated": "Son Güncelleme { date }",
-            "updatingIn": "Updating in { time } seconds"
+            "updatingIn": "{ time } saniyede güncelleniyor"
         }
     },
-    "cookieWarning": "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences&nbsp; | here | . By continuing to use our site you consent to use our cookies.",
+    "cookieWarning": "Sitemizdeki deneyiminizi iyileştirmek için tanımlama bilgileri kullandık. Onlar ayrıca sitemizin nasıl kullanıldığını anlamamıza yardımcı olurlar. Daha fazlasını öğrenin ve çerez tercihlerinizi belirleyin&nbsp; | burada | . Sitemizi kullanmaya devam ederek çerezlerimizin kullanımına izin vermiş olursunuz.",
     "dashboard": {
-        "dashboardEditEnabled": "Dashboard editing is enabled",
-        "dashboardLocked": "Dashboard is locked",
+        "dashboardEditEnabled": "Pano düzenleme etkinleştirildi",
+        "dashboardLocked": "Pano kilitli",
         "unlockToUpload": "Unlock dashboard to upload config from json",
         "unlockToMove": "Unlock dashboard to move widgets"
     },
@@ -391,15 +391,15 @@
             "information": {
                 "update": {
                     "title": "Değiştir",
-                    "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
+                    "body": "Yeni anahtarı kullanarak Sistemdeki mevcut Bulut Depolama boyutunu değiştirebilirsiniz. Kaydedilen tüm veriler kaydedilecektir."
                 },
                 "migrate": {
                     "title": "Taşı",
-                    "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
+                    "body": "Kaydedilen tüm verileri içeren Bulut Depolama, etkin Bulut Depolama olmadan diğer Sisteminize kolayca aktarılabilir."
                 },
                 "delete": {
                     "title": "Sil",
-                    "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
+                    "body": "Bulut Depolamayı istediğiniz zaman Sistemden kaldırabilirsiniz. İsterseniz bu anahtarı daha sonra yeniden etkinleştirme için kullanabilirsiniz."
                 }
             },
             "remove": {
@@ -436,7 +436,7 @@
         },
         "merge": {
             "adminPasswordTitle": "Enter password to owner's account in <strong>{secondarySystem}</strong>",
-            "adminPasswordWrong": "Password for admin user is wrong",
+            "adminPasswordWrong": "Yönetici için şifre yanlış",
             "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME% portal.",
             "unknownBothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
             "checking": "Kontrol Ediliyor...",
@@ -462,10 +462,10 @@
             "primaryCannotMerge": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} System.",
             "primarySystemOffline": "System {primarySystem} is offline and cannot be merged with System {targetSystem}",
             "primarySystemUnavailable": "System {primarySystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "recommendSupport": "We recommend that you consult with | support | before proceeding.",
+            "recommendSupport": "Danışmanızı öneririz | destek | devam etmeden önce.",
             "restError": {
-                "duplicateServer": "Merge error. Both systems have same server",
-                "useCloudMerge": "Cannot merge systems bound to the cloud",
+                "duplicateServer": "Birleştirme hatası. Her iki sistem de aynı sunucuya sahip",
+                "useCloudMerge": "Buluta bağlı sistemler birleştirilemez",
                 "differentCloudOwners": "Cannot merge two Cloud Systems with different owners"
             },
             "secondaryCannotMerge": "System {targetSystem} has an older software version that is incompatible with the current system. Update {targetSystem} to the {downloadHTML} to merge it with the current one.",
@@ -486,11 +486,11 @@
             "urlNotValid": "Geçerli bir URL girin",
             "unknownError": "Bilinmeyen bir hata oluştu. Sayfayı yenileyin ve tekrar deneyin. Sorun devam ederse, lütfen <a href=\"%SUPPORT_LINK%\" target=\"_blank\">destek</a>iletişime geçin.",
             "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System.",
-            "update": "Update them to the&nbsp; | latest build |"
+            "update": "Onları güncelle &nbsp; | son yapı |"
         },
         "message": {
             "system2faEnabled": "Two-factor authentication will now be forced for this system.",
-            "system2faDisabled": "Two-factor authentication is not required for this system.",
+            "system2faDisabled": "Bu sistem için iki faktörlü kimlik doğrulama gerekli değildir.",
             "storageSettingsSaved": "Depolama ayarları kaydedildi.",
             "storageSettingsNotSaved": "Depolama alanı ayarları kaydedilemedi.",
             "settingsSaved": "Ayarlar kaydedildi.",
@@ -503,22 +503,22 @@
             },
             "sent": "Mesaj gönderildi.",
             "subject": {
-                "integration_feedback": "Feedback for integration {asset}",
+                "integration_feedback": "Entegrasyon için geri bildirim {asset}",
                 "ipvd_feedback_device": "Feedback about {asset}",
                 "ipvd_feedback_page": "Kameralar sayfası için geri bildirim",
                 "sales_inquiry": "Sales inquiry for {asset}",
                 "technical_inquiry": "Technical inquiry for {asset}"
             },
             "title": {
-                "integration": "Get in touch with {companyName}",
+                "integration": "{companyName} ile iletişime geçin",
                 "ipvd_feedback_device": "Feedback about {asset}",
                 "ipvd_feedback_page": "Kameralar sayfası için geri bildirim"
             },
             "twoFactor": {
-                "required": "Two-factor authentication is required.",
+                "required": "İki faktörlü kimlik doğrulama gereklidir.",
                 "configure": "You can configure it in your",
                 "accountLink": "hesap ayarları",
-                "codeRequired": "Code is required"
+                "codeRequired": "Kod gerekli"
             }
         },
         "removeSystem": {
@@ -528,7 +528,7 @@
         },
         "renewAuth": {
             "action": "Giriş",
-            "message": "Please log in again.",
+            "message": "Lütfen tekrar giriş yapın.",
             "title": "Oturumunun süresi dolu"
         },
         "systemGroups": {
@@ -536,13 +536,13 @@
             "createdInCurrentGroup": "Mevcut grupta yeni grup oluşturulacak"
         },
         "transferOwnership": {
-            "userNotFound": "{ newOwnerEmail } is not a user in the system"
+            "userNotFound": "{ newOwnerEmail } sistemde bir kullanıcı değil"
         },
         "titles": {
             "error": "Hata",
             "success": "Başarılı",
             "changeAccount": "Bu mail {email} ile zaten giriş yapmışsınız",
-            "changePasswordFor": "Change Password for User \"{username}\"",
+            "changePasswordFor": "Kullanıcı \"{username}\" için Şifreyi Değiştir",
             "deleteUser": "Kullanıcıyı sil?",
             "failedLoginTo": "{systemName} e bağlanırken hata oluştu",
             "loggedFromOtherAccount": "Farklı bir hesapla giriş yapacaksınız",
@@ -553,12 +553,12 @@
             "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
-            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal and disable two factor authentication to delete your account."
+            "deleteAccount": "Hesabınızı silmek için sahibi olduğunuz tüm sistemlerin %CLOUD_NAME% portalından bağlantısını kesin ve iki faktörlü kimlik doğrulamayı devre dışı bırakın."
         },
         "twoFactor": {
             "action": "Giriş",
-            "message": "Two factor authentication is enabled for this account. Please login.",
-            "title": "Two factor is required!",
+            "message": "Bu hesap için iki faktörlü kimlik doğrulama etkinleştirildi. Lütfen giriş yapın.",
+            "title": "İki faktör gereklidir!",
             "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
             "unsupportedSystem": "To log in to this system disable \"Ask for verification code on every login with %CLOUD_NAME% account\" in your <a href=\"/account/security\">account settings</a>."
         }
@@ -648,8 +648,8 @@
         "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
         "This authorization method is forbidden. Please contact your system administrator.": "This authorization method is forbidden. Please contact your system administrator.",
         "This user does not exist.": "Kullanıcı mevcut değil.",
-        "The user is disabled. Please contact your system administrator.": "The user is disabled. Please contact your system administrator.",
-        "This user has been disabled by a system administrator.": "This user has been disabled by a system administrator.",
+        "The user is disabled. Please contact your system administrator.": "Kullanıcı devre dışı. Lütfen sistem yöneticinize başvurun.",
+        "This user has been disabled by a system administrator.": "Bu kullanıcı sistem yöneticisi tarafından devre dışı bırakıldı.",
         "cloud_systems_have_different_owners": "Bu sistem %CLOUD_NAME% bağlı, ancak farklı bir sahibi var. Bulut sistemleri, yalnızca sahip hesabı aynı ise birleştirilebilir.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">Bir sunucu, hem seçilen hem de geçerli sistem altında kendisini listeliyor gibi görünüyor.</p><p>Çevrimdışı ve uyumsuz sunucuları her sistemden kaldırın ve tekrar deneyin.</p>",
         "fail": "{failedSystem} erişilemez.",
@@ -665,7 +665,7 @@
         "cantAddYourOwnEmail": "Kendi e-postanızı eklemenize izin verilmiyor",
         "cantChangeAccountPrefix": "Değişiklikler kaydedilemiyor",
         "cantChangePasswordPrefix": "Parola kaydedilemiyor",
-        "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
+        "cantDeleteAccountOwningSystems": "Sistemin sahibi olan hesap silinemez",
         "cantConnectSystemPrefix": "Sisteme bağlanılamıyor",
         "cantDisconnectSystemPrefix": "Sistem silinemiyor",
         "cantEditAdmin": "Bu kullanıcının yönetici izinleri var",
@@ -705,8 +705,8 @@
         "licenseTimeout": "Bağlantı zaman aşımı nedeniyle lisans etkinleştirilemedi. Lütfen sunucunun çevrimiçi olduğundan emin olun ve tekrar deneyin.",
         "licenseServerError": "Lisans etkinleştirilemedi. Lisans sunucusu yanıt vermedi. Lütfen tekrar deneyin veya Müşteri Desteği ile iletişim kurun.",
         "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
-        "archiveEncrypted": "ARCHIVE\nENCRYPTED",
-        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive.",
+        "archiveEncrypted": "ARŞİV ŞİFRELİ",
+        "archiveEncryptedMessage": "Bu arşivin şifresini çözmek için sistem yöneticinizden şifreleme\nparolasını girmesini isteyin.",
         "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
     },
     "appHeader": {
@@ -748,8 +748,8 @@
         "Storage": "Depolama",
         "myIntegrationsLabel": "Benim",
         "requirements": "{name} Requirements",
-        "testedVersionLabel": "Tested by the developer with {vmsName} version:",
-        "testedVersionsLabel": "Tested by the developer with {vmsName} versions:"
+        "testedVersionLabel": "Geliştirici tarafından {vmsName} sürümü ile test edilmiştir:",
+        "testedVersionsLabel": "Geliştirici tarafından {vmsName} sürümle test edilmiştir:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "Gelişmiş PTZ kameralar",
@@ -791,8 +791,8 @@
     "ipvdFeedback": {
         "request": "Please <span id=\"request\">submit a request</span> for additional questions/concerns regarding supported devices."
     },
-    "layoutAutosave": "Auto saving in { time } seconds...",
-    "systemsCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}} found",
+    "layoutAutosave": "{ time } saniyede otomatik kaydetme...",
+    "systemsCount": "{count, plural, =0{# Sistemler} one{# Sistem} other{# Sistemler}} bulundu",
     "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "ipvdTopXByVolume": "Top {value} by volume:",
     "ipvdDisclaimer": "This list is limited to devices found on {vmsName} where users have allowed auto-reporting of device specs to {companyName}. No personal information is collected and each user remains completely anonymous.",
@@ -804,12 +804,12 @@
             "licenses": "Lisanslar",
             "users": "Kullanıcılar",
             "servers": "Sunucular",
-            "alerts": "Alerts",
+            "alerts": "Alarmlar",
             "systems": "Sistem",
             "storages": "Depolama konumları",
             "networkInterfaces": "Ağ Arabirimleri",
             "graphs": "Grafikler",
-            "logs": "Logs"
+            "logs": "Kayıtlar"
         }
     },
     "tableHeaders": {
@@ -818,11 +818,11 @@
         "alert": "Alarm"
     },
     "appFooter": {
-        "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. All Rights Reserved"
+        "copyright": "Telif hakkı (c) {currentYear} %COMPANY_NAME%. Her hakkı saklıdır"
     },
     "pages": {
         "developers": {
-            "menuNodeContainsErrors": "Menu node <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> contains errors"
+            "menuNodeContainsErrors": "Menü düğümü <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> hatalar içeriyor"
         },
         "downloadHistory": {
             "published": "YAYINLANAN { date }"
@@ -847,8 +847,8 @@
         "downloadPlatform": "İçin %VMS_NAME% indir ",
         "failedToAccess2FA": "Failed to access \"{systemName}\" system",
         "failedToAccessSystem": "Sisteme erişim sağlanılamadı",
-        "failedToAccessCamera": "Failed to access camera",
-        "integrations": "%VMS_NAME% Integrations",
+        "failedToAccessCamera": "Kameraya erişilemiyor",
+        "integrations": "%VMS_NAME% Entegrasyon",
         "login": "Giriş yap",
         "pageNotFound": "Sayfa bulunamadı",
         "register": "Hesap Oluştur",
@@ -862,9 +862,9 @@
         "template": "{title} - %CLOUD_NAME%",
         "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
         "view": "Kameraları görüntüle",
-        "apiTool": "API testing tool",
+        "apiTool": "API test aracı",
         "security": "Güvenlik",
-        "twofaRequired": "Two-factor authentication required",
+        "twofaRequired": "İki faktörlü kimlik doğrulama gerekli",
         "information": "Bilgi",
         "monitoring": "İzleme"
     },
@@ -881,7 +881,7 @@
         "good": "iyi",
         "minLength": "çok kısa",
         "minLengthMessage": "Şifre en az 8 karakter içermelidir",
-        "missingMessage": "Required",
+        "missingMessage": "Zorunlu",
         "required": "yanlış",
         "requiredMessage": "Sadece alfanümerik ve klavye karakterleri kullanın",
         "strongMessage": "Güçlü parola!",
@@ -894,7 +894,7 @@
             "message": "Lütfen sunucularınızın çevrimiçi olduğundan emin olun ve tekrar deneyin."
         },
         "merge": {
-            "title": "This system is being merged to {systemName}.",
+            "title": "Bu sistem {systemName} ile birleştiriliyor.",
             "message": {
                 "dependingOnSize": "Veritabanının boyutuna bağlı olarak, bu işlem birkaç saat sürebilir.",
                 "untilFinished": "Birleştirme tamamlanana kadar bu sisteme giriş yapabilir ve video izleyebilir, ancak herhangi bir ayarı değiştiremezsiniz.",
@@ -906,11 +906,11 @@
             "message": "Sistem çevrimdışı ve bu nedenle bilgiye erişilemiyor."
         },
         "noSystemApiTool": {
-            "title": "No Valid System Found",
+            "title": "Geçerli Sistem Bulunamadı",
             "message": ""
         },
         "systemLoadFailureApiTool": {
-            "title": "System failed to load",
+            "title": "Sistem yüklenemedi",
             "message": ""
         }
     },
@@ -930,13 +930,13 @@
         "finishingMerge": "Sistem birleştirme bitiriliyor",
         "integration": {
             "accept": "Kabul Et",
-            "reject": "Reject",
+            "reject": "Reddet",
             "backToEditText": "Düzenleme arayüzlerine geri dön",
             "previewRibbon": "Bu sayfa en son değişikliklerin önizlemesidir ve herkese açık kullanılabilir sürümle eşleşmiyor.",
             "publishedRibbon": "This page is the live version that is publicly available."
         },
         "newVersionAvailable": {
-            "notification": "New version of %CLOUD_NAME% is available",
+            "notification": "%CLOUD_NAME% yeni sürümü mevcut",
             "installButton": "Güncellemek için Yenile"
         },
         "systemOffline": "Sistem çevrimdışı. Bazı ayarlara erişim olmayabilir.",
@@ -955,13 +955,13 @@
         "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
         "vendor": "Üretici",
         "vendors": "Üreticiler",
-        "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
+        "resultsFound": "{count, plural, =0{# Sonuçlar} one{# Sonuç} other{# Sonuçlar}} bulundu",
         "noMatches": "Eşleşme yok",
         "userNotFound": "<span class=\"error\">Kullanıcı bulunamadı</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Error deleting or keeping analytics data",
-        "autoRefresh": "auto refresh in {time}s...",
+        "autoRefresh": "{time}saniyede otomatik yenileme...",
         "beginDetach": "Sunucu şimdi ayrılıyor",
         "beginReset": "Sunucu şimdi sıfırlanıyor.",
         "detachSystemFailed": "Sunucu sistemden kaldırılamadı. Lütfen girdiğiniz şifrenin doğru olup olmadığını ve sunucunun çevrimiçi olup olmadığını kontrol edin ve tekrar deneyin.",
@@ -971,7 +971,7 @@
         "refreshing": "Yenileniyor...",
         "removeMediaserverFailed": "Sunucu sistemden kaldırılamadı.",
         "resetFailed": "Sunucu sistemden kaldırılamadı. Lütfen girdiğiniz şifrenin doğru olup olmadığını ve sunucunun çevrimiçi olup olmadığını kontrol edin ve tekrar deneyin.",
-        "resetSuccessful": "Server {serverName} has been reset to defaults.",
+        "resetSuccessful": "Sunucu {serverName} varsayılanlara sıfırlandı.",
         "restartFailed": "Sunucu yeniden başlatılırken bir sorun oluştu.",
         "restartSuccessful": "Sunucu başarıyla yeniden başlatıldı.",
         "serverOffline": "Sunucu Çevrimdışı.",
@@ -1074,11 +1074,11 @@
             "local": "Yerel",
             "usb": "USB",
             "network": "Ağ, işletim sistemi aracılığıyla eklendi",
-            "smb": "Network (smb), added through VMS",
+            "smb": "Ağ (smb), VMS aracılığıyla eklendi",
             "cloud": "Bulut"
         },
-        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> wants to transfer ownership of this system to you",
-        "transferTo": "Transferring ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
+        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> bu sistemin sahipliğini size devretmek istiyor",
+        "transferTo": "Sahipliğin devredilmesi – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
     },
     "systemGroups": {
         "root": "kök",
@@ -1088,8 +1088,8 @@
         "connectionRestored": "Bağlantı geri yüklendi",
         "couldNotReconnect": "Bağlantı geri yüklenemedi",
         "noConnection": "Bağlantı yok",
-        "groupAlreadyIn": "Group { srcName } is already in { destName }",
-        "systemAlreadyIn": "System { srcName } is already in { destName }",
+        "groupAlreadyIn": "Grup { srcName } zaten mevcut { destName }",
+        "systemAlreadyIn": "Sistem { srcName } zaten mevcut { destName }",
         "addGroupToSelf": "Grubu kendisine ekleyemezsin",
         "errorMsg": {
             "You can only delete groups that you own": "Yalnızca sahibi olduğunuz grupları silebilirsiniz",
@@ -1098,7 +1098,7 @@
             "You cannot add a group to itself": "Grubu kendisine ekleyemezsin",
             "You cannot add a parent group to its child.": "Alt gruba bir üst grup ekleyemezsiniz.",
             "You can only move groups that you own.": "Yalnızca sahibi olduğunuz grupları taşıyabilirsiniz.",
-            "Adding src group to dst group would create a cycle in tree.": "Adding src group to dst group would create a cycle in tree.",
+            "Adding src group to dst group would create a cycle in tree.": "Hedef grubuna kaynak grubu eklemek, ağaçta bir döngü oluşturur.",
             "User does not exist in group": "Kullanıcı grupta mevcut değil"
         }
     },
@@ -1115,22 +1115,22 @@
         "accessibleAt": "Windows için kayıt defteri anahtarı: { windowsPath } Medya Sunucusu \n Diğer tüm platformlar için bir yapılandırma dosyasına yerleştirilir: {defaultPath} Bazı ayarları geçici olarak yorumlamak için, adının başına alt çizgi (\"_\") ekleyin, örneğin \"absoluteRtcpTimestamps= false\", \"_absoluteRtcpTimestamps=false\" değerine dönüşür."
     },
     "toastMessage": {
-        "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
-        "nameFail": "Failed to change {type} name",
-        "noConnection": "Restore the connection to %CLOUD_NAME% and try again.",
-        "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
+        "cloudUnavailable": "Bir şeyler yanlış gitti. Lütfen sayfayı 30 saniye içinde yenileyin.",
+        "nameFail": "{type} ad değiştirilemedi",
+        "noConnection": "%CLOUD_NAME% için bağlantıyı geri yükleyin ve tekrar deneyin.",
+        "noInternet": "%CLOUD_NAME% şu anda kullanılamıyor. Lütfen daha sonra tekrar deneyiniz.",
         "userChangesFail": "Değişlikler uygulanamadı",
         "reviewAccepted": "İnceleme silindi",
         "system": {
             "deleted": {
-                "success": "System {systemName} is successfully deleted from your account"
+                "success": "{systemName} Sistem hesabınızdan başarıyla silindi"
             },
             "disconnected": {
                 "success": "Sistem %CLOUD_NAME%'den başarıyla çıkarıldı"
             },
             "cloudConnect": {
                 "success": "Sistem %CLOUD_NAME% e bağlı",
-                "failed": "Failed to connect system to %CLOUD_NAME%"
+                "failed": "Sistem %CLOUD_NAME% bağlanamadı"
             },
             "merge": {
                 "failed": "Sistem birleştirme işlemi başarısız oldu",
@@ -1162,38 +1162,38 @@
             "version": "Sistem sürümü",
             "cloudSystemId": "Bulut sistem kimliği",
             "status": "Durum",
-            "offlineEvents": "Events: Server Offline (24h)",
-            "uptimeS": "Uptime",
+            "offlineEvents": "Etkinlikler: Sunucu Çevrimdışı (24s)",
+            "uptimeS": "Çalışma süresi",
             "cpuUsageP": "İŞLEMCİ %",
-            "serverCpuUsageP": "CPU (VMS Server) %",
-            "ramUsageB": "RAM Usage",
+            "serverCpuUsageP": "CPU (VMS Sunucusu) %",
+            "ramUsageB": "RAM Kullanımı",
             "ramUsageP": "RAM %",
-            "serverRamUsageB": "RAM (VMS Server)",
-            "serverRamUsageP": "RAM (VMS Server) %",
+            "serverRamUsageB": "RAM (VMS Sunucusu)",
+            "serverRamUsageP": "RAM (VMS Sunucusu) %",
             "threads": "Server threads",
             "decodingThreads": "Decoding threads",
-            "decodingSpeed3s": "Decoding speed",
+            "decodingSpeed3s": "Kod çözme hızı",
             "encodingThreads": "Encoding threads",
             "encodingSpeed3s": "Encoding speed",
-            "primaryStreams": "Outgoing Primary streams",
-            "secondaryStreams": "Outgoing Secondary streams",
-            "incomingConnections": "Incoming connections",
-            "outgoingConnections": "Outgoing connections",
-            "logLevel": "Logging level",
-            "publicIp": "Public IP",
+            "primaryStreams": "Giden Birincil akışlar",
+            "secondaryStreams": "Giden İkincil akışlar",
+            "incomingConnections": "Gelen bağlantılar",
+            "outgoingConnections": "Giden bağlantılar",
+            "logLevel": "Günlük kaydı düzeyi",
+            "publicIp": "Dışa açık IP",
             "os": "OS",
             "osTime": "İşletim Sistemi Zamanı",
             "vmsTime": "VMS Zamanı",
             "cpu": "CPU",
-            "cpuCores": "Cores",
+            "cpuCores": "Çekirdekler",
             "ramB": "RAM",
-            "guidConflict": "Server GUID conflict",
+            "guidConflict": "Sunucu GUID çakışması",
             "vmsTimeChanged24h": "Events: Time Changed (24h)",
-            "transactionsPerSecond1m": "Transactions/s",
-            "actionsTriggered1m": "Rules Activations/s",
-            "apiCalls1m": "API Calls/s",
-            "thumbnails1m": "Thumbnails/s",
-            "activePlugins": "Active plugins list"
+            "transactionsPerSecond1m": "İşlemler",
+            "actionsTriggered1m": "Kural Aktivasyonları",
+            "apiCalls1m": "API çağrıları",
+            "thumbnails1m": "Küçük resimler",
+            "activePlugins": "Aktif eklenti listesi"
         }
     },
     "headerLabels": {
@@ -1227,7 +1227,7 @@
             "error": "Hata",
             "expired": "Süresi Dolmuş",
             "ok": "Tamam",
-            "nvrError": "NVR Error",
+            "nvrError": "NVR Hatası",
             "serverNotFound": "Sunucu bulunamadı"
         },
         "messages": {
@@ -1352,33 +1352,33 @@
     },
     "storage": {
         "reindexingDone": {
-            "mainSuccess": "Main storage reindexing completed",
-            "backupSuccess": "Backup storage reindexing completed",
-            "mainFailed": "Main storage reindexing failed",
-            "backupFailed": "Backup storage reindexing failed"
+            "mainSuccess": "Ana depolama yeniden indeksleme tamamlandı",
+            "backupSuccess": "Yedek depolama yeniden indeksleme tamamlandı",
+            "mainFailed": "Ana depolama yeniden indeksleme başarısız oldu",
+            "backupFailed": "Yedek depolama yeniden indeksleme başarısız oldu"
         },
         "modes": {
             "main": "Ana Menü",
             "backup": "Yedekleme",
-            "notInUse": "Not in use",
+            "notInUse": "Kullanımda değil",
             "reserved": "Rezerve",
             "inaccessible": "Erişilemez",
             "changing": "Mod değiştiriliyor...",
             "disabled": "Devre Dışı Bırak"
         },
         "alreadyUsed": "Storage path {url} is already used by another server.",
-        "deleteExternalStorage": "Delete External Storage?",
-        "failed": "Failed to add external storage",
+        "deleteExternalStorage": "Harici Depolama Silinsin mi?",
+        "failed": "Harici depolama eklenemedi",
         "invalidPath": "Geçersiz depolama yolu.",
         "stillHasArchivesPreWarning": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
         "stillHasArchives": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted.",
-        "storageDeleted": "Storage {url} deleted",
-        "failedRemove": "Failed to delete external storage {url}",
+        "storageDeleted": "Depolama {url} silindi",
+        "failedRemove": "Harici depolama silinemedi {url}",
         "reservedTooSmallTooltip": "This storage location cannot be used for recording because it is too small, and there are other larger storage locations available for recording.",
         "reservedSystemTooltip": "This storage location cannot be used for recording because it’s system storage and there are other larger storage locations available for recording.",
-        "serverOffline": "Failed to add external storage - server doesn't respond",
-        "success": "External storage added",
-        "urlPlaceholder": "//<Computer Name>/<Folder>"
+        "serverOffline": "Harici depolama eklenemedi - sunucu yanıt vermiyor",
+        "success": "Harici depolama eklendi",
+        "urlPlaceholder": "//<Bilgisayar adı>/<Klasör>"
     },
     "metaDefaults": {
         "default": {
@@ -1387,38 +1387,38 @@
             "description": "%CLOUD_NAME%, a simple way to connect to, manage and expand %VMS_NAME% Systems."
         },
         "/systems": {
-            "title": "Systems - %CLOUD_NAME%"
+            "title": "Sistemler - %CLOUD_NAME%"
         },
         "/integrations": {
-            "title": "%VMS_NAME% Integrations - %CLOUD_NAME%"
+            "title": "%VMS_NAME% Entegrasyon - %CLOUD_NAME%"
         },
         "/docs": {
             "title": "%VMS_NAME% Documentation - %CLOUD_NAME%"
         },
         "/ipvd": {
-            "title": "Supported Devices - %CLOUD_NAME%"
+            "title": "Desteklenen Cihazlar - %CLOUD_NAME%"
         }
     },
     "metaDefaultsWebadmin": {
         "default": {
             "site_name": "%VMS_NAME%",
-            "title": "webadmin - %VMS_NAME%"
+            "title": "web yöneticisi - %VMS_NAME%"
         },
         "/settings": {
-            "title": "Settings - webadmin - %VMS_NAME%"
+            "title": "Ayarlar - web yöneticisi - %VMS_NAME%"
         },
         "/view": {
-            "title": "View - webadmin - %VMS_NAME%"
+            "title": "Görünüm - web yöneticisi - %VMS_NAME%"
         },
         "/health": {
-            "title": "Information - webadmin - %VMS_NAME%"
+            "title": "Bilgi - web yöneticisi - %VMS_NAME%"
         },
         "/monitoring": {
-            "title": "Server Monitoring - webadmin - %VMS_NAME%"
+            "title": "Sunucu İzleme - web yöneticisi - %VMS_NAME%"
         }
     },
     "maintenance": {
-        "description": "We are working on some improvements and brand new features."
+        "description": "Bazı iyileştirmeler ve yepyeni özellikler üzerinde çalışıyoruz."
     },
     "view": {
         "timeline": {
