@@ -259,6 +259,7 @@ export interface ec2User {
 
 export interface restUser extends ec2User {
     accessibleResources: string[];
+    type: string;
 }
 
 export interface UserSession {

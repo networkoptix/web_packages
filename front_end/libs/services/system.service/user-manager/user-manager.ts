@@ -1,5 +1,5 @@
 import { LOCALE_ID } from '@angular/core';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
@@ -196,14 +196,15 @@ export class UserManager {
             return this.mediaserver.getAggregatedUsersData();
         }
         const mediaserver = <NxSystemRestAPI | NxSystemRestAPI2> this.mediaserver;
-        return combineLatest([mediaserver.getUsers(), mediaserver.getUserRoles()]).pipe(
-            map<[restUser[], ec2UserRole[]], t.AggregatedUsers>(([users, roles]) => ({
+        const predefinedRoles$ = this.mediaserver.version < 5.2 ? mediaserver.getPredefinedRoles() : of([]);
+        return combineLatest([mediaserver.getUsers(), predefinedRoles$, mediaserver.getUserRoles()]).pipe(
+            map<[restUser[], ec2PredefinedRole[], ec2UserRole[]], t.AggregatedUsers>(([users, predefinedRoles, roles]) => ({
                 error: '0',
                 errorId: 'ok',
                 errorString: '',
                 reply: {
-                    'ec2/getUsers': users,
-                    'ec2/getPredefinedRoles': [],
+                    'ec2/getUsers': users.map(user => ({ ...user, isCloud: user.type === 'cloud' })),
+                    'ec2/getPredefinedRoles': predefinedRoles,
                     'ec2/getUserRoles': roles.filter(({ name }) => name !== 'Owner'), // hide the owner role
                     'ec2/getAccessRights': users.map(({ id, accessibleResources }) => ({ userId: id, resourceIds: accessibleResources ?? [] }))
                 }

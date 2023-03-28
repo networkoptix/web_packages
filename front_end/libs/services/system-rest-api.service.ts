@@ -29,6 +29,7 @@ import {
 import { environment } from '@environments/environment';
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
 import { NxHealthService } from '@pages/health/health.service';
+import { getPredefinedRolesLegacy } from '@services/mediaserver-apis/endpoints/get-predefined-roles';
 import { getUserRolesRestV1 } from '@services/mediaserver-apis/endpoints/get-user-roles';
 import { getUsersRestV1 } from '@services/mediaserver-apis/endpoints/get-users';
 import { NxStorageService } from '@services/storage.service';
@@ -1084,4 +1085,5 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
 
     getUsers = getUsersRestV1;
     getUserRoles = getUserRolesRestV1;
+    getPredefinedRoles = getPredefinedRolesLegacy;
 }
