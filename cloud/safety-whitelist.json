@@ -117,5 +117,9 @@
   "53048": {
     "name": "cryptography",
     "note": "Cryptography 39.0.1 includes a fix for CVE-2023-23931: In affected versions 'Cipher.update_into' would accept Python objects which implement the buffer protocol, but provide only immutable buffers. This would allow immutable objects (such as 'bytes') to be mutated, thus violating fundamental rules of Python and resulting in corrupted output. This issue has been present since 'update_into' was originally introduced in cryptography 1.8.https://github.com/pyca/cryptography/security/advisories/GHSA-w7pp-m8wf- vj6r CVE-2023-23931 For more information, please visit https://pyup.io/v/53048/f17"
+  },
+  "53315": {
+    "name": "django",
+    "note": "Django 4.1.7, 4.0.10 and 3.2.18 include a fix for CVE-2023-24580: Potential denial-of-service vulnerability in file uploads. https://www.djangoproject.com/weblog/2023/feb/14/security-releases CVE-2023-24580 For more information, please visit https://pyup.io/v/53315/f17"
   }
 }
