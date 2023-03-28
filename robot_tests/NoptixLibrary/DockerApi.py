@@ -33,6 +33,7 @@ class DockerApi(object):
             }
         }
         r = requests.post(f'http://{self.docker_host_ip}:5555/containers/create?name={name}', json=payload)
+        logger.trace(r.json)
         assert r.status_code == 201 
         return r.json()['Id']
 

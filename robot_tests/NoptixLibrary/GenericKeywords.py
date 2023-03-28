@@ -24,6 +24,7 @@ from robot.api import logger
 from robot.api.deco import keyword, library
 from ServerAPI5 import ServerAPI5
 from CloudPortalAPI import CloudPortalAPI
+from DockerApi import DockerApi
 
 
 from selenium import webdriver
@@ -53,6 +54,7 @@ class GenericKeywords(object):
             }
         self.cloud_api = CloudPortalAPI(env=self.cloud_host)
         self.server_api = ServerAPI5()
+        self.docker_api = DockerApi()
 
     @keyword
     def go_forward(self):
@@ -546,14 +548,15 @@ class GenericKeywords(object):
 
     @keyword
     def get_random_port_from_docker_server(self):
-        with self._ssh_client() as ssh_client:
-            command = "comm -23 <(seq 30000 65535 | sort) <(ss -Htan | awk '{print $4}' | cut -d':' -f2 | sort -u) | shuf | head -n 1"
-            _, ssh_stdout, ssh_stderr = ssh_client.exec_command(command)
-            error = ssh_stderr.read()
-            if error:
-                raise Exception(f'Unable to get port: {error}')
-            port = ssh_stdout.read().decode("utf-8").strip()
-        return port
+        containers = self.docker_api.list_containers()
+        usedPorts = []
+        for container in containers:
+            for usedPort in container["Ports"]:
+                usedPorts.append(usedPort["PublicPort"])
+        port = randint(30000, 65535)
+        while port in usedPorts:
+            port = randint(30000, 65535)        
+        return str(port)
 
     @keyword
     def run_container(self, image_name, port, network='host'):
@@ -917,18 +920,13 @@ class GenericKeywords(object):
         ports = []
         for _ in range(server["ports"]):
             ports.append(self.get_random_port_from_docker_server())
-
-        command = self.create_docker_run_command(server, name, mac, ports)
-        with self._ssh_client() as ssh_client:
-            _, _, ssh_stderr = ssh_client.exec_command(command)
-            error = ssh_stderr.read()
-            if error:
-                raise RuntimeError(f'Failed to start server: {error}')
-
+        container = self.docker_api.create_container(ports, mac, name)  
+        self.docker_api.start_container(container)  
         return {
             "name": name,
             "port": ports,
             "mac" : mac,
+            "container": container
             }
 
     def create_docker_run_command(self, server, name, mac, ports):
@@ -959,13 +957,13 @@ class GenericKeywords(object):
     @keyword
     def teardown_servers(self, serversJson):
         # Disconnect each server from cloud
+        # Stop and remove docker container
         for server in serversJson:
             self.cloud_api.disconnect(server["cloudOwner"], self.password, server["id"])
+            self.docker_api.delete_container(server["container"])
             # Delete each user's account if they were added
             for user in server["cloudUsers"]:
                 self.cloud_api.delete_account(server["cloudUsers"][user], self.password)
         # Delete the owner account
         self.cloud_api.delete_account(server["cloudOwner"], self.password)
-        # Stop and remove docker container
-        self.delete_docker_server(BuiltIn().get_variable_value('${random}'))
 

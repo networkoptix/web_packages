@@ -16,6 +16,7 @@ Library      NoptixLibrary/CloudPortalAPI.py    ${ENV}    ${customization}    ${
 Library      NoptixLibrary/ServerAPI5.py    ${IMAGE}
 Library      NoptixLibrary/LicenseManagement.py    ${LM HOST}/nxlicensed    ${LM AUTH}
 Library      NoptixLibrary/Cloud2fa.py
+Library      NoptixLibrary/DockerApi.py
 Library      pabot.PabotLib
 
 *** Variables ***
@@ -248,7 +249,7 @@ Check Log In
 
 Log Out
     # Add a delay to your call if logging in soon after logging oiut to avoid session race condition
-    [Arguments]     ${add_delay}=0   ${api}=${True}
+    [Arguments]     ${add_delay}=0   ${api}=${False}
     IF    '''${mode}'''=='''cloud'''
         IF   ${api}
             Log Out via API

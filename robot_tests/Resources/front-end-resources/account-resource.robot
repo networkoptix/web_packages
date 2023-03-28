@@ -64,7 +64,7 @@ Account Server Suite Tear Down
 #    END
 #    Execute Command Remotely    docker rm -f ${server 4}[id] ${server 5}[id]
     Teardown Servers    ${servers}
-    Delete Account    ${delete}    ${base password}
+    # Delete Account    ${delete}    ${base password}
     Close All Browsers
 
 Account Suite Tear Down
