@@ -1,9 +1,11 @@
+import logging
 from uuid import uuid4
 from random import randint
 
 import pytest
 from unittest.mock import call
 
+from cloud.drf_async import async_api_view
 from cloud.helpers.exceptions import *
 
 
@@ -491,3 +493,30 @@ class TestExceptions:
         decorated_function(*mock_args, **mock_kwargs)
         mock_exception_handler.assert_called_once_with(
             mock_args[0], exception_to_raise)
+
+    @pytest.mark.asyncio
+    async def test_exception_traceback_in_async_func(self, arf):
+        exc_msg = "Raised unexpected exception"
+
+        class TbTestException(Exception):
+            pass
+
+        async def raiser_func():
+            raise TbTestException(exc_msg)
+
+        @async_api_view(['GET'])
+        async def view_func(req):
+            return api_success(data=await raiser_func())
+
+        request = arf.get('/')
+        formatted_msg = ''
+        try:
+            await view_func(request)
+        except Exception as ex:
+            formatted_msg = log_error(request, error=ex, log_level=logging.DEBUG)
+
+        assert formatted_msg.find('TbTestException') > 0
+        assert formatted_msg.find(exc_msg) > 0
+        assert formatted_msg.find('raiser_func') > 0
+        assert formatted_msg.find('view_func') > 0
+
