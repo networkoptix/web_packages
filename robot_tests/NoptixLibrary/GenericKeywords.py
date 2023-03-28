@@ -548,9 +548,8 @@ class GenericKeywords(object):
 
     @keyword
     def get_random_port_from_docker_server(self):
-        containers = self.docker_api.list_containers()
         usedPorts = []
-        for container in containers:
+        for container in self.docker_api.list_containers():
             for usedPort in container["Ports"]:
                 usedPorts.append(usedPort["PublicPort"])
         port = randint(30000, 65535)

@@ -131,5 +131,6 @@ ${NOAUTH CAMERA PASSWORD}             qweasd123
 
 #Docker server machine info
 ${QA BURBANK IP}                      10.1.5.48
+${QA DOCKER HOST PORT}                5555
 ${QA BURBANK USER}                    qaburbank
 ${QA BURBANK PASS}                    QABurbank777$
