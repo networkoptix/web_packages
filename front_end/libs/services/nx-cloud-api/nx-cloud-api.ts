@@ -822,8 +822,9 @@ export class NxCloudApiService {
     ) => observableInputFactory => {
         const getAccessToken = (minSession?: number) => this.account(true).pipe(
             switchMap(({
+                accessToken,
                 sessionExpires
-            }) => !minSession || ((Date.now() + (minSession * 1000)) > sessionExpires) ? this.renewSessionUsingRefreshToken() : this.account())
+            }) => !minSession || ((Date.now() + (minSession * 1000)) > sessionExpires) ? this.renewSessionUsingRefreshToken() : of({ accessToken }))
         );
 
         return getAccessToken(minSessionSeconds).pipe(
