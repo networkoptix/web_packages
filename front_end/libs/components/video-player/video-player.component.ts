@@ -7,7 +7,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { ConnectionError, WebRTCStreamManager } from './WebRTCStreamManager';
+import { ConnectionError, WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';
 import { filter, map, switchMap, tap } from 'rxjs';
 
 @UntilDestroy()

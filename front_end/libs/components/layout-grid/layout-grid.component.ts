@@ -33,10 +33,10 @@ import { v4 as uuid } from 'uuid';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { ConfigType } from '@components/console-table/console-table.component.types';
-import { ConnectionError } from '@components/video-player/WebRTCStreamManager';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { icons } from '@lib/variables/static-variables';
+import { ConnectionError } from '@openLibs/webrtc-stream-manager';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 import { IConfig } from '@services/nx-config/config-types';

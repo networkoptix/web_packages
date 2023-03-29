@@ -35,7 +35,11 @@
             "@src/app/*": ["common/*", "libs/*"],
             "@app/*": ["common/*", "libs/*"],
             "@lib/*": ["common/*", "libs/*", "packages/*"],
-            "@src/*": ["common/*", "libs/*"]
+            "@src/*": ["common/*", "libs/*"],
+            "@openLibs/*": [
+                "node_modules/nx-open-web/packages/*",
+                "node_modules/nx-open-web-candidate/packages/*"
+            ]
         },
         "typeRoots": ["node_modules/@types"],
         "types": ["jasmine", "node"]

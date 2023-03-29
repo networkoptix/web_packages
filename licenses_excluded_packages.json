@@ -1,5 +1,7 @@
 [
     "cloud-portal",
     "cloud-portal-backend",
-    "inline-wizard"
+    "inline-wizard",
+    "nx-open-web-candidate",
+    "nx-open-web"
 ]

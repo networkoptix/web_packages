@@ -4,7 +4,7 @@ import { clamp, isArray, uniq } from 'lodash-es';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { LayoutResourceTree } from '@components/layout-grid/layout-grid.types';
-import { WebRTCStreamManager } from '@components/video-player/WebRTCStreamManager';
+import { WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';
 import { TimeDetail } from '@services/system.service/camera-manager/camera-manager-types';
 import { NgChanges } from '@utils/ng-changes';
 

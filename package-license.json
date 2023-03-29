@@ -10636,6 +10636,18 @@
             "path": "cloud_portal/front_end/node_modules/nwsapi",
             "licenseFile": "cloud_portal/front_end/node_modules/nwsapi/LICENSE"
         },
+        "nx-open-web-candidate@0.0.0": {
+            "licenses": "UNLICENSED",
+            "private": [],
+            "path": "cloud_portal/front_end/node_modules/nx-open-web-candidate",
+            "licenseFile": "cloud_portal/front_end/node_modules/nx-open-web-candidate/README.md"
+        },
+        "nx-open-web@0.0.0": {
+            "licenses": "UNLICENSED",
+            "private": [],
+            "path": "cloud_portal/front_end/node_modules/nx-open-web",
+            "licenseFile": "cloud_portal/front_end/node_modules/nx-open-web/README.md"
+        },
         "nx@14.7.5": {
             "licenses": "MIT",
             "repository": "https://github.com/nrwl/nx",
@@ -14613,6 +14625,45 @@
             "url": "http://blog.izs.me/",
             "path": "cloud_portal/front_end/packages/lib-template/node_modules/wrappy",
             "licenseFile": "cloud_portal/front_end/packages/lib-template/node_modules/wrappy/LICENSE"
+        }
+    },
+    "/open/examples/example-explorer/": {
+        "example-explorer@0.0.0": {
+            "licenses": "UNLICENSED",
+            "private": [],
+            "path": "cloud_portal/open/examples/example-explorer",
+            "licenseFile": "cloud_portal/open/examples/example-explorer/README.md"
+        }
+    },
+    "/open/examples/webrtc-stream-manager-example/": {
+        "webrtc-stream-manager-example@0.0.0": {
+            "licenses": "UNLICENSED",
+            "private": [],
+            "path": "cloud_portal/open/examples/webrtc-stream-manager-example",
+            "licenseFile": "cloud_portal/open/examples/webrtc-stream-manager-example/README.md"
+        }
+    },
+    "/open/": {
+        "nx-open-web@0.0.0": {
+            "licenses": "UNLICENSED",
+            "private": [],
+            "path": "cloud_portal/open",
+            "licenseFile": "cloud_portal/open/README.md"
+        }
+    },
+    "/open/packages/webrtc-stream-manager/": {
+        "webrtc-stream-manager@0.1.0": {
+            "licenses": "MPL-2.0",
+            "path": "cloud_portal/open/packages/webrtc-stream-manager",
+            "licenseFile": "cloud_portal/open/packages/webrtc-stream-manager/README.md"
+        }
+    },
+    "/open_candidate/": {
+        "nx-open-web-candidate@0.0.0": {
+            "licenses": "UNLICENSED",
+            "private": [],
+            "path": "cloud_portal/open_candidate",
+            "licenseFile": "cloud_portal/open_candidate/README.md"
         }
     }
 }

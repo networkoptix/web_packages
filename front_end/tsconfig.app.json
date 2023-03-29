@@ -1,4 +1,5 @@
 {
     "extends": "./tsconfig.base.json",
-    "exclude": ["node_modules", "**/*.spec.ts", ".eslintrc.js"]
+    "exclude": ["node_modules", "**/*.spec.ts", ".eslintrc.js"],
+    "include": ["../open/packages/*", "../open_candidates/packages/*"]
 }

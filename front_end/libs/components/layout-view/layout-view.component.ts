@@ -36,9 +36,9 @@ import {
     ResourceNode,
     ResourceType,
 } from '@components/layout-grid/layout-grid.types';
-import { WebRTCStreamManager } from '@components/video-player/WebRTCStreamManager';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
+import { WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';
 import { NxTranslatePipe } from '@pipes/nx-translate.pipe';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';

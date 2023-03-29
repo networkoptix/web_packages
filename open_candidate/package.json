@@ -1,0 +1,19 @@
+{
+  "name": "nx-open-web-candidate",
+  "version": "0.0.0",
+  "license": "MPL-2.0",
+  "scripts": {
+    "build": "npx nx run-many --target=build --all"
+  },
+  "private": true,
+  "devDependencies": {
+    "@nrwl/nx-cloud": "latest",
+    "@types/node": "^18.15.5",
+    "nx": "15.8.7",
+    "prettier": "^2.6.2",
+    "typescript": "^5.0.2"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}

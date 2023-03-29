@@ -28,6 +28,8 @@ rsync -a $SOURCE_DIR/../build_scripts .
 rsync -a $SOURCE_DIR/../skins .
 rsync -a $SOURCE_DIR/../translations .
 rsync -a $SOURCE_DIR/../front_end . --exclude static --exclude node_modules --exclude dist --exclude .idea
+rsync -a $SOURCE_DIR/../open . --exclude static --exclude node_modules --exclude dist --exclude .idea
+rsync -a $SOURCE_DIR/../open_candidate . --exclude static --exclude node_modules --exclude dist --exclude .idea
 
 # Setup environment for dependencies
 echo -e "\npip install requirements"

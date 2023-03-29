@@ -1,128 +1,9 @@
-/** IMPORTANT:
- *
- * This will probably be moved to the open source repo and published on NPM at some point so avoid importing any code specific to our project. Rxjs would be a dependency of the package so imports from there would be fine.
- *
- * Once the the api's with the mediaserver are stabilized and WebRTCStreamManager has been been updated to handle updating position and performance tuning we'll look into moving and publishing.
- */
-
 import { Observable, BehaviorSubject, timer, Subject } from 'rxjs';
 import { filter, shareReplay, switchMap, take, map, delay, takeUntil, skip } from 'rxjs/operators';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
-
-const removeAuth = (webRtcUrl: string): string => webRtcUrl.split('&auth=')[0].split('&pos=')[0];
-
-/**
- * Track Video Perforamance for use in tuning webRTC streams
- */
-class FrameTracker {
-    players = 0;
-    start = Infinity;
-    end = 0;
-    frames = 0;
-
-    #reset = (): void => {
-        this.start = performance.now();
-        this.end = 0;
-        this.frames = 0;
-    };
-
-    /**
-     * Get currently accumulated frame count, optionally reset count after calculating current value.
-     *
-     * @param reset Whether to reset frame counters
-     * @returns number
-     */
-    getFps = (reset = false): number => {
-        if (!this.players || !this.frames || this.start === this.end) {
-            return 0;
-        }
-
-        const seconds = (this.end - this.start) / 1000;
-        const fps = Math.round(this.frames / seconds / this.players);
-
-        if (reset) {
-            this.#reset();
-        }
-
-        return fps;
-    };
-
-    /**
-     * Updates accumulated frame counters and returns current fps.
-     *
-     * @param now number
-     * @returns number
-     */
-    updateFrame = (now: number): number => {
-        this.start = Math.min(this.start, now);
-        this.end = Math.max(this.start, now);
-        this.frames++;
-        return this.getFps();
-    };
-}
-
-type PlaybackDetails = Record<string, { fps: number; players: number }>;
-
-type StreamHandler = (stream: MediaStream) => unknown;
-
-interface IceCandidate {
-    ice: RTCIceCandidate;
-}
-
-interface SdpInit {
-    sdp: RTCSessionDescriptionInit;
-}
-
-interface IceInit {
-    ice: RTCIceCandidateInit;
-}
-
-interface ErrorMsg {
-    error: unknown;
-}
-
-type SignalingMessage = SdpInit | IceInit | IceCandidate | ErrorMsg;
-
-export enum ConnectionError {
-    websocket = 'websocket',
-    authorization = 'authorization',
-}
-
-class MediaServerPeerConnection extends RTCPeerConnection {
-    onicecandidate = (event: RTCPeerConnectionIceEvent): void => {
-        if (event.candidate) {
-            this.wsConnection.next({ ice: event.candidate });
-        }
-    };
-
-    oniceconnectionstatechange = (): void => {
-        console.log('peerConnection ice state ' + this.iceConnectionState);
-        if (this.iceConnectionState === 'connected') {
-            this.closeWebsocket();
-        }
-    };
-
-    private get wsConnection(): WebSocketSubject<SignalingMessage> {
-        return this.getWebSocket();
-    }
-
-    constructor(
-        private getWebSocket: () => WebSocketSubject<SignalingMessage>,
-        private closeWebsocket: () => void,
-        trackHandler: StreamHandler,
-    ) {
-        super({
-            iceServers: [
-                { urls: 'stun:stun.stunprotocol.org:3478' },
-                { urls: 'stun:stun.l.google.com:19302' },
-                { urls: 'stun:stun1.l.google.com:19302' },
-                { urls: 'stun:stun1.l.google.com:19302' },
-            ],
-        });
-
-        this.ontrack = (event: RTCTrackEvent): unknown => trackHandler(event.streams[0]);
-    }
-}
+import { FrameTracker } from './frame-tracker';
+import { MediaServerPeerConnection } from './media-server-peer-connection';
+import { SignalingMessage, PlaybackDetails, ConnectionError, SdpInit, IceInit, ErrorMsg } from './types';
 
 /**
  * Manages connection negotation using websockets as well as webRTC peer connections to mediaservers.
@@ -133,6 +14,7 @@ class MediaServerPeerConnection extends RTCPeerConnection {
  *
  * TODO: Playback sync as well as performance tuning will be blocked until data channels on VMS-35748 are implemented for position and stream switching.
  */
+
 export class WebRTCStreamManager {
     /** For Tracking existing connections */
     static EXISTING_CONNECTIONS: Record<string, WebRTCStreamManager> = {};
@@ -148,7 +30,7 @@ export class WebRTCStreamManager {
     /** Used to trigger sync events such as performance tuning and connection cleanup */
     static sync$ = WebRTCStreamManager.forceSync$.pipe(
         switchMap(() => timer(0, WebRTCStreamManager.SYNC_INTERVAL)),
-        shareReplay({ refCount: true, bufferSize: 1 }),
+        shareReplay({ refCount: true, bufferSize: 1 })
     );
 
     /** Whether to log current playback performance details */
@@ -159,26 +41,24 @@ export class WebRTCStreamManager {
 
     /** Playback details for use in either logging during development or for performance tuning */
     static PLAYBACK_DETAILS$ = WebRTCStreamManager.sync$.pipe(
-        map(() =>
-            Object.entries(WebRTCStreamManager.EXISTING_CONNECTIONS).reduce(
-                (summary, [webRtcUrl, connection]) =>
-                    connection?.getPlaying()
-                        ? {
-                              ...summary,
-                              [webRtcUrl]: {
-                                  fps: connection.getFps(true),
-                                  players: connection.getPlayerCount(),
-                              },
-                          }
-                        : summary,
-                {} as PlaybackDetails,
-            ),
-        ),
+        map(() => Object.entries(WebRTCStreamManager.EXISTING_CONNECTIONS).reduce(
+            (summary, [webRtcUrl, connection]) => connection?.getPlaying()
+                ? {
+                    ...summary,
+                    [webRtcUrl]: {
+                        fps: connection.getFps(true),
+                        players: connection.getPlayerCount(),
+                    },
+                }
+                : summary,
+            {} as PlaybackDetails
+        )
+        )
     );
 
     /** Stats logger subcription, only adding as a static property in case we want to be able to unsubscribe */
     static STATS = WebRTCStreamManager.PLAYBACK_DETAILS$.pipe(
-        filter(details => this.SHOW_STATS && !!Object.keys(details).length),
+        filter(details => this.SHOW_STATS && !!Object.keys(details).length)
     ).subscribe(WebRTCStreamManager.STATS_HANDLER);
 
     /**
@@ -190,17 +70,24 @@ export class WebRTCStreamManager {
      */
     static connect(
         webRtcUrlFactory: (params?: Record<string, unknown>) => string,
-        videoElement?: HTMLVideoElement,
+        videoElement?: HTMLVideoElement
     ): Observable<[MediaStream, ConnectionError]> {
-        const webRtcUrl = removeAuth(webRtcUrlFactory());
+        const sanitizeUrl = (webRtcUrl: string): string => {
+            const { origin, search } = new URL(webRtcUrl)
+            const cameraId = new URLSearchParams(search).get('camera_id')
+            return `${origin}?camera_id=${cameraId}`
+        }
+
+        const webRtcUrl = sanitizeUrl(webRtcUrlFactory());
+
         WebRTCStreamManager.EXISTING_CONNECTIONS[webRtcUrl] ||= new WebRTCStreamManager(
-            webRtcUrlFactory,
+            webRtcUrlFactory
         );
 
         WebRTCStreamManager.EXISTING_CONNECTIONS[webRtcUrl].registerElement(videoElement);
 
         return WebRTCStreamManager.EXISTING_CONNECTIONS[webRtcUrl].mediaStream$.pipe(
-            filter(res => !!res),
+            filter(res => !!res)
         );
     }
 
@@ -223,14 +110,12 @@ export class WebRTCStreamManager {
     }
 
     /** Internal */
-
     #peerConnection: MediaServerPeerConnection;
     #wsConnection: WebSocketSubject<SignalingMessage>;
     #videoElements: HTMLVideoElement[] = [];
     #frameTracker = new FrameTracker();
 
     /** Public methods and properties */
-
     /** Updates whenever the mediasserver sends a new stream */
     mediaStream$ = new BehaviorSubject<[MediaStream, ConnectionError]>(null);
 
@@ -261,8 +146,7 @@ export class WebRTCStreamManager {
     }
 
     static getPlaying(): boolean {
-        return Object.values(WebRTCStreamManager.EXISTING_CONNECTIONS).some(connection =>
-            connection.getPlaying(),
+        return Object.values(WebRTCStreamManager.EXISTING_CONNECTIONS).some(connection => connection.getPlaying()
         );
     }
 
@@ -278,8 +162,7 @@ export class WebRTCStreamManager {
 
     static togglePlaying(play?: boolean): void {
         play = typeof play === 'boolean' ? play : !this.getPlaying();
-        Object.values(WebRTCStreamManager.EXISTING_CONNECTIONS).forEach(connection =>
-            connection.togglePlaying(play),
+        Object.values(WebRTCStreamManager.EXISTING_CONNECTIONS).forEach(connection => connection.togglePlaying(play)
         );
     }
 
@@ -292,7 +175,7 @@ export class WebRTCStreamManager {
     public registerElement = (videoElement?: HTMLVideoElement): void => {
         // Fix type issue with requestVideoFrameCallback
         const element = videoElement as HTMLVideoElement & {
-            requestVideoFrameCallback?: (number) => void;
+            requestVideoFrameCallback?: (number: unknown) => void;
         };
 
         if (!element) {
@@ -330,7 +213,6 @@ export class WebRTCStreamManager {
     #closeWsConnection = new Subject<string>();
 
     /** Peer Connection Helpers */
-
     /**
      * Handles cleaning up connections when no longer in use.
      */
@@ -345,7 +227,7 @@ export class WebRTCStreamManager {
      *
      * @param message MessageEvent<string>
      */
-    #gotMessageFromServer = (signal: SdpInit | IceInit): void => {
+    #gotMessageFromServer = (signal: SdpInit | IceInit | ErrorMsg): void => {
         this.#initPeerConnection();
 
         if ('sdp' in signal) {
@@ -361,11 +243,11 @@ export class WebRTCStreamManager {
                     }
                 })
                 .catch(this.#errorHandler);
-        } else if (signal.ice) {
+        } else if ('ice' in signal) {
             this.#peerConnection
                 .addIceCandidate(new RTCIceCandidate(signal.ice))
                 .catch(this.#errorHandler);
-        } else if (signal.ice === null) {
+        } else {
             this.start();
         }
     };
@@ -409,7 +291,6 @@ export class WebRTCStreamManager {
     };
 
     /** Initialization helpers */
-
     /**
      * Initializes websocket connection for negotating peer connection.
      */
@@ -417,7 +298,7 @@ export class WebRTCStreamManager {
         this.#peerConnection?.close();
         this.#peerConnection = null;
         this.#wsConnection = webSocket(
-            this.webRtcUrlFactory({ position: WebRTCStreamManager.position }),
+            this.webRtcUrlFactory({ position: WebRTCStreamManager.position })
         );
 
         this.#wsConnection.pipe(takeUntil(this.#closeWsConnection)).subscribe({
@@ -441,7 +322,7 @@ export class WebRTCStreamManager {
             .pipe(
                 delay(WebRTCStreamManager.SYNC_INTERVAL),
                 filter(() => !this.mediaStream$.observed),
-                take(1),
+                take(1)
             )
             .subscribe(this.#close);
     };
@@ -456,7 +337,7 @@ export class WebRTCStreamManager {
             stream => {
                 console.log(stream);
                 this.mediaStream$.next([stream, null]);
-            },
+            }
         );
     };
 
