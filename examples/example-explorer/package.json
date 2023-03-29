@@ -1,0 +1,23 @@
+{
+  "name": "example-explorer",
+  "description": "Open Source Web Examples",
+  "private": true,
+  "version": "0.0.0",
+  "license": "MPL-2.0",
+  "type": "module",
+  "scripts": {
+    "start": "nx run example-explorer:serve",
+    "preserve": "npm run generate-manifest",
+    "serve": "vite",
+    "pregenerate-manifest": "nx run-many --target=build:demo --all --exclude example-explorer --skip-nx-cache && rm -rf ../dist/example-explorer && rm -rf ./public && cp -r ../dist ./public",
+    "generate-manifest": "node ./generate-manifest.js",
+    "prebuild:demo": "npm run generate-manifest",
+    "build:demo": "tsc --outDir ../dist/example-explorer && vite build --outDir ../dist/example-explorer --emptyOutDir --base ./",
+    "deploy:demo": "echo 'FUTURE TODO: Add UI wrapper to display show all buildable demos and deploy them statically'",
+    "ci:check": "echo 'Additional CI checks can be added here'"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.3",
+    "vite": "^4.2.0"
+  }
+}
