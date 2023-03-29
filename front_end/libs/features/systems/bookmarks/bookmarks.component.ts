@@ -229,7 +229,7 @@ export class NxBookmarksComponent implements OnInit {
                         this.creationCutOffTimeMS$.next(params.creationStartTimeMs);
                     }
                     this.newCreationCutOffTimeMS$.next(params.creationStartTimeMs);
-                    bks = bks.sort(paramSortFunc(b => b.startTimeMs));
+                    bks = bks.sort(paramSortFunc(b => b.startTimeMs, false));
                     this._bookmarks = this.mergeBookmarks(this._bookmarks, bks);
                 }
                 return this._bookmarks;
