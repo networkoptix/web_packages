@@ -48,6 +48,7 @@ import { NxUriCacheService } from './uri-cache.service';
 export class NxSystemRestAPI extends NxSystemAPI {
     readonly version: number;
     public readonly requiresPassword: boolean = false;
+    private readonly cookieLoginSupport: boolean;
     private readonly cloudToken = 'cloudAccessToken';
     private readonly token = 'x-runtime-guid';
     private readonly refreshToken = 'refreshToken';
@@ -85,6 +86,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         );
         this.version = 5.0;
         this.injector = injector;
+        this.cookieLoginSupport = this.CONFIG.featureFlags.restCookieLogin;
     }
 
     private get storageService() {
@@ -199,7 +201,6 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.get(
             `/rest/v1/login/sessions/${this.accessToken}?setCookie=true`,
             {},
-            { withCredentials: 'true' }
         ).pipe(catchError(e => {
             const location = this.window.location;
             if (!environment.isLocal &&
@@ -377,10 +378,11 @@ export class NxSystemRestAPI extends NxSystemAPI {
         if (this.requiresWeb(url)) {
             url = `/web${url}`;
         }
+        const withCredentials = this.cookieLoginSupport && url.includes('/rest/v1/login/sessions') && url.includes('?setCookie=true');
         const fullUrl = `${this.urlBase}${url}`;
         const responseType = <any>(customHttpHeaders?.responseType || 'json');
         return this.#getHeaders(customHttpHeaders, url).pipe(
-            switchMap(headers => this.http.get<ResponseType>(fullUrl, { headers, params, responseType })),
+            switchMap(headers => this.http.get<ResponseType>(fullUrl, { headers, params, responseType, withCredentials })),
             retryWhen(request => this.retryHandler(request)),
             timeout(requestTimeout),
             tap(undefined, error => {

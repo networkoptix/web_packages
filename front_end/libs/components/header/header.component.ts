@@ -386,8 +386,9 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                     if (this.newHeader) {
                         const welcomeLang = this.LANG.appHeader.headerMenuNodes.welcome;
                         const systemLang = this.LANG.appHeader.headerMenuNodes.system;
-                        if (this.headerService.nodes[0].name !== systemLang.displayName) {
-                            if (this.headerService.nodes[0].name === welcomeLang.displayName) {
+                        const headerName = this.headerService?.nodes[0]?.name;
+                        if (headerName !== systemLang.displayName) {
+                            if (headerName === welcomeLang.displayName) {
                                 this.headerService.nodes.shift();
                             }
                             const systemNode = this.menusService.makeSystemMenuNode();

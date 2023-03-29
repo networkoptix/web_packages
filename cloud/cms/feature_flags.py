@@ -78,6 +78,7 @@ class FLAGS(metaclass=_FlagType):
 
     system_groups = ('System Groups', 'systemGroups', '%SYSTEM_GROUPS_ENABLED%')
     channel_partners = ('Chanel Partners', 'channelPartners', '%CHANNEL_PARTNERS_ENABLED%')
+    rest_cookie_login = ('Rest Cookie Login', 'restCookieLogin')
 
     # TODO: Remove this with https://networkoptix.atlassian.net/browse/CLOUD-8667 *********
     five_r = ('Paginator(experimental)', 'paginatorExperimental', '%FIVE_R_ENABLED%')

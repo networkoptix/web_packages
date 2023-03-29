@@ -166,7 +166,8 @@ const FeatureFlagKeys = [
     'layoutsTimeline',
     'layoutsPtz',
     'layoutsDemo',
-    'channelPartners'
+    'channelPartners',
+    'restCookieLogin'
 ] as const;
 
 export type FeatureFlagType = typeof FeatureFlagKeys[number];
