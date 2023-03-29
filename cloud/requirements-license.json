@@ -300,6 +300,12 @@
     "Version": "1.7.0"
   },
   {
+    "License": "BSD License",
+    "Name": "django-proxy",
+    "URL": "https://github.com/mjumbewu/django-proxy",
+    "Version": "1.2.2"
+  },
+  {
     "License": "MIT License",
     "Name": "django-push-notifications",
     "URL": "https://github.com/jazzband/django-push-notifications",
@@ -702,6 +708,12 @@
     "Version": "6.2.4"
   },
   {
+    "License": "Apache Software License",
+    "Name": "pytest-asyncio",
+    "URL": "https://github.com/pytest-dev/pytest-asyncio",
+    "Version": "0.20.3"
+  },
+  {
     "License": "MIT License",
     "Name": "pytest-cov",
     "URL": "https://github.com/pytest-dev/pytest-cov",
@@ -880,12 +892,6 @@
     "Name": "vine",
     "URL": "http://github.com/celery/vine",
     "Version": "5.0.0"
-  },
-  {
-    "License": "MIT License",
-    "Name": "wcwidth",
-    "URL": "https://github.com/jquast/wcwidth",
-    "Version": "0.2.5"
   },
   {
     "License": "BSD License",

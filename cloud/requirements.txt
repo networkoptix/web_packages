@@ -115,6 +115,7 @@ pyOpenSSL==22.0.0
 pyparsing==2.4.7
 pystache==0.6.0
 pytest==6.2.4
+pytest-asyncio==0.20.3
 pytest-cov==2.12.1
 pytest-django==4.3.0
 pytest-env==0.6.2
