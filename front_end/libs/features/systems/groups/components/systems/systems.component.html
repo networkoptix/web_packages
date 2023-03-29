@@ -1,0 +1,24 @@
+<div class="cards-container">
+    <h2
+        *ngIf="showPersonal"
+        class="pb-3"
+        translate
+    >
+        My System
+    </h2>
+    <div
+        class="systems-row"
+        [ngClass]="{ shared: !showPersonal }"
+        *ngFor="let user of systems$ | async | keyvalue"
+    >
+        <div *ngIf="!showPersonal">
+            {{ user.key }}
+        </div>
+        <div *ngFor="let system of user.value.systems; trackBy: trackItem">
+            <nx-system-card
+                [system]="system"
+                [search]="''"
+            ></nx-system-card>
+        </div>
+    </div>
+</div>

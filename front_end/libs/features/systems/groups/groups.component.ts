@@ -2,12 +2,13 @@ import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { LocalStorageService } from 'ngx-webstorage';
 import { forkJoin, take } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { selectCurrentUser } from '@common/store/account/account.selectors';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons } from '@lib/variables/static-variables';
+import { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 
@@ -51,9 +52,9 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
     openGroups$ = this.store.select<OpenGroups>(selectOpenGroups);
     crumbs$ = this.store.select<Crumb[] | null>(selectCrumbs);
     currentPath$ = this.store.select<GroupPath[]>(selectCurrentPath);
-    userEmail: string = this.localStorageService.retrieve('loginstate');
     sidebarSettings: CustomAccountProperty<SidebarSettings>;
     showPersonal: boolean = true;
+    userEmail: string;
     sharedItems$ = this.store.select<SharedItems>(selectSharedItems);
     personalItems$ = this.store.select<BaseItems>(selectPersonalItems);
     hasGroups$ = this.store.select(selectHasGroups);
@@ -66,12 +67,10 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
         private store: Store,
         private groupsService: NxSystemGroupsService,
         private route: ActivatedRoute,
-        private localStorageService: LocalStorageService,
         private cloudApi: NxCloudApiService,
         private dialogsService: NxDialogsService,
     ) {
         this.groupsService.connect();
-        this.init();
     }
 
     ngOnInit(): void {
@@ -89,15 +88,15 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
                 })
             );
         });
-        this.store.dispatch(GroupActions.setAccountEmail({ accountEmail: this.userEmail }));
+        this.store.select<Account>(selectCurrentUser).pipe(take(1)).subscribe(({ email }) => {
+            this.userEmail = email;
+            this.store.dispatch(GroupActions.setAccountEmail({ accountEmail: email }));
+            this.sidebarSettings = this.cloudApi.customAccountPropertyFactory('showSidebarState', email, { showSidebarState: true });
+        });
     }
 
     ngOnDestroy(): void {
         this.groupsService.disconnect();
-    }
-
-    init(): void {
-        this.sidebarSettings = this.cloudApi.customAccountPropertyFactory('showSidebarState', this.userEmail, { showSidebarState: true });
     }
 
     public handleSidebarTogglingEarClick(): void {

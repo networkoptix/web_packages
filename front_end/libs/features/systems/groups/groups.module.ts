@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { StoreModule } from '@ngrx/store';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { accountReducer } from '@common/store/account';
 import { ComponentsCoreModule } from '@components/components-core.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { AuthGuard } from '@guards/authGuard';
@@ -37,7 +38,7 @@ import { groupsReducer } from './store/groups.reducer';
             }
         ]),
         StoreModule.forFeature('groups', groupsReducer),
-
+        StoreModule.forFeature('account', accountReducer),
         NxGroupsSidebarLevelModule,
         NxGroupsCardsModule,
         PreLoaderModule,
