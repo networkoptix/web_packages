@@ -4,7 +4,6 @@ import { Component, OnInit } from '@angular/core';
     selector: 'nx-non-supported-browser',
     templateUrl: 'non-supported-browser.component.html',
 })
-
 export class NonSupportedBrowserComponent implements OnInit {
     ngOnInit(): void {}
 }

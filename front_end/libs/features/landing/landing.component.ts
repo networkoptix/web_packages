@@ -17,7 +17,6 @@ import { WINDOW } from '@services/window-provider';
     templateUrl: 'landing.component.html',
     styleUrls: ['landing.component.scss'],
 })
-
 export class NxLandingComponent implements OnInit {
     CONFIG: IConfig;
     LANG = staticLang;
@@ -64,22 +63,20 @@ export class NxLandingComponent implements OnInit {
         } else if (this.startUrl.includes('/content/about')) {
             this.loaded = true;
         } else {
-            this.sessionService.loginStateSubject
-                .pipe(untilDestroyed(this))
-                .subscribe(account => {
-                    if (account && !this.startParams.next) {
-                        this.accountService.redirectAuthorised();
-                        this.userEmail = this.accountService.email;
+            this.sessionService.loginStateSubject.pipe(untilDestroyed(this)).subscribe(account => {
+                if (account && !this.startParams.next) {
+                    this.accountService.redirectAuthorised();
+                    this.userEmail = this.accountService.email;
+                } else {
+                    if (this.startUrl.includes('/login') && !this.startParams.code) {
+                        this.accountService.showLogin(false, false);
+                    } else if (this.startParams.next) {
+                        return this.router.navigate([this.startParams.next]);
                     } else {
-                        if (this.startUrl.includes('/login') && !this.startParams.code) {
-                            this.accountService.showLogin(false, false);
-                        } else if (this.startParams.next) {
-                            return this.router.navigate([this.startParams.next]);
-                        } else {
-                            this.loaded = true;
-                        }
+                        this.loaded = true;
                     }
-                });
+                }
+            });
         }
     }
 }

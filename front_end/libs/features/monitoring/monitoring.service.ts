@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { NxSystem } from '@services/system.service/system';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxMonitoringService {
     systemSubject = new BehaviorSubject<NxSystem>(undefined);

@@ -570,7 +570,7 @@ module.exports = {
                 'libs/db/**/*.ts',
                 'libs/decorators/**/*.ts',
                 'libs/directives/**/*.ts',
-                'libs/features/[0-i]*/**/*.ts',
+                'libs/features/[0-r]*/**/*.ts',
                 // 'libs/features/integration/**/*.ts',
                 'libs/features/systems/bookmarks/**/*.ts',
                 'libs/features/systems/groups/**/*.ts',

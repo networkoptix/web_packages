@@ -7,8 +7,8 @@ import { NgChanges } from '@utils/ng-changes';
 import { NxLandingService } from '../landing.service';
 
 interface layer {
-    scale : number;
-    path : string;
+    scale: number;
+    path: string;
 }
 
 @Component({
@@ -27,19 +27,19 @@ export class NxBackgroundGraphicComponent implements AfterViewInit, OnChanges {
 
     svgProperties = {
         defaultWidth: 1920,
-        defaultHeight: 1080
+        defaultHeight: 1080,
     };
 
     calculationProperties = {
         scrollSpeedCoefficient: 0.0005,
-        layerDistanceCoefficient: 0.00005
+        layerDistanceCoefficient: 0.00005,
     };
 
     constructor(platform: Platform, public landingService: NxLandingService) {
         for (const graphic of this.graphicPaths) {
             this.layers.push({
                 path: 'land_layer_' + graphic + '.svg',
-                scale: 0.5
+                scale: 0.5,
             });
         }
         this.isSafari = platform.SAFARI;
@@ -47,23 +47,20 @@ export class NxBackgroundGraphicComponent implements AfterViewInit, OnChanges {
 
     // Calculates the size of the backgrounGraphics
     layerSize = (original: number, layer: number): number => {
-        const {
-            scrollSpeedCoefficient,
-            layerDistanceCoefficient
-        } = this.calculationProperties;
-        return 4 * (
-            original / (1 - (
-                this.scrollPosition * (
-                    scrollSpeedCoefficient + (layerDistanceCoefficient * layer)
-                )
-            ))
+        const { scrollSpeedCoefficient, layerDistanceCoefficient } = this.calculationProperties;
+        return (
+            4 *
+            (original /
+                (1 -
+                    this.scrollPosition *
+                        (scrollSpeedCoefficient + layerDistanceCoefficient * layer)))
         );
     };
 
     // Converts layer size to scale
     getScale = (layer: number): number => {
         const { defaultWidth } = this.svgProperties;
-        return 0.25 * (this.layerSize(defaultWidth, layer) / (defaultWidth));
+        return 0.25 * (this.layerSize(defaultWidth, layer) / defaultWidth);
     };
 
     recalculateScale = (): void => {

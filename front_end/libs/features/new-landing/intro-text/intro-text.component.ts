@@ -55,7 +55,7 @@ export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
         // the element from position:fixed to position:absolute
         this.realTimeScroll$ = scrollMechanics.windowScrollSubject.pipe(
             startWith(0),
-            untilDestroyed(this)
+            untilDestroyed(this),
         );
     }
 
@@ -72,7 +72,7 @@ export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
         const rect = elm.getBoundingClientRect();
         const viewHeight = Math.max(
             this.document.documentElement.clientHeight,
-            this.window.innerHeight
+            this.window.innerHeight,
         );
         return !(rect.bottom - headerHeight < 0 || rect.top - viewHeight >= 0);
     }
@@ -92,10 +92,8 @@ export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
 
     getElementPosition(elm: HTMLElement): { top: number; left: number } {
         const rect = elm.getBoundingClientRect();
-        const scrollLeft = this.window.pageXOffset ||
-            this.document.documentElement.scrollLeft;
-        const scrollTop = this.window.pageYOffset ||
-            this.document.documentElement.scrollTop;
+        const scrollLeft = this.window.pageXOffset || this.document.documentElement.scrollLeft;
+        const scrollTop = this.window.pageYOffset || this.document.documentElement.scrollTop;
         return { top: rect.top + scrollTop, left: rect.left + scrollLeft };
     }
 
@@ -110,7 +108,10 @@ export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
         // the intro-text component is using position:absolute or position:fixed
         if (!this.elementObserver$ && this.rootFixedRef && this.rootAbsoluteRef) {
             this.elementObserver$ = this.realTimeScroll$
-                .pipe(untilDestroyed(this), filter(value => value < 1000))
+                .pipe(
+                    untilDestroyed(this),
+                    filter(value => value < 1000),
+                )
                 .subscribe(() => {
                     if (
                         this.getElementPosition(this.rootAbsoluteRef.nativeElement).top >

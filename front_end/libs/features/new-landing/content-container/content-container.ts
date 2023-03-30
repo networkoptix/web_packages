@@ -33,64 +33,69 @@ export class NxContentContainerComponent implements AfterViewInit {
         firstSectionData: [
             {
                 title: 'Connect to your systems from anywhere',
-                content: 'Login to your VMS from anywhere, anytime, on any device. /n No need to set up VPN tunnel or do port forwarding. We automatically find the best way to connect to your servers – direct, nat traversal or through our proxies.',
+                content:
+                    'Login to your VMS from anywhere, anytime, on any device. /n No need to set up VPN tunnel or do port forwarding. We automatically find the best way to connect to your servers – direct, nat traversal or through our proxies.',
                 url: '',
                 externalLink: true,
-                svg: 'camera'
+                svg: 'camera',
             },
             {
                 title: 'Simple user management',
-                content: 'Invite new users to the systems by email.\nUsers will get an invite link and be able to create an account.\n\nEach user can have access to an unliminted number of \nsystems with the same credentials. Users can see the list of all accessible systems on one screen.',
+                content:
+                    'Invite new users to the systems by email.\nUsers will get an invite link and be able to create an account.\n\nEach user can have access to an unliminted number of \nsystems with the same credentials. Users can see the list of all accessible systems on one screen.',
                 url: '/docs/developers/knowledgebase',
-                svg: 'knowledgebase'
+                svg: 'knowledgebase',
             },
             {
                 title: 'Access the system in the browser',
-                content: 'Access the main system capabilities in the browser.\nView live and recorded videos, set up storage drives, activate licenses, enable recordings,\n\naccess system settings and view health report using the browser.',
+                content:
+                    'Access the main system capabilities in the browser.\nView live and recorded videos, set up storage drives, activate licenses, enable recordings,\n\naccess system settings and view health report using the browser.',
                 url: '',
-                svg: 'desktop'
-            }
+                svg: 'desktop',
+            },
         ],
         secondSectionData: [
             {
                 title: 'Viewing live and archive video',
-                content: 's with the same credentials.\n \n Users can see the list of all accessible systems on one screen.',
+                content:
+                    's with the same credentials.\n \n Users can see the list of all accessible systems on one screen.',
                 url: '',
                 externalLink: true,
-                svg: 'camera'
+                svg: 'camera',
             },
             {
                 title: 'Simple user management',
-                content: 'Invite new users to the systems by email. \n Users will get an invite link and be able to create an account.\n \n Each user can have access to an unliminted number of \nsystems with the same credentials. Users can see the list of all accessible systems on one screen.',
+                content:
+                    'Invite new users to the systems by email. \n Users will get an invite link and be able to create an account.\n \n Each user can have access to an unliminted number of \nsystems with the same credentials. Users can see the list of all accessible systems on one screen.',
                 url: 'ss',
-                svg: 'camera'
-            }
+                svg: 'camera',
+            },
         ],
         cardData: [
             {
                 title: 'Cameras & recording settings',
                 content: 'Basic recording settings without schedule.',
                 url: 'ss',
-                svg: 'camera'
+                svg: 'camera',
             },
             {
                 title: 'Simple user management',
                 content: 'All core system settings, including security.',
                 url: 'ss',
-                svg: 'camera'
+                svg: 'camera',
             },
             {
                 title: 'API documentation',
                 content: 'Different software version and a test tool.',
                 url: '',
-                svg: 'camera'
+                svg: 'camera',
             },
             {
                 title: 'Universal remote connectivity',
                 content: 'You can open and login any system in the desktop client with one click.',
                 url: '[oizz',
-                svg: 'camera'
-            }
+                svg: 'camera',
+            },
             // {
             //     title   : 'Cameras & recording settings',
             //     content : 'Basic recording settings without schedule.',
@@ -133,12 +138,10 @@ export class NxContentContainerComponent implements AfterViewInit {
             //     url     : '',
             //     svg     : 'camera'
             // }
-        ]
+        ],
     };
 
-    constructor(public landingService: NxLandingService) {
-
-    }
+    constructor(public landingService: NxLandingService) {}
 
     determineBlockType(type: 'small' | 'wide'): 'small' | 'wide' | 'adaptive' {
         if (this.screenWidth > 769) {

@@ -20,7 +20,7 @@ export class NxLearnMoreComponent implements OnChanges {
     visible = true;
     isVisibleBreakpoints = {
         scrollPosition: 91,
-        screenHeight: 690
+        screenHeight: 690,
     };
 
     constructor(
@@ -49,7 +49,7 @@ export class NxLearnMoreComponent implements OnChanges {
             // Scroll behavior smooth not supported in safari...
             // if smooth scroll is desired might need different implementation
             this.landingService.contentStartRef.nativeElement.scrollIntoView({
-                behavior: 'smooth'
+                behavior: 'smooth',
             });
             if (this.platform.SAFARI) {
                 this.scrollMechanics.windowScrollSubject.next(this.window.scrollY);

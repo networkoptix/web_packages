@@ -8,7 +8,7 @@ import { NxLandingService } from './landing.service';
     selector: 'nx-landing-page',
     templateUrl: './landing-page.component.html',
     styleUrls: ['./landing-page.component.scss'],
-    providers: [NxLandingService]
+    providers: [NxLandingService],
 })
 export class NxLandingPageComponent {
     constructor(public landingService: NxLandingService) {}

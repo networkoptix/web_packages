@@ -24,12 +24,10 @@ export class LogsComponent implements OnInit {
         this.menuService.section = 'logs';
         this.menuService.detail = '';
 
-        this.monitoringService.systemSubject
-            .pipe(untilDestroyed(this))
-            .subscribe(system => {
-                this.system = system;
-                this.selectedServerId = this.monitoringService.selectedServerId;
-            });
+        this.monitoringService.systemSubject.pipe(untilDestroyed(this)).subscribe(system => {
+            this.system = system;
+            this.selectedServerId = this.monitoringService.selectedServerId;
+        });
 
         this.monitoringService.selectedServerIdSubject
             .pipe(untilDestroyed(this))

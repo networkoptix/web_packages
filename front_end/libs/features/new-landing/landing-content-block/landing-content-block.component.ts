@@ -22,15 +22,15 @@ export class NxContentLandingBlockComponent {
     svgSizes = {
         mainSvg: {
             width: '64',
-            height: '64'
+            height: '64',
         },
         arrowLarge: {
             width: '64',
-            height: '50'
+            height: '50',
         },
         arrowSmall: {
             width: '40',
-            height: '24'
-        }
+            height: '24',
+        },
     };
 }

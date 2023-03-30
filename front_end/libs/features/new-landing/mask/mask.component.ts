@@ -20,7 +20,7 @@ export class NxMaskComponent implements OnInit, OnChanges, AfterViewInit, OnDest
 
     calculationProperties = {
         scrollSpeedCoefficient: 0.0005,
-        maskCoefficient: 2.4
+        maskCoefficient: 2.4,
     };
 
     constructor(platform: Platform, public landingService: NxLandingService) {
@@ -28,13 +28,8 @@ export class NxMaskComponent implements OnInit, OnChanges, AfterViewInit, OnDest
     }
 
     getMaskScale = (scrollPosition: number): number => {
-        const {
-            scrollSpeedCoefficient,
-            maskCoefficient
-        } = this.calculationProperties;
-        return 0.166 * (
-            1 - (scrollPosition * scrollSpeedCoefficient * maskCoefficient)
-        );
+        const { scrollSpeedCoefficient, maskCoefficient } = this.calculationProperties;
+        return 0.166 * (1 - scrollPosition * scrollSpeedCoefficient * maskCoefficient);
     };
 
     ngOnInit(): void {
@@ -55,9 +50,7 @@ export class NxMaskComponent implements OnInit, OnChanges, AfterViewInit, OnDest
             if (this.scrollPosition < this.landingService.scrollBreakpoints.maskMaxSize) {
                 this.scale = this.getMaskScale(this.scrollPosition);
             } else {
-                this.scale = this.getMaskScale(
-                    this.landingService.scrollBreakpoints.maskMaxSize
-                );
+                this.scale = this.getMaskScale(this.landingService.scrollBreakpoints.maskMaxSize);
             }
         }
     }

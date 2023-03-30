@@ -8,7 +8,7 @@ import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 @UntilDestroy()
 @Injectable()
 export class NxLandingService {
-    screenSize$: Observable<{ width:number; height: number }>;
+    screenSize$: Observable<{ width: number; height: number }>;
     scrollPosition$: Observable<number>;
     introAnimationFinished$ = new BehaviorSubject<boolean>(false);
     // First maskFinishedLoading$ emits which triggers the backgroundGraphic to start loading
@@ -20,7 +20,7 @@ export class NxLandingService {
     contentStartRef: ElementRef;
     scrollBreakpoints = {
         showGraphics: 1000,
-        maskMaxSize: 815
+        maskMaxSize: 815,
     };
 
     animationDuration = 1800;
@@ -36,21 +36,23 @@ export class NxLandingService {
             untilDestroyed(this),
             shareReplay({
                 bufferSize: 1,
-                refCount: true
-            })
+                refCount: true,
+            }),
         );
 
         this.scrollPosition$ = scrollMechanics.windowScrollSubject.pipe(
             debounceTime(scrollDebounce),
             startWith(0),
             untilDestroyed(this),
-            map(value => value < this.scrollBreakpoints.showGraphics
-                ? value
-                : this.scrollBreakpoints.showGraphics),
+            map(value =>
+                value < this.scrollBreakpoints.showGraphics
+                    ? value
+                    : this.scrollBreakpoints.showGraphics,
+            ),
             shareReplay({
                 bufferSize: 1,
-                refCount: true
-            })
+                refCount: true,
+            }),
         );
 
         this.backgroundGraphicFinishedLoading$

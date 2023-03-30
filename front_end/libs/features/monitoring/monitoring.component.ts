@@ -59,27 +59,26 @@ export class NxMonitoringComponent implements OnInit {
                     svg: menus.systemMonitoring.graphs.icon,
                     label: this.LANG.menu.titles.graphs,
                     path: menus.systemMonitoring.graphs.path,
-                }, {
+                },
+                {
                     id: menus.systemMonitoring.logs.id,
                     svg: menus.systemMonitoring.logs.icon,
                     label: this.LANG.menu.titles.logs,
                     path: menus.systemMonitoring.logs.path,
-                }
-            ]
+                },
+            ],
         };
 
-        this.menuService.selectedSectionSubject
-            .pipe(untilDestroyed(this))
-            .subscribe(selection => {
-                setTimeout(() => {
-                    this.pageService.pageTitle(this.LANG.pageTitles.monitoring);
-                });
-                if (this.content.selectedSection === selection) {
-                    return;
-                }
-                this.content.selectedSection = selection;
-                this.content = { ...this.content }; // trigger onChange
+        this.menuService.selectedSectionSubject.pipe(untilDestroyed(this)).subscribe(selection => {
+            setTimeout(() => {
+                this.pageService.pageTitle(this.LANG.pageTitles.monitoring);
             });
+            if (this.content.selectedSection === selection) {
+                return;
+            }
+            this.content.selectedSection = selection;
+            this.content = { ...this.content }; // trigger onChange
+        });
     }
 
     private updateMonitor(system: NxSystem): void {
@@ -90,7 +89,7 @@ export class NxMonitoringComponent implements OnInit {
             this.availServers.push({
                 value: server.id,
                 name: server.name,
-                disabled: server.status !== 'Online'
+                disabled: server.status !== 'Online',
             });
 
             if (!this.selectedServer) {
@@ -102,11 +101,10 @@ export class NxMonitoringComponent implements OnInit {
                 this.selectedServer.value === server.id &&
                 this.selectedServer.disabled !== (server.status !== 'Online')
             ) {
-                this.selectedServer.disabled = (server.status !== 'Online');
-                this.monitoringService.selectedServerId =
-                    this.selectedServer.disabled
-                        ? undefined
-                        : server.id; // trigger onChange
+                this.selectedServer.disabled = server.status !== 'Online';
+                this.monitoringService.selectedServerId = this.selectedServer.disabled
+                    ? undefined
+                    : server.id; // trigger onChange
             }
         });
 
@@ -114,12 +112,10 @@ export class NxMonitoringComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.route.params
-            .pipe(untilDestroyed(this))
-            .subscribe(params => {
-                this.systemId = params.systemId;
-                this.init();
-            });
+        this.route.params.pipe(untilDestroyed(this)).subscribe(params => {
+            this.systemId = params.systemId;
+            this.init();
+        });
     }
 
     init(): void {
@@ -150,10 +146,7 @@ export class NxMonitoringComponent implements OnInit {
                 //     });
 
                 this.system.infoSubject
-                    .pipe(
-                        untilDestroyed(this),
-                        takeUntil(this.destroy$)
-                    )
+                    .pipe(untilDestroyed(this), takeUntil(this.destroy$))
                     .subscribe(() => {
                         this.updateMonitor(this.system);
                     });
