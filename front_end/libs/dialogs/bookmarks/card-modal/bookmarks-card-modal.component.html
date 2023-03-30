@@ -14,25 +14,30 @@
 
     <div class="modal-body">
         <div class="video">
-            <nx-clip
-                [sourceUrl]="bookmark.src"
-                [posterUrl]="bookmark.thumbnail | async"
-                disableDownload
-                (error)="videoError = true"
+            <div class="clip">
+                <nx-clip
+                    [ngClass]="{ 'clip--hidden': videoError }"
+                    [sourceUrl]="bookmark.src"
+                    [posterUrl]="bookmark.thumbnail | async"
+                    disableDownload
+                    (error)="videoError = true"
+                >
+                </nx-clip>
+            </div>
+            <div
+                class="error"
+                [ngClass]="{ 'is-hidden': !videoError }"
             >
-            </nx-clip>
-        </div>
-        <div
-            class="error"
-            [ngClass]="{ 'error--visible': videoError }"
-        >
-            <p
-                class="error__text"
-                translate
-            >
-                The video format for this bookmark is not supported by your browser. Please download
-                it to view locally
-            </p>
+                <nx-player-placeholder
+                    class="error--hidden"
+                    [ngClass]="{ 'error--visible': videoError }"
+                    svgFileName="placeholder_camera_alert"
+                    [description]="
+                        'The video format for this bookmark is not supported by your browser. Please download it to view locally'
+                            | translate
+                    "
+                ></nx-player-placeholder>
+            </div>
         </div>
         <div class="date">{{ date }} • {{ time }}</div>
         <div class="deviceName">{{ bookmark.deviceName }}</div>

@@ -14,25 +14,50 @@
     .modal-body {
         padding: 10px !important;
 
-        .error {
-            height: 0px;
-            opacity: 0;
-            visibility: hidden;
-            transition: visibility 0.50s ease 0.2s,
-                opacity 0.50s ease 0.2s,
-                height 0.50s ease 0.2s,
-                margin-top 0.50s ease 0.2s;
+        .video {
             
-            &--visible {
-                visibility: visible;
-                opacity: 1;
-                height: 42px;
-                margin-top: 5px;
+            .clip {
+
+                nx-clip {
+                    visibility: visible;
+                    opacity: 1;
+                    transition: visibility 0.50s ease 0.2s,
+                        opacity 0.50s ease 0.2s,
+                        padding-bottom 0.50s ease 0.2s;
+
+                    &.clip--hidden {
+                        visibility: hidden;
+                        opacity: 0;
+                        padding-bottom: 0px;
+                    }
+                }
             }
 
-            &__text {
-                font-size: 14px;
-                margin: 0;
+            .error {
+                transition: max-height 0.50s ease 0.2s;
+                max-height: 184px;
+
+                &.is-hidden {
+                    max-height: 0;
+                }
+
+                nx-player-placeholder {
+
+                    &.error--hidden {
+                        visibility: hidden;
+                        opacity: 0 !important;
+                        height: 0 !important;
+                        transition: visibility 0.50s ease 0.2s,
+                            opacity 0.50s ease 0.2s,
+                            height 0.50s ease 0.2s;
+                    }
+    
+                    &.error--visible {
+                        visibility: visible;
+                        opacity: 1 !important;
+                        height: 100% !important;
+                    }
+                }
             }
         }
 
