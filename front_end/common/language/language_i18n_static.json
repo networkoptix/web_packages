@@ -916,6 +916,9 @@
                     },
                     "shared" : {
                         "displayName" : "Shared"
+                    },
+                    "organization" : {
+                        "displayName" : "Organization"
                     }
                 }
             }

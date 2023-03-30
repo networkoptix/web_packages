@@ -53,7 +53,6 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
     crumbs$ = this.store.select<Crumb[] | null>(selectCrumbs);
     currentPath$ = this.store.select<GroupPath[]>(selectCurrentPath);
     sidebarSettings: CustomAccountProperty<SidebarSettings>;
-    showPersonal: boolean = true;
     userEmail: string;
     sharedItems$ = this.store.select<SharedItems>(selectSharedItems);
     personalItems$ = this.store.select<BaseItems>(selectPersonalItems);
@@ -74,17 +73,10 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.route.url.subscribe(url => {
-            this.showPersonal = url[0].path !== 'shared';
-        });
-
-        this.route.params.subscribe(params => {
-            if (params.groupId === 'shared') {
-                return;
-            }
+        this.route.params.subscribe(({ id }) => {
             this.store.dispatch(
                 GroupActions.setCurrentGroupId({
-                    currentGroupId: params.groupId
+                    currentGroupId: id
                 })
             );
         });

@@ -157,7 +157,7 @@ export const selectCurrentIndexes = createSelector(
 
 export const selectHasCurrentIndexes = createSelector(
     selectCurrentIndexes,
-    indexes => !!indexes?.length
+    indexes => !indexes?.length
 );
 
 export const selectLoadingState = createSelector(

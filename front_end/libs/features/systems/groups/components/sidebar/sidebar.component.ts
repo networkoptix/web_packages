@@ -4,6 +4,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { CoercedBoolInput } from '@decorators/ibool';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons } from '@src/app/variables/static-variables';
 
@@ -20,9 +21,9 @@ import { selectRootPersonalItems, selectRootSharedItems } from '../../store/grou
 export class NxSystemGroupsSidebarComponent implements OnInit {
     @Input() currentGroupId: string;
     @Input() currentGroupOwner: string;
-    @Input() showPersonal: boolean;
+    @Input() showPersonal: CoercedBoolInput = true;
     @Input() openGroups: OpenGroups;
-    @Input() hasGroups: boolean;
+    @Input() hasGroups: CoercedBoolInput;
     @Input() userEmail: string;
     @Input() currentPath: GroupPath[];
     @Output() dismiss = new EventEmitter<void>();

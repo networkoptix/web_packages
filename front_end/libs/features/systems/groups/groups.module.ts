@@ -17,6 +17,8 @@ import {
     NxGroupsSidebarLevelModule
 } from './components/sidebar-level/sidebar-level.module';
 import { NxSystemGroupsSidebarModule } from './components/sidebar/sidebar.module';
+import { NxGroupsSystemsComponent } from './components/systems/systems.component';
+import { NxGroupsSystemsModule } from './components/systems/systems.module';
 import { NxSystemGroupsComponent } from './groups.component';
 import { groupsReducer } from './store/groups.reducer';
 
@@ -32,9 +34,23 @@ import { groupsReducer } from './store/groups.reducer';
                 canActivate: [AuthGuard],
             },
             {
-                path: ':groupId',
+                path: 'personal',
+                component: NxGroupsSystemsComponent,
+                canActivate: [AuthGuard],
+            },
+            {
+                path: 'shared',
+                component: NxGroupsSystemsComponent,
+                canActivate: [AuthGuard],
+            },
+            {
+                path: 'organization/:id',
                 component: NxSystemGroupsComponent,
                 canActivate: [AuthGuard],
+            },
+            {
+                path: '**',
+                redirectTo: 'personal',
             }
         ]),
         StoreModule.forFeature('groups', groupsReducer),
@@ -43,6 +59,7 @@ import { groupsReducer } from './store/groups.reducer';
         NxGroupsCardsModule,
         PreLoaderModule,
         NxSystemGroupsSidebarModule,
+        NxGroupsSystemsModule
     ],
     declarations: [
         NxSystemGroupsComponent,

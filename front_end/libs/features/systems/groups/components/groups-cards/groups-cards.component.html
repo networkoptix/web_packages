@@ -1,7 +1,7 @@
 <!-- Issue with "Unable to preventDefault inside passive event listener invocation." caused by monitoring? -->
 <!-- https://github.com/angular/components/issues/24979#issuecomment-1203583528 -->
 <div
-    *ngIf="emptyGroup; else showGroups"
+    *ngIf="!(currentGroups$ | async).length && !(currentSystems$ | async).length; else showGroups"
     class="no-systems"
     translate
 >
@@ -9,25 +9,13 @@
 </div>
 
 <ng-template
-    #user
-    let-user
->
-    <svg-icon
-        nx-add-svg-src
-        [src]="icons.dir + 'user.svg'"
-        [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-    ></svg-icon>
-    {{ user }}
-</ng-template>
-
-<ng-template
-    #cards
+    #showGroups
     let-groups="groups"
     let-systems="systems"
 >
     <div class="px-3 cards-container">
         <div
-            *ngFor="let group of groups; trackBy: trackItem"
+            *ngFor="let group of currentGroups$ | async; trackBy: trackItem"
             class="group-card"
             cdkDropList
             cdkDropListSortingDisabled
@@ -44,7 +32,10 @@
             <div class="placeholder-shadow"></div>
         </div>
         <div
-            *ngFor="let system of systems; trackBy: trackItem"
+            *ngFor="
+                let system of (inRoot$ | async) ? [] : (currentSystems$ | async);
+                trackBy: trackItem
+            "
             class="system-card"
             cdkDropList
             cdkDropListSortingDisabled
@@ -58,56 +49,10 @@
                 <nx-system-card
                     [system]="system"
                     [search]="''"
-                    [account]="account"
+                    [account]="account$ | async"
                 ></nx-system-card>
             </div>
             <div class="placeholder-shadow"></div>
         </div>
     </div>
-</ng-template>
-
-<ng-template #showGroups>
-    <ng-container *ngIf="showPersonal; else showShared">
-        <ng-container
-            *ngTemplateOutlet="
-                cards;
-                context: { groups: personalItems.groups, systems: personalItems.systems }
-            "
-        ></ng-container>
-    </ng-container>
-    <ng-template #showShared>
-        <ng-container *ngIf="!currentSharedOwner; else userFilteredGroups">
-            <div
-                *ngFor="let owner of sharedItems | keyvalue"
-                class="sharedGroups"
-            >
-                <ng-container
-                    *ngTemplateOutlet="user; context: { $implicit: owner.key }"
-                ></ng-container>
-                <ng-container
-                    *ngTemplateOutlet="
-                        cards;
-                        context: { groups: owner.value.groups, systems: owner.value.systems }
-                    "
-                ></ng-container>
-            </div>
-        </ng-container>
-        <ng-template
-            #userFilteredGroups
-            class="sharedGroups"
-        >
-            <ng-template
-                *ngTemplateOutlet="user; context: { $implicit: currentSharedOwner }"
-            ></ng-template>
-            <ng-container
-                *ngTemplateOutlet="
-                    cards;
-                    context: {
-                        groups: sharedItems[currentSharedOwner].groups,
-                        systems: sharedItems[currentSharedOwner].systems
-                    }
-                "
-            ></ng-container>
-        </ng-template>
-    </ng-template>
 </ng-template>

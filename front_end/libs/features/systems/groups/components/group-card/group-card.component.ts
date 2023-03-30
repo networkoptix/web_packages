@@ -34,7 +34,7 @@ export class NxGroupCardComponent {
     }
 
     openGroup(): void {
-        this.router.navigate(['groups', this.group.id])
+        this.router.navigate(['home', 'organization', this.group.id])
             .then(() => this.store.dispatch(GroupActions.setOpenGroups({ openGroups: { [this.group.id]: true } })));
     }
 
