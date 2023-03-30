@@ -80,7 +80,6 @@ export class NxBookmarksComponent implements OnInit {
     CONFIG: IConfig;
     icons = icons;
     noBksImgSrc: string;
-
     system: NxSystem;
 
     _bookmarks: Bookmark[] = [];

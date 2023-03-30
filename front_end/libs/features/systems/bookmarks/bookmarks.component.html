@@ -60,9 +60,16 @@
                         [ngClass]="{
                             'no-bookmarks-text-dark': CONFIG.isDarkTheme
                         }"
-                        translate
                     >
-                        You don't have any Bookmarks yet.
+                        <span
+                            *ngIf="creationCutOffTimeMS$ | async; else noBookmarksText"
+                            translate
+                        >
+                            No matching results.
+                        </span>
+                        <ng-template #noBookmarksText>
+                            <span translate>You don't have any Bookmarks yet.</span>
+                        </ng-template>
                     </h2>
                 </ng-container>
                 <div
