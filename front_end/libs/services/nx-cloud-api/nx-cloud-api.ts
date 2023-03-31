@@ -866,7 +866,7 @@ export class NxCloudApiService {
         return this.http.post<{ message: string }>(`${apiBase}/account/renewSession`, { code }).pipe(
             map(() => true),
             catchError(() => Promise.resolve(false)),
-            switchMap(refreshed => this.account(refreshed))
+            switchMap(refreshed => this.account(true))
         );
     }
 
