@@ -959,7 +959,7 @@
     "Outgoing Secondary streams": "Outgoing Secondary streams",
     "Outgoing connections": "Outgoing connections",
     "Owner": "Owner",
-    "Ownership change will occur as soon as the new owner accepts the request": "Ownership change will occur as soon as the new owner accepts the request",
+    "Ownership transfer will occur as soon as the new owner accepts the request. You may still cancel the transfer before the new owner accepts it.": "Ownership transfer will occur as soon as the new owner accepts the request. You may still cancel the transfer before the new owner accepts it.",
     "P": "P",
     "PM": "PM",
     "PTZ": "PTZ",
