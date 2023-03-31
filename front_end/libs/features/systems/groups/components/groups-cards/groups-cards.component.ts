@@ -9,7 +9,11 @@ import { icons } from '@src/app/variables/static-variables';
 
 import { GroupItem, GroupsItem, SystemItem } from '../../groups.types';
 import { NxSystemGroupsService } from '../../services/system-groups.service';
-import { selectCurrentGroupItems, selectCurrentSystemItems, selectHasCurrentIndexes } from '../../store/groups.selectors';
+import {
+    selectCurrentGroupItems,
+    selectCurrentSystemItems,
+    selectHasCurrentIndexes,
+} from '../../store/groups.selectors';
 
 @Component({
     selector: 'nx-groups-cards',
@@ -25,11 +29,7 @@ export class NxGroupsCardsComponent {
     LANG = staticLang;
     icons = icons;
 
-    constructor(
-        private groupsService: NxSystemGroupsService,
-        private store: Store,
-    ) {
-    }
+    constructor(private groupsService: NxSystemGroupsService, private store: Store) {}
 
     trackItem(_index: number, item: GroupsItem): string {
         return item.id;

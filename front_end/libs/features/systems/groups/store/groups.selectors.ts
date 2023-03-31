@@ -15,39 +15,22 @@ import { GroupsState } from './groups.state';
 
 const selectGroupState = createFeatureSelector<GroupsState>('groups');
 
-const selectBaseGroupsItems = createSelector(
-    selectGroupState,
-    state => state.items,
-);
+const selectBaseGroupsItems = createSelector(selectGroupState, state => state.items);
 
-const selectSystemInfo = createSelector(
-    selectGroupState,
-    state => state.systemInfo,
-);
+const selectSystemInfo = createSelector(selectGroupState, state => state.systemInfo);
 
-export const selectOpenGroups = createSelector(
-    selectGroupState,
-    state => state.openGroups,
-);
+export const selectOpenGroups = createSelector(selectGroupState, state => state.openGroups);
 
-const selectAccountEmail = createSelector(
-    selectGroupState,
-    state => state.accountEmail,
-);
+const selectAccountEmail = createSelector(selectGroupState, state => state.accountEmail);
 
 export const selectCurrentSharedOwner = createSelector(
     selectGroupState,
     state => state.currentSharedOwner,
 );
 
-const selectSystemInfoMap = createSelector(
-    selectSystemInfo,
-    systems => {
-        return systems
-            ? new Map<string, SystemInfo>(systems.map(s => [s.id, s]))
-            : systems as null;
-    }
-);
+const selectSystemInfoMap = createSelector(selectSystemInfo, systems => {
+    return systems ? new Map<string, SystemInfo>(systems.map(s => [s.id, s])) : (systems as null);
+});
 
 export const selectGroupsItems = createSelector(
     selectBaseGroupsItems,
@@ -59,14 +42,12 @@ export const selectGroupsItems = createSelector(
 
         const placedSystem = new Set<string>();
         function extendSystemInfo(groupItem: BaseGroupItem): GroupItem {
-            groupItem.groups = groupItem.groups.map(g =>
-                extendSystemInfo({ ...g })
-            );
+            groupItem.groups = groupItem.groups.map(g => extendSystemInfo({ ...g }));
             groupItem.systems = groupItem.systems.map(s => {
                 placedSystem.add(s.id);
                 return {
                     ...s,
-                    ...sysInfo.get(s.id)
+                    ...sysInfo.get(s.id),
                 };
             });
             return groupItem as GroupItem;
@@ -77,7 +58,7 @@ export const selectGroupsItems = createSelector(
             } else {
                 item = {
                     ...item,
-                    ...sysInfo.get(item.id)
+                    ...sysInfo.get(item.id),
                 };
             }
             return item as GroupsItem;
@@ -90,28 +71,22 @@ export const selectGroupsItems = createSelector(
             }
         });
         return data;
-    }
+    },
 );
 
 export const selectRootGroupItems = createSelector(
     selectGroupsItems,
-    items => items?.filter(item => item.type === 'group') as GroupItem[]
+    items => items?.filter(item => item.type === 'group') as GroupItem[],
 );
 
-export const selectHasGroups = createSelector(
-    selectRootGroupItems,
-    groups => !!groups?.length
-);
+export const selectHasGroups = createSelector(selectRootGroupItems, groups => !!groups?.length);
 
 export const selectRootSystemItems = createSelector(
     selectGroupsItems,
-    items => items?.filter(item => item.type === 'system') as SystemItem[]
+    items => items?.filter(item => item.type === 'system') as SystemItem[],
 );
 
-export const selectCurrentGroupId = createSelector(
-    selectGroupState,
-    items => items.currentGroupId
-);
+export const selectCurrentGroupId = createSelector(selectGroupState, items => items.currentGroupId);
 
 function findTargetAddress(
     targetId: string,
@@ -152,26 +127,23 @@ export const selectCurrentIndexes = createSelector(
             return findTargetAddress(groupId, rootGroups);
             // undefined: No matching group
         }
-    }
+    },
 );
 
 export const selectHasCurrentIndexes = createSelector(
     selectCurrentIndexes,
-    indexes => !indexes?.length
+    indexes => !indexes?.length,
 );
 
-export const selectLoadingState = createSelector(
-    selectCurrentIndexes,
-    indexes => {
-        if (indexes === null) {
-            return LoadingState.LOADING;
-        } else if (indexes === undefined) {
-            return LoadingState.NOT_FOUND;
-        } else {
-            return LoadingState.LOADED;
-        }
+export const selectLoadingState = createSelector(selectCurrentIndexes, indexes => {
+    if (indexes === null) {
+        return LoadingState.LOADING;
+    } else if (indexes === undefined) {
+        return LoadingState.NOT_FOUND;
+    } else {
+        return LoadingState.LOADED;
     }
-);
+});
 
 export const selectCurrentGroupItems = createSelector(
     selectCurrentIndexes,
@@ -181,12 +153,9 @@ export const selectCurrentGroupItems = createSelector(
             return null;
         }
         return indexes.length
-            ? indexes.reduce(
-                (groups, index) => groups[index].groups,
-                rootGroups
-            )
+            ? indexes.reduce((groups, index) => groups[index].groups, rootGroups)
             : rootGroups;
-    }
+    },
 );
 
 export const selectCurrentSystemItems = createSelector(
@@ -198,15 +167,15 @@ export const selectCurrentSystemItems = createSelector(
             return null;
         }
         if (indexes.length) {
-            const currentGroup = indexes.reduce(
-                (group, index) => group.groups[index],
-                { groups: rootGroups, systems: rootSystems }
-            );
+            const currentGroup = indexes.reduce((group, index) => group.groups[index], {
+                groups: rootGroups,
+                systems: rootSystems,
+            });
             return currentGroup.systems;
         } else {
             return rootSystems;
         }
-    }
+    },
 );
 
 export const selectCrumbs = createSelector(
@@ -225,7 +194,7 @@ export const selectCrumbs = createSelector(
             });
         }
         return crumbs;
-    }
+    },
 );
 
 // Same as above to prevent unexpected changes for crumbs
@@ -245,13 +214,10 @@ export const selectCurrentPath = createSelector(
             });
         }
         return crumbs;
-    }
+    },
 );
 
-const createSharedItemsObject = (
-    groups: GroupItem[],
-    systems: SystemItem[],
-): SharedItems => {
+const createSharedItemsObject = (groups: GroupItem[], systems: SystemItem[]): SharedItems => {
     const result: SharedItems = {};
 
     for (const group of groups) {
@@ -277,7 +243,7 @@ export const selectRootPersonalItems = createSelector(
     (groups, systems, email) => {
         return {
             groups: groups.filter(group => group.owner_account_email === email),
-            systems: systems.filter(system => system.ownerAccountEmail === email)
+            systems: systems.filter(system => system.ownerAccountEmail === email),
         };
     },
 );
@@ -286,24 +252,23 @@ export const selectRootSharedItems = createSelector(
     selectRootGroupItems,
     selectRootSystemItems,
     selectAccountEmail,
-    (groups, systems, email) => createSharedItemsObject(
-        groups.filter(group => group.owner_account_email !== email),
-        systems.filter(system => system.ownerAccountEmail !== email)
-    )
+    (groups, systems, email) =>
+        createSharedItemsObject(
+            groups.filter(group => group.owner_account_email !== email),
+            systems.filter(system => system.ownerAccountEmail !== email),
+        ),
 );
 
 export const selectPersonalGroupItems = createSelector(
     selectCurrentGroupItems,
     selectAccountEmail,
-    (groups, email) =>
-        groups.filter(group => group.owner_account_email === email),
+    (groups, email) => groups.filter(group => group.owner_account_email === email),
 );
 
 export const selectPersonalSystemItems = createSelector(
     selectCurrentSystemItems,
     selectAccountEmail,
-    (systems, email) =>
-        systems.filter(system => system.ownerAccountEmail === email)
+    (systems, email) => systems.filter(system => system.ownerAccountEmail === email),
 );
 
 export const selectPersonalItems = createSelector(
@@ -317,15 +282,13 @@ export const selectPersonalItems = createSelector(
 export const selectSharedGroupItems = createSelector(
     selectCurrentGroupItems,
     selectAccountEmail,
-    (groups, email) =>
-        groups.filter(group => group.owner_account_email !== email),
+    (groups, email) => groups.filter(group => group.owner_account_email !== email),
 );
 
 export const selectSharedSystemItems = createSelector(
     selectCurrentSystemItems,
     selectAccountEmail,
-    (systems, email) =>
-        systems.filter(system => system.ownerAccountEmail !== email),
+    (systems, email) => systems.filter(system => system.ownerAccountEmail !== email),
 );
 
 export const selectSharedItems = createSelector(
@@ -342,5 +305,5 @@ export const selectCurrentGroupOwner = createSelector(
             return;
         }
         return groups[indexes[0]].owner_account_email;
-    }
+    },
 );

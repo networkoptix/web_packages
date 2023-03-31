@@ -19,32 +19,40 @@ export const groupsReducer = createReducer(
     //     systemInfo: [],
     //     currentGroupId: undefined,
     // })),
-    on(GroupActions.setItems, (state, { items }): GroupsState => ({
-        ...state,
-        items,
-    })),
-    on(GroupActions.setSystemInfo, (state, { systemInfo }): GroupsState => ({
-        ...state,
-        systemInfo,
-    })),
+    on(
+        GroupActions.setItems,
+        (state, { items }): GroupsState => ({
+            ...state,
+            items,
+        }),
+    ),
+    on(
+        GroupActions.setSystemInfo,
+        (state, { systemInfo }): GroupsState => ({
+            ...state,
+            systemInfo,
+        }),
+    ),
     on(
         GroupActions.setCurrentGroupId,
         (state, { currentGroupId }): GroupsState => ({
             ...state,
             currentGroupId,
-        })),
+        }),
+    ),
     on(
         GroupActions.setCurrentSharedOwner,
         (state, { currentSharedOwner }): GroupsState => ({
             ...state,
-            currentSharedOwner
-        })),
+            currentSharedOwner,
+        }),
+    ),
     on(
         GroupActions.setAccountEmail,
         (state, { accountEmail }): GroupsState => ({
             ...state,
-            accountEmail
-        })
+            accountEmail,
+        }),
     ),
     on(
         GroupActions.setOpenGroups,
@@ -52,8 +60,8 @@ export const groupsReducer = createReducer(
             ...state,
             openGroups: {
                 ...state.openGroups,
-                ...openGroups
-            }
-        })
-    )
+                ...openGroups,
+            },
+        }),
+    ),
 );

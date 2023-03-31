@@ -46,8 +46,7 @@ export class NxDateAndTimeFilterComponent {
     quickPreview: DateRange | null = null;
 
     private get singleDayRange(): boolean {
-        return this.dateRange &&
-            this.dateRange.start.toString() === this.dateRange.end.toString();
+        return this.dateRange && this.dateRange.start.toString() === this.dateRange.end.toString();
     }
 
     // Comparison range start date must be before end
@@ -93,10 +92,7 @@ export class NxDateAndTimeFilterComponent {
         return new DR(thirtyDaysAgo, today);
     }
 
-    constructor(
-        dateAdapter: DateAdapter<Date>,
-        @Inject(WINDOW) private window: Window,
-    ) {
+    constructor(dateAdapter: DateAdapter<Date>, @Inject(WINDOW) private window: Window) {
         dateAdapter.setLocale(getSysLang(window));
     }
 
@@ -162,13 +158,11 @@ export class NxDateAndTimeFilterComponent {
         let newRange: DateRange;
         if (!this.dateRange) {
             newRange = new DR(selected, selected);
-        } else if (
-            this.singleDayRange &&
-            selected.toString() !== this.dateRange.start.toString()
-        ) {
-            newRange = selected.getTime() > this.dateRange.start.getTime()
-                ? new DR(this.dateRange.start, selected)
-                : new DR(selected, this.dateRange.start);
+        } else if (this.singleDayRange && selected.toString() !== this.dateRange.start.toString()) {
+            newRange =
+                selected.getTime() > this.dateRange.start.getTime()
+                    ? new DR(this.dateRange.start, selected)
+                    : new DR(selected, this.dateRange.start);
         } else {
             newRange = new DR(selected, selected);
         }
@@ -198,7 +192,7 @@ export class NxDateAndTimeFilterComponent {
         if (this.invalidTimeRange()) {
             this.timeRangeError$.next(true);
             return;
-        } else if ((this.timeRange.start !== null && this.timeRange.end !== null)) {
+        } else if (this.timeRange.start !== null && this.timeRange.end !== null) {
             this.timeRangeChange.emit(this.timeRange);
             if (!this.dateRange) {
                 const today = this.todayStart;
@@ -220,9 +214,10 @@ export class NxDateAndTimeFilterComponent {
      * - Oct 12 4PM - Oct 12 2AM ❌
      */
     private invalidTimeRange(dateRange = this.dateRange): boolean {
-        return (this.timeRange.start ?? Number.NEGATIVE_INFINITY) >
-            (this.timeRange.end ?? Number.POSITIVE_INFINITY) && (
-            !dateRange || dateRange.start.toString() === dateRange.end.toString()
+        return (
+            (this.timeRange.start ?? Number.NEGATIVE_INFINITY) >
+                (this.timeRange.end ?? Number.POSITIVE_INFINITY) &&
+            (!dateRange || dateRange.start.toString() === dateRange.end.toString())
         );
     }
 }

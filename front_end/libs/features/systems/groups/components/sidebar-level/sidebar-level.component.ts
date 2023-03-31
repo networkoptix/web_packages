@@ -31,8 +31,7 @@ export class NxGroupsSidebarLevelComponent {
         private groupsService: NxSystemGroupsService,
         private store: Store,
         private router: Router,
-    ) {
-    }
+    ) {}
 
     trackItem(_index: number, item: GroupsItem): string {
         return item.id;
@@ -49,8 +48,13 @@ export class NxGroupsSidebarLevelComponent {
     }
 
     selectUserFilter(user: string): void {
-        this.router.navigate(['/', 'groups'])
-            .then(() => this.store.dispatch(GroupActions.setCurrentSharedOwner({ currentSharedOwner: user })));
+        this.router
+            .navigate(['/', 'groups'])
+            .then(() =>
+                this.store.dispatch(
+                    GroupActions.setCurrentSharedOwner({ currentSharedOwner: user }),
+                ),
+            );
     }
 
     toggleOpenState(groupId?: string): boolean | void {

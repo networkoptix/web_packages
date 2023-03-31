@@ -12,16 +12,19 @@ import { pollingTimeout } from '@pages/static-variables-features';
 import { NxAccountService } from '@services/account.service';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import type {
-    BookmarksParams,
-    BookmarksTags,
-    Device,
-} from '@services/system-api.types';
+import type { BookmarksParams, BookmarksTags, Device } from '@services/system-api.types';
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { WINDOW } from '@services/window-provider';
-import { alphabeticalSort, caseInsenstiveSearch, cleanId, msToParts, offsetDate, paramSortFunc } from '@utils/general';
+import {
+    alphabeticalSort,
+    caseInsenstiveSearch,
+    cleanId,
+    msToParts,
+    offsetDate,
+    paramSortFunc,
+} from '@utils/general';
 import { getSysLang } from '@utils/nx';
 
 import type { Bookmark, TimeRange } from './bookmarks.types';
@@ -39,7 +42,7 @@ interface BookmarkParams {
 // Cssa = Comma separated string array
 // ['foo', 'bar', 'fizz,buzz'] => 'foo,bar,fizz\,buzz'
 function strArrayToCssa(strings: string[]): string {
-    return strings.map(s => s.replace(/,/g, '\,')).toString();
+    return strings.map(s => s.replace(/,/g, ',')).toString();
 }
 
 function unescapeCommas(escaped: string): string {
@@ -59,9 +62,7 @@ function cssaToStrArray(cssa: string): string[] {
     }
     const strings = [unescapeCommas(cssa.slice(0, splitIndexes[0]))];
     splitIndexes.forEach((s, i) => {
-        strings.push(
-            unescapeCommas(cssa.slice(s + 1, splitIndexes[i + 1]))
-        );
+        strings.push(unescapeCommas(cssa.slice(s + 1, splitIndexes[i + 1])));
         // Final will slice to end
     });
     return strings;
@@ -116,12 +117,11 @@ export class NxBookmarksComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.noBksImgSrc = `${icons.dirSectionPlaceholder}empty-bookmarks${this.CONFIG.isDarkTheme ? '' : '-cloud'}.svg`;
+        this.noBksImgSrc = `${icons.dirSectionPlaceholder}empty-bookmarks${
+            this.CONFIG.isDarkTheme ? '' : '-cloud'
+        }.svg`;
 
-        combineLatest<[BookmarkParams, Params]>([
-            this.route.queryParams,
-            this.route.params
-        ])
+        combineLatest<[BookmarkParams, Params]>([this.route.queryParams, this.route.params])
             .pipe(take(1))
             .subscribe(([queryParams, params]) => {
                 this.queryParams = { ...queryParams };
@@ -148,22 +148,15 @@ export class NxBookmarksComponent implements OnInit {
                         this.timeFilter.end = Number(queryParams.endTime);
                     }
                     if (queryParams.devices) {
-                        this.deviceFilter.select(
-                            ...cssaToStrArray(queryParams.devices)
-                        );
+                        this.deviceFilter.select(...cssaToStrArray(queryParams.devices));
                     }
                     if (queryParams.tags) {
-                        this.tagFilter.select(
-                            ...cssaToStrArray(queryParams.tags)
-                        );
+                        this.tagFilter.select(...cssaToStrArray(queryParams.tags));
                     }
                 }
 
                 this.accountService.get().then(account => {
-                    this.system = this.systemService.createSystem(
-                        account.email,
-                        params.systemId,
-                    );
+                    this.system = this.systemService.createSystem(account.email, params.systemId);
                     this.bookmarksPoll();
                 });
             });
@@ -189,11 +182,17 @@ export class NxBookmarksComponent implements OnInit {
         const mediaserver = this.system.mediaserver as NxSystemRestAPI;
         const params: BookmarksParams = {
             order: 'desc',
-            _orderBy: 'startTimeMs'
+            _orderBy: 'startTimeMs',
         };
         const bookmarksPoll$: Observable<Bookmark[]> = timer(0, pollingTimeout).pipe(
             // Promise.all for Observables.
-            switchMap(() => zip([mediaserver.getBookmarks(params), mediaserver.getBookmarkTags(), mediaserver.getDevices()])),
+            switchMap(() =>
+                zip([
+                    mediaserver.getBookmarks(params),
+                    mediaserver.getBookmarkTags(),
+                    mediaserver.getDevices(),
+                ]),
+            ),
             // Then for Promise.all. In here we convert bookmarks from BookmarkResp -> Bookmark, and update filters.
             map(([bks, tags, devices]) => {
                 this.updateTags(tags);
@@ -205,14 +204,14 @@ export class NxBookmarksComponent implements OnInit {
                         duration: Math.floor(bk.durationMs / 1000),
                         endPos: bk.startTimeMs + bk.durationMs,
                         pos: bk.startTimeMs,
-                        transport: 'mkv'
+                        transport: 'mkv',
                     }),
                     thumbnail: this.system.serverManager.getPreviewUrl(
                         bk.deviceId,
                         bk.startTimeMs,
                         320,
                         180,
-                        0
+                        0,
                     ),
                     isVisible: false,
                     deviceName: devices.find(device => device.id === bk.deviceId)?.name,
@@ -223,7 +222,9 @@ export class NxBookmarksComponent implements OnInit {
             // Merge recently created and new bookmarks together, and update vars to check if we got new bookmarks
             map(bks => {
                 if (bks.length) {
-                    params.creationStartTimeMs = this.findNewestBookmark(bks.length ? bks : this._bookmarks)?.creationTimeMs + 1;
+                    params.creationStartTimeMs =
+                        this.findNewestBookmark(bks.length ? bks : this._bookmarks)
+                            ?.creationTimeMs + 1;
                     if (!this.creationCutOffTimeMS$.value) {
                         this.creationCutOffTimeMS$.next(params.creationStartTimeMs);
                     }
@@ -232,10 +233,16 @@ export class NxBookmarksComponent implements OnInit {
                     this._bookmarks = this.mergeBookmarks(this._bookmarks, bks);
                 }
                 return this._bookmarks;
-            })
+            }),
         );
-        this.bookmarks$ = combineLatest([this.creationCutOffTimeMS$, bookmarksPoll$, this.route.queryParams]).pipe(
-            map(([creationCutOffTimeMS, bks, _]) => bks.filter(bk => creationCutOffTimeMS > bk.creationTimeMs)),
+        this.bookmarks$ = combineLatest([
+            this.creationCutOffTimeMS$,
+            bookmarksPoll$,
+            this.route.queryParams,
+        ]).pipe(
+            map(([creationCutOffTimeMS, bks, _]) =>
+                bks.filter(bk => creationCutOffTimeMS > bk.creationTimeMs),
+            ),
             map(bks => {
                 if (this.queryParams.devices) {
                     bks = bks.filter(bk => this.queryParams.devices.includes(bk.deviceName));
@@ -259,23 +266,26 @@ export class NxBookmarksComponent implements OnInit {
                         endDatetime = offsetDate(endDatetime, { day: 1 }).getTime();
                     }
 
-                    bks = bks.filter(bk =>
-                        bk.startTimeMs >= startDatetime &&
-                        bk.startTimeMs < endDatetime
+                    bks = bks.filter(
+                        bk => bk.startTimeMs >= startDatetime && bk.startTimeMs < endDatetime,
                     );
                 }
 
                 if (this.queryParams.search) {
                     const searches = this.queryParams.search.trim().split(/\s+/);
-                    bks = bks.filter(bk => searches.some(s => caseInsenstiveSearch(bk.name, s) ||
-                        caseInsenstiveSearch(bk.deviceName, s) ||
-                        bk.tags.some(t => caseInsenstiveSearch(t, s))
-                    ));
+                    bks = bks.filter(bk =>
+                        searches.some(
+                            s =>
+                                caseInsenstiveSearch(bk.name, s) ||
+                                caseInsenstiveSearch(bk.deviceName, s) ||
+                                bk.tags.some(t => caseInsenstiveSearch(t, s)),
+                        ),
+                    );
                 }
 
                 return bks;
             }),
-            distinctUntilChanged()
+            distinctUntilChanged(),
         );
     }
 
@@ -287,9 +297,12 @@ export class NxBookmarksComponent implements OnInit {
         const oldBookmarksLen = bookmarks.length;
         const newBookmarksLen = newBookmarks.length;
         // Use same Bookmarks if both Bookmark Lists are the exact same
-        if (oldBookmarksLen === newBookmarksLen && bookmarks.every((bk, i) => {
-            return bk === newBookmarks[i];
-        })) {
+        if (
+            oldBookmarksLen === newBookmarksLen &&
+            bookmarks.every((bk, i) => {
+                return bk === newBookmarks[i];
+            })
+        ) {
             return bookmarks;
         }
 

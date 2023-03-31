@@ -93,9 +93,6 @@ export interface OutgoingData {
     systems: { action: WebSocketAction.SYSTEMS };
 }
 
-export type WebSocketIncoming =
-    Connected |
-    IncomingData[WebSocketAction] |
-    ErrorData;
+export type WebSocketIncoming = Connected | IncomingData[WebSocketAction] | ErrorData;
 
 export type WebSocketOutgoing = OutgoingData[WebSocketAction];

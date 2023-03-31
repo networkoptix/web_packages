@@ -33,13 +33,14 @@ export class NxSystemCardComponent implements OnInit {
     icons = icons;
 
     get tagType(): string {
-        return this.CONFIG.system.status[this.system.stateOfHealth]?.style ||
-            this.CONFIG.system.status.default.style;
+        return (
+            this.CONFIG.system.status[this.system.stateOfHealth]?.style ||
+            this.CONFIG.system.status.default.style
+        );
     }
 
     get systemState(): string {
-        return this.LANG.systemStatuses[this.system.stateOfHealth] ||
-            this.system.stateOfHealth;
+        return this.LANG.systemStatuses[this.system.stateOfHealth] || this.system.stateOfHealth;
     }
 
     // We don't get useRest on system info from WebSocket, but but all v5
@@ -49,7 +50,6 @@ export class NxSystemCardComponent implements OnInit {
     }
 
     constructor(
-
         configService: NxConfigService,
         private dialogs: NxDialogsService,
         private processService: NxProcessService,
@@ -68,8 +68,8 @@ export class NxSystemCardComponent implements OnInit {
             },
             {
                 errorCodes: {
-                    [openClientError]: () => {}
-                }
+                    [openClientError]: () => {},
+                },
             },
             () => {
                 this.modalActive = false;
@@ -86,26 +86,26 @@ export class NxSystemCardComponent implements OnInit {
                         footer: {
                             actionLabel: this.LANG.dialogs.buttons.download,
                             cancelLabel: this.LANG.dialogs.buttons.cancel,
-                        }
+                        },
                     })
                     .then(result => {
                         if (result) {
-                            this.router
-                                .navigate(['/download'])
-                                .catch(error => {
-                                    console.error(error);
-                                });
+                            this.router.navigate(['/download']).catch(error => {
+                                console.error(error);
+                            });
                         }
-                    }).finally(() => {
+                    })
+                    .finally(() => {
                         this.modalActive = false;
                     });
-            });
+            },
+        );
     }
 
     get getSystemOwnerName(): string {
         return this.system.ownerAccountEmail === this.account?.email
             ? ''
-            : (this.system.ownerFullName || this.system.ownerAccountEmail);
+            : this.system.ownerFullName || this.system.ownerAccountEmail;
     }
 
     get systemNotOnline(): boolean {
@@ -113,9 +113,11 @@ export class NxSystemCardComponent implements OnInit {
     }
 
     get canShowButton(): boolean {
-        return this.LANG.system &&
+        return (
+            this.LANG.system &&
             this.system.stateOfHealth === this.CONFIG.system.status.online &&
-            !this.needToConfigureTwoFactor;
+            !this.needToConfigureTwoFactor
+        );
     }
 
     get needToConfigureTwoFactor(): boolean {

@@ -13,7 +13,7 @@ import { Bookmark } from '../../bookmarks.types';
     selector: 'nx-bookmarks-card',
     templateUrl: 'bookmarks-card.component.html',
     styleUrls: ['bookmarks-card.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxBookmarksCardComponent implements OnInit {
     @Input() bookmark: Bookmark;
@@ -28,10 +28,7 @@ export class NxBookmarksCardComponent implements OnInit {
     thumbnail$: Observable<string>;
     loading: boolean = true;
 
-    constructor(
-        private dialogs: NxDialogsService,
-        @Inject(WINDOW) window: Window,
-    ) {
+    constructor(private dialogs: NxDialogsService, @Inject(WINDOW) window: Window) {
         this.locale = getSysLang(window);
     }
 
@@ -47,13 +44,15 @@ export class NxBookmarksCardComponent implements OnInit {
 
         const { s: seconds, min: minutes, hr: hours } = msToParts(this.bookmark.durationMs);
         const includeHours = hours !== 0 ? hours.toString().padStart(2, '0') + ':' : '';
-        this.duration = `${includeHours}${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        this.duration = `${includeHours}${minutes.toString().padStart(2, '0')}:${seconds
+            .toString()
+            .padStart(2, '0')}`;
 
         this.thumbnail$ = this.bookmark.thumbnail.pipe(
             map(thumbnailUrl => {
                 this.loading = false;
                 return thumbnailUrl;
-            })
+            }),
         );
     }
 

@@ -1,4 +1,3 @@
-
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
@@ -34,9 +33,9 @@ export class NxSystemGroupsSidebarComponent implements OnInit {
     LANG = staticLang;
 
     constructor(
-      private groupsService: NxSystemGroupsService,
-      private dialogsService: NxDialogsService,
-      private store: Store
+        private groupsService: NxSystemGroupsService,
+        private dialogsService: NxDialogsService,
+        private store: Store,
     ) {}
 
     ngOnInit(): void {
@@ -62,7 +61,7 @@ export class NxSystemGroupsSidebarComponent implements OnInit {
         this.dialogsService.createSystemGroup({
             targetId: this.currentGroupId,
             parentGroup: null,
-            hasGroups: false
+            hasGroups: false,
         });
     }
 }

@@ -76,15 +76,22 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
         this.route.params.subscribe(({ id }) => {
             this.store.dispatch(
                 GroupActions.setCurrentGroupId({
-                    currentGroupId: id
-                })
+                    currentGroupId: id,
+                }),
             );
         });
-        this.store.select<Account>(selectCurrentUser).pipe(take(1)).subscribe(({ email }) => {
-            this.userEmail = email;
-            this.store.dispatch(GroupActions.setAccountEmail({ accountEmail: email }));
-            this.sidebarSettings = this.cloudApi.customAccountPropertyFactory('showSidebarState', email, { showSidebarState: true });
-        });
+        this.store
+            .select<Account>(selectCurrentUser)
+            .pipe(take(1))
+            .subscribe(({ email }) => {
+                this.userEmail = email;
+                this.store.dispatch(GroupActions.setAccountEmail({ accountEmail: email }));
+                this.sidebarSettings = this.cloudApi.customAccountPropertyFactory(
+                    'showSidebarState',
+                    email,
+                    { showSidebarState: true },
+                );
+            });
     }
 
     ngOnDestroy(): void {
@@ -108,12 +115,13 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
     newGroupDialog(): void {
         const currentGroupId$ = this.currentGroupId$.pipe(take(1));
         const hasGroups$ = this.hasGroups$.pipe(take(1));
-        forkJoin([currentGroupId$, hasGroups$])
-            .subscribe(([currentGroupId, hasGroups]) => this.dialogsService.createSystemGroup({
+        forkJoin([currentGroupId$, hasGroups$]).subscribe(([currentGroupId, hasGroups]) =>
+            this.dialogsService.createSystemGroup({
                 targetId: currentGroupId,
                 hasGroups,
-                parentGroup: null
-            }));
+                parentGroup: null,
+            }),
+        );
     }
 
     // Temporary

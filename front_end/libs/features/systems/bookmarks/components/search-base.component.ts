@@ -11,8 +11,6 @@ export class SearchBaseComponent {
     search: string = '';
 
     get searchMatches(): string[] {
-        return !this.search
-            ? this.items
-            : spaceSplitSearch(this.items, this.search);
+        return !this.search ? this.items : spaceSplitSearch(this.items, this.search);
     }
 }

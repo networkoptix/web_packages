@@ -35,19 +35,18 @@ class DateTimeHelper {
         // Hour, separator, minute
         const parts = this.dtf.formatToParts(date);
         const hourIndex = parts.findIndex(p => p.type === 'hour');
-        return parts.slice(hourIndex, hourIndex + 3).map(p => p.value).join('');
+        return parts
+            .slice(hourIndex, hourIndex + 3)
+            .map(p => p.value)
+            .join('');
     }
 
     get hour12Regex(): RegExp {
-        return new RegExp(
-            `^\\s*${oneToTwelve}${this.separator}${zerozeroToFiftynine}\\s*$`
-        );
+        return new RegExp(`^\\s*${oneToTwelve}${this.separator}${zerozeroToFiftynine}\\s*$`);
     }
 
     get hour24Regex(): RegExp {
-        return new RegExp(
-            `^\\s*${zeroToTwentythree}${this.separator}${zerozeroToFiftynine}\\s*$`
-        );
+        return new RegExp(`^\\s*${zeroToTwentythree}${this.separator}${zerozeroToFiftynine}\\s*$`);
     }
 
     get postPeriod(): boolean {
@@ -61,9 +60,11 @@ class DateTimeHelper {
     }
 
     get dayPeriods(): [string, string] {
-        const AM = this.dtf.formatToParts(DateTimeHelper.dayStart)
+        const AM = this.dtf
+            .formatToParts(DateTimeHelper.dayStart)
             .find(p => p.type === 'dayPeriod').value;
-        const PM = this.dtf.formatToParts(DateTimeHelper.dayEnd)
+        const PM = this.dtf
+            .formatToParts(DateTimeHelper.dayEnd)
             .find(p => p.type === 'dayPeriod').value;
         return [AM, PM];
     }
@@ -175,7 +176,10 @@ export class NxTimeSelectorComponent implements OnInit, OnChanges {
     }
 
     h24StrToMs(time: string): number {
-        let [hours, minutes] = time.match(/(\d+)\D+(\d+)/).slice(1).map(Number);
+        let [hours, minutes] = time
+            .match(/(\d+)\D+(\d+)/)
+            .slice(1)
+            .map(Number);
         if (!hours && !minutes && this.point === 'end') {
             hours += 24;
         }
@@ -183,7 +187,10 @@ export class NxTimeSelectorComponent implements OnInit, OnChanges {
     }
 
     h12StrToMs(time: string): number {
-        let [hours, minutes] = time.match(/(\d+)\D+(\d+)/).slice(1).map(Number);
+        let [hours, minutes] = time
+            .match(/(\d+)\D+(\d+)/)
+            .slice(1)
+            .map(Number);
         if (hours < 12 && this.period === this.PM) {
             hours += 12;
         } else if (hours === 12 && this.period === this.AM) {
@@ -202,9 +209,7 @@ export class NxTimeSelectorComponent implements OnInit, OnChanges {
         const validValue = this.timeRegex.test(trimmed);
         if (validValue) {
             this.lastValidValue = trimmed;
-            this.timeChange.emit(
-                this.hour12 ? this.h12StrToMs(trimmed) : this.h24StrToMs(trimmed)
-            );
+            this.timeChange.emit(this.hour12 ? this.h12StrToMs(trimmed) : this.h24StrToMs(trimmed));
         } else if (!trimmed) {
             this.lastValidValue = null;
             this.timeChange.emit(null);

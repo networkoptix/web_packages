@@ -13,10 +13,7 @@ import * as GroupActions from '../../store/groups.actions';
 @Component({
     selector: 'nx-group-card',
     templateUrl: 'group-card.component.html',
-    styleUrls: [
-        '../system-card/system-card.component.scss',
-        'group-card.component.scss',
-    ],
+    styleUrls: ['../system-card/system-card.component.scss', 'group-card.component.scss'],
 })
 export class NxGroupCardComponent {
     @Input() group: GroupItem;
@@ -29,13 +26,17 @@ export class NxGroupCardComponent {
         private router: Router,
         private groupsService: NxSystemGroupsService,
         private dialogsService: NxDialogsService,
-        private store: Store
-    ) {
-    }
+        private store: Store,
+    ) {}
 
     openGroup(): void {
-        this.router.navigate(['home', 'organization', this.group.id])
-            .then(() => this.store.dispatch(GroupActions.setOpenGroups({ openGroups: { [this.group.id]: true } })));
+        this.router
+            .navigate(['home', 'organization', this.group.id])
+            .then(() =>
+                this.store.dispatch(
+                    GroupActions.setOpenGroups({ openGroups: { [this.group.id]: true } }),
+                ),
+            );
     }
 
     deleteGroup(): void {
@@ -46,7 +47,7 @@ export class NxGroupCardComponent {
         this.dialogsService.createSystemGroup({
             targetId: this.group.id,
             hasGroups: true,
-            parentGroup: this.group.name
+            parentGroup: this.group.name,
         });
     }
 }
