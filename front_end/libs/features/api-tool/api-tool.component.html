@@ -36,14 +36,19 @@
                             (APIJSONService.searchMoreShowing$ | async)
                         "
                         class="more-results"
-                        (click)="clickMoreResults()"
                     >
-                        <svg-icon
-                            nx-add-svg-src
-                            [src]="CONFIG.icons.dirTextButtons + 'more_results.svg'"
-                            [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
-                        ></svg-icon>
-                        <span translate>More Results</span>
+                        <span (click)="clickMoreResults()">
+                            <svg-icon
+                                nx-add-svg-src
+                                [src]="CONFIG.icons.dirTextButtons + 'more_results.svg'"
+                                [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+                            ></svg-icon>
+                            <span
+                                class="more-results-text"
+                                translate
+                                >More Results</span
+                            >
+                        </span>
                     </div>
                 </div>
                 <div

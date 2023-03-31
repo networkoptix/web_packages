@@ -187,7 +187,7 @@ export class NxDevelopersMenuComponent implements OnInit {
     };
 
     updateSearchQuery({ query }): void {
-        if (query !== '' && query === this.searchQuery$.value) return;
+        if (query === undefined || (query !== '' && query === this.searchQuery$.value)) return;
         this.searchQuery$.next(query);
     }
 
@@ -263,10 +263,13 @@ export class NxDevelopersMenuComponent implements OnInit {
                 this.displayedMenuNodes = menu.nodes;
                 this.menuNodes = menu.nodes;
                 if (this.searchEnabled && this.uriService.queryParams.search) {
-                    this.searchQuery$.next(this.uriService.queryParams.search);
+                    this.updateSearchQuery(this.uriService.queryParams.search);
                 }
                 if (this.service.activeNode) {
                     this.openNodeAndParents(this.service.activeNode);
+                }
+                if (this.additionalSearchNodes.length) {
+                    this.filterMenuItems(this.searchQuery$.value);
                 }
             } else {
                 this.displayedMenuNodes = [];
