@@ -10,7 +10,7 @@ Force Tags        system    left-menu    threaded    webadmin    cloud
 *** Test Cases ***
 1. Should login as "viewer" and should have no ability to "search" in left menu
     Log Out
-    Log in to system    ${system 1}    ${system 1}[cloud users][viewer]
+    Log in to system new   ${system 1}    ${system 1}[cloudUsers][viewer]
     Wait Until Page Contains Element            ${LEFT MENU}
     Wait Until Page Does Not Contain Element    ${LEFT MENU SEARCH INPUT}
 

@@ -7,7 +7,9 @@ Suite Teardown    Run Keyword and Ignore Error   Storage Suite Teardown
 Force Tags        storage
 
 *** Variables ***
-@{storage string}    --mount type=bind,source="/home/qaburbank/disk-invalid",target=/invalid    ${EMPTY}    ${EMPTY}
+@{bind 1}    /home/qaburbank/disk-invalid:/invalid
+@{bind 2}    
+@{binds}    ${bind 1}   ${EMPTY}
 
 *** Test Cases ***
 1. Loading State of Storage Locations Block
@@ -789,7 +791,7 @@ Force Tags        storage
     Merge Systems Local    ${LOCAL AUTH}    admin:${BASE PASSWORD}    https://${QA BURBANK IP}:${server 1}[port][0]    ${QA BURBANK IP}:${server 3}[port][0]    currentPassword=${BASE PASSWORD}
     Sleep    30
     Make Directory    disk-invalid
-    Restart Docker Servers    ${server 1}[name]     ${server 3}[name]
+    Restart Docker Servers    ${server 1}     ${server 3}
     Sleep    90
     Remove Directory    disk-invalid
     Go To    ${ENV}/systems/${server 1['id']}/servers/${server 3['id']}

@@ -37,7 +37,7 @@ Health Monitor Suite Setup
     Set Suite Variable    ${servers}     ${servers}
     Set Suite Variable    ${server 1}    ${servers}[0]
     Set Suite Variable    ${server 2}    ${servers}[1]
-    Stop Docker Server    ${server 2}[name]
+    Stop Container    ${server 2}[container]
     Go to    ${ENV}
     Run Keyword If    '''${mode}'''=='''cloud'''    Set Suite Variable     ${user in charge}    ${server 1}[cloudOwner]
     ...    ELSE   Set Suite Variable     ${user in charge}    admin
@@ -158,13 +158,14 @@ Health Monitor Suite Teardown
 
 Health Monitor Details Setup
     Open Browser and Go To URL    ${url}
-    ${random}=    Generate Random String      length=5
-    ${owner}=    Register and activate account with random email    mark    hamill    ${BASE PASSWORD}
-    ${server} =    Create Base System      hmdetails-${random}    owner=${owner}
-    Set Suite Variable    &{server}    &{server}
+    ${random} =	   Generate Random String      length=5
+    Set Suite Variable     ${random}    ${random}
+    ${servers} =    Create Systems
+    Set Suite Variable    ${servers}   
+    Set Suite Variable    ${server}    ${servers}[0]
     Run Keyword If    '''${mode}'''=='''cloud'''    Run Keywords
     ...    Go to    ${url}
-    ...    AND    Log in to user and system     ${server['owner']}    ${server['cloud id']}    password=${password}
+    ...    AND    Log in to user and system     ${server['cloudOwner']}    ${server['id']}    password=${password}
     ...    AND    Sleep    20
     ...    AND    Wait Until Element is Visible    ${SERVERS LINK}    300
     ...    AND    Go To Servers
@@ -172,25 +173,26 @@ Health Monitor Details Setup
     ...    AND    Log Out
     
 Health Monitor Details Tear Down
-    Run Keyword If    '''${mode}'''=='''cloud'''    Disconnect Server via API    ${auth}    ${server['cloud id']}    ${password}    ${server['owner']}
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
-    ${results}    Execute Command    docker container stop ${server}[id]
-    ${results}    Execute Command    docker container rm ${server}[id]
-    FOR    ${user}    IN    @{server['cloudUsers'].values()}
-         Run Keyword If    '''${mode}'''=='''cloud'''    Delete Account    ${user}          ${password}  
-    END
+    # Run Keyword If    '''${mode}'''=='''cloud'''    Disconnect Server via API    ${auth}    ${server['id']}    ${password}    ${server['cloudOwner']}
+    # Open Connection    ${QA BURBANK IP}
+    # SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
+    # ${results}    Execute Command    docker container stop ${server}[id]
+    # ${results}    Execute Command    docker container rm ${server}[id]
+    # FOR    ${user}    IN    @{server['cloudUsers'].values()}
+    #      Run Keyword If    '''${mode}'''=='''cloud'''    Delete Account    ${user}          ${password}  
+    # END
+    Teardown Servers      ${servers} 
     Close All Connections
     Close All Browsers
   
 Start
     Health Monitor Details Setup
     Run Keyword If    '''${mode}'''=='''cloud'''    Run Keywords
-    ...    Go To   ${url}/systems/${server['cloud id']}
-    ...    AND    Log In     ${server['owner']}    ${password}    button=None
+    ...    Go To   ${url}/systems/${server['id']}
+    ...    AND    Log In     ${server['cloudOwner']}    ${password}    button=None
     ...    ELSE    Run Keywords
-    ...    Open Browser and Go To URL    https://${QA BURBANK IP}:${server['port']}
-    ...    AND    Log In     ${server['local auth'][0]}    ${server['local auth'][1]}    button=None
+    ...    Open Browser and Go To URL    https://${QA BURBANK IP}:${server}[port][0]
+    ...    AND    Log In     ${server['localAuth'][0]}    ${server['localAuth'][1]}    button=None
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
     Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}

@@ -8,7 +8,9 @@ Suite Teardown    Run Keyword and Ignore Error   Storage Suite Teardown
 Force Tags        storage
 
 *** Variables ***
-@{storage string}    --mount type=bind,source="/home/qaburbank/disk-invalid",target=/invalid    ${EMPTY}    ${EMPTY}
+@{bind 1}    /home/qaburbank/disk-invalid:/invalid
+@{bind 2}    
+@{binds}    ${bind 1}   ${EMPTY}
 
 *** Test Cases ***
 1. Disabling storage warnings aren't shown - Main storages

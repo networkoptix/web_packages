@@ -2,7 +2,7 @@
 ${url}    ${ENV}
 ${password}    ${BASE PASSWORD}
 
-${HM INFORMATION TAB LINK}               //header/nav//a[text()="${INFORMATION TEXT}"]
+${HM INFORMATION TAB LINK}               //header//a[contains(text(),"${INFORMATION TEXT}")]
 
 ${HM SYSTEM OFFLINE}                     //h2[contains(text(), "${SYSTEM OFFLINE TEXT}")]
 ${HM SYSTEM CANNOT BE ACCESSED}          //div[contains(text(), "${SYSTEM CANNOT BE ACCESSED TEXT}")]

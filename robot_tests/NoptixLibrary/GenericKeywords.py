@@ -577,26 +577,26 @@ class GenericKeywords(object):
         else:
             return 'Container is not running'
 
-    @keyword
-    def start_container(self, name):
-        client = docker.client.from_env()
-        container = client.containers.get(name)
-        running_containers = client.containers.list()
-        if container not in running_containers:
-            container.start()
-            time.sleep(10)
+    # @keyword
+    # def start_container(self, name):
+    #     client = docker.client.from_env()
+    #     container = client.containers.get(name)
+    #     running_containers = client.containers.list()
+    #     if container not in running_containers:
+    #         container.start()
+    #         time.sleep(10)
 
-    @keyword
-    def stop_container(self, name, remove=False):
-        client = docker.from_env()
-        container = client.containers.get(name)
-        running_containers = client.containers.list()
-        if container in running_containers:
-            container.stop()
-        if remove:
-            all_containers = client.containers.list(all=True)
-            if container in all_containers:
-                container.remove()
+    # @keyword
+    # def stop_container(self, name, remove=False):
+    #     client = docker.from_env()
+    #     container = client.containers.get(name)
+    #     running_containers = client.containers.list()
+    #     if container in running_containers:
+    #         container.stop()
+    #     if remove:
+    #         all_containers = client.containers.list(all=True)
+    #         if container in all_containers:
+    #             container.remove()
 
     @keyword
     def get_container_id(self, name):
@@ -609,21 +609,21 @@ class GenericKeywords(object):
         else:
             return 'Container not found'
 
-    @keyword
-    def stop_containers(self, allContainers=True):
-        client = docker.from_env()
-        conts = client.containers.list()
-        if allContainers:
-            for cont in conts:
-                if "mergemediaserver" in cont.name:
-                    cont.stop()
-        else:
-            conts[0].stop()
+    # @keyword
+    # def stop_containers(self, allContainers=True):
+    #     client = docker.from_env()
+    #     conts = client.containers.list()
+    #     if allContainers:
+    #         for cont in conts:
+    #             if "mergemediaserver" in cont.name:
+    #                 cont.stop()
+    #     else:
+    #         conts[0].stop()
 
-    @keyword
-    def prune_containers(self):
-        client = docker.from_env()
-        client.containers.prune()
+    # @keyword
+    # def prune_containers(self):
+    #     client = docker.from_env()
+    #     client.containers.prune()
 
     @keyword
     def remove_images(self):
@@ -816,12 +816,14 @@ class GenericKeywords(object):
         with open(jsonPath,  encoding="utf-8") as suite_json:
             serversJson = json.load(suite_json)
             runName = BuiltIn().get_variable_value('${random}')
-            storageString = BuiltIn().get_variable_value('${storage string}')
+            # if storage suite, binds will exist
+            binds = BuiltIn().get_variable_value('${binds}')
             # Start Docker server for each server in the JSON
             for idx, server in enumerate(serversJson):
                 server["name"] = f"{BuiltIn().get_variable_value('${SUITE NAME}').lower().replace('test-cases.', '')}_{idx}_"
-                if storageString:
-                    server["storage"] = storageString[idx]
+                if binds:
+                    if idx < 2:
+                        server["binds"] = binds[idx]
                 server.update(self.create_docker_server(server, runName))
             
             # Set up systems
@@ -895,21 +897,22 @@ class GenericKeywords(object):
                         localUsers.update({user:{"login":"Local"+user, "email": f"noptixautoqa+local_{user}@gmail.com"}})
                     server.update({"localUsers":localUsers})
 
-            # Register, Activate, and Share cloud users if required
-            if server["addUsers"] and 'cloudOwnerId' in server:
-                for server in serversJson:
-                    for permission in permissions:
-                        email = self.get_random_email(self.base_email, sendemail=self.from_email)
-                        self.cloud_api.register_account("Mark", "Hamill", email, self.password)
-                        server["cloudUsers"].update({permission:email})
+                # Register, Activate, and Share cloud users if required
+                if 'addUsers' and 'cloudOwnerId' in server:
+                    for server in serversJson:
+                        for permission in permissions:
+                            email = self.get_random_email(self.base_email, sendemail=self.from_email)
+                            r = self.cloud_api.register_account("Mark", "Hamill", email, self.password)
+                            logger.trace(email, r)
+                            server["cloudUsers"].update({permission:email})
+                        logger.trace(server["cloudUsers"])
 
-                for server in serversJson:
-                    for user in server["cloudUsers"]:
-                        BuiltIn().run_keyword('Activate', server["cloudUsers"][user], self.from_email)
-                        self.Add_user_to_cloud_system_if_not_there(server["id"], user, server["cloudUsers"][user], [server["cloudOwner"], self.password])
-                
-
-
+                    for server in serversJson:
+                        for user in server["cloudUsers"]:
+                            BuiltIn().run_keyword('Activate', server["cloudUsers"][user], self.from_email)
+                            self.Add_user_to_cloud_system_if_not_there(server["id"], user, server["cloudUsers"][user], [server["cloudOwner"], self.password])
+                else:
+                    logger.trace("Users not added")
         return serversJson
 
 
@@ -919,7 +922,7 @@ class GenericKeywords(object):
         ports = []
         for _ in range(server["ports"]):
             ports.append(self.get_random_port_from_docker_server())
-        container = self.docker_api.create_container(ports, mac, name)  
+        container = self.docker_api.create_container(ports, mac, name, server)  
         self.docker_api.start_container(container)  
         return {
             "name": name,
@@ -927,21 +930,6 @@ class GenericKeywords(object):
             "mac" : mac,
             "container": container
             }
-
-    def create_docker_run_command(self, server, name, mac, ports):
-        base_command = "docker run -d  --restart always --privileged --cap-add=NET_ADMIN"
-        storage_command = server.get('storage', '')
-        name_command = f"--name={name}"
-        mac_command = f"--mac-address={mac}"
-        port_command = ""
-        port_count = 7001
-        for port in ports:
-            port_command = f"{port_command} -p {port}:{port_count}"
-            port_count = port_count + 1
-        cloud_host_command = f"-e CLOUD_HOST={self.cloud_host.replace('https://', '')}"
-        return (
-            f"{base_command} {name_command} {mac_command} {port_command} "
-            f"{storage_command} {cloud_host_command} {self.image}")
 
     @keyword
     def delete_docker_server(self, name):

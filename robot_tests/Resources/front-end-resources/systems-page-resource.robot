@@ -17,7 +17,7 @@ Systems Page Suite Setup
     ${offline systems}=   Create List
     FOR    ${server}    IN   @{servers}[2:9]
         Append To List    ${offline systems}    ${server}
-        Delete Docker Server    ${server}[name]
+        Delete container   ${server}[container]
     END
     Set Suite Variable    ${offline systems}    ${offline systems}
     ${no sys user}=   Register and activate account with random email    NoSystems    User    ${base password}

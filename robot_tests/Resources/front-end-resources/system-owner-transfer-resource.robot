@@ -150,10 +150,10 @@ Disable User OT
     Enable Cloud User via API   ${False}   liveViewer    ${server 1}
     
 Take Server Offline
-    Stop Docker Server    ${server 1}[name]
+    Stop Container   ${server 1}[container]
 
 Bring Server Online
-    Start Docker Server    ${server 1}[name]
+    Start container    ${server 1}[container]
 
 Check OT Email
     [Arguments]    ${recipient}   ${subject}

@@ -10,7 +10,7 @@ Force Tags        system
 *** Test Cases ***
 #Rename server requires a name
 #    [Tags]    C70960    
-#    Verify Server Buttons Are Enabled
+#    
 #    Rename System or Hardware    ${EMPTY}
 #    Wait Until Element Is Visible    ${SYSTEM SAVE}
 #    Click Button    ${SYSTEM SAVE}
@@ -18,17 +18,26 @@ Force Tags        system
 #    Change server name via API    ${server auth}    server 1    ${server 1["serverId"]}    https://${QA BURBANK IP}:${server 1["port"]}
 #    Element Text Should Be    ${SERVER NAME}    server 1
 
-1. Server name can be changed
-    [Tags]    C71000    cloud    webadmin
+0.1 Verify Server Buttons Are Enabled
+    [Tags]    CLOUD-10255   cloud   webadmin
+    Verify on Servers Page
+    Sleep    1
     Select Server By Name    server 1
-    Verify Server Buttons Are Enabled
+    Wait Until Elements are Enabled
+    ...    ${PORT INPUT}
+    ...    ${RESTART SERVER BUTTON}
+1. Server name can be changed
+    [Tags]    C71000    cloud    webadmin  
+    Verify on Servers Page
+    Sleep    1 
+    Select Server By Name    server 1
     Change System Name    server 1 name changed    save=True
     Wait Until Element is Visible    //header//nx-text-editable[contains(text(),"server 1 name changed")]
     Reload Page
     Wait Until Element is Visible    //header//nx-text-editable[contains(text(),"server 1 name changed")]
-    Wait Until Element is Visible    //nx-level-3-item//a//span[contains(text(),"server 1 name changed")]     
+    Wait Until Element is Visible    //nx-level-3-item//a//span/nx-search-highlight[contains(text(),"server 1 name changed")]     
     Log    Reset the name to server 1
-    Change server name via API    ${server auth}    server 1    ${servers}[0][id]    https://${QA BURBANK IP}:${servers}[0][port]
+    Change server name via API    ${server auth}    server 1    ${servers}[0][id]    https://${QA BURBANK IP}:${servers}[0][port][0]
     Reload Page
     Wait Until Element Is Visible    //header//nx-text-editable[contains(text(),"server 1")]
 
@@ -36,8 +45,7 @@ Force Tags        system
     [Tags]    C70961    cloud    webadmin
     Verify on Servers Page
     Sleep    1
-    Select Server By Name    server 1
-    Verify Server Buttons Are Enabled
+    Select Server By Name    server 1  
     ${loc}=   Get Location
     ${split}=   Split String    ${loc}    separator=/servers/%7B
     Change server name via API    ${server auth}    server 1 name changed    ${servers}[0][id]    https://${QA BURBANK IP}:${servers}[0][port][0]
@@ -53,7 +61,7 @@ Force Tags        system
 3. Restart close button works
     [Tags]    C70968    cloud    webadmin
     Verify on Servers Page
-    Verify Server Buttons Are Enabled
+    
     Click Button    ${RESTART SERVER BUTTON}
     Verify Restart Dialog
     Click Button    ${RESTART DIALOG CLOSE BUTTON}
@@ -62,7 +70,7 @@ Force Tags        system
 4. Restart cancel button works
     [Tags]    C70968    cloud    webadmin
     Verify on Servers Page
-    Verify Server Buttons Are Enabled
+    
     Click Button    ${RESTART SERVER BUTTON}
     Verify Restart Dialog
     Click Button    ${RESTART DIALOG CANCEL BUTTON}
@@ -73,7 +81,7 @@ Force Tags        system
     [Tags]    C70968    webadmin    # cloud
     Skip If     '''${mode}'''=='''cloud'''
     Verify on Servers Page
-    Verify Server Buttons Are Enabled
+    
     Click Button    ${RESTART SERVER BUTTON}
     Verify Restart Dialog
     Click Button    ${RESTART DIALOG RESTART BUTTON}
@@ -90,8 +98,8 @@ Force Tags        system
     END
 
 6. Restart server as administrator
-    [Documentation]     Skipping cloud due to https://networkoptix.atlassian.net/browse/CLOUD-8158
-    [Tags]    C70968    webadmin    # cloud
+    [Documentation] 
+    [Tags]    C70968    webadmin    cloud
     [Setup]    Server Settings Test Setup    user=${servers}[0][cloudUsers][cloudAdmin]
     Skip If    '''${mode}'''=='''cloud'''
     Verify on Servers Page
@@ -120,7 +128,7 @@ Force Tags        system
 8. Port field validation
     [Tags]    C70929    cloud    webadmin     CLOUD-8753
     Verify on Servers Page
-    Verify Server Buttons Are Enabled
+    
 
     Log    Step 1
     ${before port}=    Get Value    ${PORT INPUT}
@@ -128,7 +136,7 @@ Force Tags        system
     Delete All Text    ${PORT INPUT}
     Wait Until Element Is Visible    ${SERVER PORT IS REQUIRED ERROR}
     Reload Page
-_    Wait Until Element Is Visible    ${PORT INPUT}
+    Wait Until Element Is Visible    ${PORT INPUT}
     Wait Until Element Is Not Visible    ${SERVER PORT IS REQUIRED ERROR}
     ${after port}=    Get Value    ${PORT INPUT}
     Should Be Equal    ${before port}    ${after port}
@@ -179,7 +187,7 @@ _    Wait Until Element Is Visible    ${PORT INPUT}
 
 9. Change port
     [Tags]    C70975    cloud    webadmin
-    Verify Server Buttons Are Enabled
+    
     Change Port To    7002
     @{auth}=    Create List    admin    ${password}
     Get Cameras    ${auth}    https://${QA BURBANK IP}:${servers}[0][port][1]
@@ -193,7 +201,7 @@ _    Wait Until Element Is Visible    ${PORT INPUT}
     ${loc}=   Get Location
     ${split}=   Split String    ${loc}    separator=/servers/
     @{auth}=    Create List    ${servers}[0][localUsers][cloudAdmin]    ${password}
-    ${resp}=   Run Keyword If    '''${mode}'''=='''cloud'''    Change server port via API    ${auth}    https://${servers}[0][id].relay.vmsproxy.hdw.mx    7777    ${split[1]}
+    ${resp}=   Run Keyword If    '''${mode}'''=='''cloud'''    Change server port via API    ${auth}    https://${env}/systems/${servers}[0][id].relay.vmsproxy.hdw.mx    7777    ${split[1]}
     ...    ELSE    Change server port via API    ${auth}    https://${QA BURBANK IP}:${servers}[0][port][0]    7777    ${split[1]}
     ${status is correct}=   Evaluate    $resp.status_code in {401, 403}
     Should Be True    ${status is correct}
@@ -209,7 +217,7 @@ _    Wait Until Element Is Visible    ${PORT INPUT}
     Wait Until Element Is Visible    ${CHECKING BANNER}
     Wait Until Element Is Not Visible    ${CHECKING BANNER}
     Element Text Should Be    ${OFFLINE BANNER}    ${SERVER OFFLINE TEXT}
-    Start Docker Server    ${server 2}[id]
+    Start container   ${server 2}[container]
     Sleep    2
     Click Button    ${CHECK STATUS BUTTON}
     Wait Until Element is Visible    ${CHECKING BANNER}
@@ -217,7 +225,7 @@ _    Wait Until Element Is Visible    ${PORT INPUT}
     Wait Until Element Is Not Visible    ${CHECK STATUS BUTTON}
     Element Should Be Enabled    ${RESTART SERVER BUTTON}
     Wait Until Element Is Not Visible    ${OFFLINE BANNER}    300
-    Stop Docker Server    ${server 2}[id]  
+    Stop container   ${server 2}[container]  
 
 12. Detailed info 1 server
     [Tags]   C70923    cloud    webadmin
@@ -236,13 +244,13 @@ _    Wait Until Element Is Visible    ${PORT INPUT}
 
 13. Detailed info 2 servers
     [Tags]    C70923    cloud    webadmin
-    Execute Command Remotely   docker container start ${servers}[1][id]
+    Start Container    ${servers}[1][container]
     Select Server By Name    server 1
     Click Button    ${SERVER DETAILED INFO BUTTON}
     IF    '''${mode}'''=='''cloud'''
         Wait Until Location Contains    ${ENV}/systems/${servers}[0][id]/health/servers
     ELSE
-        Wait Until Location Contains    https://${QA BURBANK IP}:${servers}[0][port]/#/health/servers
+        Wait Until Location Contains    https://${QA BURBANK IP}:${servers}[0][port][0]/#/health/servers
     END
     
     Wait Until Elements Are Visible
@@ -252,12 +260,12 @@ _    Wait Until Element Is Visible    ${PORT INPUT}
     ...     //span[contains(text(), "Activity")]
 #    Page Should Not Contain Element    ${HM SINGLE ENTITY}
 #    Wait Until Element is Visible    //nx-block//h4[@class="panel-title"]
-    Execute Command Remotely    docker container stop ${servers}[1][name]
+    Stop Container  ${servers}[1][container]
 
 14. Offline system 1 server settings
     [Tags]    C70950    cloud
     [Setup]    Server Settings Test Setup    server=${servers}[2]
-    Execute Command Remotely    docker container stop ${servers}[2][name]
+    Stop container    ${servers}[2][container]
     Reload Page
     Wait Until Elements Are Visible
         ...    ${SERVER NOT ACCESIBLE IMAGE}
@@ -273,7 +281,7 @@ _    Wait Until Element Is Visible    ${PORT INPUT}
     Verify on Servers Page
     Select Server By Name    server 1
     Verify on Servers Page
-    Verify Server Buttons Are Enabled
+    
     
 16. Server1 is online Server2 is offline
     [Tags]    C70955    cloud    webadmin
@@ -281,7 +289,7 @@ _    Wait Until Element Is Visible    ${PORT INPUT}
     Element Should be Enabled    ${PORT INPUT}
     Element Should be Enabled    ${RESTART SERVER BUTTON}
     Element Should be Visible    ${SERVER DETAILED INFO BUTTON}
-    stop docker server    ${servers}[1][id]
+    stop container    ${servers}[1][container]
     Select Server By Name    server 2
     Wait Until Element is Visible    ${CHECK STATUS BUTTON}
     Element Should be Disabled    ${RESTART SERVER BUTTON}
@@ -293,11 +301,11 @@ _    Wait Until Element Is Visible    ${PORT INPUT}
     [Tags]    C69853    C70927    cloud    webadmin
     Wait Until Element is Visible    ${SERVERS LINK}
     Verify on Servers Page
-    Verify Server Buttons Are Enabled
+    
 
 18. Administrator has Access
     [Tags]    C69853    C70927    cloud    webadmin
-    [Setup]    Server Settings Test Setup    ${server 1}    ${admin}
+    [Setup]    Server Settings Test Setup    ${servers}[0]    ${admin}
     Wait Until Element is Visible    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
     Verify on Servers Page
@@ -305,22 +313,22 @@ _    Wait Until Element Is Visible    ${PORT INPUT}
 
 19. Viewer does not have Access
     [Tags]    C69853    cloud    webadmin
-    [Setup]    Server Settings Test Setup    ${server 1}    ${viewer}    verify=${False}
+    [Setup]    Server Settings Test Setup    ${servers}[0]    ${viewer}    verify=${False}
     Element Should not be Visible    ${SERVERS LINK}
 
 20. Advanced Viewer does not have Access
     [Tags]    C69853    cloud    webadmin
-    [Setup]    Server Settings Test Setup    ${server 1}    ${adv viewer}    verify=${False}
+    [Setup]    Server Settings Test Setup    ${servers}[0]    ${adv viewer}    verify=${False}
     Element Should not be Visible    ${SERVERS LINK}
 
 21. Live Viewer does not have Access
     [Tags]    C69853    cloud    webadmin
-    [Setup]    Server Settings Test Setup    ${server 1}    ${live viewer}    verify=${False}
+    [Setup]    Server Settings Test Setup    ${servers}[0]    ${live viewer}    verify=${False}
     Element Should not be Visible    ${SERVERS LINK}
 
 22. Custom User does not have Access
     [Tags]    C69853    cloud    webadmin
-    [Setup]    Server Settings Test Setup    ${server 1}    ${custom}    verify=${False}
+    [Setup]    Server Settings Test Setup    ${servers}[0]    ${custom}    verify=${False}
     Element Should not be Visible    ${SERVERS LINK}
 
 # This is probably deprecated by the new left menu search.
@@ -331,7 +339,7 @@ _    Wait Until Element Is Visible    ${PORT INPUT}
 #    Element Should Be Focused    //nx-level-3-item/a//span[contains(text(),"server 1")]/../..
 #    Press Keys    None    TAB
 #    Element Should Be Focused    //nx-level-3-item/a//span[contains(text(),"server 2")]/../..
-#    Verify Server Buttons Are Enabled
+#    
 #    @{tab items}=   Create List
 #    ...    ${SERVER DETAILED INFO BUTTON}
 #    ...    ${RENAME SERVER BUTTON}

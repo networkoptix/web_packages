@@ -1004,7 +1004,7 @@ Delete Base System
     Run Keyword If    $system['owner']    Disconnect    ${system}[owner]    ${password}    ${system}[cloud id]
     Run Keyword If    $system['cloud users']    Delete Account    ${system['cloud users'].values()}
 
-    Delete Docker Server    ${system}[id]
+    Delete container    ${system}[container]
 
     # Delete user if he doesn't own any cloud systems
     Run Keyword If    not $system['owner']    Return From Keyword    True
@@ -1037,10 +1037,9 @@ Stop Docker Server
     Execute Command Remotely    docker stop ${name}
 
 Restart Docker Servers
-    [Arguments]    @{names}
-    FOR    ${name}    IN    @{names}
-        ${result} =    Execute Command Remotely    docker restart ${name}
-        Run Keyword and Warn on Failure    Should Be Equal As Strings     ${result}    ${name}
+    [Arguments]    @{servers}
+    FOR    ${server}    IN    @{servers}
+        Restart_Container    ${server}[container]
         Sleep    1
     END
     
@@ -1058,24 +1057,20 @@ Restart Docker Servers
 
 Get container port by name
     [Arguments]    ${name}
-    Acquire Lock   get_port_lock
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${port info}=   Execute Command    docker container port ${name}
-    ${port info}=   Split String    ${port info}    :
-    Close Connection
-    Release Lock   get_port_lock
-    [Return]    ${port info}[1]
-
-Get container id by name
-    [Arguments]    ${name}
-    Acquire Lock    get_id_lock
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${id}=   Execute Command    docker ps -qaf "name=^${name}"
-    Close Connection
-    Release Lock    get_id_lock
-    [Return]    ${id}
+    ${containers} =    List Containers
+    ${port} =   Set Variable   ${EMPTY}
+    FOR    ${container}    IN    @{containers}
+        FOR    ${item}    IN    @{container}[Names]
+            IF    '''${item}''' == '''/${name}'''            
+                ${port} =    Set Variable   ${container}[Ports][0][PublicPort]
+                Exit For Loop
+            END
+        END
+        IF    ${port} != ${EMPTY}
+            Exit For Loop
+        END
+    END    
+    [Return]    ${port}
 
 Page Should Not Contain Elements
     [Arguments]    @{locators}
@@ -1190,6 +1185,7 @@ Create Virtual Disk
     Set To Dictionary    ${disk}    size=${disk size}
     Set To Dictionary    ${disk}    target=${disk target}
     Set To Dictionary    ${disk}    string=--mount type=bind,source="/home/qaburbank/${disk name}",target=/${disk target}
+    Set To Dictionary    ${disk}    bind=/home/qaburbank/${disk name}:/${disk target}
     [Return]    ${disk}
     
 Delete Virtual Disk

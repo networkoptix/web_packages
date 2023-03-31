@@ -224,7 +224,7 @@ Force Tags        advanced server     cloud
     [Tags]    C76559
     Log    Preconditions
     Verify on Servers Page
-    Stop Docker Server    ${server}[name]
+    Stop container    ${server}[container]
     ${location} =    Get Location
 
     Log    Step 1
@@ -237,7 +237,7 @@ Force Tags        advanced server     cloud
     ...    @{LOG SETTINGS BLOCK}
 
     Log    Step 2: make sure settings are back after the server is back online
-    Start Docker Server    ${server}[name]
+    Start container   ${server}[container]
     Wait Until Element Is Not Visible    ${THIS PAGE CANNOT BE LOADED}    timeout=300
     Wait Until Element is Visible    ${SERVERS LINK}    60
     Sleep    1

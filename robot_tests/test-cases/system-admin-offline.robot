@@ -24,7 +24,7 @@ Force Tags        system    system_offline
 3. Offline system should confirm, if not owner deletes system
     [Tags]        
     Log Out
-    Log in to user and system    ${system}[cloud users][viewer]    ${system}[cloud id]
+    Log in to user and system    ${system}[cloudUsers][viewer]    ${system}[id]
     Wait Until Elements Are Visible    ${SYSTEM NAME OFFLINE}    ${DISCONNECT FROM MY ACCOUNT}
     Click Button    ${DISCONNECT FROM MY ACCOUNT}
     Wait Until Elements Are Visible
@@ -59,7 +59,7 @@ Force Tags        system    system_offline
 6. Should not be able to delete/edit users
     [Tags]            CLOUD-6615
     Click Link    ${USERS LIST LINK}
-    ${viewer}=   Set Variable    ${USERS LIST}//span[text()='${system}[cloud users][viewer]']
+    ${viewer}=   Set Variable    ${USERS LIST}//span[text()='${system}[cloudUsers][viewer]']
     Wait Until Element Is Visible    ${viewer}
     Click Element    ${viewer}
     Wait Until Elements Are Visible    ${ACCESS LEVEL DROPDOWN}    ${REMOVE USER BUTTON}
@@ -69,7 +69,7 @@ Force Tags        system    system_offline
 7. Offline system should open System page by link to not authorized user and redirect to homepage, if he does not log in
     [Tags]        
     Log Out
-    Go To    ${ENV}/systems/${system}[cloud id]
+    Go To    ${ENV}/systems/${system}[id]
     #Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
     #Click Button    ${LOG IN CLOSE BUTTON}
     Go To    ${ENV}
@@ -79,8 +79,8 @@ Force Tags        system    system_offline
 8. Offline system should open System page by link to not authorized user and show it, after owner logs in
     [Tags]        
     Log Out
-    Go To    ${ENV}/systems/${system}[cloud id]
-    Log In    ${system}[owner]    ${base password}    button=None
+    Go To    ${ENV}/systems/${system}[id]
+    Log In    ${system}[cloudOwner]   ${base password}    button=None
     Wait until element is visible    //nx-text-editable[contains(text(), "${system}[name]")]
 
 9. Offline system should open System page by link to user without permission and show alert (System info is unavailable: You have no access to this system)
@@ -88,7 +88,7 @@ Force Tags        system    system_offline
     ${random email}=   Register and activate account with random email    mark    hamill   ${BASE PASSWORD}
     Log Out
     Log In    ${random email}    ${base password}
-    Go To    ${ENV}/systems/${system}[cloud id]
+    Go To    ${ENV}/systems/${system}[id]
     Wait Until Elements Are Visible    ${SYSTEM NO ACCESS}    ${TAKE ME HOME}
     Slow   Click Link    ${TAKE ME HOME}
     Wait Until Location Is    ${ENV}/systems
@@ -97,7 +97,7 @@ Force Tags        system    system_offline
     [Tags]        
     ${random email}=   Register and activate account with random email    mark    hamill   ${BASE PASSWORD}
     Log Out
-    Go To    ${ENV}/systems/${system}[cloud id]
+    Go To    ${ENV}/systems/${system}[id]
     Log In    ${random email}    ${base password}    button=None
     Wait Until Elements Are Visible    ${SYSTEM NO ACCESS}    ${TAKE ME HOME}
 
@@ -109,24 +109,24 @@ Force Tags        system    system_offline
 #    Log Out
 #
 #    # Make sure new name is saved
-#    Log in to user and system    ${system}[owner]    ${system}[cloud id]
+#    Log in to user and system    ${system}[cloudOwner]   ${system}[id]
 #    ${current name}=   Get Text    //h2[@id="editable-title"]
 #    ${system info}=   Get Cloud System Settings    ${cloud auth}    ${system}[clud id]
 #    Should be equal as strings    ${system}[name]     ${new name}
 #    Should be equal as strings    ${current name}     ${new name}
 #
 #    # Return to initial name
-#    Rename System    ${auth}    ${system}[cloud id]    ${system}[name]
+#    Rename System    ${auth}    ${system}[id]    ${system}[name]
 #
 #    # Make sure old name is saved
-#    ${system info}=   Get Cloud System Settings    ${auth}    ${system}[cloud id]
+#    ${system info}=   Get Cloud System Settings    ${auth}    ${system}[id]
 #    Should be equal as strings    ${system info}[name]     ${system}[name]
 
 11. Does not show Share button to viewer, advanced viewer, live viewer
     [Tags]        
     Log Out
-    FOR    ${user}    IN    ${system}[cloud users][viewer]    ${system}[cloud users][advancedViewer]    ${system}[cloud users][liveViewer]
-        Log in to user and system    ${user}    ${system}[cloud id]
+    FOR    ${user}    IN    ${system}[cloudUsers][viewer]    ${system}[cloudUsers][advancedViewer]    ${system}[cloudUsers][liveViewer]
+        Log in to user and system    ${user}    ${system}[id]
         Wait Until Element is Visible    //nx-text-editable[contains(text(), "${system}[name]")]
         Elements Should Not Be Visible    ${USERS LIST LINK}    ${ADD USER BUTTON SYSTEMS}
         Log Out
@@ -136,10 +136,10 @@ Force Tags        system    system_offline
     [Tags]        C41881    
     Log Out
     ${users text}=    Create List    ${ADMIN TEXT}   ${VIEWER TEXT}     ${LIVE VIEWER TEXT}    ${ADV VIEWER TEXT}    ${CUSTOM TEXT}
-    ${users emails}=   Create List    ${system}[cloud users][cloudAdmin]    ${system}[cloud users][viewer]    ${system}[cloud users][liveViewer]    ${system}[cloud users][advancedViewer]    ${system}[cloud users][custom]
+    ${users emails}=   Create List    ${system}[cloudUsers][cloudAdmin]    ${system}[cloudUsers][viewer]    ${system}[cloudUsers][liveViewer]    ${system}[cloudUsers][advancedViewer]    ${system}[cloudUsers][custom]
     ${current owner name}=    Replace String    ${OWNER NAME}    %OWNER_NAME%    System Owner
     FOR    ${user}  ${text}  IN ZIP  ${users emails}  ${users text}
-        Log in to user and system    ${user}    ${system}[cloud id]
+        Log in to user and system    ${user}    ${system}[id]
         Wait Until Elements Are Visible
            ...    ${current owner name}
            ...    //span[contains(text(), "${system}[owner]")]
@@ -154,7 +154,7 @@ Force Tags        system    system_offline
     Wait Until Element Is Visible    ${current owner name}
     Log Out
 
-    Log in to user and system    ${system}[cloud users][viewer]    ${system}[cloud id]
+    Log in to user and system    ${system}[cloudUsers][viewer]    ${system}[id]
     ${current owner name}=    Replace String    ${OWNER NAME}    %OWNER_NAME%    System Owner
     Wait Until Elements Are Visible    ${current owner name}    //span[contains(text(), "${system}[owner]")]
 
@@ -163,16 +163,16 @@ Force Tags        system    system_offline
     Log Out
 
     Log    Step 1
-    Log in to user and system    ${extra system}[owner]    ${extra system}[cloud id]
+    Log in to user and system    ${extra system}[cloudOwner]   ${extra system}[id]
     ${current owner name}=    Replace String    ${OWNER NAME}    %OWNER_NAME%    ${YOU TEXT}
     Wait Until Element Is Visible    ${current owner name}
 
     Log    Step 2
-    Stop Docker Server    ${extra system}[id]
+    Stop container    ${extra system}[container]
     Reload Page
     Wait Until Element Is Visible    ${SYSTEM NAME OFFLINE}
 
     Log    Step 3
-    Start Docker Server    ${extra system}[id]
+    Start container   ${extra system}[container]
     Reload Page
     Wait Until Element Is Not Visible    ${SYSTEM NAME OFFLINE}

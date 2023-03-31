@@ -201,12 +201,12 @@ Force Tags        cameras    WIP
 13. Offline System
     [Tags]    C84170
     Close All Browsers
-    Stop Docker Server    ${system}[id]
+    Stop container    ${system}[container]
     Open Browser and go to URL    ${url}
     Log in to user and system    ${system}[owner]    ${system}[cloud id]
     Go To View Tab
     Wait Until Element Is Visible    ${SYSTEM OFFLINE}
-    Start Docker Server    ${system}[id]
+    Start container   ${system}[container]
 
 14. Resource status is updated correctly
     [Tags]    C84173
@@ -226,8 +226,8 @@ Force Tags        cameras    WIP
     Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}
     Go To    ${URL}/systems/${system}[cloud id]/view/${camera id2}
     Check if Camera is Live
-    Stop Docker Server    ${system}[id]
+    Stop container    ${system}[container]
     Sleep    10
     Wait Until Element Is Visible    ${SYSTEM OFFLINE}    timeout=80
-    Start Docker Server    ${system}[id]
+    Start container   ${system}[container]
     Verify on View Page

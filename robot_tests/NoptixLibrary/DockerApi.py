@@ -12,7 +12,7 @@ class DockerApi(object):
         self.docker_image = BuiltIn().get_variable_value("${IMAGE}")
 
     @keyword
-    def create_container(self, ports, mac, name):
+    def create_container(self, ports, mac, name, server):
         port_count = 7001
         PortBindings = {}
         ExposedPorts = {}
@@ -24,7 +24,7 @@ class DockerApi(object):
             "Image": self.docker_image,
             "MacAddress": mac,
             "ExposedPorts": ExposedPorts,
-            "HostConfig":{
+            "HostConfig":{ 
                 "RestartPolicy":{
                     "Name": "always"
                 },
@@ -33,8 +33,10 @@ class DockerApi(object):
                 "Privileged": True
             }
         }
+        if server.get("binds"):
+            payload["HostConfig"]["Binds"] = server["binds"]
         r = requests.post(f'http://{self.docker_host_ip}:{self.docker_host_port}/containers/create?name={name}', json=payload)
-        logger.trace(r.json)
+        logger.trace(payload, r.json)
         assert r.status_code == 201 
         return r.json()['Id']
 
@@ -43,10 +45,14 @@ class DockerApi(object):
         r = requests.post(f'http://{self.docker_host_ip}:{self.docker_host_port}/containers/{id}/start')
         assert r.status_code == 204 
 
-
     @keyword    
     def stop_container(self, id):
         r = requests.post(f'http://{self.docker_host_ip}:{self.docker_host_port}/containers/{id}/stop')
+        assert r.status_code == 204 
+    
+    @keyword    
+    def restart_container(self, id):
+        r = requests.post(f'http://{self.docker_host_ip}:{self.docker_host_port}/containers/{id}/restart')
         assert r.status_code == 204 
 
     @keyword    

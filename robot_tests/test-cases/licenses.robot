@@ -50,14 +50,14 @@ Force Tags    Threaded    Licenses
     [Tags]    C76533    cloud
 #    Run Keyword If   '''${mode}'''=='''webadmin'''    Pass Execution     Not relevant in webadmin mode
     Skip If Irrelevant
-    Stop Docker Server    ${system 1}[id]    # Get the server offline
+    Stop container    ${system 1}[container]    # Get the server offline
     Log in to system    ${system 1}    ${system 1}[cloud auth][0]
     Open Licenses Page
     Wait Until Elements Are Visible
     ...    ${THIS PAGE CANNOT BE LOADED}
     ...    ${MAKE SURE SERVERS ARE ONLINE}
 
-    Start Docker Server    ${system 1}[id]
+    Start container    ${system 1}[container]
     Sleep    30
     Log Out
 
@@ -231,14 +231,14 @@ Force Tags    Threaded    Licenses
     Open Licenses Page
     Validate Licenses Page    trial left=True
 
-    Stop Docker Server    ${system 1}[id]
+    Stop container    ${system 1}[container]
     ${key}=   Generate Licenses
     Activate Key    ${key}    success=False
     Check For Alert    ${FAILED TO ACTIVATE LICENSE TEXT}    timeout=10
     ${input val}=   Get Formatted Key Input
     Should Be Equal As Strings    ${input val}    ${key}
 
-    Start Docker Server    ${system 1}[id]
+    Start container   ${system 1}[container]
     Log Out
 
 8. Server response errors: Server offline(System has two servers)
@@ -250,7 +250,7 @@ Force Tags    Threaded    Licenses
     Open Licenses Page
     Validate Licenses Page    several servers=True    trial left=True
 
-    Stop Docker Server    ${system 3}[id]
+    Stop container    ${system 3}[container]
     Sleep    10
     Reload Page
     Validate Licenses Page    several servers=True    trial left=True
@@ -269,7 +269,7 @@ Force Tags    Threaded    Licenses
     ${input val}=   Get Formatted Key Input
     Should Be Equal As Strings    ${input val}    ${key}
 
-    Start Docker Server    ${system 3}[id]
+    Start container   ${system 3}[container]
     Log Out
 
 9. Successful scenarios
@@ -504,7 +504,7 @@ Force Tags    Threaded    Licenses
     Activate Key    ${key}    server name=${server 3}
     ${activated}=   License Is Activated    ${LOCAL AUTH}    https://${QA BURBANK IP}:${system 3}[port]    ${key}
     Should Be True    ${activated}
-    Stop Docker Server    ${system 3}[id]
+    Stop container    ${system 3}[container]
     Sleep    10
     Reload Page
     Validate Licenses Page    several servers=True    trial left=True    clean=False
@@ -514,7 +514,7 @@ Force Tags    Threaded    Licenses
     ${status}=   Get Key Status    ${key}
     Run keyword and ignore error    Should Be Equal As Strings    ${status}    Error
 
-    Start Docker Server    ${system 3}[id]
+    Start container   ${system 3}[container]
     Sleep    10
     Reload Page
     Validate Licenses Page    several servers=True    trial left=True    clean=False
@@ -548,14 +548,14 @@ Force Tags    Threaded    Licenses
     Validate License Info    ${pro on}    server num=2
     Validate License Info    ${pro off}    server num=3
 
-    Stop Docker Server    ${system 3}[id]
+    Stop container    ${system 3}[container]
     Sleep    30
     Reload Page
 
     Validate Licenses Page    several servers=True    trial left=True    clean=False
     Validate Summary Record    ${LIC TYPES}[digital]    ${total}    ${num online}
 
-    Start Docker Server    ${system 3}[id]
+    Start container   ${system 3}[container]
     Log Out
 
 18. License Summary Block: License key is expired
