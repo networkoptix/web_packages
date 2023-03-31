@@ -27,7 +27,7 @@ Header Suite Setup
     ${random}=   Generate Random String      length=5
     FOR    ${i}    IN RANGE    1    17
         Append To List    ${offline systems}    ${systems}[${i}]
-        Delete Docker Server    ${systems}[${i}][name]
+        Delete container    ${systems}[${i}][container]
     END
     Set Suite Variable    ${offline systems}
 

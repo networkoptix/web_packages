@@ -48,9 +48,11 @@ Storage Suite Setup
         Set List Value    ${disk}    ${n}    ${new disk}
         Log    disk${n} mounted ..... | PASS |    DEBUG      console=${console}
         IF    ${n} < 4
-            Catenate Storages One    ${disk[${n}]}[string]
+            Append To List    ${bind 1}    ${disk[${n}]}[bind]
+            Set List Value    ${binds}    0    ${bind 1}
         ELSE
-            Catenate Storages Two    ${disk[${n}]}[string]
+            Append To List    ${bind 2}    ${disk[${n}]}[bind]
+            Set List Value    ${binds}    1    ${bind 2}
         END
     END
     ${servers} =    Create Systems
@@ -81,19 +83,6 @@ Storage Suite Setup
     Turn On Recording    ${server 1['cloudOwner']}    ${server 1['id']}
     Verify Storages    5    owner=${server 1['cloudOwner']}    system=${server 1['id']}    login=${TRUE}
     Verify Storages    1    owner=${server 1['cloudOwner']}    system=${server 2['id']}    login=${TRUE}
-
-Catenate Storages One
-    [Arguments]    ${string}
-    ${storage string 1} =    Catenate    ${storage string}[0]    ${string}
-    Set List Value    ${storage string}   0   ${storage string 1}
-    Set Suite Variable    ${storage string}   ${storage string}
-
-Catenate Storages Two
-    [Arguments]    ${string}
-    ${storage string 2} =    Catenate    ${storage string}[1]    ${string}
-    ${storage string 2} =    Get Substring    ${storage string 2}    1
-    Set List Value    ${storage string}   1   ${storage string 2}
-    Set Suite Variable    ${storage string}   ${storage string}
 
 Storage Suite Teardown
     Teardown Servers    ${servers}

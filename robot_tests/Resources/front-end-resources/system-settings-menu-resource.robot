@@ -9,7 +9,7 @@ Settings Menu Test Teardown
 System Settings Menu Test Setup
     Run Keyword and Ignore Error    Dismiss New Feature Modal
     Log Out
-    Log in to system    ${system 1}    ${system 1}[owner]
+    Log in to system new   ${system 1}    ${system 1}[cloudOwner]
     Wait Until Element is Visible    ${SERVERS LINK}
 #    Click Link    ${SERVERS LINK}
 #    Verify on Servers Page    timeout=150
@@ -17,31 +17,32 @@ System Settings Menu Test Setup
 System Settings Menu Test Restart
     ${logged in}=   Run keyword and return status    Wait until element is visible    ${ACCOUNT DROPDOWN}
     IF    ${logged in} == ${False}
-        Log in to system    ${system 1}    ${system 1}[owner]
+        Log in to system new   ${system 1}    ${system 1}[cloudOwner]
     END
 
 System Settings Menu Suite Setup
     Open Browser and go to URL    ${url}
-    ${rand}=   Generate Random String      length=5
-    ${owner}=   Register and activate account with random email    SystemsMenu    Owner    ${BASE PASSWORD}
+    ${random}=   Generate Random String      length=5
+    Set Suite Variable     ${random}    ${random}
+    ${servers}=    Create Systems
+    Set Suite Variable    ${servers}    ${servers}
     FOR    ${i}    IN RANGE    1    4
-        ${system}=   Create Base System    container name=systems_menu_${rand}_${i}    owner=${owner}
-        Set Suite Variable    ${system ${i}}    ${system}
+        ${n} =    Evaluate   ${i}-1
+        Set Suite Variable    ${system ${i}}    ${servers}[${n}]
     END
-
     FOR    ${i}    IN RANGE    2    4
-        cdb Merge Cloud Systems    ${system 1}[cloud id]    ${system ${i}}[cloud id]    ${system 1}[cloud auth][0]    ${system 1}[cloud auth][1]
+        cdb Merge Cloud Systems    ${system 1}[id]    ${system ${i}}[id]    ${system 1}[cloudAuth][0]    ${system 1}[cloudAuth][1]
         Sleep    60
     END
     Go to   ${url}
-    Log in to system    ${system 1}    ${system 1}[owner]
+    Log in to system new   ${system 1}    ${system 1}[cloudOwner]
     Wait Until Element is Visible    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
     Verify on Servers Page    timeout=150
 
 System Settings Menu Suite Teardown
-    Delete Base System    ${system 1}
+    Teardown Servers    ${system 1}
     FOR    ${i}    IN RANGE    2    4
-        Delete Docker Server    ${system ${i}}[name]
+        Delete container    ${system ${i}}[container]
     END
     Close All Browsers

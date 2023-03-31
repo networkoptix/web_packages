@@ -57,7 +57,7 @@ LM Test Restart
     ${status}=   Run Keyword and Return Status    Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}    2
     Run Keyword If    ${status}    Log Out
     FOR    ${i}    IN RANGE    1    4
-        Start Docker Server    ${system ${i}}[id]
+        Start container    ${system ${i}}[container]
         Sleep    10
         Change License Portal Host    ${LOCAL AUTH}    https://${QA BURBANK IP}:${system ${i}}[port]    ${LM HOST}
     END

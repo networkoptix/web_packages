@@ -156,7 +156,7 @@ Web Admin Suite Setup
     Set Suite Variable    ${live viewer}    Local+${local users[3]}
     Set Suite Variable    ${adv viewer}     Local+${local users[0]}
     Set Suite Variable    ${custom}         Local+${local users[2]}
-    Execute Command Remotely    docker container stop $${servers}[1][id]
+    Stop Container   $${servers}[1][container]
 
 Cloud Suite Setup
     Log in to user and system    ${servers}[0][cloudOwner]    ${servers}[0][id]    password=${password}
@@ -187,12 +187,18 @@ Cloud Suite Setup
     Verify on Servers Page    timeout=30
     Log Out   api=${False}
     Open Browser and go to URL    ${ENV}
-    Execute Command Remotely    docker container stop ${servers}[1][name]
+    Stop Container     ${servers}[1][container]
+
+    @{local users}=   Reset Local Users    ${server auth}    ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]    password=${password}
+    Set Suite Variable    ${admin}          Local+${local users[1]}
+    Set Suite Variable    ${viewer}         Local+${local users[4]}
+    Set Suite Variable    ${live viewer}    Local+${local users[3]}
+    Set Suite Variable    ${adv viewer}     Local+${local users[0]}
+    Set Suite Variable    ${custom}         Local+${local users[2]}
 
 
 Server Settings Suite Tear Down
     Teardown Servers    ${servers}
-
     Close All Connections
     Close All Browsers
 
@@ -229,13 +235,13 @@ Server Settings Test Teardown
     END
     Run Keyword If Test Failed    Run Keywords
         ...    Change server name via API    ${server auth}    server 1    ${servers}[0][id]    https://${QA BURBANK IP}:${servers}[0][port][0]    AND
-        ...    Execute Command Remotely    docker container stop ${servers}[1][id]
+        ...    Run Keyword and Ignore Error    Stop Container   ${servers}[1][container]
 
 Cloud Test Teardown
     Common Restart Logout    ${ENV}
     Run Keyword If Test Failed    Run Keywords
         ...    Change server name via API    ${server auth}    server 1    ${servers}[0][id]    https://${QA BURBANK IP}:${servers}[0][port][0]    AND
-        ...    Execute Command Remotely    docker container stop ${servers}[1][name]
+        ...    Run Keyword and Ignore Error   Stop Container   ${servers}[1][container]
 
 Web Admin Test Teardown
     Close Browser

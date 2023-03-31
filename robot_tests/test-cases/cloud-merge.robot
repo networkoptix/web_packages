@@ -30,7 +30,7 @@ Force Tags        merge
     END
 
     Log    C70977: "Merge with Another System" button is disabled if system is offline
-    Stop Docker Server    ${system}[id]
+    Stop Container    ${system}[container]
     Log in to system    ${system}    ${owner email}
     Wait until element is visible    ${MERGE BUTTON SYSTEM DISABLED}
 
@@ -55,7 +55,7 @@ Force Tags        merge
     #Rename Server     https://${QA BURBANK IP}:${system 7}[port]    ${system 7}[local auth]    ServerName
 
     Sleep    60
-    Stop Docker Server    ${system 4}[id]
+    Stop Container   ${system 4}[container]
 
     Log    Step 1
     Log in to system    ${system 1}    ${owner email}
@@ -142,7 +142,7 @@ Force Tags        merge
     Wait Until Element Is Not Visible    ${MERGE DIALOG}
 
     Log   C76420
-    Stop Docker Server    ${system 2}[id]
+    Stop Container    ${system 2}[container]
     Reload Page
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}
     Click Button    ${MERGE BUTTON SYSTEM}
@@ -767,8 +767,8 @@ Force Tags        merge
     END
     Sleep    60
 
-    Stop Docker Server    ${system 2}[id]
-    Stop Docker Server    ${system 4}[id]
+    Stop container    ${system 2}[container]
+    Stop container    ${system 4}[container]
 
     FOR    ${i}    IN    1    3
         Log    C70983: System offline
@@ -795,7 +795,7 @@ Force Tags        merge
 
         Log    C70987: offline system becomes online
         Log    Step 2: Bring system 2 back online and click Next
-        Start Docker Server    ${system ${j}}[id]
+        Start container    ${system ${j}}[container]
         Go To    ${ENV}/systems/${system ${j}}[cloud id]
         Reload Page
         Sleep    5
@@ -1419,7 +1419,7 @@ Force Tags        merge
     Complete merge steps till final password input     ${system 1}[name]    ${system 2}[name]
 
     Log     Step 2
-    Stop Docker Server    ${system 2}[id]
+    Stop container    ${system 2}[container]
     Sleep    5
     Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}
     Click Button    ${MERGE SYSTEMS BUTTON}

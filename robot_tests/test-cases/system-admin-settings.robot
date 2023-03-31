@@ -395,14 +395,14 @@ Force Tags        system    cloud    webadmin    system settings
 16. System Settings block is not available when the system is offline
     [Tags]    C69744
     Remove Tags     webadmin
-    Stop Docker Server    ${system}[id]
+    Stop container    ${system}[container]
     Log in to system    ${system}    ${system}[owner]
     Wait Until Elements Are Visible
     ...    ${DISCONNECT FROM NX}
     ...    ${MERGE BUTTON SYSTEM}
     ...    ${PLACEHOLDER ICON}
     ...    //span[text()='${NOT ABLE TO LOAD TEXT}']
-    Start Docker Server    ${system}[id]
+    Start container   ${system}[container]
 
 #System settings block view for different System versions
 #    [Tags]    C69743    C65829    cloud    system settings    

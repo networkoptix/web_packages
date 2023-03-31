@@ -21,7 +21,7 @@ System Admin Suite Setup
 
 System Admin Suite Teardown
     Teardown Servers    ${servers}
-    Run Keyword If    '''${mode}'''=='''webadmin'''    Delete Docker Server    ${local system}[id]
+    Run Keyword If    '''${mode}'''=='''webadmin'''    Delete container   ${local system}[container]
     Close All Browsers
     Run Keyword And Ignore Error    Delete Docker Server    ${4.0 cont}
 
@@ -35,7 +35,7 @@ System Admin Test Restart
     Run Keyword If    ${logged in}    Log Out
 
     Run Keyword If Test Failed    Run Keywords
-        ...    Start Docker Server    ${system}[id]
+        ...    Start container    ${system}[container]
         ...    AND    Sleep    10
 
     Set System Name    ${server url}    ${system}[localAuth]    ${system}[name]
@@ -415,19 +415,18 @@ Reset Settings To Default
 
 System Offline Suite Setup
     Open browser and go to URL    ${ENV}
-    ${owner}=   Register and activate account with random email    System     Owner    ${BASE PASSWORD}
-    ${rand}=   Generate Random String      length=5
-    ${system}=   Create Base System    system_admin_offline_1_${rand}    image=${IMAGE}    owner=${owner}
-    Set Suite Variable    ${system}
-    Stop Docker Server    ${system}[id]
-    ${extra system}=   Create Base System    system_admin_offline_2_${rand}    image=${IMAGE}    owner=${owner}
-    Set Suite Variable    ${extra system}
+    ${random}=   Generate Random String      length=5
+    Set Suite Variable     ${random}    ${random}
+    ${servers} =    Create Systems
+    Set Suite Variable    ${servers}
+    Set Suite Variable    ${system}   ${servers}[0]
+    Set Suite Variable    ${extra system}   ${servers}[1]
+    Stop Container    ${system}[container]
     Sleep    30
     Go to    ${ENV}
 
 System Offline Suite Teardown
-    Delete Base System    ${system}
-    Delete Base System    ${extra system}
+    Teardown Servers     ${servers}
     Close All Browsers
 
 System Offline Restart

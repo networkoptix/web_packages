@@ -235,7 +235,7 @@ Camera Suite Setup
     ${custom cameras}=    Create And Add Custom Camera User Type and User
     Activate License    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    ${TRIAL LICENSE}
     Sleep    30
-    Restart Docker Servers    ${system}[name]
+    Restart container    ${system}[container]
     Sleep    90
     # Stop Docker Server    ${system2}[id]
     ${no perm}=    Register and activate account with random email    mark   hamill    ${BASE PASSWORD}
@@ -254,7 +254,7 @@ Camera Test Setup
     Go To Cameras
 
 Offline Server Test Setup
-    Stop Docker Server    ${system3}[name]
+    Stop Container   ${system3}[container]
     Camera Test Setup    user=${system3}[owner]    system=${system3}[cloud id]
 
 Camera Suite Teardown

@@ -47,7 +47,7 @@ View Page Suite Setup
 
     Activate License    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    ${TRIAL LICENSE}
     Sleep    30
-    Restart Docker Servers    ${system}[name]
+    Restart container    ${system}[container]
     Sleep    90
     Go to    ${url}
     Take Camera Offline    ${system}[name]    192.168.0.201

@@ -246,7 +246,7 @@ Force Tags        system    cloud
 
 19. Left menu search: Search menu for offline system
     [Tags]    C81761    search
-    Stop Docker Server    ${system}[id]
+    Stop container    ${system}[container]
     Log in to system new    ${system}    ${system}[cloudOwner]
 
     Log    Steps 2, 3
@@ -269,7 +269,7 @@ Force Tags        system    cloud
     Wait Until Elements Are Visible     ${SYSTEM OFFLINE HEADER}    ${THIS SYSTEM IS OFFLINE}
     Wait Until Element Is Not Visible    ${SEARCH INPUT}
 
-    Start Docker Server    ${system}[id]
+    Start container   ${system}[container]
 
 20. Left menu search: Availability for different users
     [Tags]    C81760    webadmin    search
