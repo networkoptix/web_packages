@@ -861,7 +861,7 @@
         "systems": "システム",
         "template": "{title} - %CLOUD_NAME%",
         "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
-        "view": "カメラを表示",
+        "view": "カメラ映像",
         "apiTool": "API テストツール",
         "security": "セキュリティ",
         "twofaRequired": "二要素認証が必須です",
