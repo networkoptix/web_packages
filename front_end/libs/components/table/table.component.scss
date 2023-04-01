@@ -4,15 +4,87 @@
 :host {
     width: 100%;
 
+
     .nx-new-table {
-        width: 100%;
+        display: grid;
+        border-collapse: collapse;
+        min-width: 100%;
+        height: inherit;
+
+        .container {
+            height: 100%;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr;
+        }
+
+        .header {
+            display: grid;
+            grid-template-columns: 50px 1fr 1fr 1fr 1fr 40px;
+            height: 2.5rem;
+            border: 1px solid var(--border-color);
+            background-color: var(--card-header-bg);
+        }
+
+        .footer {
+            height: 2.5rem;
+        }
+
+        .body {
+            display: grid;
+            grid-template-columns: 1fr;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            border-top: none;
+        }
+
+        .content {
+            overflow-y: scroll;
+        }
+
+        .sort-svg {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            display: block;
+            opacity: 1;
+
+            &:not(.sort-svg-asc, .sort-svg-desc) {
+                display: none;
+            }
+
+            &.sort-svg-asc {
+                transform: scaleY(-1);
+            }
+
+            &.sort-svg-desc {
+                transform: none;
+            }
+
+            &.sort-svg-hover:not(.sort-svg-asc, .sort-svg-desc) {
+                display: block !important;
+                opacity: 0.3;
+            }
+        }
     }
 
-    .big-row {
-        height: 2.5rem;
 
-        &:nth-child(even) {
-            background-color: var(--card-header-bg);
+    .paginator-wrapper {
+        padding: 1rem 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .rows-selector {
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+            color: var(--body-text-color);
+
+            nx-select {
+                margin-left: 8px;
+            }
         }
     }
 }

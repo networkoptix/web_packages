@@ -1,35 +1,62 @@
-<table class="nx-new-table">
-    <thead>
-        <tr>
-            <ng-container
-                *ngTemplateOutlet="headers || defaultHeaderTemplate; context: { $implicit: data }"
-            ></ng-container>
-        </tr>
-    </thead>
-
-    <tbody>
-        <tr
-            *ngFor="let row of data"
-            class="big-row"
-            (click)="onRowClick($event)"
+<div class="nx-new-table container">
+    <div class="header">
+        <ng-container
+            *ngTemplateOutlet="header || defaultHeaderTemplate; context: { $implicit: data }"
+        ></ng-container>
+    </div>
+    <div class="body">
+        <div class="content">
+            <div
+                *ngFor="let row of pagedItems; trackBy: trackItem"
+                class="big-row"
+                [ngClass]="row.id === expandRowId ? 'expanded' : ''"
+                (click)="onRowClick($event)"
+            >
+                <ng-container
+                    *ngTemplateOutlet="rows || defaultRowTemplate; context: { $implicit: row }"
+                ></ng-container>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div
+            *ngIf="setPagination"
+            class="paginator-wrapper"
         >
-            <ng-container
-                *ngTemplateOutlet="rows || defaultRowTemplate; context: { $implicit: row }"
-            ></ng-container>
-        </tr>
-    </tbody>
-</table>
+            <div
+                class="rows-selector"
+                *ngIf="setRows"
+            >
+                <span translate>Rows per page:</span>
+                <nx-select
+                    type="transparent-button"
+                    [selected]="perPageSelectedOption"
+                    [items]="perPageOptions"
+                    (onSelected)="setRowsPerPage($event)"
+                ></nx-select>
+            </div>
 
-<ng-template
-    #defaultHeaderTemplate
-    let-data
->
-    <th *ngFor="let header of data[0] | keyvalue">{{ header.key }}</th>
-</ng-template>
+            <div [innerText]="'{n} of {m}' | translate: { n: nDisplayed, m: data.length }"></div>
 
-<ng-template
-    #defaultRowTemplate
-    let-row
->
-    <td *ngFor="let row of row | keyvalue">{{ row.value }}</td>
-</ng-template>
+            <nx-paginator
+                [numPages]="numPages"
+                [pagesToShow]="3"
+                (onChange)="setPage($event)"
+            ></nx-paginator>
+        </div>
+    </div>
+
+    <ng-template
+        #defaultHeaderTemplate
+        let-data
+    >
+        <th *ngFor="let header of data[0] | keyvalue">{{ header.key }}</th>
+    </ng-template>
+
+    <ng-template
+        #defaultRowTemplate
+        let-row
+    >
+        <td *ngFor="let row of row | keyvalue">{{ row.value }}</td>
+    </ng-template>
+</div>

@@ -13,6 +13,7 @@
     "Terms": "Terms",
     "Developers Console": "Developers Console",
     "productName": "",
+    "NofM": "{n} of {m}",
     "exclude": {
         "nested": "{start}{end}"
     },

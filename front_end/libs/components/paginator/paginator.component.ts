@@ -1,8 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
 
+import { CoercedBoolInput } from '@decorators/ibool';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NgChanges } from '@utils/ng-changes';
@@ -16,8 +17,10 @@ import { NgChanges } from '@utils/ng-changes';
 export class NxPaginatorComponent {
     @Input() numPages: number;
     @Input() pagesToShow: number;
-    @Input() tempDisabled: boolean = false;
-    @Input() showPrevNext: boolean = false;
+    @Input() tempDisabled: CoercedBoolInput = false;
+    @Input() showPrevNext: CoercedBoolInput = false;
+
+    @Output() onChange = new EventEmitter<number>();
 
     CONFIG: IConfig;
     showExperimental: boolean = false;
@@ -36,6 +39,8 @@ export class NxPaginatorComponent {
             if (!this.pagesToShow || !this.numPages) {
                 return;
             }
+
+            this.onChange.emit(page);
 
             let pages: number[] = [];
             let _current = page <= this.pagesToShow ? 1 : page;

@@ -26,7 +26,7 @@ export class TableComponent {
         this.records = [
             {
                 id: '1',
-                email: 'abc1@networkoptix.com',
+                login: 'abc1@networkoptix.com',
                 fullName: 'Tsanko',
                 accessLevel: [
                     { id: '123', name: 'Chase' },
@@ -40,7 +40,7 @@ export class TableComponent {
             },
             {
                 id: '2',
-                email: 'abc2@networkoptix.com',
+                login: 'abc2@networkoptix.com',
                 fullName: 'Nick',
                 accessLevel: [{ id: '124', name: 'Citi' }],
                 group: [
@@ -51,7 +51,7 @@ export class TableComponent {
             },
             {
                 id: '3',
-                email: 'abc3@networkoptix.com',
+                login: 'abc3@networkoptix.com',
                 fullName: 'Roman',
                 accessLevel: [{ id: '124', name: 'Citi' }],
                 group: [
@@ -61,7 +61,7 @@ export class TableComponent {
             },
             {
                 id: '4',
-                email: 'abc4@networkoptix.com',
+                login: 'abc4@networkoptix.com',
                 fullName: 'Illya',
                 accessLevel: [{ id: '124', name: 'Citi' }],
                 group: [
@@ -71,7 +71,7 @@ export class TableComponent {
             },
             {
                 id: '5',
-                email: 'abc5@networkoptix.com',
+                login: 'abc5@networkoptix.com',
                 fullName: 'Andrew',
                 accessLevel: [{ id: '124', name: 'Citi' }],
                 group: [
@@ -81,7 +81,7 @@ export class TableComponent {
             },
             {
                 id: '6',
-                email: 'abc6@networkoptix.com',
+                login: 'abc6@networkoptix.com',
                 fullName: 'Connie',
                 accessLevel: [{ id: '124', name: 'Citi' }],
                 group: [
@@ -92,7 +92,7 @@ export class TableComponent {
             },
             {
                 id: '7',
-                email: 'abc7@networkoptix.com',
+                login: 'abc7@networkoptix.com',
                 fullName: 'Olga',
                 accessLevel: [{ id: '125', name: 'BOOM!' }],
                 group: [

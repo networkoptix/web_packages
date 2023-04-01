@@ -4,7 +4,7 @@
 // @import 'styles/theme_palette';
 // @use 'theme_variables_common' as variables;
 
-.nx-table, .nx-new-table {
+.nx-table {
     table-layout: auto;
     white-space: nowrap;
     margin-bottom: 0;
@@ -127,55 +127,54 @@
 }
 
 .nx-new-table {
-    thead tr th:nth-child(2) {
-        padding-left: 25px;
+    .header div {
+        display: flex;
+        flex-wrap: wrap;
+        align-content: center;
+        justify-items: flex-start;
+        line-height: 22px;
+        cursor: default;
     }
 
-    tbody tr {
-        position: relative;
+    .big-row {
+        display: grid;
+        grid-template-columns: 50px 1fr 1fr 1fr 1fr 30px;
+        grid-template-rows: minmax(2.5rem, auto);
 
-        td {
-            position: relative;
-            color: var(--input-color) !important;
-            vertical-align: top;
+        &:nth-child(even) {
+            background-color: var(--card-header-bg);
+        }
 
-            &:first-of-type {
-                width: 50px;
+        & div {
+            display: flex;
+            flex-wrap: wrap;
+            align-content: center;
+            justify-items: flex-start;
+
+            svg-icon.icon-expand {
+                transform: rotate(-90deg);
             }
+        }
 
-            &:last-of-type {
-                width: 200px;
-            }
+        &.expanded {
+            padding: 10px 0;
 
-            &:nth-child(2) {
-                padding-left: 25px;
+            div {
+                align-content: flex-start;
 
-                svg-icon {
-                    position : absolute;
-                    left: 0;
-                    top : 10px;
-                    transform: rotate(-90deg);
-                }
-
-                &.expanded svg-icon {
+                svg-icon.icon-expand {
                     transform: none;
                 }
             }
 
-            &:not(:has(> div)) {
-                padding-top: 12px;
+            .div-container-wrapper {
+                flex-direction: column;
             }
+        }
 
-            div.td-container {
-                line-height: 2rem;
-                position: relative;
-
-                svg {
-                    position: absolute;
-                    right: 16px;
-                    top: 4px;
-                }
-            }
+        .div-container-wrapper svg-icon svg .st0 {
+            fill: var(--svg-std-icon-fill);
+            stroke: none;
         }
     }
 }

@@ -1697,6 +1697,7 @@
     "{name} Requirements": "{name} Requirements",
     "{numUsers} users from this system have accounts with disabled two-factor authentication. They will not be able to log in to the system.": "{numUsers} users from this system have accounts with disabled two-factor authentication. They will not be able to log in to the system.",
     "{number} more required": "{number} more required",
+    "{n} of {m}": "{n} of {m}",
     "{resourceType} \"{name}\" Statistics": "{resourceType} \"{name}\" Statistics",
     "{size} until {expires}": "{size} until {expires}",
     "{startTag}{count, plural, =0{#{endTag} more integrations...} one{#{endTag} more integration...} other{#{endTag} more integrations...}}": "{startTag}{count, plural, =0{#{endTag} more integrations...} one{#{endTag} more integration...} other{#{endTag} more integrations...}}",
