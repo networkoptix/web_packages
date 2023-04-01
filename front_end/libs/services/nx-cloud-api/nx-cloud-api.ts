@@ -504,27 +504,35 @@ export class NxCloudApiService {
         return this.http.post<t.CloudResponse>(apiBase + '/account/delete', { password }).toPromise();
     }
 
+    private _account: Observable<Account>;
+    private _throttleTimeout;
     account = (forceUpdate = false) => {
-        const endpoint = apiBase + '/account';
-        this.cacheService.addToCache(endpoint);
-        let headers = new HttpHeaders();
-        const params: { force?: true } = {};
-        if (forceUpdate) {
-            headers = headers.set('reset-cache', 'reset');
-            params.force = true;
+        if (forceUpdate || !this._account) {
+            if (this._throttleTimeout) {
+                clearTimeout(this._throttleTimeout);
+                this._throttleTimeout = undefined;
+            }
+            this._account = this.http.get<Account>(apiBase + '/account')
+                .pipe(
+                    map(account => {
+                        if (!account.isCloud) {
+                            // Returned object is readonly sometimes for some reason
+                            account = { ...account, isCloud: true };
+                        }
+                        this.currentAccount = account;
+                        return account;
+                    },
+                    tap(this.logIdentifyUser)),
+                    tap(() => {
+                        this._throttleTimeout = setTimeout(() => {
+                            // Limits account requests to 1 per 5 seconds unless forced.
+                            this._account = undefined;
+                        }, 5000);
+                    }),
+                    shareReplay({ refCount: true, bufferSize: 1 })
+                );
         }
-        return this.http.get<Account>(endpoint, { headers, params })
-            .pipe(
-                map(account => {
-                    if (!account.isCloud) {
-                        // Returned object is readonly sometimes for some reason
-                        account = { ...account, isCloud: true };
-                    }
-                    this.currentAccount = account;
-                    return account;
-                },
-                tap(this.logIdentifyUser))
-            );
+        return this._account;
     };
 
     checkFeatureNotice = <T>(
@@ -820,7 +828,7 @@ export class NxCloudApiService {
     #withFreshSession: t.WithFreshSession = (
         minSessionSeconds = 300
     ) => observableInputFactory => {
-        const getAccessToken = (minSession?: number) => this.account(true).pipe(
+        const getAccessToken = (minSession?: number) => this.account(false).pipe(
             switchMap(({
                 accessToken,
                 sessionExpires
