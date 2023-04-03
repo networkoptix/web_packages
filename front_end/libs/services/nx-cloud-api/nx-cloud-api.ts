@@ -903,7 +903,7 @@ export class NxCloudApiService {
             let currentSession = !force && await this.db.personal.unstructured.get(key) as UnstructuredTable<Account>;
 
             if (!currentSession?.value || force) {
-                value = await firstValueFrom(this.account(force));
+                value = await firstValueFrom(this.account(true));
                 currentSession = { key, value };
             }
 
@@ -956,7 +956,7 @@ export class NxCloudApiService {
         return this.http.post<{ message: string }>(`${apiBase}/account/renewSession`, { code }).pipe(
             map(() => true),
             catchError(() => Promise.resolve(false)),
-            switchMap(refreshed => this.account(refreshed))
+            switchMap(refreshed => this.account(true))
         );
     }
 

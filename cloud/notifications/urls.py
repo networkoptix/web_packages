@@ -10,7 +10,9 @@ public_patterns = [
     re_path(r'^push_notification$', push_notification, name='push_notification'),
     re_path(r'^email_notification$', email_notification, name='email_notification'),
     path('subscriptions/<str:deviceToken>', Subscriptions.as_view(), name='subscriptions'),
-    path('subscriptions', DeviceSubscriptionListView.as_view(), name='subscriptions')
+    path('subscriptions', DeviceSubscriptionListView.as_view(), name='subscriptions'),
+    re_path(r'^maintenance/health$', health_email),
+    re_path(r'^maintenance/health_push$', health_push),
 ]
 
 urlpatterns = [

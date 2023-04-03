@@ -314,7 +314,9 @@ async def index(request):
     if request.method == 'GET':
         # get authorized user here
         # Redirect if no version
-        # Add indefinate cache heading
+        # Add indefinite cache heading
+        # Removing the caching for now!!
+        """
         cached = request.query_params.get('cached')
         current_version = not request.query_params.get('force') and caches['requests'].get(request.user.email)
         if not cached or not current_version or cached != current_version:
@@ -322,9 +324,10 @@ async def index(request):
                 current_version = str(uuid4())
                 caches['requests'].set(request.user.email, current_version)
             return redirect(f'{reverse("account")}?cached={current_version}')
+        """
         serializer = await sync_to_async(lambda: AccountSerializer(request, many=False))()
 
-        return api_success(await sync_to_async(AccountSerializer.data.fget)(serializer), additional_headers={'Cache-Control': f'max-age={60**2 * 24}'})
+        return api_success(await sync_to_async(AccountSerializer.data.fget)(serializer))  # , additional_headers={'Cache-Control': f'max-age={60**2 * 24}'})
 
     serializer = await sync_to_async(lambda: AccountUpdateSerializer(request, data=request.data))()
 

@@ -1,37 +1,47 @@
 "use strict";
 const utils_1 = require("@typescript-eslint/utils");
 const utils_2 = require("./utils");
-function hasInjectedWindow(param) {
+function hasInjectionToken(param, propName) {
     return param.decorators?.some((d) => (0, utils_2.decoratorHasCall)(d) &&
         (0, utils_2.decoratorName)(d) === 'Inject' &&
         d.expression.arguments[0]?.type === utils_1.AST_NODE_TYPES.Identifier &&
-        d.expression.arguments[0].name === 'WINDOW');
+        d.expression.arguments[0].name === propName.toUpperCase());
 }
-function hasInjectedWindowProp(classBody) {
+function hasInjectedProp(classBody, propName) {
     return classBody.body.some(b => b.type === utils_1.AST_NODE_TYPES.MethodDefinition &&
         b.kind === 'constructor' &&
         b.value.params.some(p => {
             return p.type === utils_1.AST_NODE_TYPES.TSParameterProperty &&
                 p.parameter.type === utils_1.AST_NODE_TYPES.Identifier &&
-                p.parameter.name === 'window' &&
-                hasInjectedWindow(p);
+                p.parameter.name === propName &&
+                hasInjectionToken(p, propName);
         }));
 }
 module.exports = (0, utils_2.createRule)({
     meta: {
         type: 'problem',
-        schema: [],
+        schema: [{
+                title: 'Banned variables names',
+                description: 'Variables which should not be accessed globally',
+                type: 'array',
+                items: {
+                    type: 'string',
+                },
+            }],
         messages: {
-            globalWindow: 'Do not use global window',
+            forbiddenGlobal: 'Forbidden global variable',
         },
         fixable: 'code',
         hasSuggestions: true,
     },
-    defaultOptions: [],
-    create(context) {
+    defaultOptions: [[]],
+    create(context, [bannedVars]) {
         return {
-            'ClassDeclaration Identifier[name="window"]'(node) {
-                const { parent } = node;
+            'ClassBody Identifier'(node) {
+                if (!bannedVars.includes(node.name)) {
+                    return;
+                }
+                const { parent, name } = node;
                 const isBaseObject = parent.type === utils_1.AST_NODE_TYPES.MemberExpression &&
                     parent.object === node;
                 const notMemberExp = parent.type !== utils_1.AST_NODE_TYPES.MemberExpression;
@@ -76,10 +86,10 @@ module.exports = (0, utils_2.createRule)({
                 if (isBaseObject || (notMemberExp && !isNotGlobal)) {
                     let scope = context.getScope();
                     while (scope.type !== utils_1.TSESLint.Scope.ScopeType.global) {
-                        if (scope.set.has('window')) {
-                            const variable = scope.set.get('window');
+                        if (scope.set.has(name)) {
+                            const variable = scope.set.get(name);
                             const identifier = variable.identifiers[0];
-                            if (identifier.name === 'window' &&
+                            if (identifier.name === name &&
                                 identifier.range[1] < node.range[0]) {
                                 return;
                             }
@@ -90,10 +100,10 @@ module.exports = (0, utils_2.createRule)({
                     while (classBody.type !== utils_1.AST_NODE_TYPES.ClassBody) {
                         classBody = classBody.parent;
                     }
-                    if (hasInjectedWindowProp(classBody)) {
+                    if (hasInjectedProp(classBody, name)) {
                         context.report({
                             node,
-                            messageId: 'globalWindow',
+                            messageId: 'forbiddenGlobal',
                             fix(fixer) {
                                 return fixer.insertTextBefore(node, 'this.');
                             }
@@ -102,7 +112,7 @@ module.exports = (0, utils_2.createRule)({
                     else {
                         context.report({
                             node,
-                            messageId: 'globalWindow',
+                            messageId: 'forbiddenGlobal',
                         });
                     }
                 }

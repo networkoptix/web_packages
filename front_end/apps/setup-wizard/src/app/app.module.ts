@@ -1,4 +1,3 @@
-/* eslint nx/ban-global-variables: 0 */
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';

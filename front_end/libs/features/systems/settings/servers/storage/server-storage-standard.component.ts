@@ -637,7 +637,7 @@ export class NxSystemStorageComponent implements OnInit {
         );
     }
 
-    handleModeUpdate = (): Promise<string> => {
+    handleModeUpdate = async (): Promise<string> => {
         this.forceShowBackupBlock = false;
         const updating: string[] = [];
         for (const id in this.modeWatchers) {
@@ -649,11 +649,24 @@ export class NxSystemStorageComponent implements OnInit {
                 store.storageStatus += ` | ${STORAGE_STATUS.BEING_CHECKED}`;
                 this.modeWatchers[id].originalValue = currentMode;
                 if (
-                    !store.storageId.startsWith('/') &&
+                    (!store.storageId.startsWith('/') || store.storageType === 'usb') &&
                     store.status !== STORAGE_STATUS.RESERVED
-                ) {
                     // Excludes non changeable storage
-                    updating.push(store.storageId);
+                ) {
+                    if (store.storageId.startsWith('/')) {
+                        // Add new external storage
+                        const updatedStore = await this.system.storageManager.saveStorage({
+                            parentId: this.serverId,
+                            url: store.storageId,
+                            storageType: 'usb',
+                            usedForWriting: true,
+                            isWritable: true,
+                            isBackup: currentMode === 'modeBackup',
+                        }).toPromise();
+                        updating.push(updatedStore.id);
+                    } else {
+                        updating.push(store.storageId);
+                    }
                 }
                 this.forceShowBackupBlock ||= currentMode === 'modeBackup';
             }

@@ -129,7 +129,7 @@ export class CloudAccount extends BaseAccount {
             return Promise.resolve(this.account);
         }
 
-        return firstValueFrom(this.cloudApi.account(true))
+        return firstValueFrom(this.cloudApi.account(false))
             .then((account: Account | any) => {
                 // eslint-disable-next-line camelcase
                 if (!account?.is_authenticated) {

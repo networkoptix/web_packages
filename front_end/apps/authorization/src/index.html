@@ -28,6 +28,7 @@
             const language = urlParams.get('lang');
             if (viewType !== 'web' && ['desktop', 'mobile'].includes(viewType)) {
                 document.body.classList.add(viewType === 'desktop' ? 'desktopBackground' : 'mobileBackground');
+                document.querySelector('html').setAttribute('data-platform', viewType);
             } else {
                 const themes = {
                     dark: '#0D0E0F',

@@ -170,7 +170,8 @@ const FeatureFlagKeys = [
     'channelPartners',
     'requestCaching',
     'requestCachingRemoteSync',
-    'useJsonRpc'
+    'useJsonRpc',
+    'restCookieLogin'
 ] as const;
 
 export type FeatureFlagType = typeof FeatureFlagKeys[number];

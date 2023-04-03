@@ -181,7 +181,7 @@ def get_widget(datastructure: DataStructure):
 def get_record_value(datastructure, asset, language):
     record_value = datastructure.find_actual_value(asset, language, draft=True)
     if datastructure.type in [DataStructure.DATA_TYPES.object, DataStructure.DATA_TYPES.array]:
-        if record_value is "":
+        if record_value == "":
             record_value = {} if datastructure.type is DataStructure.DATA_TYPES.object else []
         else:
             record_value = json.dumps(record_value, indent=4, separators=(',', ': '))

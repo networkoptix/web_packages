@@ -1,8 +1,7 @@
-import { Component, Inject, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxThemeService } from '@services/theme.service';
-import { WINDOW } from '@services/window-provider';
 
 @Component({
     selector: 'nx-auth-app-root',
@@ -12,7 +11,6 @@ import { WINDOW } from '@services/window-provider';
 })
 export class AppComponent {
     constructor(
-        @Inject(WINDOW) private window: Window,
         private configService: NxConfigService,
         private themeService: NxThemeService,
     ) {
@@ -22,8 +20,6 @@ export class AppComponent {
                 () => {}, // weird Safari 12
                 () => {}
             );
-        } else {
-            this.window.document.documentElement.setAttribute('data-theme', CONFIG.themeConfig.light);
         }
     }
 }

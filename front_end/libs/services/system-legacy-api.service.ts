@@ -5,7 +5,7 @@ import { pick } from 'lodash-es';
 import md5 from 'md5';
 import { CookieService } from 'ngx-cookie-service';
 import { from, of, throwError, Observable, BehaviorSubject, firstValueFrom } from 'rxjs';
-import { flatMap, map, mergeMap, retryWhen, timeout, tap, share, switchMap } from 'rxjs/operators';
+import { catchError, flatMap, map, mergeMap, retryWhen, timeout, tap, share, switchMap } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
@@ -1106,8 +1106,11 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         }
 
         const url = this.generateGetUrl(endpoint, data).replace(this.urlBase, '');
-        return this.get(url, undefined, { responseType: 'blob' })
-            .pipe(map(blob => blob ? URL.createObjectURL(blob) : undefined), share());
+        return this.get(url, undefined, { responseType: 'blob' }).pipe(
+            catchError(e => of(new Blob())),
+            map(blob => URL.createObjectURL(blob || new Blob())),
+            share()
+        );
     }
 
     hlsUrl(cameraId: string, position: string = 'now', resolution: string = '') {

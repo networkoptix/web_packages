@@ -70,7 +70,7 @@ export class MediaServerListComponent implements OnChanges {
                 (acc, ms) => {
                     const key = `nx_system_${this.systemId}_server_${ms.id}_expansion_status`;
                     const status = this.localStorage.retrieve(key);
-                    acc[ms.id] = status ? JSON.parse(status) : true;
+                    acc[ms.id] = status ? JSON.parse(status) : false;
                     return acc;
                 },
                 {}

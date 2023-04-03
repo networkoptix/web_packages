@@ -33,9 +33,9 @@ def get_config(customization=None):
         logger.critical(msg)
         raise UnableToFetchConfigException(msg)
     if not os.path.isfile(file_path):  # this is for local environment
-        file_path = os.path.join(conf_dir, '../../etc', 'cloud_portal.yaml')
+        file_path = os.path.join(conf_dir, '../../etc', 'cloud_portal.local.yaml')
     if not os.path.isfile(file_path):  # this is for Jenkins to collect static
-        file_path = os.path.join(conf_dir, '..', 'cloud_portal.yaml')
+        file_path = os.path.join(conf_dir, '..', 'cloud_portal.jenkins.yaml')
 
     return yaml.safe_load(open(file_path))
 

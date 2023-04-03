@@ -49,7 +49,7 @@ function hasInjectedProp(
 // Rule Definition
 // ----------------------------------------------------------------------------
 
-export = createRule({
+export = createRule<[string[]], 'forbiddenGlobal'>({
     meta: {
         type: 'problem',
         schema: [{
@@ -67,9 +67,9 @@ export = createRule({
         hasSuggestions: true,
     },
     defaultOptions: [[]],
-    create(context, [bannedVars]: [string[]]) {
+    create(context, [bannedVars]) {
         return {
-            'ClassDeclaration Identifier'(node: TSESTree.Identifier) {
+            'ClassBody Identifier'(node: TSESTree.Identifier) {
                 if (!bannedVars.includes(node.name)) {
                     return;
                 }

@@ -1,4 +1,3 @@
-/* eslint nx/ban-global-variables: 0 */
 import { DialogModule } from '@angular/cdk/dialog';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import {

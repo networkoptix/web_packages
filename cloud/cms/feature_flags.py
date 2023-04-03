@@ -81,6 +81,7 @@ class FLAGS(metaclass=_FlagType):
 
     system_groups = ('System Groups', 'systemGroups', '%SYSTEM_GROUPS_ENABLED%')
     channel_partners = ('Chanel Partners', 'channelPartners', '%CHANNEL_PARTNERS_ENABLED%')
+    rest_cookie_login = ('Rest Cookie Login', 'restCookieLogin')
 
     request_caching = ('Request Caching', 'requestCaching', '%REQUEST_CACHING_ENABLED%')
     request_caching_remote_sync = ('Request Caching Remote Sync', 'requestCachingRemoteSync', '%REQUEST_CACHING_REMOTE_SYNC_ENABLED%')
