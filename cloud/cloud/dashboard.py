@@ -22,6 +22,14 @@ from admin_tools.utils import get_admin_site_name
 from django.conf import settings
 
 
+class DashboardAppList(modules.AppList):
+    def init_with_context(self, context):
+        super().init_with_context(context)
+        for child in self.children:
+            # sort ignoring case
+            child['models'].sort(key=lambda x: x['title'].lower())
+
+
 class CustomIndexDashboard(Dashboard):
     """
     Custom index dashboard for cloud.
@@ -30,7 +38,7 @@ class CustomIndexDashboard(Dashboard):
         user = context['user']
         site_name = get_admin_site_name(context)
         # append an app list module for "Applications"
-        self.children.append(modules.AppList(
+        self.children.append(DashboardAppList(
             _('Applications'),
             models=settings.ADMIN_DASHBOARD,
             deletable=False,
@@ -38,7 +46,7 @@ class CustomIndexDashboard(Dashboard):
         ))
 
         # append an app list module for "Administration"
-        self.children.append(modules.AppList(
+        self.children.append(DashboardAppList(
             _('Internal'),
             exclude=settings.ADMIN_DASHBOARD,
             deletable=False,
@@ -46,9 +54,10 @@ class CustomIndexDashboard(Dashboard):
         ))
         if user.is_superuser:
             # append a recent actions module
-            self.children.append(modules.RecentActions(
+            self.children.append(DashboardAppList(
                 _('Recent Actions'),
                 5,
                 deletable=False,
                 collapsible=False,
             ))
+
