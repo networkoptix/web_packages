@@ -196,7 +196,8 @@ export class NxLayoutGridComponent {
 
     layout$ = this.#initialLayout$.pipe(
         filter(layout => !!layout),
-        map(initial => this.parseLayout({ items: [], ...initial })),
+        map(layout => ({ ...layout, items: this.filterRemovedResources(layout.items || []) })),
+        map(initial => this.parseLayout(initial)),
         tap(layout => {
             console.log(layout);
         }),
@@ -710,6 +711,9 @@ export class NxLayoutGridComponent {
     updateWrapperSize = ({ height, width }: Size): void => {
         this.#wrapperSize$.next({ height, width });
     };
+
+    filterRemovedResources = (items: LayoutItems): LayoutItems =>
+        items.filter(({ resourceId }) => !!this.layoutItemLookup[resourceId]);
 
     parseLayout = (layout: Layout): ParsedLayout => ({
         ...layout,
