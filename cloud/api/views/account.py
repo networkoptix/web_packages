@@ -368,8 +368,15 @@ async def renew_session(request):
     request.session["access_token"] = tokens["access_token"]
     request.session["refresh_token"] = tokens["refresh_token"]
 
-    await sync_to_async(Auth.delete_token)(request, old_tokens["access_token"])
-    await sync_to_async(Auth.delete_token)(request, old_tokens["refresh_token"])
+    try:
+        await sync_to_async(Auth.delete_token_no_refresh)(tokens, old_tokens["access_token"])
+    except (APILogicException, APINotAuthorisedException):
+        pass
+
+    try:
+        await sync_to_async(Auth.delete_token_no_refresh)(tokens, old_tokens["refresh_token"])
+    except (APILogicException, APINotAuthorisedException):
+        pass
 
     return api_success({
         "msg": "Session has been renewed."
@@ -384,9 +391,14 @@ async def refresh_access_token(request):
     refresh_token = request.session.get('refresh_token')
     tokens = await sync_to_async(Auth.get_refresh_token)(refresh_token, get_ip(request))
     request.session['access_token'] = tokens['access_token']
-    request.session['refresh_token'] = tokens['refresh_token']  # Shouldn't change but to be safe we'll add it anyway.
+    # Shouldn't change but to be safe we'll add it anyway.
+    if new_refresh_token := tokens['refresh_token'] != refresh_token:
+        request.session['refresh_token'] = new_refresh_token
 
-    await sync_to_async(Auth.delete_token)(request, old_access_token)
+    try:
+        await sync_to_async(Auth.delete_token_no_refresh)(tokens, old_access_token)
+    except (APILogicException, APINotAuthorisedException):
+        pass
 
     return api_success({
         'access_token': tokens['access_token']

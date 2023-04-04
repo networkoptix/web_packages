@@ -818,7 +818,7 @@ export class NxCloudApiService {
     }
 
     refreshAccessTokens() {
-        return this.http.post<Record<string, string>>(`${this.CONFIG.cloudHost}${apiBase}/account/refreshAccessToken`, {});
+        return this.http.post<Record<string, string>>(`${this.CONFIG.cloudHost}${apiBase}/account/refreshAccessToken`, {}).pipe(map(({ access_token }) => ({ accessToken: access_token })));
     }
 
     /**
