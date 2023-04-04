@@ -309,6 +309,8 @@ async def time_since_password(request):
 @permission_classes((AllowAny, ))
 async def index(request):
     if request.user.is_anonymous:
+        if request.method == 'POST':
+            raise APINotAuthorisedException('Session has expired', error_code=ErrorCodes.not_authorized)
         return api_success({'is_authenticated': False})
 
     if request.method == 'GET':
@@ -345,6 +347,7 @@ async def index(request):
     return api_success(await sync_to_async(AccountSerializer.data.fget)(serializer))
 
 
+# TODO: Needs UT added
 @swagger_auto_schema(method="POST",  # auto_schema=None,
                      request_body=openapi.Schema(
                          type=openapi.TYPE_OBJECT,
@@ -370,6 +373,23 @@ async def renew_session(request):
 
     return api_success({
         "msg": "Session has been renewed."
+    })
+
+
+# TODO: Needs UT added
+@api_view(['POST'])
+@permission_classes((IsAuthenticated, ))
+async def refresh_access_token(request):
+    old_access_token = request.session.get('access_token')
+    refresh_token = request.session.get('refresh_token')
+    tokens = await sync_to_async(Auth.get_refresh_token)(refresh_token, get_ip(request))
+    request.session['access_token'] = tokens['access_token']
+    request.session['refresh_token'] = tokens['refresh_token']  # Shouldn't change but to be safe we'll add it anyway.
+
+    await sync_to_async(Auth.delete_token)(request, old_access_token)
+
+    return api_success({
+        'access_token': tokens['access_token']
     })
 
 

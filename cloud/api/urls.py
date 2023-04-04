@@ -37,6 +37,7 @@ urlpatterns = [
     re_path(r'^account/checkAuthCode$',      account.check_auth_code),
     re_path(r'^account/delete$',             account.delete_user),
     re_path(r'^account/renewSession$',       account.renew_session),
+    re_path(r'^account/refreshAccessToken$', account.refresh_access_token),
     re_path(r'^account/security$',           account.AccountSecurity.as_view()),
     re_path(r'^account/timeSincePassword$',  account.time_since_password),
     re_path(r'^account/reviewCookie$',       account.review_cookie),
