@@ -20,7 +20,8 @@
             justify-content: space-between;
 
             >div {
-                @include typography.regular12light12;
+                @include typography.regular12nocolor;
+                color: var(--light12);
                 line-height: 1rem;
             }
 
@@ -52,7 +53,7 @@
 
         &-descr {
             @include typography.regular13nocolor;
-            color: var(--label-color);
+            color: var(--alt-tile-color);
             margin-top: .5rem;
         }
     }

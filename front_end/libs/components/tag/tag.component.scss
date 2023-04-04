@@ -76,7 +76,7 @@ a {
 }
 
 .badge-brand-selected {
-    @include typography.regular13dark9;
+    @include typography.regular13nocolor;
     @include mixins.badge-selected(var(--brand-core), var(--brand-d1), var(--brand-d2));
     cursor: default !important;
 }

@@ -92,7 +92,7 @@
                 background-color: var(--switch-warning-hover-color);
 
                 &+.bar+.circle {
-                    border: 2px solid var(--switch-warning-circle-color);
+                    border: 2px solid var(--switch-circle-off-hover-color);
                 }
             }
         }
