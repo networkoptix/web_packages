@@ -183,7 +183,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     protected getUrlBase(protocol = this.window.location.protocol) {
         const getCurrentRelayHost = () => this.currentRelayHost || this.CONFIG.trafficRelayHost
             .replace('{host}', this.window.location.host)
-            .replace('{systemId}', this.serverId ? `${this.cleanId(this.serverId)}.${this.systemId}` : this.systemId);
+            .replace('{systemId}', this.systemId);
         let urlBase = protocol !== this.window.location.protocol ? `${protocol}//${this.window.location.host}` : '';
         if (this.systemId) {
             const localProxy = this.cookieService.get('cors_bypass') || '';
@@ -1290,7 +1290,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         }
         switch (transport) {
             case 'webRtc':
-                url = `${this.getUrlBase('wss:')}/webrtc-tracker/?camera_id=${this.cleanId(cameraId)}&`;
+                url = `${this.getUrlBase('wss:')}/webrtc-tracker/?camera_id=${this.cleanId(cameraId)}&X-Server-Guid=${this.serverId}&`;
                 break;
             case 'hls':
                 url = `${this.getUrlBase()}/web/hls/${this.cleanId(cameraId)}.m3u8?${hlsResolutionOrEmpty(resolution)}&`;

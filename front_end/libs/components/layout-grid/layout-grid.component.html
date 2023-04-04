@@ -544,6 +544,7 @@
                                     *ngIf="
                                         !errors[itemDetail.details.id] &&
                                             (playable.includes(itemDetail.details.status) ||
+                                                itemDetail.details.online ||
                                                 itemDetail.type === RESOURCE_TYPE.WEB_PAGE);
                                         else showError
                                     "
