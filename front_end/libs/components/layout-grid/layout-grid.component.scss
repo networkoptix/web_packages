@@ -472,6 +472,14 @@ iframe {
     & .st1 {
         fill: var(--svg-path-accent-color);
     }
+
+    &:hover .st1{
+        fill: var(--left-menu-l3-selected-bg);
+    }
+
+    &.selected:not(:hover) .st1 {
+        fill: var(--left-menu-l3-selected-color);
+    }
 }
 
 .highlight-adding {
