@@ -211,6 +211,10 @@ export class NxLayoutGridComponent {
         }),
     );
 
+    showTooltip$ = this.#wrapperSize$.pipe(
+        map(({ width }) => !this.window.matchMedia('(any-hover: none)').matches && width > 600),
+    );
+
     aspectHandler$ = combineLatest([this.#wrapperSize$, this.layout$]).pipe(
         filter(([wrapper]) => !!wrapper),
         map(

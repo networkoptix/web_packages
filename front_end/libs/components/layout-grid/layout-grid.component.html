@@ -123,8 +123,8 @@
                 <svg-icon
                     nx-add-svg-src
                     [svgStyle]="{
-                        'width.px': '20',
-                        'height.px': '20',
+                        'width.px': '24',
+                        'height.px': '24',
                         'margin-right.px': '8'
                     }"
                     [src]="
@@ -237,11 +237,12 @@
                     (cdkDragMoved)="moveAddedItem($event, currentItem)"
                     (cdkDragReleased)="dragging = false; addItem(node)"
                     [nxTooltip]="
-                        node.type === RESOURCE_TYPE.CAMERA
+                        (showTooltip$ | async) &&
+                        (node.type === RESOURCE_TYPE.CAMERA
                             ? cameraTooltip
                             : node.type === RESOURCE_TYPE.SERVER
                             ? serverTooltip
-                            : ''
+                            : '')
                     "
                     (mouseenter)="updateTooltipTarget(node.details.id)"
                     (mouseleave)="unsubTooltips()"
