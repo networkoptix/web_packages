@@ -6,9 +6,10 @@ import { map, Observable, take } from 'rxjs';
 import { selectCurrentUser } from '@common/store/account/account.selectors';
 import { Account } from '@services/account.service/account';
 
-import { GroupsItem, SharedItems } from '../../groups.types';
+import { GroupsItem, LoadingState, SharedItems } from '../../groups.types';
 import { NxSystemGroupsService } from '../../services/system-groups.service';
-import { selectCurrentSystemItems } from '../../store/groups.selectors';
+import * as GroupActions from '../../store/groups.actions';
+import { selectCurrentSystemItems, selectLoadingState } from '../../store/groups.selectors';
 
 @Component({
     selector: 'nx-groups-systems',
@@ -18,7 +19,9 @@ import { selectCurrentSystemItems } from '../../store/groups.selectors';
 export class NxGroupsSystemsComponent implements OnInit, OnDestroy {
     systems$: Observable<SharedItems>;
     userEmail: string;
-    showPersonal: boolean = this.route.snapshot.url[0].path === 'personal';
+    showPersonal: boolean = this.route.snapshot.url[0]?.path !== 'shared';
+    loadingState$ = this.store.select<LoadingState>(selectLoadingState);
+    LoadingState = LoadingState;
 
     constructor(
         private route: ActivatedRoute,
@@ -29,6 +32,7 @@ export class NxGroupsSystemsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.store.dispatch(GroupActions.setCurrentGroupId({ currentGroupId: undefined }));
         this.systems$ = this.store.select(selectCurrentSystemItems).pipe(
             map(systems => {
                 const result: SharedItems = {};

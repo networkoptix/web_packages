@@ -1,0 +1,19 @@
+<div class="nx-tab-set">
+    <ul class="justify-content-start nav nav-tabs nx-tab-set-tabs">
+        <li
+            *ngFor="let tab of tabs"
+            class="nav-item"
+            (click)="handleClick(tab)"
+        >
+            <div
+                class="nav-link"
+                [ngClass]="{ active: currentTab$.value === tab }"
+            >
+                <span
+                    class="tab-heading"
+                    [textContent]="tab.charAt(0).toUpperCase() + tab.slice(1)"
+                ></span>
+            </div>
+        </li>
+    </ul>
+</div>

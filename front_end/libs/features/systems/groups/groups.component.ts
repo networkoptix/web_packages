@@ -1,39 +1,28 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { forkJoin, take } from 'rxjs';
+import { take } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { selectCurrentUser } from '@common/store/account/account.selectors';
-import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons } from '@lib/variables/static-variables';
 import { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 
-import {
-    GroupsItem,
-    Crumb,
-    SharedItems,
-    BaseItems,
-    OpenGroups,
-    LoadingState,
-    GroupPath,
-} from './groups.types';
+import { GroupsItem, Crumb, OpenGroups, LoadingState, GroupPath } from './groups.types';
 import { NxSystemGroupsService } from './services/system-groups.service';
 import * as GroupActions from './store/groups.actions';
 import {
-    selectCrumbs,
     selectCurrentGroupId,
     selectCurrentGroupOwner,
     selectCurrentPath,
-    selectCurrentSharedOwner,
+    selectCurrentRootGroup,
+    selectHasCurrentIndexes,
     selectHasGroups,
     selectLoadingState,
     selectOpenGroups,
-    selectPersonalItems,
-    selectSharedItems,
 } from './store/groups.selectors';
 
 interface SidebarSettings {
@@ -50,24 +39,26 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
     LoadingState = LoadingState;
     LANG = staticLang;
     openGroups$ = this.store.select<OpenGroups>(selectOpenGroups);
-    crumbs$ = this.store.select<Crumb[] | null>(selectCrumbs);
     currentPath$ = this.store.select<GroupPath[]>(selectCurrentPath);
     sidebarSettings: CustomAccountProperty<SidebarSettings>;
     userEmail: string;
-    sharedItems$ = this.store.select<SharedItems>(selectSharedItems);
-    personalItems$ = this.store.select<BaseItems>(selectPersonalItems);
-    hasGroups$ = this.store.select(selectHasGroups);
-    currentSharedOwner$ = this.store.select<string>(selectCurrentSharedOwner);
+    hasGroups$ = this.store.select<boolean>(selectHasGroups);
     currentGroupOwner$ = this.store.select<string>(selectCurrentGroupOwner);
     loadingState$ = this.store.select<LoadingState>(selectLoadingState);
     currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
+    inRoot$ = this.store.select<boolean>(selectHasCurrentIndexes);
+
+    currentGroupId: string;
+    currentTab: string;
+    rootGroup$ = this.store.select<Crumb>(selectCurrentRootGroup);
+    tabs = ['systems', 'users', 'reports', 'settings'];
 
     constructor(
         private store: Store,
         private groupsService: NxSystemGroupsService,
         private route: ActivatedRoute,
+        private router: Router,
         private cloudApi: NxCloudApiService,
-        private dialogsService: NxDialogsService,
     ) {
         this.groupsService.connect();
     }
@@ -79,6 +70,10 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
                     currentGroupId: id,
                 }),
             );
+        });
+
+        this.route.url.subscribe(_ => {
+            this.currentTab = this.route.firstChild.snapshot.url[0].path;
         });
         this.store
             .select<Account>(selectCurrentUser)
@@ -112,16 +107,11 @@ export class NxSystemGroupsComponent implements OnInit, OnDestroy {
         }, true);
     }
 
-    newGroupDialog(): void {
-        const currentGroupId$ = this.currentGroupId$.pipe(take(1));
-        const hasGroups$ = this.hasGroups$.pipe(take(1));
-        forkJoin([currentGroupId$, hasGroups$]).subscribe(([currentGroupId, hasGroups]) =>
-            this.dialogsService.createSystemGroup({
-                targetId: currentGroupId,
-                hasGroups,
-                parentGroup: null,
-            }),
-        );
+    onTabClick(tab: string): void {
+        this.store
+            .select<string>(selectCurrentGroupId)
+            .pipe(take(1))
+            .subscribe(id => this.router.navigate(['home', 'organization', id, tab]));
     }
 
     // Temporary

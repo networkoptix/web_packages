@@ -8,11 +8,28 @@
     No systems
 </div>
 
+<ng-template #actions>
+    <div class="actions p-3">
+        <button
+            [disabled]="(currentGroupOwner$ | async) !== (account$ | async).email"
+            class="btn btn-default"
+            translate
+            (click)="newGroupDialog()"
+        >
+            New Group
+        </button>
+        <input [placeholder]="'Search' | translate" />
+    </div>
+</ng-template>
+
 <ng-template
     #showGroups
     let-groups="groups"
     let-systems="systems"
 >
+    <ng-container *ngIf="!inRoot">
+        <ng-container *ngTemplateOutlet="actions"></ng-container>
+    </ng-container>
     <div class="px-3 cards-container">
         <div
             *ngFor="let group of currentGroups$ | async; trackBy: trackItem"
@@ -32,10 +49,7 @@
             <div class="placeholder-shadow"></div>
         </div>
         <div
-            *ngFor="
-                let system of (inRoot$ | async) ? [] : (currentSystems$ | async);
-                trackBy: trackItem
-            "
+            *ngFor="let system of inRoot ? [] : (currentSystems$ | async); trackBy: trackItem"
             class="system-card"
             cdkDropList
             cdkDropListSortingDisabled

@@ -217,6 +217,8 @@ export const selectCurrentPath = createSelector(
     },
 );
 
+export const selectCurrentRootGroup = createSelector(selectCurrentPath, path => path[0]);
+
 const createSharedItemsObject = (groups: GroupItem[], systems: SystemItem[]): SharedItems => {
     const result: SharedItems = {};
 

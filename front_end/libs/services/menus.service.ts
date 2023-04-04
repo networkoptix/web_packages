@@ -256,8 +256,8 @@ export class NxMenusService {
         const systemGroupsLang = this.LANG.appHeader.headerMenuNodes.systemGroups;
         const groupsNode = new MenuNode(systemGroupsLang.displayName, '/home');
         groupsNode.invisible = true;
-        groupsNode.nodes.push(new MenuNode(systemGroupsLang.nodes.organization.displayName, '/home'));
-        groupsNode.nodes.push(new MenuNode(systemGroupsLang.nodes.personal.displayName, '/home/personal'));
+        groupsNode.nodes.push(new MenuNode(systemGroupsLang.nodes.organization.displayName, '/home/organization'));
+        groupsNode.nodes.push(new MenuNode(systemGroupsLang.nodes.personal.displayName, '/home'));
         groupsNode.nodes.push(new MenuNode(systemGroupsLang.nodes.shared.displayName, '/home/shared'));
         return groupsNode;
     }

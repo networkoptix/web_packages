@@ -30,13 +30,11 @@ export class NxGroupCardComponent {
     ) {}
 
     openGroup(): void {
-        this.router
-            .navigate(['home', 'organization', this.group.id])
-            .then(() =>
-                this.store.dispatch(
-                    GroupActions.setOpenGroups({ openGroups: { [this.group.id]: true } }),
-                ),
+        this.router.navigate(['home', 'organization', this.group.id, 'systems']).then(() => {
+            this.store.dispatch(
+                GroupActions.setOpenGroups({ openGroups: { [this.group.id]: true } }),
             );
+        });
     }
 
     deleteGroup(): void {

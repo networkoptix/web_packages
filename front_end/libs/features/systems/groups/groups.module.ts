@@ -8,8 +8,10 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { accountReducer } from '@common/store/account';
 import { ComponentsCoreModule } from '@components/components-core.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxTabsModule } from '@components/tabs/tabs.module';
 import { AuthGuard } from '@guards/authGuard';
 
+import { NxGroupsCardsComponent } from './components/groups-cards/groups-cards.component';
 import {
     NxGroupsCardsModule
 } from './components/groups-cards/groups-cards.module';
@@ -30,11 +32,6 @@ import { groupsReducer } from './store/groups.reducer';
         RouterModule.forChild([
             {
                 path: '',
-                component: NxSystemGroupsComponent,
-                canActivate: [AuthGuard],
-            },
-            {
-                path: 'personal',
                 component: NxGroupsSystemsComponent,
                 canActivate: [AuthGuard],
             },
@@ -47,10 +44,21 @@ import { groupsReducer } from './store/groups.reducer';
                 path: 'organization/:id',
                 component: NxSystemGroupsComponent,
                 canActivate: [AuthGuard],
+                children: [
+                    {
+                        path: 'systems',
+                        component: NxGroupsCardsComponent
+                    }
+                ]
+            },
+            {
+                path: 'organization',
+                component: NxSystemGroupsComponent,
+                canActivate: [AuthGuard],
             },
             {
                 path: '**',
-                redirectTo: 'personal',
+                redirectTo: '',
             }
         ]),
         StoreModule.forFeature('groups', groupsReducer),
@@ -59,7 +67,8 @@ import { groupsReducer } from './store/groups.reducer';
         NxGroupsCardsModule,
         PreLoaderModule,
         NxSystemGroupsSidebarModule,
-        NxGroupsSystemsModule
+        NxGroupsSystemsModule,
+        NxTabsModule
     ],
     declarations: [
         NxSystemGroupsComponent,

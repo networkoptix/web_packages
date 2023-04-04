@@ -54,6 +54,11 @@
         flex-direction: column;
         gap: 1rem;
 
+        .header {
+            display: flex;
+            flex-direction: column;
+          }
+
         .btn-default {
             width: 8rem;
         }

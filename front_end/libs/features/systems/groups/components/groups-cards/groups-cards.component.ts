@@ -1,18 +1,23 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { forkJoin, take } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { selectCurrentUser } from '@common/store/account/account.selectors';
+import { CoercedBoolInput } from '@decorators/ibool';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { Account } from '@services/account.service/account';
 import { icons } from '@src/app/variables/static-variables';
 
 import { GroupItem, GroupsItem, SystemItem } from '../../groups.types';
 import { NxSystemGroupsService } from '../../services/system-groups.service';
 import {
+    selectCurrentGroupId,
     selectCurrentGroupItems,
+    selectCurrentGroupOwner,
     selectCurrentSystemItems,
-    selectHasCurrentIndexes,
+    selectHasGroups,
 } from '../../store/groups.selectors';
 
 @Component({
@@ -21,7 +26,10 @@ import {
     styleUrls: ['groups-cards.component.scss'],
 })
 export class NxGroupsCardsComponent {
-    inRoot$ = this.store.select<boolean>(selectHasCurrentIndexes);
+    @Input() inRoot: CoercedBoolInput = false;
+    hasGroups$ = this.store.select<boolean>(selectHasGroups);
+    currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
+    currentGroupOwner$ = this.store.select<string>(selectCurrentGroupOwner);
     currentGroups$ = this.store.select<GroupItem[]>(selectCurrentGroupItems);
     currentSystems$ = this.store.select<SystemItem[]>(selectCurrentSystemItems);
     account$ = this.store.select<Account>(selectCurrentUser);
@@ -29,7 +37,11 @@ export class NxGroupsCardsComponent {
     LANG = staticLang;
     icons = icons;
 
-    constructor(private groupsService: NxSystemGroupsService, private store: Store) {}
+    constructor(
+        private groupsService: NxSystemGroupsService,
+        private store: Store,
+        private dialogsService: NxDialogsService,
+    ) {}
 
     trackItem(_index: number, item: GroupsItem): string {
         return item.id;
@@ -47,5 +59,17 @@ export class NxGroupsCardsComponent {
         } else if (dragged.type === 'system') {
             this.groupsService.moveSystem(dragged.id, droppedOn.id);
         }
+    }
+
+    newGroupDialog(): void {
+        const currentGroupId$ = this.currentGroupId$.pipe(take(1));
+        const hasGroups$ = this.hasGroups$.pipe(take(1));
+        forkJoin([currentGroupId$, hasGroups$]).subscribe(([currentGroupId, hasGroups]) =>
+            this.dialogsService.createSystemGroup({
+                targetId: currentGroupId,
+                hasGroups,
+                parentGroup: null,
+            }),
+        );
     }
 }

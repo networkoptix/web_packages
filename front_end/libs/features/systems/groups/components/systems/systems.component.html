@@ -6,19 +6,34 @@
     >
         My System
     </h2>
-    <div
-        class="systems-row"
-        [ngClass]="{ shared: !showPersonal }"
-        *ngFor="let user of systems$ | async | keyvalue"
+
+    <ng-container
+        *ngIf="loadingState$ | async as loadingState"
+        [ngSwitch]="loadingState"
     >
-        <div *ngIf="!showPersonal">
-            {{ user.key }}
+        <nx-pre-loader *ngSwitchCase="LoadingState.LOADING"></nx-pre-loader>
+        <ng-container *ngSwitchCase="LoadingState.LOADED">
+            <div
+                class="systems-row"
+                [ngClass]="{ shared: !showPersonal }"
+                *ngFor="let user of systems$ | async | keyvalue"
+            >
+                <div *ngIf="!showPersonal">
+                    {{ user.key }}
+                </div>
+                <div *ngFor="let system of user.value.systems; trackBy: trackItem">
+                    <nx-system-card
+                        [system]="system"
+                        [search]="''"
+                    ></nx-system-card>
+                </div>
+            </div>
+        </ng-container>
+        <div
+            *ngSwitchDefault
+            translate
+        >
+            No systems
         </div>
-        <div *ngFor="let system of user.value.systems; trackBy: trackItem">
-            <nx-system-card
-                [system]="system"
-                [search]="''"
-            ></nx-system-card>
-        </div>
-    </div>
+    </ng-container>
 </div>
