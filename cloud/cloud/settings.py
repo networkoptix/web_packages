@@ -835,7 +835,7 @@ BROADCAST_NOTIFICATIONS_SUPERUSERS_ONLY = 'debug' in conf and conf['debug']
 NOTIFICATIONS_AUTO_SUBSCRIBE = False
 
 IPVD_CONNECT = 'https://cameras.networkoptix.com/api/v1/cacameras/'
-UPDATES_URL_BASE = conf['updates'].get('url') or 'https://updates.networkoptix.com'
+UPDATES_URL_BASE = conf.get('updates', {}).get('url') or 'https://updates.networkoptix.com'
 UPDATE_JSON = f'{UPDATES_URL_BASE}/updates.json'
 DOWNLOADS_JSON = UPDATES_URL_BASE + '/{{customization}}/downloads.json'
 DOWNLOADS_VERSION_JSON = UPDATES_URL_BASE + '/{{customization}}/{{build}}/downloads.json'
