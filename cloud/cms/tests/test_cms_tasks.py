@@ -89,7 +89,7 @@ def test_make_package(mocker, db):
     preview = True
     version_id = str(uuid4())
 
-    make_package(asset.id, preview, version_id)
+    make_package(asset.id, preview, version_id, customization=settings.TEST_CUSTOMIZATION)
     get_progress_updater.assert_called_once_with(None)
     mock_exporter.assert_called_once_with(
         asset, preview, version_id, update_progress_cb=mock_updater)
@@ -144,10 +144,10 @@ def test_make_custom_client(mocker, db):
     base_vms = baker.make(
         Asset, asset_type=AssetType.objects.filter(type=AssetType.ASSET_TYPES.vms).first())
     custom_client = baker.make(CustomClient, base_vms=base_vms, created_customization=Customization.objects.filter(
-        name=settings.CUSTOMIZATION).first())
+        name=settings.TEST_CUSTOMIZATION).first())
 
     # Test no errors
-    make_custom_client(custom_client.id, download_id)
+    make_custom_client(custom_client.id, download_id, customization=settings.TEST_CUSTOMIZATION)
     cache_key = get_custom_client_package_key(custom_client.id, download_id)
     assert PACKAGE_CACHE[cache_key] == {
         "file": mock_zip_package, "is_ready": True, 'task_id': task_id}
@@ -157,7 +157,7 @@ def test_make_custom_client(mocker, db):
     mocker.patch('cms.controllers.filldata.calculate_custom_client_data',
                  return_value=[custom_data, errors])
     try:
-        make_custom_client(custom_client.id, download_id)
+        make_custom_client(custom_client.id, download_id, customization=settings.TEST_CUSTOMIZATION)
 
         # Shouldn't run
         assert False
@@ -179,7 +179,8 @@ def test_make_structure(mocker, account_factory, cloud_portal_type, db):
     user = account_factory()
 
     make_structure(user.id, asset_id=asset.id,
-                   use_actual_values=use_actual_values)
+                   use_actual_values=use_actual_values,
+                   customization=settings.TEST_CUSTOMIZATION)
     expected_file_name = f"{asset.asset_type}-structure.json".replace(" ", "_").lower()
     expected_content = json.dumps(
         [mock_asset_dict], ensure_ascii=False, indent=4, separators=(',', ': '))
@@ -221,7 +222,8 @@ def test_async_import_assets_from_json(mocker, account_factory, db):
     user = account_factory()
     publish = True
 
-    async_import_assets_from_json(json_cache_id, user.id, publish=publish)
+    async_import_assets_from_json(json_cache_id, user.id, publish=publish,
+                                  customization=settings.TEST_CUSTOMIZATION)
     mock_import_assets_from_json.assert_called_once_with(
         asset_list, user, publish=publish, increment_progress=mock_get_progress_updater)
 
@@ -240,7 +242,8 @@ def test_async_menu_import(mocker, account_factory, db):
                  return_value=mock_updater_cb)
     mock_from_dict = mocker.patch('cms.models.Menu.from_dict')
 
-    async_menu_import(cache_key, menu.name, user.email, accept_reviews)
+    async_menu_import(cache_key, menu.name, user.email, accept_reviews,
+                      customization=settings.TEST_CUSTOMIZATION)
     mock_from_dict.assert_called_once_with(
         menu_dict, user, update_progress_cb=mock_updater_cb, accept_reviews=accept_reviews)
 
@@ -254,7 +257,7 @@ def test_async_menu_export(mocker):
     mocker.patch('cms.tasks.get_progress_updater',
                  return_value=mock_update_progress_cb)
 
-    async_menu_export(menu_name)
+    async_menu_export(menu_name, customization=settings.TEST_CUSTOMIZATION)
     mock_generate_export.assert_called_once_with(
         menu_name, complete_cb=mock_complete_cb, update_progress_cb=mock_update_progress_cb)
 
@@ -262,7 +265,7 @@ def test_async_menu_export(mocker):
 def test_async_zendesk_sync(mocker, db):
     from cms.models import Menu, ZendeskSite
     customization = Customization.objects.filter(
-        name=settings.CUSTOMIZATION).first()
+        name=settings.TEST_CUSTOMIZATION).first()
     site = ZendeskSite.objects.filter(customization=customization).first(
     ) or baker.make(ZendeskSite, customization=customization)
     menu = baker.make(Menu)
@@ -289,3 +292,7 @@ def test_async_zendesk_push_article(mocker, asset_factory, db):
     async_zendesk_push_article(asset.id, customization=customization_name)
     mock_push_accepted_article_to_zendesk.assert_called_once_with(
         asset, customization=customization_name, request=None)
+
+
+def test_async_generate_menus(mocker, db):
+    async_generate_menus(settings.TEST_CUSTOMIZATION, cache_key=None)

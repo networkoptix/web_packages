@@ -1,6 +1,8 @@
 import pytest
 from random import randint, sample, choice
 from uuid import uuid4
+
+from django.conf import settings
 from model_bakery import baker
 from cms.controllers.integration import make_integrations_json
 from cms.controllers.release_notes import RELEASE_NOTES, make_release_notes_json
@@ -25,13 +27,15 @@ asset_type_to_json_function = {
 class BaseTestMakeAssetJSON:
     asset_type = None # Specify the asset_type or the tests will fail
     @pytest.fixture(autouse=True)
-    def setup(self, db, account_factory, mocker, asset_factory, language_factory):
+    def setup(self, db, account_factory, mocker, asset_factory, language_factory, arf):
         self.asset_factory = asset_factory
         self.mocker = mocker
         self.asset_count = randint(1, 10)
         self.language = language_factory()
         self.superuser_account = account_factory()
         self.user = account_factory(email='user@user.com', is_superuser=False)
+        self.arf = arf
+        self.request = arf.get('/')
 
     def make_asset_json(self, assets=[], user=None, **kwargs):
         '''
@@ -39,7 +43,10 @@ class BaseTestMakeAssetJSON:
 
         show_pending=False, show_drafts=False, user=None
         '''
-        return asset_type_to_json_function[self.asset_type](assets, self.language, user=user or self.superuser_account, **kwargs)
+        kwargs.update(request=self.request)
+        return asset_type_to_json_function[self.asset_type](
+            assets, self.language, user=user or self.superuser_account, **kwargs
+        )
 
     def make_assets(self, user, asset_count, state=ACCEPTED, draft=False):
         assets = list(self.asset_factory(qty=asset_count, account=user, asset_type=self.asset_type, state=state, draft=draft))
@@ -145,7 +152,7 @@ class TestGenerateAssetStateDictionary:
 
 class TestGenerateContextDictsWithActualValues:
     @pytest.fixture(autouse=True)
-    def setup(self, db, mocker):
+    def setup(self, db, mocker, arf):
         self.datastructure_count = randint(3,10)
         ids = sample(range(1000,4000), self.datastructure_count)
         self.context = baker.make("Context")
@@ -159,9 +166,12 @@ class TestGenerateContextDictsWithActualValues:
         self.datastructures = datastructures
         mocker.patch(
             'cms.controllers.asset_json.map_ds_attribute_to_actual_value',  return_value=self.mock_records)
+        self.request = arf.get('/')
 
     def test_success(self):
-        for context, context_dict in generate_context_dicts_with_actual_values(False, False, [self.context], self.datastructures, None, None):
+        for context, context_dict in generate_context_dicts_with_actual_values(
+                False, False, [self.context], self.datastructures, None, None, request=self.request
+        ):
             assert context == self.context
             for key in context_dict:
                 id = int(key[:4])
@@ -177,7 +187,9 @@ class TestGenerateContextDictsWithActualValues:
         external_file.save()
         self.mock_records[external_file.id] = f"Test {S3_LINK} Test"
 
-        for context, context_dict in generate_context_dicts_with_actual_values(False, False, [self.context], self.datastructures, None, None):
+        for context, context_dict in generate_context_dicts_with_actual_values(
+                False, False, [self.context], self.datastructures, None, None, request=self.request
+        ):
             for key in context_dict:
                 assert S3_LINK not in context_dict[key]
                 if key in [external_image.name, external_file.name]:
@@ -188,7 +200,9 @@ class TestGenerateContextDictsWithActualValues:
         private_ds.public = False
         private_ds.save()
 
-        for context, context_dict in generate_context_dicts_with_actual_values(False, False, [self.context], self.datastructures, None, None):
+        for context, context_dict in generate_context_dicts_with_actual_values(
+                False, False, [self.context], self.datastructures, None, None, request=self.request
+        ):
             for key in context_dict:
                 assert key != private_ds.name
 
@@ -200,7 +214,10 @@ class TestGenerateContextDictsWithActualValues:
         multiselect_ds.save()
         self.mock_records[blank_id], self.mock_records[multiselect_id] = '', ''
 
-        for context, context_dict in generate_context_dicts_with_actual_values(False, False, [self.context], self.datastructures, None, None):
+        for context, context_dict in \
+                generate_context_dicts_with_actual_values(
+                    False, False, [self.context], self.datastructures, None, None, request=self.request
+                ):
             multiselect_ds_found = False
             for key in context_dict:
                 assert key != blank_ds.name
@@ -210,7 +227,7 @@ class TestGenerateContextDictsWithActualValues:
 
 class TestGetCurrentVersion:
     @pytest.fixture(autouse=True)
-    def setup(self, db, mocker, language_factory):
+    def setup(self, db, mocker, language_factory, arf):
         self.state = choice('latest, review')
         self.language = language_factory()
         self.current_version = randint(1000,4000)
@@ -218,9 +235,11 @@ class TestGetCurrentVersion:
         self.versions = {
             self.asset.id: self.current_version
         }
+        self.request = arf.get('/')
 
     def generate_lookup_key(self):
-        return BaseCache.generate_lookup_key(self.language, self.state, self.asset.id, self.current_version)
+        return BaseCache.generate_lookup_key(self.language, self.state, self.asset.id,
+                                             self.current_version, request=self.request)
 
     def version_not_found(self, has_version, current_version, lookup_key, review_id):
         assert has_version is False
@@ -230,7 +249,8 @@ class TestGetCurrentVersion:
 
     def test_success(self):
         has_version, current_version, lookup_key, review_id = get_current_version(
-            self.language, self.state, self.versions, self.asset)
+            self.language, self.state, self.versions, self.asset, request=self.request
+        )
 
         assert has_version == True
         assert current_version == self.current_version
@@ -240,7 +260,9 @@ class TestGetCurrentVersion:
     def test_version_not_found(self):
         self.versions[self.asset.id] = 0
         has_version, current_version, lookup_key, review_id = get_current_version(
-            self.language, self.state, self.versions, self.asset)
+            self.language, self.state, self.versions, self.asset,
+            request=self.request
+        )
 
         self.version_not_found(has_version, current_version, lookup_key, review_id)
 
@@ -250,7 +272,9 @@ class TestGetCurrentVersion:
         mocked_get_pending_version = mocker.patch('cms.controllers.asset_json.get_review_matching_current_version',
                                                    return_value=review)
         has_version, current_version, lookup_key, review_id = get_current_version(
-            self.language, self.state, self.versions, self.asset, show_pending=True)
+            self.language, self.state, self.versions, self.asset, show_pending=True,
+            request=self.request
+        )
 
         assert mocked_get_pending_version.called_once_with(self.asset, self.current_version)
         assert has_version == True
@@ -262,14 +286,18 @@ class TestGetCurrentVersion:
         mocker.patch('cms.controllers.asset_json.get_review_matching_current_version',
                       return_value=None)
         has_version, current_version, lookup_key, review_id = get_current_version(
-            self.language, self.state, self.versions, self.asset, show_pending=True)
+            self.language, self.state, self.versions, self.asset, show_pending=True,
+            request=self.request
+        )
 
         self.version_not_found(has_version, current_version, lookup_key, review_id)
 
     def test_draft_success(self):
         self.state = 'draft'
         has_version, current_version, lookup_key, review_id = get_current_version(
-            self.language, self.state, self.versions, self.asset, show_drafts=True) # show_drafts True
+            self.language, self.state, self.versions, self.asset, show_drafts=True,
+            request=self.request
+        ) # show_drafts True
 
         assert has_version == True
         assert current_version == None

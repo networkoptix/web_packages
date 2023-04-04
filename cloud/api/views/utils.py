@@ -18,11 +18,11 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import serializers, status
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from util.helpers import get_customization
 from waffle import flag_is_active, switch_is_active, sample_is_active
 
-from cloud.helpers.exceptions import api_success, handle_exceptions, require_params,\
-    APIRequestException, APIForbiddenException, APINotFoundException, ErrorCodes
+from cloud.customization_context import customization_ctx
+from cloud.helpers.exceptions import api_success, handle_exceptions, require_params, \
+    APIRequestException, APIForbiddenException, APINotFoundException, ErrorCodes, APIInternalException
 from cloud.drf_async import async_api_view as api_view
 from api.serializers import CustomizationCacheSerializer, SettingsSerializer, IpvdSerializer
 from cms.models import Customization, cloud_portal_customization_cache, get_cached_menu, UserGroupsToAssetPermissions, \
@@ -44,7 +44,10 @@ visited_key__body = openapi.Schema(type=openapi.TYPE_STRING)
 
 
 def get_cloud_capabilities_from_cache(*, customization=None, request=None):
-    customization = customization or get_customization(request)
+    if not customization and not request and not customization_ctx.get():
+        raise APIInternalException('Customization must be given.',
+                                  error_code=ErrorCodes.no_customization_given)
+    customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
     customization_cache = cloud_portal_customization_cache(
         customization, 'cloud_capabilities')
     capabilities = {
@@ -62,7 +65,12 @@ def get_settings_from_cache(*, customization=None, request=None):
 
 
 async def get_settings_from_cache_async(*, customization=None, request=None):
-    customization = customization or get_customization(request)
+    if not customization and not request and not customization_ctx.get():
+        raise APIInternalException('Customization must be given.',
+                                   error_code=ErrorCodes.no_customization_given)
+
+    customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
+
     customization_cache = await cloud_portal_customization_cache_async(
         customization, 'config')
     serializer = CustomizationCacheSerializer(data=customization_cache)
@@ -195,7 +203,7 @@ def languages(request):
 @permission_classes((AllowAny, ))
 def downloads_history(request):
     # TODO: later we can check specific permissions
-    customization = get_customization(request)
+    customization = request.CUSTOMIZATION
     can_view_releases = UserGroupsToAssetPermissions.\
         check_customization_permission(
             request.user, customization, 'api.can_view_release')
@@ -234,7 +242,7 @@ def downloads_history(request):
 @permission_classes((IsAuthenticated, ))
 def download_build(request, build):
     # TODO: later we can check specific permissions
-    customization = get_customization(request)
+    customization = request.CUSTOMIZATION
     public_release_history = get_settings_from_cache(
         customization=customization)['publicReleases']
     can_view_releases = UserGroupsToAssetPermissions.\
@@ -297,7 +305,7 @@ def download_build(request, build):
 @permission_classes((AllowAny, ))
 def downloads(request):
     global_cache = caches['global']
-    customization = get_customization(request)
+    customization = request.CUSTOMIZATION
     settings_cache = get_settings_from_cache(customization=customization)
 
     public_downloads = settings_cache['publicDownloads']
@@ -404,7 +412,7 @@ def webadmin_feature_flags(request):
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 def get_settings(request):
-    customization = get_customization(request)
+    customization = request.CUSTOMIZATION
     global_cache = caches['customization']
     user = request.query_params.get('cached')
     user_key = getattr(request.user, 'email', 'anonymous_user')

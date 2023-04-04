@@ -2,14 +2,14 @@ import os
 import re
 
 from django.conf import settings
+
+from cloud.customization_context import customization_ctx
 from cms.controllers.asset_json import generate_asset_dictionary, get_contexts_and_datastructures_of_asset_type, \
                                        get_current_version, get_global_contexts, generate_context_dicts_with_actual_values,  \
                                        get_user_assets, process_asset_global_contexts, get_state
 from cms.models import Asset,  AssetType, cloud_portal_customization_cache, get_cloud_portal_asset
-from util.base_cache import BaseCache
-from util.helpers import get_customization
+from util.base_cache import IntegrationCache
 
-INTEGRATION_CACHE = BaseCache(cache_key='integrations')
 INTEGRATION = AssetType.ASSET_TYPES.integration
 
 SCREENSHOT_REGEX = re.compile("^(?=.*Screenshot)((?!caption).)*$")
@@ -21,7 +21,7 @@ def make_integrations_json(assets, language, user=None, show_pending=False, show
 
     contexts, data_structures = get_contexts_and_datastructures_of_asset_type(INTEGRATION)
     user_assets = get_user_assets(user)
-    customization=get_customization(request)
+    customization = getattr(request, 'CUSTOMIZATION', customization_ctx.get())
     cloud_portal = get_cloud_portal_asset(customization=customization)
     state = get_state(show_pending, show_drafts)
     response_asset_json = []
@@ -32,12 +32,12 @@ def make_integrations_json(assets, language, user=None, show_pending=False, show
 
         for asset in assets:
             has_version, current_version, lookup_key, review_id = get_current_version(
-                language, state, versions, asset, show_pending, show_drafts)
+                language, state, versions, asset, show_pending, show_drafts, customization=customization)
             if not has_version:
                 continue
-
-            INTEGRATION_CACHE.lookup_key = lookup_key
-            asset_dict = INTEGRATION_CACHE.get_cached_item() or {}
+            integration_cache = IntegrationCache(language=language, state=state, identifier=asset.id,
+                                                 version=versions[asset.id], customization_name=customization)
+            asset_dict = integration_cache.get_cached_item() or {}
 
             if not asset_dict or asset_dict['version'] != current_version or show_drafts:
                 for context, context_dict in generate_context_dicts_with_actual_values(show_pending, show_drafts,
@@ -60,7 +60,7 @@ def make_integrations_json(assets, language, user=None, show_pending=False, show
                                                 review_id, include_last_modified=True)
                 }
                 if not show_drafts:
-                    INTEGRATION_CACHE.set_cached_item(asset_dict)
+                    integration_cache.set_cached_item(asset_dict)
 
             # Create a copy to remove the version key.
             asset_dict_copy = asset_dict.copy()
@@ -119,5 +119,5 @@ def add_integration_properties(asset_dict, asset, user, user_assets):
 
 
 def check_integration_store_enabled(request=None):
-    customization = get_customization(request)
+    customization = request.CUSTOMIZATION
     return cloud_portal_customization_cache(customization, 'config')['integration_store_enabled']

@@ -13,12 +13,12 @@ from django.contrib.contenttypes.models import ContentType
 from jsonfield import JSONField
 
 from cloud.controllers.cloud_api import Account as cloud_api_account
+from cloud.customization_context import customization_ctx
 from cloud.helpers.exceptions import (
-    APIRequestException, APIException, APILogicException, APINotAuthorisedException, ErrorCodes
+    APIRequestException, APIException, APILogicException, APINotAuthorisedException, ErrorCodes, APIInternalException
 )
 from cms.models import Customization, Asset, AssetType, UserGroupsToAssetPermissions, get_cloud_portal_asset
 from cloud.settings import CUSTOMIZATION
-from util.helpers import get_customization
 
 
 class AccountManager(models.Manager):
@@ -43,11 +43,17 @@ class AccountManager(models.Manager):
         first_name = extra_fields.pop("first_name")
         last_name = extra_fields.pop("last_name")
         code = extra_fields.pop("code", None)
+        request = extra_fields.pop('request', None)
+        customization = extra_fields.pop('request', None)
+        if not customization and not request and not customization_ctx.get():
+            raise APIInternalException('Customization must be given.',
+                                      error_code=ErrorCodes.no_customization_given)
 
         # this line will send request to cloud_db and raise an exception if fails:
         try:
             cloud_api_account.register(
-                email, password, first_name, last_name, ip=ip, code=code)
+                email, password, first_name, last_name, ip=ip, code=code,
+                customization=customization, request=request)
         except APIException as a:
             if a.error_code == ErrorCodes.account_exists and not AccountManager.is_email_in_portal(email):
                 raise APILogicException(
@@ -57,7 +63,7 @@ class AccountManager(models.Manager):
         user = self.model(email=email,
                           first_name=first_name,
                           last_name=last_name,
-                          customization=CUSTOMIZATION,
+                          customization=customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get()),
                           **extra_fields)
 
         if code:
@@ -73,13 +79,13 @@ class AccountManager(models.Manager):
         return self._create_user(email, password, **extra_fields)
 
     @staticmethod
-    async def register_cloud_invite_user(email, password, data):
+    async def register_cloud_invite_user(email, password, data, request):
         ip = data.get("IP", "")
         first_name = data.pop("first_name")
         last_name = data.pop("last_name")
 
         await sync_to_async(cloud_api_account.register, thread_sensitive=False)(
-            email, password, first_name, last_name, ip=ip)
+            email, password, first_name, last_name, ip=ip, request=request)
         user = await Account.objects.aget(email=email)
         """
         When an account is created using cloud invites it is disabled because its registration
@@ -194,7 +200,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     @property
     def permissions(self):
-        if not UserGroupsToAssetPermissions.check_customization_permission(self, CUSTOMIZATION):
+        if not UserGroupsToAssetPermissions.check_customization_permission(self, settings.DEF_CUSTOMIZATION):
             return []
 
         permissions = []
@@ -275,7 +281,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
         ]
 
     def custom_client_vms_assets(self, *, request=None):
-        customization=get_customization(request) if request else self.customization
+        customization = request.CUSTOMIZATION if request else self.customization
         return Asset.objects.filter(models.Q(
             asset_type__type=AssetType.ASSET_TYPES.vms,
             customizations__in=UserGroupsToAssetPermissions.get_customizations_with_permission(

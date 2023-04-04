@@ -12,7 +12,6 @@ from django.core.cache import caches, cache
 from rest_framework import status
 
 import copy
-from datetime import datetime
 from dateutil import parser as date_parser
 import pytest
 
@@ -31,8 +30,8 @@ def test_get_cloud_capabilities_from_cache(mocker, cloud_capabilities, settings)
     expected = {'integrationStoreEnabled': cloud_capabilities.get(
         'integration_store_enabled', False)}
 
-    cache_capabilities = utils.get_cloud_capabilities_from_cache(customization=settings.CUSTOMIZATION)
-    cache_mock.assert_called_with(settings.CUSTOMIZATION, 'cloud_capabilities')
+    cache_capabilities = utils.get_cloud_capabilities_from_cache(customization=settings.TEST_CUSTOMIZATION)
+    cache_mock.assert_called_with(settings.TEST_CUSTOMIZATION, 'cloud_capabilities')
     assert cache_capabilities == expected
 
 
@@ -40,8 +39,8 @@ def test_get_settings_from_cache(mocker, customization_config, settings_from_cac
     cache_mock = mocker.patch.object(utils, 'cloud_portal_customization_cache_async')
     cache_mock.return_value = settings_from_cache
 
-    settings_dict = utils.get_settings_from_cache(customization=settings.CUSTOMIZATION)
-    cache_mock.assert_called_with(settings.CUSTOMIZATION, 'config')
+    settings_dict = utils.get_settings_from_cache(customization=settings.TEST_CUSTOMIZATION)
+    cache_mock.assert_called_with(settings.TEST_CUSTOMIZATION, 'config')
     assert settings_dict == settings_from_cache
 
 
@@ -280,7 +279,7 @@ class TestDownloadBuild(DownloadsBase):
         assert response.data['resultCode'] == ErrorCodes.not_found.value
 
     def test_no_customization(self, settings, other_portal):
-        settings.CUSTOMIZATION = 'other'
+        settings.TEST_CUSTOMIZATION = 'other'
         response = self.make_request(build_number='4.2.0.32840')
         assert response.status_code == status.HTTP_200_OK
 

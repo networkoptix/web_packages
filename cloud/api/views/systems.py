@@ -370,14 +370,14 @@ async def connect(request):
     require_params(request, ('name',))
     if request.user.is_authenticated:
         data = await sync_to_async(cloud_api.System.bind, thread_sensitive=False)(
-            request, request.data['name'], customization=get_customization(request)
+            request, request.data['name'], customization=request.CUSTOMIZATION
         )
         return api_success(data)
 
     require_params(request, ('email', 'password'))
     with cloud_api.TempLogin(request.data['email'].lower(), request.data['password']) as credentials:
         data = await sync_to_async(cloud_api.System.bind, thread_sensitive=False)(
-            credentials.tokens, request.data['name'], customization=get_customization(request)
+            credentials.tokens, request.data['name'], customization=request.CUSTOMIZATION
         )
     return api_success(data)
 

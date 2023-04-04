@@ -3,6 +3,7 @@ from django.conf import settings
 from django.core.cache import caches
 from django.core.exceptions import ObjectDoesNotExist
 
+from cloud.customization_context import customization_ctx
 from cms.models import AssetCustomizationReview, AssetType, cloud_portal_customization_cache, Language, Customization
 from django.urls import reverse
 from meilisearch import Client
@@ -39,7 +40,7 @@ def get_meilisearch_client():
 
 def get_languages(customization=None, request=None):
     if not customization:
-        customization = get_customization(request)
+        customization = getattr(request, 'CUSTOMIZATION', customization_ctx.get())
 
     return cloud_portal_customization_cache(customization, 'default_language'), \
         cloud_portal_customization_cache(customization, 'languages')
@@ -47,7 +48,7 @@ def get_languages(customization=None, request=None):
 
 def detect_language_by_request(request):
     lang = None
-    default_language, languages = get_languages(get_customization(request))
+    default_language, languages = get_languages(request.CUSTOMIZATION)
 
     # 1. Try account value - top priority
     if request.user.is_authenticated:

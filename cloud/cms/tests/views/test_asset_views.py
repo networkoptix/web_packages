@@ -14,7 +14,7 @@ from conftest import get_asset_type
 
 def test_make_package_name(db):
     asset = baker.make(Asset, customizations=Customization.objects.filter(
-        name=settings.CUSTOMIZATION))
+        name=settings.TEST_CUSTOMIZATION))
 
     # Test non vms
     assert make_package_name(asset) == f"{asset.name}.zip"
@@ -22,7 +22,7 @@ def test_make_package_name(db):
     # Test vms
     asset.asset_type = AssetType.objects.filter(
         type=AssetType.ASSET_TYPES.vms).first()
-    assert make_package_name(asset) == f"{settings.CUSTOMIZATION}.zip"
+    assert make_package_name(asset) == f"{settings.TEST_CUSTOMIZATION}.zip"
 
 
 def test_get_context_and_language(mocker, db):
@@ -760,7 +760,9 @@ def test_handle_settings_from_json(mocker, arf, account_factory, db):
     mock_info_message.assert_called_once_with(
         request, 'Starting assets import')
     mock_async_import.assert_called_once_with(
-        args=[json_cache_id, user.id, True], queue='broadcast-notifications')
+        args=[json_cache_id, user.id, True],
+        kwargs={'customization': settings.TEST_CUSTOMIZATION},
+        queue='broadcast-notifications')
     assert PackagesCache()[json_cache_id] == settings_file
 
     # Test handles update_structure
@@ -1069,7 +1071,9 @@ def test_download_all_asset_structures(arf, mocker, account_factory, db):
     assert PACKAGES_CACHE[cache_key] == {
         "file": None, "is_ready": False, "task_id": task_id}
     mock_make_structure.assert_called_once_with(
-        kwargs={'asset_type': asset_type, 'user_id': mock_request.user.id}, queue='broadcast-notifications')
+        kwargs={'asset_type': asset_type, 'user_id': mock_request.user.id,
+                'customization': settings.TEST_CUSTOMIZATION},
+        queue='broadcast-notifications')
 
     # Test not ready
     res = download_all_asset_structures(mock_request, asset_type)
@@ -1173,7 +1177,7 @@ def test_download_package(mocker, arf, account_factory, db):
     mock_asset_has_required_data.assert_called_once_with(
         mock_asset, latest_review.version.id)
     mock_handle_cloud_portal_and_vms_package.assert_called_once_with(
-        mock_asset, False, None)
+        mock_asset, False, None, customization=settings.TEST_CUSTOMIZATION)
 
     # Test handle other packages
     mock_handle_cloud_portal_and_vms_package.return_value = False
@@ -1296,7 +1300,7 @@ class TestMenuAssetAutocomplete:
 
 def test_prepare_asset_info(mocker, arf, account_factory, db):
     mock_request = arf.get('')
-    mock_request.GET = {'customization': settings.CUSTOMIZATION}
+    mock_request.GET = {'customization': settings.TEST_CUSTOMIZATION}
     mock_request.user = account_factory()
     customization = Customization.objects.first()
     mock_asset = baker.make(Asset, customizations=[customization])
@@ -1329,7 +1333,7 @@ def test_prepare_asset_info(mocker, arf, account_factory, db):
 
 def test_get_asset_info(mocker, arf, account_factory, db):
     mock_request = arf.get('')
-    mock_request.GET = {'customization': settings.CUSTOMIZATION}
+    mock_request.GET = {'customization': settings.TEST_CUSTOMIZATION}
     mock_request.user = account_factory()
     asset_id = str(uuid4())
     mock_asset_info = str(uuid4())
@@ -1348,7 +1352,7 @@ def test_prepare_asset_info_for_menu(mocker, db):
     mocker.patch('cms.models.Menu.all_asset_ids', [mock_asset.id])
     mock_prepare_asset_info = mocker.patch(
         'cms.views.asset.prepare_asset_info', return_value=mock_asset_prepared)
-    mock_request.GET = {'customization': settings.CUSTOMIZATION}
+    mock_request.GET = {'customization': settings.TEST_CUSTOMIZATION}
 
     assert prepare_asset_info_for_menu(mock_request, mock_menu.id) == {
         mock_asset.id: mock_asset_prepared}
@@ -1356,7 +1360,7 @@ def test_prepare_asset_info_for_menu(mocker, db):
 
 def test_get_asset_info_by_menu(mocker, arf, account_factory, db):
     mock_request = arf.get('')
-    mock_request.GET = {'customization': settings.CUSTOMIZATION}
+    mock_request.GET = {'customization': settings.TEST_CUSTOMIZATION}
     mock_request.user = account_factory()
     menu_id = str(uuid4())
     mock_asset_info = str(uuid4())
@@ -1410,7 +1414,7 @@ class TestCustomClientViewSet:
     def test_get_queryset(self, mocker, get_instance, db):
         instance = get_instance()
         custom_client = baker.make(CustomClient, created_customization=Customization.objects.filter(
-            name=settings.CUSTOMIZATION).first())
+            name=settings.TEST_CUSTOMIZATION).first())
 
         # Test non-superuser no clients
         mocker.patch.object(instance.request.user, 'is_superuser', False)
@@ -1428,7 +1432,7 @@ class TestCustomClientViewSet:
             'cms.models.get_vms_asset', return_value=mock_base_vms)
         expected_meta_kwargs = {
             'created_by': instance.request.user,
-            'created_customization': Customization.objects.filter(name=settings.CUSTOMIZATION).first(),
+            'created_customization': Customization.objects.filter(name=settings.TEST_CUSTOMIZATION).first(),
         }
         expected_non_meta_kwargs = {
             **expected_meta_kwargs,
@@ -1439,7 +1443,7 @@ class TestCustomClientViewSet:
         instance.perform_create(mock_serializer)
         mock_serializer.save.assert_called_once_with(
             **expected_non_meta_kwargs)
-        mock_get_vms_asset.assert_called_once_with(customization=settings.CUSTOMIZATION)
+        mock_get_vms_asset.assert_called_once_with(customization=settings.TEST_CUSTOMIZATION)
 
         # Test meta
         mocker.patch.object(settings, 'META', True)
@@ -1483,9 +1487,12 @@ class TestCustomClientViewSet:
         assert PACKAGES_CACHE[mock_cache_key] == {
             "file": None, "is_ready": False, "task_id": mock_task_id}
         expected_args = [mock_custom_client.pk, mock_download_id]
-        mock_make_custom_client.assert_called_once_with(args=expected_args, queue='broadcast-notifications')
+        mock_make_custom_client.assert_called_once_with(
+            args=expected_args,
+            kwargs={'customization': settings.TEST_CUSTOMIZATION},
+            queue='broadcast-notifications')
         mock_get_custom_client_package_key.assert_called_once_with(
-            *expected_args)
+            *expected_args, )
 
     def test_get_download_package(self, mocker, get_instance, db):
         mock_cache_key, mock_pk, mock_cached_package = [

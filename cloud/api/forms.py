@@ -15,7 +15,6 @@ from api.models import Account
 from cms.models import (
     Customization, Asset, AssetType, UserGroupsToAssetPermissions, UserGroupsToAssetType)
 from notifications import notifications_api
-from util.helpers import get_customization
 
 User = get_user_model()
 assets_help_text = "Grants group permissions to the selected assets.<br>" \
@@ -125,14 +124,16 @@ class UserInviteFrom(forms.Form):
         self.user = kwargs.pop('user', None)
         self.request = request
         super(UserInviteFrom, self).__init__(*args, **kwargs)
-        self.fields['customization'].initial = get_customization(self.request)
+        self.fields['customization'].initial = request.CUSTOMIZATION
         if self.user:
-            self.fields['customization'].choices = [(customization, customization) for customization in self.user.customizations]
+            self.fields['customization'].choices = [
+                (customization, customization) for customization in self.user.customizations
+            ]
 
     @staticmethod
     def add_user(request, group=None):
         email = request.POST['email']
-        customization = get_customization(request)
+        customization = request.CUSTOMIZATION
         message = request.POST['message']
         user = User.objects.filter(email=email).first()
         if user:

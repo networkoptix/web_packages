@@ -13,8 +13,8 @@ from cms.models import (Context, Asset, AssetType, get_cloud_portal_asset,
                         AssetCustomizationReview, DataStructure)
 from cms.serializers import ArticleSerializer
 
-from util.base_cache import BaseCache
-from util.helpers import get_customization, get_language_object_from_request
+from util.base_cache import ArticleCache
+from util.helpers import get_language_object_from_request
 
 from typing import Union
 
@@ -38,13 +38,12 @@ ARTICLE_NOT_FOUND = 'Article not found'
 @api_view(("GET", ))
 @permission_classes((AllowAny, ))
 def get_article(request, url_param, **kwargs):
-    ARTICLE_CACHE = BaseCache(cache_key='article')
     state = request.query_params.get('state') or 'accepted'
     draft = state == 'draft'
     review = state == 'pending'
     article_id = request.query_params.get('id')
     language = get_language_object_from_request(request)
-    customization=get_customization(request)
+    customization = request.CUSTOMIZATION
     article: Union[Asset, None] = None
     version = None
     cached_article = None
@@ -53,7 +52,9 @@ def get_article(request, url_param, **kwargs):
         # If id is provided, then only search with id, url_parm is ignored to make sure correct article is found
         # Used primarily for showing previews correctly
         article = Asset.objects.filter(id=article_id).first()
-
+        article_cache = ArticleCache(language=language, state=state,
+                                     identifier=url_param, version=version,
+                                     request=request)
     else:
         article_review = AssetCustomizationReview.objects.filter(
             version__asset__datarecord__value=url_param, version__asset__datarecord__data_structure__name='url',
@@ -64,9 +65,10 @@ def get_article(request, url_param, **kwargs):
             # Check that that the asset's current url still matches
             article = article_review.version.asset
             version = article.version_id(customization)
-            ARTICLE_CACHE.lookup_key = BaseCache.generate_lookup_key(
-                language, state, url_param, version, request=request)
-            cached_article = ARTICLE_CACHE.get_cached_item()
+            article_cache = ArticleCache(language=language, state=state,
+                                         identifier=url_param, version=version,
+                                         request=request)
+            cached_article = article_cache.get_cached_item()
 
             if not cached_article:
                 url_ds = DataStructure.objects.get(
@@ -96,7 +98,9 @@ def get_article(request, url_param, **kwargs):
             _, datastructures = get_contexts_and_datastructures_of_asset_type(
                 AssetType.ASSET_TYPES.article)
             actual_values = find_actual_values(
-                datastructures, article, version, draft, review, name_filter=['title', 'body'])
+                datastructures, article, version, draft, review,
+                name_filter=['title', 'body'], request=request
+            )
             article_dict = map_ds_attribute_to_actual_value(
                 actual_values, 'name')
 
@@ -110,7 +114,7 @@ def get_article(request, url_param, **kwargs):
                 language, cloud_portal, global_contexts, cloud_portal.version_id(),
                 article_dict, global_contexts_dict=global_contexts_dict)
 
-            ARTICLE_CACHE.set_cached_item(article_dict)
+            article_cache.set_cached_item(article_dict)
 
             ser = ArticleSerializer(data=article_dict)
             ser.is_valid()

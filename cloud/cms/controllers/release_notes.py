@@ -4,10 +4,8 @@ from cms.controllers.asset_json import generate_asset_dictionary, get_contexts_a
     get_current_version, get_global_contexts, generate_context_dicts_with_actual_values,  \
     process_asset_global_contexts, get_state
 from cms.models import Asset,  AssetType, Context, get_cloud_portal_asset
-from util.base_cache import BaseCache
-from util.helpers import get_customization
+from util.base_cache import ReleaseNotesCache
 
-RELEASE_NOTES_CACHE = BaseCache(cache_key='release_notes')
 RELEASE_NOTES = AssetType.ASSET_TYPES.release_notes
 
 
@@ -16,7 +14,7 @@ def make_release_notes_json(assets, language, user=None,
     if not assets:
         return []
     contexts, data_structures = get_contexts_and_datastructures_of_asset_type(RELEASE_NOTES)
-    customization=get_customization(request)
+    customization = request.CUSTOMIZATION
     cloud_portal = get_cloud_portal_asset(customization=customization)
     state = get_state(show_pending, show_drafts)
     response_asset_json = []
@@ -27,12 +25,15 @@ def make_release_notes_json(assets, language, user=None,
 
         for asset in assets:
             has_version, current_version, lookup_key, review_id = get_current_version(
-                language, state, versions, asset, show_pending, show_drafts)
+                language, state, versions, asset, show_pending, show_drafts, customization=customization)
             if not has_version:
                 continue
 
-            RELEASE_NOTES_CACHE.lookup_key = lookup_key
-            asset_dict = RELEASE_NOTES_CACHE.get_cached_item() or {}
+            release_notes_cache = ReleaseNotesCache(
+                language=language, state=state, identifier=asset.id,
+                version=versions[asset.id], customization_name=customization
+            )
+            asset_dict = release_notes_cache.get_cached_item() or {}
 
             if not asset_dict or asset_dict['version'] != current_version or show_drafts:
                 for context, context_dict in generate_context_dicts_with_actual_values(show_pending, show_drafts,
@@ -53,7 +54,7 @@ def make_release_notes_json(assets, language, user=None,
                                                 review_id, include_last_modified=True)
                 }
                 if not show_drafts:
-                    RELEASE_NOTES_CACHE.set_cached_item(asset_dict)
+                    release_notes_cache.set_cached_item(asset_dict)
 
             # Create a copy to remove the version key.
             asset_dict_copy = asset_dict.copy()

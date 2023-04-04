@@ -42,10 +42,10 @@ class TestGenerateDocJSON:
         '''
         return generate_doc_json(self.docs, self.language, **kwargs)
 
-    def test_with_defaults(self):
-        docs = self.with_arguments()
+    def test_with_defaults(self, arf):
+        docs = self.with_arguments(request=arf.get('/'))
         assert len(docs) == self.accepted_count
 
-    def test_with_review(self):
-        docs = self.with_arguments(review=True)
+    def test_with_review(self, arf):
+        docs = self.with_arguments(review=True, request=arf.get('/'))
         assert len(docs) == self.pending_count + self.accepted_count

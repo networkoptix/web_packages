@@ -30,6 +30,7 @@ class ErrorCodes(Enum):
 
     # Portal critical errors (unexpected)
     portal_critical_error = 'portalError'
+    no_customization_given = 'noCustomizationGiven'
 
     # Validation errors
     not_authorized = 'notAuthorized'

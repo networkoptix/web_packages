@@ -13,7 +13,7 @@ import uuid
 from contextlib import suppress
 from itertools import chain
 from functools import reduce
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import as_completed
 from datetime import datetime, timedelta
 from distutils.util import strtobool
 from uuid import uuid4
@@ -23,7 +23,9 @@ from django.core.validators import RegexValidator
 
 from django.db.models.aggregates import Count
 
-from util.base_cache import BaseCache
+from cloud.customization_context import customization_ctx, ContextExecutor
+from cloud.helpers.exceptions import ErrorCodes, APIInternalException
+from util.base_cache import BaseCache, ReadOnlyAPICache, BaseCacheV2
 
 from redis.exceptions import ConnectionError
 from django.apps import apps
@@ -53,37 +55,43 @@ from django.template.defaultfilters import truncatechars
 from cloud.storage_backend import MediaStorage
 
 INITIALIZATION_TASK_TIMEOUT = 60 * 5
-INITIALIZATION_TASK_KEY = f'initialize-{settings.CUSTOMIZATION}-menus'
 
-class MenuCache(BaseCache):
-    def __init__(self):
-        super().__init__(cache_key='menus')
+
+class MenuCache(BaseCacheV2):
+    def __init__(self, **kwargs):
+        super().__init__(cache_key='menus', lookup_key='', **kwargs)
+
+    def get_init_task_key(self):
+        return f'initialize-{self.customization_name}-menus'
+
+    @property
+    def init_task_key(self):
+        return self.get_init_task_key()
 
     def __getitem__(self, key):
         return super().__getitem__(key.lower())
 
     def __setitem__(self, key, menu):
-        from cms.controllers.documentation import DOC_CACHE
-        DOC_CACHE.clear_cache()
+        from cms.controllers.documentation import DocumentCache
+        DocumentCache(customization_name=self.customization_name).clear_cache()
         super().__setitem__(key.lower(), menu)
 
     def clear_cache(self, immediate = False):
-        from cms.controllers.documentation import DOC_CACHE
+        from cms.controllers.documentation import DocumentCache
         from cms.tasks import async_generate_menus
         from notifications.celery import app
         if immediate:
             super().clear_cache()
         elif not settings.TESTING:
-            running_task = cache.get(INITIALIZATION_TASK_KEY)
+            # Possible race condition.
+            running_task = cache.get(self.init_task_key)
             if running_task:
                 app.control.revoke(running_task, terminate=True, signal='SIGUSR1')
-            task = async_generate_menus.apply_async(args=[settings.CUSTOMIZATION, self.cache_key], queue='broadcast-notifications')
-            cache.set(INITIALIZATION_TASK_KEY, str(task), INITIALIZATION_TASK_TIMEOUT)
-            DOC_CACHE.clear_cache()
+            task = async_generate_menus.apply_async(args=[self.customization_name, self._cache_key], queue='broadcast-notifications')
+            cache.set(self.init_task_key, str(task), INITIALIZATION_TASK_TIMEOUT)
+            DocumentCache(customization_name=self.customization_name).clear_cache()
 
 
-READONLY_API_CACHE = BaseCache(cache_key='readonly_apis')
-MENU_CACHE = MenuCache()
 PORTAL_MANAGER_PERMISSIONS = [
     'access_customization',
     'change_account',
@@ -184,8 +192,9 @@ def rename_permission_group(group, asset):
 
 
 def get_cloud_portal_asset(*, customization=None, request=None, no_create=False):
-    from util.helpers import get_customization
-    customization = customization or get_customization(request)
+    # Todo. Function can be called from out of Asset.from_dict without request
+    #  or customization. As temporary solution settings.CUSTOMIZATION is left.
+    customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
     if asset := Asset.objects.filter(customizations__name__in=[customization], asset_type__name="", asset_type__type=AssetType.ASSET_TYPES.cloud_portal).first():
         return asset
 
@@ -204,8 +213,8 @@ def get_cloud_portal_asset(*, customization=None, request=None, no_create=False)
 
 
 def get_vms_asset(*, customization=None, request=None):
-    from util.helpers import get_customization
-    customization = customization or get_customization(request)
+
+    customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
     return Asset.objects.filter(
         customizations__name__in=[customization], asset_type__name="",
         asset_type__type=AssetType.ASSET_TYPES.vms
@@ -235,7 +244,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
 async def cloud_portal_customization_cache_async(customization_name, value=None, force=False):
     from cms.controllers.special_structures import SpecialStructures
     customization_cache = caches['customization']
-    
+
     async def release_lock(key, val):
         if (await customization_cache.aget(key)) == val:
             await customization_cache.adelete(key)
@@ -370,8 +379,10 @@ async def cloud_portal_customization_cache_async(customization_name, value=None,
 
 
 def check_user_menu_permissions(nodes, user, overrides=None, *, customization=None, request=None):
-    from util.helpers import get_customization
-    customization = customization or get_customization(request)
+    if not customization and not request and not customization_ctx.get():
+        raise APIInternalException('Customization must be given.',
+                                   error_code=ErrorCodes.no_customization_given)
+    customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
     for i in reversed(range(len(nodes))):
         node = nodes[i]
         condition = node.pop('condition', None)
@@ -400,8 +411,7 @@ def check_user_menu_permissions(nodes, user, overrides=None, *, customization=No
             check_user_menu_permissions(node.get('nodes', []), user, overrides, customization=customization)
 
 def feature_flag_is_active(feature_flag, user, overrides=None, *, customization=None, request=None):
-    from util.helpers import get_customization
-    customization = customization or get_customization(request)
+    customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
     flag = getattr(FLAGS, feature_flag, None)
     switch = getattr(SWITCHES, feature_flag, None)
     return flag and flag_is_active_for_user(user, flag, overrides, customization=customization) or switch and switch_is_active(switch)
@@ -409,7 +419,8 @@ def feature_flag_is_active(feature_flag, user, overrides=None, *, customization=
 
 def cached_doc_menu_map(customization_name, refresh=False):
     cache_key = f'{customization_name}-doc-dir'
-    menu_map = MENU_CACHE[cache_key]
+    menu_cache = MenuCache(customization_name=customization_name)
+    menu_map = menu_cache[cache_key]
     if refresh or not menu_map:
         menu_map = {}
         for menu in Menu.objects.filter(enabled=True, type__in=[Menu.MENU_TYPES.docs_struct, Menu.MENU_TYPES.docs_knowledgebase]):
@@ -418,28 +429,28 @@ def cached_doc_menu_map(customization_name, refresh=False):
             if menu.url not in menu_map[menu.base_url]:
                 menu_map[menu.base_url][menu.url] = menu.name
 
-        MENU_CACHE[cache_key] = menu_map
+        menu_cache[cache_key] = menu_map
     return menu_map
 
 
 def get_cached_menu(customization_name, name=None, user=None, menu_type=None, request=None):
     overrides = {header: value for header, value in request.META.items() if header.startswith('HTTP_FEATURE_')} if request else {}
-
-    menu_customization = MENU_CACHE[customization_name]
+    menu_cache = MenuCache(customization_name=customization_name)
+    menu_customization = menu_cache[customization_name]
     if menu_customization is None:
         menus_to_generate = [*Menu.REQUIRED_MENUS, name] if name else Menu.REQUIRED_MENUS
         menu_customization = Menu.generate_menus(customization=customization_name, menu_names=menus_to_generate)
-        MENU_CACHE[customization_name] = menu_customization
+        menu_cache[customization_name] = menu_customization
 
     elif name and not menu_customization.get(name.lower(), False):
         if generated := Menu.generate_menus(customization=customization_name, menu_names=[name]):
-            MENU_CACHE[customization_name] = menu_customization = {**menu_customization, **generated}
+            menu_cache[customization_name] = menu_customization = {**menu_customization, **generated}
 
     for menu_name, menu in menu_customization.items():
         if not menu:
             generated = Menu.generate_menus(customization=customization_name, menu_names=[menu_name])
-            MENU_CACHE[customization_name] = menu_customization = {**menu_customization, **generated}
-            menu = MENU_CACHE[customization_name][menu_name]
+            menu_cache[customization_name] = menu_customization = {**menu_customization, **generated}
+            menu = menu_cache[customization_name][menu_name]
         check_user_menu_permissions(menu['nodes'], user, overrides, customization=customization_name, request=request)
 
     if menu_type:
@@ -718,14 +729,14 @@ class Asset(models.Model):
     @property
     def can_preview_on_portal(self):
         return self.asset_type.can_preview and \
-            self.customizations.filter(name=settings.CUSTOMIZATION).exists()
+            self.customizations.filter(name=customization_ctx.get()).exists()
 
     @property
     def default_language(self):
         if len(self.customizations.all()) == 1:
             return self.customizations.first().default_language
 
-        return Customization.objects.get(name=settings.CUSTOMIZATION).default_language
+        return Customization.objects.get(name=customization_ctx.get()).default_language
 
     @property
     def languages_list(self):
@@ -734,7 +745,7 @@ class Asset(models.Model):
             for customization in self.customizations.all():
                 lang_list.extend(customization.languages_list)
             return list(set(lang_list))
-        return Customization.objects.get(name=settings.CUSTOMIZATION).languages_list
+        return Customization.objects.get(name=customization_ctx.get()).languages_list
 
     @property
     def languages(self):
@@ -742,7 +753,7 @@ class Asset(models.Model):
         if customizations:
             return Language.objects.filter(customization__in=customizations)
         else:
-            return Customization.objects.get(name=settings.CUSTOMIZATION).languages.all()
+            return Customization.objects.get(name=customization_ctx.get()).languages.all()
 
     @property
     def asset_root(self):
@@ -830,7 +841,9 @@ class Asset(models.Model):
     def is_asset_type(self, asset_type):
         return self.asset_type.type == asset_type
 
-    def version_id(self, customization=settings.CUSTOMIZATION):
+    def version_id(self, customization=None):
+        if customization is None:
+            customization = customization_ctx.get()
         if self.asset_type and self.asset_type.single_customization:
             actual_customization = self.customizations.first()
             if actual_customization:
@@ -845,8 +858,7 @@ class Asset(models.Model):
 
     @classmethod
     def version_ids(cls, assets, customization=None, request=None):
-        from util.helpers import get_customization
-        customization = customization or get_customization(request)
+        customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
         asset_ids = {asset.id for asset in assets}
         version_dict = {}
         accepted_reviews = AssetCustomizationReview.objects.filter(
@@ -1021,14 +1033,14 @@ class Context(models.Model):
                     None)
 
     def get_state(self, asset, *, customization=None, request=None):
-        from util.helpers import get_customization
+
         # (State, order) In order of importance. Only update a state if the new state is more important
         INCOMPLETE = ('Incomplete', 0)
         DRAFT = ('Draft', 1)
         IN_REVIEW = ('In review', 2)
         REJECTED = ('Rejected', 3)
         PUBLISHED = ('Published', 4)
-        customization = customization or get_customization(request)
+        customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
 
         if asset.asset_type.single_customization and asset.customizations.exists():
             customization = asset.customizations.first().name
@@ -1045,7 +1057,7 @@ class Context(models.Model):
         else:
             state = DRAFT
 
-        for datastructure in self.datastructure_set.all():
+        for datastructure in (ds := self.datastructure_set.all()):
             records = datastructure.datarecord_set.filter(asset=asset)
             last_record = records.last()
             last_record_value = last_record.cast_value if last_record else None
@@ -1065,7 +1077,7 @@ class Context(models.Model):
                 if last_record.version:
                     if state[1] > IN_REVIEW[1]:
                         review = last_record.version.assetcustomizationreview_set.filter(
-                            customization__name=settings.CUSTOMIZATION).first()
+                            customization__name=customization).first()
                         if review:
                             if review.state in [AssetCustomizationReview.REVIEW_STATES.pending,
                                                 AssetCustomizationReview.REVIEW_STATES.blocked]:
@@ -1200,7 +1212,7 @@ class DataStructure(models.Model):
         # try to get translated content
         if self.translatable:
             default_lang = Customization.objects.get(
-                name=settings.CUSTOMIZATION).default_language
+                name=customization_ctx.get()).default_language
             content_record_language = content_record.filter(language=language)
             content_record_default = content_record.filter(
                 language=default_lang)
@@ -1343,7 +1355,7 @@ class DataStructure(models.Model):
         translatable_ds_set = {ds for ds in data_structures if ds.translatable}
         nontranslatable_ds_set = data_structure_set - translatable_ds_set
         default_lang = Customization.objects.get(
-            name=settings.CUSTOMIZATION).default_language
+            name=customization_ctx.get()).default_language
         fished_records = {}
 
         # Get translatable records
@@ -1525,7 +1537,7 @@ class UserGroupsToAssetPermissions(models.Model):
         return UserGroupsToAssetPermissions.check_permission(user, asset, "cms.edit_content")
 
     @staticmethod
-    def check_customization_permission(user, customization=settings.CUSTOMIZATION, permission=None, no_create=True):
+    def check_customization_permission(user, customization, permission=None, no_create=True):
         if not (cloud_portal := get_cloud_portal_asset(customization=customization, no_create=no_create)):
             return False
 
@@ -1562,8 +1574,7 @@ class UserGroupsToAssetPermissions(models.Model):
 
     @staticmethod
     def check_customization_publish(user, *, customization=None, request=None):
-        from util.helpers import get_customization
-        customization = customization or get_customization(request)
+        customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
         return UserGroupsToAssetPermissions.\
             check_customization_permission(
                 user, customization, "cms.publish_version")
@@ -1818,7 +1829,7 @@ class AssetCustomizationReview(models.Model):
         can_preview = self.version.asset.asset_type.can_preview
         in_review = self.state in [
             self.REVIEW_STATES.pending, self.REVIEW_STATES.blocked]
-        is_current_customization = self.customization.name == settings.CUSTOMIZATION
+        is_current_customization = self.customization.name == customization_ctx.get()
         return can_preview and in_review and is_current_customization
 
     @property
@@ -2068,8 +2079,7 @@ class ContributorAgreement(models.Model):
 
     @staticmethod
     def get_current(*, customization=None, request=None):
-        from util.helpers import get_customization
-        customization = customization or get_customization(request)
+        customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
         return AssetCustomizationReview.objects.filter(
             version__asset__asset_type__type=AssetType.ASSET_TYPES.agreement,
             state=AssetCustomizationReview.REVIEW_STATES.accepted, customization__name=customization
@@ -2077,8 +2087,7 @@ class ContributorAgreement(models.Model):
 
     def is_valid(self, *, customization=None, request=None):
         if not customization:
-            from util.helpers import get_customization
-            customization = self.accepted_agreement.customization or get_customization(request)
+            customization = self.accepted_agreement.customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
         review = self.get_current(customization=customization)
         return review and self.accepted_agreement == review
 
@@ -2133,19 +2142,21 @@ class Menu(models.Model):
         super().save(*args, **kwargs)
 
     def clear_menu_from_cache_for_all_customizations(self):
+        # !!! Called on Menu.save(). customization contextvar can be missing
+        menu_cache = MenuCache()
         for customization in Customization.objects.all().values_list('name', flat=True):
                 doc_cache_key = f'{customization}-doc-dir'
                 menu_name = self.name.lower()
-                if cache := MENU_CACHE[customization]:
+                if cache := menu_cache[customization]:
                     new_cache = copy.deepcopy(cache)
                     if new_cache.get(menu_name):
                         new_cache[menu_name] = None
-                    MENU_CACHE[customization] = new_cache
-                if cache := MENU_CACHE[doc_cache_key]:
+                    menu_cache[customization] = new_cache
+                if cache := menu_cache[doc_cache_key]:
                     new_cache = copy.deepcopy(cache)
                     if new_cache.get(menu_name):
                         new_cache[menu_name] = None
-                    MENU_CACHE[doc_cache_key] = new_cache
+                    menu_cache[doc_cache_key] = new_cache
 
 
     def preview_url(self, state='draft'):
@@ -2224,7 +2235,7 @@ class Menu(models.Model):
 
         menu_customization_structure = {}
 
-        with ThreadPoolExecutor(max_workers=4) as executer:
+        with ContextExecutor(max_workers=4) as executer:
             futures = [executer.submit(cls.generate_menus_for_customization,
                                        menus, customization_instance) for customization_instance in customizations]
 
@@ -2275,16 +2286,19 @@ class Menu(models.Model):
         return (*prefetches, *child_prefetches)
 
     @classmethod
-    def cache_all_customizations(cls, **kwargs):
+    def cache_all_customizations(cls, customization=None, **kwargs):
         structures = cls.generate_menus()
+        # !!! customization contextvar can be missing
+        menu_cache = MenuCache(customization_name=customization)
         for customization, structure in structures.items():
-            MENU_CACHE[customization] = structure
+            menu_cache.__setitem__(customization, structure)
 
     @staticmethod
     def clear_all_customizations_cache():
+        menu_cache = MenuCache()
         for customization in Customization.objects.all().values_list('name', flat=True):
             doc_cache_key = f'{customization}-doc-dir'
-            MENU_CACHE[customization] = MENU_CACHE[doc_cache_key] = None
+            menu_cache[customization] = menu_cache[doc_cache_key] = None
 
     def to_dict(self):
         assets = set()
@@ -2684,7 +2698,8 @@ class MenuNode(models.Model):
         if customization:
             for node in cls.objects.filter(is_global=True):
                 node.enabled.add(customization)
-            Menu.cache_all_customizations()
+            # Assuming that menus must be generate for this customization, not one from a request
+            Menu.cache_all_customizations(customization=customization.name)
 
     @property
     def enabled_customizations(self):
@@ -3290,8 +3305,7 @@ class ReadOnlyAPI(models.Model):
     def save(self, *args, **kwargs):
         if self.id:
             # Clear cache
-            READONLY_API_CACHE.lookup_key = "readonlyapi-" + str(self.id)
-            READONLY_API_CACHE.set_cached_item({})
+            ReadOnlyAPICache(api_id=self.id).set_cached_item({})
 
         super().save(*args, **kwargs)
 
@@ -3369,8 +3383,7 @@ class ReadOnlyAPIFile(models.Model):
 
     def save(self, *args, **kwargs):
         # Clear cache
-        READONLY_API_CACHE.lookup_key = "readonlyapi-" + str(self.readonly_api.id)
-        READONLY_API_CACHE.set_cached_item({})
+        ReadOnlyAPICache(api_id=self.readonly_api.id).set_cached_item({})
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -3422,8 +3435,8 @@ class Flag(AbstractUserFlag):
 
 
     def is_active_for_user(self, user, overrides=None, *, customization=None, request=None):
-        from util.helpers import get_customization
-        customization = customization or get_customization(request)
+
+        customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
         if override := (overrides or {}).get(f'HTTP_FEATURE_{self.get_json_key()}'.upper()):
             with suppress(ValueError):
                 return bool(int(override))

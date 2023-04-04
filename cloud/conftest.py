@@ -10,6 +10,7 @@ import model_bakery
 from model_bakery import baker
 
 from api.tests.utils import NxTestClient, NxAPIClient, MockCache
+from cloud.customization_context import customization_ctx
 from cloud.utils import is_async
 from cms.controllers.structure import read_structure_json
 from cms.models import *
@@ -19,6 +20,36 @@ from rest_framework.test import APIRequestFactory
 from rest_framework.test import APIClient
 from django_mock_queries.query import MockSet
 
+
+class CloudRequestFactory(APIRequestFactory):
+    """
+    Custom Request Factory with changing CUSTOMIZATION on the fly.
+
+    Examples:
+
+    req = arf.get('/', customization_name="customization")
+    req.CUSTOMIZATION == "customization" # True
+
+    req = arf.post('/')
+    req.CUSTOMIZATION == "default" # True
+    """
+
+    def request(self, customization_name=settings.TEST_CUSTOMIZATION,
+                set_context_var=True, **kwargs):
+        """
+        Construct request object with CUSTOMIZATION filled.
+
+        :param customization_name: customization name string default settings.TEST_CUSTOMIZATION
+        :param set_context_var: If set to True then set context variable customization_ctx.
+        :param kwargs: rest_framework.test.APIRequestFactory.request() keyword arguments
+        :returns: request object
+
+        """
+        request = super().request(CUSTOMIZATION=customization_name, **kwargs)
+        request.CUSTOMIZATION = customization_name
+        if set_context_var:
+            customization_ctx.set(customization_name)
+        return request
 
 class BaseModelTest:
     @pytest.fixture()
@@ -70,7 +101,7 @@ def set_settings(settings):
 
 @pytest.fixture()
 def arf():
-    return APIRequestFactory()
+    return CloudRequestFactory()
 
 
 @pytest.fixture()
@@ -184,7 +215,7 @@ def asset_factory():
             Asset: With asset type and name from asset_type and name kwargs
         """
         language = get_language(code=lang_code)
-        customization = get_customization(customization_name)
+        customization = get_test_customization(customization_name)
         customization.languages.add(language)
         accepted = state == AssetCustomizationReview.REVIEW_STATES.accepted
         create_asset = baker.make if write_db else baker.prepare
@@ -255,10 +286,11 @@ def get_asset_type(type=AssetType.ASSET_TYPES.integration):
 
 @pytest.fixture(scope="session")
 def customization_factory():
-    return get_customization
+    return get_test_customization
 
 
-def get_customization(name='default'):
+# Todo. Can we change default value to settings.TEST_CUSTOMIZATION?
+def get_test_customization(name='default'):
     """Gets existing Customization or creates new.
 
     Args:

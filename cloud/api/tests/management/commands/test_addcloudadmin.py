@@ -16,6 +16,7 @@ class TestAddCloudAdmin:
             call('email', type=str), call('password', type=str)])
 
     def test_handle(self, mocker, db):
+        customization = 'default'
         email = f'{uuid4()}@{uuid4()}.com'
         password = str(uuid4())
         environ = {
@@ -55,7 +56,8 @@ class TestAddCloudAdmin:
         instance.handle(
             email=email, password=password)
         mock_register.assert_called_once_with(
-            email, password, first, last)
+            email, password, first, last,
+            customization=customization)
         mock_activate.assert_called_once_with(code)
         expected_calls = (
             ('SUCCESS', f'Successfully added user with {email} for email.'),

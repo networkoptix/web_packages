@@ -47,7 +47,7 @@ class TestAssetFilters:
         """Check that assets are filtered by current customization by default"""
         response = self.client.get(f'{self.asset_list_path}')
         assert list(response.context_data['cl'].queryset) == \
-               list(Asset.objects.filter(customizations__name=settings.CUSTOMIZATION).order_by('-pk'))
+               list(Asset.objects.filter(customizations__name=settings.TEST_CUSTOMIZATION).order_by('-pk'))
 
     def test_customizations_all(self):
         """Check all customizations filter"""

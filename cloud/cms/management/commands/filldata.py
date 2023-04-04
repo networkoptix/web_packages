@@ -4,10 +4,10 @@ import time
 from django.core.management.base import BaseCommand
 from django.conf import settings
 
+from cloud.customization_context import customization_ctx
 from cloud.debug import timer
 from cms.controllers import filldata, structure
 from cms.models import Customization, Language
-from util.helpers import get_customization
 
 logger = logging.getLogger(__name__)
 
@@ -16,8 +16,9 @@ class Command(BaseCommand):
     help = 'Fills initial data from CMS database to static files'
 
     def add_arguments(self, parser):
+        # Customization name must be required for this argument.
         parser.add_argument(
-            '--customization', nargs='?', default=get_customization(), type=str)
+            '--customization', default='default', nargs='?', type=str)
         parser.add_argument(
             '--preview', nargs='?', default=False, type=bool)
 
@@ -31,6 +32,8 @@ class Command(BaseCommand):
 
         customization = Customization.objects.filter(
             name=customization_option).first()
+        if not customization_ctx.get():
+            customization_ctx.set(customization_option)
 
         if not customization:
             logger.warning(f'Customization {customization_option} was automatically generated.'

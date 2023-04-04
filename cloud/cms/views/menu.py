@@ -11,32 +11,33 @@ from django.conf import settings
 from dal import autocomplete
 from rest_framework.decorators import api_view, permission_classes
 
-from cms.models import MENU_CACHE, Customization, Menu, MenuNode, ZendeskSyncLog
+from cms.models import Customization, Menu, MenuNode, ZendeskSyncLog, MenuCache
 from cms.permissions import IsSuperuser
-from util.helpers import get_customization
+
 
 
 @api_view(("GET",))
 @permission_classes((AllowAny,))
 def get_menu(request, name):
-    customization = get_customization(request)
+    customization = request.CUSTOMIZATION
+    menu_cache = MenuCache(customization_name=customization)
     cached = request.query_params.get('cached')
-    current_version = MENU_CACHE[(f'{customization}_key')]
+    current_version = menu_cache[(f'{customization}_key')]
 
     if not cached or not current_version or cached != current_version:
         if not current_version:
             current_version = str(uuid4())
-            MENU_CACHE[(f'{customization}_key')] = current_version
+            menu_cache[(f'{customization}_key')] = current_version
         return redirect(f'{reverse("get_menu", kwargs={"name": name})}?cached={current_version}')
 
     name = name.lower()
-    cached_menus = MENU_CACHE[customization] or {}
+    cached_menus = menu_cache[customization] or {}
     menu  = cached_menus.get(name, None)
     if not menu:
         menu = Menu.generate_menu(menu_name=name, customization=customization)
         if menu:
             cached_menus = cached_menus or Menu.generate_menus(customization=customization)
-            MENU_CACHE[customization] = {**cached_menus, name: menu}
+            menu_cache[customization] = {**cached_menus, name: menu}
         else:
             raise APINotFoundException(f'Menu {name} not found')
 

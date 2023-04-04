@@ -108,7 +108,8 @@ class TestSystemAPI:
     def setup(self, mocker):
         user, password, d1_key, d1_val, d2_key, d2_val, system_id, slave_system_id, system_name, headers = generate_args(
             10)
-        self.request = mocker.MagicMock(spec=Request, POST={}, META={}, data={})
+        self.request = mocker.MagicMock(spec=Request, POST={}, META={}, data={},
+                                        CUSTOMIZATION=settings.TEST_CUSTOMIZATION)
         self.user = user
         self.password = password
         self.auth = {'email': user, 'password': password}
@@ -152,7 +153,7 @@ class TestSystemAPI:
             self.request, self.user, self.password, headers=self.headers)
         cloud_api_get_mock.assert_called_with(
             System.get_request_url(),
-            params={'customization': settings.CUSTOMIZATION},
+            params={'customization': settings.TEST_CUSTOMIZATION},
             auth=self.auth,
             headers=self.headers
         )
@@ -248,7 +249,7 @@ class TestSystemAPI:
         cloud_api_post_mock.assert_called_with(
             System.get_request_url('bind'),
             json={'name': self.system_name,
-                  'customization': settings.CUSTOMIZATION},
+                  'customization': settings.TEST_CUSTOMIZATION},
             headers=self.headers
         )
         assert bind.json() == self.sample_data

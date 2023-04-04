@@ -232,7 +232,7 @@ def test_get_meta(arf, mocker, db):
 def test_check_redirect(account_factory, asset_factory, mocker, db):
     expected_url, expected_base_url = [str(uuid4()) for _ in range(2)]
     customization = Customization.objects.filter(
-        name=settings.CUSTOMIZATION).first()
+        name=settings.TEST_CUSTOMIZATION).first()
     menu = baker.make(Menu, url=expected_url, base_url=expected_base_url)
     doc, doc_no_kb = asset_factory(asset_type=AssetType.ASSET_TYPES.documentation,
                                    qty=2, account=account_factory())
@@ -242,7 +242,9 @@ def test_check_redirect(account_factory, asset_factory, mocker, db):
     latest_route = f'/docs/{expected_base_url}/{expected_url}/{doc.urlify()}'
 
     def mock_request_factory(path):
-        return mocker.MagicMock(path=path, POST={}, META={}, data={}, spec=Request)
+        return mocker.MagicMock(
+            path=path, POST={}, META={}, CUSTOMIZATION=settings.TEST_CUSTOMIZATION, data={}, spec=Request
+        )
 
     # Don't redirect if latest route
     assert not check_redirect(mock_request_factory(latest_route))

@@ -10,7 +10,6 @@ from cloud.controllers import cloud_api
 from cloud.helpers.exceptions import (
     APIInternalException, APINotFoundException, handle_exceptions, api_success, require_params)
 from cms.models import cloud_portal_customization_cache
-from util.helpers import get_customization
 
 
 # Swagger params
@@ -37,7 +36,7 @@ systemId__body = openapi.Schema(type=openapi.TYPE_STRING)
 @permission_classes((IsAuthenticated, ))
 def create(request):
     require_params(request, ['systemId'])
-    storage_size = cloud_portal_customization_cache(get_customization(request))\
+    storage_size = cloud_portal_customization_cache(request.CUSTOMIZATION)\
         .get('config', {}).get('cloud_storage_size', 0)
 
     if int(storage_size) < 1:
@@ -103,7 +102,7 @@ def usage_stats(request):
         raise APINotFoundException(
             {'message': 'System does not cloud storage.'})
 
-    storage_size = cloud_portal_customization_cache(get_customization(request)) \
+    storage_size = cloud_portal_customization_cache(request.CUSTOMIZATION) \
         .get('config', {}).get('cloud_storage_size', 0)
 
     aggregated_storage_info = {

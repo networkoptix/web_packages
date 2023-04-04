@@ -5,6 +5,7 @@ from waffle import get_waffle_flag_model
 
 from rest_framework.request import Request
 
+from cloud.customization_context import customization_ctx
 
 class_builtins = object.__dict__.keys()
 
@@ -137,8 +138,7 @@ def get_feature_flag_error(flag, user):
 
 
 def flag_is_active_for_user(user, flag_name, overrides=None, *, customization=None, request=None):
-    from util.helpers import get_customization
-    customization = customization or get_customization(request)
+    customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
     flag = get_waffle_flag_model().get(flag_name)
     return flag.is_active_for_user(user, overrides, customization=customization) or flag.everyone
 

@@ -38,7 +38,6 @@ from api.views.account_serializers import (
     AccountSerializer, CreateAccountSerializer, AccountSecuritySerializer, AccountUpdateSerializer)
 from cloud.drf_async import async_api_view as api_view, AsyncAPIView as APIView
 from cloud.utils import get_authenticated_session_cookie_age, method_decorator_async
-from util.helpers import get_customization
 
 logger = logging.getLogger(__name__)
 
@@ -132,7 +131,7 @@ async def register(request):
 
     account = await models.Account.objects.filter(email=data['email']).afirst()
     if not account:
-        serializer = CreateAccountSerializer(data=data)
+        serializer = CreateAccountSerializer(data=data, context={'request': request})
         if not serializer.is_valid():
             raise APIRequestException('Wrong form parameters', ErrorCodes.wrong_parameters,
                                       error_data=serializer.errors)
@@ -143,7 +142,7 @@ async def register(request):
                                 ErrorCodes.account_exists)
     else:
         await models.AccountManager().register_cloud_invite_user(
-            data['email'], data['password'], data)
+            data['email'], data['password'], data, request)
 
     logger.debug('/api/account/register checking if activated')
     activated = models.AccountManager().check_if_activated(
@@ -656,7 +655,7 @@ async def check_account_in_portal(request):
                 email=email,
                 first_name='',
                 last_name='',
-                customization=get_customization(request),
+                customization=request.CUSTOMIZATION,
                 is_active=is_active
             )
             if account.is_active:

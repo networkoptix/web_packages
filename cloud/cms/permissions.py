@@ -2,7 +2,6 @@ from django.conf import settings
 from rest_framework import permissions
 
 from cms import models
-from util.helpers import get_customization
 
 
 class IsSuperuser(permissions.BasePermission):
@@ -12,7 +11,7 @@ class IsSuperuser(permissions.BasePermission):
 
 class CanViewDevelopers(permissions.BasePermission):
     def has_permission(self, request, view):
-        customization = get_customization(request)
+        customization = request.CUSTOMIZATION
         config_cache = models.cloud_portal_customization_cache(
             customization, 'config')
         if config_cache.get('developers_enabled', False):

@@ -44,9 +44,8 @@ class CreateAccountSerializer(serializers.Serializer):  # ModelSerializer
         django.core.validators.validate_email(value)
         return value
 
-    @staticmethod
-    def create(validated_data):
-        return Account.objects.create_user(**validated_data)
+    def create(self, validated_data):
+        return Account.objects.create_user(request=self.context['request'], **validated_data)
 
 class CdbAccountMixin(serializers.Serializer):
     account2faEnabled = serializers.BooleanField(required=False)

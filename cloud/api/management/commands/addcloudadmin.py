@@ -44,10 +44,12 @@ class Command(BaseCommand):
         account.is_superuser = True
         account.is_staff = True
         account.is_active = True
+        account.customization = 'default'
         account.save()
 
         try:
-            cloud_api.Account.register(email, password, first, last)
+            cloud_api.Account.register(email, password, first, last,
+                                       customization='default')
             self.stdout.write(self.style.SUCCESS(
                 f"Successfully created user with {email} for email."))
         except APINotFoundException:

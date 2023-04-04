@@ -17,7 +17,7 @@ from cms.models import *
 from cms.controllers.modify_db import are_asset_datarecords_unique, GUID_REGEXP
 from cms.controllers.special_structures import SpecialStructures
 from cms.widgets import BootstrapMultiSelect
-from util.helpers import get_customization
+
 
 BYTES_TO_MEGABYTES = 1048576.0
 GUID_DESCRIPTION = "<br>GUID format is '{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}' using hexadecimal " \
@@ -57,13 +57,14 @@ def get_languages_list(*, customization=None, request=None):
             is_default = " - default"
         return language[0], f"{language[0]} - {language[1]}{is_default}"
 
-    customization = Customization.objects.get(name=customization or get_customization(request))
+    customization = Customization.objects.get(name=customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get()))
     default_language_code = customization.default_language.code
     return map(modify_default_language, customization.languages.values_list('code', 'name'))
 
 
 def get_branding_shortcuts(customization=None, request=None):
-    customization = customization or get_customization(request)
+    # Todo. Can it be called without customization?
+    customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
     cloud_portal = Asset.objects.get(customizations__name=customization,
                                      asset_type=get_cloud_portal_asset(customization=customization).asset_type)
     branding_context_structures = branding_context.datastructure_set.all() if (
@@ -89,7 +90,7 @@ def get_branding_shortcuts(customization=None, request=None):
 def get_restricted_keywords(*, customization=None, request=None):
     '''Returns list of keywords that should be restricted from use in assets
     '''
-    customization = customization or get_customization(request)
+    customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
     cloud_portal = Asset.objects.get(customizations__name=customization,
                                      asset_type=get_cloud_portal_asset(customization=customization).asset_type)
     branding_context = Context.objects.get(name='branding', asset_type=get_cloud_portal_asset(customization=customization).asset_type)
@@ -177,6 +178,7 @@ def get_widget(datastructure: DataStructure):
         return ForeignKeyRawIdWidget(rel=temp_field.remote_field, admin_site=site)
 
     return forms.TextInput(attrs={'size': 80, 'placeholder': datastructure.placeholder})
+
 
 def get_record_value(datastructure, asset, language):
     record_value = datastructure.find_actual_value(asset, language, draft=True)

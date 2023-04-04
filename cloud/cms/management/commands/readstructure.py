@@ -16,7 +16,7 @@ from django.core.cache import caches
 from cloud.debug import timer
 from cms.controllers import structure
 from cms.models import *
-from util.helpers import get_customization
+
 logger = logging.getLogger(__name__)
 
 SOURCE_DIR = 'static/_source/{{skin}}/'
@@ -162,8 +162,9 @@ class Command(BaseCommand):
            'the database (contexts, datastructure)'
 
     def add_arguments(self, parser):
+        # Customization name must be required for this argument.
         parser.add_argument(
-            '--customization', nargs='?', default=get_customization(), type=str)
+            '--customization', default='default', nargs='?', type=str)
         parser.add_argument('asset_type', nargs='?', default='cloud_portal')
 
     @timer
@@ -173,7 +174,9 @@ class Command(BaseCommand):
 
         asset_type = AssetType.get_type_by_name(asset_type_name)
         read_languages(settings.DEFAULT_SKIN)
-        customization = options.get('customization', get_customization())
+        customization = options['customization']
+        if not customization_ctx.get():
+            customization_ctx.set(customization)
         if not Customization.objects.filter(name=customization).exists():
             default_customization = Customization.objects.create(
                 name=customization, default_language=Language.by_code('en_US'))

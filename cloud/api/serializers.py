@@ -11,7 +11,6 @@ import re
 
 from cloud.helpers.exceptions import APIInternalException
 from cms.models import LicenseType, Menu, MenuNode, UserGroupsToAssetPermissions, cached_doc_menu_map, get_cached_menu
-from util.helpers import get_customization
 
 
 def to_camel_case(value):
@@ -219,7 +218,7 @@ class SettingsSerializer(CustomizationCacheSerializer):
 
     def extend_settings(self, request):
         from api.views.utils import get_feature_flags
-        customization=get_customization(request)
+        customization=request.CUSTOMIZATION
         return {
             'menus': get_cached_menu(customization, user=request.user, request=request),
             'docMenuMap': cached_doc_menu_map(customization_name=customization),
@@ -242,7 +241,7 @@ class SettingsSerializer(CustomizationCacheSerializer):
                 **self.extend_settings(request)
             }
 
-            customization = get_customization(request)
+            customization = request.CUSTOMIZATION
 
             if not kwargs['data'].get('integrationStoreEnabled', False) and \
                     UserGroupsToAssetPermissions.user_has_beta_access(request.user, customization=customization):

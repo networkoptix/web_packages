@@ -11,8 +11,7 @@ class TestFillData:
         parser = mocker.MagicMock()
         Command().add_arguments(parser)
         parser.add_argument.assert_has_calls([
-            call('--customization', nargs='?',
-                 default=settings.CUSTOMIZATION, type=str),
+            call('--customization', default='default', nargs='?', type=str),
             call('--preview', nargs='?', default=False, type=bool)
         ])
 

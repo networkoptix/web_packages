@@ -136,7 +136,7 @@ class CustomizationFilter(SimpleListFilter):
     def lookups(self, request, model_admin):
         # Temporary customization 0 is need for 'All' since we need to keep it,
         # but choose the customization for the current cloud portal as the default value
-        self.default_customization = Customization.objects.get(name=get_customization(request)).id
+        self.default_customization = Customization.objects.get(name=request.CUSTOMIZATION).id
         customizations = [Customization(id=self.ALL_CUSTOMIZATIONS, name='All Customizations')]
         customizations.extend(list(Customization.objects.filter(name__in=request.user.customizations)))
         customizations.extend([Customization(id=self.OTHER_CUSTOMIZATIONS, name='Other Customizations')])
@@ -266,7 +266,7 @@ class AssetFilter(SimpleListFilter):
             assets = assets.filter(customizations__name__in=request.user.customizations).distinct()
         # TODO: Get list of available assets for non context managers
         if not UserGroupsToAssetPermissions.\
-                check_customization_permission(request.user, get_customization(request), 'cms.publish_version'):
+                check_customization_permission(request.user, request.CUSTOMIZATION, 'cms.publish_version'):
             editable_assets = request.user.assets_with_permission('cms.edit_content')
             assets = Asset.objects.filter(Q(id__in=editable_assets))
 
@@ -555,7 +555,7 @@ class AssetAdmin(CMSAdmin):
                 return redirect(f'{context["preview_link"].url}{custom_preview or ""}')
 
         context['title'] = f"Edit {target_context.get_nice_name()}"
-        context['language_code'] = Customization.objects.get(name=get_customization(request)).default_language
+        context['language_code'] = Customization.objects.get(name=request.CUSTOMIZATION).default_language
         context['EXTERNAL_IMAGE'] = DataStructure.DATA_TYPES[
             DataStructure.DATA_TYPES.external_image]
         context['BYTES_TO_MB'] = BYTES_TO_MEGABYTES
@@ -729,6 +729,7 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = extra_context or {}
+        # Todo. Add permission check based on user/customization
         customization_review = AssetCustomizationReview.objects.get(id=object_id)
         version = customization_review.version
         extra_context['contexts'], extra_context['context_preview_links'] = get_records_for_version(version.asset,
@@ -858,7 +859,7 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
 
     def template_allowed(self, request, customization_review):
         customization_name = customization_review.customization.name
-        matching_portal = customization_name == get_customization(request)
+        matching_portal = customization_name == request.CUSTOMIZATION
         asset = customization_review.version.asset
         is_cloud_portal = asset.is_cloud_portal
         state = customization_review.state
@@ -1180,7 +1181,7 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
         if zendesk_sync_feature_enabled:
             extra_context['zendesk_sync_url'] = reverse("admin:menu_sync", args=(menu.id,))
             extra_context['sync_states'] = menu.zendesk_sync_state
-            extra_context['zendesk_mapping_url'] = reverse("admin:zendesk_mapping", args=(getattr(self, 'chosen_customization', get_customization(request)),))
+            extra_context['zendesk_mapping_url'] = reverse("admin:zendesk_mapping", args=(getattr(self, 'chosen_customization', request.CUSTOMIZATION),))
         extra_context['preview_url_review'] = menu.preview_url('pending')
         extra_context['asset_info'] = json.dumps(prepare_asset_info_for_menu(request, object_id))
         extra_context['label_lookup'] = Menu.LABEL_LOOKUP
@@ -1234,7 +1235,7 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
 
     @staticmethod
     def on_save(obj, request):
-        MENU_CACHE.clear_cache()
+        MenuCache(request=request).clear_cache()
         zendesk_sync_feature_enabled = flag_is_active(request, FLAGS.zendesk_sync) and request.user.is_superuser
         if zendesk_sync_feature_enabled:
             for _ in sync_menu(obj):
@@ -1275,7 +1276,7 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
                     if not (credentials['token'] or data['zendesk_email']):
                         credentials['token'] = 'xx'
                     try:
-                        Importer(subdomain=subdomain, domain=domain, user=request.user, creds=credentials).import_knowledgebase(menu=data['menu'], category_name=data['zendesk_category_name'], customization=get_customization(request))
+                        Importer(subdomain=subdomain, domain=domain, user=request.user, creds=credentials).import_knowledgebase(menu=data['menu'], category_name=data['zendesk_category_name'], customization=request.CUSTOMIZATION)
                     except CategoryNotFoundException:
                         messages.error(request, 'Zendesk category not found')
                     else:
@@ -1307,7 +1308,7 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
     @check_feature_flag(FLAGS.zendesk_sync, validate_is_superuser)
     def zendesk_mapping(self, request, customization):
         from cms.controllers.zendesk import ZendeskMapper, ZendeskNotConfigured, ZendeskInvalidConfiguration
-        settings_context = Context.objects.get(name='settings', asset_type=get_cloud_portal_asset(customization=get_customization(request)).asset_type)
+        settings_context = Context.objects.get(name='settings', asset_type=get_cloud_portal_asset(customization=request.CUSTOMIZATION).asset_type)
         settings_change_page = reverse('admin:change_page', args=(customization_obj.id, settings_context.id)) if (customization_obj := Customization.objects.filter(name=customization).first()) else ''
         try:
             mapper = ZendeskMapper(customization_name=customization, verify_auth=True)
@@ -1331,7 +1332,10 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
                 form_export = MenuPortForm(request.POST, request.FILES, port_type='export')
                 if form_export.is_valid():
                     menu_name = form_export.cleaned_data['menu'].name
-                    task = async_menu_export.apply_async(args=[menu_name], queue='broadcast-notifications')
+                    task = async_menu_export.apply_async(
+                        args=[menu_name], queue='broadcast-notifications',
+                        kwargs={'customization': request.CUSTOMIZATION}
+                    )
                     file_name = f'menu-{menu_name}.json'
                     return render(request, 'cms/menu_porting.html',
                                   {'formExport': form_export,
@@ -1367,7 +1371,10 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
                     conflicts = structure.check_asset_conflicts(file.get('assets', []))
                     if not conflicts or force:
                         conflicts = []
-                        task = async_menu_import.apply_async(args=[cache_key, menu.name, request.user.email, accept_reviews], queue='broadcast-notifications')
+                        task = async_menu_import.apply_async(
+                            args=[cache_key, menu.name, request.user.email, accept_reviews],
+                            kwargs={'customization': request.CUSTOMIZATION},
+                            queue='broadcast-notifications')
                     else:
                         messages.warning(request, 'Some assets contain conflicts with existing records. To force update with new values please check the "Force Update" checkbox.')
                     return render(request, 'cms/menu_porting.html',
@@ -1475,7 +1482,7 @@ class MenuNodeAdmin(CMSAdmin):
 
     def save_related(self, request, form, formsets, change):
         super().save_related(request, form, formsets, change)
-        transaction.on_commit(MENU_CACHE.clear_cache)
+        transaction.on_commit(MenuCache(customization_name=request.CUSTOMIZATION).clear_cache)
 
     def save_model(self, request, obj, form, change):
         if obj.pk:

@@ -8,13 +8,14 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 
 from cloud.controllers import cloud_api
+from cloud.customization_context import customization_ctx
 from cloud.helpers import exceptions
 from api.models import Account
 from notifications.models import Message, Event, Feedback, PushDevice, PushNotification
 from cms.models import Asset, get_cloud_portal_asset
 
 import botocore
-from util.helpers import get_customization
+
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +32,7 @@ def find_message(external_id):
 
 def send(user_email, msg_type, message, *, customization=None, external_id=None, request=None):
     django.core.validators.validate_email(user_email)
-    customization = customization or get_customization(request)
+    customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
 
     if 'code' in message:
         message['code'] = quote_plus(message['code'])
@@ -58,11 +59,11 @@ def send(user_email, msg_type, message, *, customization=None, external_id=None,
 
 def notify(event_type, object, data, *, request=None):
     event = Event(type=event_type, object=object, data=data)
-    event.send(customization=get_customization(request))
+    event.send(customization=getattr(request, 'CUSTOMIZATION', customization_ctx.get()))
 
 
 def send_feedback(event_type, asset_id, data, *, request=None):
-    customization=get_customization(request)
+    customization=request.CUSTOMIZATION
     if not asset_id:
         asset = get_cloud_portal_asset(customization=customization)
     else:

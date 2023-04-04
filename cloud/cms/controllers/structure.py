@@ -12,7 +12,7 @@ from zipfile import ZipFile
 from django.conf import settings
 from django.core.files.base import ContentFile
 
-from cms.controllers.documentation import DOC_CACHE
+from cms.controllers.documentation import DocumentCache
 from cms.controllers.generate_structure import templatify_json
 from cms.controllers.modify_db import save_unrevisioned_records, send_version_for_review, update_draft_state
 from cms.models import Context, ContextTemplate, DataStructure, DataRecord, Asset, AssetType, MenuNode, Customization, \
@@ -617,7 +617,9 @@ def import_assets_from_json(assets_list, user, publish=False, increment_progress
                     published = True
                     update_draft_state(review.id, AssetCustomizationReview.REVIEW_STATES.accepted, user)
             if asset_obj.is_documentation and published:
-                DOC_CACHE.clear_cache()
+                # !!! import_assets_from_json() is used widely. Can cause a lot of troubles
+                # because CUSTOMIZATION can be missed in contextvar
+                DocumentCache().clear_cache()
         if increment_progress:
             increment_progress()
 

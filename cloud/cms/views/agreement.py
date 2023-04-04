@@ -12,8 +12,8 @@ from cms.controllers.filldata import global_contexts_to_dict, ContextProcessor
 from cms.models import (Context, Asset, AssetType, get_cloud_portal_asset, AssetCustomizationReview,
                         DataStructure, ContributorAgreement)
 from cms.serializers import AgreementSerializer
-from util.base_cache import BaseCache
-from util.helpers import get_customization, get_language_object_from_request
+from util.base_cache import AgreementCache
+from util.helpers import get_language_object_from_request
 
 AGREEMENT_NOT_FOUND = 'Agreement not found'
 PREVIEW_NOT_ALLOWED = 'Not allowed to view this preview'
@@ -37,13 +37,12 @@ id__query_param = openapi.Parameter(
 @api_view(("GET", ))
 @permission_classes((AllowAny, ))
 def get_agreement(request):
-    AGREEMENT_CACHE = BaseCache(cache_key='agreement')
     state = request.query_params.get('state') or 'accepted'
     draft = state == 'draft'
     review = state == 'pending'
     agreement_id = request.query_params.get('id')
     language = get_language_object_from_request(request)
-    customization=get_customization(request)
+    customization = request.CUSTOMIZATION
     agreement = None
     agreement_review = None
     version = None
@@ -52,6 +51,9 @@ def get_agreement(request):
         # If id is provided, then only search with id
         # Used primarily for showing previews correctly
         agreement = Asset.objects.filter(id=agreement_id).first()
+        # Todo, maybe version is required here.
+        agreement_cache = AgreementCache(language=language, state=state, identifier=agreement_id,
+                                         request=request)
     else:
         agreement_review = AssetCustomizationReview.objects.filter(
             version__asset__asset_type__type=AssetType.ASSET_TYPES.agreement,
@@ -62,9 +64,9 @@ def get_agreement(request):
             return api_success("Agreement not available", status_code=status.HTTP_404_NOT_FOUND)
 
         agreement_id = agreement_review.version.asset.id
-        AGREEMENT_CACHE.lookup_key = BaseCache.generate_lookup_key(
-            language, state, agreement_id, agreement_review.version, request=request)
-        cached_agreement = AGREEMENT_CACHE.get_cached_item()
+        agreement_cache = AgreementCache(language=language, state=state, identifier=agreement_id,
+                                         version=agreement_review.version, request=request)
+        cached_agreement = agreement_cache.get_cached_item()
 
         if agreement_review and not cached_agreement:
             agreement = agreement_review.version.asset
@@ -138,12 +140,13 @@ def get_agreement(request):
             serializer = AgreementSerializer(data=agreement_dict)
             serializer.is_valid()
             agreement_dict = serializer.data
-
-            AGREEMENT_CACHE.set_cached_item(agreement_dict)
-            if agreement_id:
-                AGREEMENT_CACHE.lookup_key = BaseCache.generate_lookup_key(
-                    language, state, request=request)
-                AGREEMENT_CACHE.set_cached_item(agreement_dict)
+            agreement_cache.set_cached_item(agreement_dict)
+            # Really not sure about this piece of code. Both options (get from cache or db) are resolved on the
+            # Agreement retrieving stage L51-L70. Commenting this out.
+            # if agreement_id:
+            #     AGREEMENT_CACHE.lookup_key = BaseCache.generate_lookup_key(
+            #         language, state, request=request)
+            #     AGREEMENT_CACHE.set_cached_item(agreement_dict)
             return api_success(agreement_dict)
 
     raise APINotFoundException(error_text=AGREEMENT_NOT_FOUND)
@@ -169,7 +172,7 @@ def accept_agreement(request):
 
     agreement_review = AssetCustomizationReview.objects.filter(
         version__asset__asset_type__type=AssetType.ASSET_TYPES.agreement,
-        state=AssetCustomizationReview.REVIEW_STATES.accepted, customization__name=get_customization(request), id=review_id
+        state=AssetCustomizationReview.REVIEW_STATES.accepted, customization__name=request.CUSTOMIZATION, id=review_id
     ).last()
 
     if agreement_review:

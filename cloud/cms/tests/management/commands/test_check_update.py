@@ -8,6 +8,7 @@ from cms.management.commands.check_update import *
 
 class TestCheckUpdate:
     def test_handle(self, mocker):
+        options = {'customization': settings.TEST_CUSTOMIZATION}
         current_version = randint(10, 1000)
         local_version = current_version - randint(1, 10)
         mock_check_update_cache = mocker.patch.object(
@@ -21,7 +22,7 @@ class TestCheckUpdate:
             instance, 'initialize_static_content')
 
         # Test initialize version.id file
-        instance.handle()
+        instance.handle(**options)
         mock_log_info.assert_has_calls([
             call(f'Local version: None\tUpdate: True\tCurrent Version: {current_version}'),
             call(current_version)])
@@ -32,12 +33,12 @@ class TestCheckUpdate:
 
         # Test initialize static content
         mock_read_id.return_value = local_version
-        instance.handle()
-        mock_initialize_static_content.assert_called_once_with(current_version, settings.CUSTOMIZATION)
+        instance.handle(**options)
+        mock_initialize_static_content.assert_called_once_with(current_version, settings.TEST_CUSTOMIZATION)
 
         # Test no changes
         mock_check_update_cache.return_value = [False, current_version]
-        instance.handle()
+        instance.handle(**options)
         mock_write_stdout.assert_called_with(instance.style.SUCCESS('No change was detected'))
 
     def test_read_and_write_id(self):
@@ -69,7 +70,7 @@ class TestCheckUpdate:
             'Content has been updated.'
         ]
 
-        instance.initialize_static_content(current_version, customization=settings.CUSTOMIZATION)
+        instance.initialize_static_content(current_version, customization=settings.TEST_CUSTOMIZATION)
         assert instance.read_id() == current_version
         mock_log_info.assert_has_calls(call(message) for message in expected_logged_info)
         mock_write_stdout.assert_called_once_with(

@@ -36,9 +36,9 @@ class TestMakeIntegrationsJSON(BaseTestMakeAssetJSON):
             *self.make_assets(additional_user, additional_user_asset_count),
         ]
         non_superuser_asset_json = self.make_asset_json(
-            assets=assets, user=self.user)
+            assets=assets, user=self.user, request=self.request)
         superuser_asset_json = self.make_asset_json(
-            assets=assets, user=self.superuser_account)
+            assets=assets, user=self.superuser_account, request=self.request)
 
         # Test that non-superuser can only edit their own assets
         assert can_edit_count(non_superuser_asset_json) == self.asset_count

@@ -33,6 +33,7 @@ import json
 import sys
 
 from botocore.config import Config
+from django.core.exceptions import ImproperlyConfigured
 
 from util.config import get_config
 from cloud.logger import downgrade_requests
@@ -72,7 +73,7 @@ if not CUSTOMIZATION:
 
 META_CUSTOMIZATION = 'metavms'
 META = CUSTOMIZATION == META_CUSTOMIZATION
-
+DEF_CUSTOMIZATION = 'default'
 if LOCAL_ENVIRONMENT:
     STATIC_ROOT = os.path.join(BASE_DIR, "static/common")
     STATICFILES_DIRS = (
@@ -83,7 +84,11 @@ if LOCAL_ENVIRONMENT:
     PREVIEW_URL = '/preview/'
     PREVIEW_LOCATION = os.path.join(STATIC_LOCATION, CUSTOMIZATION, "preview")
 
-    LOCAL_CUSTOMIZATION = os.getenv('CUSTOMIZATION', 'default')
+    LOCAL_CUSTOMIZATION = os.getenv('CUSTOMIZATION') or DEF_CUSTOMIZATION
+    TEST_CUSTOMIZATION = os.getenv('TEST_CUSTOMIZATION') or DEF_CUSTOMIZATION
+elif TESTING:
+    TEST_CUSTOMIZATION = os.getenv('TEST_CUSTOMIZATION')
+
 
 cloud_db = conf['cloud_database']
 
@@ -133,6 +138,7 @@ INSTALLED_APPS = (
 
 MIDDLEWARE = (
     'cloud.middleware.CustomizationMiddleware',
+    'cloud.customization_context.CustomizationCtxMiddleware',
     'cloud.middleware.CachedMiddleware',
     'cloud.middleware.HeaderMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

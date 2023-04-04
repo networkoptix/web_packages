@@ -307,7 +307,7 @@ class TestReadStructure:
         parser = mocker.MagicMock()
         Command().add_arguments(parser)
         parser.add_argument.assert_has_calls(
-            [call('--customization', nargs='?', default='default', type=str),
+            [call('--customization', default='default', nargs='?', type=str),
              call('asset_type', nargs='?', default='cloud_portal')]
         )
 
@@ -338,7 +338,7 @@ class TestReadStructure:
             'Successfully initiated menu structure',
             'Set deployment status to ready'
         ]
-        instance.handle(asset_type=asset_type)
+        instance.handle(asset_type=asset_type, customization=customization_name)
         created_customization, = asset_factory(
             name=customization_name, lang_code='en_US')
         added_default_to_languages = list(

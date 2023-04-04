@@ -11,7 +11,6 @@ from typing import Dict, Callable
 import traceback
 from typing import Union, Tuple, Dict, List
 from io import BytesIO
-from concurrent.futures import ThreadPoolExecutor
 
 from django.db.models import QuerySet
 
@@ -510,7 +509,7 @@ def fill_content(asset,
             asset=asset, version_id=version_id, global_contexts=global_contexts,
             global_contexts_dict=global_contexts_dict, preview=preview, skin=skin
         )
-        with ThreadPoolExecutor(max_workers=workers) as executor:
+        with ContextExecutor(max_workers=workers) as executor:
             # Stores the tasks that the thread pool runs. This is needed for checking for exceptions
             futures = []
             for context in changed_contexts:

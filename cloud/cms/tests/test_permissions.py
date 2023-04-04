@@ -1,6 +1,8 @@
 import pytest
 from uuid import uuid4
 
+from requests import Request
+
 from cms.permissions import *
 
 
@@ -23,7 +25,7 @@ def test_is_superuser_permission(account_factory, mocker):
 def test_can_view_developers_permission(account_factory, mocker, db):
     superuser = account_factory(email=str(uuid4()))
     non_superuser = account_factory(email=str(uuid4()), is_superuser=False)
-    request, view = [mocker.MagicMock() for _ in range(2)]
+    request, view = [mocker.MagicMock(spec=Request, CUSTOMIZATION=settings.TEST_CUSTOMIZATION) for _ in range(2)]
     request.POST={}
     request.META={}
     request.data={}
@@ -45,7 +47,7 @@ def test_can_view_developers_permission(account_factory, mocker, db):
 
     assert instance.has_permission(request, view) == check_permission_result
     mock_check_customization_permission.assert_called_once_with(
-        non_superuser, settings.CUSTOMIZATION, 'cms.access_developers')
+        non_superuser, settings.TEST_CUSTOMIZATION, 'cms.access_developers')
 
     # Test developers enabled globally
     mocker.patch.object(

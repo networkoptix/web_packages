@@ -30,7 +30,7 @@ import json
 import logging
 import traceback
 
-from util.helpers import get_customization
+
 
 logger = logging.getLogger(__name__)
 
@@ -143,7 +143,7 @@ class CloudSessionAuthentication(SessionAuthentication):
 @permission_classes((IsAuthenticatedUserOrSystem,))
 @authentication_classes((CloudSystemBasicAuthentication, CloudSessionAuthentication))
 def push_notification(request):
-    customization = get_customization(request)
+    customization = request.CUSTOMIZATION
     serializer = NotificationSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     data = serializer.validated_data

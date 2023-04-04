@@ -50,7 +50,7 @@ def get_integrations_meta(path, config, lang, config_meta, lang_meta):
         **lang_meta.get(get_integrations_meta.route, {})
     }
 
-    title_segments = base_route_meta['title'].split(' - ')[::-1]
+    title_segments = base_route_meta.get('title', '').split(' - ')[::-1]
 
     if integration_id := integration_slug.split('-')[0]:
         integration_asset = Asset.objects.filter(id=integration_id).first()
@@ -141,10 +141,10 @@ def get_lang_meta(request, lang_path=None, static_lang_path=None):
     try:
         lang = detect_language_by_request(request)
         if not lang_path:
-            lang_path = os.path.join(settings.STATIC_LOCATION, get_customization(request),
+            lang_path = os.path.join(settings.STATIC_LOCATION, request.CUSTOMIZATION,
                                     'static', f'lang_{lang}', 'language_compiled.json')
         if not static_lang_path:
-            static_lang_path = os.path.join(settings.STATIC_LOCATION, get_customization(request),
+            static_lang_path = os.path.join(settings.STATIC_LOCATION, request.CUSTOMIZATION,
                                     'static', 'language_i18n_static.json')
         with open(static_lang_path) as static_lang_file:
             meta_defaults = json.load(static_lang_file)['metaDefaults']
@@ -162,7 +162,7 @@ def get_lang_meta(request, lang_path=None, static_lang_path=None):
 def get_config_meta(request, config_path=None):
     if not config_path:
         config_path = os.path.join(
-            settings.STATIC_LOCATION, get_customization(request), 'static', 'metaDefaults.json')
+            settings.STATIC_LOCATION, request.CUSTOMIZATION, 'static', 'metaDefaults.json')
     is_secure = request.is_secure()
     host = request.get_host()
     base = f'http{"s" if is_secure else ""}://{host}'
@@ -178,7 +178,7 @@ def get_config_meta(request, config_path=None):
 
 
 def get_meta(request, config_path=None):
-    config = cloud_portal_customization_cache(get_customization(request))['config']
+    config = cloud_portal_customization_cache(request.CUSTOMIZATION)['config']
     lang = Language(code=detect_language_by_request(request))
     lang_meta = get_lang_meta(request)
     config_meta = get_config_meta(request, config_path)
@@ -229,7 +229,7 @@ def check_redirect(request):
 
     for node in doc.nodes.all():
         node_enabled = node.enabled_customizations.filter(
-            name=get_customization(request)).exists()
+            name=request.CUSTOMIZATION).exists()
         parent_menu = node.get_parent()
 
         if node_enabled and parent_menu and parent_menu.enabled:

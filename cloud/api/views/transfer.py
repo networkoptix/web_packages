@@ -15,7 +15,6 @@ from cloud.drf_async import AsyncAPIView
 from cloud.helpers.exceptions import api_success
 from cloud.utils import method_decorator_async
 from notifications import notifications_api
-from util.helpers import get_customization
 
 
 cloud__response = openapi.Response('Cloud response.', CloudResponseSerializer)
@@ -41,7 +40,7 @@ async def send_ownership_transfer_email(request, system_id, new_owner_email):
         new_owner_email,
         'ownership_transfer_invite',
         message,
-        customization=get_customization(request)
+        customization=request.CUSTOMIZATION
     )
 
 
@@ -57,7 +56,7 @@ async def send_ownership_transfer_response_email(request, system_info, status):
         system_info.get('ownerAccountEmail'),
         'ownership_transfer_response',
         message,
-        customization=get_customization(request)
+        customization=request.CUSTOMIZATION
     )
 
 

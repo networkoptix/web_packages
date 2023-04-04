@@ -5,7 +5,6 @@ from io import BytesIO
 import json
 import re
 import typing
-from util.base_cache import BaseCache
 import uuid
 from dataclasses import dataclass
 
@@ -18,7 +17,7 @@ from PIL import Image
 from api.models import Account
 from cms.models import *
 from util.config import UnableToFetchConfigException
-from util.helpers import get_customization
+
 
 BYTES_TO_MEGABYTES = 1048576.0
 PENDING = AssetCustomizationReview.REVIEW_STATES[
@@ -413,7 +412,8 @@ def save_unrevisioned_records(asset, context, language, data_structures,
     # Start save_unrevisioned_records
     can_edit_advanced = UserGroupsToAssetPermissions.check_edit_advanced(
         user, asset)
-    customization = customization or get_customization(request)
+    # TODO. Can provide None value. Is it correct?
+    customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
     upload_errors = []
     # Only process non-translatable data structures if language is default.
     default_language = get_cloud_portal_asset(customization=customization).default_language

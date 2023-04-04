@@ -14,10 +14,10 @@ from django.conf import settings
 from rest_framework.response import Response
 from rest_framework import status
 
+from cloud.customization_context import customization_ctx
 from cloud.helpers.exceptions import (validate_response, ErrorCodes, APIRequestException,
                                       APINotAuthorisedException, APINotFoundException, get_client_ip,
-                                      kill_session, kill_tokens)
-from util.helpers import get_customization
+                                      kill_session, kill_tokens, APIInternalException)
 
 logger = logging.getLogger(__name__)
 
@@ -346,7 +346,7 @@ class System(object):
         auth = None
         params = {}
         if one_customization:
-            params['customization'] = get_customization(request)
+            params['customization'] = getattr(request, 'CUSTOMIZATION', customization_ctx.get())
 
         if email and password:
             auth = {"email": email, "password": password}
@@ -442,10 +442,10 @@ class System(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def bind(request, name, headers=None, *, customization=settings.CUSTOMIZATION):
+    def bind(request, name, headers=None, customization=None, **kwargs):
         params = {
             'name': name,
-            'customization': customization
+            'customization': customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
         }
         return post_wrapper(System.get_request_url('bind'), json=params, headers=headers)
 
@@ -540,7 +540,11 @@ class Account(object):
     @staticmethod
     @lower_case_email
     def register(email, password, first_name, last_name, ip=None, code=None, *, customization=None, request=None):
-        customization = customization or get_customization(request)
+        # Todo. Add test for different set of customization and request
+        if not customization and not request and not customization_ctx.get():
+            raise APIInternalException('Customization must be given.',
+                                      error_code=ErrorCodes.no_customization_given)
+        customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
         logger.debug('cloud_api.Account.register: ' + email)
 
         headers = {
@@ -641,10 +645,10 @@ class Account(object):
     @staticmethod
     @validate_response
     @lower_case_email
-    def reset_password(email, ip, *, request=None):
+    def reset_password(email, ip, request):
         params = {
             'email': email,
-            'customization': get_customization(request)
+            'customization': getattr(request, 'CUSTOMIZATION', customization_ctx.get())
         }
         headers = {
             'X-Forwarded-For': ip

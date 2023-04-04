@@ -1,7 +1,7 @@
 from uuid import uuid4
 
 from cloud.drf_async import async_api_view
-from util.base_cache import BaseCache
+from util.base_cache import ReadOnlyAPICache
 from cms.serializers import ReadOnlyAPIDetailSerializer, ReadOnlyAPIListSerializer
 
 from django.urls import reverse
@@ -16,7 +16,6 @@ from asgiref.sync import sync_to_async
 from cloud.helpers.exceptions import api_success
 from cms.models import ReadOnlyAPI
 
-READONLY_API_CACHE = BaseCache(cache_key='readonly_apis')
 READONLY_EXPIRES = 60 * 60 * 24 * 365 # 1 Year
 READONLY_CACHE_HEADER = {'Cache-Control': f'max-age={READONLY_EXPIRES}'}
 
@@ -47,8 +46,8 @@ async def get_readonly_api(request, api_id=None):
 
     api_id = int(api_id)
 
-    READONLY_API_CACHE.lookup_key = 'readonlyapi-' + str(api_id)
-    api_cache = await READONLY_API_CACHE.aget_cached_item() or {}
+    readonly_api_cache = ReadOnlyAPICache(api_id=api_id)
+    api_cache = await readonly_api_cache.aget_cached_item() or {}
     if not api_cache:
         try:
             api = await ReadOnlyAPI.objects.aget(id=api_id)
@@ -56,13 +55,14 @@ async def get_readonly_api(request, api_id=None):
             return api_success(API_NOT_FOUND, status_code=status.HTTP_404_NOT_FOUND)
         cache_version = str(uuid4())
         data = await sync_to_async(lambda: ReadOnlyAPIDetailSerializer(api).data)()
-        await READONLY_API_CACHE.aset_cached_item({'data': data, 'version': cache_version})
+        await readonly_api_cache.aset_cached_item({'data': data, 'version': cache_version})
         return redirect(f'{reverse("get_readonly_api", args=(api_id,))}?version={cache_version}')
     cache_version = api_cache['version']
     if request_version != cache_version:
         return redirect(f'{reverse("get_readonly_api", args=(api_id,))}?version={cache_version}')
 
     return api_success(api_cache['data'], additional_headers=READONLY_CACHE_HEADER)
+
 
 @swagger_auto_schema(method='GET',
                      operation_description="Returns a list of readonlyAPIs. Can be filtered by type.",

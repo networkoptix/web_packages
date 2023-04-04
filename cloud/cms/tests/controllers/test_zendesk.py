@@ -470,7 +470,7 @@ class TestImporter:
 
         assert created_section
 
-    def test_import_knowledgebase(self, mocker, importer_instance, db):
+    def test_import_knowledgebase(self, mocker, importer_instance, db, arf):
         menu = baker.make(Menu)
         name, *sections = [str(uuid4()) for _ in range(10)]
         mock_zd_category = mocker.MagicMock()
@@ -486,7 +486,7 @@ class TestImporter:
             importer_instance, '_create_zendesk_sections')
         mocker.patch('cms.controllers.zendesk.Exporter')
 
-        importer_instance.import_knowledgebase(menu, mock_zd_category.name)
+        importer_instance.import_knowledgebase(menu, mock_zd_category.name, request=arf.get('/'))
         saved_category = ZendeskCategory.objects.filter(
             site=importer_instance.site, menu=menu, name=name, category_id=mock_zd_category.id).first()
 
@@ -501,7 +501,7 @@ class TestZendeskMapper:
     def get_mapper_instance(self, mocker):
         mocker.patch('cms.controllers.zendesk.Exporter', mocker.MagicMock())
 
-        def _get_mapper_instance(customization_name=settings.CUSTOMIZATION):
+        def _get_mapper_instance(customization_name=settings.TEST_CUSTOMIZATION):
             return ZendeskMapper(
                 customization_name=customization_name, cloud_portal=mocker.MagicMock(), default_permission_group_id=randint(1000, 9999))
 
@@ -824,7 +824,7 @@ class TestZendeskMapper:
 
 @pytest.fixture
 def get_exporter_instance(mocker):
-    def _get_exporter_instance(customization_name=settings.CUSTOMIZATION):
+    def _get_exporter_instance(customization_name=settings.TEST_CUSTOMIZATION):
         exporter_instance = Exporter(
             customization_name=customization_name, cloud_portal=mocker.MagicMock())
         mocker.patch('cms.controllers.zendesk.Exporter')
@@ -1438,10 +1438,10 @@ def test_push_accepted_article_to_zendesk(mocker, asset_type_factory, db):
     exporter, *doc_json = [
         str(uuid4()) for _ in range(2)]
     customization = Customization.objects.filter(
-        name=settings.CUSTOMIZATION).first()
+        name=settings.TEST_CUSTOMIZATION).first()
     site = ZendeskSite.objects.filter(customization=customization).first(
     ) or baker.make(ZendeskSite, customization=customization)
-    cloud_portal = get_cloud_portal_asset(customization=settings.CUSTOMIZATION)
+    cloud_portal = get_cloud_portal_asset(customization=settings.TEST_CUSTOMIZATION)
     mocker.patch.object(cloud_portal, 'read_global_value', return_value=True)
     mocker.patch.object(Asset, 'read_global_value', return_value=True)
     mocker.patch.object(documentation, 'generate_doc_json',
@@ -1453,7 +1453,7 @@ def test_push_accepted_article_to_zendesk(mocker, asset_type_factory, db):
     article = baker.make(
         ZendeskArticle, asset=asset)
 
-    push_accepted_article_to_zendesk(asset)
+    push_accepted_article_to_zendesk(asset, customization=customization.name)
 
     assert mock_sync_article.call_count == 1
     updated_article, updated_doc_json, updated_site, updated_exporter = mock_sync_article.call_args_list[
@@ -1495,7 +1495,7 @@ def test_update_zd_article(mocker, get_exporter_instance, asset_type_factory, db
     exporter = get_exporter_instance()
     position = randint(1, 1000)
     customization = Customization.objects.filter(
-        name=settings.CUSTOMIZATION).first()
+        name=settings.TEST_CUSTOMIZATION).first()
     site = ZendeskSite.objects.filter(customization=customization).first(
     ) or baker.make(ZendeskSite, customization=customization)
     category = baker.make(
@@ -1536,7 +1536,7 @@ def test_update_zd_article(mocker, get_exporter_instance, asset_type_factory, db
 def test_check_if_article_can_sync(mocker, asset_type_factory, db):
     mocker.patch('cms.controllers.zendesk.Exporter')
     customization = Customization.objects.filter(
-        name=settings.CUSTOMIZATION).first()
+        name=settings.TEST_CUSTOMIZATION).first()
     site = ZendeskSite.objects.filter(customization=customization).first(
     ) or baker.make(ZendeskSite, customization=customization)
     sync_log = baker.make(ZendeskSyncLog, zendesk_site=site)
@@ -1562,7 +1562,7 @@ def test_process_asset(mocker, asset_type_factory, db):
     read_global_value = mocker.MagicMock(return_value='1')
     cloud_portal = mocker.MagicMock(read_global_value=read_global_value)
     customization = Customization.objects.filter(
-        name=settings.CUSTOMIZATION).first()
+        name=settings.TEST_CUSTOMIZATION).first()
     site = ZendeskSite.objects.filter(customization=customization).first(
     ) or baker.make(ZendeskSite, customization=customization)
     sync_log = baker.make(ZendeskSyncLog, zendesk_site=site)
@@ -1600,7 +1600,7 @@ def test_process_nodes(mocker, asset_type_factory, db):
         'cms.controllers.zendesk.Exporter').return_value
     mock_process_node = mocker.patch('cms.controllers.zendesk.process_node')
     customization = Customization.objects.filter(
-        name=settings.CUSTOMIZATION).first()
+        name=settings.TEST_CUSTOMIZATION).first()
     site = ZendeskSite.objects.filter(customization=customization).first(
     ) or baker.make(ZendeskSite, customization=customization)
     category = baker.make(
@@ -1636,7 +1636,7 @@ def test_process_node(mocker, asset_type_factory, db):
     mock_exporter = mocker.patch(
         'cms.controllers.zendesk.Exporter').return_value
     customization = Customization.objects.filter(
-        name=settings.CUSTOMIZATION).first()
+        name=settings.TEST_CUSTOMIZATION).first()
     node = baker.make(MenuNode)
     node.enabled.add(customization)
     setattr(node, 'nodes_list', nodes_list)
@@ -1673,7 +1673,7 @@ def test_process_general_section_node(mocker, get_exporter_instance, asset_type_
         for asset in top_level_assets]
     mock_exporter = mocker.patch('cms.controllers.zendesk.Exporter')
     customization = Customization.objects.filter(
-        name=settings.CUSTOMIZATION).first()
+        name=settings.TEST_CUSTOMIZATION).first()
     site = ZendeskSite.objects.filter(customization=customization).first(
     ) or baker.make(ZendeskSite, customization=customization)
     sync_log = baker.make(ZendeskSyncLog, zendesk_site=site)

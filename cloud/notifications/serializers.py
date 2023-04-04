@@ -14,7 +14,7 @@ from notifications.conf import get_sns_client
 import botocore
 import logging
 
-from util.helpers import get_customization
+
 
 PUSHDEVICE_TYPES = tuple(PushDevice.TYPES._identifier_map.keys())
 PROVIDERS = tuple(PushDevice.PROVIDERS._identifier_map.keys())
@@ -89,7 +89,7 @@ class SubscriptionSerializer(serializers.Serializer):
         device_token = data.get('deviceToken')
         provider = data.get('provider')
         user_id = data.get('userId')
-        customization=get_customization(self.context['request'])
+        customization=self.context['request'].CUSTOMIZATION
 
         if not self.instance:
             if provider == 'firebase_legacy':
@@ -176,7 +176,7 @@ class SubscriptionSerializer(serializers.Serializer):
     def create_platform_endpoint(self, instance):
         provider = self.validated_data.get('provider')
         user_id = self.validated_data.get('userId')
-        platform_arns = get_aws_platform_arns(get_customization(self.context['request']))
+        platform_arns = get_aws_platform_arns(self.context['request'].CUSTOMIZATION)
         platform_arn = platform_arns[provider]
         if not platform_arn:
             raise serializers.ValidationError(
@@ -214,7 +214,7 @@ class SubscriptionSerializer(serializers.Serializer):
                                       registration_id=device.registration_id).delete()
 
     def create(self, validated_data, *, customization=None):
-        customization = customization or get_customization(self.context['request'])
+        customization = customization or self.context['request'].CUSTOMIZATION
         device = PushDevice(
             registration_id=validated_data['deviceToken'], cloud_message_type='FCM',
             user=self.context['request'].user, application_id=customization

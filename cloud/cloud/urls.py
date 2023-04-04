@@ -64,7 +64,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     re_path(r'^swagger/$', schema_view.with_ui(), name='swagger'),
-    re_path(r'^health/', health_check),
+    re_path(r'^health/', health_check, name='health_migrations'),
     re_path(r'^admin/login/', redirect_login),
     re_path(r'^admin/logout/', RedirectView.as_view(url='/logout'), name='logout'),
     re_path(r'^admin/cms/', include('cms.admin_urls')),

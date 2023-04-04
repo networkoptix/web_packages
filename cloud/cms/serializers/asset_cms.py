@@ -5,8 +5,9 @@ Serializers for Asset CMS on the frontend.
 from django.conf import settings
 from rest_framework import serializers
 
+from cloud.customization_context import customization_ctx
 from cms.models import Asset, AssetType, Context, DataStructure
-from util.helpers import get_customization
+
 
 
 class FieldSerializer(serializers.ModelSerializer):
@@ -75,8 +76,9 @@ class AssetDataRecordSerializer(serializers.Serializer):
         self._instance = instance
         ds = DataStructure.objects.get(id=instance)
         request = self.context.get("request")
+        customization = getattr(request, 'CUSTOMIZATION', customization_ctx.get())
         return ds.find_actual_value(
-            self.asset, draft=True, customization_name=get_customization(request))
+            self.asset, draft=True, customization_name=customization)
 
 
 class AssetDsSerializer(serializers.ModelSerializer):

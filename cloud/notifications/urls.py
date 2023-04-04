@@ -17,7 +17,7 @@ public_patterns = [
 
 urlpatterns = [
     re_path(r'^send$', send_notification),
-    re_path(r'^maintenance/health$', health_email),
-    re_path(r'^maintenance/health_push$', health_push),
+    re_path(r'^maintenance/health$', health_email, name='notification_health_email'),
+    re_path(r'^maintenance/health_push$', health_push, name='notification_health_push'),
     re_path('', include(public_patterns))
 ]

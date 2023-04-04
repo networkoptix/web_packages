@@ -2,15 +2,16 @@ import traceback
 import logging
 
 from django.conf import settings
+from django.urls import reverse_lazy
 from django.utils.deprecation import MiddlewareMixin
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from rest_framework import status
 
+from cloud.helpers.exceptions import APIInternalException, ErrorCodes
 from util.helpers import get_customization_name_from_cloud_host
 
 logger = logging.getLogger(__name__)
-
 
 class CatchExceptionMiddleware(MiddlewareMixin):
     @staticmethod
@@ -57,13 +58,22 @@ class CachedMiddleware(MiddlewareMixin):
 
 
 class CustomizationMiddleware(MiddlewareMixin):
+    # Todo. Add tests in QA for health checks
+    health_checks = [
+        reverse_lazy('health_migration'),
+        reverse_lazy('notification_health_email'),
+        reverse_lazy('notification_health_push'),
+    ]
+
     def process_request(self, request):
         host = request.get_host()
         # If local set customization name from setting
-        if host.startswith('localhost') and settings.LOCAL_CUSTOMIZATION:
+        if host.startswith('localhost') and settings.LOCAL_CUSTOMIZATION or settings.LOCAL_ENVIRONMENT:
             customization_name = settings.LOCAL_CUSTOMIZATION
         else:
             customization_name = get_customization_name_from_cloud_host(host)
-
+        if not customization_name and request.path not in self.health_checks:
+            raise APIInternalException(f'Cannot determine customization for host "{host}".',
+                                       error_code=ErrorCodes.wrong_parameters)
         request.META['CUSTOMIZATION'] = customization_name
         request.CUSTOMIZATION = customization_name

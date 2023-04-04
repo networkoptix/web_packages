@@ -103,7 +103,7 @@ def test_send_email(mocker, db):
             SystemEmail.MSG_TYPE,
             expected_message,
             expected_lang,
-            settings.CUSTOMIZATION,
+            settings.TEST_CUSTOMIZATION,
             sys_email.subject,
             [{**attachment, 'content': base64.b64decode(attachment['content'])} for attachment in cached_attachments]
         )
@@ -116,7 +116,7 @@ def test_send_email(mocker, db):
         'user_email': expected_emails,
         'type': SystemEmail.MSG_TYPE,
         'message': expected_message,
-        'customization': settings.CUSTOMIZATION,
+        'customization': settings.TEST_CUSTOMIZATION,
         'language': expected_lang,
         'queue': '',
         'attempt': 1
@@ -308,7 +308,7 @@ def test_send_push_notification(mocker, db):
 
 def test_send_to_all_users(mocker, account_factory, db):
     mock_send = mocker.patch('notifications.notifications_api.send')
-    customizations = [settings.CUSTOMIZATION]
+    customizations = [settings.TEST_CUSTOMIZATION]
     notification_id = str(uuid4())
     subject = str(uuid4())
     message = {'subject': subject}

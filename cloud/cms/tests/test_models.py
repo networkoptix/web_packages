@@ -200,8 +200,9 @@ class TestModelFunctions:
     # Menu Cache Helpers
 
     def cache_menu_with(self, menu_type=Menu.MENU_TYPES.docs_struct, nodes_count=3, base_url='', menu_url='', new_menu=False, menu_name=None):
-        MENU_CACHE.clear_cache()
         customization = self.customization.name
+        menu_cache = MenuCache(customization_name=customization)
+        menu_cache.clear_cache()
         menu_name = menu_name or str(uuid.uuid4())
         menu = self.menu
         if new_menu:
@@ -215,7 +216,7 @@ class TestModelFunctions:
         for node in range(nodes_count):
             node = baker.make(MenuNode, name=f'{menu_name} - node {node}', enabled=[self.customization], available=[
                        self.customization], authentication=MenuNode.AUTH_CHOICES.logged_in, parent_menu=menu)
-        MENU_CACHE[customization] = Menu.generate_menus(customization=customization, menu_names=[menu_name])
+        menu_cache[customization] = Menu.generate_menus(customization=customization, menu_names=[menu_name])
         return customization, menu_name, menu_type, nodes_count
 
     def map_menu_helper(self, menu_name, base_url, menu_url):
@@ -226,7 +227,8 @@ class TestModelFunctions:
     def test_cached_doc_menu_map(self, uses):
         uses(customization=True, menu=True)
         customization = self.customization.name
-        MENU_CACHE.clear_cache()
+        menu_cache = MenuCache(customization_name=customization)
+        menu_cache.clear_cache()
         test_if_one_in_menu_map = self.map_menu_helper('menu-name-one', 'base-url-one', 'menu-url-one')
         test_if_two_in_menu_map = self.map_menu_helper('menu-name-two', 'base-url-two', 'menu-url-two')
 
@@ -482,7 +484,7 @@ class TestMenuMethods:
             Menu, 'generate_menus_for_customization',
             return_value=('customization', {kb_menu.name.lower(): mocker.sentinel.generated_menu})
         )
-        generated_menu = Menu.generate_menu(kb_menu.name, customization=settings.CUSTOMIZATION)
+        generated_menu = Menu.generate_menu(kb_menu.name, customization=settings.TEST_CUSTOMIZATION)
         assert generated_menu == mocker.sentinel.generated_menu
         prefetch_mock.assert_called_with([kb_menu.name.lower()])
         gen_mock.assert_called_with(['prefetched_menu'], default_customization, include_not_accepted=True)
@@ -526,11 +528,11 @@ class TestMenuMethods:
             Menu, 'generate_menus',
             return_value={'default': mocker.sentinel.default_struct, 'other': mocker.sentinel.other_struct}
         )
-        menu_cache_mock = mocker.patch('cms.models.MENU_CACHE')
-        Menu.cache_all_customizations()
+        Menu.cache_all_customizations(customization=settings.TEST_CUSTOMIZATION)
         gen_menus_mock.assert_called()
-        menu_cache_mock.__setitem__.assert_any_call('default', mocker.sentinel.default_struct)
-        menu_cache_mock.__setitem__.assert_any_call('other', mocker.sentinel.other_struct)
+        menu_cache = MenuCache(customization_name=settings.TEST_CUSTOMIZATION)
+        assert menu_cache['default'] == mocker.sentinel.default_struct
+        assert menu_cache['other'] == mocker.sentinel.other_struct
 
     @pytest.mark.slow
     def test_to_dict(self, menu_with_nodes, expected_menu_dict):
@@ -1297,9 +1299,13 @@ class TestContextFields:
 
 class TestContextMethods:
     @pytest.fixture(autouse=True)
-    def setup(self):
+    def setup(self, arf):
         self.context = baker.prepare('Context', name='test_context')
 
+    @pytest.fixture
+    def cust_request(self, arf):
+        return arf.get('/', customization_name=self.customization.name)
+    
     def test_str(self):
         assert str(self.context) == 'test_context'
         self.context.asset_type = baker.prepare('AssetType', name='test_type')
@@ -1335,7 +1341,7 @@ class TestContextMethods:
 
     @pytest.fixture()
     def asset_with_datarecords_and_review(self, asset_with_datarecords, settings):
-        settings.CUSTOMIZATION = self.customization.name
+        # Todo. Fix after removing get_customization() function
         self.version = baker.make('ContentVersion', asset=self.asset)
         for dr in self.drs:
             dr.version = self.version
@@ -1345,24 +1351,24 @@ class TestContextMethods:
             state=AssetCustomizationReview.REVIEW_STATES.pending
         )
 
-    def test_get_state_incomplete(self, asset_with_context_and_ds):
-        assert self.context.get_state(self.asset) == 'Incomplete'
+    def test_get_state_incomplete(self, asset_with_context_and_ds, cust_request):
+        assert self.context.get_state(self.asset, request=cust_request) == 'Incomplete'
 
-    def test_get_state_draft(self, asset_with_datarecords):
-        assert self.context.get_state(self.asset) == 'Draft'
+    def test_get_state_draft(self, asset_with_datarecords, cust_request):
+        assert self.context.get_state(self.asset, request=cust_request) == 'Draft'
 
-    def test_get_state_review(self, asset_with_datarecords_and_review):
-        assert self.context.get_state(self.asset) == 'In review'
+    def test_get_state_review(self, asset_with_datarecords_and_review, cust_request):
+        assert self.context.get_state(self.asset, request=cust_request) == 'In review'
 
-    def test_get_state_published(self, asset_with_datarecords_and_review):
+    def test_get_state_published(self, asset_with_datarecords_and_review, cust_request):
         self.review.state = AssetCustomizationReview.REVIEW_STATES.accepted
         self.review.save()
-        assert self.context.get_state(self.asset) == 'Published'
+        assert self.context.get_state(self.asset, request=cust_request) == 'Published'
 
-    def test_get_state_rejected(self, asset_with_datarecords_and_review):
+    def test_get_state_rejected(self, asset_with_datarecords_and_review, cust_request):
         self.review.state = AssetCustomizationReview.REVIEW_STATES.rejected
         self.review.save()
-        assert self.context.get_state(self.asset) == 'Rejected'
+        assert self.context.get_state(self.asset, request=cust_request) == 'Rejected'
 
 
 class TestContributorAgreement:
@@ -2107,6 +2113,8 @@ class TestDataStructure:
         assert ds.find_actual_value(asset) == dr.value
 
     def test_find_actual_values(self, setup_accepted_review):
+        # Find actual value requires for customization contextvar.
+        customization_ctx.set(settings.TEST_CUSTOMIZATION)
         asset, version, review = setup_accepted_review
         data_structures = baker.make(
             'DataStructure', type=DataStructure.DATA_TYPES.text, default='default text', translatable=False,

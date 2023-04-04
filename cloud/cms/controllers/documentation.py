@@ -16,18 +16,28 @@ from redis.exceptions import ConnectionError
 from mistletoe import markdown
 from html2text import HTML2Text
 from waffle import switch_is_active
+
+from cloud.customization_context import customization_ctx
 from cms.controllers.asset_json import get_review_matching_current_version, process_asset_global_contexts
 from cms.feature_flags import SWITCHES
 from meilisearch.errors import MeiliSearchCommunicationError, MeiliSearchApiError
-from util.base_cache import BaseCache
+from util.base_cache import BaseCache, BaseCacheV2
 from cms.controllers.filldata import global_contexts_to_dict, ContextProcessor
 from cms.models import DataStructure, AssetType, AssetCustomizationReview, Context, get_cloud_portal_asset, Asset, ExternalFile
-from util.helpers import get_customization, get_meilisearch_client
+from util.helpers import get_meilisearch_client
 
 logger = logging.getLogger(__name__)
 
 INITIALIZATION_TASK_TIMEOUT = 60 * 60
-INITIALIZATION_TASK_KEY = f'initialize-{settings.CUSTOMIZATION}-docs'
+# INITIALIZATION_TASK_KEY = f'initialize-{settings.CUSTOMIZATION}-docs'
+ATTRIBUTES = ['title', 'shortDescription',
+              'body', 'version', 'id', 'labels', 'kbMenus']
+SEARCH_SETTINGS = {
+    'displayedAttributes': ATTRIBUTES,
+    'searchableAttributes': ATTRIBUTES,
+    'sortableAttributes': ATTRIBUTES,
+    'filterableAttributes': ['labels', 'kbMenus'],
+}
 
 def html2md(html):
     parser = HTML2Text()
@@ -67,21 +77,43 @@ def html2plain(html):
 #                 raise e
 
 #     return _ignore_index_not_found
+def start_reinitialization(init_task_key, customization):
+    from cms.tasks import async_initialize_doc_cache
+    from notifications.celery import app
+    running_task = cache.get(init_task_key)
+    if running_task:
+        app.control.revoke(running_task, terminate=True, signal='SIGUSR1')
+    task = async_initialize_doc_cache.apply_async(
+        args=[customization, init_task_key], queue='broadcast-notifications')
+    cache.set(init_task_key, str(task), INITIALIZATION_TASK_TIMEOUT)
 
-class SearchableCache(BaseCache):
+
+
+class SearchableCache(BaseCacheV2):
     check_interval = 60 * 5  # 5 Minutes
     update_interval = 30
 
-    def __init__(self, *args, reinitialize=None, **kwargs):
-        self.custom_settings = kwargs.pop('search_settings', {})
-        super().__init__()
+    def __init__(self, *args, reinitialize=start_reinitialization, **kwargs):
+        self.custom_settings = kwargs.pop('search_settings', SEARCH_SETTINGS)
+        super().__init__(*args, lookup_key='', **kwargs)
         self.current_settings = None
         self._search_index = None
         self.last_checked = 0
         self._reinitialize = reinitialize
         self.get_search_index()
         self.fields_from_doc = [
-            *self.custom_settings.pop('displayedAttributes'), 'blocks']
+            *self.custom_settings.get('displayedAttributes'), 'blocks']
+
+    @property
+    def cache_key(self):
+        return self._cache_key
+
+    def get_init_task_key(self):
+        return f'initialize-{self.customization_name}-docs'
+
+    @property
+    def init_task_key(self):
+        return self.get_init_task_key()
 
     @property
     def search_index(self):
@@ -94,7 +126,7 @@ class SearchableCache(BaseCache):
 
     @property
     def being_initialized(self):
-        return bool(cache.get(INITIALIZATION_TASK_KEY))
+        return bool(cache.get(self.init_task_key))
 
     def get_search_index(self):
         if settings.TESTING:
@@ -162,7 +194,7 @@ class SearchableCache(BaseCache):
                 if self.search_index:
                     self.search_index.delete_all_documents()
                     if self._reinitialize:
-                        self._reinitialize()
+                        self._reinitialize(self.init_task_key, self.customization_name)
 
             except (MeiliSearchCommunicationError, MeiliSearchApiError, TypeError, AttributeError) as e:
                 # MeiliSearchApiError is only raised when running with an empty db
@@ -199,33 +231,14 @@ class SearchableCache(BaseCache):
                     self.mark_updated()
             except (MeiliSearchCommunicationError, TypeError) as e:
                 # MeiliSearchCommunicationError is raised when meilisearch service is unavailable
-                # TypeError is raised when switch is enabled but no master key provided
                 logger.warning(e)
+                # TypeError is raised when switch is enabled but no master key provided
 
 
-ATTRIBUTES = ['title', 'shortDescription',
-              'body', 'version', 'id', 'labels', 'kbMenus']
-
-SEARCH_SETTINGS = {
-    'displayedAttributes': ATTRIBUTES,
-    'searchableAttributes': ATTRIBUTES,
-    'sortableAttributes': ATTRIBUTES,
-    'filterableAttributes': ['labels', 'kbMenus'],
-}
-
-def start_reinitialization():
-    from cms.tasks import async_initialize_doc_cache
-    from notifications.celery import app
-    running_task = cache.get(INITIALIZATION_TASK_KEY)
-    if running_task:
-        app.control.revoke(running_task, terminate=True, signal='SIGUSR1')
-    task = async_initialize_doc_cache.apply_async(
-        args=[settings.CUSTOMIZATION, INITIALIZATION_TASK_KEY], queue='broadcast-notifications')
-    cache.set(INITIALIZATION_TASK_KEY, str(task), INITIALIZATION_TASK_TIMEOUT)
+class DocumentCache(SearchableCache):
+    _cache_key = 'documentation'
 
 
-DOC_CACHE = SearchableCache(
-    cache_key='documentation', search_settings=SEARCH_SETTINGS, reinitialize=start_reinitialization)
 BODY_REGEX = re.compile(r'<body>(.*)</body>', re.S)
 
 
@@ -301,7 +314,8 @@ def apply_replacements(html, replacements):
 
 
 def generate_doc_json(docs, language, draft=False, review=False, trust_cache=False, global_contexts=None, global_contexts_dict=None, external_link=False, force_update=False, *, customization=None, request=None):
-    customization = customization or get_customization(request)
+    customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
+    document_cache = DocumentCache(customization_name=customization)
     S3_LINK = f"https://{settings.AWS_S3_CUSTOM_DOMAIN}"
     REPLACEMENT_LINK = '' if external_link else f"{settings.CLOUD_PORTAL_URL}/static/media"
     doc_structures = DataStructure.objects.filter(
@@ -325,7 +339,7 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
         version = None
         doc_id = doc if type(doc) is int else doc.id
         cache_key = f'{customization}-{language.code}-{doc_id}-{state}'
-        doc_dict = DOC_CACHE[cache_key] or {}
+        doc_dict = document_cache[cache_key] or {}
 
         # Check if we need to query for the asset and version
         if not doc_dict or not trust_cache or review or draft:
@@ -399,7 +413,7 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
             if not draft:
                 doc_dict['kbMenus'] = [
                     node.get_parent().name for node in doc.nodes.all()]
-                DOC_CACHE[cache_key] = doc_dict
+                document_cache[cache_key] = doc_dict
 
         doc_dict_copy = doc_dict.copy()
         del doc_dict_copy['version']

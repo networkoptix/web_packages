@@ -5,11 +5,12 @@ from celery.exceptions import Ignore
 from django.core.exceptions import PermissionDenied
 from django.core.cache import cache
 
+from cloud.customization_context import customization_ctx, needs_customization_ctx
 from cms.controllers import filldata, generate_structure, structure, structure_to_html
 from api.models import Account
 from cms.models import Asset, Menu, PackagesCache, UserGroupsToAssetPermissions, CustomClient
 from celery.result import AsyncResult
-from util.helpers import get_customization
+
 
 PACKAGE_CACHE = PackagesCache()
 
@@ -49,10 +50,10 @@ def get_package_cache_key(asset: Asset, preview=None, version_id=None, structure
 
 
 @shared_task
-def make_package(asset_id, preview, version_id):
+@needs_customization_ctx
+def make_package(asset_id, preview, version_id, customization=None):
     asset = Asset.objects.get(id=asset_id)
     cache_key = get_package_cache_key(asset, preview, version_id)
-
     zip_package = filldata.PackageExporter(
         asset, preview, version_id, update_progress_cb=get_progress_updater(current_task)).get_zip_package()
     PACKAGE_CACHE[cache_key] = {"file": zip_package, "is_ready": True}
@@ -74,7 +75,8 @@ def raise_errors(current_task, errors):
 
 
 @shared_task
-def make_custom_client(custom_client_id, download_id):
+@needs_customization_ctx
+def make_custom_client(custom_client_id, download_id, customization=None):
     custom_client = CustomClient.objects.get(id=custom_client_id)
     cache_key = get_custom_client_package_key(custom_client_id, download_id)
 
@@ -91,7 +93,9 @@ def make_custom_client(custom_client_id, download_id):
 
 
 @shared_task
-def make_structure(user_id, output_format='json', use_actual_values=True, asset_type=None, asset_id=None):
+@needs_customization_ctx
+def make_structure(user_id, output_format='json', use_actual_values=True,
+                   asset_type=None, asset_id=None, customization=None):
     update_progress = get_progress_updater(current_task)
     data = []
     assets = list(Asset.objects.filter(asset_type__type=asset_type)
@@ -137,7 +141,8 @@ def make_asset_dict(asset, use_actual_values):
 
 
 @shared_task
-def async_import_assets_from_json(json_cache_id, user_id, publish=False):
+@needs_customization_ctx
+def async_import_assets_from_json(json_cache_id, user_id, publish=False, customization=None):
     assets_list = PACKAGE_CACHE.get(json_cache_id)
     user = Account.objects.get(pk=user_id)
     task = async_import_assets_from_json.AsyncResult(
@@ -148,7 +153,8 @@ def async_import_assets_from_json(json_cache_id, user_id, publish=False):
 
 
 @shared_task
-def async_menu_import(cache_key, menu_name, user_email, accept_reviews=False):
+@needs_customization_ctx
+def async_menu_import(cache_key, menu_name, user_email, accept_reviews=False, customization=None):
     menu_dict = PACKAGE_CACHE[cache_key]
     menu = Menu.objects.get(name=menu_name)
     user = Account.objects.get(email=user_email)
@@ -158,7 +164,8 @@ def async_menu_import(cache_key, menu_name, user_email, accept_reviews=False):
 
 
 @shared_task
-def async_menu_export(menu_name):
+@needs_customization_ctx
+def async_menu_export(menu_name, customization=None):
     from cms.admin import MenuAdmin
 
     MenuAdmin.generate_export(
@@ -167,6 +174,8 @@ def async_menu_export(menu_name):
 
 @shared_task
 def async_zendesk_sync(menu_id, customization_name, log_id, force_update=True):
+    if not customization_ctx:
+        customization_ctx.set(customization_name)
     from cms.models import Menu, ZendeskSite, ZendeskSyncLog
     from cms.controllers.zendesk import update_customization_structure
     site = ZendeskSite.objects.filter(
@@ -179,10 +188,11 @@ def async_zendesk_sync(menu_id, customization_name, log_id, force_update=True):
 
 
 @shared_task
+@needs_customization_ctx
 def async_zendesk_push_article(asset_id, *, customization=None, request=None):
     from cms.models import Asset
     from cms.controllers.zendesk import push_accepted_article_to_zendesk
-    customization = customization or get_customization(request)
+    customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
     asset = Asset.objects.filter(id=asset_id).first()
     if asset:
         push_accepted_article_to_zendesk(asset, customization=customization, request=request)
@@ -190,8 +200,10 @@ def async_zendesk_push_article(asset_id, *, customization=None, request=None):
 
 @shared_task
 def async_initialize_doc_cache(customization, cache_key=None):
+    if not customization_ctx:
+        customization_ctx.set(customization)
     from cms.models import Customization, AssetType
-    from cms.controllers.documentation import generate_doc_json, DOC_CACHE
+    from cms.controllers.documentation import generate_doc_json
     customization = Customization.objects.filter(name=customization).first()
     if customization:
         generate_doc_json(
@@ -208,7 +220,9 @@ def async_initialize_doc_cache(customization, cache_key=None):
 
 @shared_task
 def async_generate_menus(customization, cache_key):
-    from cms.models import Menu, MENU_CACHE
-    MENU_CACHE[customization] = Menu.generate_menus(customization=customization)
+    if not customization_ctx.get():
+        customization_ctx.set(customization)
+    from cms.models import Menu, MenuCache
+    MenuCache(customization_name=customization)[customization] = Menu.generate_menus(customization=customization)
     if cache_key:
         cache.delete(cache_key)

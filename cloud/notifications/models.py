@@ -1,4 +1,4 @@
-from concurrent.futures import ThreadPoolExecutor, wait, as_completed
+from concurrent.futures import wait, as_completed
 import json
 import re
 from uuid import UUID, uuid4
@@ -20,9 +20,10 @@ from rest_framework import serializers
 
 import botocore
 
+from cloud.customization_context import ContextExecutor, customization_ctx
 from cms.models import Customization, Asset, DataStructure
 from api.models import Account
-from util.helpers import get_customization
+
 from .conf import get_sns_client
 
 # Monkey patch to add extra keys to be used in the "notification" object in the request to fcm
@@ -65,7 +66,7 @@ class Event(models.Model):
 
     def send(self, *, customization=None, request=None):
         self.save()
-        customization = customization or get_customization(request)
+        customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
         # 1. Get all subscriptions for this event
         subscriptions = Subscription.objects.filter(Q(type=self.type, object='') |
                                                     Q(type='', object=self.object) |
@@ -136,7 +137,7 @@ class Message(models.Model):
 
     def send(self, *, customization=None, request=None):
         self.save()
-        customization = customization or get_customization(request)
+        customization = self.customization
 
         # TODO: initiate business-logic here
 
@@ -183,7 +184,7 @@ class Feedback(models.Model):
         return f'{self.asset_name} - {self.type}'
 
     def send(self, *, customization=None, request=None):
-        customization = customization or get_customization(request)
+        customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
         self.save()
         data = {
             'sender_name': self.sender_name,
@@ -392,7 +393,7 @@ class PushNotification(models.Model):
             type=PushDevice.TYPES.data)
 
         # Multithreading to deal with lots of network I/O delay
-        with ThreadPoolExecutor() as executor:
+        with ContextExecutor() as executor:
             futures = [
                 executor.submit(device.send_message, body, title=title, extra={
                                 **payload, 'targets': device.targets}, **options)
@@ -494,10 +495,9 @@ def check_urls(known_urls, sub_val='{redacted_url}'):
     return _check_urls
 
 
-
-def clean_content_factory(known_urls=None):
+def clean_content_factory(known_urls=None, customization=None):
     from cms.forms import get_branding_shortcuts
-    _branding, hidden_branding = get_branding_shortcuts()
+    _branding, hidden_branding = get_branding_shortcuts(customization=customization)
     known_urls = [url] if isinstance(url := known_urls or [], str) else url
     known_urls += [val.split('//')[-1] for _, val in _branding + hidden_branding if val and re.search(URL_REGEX, val)]
 
@@ -506,7 +506,8 @@ def clean_content_factory(known_urls=None):
 
     return _clean_content
 
-def sub_system_id_factory():
+
+def sub_system_id_factory(**kwargs):
     proxy = settings.TRAFFIC_RELAY_HOST.replace('{systemId}', '')
     system_link_regex = r"(?<=://)([0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12})" + f'(?!{proxy})'
 
@@ -557,7 +558,7 @@ class SystemEmail(models.Model):
             content_cleaners = [clean_content_factory, sub_system_id_factory]
 
             for cleaner in content_cleaners:
-                content = cleaner()(content)
+                content = cleaner(customization=self.customization)(content)
 
             return content
 

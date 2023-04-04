@@ -6,7 +6,7 @@ from cms.controllers import modify_db
 from cms.controllers import structure
 from cms import forms
 from cms.models import *
-from util.helpers import get_customization, substitute_branding
+from util.helpers import substitute_branding
 
 from django.conf import settings
 from django.utils.http import urlencode
@@ -322,7 +322,7 @@ class Importer:
             )
 
     def import_knowledgebase(self, menu, category_name, *, customization=None, request=None):
-        customization = customization or get_customization(request)
+        customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
         self.menu = menu
         self.category_name = category_name
         self.customization = Customization.objects.get(
@@ -338,8 +338,12 @@ class Importer:
 
 
 class ZendeskBase:
-    def __init__(self, customization_name=None, cloud_portal=None, default_permission_group_id=None, verify_auth=False):
-        self.customization_name = customization_name or get_customization()
+    def __init__(self, customization_name, cloud_portal=None, default_permission_group_id=None, verify_auth=False):
+        # Added exception because previous implementation always has a customization value.
+        # self.customization_name = customization_name or get_customization()
+        if not customization_name:
+            raise APIInternalException('No customization given.', error_code=ErrorCodes.no_customization_given)
+        self.customization_name = customization_name
         self.cloud_portal = cloud_portal or get_cloud_portal_asset(
             self.customization_name)
         domain = self.cloud_portal.read_global_value('%ZENDESK_DOMAIN%')
@@ -1027,7 +1031,7 @@ def sync_article(zd_article, doc_json, site, exporter):
 
 
 def push_accepted_article_to_zendesk(asset, *, customization=None, request=None):
-    customization = customization or get_customization(request)
+    customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
     cloud_portal = get_cloud_portal_asset(customization=customization)
     sync_enabled = cloud_portal.read_global_value('%ZENDESK_SYNC_ARTICLES%')
     zd_articles = list(ZendeskArticle.objects.filter(asset=asset, sync=True))

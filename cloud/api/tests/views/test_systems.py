@@ -394,7 +394,7 @@ class TestSystemViews:
         request.session = {}
         response = await connect(request)
         temp_login_mock.assert_called_with(self.user.email, self.password)
-        bind_mock.assert_called_with(self.tokens, connect_data['name'], customization=settings.CUSTOMIZATION)
+        bind_mock.assert_called_with(self.tokens, connect_data['name'], customization=settings.TEST_CUSTOMIZATION)
         assert response.data == self.sample_data
 
     @pytest.mark.asyncio

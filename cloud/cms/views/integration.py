@@ -10,7 +10,7 @@ from rest_framework.permissions import AllowAny
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
-from util.helpers import get_customization, get_language_object_from_request
+from util.helpers import get_language_object_from_request
 from cloud.helpers.exceptions import api_success
 from cms.models import Asset, AssetCustomizationReview, AssetType,\
     UserGroupsToAssetPermissions
@@ -49,7 +49,7 @@ def get_integration(request, asset_id=None):
     draft = "draft" in request.GET
     review = "pending" in request.GET
     is_enabled = check_integration_store_enabled(request)
-    customization = get_customization(request)
+    customization = request.CUSTOMIZATION
     has_beta_access = UserGroupsToAssetPermissions.user_has_beta_access(
         request.user, customization=customization)
     has_draft_permission = UserGroupsToAssetPermissions.check_customization_permission(
@@ -99,7 +99,7 @@ def get_integrations(request):
     """
     is_enabled = check_integration_store_enabled(request)
     language = get_language_object_from_request(request)
-    customization=get_customization(request)
+    customization = request.CUSTOMIZATION
     integrations = Asset.objects.filter(asset_type__type=INTEGRATION,
                                         customizations__name__in=[customization])
 
@@ -166,7 +166,7 @@ def get_integrations(request):
 @permission_classes((AllowAny, ))
 def get_integrations_count(request):
     is_enabled = check_integration_store_enabled(request)
-    customization=get_customization(request)
+    customization = request.CUSTOMIZATION
     is_portal_manager = UserGroupsToAssetPermissions. \
         check_customization_permission(
             request.user, customization, 'cms.publish_version')

@@ -3,6 +3,8 @@ from collections import defaultdict, OrderedDict
 from contextlib import suppress
 from django.core.files import base
 from django.db.models.expressions import OuterRef, Subquery
+
+from util.base_cache import IntegrationCache
 from util.config import UnableToFetchConfigException
 from waffle import flag_is_active
 from cms.controllers.asset_json import get_contexts_and_datastructures_of_asset_type
@@ -42,9 +44,7 @@ from cms.serializers import AssetManifestSerializer, AssetSerializer, CustomClie
     PackageDownloadIdSerializer
 from cms import tasks
 
-from ..controllers.documentation import DOC_CACHE
-from ..controllers.integration import INTEGRATION_CACHE
-
+from ..controllers.documentation import DocumentCache
 
 DRAFT = Asset.PREVIEW_STATUS[Asset.PREVIEW_STATUS.draft]
 PACKAGES_CACHE = PackagesCache()
@@ -259,7 +259,7 @@ def page_editor(request):
         # Otherwise go to the first customization in the list of reviews.
         try:
             customization_review = customization_reviews.get(
-                customization__name=get_customization(request))
+                customization__name=request.CUSTOMIZATION)
         except AssetCustomizationReview.DoesNotExist:
             customization_review = customization_reviews.first()
 
@@ -313,13 +313,18 @@ def publish_review(request, target_review, target_customization='', message=True
     asset = target_review.version.asset
     customization = target_review.customization.name
     target_review_id = target_review.id
-    customization_cache = MENU_CACHE[customization]
+    menu_cache = MenuCache(request=request)
+    customization_cache = menu_cache[customization]
     if customization_cache:
         menus = {node.get_parent() for node in asset.nodes.all()}
         if len(menus):
-            MENU_CACHE[customization] = None
+            menu_cache[customization] = None
     if asset.is_cloud_portal:
-        INTEGRATION_CACHE.clear_cache()
+        # Integration cache does not allow partial initiation, all attributes needed for lookup
+        # generation must be set.
+        # IntegrationCache(lookup_key='integrations', customization_required=False).clear_cache()
+        # Todo. Using direct cache call instead. Replace it when fixed.
+        caches['integrations'].clear()
         if not asset.can_preview_on_portal:
             return 'success', f'Version {target_review.version.id} has been published'
 
@@ -334,7 +339,7 @@ def publish_review(request, target_review, target_customization='', message=True
         modify_db.update_draft_state(
             target_review_id, AssetCustomizationReview.REVIEW_STATES.accepted, request.user)
         if asset.is_documentation:
-            DOC_CACHE.clear_cache()
+            DocumentCache(customization_name=request.CUSTOMIZATION).clear_cache()
             zd_articles = ZendeskArticle.objects.filter(
                 asset__id=asset.id, site__customization__name=target_customization)
             if zd_articles:
@@ -377,7 +382,7 @@ def manage_release_note_notification(asset_review):
 
 
 def create_or_update_notification_for_release_note(asset, version, *, customization=None, request=None):
-    customization = customization or helpers.get_customization(request)
+    customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
     _, datastructures = get_contexts_and_datastructures_of_asset_type(
         AssetType.ASSET_TYPES.release_notes)
     datastructures = DataStructure.find_actual_values(
@@ -490,7 +495,7 @@ def handle_revoke(request, asset_review, can_publish):
 
 @defer_handler
 def handle_reject_or_ask(request, asset_review):
-    customization=get_customization(request)
+    customization = request.CUSTOMIZATION
     if "ask_question" not in request.POST and "reject" not in request.POST:
         return
 
@@ -532,7 +537,7 @@ def handle_invalid_option():
 
 def get_review_arguments(request):
     review_id = request.POST.get('review_id')
-    customization=get_customization(request)
+    customization = request.CUSTOMIZATION
     asset_review = AssetCustomizationReview.objects.filter(
         id=review_id).first()
     can_publish = asset_review and UserGroupsToAssetPermissions.check_customization_publish(
@@ -586,7 +591,7 @@ def make_preview(request):
     version_id = request.POST.get('version_id')
     context = Context.objects.filter(id=request.POST['context_id']).first()
     asset = get_asset_by_revision(version_id)
-    customization=get_customization(request)
+    customization = request.CUSTOMIZATION
 
     if not UserGroupsToAssetPermissions.check_asset_edit_content(request.user, asset) and \
             not UserGroupsToAssetPermissions.check_customization_publish(request.user, customization=customization):
@@ -649,7 +654,9 @@ def handle_settings_from_json(request, is_loaded, form, file, asset):
         json_cache_id = uuid.uuid4()
         PACKAGE_CACHE[json_cache_id] = loaded_json
         task = tasks.async_import_assets_from_json.apply_async(
-            args=[json_cache_id, request.user.id, import_assets_from_json_publish], queue='broadcast-notifications')
+            args=[json_cache_id, request.user.id, import_assets_from_json_publish],
+            kwargs={'customization': request.CUSTOMIZATION},
+            queue='broadcast-notifications')
         messages.info(request, 'Starting assets import')
         return [task, None, conflicts]
     elif update_structure:
@@ -801,9 +808,11 @@ def download_current_structure(request, asset_id):
     structure_info = PACKAGES_CACHE.get(cache_key)
     if not structure_info:
         use_actual_values = "get_values" in request.query_params
-        task = tasks.make_structure.apply_async(kwargs={'asset_id': asset_id,
-                                                        'output_format': output_format, 'use_actual_values': use_actual_values,
-                                                        'user_id': request.user.id}, queue='broadcast-notifications')
+        task = tasks.make_structure.apply_async(
+            kwargs={'asset_id': asset_id, 'output_format': output_format,
+                    'use_actual_values': use_actual_values, 'user_id': request.user.id,
+                    'customization': request.CUSTOMIZATION},
+            queue='broadcast-notifications')
         PACKAGES_CACHE[cache_key] = {"file": None,
                                      "is_ready": False, "task_id": str(task)}
         return api_success({"msg": f"Building the {asset} structure", "is_ready": False, "task_id": str(task)})
@@ -876,8 +885,10 @@ def download_all_asset_structures(request, asset_type):
     asset_type_name = AssetType.objects.filter(type=asset_type).first()
     structure_info = PACKAGES_CACHE.get(cache_key)
     if not structure_info:
-        task = tasks.make_structure.apply_async(kwargs={
-            'asset_type': asset_type, 'user_id': request.user.id}, queue='broadcast-notifications')
+        task = tasks.make_structure.apply_async(
+            kwargs={'asset_type': asset_type, 'user_id': request.user.id,
+                    'customization': request.CUSTOMIZATION},
+            queue='broadcast-notifications')
         PACKAGES_CACHE[cache_key] = {"file": None,
                                      "is_ready": False, "task_id": str(task)}
         return api_success({"msg": f"Building the All {asset_type_name} structures", "is_ready": False, "task_id": str(task)})
@@ -944,21 +955,24 @@ def download_package(request, asset_id):
             error_message = f"Asset does not have all required fields filled for version: {version_id}"
         return HttpResponseBadRequest(error_message)
 
-    if package_info := handle_cloud_portal_and_vms_package(*package_args):
+    if package_info := handle_cloud_portal_and_vms_package(*package_args, customization=request.CUSTOMIZATION):
         return api_success(package_info)
     else:
         zipped_data = filldata.PackageExporter(*package_args).get_zip_package()
         return response_attachment(zipped_data, make_package_name(asset), "application/zip")
 
 
-def handle_cloud_portal_and_vms_package(asset, preview, version_id):
+def handle_cloud_portal_and_vms_package(asset, preview, version_id, customization=None):
     if not asset.is_cloud_portal and not asset.is_vms:
         return None
     cache_key = tasks.get_package_cache_key(asset, preview, version_id)
     package_info = PACKAGES_CACHE.get(cache_key)
     if not package_info:
         task = tasks.make_package.apply_async(
-            args=[asset.id, preview, version_id], queue='broadcast-notifications')
+            args=[asset.id, preview, version_id],
+            kwargs={'customization': customization or customization_ctx.get()},
+            queue='broadcast-notifications'
+        )
         PACKAGES_CACHE[cache_key] = {
             "file": None, "is_ready": False, "task_id": str(task)}
         return {"msg": "Building the package", "is_ready": False, "task_id": str(task)}
@@ -1072,7 +1086,7 @@ class MenuAssetAutocomplete(autocomplete.Select2QuerySetView):
 
 def prepare_asset_info(request, customization, asset, ignore_error=False):
     review_url = None
-    customization = customization or get_customization(request)
+    customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
     if (
         not request.user.is_superuser
         and not (
@@ -1138,7 +1152,7 @@ def dict_to_nodes(to_transform, sort_children=True):
 
 
 def build_up(target_dict, name, asset_type, include_preview=True, include_admin=True, *, customization=None, request=None):
-    customization = customization or helpers.get_customization(request)
+    customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
     assets = Asset.objects.filter(
         asset_type__type=asset_type, customizations__name=customization)
     target_dict[name] = []
@@ -1176,7 +1190,7 @@ def build_up(target_dict, name, asset_type, include_preview=True, include_admin=
 @permission_required('cms.change_asset')
 def get_assets(request):
     max_age = int(request.GET.get('maxAge') or 0)
-    customization=helpers.get_customization(request)
+    customization = request.CUSTOMIZATION
     included_types = request.GET.getlist('type') or [
         'custom_clients', *[asset_type for asset_type in AssetType.ASSET_TYPES._identifier_map.keys()]]
     selected_type_ids = [asset_type_id for identifier in included_types if (
@@ -1259,12 +1273,12 @@ class CustomClientViewSet(WaffleFlagMixin, ModelViewSet):
     def get_queryset(self):
         if self.request.user.is_anonymous:
             return CustomClient.objects.none()
-        return self.request.user.customclient_set.filter(created_customization__name=helpers.get_customization(self.request))
+        return self.request.user.customclient_set.filter(created_customization__name=self.request.CUSTOMIZATION)
 
     def perform_create(self, serializer):
         from cms.models import get_vms_asset
         kwargs = {}
-        customization = helpers.get_customization(self.request)
+        customization = self.request.CUSTOMIZATION
         if not settings.META:
             kwargs['base_vms'] = get_vms_asset(customization=customization)
         serializer.save(
@@ -1327,7 +1341,9 @@ class CustomClientViewSet(WaffleFlagMixin, ModelViewSet):
         custom_client = self.get_object()
         download_id = uuid.uuid4()
         task_id = tasks.make_custom_client.apply_async(
-            args=[custom_client.pk, download_id], queue='broadcast-notifications')
+            args=[custom_client.pk, download_id],
+            kwargs={'customization': getattr(request, 'CUSTOMIZATION', customization_ctx.get())},
+            queue='broadcast-notifications')
         cache_key = tasks.get_custom_client_package_key(
             custom_client.pk, download_id)
         PACKAGES_CACHE[cache_key] = {"file": None,

@@ -1,9 +1,10 @@
 from django.conf import settings
 
+from cloud.customization_context import customization_ctx
+from cloud.helpers.exceptions import ErrorCodes, APIRequestException, APIInternalException
 from cms.controllers.filldata import ContextProcessor
 from cms.models import Asset, AssetCustomizationReview, AssetType, Context, DataStructure, get_cloud_portal_asset
 from util.base_cache import BaseCache
-from util.helpers import get_customization
 
 S3_STRUCTURE_TYPES = [
             DataStructure.DATA_TYPES.external_image, DataStructure.DATA_TYPES.external_file]
@@ -42,12 +43,17 @@ def get_global_contexts(cloud_portal):
 
 
 def get_current_version(language, state, versions, asset, show_pending=False, show_drafts=False, *, customization=None, request=None):
-    customization = customization or get_customization(request)
+    if not customization and not request and not customization_ctx.get():
+        raise APIInternalException('Customization must be given.',
+                                   error_code=ErrorCodes.no_customization_given)
+    customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
     review_id = None
     has_version = False
     version_not_found = has_version, None, None, None
     current_version = versions[asset.id]
-    lookup_key = BaseCache.generate_lookup_key(language, state, asset.id, current_version)
+    # Todo. remove lookup_key generation.
+    lookup_key = BaseCache.generate_lookup_key(language, state, asset.id, current_version,
+                                               customization_name=customization)
     if show_pending:
         if not (review := get_review_matching_current_version(asset, current_version, customization=customization)):
             return version_not_found
@@ -80,23 +86,29 @@ def generate_asset_dictionary(show_pending, show_drafts, asset, current_version,
     return asset_dict
 
 
-def find_actual_values(data_structures, asset, current_version, show_pending, show_drafts, *, customization=None, request=None, name_filter=None):
+def find_actual_values(data_structures, asset, current_version, show_pending, show_drafts, *,
+                       customization=None, request=None, name_filter=None):
     ds_list = data_structures
-    customization = customization or get_customization(request)
+    if not customization and not request and not customization_ctx.get():
+        raise APIInternalException('Customization must be given.',
+                                   error_code=ErrorCodes.no_customization_given)
+    customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
     if name_filter:
         ds_list = [ds for ds in ds_list if ds.name in name_filter]
 
     return DataStructure.find_actual_values(ds_list, asset=asset, version_id=current_version,
-                                               draft=show_pending or show_drafts, customization_name=customization)
+                                            draft=show_pending or show_drafts, customization_name=customization)
 
 
 def map_ds_attribute_to_actual_value(datastructure_values, map_by='id'):
      return { getattr(ds, map_by): actual_value for ds, actual_value in datastructure_values.items() }
 
 
-def generate_context_dicts_with_actual_values(show_pending, show_drafts, contexts, data_structures, asset, current_version, *, customization=None, request=None):
+def generate_context_dicts_with_actual_values(show_pending, show_drafts, contexts, data_structures, asset,
+                                              current_version, *, customization=None, request=None):
     actual_values = find_actual_values(
-        data_structures, asset, current_version, show_pending, show_drafts, customization=customization, request=request)
+        data_structures, asset, current_version, show_pending, show_drafts,
+        customization=customization, request=request)
     actual_values = map_ds_attribute_to_actual_value(actual_values)
 
     for context in contexts:
@@ -119,7 +131,8 @@ def generate_context_dicts_with_actual_values(show_pending, show_drafts, context
         yield context, context_dict
 
 
-def process_asset_global_contexts(language, cloud_portal, global_contexts, current_version, asset_dict, global_contexts_dict=None):
+def process_asset_global_contexts(language, cloud_portal, global_contexts, current_version,
+                                  asset_dict, global_contexts_dict=None):
     context_processor = ContextProcessor(
         asset=cloud_portal, version_id=current_version,
         preview=False, global_contexts=global_contexts,
@@ -130,7 +143,10 @@ def process_asset_global_contexts(language, cloud_portal, global_contexts, curre
 
 
 def get_review_matching_current_version(asset, current_version, *, customization=None, request=None):
-    customization = customization or get_customization(request)
+    if not customization and not request and not customization_ctx.get():
+        raise APIInternalException('Customization must be given.',
+                                   error_code=ErrorCodes.no_customization_given)
+    customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
     return AssetCustomizationReview.objects.filter(version__id__gt=current_version,
                                                    version__asset=asset,
                                                    customization__name=customization,

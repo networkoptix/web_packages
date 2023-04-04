@@ -60,7 +60,7 @@ class TestEvent(BaseModelTest):
             **json.loads(instance.data)
         }
 
-        instance.send()
+        instance.send(customization=settings.TEST_CUSTOMIZATION)
 
         assert mock_save.call_count == 2
         assert instance.send_date is not None
@@ -191,9 +191,9 @@ class TestFeedback(BaseModelTest):
             'message': instance.message
         }
 
-        instance.send(customization=settings.CUSTOMIZATION)
+        instance.send(customization=settings.TEST_CUSTOMIZATION)
 
-        mock_event.send.assert_called_once_with(customization=settings.CUSTOMIZATION)
+        mock_event.send.assert_called_once_with(customization=settings.TEST_CUSTOMIZATION)
         mock_save.assert_called_once_with()
         mock_create_event.assert_called_once_with(
             type=instance.type,
@@ -203,7 +203,7 @@ class TestFeedback(BaseModelTest):
         mock_create_message.assert_called_once_with(
             user_email=json.dumps([instance.sender_email]),
             type=instance.type,
-            customization=settings.CUSTOMIZATION,
+            customization=settings.TEST_CUSTOMIZATION,
             message=expected_message,
             event=mock_event
         )

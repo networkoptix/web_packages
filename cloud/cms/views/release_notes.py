@@ -1,7 +1,6 @@
 from cms.controllers.asset_json import get_state
 from cms.controllers.release_notes import make_release_notes_json
 from cms.serializers import ReleaseNotesListSerializer, ReleaseNotesSerializer
-from util.base_cache import BaseCache
 from django.conf import settings
 from django.db.models import Q
 
@@ -12,13 +11,12 @@ from rest_framework.permissions import AllowAny
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
-from util.helpers import get_customization, get_language_object_from_request
+from util.helpers import get_language_object_from_request
 from cloud.helpers.exceptions import api_success
 from cms.models import Asset, AssetCustomizationReview, AssetType,\
     UserGroupsToAssetPermissions
 
 
-RELEASE_NOTES_CACHE = BaseCache(cache_key='release_notes')
 RELEASE_NOTES_ASSET_TYPE = AssetType.ASSET_TYPES.release_notes
 PENDING = AssetCustomizationReview.REVIEW_STATES.pending
 
@@ -53,7 +51,7 @@ RELEASE_NOTES_REVIEW_FORBIDDEN = "You do not have permission to view this review
 def get_release_note(request, asset_id=None):
     draft = "draft" in request.GET
     review = "pending" in request.GET
-    customization=get_customization(request)
+    customization = request.CUSTOMIZATION
 
     if not asset_id:
         return api_success(RELEASE_NOTES_NOT_FOUND, status_code=status.HTTP_404_NOT_FOUND)
@@ -99,7 +97,7 @@ def get_release_notes(request):
     Returns a list of release_notes available to the current user
     """
     customization_release_notes = Asset.objects.filter(asset_type__type=RELEASE_NOTES_ASSET_TYPE,
-                                                       customizations__name__in=[get_customization(request)])
+                                                       customizations__name__in=[request.CUSTOMIZATION])
     serializer = ReleaseNotesListSerializer.generate(
         customization_release_notes, request)
     serializer.is_valid()

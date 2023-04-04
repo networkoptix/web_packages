@@ -3,7 +3,7 @@ import json
 from django import template
 
 from cms.models import *
-from util.helpers import get_customization
+
 
 register = template.Library()
 
@@ -68,7 +68,7 @@ def has_permission(user, asset, permission=None):
 
 @register.simple_tag(takes_context=True)
 def has_customization_permission(context, user, customization, permission):
-    customization = customization or get_customization(context['request'])
+    customization = customization or context['request'].CUSTOMIZATION
     return UserGroupsToAssetPermissions.check_customization_permission(user, customization, permission)
 
 

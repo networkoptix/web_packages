@@ -16,6 +16,11 @@ from model_bakery import baker
 
 import pytest
 
+
+@pytest.fixture()
+def simple_request(arf):
+    return arf.get('/')
+
 class TestHelperFunctions:
 
     def test_convert_meta_to_description(self):
@@ -45,32 +50,32 @@ class TestHelperFunctions:
 
     def test_get_languages_list(self, db):
         test_language = baker.make("Language", name='test_language', code='TL')
-        customization = Customization.objects.get(name=settings.CUSTOMIZATION)
+        customization = Customization.objects.get(name=settings.TEST_CUSTOMIZATION)
         customization.languages.add(test_language)
         customization.default_language = test_language
         customization.save()
 
-        languages = get_languages_list(customization=settings.CUSTOMIZATION)
+        languages = get_languages_list(customization=settings.TEST_CUSTOMIZATION)
         assert tuple(languages) == (('TL', 'TL - test_language - default'),)
 
-    def test_get_branding_shortcuts(self, db):
-        brands, hidden_brands = get_branding_shortcuts()
+    def test_get_branding_shortcuts(self, db, simple_request):
+        brands, hidden_brands = get_branding_shortcuts(request=simple_request)
         # Not sure if these will change so the first value is being checked only
         assert brands[0][0]['name'] == '%CLOUD_NAME%'
         assert hidden_brands[0][0]['name'] == '%SKIN%'
 
     @patch('cms.models.DataStructure.find_actual_values')
     def test_get_restricted_keywords(self, mock_cms_models, mocker, db):
-        branding_context = Context.objects.get(name='branding', asset_type=get_cloud_portal_asset(customization=settings.CUSTOMIZATION).asset_type)
+        branding_context = Context.objects.get(name='branding', asset_type=get_cloud_portal_asset(customization=settings.TEST_CUSTOMIZATION).asset_type)
         restricted_ds = branding_context.datastructure_set.filter(name='Restricted').first()
         mock_cms_models.return_value = {restricted_ds: ['item1', 'item2']}
 
-        restricted_words = get_restricted_keywords(customization=settings.CUSTOMIZATION)
+        restricted_words = get_restricted_keywords(customization=settings.TEST_CUSTOMIZATION)
         assert restricted_words == ['item1', 'item2']
 
-    def test_generate_branding_variables(self, db):
+    def test_generate_branding_variables(self, db, simple_request):
         datastructure = baker.make("DataStructure", name='Test DS')
-        branding_variables = generate_branding_variables(datastructure)
+        branding_variables = generate_branding_variables(datastructure, request=simple_request)
         # Check that it is html
         assert list(filter(lambda html_snippet: not isinstance(html_snippet, str), BeautifulSoup(branding_variables, "html.parser").contents))
 
@@ -231,8 +236,9 @@ class TestCustomContextForm:
         mocker.patch('cms.forms.get_branding_shortcuts', return_value = [self.mocked_branding_shortcuts, self.mocked_hidden_branding_shortcuts])
 
     @pytest.fixture()
-    def init_form(self):
-        self.form = CustomContextForm(initial={'language': self.language, 'context': self.context.id},  order = None, request=None)
+    def init_form(self, simple_request):
+        # Todo. Check ability to use request object from out of test function.
+        self.form = CustomContextForm(initial={'language': self.language, 'context': self.context.id},  order = None, request=simple_request)
 
     @pytest.fixture()
     def create_datastructures(self, mocker):

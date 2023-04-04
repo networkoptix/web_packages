@@ -1,11 +1,12 @@
 import pytest
+from django.conf import settings
 from rest_framework import status
 
 from cms.controllers.documentation import generate_doc_json
 from cms.models import Menu, AssetType, MenuCache
 from cms.views.documentation import KB_NOT_FOUND, PAGE_NOT_FOUND, find_article, find_asset_knowledgebase, get_page, get_pages, kb_for_article, menu_to_endpoint, populate_docs_from_knowledgebase, simple_filter
 
-MENU_CACHE = MenuCache()
+menu_cache = MenuCache(customization_name=settings.TEST_CUSTOMIZATION)
 
 
 class TestDocumentation:
@@ -27,7 +28,7 @@ class TestDocumentation:
     @pytest.fixture(autouse=True)
     def setup(self, account_factory, asset_factory, customization_factory, menu_factory, asset_menu_node_factory, arf, db):
         # Setup common
-        MENU_CACHE.clear_cache()
+        menu_cache.clear_cache(immediate=True)
         self.arf = arf
         self.superuser = account_factory()
         self.enabled_customizations = [customization_factory()]
@@ -52,6 +53,7 @@ class TestDocumentation:
         self.struct_nodes = [asset_menu_node_factory(
             asset=doc, enabled_customizations=self.enabled_customizations, parent_menu=self.kb_menu_struct) for doc in self.struct_docs]
         self.kb_menu_struct.nodes.add(*self.struct_nodes)
+
 
     # Helper Methods
 
@@ -101,14 +103,6 @@ class TestDocumentation:
         assert response.status_code == status.HTTP_200_OK
 
     @pytest.mark.slow
-    def test_get_pages_404(self):
-        response = self.get_pages_with(
-            self.test_kb_non_existing, self.superuser)
-        assert response.status_code == status.HTTP_404_NOT_FOUND
-        assert response.data.get(
-            'errorText', '') == f'Knowledgebase {self.test_kb_non_existing} not found'
-
-    @pytest.mark.slow
     def test_kb_for_article_200(self):
         response = self.kb_for_article_with(
             self.existing_asset_id, self.superuser)
@@ -122,6 +116,14 @@ class TestDocumentation:
             self.non_existing_asset_id, self.superuser)
         assert response.status_code == status.HTTP_404_NOT_FOUND
         assert response.data.get('errorText', '') == KB_NOT_FOUND
+
+    @pytest.mark.slow
+    def test_get_pages_404(self):
+        response = self.get_pages_with(
+            self.test_kb_non_existing, self.superuser)
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+        assert response.data.get(
+            'errorText', '') == f'Knowledgebase {self.test_kb_non_existing} not found'
 
     @pytest.mark.slow
     def test_menu_to_endpoint(self):
@@ -149,13 +151,13 @@ class TestDocumentation:
         assert len(docs_target) == self.number_docs
 
     @pytest.mark.slow
-    def test_simple_filter(self, language_factory, asset_factory):
+    def test_simple_filter(self, language_factory, asset_factory, arf):
         match_term = 'findMe'
         num_title_matches = 3
         num_short_description_matches = 2
 
         docs_json = generate_doc_json(
-            self.kb_docs, language=language_factory(), trust_cache=False)
+            self.kb_docs, language=language_factory(), trust_cache=False, request=arf.get('/'))
 
         for index in range(num_title_matches + num_short_description_matches):
             docs_json[index]['title' if index < num_title_matches else 'shortDescription'] = ' ' * index + match_term

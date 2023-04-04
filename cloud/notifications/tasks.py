@@ -17,7 +17,7 @@ from notifications import notifications_api
 from notifications.engines import email_engine
 from notifications.notifications_api import log_push_result, get_push_devices_from_targets, get_system_with_users
 from notifications.models import RESULT_STATES, Message, PushNotification, SystemEmail
-from util.helpers import get_customization, get_language_for_email
+from util.helpers import get_language_for_email
 
 logger = logging.getLogger(__name__)
 

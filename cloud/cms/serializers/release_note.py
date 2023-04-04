@@ -8,7 +8,7 @@ from rest_framework import serializers
 
 from cms.controllers.release_notes import make_release_notes_json
 from cms.models import AssetCustomizationReview, UserGroupsToAssetPermissions
-from util.helpers import get_customization, get_language_object_from_request
+from util.helpers import get_language_object_from_request
 
 
 class ReleaseNotesContentSerializer(serializers.Serializer):
@@ -45,7 +45,7 @@ class ReleaseNotesListSerializer(serializers.Serializer):
     def generate(release_notes, request):
         language = get_language_object_from_request(request)
         response_release_notes = []
-        customization=get_customization(request)
+        customization = request.CUSTOMIZATION
 
         is_portal_manager = UserGroupsToAssetPermissions.\
             check_customization_permission(

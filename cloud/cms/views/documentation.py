@@ -3,7 +3,6 @@ from django.core.paginator import Paginator
 from rest_framework.decorators import api_view, permission_classes
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from django.conf import settings
 from math import ceil
 from rest_framework import status
 
@@ -11,13 +10,13 @@ from cloud.helpers.exceptions import (
     APIInternalException, api_success, handle_exceptions, APINotFoundException, APIForbiddenException)
 from api.serializers import MenusSerializer
 from cms.controllers.integration import make_integrations_json
-from cms.controllers.documentation import generate_doc_json, DOC_CACHE
+from cms.controllers.documentation import generate_doc_json, DocumentCache
 from cms.controllers.filldata import global_contexts_to_dict
 from cms.models import Asset, AssetType, get_cached_menu, Context, get_cloud_portal_asset, Menu, cached_doc_menu_map, \
     AssetCustomizationReview
 from cms.permissions import CanViewDevelopers
 from cms.serializers import *
-from util.helpers import get_customization, get_language_object_from_request, get_meilisearch_client
+from util.helpers import get_language_object_from_request, get_meilisearch_client
 import re
 from meilisearch.errors import MeiliSearchApiError
 
@@ -66,7 +65,7 @@ def get_page(request, doc_id):
                                         error_text='Not allowed to view this preview')
 
         docs_json = generate_doc_json(
-            [doc], language=language, draft=draft, review=review)
+            [doc], language=language, draft=draft, review=review, request=request)
         if docs_json:
             ser = DocumentationPageSerializer(data=docs_json[0])
             ser.is_valid()
@@ -99,7 +98,7 @@ def find_article(nodes, doc_id):
 @handle_exceptions
 def kb_for_article(request, doc_id):
     doc = Asset.objects.filter(
-        id=doc_id, asset_type__type=AssetType.ASSET_TYPES.documentation, customizations__name=get_customization(request),
+        id=doc_id, asset_type__type=AssetType.ASSET_TYPES.documentation, customizations__name=request.CUSTOMIZATION,
         contentversion__assetcustomizationreview__state=AssetCustomizationReview.REVIEW_STATES.accepted
     ).first()
     if not doc:
@@ -190,9 +189,10 @@ kb_name__path_param = openapi.Parameter(
 
 
 def sync_search_for_menu(request, name):
-    customization=get_customization(request)
+    customization = request.CUSTOMIZATION
     cache_key = f'!!{customization}--kb--{name}'
-    docs = DOC_CACHE[cache_key]
+    document_cache = DocumentCache(customization_name=customization)
+    docs = document_cache[cache_key]
     language = get_language_object_from_request(request)
     knowledgebase_menu = get_cached_menu(
         customization, name, menu_type=Menu.MENU_TYPES.docs_knowledgebase)
@@ -201,7 +201,7 @@ def sync_search_for_menu(request, name):
     knowledgebase = knowledgebase_menu['nodes']
     docs = []
     populate_docs_from_knowledgebase(knowledgebase, docs)
-    DOC_CACHE[cache_key] = docs
+    document_cache[cache_key] = docs
     return generate_doc_json(docs, language=language, force_update=True)
 
 
@@ -243,11 +243,12 @@ SEARCH_INDEX_UPDATING = 'Instant search index is being updated. Using legacy sea
 @permission_classes((CanViewDevelopers, ))
 @handle_exceptions
 def kb_search(request, name):
+    document_cache = DocumentCache(customization_name=request.CUSTOMIZATOIN)
     if not settings.MEILISEARCH_ENDPOINT or not settings.MEILISEARCH_MASTER_KEY:
         raise APIInternalException(
             SEARCH_NOT_CONFIGURED, status.HTTP_501_NOT_IMPLEMENTED)
 
-    if DOC_CACHE.being_initialized:
+    if document_cache.being_initialized:
         raise APIInternalException(
             SEARCH_INDEX_UPDATING, status.HTTP_501_NOT_IMPLEMENTED)
 
@@ -322,13 +323,15 @@ def kb_search(request, name):
 @permission_classes((CanViewDevelopers, ))
 @handle_exceptions
 def get_pages(request, name):
+
     filter_query = request.query_params.get('filter')
     page = request.query_params.get('page', 1)
     page_size = request.query_params.get('pageSize', 5)
     language = get_language_object_from_request(request)
-    customization=get_customization(request)
+    customization = request.CUSTOMIZATION
     cache_key = f'!!{customization}--kb--{name}'
-    docs = DOC_CACHE[cache_key]
+    document_cache = DocumentCache(customization_name=customization)
+    docs = document_cache[cache_key]
     if not docs:
         knowledgebase_menu = get_cached_menu(
             customization, name, menu_type=Menu.MENU_TYPES.docs_knowledgebase)
@@ -337,9 +340,9 @@ def get_pages(request, name):
         knowledgebase = knowledgebase_menu['nodes']
         docs = []
         populate_docs_from_knowledgebase(knowledgebase, docs)
-        DOC_CACHE[cache_key] = docs
+        document_cache[cache_key] = docs
         docs_json = generate_doc_json(
-            docs, language=language, trust_cache=False)
+            docs, language=language, trust_cache=False, request=request)
     else:
         docs_json = generate_doc_json(
             docs, language=language, trust_cache=True)
@@ -414,11 +417,12 @@ menu_name__path_param = openapi.Parameter(
 @permission_classes((CanViewDevelopers,))
 def menu_to_endpoint(request, name):
     language = get_language_object_from_request(request)
-    customization = get_customization(request)
+    customization = request.CUSTOMIZATION
+    document_cache = DocumentCache(customization_name=customization)
     cache_id = f'!!{customization}-{language.code}--struct--{name}'
     state = request.GET.get('state', '')
 
-    menu_dict = (not state and DOC_CACHE[cache_id]) or generate_menu_dict(
+    menu_dict = (not state and document_cache[cache_id]) or generate_menu_dict(
         request, name, language, cache_id, state)
 
     return api_success(menu_dict)
@@ -426,7 +430,8 @@ def menu_to_endpoint(request, name):
 
 def generate_menu_dict(request, name, language=None, cache_id=None, state=None):
     language = language or get_language_object_from_request(request)
-    customization = get_customization(request)
+    customization = request.CUSTOMIZATION
+    document_cache = DocumentCache(customization_name=customization)
     cache_id = cache_id or f'!!{customization}-{language.code}--struct--{name}'
     state = state or request.GET.get('state', '')
     draft = state == 'draft' and request.user.is_superuser
@@ -463,7 +468,7 @@ def generate_menu_dict(request, name, language=None, cache_id=None, state=None):
     )
 
     if not draft and not review:
-        DOC_CACHE[cache_id] = menu_dict
+        document_cache[cache_id] = menu_dict
     serializer = MenusSerializer(data=menu_dict)
     serializer.is_valid()
 
