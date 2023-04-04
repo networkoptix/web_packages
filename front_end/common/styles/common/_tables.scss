@@ -127,6 +127,11 @@
 }
 
 .nx-new-table {
+    &-container {
+        margin : 0 0 1rem;
+        padding :1rem;
+    }
+
     .header div {
         display: flex;
         flex-wrap: wrap;

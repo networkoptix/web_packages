@@ -41,7 +41,7 @@ const ROW_PER_PAGE = 10;
     templateUrl: 'table.component.html',
     styleUrls: ['table.component.scss'],
 })
-export class NxTableComponent implements OnInit, AfterContentInit {
+export class NxBaseTableComponent implements OnInit, AfterContentInit {
     @Input() data: Record<string, string | boolean | Record<string, string>[]>[];
     @IBool() @Input('set-pagination') setPagination: CoercedBoolInput;
     @IBool() @Input('set-rows') setRows: CoercedBoolInput;
@@ -53,7 +53,7 @@ export class NxTableComponent implements OnInit, AfterContentInit {
     @ContentChild('header') header: TemplateRef<never>;
     @ContentChild('rows') rows: TemplateRef<never>;
 
-    @ContentChildren('sortItem', { descendants: true }) headerItems: QueryList<HTMLDivElement>;
+    @ContentChildren('sortItem', { descendants: true }) sortableItems: QueryList<HTMLDivElement>;
 
     expandRowId: string;
 
@@ -78,14 +78,14 @@ export class NxTableComponent implements OnInit, AfterContentInit {
 
     ngAfterContentInit(): void {
         this.setSorting &&
-            this.headerItems.changes
+            this.sortableItems.changes
                 .pipe(untilDestroyed(this))
                 .subscribe((items: QueryList<HTMLDivElement>) => {
                     if (items.length) {
                         this.addSorting(items);
                     } else {
                         console.info(
-                            '¯\\_(ツ)_/¯ => Sorting enabled for table but no columns set for sorting',
+                            '¯\\_(ツ)_/¯ => Sorting is enabled for table but no columns set for sorting',
                         );
                     }
                 });
@@ -144,7 +144,7 @@ export class NxTableComponent implements OnInit, AfterContentInit {
         } else {
             this.sortOrderASC = true;
             // @ts-expect-error type error
-            this.headerItems.forEach((item: ElementRef) => {
+            this.sortableItems.forEach((item: ElementRef) => {
                 if (item.nativeElement.children[this.selectedHeader]) {
                     this.clearCss(item.nativeElement.children[this.selectedHeader]);
                 }
@@ -176,12 +176,17 @@ export class NxTableComponent implements OnInit, AfterContentInit {
         return sort;
     }
 
+    private getItemId(item: ElementRef): string {
+        return (
+            item.nativeElement.id ||
+            item.nativeElement.innerText.toLowerCase().replace(/[^a-z]/g, '')
+        );
+    }
+
     private addSorting(items: QueryList<HTMLDivElement>): void {
         // @ts-expect-error type error
         items.forEach((item: ElementRef) => {
-            const id =
-                item.nativeElement.id ||
-                item.nativeElement.innerText.toLowerCase().replace(/[^a-z]/g, '');
+            const id = this.getItemId(item);
 
             this.renderer.listen(item.nativeElement, 'mouseover', $event => {
                 $event.target.children[id] &&

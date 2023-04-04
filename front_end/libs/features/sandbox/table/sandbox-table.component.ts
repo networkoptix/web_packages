@@ -5,10 +5,12 @@ import { icons } from '@lib/variables/static-variables';
 
 @Component({
     selector: 'sandbox-table',
-    templateUrl: 'table.component.html',
-    styleUrls: ['table.component.scss'],
+    templateUrl: 'sandbox-table.component.html',
+    styleUrls: ['sandbox-table.component.scss'],
 })
-export class TableComponent {
+export class SandboxTableComponent {
+    order: Record<string, number>;
+    headers: Record<string, Record<string, number | string>>;
     records: Record<string, string | boolean | Record<string, string>[]>[];
     subLevels: boolean = false;
     expandRowId: string;
@@ -22,6 +24,25 @@ export class TableComponent {
     ngOnInit(): void {
         this.menuService.section = 'components';
         this.menuService.detail = 'table';
+
+        this.headers = {
+            login: {
+                name: 'Login',
+                order: 1,
+            },
+            fullName: {
+                name: 'Full Name',
+                order: 2,
+            },
+            accessLevel: {
+                name: 'Access Level',
+                order: 3,
+            },
+            groups: {
+                name: 'Groups',
+                order: 4,
+            },
+        };
 
         this.records = [
             {

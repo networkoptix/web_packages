@@ -2,7 +2,9 @@
 // use _table.scss --TT
 
 :host {
+    display: inline;
     width: 100%;
+    height: 100%;
 
 
     .nx-new-table {
@@ -28,7 +30,7 @@
         }
 
         .footer {
-            height: 2.5rem;
+            //height: 2.5rem;
         }
 
         .body {

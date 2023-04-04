@@ -4,7 +4,7 @@ import { CheckboxModule } from '@components/checkbox/checkbox.module';
 import { ComponentsCoreModule } from '@components/components-core.module';
 import { PaginatorModule } from '@components/paginator/paginator.module';
 
-import { NxTableComponent } from './table.component';
+import { NxBaseTableComponent } from './table.component';
 
 @NgModule({
     imports: [
@@ -13,14 +13,14 @@ import { NxTableComponent } from './table.component';
         PaginatorModule
     ],
     declarations: [
-        NxTableComponent
+        NxBaseTableComponent
     ],
     providers: [
-        NxTableComponent
+        NxBaseTableComponent
     ],
     exports: [
-        NxTableComponent
+        NxBaseTableComponent
     ]
 })
 
-export class NxTableModule { }
+export class NxBaseTableModule { }
