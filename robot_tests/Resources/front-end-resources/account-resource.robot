@@ -59,12 +59,7 @@ Account Server Suite Setup
     Go to    ${url}
     
 Account Server Suite Tear Down
-#    FOR    ${i}    IN RANGE    1    4
-#        Delete Base System    ${server ${i}}
-#    END
-#    Execute Command Remotely    docker rm -f ${server 4}[id] ${server 5}[id]
     Teardown Servers    ${servers}
-    # Delete Account    ${delete}    ${base password}
     Close All Browsers
 
 Account Suite Tear Down

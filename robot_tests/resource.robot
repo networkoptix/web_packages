@@ -1043,33 +1043,10 @@ Restart Docker Servers
         Sleep    1
     END
     
-    # [Arguments]    ${port}    ${name}    ${auth}
-    # Restart Server    https://${QA BURBANK IP}:${port}   ${auth}
-    # Sleep    10
-    # Acquire Lock   restart_server_lock
-    # Open Connection    ${QA BURBANK IP}
-    # SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    # ${port info}=   Execute Command    docker container port ${name}
-    # ${port info}=   Split String    ${port info}    :::
-    # Close Connection
-    # Release Lock   restart_server_lock
-    # [Return]    ${port info}[1]
-
 Get container port by name
     [Arguments]    ${name}
-    ${containers} =    List Containers
-    ${port} =   Set Variable   ${EMPTY}
-    FOR    ${container}    IN    @{containers}
-        FOR    ${item}    IN    @{container}[Names]
-            IF    '''${item}''' == '''/${name}'''            
-                ${port} =    Set Variable   ${container}[Ports][0][PublicPort]
-                Exit For Loop
-            END
-        END
-        IF    ${port} != ${EMPTY}
-            Exit For Loop
-        END
-    END    
+    ${container} =    Get Container By Name    ${name}
+    ${port} =    ${container}[Ports][0][PublicPort]
     [Return]    ${port}
 
 Page Should Not Contain Elements

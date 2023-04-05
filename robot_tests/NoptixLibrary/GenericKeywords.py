@@ -577,27 +577,6 @@ class GenericKeywords(object):
         else:
             return 'Container is not running'
 
-    # @keyword
-    # def start_container(self, name):
-    #     client = docker.client.from_env()
-    #     container = client.containers.get(name)
-    #     running_containers = client.containers.list()
-    #     if container not in running_containers:
-    #         container.start()
-    #         time.sleep(10)
-
-    # @keyword
-    # def stop_container(self, name, remove=False):
-    #     client = docker.from_env()
-    #     container = client.containers.get(name)
-    #     running_containers = client.containers.list()
-    #     if container in running_containers:
-    #         container.stop()
-    #     if remove:
-    #         all_containers = client.containers.list(all=True)
-    #         if container in all_containers:
-    #             container.remove()
-
     @keyword
     def get_container_id(self, name):
         """ First 12 symbols of the container id """
@@ -608,22 +587,6 @@ class GenericKeywords(object):
             return container.id[:12]
         else:
             return 'Container not found'
-
-    # @keyword
-    # def stop_containers(self, allContainers=True):
-    #     client = docker.from_env()
-    #     conts = client.containers.list()
-    #     if allContainers:
-    #         for cont in conts:
-    #             if "mergemediaserver" in cont.name:
-    #                 cont.stop()
-    #     else:
-    #         conts[0].stop()
-
-    # @keyword
-    # def prune_containers(self):
-    #     client = docker.from_env()
-    #     client.containers.prune()
 
     @keyword
     def remove_images(self):
@@ -818,13 +781,13 @@ class GenericKeywords(object):
             runName = BuiltIn().get_variable_value('${random}')
             # if storage suite, binds will exist
             binds = BuiltIn().get_variable_value('${binds}')
+            for idx in range(len(binds)):
+                serversJson[idx].update({"binds": binds[idx]})
             # Start Docker server for each server in the JSON
             for idx, server in enumerate(serversJson):
-                server["name"] = f"{BuiltIn().get_variable_value('${SUITE NAME}').lower().replace('test-cases.', '')}_{idx}_"
-                if binds:
-                    if idx < 2:
-                        server["binds"] = binds[idx]
+                server["name"] = f"{BuiltIn().get_variable_value('${SUITE NAME}').lower().replace('test-cases.', '')}_{idx}_"           
                 server.update(self.create_docker_server(server, runName))
+              
             
             # Set up systems
             time.sleep(5)

@@ -98,7 +98,6 @@ Force Tags        system
     END
 
 6. Restart server as administrator
-    [Documentation] 
     [Tags]    C70968    webadmin    cloud
     [Setup]    Server Settings Test Setup    user=${servers}[0][cloudUsers][cloudAdmin]
     Skip If    '''${mode}'''=='''cloud'''

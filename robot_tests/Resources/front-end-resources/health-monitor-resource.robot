@@ -173,14 +173,6 @@ Health Monitor Details Setup
     ...    AND    Log Out
     
 Health Monitor Details Tear Down
-    # Run Keyword If    '''${mode}'''=='''cloud'''    Disconnect Server via API    ${auth}    ${server['id']}    ${password}    ${server['cloudOwner']}
-    # Open Connection    ${QA BURBANK IP}
-    # SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
-    # ${results}    Execute Command    docker container stop ${server}[id]
-    # ${results}    Execute Command    docker container rm ${server}[id]
-    # FOR    ${user}    IN    @{server['cloudUsers'].values()}
-    #      Run Keyword If    '''${mode}'''=='''cloud'''    Delete Account    ${user}          ${password}  
-    # END
     Teardown Servers      ${servers} 
     Close All Connections
     Close All Browsers
