@@ -9,8 +9,8 @@ import type {
 } from '@components/dropdowns/searchable/searchable.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { ModalBase } from '@dialogs/modal-base';
+import { SessionState } from '@dialogs/update-session/update-session.component.types';
 import { icons, servers } from '@lib/variables/static-variables';
-import { NxLoginService } from '@services/login.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { NxProcessService } from '@services/process.service';
@@ -36,7 +36,6 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> imple
     transferComplete: boolean = false;
     hideErrors: boolean = false;
     transferOwnership: Process;
-    updateSession: boolean = false;
 
     userItems: UserItem[];
     selectedUser: UserItem;
@@ -45,7 +44,7 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> imple
     constructor(
         private processService: NxProcessService,
         private cloudService: NxCloudApiService,
-        private loginService: NxLoginService,
+        private dialogs: NxDialogsService,
         private dialogService: NxDialogsService,
         public dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) public system: DT['data'],
@@ -90,14 +89,24 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> imple
                 this.transferInfo = res;
             },
             err => {
-                this.unlock();
-                if (err?.resultCode === 'userPasswordRequired' || err.errorId === servers.errors.oldSessionErrorId) {
-                    this.updateSession = true;
-                    this.loginService.currentSystem = this.system;
-                    this.loginService.updateSession('transfer')
-                        .then(ready => {
-                            this.updateSession = !ready;
-                        });
+                if (
+                    err?.resultCode === 'userPasswordRequired' ||
+                    err.errorId === servers.errors.oldSessionErrorId
+                ) {
+                    this.dialogs.updateSession({
+                        sessionState: SessionState.Restart,
+                        noConnectionMsg: this.LANG.dialogs.updateSession.transferOnwership,
+                        system: this.system,
+                        openingRef: this.dialogRef,
+                    }).then(ready => {
+                        if (ready) {
+                            this.transferOwnership.run();
+                        } else {
+                            this.unlock();
+                        }
+                    });
+                } else {
+                    this.unlock();
                 }
             },
         );

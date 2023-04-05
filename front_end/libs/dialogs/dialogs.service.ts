@@ -458,9 +458,9 @@ export class NxDialogsService extends DialogBase {
         });
     }
 
-    refreshSession = this.dialogV2Factory<Dt.RefreshSession>(
-        () => import('./refresh-session/refresh-session.component').then(m => m.RefreshSessionModalContent),
-        { disableClose: true }
+    updateSession = this.dialogV2Factory<Dt.UpdateSession>(
+        () => import('./update-session/update-session.component').then(m => m.NxUpdateSessionModalContent),
+        { disableClose: true },
     );
 
     client2faWarning = this.dialogV2Factory<Dt.Client2faWarning>(

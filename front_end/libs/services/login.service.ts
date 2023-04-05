@@ -140,7 +140,7 @@ export class NxLoginService extends DialogBase {
         this.done$.next(true);
     }
 
-    async updateSession(state?: string) {
+    async updateSession(state: string): Promise<boolean> {
         if (['disconnect', 'transfer'].includes(state) && !environment.isLocal ||
         this._currentSystem.useRest && this._currentSystem.mediaserver.isSessionOauth) {
             if (!(await this.pingCloud())) {

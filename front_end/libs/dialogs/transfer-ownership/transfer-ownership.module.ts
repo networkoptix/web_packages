@@ -8,7 +8,6 @@ import { AlertBlockModule } from '@components/content-block/alert/block.module';
 import { SearchableModule } from '@components/dropdowns/searchable/searchable.module';
 import { ProcessButtonModule } from '@components/process-button/process-button.module';
 import { ProcessCancelButtonModule } from '@components/process-cancel-Button/process-cancel-Button.module';
-import { UpdateWebadminSessionModule } from '@components/update-webadmin-session/update-webadmin-session.module';
 
 import { TransferOwnershipModalContent } from './transfer-ownership.component';
 
@@ -22,7 +21,6 @@ import { TransferOwnershipModalContent } from './transfer-ownership.component';
         AlertBlockModule,
         ProcessButtonModule,
         ProcessCancelButtonModule,
-        UpdateWebadminSessionModule,
     ],
     declarations: [
         TransferOwnershipModalContent,

@@ -18,11 +18,11 @@ import type {
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { SessionState } from '@dialogs/update-session/update-session.component.types';
 import { environment } from '@environments/environment';
 import { icons, servers } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import type { Account } from '@services/account.service/account';
-import { NxLoginService } from '@services/login.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -88,7 +88,6 @@ export class MergeModalContent {
     primaryName: string;
     secondaryName: string;
     systemUrls = {};
-    updateSession = false;
     wrongPassword = false;
     private remotePassword: string;
     checkMergeButtonText: string;
@@ -138,7 +137,6 @@ export class MergeModalContent {
         private httpService: HttpClient,
         private cloudApi: NxCloudApiService,
         private cdRef: ChangeDetectorRef,
-        private loginService: NxLoginService,
         private processService: NxProcessService,
         private dialogs: NxDialogsService,
         private systemService: NxSystemService,
@@ -408,16 +406,32 @@ export class MergeModalContent {
         }
     }
 
-    private handleOldSession(process): void {
-        this.updateSession = true;
-        this.loginService.currentSystem = this.system;
-        this.loginService.updateSession('merge')
-            .then(ready => {
-                this.updateSession = !ready;
-                if (ready) {
-                    process.run();
-                }
+    private handleOldSession(process: Process): void {
+        const { currentState } = this.machine;
+        let noConnectionMsg: string;
+        const { dialogs: { updateSession: { merge } } } = this.LANG;
+        if (currentState === 'checkMerge') {
+            noConnectionMsg = merge.check;
+        } else if (currentState === 'adminPassword') {
+            noConnectionMsg = merge.currentPassword;
+        } else if (currentState === 'serverUrlErrors') {
+            noConnectionMsg = merge.targetPassword;
+        } else if (currentState === 'confirmMerge') {
+            noConnectionMsg = this.translateService.instant(merge.fail, {
+                primarySystem: this.primaryName,
+                secondarySystem: this.secondaryName,
             });
+        }
+        this.dialogs.updateSession({
+            sessionState: SessionState.Merge,
+            system: this.system,
+            noConnectionMsg,
+            openingRef: this.dialogRef,
+        }).then(ready => {
+            if (ready) {
+                process.run();
+            }
+        });
     }
 
     initProcesses(): void {

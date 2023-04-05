@@ -23,76 +23,65 @@
             <div class="close-content"></div>
         </button>
     </div>
-    <div [ngStyle]="{ display: needsUpdate ? 'none' : 'unset' }">
-        <div class="modal-body">
-            <div class="form-group">
-                <div [ngClass]="{ 'mb-3': system.mediaserver.requiresPassword }">
-                    <p
-                        class="mb-0"
-                        translate
-                    >
-                        The server will be detached from this system and added to a new one.
-                        Database, local users, configuration, and video archive will remain intact.
-                    </p>
+    <div class="modal-body">
+        <div class="form-group">
+            <div [ngClass]="{ 'mb-3': system.mediaserver.requiresPassword }">
+                <p
+                    class="mb-0"
+                    translate
+                >
+                    The server will be detached from this system and added to a new one. Database,
+                    local users, configuration, and video archive will remain intact.
+                </p>
 
-                    <p
-                        [ngClass]="{ 'mb-3': system.mediaserver.requiresPassword }"
-                        translate
-                    >
-                        Cloud users will not be transferred to the new system.
-                    </p>
-                    <span
-                        *ngIf="system.mediaserver.requiresPassword"
-                        translate
-                        >Enter password for your account to continue.</span
-                    >
-                </div>
-                <ng-container *ngIf="system.mediaserver.requiresPassword">
-                    <input
-                        class="fs-exclude form-control"
-                        [(ngModel)]="password"
-                        id="password"
-                        name="password"
-                        type="password"
-                        required
-                        nxFocusMe
-                    />
-                    <p
-                        class="help-block"
-                        *ngIf="
-                            !detachServerForm.controls['password']?.valid &&
-                            detachServerForm.controls['password']?.touched
-                        "
-                    >
-                        <span
-                            class="input-error"
-                            translate
-                            >Password is required</span
-                        >
-                    </p>
-                </ng-container>
+                <p
+                    [ngClass]="{ 'mb-3': system.mediaserver.requiresPassword }"
+                    translate
+                >
+                    Cloud users will not be transferred to the new system.
+                </p>
+                <span
+                    *ngIf="system.mediaserver.requiresPassword"
+                    translate
+                    >Enter password for your account to continue.</span
+                >
             </div>
-        </div>
-        <div class="modal-footer">
-            <nx-process-button
-                [process]="detachServer"
-                [form]="detachServerForm"
-                [actionType]="'danger'"
-                [buttonDisabled]="needsUpdate"
-                buttonText="{{ 'Detach' | translate }}"
-            ></nx-process-button>
-            <nx-cancel-button
-                [process]="detachServer"
-                [discardFn]="close"
-            ></nx-cancel-button>
+            <ng-container *ngIf="system.mediaserver.requiresPassword">
+                <input
+                    class="fs-exclude form-control"
+                    [(ngModel)]="password"
+                    id="password"
+                    name="password"
+                    type="password"
+                    required
+                    nxFocusMe
+                />
+                <p
+                    class="help-block"
+                    *ngIf="
+                        !detachServerForm.controls['password']?.valid &&
+                        detachServerForm.controls['password']?.touched
+                    "
+                >
+                    <span
+                        class="input-error"
+                        translate
+                        >Password is required</span
+                    >
+                </p>
+            </ng-container>
         </div>
     </div>
-    <nx-update-webadmin-session
-        *ngIf="system.useRest && needsUpdate"
-        (loginSuccess)="needsUpdate = false; detachServer.run()"
-        [noConnectionMsg]="'Failed to detach server from system.' | translate"
-        [dialogRef]="dialogRef"
-        [system]="system"
-        processAction="danger"
-    ></nx-update-webadmin-session>
+    <div class="modal-footer">
+        <nx-process-button
+            [process]="detachServer"
+            [form]="detachServerForm"
+            [actionType]="'danger'"
+            buttonText="{{ 'Detach' | translate }}"
+        ></nx-process-button>
+        <nx-cancel-button
+            [process]="detachServer"
+            [discardFn]="close"
+        ></nx-cancel-button>
+    </div>
 </form>

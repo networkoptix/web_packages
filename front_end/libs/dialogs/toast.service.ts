@@ -53,8 +53,9 @@ export class NxToastService {
         message: Translatable,
         type: string = toast.info,
         delay: number = alertTimeout,
+        showHTML: boolean = false,
     ): void {
-        const options = { autohide: true, delay };
+        const options = { autohide: true, delay, showHTML };
 
         return this.show(message, type, options);
     }

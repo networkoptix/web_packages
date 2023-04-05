@@ -4,9 +4,10 @@ import type { NgForm } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { ModalBase } from '@dialogs/modal-base';
+import { SessionState } from '@dialogs/update-session/update-session.component.types';
 import { servers } from '@lib/variables/static-variables';
-import { NxLoginService } from '@services/login.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
@@ -30,7 +31,6 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
     hideErrors: boolean = true;
     systemName: string;
     addUser: Process;
-    needsUpdate: boolean;
     user: NewUserBase;
     selectedPermissionSubject = new BehaviorSubject<NxAccessRole>({
         name: '',
@@ -41,7 +41,7 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
     constructor(
         configService: NxConfigService,
         private processService: NxProcessService,
-        private loginService: NxLoginService,
+        private dialogs: NxDialogsService,
         public dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) public system: DT['data'],
     ) {
@@ -120,23 +120,25 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
             this.close(user.id);
         },
         err => {
-            this.unlock();
             if (err?.resultCode === 'alreadyExists') {
+                this.unlock();
                 return;
             }
-            if (
-                err.errorId ===
-                servers.errors.oldSessionErrorId
-            ) {
-                this.needsUpdate = true;
-                this.loginService.currentSystem = this.system;
-                this.loginService.updateSession('renewWeb')
-                    .then(ready => {
-                        this.needsUpdate = !ready;
-                        if (ready) {
-                            this.addUser.run();
-                        }
-                    });
+            if (err.errorId === servers.errors.oldSessionErrorId) {
+                this.dialogs.updateSession({
+                    sessionState: SessionState.RenewWeb,
+                    system: this.system,
+                    noConnectionMsg: this.LANG.dialogs.updateSession.addUser,
+                    openingRef: this.dialogRef,
+                }).then(ready => {
+                    if (ready) {
+                        this.addUser.run();
+                    } else {
+                        this.unlock();
+                    }
+                });
+            } else {
+                this.unlock();
             }
         });
     }

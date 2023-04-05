@@ -18,6 +18,7 @@ import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
 import { SandboxTableComponent } from '@pages/sandbox/table/sandbox-table.component';
+import { _NxTestBoxComponent } from '@pages/sandbox/test-box.component';
 import { WebglComponent } from '@pages/sandbox/webgl/webgl.component';
 import {
     VmsClientModule
@@ -139,7 +140,11 @@ const appRoutes: Routes = [
             {
                 path: 'arch',
                 component: NxArchSvgComponent
-            }
+            },
+            {
+                path: '_test',
+                component: _NxTestBoxComponent
+            },
         ]
     }
 ];

@@ -23,10 +23,7 @@
         </button>
     </div>
     <ng-container *ngIf="!transferComplete; else transferSuccessTemplate">
-        <div
-            *ngIf="userItems.length; else noUsers"
-            [ngStyle]="{ display: updateSession ? 'none' : 'unset' }"
-        >
+        <div *ngIf="userItems.length; else noUsers">
             <div class="modal-body pb-1">
                 <div class="form-group">
                     <label
@@ -111,13 +108,6 @@
                 </button>
             </div>
         </ng-template>
-        <nx-update-webadmin-session
-            *ngIf="updateSession"
-            (loginSuccess)="updateSession = false"
-            [noConnectionMsg]="'Failed to transfer ownership.' | translate"
-            [dialogRef]="dialogRef"
-            [system]="system"
-        ></nx-update-webadmin-session>
     </ng-container>
 </form>
 

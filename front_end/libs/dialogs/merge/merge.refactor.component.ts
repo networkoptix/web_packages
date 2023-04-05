@@ -21,10 +21,10 @@ import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.t
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { SessionState } from '@dialogs/update-session/update-session.component.types';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import type { Account } from '@services/account.service/account';
-import { NxLoginService } from '@services/login.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -85,7 +85,6 @@ export class NxMergeComponent implements OnInit, OnDestroy {
     readonly wrongLogin: string = 'Wrong username or password.';
 
     // only used inside parent component
-    updateSession: boolean = false;
     systems: NxSystemInfo[];
     peerSystems: Partial<DiscoveredPeersReply[] | MergeSystem[]>;
     currentProcess: Process;
@@ -196,7 +195,6 @@ export class NxMergeComponent implements OnInit, OnDestroy {
         private processService: NxProcessService,
         private dialogs: NxDialogsService,
         // private cdRef: ChangeDetectorRef, // verify whether this is needed
-        private loginService: NxLoginService,
         // private simpleDialogService: NxSimpleDialogsService,
         private systemService: NxSystemService,
         private systemsService: NxSystemsService,
@@ -772,15 +770,16 @@ export class NxMergeComponent implements OnInit, OnDestroy {
     }
 
     private handleOldSession(process: Process): void {
-        this.updateSession = true;
-        this.loginService.currentSystem = this.system;
-        this.loginService.updateSession('merge')
-            .then(ready => {
-                this.updateSession = !ready;
-                if (ready) {
-                    process.run();
-                }
-            });
+        this.dialogs.updateSession({
+            sessionState: SessionState.Merge,
+            system: this.system,
+            noConnectionMsg: this.noConnectionMsg,
+            openingRef: this.dialogRef,
+        }).then(ready => {
+            if (ready) {
+                process.run();
+            }
+        });
     }
 
     // goBack(): void {

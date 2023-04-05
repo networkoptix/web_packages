@@ -33,7 +33,6 @@ import { RadioModule } from './radio/radio.module';
 import { SwtichModule } from './switch/switch.module';
 import { TagModule } from './tag/tag.module';
 import { TooltipModule } from './tooltip/tooltip.module';
-import { UpdateWebadminSessionModule } from './update-webadmin-session/update-webadmin-session.module';
 
 @NgModule({
     imports: [
@@ -67,7 +66,6 @@ import { UpdateWebadminSessionModule } from './update-webadmin-session/update-we
         SwtichModule,
         TagModule,
         TooltipModule,
-        UpdateWebadminSessionModule,
         MultiLineEllipsisModule,
         NxBaseTableModule,
     ],
@@ -102,7 +100,6 @@ import { UpdateWebadminSessionModule } from './update-webadmin-session/update-we
         SwtichModule,
         TagModule,
         TooltipModule,
-        UpdateWebadminSessionModule,
         MultiLineEllipsisModule,
         NxBaseTableModule,
     ]

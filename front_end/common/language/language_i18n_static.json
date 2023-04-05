@@ -733,6 +733,20 @@
         },
         "editOrgUser": {
             "title": "Edit user - {user}"
+        },
+        "updateSession": {
+            "addUser": "Failed to add user to system.",
+            "changePassword": "Failed to change user password.",
+            "detachServer": "Failed to detach server from system.",
+            "disconnect": "Failed to disconnect system from %CLOUD_NAME%.",
+            "merge": {
+                "currentPassword": "Failed to check current system's password.",
+                "targetPassword": "Failed to check the target system's password.",
+                "check": "Failed to check if the systems can merge.",
+                "fail": "Failed to merge { primarySystem } and { secondarySystem }."
+            },
+            "resetServer": "Failed to reset server.",
+            "transferOnwership": "Failed to transfer ownership."
         }
     },
     "downloads": {

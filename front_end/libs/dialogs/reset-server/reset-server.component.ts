@@ -9,9 +9,9 @@ import staticLang from '@common/language/language_i18n_static.json';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
+import { SessionState } from '@dialogs/update-session/update-session.component.types';
 import { environment } from '@environments/environment';
 import { servers, toast } from '@lib/variables/static-variables';
-import { NxLoginService } from '@services/login.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -33,14 +33,12 @@ export class ResetServerModalContent {
     system: NxSystem;
     serverName: string;
     serverId: string;
-    needsUpdate: boolean;
     resetServer: Process;
     password: string;
     hideErrors = true;
 
     constructor(
         private appState: NxAppStateService,
-        private loginService: NxLoginService,
         private processService: NxProcessService,
         private dialogs: NxDialogsService,
         private toastService: NxToastService,
@@ -166,15 +164,17 @@ export class ResetServerModalContent {
                     .catch(err => handleResetFailError('restartServer', err));
             }, err => {
                 if (err.errorId === servers.errors.oldSessionErrorId) {
-                    this.needsUpdate = true;
-                    this.loginService.currentSystem = this.system;
-                    this.loginService.updateSession('reset')
-                        .then(ready => {
-                            this.needsUpdate = !ready;
-                            if (ready) {
-                                this.resetServer.run();
-                            }
-                        });
+                    this.dialogs.updateSession({
+                        sessionState: SessionState.Reset,
+                        system: this.system,
+                        noConnectionMsg: this.LANG.dialogs.updateSession.resetServer,
+                        openingRef: this.dialogRef,
+                        processAction: 'danger',
+                    }).then(ready => {
+                        if (ready) {
+                            this.resetServer.run();
+                        }
+                    });
                 } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
                     return this.dialogs.expiredSession().then(() => this.window.location.reload());
                 }

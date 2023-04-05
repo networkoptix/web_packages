@@ -44,7 +44,6 @@ const typeLintBlacklist = [
     '**/radio/radio.component.ts',
     '**/summary/summary.component.ts',
     '**/systems-list/list.component.ts',
-    '**/update-webadmin-session/update-webadmin-session.component.ts',
     '**/bookmarks/bookmarks-widget.component.ts',
     '**/event-generator/event-generator.component.ts',
     '**/health-monitor/health-monitor-widget.component.ts',

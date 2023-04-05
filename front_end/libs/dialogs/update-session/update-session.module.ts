@@ -1,16 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { ProcessButtonModule } from '@components/process-button/process-button.module';
 import { ProcessCancelButtonModule } from '@components/process-cancel-Button/process-cancel-Button.module';
 
-import { RemoveUserModalContent } from './remove-user.component';
+import { NxUpdateSessionModalContent } from './update-session.component';
 
 @NgModule({
     imports: [
         CommonModule,
-        // FormsModule,
+        FormsModule,
         // AngularSvgIconModule.forRoot(),
         TranslateModule,
 
@@ -18,11 +19,11 @@ import { RemoveUserModalContent } from './remove-user.component';
         ProcessCancelButtonModule,
     ],
     declarations: [
-        RemoveUserModalContent,
+        NxUpdateSessionModalContent,
     ],
     providers: [],
     exports: [
-        RemoveUserModalContent,
+        NxUpdateSessionModalContent,
     ]
 })
-export class RemoveUserModalModule {}
+export class NxUpdateSessionModalModule {}

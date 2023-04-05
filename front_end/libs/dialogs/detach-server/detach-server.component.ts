@@ -3,8 +3,8 @@ import { Component, Inject, Input } from '@angular/core';
 import staticLang from '@common/language/language_i18n_static.json';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { SessionState } from '@dialogs/update-session/update-session.component.types';
 import { servers, toast } from '@lib/variables/static-variables';
-import { NxLoginService } from '@services/login.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
@@ -27,11 +27,9 @@ export class DetachServerModalContent {
     serverName: string;
     serverId: string;
     detachServer: Process;
-    needsUpdate: boolean;
     password: string;
 
     constructor(
-        private loginService: NxLoginService,
         private processService: NxProcessService,
         private dialogs: NxDialogsService,
         private toastService: NxToastService,
@@ -63,19 +61,18 @@ export class DetachServerModalContent {
                     // return this.system.update().subscribe()
                 },
                 err => {
-                    if (
-                        err.errorId ===
-                        servers.errors.oldSessionErrorId
-                    ) {
-                        this.needsUpdate = true;
-                        this.loginService.currentSystem = this.system;
-                        this.loginService.updateSession('detach')
-                            .then(ready => {
-                                this.needsUpdate = !ready;
-                                if (ready) {
-                                    this.detachServer.run();
-                                }
-                            });
+                    if (err.errorId === servers.errors.oldSessionErrorId) {
+                        this.dialogs.updateSession({
+                            sessionState: SessionState.Detach,
+                            system: this.system,
+                            noConnectionMsg: this.LANG.dialogs.updateSession.detachServer,
+                            openingRef: this.dialogRef,
+                            processAction: 'danger',
+                        }).then(ready => {
+                            if (ready) {
+                                this.detachServer.run();
+                            }
+                        });
                     } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
                         return this.dialogs.expiredSession().then(() => this.window.location.reload());
                     } else {

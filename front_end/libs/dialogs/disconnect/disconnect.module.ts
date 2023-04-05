@@ -5,7 +5,6 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { ProcessButtonModule } from '@components/process-button/process-button.module';
 import { ProcessCancelButtonModule } from '@components/process-cancel-Button/process-cancel-Button.module';
-import { UpdateWebadminSessionModule } from '@components/update-webadmin-session/update-webadmin-session.module';
 
 import { DisconnectModalContent } from './disconnect.component';
 
@@ -18,7 +17,6 @@ import { DisconnectModalContent } from './disconnect.component';
 
         ProcessButtonModule,
         ProcessCancelButtonModule,
-        UpdateWebadminSessionModule,
     ],
     declarations: [
         DisconnectModalContent,

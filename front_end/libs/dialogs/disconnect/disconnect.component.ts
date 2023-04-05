@@ -6,11 +6,11 @@ import staticLang from '@common/language/language_i18n_static.json';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { ModalBase } from '@dialogs/modal-base';
 import { NxToastService } from '@dialogs/toast.service';
+import { SessionState } from '@dialogs/update-session/update-session.component.types';
 import { environment } from '@environments/environment';
 import type { IEnvironment } from '@environments/environment-config';
 import { servers, toast } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
-import { NxLoginService } from '@services/login.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxSystemAPIService } from '@services/system-api.service';
@@ -28,13 +28,11 @@ import type { Disconnect as DT } from '../dialogs.types';
 export class DisconnectModalContent extends ModalBase<DT['return']> {
     readonly environment: IEnvironment = environment;
     LANG = staticLang;
-    needsUpdate: boolean;
     disconnect: Process;
     unsub$ = new Subject<boolean>();
 
     constructor(
         private processService: NxProcessService,
-        private loginService: NxLoginService,
         private dialogs: NxDialogsService,
         private systemApiService: NxSystemAPIService,
         private toastService: NxToastService,
@@ -80,19 +78,25 @@ export class DisconnectModalContent extends ModalBase<DT['return']> {
                 toast.success,
             );
         }, err => {
-            this.unlock();
             if (err?.resultCode === 'userPasswordRequired' || err.errorId === servers.errors.oldSessionErrorId) {
-                this.needsUpdate = true;
-                this.loginService.currentSystem = this.system;
-                return this.loginService.updateSession('disconnect')
-                    .then(ready => {
-                        this.needsUpdate = !ready;
-                        if (ready) {
-                            this.disconnect.run();
-                        }
-                    });
+                this.dialogs.updateSession({
+                    sessionState: SessionState.Disconnect,
+                    system: this.system,
+                    noConnectionMsg: this.LANG.dialogs.updateSession.disconnect,
+                    openingRef: this.dialogRef,
+                    processAction: 'danger',
+                }).then(ready => {
+                    if (ready) {
+                        this.disconnect.run();
+                    } else {
+                        this.unlock();
+                    }
+                });
             } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
+                this.unlock();
                 return this.dialogs.expiredSession().then(() => this.window.location.reload());
+            } else {
+                this.unlock();
             }
         });
     }

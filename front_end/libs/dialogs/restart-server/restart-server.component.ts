@@ -13,10 +13,10 @@ import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
+import { SessionState } from '@dialogs/update-session/update-session.component.types';
 import { environment } from '@environments/environment';
 import { servers, toast } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';
-import { NxLoginService } from '@services/login.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
@@ -36,13 +36,11 @@ export class RestartServerModalContent {
     system: NxSystem;
     serverName: string;
     serverId: string;
-    needsUpdate: boolean;
     restartServer: Process;
     readonly maxNumberServerChecked: number = 6;
     private applyService: NxApplyService;
 
     constructor(
-        private loginService: NxLoginService,
         private processService: NxProcessService,
         private dialogs: NxDialogsService,
         private ribbonService: NxRibbonService,
@@ -210,15 +208,15 @@ export class RestartServerModalContent {
                     this.close(servers.status.offline);
                     this.toastService.notify(message, toast.warning);
                 } else if (err.errorId === servers.errors.oldSessionErrorId) {
-                    this.needsUpdate = true;
-                    this.loginService.currentSystem = this.system;
-                    this.loginService.updateSession('restart')
-                        .then(ready => {
-                            this.needsUpdate = !ready;
-                            if (ready) {
-                                this.restartServer.run();
-                            }
-                        });
+                    this.dialogs.updateSession({
+                        sessionState: SessionState.Restart,
+                        system: this.system,
+                        openingRef: this.dialogRef,
+                    }).then(ready => {
+                        if (ready) {
+                            this.restartServer.run();
+                        }
+                    });
                 } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
                     return this.dialogs.expiredSession().then(() => this.window.location.reload());
                 } else {

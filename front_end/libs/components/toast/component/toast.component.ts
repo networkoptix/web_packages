@@ -3,6 +3,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subject, timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+import type { Translatable } from '@pipes/nx-translate.types';
 import { NgChanges } from '@utils/ng-changes';
 
 import type { Toast } from '../toast.types';
@@ -20,7 +21,7 @@ export class NxToast implements OnChanges {
     destroy$ = new Subject<boolean>();
 
     isTemplate(
-        content: string | TemplateRef<unknown> | { value: string; params?: unknown } | unknown,
+        content: string | TemplateRef<unknown> | Translatable,
     ): content is TemplateRef<unknown> {
         return content instanceof TemplateRef;
     }

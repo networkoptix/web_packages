@@ -30,7 +30,7 @@
     </div>
     <div
         class="merge-window"
-        [ngSwitch]="!updateSession && currentState"
+        [ngSwitch]="currentState"
     >
         <nx-merge-select-system-component
             *ngSwitchCase="MergeState.select"
@@ -92,12 +92,5 @@
             (close)="close()"
             (setCurrentState)="setCurrentState($event)"
         ></nx-merge-generic-merge-component>
-        <nx-update-webadmin-session
-            *ngSwitchCase="false"
-            (loginSuccess)="updateSession = false; currentProcess.run()"
-            [noConnectionMsg]="'Failed to the check current system\'s password.' | translate"
-            [dialogRef]="dialogRef"
-            [system]="system"
-        ></nx-update-webadmin-session>
     </div>
 </div>

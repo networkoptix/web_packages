@@ -3,6 +3,7 @@ import { Component, Input, OnChanges, ViewEncapsulation } from '@angular/core';
 import staticLang from '@common/language/language_i18n_static.json';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { SessionState } from '@dialogs/update-session/update-session.component.types';
 import { servers } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';
 import { Watcher } from '@services/apply.service/watcher';
@@ -82,7 +83,10 @@ export class NxServerLoggerComponent implements OnChanges {
                     });
                 };
                 if (err.errorId === servers.errors.oldSessionErrorId) {
-                    this.dialogsService.refreshSession(this.system).then(res => {
+                    this.dialogsService.updateSession({
+                        sessionState: SessionState.RenewWeb,
+                        system: this.system,
+                    }).then(res => {
                         if (res) {
                             this.saveLoggers.run();
                         } else {

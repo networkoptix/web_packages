@@ -1,11 +1,16 @@
 /* Specific-purpose utility functions. If a function/type only involves
 primitives it should probaly go in general.ts intead.  */
 
+import type { TranslateService } from '@ngx-translate/core';
 import { zip } from 'lodash-es';
 import type { IStepOption } from 'ngx-ui-tour-md-menu';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import type { TranslateObject, Translatable } from '@pipes/nx-translate.types';
+import type {
+    TranslateObject,
+    Translatable,
+    SingleTranslateObject,
+} from '@pipes/nx-translate.types';
 import type { MenuNode } from '@services/menus.service.types';
 import type { ec2MediaServer } from '@services/system-api.types';
 
@@ -173,3 +178,160 @@ export const nestedTranslation = (
             .reduce((vals, val) => [...vals, ...val], [])
             .filter(val => val),
     );
+
+type HtmlTag = keyof HTMLElementTagNameMap;
+const selfClosingTags: readonly HtmlTag[] = [
+    'area',
+    'base',
+    'br',
+    'col',
+    'embed',
+    'hr',
+    'img',
+    'input',
+    'link',
+    'meta',
+    'source',
+    'track',
+    'wbr',
+];
+const blockLevelTags: readonly HtmlTag[] = [
+    'address',
+    'article',
+    'aside',
+    'blockquote',
+    'details',
+    'dialog',
+    'dd',
+    'div',
+    'dl',
+    'dt',
+    'fieldset',
+    'figcaption',
+    'figure',
+    'footer',
+    'form',
+    'h1',
+    'h2',
+    'h3',
+    'h4',
+    'h5',
+    'header',
+    'hgroup',
+    'hr',
+    'li',
+    'main',
+    'nav',
+    'ol',
+    'p',
+    'pre',
+    'section',
+    'table',
+    'ul',
+];
+export interface HtmlObj {
+    name: HtmlTag;
+    classes?: string[];
+    props?: { name: string; value?: string }[];
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    children?: HtmlStrElem[];
+}
+type HtmlStrElem = string | HtmlObj | SingleTranslateObject;
+function isTranslatable(elem: HtmlStrElem): elem is SingleTranslateObject {
+    return typeof elem === 'object' && 'value' in elem;
+}
+function isInlineElem(elem: HtmlStrElem): boolean {
+    return typeof elem === 'string' || isTranslatable(elem) || !blockLevelTags.includes(elem.name);
+}
+// TODO: More testing
+export function htmlStrConstructor(nodes: HtmlStrElem[], translate?: TranslateService): string {
+    function parseHtmlObj(
+        { name, classes, props, children }: HtmlObj,
+        indent: number,
+        parentInline: boolean = false, // Format children of inline elements as all inline
+    ): string {
+        const parts = [`${' '.repeat(indent * 4)}<${name}`];
+        if (classes?.length || props?.length) {
+            parts.push(' ');
+        }
+
+        if (classes?.length) {
+            parts.push('class="', classes.join(' '), '"');
+            if (props?.length) {
+                parts.push(' ');
+            }
+        }
+
+        if (props?.length) {
+            parts.push(props.map(p => (!p.value ? p.name : `${p.name}="${p.value}"`)).join(' '));
+        }
+
+        const isSelfClosing = selfClosingTags.includes(name);
+        if (!isSelfClosing) {
+            parts.push('>');
+        }
+
+        if (isSelfClosing && children) {
+            throw new Error(`Self closing element <${name} /> cannot have children`);
+        }
+
+        const formatChildrenAsBlock =
+            !parentInline &&
+            children?.some(
+                c => typeof c !== 'string' && !isTranslatable(c) && blockLevelTags.includes(c.name),
+            );
+        if (children?.length) {
+            const blockNewline = `\n${' '.repeat((indent + 1) * 4)}`;
+            if (formatChildrenAsBlock) {
+                parts.push(blockNewline);
+            }
+            children.forEach((c, i) => {
+                if (typeof c === 'string') {
+                    parts.push(c);
+                } else if (isTranslatable(c)) {
+                    parts.push(translate.instant(c.value, c.params));
+                } else if (parentInline || !blockLevelTags.includes(c.name)) {
+                    parts.push(parseHtmlObj(c, indent + 1, true));
+                } else {
+                    if (i > 0 && isInlineElem(c[i - 1])) {
+                        parts.push(blockNewline);
+                    }
+                    parts.push(parseHtmlObj(c, indent + 1));
+                    if (i < children.length - 1) {
+                        parts.push(blockNewline);
+                    }
+                }
+            });
+        }
+
+        if (isSelfClosing) {
+            parts.push(' />');
+        } else if (formatChildrenAsBlock && children?.length) {
+            parts.push(`\n${' '.repeat(indent * 4)}</${name}>`);
+        } else if (!formatChildrenAsBlock || !children?.length) {
+            parts.push(`</${name}>`);
+        }
+
+        return parts.join('');
+    }
+
+    const elems: string[] = [];
+    nodes.forEach((node, i) => {
+        if (typeof node === 'string') {
+            elems.push(node);
+        } else if (isTranslatable(node)) {
+            elems.push(translate.instant(node.value, node.params));
+        } else if (!blockLevelTags.includes(node.name)) {
+            elems.push(parseHtmlObj(node, 0, true));
+        } else {
+            if (i > 0 && isInlineElem(nodes[i - 1])) {
+                elems.push('\n');
+            }
+            elems.push(parseHtmlObj(node, 0));
+            if (i < nodes.length - 1) {
+                elems.push('\n');
+            }
+        }
+    });
+    return elems.join('');
+}

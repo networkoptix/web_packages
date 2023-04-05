@@ -50,7 +50,6 @@ import { MergeModalContent } from './merge/merge.component';
 import { NxMergeModule } from './merge/merge.refactor.module';
 import { MessageModalModule } from './message/message.module';
 import { NewFeatureInformationModalModule } from './new-feature/new-feature.module';
-import { RefreshSessionModalModule } from './refresh-session/refresh-session.module';
 import { RemoveSystemModalModule } from './remove-system/remove-system.module';
 import { RemoveUserModalModule } from './remove-user/remove-user.module';
 import { ReserveSpaceWarningModalContent } from './reserve-space-warning/reserve-space-warning.component';
@@ -63,6 +62,7 @@ import { TwoFAModalModule } from './two-fa/two-fa.module';
 import {
     UpdateCameraCredentialsModalContent
 } from './update-camera-credentials/update-camera-credentials.component';
+import { NxUpdateSessionModalModule } from './update-session/update-session.module';
 import { WizardModalContent } from './wizard/wizard.component';
 
 @NgModule({
@@ -100,7 +100,6 @@ import { WizardModalContent } from './wizard/wizard.component';
         AddUserModalModule,
         RemoveUserModalModule,
         DeleteCloudUserModalModule,
-        RefreshSessionModalModule,
         MessageModalModule,
         Client2faWarningModalModule,
         ConnectCloudModalModule,
@@ -115,6 +114,7 @@ import { WizardModalContent } from './wizard/wizard.component';
         NewFeatureInformationModalModule,
         NxAddOrgUserModule,
         NxEditOrgUserModule,
+        NxUpdateSessionModalModule,
     ],
     declarations: [
         AddStorageModalContent,

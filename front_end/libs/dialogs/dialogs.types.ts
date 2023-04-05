@@ -1,4 +1,5 @@
 import type { SelectionModel } from '@angular/cdk/collections';
+import type { DialogRef as CdkDialogRef } from '@angular/cdk/dialog';
 import type { EventEmitter, TemplateRef } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
@@ -11,8 +12,10 @@ import type { LicenseManager } from '@services/system.service/license-manager/li
 import type { NxSystem } from '@services/system.service/system';
 import type { NxUser } from '@services/system.service/user-manager/user-manager-types';
 
+import type { DialogRef } from './dialog-ref';
 import { NewFeatureTemplate } from './new-feature/new-feature.component.types';
 import { TfaAction } from './two-fa/two-fa.component.types';
+import type { SessionState } from './update-session/update-session.component.types';
 
 export interface DialogType<D = unknown, R = unknown> {
     data: D;
@@ -77,7 +80,14 @@ interface MessageData {
 export type Message = DialogType<MessageData, true>;
 
 /* Auth */
-export type RefreshSession = DialogType<NxSystem, boolean>;
+interface UpdateSessionData {
+    sessionState: SessionState;
+    system: NxSystem;
+    noConnectionMsg?: string;
+    processAction?: string;
+    openingRef?: DialogRef | CdkDialogRef;
+}
+export type UpdateSession = DialogType<UpdateSessionData, true>;
 export type Client2faWarning = DialogType<void, void>;
 
 /* Account */

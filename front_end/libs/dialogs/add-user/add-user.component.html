@@ -23,95 +23,83 @@
             <div class="close-content"></div>
         </button>
     </div>
-    <div [ngStyle]="{ display: needsUpdate ? 'none' : 'unset' }">
-        <div class="modal-body">
-            <div class="form-group">
-                <label
-                    for="addUserEmail"
-                    translate
-                    >Email</label
-                >
-                <nx-email-input
-                    class="fs-mask form-component"
-                    id="addUserEmail"
-                    name="addUserEmail"
-                    componentId="addUserEmail"
-                    [(ngModel)]="user.email"
-                    [form]="addUserForm"
-                    [setFocus]="true"
-                    #addUserEmail="ngModel"
-                >
-                </nx-email-input>
-                <div class="col-12 ml-n2 d-flex">
-                    <ng-container *ngIf="addUserEmail.errors">
+    <div class="modal-body">
+        <div class="form-group">
+            <label
+                for="addUserEmail"
+                translate
+                >Email</label
+            >
+            <nx-email-input
+                class="fs-mask form-component"
+                id="addUserEmail"
+                name="addUserEmail"
+                componentId="addUserEmail"
+                [(ngModel)]="user.email"
+                [form]="addUserForm"
+                [setFocus]="true"
+                #addUserEmail="ngModel"
+            >
+            </nx-email-input>
+            <div class="col-12 ml-n2 d-flex">
+                <ng-container *ngIf="addUserEmail.errors">
+                    <span
+                        *ngIf="addUserEmail.errors.alreadyExists"
+                        class="input-error"
+                        >{{ LANG.dialogs.addUser.alreadyExists | translate: { systemName } }}</span
+                    >
+                    <ng-container *ngIf="addUserEmail.touched">
                         <span
-                            *ngIf="addUserEmail.errors.alreadyExists"
+                            *ngIf="addUserEmail.errors.required"
                             class="input-error"
-                            >{{
-                                LANG.dialogs.addUser.alreadyExists | translate: { systemName }
-                            }}</span
+                            translate
+                            >Email is required</span
                         >
-                        <ng-container *ngIf="addUserEmail.touched">
-                            <span
-                                *ngIf="addUserEmail.errors.required"
-                                class="input-error"
-                                translate
-                                >Email is required</span
-                            >
-                            <span
-                                *ngIf="addUserEmail.errors.pattern"
-                                class="input-error"
-                                translate
-                                >Please enter a valid Email</span
-                            >
-                        </ng-container>
+                        <span
+                            *ngIf="addUserEmail.errors.pattern"
+                            class="input-error"
+                            translate
+                            >Please enter a valid Email</span
+                        >
                     </ng-container>
-                </div>
-            </div>
-            <div class="form-group">
-                <label
-                    for="permissionsSelect"
-                    translate
-                    >Access Level</label
-                >
-                <nx-permissions-select
-                    id="permissionsSelect"
-                    name="permissionsSelect"
-                    [system]="system"
-                    [roles]="system.userManager.accessRoles"
-                    [ngModel]="user.role"
-                    (ngModelChange)="setPermission($event)"
-                >
-                </nx-permissions-select>
-                <span
-                    class="help-block"
-                    data-testid="addUserHelpBlock"
-                    [innerText]="accessDescription | translate"
-                ></span>
+                </ng-container>
             </div>
         </div>
-        <div class="modal-footer">
-            <nx-process-button
-                [clickFn]="preSubmit"
-                [process]="addUser"
-                [form]="addUserForm"
-                [buttonText]="'Add' | translate"
-                data-testid="addUserBtn"
-            ></nx-process-button>
-            <nx-cancel-button
-                [process]="addUser"
-                [cancelFn]="unlock"
-                [discardFn]="close"
-                data-testid="cancelAddUserBtn"
-            ></nx-cancel-button>
+        <div class="form-group">
+            <label
+                for="permissionsSelect"
+                translate
+                >Access Level</label
+            >
+            <nx-permissions-select
+                id="permissionsSelect"
+                name="permissionsSelect"
+                [system]="system"
+                [roles]="system.userManager.accessRoles"
+                [ngModel]="user.role"
+                (ngModelChange)="setPermission($event)"
+            >
+            </nx-permissions-select>
+            <span
+                class="help-block"
+                data-testid="addUserHelpBlock"
+                [innerText]="accessDescription | translate"
+            ></span>
         </div>
     </div>
-    <nx-update-webadmin-session
-        *ngIf="system.useRest && needsUpdate"
-        (loginSuccess)="needsUpdate = false; addUser.run()"
-        [noConnectionMsg]="'Failed to detach server from system.' | translate"
-        [dialogRef]="dialogRef"
-        [system]="system"
-        processAction="danger"
-    ></nx-update-webadmin-session>
+    <div class="modal-footer">
+        <nx-process-button
+            [clickFn]="preSubmit"
+            [process]="addUser"
+            [form]="addUserForm"
+            [buttonText]="'Add' | translate"
+            data-testid="addUserBtn"
+        ></nx-process-button>
+        <nx-cancel-button
+            [process]="addUser"
+            [cancelFn]="unlock"
+            [discardFn]="close"
+            data-testid="cancelAddUserBtn"
+        ></nx-cancel-button>
+    </div>
 </form>
