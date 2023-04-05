@@ -1290,7 +1290,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         }
         switch (transport) {
             case 'webRtc':
-                url = `${this.getUrlBase('wss:')}/webrtc-tracker/?camera_id=${this.cleanId(cameraId)}&X-Server-Guid=${this.serverId}&`;
+                url = `${this.getUrlBase('wss:')}/webrtc-tracker/?camera_id=${this.cleanId(cameraId)}&x-server-guid=${this.cleanId(this.serverId)}&`;
                 break;
             case 'hls':
                 url = `${this.getUrlBase()}/web/hls/${this.cleanId(cameraId)}.m3u8?${hlsResolutionOrEmpty(resolution)}&`;
