@@ -912,8 +912,8 @@ export class NxCloudApiService {
             }
 
             if (!minSessionSeconds || ((Date.now() + minSessionSeconds * 1000) > currentSession.value.sessionExpires)) {
-                value = await firstValueFrom(this.refreshAccessTokens());
-                currentSession = { key, value };
+                const { accessToken } = await firstValueFrom(this.refreshAccessTokens());
+                currentSession = { key, value: { ...currentSession.value, accessToken } };
             }
 
             await this.db.personal.unstructured.put(currentSession);
