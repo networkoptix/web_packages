@@ -12,7 +12,7 @@
 <nx-page-placeholder
     class="placeholder-section"
     type="NO_SETTINGS"
-    *ngIf="isOffline || !system.isAvailable; else showServer"
+    *ngIf="isOffline && !system.isAvailable; else showServer"
 ></nx-page-placeholder>
 
 <ng-template #showServer>

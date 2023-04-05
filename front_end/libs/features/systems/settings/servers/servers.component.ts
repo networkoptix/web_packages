@@ -135,7 +135,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                         });
                 }),
                 tap(() => {
-                    this.isOffline = !this.system.isAvailable;
+                    this.isOffline = !this.system.isOnline;
                     if (this.system && !this.system.userManager.permissions.isAdmin) {
                         this.uriService
                             .navigateSystem(
