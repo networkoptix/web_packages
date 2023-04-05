@@ -113,7 +113,7 @@ export class UserManager {
     }
 
     checkPermissions(): void {
-        const isMine = this.isMine || !!this.currentUser?.isLocalOwner;
+        const isMine = this.isMine || !!this.currentUser?.isLocalOwner || this.accessRole === 'owner';
         let isAdmin = isMine ||
             this.CONFIG.accessRoles.adminAccess.includes(this._accessRole.toLowerCase());
         if (!isAdmin && this.currentUser) {
