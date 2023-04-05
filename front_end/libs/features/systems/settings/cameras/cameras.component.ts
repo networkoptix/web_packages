@@ -505,10 +505,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     .pipe(
                         untilDestroyed(this),
                         filter(res => {
-                            if (res.cameraManager.cameras === undefined) {
-                                return false;
-                            }
-
                             this.noCameras = res.cameraManager.cameras?.length === 0;
                             if (this.noCameras) {
                                 this.showPreloader = false;
