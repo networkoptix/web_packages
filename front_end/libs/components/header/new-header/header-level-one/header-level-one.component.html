@@ -16,9 +16,8 @@
             *ngIf="!loggedIn"
             [href]="headerService.createUrl"
             class="create-account"
-            translate
         >
-            CREATE ACCOUNT
+            {{ LANG.createAccount | translate | uppercase }}
         </a>
         <nx-header-language-select
             *ngIf="!loggedIn"

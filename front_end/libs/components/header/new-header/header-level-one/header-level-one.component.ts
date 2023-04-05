@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
+import staticLang from '@common/language/language_i18n_static.json';
 import { NxMenusService } from '@services/menus.service';
 import type { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
@@ -16,6 +17,7 @@ export class NxHeaderLevelOneComponent {
     @Input() loggedIn: boolean | undefined = undefined;
     @Output() nodeSelect = new EventEmitter<MenuNode>();
     profileDropdownOpen = false;
+    LANG = staticLang;
 
     constructor(public headerService: NxHeaderService, private menusService: NxMenusService) {}
 
