@@ -70,7 +70,7 @@ const lazyRoutes: Routes = [
     },
     {
         path: 'home',
-        loadChildren: () => import('@pages/systems/groups/groups.module').then(m => m.NxSystemGroupsModule),
+        loadChildren: () => import('@pages/home/home.module').then(m => m.NxHomeModule),
         canLoad: [FeatureGuard],
         data: {
             flags: FeatureFlagStrings.systemGroups

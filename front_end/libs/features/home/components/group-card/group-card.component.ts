@@ -6,7 +6,7 @@ import staticLang from '@common/language/language_i18n_static.json';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons } from '@lib/variables/static-variables';
 
-import type { GroupItem } from '../../groups.types';
+import type { GroupItem } from '../../home.types';
 import { NxSystemGroupsService } from '../../services/system-groups.service';
 import * as GroupActions from '../../store/groups.actions';
 

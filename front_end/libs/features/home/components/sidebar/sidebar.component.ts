@@ -7,7 +7,7 @@ import { CoercedBoolInput } from '@decorators/ibool';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons } from '@src/app/variables/static-variables';
 
-import { GroupsItem, SharedItems, BaseItems, OpenGroups, GroupPath } from '../../groups.types';
+import { GroupsItem, SharedItems, BaseItems, OpenGroups, GroupPath } from '../../home.types';
 import { NxSystemGroupsService } from '../../services/system-groups.service';
 import * as GroupActions from '../../store/groups.actions';
 import { selectRootPersonalItems, selectRootSharedItems } from '../../store/groups.selectors';

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
 import { DialogRef } from '@dialogs/dialog-ref';
-import { NxSystemGroupsService } from '@pages/systems/groups/services/system-groups.service';
+import { NxSystemGroupsService } from '@pages/home/services/system-groups.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 
@@ -33,10 +33,14 @@ export class SystemGroupSettingsModalContent implements OnInit {
         const successHandler = (): void => {
             this.dialogRef.close();
         };
-        this.systemGroupSettingsProcess = this.processService.createProcess(() => {
-            this._importGroups(this.code);
-            return Promise.resolve();
-        }, {}, successHandler);
+        this.systemGroupSettingsProcess = this.processService.createProcess(
+            () => {
+                this._importGroups(this.code);
+                return Promise.resolve();
+            },
+            {},
+            successHandler,
+        );
     }
 
     close = (): void => {

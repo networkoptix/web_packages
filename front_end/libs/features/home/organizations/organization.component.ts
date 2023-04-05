@@ -11,9 +11,9 @@ import { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 
-import { GroupsItem, Crumb, OpenGroups, LoadingState, GroupPath } from './groups.types';
-import { NxSystemGroupsService } from './services/system-groups.service';
-import * as GroupActions from './store/groups.actions';
+import { GroupsItem, Crumb, OpenGroups, LoadingState, GroupPath } from '../home.types';
+import { NxSystemGroupsService } from '../services/system-groups.service';
+import * as GroupActions from '../store/groups.actions';
 import {
     selectCurrentGroupId,
     selectCurrentGroupOwner,
@@ -23,18 +23,18 @@ import {
     selectHasGroups,
     selectLoadingState,
     selectOpenGroups,
-} from './store/groups.selectors';
+} from '../store/groups.selectors';
 
 interface SidebarSettings {
     showSidebarState: boolean;
 }
 
 @Component({
-    selector: 'nx-groups',
-    templateUrl: 'groups.component.html',
-    styleUrls: ['groups.component.scss'],
+    selector: 'nx-organization',
+    templateUrl: 'organization.component.html',
+    styleUrls: ['organization.component.scss'],
 })
-export class NxSystemGroupsComponent implements OnInit, OnDestroy {
+export class NxOrganizationsComponent implements OnInit, OnDestroy {
     icons = icons;
     LoadingState = LoadingState;
     LANG = staticLang;

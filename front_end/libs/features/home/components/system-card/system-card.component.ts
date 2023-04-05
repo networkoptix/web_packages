@@ -12,7 +12,7 @@ import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
 import { NxUrlProtocolService } from '@services/url-protocol.service';
 
-import type { SystemItem } from '../../groups.types';
+import type { SystemItem } from '../../home.types';
 
 @Component({
     selector: 'nx-system-card',

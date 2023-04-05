@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 
 import { icons } from '@lib/variables/static-variables';
 
-import { GroupItem, GroupsItem, OpenGroups } from '../../groups.types';
+import { GroupItem, GroupsItem, OpenGroups } from '../../home.types';
 import { NxSystemGroupsService } from '../../services/system-groups.service';
 import * as GroupActions from '../../store/groups.actions';
 import { selectCurrentGroupId } from '../../store/groups.selectors';

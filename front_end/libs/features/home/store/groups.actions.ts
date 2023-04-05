@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 
-import type { BaseGroupsItem, OpenGroups, SystemInfo } from '../groups.types';
+import type { BaseGroupsItem, OpenGroups, SystemInfo } from '../home.types';
 
 export const reset = createAction('[System Groups] Reset');
 

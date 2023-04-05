@@ -13,7 +13,7 @@ import { toast } from '@lib/variables/static-variables';
 import { WINDOW } from '@services/window-provider';
 import { isObject } from '@utils/general';
 
-import type { GroupsItem } from '../groups.types';
+import type { GroupsItem } from '../home.types';
 import * as GroupActions from '../store/groups.actions';
 
 import {

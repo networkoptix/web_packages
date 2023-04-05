@@ -8,8 +8,8 @@ import type {
     SystemItem,
     Crumb,
     SharedItems,
-} from '../groups.types';
-import { LoadingState } from '../groups.types';
+} from '../home.types';
+import { LoadingState } from '../home.types';
 
 import { GroupsState } from './groups.state';
 

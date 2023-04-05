@@ -10,7 +10,7 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { Account } from '@services/account.service/account';
 import { icons } from '@src/app/variables/static-variables';
 
-import { GroupItem, GroupsItem, SystemItem } from '../../groups.types';
+import { GroupItem, GroupsItem, SystemItem } from '../../home.types';
 import { NxSystemGroupsService } from '../../services/system-groups.service';
 import {
     selectCurrentGroupId,

@@ -5,7 +5,7 @@ import type { NgForm } from '@angular/forms';
 import staticLang from '@common/language/language_i18n_static.json';
 import type { CreateSystemGroup as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
-import { NxSystemGroupsService } from '@pages/systems/groups/services/system-groups.service';
+import { NxSystemGroupsService } from '@pages/home/services/system-groups.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { pickFrom } from '@utils/general';
@@ -51,7 +51,7 @@ export class CreateSystemGroupModalContent extends ModalBase<DT['return']> {
                 return Promise.resolve();
             },
             {},
-            () => this.close()
+            () => this.close(),
         );
     }
 }
