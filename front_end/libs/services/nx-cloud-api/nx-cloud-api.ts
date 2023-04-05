@@ -886,6 +886,10 @@ export class NxCloudApiService {
         return this.http.get<Record<string, string>>(`${this.CONFIG.cloudHost}/oauth/token/`, { params });
     }
 
+    refreshAccessTokens() {
+        return this.http.post<Record<string, string>>(`${this.CONFIG.cloudHost}${apiBase}/account/refreshAccessToken`, {}).pipe(map(({ access_token }) => ({ accessToken: access_token })));
+    }
+
     /**
      * This is used to ensure that request made to cloud services external to cloud portal have a fresh session to be used for request.
      *
@@ -908,7 +912,7 @@ export class NxCloudApiService {
             }
 
             if (!minSessionSeconds || ((Date.now() + minSessionSeconds * 1000) > currentSession.value.sessionExpires)) {
-                value = await firstValueFrom(this.renewSessionUsingRefreshToken());
+                value = await firstValueFrom(this.refreshAccessTokens());
                 currentSession = { key, value };
             }
 
@@ -925,40 +929,6 @@ export class NxCloudApiService {
             }))
         );
     };
-
-    // This is for sharing the renew token request when multiple get triggered.
-    // This is for 23.1 only. Is being handled differently within develop branch.
-    // Take changed from develop when merging 23.1 into develop.
-    #cachedRenewRequest: Record<string, Observable<Account>> = {};
-    #lastSessionUpdate = 0;
-
-    renewSessionUsingRefreshToken(refreshToken: string | 'session' = 'session') {
-        const newRequest = () => this.getTokensFromCloud(refreshToken, 'refresh_token', 'code').pipe(
-            switchMap(({ code }) => this.renewToken(code)),
-            shareReplay({ bufferSize: 1, refCount: false })
-        );
-
-        const useSession = refreshToken === 'session';
-        const tenSecondsAgo = Date.now() - 1000 * 10;
-
-        if (!this.#cachedRenewRequest[refreshToken] || (useSession && this.#lastSessionUpdate < tenSecondsAgo)) {
-            this.#cachedRenewRequest[refreshToken] = newRequest();
-            if (useSession) {
-                this.#lastSessionUpdate = Date.now();
-            }
-        }
-
-        return this.#cachedRenewRequest[refreshToken];
-    }
-
-    @memoizeAsyncPersistent
-    renewToken(code: string) {
-        return this.http.post<{ message: string }>(`${apiBase}/account/renewSession`, { code }).pipe(
-            map(() => true),
-            catchError(() => Promise.resolve(false)),
-            switchMap(refreshed => this.account(true))
-        );
-    }
 
     @memoizeAsyncShort
     getTokenInfo(token: string) {
