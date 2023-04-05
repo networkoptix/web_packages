@@ -32,7 +32,7 @@
 
             svg-icon svg {
                 .st0, .icon-with-fill {
-                    fill: var(--btn-header-main-color) !important;
+                    fill: var(--btn-header-main-color);
                 }
             }
         }
@@ -209,9 +209,8 @@
                 .user-svg {
                     margin-left : 2px;
 
-                    .st0 {
-                        fill   : var(--header-profile-color) !important;
-                        stroke : var(--header-profile-color) !important;
+                    .icon-with-fill {
+                        fill   : var(--header-profile-color);
                     }
                 }
             }

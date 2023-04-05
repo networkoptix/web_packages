@@ -4,7 +4,7 @@
         [selectedNode]="selectedNode"
         [noSystems]="(systemCount$ | async) === 0"
         (nodeSelect)="handleNodeSelect($any($event))"
-        [loggedIn]="loggedIn"
+        [loggedIn]="loggedIn$ | async"
     >
     </nx-header-level-one>
     <nx-header-level-two
@@ -16,7 +16,7 @@
 
 <nx-header-mobile
     *ngIf="isMobile$ | async"
-    [loggedIn]="loggedIn"
+    [loggedIn]="loggedIn$ | async"
     [menuNodes]="displayedNodes"
     [systemCount]="systemCount$ | async"
 ></nx-header-mobile>

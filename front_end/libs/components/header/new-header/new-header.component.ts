@@ -28,7 +28,7 @@ export class NxNewHeaderComponent {
     @Input() width: Observable<number>;
     selectedNode: MenuNode;
     displayedNodes: MenuNode[];
-    loggedIn: boolean | undefined = undefined;
+    loggedIn$ = this.store.select(accountSelectors.selectIsAuthenticated);
     isMobile$ = new BehaviorSubject<boolean>(false);
     systemCount$: Observable<number>;
 
@@ -80,17 +80,6 @@ export class NxNewHeaderComponent {
                 if (headerService.currentLocation?.path?.includes('/systems/')) {
                     // specific system page
                     this.selectedNode = cloneDeep({ ...node, name: 'systems' });
-                }
-            });
-
-        this.store
-            .select(accountSelectors.selectCurrentUser)
-            .pipe(untilDestroyed(this))
-            .subscribe(account => {
-                if (account?.is_authenticated) {
-                    this.loggedIn = true;
-                } else {
-                    this.loggedIn = false;
                 }
             });
 
