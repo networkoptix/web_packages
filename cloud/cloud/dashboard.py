@@ -54,7 +54,7 @@ class CustomIndexDashboard(Dashboard):
         ))
         if user.is_superuser:
             # append a recent actions module
-            self.children.append(DashboardAppList(
+            self.children.append(modules.RecentActions(
                 _('Recent Actions'),
                 5,
                 deletable=False,
