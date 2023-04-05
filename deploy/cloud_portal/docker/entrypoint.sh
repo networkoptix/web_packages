@@ -110,9 +110,9 @@ do
                 done
 
             fi
-            python manage.py update_host
-            python manage.py filldata
-            python manage.py filldata --preview=True &
+            python manage.py update_host --customization $CUSTOMIZATION
+            python manage.py filldata --customization $CUSTOMIZATION
+            python manage.py filldata --customization $CUSTOMIZATION --preview=True &
 
             find /app/app/static | xargs touch
             exec gunicorn cloud.asgi:application --capture-output --workers ${PORTAL_WORKERS} --bind :5000 --log-level=debug --timeout 300 -k uvicorn.workers.UvicornWorker
