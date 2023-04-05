@@ -2,7 +2,7 @@
 // use _table.scss --TT
 
 :host {
-    display: inline;
+    display: inherit;
     width: 100%;
     height: 100%;
 
@@ -12,6 +12,7 @@
         border-collapse: collapse;
         min-width: 100%;
         height: inherit;
+        grid-template-rows: 40px auto 40px;
 
         .container {
             height: 100%;

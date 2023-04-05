@@ -16,15 +16,17 @@ import {
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+import staticLang from '@app/language/language_i18n_static.json';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
 
 /* USAGE
  <nx-table
-    set-pagination                  // set pagination
-    set-sorting                     // set sorting
-    set-rows                        // allow row per page adjustment (dropdown)
-    [set-row-expand]="subLevels"    // control if rows can be expanded
+    set-pagination                              // set pagination
+    set-sorting                                 // set sorting
+    set-rows                                    // allow row per page adjustment (dropdown)
+    [rows-per-page]="[{name: '5', value: 5}]"
+    [set-row-expand]="subLevels"                // control if rows can be expanded
     (onRowExpand)="expandRow($event)"
     [data]='records'>
 </nx-table>
@@ -32,8 +34,6 @@ import { CoercedBoolInput, IBool } from '@decorators/ibool';
  Optional header and rows can be supplied through ng-template
  .. see sandbox/table
 */
-
-const ROW_PER_PAGE = 10;
 
 @UntilDestroy()
 @Component({
@@ -47,6 +47,7 @@ export class NxBaseTableComponent implements OnInit, AfterContentInit {
     @IBool() @Input('set-rows') setRows: CoercedBoolInput;
     @IBool() @Input('set-sorting') setSorting: CoercedBoolInput;
     @Input('set-row-expand') setRowExpand: boolean = false;
+    @Input('rows-per-page') rowsPerPage: Array<number> = [25, 50, 100];
 
     @Output() onRowExpand = new EventEmitter<string>();
 
@@ -55,6 +56,8 @@ export class NxBaseTableComponent implements OnInit, AfterContentInit {
 
     @ContentChildren('sortItem', { descendants: true }) sortableItems: QueryList<HTMLDivElement>;
 
+    LANG = staticLang;
+
     expandRowId: string;
 
     currentPage: number = 1;
@@ -62,7 +65,7 @@ export class NxBaseTableComponent implements OnInit, AfterContentInit {
     nDisplayed: string;
     pagedItems: Record<string, string | boolean | Record<string, string>[]>[];
     perPageOptions: DropdownItem<number>[] = [];
-    perPageSelectedOption = { name: `${ROW_PER_PAGE}`, value: ROW_PER_PAGE };
+    perPageSelectedOption: DropdownItem<number>;
 
     public selectedHeader: string;
     public sortOrderASC: boolean = true;
@@ -70,8 +73,13 @@ export class NxBaseTableComponent implements OnInit, AfterContentInit {
     constructor(private renderer: Renderer2, @Inject(LOCALE_ID) private locale: string) {}
 
     ngOnInit(): void {
-        this.perPageOptions.push({ name: '5', value: 5 });
-        this.perPageOptions.push({ name: 'All', value: this.data.length });
+        this.rowsPerPage.forEach(item => {
+            this.perPageOptions.push({ name: `${item}`, value: item });
+        });
+
+        this.perPageOptions.push({ name: this.LANG.search.All, value: this.data.length });
+        this.perPageSelectedOption = this.perPageOptions[0];
+
         this.numPages = Math.ceil(this.data.length / this.perPageSelectedOption.value);
         this.setPage(1);
     }
@@ -216,11 +224,14 @@ export class NxBaseTableComponent implements OnInit, AfterContentInit {
         this.pagedItems = this.data.slice(startIndex, endIndex);
 
         if (this.currentPage === 1) {
-            this.nDisplayed = `1-${this.perPageSelectedOption.value}`;
+            this.nDisplayed = `1-${Math.min(this.perPageSelectedOption.value, this.data.length)}`;
         } else {
-            this.nDisplayed = `${(this.currentPage - 1) * this.perPageSelectedOption.value + 1}-${
-                (this.currentPage - 1) * this.perPageSelectedOption.value + this.pagedItems.length
-            }`;
+            this.nDisplayed = `${
+                (this.currentPage - 1) * this.perPageSelectedOption.value + 1
+            }-${Math.min(
+                (this.currentPage - 1) * this.perPageSelectedOption.value + this.pagedItems.length,
+                this.data.length,
+            )}`;
         }
     }
 

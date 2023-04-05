@@ -16,6 +16,8 @@ export class SandboxTableComponent {
     expandRowId: string;
     icons = icons;
 
+    rowsPerPage: Array<number>;
+
     constructor(
         private menuService: NxMenuService
     ) {
@@ -24,6 +26,8 @@ export class SandboxTableComponent {
     ngOnInit(): void {
         this.menuService.section = 'components';
         this.menuService.detail = 'table';
+
+        this.rowsPerPage = [5, 10, 20, 50];
 
         this.headers = {
             login: {
