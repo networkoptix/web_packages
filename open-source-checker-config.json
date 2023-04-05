@@ -1,0 +1,14 @@
+{
+    "open_source_roots": [
+        "open",
+        "open_candidate"
+    ],
+    "excluded_dirs": [],
+    "excluded_file_paths": [
+        "open/readme.md"
+    ],
+    "excluded_file_name_patterns": [
+        "*.json",
+        ".*"
+    ]
+}

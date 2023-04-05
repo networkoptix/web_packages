@@ -182,7 +182,7 @@ django-unit-test-fast:
     - cp -r "$FRONTEND_NODE_MODULES" ./front_end/node_modules
     - cp -r "$ES_LINT_PLUGIN_NODE_MODULES" ./front_end/eslint-plugin-nx/node_modules
 
-open-source-checks:
+open-source:monorepo-checks:
   extends: .frontend-node
   stage: check
   script:
@@ -190,6 +190,38 @@ open-source-checks:
       pushd "front_end"
         npm run ci:open
       popd
+
+open-source:open-source-checker:
+  stage: check
+  image: ${DOCKER_REGISTRY}/nx/workflow_police/open-source-checker
+  script:
+  - git config --global --add safe.directory "${CI_PROJECT_DIR}" #< Prevent "detected dubious ownership" error.
+  - echo "Getting files changed by this MR (${CI_MERGE_REQUEST_DIFF_BASE_SHA} => ${CI_COMMIT_SHA})"
+  - git diff-tree --no-commit-id --name-status -r "${CI_MERGE_REQUEST_DIFF_BASE_SHA}" "${CI_COMMIT_SHA}"
+      | (egrep '^(M|A)\s+(open|open_candidate)/' || true) | awk '{print $2}'
+      | tee changed_open_source_files.txt
+  - |
+    if [[ -s changed_open_source_files.txt ]]; then
+      /workdir/open_source_check.py \
+        --config open-source-checker-config.json --check-file-list changed_open_source_files.txt --display-relative-paths \
+        --repo-dir . 2>&1 | tee report.txt
+    else
+      echo "No new or modified open-source files in git diff." | tee report.txt
+    fi
+  artifacts:
+    expose_as: open-source-check-report
+    when: always
+    paths: ['report.txt']
+  allow_failure: false
+  variables:
+    GIT_STRATEGY: "fetch"
+  rules:
+  - if: $CI_MERGE_REQUEST_ID
+    changes:
+    - open/**/*
+    - open_candidate/**/*
+    - open-source-checker-config.json
+
 
 other-frontend-checks:
   extends: .frontend-node
