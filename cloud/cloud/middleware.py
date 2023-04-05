@@ -60,7 +60,7 @@ class CachedMiddleware(MiddlewareMixin):
 class CustomizationMiddleware(MiddlewareMixin):
     # Todo. Add tests in QA for health checks
     health_checks = [
-        reverse_lazy('health_migration'),
+        reverse_lazy('health_migrations'),
         reverse_lazy('notification_health_email'),
         reverse_lazy('notification_health_push'),
     ]
