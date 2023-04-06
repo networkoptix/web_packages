@@ -8,6 +8,10 @@
 
         .title {
             font-size: 14px !important;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            word-break: break-word;
+            padding-right: 25px;
         }
     }
 
@@ -91,6 +95,9 @@
         .name {
             font-size: 20px !important;
             margin-bottom: 10px;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            word-break: break-word;
         }
     
         .description {
