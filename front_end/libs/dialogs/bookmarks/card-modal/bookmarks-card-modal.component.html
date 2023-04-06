@@ -15,7 +15,9 @@
     <div class="modal-body">
         <div class="video">
             <div class="clip">
+                <!-- When uncommenting the CSS transitions, remove "*ngIf="!videoError"-->
                 <nx-clip
+                    *ngIf="!videoError"
                     [ngClass]="{ 'clip--hidden': videoError }"
                     [sourceUrl]="bookmark.src"
                     [posterUrl]="bookmark.thumbnail | async"
