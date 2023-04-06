@@ -46,10 +46,13 @@ const expected1 = `
 `.trim();
 testEqual(result1, expected1);
 
-const result2 = htmlStrConstructor([
-    { name: 'p', children: [{ value: 'Action failed.' }] },
-    { name: 'p', children: [{ value: 'Please reconnect.' }] },
-], TranslateServiceMock);
+const result2 = htmlStrConstructor(
+    [
+        { name: 'p', children: [{ value: 'Action failed.' }] },
+        { name: 'p', children: [{ value: 'Please reconnect.' }] },
+    ],
+    TranslateServiceMock,
+);
 const expected2 = `
 <p>Action failed.</p>
 <p>Please reconnect.</p>

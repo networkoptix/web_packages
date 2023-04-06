@@ -31,26 +31,31 @@ export class NxSandboxComponent {
                         {
                             id: 'basicColors',
                             label: 'Basic',
-                            path: '/basic-colors'
-                        }, {
+                            path: '/basic-colors',
+                        },
+                        {
                             id: 'customColors',
                             label: 'Customizations',
-                            path: '/custom-colors'
-                        }, {
+                            path: '/custom-colors',
+                        },
+                        {
                             id: 'themeColors',
                             label: 'Themes',
-                            path: '/theme-colors'
-                        }, {
+                            path: '/theme-colors',
+                        },
+                        {
                             id: 'themeHSL',
                             label: 'HSL colors',
-                            path: '/hsl-theme'
-                        }, {
+                            path: '/hsl-theme',
+                        },
+                        {
                             id: 'webgl',
                             label: 'WebGL',
-                            path: '/webgl'
-                        }
-                    ]
-                }, {
+                            path: '/webgl',
+                        },
+                    ],
+                },
+                {
                     id: 'components',
                     svg: 'system',
                     label: 'Components',
@@ -59,73 +64,80 @@ export class NxSandboxComponent {
                         {
                             id: 'applyServiceForm',
                             label: 'Apply service (form)',
-                            path: '/apply-service-form'
-                        }, {
+                            path: '/apply-service-form',
+                        },
+                        {
                             id: 'applyServiceSection',
                             label: 'Apply service (section)',
-                            path: '/apply-service-section'
-                        }, {
+                            path: '/apply-service-section',
+                        },
+                        {
                             id: 'dropdowns',
                             label: 'Dropdowns',
-                            path: '/dropdowns'
-                        }, {
+                            path: '/dropdowns',
+                        },
+                        {
                             id: 'demoLayout',
                             label: 'Demo layout',
-                            path: '/demo-layout'
-                        }, {
+                            path: '/demo-layout',
+                        },
+                        {
                             id: 'search',
                             label: 'Search',
-                            path: '/search'
-                        }, {
+                            path: '/search',
+                        },
+                        {
                             id: 'masonryGrid',
                             label: 'Masonry grid',
-                            path: '/masonry-grid'
-                        }, {
+                            path: '/masonry-grid',
+                        },
+                        {
                             id: 'formElements',
                             label: 'Form elements',
-                            path: '/form-elements'
-                        }, {
+                            path: '/form-elements',
+                        },
+                        {
                             id: 'validation',
                             label: 'Validation',
-                            path: '/validation'
-                        }, {
+                            path: '/validation',
+                        },
+                        {
                             id: 'table',
                             label: 'Table',
-                            path: '/table'
-                        }, {
+                            path: '/table',
+                        },
+                        {
                             id: 'tags',
                             label: 'Tags',
-                            path: '/tags'
-                        }, {
+                            path: '/tags',
+                        },
+                        {
                             id: 'toaster',
                             label: 'Ribbon,  Banner, Toaster & Buttons',
-                            path: '/toaster'
-                        }, {
+                            path: '/toaster',
+                        },
+                        {
                             id: 'archsvg',
                             label: 'Architecture (SVG)',
-                            path: '/arch'
-                        }
-                    ]
-                }
-            ]
+                            path: '/arch',
+                        },
+                    ],
+                },
+            ],
         };
         this.menuReady = true;
 
-        this.menuService.selectedSectionSubject
-            .pipe(untilDestroyed(this))
-            .subscribe(selection => {
-                if (this.content.selectedSection === selection) {
-                    return;
-                }
-                this.content.selectedSection = selection;
-                this.content = { ...this.content }; // trigger onChange
-            });
+        this.menuService.selectedSectionSubject.pipe(untilDestroyed(this)).subscribe(selection => {
+            if (this.content.selectedSection === selection) {
+                return;
+            }
+            this.content.selectedSection = selection;
+            this.content = { ...this.content }; // trigger onChange
+        });
 
-        this.menuService.selectedDetailsSection
-            .pipe(untilDestroyed(this))
-            .subscribe(selection => {
-                this.content.selectedDetailsSection = selection;
-                this.content = { ...this.content }; // trigger onChange
-            });
+        this.menuService.selectedDetailsSection.pipe(untilDestroyed(this)).subscribe(selection => {
+            this.content.selectedDetailsSection = selection;
+            this.content = { ...this.content }; // trigger onChange
+        });
     }
 }

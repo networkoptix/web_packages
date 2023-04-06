@@ -13,9 +13,12 @@ import { Process } from '@services/process.service/process';
 })
 export class SectionApplyExampleComponent {
     // Refs to use for rendering apply component instances
-    @ViewChild('section1apply', { read: ViewContainerRef, static: true }) section1apply: ViewContainerRef;
-    @ViewChild('section2apply', { read: ViewContainerRef, static: true }) section2apply: ViewContainerRef;
-    @ViewChild('section3apply', { read: ViewContainerRef, static: true }) section3apply: ViewContainerRef;
+    @ViewChild('section1apply', { read: ViewContainerRef, static: true })
+    section1apply: ViewContainerRef;
+    @ViewChild('section2apply', { read: ViewContainerRef, static: true })
+    section2apply: ViewContainerRef;
+    @ViewChild('section3apply', { read: ViewContainerRef, static: true })
+    section3apply: ViewContainerRef;
     @ViewChild('pageApply', { read: ViewContainerRef, static: true }) pageApply: ViewContainerRef;
 
     // section 1
@@ -34,7 +37,7 @@ export class SectionApplyExampleComponent {
     // section 2 - Watcher with additional properties
     section2InputWatcher = Watcher.extendedWatcherFactory(null, {
         additionalProperty1: 'additionalProperty1',
-        additionalProperty2: 2
+        additionalProperty2: 2,
     });
 
     section2Watcher: SectionWatcher;
@@ -83,7 +86,7 @@ export class SectionApplyExampleComponent {
             this.section1apply,
             this.saveSection1,
             () => this.section1InputWatcher.reset(),
-            [this.section1InputWatcher]
+            [this.section1InputWatcher],
         );
 
         // setup section 2
@@ -95,7 +98,7 @@ export class SectionApplyExampleComponent {
             this.section2apply,
             this.saveSection2,
             () => this.section2InputWatcher.reset(),
-            [this.section2InputWatcher]
+            [this.section2InputWatcher],
         );
 
         // const availableSectionWatchers = [this.section1Watcher, this.section2Watcher];
@@ -103,11 +106,9 @@ export class SectionApplyExampleComponent {
         this.saveAll = this.processService
             .createProcess(() => Promise.resolve())
             .then(() => {
-                availableSectionWatchers.forEach(
-                    (watcher: Watcher<unknown> | SectionWatcher) => {
-                        watcher.reset();
-                    }
-                );
+                availableSectionWatchers.forEach((watcher: Watcher<unknown> | SectionWatcher) => {
+                    watcher.reset();
+                });
             });
         // Init page watcher with sectionWatchers
         this.applyService.initPageWatcher(
@@ -115,7 +116,7 @@ export class SectionApplyExampleComponent {
             this.saveAll,
             () => null,
             // () => availableSectionWatchers.forEach(watcher => watcher.reset()),
-            availableSectionWatchers
+            availableSectionWatchers,
         );
 
         // setup section 3 - Added using addWatchersAndFunctionsFromChild after page watcher already initialized
@@ -127,24 +128,24 @@ export class SectionApplyExampleComponent {
             this.section3apply,
             this.saveSection3,
             () => this.section3InputWatcher.reset(),
-            [this.section3InputWatcher]
+            [this.section3InputWatcher],
         );
 
         // This is how you would add watchers when the page watcher has already been instantiated earlier.
         this.applyService.addWatchersAndFunctionsFromChild(
             [this.section1Watcher],
             this.saveSection1,
-            () => this.section1InputWatcher.reset()
+            () => this.section1InputWatcher.reset(),
         );
         this.applyService.addWatchersAndFunctionsFromChild(
             [this.section2Watcher],
             this.saveSection2,
-            () => this.section2InputWatcher.reset()
+            () => this.section2InputWatcher.reset(),
         );
         this.applyService.addWatchersAndFunctionsFromChild(
             [this.section3Watcher],
             this.saveSection3,
-            () => this.section3InputWatcher.reset()
+            () => this.section3InputWatcher.reset(),
         );
 
         this.applyService.setVisible();

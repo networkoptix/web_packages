@@ -12,7 +12,7 @@ import { Process } from '@services/process.service/process';
 export class ValidationComponent {
     data = {
         newPassword: '',
-        email: ''
+        email: '',
     };
     change: Process;
     restore: Process;

@@ -13,7 +13,6 @@ import { Process } from '@services/process.service/process';
     templateUrl: 'dynamic-form-apply-example.component.html',
     styleUrls: ['dynamic-form-apply-example.component.scss'],
 })
-
 export class DynamicFormApplyExampleComponent {
     // page process
     saveAll: Process;
@@ -33,15 +32,19 @@ export class DynamicFormApplyExampleComponent {
 
     ngOnInit(): void {
         this.form2Group = this.formBuilder.group({
-            fields: this.formBuilder.array<string>([])
+            fields: this.formBuilder.array<string>([]),
         });
 
-        this.saveForm3 = this.processService.createProcess(() => {
-            return Promise.resolve();
-        }, {}, result => {
-            this.toastService.notify('form3 saved', toast.success);
-        }, _ => {
-        });
+        this.saveForm3 = this.processService.createProcess(
+            () => {
+                return Promise.resolve();
+            },
+            {},
+            result => {
+                this.toastService.notify('form3 saved', toast.success);
+            },
+            _ => {},
+        );
     }
 
     ngAfterViewInit(): void {
@@ -52,7 +55,8 @@ export class DynamicFormApplyExampleComponent {
             null,
             undefined,
             true,
-            true);
+            true,
+        );
     }
 
     addField(): void {

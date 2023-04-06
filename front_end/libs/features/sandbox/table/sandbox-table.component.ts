@@ -18,10 +18,7 @@ export class SandboxTableComponent {
 
     rowsPerPage: Array<number>;
 
-    constructor(
-        private menuService: NxMenuService
-    ) {
-    }
+    constructor(private menuService: NxMenuService) {}
 
     ngOnInit(): void {
         this.menuService.section = 'components';
@@ -55,13 +52,13 @@ export class SandboxTableComponent {
                 fullName: 'Tsanko',
                 accessLevel: [
                     { id: '123', name: 'Chase' },
-                    { id: '124', name: 'Citi' }
+                    { id: '124', name: 'Citi' },
                 ],
                 group: [
                     { id: '1', name: 'Administrator' },
-                    { id: '2', name: 'Manager' }
+                    { id: '2', name: 'Manager' },
                 ],
-                selected: false
+                selected: false,
             },
             {
                 id: '2',
@@ -70,39 +67,33 @@ export class SandboxTableComponent {
                 accessLevel: [{ id: '124', name: 'Citi' }],
                 group: [
                     { id: '1', name: 'Administrator' },
-                    { id: '2', name: 'Manager' }
+                    { id: '2', name: 'Manager' },
                 ],
-                selected: false
+                selected: false,
             },
             {
                 id: '3',
                 login: 'abc3@networkoptix.com',
                 fullName: 'Roman',
                 accessLevel: [{ id: '124', name: 'Citi' }],
-                group: [
-                    { id: '2', name: 'Manager' }
-                ],
-                selected: false
+                group: [{ id: '2', name: 'Manager' }],
+                selected: false,
             },
             {
                 id: '4',
                 login: 'abc4@networkoptix.com',
                 fullName: 'Illya',
                 accessLevel: [{ id: '124', name: 'Citi' }],
-                group: [
-                    { id: '2', name: 'Manager' }
-                ],
-                selected: false
+                group: [{ id: '2', name: 'Manager' }],
+                selected: false,
             },
             {
                 id: '5',
                 login: 'abc5@networkoptix.com',
                 fullName: 'Andrew',
                 accessLevel: [{ id: '124', name: 'Citi' }],
-                group: [
-                    { id: '2', name: 'Manager' }
-                ],
-                selected: false
+                group: [{ id: '2', name: 'Manager' }],
+                selected: false,
             },
             {
                 id: '6',
@@ -111,20 +102,18 @@ export class SandboxTableComponent {
                 accessLevel: [{ id: '124', name: 'Citi' }],
                 group: [
                     { id: '1', name: 'Administrator' },
-                    { id: '2', name: 'Manager' }
+                    { id: '2', name: 'Manager' },
                 ],
-                selected: false
+                selected: false,
             },
             {
                 id: '7',
                 login: 'abc7@networkoptix.com',
                 fullName: 'Olga',
                 accessLevel: [{ id: '125', name: 'BOOM!' }],
-                group: [
-                    { id: '2', name: 'Manager' }
-                ],
-                selected: false
-            }
+                group: [{ id: '2', name: 'Manager' }],
+                selected: false,
+            },
         ];
     }
 
@@ -132,9 +121,7 @@ export class SandboxTableComponent {
         if (!this.subLevels) {
             return;
         }
-        this.expandRowId = this.expandRowId && this.expandRowId === id
-            ? ''
-            : id; // toggle
+        this.expandRowId = this.expandRowId && this.expandRowId === id ? '' : id; // toggle
     }
 
     showSubLevels(state: boolean): void {
@@ -144,11 +131,7 @@ export class SandboxTableComponent {
         }
     }
 
-    selectAll(): void {
+    selectAll(): void {}
 
-    }
-
-    selectRecord(rec: Record<string, string>): void {
-
-    }
+    selectRecord(rec: Record<string, string>): void {}
 }

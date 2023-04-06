@@ -8,6 +8,6 @@ import { Book } from '../../../store/books/book.model';
     // styleUrls: ['./book-list.component.css'],
 })
 export class NgrxDemoBookListComponent {
-  @Input() books: ReadonlyArray<Book> = [];
-  @Output() add = new EventEmitter<string>();
+    @Input() books: ReadonlyArray<Book> = [];
+    @Output() add = new EventEmitter<string>();
 }

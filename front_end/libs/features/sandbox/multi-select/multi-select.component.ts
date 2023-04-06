@@ -3,9 +3,7 @@ import { Component, Inject } from '@angular/core';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
-import type {
-    MultiSelectItem
-} from '@components/dropdowns/multi-select/multi-select.component.types';
+import type { MultiSelectItem } from '@components/dropdowns/multi-select/multi-select.component.types';
 
 @Component({
     selector: 'multi-select',
@@ -61,13 +59,17 @@ export class MultiSelectComponent {
             { value: '4915200', name: '5mp' },
             { value: '8000000', name: '8mp' },
             { value: '10039296', name: '10mp' },
-            { value: '15824256', name: '16mp' }
+            { value: '15824256', name: '16mp' },
         ];
 
         // this.selectedDDItem = { value: '0', name: 'All' };
         this.itemsSearchableDDSingle = [
             { value: 'test@test.com', name: 'test@test.com', help: 'Johnny Test' },
-            { value: 'test1@test.com', name: 'test1@test.com', help: 'Test Test Test Test Test Test Test' },
+            {
+                value: 'test1@test.com',
+                name: 'test1@test.com',
+                help: 'Test Test Test Test Test Test Test',
+            },
             { value: 'test2@test.com', name: 'test2@test.com', help: 'Test 2' },
             { value: 'test3@test.com', name: 'test3@test.com', help: 'Test 3' },
             { value: 'test4@test.com', name: 'test4@test.com', help: 'Test 4' },
@@ -92,7 +94,7 @@ export class MultiSelectComponent {
         this.mode = [
             { name: 'Main', value: 'qwerty2' },
             { name: 'Backup', value: 'qwerty3' },
-            { name: 'Not in use', value: 'qwerty4' }
+            { name: 'Not in use', value: 'qwerty4' },
         ];
 
         this.modeSelected = this.mode[2];

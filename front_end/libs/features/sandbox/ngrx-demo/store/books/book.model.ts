@@ -1,7 +1,7 @@
 export interface Book {
     id: string;
     volumeInfo: {
-      title: string;
-      authors: Array<string>;
+        title: string;
+        authors: Array<string>;
     };
 }

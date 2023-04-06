@@ -38,10 +38,10 @@ export class SearchComponent {
                         { value: '4915200', name: '5mp' },
                         { value: '8000000', name: '8mp' },
                         { value: '10039296', name: '10mp' },
-                        { value: '15824256', name: '16mp' }
+                        { value: '15824256', name: '16mp' },
                     ],
-                    selected: undefined
-                }
+                    selected: undefined,
+                },
             ],
             multiselects: [
                 {
@@ -52,28 +52,28 @@ export class SearchComponent {
                         { id: 'Multi-Sensor Camera', label: 'Multi-Sensor Camera' },
                         { id: 'Encoder', label: 'Encoder' },
                         { id: 'DVR', label: 'DVR' },
-                        { id: 'Other', label: 'Other' }
+                        { id: 'Other', label: 'Other' },
                     ],
-                    selected: undefined
-                }
+                    selected: undefined,
+                },
             ],
             tags: [
                 {
                     id: '0',
                     label: 'Access Control',
-                    value: false
+                    value: false,
                 },
                 {
                     id: '1',
                     label: 'Analytics',
-                    value: false
+                    value: false,
                 },
                 {
                     id: '2',
                     label: 'PCIM',
-                    value: false
-                }
-            ]
+                    value: false,
+                },
+            ],
         };
     }
 }

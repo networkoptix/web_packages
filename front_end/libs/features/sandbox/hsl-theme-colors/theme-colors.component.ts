@@ -39,7 +39,8 @@ export class NxHSLThemeColorsComponent implements OnInit {
     @ViewChild('frmTheme', { static: true }) public frmTheme: NgForm;
     @ViewChild('brandInput', { static: true }) public brandInput: ElementRef<HTMLInputElement>;
     @ViewChild('colorInput', { static: true }) public colorInput: ElementRef<HTMLInputElement>;
-    @ViewChild('backgroundInput', { static: true }) public backgroundInput: ElementRef<HTMLInputElement>;
+    @ViewChild('backgroundInput', { static: true })
+    public backgroundInput: ElementRef<HTMLInputElement>;
 
     constructor(private self: ElementRef<HTMLElement>, private menuService: NxMenuService) {}
 
@@ -72,14 +73,16 @@ export class NxHSLThemeColorsComponent implements OnInit {
 
     setBackgroundInput(): void {
         this.backgroundInput.nativeElement.value = this.hslToHex(
-            this.toHSLObject(this.rs.getPropertyValue('--new-body-bg'))
+            this.toHSLObject(this.rs.getPropertyValue('--new-body-bg')),
         ).toUpperCase();
     }
 
     setBrandInput(): void {
-        this.brandInput.nativeElement.value = this
-            .hslToHex({ h: this.brand.hue, s: this.brand.saturation, l: this.brand.luminosity })
-            .toUpperCase();
+        this.brandInput.nativeElement.value = this.hslToHex({
+            h: this.brand.hue,
+            s: this.brand.saturation,
+            l: this.brand.luminosity,
+        }).toUpperCase();
 
         this.setColorHue(this.brand.hue);
         this.setColorSaturation(this.brand.saturation);
@@ -137,7 +140,8 @@ export class NxHSLThemeColorsComponent implements OnInit {
         g /= 255;
         b /= 255;
 
-        const max = Math.max(r, g, b); const min = Math.min(r, g, b);
+        const max = Math.max(r, g, b);
+        const min = Math.min(r, g, b);
         let h: number;
         let s: number;
         const l = (max + min) / 2;
@@ -148,9 +152,15 @@ export class NxHSLThemeColorsComponent implements OnInit {
             const d = max - min;
             s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
             switch (max) {
-                case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-                case g: h = (b - r) / d + 2; break;
-                case b: h = (r - g) / d + 4; break;
+                case r:
+                    h = (g - b) / d + (g < b ? 6 : 0);
+                    break;
+                case g:
+                    h = (b - r) / d + 2;
+                    break;
+                case b:
+                    h = (r - g) / d + 4;
+                    break;
             }
             h /= 6;
         }
@@ -158,7 +168,7 @@ export class NxHSLThemeColorsComponent implements OnInit {
         return {
             hue: Math.round(h * 360),
             sat: Math.round(s * 100),
-            lum: Math.round(l * 100)
+            lum: Math.round(l * 100),
         };
     }
 
@@ -203,8 +213,10 @@ export class NxHSLThemeColorsComponent implements OnInit {
             this.hexError[idx] = {
                 label: availErrorColors[idx],
                 hex: this.hslToHex(
-                    this.toHSLObject(this.rs.getPropertyValue('--new-error-' + availErrorColors[idx]))
-                ).toUpperCase()
+                    this.toHSLObject(
+                        this.rs.getPropertyValue('--new-error-' + availErrorColors[idx]),
+                    ),
+                ).toUpperCase(),
             };
         }
     }
@@ -215,8 +227,10 @@ export class NxHSLThemeColorsComponent implements OnInit {
             this.hexGreen[idx] = {
                 label: availGreenColors[idx],
                 hex: this.hslToHex(
-                    this.toHSLObject(this.rs.getPropertyValue('--new-green-' + availGreenColors[idx]))
-                ).toUpperCase()
+                    this.toHSLObject(
+                        this.rs.getPropertyValue('--new-green-' + availGreenColors[idx]),
+                    ),
+                ).toUpperCase(),
             };
         }
     }
@@ -227,8 +241,10 @@ export class NxHSLThemeColorsComponent implements OnInit {
             this.hexYellow[idx] = {
                 label: availYellowColors[idx],
                 hex: this.hslToHex(
-                    this.toHSLObject(this.rs.getPropertyValue('--new-yellow-' + availYellowColors[idx]))
-                ).toUpperCase()
+                    this.toHSLObject(
+                        this.rs.getPropertyValue('--new-yellow-' + availYellowColors[idx]),
+                    ),
+                ).toUpperCase(),
             };
         }
     }
@@ -239,8 +255,10 @@ export class NxHSLThemeColorsComponent implements OnInit {
             this.hexBrand[idx] = {
                 label: availBrandColors[idx],
                 hex: this.hslToHex(
-                    this.toHSLObject(this.rs.getPropertyValue('--new-brand-' + availBrandColors[idx]))
-                ).toUpperCase()
+                    this.toHSLObject(
+                        this.rs.getPropertyValue('--new-brand-' + availBrandColors[idx]),
+                    ),
+                ).toUpperCase(),
             };
         }
     }

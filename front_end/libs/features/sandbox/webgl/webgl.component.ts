@@ -1,3 +1,4 @@
+/*eslint-disable */
 import { Component } from '@angular/core';
 
 import { NxMenuService } from '@app/menu/menu.service';

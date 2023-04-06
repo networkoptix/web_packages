@@ -591,9 +591,7 @@ const palette = `$dark1: #000000;
 export class NxThemeColorsComponent implements OnInit {
     palette: object;
 
-    theme = [
-        { name: '--body-bg', light: '#F0F2F4', dark: '#0D0E0F' },
-    ];
+    theme = [{ name: '--body-bg', light: '#F0F2F4', dark: '#0D0E0F' }];
 
     constructor(private menuService: NxMenuService) {}
 
@@ -612,14 +610,13 @@ export class NxThemeColorsComponent implements OnInit {
         arrPalette.forEach(color => {
             try {
                 this.palette[color.match(paletteName)[0]] = color.match(paletteColor)[0];
-            } catch (ex) {
-            }
+            } catch (ex) {}
         });
 
         this.theme = [];
         const arrVars = vars.split('\n');
         const varName = new RegExp('--[\\w-]+');
-        const varColor = new RegExp('#?[\${}()-\\d\\w]+;');
+        const varColor = new RegExp('#?[${}()-\\d\\w]+;');
         arrVars.forEach(v => {
             if (v.length) {
                 try {
@@ -633,8 +630,7 @@ export class NxThemeColorsComponent implements OnInit {
                         dark = v.split(':')[1];
                     }
                     this.theme.push({ name, dark, light: '' });
-                } catch (ex) {
-                }
+                } catch (ex) {}
             }
         });
     }

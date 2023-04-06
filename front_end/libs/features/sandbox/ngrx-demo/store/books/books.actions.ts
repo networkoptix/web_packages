@@ -2,17 +2,14 @@ import { createAction, props } from '@ngrx/store';
 
 import { Book } from './book.model';
 
-export const addBook = createAction(
-    '[Book Collection] Add Book',
-    props<{ bookId: string }>()
-);
+export const addBook = createAction('[Book Collection] Add Book', props<{ bookId: string }>());
 
 export const removeBook = createAction(
     '[Book Collection] Remove Book',
-    props<{ bookId: string }>()
+    props<{ bookId: string }>(),
 );
 
 export const retrievedBookList = createAction(
     '[Book List/API] Retrieve Books Success',
-    props<{ books: ReadonlyArray<Book> }>()
+    props<{ books: ReadonlyArray<Book> }>(),
 );

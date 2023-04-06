@@ -8,5 +8,5 @@ export const counterReducer = createReducer(
     initialState,
     on(CounterActions.increment, (state): number => state + 1),
     on(CounterActions.decrement, (state): number => state - 1),
-    on(CounterActions.reset, (state): number => 0)
+    on(CounterActions.reset, (state): number => 0),
 );

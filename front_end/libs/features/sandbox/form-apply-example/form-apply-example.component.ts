@@ -3,9 +3,7 @@ import type { NgForm } from '@angular/forms';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
-import type {
-    MultiSelectItem
-} from '@components/dropdowns/multi-select/multi-select.component.types';
+import type { MultiSelectItem } from '@components/dropdowns/multi-select/multi-select.component.types';
 import { NxToastService } from '@dialogs/toast.service';
 import { toast } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';
@@ -29,15 +27,15 @@ export class FormApplyExampleComponent {
     formWatcher: FormWatcher;
     account = {
         form1Field1Input: '',
-        form1Field2Input: ''
+        form1Field2Input: '',
     };
 
-    saveForm1 : Process;
+    saveForm1: Process;
 
     @ViewChild('form2') form2: NgForm;
     formWatcher2: FormWatcher;
     form2Field1Input: string;
-    saveForm2 : Process;
+    saveForm2: Process;
 
     show1: boolean;
     show2: boolean;
@@ -67,7 +65,7 @@ export class FormApplyExampleComponent {
             { label: 'Administrator', id: 'qwerty1' },
             { label: 'Advanced Viewer', id: 'qwerty2' },
             { label: 'Viewer', id: 'qwerty3' },
-            { label: 'Live Viewer', id: 'qwerty4' }
+            { label: 'Live Viewer', id: 'qwerty4' },
         ];
 
         this.itemsSelected = ['qwerty2', 'qwerty3'];
@@ -87,7 +85,7 @@ export class FormApplyExampleComponent {
             { value: '4915200', name: '5mp' },
             { value: '8000000', name: '8mp' },
             { value: '10039296', name: '10mp' },
-            { value: '15824256', name: '16mp' }
+            { value: '15824256', name: '16mp' },
         ];
 
         this.selectedDDItem = { value: '0', name: 'All' };
@@ -99,7 +97,7 @@ export class FormApplyExampleComponent {
             { name: 'danger', selected: true, type: 'danger' },
             { name: 'warning', selected: false, type: 'warning' },
             { name: 'info', selected: false, type: 'info' },
-            { name: 'default', selected: true }
+            { name: 'default', selected: true },
         ];
     }
 
@@ -111,33 +109,39 @@ export class FormApplyExampleComponent {
         this.account.form1Field2Input = 'Tsolov';
         this.applyService.initPageFormsWatcher(this.pageApply);
 
-        this.saveForm1 = this.processService.createProcess(() => {
-            return Promise.resolve();
-        }, {}, result => {
-            this.toastService.notify('form1 saved', toast.success);
-        }, _ => {
-        });
+        this.saveForm1 = this.processService.createProcess(
+            () => {
+                return Promise.resolve();
+            },
+            {},
+            result => {
+                this.toastService.notify('form1 saved', toast.success);
+            },
+            _ => {},
+        );
 
         // ngModel should be ALWAYS initialized -> when comparing form values JSON stingify will omit undefined fields!!!
         this.form2Field1Input = '';
-        this.saveForm2 = this.processService.createProcess(() => {
-            return Promise.resolve();
-        }, {}, result => {
-            this.toastService.notify('form2 saved', toast.success);
-        }, _ => {
-        });
+        this.saveForm2 = this.processService.createProcess(
+            () => {
+                return Promise.resolve();
+            },
+            {},
+            result => {
+                this.toastService.notify('form2 saved', toast.success);
+            },
+            _ => {},
+        );
     }
 
     ngAfterViewInit(): void {
-        this.formWatcher = this.applyService.createFormWatcher(
-            'form1',
-            this.form1,
-            this.saveForm1);
+        this.formWatcher = this.applyService.createFormWatcher('form1', this.form1, this.saveForm1);
 
         this.formWatcher2 = this.applyService.createFormWatcher(
             'form2',
             this.form2,
-            this.saveForm2);
+            this.saveForm2,
+        );
 
         // setTimeout(() => {
         //     this.applyService.removeFormWatcher('form2');

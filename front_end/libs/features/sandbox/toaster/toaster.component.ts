@@ -42,7 +42,7 @@ export class ToasterComponent implements OnInit, OnDestroy {
                 this.LANG.common.viewingOutdatedReport,
                 [{ type: 'link', text: 'Refresh', value: '' }],
                 this.ribbonType,
-                this.refreshHealth
+                this.refreshHealth,
             );
         }
     }
@@ -50,15 +50,15 @@ export class ToasterComponent implements OnInit, OnDestroy {
     showInfoRibbon(): void {
         this.ribbonService.hide();
         if (this.ribbonType) {
-            this.ribbonService.show(
-                this.LANG.ribbon.newVersionAvailable.notification,
-                [{
+            this.ribbonService.show(this.LANG.ribbon.newVersionAvailable.notification, [
+                {
                     type: 'process-button',
                     text: this.LANG.ribbon.newVersionAvailable.installButton,
                     value: this.processService.createProcess(() => {
                         return Promise.resolve();
-                    })
-                }]);
+                    }),
+                },
+            ]);
         }
     }
 

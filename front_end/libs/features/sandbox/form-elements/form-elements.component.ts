@@ -68,7 +68,7 @@ export class FormElementsComponent {
         this.aspectRatios = [
             { name: '4:3', value: 1.33333 },
             { name: '16:9', value: 1.77778 },
-            { name: '1:1', value: 1 }
+            { name: '1:1', value: 1 },
         ];
         this.selectedAspect = this.aspectRatios[0];
 
@@ -76,13 +76,17 @@ export class FormElementsComponent {
             { name: '0˚', value: 0 },
             { name: '90˚', value: 90 },
             { name: '180˚', value: 180 },
-            { name: '270˚', value: 270 }
+            { name: '270˚', value: 270 },
         ];
         this.selectedRotation = this.rotations[0];
 
         this.itemsSearchableDDSingle = [
             { value: 'test@test.com', name: 'test@test.com', help: 'Johnny Test' },
-            { value: 'test1@test.com', name: 'test1@test.com', help: 'Test Test Test Test Test Test Test' },
+            {
+                value: 'test1@test.com',
+                name: 'test1@test.com',
+                help: 'Test Test Test Test Test Test Test',
+            },
             { value: 'test2@test.com', name: 'test2@test.com', help: 'Test 2' },
             { value: 'test3@test.com', name: 'test3@test.com', help: 'Test 3' },
             { value: 'test4@test.com', name: 'test4@test.com', help: 'Test 4' },
@@ -105,11 +109,13 @@ export class FormElementsComponent {
         ];
 
         this.urlRegex = simpleURLRegex;
-        this.items = [{
-            name: 'SOFIA - (10.0.0.1)',
-            value: 'https://10.0.0.1:7001',
-            help: 'Ask Tsanko'
-        }];
+        this.items = [
+            {
+                name: 'SOFIA - (10.0.0.1)',
+                value: 'https://10.0.0.1:7001',
+                help: 'Ask Tsanko',
+            },
+        ];
     }
 
     get remoteSystem(): Item {

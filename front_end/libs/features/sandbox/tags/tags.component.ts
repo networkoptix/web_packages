@@ -23,7 +23,7 @@ export class TagsComponent {
             { name: 'danger', selected: true, type: 'danger' },
             { name: 'warning', selected: false, type: 'warning' },
             { name: 'info', selected: false, type: 'info' },
-            { name: 'default', selected: true }
+            { name: 'default', selected: true },
         ];
     }
 }

@@ -20,3 +20,6 @@ vendor.ts
 
 # Don't lint environment files
 environments
+
+# 64k lines!!
+libs/features/sandbox/webgl/webgl.component.ts
