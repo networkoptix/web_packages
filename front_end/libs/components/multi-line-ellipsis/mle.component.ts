@@ -44,7 +44,7 @@ export class NxMultiLineEllipsisComponent implements OnChanges {
             this.lineHeight = viewLineHeight.currentValue;
             this.height = Math.ceil(this.lines * this.lineHeight);
         }
-        if (viewMore.currentValue !== viewMore.previousValue) {
+        if (viewMore && viewMore.currentValue !== viewMore.previousValue) {
             this.more = viewMore.currentValue;
         }
     }
