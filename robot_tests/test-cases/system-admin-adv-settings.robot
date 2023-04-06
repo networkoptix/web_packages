@@ -511,11 +511,11 @@ Force Tags        system    advanced_settings    cloud    webadmin
     Log    Step 3
     Changing input setting changes it on server    ${SYSTEM NAME INPUT}    systemName    Advanced Settings changed
 
-18. Camera cloudOwnership, update information
+18. Camera Ownership, update information
     [Tags]    C78398
     Log    Preconditions
     ${settings}=   Create Dictionary
-       ...    takeCameracloudOwnershipWithoutLock=true
+       ...    takeCameraOwnershipWithoutLock=true
 
     Set System Settings    ${system}[localAuth]    ${server url}    ${settings}
     Log in to system new   ${system}    ${system}[cloudOwner]
@@ -523,7 +523,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    FOURTEEN    timeout=60
 
     Log    Step 1
-    Changing setting changes it on server    ${TAKE CAMERA cloudOwnerSHIP WITHOUT LOCK CHECKBOX}    takeCameracloudOwnershipWithoutLock    advanced=True
+    Changing setting changes it on server    ${TAKE CAMERA OWNERSHIP WITHOUT LOCK CHECKBOX}    takeCameraOwnershipWithoutLock    advanced=True
 
 19. Time synchronization, update notifications
     [Tags]    C78399
