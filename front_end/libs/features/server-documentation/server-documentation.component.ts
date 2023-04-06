@@ -18,7 +18,6 @@ import { NxSystemService } from '@services/system.service/system.service';
     templateUrl: 'server-documentation.component.html',
     styleUrls: ['server-documentation.component.scss'],
 })
-
 export class NxServerDocumentationComponent {
     CONFIG: IConfig;
     LANG = staticLang;
@@ -38,24 +37,29 @@ export class NxServerDocumentationComponent {
             value: this.LANG.serverDocumentation.accessibleAt,
             params: {
                 windowsPath: this.CONFIG.serverDocumentation.windowsPath,
-                defaultPath: this.CONFIG.serverDocumentation.defaultPath
-            }
+                defaultPath: this.CONFIG.serverDocumentation.defaultPath,
+            },
         };
         if (!settingsService.system?.mediaserver) {
             accountService.get().then(async account => {
                 if (!account) {
                     router.navigate(['/']);
                 }
-                const localSystem = systemService.createLocalSystem(accountService.mediaServerApi, account.id, account.email);
+                const localSystem = systemService.createLocalSystem(
+                    accountService.mediaServerApi,
+                    account.id,
+                    account.email,
+                );
                 await localSystem.update().catch(() => {});
-                localSystem.mediaserver.getSettingsDocumentation().then(
-                    settings => {
-                        this.serverDocumentation = settings.reply.settings;
-                    });
+                localSystem.mediaserver.getSettingsDocumentation().then(settings => {
+                    this.serverDocumentation = settings.reply.settings;
+                });
             });
         } else {
-            systemService.getCurrentSystem().mediaserver.getSettingsDocumentation().then(
-                settings => {
+            systemService
+                .getCurrentSystem()
+                .mediaserver.getSettingsDocumentation()
+                .then(settings => {
                     this.serverDocumentation = settings.reply.settings;
                 });
         }

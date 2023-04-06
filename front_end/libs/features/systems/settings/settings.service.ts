@@ -16,7 +16,7 @@ import { SystemConfigSettings } from '@services/system-api.types';
 import type { NxSystem } from '@services/system.service/system';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxSettingsService implements OnDestroy {
     static currentSystemId = '';
@@ -48,15 +48,19 @@ export class NxSettingsService implements OnDestroy {
     systemSettings$: Observable<{ [x: string]: SystemConfigSettings }> = this.systemSubject$.pipe(
         filter(val => !!val),
         switchMap(system => this.updater$.pipe(map(() => system))),
-        switchMap(system => forkJoin({
-            [system.id]: system.mediaserver.updateOrGetSettings({}).pipe(map(res => res?.reply?.settings))
-        })),
+        switchMap(system =>
+            forkJoin({
+                [system.id]: system.mediaserver
+                    .updateOrGetSettings({})
+                    .pipe(map(res => res?.reply?.settings)),
+            }),
+        ),
         filter(val => {
             console.log(val);
             return !!Object.values(val).pop();
         }),
         catchError(() => Promise.resolve(null)),
-        shareReplay({ bufferSize: 100, refCount: false })
+        shareReplay({ bufferSize: 100, refCount: false }),
     );
 
     ngOnDestroy(): void {
@@ -66,16 +70,18 @@ export class NxSettingsService implements OnDestroy {
     constructor(
         // private applyService: NxApplyService,
         private route: ActivatedRoute,
-        private router: Router
+        private router: Router,
     ) {
-        this.router.events.pipe(
-            filter(event => event instanceof NavigationEnd),
-            map(() => this.route.root.firstChild),
-            switchMap(route => route.params),
-            map(params => params.systemId),
-            filter(systemId => systemId && systemId !== this.system?.id)
-        ).subscribe(() => {
-            this.system = undefined;
-        });
+        this.router.events
+            .pipe(
+                filter(event => event instanceof NavigationEnd),
+                map(() => this.route.root.firstChild),
+                switchMap(route => route.params),
+                map(params => params.systemId),
+                filter(systemId => systemId && systemId !== this.system?.id),
+            )
+            .subscribe(() => {
+                this.system = undefined;
+            });
     }
 }
