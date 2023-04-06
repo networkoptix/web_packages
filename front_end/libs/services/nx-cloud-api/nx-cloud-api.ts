@@ -512,7 +512,13 @@ export class NxCloudApiService {
                 clearTimeout(this._throttleTimeout);
                 this._throttleTimeout = undefined;
             }
-            this._account = this.http.get<Account>(apiBase + '/account')
+            let headers = new HttpHeaders();
+            const params: { force?: true } = {};
+            if (forceUpdate) {
+                headers = headers.set('reset-cache', 'reset');
+                params.force = true;
+            }
+            this._account = this.http.get<Account>(apiBase + '/account', { headers, params })
                 .pipe(
                     map(account => {
                         if (!account.isCloud) {
@@ -836,7 +842,9 @@ export class NxCloudApiService {
             switchMap(({
                 accessToken,
                 sessionExpires
-            }) => !minSession || ((Date.now() + (minSession * 1000)) > sessionExpires) ? this.refreshAccessTokens() : of({ accessToken }))
+            }) => !minSession || ((Date.now() + (minSession * 1000)) > sessionExpires)
+                ? this.refreshAccessTokens().pipe(switchMap(() => this.account(true)))
+                : of({ accessToken }))
         );
 
         return getAccessToken(minSessionSeconds).pipe(
