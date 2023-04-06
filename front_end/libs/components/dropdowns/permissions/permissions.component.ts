@@ -13,6 +13,7 @@ import type {
     UserRole,
 } from '@services/system.service/user-manager/user-manager-types';
 import type { NgChanges } from '@utils/ng-changes';
+import { isAdmin } from '@utils/nx';
 
 import { BaseDropdown } from '../injDropdown';
 
@@ -75,10 +76,10 @@ export class NxPermissionsDropdown extends BaseDropdown {
         this.accessRoles = this.roles
             .filter(role => {
                 const ownerLevel = (role as PredefinedRole).isOwner;
-                const adminLevel = (role as PredefinedRole | UserRole).isAdmin;
+                const adminLevel = isAdmin(role);
                 // Don't allow owner level in dropdown
                 // Don't allow admin level if not owner
-                return !ownerLevel && !(adminLevel && !this.system.userManager.isMine);
+                return !ownerLevel && !(adminLevel && !this.system.userManager.isMySystem);
             })
             .map(role => ({
                 ...role,

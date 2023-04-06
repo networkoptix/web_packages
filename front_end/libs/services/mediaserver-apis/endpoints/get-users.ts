@@ -1,11 +1,11 @@
 import { Observable } from 'rxjs';
 
-import { restUser } from '@services/system-api.types';
+import { RestUser } from '@services/system-api.types';
 import { NxSystemUser } from '@services/system.service/user-manager/user-manager-types.bak';
 
 import { MediaserverRestConnection } from '../connections/adapters/adapter-target-types';
 
-export function getUsersRestV1(this: MediaserverRestConnection): Observable<restUser[]> {
+export function getUsersRestV1(this: MediaserverRestConnection): Observable<RestUser[]> {
     return this.get('/rest/v1/users', { _keepDefault: true });
 }
 

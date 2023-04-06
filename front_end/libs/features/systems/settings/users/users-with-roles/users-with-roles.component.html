@@ -141,7 +141,7 @@
                             id="email"
                             #emailInput="ngModel"
                             pattern="{{ credentialsValidation.emailRegex }}"
-                            [readonly]="isLdap"
+                            [readonly]="selectedUser.isLdap"
                             [disabled]="
                                 !(environment.isLocal && selectedUser.isMe) &&
                                 !selectedUser.canBeEdited
@@ -189,7 +189,7 @@
                     <button
                         class="btn btn-default"
                         (click)="changePassword()"
-                        [disabled]="isLdap"
+                        [disabled]="selectedUser.isLdap"
                         translate
                     >
                         Change Password

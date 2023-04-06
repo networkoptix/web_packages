@@ -225,6 +225,13 @@ export interface ec2UserRole {
     permissions: string;
 }
 
+export interface RestUserRole {
+    accessibleResources: string[];
+    id: string;
+    name: string;
+    permissions: string;
+}
+
 /** /api/getCurrentUser or /rest/v1/users?name=username */
 export interface CurrentUser {
     fullName?: string;
@@ -257,9 +264,23 @@ export interface ec2User {
     userRoleIds: string[];
 }
 
-export interface restUser extends ec2User {
+export interface RestUser {
     accessibleResources: string[];
+    email: string;
+    fullName: string;
+    id: string;
+    isEnabled: boolean;
+    isHttpDigestEnabled: boolean;
+    isOwner: boolean;
+    name: string;
+    permissions: string;
     type: string;
+    userRoleId: string;
+}
+
+export interface RestUserCompat extends RestUser {
+    isCloud: boolean;
+    isLdap: boolean;
 }
 
 export interface UserSession {
@@ -269,13 +290,25 @@ export interface UserSession {
   expiresInS: number;
 }
 
-interface AggregatedUsersReply {
+interface AggregatedEc2UsersReply {
     'ec2/getAccessRights': ec2AccessRight[];
     'ec2/getPredefinedRoles': ec2PredefinedRole[];
     'ec2/getUserRoles': ec2UserRole[];
     'ec2/getUsers': ec2User[];
 }
-export interface AggregatedUsers extends NormalResponse<AggregatedUsersReply> {}
+export interface AggregatedEc2Users extends NormalResponse<AggregatedEc2UsersReply> {}
+
+// Using old keys for compatibility for now
+interface AggregatedRestUsers {
+    reply: {
+        'ec2/getUsers': RestUserCompat[];
+        'ec2/getPredefinedRoles': ec2PredefinedRole[];
+        'ec2/getUserRoles': RestUserRole[];
+        'ec2/getAccessRights': ec2AccessRight[];
+    };
+}
+
+export type AggregatedUsers = AggregatedEc2Users | AggregatedRestUsers;
 
 export type ec2SaveUser = Partial<{
     id: string;

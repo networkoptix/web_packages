@@ -55,7 +55,7 @@ export class SystemGuard implements CanActivate {
 
         const checkPermissionsFor = (system: NxSystem): boolean | Promise<boolean> => {
             const permissions = system.userManager?.permissions || ({} as SystemPermissions);
-            const isOwner = system.userManager.isOwner(system.userManager.currentUser);
+            const isOwner = system.userManager.isMySystem;
             const canViewChecks = {
                 users: permissions.editUsers,
                 'cloud-storage': system.canUserViewCloudStorage(),

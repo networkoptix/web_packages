@@ -330,7 +330,9 @@
                         </label>
                     </ng-container>
                     <ng-container
-                        *ngIf="!environment.isLocal && system.useRest && system.userManager.isMine"
+                        *ngIf="
+                            !environment.isLocal && system.useRest && system.userManager.isMySystem
+                        "
                     >
                         <div class="d-flex checkbox-block align-items-center mt-1">
                             <nx-checkbox

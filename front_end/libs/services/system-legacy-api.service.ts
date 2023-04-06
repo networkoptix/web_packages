@@ -942,7 +942,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
             'ec2/getUserRoles',
             'ec2/getAccessRights'
         ];
-        return this.getRequestAggregator<t.AggregatedUsers>(routes);
+        return this.getRequestAggregator<t.AggregatedEc2Users>(routes);
     }
 
     saveUser<U extends t.ec2SaveUser>(user: U): Observable<t.ChangedIdReturned> {

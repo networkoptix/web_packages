@@ -29,7 +29,7 @@ import type { NxSystemCamera } from '@services/system.service/camera-manager/cam
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
-import type { NxEc2LocalUser } from '@services/system.service/user-manager/user-manager-types';
+import type { NxUser } from '@services/system.service/user-manager/user-manager-types';
 import { NxSystemsService } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
 import { GridBreakpoints } from '@styles/theme-variables-common';
@@ -720,7 +720,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                 break;
                         }
                     } else {
-                        additionalLabel = !user.isCloud && (user as NxEc2LocalUser).name === 'admin'
+                        additionalLabel = !user.isCloud && (user as NxUser).name === 'admin'
                             ? this.LANG.accessRoles.Owner.label || 'Owner'
                             : this.LANG.accessRoles[user.role.name]?.label || user.role.name;
                     }
@@ -818,7 +818,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
         if (
             this.system.userManager.permissions.isAdmin ||
-            this.system.userManager.isMine
+            this.system.userManager.isMySystem
         ) {
             adminNode.level3.push({
                 id: menus.systemSettings.licenses.id,

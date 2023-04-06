@@ -52,7 +52,7 @@ import { ServerManager } from '../../system.service/server-manager/server-manage
 import { NxSystem } from '../../system.service/system';
 import { NxMediaServer, ServerTimeInfo } from '../../system.service/system-types';
 import { UserManager } from '../../system.service/user-manager/user-manager';
-import { NxEc2LocalUser, NxUser, PreprocessCloudUser } from '../../system.service/user-manager/user-manager-types';
+import { NxUser, CloudUserCompat } from '../../system.service/user-manager/user-manager-types';
 import { NxSystemsService } from '../../systems.service';
 import { NxSystemBase } from '../system-base';
 
@@ -315,9 +315,9 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         if (!this.CONFIG.featureFlags.cloudStorage || environment.isLocal) {
             return false;
         }
-        return (this.CONFIG.featureFlags.cloudStorage && this.userManager.isMine) ||
+        return (this.CONFIG.featureFlags.cloudStorage && this.userManager.isMySystem) ||
             (this.userManager.permissions.isAdmin && this.systemInfo?.cloudStorageSystemEnabled) ||
-            (this.systemInfo?.cloudStorageCapable && this.userManager.isMine);
+            (this.systemInfo?.cloudStorageCapable && this.userManager.isMySystem);
     }
 
     getInfoFromCloudDb() {
@@ -353,7 +353,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                         parsedSettings = parseSettings(res);
                     }
                     const currentUser = {
-                        ...this.userManager.currentUser as NxEc2LocalUser
+                        ...this.userManager.currentUser
                     };
                     delete currentUser.name;
                     Object.assign(parsedSettings, currentUser);
@@ -410,7 +410,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                 this.userManager.ownerEmail = this.info.ownerAccountEmail;
                 this.isOnline = this.info.stateOfHealth === this.CONFIG.system.status.online;
                 const capabilities = this.info?.capabilities || {}; // Make capabilities defined so that its easier to check feature flags.
-                this.canMerge = this.userManager.isMine && 'cloudMerge' in capabilities;
+                this.canMerge = this.userManager.isMySystem && 'cloudMerge' in capabilities;
                 this.cloudStorageCapable = '5_1_cloud_storage' in capabilities;
                 if (this.cloudStorageCapable) {
                     // Cloud storage backend is currently not ready. Removed for CB-1657
@@ -885,14 +885,18 @@ export class NxSystemOldModule extends NxSystemModuleBase {
      * TODO: This method needs to be refactored and moved into userManager.
      * @deprecated Not really deprecated yet but should be soon.
      */
-    private getUsersCachedInCloud(): Promise<PreprocessCloudUser[]> {
+    private getUsersCachedInCloud(): Promise<CloudUserCompat[]> {
         this.isAvailable = false;
         return this.cloudApi.users(this.id).toPromise().then(data => {
-            return data.map(user => ({
+            return data.map<CloudUserCompat>(user => ({
                 ...user,
                 isCloud: true,
                 permissions: this.userManager.normalizePermissionString(user.customPermissions),
                 email: user.accountEmail,
+                id: user.accountId,
+                fullName: user.accountFullName,
+                name: user.accountEmail,
+                isLdap: false,
             }));
         }).catch(err => err);
     }

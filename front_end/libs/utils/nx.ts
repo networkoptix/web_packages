@@ -12,6 +12,7 @@ import type {
     SingleTranslateObject,
 } from '@pipes/nx-translate.types';
 import type { MenuNode } from '@services/menus.service.types';
+import { nxConfig as CONFIG } from '@services/nx-config/config';
 import type { ec2MediaServer } from '@services/system-api.types';
 
 /**
@@ -178,6 +179,12 @@ export const nestedTranslation = (
             .reduce((vals, val) => [...vals, ...val], [])
             .filter(val => val),
     );
+
+export const ZERO_ID = '{00000000-0000-0000-0000-000000000000}';
+
+export function isAdmin({ permissions }: { permissions: string }): boolean {
+    return permissions.includes(CONFIG.accessRoles.globalAdminPermissionFlag);
+}
 
 type HtmlTag = keyof HTMLElementTagNameMap;
 const selfClosingTags: readonly HtmlTag[] = [

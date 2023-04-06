@@ -22,7 +22,7 @@ export class UserWithGroupsManager extends UserManager {
     protected _ownerEmail: string;
     protected _userId: string;
     protected locale: string;
-    isMine: boolean;
+    // isMySystem: boolean;
     currentUser: NxSystemUser;
     currentUserEmail: string;
     permissions: SystemPermissions;
@@ -46,8 +46,13 @@ export class UserWithGroupsManager extends UserManager {
         this._userId = userId;
 
         this._ownerEmail = '';
-        this.isMine = false;
+        // this.isMySystem = false;
         this.permissions = new SystemPermissions();
+    }
+
+    get isMySystem(): boolean {
+        return (this._ownerEmail && this.currentUserEmail === this._ownerEmail) ||
+            (this.currentUser && this.isOwner(this.currentUser));
     }
 
     get userGroups(): NxUserGroup[] {
@@ -72,9 +77,9 @@ export class UserWithGroupsManager extends UserManager {
     set ownerEmail(email: string) {
         if (email) {
             this._ownerEmail = email;
-            this.isMine =
-                this.currentUserEmail === email ||
-                !!this.currentUser?.isLocalOwner;
+            // this.isMySystem =
+            //     this.currentUserEmail === email ||
+            //     !!this.currentUser?.isLocalOwner;
             this.processUsers(this.users);
         }
     }
@@ -95,8 +100,15 @@ export class UserWithGroupsManager extends UserManager {
         });
     }
 
+    // TODO: Replace this with util
+    protected isAdmin(userOrRole: { permissions: string }): boolean {
+        return userOrRole.permissions?.includes(
+            this.CONFIG.accessRoles.globalAdminPermissionFlag
+        );
+    }
+
     override checkPermissions(): void {
-        const isMine = this.isMine || this.currentUser?.isLocalOwner || false;
+        const isMine = this.isMySystem || this.currentUser?.isLocalOwner || false;
         let isAdmin = isMine;
         // is there a backup admin check within new permission scheme?
         // || this.CONFIG.accessRoles.adminAccess.includes(this._accessRole.toLowerCase());
@@ -256,7 +268,7 @@ export class UserWithGroupsManager extends UserManager {
          *   they also can not be edited
          */
         const isNotMeOrOwner = !(user.isMe || user.isOwner);
-        return isNotMeOrOwner && (this.isMine || !user.isAdmin);
+        return isNotMeOrOwner && (this.isMySystem || !user.isAdmin);
     }
 
     modifyUser(user: NxSystemUser): Promise<NxSystemUser> {
@@ -277,7 +289,7 @@ export class UserWithGroupsManager extends UserManager {
             user = { ...existingUser, ...user };
         }
 
-        if (!isSelf && !user.canBeEdited && !this.isMine) {
+        if (!isSelf && !user.canBeEdited && !this.isMySystem) {
             return Promise.reject({ resultCode: 'cantEditAdmin' });
         }
 

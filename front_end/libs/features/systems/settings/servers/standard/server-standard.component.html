@@ -108,7 +108,9 @@
                     <nx-info-block [sectionsOrColumns]="[serverDetails]"></nx-info-block>
                 </div>
             </header>
-            <nx-section *ngIf="system.userManager.isMine || system.userManager.permissions.isAdmin">
+            <nx-section
+                *ngIf="system.userManager.isMySystem || system.userManager.permissions.isAdmin"
+            >
                 <div class="server-setting-buttons">
                     <div class="left setting-buttons">
                         <button
@@ -125,7 +127,7 @@
                     </div>
                     <div
                         class="right setting-buttons"
-                        *ngIf="environment.isLocal && system.userManager.isOwner"
+                        *ngIf="environment.isLocal && system.userManager.isMySystem"
                     >
                         <button
                             class="btn btn-default"

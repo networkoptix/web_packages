@@ -6,9 +6,7 @@ import { SessionState } from '@dialogs/update-session/update-session.component.t
 import { servers } from '@lib/variables/static-variables';
 import { NxSystemUsersBaseComponent } from '@pages/systems/settings/users/edit-user-base/edit-user-base.component';
 import type {
-    NxEc2LocalUser,
-    NxEc2User,
-    NxUserRole,
+    NxAccessRole,
     NxUser,
 } from '@services/system.service/user-manager/user-manager-types';
 
@@ -20,13 +18,12 @@ import type {
 })
 
 export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent {
+    // TODO: Remove this once user groups is typed
+    selectedUser: NxUser;
+
     accessDescription: string;
 
     @ViewChild('userRoleForm', { read: NgForm }) private userRoleForm: NgForm;
-
-    get isLdap(): boolean {
-        return (this.selectedUser as NxEc2User)?.isLdap;
-    }
 
     protected initProcesses(): void {
         // DO not attempt to set the process correctly!!! Due to issues with multiple for watchers it's best to leave this alone for now.
@@ -77,7 +74,7 @@ export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent 
             this.applyService.resetFormWatchers();
             this.setUserHelper(user);
             this.setPermission(this.selectedUser.role);
-            this.role = !user.isCloud && (user as NxEc2LocalUser).name === 'admin'
+            this.role = !user.isCloud && user.name === 'admin'
                 ? 'Owner'
                 : user.role.name;
 
@@ -107,7 +104,7 @@ export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent 
         }
     }
 
-    public setPermission(role: NxUserRole): void {
+    public setPermission(role: NxAccessRole): void {
         const userRole = role?.name ?? this.selectedUser.accessRole;
         this.accessDescription = this.LANG.accessRoles[userRole]
             ? this.LANG.accessRoles[userRole].description

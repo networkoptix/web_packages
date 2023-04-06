@@ -16,7 +16,7 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
 import type {
-    NxEc2LocalUser,
+    NxUser,
 } from '@services/system.service/user-manager/user-manager-types';
 import { pickFrom } from '@utils/general';
 
@@ -31,7 +31,7 @@ export class ChangePasswordModalContent {
     LANG = staticLang;
 
     system: NxSystem;
-    user: NxEc2LocalUser;
+    user: NxUser;
     changePassword: Process;
     newPasswordForUser: string;
     currentPasswordForUser: string;

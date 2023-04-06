@@ -86,7 +86,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     /** Owner (current user) can send a new ownership transfer request */
     get canSendTransferRequest(): boolean {
         return this.ownershipTransferEnabled &&
-            this.system.userManager.isMine &&
+            this.system.userManager.isMySystem &&
             this.system.useRest &&
             !this.transferInfo;
     }
@@ -243,7 +243,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         this.enableEdit = this.system.isOnline &&
                             (this.environment.isLocal
                                 ? this.system.userManager.permissions.isAdmin
-                                : this.system.userManager.isMine) &&
+                                : this.system.userManager.isMySystem) &&
                             !this.settings.renameDisabled;
                         // TODO: Restore cloud admin rename permissions
                         // See CB-1596
@@ -447,7 +447,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     };
 
     delete() {
-        if (!this.system.userManager.isMine) {
+        if (!this.system.userManager.isMySystem) {
             // User is not owner. Deleting means he'll lose access to it
             if (this.environment.isLocal) {
                 return this.dialogs.removeSystem(this.system)
