@@ -861,7 +861,7 @@ class GenericKeywords(object):
                     server.update({"localUsers":localUsers})
 
                 # Register, Activate, and Share cloud users if required
-                if 'addUsers' and 'cloudOwnerId' in server:
+                if server['addUsers'] and 'cloudOwnerId' in server:
                     for server in serversJson:
                         for permission in permissions:
                             email = self.get_random_email(self.base_email, sendemail=self.from_email)
