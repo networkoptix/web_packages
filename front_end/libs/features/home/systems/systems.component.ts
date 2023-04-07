@@ -6,10 +6,10 @@ import { map, Observable, take } from 'rxjs';
 import { selectCurrentUser } from '@common/store/account/account.selectors';
 import { Account } from '@services/account.service/account';
 
-import { GroupsItem, LoadingState, SharedItems } from './../home.types';
-import { NxSystemGroupsService } from './../services/system-groups.service';
-import * as GroupActions from './../store/groups.actions';
-import { selectCurrentSystemItems, selectLoadingState } from './../store/groups.selectors';
+import { GroupsItem, LoadingState, SharedItems } from '../home.types';
+import { NxSystemGroupsService } from '../services/system-groups.service';
+import * as GroupActions from '../store/groups.actions';
+import { selectCurrentSystemItems, selectLoadingState } from '../store/groups.selectors';
 
 @Component({
     selector: 'nx-groups-systems',

@@ -48,7 +48,6 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
     currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
     inRoot$ = this.store.select<boolean>(selectHasCurrentIndexes);
 
-    currentGroupId: string;
     currentTab: string;
     rootGroup$ = this.store.select<Crumb>(selectCurrentRootGroup);
     tabs = ['systems', 'users', 'reports', 'settings'];

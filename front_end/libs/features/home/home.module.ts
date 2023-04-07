@@ -1,7 +1,7 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 // import { AngularSvgIconModule } from 'angular-svg-icon';
 import { StoreModule } from '@ngrx/store';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -15,16 +15,24 @@ import { AuthGuard } from '@guards/authGuard';
 
 import { NxGroupCardComponent } from './components/group-card/group-card.component';
 import { NxGroupsCardsComponent } from './components/groups-cards/groups-cards.component';
+import { NxOrganizationReportsComponent } from './components/reports/reports.component';
+import { NxOrganizationSettingsComponent } from './components/settings/settings.component';
 import { NxGroupsSidebarLevelComponent } from './components/sidebar-level/sidebar-level.component';
 import { NxSystemGroupsSidebarComponent } from './components/sidebar/sidebar.component';
 import { NxSystemCardComponent } from './components/system-card/system-card.component';
+import { NxOrganizationUsersComponent } from './components/users/users.component';
 import { NxOrganizationsComponent } from './organizations/organization.component';
 import { groupsReducer } from './store/groups.reducer';
 import { NxGroupsSystemsComponent } from './systems/systems.component';
 
-const homeRoutes = [
+const homeRoutes: Routes = [
     {
         path: '',
+        redirectTo: 'personal',
+        pathMatch: 'full'
+    },
+    {
+        path: 'personal',
         component: NxGroupsSystemsComponent,
         canActivate: [AuthGuard],
     },
@@ -42,6 +50,18 @@ const homeRoutes = [
                 path: 'systems',
                 component: NxGroupsCardsComponent,
             },
+            {
+                path: 'reports',
+                component: NxOrganizationReportsComponent,
+            },
+            {
+                path: 'users',
+                component: NxOrganizationUsersComponent,
+            },
+            {
+                path: 'settings',
+                component: NxOrganizationSettingsComponent
+            }
         ],
     },
     {
