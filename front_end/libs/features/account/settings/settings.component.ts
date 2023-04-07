@@ -90,7 +90,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
         this.initProcess();
 
         this.accountService
-            .get(true)
+            .get(false)
             .then(account => {
                 if (account?.email) {
                     this.account = { ...account };

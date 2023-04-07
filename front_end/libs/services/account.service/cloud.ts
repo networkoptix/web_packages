@@ -126,7 +126,7 @@ export class CloudAccount extends BaseAccount {
         }
 
         return this.cloudApi
-            .account(false).toPromise()
+            .account(forceUpdate).toPromise()
             .then((account: Account | any) => {
                 // eslint-disable-next-line camelcase
                 if (!account?.is_authenticated) {

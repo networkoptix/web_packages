@@ -172,7 +172,7 @@ export class NxDropMenu extends BaseDropdown {
             if (environment.isLocal) {
                 user = await this.accountService.mediaServerApi.getCurrentUser(true);
             } else {
-                user = await this.accountService.get(true);
+                user = await this.accountService.get(false);
             }
             const isAdmin = user?.permissions?.includes('GlobalAdminPermission') || false;
             this.systems$.next(changes.systems.currentValue);
