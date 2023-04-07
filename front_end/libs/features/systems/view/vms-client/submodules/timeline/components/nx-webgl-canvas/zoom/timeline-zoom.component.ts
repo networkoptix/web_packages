@@ -12,7 +12,7 @@ import {
     templateUrl: './timeline-zoom.component.html',
     styleUrls: ['./timeline-zoom.component.scss']
 })
-export class TimelineZoomComponent {
+export class WebGlTimelineZoomComponent {
     @Output() onZoom = new EventEmitter<ZOOM_DIRECTION>();
     @Output() constantZoom = new EventEmitter<{
         direction: ZOOM_DIRECTION;

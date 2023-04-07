@@ -1,0 +1,112 @@
+:host > div {
+    opacity: 1;
+    display: block;
+    position: absolute;
+    left: 0;
+    top: -50px;
+    height: 50px;
+    width: 140px;
+    padding-left: 5px;
+    padding-top: 5px;
+    pointer-events: none;
+    transform: translateX(-50%);
+    text-align: center;
+    background: var(--timeline-playback-indicator-bg);
+    color: var(--timeline-playback-indicator-color);
+    z-index: 12;
+
+    * {
+        pointer-events: none;
+    }
+
+    > .vertical-line {
+        content: '';
+        width: 2px;
+        height: 85px;
+        background-color: var(--timeline-playback-indicator-bg);
+        position: absolute;
+        left: 50%;
+        bottom: -88px;
+        transform: translateX(-50%);
+    }
+
+    > .side-arrow {
+        display: none;
+        position: absolute;
+        top: 15px;
+        border-top: 8px solid transparent;
+        border-bottom: 8px solid transparent;
+    }
+
+    > svg.bottom-arrow {
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        right: 0;
+        width: 140px;
+        height: 5px;
+
+        > polygon {
+            fill: var(--timeline-playback-indicator-bg);
+        }
+    }
+
+    > span {
+        display: block;
+        text-align: center;
+
+        &.date {
+            padding-top: 2px;
+            font-size: 13px;
+            line-height: 1.5em;
+            font-family: Roboto, Helvetica, sans-serif;
+        }
+
+        &.time {
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 16px;
+            line-height: 1.0em;
+            font-family: 'robotobold', Roboto, Helvetica, sans-serif;
+        }
+    }
+
+    &.left-most {
+        pointer-events: auto;
+        cursor: pointer;
+
+        > .vertical-line {
+            display: none;
+        }
+
+        > svg.bottom-arrow {
+            display: none;
+        }
+
+        > .side-arrow {
+            display: block;
+            left: -8px;
+            border-right: 8px solid var(--timeline-playback-indicator-bg);
+        }
+    }
+
+    &.right-most {
+        pointer-events: auto;
+        pointer-events: auto;
+        cursor: pointer;
+
+        > .vertical-line {
+            display: none;
+        }
+
+        > svg.bottom-arrow {
+            display: none;
+        }
+
+        > .side-arrow {
+            display: block;
+            right: -8px;
+            border-left: 8px solid var(--timeline-playback-indicator-bg);
+        }
+    }
+}

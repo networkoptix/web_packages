@@ -1,0 +1,53 @@
+<div
+    (nxHoldStart)="selectionHandler($event, SELECTION_ACTION.start)"
+    (nxHoldStop)="selectionHandler($event, SELECTION_ACTION.end)"
+    (nxDblClick)="selectedRangeDoubleClickHandler($event)"
+    (mousemove)="selectionMoveHandler($event)"
+>
+    <div
+        #selectedRange
+        [style.opacity.%]="selection?.active ? '100' : '0'"
+        [style.left.px]="selection?.start"
+        [style.width.px]="selection?.end - selection?.start"
+        class="selected-range"
+    >
+        <div
+            class="left-draggable"
+            (mouseover)="leftEarMouseInOutHandler(true)"
+            (mouseout)="leftEarMouseInOutHandler(false)"
+            (mousedown)="leftEarMouseHandler($event, SELECTION_ACTION.start)"
+            (mouseup)="leftEarMouseHandler($event, SELECTION_ACTION.end)"
+        ></div>
+        <div
+            #leftEar
+            [style.opacity.%]="!hideLeftEar ? '100' : '0'"
+            [style.left.px]="leftEarViewLeft"
+            class="ear left"
+        >
+            <span class="date">{{ selection.leftDate }}</span>
+            <span class="time">{{ selection.leftTime }}</span>
+            <svg viewbox="0 0 140 5">
+                <polygon [attr.points]="svgLeftArrowPoints" />
+            </svg>
+        </div>
+        <div
+            #rightEar
+            [style.opacity.%]="!hideRightEar ? '100' : '0'"
+            [style.right.px]="rightEarViewRight"
+            class="ear right"
+        >
+            <span class="date">{{ selection.rightDate }}</span>
+            <span class="time">{{ selection.rightTime }}</span>
+            <svg viewbox="0 0 140 5">
+                <polygon [attr.points]="svgRightArrowPoints" />
+            </svg>
+        </div>
+        <div
+            class="right-draggable"
+            (mouseover)="rightEarMouseInOutHandler(true)"
+            (mouseout)="rightEarMouseInOutHandler(false)"
+            (mousedown)="rightEarMouseHandler($event, SELECTION_ACTION.start)"
+            (mouseup)="rightEarMouseHandler($event, SELECTION_ACTION.end)"
+        ></div>
+    </div>
+</div>

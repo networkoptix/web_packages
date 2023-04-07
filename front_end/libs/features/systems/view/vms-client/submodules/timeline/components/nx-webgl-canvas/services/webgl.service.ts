@@ -13,6 +13,10 @@ import { SCROLL_DIRECTIONS } from './webgl.types';
     providedIn: 'root'
 })
 export class NxWebGLService {
+    canvasWidth$ = new BehaviorSubject<number>(0);
+    canvasHeight$ = new BehaviorSubject<number>(0);
+    canvasRect$ = new BehaviorSubject<DOMRect>(new DOMRect());
+
     canScroll$ = new BehaviorSubject<SCROLL_DIRECTIONS>({
         left: false,
         right: false,

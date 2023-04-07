@@ -40,6 +40,11 @@
 }
 
 #chart {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    right: 0;
+    height: 40px;
     border: 1px solid var(--input-border-color);
 
     d3fc-group.cartesian-chart {

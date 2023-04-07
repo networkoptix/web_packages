@@ -54,8 +54,8 @@ export class NxWebGLCanvasComponent implements AfterViewInit {
     // eslint-disable-next-line nx/no-untyped-init
     canvas;
 
-    width: number;
-    height: number;
+    currentPointer: Date;
+    playbackPointer: Date;
 
     container: HTMLDivElement;
     barSeries: never;
@@ -79,6 +79,9 @@ export class NxWebGLCanvasComponent implements AfterViewInit {
     cancelScroll$ = new Subject<boolean>();
     cancelZoom$ = new Subject<boolean>();
 
+    timeLabelPosition: number | undefined;
+    playbackLabelPosition: number | undefined;
+
     constructor(
         private webglService: NxWebGLService,
         @Inject(DOCUMENT) private document: Document,
@@ -86,8 +89,9 @@ export class NxWebGLCanvasComponent implements AfterViewInit {
 
     ngAfterViewInit(): void {
         this.container = this.document.querySelector('#chart');
-        this.width = this.container.clientWidth;
-        this.height = this.container.clientHeight;
+        this.webglService.canvasWidth$.next(this.container.clientWidth);
+        this.webglService.canvasHeight$.next(this.container.clientHeight);
+        this.webglService.canvasRect$.next(this.container.getBoundingClientRect());
 
         if (this.initialData.length) {
             this.initData();
@@ -154,7 +158,7 @@ export class NxWebGLCanvasComponent implements AfterViewInit {
             .domain([this.start, this.end])
             // .domain(d3.extent(data, d => d.x))
             // .nice() // this will round domain to a whole year
-            .range([0, this.width]);
+            .range([0, this.webglService.canvasWidth$.value]);
 
         const xScaleOriginal = xScale.copy();
 
@@ -327,7 +331,7 @@ export class NxWebGLCanvasComponent implements AfterViewInit {
         this.zoom = d3
             .zoom()
             .scaleExtent([1, this.timeFrameInS])
-            .translateExtent([[0, 0], [this.width, this.height]])
+            .translateExtent([[0, 0], [this.webglService.canvasWidth$.value, this.webglService.canvasHeight$.value]])
             .on('zoom', event => {
                 const newScale = event.transform.rescaleX(xScaleOriginal);
                 xScale.domain(newScale.domain());
@@ -354,15 +358,13 @@ export class NxWebGLCanvasComponent implements AfterViewInit {
                 this.redraw();
             });
 
-        let currentPointer: Date;
-
         const pointer = fc.pointer()
             .on('point', ([coord]) => {
                 if (!coord) {
                     return;
                 }
 
-                currentPointer = xScale.invert(coord.x);
+                this.currentPointer = xScale.invert(coord.x);
             });
 
         this.chart = fc.chartCartesian({
@@ -379,25 +381,33 @@ export class NxWebGLCanvasComponent implements AfterViewInit {
                     .on('measure', event => {
                         xAxisMajorTicks();
 
-                        if (this.width === event.detail.width) {
+                        if (this.webglService.canvasWidth$.value === event.detail.width) {
                             return;
                         }
-                        this.width = event.detail.width;
-                        this.height = event.detail.height;
-                        xScaleOriginal.range([0, this.width]);
+
+                        this.webglService.canvasWidth$.next(event.detail.width);
+                        this.webglService.canvasHeight$.next(event.detail.height);
+                        this.webglService.canvasRect$.next(event.target.getBoundingClientRect());
+
+                        xScaleOriginal.range([0, this.webglService.canvasWidth$.value]);
                     })
                     .on('click', (event, data) => {
                         // console.log('1 =>', event);
-                        console.log('clicked =>', currentPointer.getTime());
+                        console.log('clicked =>', this.currentPointer.getTime());
                         const found = this.sampledData.find(chunk => {
-                            const currentTime = currentPointer.getTime();
+                            const currentTime = this.currentPointer.getTime();
                             if (chunk.x <= currentTime && chunk.x + chunk.width >= currentTime) {
                                 console.log('In chunk => ');
+                                this.playbackPointer = this.currentPointer;
+                                this.playbackLabelPosition = event.offsetX;
                                 return true;
                             } else if (chunk.x > currentTime) {
+                                this.playbackPointer = this.currentPointer;
+                                this.playbackLabelPosition = event.offsetX; // this will need tuning
                                 console.log('Next chunk => ');
                                 return true;
                             } else {
+                                this.playbackLabelPosition = undefined;
                                 return false;
                             }
                         });
@@ -519,5 +529,19 @@ export class NxWebGLCanvasComponent implements AfterViewInit {
                 this.cancelZoom$.next(true);
             }
         }
+    }
+
+    mouseMoveHandler(event: MouseEvent): void {
+        if (event.offsetY > 5) { // avoid triggering at bottom scroll area
+            this.timeLabelPosition = event.offsetX;
+        }
+    }
+
+    mouseLeaveHandler(): void {
+        this.timeLabelPosition = undefined;
+    }
+
+    getSelectionDate(coordX: number): void {
+        this.currentPointer = this.chart.xInvert(coordX);
     }
 }
