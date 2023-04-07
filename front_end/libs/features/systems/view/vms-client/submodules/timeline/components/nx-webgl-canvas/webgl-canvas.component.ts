@@ -159,6 +159,7 @@ export class NxWebGLCanvasComponent implements AfterViewInit {
             // .domain(d3.extent(data, d => d.x))
             // .nice() // this will round domain to a whole year
             .range([0, this.webglService.canvasWidth$.value]);
+        this.webglService.xScale$.next(xScale);
 
         const xScaleOriginal = xScale.copy();
 
@@ -345,6 +346,7 @@ export class NxWebGLCanvasComponent implements AfterViewInit {
                 nxXAxisMinor.call(this.xAxisMinor.scale(newScale));
                 nxXAxisMinor.call(this.xAxisMinor);
 
+                this.webglService.xScale$.next(xScale);
                 this.webglService.levelZoom$.next(event.transform.k); // k, x and y
 
                 this.webglService.canZoom$.next({

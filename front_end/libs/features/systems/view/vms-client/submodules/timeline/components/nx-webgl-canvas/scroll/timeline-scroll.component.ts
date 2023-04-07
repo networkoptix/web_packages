@@ -44,6 +44,7 @@ export class TimelineScrollComponent implements OnChanges {
     // public barWidthPx: px = 0;
     // public honestBarLeftPx: px = 0;
     // public honestBarWidthPx: px = 0;
+    onSelectionDrag: boolean = false;
     canScrollLeft: boolean;
     canScrollRight: boolean;
     currentPos: number;
@@ -73,6 +74,12 @@ export class TimelineScrollComponent implements OnChanges {
                         action: 'stop'
                     });
                 }
+            });
+
+        webglService.selectionDrag$
+            .pipe(untilDestroyed(this))
+            .subscribe(value => {
+                this.onSelectionDrag = value;
             });
     }
 

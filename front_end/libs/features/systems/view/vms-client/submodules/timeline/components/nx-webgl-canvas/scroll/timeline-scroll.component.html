@@ -1,7 +1,7 @@
 <div
     class="button left"
     #left
-    [ngClass]="{ enabled: canScrollLeft && !disabled }"
+    [ngClass]="{ enabled: canScrollLeft && !disabled && !onSelectionDrag }"
     (nxClick)="scrollTo(SCROLL_DIRECTION.left)"
     (nxDblClick)="scrollTo(SCROLL_DIRECTION.beginning)"
     (nxHoldStart)="scrollTo(SCROLL_DIRECTION.constantLeft)"
@@ -57,7 +57,7 @@
 <div
     class="button right"
     #right
-    [ngClass]="{ enabled: canScrollRight && !disabled }"
+    [ngClass]="{ enabled: canScrollRight && !disabled && !onSelectionDrag }"
     (nxClick)="scrollTo(SCROLL_DIRECTION.right)"
     (nxDblClick)="scrollTo(SCROLL_DIRECTION.end)"
     (nxHoldStart)="scrollTo(SCROLL_DIRECTION.constantRight)"

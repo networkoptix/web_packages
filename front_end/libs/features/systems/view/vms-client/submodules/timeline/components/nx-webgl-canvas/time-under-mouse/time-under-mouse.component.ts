@@ -4,16 +4,11 @@ import dateFormat from 'dateformat';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NgChanges } from '@utils/ng-changes';
-import { px } from '@vms-client/utils/type-aliases';
 
 import { NxWebGLService } from '../services/webgl.service';
 
-// const MARGIN = 5;
 const ARROW_WIDTH = 10;
 const PRIMARY_WIDTH = 140;
-// const WNM = PRIMARY_WIDTH - 2 * MARGIN; // widthNoMargins
-// const WWM = PRIMARY_WIDTH + 2 * MARGIN; // widthWithMargins
-
 const TIME_FORMAT = 'HH:MM:ss';
 const DATE_FORMAT = 'ddd mmm dd yyyy';
 
@@ -31,8 +26,6 @@ export class WebGlTimeUnderMouseComponent implements OnChanges {
     public time: string = '';
 
     svgArrow: string;
-    protected _honestOffset: px;
-    protected _visualOffset: px;
     vlPosition: number;
 
     @ViewChild('timeUnderEar', { static: true })
@@ -106,14 +99,5 @@ export class WebGlTimeUnderMouseComponent implements OnChanges {
         }
 
         return `${tl},0 ${tr},0 ${b},5`;
-    }
-
-    public get verticalLineLeftPx(): number {
-        let result = PRIMARY_WIDTH / 2;
-        const offset = this._visualOffset - this._honestOffset;
-        if (Math.abs(offset) > 0) {
-            result -= offset;
-        }
-        return result;
     }
 }

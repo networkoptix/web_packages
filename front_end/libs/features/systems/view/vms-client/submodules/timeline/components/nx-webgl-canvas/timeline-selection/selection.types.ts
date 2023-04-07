@@ -1,6 +1,10 @@
 export interface ExportSelection {
     drag: boolean;
     active: boolean;
+    startDate: Date;
+    endDate: Date;
+    startDisplay: number;
+    endDisplay: number;
     start: number;
     end: number;
     leftDate: string;

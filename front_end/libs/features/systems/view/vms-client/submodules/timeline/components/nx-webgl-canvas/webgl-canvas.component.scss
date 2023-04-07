@@ -4,6 +4,12 @@
     position: relative;
 }
 
+.nx-timeline-wrapper {
+    display: block;
+    position: relative;
+    width: 100%;
+}
+
 #nx-x-axis-minor,
 #nx-x-axis-major {
     overflow: hidden;

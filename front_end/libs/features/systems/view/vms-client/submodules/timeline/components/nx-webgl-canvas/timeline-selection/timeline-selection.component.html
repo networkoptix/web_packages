@@ -7,8 +7,12 @@
     <div
         #selectedRange
         [style.opacity.%]="selection?.active ? '100' : '0'"
-        [style.left.px]="selection?.start"
-        [style.width.px]="selection?.end - selection?.start"
+        [style.left.px]="selection?.startDisplay"
+        [style.width.px]="selection?.endDisplay - selection?.startDisplay"
+        [ngClass]="{
+            hideLeftBorder: selection.startDisplay === 0,
+            hideRightBorder: selection.endDisplay === canvasWidth
+        }"
         class="selected-range"
     >
         <div

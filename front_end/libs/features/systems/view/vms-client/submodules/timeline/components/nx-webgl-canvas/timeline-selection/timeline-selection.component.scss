@@ -11,7 +11,6 @@
     z-index: 10;
     display: block;
     cursor: default;
-    background-color: rgba(var(--brand-core--rgb), 0.2);
 
     .left-draggable,
     .right-draggable {
@@ -33,11 +32,11 @@
     > .selected-range {
         pointer-events: none;
         display: block;
-        position: relative;
-        bottom: 0;
-        height: 88px;
+        position: absolute;
+        bottom: -39px;
+        height: 89px;
         background-color: rgba(var(--brand-core--rgb), 0.3);
-        transition: opacity 0.2s ease-in-out;
+        transition: opacity 0.1s ease-in-out;
         min-width: 1px;
         border-left: 2px solid rgba(var(--brand-core--rgb), 0.7);
         border-right: 2px solid rgba(var(--brand-core--rgb), 0.7);
@@ -45,7 +44,15 @@
         //&.active {
         //    display: block;
         //}
-        
+
+        &.hideLeftBorder {
+            border-left: none;
+        }
+
+        &.hideRightBorder {
+            border-right: none;
+        }
+
         &.range-drag {
             cursor: grab;
         }
@@ -56,7 +63,7 @@
             background-color: var(--timeline-selection-panel-bg);
             color: var(--timeline-selection-panel-color);
             padding: 2px 4px;
-            top: -50px;
+            top: -51px;
             height: 50px;
             font-size: 12px;
             line-height: 1.2em;
@@ -71,7 +78,7 @@
                 height: 5px;
 
                 > polygon {
-                    transition: fill .2s ease-in-out;
+                    transition: fill .1s ease-in-out;
                     fill: var(--timeline-selection-panel-bg);
                 }
             }
