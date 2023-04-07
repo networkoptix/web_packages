@@ -63,7 +63,7 @@ a {
     @include mixins.badge-selected(var(--badge-base-selected-bg),
         var(--badge-base-selected-hover-bg),
         var(--badge-base-selected-active-bg));
-    color: var(--badge-base-color); //dark9
+    color: var(--badge-base-selected-color);
     cursor: default !important;
     padding-right: 32px !important;
     position: relative;
