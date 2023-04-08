@@ -67,14 +67,18 @@
                                 Organization
                             </p>
                             <h2 class="pb-3 pt-2">{{ (rootGroup$ | async).name }}</h2>
-                            <nx-tabs
-                                [tabs]="tabs"
-                                [currentTab]="currentTab"
-                                (tabClick)="onTabClick($event)"
-                            ></nx-tabs>
                         </div>
-                        <router-outlet></router-outlet>
+                        <nx-tabs
+                            [onLoadTab]="currentTab"
+                            (tabClick)="onTabClick($event)"
+                        >
+                            <div *tab="'systems'; title as title">{{ title }}</div>
+                            <div *tab="'users'; title as title">{{ title }}</div>
+                            <div *tab="'reports'; title as title">{{ title }}</div>
+                            <div *tab="'settings'; title as title">{{ title }}</div>
+                        </nx-tabs>
                     </div>
+                    <router-outlet></router-outlet>
                 </ng-template>
             </ng-container>
             <!-- TODO: Replace with actual placeholder -->

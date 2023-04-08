@@ -610,6 +610,11 @@ html[data-theme="light"] {
     --active-license-text: var(--green_main);
     --inactive-license-text: var(--yellow_d2);
 
+    /* Tabs component */
+    --tabs-border-color: var(--light5);
+    --tabs-active-color: var(--blue10);
+    --tabs-color: var(--light16);
+
     // System groups
     --groups-sidebar-bg: var(--light2);
     @include generateVarAndRgb(--groups-sidebar-highlight, $light16);

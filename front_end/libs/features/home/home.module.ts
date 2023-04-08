@@ -1,7 +1,7 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CdkMenuModule } from '@angular/cdk/menu';
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Injectable, NgModule } from '@angular/core';
+import { ActivatedRouteSnapshot, Resolve, RouterModule, Routes } from '@angular/router';
 // import { AngularSvgIconModule } from 'angular-svg-icon';
 import { StoreModule } from '@ngrx/store';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -11,6 +11,7 @@ import { ComponentsCoreModule } from '@components/components-core.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { NxSearchHighlightModule } from '@components/search-highlight/search-highlight.module';
 import { NxTabsComponent } from '@components/tabs/tabs.component';
+import { NxTabsDirective } from '@components/tabs/tabs.directive';
 import { AuthGuard } from '@guards/authGuard';
 
 import { NxGroupCardComponent } from './components/group-card/group-card.component';
@@ -24,6 +25,13 @@ import { NxOrganizationUsersComponent } from './components/users/users.component
 import { NxOrganizationsComponent } from './organizations/organization.component';
 import { groupsReducer } from './store/groups.reducer';
 import { NxGroupsSystemsComponent } from './systems/systems.component';
+
+@Injectable()
+class TabResolver implements Resolve<string> {
+    resolve(route: ActivatedRouteSnapshot): string {
+        return route.children[0].routeConfig.path;
+    }
+}
 
 const homeRoutes: Routes = [
     {
@@ -45,6 +53,7 @@ const homeRoutes: Routes = [
         path: 'organization/:id',
         component: NxOrganizationsComponent,
         canActivate: [AuthGuard],
+        resolve: { currentTab: TabResolver },
         children: [
             {
                 path: 'systems',
@@ -69,10 +78,6 @@ const homeRoutes: Routes = [
         component: NxOrganizationsComponent,
         canActivate: [AuthGuard],
     },
-    {
-        path: '**',
-        redirectTo: '',
-    },
 ];
 
 @NgModule({
@@ -93,11 +98,18 @@ const homeRoutes: Routes = [
         NxGroupsCardsComponent,
         NxGroupsSystemsComponent,
         NxTabsComponent,
+        NxTabsDirective,
         NxGroupsSidebarLevelComponent,
         NxSystemGroupsSidebarComponent,
         NxSystemCardComponent,
+        NxOrganizationReportsComponent,
+        NxOrganizationSettingsComponent,
+        NxOrganizationUsersComponent,
+        NxGroupsSystemsComponent
     ],
-    providers: [],
+    providers: [
+        TabResolver
+    ],
     exports: [],
 })
 export class NxHomeModule {}

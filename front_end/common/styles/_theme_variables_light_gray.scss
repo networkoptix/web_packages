@@ -583,6 +583,11 @@ html[data-theme="light-gray"] {
     --active-license-text: var(--green_main);
     --inactive-license-text: var(--yellow_d2);
 
+    /* Tabs component */
+    --tabs-border-color: var(--light_gray_3);
+    --tabs-active-color: var(--blue1);
+    --tabs-color: var(--light_gray_4);
+    
     // System groups
     --groups-sidebar-bg: var(--light_gray_2);
     @include generateVarAndRgb(--groups-sidebar-highlight, $light_gray_16);

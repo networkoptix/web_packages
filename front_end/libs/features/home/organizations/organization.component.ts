@@ -63,6 +63,7 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.currentTab = this.route.snapshot.data.currentTab;
         this.route.params.subscribe(({ id }) => {
             this.store.dispatch(
                 GroupActions.setCurrentGroupId({
@@ -71,9 +72,6 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
             );
         });
 
-        this.route.url.subscribe(_ => {
-            this.currentTab = this.route.firstChild.snapshot.url[0].path;
-        });
         this.store
             .select<Account>(selectCurrentUser)
             .pipe(take(1))
@@ -107,6 +105,7 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
     }
 
     onTabClick(tab: string): void {
+        this.currentTab = tab;
         this.store
             .select<string>(selectCurrentGroupId)
             .pipe(take(1))

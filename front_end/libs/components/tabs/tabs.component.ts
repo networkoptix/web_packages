@@ -1,30 +1,46 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import {
+    AfterViewInit,
+    Component,
+    ContentChildren,
+    EventEmitter,
+    Input,
+    Output,
+    QueryList,
+    TemplateRef,
+} from '@angular/core';
 
-import { NgChanges } from '@utils/ng-changes';
+import { NxTabsDirective } from './tabs.directive';
 
 @Component({
     selector: 'nx-tabs',
     templateUrl: 'tabs.component.html',
     styleUrls: ['tabs.component.scss'],
 })
-export class NxTabsComponent implements OnInit, OnChanges {
-    @Input() tabs: string[];
-    @Input() currentTab: string;
+export class NxTabsComponent implements AfterViewInit {
+    @Input() onLoadTab: string;
     @Output() tabClick = new EventEmitter<string>();
-    currentTab$ = new BehaviorSubject<string>(null);
+    @ContentChildren(NxTabsDirective)
+    tabs: QueryList<NxTabsDirective>;
+    tabsMap: string[] = [];
 
-    ngOnInit(): void {
-        this.currentTab$.next(this.currentTab);
+    currentTabTemplate: TemplateRef<unknown>;
+    currentTabIndex: number = 0;
+
+    ngAfterViewInit(): void {
+        this.tabs.forEach((tab, index) => {
+            this.tabsMap[index] = tab.name;
+        });
+        this.currentTabTemplate = this.onLoadTab
+            ? this.tabs.find((tab, index) => {
+                  this.currentTabIndex = index;
+                  return tab.name === this.onLoadTab;
+              }).template
+            : this.tabs.first.template;
     }
 
-    // Update seleted tab based on input
-    ngOnChanges({ currentTab }: NgChanges<NxTabsComponent>): void {
-        this.currentTab$.next(currentTab.currentValue);
-    }
-
-    handleClick(tab: string): void {
-        this.currentTab$.next(tab);
-        this.tabClick.emit(tab);
+    handleClick(tab: NxTabsDirective, index: number): void {
+        this.currentTabTemplate = tab.template;
+        this.currentTabIndex = index;
+        this.tabClick.emit(tab.name);
     }
 }

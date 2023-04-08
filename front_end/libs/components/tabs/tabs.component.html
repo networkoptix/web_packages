@@ -1,19 +1,16 @@
-<div class="nx-tab-set">
-    <ul class="justify-content-start nav nav-tabs nx-tab-set-tabs">
-        <li
-            *ngFor="let tab of tabs"
-            class="nav-item"
-            (click)="handleClick(tab)"
+<div class="tabs-component">
+    <div class="row">
+        <button
+            class="tab"
+            *ngFor="let tab of tabs; index as i"
+            (click)="handleClick(tab, i)"
+            [ngClass]="{ selected: tab.name === tabsMap[currentTabIndex] }"
         >
-            <div
-                class="nav-link"
-                [ngClass]="{ active: currentTab$.value === tab }"
-            >
-                <span
-                    class="tab-heading"
-                    [textContent]="tab.charAt(0).toUpperCase() + tab.slice(1)"
-                ></span>
-            </div>
-        </li>
-    </ul>
+            {{ tab.name.charAt(0).toUpperCase() + tab.name.slice(1) }}
+        </button>
+    </div>
+
+    <div class="display">
+        <ng-container *ngTemplateOutlet="currentTabTemplate"></ng-container>
+    </div>
 </div>

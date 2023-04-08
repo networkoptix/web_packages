@@ -1,0 +1,18 @@
+.tabs-component{
+  display: flex;
+  flex-direction: column;
+
+  .row{
+    border-bottom: 1px solid var(--tabs-border-color);
+  }
+
+  .tab{
+    background-color: var(--body-bg);
+    color: var(--tabs-color); 
+
+    &.selected {
+      border-bottom: 2px solid var(--tabs-active-color);
+      color: var(--tabs-active-color);
+    }
+  }
+}
