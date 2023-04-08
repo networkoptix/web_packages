@@ -32,6 +32,11 @@ const selectSystemInfoMap = createSelector(selectSystemInfo, systems => {
     return systems ? new Map<string, SystemInfo>(systems.map(s => [s.id, s])) : (systems as null);
 });
 
+const hasAccessToSystem = (system: SystemItem): boolean => {
+    // Systems without name property are systems user has not been added to
+    return !!system.name;
+};
+
 export const selectGroupsItems = createSelector(
     selectBaseGroupsItems,
     selectSystemInfoMap,
@@ -43,13 +48,15 @@ export const selectGroupsItems = createSelector(
         const placedSystem = new Set<string>();
         function extendSystemInfo(groupItem: BaseGroupItem): GroupItem {
             groupItem.groups = groupItem.groups.map(g => extendSystemInfo({ ...g }));
-            groupItem.systems = groupItem.systems.map(s => {
-                placedSystem.add(s.id);
-                return {
-                    ...s,
-                    ...sysInfo.get(s.id),
-                };
-            });
+            groupItem.systems = groupItem.systems
+                .map(s => {
+                    placedSystem.add(s.id);
+                    return {
+                        ...s,
+                        ...sysInfo.get(s.id),
+                    };
+                })
+                .filter(system => hasAccessToSystem(system));
             return groupItem as GroupItem;
         }
         const data = items.map(item => {
