@@ -1287,7 +1287,7 @@ class CustomClientViewSet(WaffleFlagMixin, ModelViewSet):
     def generate_settings_for_manifest(request):
         show_vms_list = settings.META
         vms_list = [{'name': vms.name, 'value': vms.id} for vms in
-                    request.user.custom_client_vms_assets(request)] if show_vms_list else []
+                    request.user.custom_client_vms_assets(request=request)] if show_vms_list else []
 
         return {
             'base_vms': {
