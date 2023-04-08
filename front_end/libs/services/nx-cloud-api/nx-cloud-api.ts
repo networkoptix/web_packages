@@ -611,7 +611,6 @@ export class NxCloudApiService {
             last_name: account.last_name,
             is_staff: account.is_staff,
             is_superuser: account.is_superuser || false,
-            language: account.language,
             permissions: account.permissions
         };
         return this.http.post<t.AccountEdit>(apiBase + '/account', accountInfo).toPromise();
