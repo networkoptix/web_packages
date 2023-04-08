@@ -174,7 +174,7 @@ export class NxSystemsService {
     @memoizeAsyncPersistent
     private _getSystems(systemId?: string): Observable<System[]> {
         return combineLatest([timer(0, updateInterval), this.currentUser$]).pipe(switchMap(() => {
-            console.log(systemId);
+            // console.log(systemId);
             return this.cloudApi.systems(systemId);
         }));
     }

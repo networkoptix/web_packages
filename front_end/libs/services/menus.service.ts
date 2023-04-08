@@ -16,6 +16,7 @@ import { MenuStructure, MenusStructure } from './nx-config/base-config';
 import type { IConfig } from './nx-config/config-types';
 import { NxConfigService } from './nx-config/nx-config.service';
 import { NxSessionService } from './session.service';
+import type { NxUser } from './system.service/user-manager/user-manager-types';
 
 @UntilDestroy({ checkProperties: true })
 @Injectable({
@@ -28,6 +29,8 @@ export class NxMenusService {
     private languageChanged$ = new BehaviorSubject('');
     public currentSystemNode$ = new BehaviorSubject<MenuNode>(null);
     apiBase: string = apiBase;
+
+    currentUser: NxUser;
 
     endpoint: Partial<{
         view: boolean;
@@ -334,7 +337,7 @@ export class NxMenusService {
         in bookmarksGuard.ts */
         if (
             this.configService.flagsEnabled('bookmarks') &&
-            activeSystem.accessRole !== 'liveViewer' &&
+            this.currentUser?.permissions.includes('GlobalViewBookmarksPermission') &&
             !this.deviceService.isMobile()
         ) {
             const bookmarksNode = new MenuNode(

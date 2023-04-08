@@ -163,9 +163,13 @@ export abstract class BaseAccount implements OnDestroy {
         }
     }
 
-    // these seem to be deprecated (@gbezyuk)
     get email() {
+        return this._account?.email;
+    }
+
+    get loginState() {
         return this.sessionService.loginState;
+        // This is name on local, not email
     }
 
     async authKey() {

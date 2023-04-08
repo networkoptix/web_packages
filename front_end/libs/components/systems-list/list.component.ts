@@ -190,13 +190,6 @@ export class NxSystemsListComponent implements OnInit {
                 .updateURI(this.menusService.getUrl(system.id, this.endpoint), {
                     search: undefined,
                 })
-                .then(() => {
-                    const activeSystem =
-                        this.headerService.activeSystem ||
-                        this.headerService.lastActive$.value ||
-                        this.systems[0];
-                    this.menusService.updateActiveSystemMenu(activeSystem);
-                })
                 .catch(err => {
                     console.error(err);
                 });

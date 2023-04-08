@@ -33,7 +33,7 @@ export const cloudSettingsRoutes: Routes = [
     {
         path: '',
         component: NxSystemSettingsComponent,
-        canActivate: [AuthGuard, TwofaGuard],
+        canActivate: [AuthGuard, SystemGuard, TwofaGuard],
         children: [
             {
                 path: '',

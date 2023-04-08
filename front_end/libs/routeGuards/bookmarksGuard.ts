@@ -40,7 +40,13 @@ export class BookmarksGuard implements CanActivate {
 
         const usersPromise = system.userManager.currentUser
             ? Promise.resolve()
-            : system.userManager.getUsersDataFromTheSystem();
+            : new Promise<void>((resolve, reject) => {
+                  system.userManager.currentUserEmail ||= this.accountService.email;
+                  // Patch for systems.service creating systems with no user email
+                  system.userManager.getUsersDataFromTheSystem().then(() => {
+                      resolve();
+                  });
+              });
 
         return usersPromise.then(() => {
             // https://networkoptix.atlassian.net/wiki/spaces/FS/pages/2786951363/Bookmarks+on+Cloud#User-Permissions-new
@@ -48,7 +54,9 @@ export class BookmarksGuard implements CanActivate {
             // for header in menus.service.ts
             if (
                 this.configService.flagsEnabled('bookmarks') &&
-                system.userManager.currentUser.accessRole !== 'Live Viewer' &&
+                system.userManager.currentUser.permissions.includes(
+                    'GlobalViewBookmarksPermission',
+                ) &&
                 !this.deviceService.isMobile()
             ) {
                 return true;

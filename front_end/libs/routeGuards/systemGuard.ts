@@ -11,6 +11,7 @@ import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
 import { NxSettingsService } from '@pages/systems/settings/settings.service';
 import { NxAccountService } from '@services/account.service';
+import { NxMenusService } from '@services/menus.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import type { SystemPermissions } from '@services/system.service/user-manager/user-manager-types';
@@ -24,6 +25,7 @@ export class SystemGuard implements CanActivate {
         private accountService: NxAccountService,
         private systemService: NxSystemService,
         private settingsService: NxSettingsService,
+        private menusService: NxMenusService,
     ) {}
 
     canActivate(
@@ -73,16 +75,17 @@ export class SystemGuard implements CanActivate {
             );
         };
 
-        if (!(systemId && currentRoute)) {
-            return;
-        }
-        return this.accountService.get().then(async account => {
+        const accountPromise = this.accountService.account
+            ? Promise.resolve(this.accountService.account)
+            : this.accountService.get();
+
+        return accountPromise.then(async account => {
             if (!account) {
                 return;
             }
             let currSystem = this.systemService.getCurrentSystem();
 
-            if (!currSystem) {
+            if (!currSystem || (currSystem.id !== systemId && !environment.isLocal)) {
                 if (environment.isLocal) {
                     currSystem = this.systemService.createLocalSystem(
                         this.accountService.mediaServerApi,
@@ -97,14 +100,26 @@ export class SystemGuard implements CanActivate {
                 this.settingsService.system = currSystem;
             }
             if (currSystem.userManager.users === undefined) {
+                currSystem.userManager.currentUserEmail ||= account.email;
+                // Patch for systems.service creating systems with no user email
                 await currSystem.userManager.getUsersDataFromTheSystem();
             }
+            this.menusService.currentUser = currSystem.userManager.currentUser;
+            this.menusService.updateActiveSystemMenu(
+                currSystem,
+                currSystem.userManager.permissions.isAdmin,
+            );
 
             if (!this.settingsService.system) {
                 this.settingsService.system = currSystem;
             }
 
-            return checkPermissionsFor(currSystem);
+            if (currentRoute) {
+                return checkPermissionsFor(currSystem);
+            } else {
+                // Auth guard has already checked user is logged in
+                return true;
+            }
         });
     }
 }
