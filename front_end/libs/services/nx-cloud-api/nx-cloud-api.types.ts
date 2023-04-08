@@ -1,5 +1,6 @@
 import { Observable, ObservableInput } from 'rxjs';
 
+import type staticLang from '@common/language/language_i18n_static.json';
 import { ConfigType } from '@components/console-table/console-table.component.types';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
@@ -386,18 +387,10 @@ export interface LicenseServerInfo {
     cacheUpdated: boolean;
 }
 
-export interface ReleasesTypes {
-    beta: (params?: Record<string, string | number>) => string;
-    betas: (params?: Record<string, string | number>) => string;
-    patch: (params?: Record<string, string | number>) => string;
-    patches: (params?: Record<string, string | number>) => string;
-    rc: (params?: Record<string, string | number>) => string;
-    release: (params?: Record<string, string | number>) => string;
-    releases: (params?: Record<string, string | number>) => string;
-}
+export type ReleasesTypes = keyof typeof staticLang.downloads.releasesTypes;
 
 export type BuildHistory =
-    { [type in keyof ReleasesTypes]?: Downloads[] } &
+    { [type in ReleasesTypes]?: Downloads[] } &
     { updatesPrefix: string };
 
 export interface Build extends Downloads {
