@@ -600,14 +600,16 @@ html[data-theme="light-gray"] {
 
     --group-card-folder-icon-body-fill: var(--light_gray_10);
     --group-card-folder-icon-tab-fill: var(--light_gray_13);
-    --group-card-bg-grad0: var(--light_gray_3);
-    --group-card-bg-grad100: var(--light_gray_5);
-    --group-card-border-color: var(--light_gray_7);
+    --group-card-bg: var(--light_gray_6);
+    --group-card-bg-hover: var(--light_gray_7);
+    --group-card-border-color: var(--light_gray_10);
 
     @include generateVarAndRgb(--system-card-bg-grad0, $light_gray_1);
     @include generateVarAndRgb(--system-card-bg-grad100, $light_gray_3);
-    --system-card-offline-color: var(--light_gray_16);
+    --system-card-bg: var(--light_gray_7);
+    --system-card-offline-color: var(--light_gray_4);
     --system-card-border-color: var(--light_gray_5);
+    --system-card-owner-color: var(--light_gray_16);
 
     --card-subtext-color: var(--light_gray_16);
     --card-menu-dots-fill: var(--light_gray_16);

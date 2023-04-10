@@ -615,14 +615,16 @@ html[data-theme="dark-gray"] {
 
     --group-card-folder-icon-body-fill: var(--dark_gray_12);
     --group-card-folder-icon-tab-fill: var(--dark_gray_13);
-    --group-card-bg-grad0: var(--dark_gray_11);
-    --group-card-bg-grad100: var(--dark_gray_9);
-    --group-card-border-color: var(--dark_gray_14);
+    --group-card-bg: var(--dark_gray_6);
+    --group-card-bg-hover: var(--dark_gray_7);
+    --group-card-border-color: var(--dark_gray_10);
 
     @include generateVarAndRgb(--system-card-bg-grad0, $dark_gray_1);
     @include generateVarAndRgb(--system-card-bg-grad100, $dark_gray_11);
+    --system-card-bg: var(--dark_gray_7)
     --system-card-offline-color: var(--dark_gray_18);
-    --system-card-border-color: var(--dark_gray_9);
+    --system-card-border-color: var(--dark_gray_10);
+    --system-card-owner-color: var(--dark_gray_16);
 
     --card-subtext-color: var(--dark_gray_18);
     --card-menu-dots-fill: var(--dark_gray_18);

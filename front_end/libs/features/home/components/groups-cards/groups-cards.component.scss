@@ -15,6 +15,10 @@
     .group-card,
     .system-card {
         position: relative;
+
+        .card-container {
+            height: 100%;
+        }
     }
 
     .placeholder-shadow {
@@ -62,4 +66,24 @@
 .actions {
     display: flex;
     justify-content: space-between;
+
+    .input {
+        display: flex;
+        align-items: center;
+        width: 40%;
+        max-width: 320px;
+        border: 1px solid var(--system-card-border-color);
+        border-radius: 2px;
+
+        input {
+            height: 100%;
+            width: 100%;
+            border: none;
+            background: none;
+        }
+
+        ::placeholder {
+            color: var(--body-text-color)
+        }
+    }
 }

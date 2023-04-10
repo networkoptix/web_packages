@@ -1,30 +1,27 @@
-<div class="system-button card card-condensed">
+<div class="system-button group-card card-condensed">
     <div
         class="card-body"
         (click)="openGroup()"
     >
-        <h2>
+        <div class="top">
             <svg-icon
                 nx-add-svg-src
                 [src]="icons.dir + 'folder2.svg'"
-                [svgStyle]="{ 'width.rem': '1.5', 'height.rem': '2' }"
+                [svgStyle]="{ 'width.px': '54', 'height.px': '64' }"
             ></svg-icon>
-            <nx-search-highlight
-                [text]="group.name"
-                [search]="search"
-                class="card-name"
-            ></nx-search-highlight>
-        </h2>
-        <div class="system-list-bottom-bar">
-            <div class="group-children">
-                <span class="user-name">{{
-                    LANG.systemGroups.groupCount | translate: { count: group.groups.length }
-                }}</span>
-                <span class="user-name">{{
-                    LANG.systemGroups.systemCount | translate: { count: group.systems.length }
-                }}</span>
-            </div>
         </div>
+        <h3>
+            <div class="bottom">
+                <nx-search-highlight
+                    [text]="group.name"
+                    [search]="search"
+                    class="card-name"
+                ></nx-search-highlight>
+                <span class="count">
+                    {{ group.systemsCount + group.groups.length }}
+                </span>
+            </div>
+        </h3>
     </div>
     <div
         class="three-dots"

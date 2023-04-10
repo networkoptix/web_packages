@@ -1,24 +1,32 @@
 :host {
-    .card {
+    .group-card {
+        height: 100%;
         border-color: var(--group-card-border-color);
     }
 
     .system-button {
         &.card-condensed {
             .card-body {
+                display: flex;
+                flex-direction: column;
 
-                .card-name{
-                    padding-left: 10px;
-                }
-
-                background: linear-gradient(
-                    180deg,
-                    var(--group-card-bg-grad0) 0%,
-                    var(--group-card-bg-grad100) 100%
-                );
+                background: var(--group-card-bg);
 
                 &:hover {
-                    background: var(--group-card-bg-grad0);
+                    background: var(--group-card-bg-hover);
+                }
+
+                .top {
+                    height: 65%;
+                }
+
+                .bottom {
+                    display: flex;
+                    justify-content: space-between;
+
+                    .count {
+                        color: var(--system-card-owner-color);
+                    }
                 }
             }
         }

@@ -8,10 +8,11 @@ $card-height: $card-header-height +
     2 * $card-vertical-padding +
     $card-content-height;
 $card-width: 20rem;
-$card-border-radius: 0.25rem;
+$card-border-radius: 12px;
 
-.card {
+.system-card {
     border: none;
+    background-color: none;
 
     width: $card-width;
     height: $card-height;
@@ -31,15 +32,12 @@ $card-border-radius: 0.25rem;
 
     &.card-condensed {
         .card-body {
-            border: 1px var(--system-card-border-color) solid;
+            height: 100%;
+            border: 2px var(--system-card-border-color) solid;
             border-radius: $card-border-radius;
             padding: $card-vertical-padding 1rem;
 
-            background: linear-gradient(
-                180deg,
-                var(--system-card-bg-grad0) 0%,
-                var(--system-card-bg-grad100) 100%
-            );
+            background: var(--system-card-bg);
 
             h2{
                 display: block !important;
@@ -73,6 +71,7 @@ $card-border-radius: 0.25rem;
 }
 
 .system-owner {
+    color: var(--system-card-owner-color);
     line-height: 1.25rem;
     height: 1.25rem;
     position: absolute;

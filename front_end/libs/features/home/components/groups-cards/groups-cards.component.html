@@ -18,7 +18,13 @@
         >
             New Group
         </button>
-        <input [placeholder]="'Search' | translate" />
+        <div class="input px-2">
+            <span class="glyphicon web-icon-search icon-search"></span>
+            <input
+                class="pl-2"
+                [placeholder]="'Search' | translate"
+            />
+        </div>
     </div>
 </ng-template>
 
@@ -40,6 +46,7 @@
             (cdkDropListDropped)="onDrop($event)"
         >
             <div
+                class="card-container"
                 cdkDrag
                 [cdkDragData]="group"
             >

@@ -627,14 +627,16 @@ html[data-theme="dark"] {
 
     --group-card-folder-icon-body-fill: var(--dark11);
     --group-card-folder-icon-tab-fill: var(--dark13);
-    --group-card-bg-grad0: var(--dark5);
-    --group-card-bg-grad100: var(--dark7);
+    --group-card-bg: var(--dark6);
+    --group-card-bg-hover: var(--dark7);
     --group-card-border-color: var(--dark10);
 
     @include generateVarAndRgb(--system-card-bg-grad0, $dark4);
     @include generateVarAndRgb(--system-card-bg-grad100, $dark5);
+    --system-card-bg: var(--dark7);
     --system-card-offline-color: var(--light4);
-    --system-card-border-color: var(--dark8);
+    --system-card-border-color: var(--dark10);
+    --system-card-owner-color: var(--dark16);
 
     --card-subtext-color: var(--light4);
     --card-menu-dots-fill: var(--light4);
