@@ -1,7 +1,7 @@
 from uuid import uuid4
 
 from cloud.drf_async import async_api_view
-from util.base_cache import ReadOnlyAPICache
+from util.base_cache import ReadOnlyAPICache, BaseCacheV2
 from cms.serializers import ReadOnlyAPIDetailSerializer, ReadOnlyAPIListSerializer
 
 from django.urls import reverse
@@ -72,13 +72,17 @@ async def get_readonly_api(request, api_id=None):
 @permission_classes((AllowAny, ))
 async def get_readonly_apis(request):
     type = request.GET.get('type', False)
-
-    if type:
-        if (api_type := getattr(ReadOnlyAPI.API_TYPES, type, False)) is False:
-            return api_success(INVALID_API_TYPE, status_code=status.HTTP_404_NOT_FOUND)
-        apis = ReadOnlyAPI.objects.filter(type=api_type)
-    else:
-        apis = ReadOnlyAPI.objects.all()
-
-    response = await sync_to_async(lambda: ReadOnlyAPIListSerializer(apis, many=True).data)()
-    return api_success({ 'data': response })
+    lookup_key = f'readonly_apis-{type}' if type else 'readonly_apis'
+    api_cache = BaseCacheV2(lookup_key=lookup_key, cache_key='readonly_apis',
+                            customization_name=request.CUSTOMIZATION)
+    data = await api_cache.aget_cached_item()
+    if not data:
+        if type:
+            if (api_type := getattr(ReadOnlyAPI.API_TYPES, type, False)) is False:
+                return api_success(INVALID_API_TYPE, status_code=status.HTTP_404_NOT_FOUND)
+            apis = ReadOnlyAPI.objects.filter(type=api_type)
+        else:
+            apis = ReadOnlyAPI.objects.all()
+        data = await sync_to_async(lambda: ReadOnlyAPIListSerializer(apis, many=True).data)()
+        await api_cache.cache.aset(api_cache.lookup_key, data, timeout=3600)
+    return api_success({'data': data})

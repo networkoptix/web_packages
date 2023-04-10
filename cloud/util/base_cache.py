@@ -7,6 +7,8 @@ from cloud.customization_context import customization_ctx
 
 from cloud.helpers.exceptions import ErrorCodes, APIInternalException
 
+from cloud.helpers.exceptions import APIRequestException, ErrorCodes, APIInternalException
+
 
 class BaseCache(object):
     """Wraps document caching logic
