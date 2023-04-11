@@ -45,6 +45,7 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ContextManifest } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxPageService } from '@services/page.service';
 import { Layouts, Layout, WebPages, LayoutItem } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import {
@@ -402,6 +403,7 @@ export class NxLayoutViewComponent {
                     [`${this.router.url.split('layouts')[0]}layouts/${layoutId}`],
                     { queryParams },
                 );
+                this.pageService.pageTitle(staticLang.pageTitles.layouts);
             }
             return layoutId;
         }),
@@ -499,6 +501,7 @@ export class NxLayoutViewComponent {
         private translate: TranslateService,
         private cd: ChangeDetectorRef,
         private cloudApi: NxCloudApiService,
+        private pageService: NxPageService,
     ) {
         this.CONFIG = configService.config;
     }

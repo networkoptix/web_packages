@@ -126,7 +126,7 @@ export class NxPageMetaService {
      * Updates a pages metadata from an object. If only partial metadata is provided fallbacks are used for the others.
      */
     setMetaProperties(url: string, properties: Record<string, string>): void {
-        this.routerUrl = url;
+        this.routerUrl = url.split('?')[0];
         Object.entries(properties).forEach(args => this.updateLookups(...args));
     }
 }

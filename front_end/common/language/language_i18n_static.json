@@ -1049,6 +1049,7 @@
         "failedToAccessSystem": "Failed to access system",
         "failedToAccessCamera": "Failed to access camera",
         "integrations": "%VMS_NAME% Integrations",
+        "layouts": "Layouts",
         "login": "Log in",
         "pageNotFound": "Page not found",
         "register": "Create account in",
