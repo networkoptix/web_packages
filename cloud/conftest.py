@@ -437,3 +437,11 @@ def mock_session(mocker):
         return session
 
     return _mock_session
+
+
+@pytest.fixture(autouse=True, scope='function')
+def clear_caches():
+    if not settings.LOCAL_ENVIRONMENT:
+        return
+    for cache in caches.all():
+        cache.clear()

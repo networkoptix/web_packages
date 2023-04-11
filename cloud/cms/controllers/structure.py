@@ -616,10 +616,11 @@ def import_assets_from_json(assets_list, user, publish=False, increment_progress
                 if review:
                     published = True
                     update_draft_state(review.id, AssetCustomizationReview.REVIEW_STATES.accepted, user)
-            if asset_obj.is_documentation and published:
-                # !!! import_assets_from_json() is used widely. Can cause a lot of troubles
-                # because CUSTOMIZATION can be missed in contextvar
-                DocumentCache().clear_cache()
+                if asset_obj.is_documentation and published:
+                    # !!! import_assets_from_json() is used widely. Can cause a lot of troubles
+                    # because CUSTOMIZATION can be missed in contextvar. Reinitializing documentation
+                    # cache for each customization.
+                    DocumentCache(customization_name=customization.name).clear_cache()
         if increment_progress:
             increment_progress()
 

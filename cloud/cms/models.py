@@ -1211,8 +1211,15 @@ class DataStructure(models.Model):
 
         # try to get translated content
         if self.translatable:
+            # Old version:
+            # default_lang = Customization.objects.get(
+            #     name=settings.CUSTOMIZATION).default_language
+            # Default language was gotten as a default language of a server. For now, it is hard to
+            # determined it here, because find_actual_value(s) can be called with customization
+            # different from a caller one or even None value. So, customization_ctx must be always
+            # set to handle this value correctly.
             default_lang = Customization.objects.get(
-                name=customization_ctx.get()).default_language
+                name=customization_name or customization_ctx.get()).default_language
             content_record_language = content_record.filter(language=language)
             content_record_default = content_record.filter(
                 language=default_lang)
@@ -1354,8 +1361,14 @@ class DataStructure(models.Model):
         data_structure_set = set(data_structures)
         translatable_ds_set = {ds for ds in data_structures if ds.translatable}
         nontranslatable_ds_set = data_structure_set - translatable_ds_set
+        # Old version:
+        # default_lang = Customization.objects.get(
+        #     name=settings.CUSTOMIZATION).default_language
+        # Default language was gotten as a default language of a server. For now, it is hard to determined it here,
+        # because find_actual_value(s) can be called with customization different from a caller one or even None value.
+        # So, customization_ctx must be always set to handle this value correctly.
         default_lang = Customization.objects.get(
-            name=customization_ctx.get()).default_language
+            name=customization_name or customization_ctx.get()).default_language
         fished_records = {}
 
         # Get translatable records
@@ -3421,7 +3434,9 @@ class Flag(AbstractUserFlag):
             for cust_name in customizations
         ]
         flag_cache = get_cache()
-        flag_cache.delete_many(keys)
+        # keys must be presented, empty list is not allowed for redis cache
+        if keys:
+            flag_cache.delete_many(keys)
 
     def get_json_key(self):
         return FLAGS.json_key(FLAGS.value_to_key(self.name))

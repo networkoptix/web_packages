@@ -26,23 +26,26 @@ class ContextExecutor(ThreadPoolExecutor):
             var.set(val)
 
 
-def needs_customization_ctx(func, key='customization', set_context: bool = True):
+def needs_customization_ctx(key='customization', set_context: bool = True):
     """
     Checks keyword arguments for presented customization name and set ContextVar.
     :param func: decorated function.
     :param key: customization keyword, default `customization`.
     :param set_context: ensure ContextVar customization_ctx is set. default `True`.
     """
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        if not kwargs.get(key):
-            raise APIInternalException(
-                'No customization given', error_code=ErrorCodes.no_customization_given
-            )
-        if set_context:
-            if not customization_ctx.get():
-                customization_ctx.set(kwargs.get(key))
-        return func(*args, **kwargs)
-    return wrapper
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if not kwargs.get(key):
+                raise APIInternalException(
+                    f'No customization given in {func.__module__}.{func.__name__}', error_code=ErrorCodes.no_customization_given
+                )
+            if set_context:
+                if not customization_ctx.get():
+                    customization_ctx.set(kwargs.get(key))
+            return func(*args, **kwargs)
+        return wrapper
+
+    return decorator
 
 

@@ -12,6 +12,7 @@ from django.core.cache import caches
 
 from cloud.controllers import cloud_api
 from api.models import Account
+from cloud.customization_context import customization_ctx
 
 from notifications import notifications_api
 from notifications.engines import email_engine
@@ -59,6 +60,9 @@ def send_email(msg_id, queue="", attempt=1, email_type='', emails = None, sessio
         session = {}
     message = (SystemEmail if email_type == SystemEmail.MSG_TYPE else Message).objects.get(id=msg_id)
     customization = getattr(message, 'customization', customization)
+    # ensure customization ctx var is set inside celery task.
+    if customization and not customization_ctx.get():
+        customization_ctx.set(customization)
     emails = emails or getattr(message, 'user_email', '') or getattr(message, 'targets')
     template_type = getattr(message, 'type', email_type)
     lang = get_language_for_email(emails, customization)
