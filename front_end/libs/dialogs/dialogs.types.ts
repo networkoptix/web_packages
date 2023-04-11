@@ -7,6 +7,7 @@ import type { Bookmark } from '@pages/systems/bookmarks/bookmarks.types';
 import type { Translatable } from '@pipes/nx-translate.types';
 import type { CloudResponse, SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { Process } from '@services/process.service/process';
+import type { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import type { CloudStorageManager } from '@services/system.service/cloud-storage-manager/cloud-storage-manager';
 import type { LicenseManager } from '@services/system.service/license-manager/licence-manager';
 import type { NxSystem } from '@services/system.service/system';
@@ -144,6 +145,14 @@ export type CloudStorage = DialogType<
 >;
 
 /* Cameras */
+export type UpdateCameraCredentials = DialogType<
+    {
+        camera: NxSystemCamera;
+        system: NxSystem;
+        updateCallback: () => Promise<void>;
+    },
+    void
+>;
 
 /* Users */
 export type AddUser = DialogType<NxSystem, string>;
@@ -155,6 +164,7 @@ export type RemoveUser = DialogType<
     true
 >;
 export type DeleteCloudUser = DialogType<void, CloudResponse>;
+export type ChangePassword = DialogType<{ system: NxSystem; user: NxUser }, boolean>;
 
 /* Servers */
 

@@ -11,10 +11,8 @@ import { DashboardConfiguration } from '@pages/dashboard/dashboard-configuration
 import { Translatable } from '@pipes/nx-translate.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import type { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { StorageManager } from '@services/system.service/storage-manager/storage-manager';
 import type { NxSystem } from '@services/system.service/system';
-import type { NxUser } from '@services/system.service/user-manager/user-manager-types';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { pickFrom } from '@utils/general';
 import { TimelineSelectionService } from '@vms-client/submodules/timeline/services/timeline.selection.service';
@@ -230,21 +228,6 @@ export class NxDialogsService extends DialogBase {
             .afterClosed();
     }
 
-    public async changePassword(system: NxSystem, user: NxUser): Promise<boolean> {
-        const config: Partial<DialogConfig> = {
-            data: {
-                system,
-                user,
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-        await this.preloadDialogsModule();
-        const component = await import('./change-password/change-password.component').then(m => m.ChangePasswordModalContent);
-
-        return this.open(component, dialogConfig)
-            .afterClosed();
-    }
-
     public async wizard() {
         const config: Partial<DialogConfig> = {
             width: DIALOG_SIZE.SMALL,
@@ -298,26 +281,6 @@ export class NxDialogsService extends DialogBase {
     //     return this.open(EmbedModalContent, dialogConfig)
     //         .afterClosed();
     // }
-
-    public async updateCameraCredentials(
-        camera: NxSystemCamera,
-        system: NxSystem,
-        updateCallback: () => Promise<void>
-    ) {
-        const config: Partial<DialogConfig> = {
-            data: {
-                system,
-                camera,
-                updateCallback,
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-        await this.preloadDialogsModule();
-        const component = await import('./update-camera-credentials/update-camera-credentials.component').then(m => m.UpdateCameraCredentialsModalContent);
-
-        return this.open(component, dialogConfig)
-            .afterClosed();
-    }
 
     public async resetBackupToDefaultSettings(
         system: NxSystem,
@@ -578,6 +541,10 @@ export class NxDialogsService extends DialogBase {
     );
 
     /* Cameras */
+    updateCameraCredentials = this.dialogV2Factory<Dt.UpdateCameraCredentials>(
+        () => import('./update-camera-credentials/update-camera-credentials.component').then(m => m.UpdateCameraCredentialsModalContent),
+        { autoFocus: 'input' },
+    );
 
     /* Users */
     addUser = this.dialogV2Factory<Dt.AddUser>(
@@ -591,6 +558,10 @@ export class NxDialogsService extends DialogBase {
     deleteCloudUser = this.dialogV2Factory<Dt.DeleteCloudUser>(
         () => import('./delete-cloud-user/delete-cloud-user.component').then(m => m.DeleteCloudUserModalContent),
         { autoFocus: 'input' }
+    );
+
+    changePassword = this.dialogV2Factory<Dt.ChangePassword>(
+        () => import('./change-password/change-password.component').then(m => m.ChangePasswordModalContent)
     );
 
     /* Servers */

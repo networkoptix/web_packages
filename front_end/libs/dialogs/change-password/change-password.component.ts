@@ -1,15 +1,18 @@
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import {
     Component,
     Inject,
-    Input,
     Renderer2,
-    ViewChild
+    ViewChild,
+    OnInit,
+    AfterViewInit,
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import type { ChangePassword as DT } from '@dialogs/dialogs.types';
+import { ModalBase } from '@dialogs/modal-base';
 import { SessionState } from '@dialogs/update-session/update-session.component.types';
 import { servers } from '@lib/variables/static-variables';
 import { NxProcessService } from '@services/process.service';
@@ -25,9 +28,7 @@ import { pickFrom } from '@utils/general';
     templateUrl: 'change-password.component.html',
     styleUrls: [],
 })
-export class ChangePasswordModalContent {
-    @Input() closable = true;
-
+export class ChangePasswordModalContent extends ModalBase<DT['return']> implements OnInit, AfterViewInit {
     LANG = staticLang;
 
     system: NxSystem;
@@ -40,21 +41,22 @@ export class ChangePasswordModalContent {
     currentPasswordToggle = true;
     confirmPasswordToggle = true;
 
-    @ViewChild('changePasswordForm') changePasswordForm: NgForm;
+    @ViewChild('changePasswordForm') private changePasswordForm: NgForm;
 
     constructor(
         private renderer: Renderer2,
         private processService: NxProcessService,
         private dialogs: NxDialogsService,
-        public dialogRef: DialogRef,
-        @Inject(DIALOG_DATA) private dialogData: any,
+        dialogRef: DialogRef<DT['return']>,
+        @Inject(DIALOG_DATA) private dialogData: DT['data'],
     ) {
+        super(dialogRef);
         this.newPasswordForUser = '';
         this.currentPasswordForUser = '';
         this.confirmNewPasswordForUser = '';
     }
 
-    public get isMe(): boolean {
+    public get isMyLocalSystem(): boolean {
         return this.user.isLocalOwner && this.user.isMe;
     }
 
@@ -63,12 +65,13 @@ export class ChangePasswordModalContent {
 
         this.changePassword = this.processService
             .createProcess(() => {
+                this.lock();
                 const updatedUser = {
                     ...this.user,
                     password: this.newPasswordForUser
                 };
 
-                if (this.isMe) {
+                if (this.isMyLocalSystem) {
                     if (this.confirmNewPasswordForUser !== this.newPasswordForUser) {
                         this.changePasswordForm.controls.confirmNewPassword.setErrors({ dontMatch: true });
                         this.renderer.selectRootElement('#confirmNewPassword').focus();
@@ -117,13 +120,23 @@ export class ChangePasswordModalContent {
                     }).then(ready => {
                         if (ready) {
                             this.changePassword.run();
+                        } else {
+                            this.unlock();
                         }
                     });
+                } else {
+                    this.unlock();
                 }
             });
     }
 
-    close = (msg: boolean = false): void => {
+    ngAfterViewInit(): void {
+        setTimeout(() => {
+            this.renderer.selectRootElement('.modal-body input')?.focus();
+        });
+    }
+
+    override close = (msg: DT['return'] = false): void => {
         this.dialogRef.close(msg);
     };
 }

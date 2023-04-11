@@ -56,7 +56,6 @@ const typeLintBlacklist = [
     /* Dialogs */
     '**/add-storage/add-storage.component.ts',
     '**/add-widget/add-widget.component.ts',
-    '**/change-password/change-password.component.ts',
     '**/change-storage/change-storage.component.ts',
     '**/cloud-storage/action-common/BaseCloudStorageActionModalContent.ts',
     '**/detach-server/detach-server.component.ts',
@@ -74,7 +73,6 @@ const typeLintBlacklist = [
     '**/reset-server/reset-server.component.ts',
     '**/select-time-range-native-fallback/select-time-range.component.ts',
     '**/two-fa/two-fa.component.ts',
-    '**/update-camera-credentials/update-camera-credentials.component.ts',
     /* Directives */
     '**/nx-editable.directive.ts',
     '**/nx-intersection.directive.ts',

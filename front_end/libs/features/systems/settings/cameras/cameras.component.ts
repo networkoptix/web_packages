@@ -717,11 +717,11 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 this.reload$.next(this.reload$.value + 1);
             });
         };
-        this.dialogService.updateCameraCredentials(
-            this.selectedCamera,
-            this.system,
-            update
-        );
+        this.dialogService.updateCameraCredentials({
+            camera: this.selectedCamera,
+            system: this.system,
+            updateCallback: update,
+        });
     }
 
     handleResize({ width }: Size): void {

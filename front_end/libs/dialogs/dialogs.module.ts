@@ -31,7 +31,7 @@ import { ApplyModalModule } from './apply/apply.module';
 import { NxBookmarksCardModalModule } from './bookmarks/card-modal/bookmarks-card-modal.module';
 import { NxMoreDevicesModule } from './bookmarks/more-devices/more-devices.module';
 import { NxMoreTagsModule } from './bookmarks/more-tags/more-tags.module';
-import { ChangePasswordModalContent } from './change-password/change-password.component';
+import { ChangePasswordModalModule } from './change-password/change-password.module';
 import { ChangeStorageModalContent } from './change-storage/change-storage.component';
 import { Client2faWarningModalModule } from './client-2fa-warning/client-2fa-warning.module';
 import { CloudStorageModule } from './cloud-storage/cloud-storage.module';
@@ -59,9 +59,7 @@ import { RestartServerModalContent } from './restart-server/restart-server.compo
 import { SelectTimeRangeModalContent } from './select-time-range-native-fallback/select-time-range.component';
 import { TransferOwnershipModule } from './transfer-ownership/transfer-ownership.module';
 import { TwoFAModalModule } from './two-fa/two-fa.module';
-import {
-    UpdateCameraCredentialsModalContent
-} from './update-camera-credentials/update-camera-credentials.component';
+import { UpdateCameraCredentialsModalModule } from './update-camera-credentials/update-camera-credentials.module';
 import { NxUpdateSessionModalModule } from './update-session/update-session.module';
 import { WizardModalContent } from './wizard/wizard.component';
 
@@ -115,6 +113,8 @@ import { WizardModalContent } from './wizard/wizard.component';
         NxAddOrgUserModule,
         NxEditOrgUserModule,
         NxUpdateSessionModalModule,
+        ChangePasswordModalModule,
+        UpdateCameraCredentialsModalModule,
     ],
     declarations: [
         AddStorageModalContent,
@@ -124,9 +124,7 @@ import { WizardModalContent } from './wizard/wizard.component';
         RestartServerModalContent,
         DetachServerModalContent,
         ResetServerModalContent,
-        ChangePasswordModalContent,
         WizardModalContent,
-        UpdateCameraCredentialsModalContent,
         ResetBackupModalContent,
         AddStorageModalContent,
         EditModalContent,

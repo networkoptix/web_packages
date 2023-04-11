@@ -1,14 +1,13 @@
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import {
     Component,
     Inject,
-    Input,
     OnInit,
-    ViewChild
 } from '@angular/core';
-import type { NgForm } from '@angular/forms';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
+import type { UpdateCameraCredentials as DT } from '@dialogs/dialogs.types';
+import { ModalBase } from '@dialogs/modal-base';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type {
@@ -22,10 +21,7 @@ import { pickFrom } from '@utils/general';
     templateUrl: 'update-camera-credentials.component.html',
     styleUrls: [],
 })
-export class UpdateCameraCredentialsModalContent implements OnInit {
-    @Input() closable = true;
-    @ViewChild('updateForm') updateForm: NgForm;
-
+export class UpdateCameraCredentialsModalContent extends ModalBase<DT['return']> implements OnInit {
     LANG = staticLang;
     update: Process;
 
@@ -38,9 +34,11 @@ export class UpdateCameraCredentialsModalContent implements OnInit {
 
     constructor(
         private processService: NxProcessService,
-        private dialogRef: DialogRef,
-        @Inject(DIALOG_DATA) private dialogData: any,
-    ) {}
+        dialogRef: DialogRef<DT['return']>,
+        @Inject(DIALOG_DATA) private dialogData: DT['data'],
+    ) {
+        super(dialogRef);
+    }
 
     clearPassword(): void {
         if (this.cameraPasswordCredentials === '******') {
@@ -58,6 +56,7 @@ export class UpdateCameraCredentialsModalContent implements OnInit {
         this.cameraLoginCredentials = loginName;
         this.cameraPasswordCredentials = loginName && password;
         this.update = this.processService.createProcess(() => {
+            this.lock();
             if (
                 this.cameraLoginCredentials === this.currentCredentials.loginName &&
                 this.cameraPasswordCredentials === this.currentCredentials.password
@@ -72,8 +71,4 @@ export class UpdateCameraCredentialsModalContent implements OnInit {
             this.close();
         });
     }
-
-    close = (): void => {
-        this.dialogRef.close();
-    };
 }
