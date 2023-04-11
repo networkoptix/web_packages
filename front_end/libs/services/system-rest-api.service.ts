@@ -124,6 +124,9 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     protected proxy(method, protocol, serverAddress, requestUrl, data, coercedEnglishError?: boolean) {
+        if (environment.isLocal && protocol === 'https') {
+            protocol = 'https-insecure';
+        }
         const url = `/proxy/${protocol}/${serverAddress}/${requestUrl}`;
 
         const headers = {};

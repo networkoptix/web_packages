@@ -653,11 +653,10 @@ export class WizardStateService {
             .pipe(untilDestroyed(this))
             .subscribe(() => {
                 const { remoteLogin, remotePassword } = this.setupConfig;
-                return this.updateCredentials(remoteLogin, remotePassword, false)
-                    .then(() => {
-                        this.appBusyState = false;
-                    });
+                return this.updateCredentials(remoteLogin, remotePassword, false);
+                this.appBusyState = false;
             }, () => {
+                this.appBusyState = false;
                 this.currentState = WIZARD_STATE.MergeFailure;
             });
     }
@@ -692,9 +691,11 @@ export class WizardStateService {
                     data.authKey,
                     email,
                     this.systemSettings
-                ).then(() => {
+                ).finally(() => {
                     this.appBusyState = false;
                 });
+            }, () => {
+                this.appBusyState = false;
             });
     }
 
@@ -720,10 +721,10 @@ export class WizardStateService {
         this.server.setupLocalSystem(systemName, localPassword, settings, this.securityLevel)
             .then(_ => {
                 return this.updateCredentials(this.defaultUser, localPassword, false)
-                    .then(() => {
+                    .catch(this.offlineErrorHandler)
+                    .finally(() => {
                         this.appBusyState = false;
-                    })
-                    .catch(this.offlineErrorHandler);
+                    });
             });
     }
 
