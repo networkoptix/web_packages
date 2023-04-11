@@ -51,10 +51,6 @@ const lazyRoutes: Routes = [
         pathMatch: 'full'
     },
     {
-        path: 'layouts',
-        loadChildren: () => import('@pages/systems/layout-view/layout-view.module').then(m => m.NxLayoutViewModule)
-    },
-    {
         path: 'bookmarks',
         loadChildren: () => import('@pages/systems/bookmarks/bookmarks.module').then(m => m.BookmarksModule)
     },
