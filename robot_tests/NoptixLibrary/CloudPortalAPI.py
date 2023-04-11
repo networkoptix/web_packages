@@ -44,6 +44,7 @@ class CloudPortalAPI(object):
         self.customization = customization
         self.password = password
         self.baseEmail = email
+        self._is_debug = self._check_debug_status()
 
     @contextmanager
     def _session(
@@ -208,14 +209,24 @@ class CloudPortalAPI(object):
 
     @keyword
     def get_code_from_api(self, email, message_type):
-        with self._session(self.baseEmail, self.password) as s:
-            s.headers.update({"referer": f"{self.env}/authorize"})
-            logger.trace(message_type)
-            r = s.post(
+        # If cloud is in debug mode, use anonymous call
+        if self._is_debug:
+            r = requests.post(
                 f'{self.env}/api/robot/get_code',
-                json={'email': email, 'type': message_type})
-            logger.trace(r.content)
-            return r.json()['code']
+                json={'email': email, 'type': message_type},
+                verify=_ssl_certs_path
+                )
+        else:
+            with self._session(self.baseEmail, self.password) as s:
+                s.headers.update({"referer": f"{self.env}/authorize"})
+                logger.trace(message_type)
+                r = s.post(
+                    f'{self.env}/api/robot/get_code',
+                    json={'email': email, 'type': message_type})
+                logger.trace(r.content)
+                return r.json()['code']
+        logger.trace(r.content)
+        return r.json()['code']
 
     @keyword
     def disconnect_from_account(self, email, password, system_id):
@@ -631,14 +642,25 @@ class CloudPortalAPI(object):
             return backupCode
 
     @keyword
-    def set_feature_flags(self):
-        with codecs.open("NoptixLibrary/features.json", encoding="utf-8") as featuresJson:
-            featuresDict = json.load(featuresJson)
-            res = requests.post(f'{self.env}/api/robot/set_flags', data=featuresDict, verify=_ssl_certs_path)
-            assert res.status_code == 200
-            return featuresDict
+    def set_feature_flags(self, featuresDict):
+        res = requests.post(
+            f'{self.env}/api/robot/set_flags', data=featuresDict, verify=_ssl_certs_path)
+        if res.status_code != 200:
+            raise CannotSetFeatureFlags()
 
     @keyword
     def get_cloud_settings(self):
         res = requests.get(f'{self.env}/api/utils/settings', verify=_ssl_certs_path)
         return res.json()
+
+    def _check_debug_status(self):
+        try:
+            self.set_feature_flags({})
+        except CannotSetFeatureFlags:
+            print(f"debug is not enabled on the {self.env} instance")
+            return False
+        return True
+
+
+class CannotSetFeatureFlags(Exception):
+    pass

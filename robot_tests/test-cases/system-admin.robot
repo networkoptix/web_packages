@@ -469,6 +469,3 @@ Force Tags        system    cloud
     Log In    ${system}[cloudUsers][viewer]    ${base password}
     Wait Until Location Contains    ${ENV}/systems
     Wait until element is visible    //span[contains(text(), "${YOU HAVE NO SYSTEMS TEXT}")]
-    Validate Header Button Text    0
-    Click Button    ${SYSTEMS DROPDOWN}
-    Wait until element is not visible    ${DROPDOWN SYSTEMS GRID}

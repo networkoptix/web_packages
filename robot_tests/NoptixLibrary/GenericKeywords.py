@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+import codecs
 import string
 import docker
 import email.header
@@ -917,3 +917,8 @@ class GenericKeywords(object):
         # Delete the owner account
         self.cloud_api.delete_account(server["cloudOwner"], self.password)
 
+    @keyword
+    def get_features_json(self, path):
+        with codecs.open(path, encoding="utf-8") as featuresJson:
+            featuresDict = json.load(featuresJson)
+            return featuresDict

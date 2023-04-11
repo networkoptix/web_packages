@@ -28,6 +28,7 @@
 "useJsonRpc": false,
 "systemGroups": true,
 "channelPartners": false,
+"restCookieLogin": false,
 "requestCaching": false,
 "requestCachingRemoteSync": false,
 "paginatorExperimental": true,
