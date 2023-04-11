@@ -328,9 +328,12 @@ cdk-tree,
     display: flex;
     justify-content: center;
     align-items: center;
-    background: var(--header-bg);
     margin: 1px;
     overflow: hidden;
+
+    &:not(.camera-layout-item) {
+        background: var(--header-bg)
+    }
 
     &:hover {
         outline: 2px solid var(--border-color);

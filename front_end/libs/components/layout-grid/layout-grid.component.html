@@ -422,6 +422,10 @@
                             (cdkDragStarted)="dragging = true"
                             (cdkDragMoved)="updateBackground($event, item, 'move')"
                             class="layout-item"
+                            [ngClass]="{
+                                'camera-layout-item':
+                                    layoutItemLookup[item.resourceId].type === RESOURCE_TYPE.CAMERA
+                            }"
                             [ngStyle]="(collisions$ | async)[item.id] || item.renderConfig.child"
                         >
                             <header

@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostBinding, Input, Output, ViewChild } from '@angular/core';
 import { v4 as uuid } from 'uuid';
 
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
@@ -31,6 +31,10 @@ export class NxVideoPlayerComponent {
     @Output() showError = new EventEmitter<ConnectionError>();
 
     @ViewChild('webRtcPlayer') webRtcPlayerRef: ElementRef<HTMLVideoElement>;
+    @HostBinding('class') get class() {
+        const { paused, currentTime } = this.webRtcPlayerRef?.nativeElement || { paused: true, currentTime: 0 };
+        return !paused && currentTime ? 'playing' : '';
+    }
 
     static POSTER_RETRIES = 5
     static POSTER_INTERVAL = 5
