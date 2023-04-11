@@ -69,7 +69,8 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
     ) {
         super(configService);
         this.accountDropdown = accountDropdown;
-        this.accountDropdownStaff = accountDropdownStaff;
+        const channelPartners = this.CONFIG.featureFlags.channelPartners;
+        this.accountDropdownStaff = accountDropdownStaff.filter(({ name }) => channelPartners || !name.includes('Channel partners'));
         this.newHeader = this.CONFIG.featureFlags.newHeader;
         headerService.currentLocation$.pipe(untilDestroyed(this)).subscribe(location => {
             this.isAccountRoute = location?.path?.includes('/account');
