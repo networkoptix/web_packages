@@ -244,6 +244,7 @@
     "Can view live video, browse the archive, control PTZ etc": "Can view live video, browse the archive, control PTZ etc",
     "Can't activate license: only one NVR license is allowed per System": "Can't activate license: only one NVR license is allowed per System",
     "Can't connect to the camera": "Can't connect to the camera",
+    "Can't connect to the camera. Please, make sure the server \"{serverName}\" has Internet access.": "Can't connect to the camera. Please, make sure the server \"{serverName}\" has Internet access.",
     "Can't disconnect system from %CLOUD_NAME%": "Can't disconnect system from %CLOUD_NAME%",
     "Cancel": "Cancel",
     "Cannot Enable Cloud Storage": "Cannot Enable Cloud Storage",

@@ -38,6 +38,7 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { icons } from '@lib/variables/static-variables';
 import { ConnectionError } from '@openLibs/webrtc-stream-manager';
+import { Translatable } from '@pipes/nx-translate.types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 import { IConfig } from '@services/nx-config/config-types';
@@ -177,7 +178,7 @@ export class NxLayoutGridComponent {
     addOffset = 0;
     changingLayout: string | boolean = true;
     errors: Record<string, string> = {};
-    additionalErrorMessages: Record<string, string> = {};
+    additionalErrorMessages: Record<string, Translatable> = {};
     icons = icons;
     readonly RESOURCE_TYPE = ResourceType;
     readonly EDGE_GAP = 60;
@@ -928,12 +929,18 @@ export class NxLayoutGridComponent {
             online: boolean;
             previewUrl: Observable<unknown>;
             status: string;
+            parentId: string;
         }>,
         error: string,
     ): void {
         const showOfflineError = (): void => {
             itemDetail.details.online = false;
-            this.errors[itemDetail.details.id] = 'offline';
+            const serverName = this.layoutItemLookup[itemDetail.details.parentId].name;
+            this.errors[itemDetail.details.id] = staticLang.common.cameraStates.unavailable;
+            this.additionalErrorMessages[itemDetail.details.id] = {
+                value: staticLang.layouts.additionalErrorMessages.unreachable,
+                params: { serverName },
+            };
         };
 
         const showDefaultPasswordError = (): void => {

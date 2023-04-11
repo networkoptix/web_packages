@@ -93,6 +93,9 @@
         "delete": "Delete \"{name}\" layout",
         "pleaseAddNew": "Please add layout on thick client to view layouts",
         "statistics": "{resourceType} \"{name}\" Statistics",
+        "additionalErrorMessages": {
+            "unreachable": "Can't connect to the camera. Please, make sure the server \"{serverName}\" has Internet access."
+        },
         "titles": {
             "resourceTypes": {
                 "server": "Server",
