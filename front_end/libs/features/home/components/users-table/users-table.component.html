@@ -120,7 +120,7 @@
                     class="div-container"
                     *ngIf="subLevels"
                 >
-                    <i>{{ row.accessLevel.length }} folders</i>
+                    <i>{{ LANG.systemsCount | translate: { count: row.accessLevel.length } }}</i>
                 </div>
 
                 <div
@@ -159,7 +159,7 @@
                     class="div-container"
                     *ngIf="subLevels"
                 >
-                    <i>multiple groups</i>
+                    <i translate>multiple groups</i>
                 </div>
 
                 <div

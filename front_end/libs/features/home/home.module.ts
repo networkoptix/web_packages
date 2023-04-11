@@ -7,12 +7,15 @@ import { StoreModule } from '@ngrx/store';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { accountReducer } from '@common/store/account';
+import { CheckboxModule } from '@components/checkbox/checkbox.module';
 import { ComponentsCoreModule } from '@components/components-core.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { NxSearchHighlightModule } from '@components/search-highlight/search-highlight.module';
+import { NxBaseTableModule } from '@components/table/table.module';
 import { NxTabsComponent } from '@components/tabs/tabs.component';
 import { NxTabsDirective } from '@components/tabs/tabs.directive';
 import { AuthGuard } from '@guards/authGuard';
+import { NxUsersTableComponent } from '@pages/home/components/users-table/users-table.component';
 
 import { NxGroupCardComponent } from './components/group-card/group-card.component';
 import { NxGroupsCardsComponent } from './components/groups-cards/groups-cards.component';
@@ -91,6 +94,8 @@ const homeRoutes: Routes = [
         StoreModule.forFeature('groups', groupsReducer),
         StoreModule.forFeature('account', accountReducer),
         RouterModule.forChild(homeRoutes),
+        CheckboxModule,
+        NxBaseTableModule
     ],
     declarations: [
         NxOrganizationsComponent,
@@ -105,7 +110,8 @@ const homeRoutes: Routes = [
         NxOrganizationReportsComponent,
         NxOrganizationSettingsComponent,
         NxOrganizationUsersComponent,
-        NxGroupsSystemsComponent
+        NxGroupsSystemsComponent,
+        NxUsersTableComponent,
     ],
     providers: [
         TabResolver
