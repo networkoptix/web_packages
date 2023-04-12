@@ -1,5 +1,5 @@
 import './style.css'
-import { WebRTCStreamManager } from 'webrtc-stream-manager'
+import { WebRTCStreamManager } from '@networkoptix/webrtc-stream-manager'
 
 import { description } from '../package.json'
 
