@@ -72,7 +72,7 @@ export class NxThemeService {
             .subscribe(async (loginState: string) => {
                 if (this.viewType !== 'web') {
                     this.themeSelected = this.CONFIG.themeConfig.dark;
-                } else if (loginState) {
+                } else if (loginState && this.CONFIG.featureFlags.themesEnabled) {
                     await this.themeCustomProperty.get(false, true)
                         .then(result => {
                             this.themeSelected = result.theme || this.CONFIG.themeConfig.default;
@@ -180,6 +180,10 @@ export class NxThemeService {
             );
             this.cookieService.set('theme', themeSelected);
             this.themeSelected = themeSelected;
+        }
+
+        if (!themesEnabled) {
+            return;
         }
 
         username &&
