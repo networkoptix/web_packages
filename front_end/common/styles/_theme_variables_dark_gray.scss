@@ -624,7 +624,7 @@ html[data-theme="dark-gray"] {
 
     @include generateVarAndRgb(--system-card-bg-grad0, $dark_gray_1);
     @include generateVarAndRgb(--system-card-bg-grad100, $dark_gray_11);
-    --system-card-bg: var(--dark_gray_7)
+    --system-card-bg: var(--dark_gray_7);
     --system-card-offline-color: var(--dark_gray_18);
     --system-card-border-color: var(--dark_gray_10);
     --system-card-owner-color: var(--dark_gray_16);
@@ -643,6 +643,7 @@ html[data-theme="dark-gray"] {
     --bookmarks-input-border-color: var(--dark11);
     --bookmarks-time-input-active-bg: var(--dark1);
     --bookmarks-filter-header-bg: var(--dark7);
+    --bookmarks-filter-header-color: var(--light4);
     --bookmarks-filter-clear-btn-bg: var(--dark9);
     --bookmarks-filter-clear-btn-stroke: var(--light4);
     --bookmarks-filter-body-bg: var(--dark8);
