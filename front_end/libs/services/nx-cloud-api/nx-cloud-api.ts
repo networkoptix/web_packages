@@ -548,8 +548,8 @@ export class NxCloudApiService {
     private getAllAccountInfo(forceUpdate = false): Observable<Account> {
         return forkJoin([
             this.getAccount(forceUpdate),
-            this.cloudDbApi.getAccountSecurity()
-        ]).pipe(switchMap(([cloudInfo, security]) => this.cloudDbApi.validateToken(cloudInfo.accessToken)
+            this.currentAccount?.accessToken ? this.cloudDbApi.getAccountSecurity() : of({ account2faEnabled: false, totpExistsForAccount: false })
+        ]).pipe(switchMap(([cloudInfo, security]) => (cloudInfo.accessToken ? this.cloudDbApi.validateToken(cloudInfo.accessToken) : of({ sessionExpires: Infinity }))
             .pipe(map(tokenInfo => {
                 cloudInfo.sessionVerified = cloudInfo.sessionVerified || security.account2faEnabled;
                 this.currentAccount = { ...cloudInfo, ...security, ...tokenInfo };
@@ -855,10 +855,12 @@ export class NxCloudApiService {
         minSessionSeconds = 300
     ) => observableInputFactory => {
         const getAccessToken = (minSession?: number) => {
-            const { accessToken, sessionExpires } = this.currentAccount;
-            return !minSession || !sessionExpires || ((Date.now() + (minSession * 1000)) > sessionExpires)
-                ? this.refreshAccessTokens().pipe(switchMap(() => this.getAccount(true)))
-                : of({ accessToken });
+            return this.getAccount(false).pipe(switchMap(({ accessToken }) => {
+                const { sessionExpires } = this.currentAccount || {};
+                return !minSession || !sessionExpires || ((Date.now() + (minSession * 1000)) > sessionExpires)
+                    ? this.refreshAccessTokens().pipe(switchMap(() => this.getAccount(true)))
+                    : of({ accessToken });
+            }));
         };
 
         return getAccessToken(minSessionSeconds).pipe(
