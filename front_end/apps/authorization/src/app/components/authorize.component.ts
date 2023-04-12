@@ -479,7 +479,8 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             () => {
                 this.authCodeErrorCode = '';
                 if (this.clientType === ClientType.system2faAuth && !this.initialData.redirect_uri.includes('redirect-oauth')) {
-                    return this.cloudService.updateSessionWith2fa(this.authCode);
+                    const accessCodeOrToken = this.initialData.access_code || this.initialData.access_token;
+                    return this.cloudService.verify2FaKey(accessCodeOrToken, this.authCode);
                 }
 
                 return lastValueFrom(this.action === 'restore_password'

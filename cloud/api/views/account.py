@@ -230,14 +230,14 @@ async def login_with_code(request):
             return api_success(tokens, status_code=status.HTTP_401_UNAUTHORIZED)
         raise e
 
-    account_info = await sync_to_async(Account.get, thread_sensitive=False)(tokens)
-    customization = account_info['customization']
     try:
         user = await models.Account.objects.aget(email=validate_token['username'])
-        if user.customization != customization:
-            user.customization = customization
+        if not user.customization:
+            account_info = await sync_to_async(Account.get, thread_sensitive=False)(tokens)
+            user.customization = account_info['customization']
             await sync_to_async(user.save)()
     except models.Account.DoesNotExist:
+        account_info = await sync_to_async(Account.get, thread_sensitive=False)(tokens)
         names = account_info.get('fullName', '').split(' ')
         first_name = names[0]
         last_name = names[-1]
@@ -247,7 +247,7 @@ async def login_with_code(request):
             account_info['email'],
             first_name=first_name,
             last_name=last_name,
-            customization=customization,
+            customization=account_info['customization'],
             is_active=True)
 
     request.session.set_expiry(get_authenticated_session_cookie_age())

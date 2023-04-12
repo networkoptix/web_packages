@@ -170,4 +170,16 @@ export class CloudDbAPI extends BaseCloudServiceAPI {
     public getNonce(systemId: string): Observable<{ nonce: string }> {
         return this.get(this.authEndpoint('getNonce'), { params: { systemId } });
     }
+
+    public validateToken(token: string): Observable<{ sessionExpires: number }> {
+        return this.get<{ expires_at: string }>(this.authEndpoint('token', token)).pipe(
+            map(info => ({ sessionExpires: parseInt(info.expires_at || '0') }))
+        );
+    }
+
+    public getAccountSecurity(): Observable<{ account2faEnabled: boolean, totpExistsForAccount: boolean }> {
+        return this.get('/account/self/settings/security').pipe(
+            map(({ account2faEnabled, totpExistsForAccount }) => ({ account2faEnabled, totpExistsForAccount }))
+        );
+    }
 }

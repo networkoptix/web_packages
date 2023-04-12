@@ -390,7 +390,9 @@ def toggle2fa(request):
     systems = cloud_api.System.get(request, system_id).get('systems')
     target_system = next(filter(lambda s: s['id'] == system_id, systems), None)
     twofa_enabled = target_system.get('system2faEnabled', False)
-    return api_success(cloud_api.System.update(request, system_id, request.data.get('mfaCode'), not twofa_enabled))
+    res = api_success(cloud_api.System.update(request, system_id, request.data.get('mfaCode'), not twofa_enabled))
+    request.session['has2fa'] = True
+    return res
 
 
 @swagger_auto_schema(method="GET", auto_schema=None,

@@ -2,7 +2,7 @@ import { last } from 'lodash-es';
 
 import { User } from '../system-api.types';
 
-export interface Account {
+export interface CloudAccount {
     email: string;
     first_name: string;
     name: string;
@@ -16,10 +16,14 @@ export interface Account {
     can_publish_integration: boolean;
     is_authenticated: boolean;
     cookie_reviewed: boolean;
-    account2faEnabled: boolean;
     sessionVerified: boolean;
-    totpExistsForAccount: boolean;
     accessToken: string;
+}
+
+export interface Account extends CloudAccount {
+
+    account2faEnabled: boolean;
+    totpExistsForAccount: boolean;
     sessionExpires: number;
 }
 

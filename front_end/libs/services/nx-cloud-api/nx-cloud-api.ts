@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import * as FullStory from '@fullstory/browser';
 import { CookieService } from 'ngx-cookie-service';
-import { EMPTY, of, from, BehaviorSubject, throwError, defer } from 'rxjs';
+import { EMPTY, of, from, BehaviorSubject, throwError, defer, forkJoin } from 'rxjs';
 import type { Observable } from 'rxjs';
 import { catchError, concatMap, switchMap, map, tap, shareReplay } from 'rxjs/operators';
 
@@ -22,7 +22,7 @@ import { NxSwCacheService } from '@services/sw-cache.service';
 import { WINDOW } from '@services/window-provider';
 import { mapValuesToStrings } from '@utils/general';
 
-import { Account } from '../account.service/account';
+import { Account, CloudAccount } from '../account.service/account';
 import type { IConfig } from '../nx-config/config-types';
 import { NxConfigService } from '../nx-config/nx-config.service';
 import { NxUriCacheService } from '../uri-cache.service';
@@ -506,29 +506,14 @@ export class NxCloudApiService {
 
     private _account: Observable<Account>;
     private _throttleTimeout;
-    account = (forceUpdate = false) => {
+    account = (forceUpdate = false): Observable<Account> => {
         if (forceUpdate || !this._account) {
             if (this._throttleTimeout) {
                 clearTimeout(this._throttleTimeout);
                 this._throttleTimeout = undefined;
             }
-            let headers = new HttpHeaders();
-            const params: { force?: true } = {};
-            if (forceUpdate) {
-                headers = headers.set('reset-cache', 'reset');
-                params.force = true;
-            }
-            this._account = this.http.get<Account>(apiBase + '/account', { headers, params })
+            this._account = this.getAllAccountInfo(forceUpdate)
                 .pipe(
-                    map(account => {
-                        if (!account.isCloud) {
-                            // Returned object is readonly sometimes for some reason
-                            account = { ...account, isCloud: true };
-                        }
-                        this.currentAccount = account;
-                        return account;
-                    },
-                    tap(this.logIdentifyUser)),
                     tap(() => {
                         this._throttleTimeout = setTimeout(() => {
                             // Limits account requests to 1 per 5 seconds unless forced.
@@ -540,6 +525,38 @@ export class NxCloudApiService {
         }
         return this._account;
     };
+
+    private getAccount(forceUpdate = false): Observable<CloudAccount> {
+        let headers = new HttpHeaders();
+        const params: { force?: true } = {};
+        if (forceUpdate) {
+            headers = headers.set('reset-cache', 'reset');
+            params.force = true;
+        }
+        return this.http.get<CloudAccount>(apiBase + '/account', { headers, params }).pipe(
+            map(account => {
+                if (!account.isCloud) {
+                    // Returned object is readonly sometimes for some reason
+                    account = { ...account, isCloud: true };
+                }
+                return account;
+            },
+            tap(this.logIdentifyUser)),
+        );
+    }
+
+    private getAllAccountInfo(forceUpdate = false): Observable<Account> {
+        return forkJoin([
+            this.getAccount(forceUpdate),
+            this.cloudDbApi.getAccountSecurity()
+        ]).pipe(switchMap(([cloudInfo, security]) => this.cloudDbApi.validateToken(cloudInfo.accessToken)
+            .pipe(map(tokenInfo => {
+                cloudInfo.sessionVerified = cloudInfo.sessionVerified || security.account2faEnabled;
+                this.currentAccount = { ...cloudInfo, ...security, ...tokenInfo };
+                return this.currentAccount;
+            }))
+        ));
+    }
 
     checkFeatureNotice = <T>(
         noticeKey: string, firstViewCallback: () => T
@@ -837,14 +854,12 @@ export class NxCloudApiService {
     #withFreshSession: t.WithFreshSession = (
         minSessionSeconds = 300
     ) => observableInputFactory => {
-        const getAccessToken = (minSession?: number) => this.account(false).pipe(
-            switchMap(({
-                accessToken,
-                sessionExpires
-            }) => !minSession || ((Date.now() + (minSession * 1000)) > sessionExpires)
-                ? this.refreshAccessTokens().pipe(switchMap(() => this.account(true)))
-                : of({ accessToken }))
-        );
+        const getAccessToken = (minSession?: number) => {
+            const { accessToken, sessionExpires } = this.currentAccount;
+            return !minSession || !sessionExpires || ((Date.now() + (minSession * 1000)) > sessionExpires)
+                ? this.refreshAccessTokens().pipe(switchMap(() => this.getAccount(true)))
+                : of({ accessToken });
+        };
 
         return getAccessToken(minSessionSeconds).pipe(
             switchMap(({
