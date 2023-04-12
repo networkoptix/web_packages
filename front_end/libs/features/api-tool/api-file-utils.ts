@@ -228,12 +228,20 @@ export const addAPIInfoNodesToMenu = (API: APIDoc, menuNodes: MenuNodeWithParent
 };
 
 export const queryInDescription = (path: MethodInfo, query: string) => {
-    if (path.description?.includes(query)) {
+    const includesCaseInsensitive = (str: string, searchStr: string) => {
+        const regex = new RegExp(searchStr, 'i');
+        return regex.test(str);
+    };
+
+    if (path.description && includesCaseInsensitive(path.description, query)) {
         return true;
     }
     if (path.parameters) {
         for (const parameter of path.parameters) {
-            if (parameter.name?.includes(query) || parameter.description?.includes(query)) {
+            if (
+                (parameter.name && includesCaseInsensitive(parameter.name, query)) ||
+        (parameter.description && includesCaseInsensitive(parameter.description, query))
+            ) {
                 return true;
             }
         }
@@ -241,7 +249,7 @@ export const queryInDescription = (path: MethodInfo, query: string) => {
     const schemaProperties = path.requestBody?.content['application/json']?.schema?.properties;
     if (schemaProperties) {
         for (const property of Object.keys(schemaProperties)) {
-            if (schemaProperties[property].description?.includes(query)) {
+            if (schemaProperties[property].description && includesCaseInsensitive(schemaProperties[property].description, query)) {
                 return true;
             }
         }
