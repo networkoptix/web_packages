@@ -1,3 +1,5 @@
+// Copyright 2018-present Network Optix, Inc. Licensed under MPL 2.0: www.mozilla.org/MPL/2.0/
+
 import { WebSocketSubject } from 'rxjs/webSocket';
 import { SignalingMessage, StreamHandler } from './types';
 
@@ -9,9 +11,14 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
     };
 
     oniceconnectionstatechange = (): void => {
-        console.log('peerConnection ice state ' + this.iceConnectionState);
         if (this.iceConnectionState === 'connected') {
+            console.log('peerConnection connected, closing websocket');
             this.closeWebsocket();
+        } else if (this.iceConnectionState === 'disconnected') {
+            console.log('peerConnection disconnected, reconnecting websocket');
+            this.reconnectionHandler();
+        } else {
+            console.log('peerConnection ice state ' + this.iceConnectionState);
         }
     };
 
@@ -22,7 +29,8 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
     constructor(
         private getWebSocket: () => WebSocketSubject<SignalingMessage>,
         private closeWebsocket: () => void,
-        trackHandler: StreamHandler
+        private reconnectionHandler: () => void,
+        trackHandler: StreamHandler,
     ) {
         super({
             iceServers: [

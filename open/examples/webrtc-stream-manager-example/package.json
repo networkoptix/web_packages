@@ -14,7 +14,7 @@
     "ci:check": "echo 'Additional CI checks can be added here'"
   },
   "dependencies": {
-    "webrtc-stream-manager": "*"
+    "@networkoptix/webrtc-stream-manager": "*"
   },
   "devDependencies": {
     "typescript": "^4.9.3",

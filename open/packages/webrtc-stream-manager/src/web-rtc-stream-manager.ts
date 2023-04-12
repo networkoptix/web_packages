@@ -1,3 +1,5 @@
+// Copyright 2018-present Network Optix, Inc. Licensed under MPL 2.0: www.mozilla.org/MPL/2.0/
+
 import { Observable, BehaviorSubject, timer, Subject } from 'rxjs';
 import { filter, shareReplay, switchMap, take, map, delay, takeUntil, skip } from 'rxjs/operators';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
@@ -219,6 +221,10 @@ export class WebRTCStreamManager {
     #close = (): void => {
         this.#closeWsConnection.next('close');
         this.#peerConnection?.close();
+
+        // Stop all tracks on the stream to ensure mediaserver resources are freed up.
+        this.mediaStream$.value?.[0]?.getTracks().forEach(track => track.stop());
+
         delete WebRTCStreamManager.EXISTING_CONNECTIONS[this.webRtcUrlFactory()];
     };
 
@@ -334,6 +340,7 @@ export class WebRTCStreamManager {
         this.#peerConnection ||= new MediaServerPeerConnection(
             () => this.#getOpenWebSocketConnection(),
             () => this.#closeWsConnection.next('close'),
+            this.start,
             stream => {
                 console.log(stream);
                 this.mediaStream$.next([stream, null]);
