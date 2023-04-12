@@ -100,7 +100,10 @@ class BearerAuthentication(TokenAuthentication):
             validate_token = Auth.validate_token(token)
         except APINotAuthorisedException:
             return None
-        return model.objects.get(email=validate_token['username']), token
+        try:
+            return model.objects.get(email=validate_token['username']), token
+        except model.DoesNotExist:
+            return None, token
 
 
 @receiver(user_logged_in)

@@ -347,8 +347,22 @@ def disconnect(request):
 @permission_classes((AllowAny, ))
 def connect(request):
     require_params(request, ('name',))
-    if request.user.is_authenticated:
-        data = cloud_api.System.bind(request, request.data['name'], customization=get_customization(request))
+    auth = None
+    if request.user and request.user.is_authenticated:
+        auth = request
+    # This case handles the situation where a user has activated their account but has not logged into cloud portal yet.
+    # After we changed oauth to use cloud db directly accounts are no longer created in cloud portal until the user
+    # logins for the first time.
+    # Resolves: CLOUD-10423
+    elif meta_auth := request.META.get('HTTP_AUTHORIZATION'):
+        auth_type, credentials = meta_auth.split()
+        if auth_type == 'Bearer':
+            auth = {
+                'access_token': credentials
+            }
+
+    if auth:
+        data = cloud_api.System.bind(auth, request.data['name'], customization=get_customization(request))
         return api_success(data)
 
     require_params(request, ('email', 'password'))
