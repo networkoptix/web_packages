@@ -32,8 +32,6 @@ def get_config(customization=None):
               f"for {customization}'s cloud portal asset to fix the problem."
         logger.critical(msg)
         raise UnableToFetchConfigException(msg)
-    else:
-        file_path = os.path.join('.', 'cloud_portal.yaml')
     if not os.path.isfile(file_path):  # this is for local environment
         file_path = os.path.join(conf_dir, '../../etc', 'cloud_portal.local.yaml')
     if not os.path.isfile(file_path):  # this is for Jenkins to collect static
