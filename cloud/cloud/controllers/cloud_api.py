@@ -16,9 +16,17 @@ from rest_framework import status
 from cloud.helpers.exceptions import (validate_response, ErrorCodes, APIRequestException,
                                       APINotAuthorisedException, APINotFoundException, get_client_ip,
                                       kill_session, kill_tokens)
+from util.config import get_cached_config
 from util.helpers import get_customization
 
 logger = logging.getLogger(__name__)
+
+
+class CloudDbConfig:
+    @staticmethod
+    def url(customization_name: str):
+        return get_cached_config(customization=customization_name)['cloud_db']['url']
+
 
 CLOUD_DB_URL = settings.CLOUD_CONNECT['url']
 CLOUD_STORAGE_URL = settings.CLOUD_STORAGE_URL
@@ -329,18 +337,18 @@ def ping():
 
 class System(object):
     @staticmethod
-    def get_request_url(endpoint=None, system_id=None):
+    def get_request_url(endpoint=None, system_id=None, cloud_db_url=CLOUD_DB_URL):
         system_id_segment = f'{system_id}/' if system_id else ''
         if endpoint is None:
             return f'{CLOUD_DB_URL}/system/get'
         if endpoint == 'getNonce':
             return f'{CLOUD_DB_URL}/auth/getNonce'
-        return f'{CLOUD_DB_URL}/system/{system_id_segment}{endpoint}'
+        return f'{cloud_db_url}/system/{system_id_segment}{endpoint}'
 
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def list(request, email=None, password=None, one_customization=True, headers=None):
+    def list(request, email=None, password=None, one_customization=True, headers=None, cloud_db_url=CLOUD_DB_URL):
         """Backwards support for digest. Used by push notifications and zapier"""
         auth = None
         params = {}
@@ -350,7 +358,7 @@ class System(object):
         if email and password:
             auth = {"email": email, "password": password}
 
-        return get_wrapper(System.get_request_url(), params=params, headers=headers, auth=auth)
+        return get_wrapper(System.get_request_url(cloud_db_url=cloud_db_url), params=params, headers=headers, auth=auth)
 
     @staticmethod
     @validate_response
@@ -685,11 +693,11 @@ class Account(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def get(request, email=None, password=None, headers=None):
+    def get(request, email=None, password=None, headers=None, cloud_db_url=CLOUD_DB_URL):
         auth = None
         if email and password:
             auth = {"email": email, "password": password}
-        return get_wrapper(f'{CLOUD_DB_URL}/account/get', headers=headers, auth=auth)
+        return get_wrapper(f'{cloud_db_url}/account/get', headers=headers, auth=auth)
 
     @staticmethod
     @validate_response
@@ -952,9 +960,9 @@ class Auth(object):
 
     @staticmethod
     @validate_response
-    def validate_token(access_token, session_access_token=None):
+    def validate_token(access_token, session_access_token=None, cloud_db_url=CLOUD_DB_URL):
         headers = {"Authorization": f"Bearer {session_access_token or access_token}"}
-        return get_wrapper(f"{CLOUD_DB_URL}/oauth2/token/{access_token}", headers=headers)
+        return get_wrapper(f"{cloud_db_url}/oauth2/token/{access_token}", headers=headers)
 
     @staticmethod
     @validate_response

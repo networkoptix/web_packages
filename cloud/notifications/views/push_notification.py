@@ -7,15 +7,14 @@ from django.http import Http404
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import exceptions, status
-from rest_framework.authentication import BasicAuthentication, SessionAuthentication
+from rest_framework.authentication import BasicAuthentication, SessionAuthentication, TokenAuthentication, get_authorization_header
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.generics import GenericAPIView, RetrieveAPIView
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.response import Response
 
-from api.account_backend import BearerAuthentication
-from cloud.controllers.cloud_api import Account as Clouddb_Account, System as Clouddb_System
+from cloud.controllers.cloud_api import Account as Clouddb_Account, System as Clouddb_System, Auth as Clouddb_Auth, CloudDbConfig
 from cloud.helpers.exceptions import (
     api_success, APINotAuthorisedException, APILogicException, clean_passwords
 )
@@ -134,6 +133,44 @@ class CloudSessionAuthentication(SessionAuthentication):
         return account, None
 
 
+class CustomizationBearerAuthentication(TokenAuthentication):
+    keyword = 'Bearer'
+    model = Account
+
+    def authenticate_credentials(self, token, request):
+        model = self.get_model()
+        cloud_db_url = CloudDbConfig.url(customization_name=get_customization(request))
+        try:
+            validate_token = Clouddb_Auth.validate_token(token, cloud_db_url=cloud_db_url)
+        except APINotAuthorisedException:
+            return None
+        try:
+            return model.objects.get(email=validate_token['username']), token
+        except model.DoesNotExist:
+            return None, token
+
+    def authenticate(self, request):
+        auth = get_authorization_header(request).split()
+
+        if not auth or auth[0].lower() != self.keyword.lower().encode():
+            return None
+
+        if len(auth) == 1:
+            msg = _('Invalid token header. No credentials provided.')
+            raise exceptions.AuthenticationFailed(msg)
+        elif len(auth) > 2:
+            msg = _('Invalid token header. Token string should not contain spaces.')
+            raise exceptions.AuthenticationFailed(msg)
+
+        try:
+            token = auth[1].decode()
+        except UnicodeError:
+            msg = _('Invalid token header. Token string should not contain invalid characters.')
+            raise exceptions.AuthenticationFailed(msg)
+
+        return self.authenticate_credentials(token, request)
+
+
 @swagger_auto_schema(method='POST', operation_description='Send a push notification',
                      request_body=NotificationSerializer,
                      responses={
@@ -171,7 +208,7 @@ def push_notification(request):
 class DeviceSubscriptionListView(RetrieveAPIView):
     serializer_class = DeviceSubscriptionsSerializer
     authentication_classes = (
-        BearerAuthentication, CloudAccountBasicAuthentication, CloudSessionAuthentication)
+        CustomizationBearerAuthentication, CloudAccountBasicAuthentication, CloudSessionAuthentication)
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
@@ -186,7 +223,7 @@ class DeviceSubscriptionListView(RetrieveAPIView):
 
 class Subscriptions(UpdateModelMixin, CreateModelMixin, RetrieveModelMixin, GenericAPIView):
     authentication_classes = (
-        BearerAuthentication, CloudAccountBasicAuthentication, CloudSessionAuthentication)
+        CustomizationBearerAuthentication, CloudAccountBasicAuthentication, CloudSessionAuthentication)
     permission_classes = (IsAuthenticated, )
     serializer_class = SubscriptionSerializer
 

@@ -14,6 +14,17 @@ class UnableToFetchConfigException(Exception):
         self.msg = f"Unable to fetch config file. {msg}"
 
 
+def get_cached_config(customization):
+    from django.core.cache import caches
+
+    local_cache = caches['local']
+    config = local_cache.get(f'cloud_portal_config_{customization}')
+    if not config:
+        config = get_config(customization)
+        local_cache.set(f'cloud_portal_config_{customization}', config, timeout=3600)  # 1 hour timeout
+    return config
+
+
 def get_config(customization=None):
     # Allows cloud_portal to run migratedb, readstructure, and filldata.
     # In an actual instance gunicorn is used to run cloud_portal

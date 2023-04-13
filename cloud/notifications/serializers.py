@@ -5,7 +5,7 @@ from django.core.cache import caches
 from rest_framework import serializers
 from django.core.exceptions import ValidationError
 
-from cloud.controllers.cloud_api import System
+from cloud.controllers.cloud_api import System, CloudDbConfig
 from cloud.helpers.exceptions import APILogicException, APINotAuthorisedException
 from cms.models import get_cloud_portal_asset
 from notifications.models import PushSubscription, PushDevice, PushNotification, SystemEmail
@@ -119,10 +119,10 @@ class SubscriptionSerializer(serializers.Serializer):
 
             if 'all' in value:
                 return ['all']
-
+            cloud_db_url = CloudDbConfig.url(get_customization(self.context['request']))
             try:
                 systems = System.list(
-                    self.context['request'], email=request_data.get('username'), password=request_data.get('password'))
+                    self.context['request'], email=request_data.get('username'), password=request_data.get('password'), cloud_db_url=cloud_db_url)
                 systems = [system['id'] for system in systems['systems']]
 
                 for system in value[:]:
