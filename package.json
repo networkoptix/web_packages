@@ -6,7 +6,7 @@
     "build": "nx run-many --target=build --all",
     "build:demo": "nx run-many --target=build:demo --all --exclude example-explorer",
     "run:demo": "npm run build:demo && nx run example-explorer:serve",
-    "deploy:demo": "nx run-many --target=deploy:demo --all --exclude example-explorer && nx run example-explorer:deploy:demo",
+    "deploy:demo": "npm run build:demo && nx run example-explorer:deploy:demo",
     "ci:check": "nx run-many --target=ci:check --all"
   },
   "private": true,
