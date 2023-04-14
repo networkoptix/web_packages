@@ -309,10 +309,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                                     this.clearTokens();
                                     return throwError(error);
                                 }),
-                                switchMap(res => {
-                                    this.setTokens(res, true).subscribe(() => { });
-                                    return of('');
-                                })
+                                switchMap(res => this.setTokens(res, true))
                             );
                         }
                     }
@@ -357,7 +354,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         if (useToken) {
             headers = headers.set(this.token, accessToken || this.#vmsToken || '');
         }
-        if (accessToken) {
+        if (!environment.isLocal && accessToken) {
             headers = headers.set('Authorization', `Bearer ${accessToken}`);
         }
 
@@ -661,9 +658,9 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             }
             cloudLogoutObservable = this.http.post(`${this.CONFIG.cloudHost}/oauth/logout/`, { accessToken, cloudAccessToken, refreshToken });
         }
-        this.clearTokens();
         return cloudLogoutObservable.pipe(
-            switchMap(() => this.delete(`/rest/v1/login/sessions/${accessToken || this.#vmsToken}`))
+            map(() => this.delete(`/rest/v1/login/sessions/${accessToken || this.#vmsToken}`)),
+            map(() => this.clearTokens())
         ).toPromise();
     }
 

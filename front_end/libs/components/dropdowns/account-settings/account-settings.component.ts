@@ -51,7 +51,7 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
         is_staff: false,
         is_superuser: false,
     };
-    readonly accountDropdownStaff: AccountDropdown[] = [
+    readonly _accountDropdownStaff: AccountDropdown[] = [
         {
             name: 'Administration',
             route: '/admin/',
@@ -64,6 +64,7 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
         },
     ];
     accountDropdown: AccountDropdown[];
+    accountDropdownStaff: AccountDropdown[];
 
     constructor(
         configService: NxConfigService,
@@ -73,6 +74,8 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
     ) {
         super(configService);
         this.accountDropdown = accountDropdown;
+        const channelPartners = this.CONFIG.featureFlags.channelPartners;
+        this.accountDropdownStaff = this._accountDropdownStaff.filter(({ name }) => channelPartners || !name.includes('Channel partners'));
         this.newHeader = this.CONFIG.featureFlags.newHeader;
         headerService.currentLocation$.pipe(untilDestroyed(this)).subscribe(location => {
             this.isAccountRoute = location?.path?.includes('/account');

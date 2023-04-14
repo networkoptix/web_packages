@@ -897,6 +897,9 @@ nx-swagger-markdown+div#swagger-ui {
 
 .swagger-container .highlight-code {
 	position: relative;
+	.curl {
+		white-space: normal !important;
+	}
 }
 
 .swagger-container .with-line-counter {

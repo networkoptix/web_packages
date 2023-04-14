@@ -8,6 +8,7 @@ import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxPageService } from '@services/page.service';
 import { NxSessionService } from '@services/session.service';
 import { WINDOW } from '@services/window-provider';
 
@@ -38,6 +39,7 @@ export class NxLandingComponent implements OnInit {
         private configService: NxConfigService,
         private accountService: NxAccountService,
         private sessionService: NxSessionService,
+        private pageService: NxPageService,
         @Inject(WINDOW) private window: Window,
         private router: Router,
         private cookieService: CookieService,
@@ -61,6 +63,7 @@ export class NxLandingComponent implements OnInit {
         if (this.startUrl === '/logout') {
             this.accountService.logout();
         } else if (this.startUrl.includes('/content/about')) {
+            this.pageService.pageTitle(this.LANG.pageTitles.about, '');
             this.loaded = true;
         } else {
             this.sessionService.loginStateSubject.pipe(untilDestroyed(this)).subscribe(account => {

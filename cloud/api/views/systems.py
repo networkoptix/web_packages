@@ -368,9 +368,23 @@ async def disconnect(request):
 @permission_classes((AllowAny, ))
 async def connect(request):
     require_params(request, ('name',))
-    if request.user.is_authenticated:
+    auth = None
+    if request.user and request.user.is_authenticated:
+        auth = request
+    # This case handles the situation where a user has activated their account but has not logged into cloud portal yet.
+    # After we changed oauth to use cloud db directly accounts are no longer created in cloud portal until the user
+    # logins for the first time.
+    # Resolves: CLOUD-10423
+    elif meta_auth := request.META.get('HTTP_AUTHORIZATION'):
+        auth_type, credentials = meta_auth.split()
+        if auth_type == 'Bearer':
+            auth = {
+                'access_token': credentials
+            }
+
+    if auth:
         data = await sync_to_async(cloud_api.System.bind, thread_sensitive=False)(
-            request, request.data['name'], customization=request.CUSTOMIZATION
+            auth, request.data['name'], customization=request.CUSTOMIZATION
         )
         return api_success(data)
 
@@ -404,6 +418,7 @@ async def toggle2fa(request):
     data = await sync_to_async(cloud_api.System.update, thread_sensitive=False)(
         request, system_id, request.data.get('mfaCode'), not twofa_enabled
     )
+    request.session['has2fa'] = True
     return api_success(data)
 
 

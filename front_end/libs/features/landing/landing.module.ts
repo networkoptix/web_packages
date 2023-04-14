@@ -13,7 +13,7 @@ import { NxLandingComponent } from './landing.component';
 const appRoutes: Routes = [
     {
         path: '',
-        title: '{"baseTitle": "about", "type": "info", "descr": ["landing", "description"]}',
+        title: '{"baseTitle": "", "type": "info", "descr": ["landing", "description"]}',
         component: NxLandingComponent,
         pathMatch: 'full'
     }

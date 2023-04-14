@@ -90,7 +90,7 @@ export class CloudAccount extends BaseAccount {
 
         combineLatest([timer(0, updateInterval), loginState$]).pipe(
             filter(([_, loginState]) => !!loginState),
-            switchMap(() => this.cloudApi.account(true)),
+            switchMap(() => this.cloudApi.account(false)),
             map((account: Account) => {
                 if (!account?.is_authenticated) {
                     throw Error('unauthorized');
@@ -129,7 +129,7 @@ export class CloudAccount extends BaseAccount {
             return Promise.resolve(this.account);
         }
 
-        return firstValueFrom(this.cloudApi.account(false))
+        return firstValueFrom(this.cloudApi.account(forceUpdate))
             .then((account: Account | any) => {
                 // eslint-disable-next-line camelcase
                 if (!account?.is_authenticated) {

@@ -31,13 +31,8 @@ def test_login_helper(arf, mocker, django_user_model, mock_session):
     mocker.patch.object(django.contrib.auth, 'login')
     timezone_now = timezone.now()
     now = time.time()
-    expires_at = now + 1000;
-    mocker.patch.object(Auth, 'validate_token', return_value={'expires_at': expires_at})
     mocker.patch.object(timezone, 'now', return_value=timezone_now)
     mocker.patch.object(time, 'time', return_value=now)
-    mocker.patch.object(Account, 'get', return_value={
-                        'account2faEnabled': True})
-    mocker.patch.object(Account, 'get_2fa_settings', return_value={'totpExistsForAccount': True})
 
     resp = login_helper_sync(req, token, user)
     assert req.session['access_token'] == 'acc_token'
@@ -46,16 +41,8 @@ def test_login_helper(arf, mocker, django_user_model, mock_session):
     assert user.activated_date == timezone_now
     assert req.session['time'] == now
     assert resp.data == AccountSerializer(req).data
-    assert req.session['has2fa'] is True
-
-    mocker.patch.object(Account, 'get', return_value={
-                        'account2faEnabled': False})
-
-    req.session = SessionStore()
-    req.session.update({'has2fa' : False })
 
     login_helper_sync(req, token, user)
-    assert req.session['has2fa'] is False
 
 
 class TestAccountViews:
@@ -140,15 +127,12 @@ class TestAccountViews:
             req.session.get = lambda _, val: val
             return req
 
-        mock_get_2fa_settings = self.mocker.patch.object(
-            Account, 'get_2fa_settings', return_value={'totpExistsForAccount': True})
-
         req = get_request('/api/account')
 
         # Test cache redirect
-        # resp = async_to_sync(index)(req)
-        # assert resp.status_code == status.HTTP_302_FOUND
-        # req = get_request(resp.url)
+        resp = async_to_sync(index)(req)
+        assert resp.status_code == status.HTTP_302_FOUND
+        req = get_request(resp.url)
 
         # Test with totp exists
         resp = async_to_sync(index)(req)
@@ -156,11 +140,6 @@ class TestAccountViews:
         expected_data = AccountSerializer(req).data
 
         assert resp.data == expected_data
-
-        # Test with totp doesn't exist
-        mock_get_2fa_settings.return_value = {'totpExistsForAccount': False}
-        resp = async_to_sync(index)(req)
-        assert not resp.data['totpExistsForAccount']
 
     def test_index_post(self, mock_cdb_account, active_user):
         mock_get_2fa_settings = self.mocker.patch.object(

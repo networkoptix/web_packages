@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import * as FullStory from '@fullstory/browser';
 import { CookieService } from 'ngx-cookie-service';
-import { EMPTY, of, from, BehaviorSubject, throwError, defer, firstValueFrom } from 'rxjs';
+import { EMPTY, of, from, BehaviorSubject, throwError, defer, firstValueFrom, forkJoin } from 'rxjs';
 import type { Observable } from 'rxjs';
 import { catchError, concatMap, switchMap, map, tap, shareReplay, filter } from 'rxjs/operators';
 
@@ -26,7 +26,7 @@ import { mapValuesToStrings } from '@utils/general';
 import { memoizeAsyncLong, memoizeAsyncPersistent, memoizeAsyncShort } from '@utils/memoize';
 import { startWithCache } from '@utils/start-with-cached';
 
-import { Account } from '../account.service/account';
+import { Account, CloudAccount } from '../account.service/account';
 import type { IConfig } from '../nx-config/config-types';
 import { NxConfigService } from '../nx-config/nx-config.service';
 import { NxUriCacheService } from '../uri-cache.service';
@@ -551,7 +551,7 @@ export class NxCloudApiService {
             return false;
         });
         return from(checkIfShouldUpdate()).pipe(
-            switchMap(force => this.http.get<Account>(`${apiBase}/account`, { params: { force } })),
+            switchMap(force => this.getAllAccountInfo(force)),
             switchMap(async value => value ? this.db.personal.unstructured.put({ key: 'account', value }) : null),
             switchMap(() => this.handleAccount())
             // skip(forceUpdate ? 1 : 0)
@@ -561,31 +561,40 @@ export class NxCloudApiService {
     @memoizeAsyncPersistent
     private handleAccount() {
         return this.db.personal.unstructured.$.get('account').pipe(
-            filter(current => !!current?.value),
-            map(({ value: account }: UnstructuredTable<Account>) => {
+            filter(current => !!current?.value)
+        );
+    }
+
+    private getAccount(forceUpdate = false): Observable<CloudAccount> {
+        let headers = new HttpHeaders();
+        const params: { force?: true } = {};
+        if (forceUpdate) {
+            headers = headers.set('reset-cache', 'reset');
+            params.force = true;
+        }
+        return this.http.get<CloudAccount>(apiBase + '/account', { headers, params }).pipe(
+            map(account => {
                 if (!account.isCloud) {
                     // Returned object is readonly sometimes for some reason
                     account = { ...account, isCloud: true };
                 }
-                this.currentAccount = account;
                 return account;
             },
-            tap(this.logIdentifyUser))
+            tap(this.logIdentifyUser)),
         );
-        // return this.accountUpdater$.pipe(
-        //     filter(force => force),
-        //     throttleTime(10 * 1000),
-        //     switchMap(() => this.http.get<Account>(`${apiBase}/account`, { params: { force: true } })),
-        //     map(account => {
-        //         if (!account.isCloud) {
-        //             // Returned object is readonly sometimes for some reason
-        //             account = { ...account, isCloud: true };
-        //         }
-        //         this.currentAccount = account;
-        //         return account;
-        //     },
-        //     tap(this.logRocketIdentifyUser))
-        // );
+    }
+
+    private getAllAccountInfo(forceUpdate = false): Observable<Account> {
+        return forkJoin([
+            this.getAccount(forceUpdate),
+            this.currentAccount?.accessToken ? this.cloudDbApi.getAccountSecurity() : of({ account2faEnabled: false, totpExistsForAccount: false })
+        ]).pipe(switchMap(([cloudInfo, security]) => (cloudInfo.accessToken ? this.cloudDbApi.validateToken(cloudInfo.accessToken) : of({ sessionExpires: Infinity }))
+            .pipe(map(tokenInfo => {
+                cloudInfo.sessionVerified = cloudInfo.sessionVerified || security.account2faEnabled;
+                this.currentAccount = { ...cloudInfo, ...security, ...tokenInfo };
+                return this.currentAccount;
+            }))
+        ));
     }
 
     checkFeatureNotice = <T>(
@@ -661,7 +670,6 @@ export class NxCloudApiService {
             last_name: account.last_name,
             is_staff: account.is_staff,
             is_superuser: account.is_superuser || false,
-            language: account.language,
             permissions: account.permissions
         };
         return this.http.post<t.AccountEdit>(apiBase + '/account', accountInfo).pipe(
@@ -907,7 +915,7 @@ export class NxCloudApiService {
             let currentSession = !force && await this.db.personal.unstructured.get(key) as UnstructuredTable<Account>;
 
             if (!currentSession?.value || force) {
-                value = await firstValueFrom(this.account(true));
+                value = await firstValueFrom(this.getAccount(true));
                 currentSession = { key, value };
             }
 

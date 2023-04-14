@@ -229,14 +229,14 @@ async def login_with_code(request):
             return api_success(tokens, status_code=status.HTTP_401_UNAUTHORIZED)
         raise e
 
-    account_info = await sync_to_async(Account.get, thread_sensitive=False)(tokens)
-    customization = account_info['customization']
     try:
         user = await models.Account.objects.aget(email=validate_token['username'])
-        if user.customization != customization:
-            user.customization = customization
+        if not user.customization:
+            account_info = await sync_to_async(Account.get, thread_sensitive=False)(tokens)
+            user.customization = account_info['customization']
             await sync_to_async(user.save)()
     except models.Account.DoesNotExist:
+        account_info = await sync_to_async(Account.get, thread_sensitive=False)(tokens)
         names = account_info.get('fullName', '').split(' ')
         first_name = names[0]
         last_name = names[-1]
@@ -246,7 +246,7 @@ async def login_with_code(request):
             account_info['email'],
             first_name=first_name,
             last_name=last_name,
-            customization=customization,
+            customization=account_info['customization'],
             is_active=True)
 
     request.session.set_expiry(get_authenticated_session_cookie_age())
@@ -317,7 +317,6 @@ async def index(request):
         # Redirect if no version
         # Add indefinite cache heading
         # Removing the caching for now!!
-        """
         cached = request.query_params.get('cached')
         current_version = not request.query_params.get('force') and caches['requests'].get(request.user.email)
         if not cached or not current_version or cached != current_version:
@@ -325,10 +324,12 @@ async def index(request):
                 current_version = str(uuid4())
                 caches['requests'].set(request.user.email, current_version)
             return redirect(f'{reverse("account")}?cached={current_version}')
-        """
         serializer = await sync_to_async(lambda: AccountSerializer(request, many=False))()
 
-        return api_success(await sync_to_async(AccountSerializer.data.fget)(serializer))  # , additional_headers={'Cache-Control': f'max-age={60**2 * 24}'})
+        return api_success(
+            await sync_to_async(AccountSerializer.data.fget)(serializer),
+            additional_headers={'Cache-Control': f'max-age={60**2 * 24}'}
+        )
 
     serializer = await sync_to_async(lambda: AccountUpdateSerializer(request, data=request.data))()
 

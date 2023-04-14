@@ -39,8 +39,11 @@ export function highlight(text: string, start?: number, end?: number): string {
 }
 
 export function highlightAll(text: string, target: string): string {
-    const regex = new RegExp(target, 'g');
-    return text.replace(regex, `<strong class="highlighted">${target}</strong>`);
+    if (!text) {
+        return text;
+    }
+    const regex = new RegExp(`(${target})`, 'gi');
+    return text.replace(regex, '<strong class="highlighted">$1</strong>');
 }
 
 export function strSplice(text: string, index: number, replacement: string): string {
