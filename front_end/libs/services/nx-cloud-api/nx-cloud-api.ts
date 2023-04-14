@@ -559,9 +559,10 @@ export class NxCloudApiService {
     }
 
     @memoizeAsyncPersistent
-    private handleAccount() {
+    private handleAccount(): Observable<Account> {
         return this.db.personal.unstructured.$.get('account').pipe(
-            filter(current => !!current?.value)
+            filter(current => !!current?.value),
+            map(({ value }) => value as Account)
         );
     }
 
@@ -915,7 +916,7 @@ export class NxCloudApiService {
             let currentSession = !force && await this.db.personal.unstructured.get(key) as UnstructuredTable<Account>;
 
             if (!currentSession?.value || force) {
-                value = await firstValueFrom(this.getAccount(true));
+                value = await firstValueFrom(this.getAllAccountInfo(true));
                 currentSession = { key, value };
             }
 

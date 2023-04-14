@@ -365,7 +365,7 @@ export class LoginWebadminModalContent implements OnInit {
         this.account.mediaServerApi.loginTokenUrl(token).subscribe(
             () => {
                 this.account.mediaServerApi.getCurrentUser().then(account => {
-                    this.account.account = account;
+                    this.account.loginState = account.email || account.name;
                     // If the page reloads too soon. Webadmin redirects to /
                     setTimeout(() => this.window.location.reload(), this.urlUpdateTimeout);
                 });

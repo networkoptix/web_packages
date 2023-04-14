@@ -1,5 +1,7 @@
 import { Observable, throwError } from 'rxjs';
 
+import { environment } from '@environments/environment';
+
 import { MediaserverLegacyConnection } from '../connections/adapters/adapter-target-types';
 
 export function proxyLegacyV1<ResponseType = unknown>(this: MediaserverLegacyConnection, method: string, protocol: string, serverAddress: string, requestUrl: string, data: Record<string, unknown>, coercedEnglishError?: boolean): Observable<ResponseType> {

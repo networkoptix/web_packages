@@ -172,6 +172,10 @@ export abstract class BaseAccount implements OnDestroy {
         // This is name on local, not email
     }
 
+    set loginState(username: string) {
+        this.sessionService.loginState = username;
+    }
+
     async authKey() {
         const { auth_key: auth } = await this.cloudApi.authKey();
         return auth;
