@@ -196,7 +196,7 @@ export class CloudDbAPI extends BaseCloudServiceAPI {
         );
     }
 
-    public getAccountSecurity(): Observable<{ account2faEnabled: boolean, totpExistsForAccount: boolean }> {
+    public getAccountSecurity(): Observable<{ account2faEnabled: boolean; totpExistsForAccount: boolean }> {
         return this.get('/account/self/settings/security').pipe(
             map(({ account2faEnabled, totpExistsForAccount }) => ({ account2faEnabled, totpExistsForAccount }))
         );

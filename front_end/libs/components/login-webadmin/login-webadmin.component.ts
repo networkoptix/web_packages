@@ -173,7 +173,10 @@ export class LoginWebadminModalContent implements OnInit {
         const url = new URL(this.document.location.href);
         if (url.search) {
             const { origin } = this.document.location;
-            this.document.location.href = this.document.location.href.replace(origin, `${origin}/#`);
+            this.document.location.href = this.document.location.href.replace(
+                origin,
+                `${origin}/#`,
+            );
             url.hash = `${url.hash}?${url.search}`;
         }
         const [hash, query] = url.hash.split('?');

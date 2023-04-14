@@ -536,11 +536,16 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     };
 
     private highlightSearchMoreQuery = (query: string) => {
-        this.swaggerMenuDescription.description = highlightAll(this.swaggerMenuDescription.description, query);
+        this.swaggerMenuDescription.description = highlightAll(
+            this.swaggerMenuDescription.description,
+            query,
+        );
         this.swaggerMenuDescription.title = highlightAll(this.swaggerMenuDescription.title, query);
         this.singleRoutePath = highlightAll(this.singleRoutePath, query);
 
-        const paramsDescriptions = this.document.querySelectorAll('.parameters-col_description > .renderedMarkdown > p');
+        const paramsDescriptions = this.document.querySelectorAll(
+            '.parameters-col_description > .renderedMarkdown > p',
+        );
         for (const paramDescription of paramsDescriptions) {
             paramDescription.innerHTML = highlightAll(paramDescription.innerHTML, query);
         }

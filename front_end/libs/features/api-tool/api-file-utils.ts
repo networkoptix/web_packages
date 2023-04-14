@@ -275,7 +275,7 @@ export const queryInDescription = (path: MethodInfo, query: string) => {
         for (const parameter of path.parameters) {
             if (
                 (parameter.name && includesCaseInsensitive(parameter.name, query)) ||
-        (parameter.description && includesCaseInsensitive(parameter.description, query))
+                (parameter.description && includesCaseInsensitive(parameter.description, query))
             ) {
                 return true;
             }
@@ -284,7 +284,10 @@ export const queryInDescription = (path: MethodInfo, query: string) => {
     const schemaProperties = path.requestBody?.content['application/json']?.schema?.properties;
     if (schemaProperties) {
         for (const property of Object.keys(schemaProperties)) {
-            if (schemaProperties[property].description && includesCaseInsensitive(schemaProperties[property].description, query)) {
+            if (
+                schemaProperties[property].description &&
+                includesCaseInsensitive(schemaProperties[property].description, query)
+            ) {
                 return true;
             }
         }
