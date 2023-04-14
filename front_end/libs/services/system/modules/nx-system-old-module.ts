@@ -482,7 +482,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         if (!this.updatePromise) {
             this.updatePromise = this.getInfo(true, false, true)
                 .then(() => this.isOnline ? this.cameraManager.updateSystemServersCameras() : Promise.reject({ offline: true }))
-                .then(() => this.serverManager.getForceServers(true).toPromise())
+                .then(() => this.serverManager.getForceServers(false).toPromise())
                 .then(() => environment.isLocal ? Promise.resolve() : this.getUsers(true, true))
                 .catch(error => {
                     if (error?.offline) {

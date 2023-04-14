@@ -3,6 +3,9 @@ import { Observable, throwError } from 'rxjs';
 import { MediaserverLegacyConnection } from '../connections/adapters/adapter-target-types';
 
 export function proxyLegacyV1<ResponseType = unknown>(this: MediaserverLegacyConnection, method: string, protocol: string, serverAddress: string, requestUrl: string, data: Record<string, unknown>, coercedEnglishError?: boolean): Observable<ResponseType> {
+    if (environment.isLocal && protocol === 'https') {
+        protocol = 'https-insecure';
+    }
     const url = `/proxy/${protocol}/${serverAddress}/${requestUrl}`;
 
     const headers: Record<string, unknown> = {};
