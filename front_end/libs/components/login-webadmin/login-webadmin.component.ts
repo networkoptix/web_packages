@@ -177,17 +177,28 @@ export class LoginWebadminModalContent implements OnInit {
         );
 
         const url = new URL(this.document.location.href);
+        if (url.search) {
+            const { origin } = this.document.location;
+            this.document.location.href = this.document.location.href.replace(origin, `${origin}/#`);
+            url.hash = `${url.hash}?${url.search}`;
+        }
         const [hash, query] = url.hash.split('?');
         const params = new URLSearchParams(query || '');
+        const auth = params.get('auth');
         const code = params.get('code');
         const token = params.get('token');
         if (code) {
             this.removeParamFromUrl(url, hash, params, 'code');
             this.oauthLogin(code);
             return;
-        } else if (token) {
-            this.removeParamFromUrl(url, hash, params, 'token');
-            this.tokenLogin(token);
+        } else if (token || auth) {
+            if (token) {
+                this.removeParamFromUrl(url, hash, params, 'token');
+            }
+            if (auth) {
+                this.removeParamFromUrl(url, hash, params, 'auth');
+            }
+            this.tokenLogin(token || auth);
             return;
         } else {
             this.loading = false;
@@ -361,8 +372,11 @@ export class LoginWebadminModalContent implements OnInit {
     tokenLogin(token: string): void {
         this.account.mediaServerApi.loginTokenUrl(token)
             .subscribe(() => {
-                // If the page reloads too soon. Webadmin redirects to /
-                setTimeout(() => this.window.location.reload(), this.urlUpdateTimeout);
+                this.account.mediaServerApi.getCurrentUser().then(account => {
+                    this.account.account = account;
+                    // If the page reloads too soon. Webadmin redirects to /
+                    setTimeout(() => this.window.location.reload(), this.urlUpdateTimeout);
+                });
             }, () => {
                 this.loading = false;
             });

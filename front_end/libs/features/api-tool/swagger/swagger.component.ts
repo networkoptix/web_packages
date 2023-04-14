@@ -267,7 +267,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
             this.modifyTitlesInResponse();
             this.addLabelToRequest();
             if (this.openAPIJSONService.searchQuery && !this.openAPIJSONService.searchMoreShowing$.getValue()) {
-                this.highlightSearchMoreQuery();
+                this.highlightSearchMoreQuery(this.openAPIJSONService.searchQuery);
             }
             this.customComponentsRendering = false;
             this.swaggerLoading$.next(false);
@@ -503,16 +503,16 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         }
     };
 
-    highlightSearchMoreQuery() {
-        const description = this.document.querySelector('.swagger-description')?.querySelector('.mt-3');
-        if (description) {
-            description.innerHTML = highlightAll(description.innerHTML, this.openAPIJSONService.searchQuery);
-        }
+    private highlightSearchMoreQuery = (query: string) => {
+        this.swaggerMenuDescription.description = highlightAll(this.swaggerMenuDescription.description, query);
+        this.swaggerMenuDescription.title = highlightAll(this.swaggerMenuDescription.title, query);
+        this.singleRoutePath = highlightAll(this.singleRoutePath, query);
+
         const paramsDescriptions = this.document.querySelectorAll('.parameters-col_description > .renderedMarkdown > p');
         for (const paramDescription of paramsDescriptions) {
-            paramDescription.innerHTML = highlightAll(paramDescription.innerHTML, this.openAPIJSONService.searchQuery);
+            paramDescription.innerHTML = highlightAll(paramDescription.innerHTML, query);
         }
-    }
+    };
 
     ngOnChanges(changes: NgChanges<NxSwaggerComponent>): void {
         if (changes.activeNode.currentValue) {

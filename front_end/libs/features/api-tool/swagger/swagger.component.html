@@ -13,9 +13,12 @@
                 class="swagger-description"
                 *ngIf="!openAPIJSONService.isMarkdownNode"
             >
-                <h2>{{ this.swaggerMenuDescription.title }}</h2>
+                <h2 [innerHTML]="this.swaggerMenuDescription.title | safe: 'html'"></h2>
                 <ng-container *ngIf="this.singleAPIRouteShowing">
-                    <p class="description-path">{{ this.singleRoutePath }}</p>
+                    <p
+                        class="description-path"
+                        [innerHTML]="this.singleRoutePath | safe: 'html'"
+                    ></p>
                     <div
                         class="opblock-method"
                         [ngClass]="this.singleRouteMethod"

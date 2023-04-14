@@ -27,7 +27,6 @@ import { debounceTime, filter, take } from 'rxjs/operators';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { SystemGuard } from '@guards/systemGuard';
-import { NxAccountService } from '@services/account.service';
 import { NxApplyService } from '@services/apply.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
@@ -143,7 +142,6 @@ export class AppComponent implements AfterViewInit {
         private uriService: NxUriService,
         private dialogsService: NxDialogsService,
         private localStorageService: LocalStorageService,
-        private accountService: NxAccountService,
         private themeService: NxThemeService,
         private sessionService: NxSessionService,
         @Inject(WINDOW) private window: Window
@@ -163,29 +161,7 @@ export class AppComponent implements AfterViewInit {
             }
             this.lazyLoadComponents();
         }
-
-        const url = new URL(this.window.location.href.replace('#/', ''));
-        const auth = url.searchParams.get('auth');
-        const code = url.searchParams.get('code');
-        const refreshToken = url.searchParams.get('refresh_token');
-
-        this.sessionService.loginParams = { auth, code, refreshToken };
-
-        if (refreshToken) {
-            this.accountService.handleRefreshTokenLogin(refreshToken).finally(() => {
-                this.appStateService.ready = true;
-            });
-        } else if (!this.environment.isLocal && auth) {
-            this.accountService.handleAuthKeyLogin(auth);
-        } else if (
-            !this.environment.isLocal &&
-            code &&
-            !url.toString().includes('cloud-authorize')
-        ) {
-            this.accountService.handleCodeLogin(code);
-        } else {
-            this.appStateService.ready = true;
-        }
+        this.appStateService.ready = true;
 
         /* No real need to update often unless some browser have major upgrade
          * and we don't want to support previous releases.

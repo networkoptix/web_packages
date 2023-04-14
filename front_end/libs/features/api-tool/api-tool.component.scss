@@ -98,10 +98,11 @@
 }
 
 .more-results {
-    margin: 20px auto auto 120px;
-    width: 50%;
-    &:hover {
-        cursor: pointer;
+    margin-top: 20px;
+    text-align: center;
+    width: 100%;
+    &-text {
+        margin-left: 4px;
     }
     .more-results-stroke {
         stroke: var(--light-text-color);
@@ -112,6 +113,9 @@
     span {
         @include typography.regular13nocolor;
         color: var(--light-text-color);
-        margin-left: 4px;
+
+        &:hover {
+            cursor: pointer;
+        }
     }
 }
