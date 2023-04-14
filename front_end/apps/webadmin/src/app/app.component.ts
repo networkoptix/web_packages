@@ -33,7 +33,6 @@ import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
-import { NxSessionService } from '@services/session.service';
 import { NxThemeService } from '@services/theme.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
@@ -143,7 +142,6 @@ export class AppComponent implements AfterViewInit {
         private dialogsService: NxDialogsService,
         private localStorageService: LocalStorageService,
         private themeService: NxThemeService,
-        private sessionService: NxSessionService,
         @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.getConfig();
