@@ -703,9 +703,16 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     protected getSystemSettingsHandler() {
         return this.updateSystemSettings$.pipe(
             throttleTime(1000),
-            switchMap(() => this.get('/rest/v1/system/settings')),
+            switchMap(() => this.get('/rest/v1/system/settings', { _keepDefault: true })),
             retry(3)
         );
+    }
+
+    updateOrGetSettings(updateParams: Partial<t.Settings> = {}) {
+        return (Object.keys(updateParams).length > 0
+            ? this.patch('/rest/v1/system/settings', updateParams)
+            : this.getSystemSettingsHandler()
+        ).pipe(map(data => <t.NormalResponse<t.SystemSettings>>({ error: '', errorString: '', reply: { settings: data } })));
     }
 
     getMediaServers(useCache: boolean): Observable<t.RestPartialServer[]> {

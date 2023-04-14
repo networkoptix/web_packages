@@ -689,6 +689,10 @@ export interface System {
     flags: Flags;
     name: string;
     status: SystemStatus;
+    version?: {
+        major: number;
+        minor: number;
+    }; // Only used for webadmin
 }
 
 export interface Flags {

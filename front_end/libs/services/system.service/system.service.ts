@@ -90,7 +90,7 @@ export class NxSystemService {
                 '',
                 '',
                 userId,
-                5.1, // TODO: Add a way to get the version from the server.
+                mediaServer.version
             );
             this.system.mediaserver = mediaServer;
             this.system.canMerge = true;

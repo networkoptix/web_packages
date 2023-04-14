@@ -211,27 +211,23 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         this.systemAndSecuritySettingsFormWatcher &&
             this.applyService.removeFormWatcher('systemAndSecuritySettingsForm');
         const sw = this.systemAndSecuritySettings;
+        const useRest = this.system.useRest;
         Object.keys(sw).forEach(setting => {
             let curr = settings[setting];
-            if (curr) {
-                /**
-                 * sets initial values for system & security settings
-                 * sessionLimitMinutes is the only one that's a number & not a boolean,
-                 * so it needs custom code to handle
-                 */
+            if (!useRest) {
                 if (isNaN(curr)) {
-                    sw[setting] = curr === 'true';
-                } else if (this.limitSessionTimeUnits) {
+                    curr = curr === 'true';
+                } else {
                     curr = parseInt(curr);
-                    this.sessionLimitToggle = Boolean(curr);
-                    this.selectedTimeUnit = this.limitSessionTimeUnits.minutes;
-                    this.updateTimeUnitInput(this.selectedTimeUnit);
-                    sw[setting] = curr;
-                    this.timeValue = curr;
-                    this.divideTimeValue(this.timeValue);
                 }
             }
+            sw[setting] = curr;
         });
+        this.sessionLimitToggle = Boolean(sw.sessionLimitMinutes);
+        this.selectedTimeUnit = this.limitSessionTimeUnits.minutes;
+        this.updateTimeUnitInput(this.selectedTimeUnit);
+        this.timeValue = sw.sessionLimitMinutes;
+        this.divideTimeValue(this.timeValue);
         this.settingsWatchersSet = true;
 
         setTimeout(() => {

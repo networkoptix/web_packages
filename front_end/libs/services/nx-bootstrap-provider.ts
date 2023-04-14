@@ -74,7 +74,7 @@ export class NxBootstrapProvider {
 
     private getModuleInfo(reload = true) {
         return this.environment.isLocal
-            ? this.http.get('/api/moduleInformation', {}).toPromise()
+            ? this.http.get('/rest/v1/servers/this/info', {}).toPromise()
             : Promise.resolve({});
     }
 
@@ -89,9 +89,9 @@ export class NxBootstrapProvider {
             ]).then(([language, moduleInfo]: any) => {
                 this.setLanguage(language);
 
-                if (moduleInfo.reply) {
-                    this.isNewSystem = moduleInfo.reply.serverFlags.includes('SF_NewSystem');
-                    this.setLocalInfo(moduleInfo.reply).then(() => {
+                if (moduleInfo) {
+                    this.isNewSystem = moduleInfo.serverFlags.includes('SF_NewSystem');
+                    this.setLocalInfo(moduleInfo).then(() => {
                         this.configService.updateConfigUsingOverrides();
                         this.isLoaded = true;
                         resolve(true);
@@ -121,6 +121,8 @@ export class NxBootstrapProvider {
         this.CONFIG.localSystemId = data.localSystemId;
         this.CONFIG.localServerId = data.id;
         this.CONFIG.system.name = data.systemName || data.name;
+        const [_, major, minor] = data.version.match(/(\d+\.\d+)\.\d+\.(\d+)/);
+        this.CONFIG.system.version = { major: parseFloat(major), minor: parseInt(minor) };
     };
 
     setLanguage(data) {

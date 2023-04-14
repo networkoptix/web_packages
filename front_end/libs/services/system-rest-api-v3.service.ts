@@ -93,7 +93,7 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
             isOwner: false,
             permissions: 'NoGlobalPermissions',
             isEnabled: true,
-            userGroupIds: [],
+            groupIds: [],
         };
     }
 }

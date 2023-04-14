@@ -75,7 +75,7 @@ export class LocalAccount extends BaseAccount {
             db
         );
         this.mediaServerApi = this.nxSystemAPIService
-            .createConnection(undefined, undefined, undefined, () => of(''), 5.1);
+            .createConnection(undefined, undefined, undefined, () => of(''), this.CONFIG.system.version.major);
     }
 
     async get(forceUpdate = false): Promise<Account | undefined> {

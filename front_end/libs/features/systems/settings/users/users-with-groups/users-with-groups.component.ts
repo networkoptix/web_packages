@@ -40,7 +40,7 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
             const user = this.formatUser(this.selectedUser);
             this.locked.add(user.email);
             try {
-                user.userGroupIds = this.selectedGroups;
+                user.groupIds = this.selectedGroups;
                 await (this.system.userManager as UserWithGroupsManager).modifyUser(user);
                 await this.system.getUsers(true).catch(err => console.error(err));
             } catch (err) {
@@ -93,7 +93,7 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
                     }
                 ];
             } else {
-                this.selectedGroups = this.selectedUser.userGroupIds;
+                this.selectedGroups = this.selectedUser.groupIds;
                 const isLocalOwner = !this.selectedUser.isCloud && this.selectedUser.isOwner;
                 this.processSelectedGroupsList(this.selectedGroups, isLocalOwner);
             }

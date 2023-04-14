@@ -1023,14 +1023,12 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     private updateValues(): void {
         this.healthService.ready = false;
         if (this.system.userManager.permissions.isAdmin) {
-            this.system.mediaserver.getAggregateHealthReport()
+            this.system.mediaserver.getHealthAlarms()
                 .pipe(untilDestroyed(this))
                 .subscribe({
-                    next: result => {
+                    next: ({ reply: { cameras } }) => {
                         this.applyService.setVisible();
-                        const alarms = result.reply['ec2/metrics/alarms'];
-                        const cameraAlarms = alarms.reply.cameras;
-                        this.alerts = Object.entries(cameraAlarms || {})
+                        this.alerts = Object.entries(cameras || {})
                             .map(([id, alarm]) => new Alert(id, alarm));
                         this.updateAlerts();
                     },

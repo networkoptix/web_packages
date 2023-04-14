@@ -175,7 +175,6 @@ export class NxDropMenu extends BaseDropdown {
                 this.headerService.activeSystem ||
                 this.headerService.lastActive$.value ||
                 this.systems[0];
-            activeSystem.version ||= 5.1;
             this.menusService.updateActiveSystemMenu(activeSystem, isAdmin);
         }
         this.systemCounter = this.systems && this.systems.length;

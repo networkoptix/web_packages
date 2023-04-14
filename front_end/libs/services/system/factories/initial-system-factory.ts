@@ -51,8 +51,6 @@ export function nxSystemFactory(
     userId?: string,
     version?: number
 ): SystemClasses & BaseModules {
-    version ||= 5.1;
-
     const nxSystemOld = new NxSystemOldModule(currentUserEmail, systemId, serverId, userId, version);
     const baseSystem = getBaseSystem(version as SystemVersion).with(nxSystemOld);
 

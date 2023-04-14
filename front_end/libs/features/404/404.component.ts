@@ -44,7 +44,7 @@ export class Nx404Component {
     }
 
     getAdditionalMessage(key: string): string {
-        const defaultKey = 'redirects.defaultMessage';
+        const defaultKey = this.LANG.redirects.defaultMessage;
         const additionalMessages: Record<string, string> = this.translate.instant([
             key,
             defaultKey,
@@ -96,7 +96,7 @@ export class Nx404Component {
                 })
                 .then(_ => {
                     const { origin } = this.window.location;
-                    const redirectMessage = this.translate.instant('redirects.message', {
+                    const redirectMessage = this.translate.instant(this.LANG.redirects.message, {
                         url: `${origin}/#${url}`,
                         redirectUrl: translatedLink || `${origin}/#${redirectUrl}`,
                     });

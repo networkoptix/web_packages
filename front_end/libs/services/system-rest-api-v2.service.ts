@@ -6,6 +6,10 @@ import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { NxHealthService } from '@pages/health/health.service';
+import { getSystemMetricsAlarmsV2 } from '@services/mediaserver-apis/endpoints/system-metrics-alarms';
+import { getSystemMetricsManifestV2 } from '@services/mediaserver-apis/endpoints/system-metrics-manifest';
+import { getSystemMetricsValuesV2 } from '@services/mediaserver-apis/endpoints/system-metrics-values';
+import { NxSystemAPI } from '@services/system-legacy-api.service';
 import { NxSystemUser } from '@services/system.service/user-manager/user-manager-types.bak';
 
 import { addUserRestV2 } from './mediaserver-apis/endpoints/add-user';
@@ -308,26 +312,43 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
             .pipe(map(res => this.responseWrapper(res)));
     }
 
-    addUser = addUserRestV2;
+    /** Start of Health Monitoring **/
+    protected _getHealthAlarms = getSystemMetricsAlarmsV2;
+    protected _getHealthManifest = getSystemMetricsManifestV2;
+    protected _getHealthValues = getSystemMetricsValuesV2;
+    @NxSystemAPI.memoizeHM
+    getHealthAlarms() {
+        return this._getHealthAlarms();
+    }
 
-    // Health Monitoring
-    // private getMetricsHealth(metricType: string): any {
-    //     return this.get(`/rest/v2/system/metrics/${metricType}`,
-    //         undefined)
-    //         .pipe(map(res => this.responseWrapper(res)));
-    // }
-    //
-    // getHealthAlarms(): any {
-    //     return this.getMetricsHealth('alarms');
-    // }
-    //
-    // getHealthManifest(): any {
-    //     return this.getMetricsHealth('manifest')
-    // }
-    //
-    // getHealthValues(): any {
-    //     return this.getMetricsHealth('values');
-    // }
+    @NxSystemAPI.memoizeHM
+    getHealthManifest() {
+        return this._getHealthManifest();
+    }
+
+    @NxSystemAPI.memoizeHM
+    getHealthValues() {
+        return this._getHealthValues();
+    }
+
+    // TODO: Create a health manager and move this there for legacy and rest.
+    @NxSystemAPI.memoizeHM
+    getAggregateHealthReport(forceUpdate = false): Observable<t.AggregatedHealthReport> {
+        return forkJoin([this.getHealthAlarms(), this.getHealthManifest(), this.getHealthValues()]).pipe(
+            map(([alarms, manifest, values]) => ({
+                error: '',
+                errorString: '',
+                reply: {
+                    'ec2/metrics/alarms': alarms,
+                    'ec2/metrics/manifest': manifest,
+                    'ec2/metrics/values': values
+                }
+            }))
+        );
+    }
+    /** End of Health Monitoring **/
+
+    addUser = addUserRestV2;
 
     // Users
     saveUser(user: NxSystemUser): Observable<ChangedIdReturned> {

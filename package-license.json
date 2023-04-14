@@ -14652,7 +14652,7 @@
         }
     },
     "/open/packages/webrtc-stream-manager/": {
-        "webrtc-stream-manager@0.1.0": {
+        "@networkoptix/webrtc-stream-manager@0.1.1": {
             "licenses": "MPL-2.0",
             "path": "cloud_portal/open/packages/webrtc-stream-manager",
             "licenseFile": "cloud_portal/open/packages/webrtc-stream-manager/README.md"

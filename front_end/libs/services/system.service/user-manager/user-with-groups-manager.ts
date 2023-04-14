@@ -178,14 +178,14 @@ export class UserWithGroupsManager extends UserManager {
         this._groupPermissions = processedGroups;
     }
 
-    getPermissionsFromUserGroups({ userGroupIds, permissions }: { userGroupIds?: string[]; permissions: string }): Set<string> {
+    getPermissionsFromUserGroups({ groupIds, permissions }: { groupIds?: string[]; permissions: string }): Set<string> {
         const permissionSet = new Set<string>(permissions && permissions.includes('|')
             ? permissions.split('|')
             : [permissions]
         );
         // cloud owner currently has no userGroupIds, but instead has permissions set on the user object permissions field
-        if (userGroupIds?.length > 0) {
-            userGroupIds.forEach((id: string) => {
+        if (groupIds?.length > 0) {
+            groupIds.forEach((id: string) => {
                 this._groupPermissions[id].forEach(id => {
                     permissionSet.add(id);
                 });
@@ -216,8 +216,8 @@ export class UserWithGroupsManager extends UserManager {
             //     user.fullName = user.name;
             // }
             user.permissionsSet = this.getPermissionsFromUserGroups(user);
-            if (user.userGroupIds === undefined) {
-                user.userGroupIds = [];
+            if (user.groupIds === undefined) {
+                user.groupIds = [];
             }
             user.permissions = this.normalizePermissionString([
                 user.permissions,
@@ -320,7 +320,7 @@ export class UserWithGroupsManager extends UserManager {
         fullName,
         permissions,
         isEnabled,
-        userGroupIds
+        groupIds
     }: NxSystemUser): Partial<NxSystemUser> {
         return {
             name,
@@ -328,7 +328,7 @@ export class UserWithGroupsManager extends UserManager {
             fullName,
             permissions,
             isEnabled,
-            userGroupIds
+            groupIds
         };
     }
 }

@@ -14,7 +14,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { cloneDeep } from 'lodash-es';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 import { of, throwError } from 'rxjs';
-import { flatMap } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import type { Content } from '@app/menu/menu.types';
@@ -568,30 +567,5 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
         } else {
             alert('File not supported, JSON files only');
         }
-    }
-
-    updateValues(forceUpdate = false): void {
-        this.healthService.ready = false;
-        this.system.mediaserver
-            .getAggregateHealthReport(forceUpdate)
-            .pipe(
-                untilDestroyed(this),
-                flatMap(result => this.setupReport(result)),
-            )
-            .subscribe(
-                () => {},
-                () => {
-                    if (!this.system.id) {
-                        !this.window.parent
-                            ? this.window.location.reload()
-                            : this.window.parent.location.reload();
-                    }
-                    this.hasServerError = this.system.isOnline;
-                },
-            );
-    }
-
-    canShowOffline() {
-        return !this.healthService.ready && !this.hasServerError && !this.outdatedVersion;
     }
 }

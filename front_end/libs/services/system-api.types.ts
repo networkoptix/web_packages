@@ -559,7 +559,7 @@ export interface AlarmsReply {
     };
 }
 
-interface ManifestReplyObjects {
+export interface ManifestReplyObjects {
     id: string;
     name: string;
     resource: string;
@@ -719,7 +719,7 @@ interface SystemInfo {
     };
 }
 
-interface ValuesReply {
+export interface ValuesReply {
     cameras: CameraValues;
     networkInterfaces: NetworkInterfaces;
     servers: Servers;

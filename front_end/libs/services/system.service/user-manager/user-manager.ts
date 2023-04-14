@@ -12,6 +12,7 @@ import type {
     AggregatedUsers,
 } from '@services/system-api.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
+import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxSystemBase } from '@services/system/system-base';
 import { isAdmin, ZERO_ID } from '@utils/nx';
 
@@ -50,7 +51,7 @@ export class UserManager {
     protected locale: string;
 
     constructor(
-        protected mediaserver: NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2,
+        protected mediaserver: NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2 | NxSystemRestAPI3,
         public currentUserEmail: string,
         private userId: string
     ) {
@@ -374,7 +375,7 @@ export class UserManager {
             userData.permissions = this.CONFIG.accessRoles.globalCustomUserPermission;
         }
 
-        const saveAction = !('id' in user) && this.mediaserver.version === 5.1
+        const saveAction = !('id' in user) && this.mediaserver.version >= 5.1
             ? this.mediaserver.addUser(userData)
             : this.mediaserver.saveUser(userData);
 

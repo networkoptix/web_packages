@@ -16,7 +16,7 @@ export interface User {
     type?: string;
     isOwner?: boolean,
     isHttpDigestEnabled?: boolean,
-    userGroupIds?: string[],
+    groupIds?: string[],
     resourceAccessRights?: {
         additionalProp1?: string,
         additionalProp2?: string,
