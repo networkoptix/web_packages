@@ -14654,8 +14654,25 @@
     "/open/packages/webrtc-stream-manager/": {
         "@networkoptix/webrtc-stream-manager@0.1.1": {
             "licenses": "MPL-2.0",
+            "publisher": "Network Optix",
             "path": "cloud_portal/open/packages/webrtc-stream-manager",
             "licenseFile": "cloud_portal/open/packages/webrtc-stream-manager/README.md"
+        }
+    },
+    "/open_candidate/examples/example-explorer/": {
+        "example-explorer@0.0.0": {
+            "licenses": "UNLICENSED",
+            "private": [],
+            "path": "cloud_portal/open_candidate/examples/example-explorer",
+            "licenseFile": "cloud_portal/open_candidate/examples/example-explorer/README.md"
+        }
+    },
+    "/open_candidate/examples/request-interceptor-example/": {
+        "request-interceptor-example@0.0.0": {
+            "licenses": "UNLICENSED",
+            "private": [],
+            "path": "cloud_portal/open_candidate/examples/request-interceptor-example",
+            "licenseFile": "cloud_portal/open_candidate/examples/request-interceptor-example/README.md"
         }
     },
     "/open_candidate/": {
@@ -14664,6 +14681,14 @@
             "private": [],
             "path": "cloud_portal/open_candidate",
             "licenseFile": "cloud_portal/open_candidate/README.md"
+        }
+    },
+    "/open_candidate/packages/request-interceptor/": {
+        "@networkoptix/request-interceptor@0.1.1": {
+            "licenses": "MPL-2.0",
+            "publisher": "Network Optix",
+            "path": "cloud_portal/open_candidate/packages/request-interceptor",
+            "licenseFile": "cloud_portal/open_candidate/packages/request-interceptor/README.md"
         }
     }
 }

@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-NODE_VERSION="16.13.1"
-NPM_VERSION="8.1.2"
+NODE_VERSION="18.15.0"
+NPM_VERSION="9.5.0"
 
 function build_frontend () {
     echo "Building front_end"

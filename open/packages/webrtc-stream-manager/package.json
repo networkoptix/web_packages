@@ -1,6 +1,7 @@
 {
     "name": "@networkoptix/webrtc-stream-manager",
     "version": "0.1.1",
+    "author": "Network Optix",
     "main": "dist/lib/index.js",
     "types": "dist/types/index.d.ts",
     "license": "MPL-2.0",

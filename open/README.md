@@ -22,7 +22,7 @@ For libraries contained in this repository the compiled packages will be publish
 
 ### Published packages can be found on the links below.
 
--   Javascript / Typescript (NPM): https://www.npmjs.com/~networkoptix
+-   Javascript / Typescript (NPM): https://www.npmjs.com/org/networkoptix
 
 ---
 

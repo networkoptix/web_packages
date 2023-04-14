@@ -1,0 +1,53 @@
+<!-- Copyright 2018-present Network Optix, Inc. Licensed under MPL 2.0: www.mozilla.org/MPL/2.0/ -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Request Interceptor Example</title>
+</head>
+
+<body>
+  <div id="app">
+    <h1 id="description"></h1>
+    <div class="instructions">
+      <div id="regular">
+        <p>To test the <b>RequestInterceptor</b> add the token that you would like to use for bearer authentication and
+          a url to make an authenticated request</p>
+        <p>The token will be automatically added to the fetch request before it's handled by the browser. This works for
+          all fetch request, even ones made outside this demo app.</p>
+        <p>If you make a request to in the developer console and inspect the headers for that request you'll see the
+          header was also added to that request which was made outside of the demo app.</p>
+        <h2>VMS In Client API</h2>
+        <p>The request interceptor can also work <b>WithVmsSessionMiddleware</b> which is able to provide the session
+          token when you open this page within the Nx Meta Desktop Client version 5.1 or later.</p>
+      </div>
+      <div id="vms">
+        <p>It looks like you're accessing this example page from an Nx Meta Desktop client with in client javascript api
+          enabled.</p>
+        <p>Your access token has been filled in automatically and will be used for bearer authentication for request to
+          this system.</p>
+        <p>Add either a direct or relayed url to make a GET request to this system.</p>
+      </div>
+    </div>
+    <div class="card">
+      <form>
+        <div>
+          <label for="token" id="token-label">Access Token</label>
+          <input type="text" id="token" placeholder="nxcdb-5b5c4b23-e9c9-4c6e-9d3a-78536c9bde00" />
+        </div>
+        <div>
+          <label for="url">Url</label>
+          <input type="text" id="url" placeholder="https://{systemId}.{relayUrl}/rest/v1/system/settings" />
+        </div>
+        <button id="send">Make GET Request using Bearer Authentication</button>
+      </form>
+      <pre id="response"></pre>
+    </div>
+  </div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>

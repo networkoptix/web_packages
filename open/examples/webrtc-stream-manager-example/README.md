@@ -2,9 +2,9 @@
 
 # WebRTC Stream Manager Example ![License: MPL--2.0"](https://img.shields.io/badge/License-MPL--2.0-yellow.svg)
 
-This a minimal example of how to use the `webrtc-stream-manager` package to integrate streaming from an Nx Meta VMS server to your own integrations.
+This a minimal example of how to use the `@networkoptix/webrtc-stream-manager` package to integrate streaming from an Nx Meta VMS server to your own integrations.
 
-For full documentation on the `webrtc-stream-manager` package [view the readme](../../packages/webrtc-stream-manager/README.md).
+For full documentation on the `@networkoptix/webrtc-stream-manager` package [view the readme](../../packages/webrtc-stream-manager/README.md).
 
 ---
 
@@ -36,7 +36,7 @@ Enter the `server_url`, `camera_id`, and `auth` then click the `Start WebRTC Con
 
 ## Demo Source code
 
-The relevant part of the source code related to the `webrtc-stream-manager` package is in `startStream` function in the [main.ts](./src/main.ts) file.
+The relevant part of the source code related to the `@networkoptix/webrtc-stream-manager` package is in `startStream` function in the [main.ts](./src/main.ts) file.
 
 We pass in the `webRtcUrlFactory` and `videoElement` into the `WebRTCStreamManager.connect` static method.
 

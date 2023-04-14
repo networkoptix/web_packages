@@ -3,8 +3,8 @@
   "version": "22.1.0",
   "sideEffects": false,
   "engines": {
-    "npm": ">=8 <9",
-    "node": "=16.13.1",
+    "npm": ">=9 <10",
+    "node": "=18.15.0",
     "engineStrict": "true"
   },
   "nx": {
@@ -42,7 +42,7 @@
     "serve-webadmin-amir1": "export WEBADMIN_TARGET=amir1 && npm run serve:webadmin",
     "serve-webadmin-amir2": "export WEBADMIN_TARGET=amir2 && npm run serve:webadmin",
     "preci:open": "npm run build-open-libs",
-    "ci:open": "npm explore nx-open-web -- npm run ci:check",
+    "ci:open": "npm explore nx-open-web -- npm run ci:check && npm explore nx-open-web-candidate -- npm run ci:check",
     "auth:dev:ssr": "npm run setVarSkin && npm run update-lang-files && npx nx run authorization:serve-ssr:$CLOUD_TARGET --proxy-config proxy.conf.auth.ssr.js",
     "auth:serve:ssr": "node dist/authorization/server/main.js",
     "auth:build:ssr": "npm run cleardist && npx nx run authorization:server:production --skip-nx-cache=true",
@@ -70,7 +70,7 @@
     "explore:css": "source-map-explorer ./dist/*.css",
     "postbuild": "./cloud-portal-postbuild.sh",
     "postbuild-webadmin": "./cloud-portal-postbuild.sh true",
-    "set-node-version": "npx n 16.13.1",
+    "set-node-version": "npx n 18.15.0",
     "postinstall": "ngcc && node setSkin.mjs --skin blue && node ./decorate-angular-cli.js",
     "test:local": "nx run-many --target test --all --parallel=$(getconf _NPROCESSORS_ONLN) --configuration production --skip-nx-cache=true",
     "test:ci": "npx nx run-many --target test --all --parallel=$(getconf _NPROCESSORS_ONLN) --configuration production --skip-nx-cache=true",

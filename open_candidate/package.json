@@ -3,7 +3,11 @@
   "version": "0.0.0",
   "license": "MPL-2.0",
   "scripts": {
-    "build": "npx nx run-many --target=build --all"
+    "build": "nx run-many --target=build --all",
+    "build:demo": "nx run-many --target=build:demo --all --exclude example-explorer",
+    "run:demo": "npm run build:demo && nx run example-explorer:serve",
+    "deploy:demo": "npm run build:demo && nx run example-explorer:deploy:demo",
+    "ci:check": "nx run-many --target=ci:check --all"
   },
   "private": true,
   "devDependencies": {
@@ -13,7 +17,11 @@
     "prettier": "^2.6.2",
     "typescript": "^5.0.2"
   },
+  "dependencies": {
+    "@mswjs/interceptors": "^0.22.10"
+  },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "examples/*"
   ]
 }

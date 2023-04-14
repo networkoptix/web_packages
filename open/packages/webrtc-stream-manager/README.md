@@ -2,7 +2,7 @@
 
 # WebRTC Stream Manager ![License: MPL--2.0"](https://img.shields.io/badge/License-MPL--2.0-yellow.svg)
 
-## What is `webrtc-stream-manager`?
+## What is `@networkoptix/webrtc-stream-manager`?
 
 This package simplifies playing back videos via `WebRTC` from `Nx Meta VMS` mediaservers versions 5.1 or later.
 
@@ -22,7 +22,7 @@ The `WebRTCStreamManager.connect` method takes as a first argument a function th
 
 The camera_id and auth query parameters are required, pos is optional.
 
-```ts
+```typescript
 // Could be a direct connection '{serverIp}:{port}` or a cloud relayed connection '{serverId}.{cloudSystemId}.{relayUrl}'
 const serverUrl = 'Server url';
 const cameraId = 'Camera id';
@@ -48,13 +48,13 @@ To start autoplaying you can also set `muted` and `autoplay` to true.
 <video id="someTargetId" autoplay muted></video>
 ```
 
-```ts
+```typescript
 const videoElement = document.querySelector('video#someTargetId')
 ```
 
 #### Initializing connection and setting video source
 
-```ts
+```typescript
 WebRTCStreamManager.connect(webRtcUrlFactory, videoElement).subscribe(([stream, error]) => {
   if (stream) {
     targetVideoElement.srcObject = stream;
