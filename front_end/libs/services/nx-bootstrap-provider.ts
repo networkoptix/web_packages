@@ -88,8 +88,7 @@ export class NxBootstrapProvider {
                 this.getModuleInfo()
             ]).then(([language, moduleInfo]: any) => {
                 this.setLanguage(language);
-
-                if (moduleInfo) {
+                if (!!moduleInfo && Object.keys(moduleInfo).length > 0) {
                     this.isNewSystem = moduleInfo.serverFlags.includes('SF_NewSystem');
                     this.setLocalInfo(moduleInfo).then(() => {
                         this.configService.updateConfigUsingOverrides();

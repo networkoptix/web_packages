@@ -160,7 +160,10 @@ export class MergeModalContent {
         pickFrom(this.dialogData, ['system', 'systems'], this);
 
         this.machine = new StateMachine(this.checkMerge, State);
-        this.init();
+        this.getSystemInfo(this.system.id).then(({ reply: data }) => {
+            this.system.moduleInfo = data;
+            this.init();
+        });
     }
 
     async init(targetSystem?, currentUrl?): Promise<void> {
@@ -950,7 +953,7 @@ export class MergeModalContent {
 
         let stateOfHealth = (system.info && system.info.stateOfHealth) ||
             system.stateOfHealth || system.status || '';
-        if (system.protoVersion && system.protoVersion !== this.system.moduleInfo.protoVersion) {
+        if (system.protoVersion && system.protoVersion !== this.system?.moduleInfo?.protoVersion) {
             stateOfHealth = 'incompatible';
         }
 
@@ -997,7 +1000,7 @@ export class MergeModalContent {
 
     checkMergeability(system) {
         let stateOfHealth = (system.info && system.info.stateOfHealth) || system.stateOfHealth || system.status || '';
-        if (system.protoVersion && system.protoVersion !== this.system.moduleInfo.protoVersion) {
+        if (system.protoVersion && system.protoVersion !== this.system?.moduleInfo?.protoVersion) {
             stateOfHealth = 'Incompatible';
         }
 

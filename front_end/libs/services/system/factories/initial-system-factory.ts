@@ -1,6 +1,6 @@
 import { NxSystemOldModule } from '@services/system/modules/nx-system-old-module';
 import { NxSystemBase } from '@services/system/system-base';
-import { SystemVersion } from '@services/system/system-version';
+import { AllSystemVersions, SystemVersion } from '@services/system/system-version';
 
 import { CameraManagerModule } from '../modules/resource-managers/camera-manager';
 import { ServerManagerModule } from '../modules/resource-managers/server-manager';
@@ -35,6 +35,9 @@ const classes = {
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const getBaseSystem = (version: SystemVersion) => {
+    if (!AllSystemVersions.includes(version)) {
+        version = 0;
+    }
     const SystemClass: typeof classes[SystemVersion] = classes[version];
     return new SystemClass();
 };

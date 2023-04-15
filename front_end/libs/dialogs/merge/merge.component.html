@@ -70,7 +70,7 @@
     name="checkMergeForm"
 >
     <div class="modal-body">
-        <p>{{ machine.state.template.bodyTitle | translate }}</p>
+        <p>{{ machine.state.template.bodyTitle | nxTranslate }}</p>
         <nx-select
             #checkMergeDropdown
             *ngIf="machine.state.show.systemDropdown"
@@ -87,7 +87,7 @@
             *ngIf="machine.state.show.helpText"
             class="light-text"
         >
-            {{ machine.state.template.helpText | translate }}
+            {{ machine.state.template.helpText | nxTranslate }}
         </p>
         <div
             *ngIf="machine.state.show.serverUrlInput"
@@ -122,7 +122,7 @@
             />
             <label
                 *ngIf="machine.state.show.serverUrlInputValidationErrorText"
-                [innerHTML]="machine.state.template.serverUrlInputValidationErrorText | translate"
+                [innerHTML]="machine.state.template.serverUrlInputValidationErrorText | nxTranslate"
                 class="error-label"
                 for="serverUrl"
             >
@@ -131,7 +131,7 @@
         <p
             *ngIf="machine.state.show.checkingErrorText"
             [ngClass]="{ 'error-text-margin': machine.state.show.serverUrlInput }"
-            [innerHTML]="machine.state.template.checkingErrorText | translate"
+            [innerHTML]="machine.state.template.checkingErrorText | nxTranslate"
             class="error-label"
         ></p>
     </div>
@@ -210,7 +210,7 @@
             />
             <label
                 *ngIf="machine.state.show.passwordError"
-                [innerHTML]="machine.state.template.passwordErrorText | translate | safe: 'html'"
+                [innerHTML]="machine.state.template.passwordErrorText | nxTranslate | safe: 'html'"
                 class="error-label password-label-margin mb-0"
                 for="adminPassword"
             >
@@ -244,7 +244,7 @@
     name="serverUrlErrorsForm"
 >
     <div class="modal-body">
-        <p [innerHTML]="machine.state.template.urlErrorText | translate | safe: 'html'"></p>
+        <p [innerHTML]="machine.state.template.urlErrorText | nxTranslate | safe: 'html'"></p>
     </div>
     <div class="modal-footer next-button">
         <button
@@ -397,7 +397,7 @@
             />
             <label
                 *ngIf="machine.state.show.passwordError"
-                [innerHTML]="machine.state.template.passwordErrorText | translate"
+                [innerHTML]="machine.state.template.passwordErrorText | nxTranslate"
                 class="error-label error-text-margin mb-0"
                 for="cloudOwnerPassword"
             >
