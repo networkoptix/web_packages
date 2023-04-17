@@ -33,7 +33,7 @@ export class NxVideoPlayerComponent {
     @ViewChild('webRtcPlayer') webRtcPlayerRef: ElementRef<HTMLVideoElement>;
     @HostBinding('class') get class() {
         const { paused, currentTime } = this.webRtcPlayerRef?.nativeElement || { paused: true, currentTime: 0 };
-        return !paused && currentTime ? 'playing' : '';
+        return !paused && currentTime? 'playing' : '';
     }
 
     static POSTER_RETRIES = 5
@@ -85,7 +85,6 @@ export class NxVideoPlayerComponent {
                 }
 
                 if (error) {
-                    // this.error = error;
                     this.showError.emit(error);
                 }
                 this.loading = false;
@@ -100,7 +99,10 @@ export class NxVideoPlayerComponent {
          */
         this.camera.previewUrl
             .pipe(
-                map(blob => blob !== ''),
+                switchMap(async objectgUrl => {
+                    const text = await fetch(objectgUrl).then(r => r.blob()).then(b => b.text()).catch(() => null);
+                    return !!text
+                }),
                 switchMap(authorized => {
                     if (authorized) {
                         return stream$;

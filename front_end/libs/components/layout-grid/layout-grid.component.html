@@ -130,10 +130,13 @@
                     [src]="
                         icons.dirLayouts +
                         node.type +
-                        (node.details?.status
+                        (node.details && (errorIcons[node.details.id] || node.details.status)
                             ? '_' +
-                              (node.type !== 'camera' || node.details.status === 'unauthorized'
-                                  ? node.details.status
+                              (node.type !== 'camera' ||
+                              ['warning', 'unauthorized'].includes(
+                                  errorIcons[node.details.id] || node.details.status
+                              )
+                                  ? errorIcons[node.details.id] || node.details.status
                                   : node.details.online
                                   ? 'online'
                                   : 'offline')
@@ -332,6 +335,7 @@
 <div
     *ngIf="layoutItemLookup && (layout$ | async) as layout; else preloader"
     class="grid-wrapper"
+    [ngClass]="{ locked: layout.locked || changingLayout }"
     (resize)="updateWrapperSize($event)"
     [ngStyle]="(aspectHandler$ | async)?.outerWrapper"
 >

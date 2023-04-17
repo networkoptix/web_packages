@@ -7,8 +7,16 @@ video {
     transition: background 0.5s;
 }
 
+video {
+    opacity: 1;
+    transition: opacity 0.5s;
+}
+
 :host:not(.playing) {
     background: var(--header-bg);
+    video {
+        opacity: 0;
+    }
 }
 
 .overlay {

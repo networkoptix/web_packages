@@ -295,6 +295,7 @@ cdk-tree,
         flex-wrap: wrap;
         justify-content: center;
         align-items: center;
+        background: var(--header-bg);
 
         &>.item-error {
             flex-direction: row;
@@ -318,6 +319,13 @@ cdk-tree,
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+}
+
+.locked {
+    .layout-item, .layout-item-wrapper {
+        outline: unset !important;
+        cursor: unset !important;
     }
 }
 

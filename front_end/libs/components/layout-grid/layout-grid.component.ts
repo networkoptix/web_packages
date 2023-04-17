@@ -178,6 +178,7 @@ export class NxLayoutGridComponent {
     addOffset = 0;
     changingLayout: string | boolean = true;
     errors: Record<string, string> = {};
+    errorIcons: Record<string, string> = {};
     additionalErrorMessages: Record<string, Translatable> = {};
     icons = icons;
     readonly RESOURCE_TYPE = ResourceType;
@@ -937,6 +938,7 @@ export class NxLayoutGridComponent {
             itemDetail.details.online = false;
             const serverName = this.layoutItemLookup[itemDetail.details.parentId].name;
             this.errors[itemDetail.details.id] = staticLang.common.cameraStates.unavailable;
+            this.errorIcons[itemDetail.details.id] = 'offline';
             this.additionalErrorMessages[itemDetail.details.id] = {
                 value: staticLang.layouts.additionalErrorMessages.unreachable,
                 params: { serverName },
@@ -945,6 +947,7 @@ export class NxLayoutGridComponent {
 
         const showDefaultPasswordError = (): void => {
             this.errors[itemDetail.details.id] = 'defaultPassword';
+            this.errorIcons[itemDetail.details.id] = 'warning';
         };
 
         if (error === ConnectionError.authorization) {
