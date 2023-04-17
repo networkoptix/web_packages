@@ -592,8 +592,11 @@ class CloudPortalAPI(object):
                 backup_code=backup_code, verification_code=verification_code) as s:
             s.headers.update({'Referer': self.env})
             r = s.get(f'{self.env}/api/account')
-            logger.trace(r.json())
-            if r.json()['account2faEnabled'] == True or r.json()['totpExistsForAccount'] == True:
+            logger.trace(f"/api/account json: {r.json()}")
+            s.headers.update({"Authorization": f"Bearer {r.json()['accessToken']}"})
+            sec = s.get(f'{self.env}/cdb/account/self/settings/security')
+            del s.headers["Authorization"]
+            if sec.json().get('account2faEnabled') or sec.json().get('totpExistsForAccount'):
                 s.headers.update({'Referer': self.env})
                 body = {"action": "deactivate", "mfaCode": verification_code}
                 securityRes = s.post(
