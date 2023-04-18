@@ -27,7 +27,10 @@ export interface NxSystemCamera extends Omit<ec2CameraEx, 'addParams'> {
 }
 
 export type TaskUpdate = Pick<Task, 'fps' | 'recordingType' | 'streamQuality'>;
-export type CameraUpdate = Pick<NxSystemCamera, 'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'motionType' | 'motionMask'>;
+export type CameraUpdate = Pick<
+    NxSystemCamera,
+    'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'motionType' | 'motionMask'
+>;
 
 export interface SaveCameraUserAttributes extends CameraUpdate {
     scheduleTasks?: Omit<Task, 'metadataTypes'>[];
@@ -94,7 +97,7 @@ export enum RecordingType {
     META_NEVER = 'never',
     META_ALWAYS = 'always',
     META_ONLY = 'metadataOnly',
-    META_LOW = 'metadataAndLowQuality'
+    META_LOW = 'metadataAndLowQuality',
 }
 
 export type StreamQuality = 'low' | 'normal' | 'high' | 'highest' | 'various';

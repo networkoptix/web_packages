@@ -564,6 +564,7 @@ module.exports = {
         {
             files: [
                 // '*.js', '*.ts'
+                '*types.ts',
                 'libs/components/**/*.ts',
                 'libs/db/**/*.ts',
                 'libs/decorators/**/*.ts',

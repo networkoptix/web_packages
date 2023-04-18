@@ -11,7 +11,14 @@ export interface ILanguage {
     name: string;
 }
 
-export type WithFreshSession = (minSessionSeconds?: number) => <T>(observableInputFactory: (config: { accessToken: string; getFreshAccessToken: () => Observable<string> }) => ObservableInput<T>) => Observable<T>;
+export type WithFreshSession = (
+    minSessionSeconds?: number,
+) => <T>(
+    observableInputFactory: (config: {
+        accessToken: string;
+        getFreshAccessToken: () => Observable<string>;
+    }) => ObservableInput<T>,
+) => Observable<T>;
 
 export type ILanguages = ILanguage[];
 
@@ -23,7 +30,7 @@ export interface CloudResponse {
 }
 
 export interface AuthKey {
-    'auth_key': string;
+    auth_key: string;
 }
 
 export interface VisitedKey {
@@ -135,7 +142,7 @@ export interface IPVDCameras {
     cameras: Cameras[];
     vendors: Vendors[];
     analytics: string[];
-    'num_cameras': number;
+    num_cameras: number;
     cached: boolean;
 }
 
@@ -214,11 +221,13 @@ export interface ReadOnlyAPI {
 }
 
 export interface ReadOnlyAPIDetail extends ReadOnlyAPI {
-    files: [{
-        filename: string;
-        type: 'JSON' | 'Preamble Markdown File' | 'Changelog Markdown File';
-        content: APIDoc | string;
-    }];
+    files: [
+        {
+            filename: string;
+            type: 'JSON' | 'Preamble Markdown File' | 'Changelog Markdown File';
+            content: APIDoc | string;
+        },
+    ];
 }
 
 export interface Installer {
@@ -378,7 +387,7 @@ export interface SystemTransferInfo {
 
 export enum DOC_TYPES {
     knowledgebase = 'kb',
-    struct = 'struct'
+    struct = 'struct',
 }
 
 export interface LicenseServerInfo {
@@ -389,9 +398,7 @@ export interface LicenseServerInfo {
 
 export type ReleasesTypes = keyof typeof staticLang.downloads.releasesTypes;
 
-export type BuildHistory =
-    { [type in ReleasesTypes]?: Downloads[] } &
-    { updatesPrefix: string };
+export type BuildHistory = { [type in ReleasesTypes]?: Downloads[] } & { updatesPrefix: string };
 
 export interface Build extends Downloads {
     updatesPrefix: string;

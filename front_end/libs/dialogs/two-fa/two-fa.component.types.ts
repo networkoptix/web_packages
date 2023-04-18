@@ -15,5 +15,5 @@ export enum T_FA_STEPS {
     WizardCode,
     WizardFinish,
     VerificationToggle,
-    Disable2FaCode
+    Disable2FaCode,
 }

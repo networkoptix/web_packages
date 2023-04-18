@@ -16,17 +16,18 @@ export interface AuthorizeParams {
     lang?: string;
 }
 
-export type AuthorizeStateType = 'email' |
-    'password' |
-    'create' |
-    'activate' |
-    'confirm' |
-    'request' |
-    'reset' |
-    'error' |
-    'auth' |
-    'backup' |
-    'notSecure';
+export type AuthorizeStateType =
+    | 'email'
+    | 'password'
+    | 'create'
+    | 'activate'
+    | 'confirm'
+    | 'request'
+    | 'reset'
+    | 'error'
+    | 'auth'
+    | 'backup'
+    | 'notSecure';
 
 export enum AuthorizeState {
     email = 'email',
@@ -40,7 +41,7 @@ export enum AuthorizeState {
     auth = 'authCode',
     backup = 'backupCode',
     notSecure = 'notSecure',
-    show404 = 'show404'
+    show404 = 'show404',
 }
 
 export enum ClientType {

@@ -30,10 +30,12 @@ interface JsonRpcResult<T> {
     error: ErrorDetails;
 }
 
-export interface JsonRpcRequest<T = unknown> extends JsonRpcBase, JsonRpcPayload<T> { }
+export interface JsonRpcRequest<T = unknown> extends JsonRpcBase, JsonRpcPayload<T> {}
 
-export interface JsonRpcResponse<T = unknown> extends JsonRpcBase, JsonRpcResult<T> { }
+export interface JsonRpcResponse<T = unknown> extends JsonRpcBase, JsonRpcResult<T> {}
 
-export type JsonRpcMessage<Payload = unknown, Response = unknown> = JsonRpcRequest<Payload> | JsonRpcResponse<Response>;
+export type JsonRpcMessage<Payload = unknown, Response = unknown> =
+    | JsonRpcRequest<Payload>
+    | JsonRpcResponse<Response>;
 
 export type HandlerState = Observable<JsonRpcMessage<unknown, unknown>>;

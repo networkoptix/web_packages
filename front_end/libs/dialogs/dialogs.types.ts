@@ -204,7 +204,7 @@ export type EditOrgUser = DialogType<void, void>;
 /* New feature */
 export interface NewFeatureDynamicData {
     content: TemplateRef<unknown>;
-    data: void ;
+    data: void;
 }
 export interface CloudStorageInfoData {
     content: NewFeatureTemplate.CloudStorage;

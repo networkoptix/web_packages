@@ -1,6 +1,11 @@
 import type { ParsedNetworkAddresses } from '@utils/nx';
 
-import type { ec2CameraEx, ec2MediaServer, ec2MediaServerEx, RestPartialServer } from '../system-api.types';
+import type {
+    ec2CameraEx,
+    ec2MediaServer,
+    ec2MediaServerEx,
+    RestPartialServer,
+} from '../system-api.types';
 
 export interface AddResponseTypeHere extends IParams {}
 
@@ -8,8 +13,9 @@ export interface IParams<Value = any> {
     [key: string]: Value;
 }
 
-export type NxSystemServer = ParsedNetworkAddresses<ec2MediaServerEx> |
-    ParsedNetworkAddresses<RestPartialServer>;
+export type NxSystemServer =
+    | ParsedNetworkAddresses<ec2MediaServerEx>
+    | ParsedNetworkAddresses<RestPartialServer>;
 
 export interface ModuleInfo {
     brand: string;

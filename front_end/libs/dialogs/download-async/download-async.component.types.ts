@@ -2,13 +2,13 @@ export enum PackageProgress {
     STARTING,
     GENERATING,
     DOWNLOAD_READY,
-    PACKAGE_ERROR
+    PACKAGE_ERROR,
 }
 
 export enum PackageState {
     PENDING = 'pending',
     READY = 'ready',
-    FAILED = 'failed'
+    FAILED = 'failed',
 }
 
 export interface PackageStatus {

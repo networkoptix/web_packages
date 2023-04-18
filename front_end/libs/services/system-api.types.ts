@@ -284,10 +284,10 @@ export interface RestUserCompat extends RestUser {
 }
 
 export interface UserSession {
-  username: string;
-  token: string;
-  ageS: number;
-  expiresInS: number;
+    username: string;
+    token: string;
+    ageS: number;
+    expiresInS: number;
 }
 
 interface AggregatedEc2UsersReply {
@@ -323,12 +323,13 @@ export type ec2SaveUser = Partial<{
     password: string;
 }>;
 
-export type RestV1SaveUser = ec2SaveUser & Partial<{
-    type: string;
-    isOwner: boolean;
-    accessibleResources: unknown;
-    isHttpDigestEnabled: boolean;
-}>;
+export type RestV1SaveUser = ec2SaveUser &
+    Partial<{
+        type: string;
+        isOwner: boolean;
+        accessibleResources: unknown;
+        isHttpDigestEnabled: boolean;
+    }>;
 
 export interface ChangedIdReturned {
     id: string;
@@ -391,29 +392,21 @@ export interface ec2CameraEx extends ec2Camera {
 }
 
 // Only works one level of nesting deep but should be fine for now
-export const getRestCameraKeys = [
-    'id',
-    'deviceType',
-    'name',
-    'serverId',
-    'status',
-    'url',
-] as const;
+export const getRestCameraKeys = ['id', 'deviceType', 'name', 'serverId', 'status', 'url'] as const;
 export const getRestCameraNestedKeys = {
     schedule: ['isEnabled'],
 } as const;
-export type GetRestCamera = Pick<Device, typeof getRestCameraKeys[number]> &
-    {
-        -readonly [key in keyof typeof getRestCameraNestedKeys]: {
-            [nKey in (typeof getRestCameraNestedKeys[key])[number]]: Device[key][nKey]
-        }
+export type GetRestCamera = Pick<Device, typeof getRestCameraKeys[number]> & {
+    -readonly [key in keyof typeof getRestCameraNestedKeys]: {
+        [nKey in typeof getRestCameraNestedKeys[key][number]]: Device[key][nKey];
     };
-export type RestCamera =
-    { [key in keyof Omit<
+};
+export type RestCamera = {
+    [key in keyof Omit<
         ec2CameraEx,
         keyof Omit<GetRestCamera, 'schedule' | 'serverId'> | 'scheduleEnabled' | 'parentId'
-    >]: never; } &
-    Omit<GetRestCamera, 'schedule' | 'serverId'> &
+    >]: never;
+} & Omit<GetRestCamera, 'schedule' | 'serverId'> &
     Pick<ec2CameraEx, 'scheduleEnabled' | 'parentId'>;
 
 export type EmptyObjectReturned = Record<string, never>;
@@ -449,15 +442,15 @@ export interface ec2MediaServerEx extends ec2MediaServer {
 }
 
 type RestServerSharedKeys =
-    'flags' |
-    'id' |
-    'maxCameras' |
-    'metadataStorageId' |
-    'name' |
-    'status' |
-    'storages' |
-    'url' |
-    'version';
+    | 'flags'
+    | 'id'
+    | 'maxCameras'
+    | 'metadataStorageId'
+    | 'name'
+    | 'status'
+    | 'storages'
+    | 'url'
+    | 'version';
 export interface RestServer extends Pick<ec2MediaServerEx, RestServerSharedKeys> {
     endpoints: string[];
     osInfo: {
@@ -478,13 +471,13 @@ export const getRestServerKeys = [
     'version',
 ] as const;
 export type GetRestServer = Pick<RestServer, typeof getRestServerKeys[number]>;
-export type RestPartialServer =
-    { [key in keyof Omit<ec2MediaServerEx, keyof GetRestServer | 'networkAddresses'>]: never; } &
-    // Because of the API inheritance, we still need all of the type properties from ec2Ex
-    // on the rest server type for now
-    Omit<GetRestServer, 'osInfo'> &
+export type RestPartialServer = {
+    /* Because of the API inheritance, we still need all of the type properties from ec2Ex
+    on the rest server type for now */
+    [key in keyof Omit<ec2MediaServerEx, keyof GetRestServer | 'networkAddresses'>]: never;
+} & Omit<GetRestServer, 'osInfo'> &
     Pick<ec2MediaServer, 'osInfo' | 'networkAddresses'>;
-    // Compatibility patch for now
+// Compatibility patch for now
 
 export type AggregatedServersAndCameras = NormalResponse<{
     '/ec2/getMediaServers': ec2MediaServer[];
@@ -802,7 +795,7 @@ export class SystemConfigSettings {
 
 enum EventState {
     ACTIVE = 'Active',
-    INACTIVE = 'Inactive'
+    INACTIVE = 'Inactive',
 }
 
 export interface EventParams {
@@ -825,34 +818,34 @@ export enum CameraDiagnosticSteps {
     MEDIASERVER_AVAILABILITY = 'mediaServerAvailability',
     CAMERA_AVAILABILITY = 'cameraAvailability',
     STREAM_AVAILABILITY = 'mediaStreamAvailability',
-    STREAM_INTEGRITY = 'mediaStreamIntegrity'
+    STREAM_INTEGRITY = 'mediaStreamIntegrity',
 }
 
 export enum EventTypes {
-   UNDEFINED = 'UndefinedEvent',
-   CAMERA_MOTION = 'CameraMotionEvent',
-   CAMERA_INPUT = 'CameraInputEvent',
-   CAMERA_DISCONNECT = 'CameraDisconnectEvent',
-   STORAGE_FAILURE = 'StorageFailureEvent',
-   NETWORK_ISSUE = 'NetworkIssueEvent',
-   IP_CONFLICT = 'CameraIpConflictEvent',
-   SERVER_FAILURE = 'ServerFailureEvent',
-   SERVER_CONFLICT = 'ServerConflictEvent',
-   SERVER_START = 'ServerStartEvent',
-   LICENSE_ISSUE = 'LicenseIssueEvent',
-   BACKUP_FINISHED = 'BackupFinishedEvent',
-   SYSTEM_HEALTH = 'SystemHealthEvent',
-   MAX_SYSTEM_HEALTH = 'MaxSystemHealthEvent',
-   ANY_CAMERA = 'AnyCameraEvent',
-   ANY_SERVER = 'AnyServerEvent',
-   ANY_BUSINESS = 'AnyBusinessEvent',
-   SOFT_TRIGGER = 'softwareTriggerEvent',
-   ANALYTICS = 'analyticsSdkEvent',
-   PLUGIN_DIAGNOSTIC = 'pluginDiagnosticEvent',
-   POE_OVER_BUDGET = 'poeOverBudgetEvent',
-   FAN_ERROR = 'fanErrorEvent',
-   ANY = 'anyEvent',
-   USER_DEFINED = 'userDefinedEvent',
+    UNDEFINED = 'UndefinedEvent',
+    CAMERA_MOTION = 'CameraMotionEvent',
+    CAMERA_INPUT = 'CameraInputEvent',
+    CAMERA_DISCONNECT = 'CameraDisconnectEvent',
+    STORAGE_FAILURE = 'StorageFailureEvent',
+    NETWORK_ISSUE = 'NetworkIssueEvent',
+    IP_CONFLICT = 'CameraIpConflictEvent',
+    SERVER_FAILURE = 'ServerFailureEvent',
+    SERVER_CONFLICT = 'ServerConflictEvent',
+    SERVER_START = 'ServerStartEvent',
+    LICENSE_ISSUE = 'LicenseIssueEvent',
+    BACKUP_FINISHED = 'BackupFinishedEvent',
+    SYSTEM_HEALTH = 'SystemHealthEvent',
+    MAX_SYSTEM_HEALTH = 'MaxSystemHealthEvent',
+    ANY_CAMERA = 'AnyCameraEvent',
+    ANY_SERVER = 'AnyServerEvent',
+    ANY_BUSINESS = 'AnyBusinessEvent',
+    SOFT_TRIGGER = 'softwareTriggerEvent',
+    ANALYTICS = 'analyticsSdkEvent',
+    PLUGIN_DIAGNOSTIC = 'pluginDiagnosticEvent',
+    POE_OVER_BUDGET = 'poeOverBudgetEvent',
+    FAN_ERROR = 'fanErrorEvent',
+    ANY = 'anyEvent',
+    USER_DEFINED = 'userDefinedEvent',
 }
 
 export enum ActionTypes {
@@ -871,7 +864,7 @@ export enum ActionTypes {
     SHOW_TEXT_OVERLAY = 'ShowTextOverlayAction',
     SHOW_ON_ALARM_LAYOUT = 'ShowOnAlarmLayoutAction',
     EXEC_HTTP_REQUEST = 'ExecHttpRequestAction',
-    BUZZER = 'BuzzerAction'
+    BUZZER = 'BuzzerAction',
 }
 
 export interface ServerNetworkSettings {
@@ -1023,7 +1016,7 @@ interface Speed {
 
 export enum PtzCommands {
     RELATIVE_MOVE = 'RelativeMovePtzCommand',
-    RELATIVE_FOCUS = 'RelativeFocusPtzCommand'
+    RELATIVE_FOCUS = 'RelativeFocusPtzCommand',
 }
 
 export interface BasePtzCommand<Command> extends CameraId {
@@ -1066,33 +1059,36 @@ type HiddenParams = Partial<{
     // Single string = array of one string
 }>;
 
-export type BookmarksParams = HiddenParams & Partial<{
-    startTimeMs: number;
-    endTimeMs: number;
-    text: string;
-    limit: number;
-    order: 'asc' | 'desc';
-    column: 'name' |
-        'startTime' |
-        'duration' |
-        'creationTime' |
-        'creator' |
-        'tags' |
-        'description' |
-        'cameraName';
-    minVisibleLengthMs: number;
-    creationStartTimeMs: number;
-    creationEndTimeMs: number;
-    _orderBy: Boomarks_orderBy | Boomarks_orderBy[];
-}>;
-type Boomarks_orderBy = 'id' |
-    'deviceId' |
-    'name' |
-    'description' |
-    'startTimeMs' |
-    'durationMs' |
-    'creatorUserId' |
-    'creationTimeMs';
+export type BookmarksParams = HiddenParams &
+    Partial<{
+        startTimeMs: number;
+        endTimeMs: number;
+        text: string;
+        limit: number;
+        order: 'asc' | 'desc';
+        column:
+            | 'name'
+            | 'startTime'
+            | 'duration'
+            | 'creationTime'
+            | 'creator'
+            | 'tags'
+            | 'description'
+            | 'cameraName';
+        minVisibleLengthMs: number;
+        creationStartTimeMs: number;
+        creationEndTimeMs: number;
+        _orderBy: Boomarks_orderBy | Boomarks_orderBy[];
+    }>;
+type Boomarks_orderBy =
+    | 'id'
+    | 'deviceId'
+    | 'name'
+    | 'description'
+    | 'startTimeMs'
+    | 'durationMs'
+    | 'creatorUserId'
+    | 'creationTimeMs';
 
 export interface Bookmark {
     creationTimeMs: number;

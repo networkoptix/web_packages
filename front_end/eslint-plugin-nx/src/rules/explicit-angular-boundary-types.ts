@@ -32,14 +32,14 @@ export = createRule({
             missingInput: 'Missing Input type.',
             inferType: 'Infer type from default value',
             missingOutput: 'Missing Output generic.',
-        }
+        },
     },
     defaultOptions: [],
     create(context) {
         return {
             'PropertyDefinition[decorators]'(node: TSESTree.PropertyDefinition) {
-                const isInput = node.decorators.some((d: Decorator) =>
-                    decoratorHasCall(d) && decoratorName(d) === 'Input'
+                const isInput = node.decorators.some(
+                    (d: Decorator) => decoratorHasCall(d) && decoratorName(d) === 'Input',
                 );
                 if (isInput && !node.typeAnnotation) {
                     const { value } = node;
@@ -49,15 +49,17 @@ export = createRule({
                             context.report({
                                 node,
                                 messageId: 'missingInput',
-                                suggest: [{
-                                    messageId: 'inferType',
-                                    fix(fixer) {
-                                        return fixer.insertTextAfter(
-                                            node.key,
-                                            `: ${valueType}`
-                                        );
+                                suggest: [
+                                    {
+                                        messageId: 'inferType',
+                                        fix(fixer) {
+                                            return fixer.insertTextAfter(
+                                                node.key,
+                                                `: ${valueType}`,
+                                            );
+                                        },
                                     },
-                                }]
+                                ],
                             });
                         } else {
                             context.report({
@@ -74,8 +76,8 @@ export = createRule({
                     return;
                 }
 
-                const isOutput = node.decorators.some((d: Decorator) =>
-                    decoratorHasCall(d) && decoratorName(d) === 'Output'
+                const isOutput = node.decorators.some(
+                    (d: Decorator) => decoratorHasCall(d) && decoratorName(d) === 'Output',
                 );
                 if (isOutput) {
                     const typeAnnotation = node.typeAnnotation as TypeAnnotation;
@@ -99,7 +101,7 @@ export = createRule({
                         });
                     }
                 }
-            }
+            },
         };
-    }
+    },
 });

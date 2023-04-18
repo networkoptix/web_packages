@@ -22,10 +22,12 @@ export class Area {
         if (this.sensitivity !== zone.sensitivity) {
             return false;
         }
-        return !(this.x + this.width + 1 <= zone.x ||
+        return !(
+            this.x + this.width + 1 <= zone.x ||
             this.y + this.height + 1 <= zone.y ||
             this.x - 1 >= zone.x + zone.width ||
-            this.y - 1 >= zone.y + zone.height);
+            this.y - 1 >= zone.y + zone.height
+        );
     }
 
     /**

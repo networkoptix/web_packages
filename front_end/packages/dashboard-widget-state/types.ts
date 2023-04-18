@@ -26,7 +26,7 @@ export interface MediaServer {
         cameraId?: string,
         eventType?: EventTypes,
         actionType?: ActionTypes,
-        eventRuleId?: string
+        eventRuleId?: string,
     ) => Promise<any>;
 }
 
@@ -73,12 +73,12 @@ export enum ActionTypes {
     SHOW_TEXT_OVERLAY = 'ShowTextOverlayAction',
     SHOW_ON_ALARM_LAYOUT = 'ShowOnAlarmLayoutAction',
     EXEC_HTTP_REQUEST = 'ExecHttpRequestAction',
-    BUZZER = 'BuzzerAction'
+    BUZZER = 'BuzzerAction',
 }
 
 export enum EventState {
     ACTIVE = 'Active',
-    INACTIVE = 'Inactive'
+    INACTIVE = 'Inactive',
 }
 
 export interface EventParams {

@@ -15,5 +15,5 @@ export interface ExportSelection {
 
 export enum SELECTION_ACTION {
     start,
-    end
+    end,
 }

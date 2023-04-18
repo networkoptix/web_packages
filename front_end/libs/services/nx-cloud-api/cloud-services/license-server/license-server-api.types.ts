@@ -41,7 +41,7 @@ export interface CloudLicenseChange extends LicenseKey, SourceCloudSystemId, Tar
 
 export enum ServiceType {
     LOCAL_RECORDING = 'localRecording',
-    CLOUD_STORAGE = 'cloudStorage'
+    CLOUD_STORAGE = 'cloudStorage',
 }
 
 /** LocalRecordingUsage from schema */
@@ -59,7 +59,7 @@ export interface UsageReportRequest extends CloudSystemId {
 
 export enum LicenseVersion {
     '1.0' = '1.0',
-    '2.0' = '2.0'
+    '2.0' = '2.0',
 }
 
 /** LocalRecording from schema */
@@ -75,7 +75,7 @@ export interface LicenseServices {
 
 export enum LicenseState {
     ACTIVE = 'ACTIVE',
-    INACTIVE = 'INACTIVE'
+    INACTIVE = 'INACTIVE',
 }
 
 export interface ExpirationDate {
@@ -146,13 +146,19 @@ export enum EventType {
     ACTIVATE = 'activate',
     DEACTIVATE = 'deactivate',
     DISABLE = 'disable',
-    UPDATE = 'update'
+    UPDATE = 'update',
 }
 
-export interface StorageEventParams extends Partial<Pick<Record<string, number>, 'limit' | 'startId'>> {}
+export interface StorageEventParams
+    extends Partial<Pick<Record<string, number>, 'limit' | 'startId'>> {}
 
 /** StorageEventResponse from schema */
-export interface StorageEvent extends Id, CloudStorageSize, Key, Partial<CloudSystemId>, Partial<Expiration> {
+export interface StorageEvent
+    extends Id,
+        CloudStorageSize,
+        Key,
+        Partial<CloudSystemId>,
+        Partial<Expiration> {
     eventType: EventType;
     timestamp: datetime;
 }

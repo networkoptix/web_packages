@@ -9,21 +9,24 @@ type StringKeys = [
     'defaultPreferredPtzPresetType',
 ][number];
 
-export type ParsedAddParams = Omit<Partial<{
-    bitrateInfos: BitrateInfos;
-    // bitratePerGOP: number;
-    // cameraCapabilities: number;
-    // compatibleAnalyticsEngines: CompatibleAnalyticsEngines;
-    mediaCapabilities: MediaCapabilities;
-    // mediaStreams: MediaStreams;
-    hasDualStreaming: boolean;
-    isAudioSupported: boolean;
-    // ptzCapabilities: number;
-    overrideAr: number;
-    rotation: number;
-    // streamUrls: StreamUrls; // DANGER: JSON is not properly formatted!
-    // trustCameraTime: boolean;
-}>, StringKeys>; // Actual strings should not be duplicated in parsed params
+export type ParsedAddParams = Omit<
+    Partial<{
+        bitrateInfos: BitrateInfos;
+        // bitratePerGOP: number;
+        // cameraCapabilities: number;
+        // compatibleAnalyticsEngines: CompatibleAnalyticsEngines;
+        mediaCapabilities: MediaCapabilities;
+        // mediaStreams: MediaStreams;
+        hasDualStreaming: boolean;
+        isAudioSupported: boolean;
+        // ptzCapabilities: number;
+        overrideAr: number;
+        rotation: number;
+        // streamUrls: StreamUrls; // DANGER: JSON is not properly formatted!
+        // trustCameraTime: boolean;
+    }>,
+    StringKeys // Actual strings should not be duplicated in parsed params
+>;
 
 /* Parsed JSON */
 interface BitrateInfos {

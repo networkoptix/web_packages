@@ -3,10 +3,11 @@ export enum ChildRoutes {
     SERVERS = 'servers',
     USERS = 'users',
     VIEW = 'view',
-    HEALTH = 'health'
+    HEALTH = 'health',
 }
 
-export type RouteResolverParams = { systemId?: string; cameraId: string } |
-    { systemId?: string; serverId: string } |
-    { systemId?: string; userId: string } |
-    { systemId?: string; childRoute?: ChildRoutes };
+export type RouteResolverParams =
+    | { systemId?: string; cameraId: string }
+    | { systemId?: string; serverId: string }
+    | { systemId?: string; userId: string }
+    | { systemId?: string; childRoute?: ChildRoutes };

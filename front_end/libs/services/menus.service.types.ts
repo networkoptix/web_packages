@@ -4,7 +4,7 @@ import { QueryParamsHandling } from '@angular/router';
 export enum Auth {
     BOTH = 'Both',
     LOGGED_IN = 'Logged In',
-    LOGGED_OUT = 'Logged Out'
+    LOGGED_OUT = 'Logged Out',
 }
 
 export class MenuNode {

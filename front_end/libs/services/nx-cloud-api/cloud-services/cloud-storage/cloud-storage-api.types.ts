@@ -27,7 +27,7 @@ export interface Region {
 
 export enum StorageType {
     AWSS3 = 'awss3',
-    WASABI = 'wasabi'
+    WASABI = 'wasabi',
 }
 
 export interface StorageDevice extends Region {

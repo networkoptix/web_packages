@@ -9,7 +9,8 @@ export interface TimelineScrollbarRelativeServiceStatus {
     canScrollRight: boolean;
 }
 
-export interface TimelineScrollbarAbsoluteServiceStatus extends TimelineScrollbarRelativeServiceStatus {
+export interface TimelineScrollbarAbsoluteServiceStatus
+    extends TimelineScrollbarRelativeServiceStatus {
     isIllusionary: boolean;
     left: px;
     honestLeft: px;
