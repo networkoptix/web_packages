@@ -108,7 +108,11 @@ export class UserManager {
     }
 
     protected isOwner(user: PreprocessUser | NxUser): boolean {
-        return this.isLocalOwner(user) || this.isCloudOwner(user);
+        /* Avoid race condition between getting offline users and owner
+        email being set */
+        return 'customPermissions' in user && user.accessRole === 'owner' ||
+            this.isLocalOwner(user) ||
+            this.isCloudOwner(user);
     }
 
     checkPermissions(): void {

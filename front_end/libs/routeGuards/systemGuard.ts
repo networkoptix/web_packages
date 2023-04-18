@@ -102,7 +102,16 @@ export class SystemGuard implements CanActivate {
             if (currSystem.userManager.users === undefined) {
                 currSystem.userManager.currentUserEmail ||= account.email;
                 // Patch for systems.service creating systems with no user email
-                await currSystem.userManager.getUsersDataFromTheSystem();
+                try {
+                    await currSystem.userManager.getUsersDataFromTheSystem();
+                } catch (e) {
+                    if (e === 'Media server cloud not be reached.') {
+                        const cloudUsers = await currSystem.getUsersCachedInCloud();
+                        currSystem.userManager.processUsers(cloudUsers);
+                    } else {
+                        throw e;
+                    }
+                }
             }
             this.menusService.currentUser = currSystem.userManager.currentUser;
             this.menusService.updateActiveSystemMenu(

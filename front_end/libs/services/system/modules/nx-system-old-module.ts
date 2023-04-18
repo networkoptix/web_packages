@@ -885,7 +885,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
      * TODO: This method needs to be refactored and moved into userManager.
      * @deprecated Not really deprecated yet but should be soon.
      */
-    private getUsersCachedInCloud(): Promise<CloudUserCompat[]> {
+    getUsersCachedInCloud(): Promise<CloudUserCompat[]> {
         this.isAvailable = false;
         return this.cloudApi.users(this.id).toPromise().then(data => {
             return data.map<CloudUserCompat>(user => ({

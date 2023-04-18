@@ -14,6 +14,7 @@ import type {
 import type { MenuNode } from '@services/menus.service.types';
 import { nxConfig as CONFIG } from '@services/nx-config/config';
 import type { ec2MediaServer } from '@services/system-api.types';
+import type { CloudUserCompat } from '@services/system.service/user-manager/user-manager-types';
 
 /**
  * Pass a function that evaluates a menu node to fulfill a specific condition,
@@ -182,8 +183,13 @@ export const nestedTranslation = (
 
 export const ZERO_ID = '{00000000-0000-0000-0000-000000000000}';
 
-export function isAdmin({ permissions }: { permissions: string }): boolean {
-    return permissions.includes(CONFIG.accessRoles.globalAdminPermissionFlag);
+export function isAdmin(userOrRole: { permissions: string } | CloudUserCompat): boolean {
+    const { permissions } = userOrRole;
+    return (
+        permissions.includes(CONFIG.accessRoles.globalAdminPermissionFlag) ||
+        ('customPermissions' in userOrRole &&
+            CONFIG.accessRoles.adminAccess.includes(userOrRole.accessRole.toLowerCase()))
+    );
 }
 
 type HtmlTag = keyof HTMLElementTagNameMap;
