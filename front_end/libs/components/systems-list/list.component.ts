@@ -92,7 +92,7 @@ export class NxSystemsListComponent implements OnInit {
         this.showSearch = false;
         this.fetchComplete = false;
 
-        this.accountService.get().then(account => {
+        this.accountService.get(true).then(account => {
             if (account?.email) {
                 this.account = account;
                 this.systemsService.getSystems(account.email);
