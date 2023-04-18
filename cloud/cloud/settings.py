@@ -242,8 +242,11 @@ DEBUG = conf.get('debug', LOCAL_ENVIRONMENT) and not CELERY_WORKER
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
+# Using of Custom Cache backend and client is motivated by wishes to use redis
+# hashes which is not implemented in official Django redis backend. Both backend
+# and client are subclasses of django backend and client.
 REDIS_CACHE = {
-    "BACKEND": "django.core.cache.backends.redis.RedisCache",
+    "BACKEND": "cloud.helpers.redis_cache.CustomRedisCache",
     "TIMEOUT": None
 }
 
@@ -376,12 +379,6 @@ if DEBUG:
         "LOCATION": REDIS_CACHE['LOCATION'] + '/13',
         "KEY_PREFIX": 'testing'
     }
-
-if TESTING:
-    for key, cache in CACHES.items():
-        cache['BACKEND'] = 'django.core.cache.backends.locmem.LocMemCache'
-        cache['OPTIONS'] = {}
-        cache['LOCATION'] = key
 
 
 if LOCAL_ENVIRONMENT and not TESTING:
