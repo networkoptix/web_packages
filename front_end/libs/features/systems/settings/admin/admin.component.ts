@@ -1,6 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, NavigationStart } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
@@ -180,6 +180,15 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.ownershipTransferEnabled = configService.flagsEnabled(
             'cloudOwnershipTransfer'
         );
+
+        /* Going directly to another system does not trigger lifecyle methods or destroy the
+        apply component, so we hide the component when detecting navigation and the other system
+        restores the component when it finishes loading. */
+        router.events.pipe(untilDestroyed(this)).subscribe(e => {
+            if (e instanceof NavigationStart) {
+                applyService.setVisible(false);
+            }
+        });
 
         this.setupDefaults();
         this.settingsForSystem$ = this.settingsService
