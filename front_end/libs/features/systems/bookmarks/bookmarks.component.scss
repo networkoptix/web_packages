@@ -1,4 +1,4 @@
-@use "_theme_variables_common" as *;
+@use '_theme_variables_common' as *;
 
 :host {
     .page {
@@ -28,7 +28,7 @@
 
         .body {
             flex-grow: 1;
-            overflow-y: scroll;
+            overflow-y: auto;
 
             nx-simple-search {
                 margin-bottom: 1rem;
