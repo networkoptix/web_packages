@@ -1,10 +1,9 @@
 
-import { HttpClient } from '@angular/common/http';
+import type { HttpClient } from '@angular/common/http';
 import { v4 as uuid } from 'uuid';
 
-import type { PackageStatus } from '@dialogs/download-async/download-async.component.types';
 import { apiBase } from '@lib/variables/static-variables';
-import { NxConsoleService } from '@pages/developer-console/console/console.service';
+import type { NxConsoleService } from '@pages/developer-console/console/console.service';
 
 import type * as t from './nx-cloud-api.types';
 
@@ -60,13 +59,13 @@ export class CustomClientAPI {
         return this.http.get<t.ContentManifest>(`${this.apiBase}get_manifest/`);
     };
 
-    generatePackage = <Id, DownloadId = { downloadId: string }>(id: Id) => {
-        return this.http.post<DownloadId>(`${this.apiBase}${id}/generate_package/`, {});
+    generatePackage = (id: string) => {
+        return this.http.post<{ downloadId: string }>(`${this.apiBase}${id}/generate_package/`, {});
     };
 
-    checkPackage = <Id, DownloadId>(id: Id, downloadId: DownloadId) => {
-        return this.http.get<PackageStatus>(`${this.apiBase}${id}/check_package/?downloadId=${downloadId}`);
+    checkPackage = (id: string, downloadId: string) => {
+        return this.http.get<t.PackageStatus>(`${this.apiBase}${id}/check_package/?downloadId=${downloadId}`);
     };
 
-    getDownloadUrl = <Id, DownloadId>(id: Id, downloadId: DownloadId) => `${this.apiBase}${id}/download_package/?downloadId=${downloadId}`;
+    getDownloadUrl = (id: string, downloadId: string) => `${this.apiBase}${id}/download_package/?downloadId=${downloadId}`;
 }

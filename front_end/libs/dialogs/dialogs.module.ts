@@ -40,10 +40,8 @@ import { CreateSystemGroupModalModule } from './create-system-group/create-syste
 import { DeleteCloudUserModalModule } from './delete-cloud-user/delete-cloud-user.module';
 import { DetachServerModalContent } from './detach-server/detach-server.component';
 import { DisconnectModalModule } from './disconnect/disconnect.module';
-import { DownloadAsyncModalContent } from './download-async/download-async.component';
 import { NxEditOrgUserModule } from './edit-org-user/edit-org-user.module';
 import { EditModalContent } from './edit/edit.component';
-import { EmbedModalContent } from './embed/embed.component';
 import { GenericDialogModule } from './generic/generic.module';
 import { Mandatory2faModalModule } from './mandatory-2fa/mandatory-2fa.module';
 import { MergeModalContent } from './merge/merge.component';
@@ -120,7 +118,6 @@ import { WizardModalContent } from './wizard/wizard.component';
         AddStorageModalContent,
         ChangeStorageModalContent,
         MergeModalContent,
-        EmbedModalContent,
         RestartServerModalContent,
         DetachServerModalContent,
         ResetServerModalContent,
@@ -128,7 +125,6 @@ import { WizardModalContent } from './wizard/wizard.component';
         ResetBackupModalContent,
         AddStorageModalContent,
         EditModalContent,
-        DownloadAsyncModalContent,
         AddWidgetModalContent,
         SelectTimeRangeModalContent,
         ReserveSpaceWarningModalContent,

@@ -19,8 +19,6 @@ import {
 } from '@components/console-table/console-table.component.types';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { PackageProgress } from '@dialogs/download-async/download-async.component.types';
-import { PackageHandler } from '@dialogs/download-async/package-handler';
 import { NxToastService } from '@dialogs/toast.service';
 import { icons, manifest, toast } from '@lib/variables/static-variables';
 import { NxConsoleService } from '@pages/developer-console/console/console.service';
@@ -37,6 +35,7 @@ import { NxHeaderService } from '@services/nx-header.service';
 import { WINDOW } from '@services/window-provider';
 import { NgChanges } from '@utils/ng-changes';
 
+import { PackageHandler, PackageProgress } from './package-handler';
 import { TableDataSource } from './table-data-source';
 
 @UntilDestroy()

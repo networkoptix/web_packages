@@ -143,25 +143,6 @@ export class NxDialogsService extends DialogBase {
             .afterClosed();
     }
 
-    // Not used at this moment
-    public downloadAsync(modalContent: ModalContent): void {
-        // const options: IParams = {
-        //     windowClass: 'modal-holder',
-        //     backdrop: 'static'
-        // };
-        // return this.createModal(DownloadAsyncModalContent, options, modalContent);
-
-        // const config: Partial<DialogConfig> = {
-        //      data: {
-        //          modalContent
-        //      }
-        // };
-        // const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-        //
-        // return this.open(DownloadAsyncModalContent, dialogConfig)
-        //     .afterClosed();
-    }
-
     public async changeStorage(system: NxSystem) {
         const config: Partial<DialogConfig> = {
             data: {
@@ -272,15 +253,6 @@ export class NxDialogsService extends DialogBase {
         return this.open(component, dialogConfig)
             .afterClosed();
     }
-
-    // TODO: Not used - keep as reference
-    // public embed (systemId: string) {
-    //     const config: Partial<DialogConfig> = {};
-    //     const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-    //
-    //     return this.open(EmbedModalContent, dialogConfig)
-    //         .afterClosed();
-    // }
 
     public async resetBackupToDefaultSettings(
         system: NxSystem,

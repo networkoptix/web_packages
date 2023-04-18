@@ -403,3 +403,17 @@ export type BuildHistory = { [type in ReleasesTypes]?: Downloads[] } & { updates
 export interface Build extends Downloads {
     updatesPrefix: string;
 }
+
+export interface PackageStatus {
+    state: PackageState;
+    message?: string;
+    errors: string[];
+    current: number;
+    total: number;
+}
+
+export enum PackageState {
+    PENDING = 'pending',
+    READY = 'ready',
+    FAILED = 'failed',
+}
