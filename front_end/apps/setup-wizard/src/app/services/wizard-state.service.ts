@@ -433,13 +433,12 @@ export class WizardStateService {
         }
     }
 
-    // @ts-expect-error Currently unused
-    private cancelNative(): unknown {
-        if (this.hasNativeClient) {
-            nativeClient?.cancel();
-        }
-        return this.closeNative();
-    }
+    // private cancelNative(): unknown {
+    //     if (this.hasNativeClient) {
+    //         nativeClient?.cancel();
+    //     }
+    //     return this.closeNative();
+    // }
 
     private closeNative(): Promise<void> {
         if (this.hasNativeClient) {
@@ -449,12 +448,11 @@ export class WizardStateService {
         return Promise.reject();
     }
 
-    // @ts-expect-error Currently unused
-    private openNative(url: string): void {
-        if (this.hasNativeClient) {
-            nativeClient.openUrlInBrowser(url);
-        }
-    }
+    // private openNative(url: string): void {
+    //     if (this.hasNativeClient) {
+    //         nativeClient.openUrlInBrowser(url);
+    //     }
+    // }
 
     // FSM controls
     back(): void {

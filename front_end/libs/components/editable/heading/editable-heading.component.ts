@@ -48,9 +48,8 @@ export class NxEditableHeading implements OnInit, OnChanges {
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
-    // @ts-expect-error False lint error - not used
-    private onTouchedCallback = (): void => {};
-    private onChangeCallback = (_: any): void => {};
+    protected onTouchedCallback = (): void => {};
+    protected onChangeCallback = (_: any): void => {};
 
     ngOnInit(): void {
         this.componentId = (this.id || this.name) + '-editable';
