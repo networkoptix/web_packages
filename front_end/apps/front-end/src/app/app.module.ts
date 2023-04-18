@@ -42,7 +42,6 @@ import { TourStepModule } from '@components/tour-step/tour-step.module';
 import { ResizeModule } from '@directives/resize/resize.module';
 import { environment } from '@environments/environment';
 import { AuthGuard } from '@guards/authGuard';
-import { BookmarksGuard } from '@guards/bookmarksGuard';
 import { DevelopersGuard } from '@guards/developersGuard';
 import { ManualAccessGuard } from '@guards/manualAccessGuard';
 import { SystemGuard } from '@guards/systemGuard';
@@ -160,7 +159,6 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         DevelopersGuard,
         SystemGuard,
         ManualAccessGuard,
-        BookmarksGuard,
         DatePipe,
         NxBootstrapProvider,
         NxSwPromptUpdateService,

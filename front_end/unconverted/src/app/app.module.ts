@@ -36,7 +36,6 @@ import { PopoverModule } from '@components/popover/popover.module';
 import { ResizeModule } from '@directives/resize/resize.module';
 import { environment } from '@environments/environment';
 import { AuthGuard } from '@guards/authGuard';
-import { BookmarksGuard } from '@guards/bookmarksGuard';
 import { DevelopersGuard } from '@guards/developersGuard';
 import { ManualAccessGuard } from '@guards/manualAccessGuard';
 import { SystemGuard } from '@guards/systemGuard';
@@ -137,7 +136,6 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         DevelopersGuard,
         SystemGuard,
         ManualAccessGuard,
-        BookmarksGuard,
         DatePipe,
         NxBootstrapProvider,
         { provide: APP_INITIALIZER, useFactory: NxBootstrapProviderFactory, deps: [NxBootstrapProvider], multi: true },

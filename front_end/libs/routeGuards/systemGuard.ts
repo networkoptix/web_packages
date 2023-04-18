@@ -6,15 +6,16 @@ import {
     RouterStateSnapshot,
     UrlTree,
 } from '@angular/router';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { Observable } from 'rxjs';
 
 import { environment } from '@environments/environment';
 import { NxSettingsService } from '@pages/systems/settings/settings.service';
 import { NxAccountService } from '@services/account.service';
 import { NxMenusService } from '@services/menus.service';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
-import type { SystemPermissions } from '@services/system.service/user-manager/user-manager-types';
 
 @Injectable()
 export class SystemGuard implements CanActivate {
@@ -26,6 +27,8 @@ export class SystemGuard implements CanActivate {
         private systemService: NxSystemService,
         private settingsService: NxSettingsService,
         private menusService: NxMenusService,
+        private configService: NxConfigService,
+        private deviceService: DeviceDetectorService,
     ) {}
 
     canActivate(
@@ -49,6 +52,7 @@ export class SystemGuard implements CanActivate {
             'advanced',
             'monitoring',
             'layouts',
+            'bookmarks',
         ];
         const currentRoute = routesChecked.find(route => state.url.includes(route));
         const systemId =
@@ -56,17 +60,31 @@ export class SystemGuard implements CanActivate {
             route.pathFromRoot.find(snapshot => snapshot.params.systemId).params.systemId;
 
         const checkPermissionsFor = (system: NxSystem): boolean | Promise<boolean> => {
-            const permissions = system.userManager?.permissions || ({} as SystemPermissions);
+            const permissions = system.userManager.permissions;
             const isOwner = system.userManager.isMySystem;
+            const isAdmin = permissions.isAdmin || isOwner;
+
+            // https://networkoptix.atlassian.net/wiki/spaces/FS/pages/2786951363/Bookmarks+on+Cloud#User-Permissions-new
+            /* This condition should be kept in sync with the node add condition
+            for header in menus.service.ts */
+            const canViewBookmarks =
+                this.configService.flagsEnabled('bookmarks') &&
+                system.version >= 5 &&
+                system.userManager.currentUser.permissions.includes(
+                    'GlobalViewBookmarksPermission',
+                ) &&
+                !this.deviceService.isMobile();
+
             const canViewChecks = {
                 users: permissions.editUsers,
                 'cloud-storage': system.canUserViewCloudStorage(),
                 health: system.userManager.canViewInfo(),
-                licenses: permissions.isAdmin || isOwner,
-                advanced: permissions.isAdmin || isOwner,
-                servers: permissions.isAdmin || isOwner,
-                monitoring: permissions.isAdmin || isOwner,
+                licenses: isAdmin,
+                advanced: isAdmin,
+                servers: isAdmin,
+                monitoring: isAdmin,
                 layouts: (system.version || parseFloat(system.info.version)) >= 5.1,
+                bookmarks: canViewBookmarks,
             };
 
             return (

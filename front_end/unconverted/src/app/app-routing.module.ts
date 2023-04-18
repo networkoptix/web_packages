@@ -6,7 +6,6 @@ import { PipesModule } from '@app/pipes/pipes.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
-import { BookmarksGuard } from '@guards/bookmarksGuard';
 import { FeatureGuard } from '@guards/feature.guard';
 import { RedirectAuthGuard } from '@guards/redirectAuthGuard';
 import { SystemGuard } from '@guards/systemGuard';
@@ -67,7 +66,7 @@ const lazyRoutes: Routes = [
     {
         path: 'systems/:systemId/bookmarks',
         loadChildren: () => import('@pages/systems/bookmarks/bookmarks.module').then(m => m.BookmarksModule),
-        canActivate: [BookmarksGuard]
+        // canActivate: [BookmarksGuard]
     },
     {
         path: 'systems/:systemId/monitoring',

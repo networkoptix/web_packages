@@ -7,7 +7,6 @@ import { NxPageTitleStrategy } from '@app/resolvers/title-resolver';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
-import { BookmarksGuard } from '@guards/bookmarksGuard';
 import { FeatureGuard } from '@guards/feature.guard';
 import { RedirectAuthGuard } from '@guards/redirectAuthGuard';
 import { SystemGuard } from '@guards/systemGuard';
@@ -85,7 +84,7 @@ const lazyRoutes: Routes = [
     {
         path: 'systems/:systemId/bookmarks',
         loadChildren: () => import('@pages/systems/bookmarks/bookmarks.module').then(m => m.BookmarksModule),
-        canActivate: [AuthGuard, SystemGuard, TwofaGuard, BookmarksGuard]
+        canActivate: [AuthGuard, SystemGuard, TwofaGuard]
     },
     {
         path: 'systems/:systemId/monitoring',

@@ -337,6 +337,7 @@ export class NxMenusService {
         in bookmarksGuard.ts */
         if (
             this.configService.flagsEnabled('bookmarks') &&
+            activeSystem.version >= 5 &&
             this.currentUser?.permissions.includes('GlobalViewBookmarksPermission') &&
             !this.deviceService.isMobile()
         ) {
