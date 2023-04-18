@@ -1,0 +1,13 @@
+.channel-partner {
+  flex: 1;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  a {
+    padding-left: 1rem;
+     
+    &:hover{
+      cursor: pointer;
+    }
+  }
+}

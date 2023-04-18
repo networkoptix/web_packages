@@ -938,6 +938,9 @@
                     },
                     "organization" : {
                         "displayName" : "Organization"
+                    },
+                    "channelPartners" : {
+                        "displayName" : "Channel Partners"
                     }
                 }
             }

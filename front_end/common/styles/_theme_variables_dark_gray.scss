@@ -620,6 +620,8 @@ html[data-theme="dark-gray"] {
     --group-card-bg-hover: var(--dark_gray_7);
     --group-card-border-color: var(--dark_gray_10);
 
+    --channel-partner-card-status-background: var(--dark_gray_12);
+
     @include generateVarAndRgb(--system-card-bg-grad0, $dark_gray_1);
     @include generateVarAndRgb(--system-card-bg-grad100, $dark_gray_11);
     --system-card-bg: var(--dark_gray_7)

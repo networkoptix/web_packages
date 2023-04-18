@@ -632,6 +632,8 @@ html[data-theme="light"] {
     --group-card-bg-hover: var(--light6);
     --group-card-border-color: var(--light5);
 
+    --channel-partner-card-status-background: var(--light10);
+
     @include generateVarAndRgb(--system-card-bg-grad0, $light1);
     @include generateVarAndRgb(--system-card-bg-grad100, $light3);
     --system-card-bg: var(--light4);

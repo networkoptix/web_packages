@@ -605,6 +605,8 @@ html[data-theme="light-gray"] {
     --group-card-bg-hover: var(--light_gray_7);
     --group-card-border-color: var(--light_gray_10);
 
+    --channel-partner-card-status-background: var(--light_gray_10);
+
     @include generateVarAndRgb(--system-card-bg-grad0, $light_gray_1);
     @include generateVarAndRgb(--system-card-bg-grad100, $light_gray_3);
     --system-card-bg: var(--light_gray_7);

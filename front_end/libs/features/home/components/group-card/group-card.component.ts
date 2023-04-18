@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -27,14 +27,19 @@ export class NxGroupCardComponent {
         private groupsService: NxSystemGroupsService,
         private dialogsService: NxDialogsService,
         private store: Store,
+        private route: ActivatedRoute,
     ) {}
 
     openGroup(): void {
-        this.router.navigate(['home', 'organization', this.group.id, 'systems']).then(() => {
-            this.store.dispatch(
-                GroupActions.setOpenGroups({ openGroups: { [this.group.id]: true } }),
-            );
-        });
+        this.router
+            .navigate(['organization', this.group.id, 'systems'], {
+                relativeTo: this.route.parent.parent.parent,
+            })
+            .then(() => {
+                this.store.dispatch(
+                    GroupActions.setOpenGroups({ openGroups: { [this.group.id]: true } }),
+                );
+            });
     }
 
     deleteGroup(): void {

@@ -47,6 +47,7 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
     loadingState$ = this.store.select<LoadingState>(selectLoadingState);
     currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
     inRoot$ = this.store.select<boolean>(selectHasCurrentIndexes);
+    inChannelPartners: boolean;
 
     currentTab: string;
     rootGroup$ = this.store.select<Crumb>(selectCurrentRootGroup);
@@ -64,6 +65,7 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.currentTab = this.route.snapshot.data.currentTab;
+        this.inChannelPartners = !!this.route.parent.parent.parent.snapshot.url[0]?.path;
         this.route.params.subscribe(({ id }) => {
             this.store.dispatch(
                 GroupActions.setCurrentGroupId({
@@ -109,7 +111,7 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
         this.store
             .select<string>(selectCurrentGroupId)
             .pipe(take(1))
-            .subscribe(id => this.router.navigate(['home', 'organization', id, tab]));
+            .subscribe(id => this.router.navigate([tab], { relativeTo: this.route }));
     }
 
     // Temporary
@@ -131,5 +133,9 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
     __crash(): void {
         // @ts-expect-error Deliberately crash the backend for testing
         this.groupsService.moveGroup(['foo'], ['bar']);
+    }
+
+    toRoot(): void {
+        this.router.navigate(['home', 'channelPartners', 'testId']);
     }
 }

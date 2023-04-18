@@ -1,5 +1,17 @@
 import type { System } from '@services/nx-cloud-api/nx-cloud-api.types';
 
+export interface ChannelPartner {
+    name: string;
+    organizations: Organization[];
+}
+
+export interface Organization {
+    orgName: string;
+    icon: string;
+    status: string;
+    id: string;
+}
+
 export interface BaseGroupItem {
     groups: BaseGroupItem[];
     id: string;

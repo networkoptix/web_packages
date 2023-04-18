@@ -1,7 +1,7 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CdkMenuModule } from '@angular/cdk/menu';
-import { Injectable, NgModule } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 // import { AngularSvgIconModule } from 'angular-svg-icon';
 import { StoreModule } from '@ngrx/store';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -17,6 +17,7 @@ import { NxTabsDirective } from '@components/tabs/tabs.directive';
 import { AuthGuard } from '@guards/authGuard';
 import { NxUsersTableComponent } from '@pages/home/components/users-table/users-table.component';
 
+import { NxChannelPartnersComponent } from './channel-partners/channel-partners.component';
 import { NxGroupCardComponent } from './components/group-card/group-card.component';
 import { NxGroupsCardsComponent } from './components/groups-cards/groups-cards.component';
 import { NxOrganizationReportsComponent } from './components/reports/reports.component';
@@ -28,13 +29,7 @@ import { NxOrganizationUsersComponent } from './components/users/users.component
 import { NxOrganizationsComponent } from './organizations/organization.component';
 import { groupsReducer } from './store/groups.reducer';
 import { NxGroupsSystemsComponent } from './systems/systems.component';
-
-@Injectable()
-class TabResolver implements Resolve<string> {
-    resolve(route: ActivatedRouteSnapshot): string {
-        return route.children[0].routeConfig.path;
-    }
-}
+import { TabResolver } from './tab-resolver';
 
 const homeRoutes: Routes = [
     {
@@ -53,32 +48,13 @@ const homeRoutes: Routes = [
         canActivate: [AuthGuard],
     },
     {
-        path: 'organization/:id',
-        component: NxOrganizationsComponent,
+        path: 'organization',
+        loadChildren: () => import('@pages/home/organizations/organization.module').then(m => m.NxOrganizationModule),
         canActivate: [AuthGuard],
-        resolve: { currentTab: TabResolver },
-        children: [
-            {
-                path: 'systems',
-                component: NxGroupsCardsComponent,
-            },
-            {
-                path: 'reports',
-                component: NxOrganizationReportsComponent,
-            },
-            {
-                path: 'users',
-                component: NxOrganizationUsersComponent,
-            },
-            {
-                path: 'settings',
-                component: NxOrganizationSettingsComponent
-            }
-        ],
     },
     {
-        path: 'organization',
-        component: NxOrganizationsComponent,
+        path: 'channelPartners',
+        loadChildren: () => import('@pages/home/channel-partners/channel-partners.module').then(m => m.NxChannelPartnersModule),
         canActivate: [AuthGuard],
     },
 ];
@@ -112,6 +88,7 @@ const homeRoutes: Routes = [
         NxOrganizationUsersComponent,
         NxGroupsSystemsComponent,
         NxUsersTableComponent,
+        NxChannelPartnersComponent
     ],
     providers: [
         TabResolver
