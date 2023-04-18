@@ -60,13 +60,6 @@
                 <ng-template #organization>
                     <div>
                         <div class="header">
-                            <a
-                                *ngIf="inChannelPartners"
-                                (click)="toRoot()"
-                                translate
-                            >
-                                All Organizations</a
-                            >
                             <h2 class="pb-3 pt-2">{{ (rootGroup$ | async).name }}</h2>
                         </div>
                         <nx-tabs

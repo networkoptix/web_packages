@@ -48,7 +48,7 @@ const homeRoutes: Routes = [
         canActivate: [AuthGuard],
     },
     {
-        path: 'organization',
+        path: 'organization/:id',
         loadChildren: () => import('@pages/home/organizations/organization.module').then(m => m.NxOrganizationModule),
         canActivate: [AuthGuard],
     },

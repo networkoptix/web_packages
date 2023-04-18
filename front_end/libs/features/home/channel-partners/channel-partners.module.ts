@@ -3,7 +3,9 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { Nx404Component } from '@pages/404/404.component';
 
+import { NxChannelPartnerInformationComponent } from '../components/information/information.component';
 import { NxOrganizationSettingsComponent } from '../components/settings/settings.component';
+import { NxChannelPartnerSubchannelComponent } from '../components/subchannel/subchannel.component';
 import { NxOrganizationUsersComponent } from '../components/users/users.component';
 import { TabResolver } from '../tab-resolver';
 
@@ -28,12 +30,16 @@ const CPRoutes: Routes = [
                 loadChildren: () => import('@pages/home/organizations/organization.module').then(m => m.NxOrganizationModule)
             },
             {
-                path: 'subchannel',
+                path: 'settings',
                 component: NxOrganizationSettingsComponent
             },
             {
+                path: 'subchannel',
+                component: NxChannelPartnerSubchannelComponent
+            },
+            {
                 path: 'information',
-                component: NxOrganizationSettingsComponent
+                component: NxChannelPartnerInformationComponent
             },
             {
                 path: 'users',

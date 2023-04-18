@@ -19,6 +19,7 @@ const orgRoutes: Routes = [
         component: NxOrganizationsComponent,
         resolve: { currentTab: TabResolver },
         children: [
+
             {
                 path: 'systems',
                 component: NxGroupsCardsComponent,
@@ -35,6 +36,11 @@ const orgRoutes: Routes = [
                 path: 'settings',
                 component: NxOrganizationSettingsComponent
             },
+            {
+                path: '**',
+                redirectTo: 'systems'
+            }
+
         ],
     },
     {
