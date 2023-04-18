@@ -7,6 +7,7 @@ from robot.api.deco import keyword, library
 @library
 class DockerApi(object):
     def __init__(self):
+        self.env = BuiltIn().get_variable_value("${ENV}")
         self.host_ip = BuiltIn().get_variable_value("${QA BURBANK IP}")
         self.host_port = BuiltIn().get_variable_value("${QA DOCKER HOST PORT}")
         self.image = BuiltIn().get_variable_value("${IMAGE}")
@@ -21,6 +22,7 @@ class DockerApi(object):
             PortBindings.update({f'{port_count}/tcp':[{"HostPort":port}]})
             port_count = port_count + 1
         payload = {
+            "Env": [f'CLOUD_HOST={self.env.replace("https://", "")}'],
             "Image": self.image,
             "MacAddress": mac,
             "ExposedPorts": ExposedPorts,
@@ -36,7 +38,7 @@ class DockerApi(object):
         if server.get("binds"):
             payload["HostConfig"]["Binds"] = server["binds"]
         r = requests.post(f'http://{self.host_ip}:{self.host_port}/containers/create?name={name}', json=payload)
-        logger.trace(payload, r.json)
+        logger.trace(r.content)
         assert r.status_code == 201 
         return r.json()['Id']
 

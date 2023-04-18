@@ -101,6 +101,7 @@ class ServerAPI5(ServerAPI):
                     "owner": data["ownerAccountEmail"]
                 }
                 r = s.post(f"{serverUrl}/rest/v1/system/cloudBind", json=cloud_info)
+                logger.trace(r.content)
                 s.delete(f"{serverUrl}/rest/v1/login/sessions")
                 logger.info(f"{name} has been connected to {cloudHost} with {cloud_info['owner']}'s account.")
                 logger.trace(r)

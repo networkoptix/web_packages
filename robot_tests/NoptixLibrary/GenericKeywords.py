@@ -781,8 +781,9 @@ class GenericKeywords(object):
             runName = BuiltIn().get_variable_value('${random}')
             # if storage suite, binds will exist
             binds = BuiltIn().get_variable_value('${binds}')
-            for idx in range(len(binds)):
-                serversJson[idx].update({"binds": binds[idx]})
+            if binds:
+                for idx in range(len(binds)):
+                    serversJson[idx].update({"binds": binds[idx]})
             # Start Docker server for each server in the JSON
             for idx, server in enumerate(serversJson):
                 server["name"] = f"{BuiltIn().get_variable_value('${SUITE NAME}').lower().replace('test-cases.', '')}_{idx}_"           
@@ -811,7 +812,8 @@ class GenericKeywords(object):
                     logger.info("owner-transfer NOT detected")
                     owners = [self.get_random_email(self.base_email, sendemail=self.from_email) for _ in range (len(owners_ids))]
                 for owner in owners:
-                    self.cloud_api.register_account("mark", "hamill", owner, self.password)
+                    res = self.cloud_api.register_account("mark", "hamill", owner, self.password)
+                    logger.trace(res)
                     BuiltIn().run_keyword('Activate', owner)
 
             # Add owner users to json

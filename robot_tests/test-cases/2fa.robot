@@ -96,11 +96,11 @@ Force Tags
     Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}
     Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${login user}
     Wait Until Element Is Visible    ${LOG IN NEXT BUTTON}
-    Click Button    ${LOG IN NEXT BUTTON}
+    Click Element    ${LOG IN NEXT BUTTON}
     Wait Until Element Is Visible    ${PASSWORD INPUT}
     Wait Until Keyword Succeeds    10    0.5   Input Text     ${PASSWORD INPUT}    ${password}
     Wait Until Element Is Visible    ${LOG IN BUTTON}
-    Click Button    ${LOG IN BUTTON}
+    Click Element    ${LOG IN BUTTON}
     Generate totp wait for a minute and try to login    ${login user}
     Go To    ${ENV}
 

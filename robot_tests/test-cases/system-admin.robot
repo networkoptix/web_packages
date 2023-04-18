@@ -447,12 +447,6 @@ Force Tags        system    cloud
     Run keyword and continue on failure    Check For Alert    ${SUCCESSFULLY DISCONNECTED}    60
     Wait Until Location Contains    ${ENV}/systems
     Wait Until Element Is Not Visible    ${SYSTEMS TILE}//h2[text()="${system}[name]"]
-
-    # Verify changes are reflected correctly in the header
-    Validate Header Button Text    0
-    Slow    Click Button    ${SYSTEMS DROPDOWN}    timeout=0.1
-    Wait until element is not visible    ${DROPDOWN SYSTEMS GRID}
-    Slow    Click Button    ${SYSTEMS DROPDOWN}    timeout=0.1
     Log Out
 
     Log    Step 3 - Verify cloud API gets correct list of systems

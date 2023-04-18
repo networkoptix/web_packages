@@ -179,8 +179,8 @@ ${ALREADY ACTIVATED}                  //h1[contains(@class,"process-success") an
 ${ADD USER BUTTON SYSTEMS}            //nx-menu-button[@data-testid="addUserBtn"]//button
 ${ADD USER MODAL}                     //form[@name='addUserForm']
 ${ADD USER EMAIL}                     ${ADD USER MODAL}//input[@id='addUserEmail']
-${ADD USER PERMISSIONS DROPDOWN}      ${ADD USER MODAL}//nx-permissions-select//button[@data-testid='componentId']
-${ADD USER BUTTON MODAL}              ${ADD USER MODAL}//button[@data-testid="addUserBtn" and text()='${ADD BUTTON TEXT}']
+${ADD USER PERMISSIONS DROPDOWN}      ${ADD USER MODAL}//nx-permissions-select[@id='permissionsSelect']//button
+${ADD USER BUTTON MODAL}              ${ADD USER MODAL}//nx-process-button[@data-testid="addUserBtn"]//button[text()='${ADD BUTTON TEXT}']
 ${ADD USER CANCEL}                    ${ADD USER MODAL}//button[@data-testid="cancelAddUserBtn" and text()='${CANCEL BUTTON TEXT}']
 ${ADD USER CLOSE}                     ${ADD USER MODAL}//button[@data-testid="closeAddUser"]
 ${ADD USER PERMISSIONS HINT}          ${ADD USER MODAL}//span[@data-testid="addUserHelpBlock"]
