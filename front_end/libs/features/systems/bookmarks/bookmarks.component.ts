@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { DateRange } from '@angular/material/datepicker';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { BehaviorSubject, combineLatest, switchMap, Observable, timer, zip } from 'rxjs';
@@ -28,6 +28,7 @@ import {
 import { getSysLang } from '@utils/nx';
 
 import type { Bookmark, TimeRange } from './bookmarks.types';
+import type { NxDateAndTimeFilterComponent } from './components/date-and-time-filter/date-and-time-filter.component';
 
 interface BookmarkParams {
     search?: string;
@@ -77,6 +78,7 @@ function cssaToStrArray(cssa: string): string[] {
     styleUrls: ['bookmarks.component.scss'],
 })
 export class NxBookmarksComponent implements OnInit {
+    @ViewChild('dateAndTimeFilterComp') private dateAndTimeFilter: NxDateAndTimeFilterComponent;
     LANG = staticLang;
     CONFIG: IConfig;
     icons = icons;
@@ -359,6 +361,14 @@ export class NxBookmarksComponent implements OnInit {
                 ? strArrayToCssa(this.tagFilter.selected)
                 : undefined;
         }
+        this.updateUri();
+    }
+
+    clearAllFilters(): void {
+        this.dateAndTimeFilter.clear();
+        this.deviceFilter.clear();
+        this.tagFilter.clear();
+        this.queryParams = {};
         this.updateUri();
     }
 

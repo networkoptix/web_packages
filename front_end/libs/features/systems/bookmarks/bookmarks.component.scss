@@ -78,6 +78,14 @@
                 &-dark {
                     margin-top: 10px;
                 }
+
+                .clear-filters {
+                    color: var(--brand-core);
+                    background: transparent;
+                    height: unset !important;
+                    padding: 0 !important;
+                    margin: 7px auto 0;
+                }
             }
         }
     }
