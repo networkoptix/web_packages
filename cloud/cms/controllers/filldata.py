@@ -535,6 +535,37 @@ def fill_content(asset,
                     error = True
         return error
 
+    def run_single():
+        nonlocal changed_languages
+        global_contexts = Context.objects.filter(
+            is_global=True, hidden=False, asset_type=asset.asset_type)
+        global_contexts_dict = global_contexts_to_dict(global_contexts, asset)
+        error = False
+        skin = asset.read_global_value('%SKIN%')
+        context_processor = ContextProcessor(
+            asset=asset, version_id=version_id, global_contexts=global_contexts,
+            global_contexts_dict=global_contexts_dict, preview=preview, skin=skin
+        )
+
+        for context in changed_contexts:
+            # logger.info("Process context: " + context.name + " file:" + context.file_path)
+            if incremental:
+                changed_languages = list(changed_records.filter(data_structure__context_id=context.id).
+                                         values_list('language__code', flat=True).distinct())
+
+                if default_language_code in changed_languages:
+                    # If default language changes - it can affect all languages in the context
+                    changed_languages = languages_list
+            languages = Language.objects.filter(code__in=changed_languages)
+            # Add the context to the list of tasks for the thread pool.
+            try:
+                context_processor.save_contexts(context, languages)
+            except Exception as e:
+                logger.warning(e)
+                error = True
+
+        return error
+
     # Start fill_content
     # Check if asset should be filled
     can_update_static(asset)
@@ -552,7 +583,10 @@ def fill_content(asset,
     set_changed()
 
     # Run workers
-    thread_error = run_workers()
+    if workers > 1:
+        thread_error = run_workers()
+    else:
+        thread_error = run_single()
 
     generate_languages_json(asset.asset_root, languages_list,  preview)
     if thread_error:
