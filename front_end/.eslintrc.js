@@ -572,6 +572,7 @@ module.exports = {
                 'libs/features/server-documentation/**/*.ts',
                 'libs/features/systems/bookmarks/**/*.ts',
                 'libs/features/systems/settings/*.ts',
+                'libs/features/systems/settings/admin/admin.component.ts',
                 // 'libs/features/systems/settings//**/*.ts',
                 // 'libs/features/systems/view//**/*.ts',
                 'libs/interceptors/**/*.ts',

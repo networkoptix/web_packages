@@ -85,23 +85,28 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     /** Owner (current user) can send a new ownership transfer request */
     get canSendTransferRequest(): boolean {
-        return this.ownershipTransferEnabled &&
+        return (
+            this.ownershipTransferEnabled &&
             this.system.userManager.isMySystem &&
             this.system.useRest &&
-            !this.transferInfo;
+            !this.transferInfo
+        );
     }
 
     /** System ownership is offered to the current user */
     get systemOffered(): boolean {
-        return !environment.isLocal &&
+        return (
+            !environment.isLocal &&
             !!this.transferInfo &&
-            this.transferInfo.toAccount === this.system.userManager.currentUserEmail;
+            this.transferInfo.toAccount === this.system.userManager.currentUserEmail
+        );
     }
 
     get newOwnerName(): string {
-        return this.system.userManager.users
-            .find(u => u.email === this.transferInfo.toAccount)
-            ?.fullName || '';
+        return (
+            this.system.userManager.users.find(u => u.email === this.transferInfo.toAccount)
+                ?.fullName || ''
+        );
     }
 
     private setupDefaults(): void {
@@ -110,22 +115,25 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.menuService.section = menus.systemSettings.admin.id;
         this.menuService.detail = menus.systemSettings.general.id;
 
-        this.advanced$ = this.route.queryParams.pipe(map(({ advanced }) => {
-            if (advanced !== undefined) {
-                if (this.environment.isLocal) {
-                    this.router.navigate(
-                        ['settings/advanced'],
-                        { replaceUrl: true }
-                    );
-                } else {
-                    this.router.navigate(
-                        [`systems/${this.route.snapshot.params.systemId}/advanced`],
-                        { replaceUrl: true }
-                    );
+        this.advanced$ = this.route.queryParams.pipe(
+            map(({ advanced }) => {
+                if (advanced !== undefined) {
+                    if (this.environment.isLocal) {
+                        this.router.navigate(['settings/advanced'], { replaceUrl: true });
+                    } else {
+                        this.router.navigate(
+                            [`systems/${this.route.snapshot.params.systemId}/advanced`],
+                            { replaceUrl: true },
+                        );
+                    }
                 }
-            }
-            return (this.router.url.includes('/advanced') || this.route.snapshot.routeConfig.path === 'advanced' || advanced !== undefined);
-        }));
+                return (
+                    this.router.url.includes('/advanced') ||
+                    this.route.snapshot.routeConfig.path === 'advanced' ||
+                    advanced !== undefined
+                );
+            }),
+        );
     }
 
     private setNameAndTitle(): void {
@@ -138,22 +146,24 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 this.systemNameFormWatcher = this.applyService.createFormWatcher(
                     'systemNameForm',
                     this.systemNameForm,
-                    this.systemNameProcess);
+                    this.systemNameProcess,
+                );
             });
         }
     }
 
     private updateSettings(forceMergeState?: boolean): void {
-        const isMergeTimeOver24hrs = (time: string): boolean => new Date().getTime() - parseInt(time) > 86400000;
-        this.merging = this.system && typeof this.system.mergeInfo !== 'undefined' ||
-            forceMergeState;
+        const isMergeTimeOver24hrs = (time: string): boolean =>
+            new Date().getTime() - parseInt(time) > 86400000;
+        this.merging =
+            (this.system && typeof this.system.mergeInfo !== 'undefined') || forceMergeState;
         this.settings = {
-            disconnectDisabled: this.merging &&
+            disconnectDisabled:
+                this.merging &&
                 this.system?.mergeInfo?.startTime &&
                 !isMergeTimeOver24hrs(this.system.mergeInfo.startTime),
-            renameDisabled: this.merging &&
-                this.system.mergeInfo &&
-                this.system.mergeInfo.role !== 'master'
+            renameDisabled:
+                this.merging && this.system.mergeInfo && this.system.mergeInfo.role !== 'master',
         };
     }
 
@@ -177,9 +187,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     ) {
         this.CONFIG = configService.getConfig();
 
-        this.ownershipTransferEnabled = configService.flagsEnabled(
-            'cloudOwnershipTransfer'
-        );
+        this.ownershipTransferEnabled = configService.flagsEnabled('cloudOwnershipTransfer');
 
         /* Going directly to another system does not trigger lifecyle methods or destroy the
         apply component, so we hide the component when detecting navigation and the other system
@@ -191,39 +199,40 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         });
 
         this.setupDefaults();
-        this.settingsForSystem$ = this.settingsService
-            .systemSubject$
-            .pipe(
-                filter(system => {
-                    return environment.isLocal || system?.id === this.route.snapshot.params.systemId;
-                }),
-                switchMap(system => system.updateOrGetSystemSettings()),
-                map(res => res?.reply?.settings),
-                untilDestroyed(this)
-            );
+        this.settingsForSystem$ = this.settingsService.systemSubject$.pipe(
+            filter(system => {
+                return environment.isLocal || system?.id === this.route.snapshot.params.systemId;
+            }),
+            switchMap(system => system.updateOrGetSystemSettings()),
+            map(res => res?.reply?.settings),
+            untilDestroyed(this),
+        );
     }
 
     ngOnInit(): void {
-        this.systemName = this.systemsService.systems?.find(s => s.id === this.route.snapshot.params.systemId)?.name;
-        this.accountService.get()
-            .then((account?: Account) => {
-                this.user = account;
-            });
+        this.systemName = this.systemsService.systems?.find(
+            s => s.id === this.route.snapshot.params.systemId,
+        )?.name;
+        this.accountService.get().then((account?: Account) => {
+            this.user = account;
+        });
 
         this.settings = {
             disconnectDisabled: false,
-            renameDisabled: false
+            renameDisabled: false,
         };
 
-        this.settingsService
-            .systemSubject$
+        this.settingsService.systemSubject$
             .pipe(
                 filter(system => {
-                    return environment.isLocal || system?.id === this.route.snapshot.params.systemId;
+                    return (
+                        environment.isLocal || system?.id === this.route.snapshot.params.systemId
+                    );
                 }),
                 distinctUntilChanged(),
-                untilDestroyed(this)
-            ).subscribe(system => {
+                untilDestroyed(this),
+            )
+            .subscribe(system => {
                 if (!system) {
                     this.system = undefined;
                     return;
@@ -241,15 +250,18 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                             return;
                         }
                         if (
-                            this.system && !this.system.isAvailable &&
-                            system && system.isAvailable
+                            this.system &&
+                            !this.system.isAvailable &&
+                            system &&
+                            system.isAvailable
                         ) {
                             this.system = system as NxSystem;
                         }
                         this.updateSettings(this.currentlyMerging);
                         this.syncMergeAlerts();
 
-                        this.enableEdit = this.system.isOnline &&
+                        this.enableEdit =
+                            this.system.isOnline &&
                             (this.environment.isLocal
                                 ? this.system.userManager.permissions.isAdmin
                                 : this.system.userManager.isMySystem) &&
@@ -263,19 +275,18 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
                         // TODO: In develop add a store for transfers.
                         if (this.ownershipTransferEnabled && !environment.isLocal) {
-                            this.cloudApiService.getTransfers()
+                            this.cloudApiService
+                                .getTransfers()
                                 .subscribe((res: SystemTransferInfo[]) => {
-                                    this.transferInfo = res.find(transfer =>
-                                        transfer.systemId === this.system.id
+                                    this.transferInfo = res.find(
+                                        transfer => transfer.systemId === this.system.id,
                                     );
                                 });
                         }
                         if (
                             !this.environment.isLocal ||
-                                (
-                                    this.environment.isLocal &&
-                                    this.system.userManager.permissions.isAdmin
-                                )
+                            (this.environment.isLocal &&
+                                this.system.userManager.permissions.isAdmin)
                         ) {
                             this.settingsService.getUpdatedSettings();
                         }
@@ -301,16 +312,16 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 }
                 this.toastService.notify(
                     this.LANG.toastMessage.system.cloudConnect.success,
-                    'success'
+                    'success',
                 );
                 setTimeout(() => this.window.location.reload(), 2000);
             },
             () => {
                 this.toastService.notify(
                     this.LANG.toastMessage.system.cloudConnect.failed,
-                    'danger'
+                    'danger',
                 );
-            }
+            },
         );
 
         this.systemNameProcess = this.processService.createProcess(
@@ -319,8 +330,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 if (!trimmedName) {
                     return Promise.reject();
                 }
-                return (this.environment.isLocal ? this.system.mediaserver : this.cloudApiService)
-                    .renameSystem(this.system.id, trimmedName);
+                return (
+                    this.environment.isLocal ? this.system.mediaserver : this.cloudApiService
+                ).renameSystem(this.system.id, trimmedName);
             },
             { ignoreError: true },
             () => {
@@ -328,19 +340,26 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             },
             () => {
                 this.toastService.notify(
-                    { value: this.LANG.toastMessage.nameFail, params: { type: this.LANG.common.system } },
+                    {
+                        value: this.LANG.toastMessage.nameFail,
+                        params: { type: this.LANG.common.system },
+                    },
                     toast.warning,
                 );
-            });
+            },
+        );
 
         this.checkCloudProcess = this.processService.createProcess(
             () => {
                 const startUrl = this.router.url;
                 return this.CONFIG.featureFlags.cloudStorage && this.system.cloudStorageCapable
-                    ? this.cloudApiService.getCloudStorageUsage(this.system.id)
-                        .then(_ => Promise.reject()) // If cloud storage usage returns okay then that probably means we are using cloud storage.
-                        .catch(_ => Promise.resolve(startUrl)) // If the request fails that means storage is probably not used.
+                    ? this.cloudApiService
+                          .getCloudStorageUsage(this.system.id)
+                          .then(_ => Promise.reject())
+                          .catch(_ => Promise.resolve(startUrl))
                     : Promise.resolve(startUrl);
+                // If cloud storage usage returns okay then that probably means we are using cloud storage.
+                // If the request fails that means storage is probably not used.
             },
             { ignoreError: true },
             url => {
@@ -351,54 +370,52 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             () => {
                 const {
                     dialogs: {
-                        cloudStorage: { systemDisconnectError: { title, message } },
-                        buttons: { ok }
-                    }
+                        cloudStorage: {
+                            systemDisconnectError: { title, message },
+                        },
+                        buttons: { ok },
+                    },
                 } = this.LANG;
                 this.dialogs.confirm({
                     title,
                     message,
                     safeHTML: true,
                     footer: {
-                        actionLabel: ok
-                    }
+                        actionLabel: ok,
+                    },
                 });
-            }
+            },
         );
 
         this.disconnectProcess = this.processService.createProcess(
             () => this.dialogs.disconnect(this.system),
             { ignoreError: true },
             res => {
-                if (!res) { // Dialog was canceled or closed
+                if (!res) {
+                    // Dialog was canceled or closed
                     return;
                 }
                 if (!this.environment.isLocal) {
-                    return this.router
-                        .navigate([redirect.authorised])
-                        .catch(error => {
-                            console.error(error);
-                        });
+                    return this.router.navigate([redirect.authorised]).catch(error => {
+                        console.error(error);
+                    });
                 }
                 if (this.system.userManager.currentUser?.isCloud) {
                     return this.accountService.logout();
                 }
                 // give the user chance to read the toaster
                 setTimeout(() => this.window.location.reload(), 2000);
-            });
+            },
+        );
     }
 
     syncMergeAlerts(): void {
         if (this.system?.mergeInfo) {
             this.currentMergeInfo = this.system.mergeInfo;
-        } else if (
-            this.currentMergeInfo &&
-            this.system?.mergeInfo === undefined
-        ) {
+        } else if (this.currentMergeInfo && this.system?.mergeInfo === undefined) {
             this.currentMergeInfo = undefined;
             if (!this.environment.isLocal) {
-                this.systemsService.forceUpdateSystems().toPromise()
-                    .catch(console.error);
+                this.systemsService.forceUpdateSystems().toPromise().catch(console.error);
             } else {
                 this.systemsService.mergingSystems.add(this.system.id);
                 this.systemsService.checkMerge(this.system);
@@ -409,13 +426,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         if (this.systemsSubscription) {
             this.systemsSubscription.unsubscribe();
         }
-        this.systemsSubscription = this.systemsService.systemsSubject
-            .subscribe(() => {
-                if (this.systemsService.finishedMerged) {
-                    this.systemsService.finishedMerged = false;
-                    this.system.getInfo(true, false);
-                }
-            });
+        this.systemsSubscription = this.systemsService.systemsSubject.subscribe(() => {
+            if (this.systemsService.finishedMerged) {
+                this.systemsService.finishedMerged = false;
+                this.system.getInfo(true, false);
+            }
+        });
     }
 
     transferOwnership(): void {
@@ -430,11 +446,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         if (this.window.navigator.onLine) {
             return this.dialogs.connectLocalToCloud(this.system);
         } else {
-            this.dialogs.notify(
-                this.LANG.toastMessage.noInternet,
-                'warning',
-                true
-            );
+            this.dialogs.notify(this.LANG.toastMessage.noInternet, 'warning', true);
             return Promise.resolve(true);
         }
     }
@@ -442,65 +454,65 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     updateAndGoToSystems = (): void => {
         // this.userDisconnectSystem = true;
         this.systemsService.userDisconnectSystem = true;
-        this.systemsService
-            .forceUpdateSystems(this.accountService.email)
-            .subscribe(() => {
-                setTimeout(() => {
-                    this.router
-                        .navigate([redirect.authorised])
-                        .catch(error => {
-                            console.error(error);
-                        });
+        this.systemsService.forceUpdateSystems(this.accountService.email).subscribe(() => {
+            setTimeout(() => {
+                this.router.navigate([redirect.authorised]).catch(error => {
+                    console.error(error);
                 });
             });
+        });
     };
 
     delete() {
         if (!this.system.userManager.isMySystem) {
             // User is not owner. Deleting means he'll lose access to it
             if (this.environment.isLocal) {
-                return this.dialogs.removeSystem(this.system)
-                    .then(response => {
-                        if (response) {
-                            setTimeout(() => {
-                                this.accountService.logout();
-                            }, 6000);
-                        }
-                    });
+                return this.dialogs.removeSystem(this.system).then(response => {
+                    if (response) {
+                        setTimeout(() => {
+                            this.accountService.logout();
+                        }, 6000);
+                    }
+                });
             }
             const { title, message, action } = this.LANG.dialogs.removeSystem;
-            this.dialogs.confirm({
-                title,
-                message,
-                footer: {
-                    buttonClass: 'btn-danger',
-                    actionLabel: action,
-                    cancelLabel: this.LANG.dialogs.buttons.cancel,
-                }
-            }).then(result => {
-                if (result) {
-                    return this.system.deleteFromCurrentAccount().subscribe(res => {
-                        this.toastService.notify(
-                            {
-                                value: this.LANG.toastMessage.system.deleted.success,
-                                params: {
-                                    systemName: this.system.info.systemName ||
-                                    this.system.info.name
-                                }
-                            },
-                            toast.success,
-                        );
-                    }, err => {
-                        console.error(err);
-                        this.toastService.show(
-                            this.LANG.errorCodes.cantUnshareWithMeSystemPrefix,
-                            toast.danger,
-                        );
+            this.dialogs
+                .confirm({
+                    title,
+                    message,
+                    footer: {
+                        buttonClass: 'btn-danger',
+                        actionLabel: action,
+                        cancelLabel: this.LANG.dialogs.buttons.cancel,
                     },
-                    this.updateAndGoToSystems
-                    );
-                }
-            });
+                })
+                .then(result => {
+                    if (result) {
+                        return this.system.deleteFromCurrentAccount().subscribe(
+                            res => {
+                                this.toastService.notify(
+                                    {
+                                        value: this.LANG.toastMessage.system.deleted.success,
+                                        params: {
+                                            systemName:
+                                                this.system.info.systemName ||
+                                                this.system.info.name,
+                                        },
+                                    },
+                                    toast.success,
+                                );
+                            },
+                            err => {
+                                console.error(err);
+                                this.toastService.show(
+                                    this.LANG.errorCodes.cantUnshareWithMeSystemPrefix,
+                                    toast.danger,
+                                );
+                            },
+                            this.updateAndGoToSystems,
+                        );
+                    }
+                });
         }
     }
 
@@ -508,7 +520,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.systems = this.systemsService.getMySystems(
             // this.accountService.email, // doesn't work as it was never set; looks like it's out of sync conceptually
             this.accountService.account.email,
-            this.system.id
+            this.system.id,
         );
         this.currentlyMerging = true;
         this.updateSettings(this.currentlyMerging);
@@ -518,50 +530,61 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             ? this.dialogs.mergeRefactored(this.system, this.systems)
             : this.dialogs.merge(this.system, this.systems);
         return mergeDialog
-            .then((mergeInfo: any) => {
-                if (mergeInfo) {
-                    this.system.mergeInfo = mergeInfo;
-                    const systemId = mergeInfo.role === 'master'
-                        ? this.system.id
-                        : mergeInfo.anotherSystemId;
-                    this.systemsService.addToMergeList(systemId);
-                    this.systemsService.processMerge(mergeInfo);
-                    this.system.systemInfo = this.system;
-                }
-            }, error => {
-                if (!error.primarySystemName && !error.secondarySystemName) {
-                    return;
-                }
-                const commonErrorMsg = this.translateService.instant('dialogs.merge.commonText', {
-                    primarySystem: error.primarySystemName,
-                    secondarySystem: error.secondarySystemName
-                });
-
-                let downloadHTML = `<span>${this.LANG.dialogs.merge.latestBuild}</span>`;
-                if (this.CONFIG.cloudHost) {
-                    downloadHTML = `<a href=\"${this.environment.isLocal ? this.CONFIG.cloudHost : ''}/download" target=\"_blank\">${this.LANG.dialogs.merge.latestBuild}</a>`;
-                }
-
-                const errorCodeMsg = this.LANG.errorCodes[error.errorText] ||
-                    this.LANG.errorCodes[error.resultCode] ||
-                    this.LANG.errorCodes.unknownMergeError;
-                const responseError = errorCodeMsg({
-                    failedSystem: error.failedSystemName,
-                    downloadHTML
-                });
-
-                // HTML needed for section formatting
-                const dialogBody = '<p>' + commonErrorMsg + '</p><p>' + responseError + '</p>';
-
-                this.dialogs.confirm({
-                    title: this.LANG.dialogs.merge.mergeFailedTitle,
-                    message: dialogBody,
-                    safeHTML: true,
-                    footer: {
-                        actionLabel: this.LANG.dialogs.buttons.ok,
+            .then(
+                (mergeInfo: any) => {
+                    if (mergeInfo) {
+                        this.system.mergeInfo = mergeInfo;
+                        const systemId =
+                            mergeInfo.role === 'master'
+                                ? this.system.id
+                                : mergeInfo.anotherSystemId;
+                        this.systemsService.addToMergeList(systemId);
+                        this.systemsService.processMerge(mergeInfo);
+                        this.system.systemInfo = this.system;
                     }
-                });
-            }).finally(() => {
+                },
+                error => {
+                    if (!error.primarySystemName && !error.secondarySystemName) {
+                        return;
+                    }
+                    const commonErrorMsg = this.translateService.instant(
+                        'dialogs.merge.commonText',
+                        {
+                            primarySystem: error.primarySystemName,
+                            secondarySystem: error.secondarySystemName,
+                        },
+                    );
+
+                    let downloadHTML = `<span>${this.LANG.dialogs.merge.latestBuild}</span>`;
+                    if (this.CONFIG.cloudHost) {
+                        downloadHTML = `<a href=\"${
+                            this.environment.isLocal ? this.CONFIG.cloudHost : ''
+                        }/download" target=\"_blank\">${this.LANG.dialogs.merge.latestBuild}</a>`;
+                    }
+
+                    const errorCodeMsg =
+                        this.LANG.errorCodes[error.errorText] ||
+                        this.LANG.errorCodes[error.resultCode] ||
+                        this.LANG.errorCodes.unknownMergeError;
+                    const responseError = errorCodeMsg({
+                        failedSystem: error.failedSystemName,
+                        downloadHTML,
+                    });
+
+                    // HTML needed for section formatting
+                    const dialogBody = '<p>' + commonErrorMsg + '</p><p>' + responseError + '</p>';
+
+                    this.dialogs.confirm({
+                        title: this.LANG.dialogs.merge.mergeFailedTitle,
+                        message: dialogBody,
+                        safeHTML: true,
+                        footer: {
+                            actionLabel: this.LANG.dialogs.buttons.ok,
+                        },
+                    });
+                },
+            )
+            .finally(() => {
                 this.currentlyMerging = false;
                 this.updateSettings(this.currentlyMerging);
                 this.syncMergeAlerts();
@@ -579,13 +602,14 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     hideAdvancedSettings(): void {
         if (this.router.url.includes('/advanced')) {
-            this.environment.isLocal && this.router.navigate(['settings']) ||
+            (this.environment.isLocal && this.router.navigate(['settings'])) ||
                 this.router.navigate([`systems/${this.system.id}`]);
         }
     }
 
     acceptOwnershipTransfer(): void {
-        this.cloudApiService.respondToTransfer(this.system.id, 'accepted')
+        this.cloudApiService
+            .respondToTransfer(this.system.id, 'accepted')
             .subscribe((_res: CloudResponse) => {
                 this.transferInfo = undefined;
                 this.window.location.reload();
@@ -593,16 +617,16 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     rejectOwnershipTransfer(): void {
-        this.cloudApiService.respondToTransfer(this.system.id, 'rejected')
+        this.cloudApiService
+            .respondToTransfer(this.system.id, 'rejected')
             .subscribe((_res: CloudResponse) => {
                 this.transferInfo = undefined;
             });
     }
 
     cancelOwnershipTransfer(): void {
-        this.cloudApiService.cancelTransfer(this.system.id)
-            .subscribe((_res: CloudResponse) => {
-                this.transferInfo = undefined;
-            });
+        this.cloudApiService.cancelTransfer(this.system.id).subscribe((_res: CloudResponse) => {
+            this.transferInfo = undefined;
+        });
     }
 }
