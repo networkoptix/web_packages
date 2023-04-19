@@ -31,7 +31,7 @@ from redis.exceptions import ConnectionError
 from django.apps import apps
 from django.core.cache import cache, caches
 from django.core.exceptions import ObjectDoesNotExist
-from django.db import models
+from django.db import models, connections
 from django.db.models import Q, Count
 from django.db.models.deletion import Collector
 from django.db.models.signals import post_delete, m2m_changed, post_save, pre_delete
@@ -253,6 +253,7 @@ async def cloud_portal_customization_cache_async(customization_name, value=None,
     lock_key = f'lock_customization_{customization_name}'
     lock_val = str(uuid4())
     while not (await customization_cache.aadd(lock_key, lock_val, timeout=60)):
+        connections.close_all()
         await asyncio.sleep(1)
 
     try:
