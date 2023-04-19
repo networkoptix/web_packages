@@ -2,6 +2,7 @@ from concurrent.futures import ThreadPoolExecutor
 from contextvars import ContextVar, copy_context
 from functools import wraps
 
+from django.db import close_old_connections
 from django.utils.deprecation import MiddlewareMixin
 
 from cloud.helpers.exceptions import APIInternalException, ErrorCodes
@@ -24,6 +25,16 @@ class ContextExecutor(ThreadPoolExecutor):
     def _set_inner_context(self):
         for var, val in self.context.items():
             var.set(val)
+
+    def submit(self, fn, *args, **kwargs):
+        def wrap(*wargs, **wkwargs):
+            close_old_connections()
+            try:
+                return fn(*wargs, **wkwargs)
+            finally:
+                close_old_connections()
+
+        return super().submit(wrap, *args, **kwargs)
 
 
 def needs_customization_ctx(key='customization', set_context: bool = True):
