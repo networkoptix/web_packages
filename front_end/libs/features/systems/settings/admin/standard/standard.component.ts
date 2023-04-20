@@ -52,18 +52,16 @@ class AlexaSettings {
         public eventRulesSetup = false,
     ) {}
 
-    static clean = selectedSystem =>
-        input => new AlexaSettings(
+    static clean = selectedSystem => input =>
+        new AlexaSettings(
             input.enabled || false,
             input.selectedSystem || selectedSystem,
             input.accountLinked || false,
-            input.eventRulesSetup || false
+            input.eventRulesSetup || false,
         );
 
-    static cleanObservable = selectedSystem => map(
-        AlexaSettings.clean(selectedSystem),
-        AlexaSettings.clean(selectedSystem)
-    );
+    static cleanObservable = selectedSystem =>
+        map(AlexaSettings.clean(selectedSystem), AlexaSettings.clean(selectedSystem));
 }
 
 @UntilDestroy()
@@ -72,7 +70,6 @@ class AlexaSettings {
     templateUrl: 'standard.component.html',
     styleUrls: ['standard.component.scss'],
 })
-
 export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDestroy {
     @Input() settings;
     @Input() system: NxSystem;
@@ -106,7 +103,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         auditTrailEnabled: false,
         trafficEncryptionForced: false,
         videoTrafficEncryptionForced: false,
-        sessionLimitMinutes: 0
+        sessionLimitMinutes: 0,
     };
 
     limitSessionTimeUnits: Record<LimitSessionTimeUnit, LimitSessionTimeItem> = {
@@ -115,20 +112,20 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
             name: this.LANG.system.settings.sessionLimitDuration.days,
             id: 1,
             max: 999999,
-            default: 30
+            default: 30,
         },
         hours: {
             value: 'hours',
             name: this.LANG.system.settings.sessionLimitDuration.hours,
             id: 2,
-            max: 999999
+            max: 999999,
         },
         minutes: {
             value: 'minutes',
             name: this.LANG.system.settings.sessionLimitDuration.minutes,
             id: 3,
-            max: 999999
-        }
+            max: 999999,
+        },
     };
 
     limitSessionTimeItems: LimitSessionTimeItem[] = [...Object.values(this.limitSessionTimeUnits)];
@@ -137,7 +134,8 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
 
     systemAndSecuritySettingsFormWatcher: FormWatcher;
 
-    @ViewChild('systemAndSecuritySettingsForm', { read: NgForm }) systemAndSecuritySettingsForm: NgForm;
+    @ViewChild('systemAndSecuritySettingsForm', { read: NgForm })
+    systemAndSecuritySettingsForm: NgForm;
 
     @ViewChild('selectorTracker') set selectEle(el: ElementRef) {
         if (el) {
@@ -156,7 +154,10 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
     ) {
         this.CONFIG = configService.getConfig();
         if (this.CONFIG.cloudCapabilities.alexaIntegrationEnabled) {
-            this.alexaSettingsCustomProperty = this.cloudApi.customAccountPropertyFactory(AlexaSettings.CUSTOM_PROPERTY_ENDPOINT, new AlexaSettings());
+            this.alexaSettingsCustomProperty = this.cloudApi.customAccountPropertyFactory(
+                AlexaSettings.CUSTOM_PROPERTY_ENDPOINT,
+                new AlexaSettings(),
+            );
         }
     }
 
@@ -168,25 +169,25 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         this.initProcess();
 
         if (this.CONFIG.cloudCapabilities.alexaIntegrationEnabled) {
-            delayInitial(
-                this.alexaSettingsCustomProperty.value$
-            )
+            delayInitial(this.alexaSettingsCustomProperty.value$)
                 .pipe(
                     AlexaSettings.cleanObservable(this.system.id),
                     switchMap(this.#syncEventRulesSetup),
-                    untilDestroyed(this)
-                ).subscribe(
+                    untilDestroyed(this),
+                )
+                .subscribe(
                     settings => {
                         this.alexaSettings = settings;
                     },
                     _ => {
                         this.alexaSettings = {};
-                    }
+                    },
                 );
         }
 
-        this.system2faEnabled = this.systemsService.systems
-            .find(system => system.id === this.system.id)?.system2faEnabled;
+        this.system2faEnabled = this.systemsService.systems.find(
+            system => system.id === this.system.id,
+        )?.system2faEnabled;
     }
 
     ngOnChanges(changes: NgChanges<NxSystemStandardAdminComponent>): void {
@@ -194,7 +195,9 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
             const { previousValue, currentValue, firstChange } = changes.settings;
             if (
                 (JSON.stringify(previousValue) !== JSON.stringify(currentValue) ||
-                    !this.settingsWatchersSet) && (!previousValue || firstChange) && !this.applyService.locked
+                    !this.settingsWatchersSet) &&
+                (!previousValue || firstChange) &&
+                !this.applyService.locked
             ) {
                 if (currentValue && Object.keys(currentValue).length) {
                     this.setValues(currentValue);
@@ -245,7 +248,8 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
                     } else {
                         this.sessionLimitToggle = false;
                     }
-                });
+                },
+            );
         });
     }
 
@@ -267,7 +271,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         this.setWarningMessageThroughApplyService = () => {
             if (this.systemAndSecuritySettings.videoTrafficEncryptionForced) {
                 this.applyService.setWarn(
-                    this.LANG.system.settings.warningMessages.videoEncryption
+                    this.LANG.system.settings.warningMessages.videoEncryption,
                 );
             } else {
                 this.applyService.setWarn('');
@@ -280,10 +284,12 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
     }
 
     divideTimeValue(minutesValue: number): void {
-        if (minutesValue % DAY_MINS === 0) { // Whole days
+        if (minutesValue % DAY_MINS === 0) {
+            // Whole days
             this.timeValue = minutesValue / DAY_MINS;
             this.selectedTimeUnit = this.limitSessionTimeUnits.days;
-        } else if (minutesValue % HR_MINS === 0) { // Whole hours
+        } else if (minutesValue % HR_MINS === 0) {
+            // Whole hours
             this.timeValue = minutesValue / HR_MINS;
             this.selectedTimeUnit = this.limitSessionTimeUnits.hours;
         }
@@ -314,7 +320,8 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
     // handles showing default value on open and clearing to 0 on close
     handleSessionLimitToggle(): void {
         if (this.sessionLimitToggle) {
-            if (!this.timeValue) { // prevent overwriting current value with default (in case of late init of the checkbox)
+            if (!this.timeValue) {
+                // prevent overwriting current value with default (in case of late init of the checkbox)
                 this.selectedTimeUnit = this.limitSessionTimeUnits.days;
                 this.timeValue = this.selectedTimeUnit.default;
                 this.systemAndSecuritySettings.sessionLimitMinutes =
@@ -343,7 +350,8 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
                 if (res) {
                     this.system2faEnabled = !this.system2faEnabled;
                 }
-            }).finally(() => {
+            })
+            .finally(() => {
                 this.is2faDialogActive = false;
             });
     }
@@ -364,18 +372,20 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
                     }
                     this.eventRulesBeingSetup = false;
                     this.alexaSettingsCustomProperty.save(this.alexaSettings, true);
-                })
-            ).toPromise();
+                }),
+            )
+            .toPromise();
     };
 
     #syncEventRulesSetup = (settings: Partial<AlexaSettings>) => {
         return this.system.mediaserver.getEventRules().pipe(
             switchMap(async rules => {
-                const checkCommand = (command: string) => rules.find(rule => {
-                    const condition = JSON.parse(rule.eventCondition);
-                    const resourceName = condition.resourceName;
-                    return resourceName === command;
-                });
+                const checkCommand = (command: string) =>
+                    rules.find(rule => {
+                        const condition = JSON.parse(rule.eventCondition);
+                        const resourceName = condition.resourceName;
+                        return resourceName === command;
+                    });
                 const currentUserEmail = this.system.userManager.currentUser.email;
                 const layoutCommand = `"Alexa layout command for ${currentUserEmail}"`;
                 const customCommand = `"Alexa command for ${currentUserEmail}"`;
@@ -385,59 +395,60 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
                     await this.alexaSettingsCustomProperty.save(settings, true);
                 }
                 return settings;
-            }));
+            }),
+        );
     };
 
     #updateAlexa = (settings: Partial<AlexaSettings>) =>
-        this.CONFIG.cloudCapabilities.alexaIntegrationEnabled && delayInitial(
-            this.alexaSettingsCustomProperty.save(settings)
-        ).pipe(
-            tap(settings => {
+        this.CONFIG.cloudCapabilities.alexaIntegrationEnabled &&
+        delayInitial(this.alexaSettingsCustomProperty.save(settings))
+            .pipe(
+                tap(settings => {
+                    this.alexaSettings = settings;
+                }),
+                switchMap(this.updateEventRules),
+                map(setup => ({ ...settings, eventRulesSetup: !!setup })),
+                untilDestroyed(this),
+            )
+            .subscribe(settings => {
                 this.alexaSettings = settings;
-            }),
-            switchMap(this.updateEventRules),
-            map(setup => ({ ...settings, eventRulesSetup: !!setup })),
-            untilDestroyed(this)
-        ).subscribe(settings => {
-            this.alexaSettings = settings;
-            this.alexaSettingsCustomProperty.save(this.alexaSettings, true);
-        });
+                this.alexaSettingsCustomProperty.save(this.alexaSettings, true);
+            });
 
     toggleAlexaEnabled = (): void => {
         const {
             enabled,
             // selectedSystem,
             accountLinked = false,
-            eventRulesSetup = false
+            eventRulesSetup = false,
         } = this.alexaSettings;
         this.alexaSettings = null;
-        this.#updateAlexa(enabled ? {
-            enabled: false,
-            accountLinked
-        } : {
-            enabled: true,
-            accountLinked,
-            eventRulesSetup,
-            selectedSystem: this.system.id
-        });
+        this.#updateAlexa(
+            enabled
+                ? {
+                      enabled: false,
+                      accountLinked,
+                  }
+                : {
+                      enabled: true,
+                      accountLinked,
+                      eventRulesSetup,
+                      selectedSystem: this.system.id,
+                  },
+        );
     };
 
     toggleSystemSelected = () => {
         if (this.alexaSettings.selectedSystem === this.system.id) {
             return;
         }
-        const {
-            enabled,
-            accountLinked = false,
-            eventRulesSetup = false
-        } = this.alexaSettings;
+        const { enabled, accountLinked = false, eventRulesSetup = false } = this.alexaSettings;
         this.alexaSettings = null;
         this.#updateAlexa({
             enabled,
             accountLinked,
             eventRulesSetup,
-            selectedSystem:
-                this.system.id
+            selectedSystem: this.system.id,
         });
     };
 }

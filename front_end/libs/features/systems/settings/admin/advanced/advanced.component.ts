@@ -23,7 +23,6 @@ interface SystemSetting {
     templateUrl: 'advanced.component.html',
     styleUrls: ['advanced.component.scss'],
 })
-
 export class NxSystemAdvancedAdminComponent implements OnDestroy {
     @Input() system: NxSystem;
     @ViewChild('advancedSystemSettingsForm', { read: NgForm }) advancedSystemSettingsForm: NgForm;
@@ -50,30 +49,25 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
         this.system.infoSubject
             .pipe(
                 untilDestroyed(this),
-                map((system: any) => {
+                map(system => {
                     if (!system.serverManager.servers?.length) {
+                        // eslint-disable-next-line @typescript-eslint/no-throw-literal
                         throw system;
                     }
                 }),
-                retryWhen(err => err.pipe(delay(1000)))
+                retryWhen(err => err.pipe(delay(1000))),
             )
             .pipe(take(1))
             .subscribe(() => {
-                if (
-                    this.system &&
-                    this.system.serverManager.servers?.length
-                ) {
+                if (this.system && this.system.serverManager.servers?.length) {
                     this.getAdvancedSettings();
                 }
             });
 
         this.saveAdvancedSettings = this.processService.createProcess(() => {
-            return firstValueFrom(this.system.updateOrGetSystemSettings(this.changedFields))
-                .then((response: any) => {
-                    if (
-                        typeof (response.error) !== 'undefined' &&
-                        response.error !== '0'
-                    ) {
+            return firstValueFrom(this.system.updateOrGetSystemSettings(this.changedFields)).then(
+                response => {
+                    if (typeof response.error !== 'undefined' && response.error !== '0') {
                         this.dialogsService.alert({
                             title: this.LANG.dialogs.titles.error,
                             message: response.errorString,
@@ -85,12 +79,14 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
                             message: this.LANG.dialogs.message.settingsSaved,
                         });
                     }
-                }, () => {
+                },
+                () => {
                     this.dialogsService.alert({
                         title: this.LANG.dialogs.titles.error,
                         message: this.LANG.dialogs.message.settingsNotSaved,
                     });
-                });
+                },
+            );
         });
     }
 
@@ -99,82 +95,75 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
     }
 
     canSee(key) {
-        return ['number', 'text', 'password'].includes(
-            settingsConfig[key]?.type
-        );
+        return ['number', 'text', 'password'].includes(settingsConfig[key]?.type);
     }
 
     getAdvancedSettings(): void {
-        firstValueFrom(this.system.updateOrGetSystemSettings())
-            .then((response: any) => {
-                this.settingsToBeDisplayedOrUpdated(response.reply.settings);
-                this.haveAdvSettings = (Object.keys(response.reply.settings).length > 0);
+        firstValueFrom(this.system.updateOrGetSystemSettings()).then(response => {
+            this.settingsToBeDisplayedOrUpdated(response.reply.settings);
+            this.haveAdvSettings = Object.keys(response.reply.settings).length > 0;
 
-                setTimeout(() => {
-                    this.advancedFormWatcher = this.applyService.createFormWatcher(
-                        'advancedSystemSettingsForm',
-                        this.advancedSystemSettingsForm,
-                        this.saveAdvancedSettings
-                    );
+            setTimeout(() => {
+                this.advancedFormWatcher = this.applyService.createFormWatcher(
+                    'advancedSystemSettingsForm',
+                    this.advancedSystemSettingsForm,
+                    this.saveAdvancedSettings,
+                );
 
-                    this.advancedFormWatcher.valueSubject
-                        .pipe(
-                            untilDestroyed(this))
-                        .subscribe(values => {
-                            if (values) {
-                                Object.entries(values).forEach(([key, current]) => {
-                                    const original = this.systemSettings[key];
-                                    const changed = current !== original;
-                                    if (changed) {
-                                        this.changedFields[key] = current;
-                                    } else if (key in this.changedFields) {
-                                        delete this.changedFields[key];
-                                    }
-                                });
-                            }
-                        });
-                });
+                this.advancedFormWatcher.valueSubject
+                    .pipe(untilDestroyed(this))
+                    .subscribe(values => {
+                        if (values) {
+                            Object.entries(values).forEach(([key, current]) => {
+                                const original = this.systemSettings[key];
+                                const changed = current !== original;
+                                if (changed) {
+                                    this.changedFields[key] = current;
+                                } else if (key in this.changedFields) {
+                                    delete this.changedFields[key];
+                                }
+                            });
+                        }
+                    });
             });
+        });
     }
 
     getDescription(key) {
-        return this.LANG.settingsConfig[key]
-            ? this.LANG.settingsConfig[key]
-            : key;
+        return this.LANG.settingsConfig[key] ? this.LANG.settingsConfig[key] : key;
     }
 
     settingsToBeDisplayedOrUpdated = (settings): void => {
-        Object.entries(settings).reduce((systemSettings: SystemSetting, [key, value]: [string, unknown]) => {
-            // CLOUD-6350: Refactor advanced global settings page
-            if (settingsConfig[key]?.hiddenInAdvanced) {
-                return systemSettings;
-            }
-            let type = settingsConfig[key]?.type;
-            if (type === undefined) {
-                type = 'text';
-                if (Number.isInteger(value)) {
-                    type = 'number';
-                } else if (['true', 'false'].includes(value as string)) {
-                    type = 'checkbox';
+        Object.entries(settings).reduce(
+            (systemSettings: SystemSetting, [key, value]: [string, unknown]) => {
+                // CLOUD-6350: Refactor advanced global settings page
+                if (settingsConfig[key]?.hiddenInAdvanced) {
+                    return systemSettings;
                 }
-                settingsConfig[key] = { type };
-            }
-            switch (type) {
-                case 'number':
-                    systemSettings[key] = (value !== '')
-                        ? parseInt(value as string)
-                        : '';
-                    break;
-                case 'checkbox':
-                    systemSettings[key] = (typeof value === 'boolean')
-                        ? value
-                        : (value === 'true');
-                    break;
-                default:
-                    systemSettings[key] = value;
-            }
+                let type = settingsConfig[key]?.type;
+                if (type === undefined) {
+                    type = 'text';
+                    if (Number.isInteger(value)) {
+                        type = 'number';
+                    } else if (['true', 'false'].includes(value as string)) {
+                        type = 'checkbox';
+                    }
+                    settingsConfig[key] = { type };
+                }
+                switch (type) {
+                    case 'number':
+                        systemSettings[key] = value !== '' ? parseInt(value as string) : '';
+                        break;
+                    case 'checkbox':
+                        systemSettings[key] = typeof value === 'boolean' ? value : value === 'true';
+                        break;
+                    default:
+                        systemSettings[key] = value;
+                }
 
-            return systemSettings;
-        }, this.systemSettings);
+                return systemSettings;
+            },
+            this.systemSettings,
+        );
     };
 }
