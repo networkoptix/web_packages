@@ -11,6 +11,7 @@ import { FeatureGuard } from '@guards/feature.guard';
 import { RedirectAuthGuard } from '@guards/redirectAuthGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
+import { HeaderResolver } from '@pages/home/header-resolver';
 import { FeatureFlagStrings } from '@services/nx-config/base-config';
 
 const lazyRoutes: Routes = [
@@ -70,6 +71,7 @@ const lazyRoutes: Routes = [
     {
         path: 'home',
         loadChildren: () => import('@pages/home/home.module').then(m => m.NxHomeModule),
+        resolve: { headerNodes: HeaderResolver },
         canLoad: [FeatureGuard],
         data: {
             flags: FeatureFlagStrings.systemGroups
@@ -237,7 +239,8 @@ const lazyRoutes: Routes = [
         {
             provide: TitleStrategy,
             useClass: NxPageTitleStrategy
-        }
+        },
+        HeaderResolver
     ],
     exports: []
 })

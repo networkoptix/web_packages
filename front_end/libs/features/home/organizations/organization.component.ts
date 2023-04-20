@@ -50,6 +50,7 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
     loadingState$ = this.store.select<LoadingState>(selectLoadingState);
     currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
     inRoot$ = this.store.select<boolean>(selectHasCurrentIndexes);
+    inChannelPartners: boolean;
 
     currentTab: Tab;
     rootGroup$ = this.store.select<Crumb>(selectCurrentRootGroup);
@@ -84,6 +85,7 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.currentTab = this.tabs.find(tab => tab.route === this.route.snapshot.data.currentTab);
+        this.inChannelPartners = this.router.url.includes('channelPartners');
         this.route.params.pipe(untilDestroyed(this)).subscribe(({ id }) => {
             this.store.dispatch(
                 GroupActions.setCurrentGroupId({

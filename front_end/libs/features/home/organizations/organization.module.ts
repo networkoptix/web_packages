@@ -39,7 +39,6 @@ const orgRoutes: Routes = [
                 path: '**',
                 redirectTo: 'systems'
             }
-
         ],
     },
     {

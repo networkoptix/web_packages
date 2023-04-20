@@ -48,7 +48,7 @@ const homeRoutes: Routes = [
         canActivate: [AuthGuard],
     },
     {
-        path: 'organization/:id',
+        path: 'organization',
         loadChildren: () => import('@pages/home/organizations/organization.module').then(m => m.NxOrganizationModule),
         canActivate: [AuthGuard],
     },
@@ -91,7 +91,7 @@ const homeRoutes: Routes = [
         NxChannelPartnersComponent
     ],
     providers: [
-        TabResolver
+        TabResolver,
     ],
     exports: [],
 })
