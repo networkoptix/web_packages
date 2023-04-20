@@ -1,0 +1,12 @@
+<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<style type="text/css">
+  .body{
+    fill: var(--groups-sidebar-folder-icon-tab-fill);
+  }
+  .tab{
+    fill: var(--groups-sidebar-folder-icon-body-fill);
+  }
+</style>
+<path class="tab" fill-rule="evenodd" clip-rule="evenodd" d="M4 3C2.89543 3 2 3.89543 2 5V15C2 16.1046 2.89543 17 4 17H16C17.1046 17 18 16.1046 18 15V7C18 5.89543 17.1046 5 16 5H11.6L10.4523 3.68493C10.0725 3.24973 9.52308 3 8.94546 3H4Z" fill="#698796"/>
+<path class="body" d="M3.67845 8.60777C3.86542 7.67292 4.68625 7 5.63961 7H18.7802C19.4112 7 19.8845 7.57732 19.7608 8.19612L18.3216 15.3922C18.1346 16.3271 17.3138 17 16.3604 17H3.95169C2.94201 17 2.18474 16.0763 2.38276 15.0862L2.5 14.5L3 12L3.67845 8.60777Z" fill="#879FAB"/>
+</svg>

@@ -18,7 +18,6 @@ import { NxSystemGroupsService } from '../services/system-groups.service';
 import * as GroupActions from '../store/groups.actions';
 import {
     selectCurrentGroupId,
-    selectCurrentGroupOwner,
     selectCurrentPath,
     selectCurrentRootGroup,
     selectHasCurrentIndexes,
@@ -46,7 +45,6 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
     sidebarSettings: CustomAccountProperty<SidebarSettings>;
     userEmail: string;
     hasGroups$ = this.store.select<boolean>(selectHasGroups);
-    currentGroupOwner$ = this.store.select<string>(selectCurrentGroupOwner);
     loadingState$ = this.store.select<LoadingState>(selectLoadingState);
     currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
     inRoot$ = this.store.select<boolean>(selectHasCurrentIndexes);

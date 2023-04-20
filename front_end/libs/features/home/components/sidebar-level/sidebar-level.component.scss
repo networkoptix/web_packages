@@ -12,13 +12,14 @@
         }
     }
 
-    h3 {
+    .group {
         // display: inline-block;
         height: 1.5rem;
         line-height: 1.5rem;
         margin-left: 0.25rem;
         margin-top: 0;
         margin-bottom: 0;
+        font-size: 1rem;
 
         a {
             height: 1.5rem;
@@ -32,10 +33,6 @@
         display: flex;
         align-items: center;
         
-        &.no-nested-groups{
-            margin-left: 25px;
-        }
-
         .level-name {
             width:200px;
             display: block;
@@ -45,23 +42,16 @@
         }
 
         &.selected {
+            padding: .1rem;
+            border-radius: 4px;
             background-color: var(--groups-sidebar-highlight);
-            h3, a {
-                color: var(--groups-sidebar-highlight-color);
-
+            .group, a {
+                font-size: 1rem;
                 .st0 {
                     stroke: var(--groups-sidebar-highlight-color);
                 }
             }        
   
-
-            .triangle path {
-                fill: var(--groups-sidebar-triangle-icon-highlight-fill);
-            }
-
-            .folder path {
-                fill: var(--groups-sidebar-folder-icon-highlight-fill);
-            }
         }
 
         &.cdk-drop-list-dragging {

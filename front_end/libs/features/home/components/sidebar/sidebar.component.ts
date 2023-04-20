@@ -7,10 +7,10 @@ import { CoercedBoolInput } from '@decorators/ibool';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons } from '@src/app/variables/static-variables';
 
-import { GroupsItem, SharedItems, BaseItems, OpenGroups, GroupPath } from '../../home.types';
+import { GroupsItem, OpenGroups, GroupPath, GroupItem } from '../../home.types';
 import { NxSystemGroupsService } from '../../services/system-groups.service';
 import * as GroupActions from '../../store/groups.actions';
-import { selectRootPersonalItems, selectRootSharedItems } from '../../store/groups.selectors';
+import { selectRootGroupItems } from '../../store/groups.selectors';
 
 @Component({
     selector: 'nx-groups-sidebar',
@@ -19,16 +19,13 @@ import { selectRootPersonalItems, selectRootSharedItems } from '../../store/grou
 })
 export class NxSystemGroupsSidebarComponent implements OnInit {
     @Input() currentGroupId: string;
-    @Input() currentGroupOwner: string;
-    @Input() showPersonal: CoercedBoolInput = true;
     @Input() openGroups: OpenGroups;
     @Input() hasGroups: CoercedBoolInput;
     @Input() userEmail: string;
     @Input() currentPath: GroupPath[];
     @Output() dismiss = new EventEmitter<void>();
+    rootGroupItems$ = this.store.select<GroupItem[]>(selectRootGroupItems);
 
-    sharedSidebarItems$ = this.store.select<SharedItems>(selectRootSharedItems);
-    personalSidebarItems$ = this.store.select<BaseItems>(selectRootPersonalItems);
     icons = icons;
     LANG = staticLang;
 
@@ -41,10 +38,6 @@ export class NxSystemGroupsSidebarComponent implements OnInit {
     ngOnInit(): void {
         // Opens all nested groups upon loading a group page
         const initialOpenGroups: OpenGroups = {};
-
-        if (!this.showPersonal) {
-            initialOpenGroups[this.currentGroupOwner] = true;
-        }
 
         for (const group of this.currentPath) {
             initialOpenGroups[group.id] = true;

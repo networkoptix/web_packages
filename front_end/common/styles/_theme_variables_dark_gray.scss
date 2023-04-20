@@ -606,11 +606,13 @@ html[data-theme="dark-gray"] {
     
     // System groups
     --groups-sidebar-bg: var(--dark_gray_11);
-    @include generateVarAndRgb(--groups-sidebar-highlight, $dark_gray_18);
+    --groups-sidebar-border: var(--dark_gray_9);
+    @include generateVarAndRgb(--groups-sidebar-highlight, $dark_gray_9);
     --groups-sidebar-highlight-color: var(--dark_gray_1);
     --groups-sidebar-triangle-icon-fill: var(--dark17);
     --groups-sidebar-triangle-icon-highlight-fill: var(--dark_gray_13);
-    --groups-sidebar-folder-icon-fill: var(--dark17);
+    --groups-sidebar-folder-icon-body-fill: var(--light_gray_10);
+    --groups-sidebar-folder-icon-tab-fill: var(--light_gray_16);
     --groups-sidebar-folder-icon-highlight-fill: var(--dark_gray_1);
     --groups-sidebar-intro-text-color: var(--dark_gray_18); 
 

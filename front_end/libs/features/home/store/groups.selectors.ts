@@ -83,7 +83,7 @@ export const selectGroupsItems = createSelector(
 
 export const selectRootGroupItems = createSelector(
     selectGroupsItems,
-    items => items?.filter(item => item.type === 'group') as GroupItem[],
+    items => items?.filter(item => item.type === 'group' && !item.parent_group_id) as GroupItem[],
 );
 
 export const selectHasGroups = createSelector(selectRootGroupItems, groups => !!groups?.length);

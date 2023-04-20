@@ -39,40 +39,9 @@
 
     <!--Groups Sidebar-->
     <ng-template #groupsSidebar>
-        <div
-            [ngClass]="{
-                selected: !currentGroupId
-            }"
-            cdkDropList
-            (cdkDropListDropped)="moveToRoot($event)"
-        >
-            <h3 class="root">
-                <a routerLink="/groups/">
-                    {{
-                        (showPersonal ? LANG.systemGroups.mySystems : LANG.systemGroups.shared)
-                            | translate
-                    }}
-                </a>
-            </h3>
-        </div>
-
         <nx-sidebar-level
-            *ngIf="showPersonal; else showShared"
-            [groups]="(personalSidebarItems$ | async)?.groups"
+            [groups]="rootGroupItems$ | async"
             [openGroups]="openGroups"
         ></nx-sidebar-level>
-        <ng-template #showShared>
-            <div
-                *ngFor="let user of sharedSidebarItems$ | async | keyvalue"
-                class="user-level"
-            >
-                <nx-sidebar-level
-                    [groups]="(sharedSidebarItems$ | async)[user.key]?.groups"
-                    [userLevel]="user.key"
-                    [openGroups]="openGroups"
-                >
-                </nx-sidebar-level>
-            </div>
-        </ng-template>
     </ng-template>
 </div>

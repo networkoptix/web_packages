@@ -619,11 +619,13 @@ html[data-theme="dark"] {
 
     // System groups TODO
     --groups-sidebar-bg: var(--dark4);
-    @include generateVarAndRgb(--groups-sidebar-highlight, $dark18);
+    --groups-sidebar-border: var(--dark7);
+    @include generateVarAndRgb(--groups-sidebar-highlight, $dark7);
     --groups-sidebar-highlight-color: var(--light4);
     --groups-sidebar-triangle-icon-fill: var(--dark17);
     --groups-sidebar-triangle-icon-highlight-fill: var(--dark6);
-    --groups-sidebar-folder-icon-fill: var(--dark17);
+    --groups-sidebar-folder-icon-body-fill: var(--light10);
+    --groups-sidebar-folder-icon-tab-fill: var(--light16);
     --groups-sidebar-folder-icon-highlight-fill: var(--dark1);
 
     --group-card-folder-icon-body-fill: var(--dark11);

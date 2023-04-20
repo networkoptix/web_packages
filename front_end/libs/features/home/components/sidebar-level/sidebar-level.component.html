@@ -33,37 +33,50 @@
             [cdkDropListData]="group"
             (cdkDropListDropped)="onDrop($event)"
         >
-            <svg-icon
-                (click)="toggleOpenState(group.id)"
-                *ngIf="group.groups.length"
-                nx-add-svg-src
-                [src]="
-                    icons.dir +
-                    (openGroups[group.id] ? 'triangle_opened.svg' : 'triangle_closed.svg')
-                "
-                [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
-                svgClass="triangle"
-            ></svg-icon>
-            <svg-icon
-                nx-add-svg-src
-                [src]="icons.dir + (openGroups[group.id] ? 'folder_open.svg' : 'folder.svg')"
-                [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
-                svgClass="folder"
-            ></svg-icon>
-            <h3
+            <ng-container *ngIf="!group.parent_group_id; else groupIcons">
+                <svg-icon
+                    nx-add-svg-src
+                    [src]="icons.dir + 'organization.svg'"
+                    [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
+                ></svg-icon>
+            </ng-container>
+            <ng-template #groupIcons>
+                <svg-icon
+                    (click)="toggleOpenState(group.id)"
+                    *ngIf="group.groups.length"
+                    nx-add-svg-src
+                    [src]="
+                        icons.dirTextButtons +
+                        (openGroups[group.id] ? 'arrow_right.svg' : 'arrow_down.svg')
+                    "
+                    [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
+                    svgClass="triangle"
+                ></svg-icon>
+                <svg-icon
+                    nx-add-svg-src
+                    [src]="
+                        icons.dir +
+                        (openGroups[group.id] ? 'ws_folder_open.svg' : 'ws_folder_close.svg')
+                    "
+                    [svgStyle]="{ 'width.px': '25', 'height.px': '25' }"
+                    svgClass="folder"
+                ></svg-icon>
+            </ng-template>
+            <div
                 (click)="toggleOpenState(group.id)"
                 cdkDrag
                 [cdkDragData]="group"
                 cdkDragBoundary=".sidebar"
+                class="group"
             >
                 <span *cdkDragPlaceholder></span>
                 <a
-                    [routerLink]="'/groups/' + group.id"
+                    [routerLink]="'/home/organization/' + group.id + '/systems'"
                     class="level-name"
                     [nxTooltip]="group.name"
                     >{{ group.name }}</a
                 >
-            </h3>
+            </div>
         </div>
         <nx-sidebar-level
             *ngIf="group.groups.length"

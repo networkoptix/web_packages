@@ -618,11 +618,13 @@ html[data-theme="light"] {
 
     // System groups
     --groups-sidebar-bg: var(--light2);
-    @include generateVarAndRgb(--groups-sidebar-highlight, $light16);
+    --groups-sidebar-border: var(--light5);
+    @include generateVarAndRgb(--groups-sidebar-highlight, $light5);
     --groups-sidebar-highlight-color: var(--light1);
     --groups-sidebar-triangle-icon-fill: var(--dark17);
     --groups-sidebar-triangle-icon-highlight-fill: var(--light4);
-    --groups-sidebar-folder-icon-fill: var(--dark17);
+    --groups-sidebar-folder-icon-body-fill: var(--light10);
+    --groups-sidebar-folder-icon-tab-fill: var(--light16);
     --groups-sidebar-folder-icon-highlight-fill: var(--light1);
     --groups-sidebar-intro-text-color: var(--light16);
 

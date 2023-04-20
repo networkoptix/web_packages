@@ -18,15 +18,11 @@
         </div>
     </div>
 
-    <div
-        class="sidebar-container"
-        *ngIf="(sidebarSettings.value$ | async)?.showSidebarState"
-    >
+    <div *ngIf="(sidebarSettings.value$ | async)?.showSidebarState">
         <nx-pre-loader *ngIf="loadingState === LoadingState.LOADING; else sidebar"></nx-pre-loader>
         <ng-template #sidebar>
             <nx-groups-sidebar
                 [currentGroupId]="currentGroupId$ | async"
-                [currentGroupOwner]="currentGroupOwner$ | async"
                 [userEmail]="userEmail"
                 [hasGroups]="hasGroups$ | async"
                 [currentPath]="currentPath$ | async"

@@ -591,11 +591,13 @@ html[data-theme="light-gray"] {
     
     // System groups
     --groups-sidebar-bg: var(--light_gray_2);
-    @include generateVarAndRgb(--groups-sidebar-highlight, $light_gray_16);
+    --groups-sidebar-border: var(--light_gray_5);
+    @include generateVarAndRgb(--groups-sidebar-highlight, $light_gray_5);
     --groups-sidebar-highlight-color: var(--light_gray_1);
     --groups-sidebar-triangle-icon-fill: var(--dark17);
     --groups-sidebar-triangle-icon-highlight-fill: var(--light_gray_4);
-    --groups-sidebar-folder-icon-fill: var(--dark17);
+    --groups-sidebar-folder-icon-body-fill: var(--light_gray_10);
+    --groups-sidebar-folder-icon-tab-fill: var(--light_gray_16);
     --groups-sidebar-folder-icon-highlight-fill: var(--light_gray_1);
     --groups-sidebar-intro-text-color: var(--light_gray_16);
 
