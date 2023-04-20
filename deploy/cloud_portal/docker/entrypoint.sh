@@ -95,7 +95,6 @@ do
                 sleep 10
                 exit
             fi
-
             # On non-prod instances block webcrawlers
             if [ $INSTANCE_NAME != "prod" ]; then
                 sed -i 's$<base href="/">$<base href="/"><meta name="robots" content="noindex,nofollow">$g' static/_source/*/static/index.html
@@ -113,6 +112,7 @@ do
             python manage.py update_host --customization $CUSTOMIZATION
             python manage.py filldata --customization $CUSTOMIZATION
 #            python manage.py filldata --customization $CUSTOMIZATION --preview=True &  # Removing for now
+            python manage.py update_portal_cache --customization $CUSTOMIZATION
 
             find /app/app/static | xargs touch
             exec gunicorn cloud.asgi:application --capture-output --workers ${PORTAL_WORKERS} --bind :5000 --log-level=debug --timeout 300 -k uvicorn.workers.UvicornWorker

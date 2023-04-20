@@ -227,12 +227,12 @@ def get_asset_by_revision(version_id):
 
 def update_global_cache(customization, version_id):
     global_cache = caches['customization']
-    global_cache.set(f'global_version_{customization}', version_id)
+    global_cache.set(global_version_key(customization), version_id)
 
 
 def check_update_cache(customization, version_id):
     global_cache = caches['customization']
-    global_id = global_cache.get(f'global_version_{customization}')
+    global_id = global_cache.get(global_version_key(customization))
 
     return version_id != global_id, global_id
 
@@ -241,38 +241,44 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
     return async_to_sync(cloud_portal_customization_cache_async)(customization_name, value=value, force=force)
 
 
+def global_version_key(customization):
+    return f'global_version_{customization}_{settings.VERSION}'
+
+
+def cloud_portal_customization_cache_key(customization):
+    return f'customization_{customization}_{settings.VERSION}'
+
+
 async def cloud_portal_customization_cache_async(customization_name, value=None, force=False):
     from cms.controllers.special_structures import SpecialStructures
     customization_cache = caches['customization']
+    cache_key = cloud_portal_customization_cache_key(customization_name)
 
     async def release_lock(key, val):
         if (await customization_cache.aget(key)) == val:
             await customization_cache.adelete(key)
 
-    # try to acquire lock
-    lock_key = f'lock_customization_{customization_name}'
-    lock_val = str(uuid4())
-    while not (await customization_cache.aadd(lock_key, lock_val, timeout=60)):
-        connections.close_all()
-        await asyncio.sleep(1)
+    data = await customization_cache.aget(
+        cache_key, dict())
 
-    try:
-        data = await customization_cache.aget(
-            f'customization_{customization_name}', dict())
+    if data and 'version_id' in data and not force:
+        force = check_update_cache(customization_name, data['version_id'])[0]
 
-        if data and 'version_id' in data and not force:
-            force = check_update_cache(customization_name, data['version_id'])[0]
+        # check data one more time, it can be recently updated
 
-        if not data or force:
-            lock_key = f'lock_customization_{customization_name}'
-            lock_val = str(uuid4())
-            locked = not await customization_cache.aadd(lock_key, lock_val, timeout=60)
-            if locked:
-                while not (await customization_cache.aadd(lock_key, lock_val, timeout=60)):
-                    connections.close_all()
-                    await asyncio.sleep(1)
-                return cloud_portal_customization_cache_async(customization_name, value, False)
-            else:
+    if not data or force:
+        lock_key = f'lock_{cloud_portal_customization_cache_key(customization_name)}'
+        lock_val = str(uuid4())
+        locked = not await customization_cache.aadd(lock_key, lock_val, timeout=60)
+        if locked:
+            while not (await customization_cache.aadd(lock_key, lock_val, timeout=60)):
+                connections.close_all()
+                await asyncio.sleep(0.5)
+            release_lock(lock_key, lock_val)
+            return cloud_portal_customization_cache_async(customization_name, value, False)
+        else:
+            try:
+
                 asset = await sync_to_async(get_cloud_portal_asset)(customization=customization_name)
                 customization = await Customization.objects.aget(name=customization_name)
                 global_vars = ['%INTEGRATION_STORE_ENABLED%', '%PUSH_CONFIG_WEB%', '%CLOUD_NAME%', '%VMS_NAME%',
@@ -374,14 +380,15 @@ async def cloud_portal_customization_cache_async(customization_name, value=None,
                         'smtp_disabled': ds_data.get("%SMTP_DISABLED%")
                     }
                 }
-                await customization_cache.aset(f'customization_{customization_name}', data)
+                await customization_cache.aset(cache_key, data)
                 update_global_cache(customization, data['version_id'])
-    except Exception as ex:
-        await release_lock(lock_key, lock_val)
-        raise ex
+            except Exception as ex:
+                await release_lock(lock_key, lock_val)
+                raise ex
 
         # release lock if only lock_value the same to avoid race condition
-    await release_lock(lock_key, lock_val)
+        await release_lock(lock_key, lock_val)
+
     if value:
         return data.get(value)
 

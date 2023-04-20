@@ -49,7 +49,7 @@ class Command(BaseCommand):
             'Cloud Portal', customization, 'cloud_portal', '')
 
         for _ in range(settings.FILLDATA_TRIES):
-            if filldata.init_skin(asset, preview, workers=1):
+            if filldata.init_skin(asset, preview, workers=1, management=True):
                 break
 
             warning_msg = f"Filldata Failed. Retrying in {settings.FILLDATA_TIMEOUT} seconds"

@@ -26,7 +26,7 @@ from cloud.helpers.exceptions import api_success, handle_exceptions, require_par
 from cloud.drf_async import async_api_view as api_view
 from api.serializers import CustomizationCacheSerializer, SettingsSerializer, IpvdSerializer
 from cms.models import Customization, cloud_portal_customization_cache, get_cached_menu, UserGroupsToAssetPermissions, \
-    cached_doc_menu_map, LicenseType, cloud_portal_customization_cache_async
+    cached_doc_menu_map, LicenseType, cloud_portal_customization_cache_async, global_version_key
 from cms.feature_flags import *
 
 logger = logging.getLogger(__name__)
@@ -419,7 +419,7 @@ def get_settings(request):
     current_user = cache.get(user_key)
     user_changed = not user or not current_user or user != current_user
     version = request.query_params.get('version')
-    current_version = global_cache.get(f'global_version_{customization}')
+    current_version = global_cache.get(global_version_key(customization))
     version_changed = version != str(current_version)
     features = request.query_params.get('features')
     current_features = str(uuid4())

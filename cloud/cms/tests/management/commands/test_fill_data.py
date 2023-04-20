@@ -84,7 +84,7 @@ class TestFillData:
         mock_critical.assert_called_once_with(failure_message)
         mock_write_stdout.assert_has_calls(expected_std_out_calls)
         mock_init_skin.assert_has_calls(
-            call(created_cloud_portal_asset, preview, workers=1)
+            call(created_cloud_portal_asset, preview, workers=1, management=True)
             for _ in range(settings.FILLDATA_TRIES))
 
         # Test success

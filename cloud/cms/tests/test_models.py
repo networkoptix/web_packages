@@ -169,8 +169,7 @@ class TestModelFunctions:
 
         update_global_cache(customization, test_version)
 
-        cached_version = caches['customization'].get(
-            f'global_version_{customization}')
+        cached_version = caches['customization'].get(global_version_key(customization))
         assert cached_version == test_version
 
     def test_check_update_cache(self, uses):
@@ -187,7 +186,7 @@ class TestModelFunctions:
         test_key = 'test_value'
         test_value = str(uuid.uuid4())
         caches['customization'].set(
-            f'customization_{customization}', {test_key: test_value})
+            f'customization_{customization}_{settings.VERSION}', {test_key: test_value})
 
         data = cloud_portal_customization_cache(customization)
 

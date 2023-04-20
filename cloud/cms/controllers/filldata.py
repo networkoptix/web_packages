@@ -361,7 +361,7 @@ def can_update_static(asset: Asset):
             "Can not update static files for cloud portal on other customizations.")
 
 
-def init_skin(asset, preview=False, workers=2):
+def init_skin(asset, preview=False, workers=2, management=False):
     can_update_static(asset)
     # 1. read skin for this customization
     customization_name = asset.customizations.first().name
@@ -376,12 +376,12 @@ def init_skin(asset, preview=False, workers=2):
     if not preview:
         distutils.dir_util.copy_tree(from_dir, target_dir)
         logger.info("Fill content for " + asset.__str__())
-        return fill_content(asset, preview=False, incremental=False, workers=workers)
+        return fill_content(asset, preview=False, incremental=False, workers=workers, management=management)
     else:
         distutils.dir_util.copy_tree(
             from_dir, os.path.join(target_dir, 'preview'))
         logger.info("Fill preview for " + asset.__str__())
-        return fill_content(asset, preview=True, incremental=False, workers=workers)
+        return fill_content(asset, preview=True, incremental=False, workers=workers, management=management)
 
 
 @timer
@@ -391,7 +391,8 @@ def fill_content(asset,
                  incremental=False,
                  changed_context=None,
                  send_to_review=False,
-                 workers=2):
+                 workers=2,
+                 management=False):
     def calculate_preview_state():
         # if preview=False
         #   retrieve latest accepted version
@@ -434,7 +435,8 @@ def fill_content(asset,
             else:
                 version_id = 0
                 incremental = False  # no version - do full update using default values
-            cloud_portal_customization_cache(asset.asset_root, force=True)
+            if not management:
+                cloud_portal_customization_cache(asset.asset_root, force=True)
         return True
 
     def get_changed_if_no_version():
