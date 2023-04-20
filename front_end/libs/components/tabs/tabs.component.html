@@ -4,9 +4,9 @@
             class="tab"
             *ngFor="let tab of tabs; index as i"
             (click)="handleClick(tab, i)"
-            [ngClass]="{ selected: tab.name === tabsMap[currentTabIndex] }"
+            [ngClass]="{ selected: tab.data.displayName === tabsMap[currentTabIndex] }"
         >
-            {{ tab.name.charAt(0).toUpperCase() + tab.name.slice(1) }}
+            {{ tab.data.displayName }}
         </button>
     </div>
 

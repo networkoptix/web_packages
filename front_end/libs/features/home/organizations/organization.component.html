@@ -62,14 +62,14 @@
                         <div class="header">
                             <h2 class="pb-3 pt-2">{{ (rootGroup$ | async).name }}</h2>
                         </div>
+
                         <nx-tabs
                             [onLoadTab]="currentTab"
                             (tabClick)="onTabClick($event)"
                         >
-                            <div *tab="'systems'; title as title">{{ title }}</div>
-                            <div *tab="'users'; title as title">{{ title }}</div>
-                            <div *tab="'reports'; title as title">{{ title }}</div>
-                            <div *tab="'settings'; title as title">{{ title }}</div>
+                            <ng-container *ngFor="let tab of tabs">
+                                <div *tab="tab"></div>
+                            </ng-container>
                         </nx-tabs>
                     </div>
                     <router-outlet></router-outlet>

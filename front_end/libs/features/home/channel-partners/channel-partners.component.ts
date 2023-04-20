@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { map, Observable } from 'rxjs';
+
+import { Tab, TabEmit } from '@components/tabs/tabs.types';
 
 import { LoadingState, Organization } from '../home.types';
 import { NxSystemGroupsService } from '../services/system-groups.service';
@@ -13,7 +14,6 @@ const getRandomInt = (max: number): number => {
 };
 const statusOptions = ['online', 'suspended', 'offline', 'paused'];
 
-@UntilDestroy()
 @Component({
     selector: 'nx-channel-partners',
     templateUrl: 'channel-partners.component.html',
@@ -44,8 +44,29 @@ export class NxChannelPartnersComponent implements OnInit, OnDestroy {
         }),
     );
     isAdmin: boolean = false;
-    currentTab: string;
-    tabs = ['organizations', 'subchannel', 'information', 'users', 'settings'];
+    currentTab: Tab;
+    tabs: Tab[] = [
+        {
+            displayName: 'Organizations',
+            route: '',
+        },
+        {
+            displayName: 'Subchannel',
+            route: 'subchannel',
+        },
+        {
+            displayName: 'Information',
+            route: 'information',
+        },
+        {
+            displayName: 'Users',
+            route: 'users',
+        },
+        {
+            displayName: 'Settings',
+            route: 'settings',
+        },
+    ];
 
     constructor(
         private store: Store,
@@ -57,10 +78,8 @@ export class NxChannelPartnersComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.route.url.pipe(untilDestroyed(this)).subscribe(_ => {
-            this.currentTab = this.route.snapshot.children[0].routeConfig.path;
-            this.inOrganization = this.route.snapshot.children[0].url[0]?.path === 'organization';
-        });
+        this.currentTab = this.tabs.find(tab => tab.route === this.route.snapshot.data.currentTab);
+        this.inOrganization = this.route.snapshot.children[0].url[0]?.path === 'organization';
     }
 
     ngOnDestroy(): void {
@@ -71,10 +90,11 @@ export class NxChannelPartnersComponent implements OnInit, OnDestroy {
         // temporary placeholder
     }
 
-    onTabClick(tab: string): void {
-        tab === 'organizations'
-            ? this.router.navigate(['home', 'channelPartners', 'testId'])
-            : this.router.navigate(['home', 'channelPartners', 'testId', tab]);
+    onTabClick(tab: TabEmit): void {
+        this.currentTab = this.tabs[tab.index];
+        tab.route
+            ? this.router.navigate(['home', 'channelPartners', 'testId', tab.route])
+            : this.router.navigate(['home', 'channelPartners', 'testId']);
     }
 
     handleOrgClick(id: string): void {

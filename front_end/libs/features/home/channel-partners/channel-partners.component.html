@@ -14,10 +14,10 @@
             (tabClick)="onTabClick($event)"
         >
             <ng-container *ngFor="let tab of tabs">
-                <div *tab="tab; title as title">{{ title }}</div>
+                <div *tab="tab"></div>
             </ng-container>
         </nx-tabs>
-        <ng-container *ngIf="!currentTab; else tabOutlet">
+        <ng-container *ngIf="!currentTab.route; else tabOutlet">
             <div class="actions p-3">
                 <button
                     [disabled]="isAdmin"

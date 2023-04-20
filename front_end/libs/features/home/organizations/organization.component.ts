@@ -1,11 +1,13 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { take } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { selectCurrentUser } from '@common/store/account/account.selectors';
+import { Tab, TabEmit } from '@components/tabs/tabs.types';
 import { icons } from '@lib/variables/static-variables';
 import { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -29,6 +31,7 @@ interface SidebarSettings {
     showSidebarState: boolean;
 }
 
+@UntilDestroy()
 @Component({
     selector: 'nx-organization',
     templateUrl: 'organization.component.html',
@@ -48,9 +51,26 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
     currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
     inRoot$ = this.store.select<boolean>(selectHasCurrentIndexes);
 
-    currentTab: string;
+    currentTab: Tab;
     rootGroup$ = this.store.select<Crumb>(selectCurrentRootGroup);
-    tabs = ['systems', 'users', 'reports', 'settings'];
+    tabs: Tab[] = [
+        {
+            displayName: 'Systems',
+            route: 'systems',
+        },
+        {
+            displayName: 'Users',
+            route: 'users',
+        },
+        {
+            displayName: 'Reports',
+            route: 'reports',
+        },
+        {
+            displayName: 'Settings',
+            route: 'settings',
+        },
+    ];
 
     constructor(
         private store: Store,
@@ -63,8 +83,8 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.currentTab = this.route.snapshot.data.currentTab;
-        this.route.params.subscribe(({ id }) => {
+        this.currentTab = this.tabs.find(tab => tab.route === this.route.snapshot.data.currentTab);
+        this.route.params.pipe(untilDestroyed(this)).subscribe(({ id }) => {
             this.store.dispatch(
                 GroupActions.setCurrentGroupId({
                     currentGroupId: id,
@@ -104,12 +124,9 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
         }, true);
     }
 
-    onTabClick(tab: string): void {
-        this.currentTab = tab;
-        this.store
-            .select<string>(selectCurrentGroupId)
-            .pipe(take(1))
-            .subscribe(id => this.router.navigate([tab], { relativeTo: this.route }));
+    onTabClick(tab: TabEmit): void {
+        this.currentTab = this.tabs[tab.index];
+        this.router.navigate([tab.route], { relativeTo: this.route });
     }
 
     // Temporary
