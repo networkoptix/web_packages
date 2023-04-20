@@ -264,109 +264,118 @@ async def cloud_portal_customization_cache_async(customization_name, value=None,
             force = check_update_cache(customization_name, data['version_id'])[0]
 
         if not data or force:
-            asset = await sync_to_async(get_cloud_portal_asset)(customization=customization_name)
-            customization = await Customization.objects.aget(name=customization_name)
-            global_vars = ['%INTEGRATION_STORE_ENABLED%', '%PUSH_CONFIG_WEB%', '%CLOUD_NAME%', '%VMS_NAME%',
-                           '%INTEGRATION_SEO_PAGE_DESCRIPTION%']
-            email = ['%MAIL_FROM_NAME%', '%MAIL_FROM_EMAIL%', '%REPLY_TO_EMAIL%', '%SMTP_HOST%', '%SMTP_PORT%',
-                     '%SMTP_USER%', '%SMTP_PASSWORD%', '%SMTP_TLS%']
-            config = ['%APP_TYPES_FOR_PLATFORM%', '%AVAILABLE_DOWNLOADS_PLATFORM%', '%ALEXA_INTEGRATION_ENABLED%',
-                      '%BOOKMARKS_ENABLED%', '%CLOUD_STORAGE_ENABLED%', '%CLOUD_STORAGE_ENABLED%', '%CLOUD_STORAGE_SIZE%',
-                      '%COPYRIGHT_YEAR%', '%COMPANY_NAME%', '%COMPANY_LINK%', '%DEVELOPERS_ENABLED%', '%FEEDBACK_ENABLED%',
-                      '%INTEGRATION_FILTER_ITEMS%', '%INTEGRATION_SHOW_FILTER_LIMITATION%', '%HM_CACHE_TIMEOUT%',
-                      '%PUBLIC_CUSTOM_CLIENTS%', '%PUBLIC_DOWNLOADS%', '%PUBLIC_RELEASE_HISTORY%', '%SHOW_ALL_BETAS%',
-                      '%SHOW_ANALYTICS_EVENTS%', '%SORT_SUPPORTED_DEVICES_BY_POPULARITY%', '%SUPPORT_LINK%',
-                      '%PRIVACY_LINK%', '%SUPPORTED_RESOLUTIONS%', '%SUPPORTED_HARDWARE_TYPES%', '%SEARCH_TAGS%',
-                      '%TESTED_OPERATING_SYSTEMS%', '%VENDORS_SHOWN%', '%GOOGLE_TAG_MANAGER_ID%', '%LOGROCKET_PROJECT%',
-                      '%FULLSTORY_ID%', '%TRIAL_LICENSE_KEY%', '%DEFAULT_THEME%', '%DARK_THEME%', '%LIGHT_THEME%']
-            cloud_capabilities = ['%REVIEWS_ENABLED%', '%SMTP_DISABLED%']
-            ds_data = await sync_to_async(asset.read_all_global_values)(global_vars + email + config + cloud_capabilities)
+            lock_key = f'lock_customization_{customization_name}'
+            lock_val = str(uuid4())
+            locked = not await customization_cache.aadd(lock_key, lock_val, timeout=60)
+            if locked:
+                while not (await customization_cache.aadd(lock_key, lock_val, timeout=60)):
+                    connections.close_all()
+                    await asyncio.sleep(1)
+                return cloud_portal_customization_cache_async(customization_name, value, False)
+            else:
+                asset = await sync_to_async(get_cloud_portal_asset)(customization=customization_name)
+                customization = await Customization.objects.aget(name=customization_name)
+                global_vars = ['%INTEGRATION_STORE_ENABLED%', '%PUSH_CONFIG_WEB%', '%CLOUD_NAME%', '%VMS_NAME%',
+                               '%INTEGRATION_SEO_PAGE_DESCRIPTION%']
+                email = ['%MAIL_FROM_NAME%', '%MAIL_FROM_EMAIL%', '%REPLY_TO_EMAIL%', '%SMTP_HOST%', '%SMTP_PORT%',
+                         '%SMTP_USER%', '%SMTP_PASSWORD%', '%SMTP_TLS%']
+                config = ['%APP_TYPES_FOR_PLATFORM%', '%AVAILABLE_DOWNLOADS_PLATFORM%', '%ALEXA_INTEGRATION_ENABLED%',
+                          '%BOOKMARKS_ENABLED%', '%CLOUD_STORAGE_ENABLED%', '%CLOUD_STORAGE_ENABLED%', '%CLOUD_STORAGE_SIZE%',
+                          '%COPYRIGHT_YEAR%', '%COMPANY_NAME%', '%COMPANY_LINK%', '%DEVELOPERS_ENABLED%', '%FEEDBACK_ENABLED%',
+                          '%INTEGRATION_FILTER_ITEMS%', '%INTEGRATION_SHOW_FILTER_LIMITATION%', '%HM_CACHE_TIMEOUT%',
+                          '%PUBLIC_CUSTOM_CLIENTS%', '%PUBLIC_DOWNLOADS%', '%PUBLIC_RELEASE_HISTORY%', '%SHOW_ALL_BETAS%',
+                          '%SHOW_ANALYTICS_EVENTS%', '%SORT_SUPPORTED_DEVICES_BY_POPULARITY%', '%SUPPORT_LINK%',
+                          '%PRIVACY_LINK%', '%SUPPORTED_RESOLUTIONS%', '%SUPPORTED_HARDWARE_TYPES%', '%SEARCH_TAGS%',
+                          '%TESTED_OPERATING_SYSTEMS%', '%VENDORS_SHOWN%', '%GOOGLE_TAG_MANAGER_ID%', '%LOGROCKET_PROJECT%',
+                          '%FULLSTORY_ID%', '%TRIAL_LICENSE_KEY%', '%DEFAULT_THEME%', '%DARK_THEME%', '%LIGHT_THEME%']
+                cloud_capabilities = ['%REVIEWS_ENABLED%', '%SMTP_DISABLED%']
+                ds_data = await sync_to_async(asset.read_all_global_values)(global_vars + email + config + cloud_capabilities)
 
-            integration_store_enabled = ds_data.get('%INTEGRATION_STORE_ENABLED%')
+                integration_store_enabled = ds_data.get('%INTEGRATION_STORE_ENABLED%')
 
-            public_push_config = ds_data.get('%PUSH_CONFIG_WEB%') or \
-                                 getattr(settings, 'PUSH_NOTIFICATIONS_SETTINGS', {}).get('PUBLIC')
+                public_push_config = ds_data.get('%PUSH_CONFIG_WEB%') or \
+                                     getattr(settings, 'PUSH_NOTIFICATIONS_SETTINGS', {}).get('PUBLIC')
 
-            cloud_name = ds_data.get('%CLOUD_NAME%') or ''
-            vms_name = ds_data.get('%VMS_NAME%') or ''
-            seo_description = (ds_data.get('%INTEGRATION_SEO_PAGE_DESCRIPTION%') or '') \
-                .replace("%CLOUD_NAME%", cloud_name) \
-                .replace("%VMS_NAME%", vms_name)
-            landing_description = ''
-            landing_description_ds = await DataStructure.objects.filter(
-                context__name='Landing page', name='%SUBTITLE%').afirst()
-            if landing_description_ds:
-                landing_description = await sync_to_async(landing_description_ds.find_actual_value)(
-                    asset)
+                cloud_name = ds_data.get('%CLOUD_NAME%') or ''
+                vms_name = ds_data.get('%VMS_NAME%') or ''
+                seo_description = (ds_data.get('%INTEGRATION_SEO_PAGE_DESCRIPTION%') or '') \
+                    .replace("%CLOUD_NAME%", cloud_name) \
+                    .replace("%VMS_NAME%", vms_name)
+                landing_description = ''
+                landing_description_ds = await DataStructure.objects.filter(
+                    context__name='Landing page', name='%SUBTITLE%').afirst()
+                if landing_description_ds:
+                    landing_description = await sync_to_async(landing_description_ds.find_actual_value)(
+                        asset)
 
-            data = {
-                'version_id': await sync_to_async(asset.version_id)(),
-                'languages': customization.languages_list,
-                'default_language': (await Language.objects.aget(default_in_customization=customization.id)).code,
-                'email': {
-                    'mail_from_name': ds_data.get('%MAIL_FROM_NAME%'),
-                    'mail_from_email': ds_data.get('%MAIL_FROM_EMAIL%'),
-                    'portal_url': await sync_to_async(SpecialStructures.calc_cloud_link)(asset),
-                    'reply_to': ds_data.get('%REPLY_TO_EMAIL%'),
-                    'smtp_host': ds_data.get('%SMTP_HOST%'),
-                    'smtp_port': ds_data.get('%SMTP_PORT%'),
-                    'smtp_user': ds_data.get('%SMTP_USER%'),
-                    'smtp_password': ds_data.get('%SMTP_PASSWORD%'),
-                    'smtp_tls': ds_data.get('%SMTP_TLS%')
-                },
-                'config': {
-                    'app_types_for_platform': ds_data.get('%APP_TYPES_FOR_PLATFORM%'),
-                    'available_downloads_platform': ds_data.get('%AVAILABLE_DOWNLOADS_PLATFORM%'),
-                    'alexa_integration_enabled': ds_data.get("%ALEXA_INTEGRATION_ENABLED%"),
-                    'bookmarks_enabled': ds_data.get("%BOOKMARKS_ENABLED%"),
-                    'cloud_storage_enabled': ds_data.get("%CLOUD_STORAGE_ENABLED%"),
-                    'cloud_storage_size': ds_data.get('%CLOUD_STORAGE_SIZE%'),
-                    'copyright_year': ds_data.get("%COPYRIGHT_YEAR%"),
-                    'company_name': ds_data.get("%COMPANY_NAME%"),
-                    'company_link': ds_data.get("%COMPANY_LINK%"),
-                    'developers_enabled': ds_data.get("%DEVELOPERS_ENABLED%"),
-                    'feedback_enabled': ds_data.get("%FEEDBACK_ENABLED%"),
-                    'integration_filter_items': ds_data.get("%INTEGRATION_FILTER_ITEMS%"),
-                    'integration_filter_limitation': ds_data.get("%INTEGRATION_SHOW_FILTER_LIMITATION%"),
-                    'integration_seo_page_description': seo_description,
-                    'integration_store_enabled': integration_store_enabled,
-                    'landing_description': landing_description,
-                    'health_monitor_cache_timeout': ds_data.get('%HM_CACHE_TIMEOUT%'),
-                    'public_custom_clients': ds_data.get('%PUBLIC_CUSTOM_CLIENTS%'),
-                    'public_downloads': ds_data.get("%PUBLIC_DOWNLOADS%"),
-                    'public_releases': ds_data.get("%PUBLIC_RELEASE_HISTORY%"),
-                    'show_all_betas': ds_data.get("%SHOW_ALL_BETAS%"),
-                    'show_analytics_events': ds_data.get("%SHOW_ANALYTICS_EVENTS%"),
-                    'sort_supported_devices_by_popularity': ds_data.get(
-                        "%SORT_SUPPORTED_DEVICES_BY_POPULARITY%"),
-                    'support_link': ds_data.get("%SUPPORT_LINK%"),
-                    'privacy_link': ds_data.get("%PRIVACY_LINK%"),
-                    'supported_resolutions': ds_data.get("%SUPPORTED_RESOLUTIONS%"),
-                    'supported_hardware_types': ds_data.get("%SUPPORTED_HARDWARE_TYPES%"),
-                    'search_tags': ds_data.get("%SEARCH_TAGS%"),
-                    'tested_operating_systems': ds_data.get("%TESTED_OPERATING_SYSTEMS%"),
-                    'vendors_shown': ds_data.get("%VENDORS_SHOWN%"),
-                    'cloud_name': cloud_name,
-                    'vms_name': vms_name,
-                    'push_config': public_push_config,
-                    'google_tag_manager_id': ds_data.get('%GOOGLE_TAG_MANAGER_ID%'),
-                    'log_rocket': ds_data.get("%LOGROCKET_PROJECT%"),
-                    'full_story': ds_data.get("%FULLSTORY_ID%"),
-                    'trial_license_key': ds_data.get('%TRIAL_LICENSE_KEY%'),
-                    'theme_config': {
-                        'default': ds_data.get("%DEFAULT_THEME%"),
-                        'dark': ds_data.get("%DARK_THEME%"),
-                        'light': ds_data.get("%LIGHT_THEME%")
+                data = {
+                    'version_id': await sync_to_async(asset.version_id)(),
+                    'languages': customization.languages_list,
+                    'default_language': (await Language.objects.aget(default_in_customization=customization.id)).code,
+                    'email': {
+                        'mail_from_name': ds_data.get('%MAIL_FROM_NAME%'),
+                        'mail_from_email': ds_data.get('%MAIL_FROM_EMAIL%'),
+                        'portal_url': await sync_to_async(SpecialStructures.calc_cloud_link)(asset),
+                        'reply_to': ds_data.get('%REPLY_TO_EMAIL%'),
+                        'smtp_host': ds_data.get('%SMTP_HOST%'),
+                        'smtp_port': ds_data.get('%SMTP_PORT%'),
+                        'smtp_user': ds_data.get('%SMTP_USER%'),
+                        'smtp_password': ds_data.get('%SMTP_PASSWORD%'),
+                        'smtp_tls': ds_data.get('%SMTP_TLS%')
+                    },
+                    'config': {
+                        'app_types_for_platform': ds_data.get('%APP_TYPES_FOR_PLATFORM%'),
+                        'available_downloads_platform': ds_data.get('%AVAILABLE_DOWNLOADS_PLATFORM%'),
+                        'alexa_integration_enabled': ds_data.get("%ALEXA_INTEGRATION_ENABLED%"),
+                        'bookmarks_enabled': ds_data.get("%BOOKMARKS_ENABLED%"),
+                        'cloud_storage_enabled': ds_data.get("%CLOUD_STORAGE_ENABLED%"),
+                        'cloud_storage_size': ds_data.get('%CLOUD_STORAGE_SIZE%'),
+                        'copyright_year': ds_data.get("%COPYRIGHT_YEAR%"),
+                        'company_name': ds_data.get("%COMPANY_NAME%"),
+                        'company_link': ds_data.get("%COMPANY_LINK%"),
+                        'developers_enabled': ds_data.get("%DEVELOPERS_ENABLED%"),
+                        'feedback_enabled': ds_data.get("%FEEDBACK_ENABLED%"),
+                        'integration_filter_items': ds_data.get("%INTEGRATION_FILTER_ITEMS%"),
+                        'integration_filter_limitation': ds_data.get("%INTEGRATION_SHOW_FILTER_LIMITATION%"),
+                        'integration_seo_page_description': seo_description,
+                        'integration_store_enabled': integration_store_enabled,
+                        'landing_description': landing_description,
+                        'health_monitor_cache_timeout': ds_data.get('%HM_CACHE_TIMEOUT%'),
+                        'public_custom_clients': ds_data.get('%PUBLIC_CUSTOM_CLIENTS%'),
+                        'public_downloads': ds_data.get("%PUBLIC_DOWNLOADS%"),
+                        'public_releases': ds_data.get("%PUBLIC_RELEASE_HISTORY%"),
+                        'show_all_betas': ds_data.get("%SHOW_ALL_BETAS%"),
+                        'show_analytics_events': ds_data.get("%SHOW_ANALYTICS_EVENTS%"),
+                        'sort_supported_devices_by_popularity': ds_data.get(
+                            "%SORT_SUPPORTED_DEVICES_BY_POPULARITY%"),
+                        'support_link': ds_data.get("%SUPPORT_LINK%"),
+                        'privacy_link': ds_data.get("%PRIVACY_LINK%"),
+                        'supported_resolutions': ds_data.get("%SUPPORTED_RESOLUTIONS%"),
+                        'supported_hardware_types': ds_data.get("%SUPPORTED_HARDWARE_TYPES%"),
+                        'search_tags': ds_data.get("%SEARCH_TAGS%"),
+                        'tested_operating_systems': ds_data.get("%TESTED_OPERATING_SYSTEMS%"),
+                        'vendors_shown': ds_data.get("%VENDORS_SHOWN%"),
+                        'cloud_name': cloud_name,
+                        'vms_name': vms_name,
+                        'push_config': public_push_config,
+                        'google_tag_manager_id': ds_data.get('%GOOGLE_TAG_MANAGER_ID%'),
+                        'log_rocket': ds_data.get("%LOGROCKET_PROJECT%"),
+                        'full_story': ds_data.get("%FULLSTORY_ID%"),
+                        'trial_license_key': ds_data.get('%TRIAL_LICENSE_KEY%'),
+                        'theme_config': {
+                            'default': ds_data.get("%DEFAULT_THEME%"),
+                            'dark': ds_data.get("%DARK_THEME%"),
+                            'light': ds_data.get("%LIGHT_THEME%")
+                        }
+                    },
+                    'cloud_capabilities': {
+                        'integration_store_enabled': integration_store_enabled,
+                        'reviews_enabled': ds_data.get('%REVIEWS_ENABLED%'),
+                        'smtp_disabled': ds_data.get("%SMTP_DISABLED%")
                     }
-                },
-                'cloud_capabilities': {
-                    'integration_store_enabled': integration_store_enabled,
-                    'reviews_enabled': ds_data.get('%REVIEWS_ENABLED%'),
-                    'smtp_disabled': ds_data.get("%SMTP_DISABLED%")
                 }
-            }
-            await customization_cache.aset(f'customization_{customization_name}', data)
-            update_global_cache(customization, data['version_id'])
+                await customization_cache.aset(f'customization_{customization_name}', data)
+                update_global_cache(customization, data['version_id'])
     except Exception as ex:
         await release_lock(lock_key, lock_val)
         raise ex
