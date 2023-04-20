@@ -1,5 +1,9 @@
 :host {
     .adjusted-height {
         height : calc(100% - 100px);
+
+        .row {
+            width: 100%;
+        }
     }
 }
