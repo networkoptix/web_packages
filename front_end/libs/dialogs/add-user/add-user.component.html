@@ -48,6 +48,11 @@
                         class="input-error"
                         >{{ LANG.dialogs.addUser.alreadyExists | translate: { systemName } }}</span
                     >
+                    <span
+                        *ngIf="addUserEmail.errors.cantEditAdmin"
+                        class="input-error"
+                        >{{ LANG.dialogs.addUser.cantEditAdmin }}
+                    </span>
                     <ng-container *ngIf="addUserEmail.touched">
                         <span
                             *ngIf="addUserEmail.errors.required"

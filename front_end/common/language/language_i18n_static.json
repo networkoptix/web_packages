@@ -496,7 +496,8 @@
             "nowEnabled": "Two-factor authentication is now <strong>enabled</strong> for your %CLOUD_NAME% account!"
         },
         "addUser": {
-            "alreadyExists": "This email has already been registered in the { systemName } system"
+            "alreadyExists": "This email has already been registered in the { systemName } system",
+            "cantEditAdmin": "Cannot modify an Admin account"
         },
         "buttons": {
             "cancel": "Cancel",
@@ -701,7 +702,7 @@
             "title": "Your session has expired"
         },
         "systemGroups": {
-            "createFirstGroup" : "Enter a new group name",
+            "createFirstGroup": "Enter a new group name",
             "createdInRoot": "New group will be created in root",
             "createdInCurrentGroup": "New group will be created in current group",
             "createdInsideSelectedGroup": "New group will be created in {parentGroup}"
@@ -927,20 +928,20 @@
                     }
                 ]
             },
-            "systemGroups" : {
+            "systemGroups": {
                 "displayName": "System Groups",
                 "nodes": {
-                    "personal" : {
-                        "displayName" : "My System"
+                    "personal": {
+                        "displayName": "My System"
                     },
-                    "shared" : {
-                        "displayName" : "Shared"
+                    "shared": {
+                        "displayName": "Shared"
                     },
-                    "organization" : {
-                        "displayName" : "Organization"
+                    "organization": {
+                        "displayName": "Organization"
                     },
-                    "channelPartners" : {
-                        "displayName" : "Channel Partners"
+                    "channelPartners": {
+                        "displayName": "Channel Partners"
                     }
                 }
             }
@@ -1026,7 +1027,7 @@
     },
     "appFooter": {
         "copyright": "Copyright (c) {currentYear} %COMPANY_NAME%. All Rights Reserved"
-	},
+    },
     "pages": {
         "developers": {
             "menuNodeContainsErrors": "Menu node <span class=\"brand-title-span\">\"{ menuNodeName }\"</span> contains errors"
@@ -1310,7 +1311,7 @@
         "groupAlreadyIn": "Group { srcName } is already in { destName }",
         "systemAlreadyIn": "System { srcName } is already in { destName }",
         "addGroupToSelf": "You cannot add a group to itself",
-        "introduction" :  "Cloud Layouts are <strong>cross-system layouts</strong> that allow you to work with devices from different Systems. Currently, only some features of regular layouts are available, but we will continue to expand the capabilities of Cloud Layouts",
+        "introduction": "Cloud Layouts are <strong>cross-system layouts</strong> that allow you to work with devices from different Systems. Currently, only some features of regular layouts are available, but we will continue to expand the capabilities of Cloud Layouts",
         "errorMsg": {
             "You can only delete groups that you own": "You can only delete groups that you own",
             "You can only move systems that you own.": "You can only move systems that you own.",
@@ -1601,7 +1602,7 @@
         "reservedSystemTooltip": "This storage location cannot be used for recording because it’s system storage and there are other larger storage locations available for recording.",
         "serverOffline": "Failed to add external storage - server doesn't respond",
         "success": "External storage added",
-        "urlPlaceholder": "\/\/<Computer Name>\/<Folder>"
+        "urlPlaceholder": "//<Computer Name>/<Folder>"
     },
     "metaDefaults": {
         "default": {

@@ -13,7 +13,10 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { ChangedIdReturned } from '@services/system-api.types';
-import type { NewUserBase, NxAccessRole } from '@services/system.service/user-manager/user-manager-types';
+import type {
+    NewUserBase,
+    NxAccessRole,
+} from '@services/system.service/user-manager/user-manager-types';
 
 import type { AddUser as DT } from '../dialogs.types';
 
@@ -76,70 +79,81 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
     private saveUser(): Promise<ChangedIdReturned> {
         this.user.email = this.user.email.toLowerCase();
         // this.user.userGroupIds.push(this.userGroupIds);
-        return this.system.userManager.saveUser(this.user)
+        return this.system.userManager
+            .saveUser(this.user)
             .then(user => this.system.getUsers(true).then(() => user));
     }
 
     ngOnInit(): void {
         this.systemName = this.system.info.systemName || this.system.info.name;
 
-        const defaultRole = this.system.userManager.accessRoles.find(role =>
-            role.name === this.CONFIG.accessRoles.default
+        const defaultRole = this.system.userManager.accessRoles.find(
+            role => role.name === this.CONFIG.accessRoles.default,
         );
 
         this.user = {
             email: '',
             isEnabled: true,
             isCloud: true,
-            role: defaultRole
+            role: defaultRole,
         };
         this.setPermission(defaultRole);
 
-        this.addUser = this.processService.createProcess(() => {
-            this.lock();
-            this.hideErrors = false;
-            const userExists = this.system.userManager.users.some(item => {
-                return item.email === this.user.email;
-            });
-            if (userExists) {
-                return Promise.reject({ resultCode: 'alreadyExists' });
-            } else {
-                return this.saveUser();
-            }
-        },
-        {
-            errorCodes: {
-                alreadyExists: () => {
-                    this.form.controls.addUserEmail.setErrors({ alreadyExists: true });
+        this.addUser = this.processService.createProcess(
+            () => {
+                this.lock();
+                this.hideErrors = false;
+                const userExists = this.system.userManager.users.some(item => {
+                    return item.email === this.user.email;
+                });
+                if (userExists) {
+                    return Promise.reject({ resultCode: 'alreadyExists' });
+                } else {
+                    return this.saveUser();
                 }
             },
-            ignoreError: true
-        },
-        user => {
-            this.hideErrors = true;
-            this.close(user.id);
-        },
-        err => {
-            if (err?.resultCode === 'alreadyExists') {
-                this.unlock();
-                return;
-            }
-            if (err.errorId === servers.errors.oldSessionErrorId) {
-                this.dialogs.updateSession({
-                    sessionState: SessionState.RenewWeb,
-                    system: this.system,
-                    noConnectionMsg: this.LANG.dialogs.updateSession.addUser,
-                    openingRef: this.dialogRef,
-                }).then(ready => {
-                    if (ready) {
-                        this.addUser.run();
-                    } else {
-                        this.unlock();
-                    }
-                });
-            } else {
-                this.unlock();
-            }
-        });
+            {
+                errorCodes: {
+                    alreadyExists: () => {
+                        this.form.controls.addUserEmail.setErrors({ alreadyExists: true });
+                    },
+                    cantEditAdmin: () => {
+                        this.form.controls.addUserEmail.setErrors({ cantEditAdmin: true });
+                    },
+                },
+                ignoreError: true,
+            },
+            user => {
+                this.hideErrors = true;
+                this.close(user.id);
+            },
+            err => {
+                if (err?.resultCode === 'alreadyExists') {
+                    this.unlock();
+                    return;
+                } else if (err?.resultCode === 'cantEditAdmin') {
+                    this.unlock();
+                    return;
+                }
+                if (err.errorId === servers.errors.oldSessionErrorId) {
+                    this.dialogs
+                        .updateSession({
+                            sessionState: SessionState.RenewWeb,
+                            system: this.system,
+                            noConnectionMsg: this.LANG.dialogs.updateSession.addUser,
+                            openingRef: this.dialogRef,
+                        })
+                        .then(ready => {
+                            if (ready) {
+                                this.addUser.run();
+                            } else {
+                                this.unlock();
+                            }
+                        });
+                } else {
+                    this.unlock();
+                }
+            },
+        );
     }
 }
