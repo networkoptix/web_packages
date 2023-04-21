@@ -8,7 +8,7 @@ import {
     ViewChild
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import dateFormat from 'dateformat';
+import { distinctUntilChanged } from 'rxjs';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NgChanges } from '@utils/ng-changes';
@@ -20,9 +20,6 @@ const MARGIN = 5;
 const HANDLE_ADJ = 1;
 const ARROW_WIDTH = 10;
 const PRIMARY_WIDTH = 140;
-
-const TIME_FORMAT = 'HH:MM:ss';
-const DATE_FORMAT = 'ddd mmm dd yyyy';
 
 @UntilDestroy()
 @Component({
@@ -57,20 +54,7 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
     @ViewChild('rightEar', { static: true })
     protected rightEarView: ElementRef<HTMLDivElement>;
 
-    selection: ExportSelection = {
-        active: false,
-        drag: false,
-        startDate: new Date(),
-        endDate: new Date(),
-        startDisplay: 0,
-        endDisplay: 0,
-        start: 0,
-        end: 0,
-        leftDate: '',
-        leftTime: '',
-        rightDate: '',
-        rightTime: '',
-    };
+    selection: ExportSelection;
 
     mouseOverEar: boolean = false;
     dragLeft: boolean = false;
@@ -83,30 +67,22 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
     ) {
         languageService.loadTimelineTranslations();
 
+        this.webglService.selection$
+            .pipe(
+                untilDestroyed(this),
+                distinctUntilChanged()
+            )
+            .subscribe((selection: ExportSelection) => {
+                this.selection = selection;
+                this.leftEarPosition();
+                this.rightEarPosition();
+            });
+
         this.webglService.levelZoom$
             .pipe(untilDestroyed(this))
             .subscribe(level => {
                 if (this.selection.active) {
-                    this.canvasWidth = this.webglService.canvasWidth$.value;
-
-                    const xScale = this.webglService.xScale$.value;
-                    this.selection.start = xScale(this.selection.startDate);
-                    this.selection.end = xScale(this.selection.endDate);
-
-                    this.selection.startDisplay =
-                        this.selection.start < 0
-                            ? 0
-                            : this.selection.start;
-
-                    this.selection.endDisplay =
-                        this.selection.end > this.canvasWidth
-                            ? this.canvasWidth
-                            : this.selection.end;
-
-                    this.leftEarPosition();
-                    this.rightEarPosition();
-
-                    console.log(' => ', this.selection.startDisplay, this.selection.start, this.selection.end);
+                    this.webglService.updateSelection();
                 }
             });
     }
@@ -116,46 +92,27 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
             if (this.selection.drag) {
                 if (this.dragLeft || this.selection.leftDate === '') {
                     this.selection.startDate = this.cursorTime;
-                    this.selection.leftDate = dateFormat(this.cursorTime, DATE_FORMAT);
-                    this.selection.leftTime = dateFormat(this.cursorTime, TIME_FORMAT);
                 }
 
                 if (this.dragRight || this.selection.rightDate === '') {
                     this.selection.endDate = this.cursorTime;
-                    this.selection.rightDate = dateFormat(this.cursorTime, DATE_FORMAT);
-                    this.selection.rightTime = dateFormat(this.cursorTime, TIME_FORMAT);
                 }
+
+                this.webglService.selection$.next(this.selection);
+                this.webglService.updateSelection();
             }
         }
     }
 
-    private selectionReset(): void {
-        this.selection = {
-            active: false,
-            drag: false,
-            startDate: new Date(),
-            endDate: new Date(),
-            startDisplay: 0,
-            endDisplay: 0,
-            start: 0,
-            end: 0,
-            leftDate: '',
-            leftTime: '',
-            rightDate: '',
-            rightTime: '',
-        };
-    }
-
     public selectedRangeDoubleClickHandler(event: MouseEvent): void {
-        this.selectionReset();
+        this.webglService.selectionReset();
     }
 
     selectionHandler(event : MouseEvent, action: SELECTION_ACTION): void {
         if (action === SELECTION_ACTION.start && !this.mouseOverEar && this.selection.active) {
-            this.selectionReset();
+            this.webglService.selectionReset();
         }
         this.selection.drag = action === SELECTION_ACTION.start;
-        this.webglService.selectionDrag$.next(this.selection.drag);
 
         if (this.selection.drag && !this.selection.active) {
             const offsetX = event.pageX - this.webglService.canvasRect$.value.left;
@@ -166,6 +123,7 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
             this.selection.endDisplay = offsetX;
             this.hideLeftEar = false;
             this.hideRightEar = false;
+            this.webglService.selection$.next(this.selection);
 
             this.leftEarPosition();
             this.rightEarPosition();
@@ -223,6 +181,8 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
 
                 this.leftEarPosition();
             }
+
+            this.webglService.selection$.next(this.selection);
         }
     }
 
@@ -245,9 +205,9 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
     }
 
     public get svgLeftArrowPoints(): string {
-        let tl;
-        let tr;
-        let b;
+        let tl: number;
+        let tr: number;
+        let b: number;
 
         if (!this.hideLeftEar) {
             const offset = this.selection.startDisplay - PRIMARY_WIDTH;
@@ -271,9 +231,10 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
     }
 
     public get svgRightArrowPoints(): string {
-        let tl;
-        let tr;
-        let b;
+        let tl: number;
+        let tr: number;
+        let b: number;
+
         if (!this.hideRightEar) {
             const canvasWidth = this.webglService.canvasWidth$.value;
             const offset = this.selection.endDisplay - canvasWidth + PRIMARY_WIDTH;

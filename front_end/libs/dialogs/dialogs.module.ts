@@ -59,6 +59,7 @@ import { TransferOwnershipModule } from './transfer-ownership/transfer-ownership
 import { TwoFAModalModule } from './two-fa/two-fa.module';
 import { UpdateCameraCredentialsModalModule } from './update-camera-credentials/update-camera-credentials.module';
 import { NxUpdateSessionModalModule } from './update-session/update-session.module';
+import { NxWebGlSelectTimeRangeModalModule } from './webgl-select-time-range/select-time-range.module';
 import { WizardModalContent } from './wizard/wizard.component';
 
 @NgModule({
@@ -113,6 +114,7 @@ import { WizardModalContent } from './wizard/wizard.component';
         NxUpdateSessionModalModule,
         ChangePasswordModalModule,
         UpdateCameraCredentialsModalModule,
+        NxWebGlSelectTimeRangeModalModule,
     ],
     declarations: [
         AddStorageModalContent,

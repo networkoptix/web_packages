@@ -6,17 +6,20 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { DirectivesModule } from '@directives/directives.module';
 import {
+    WebGlTimelinePlaybackIndicatorComponent
+} from '@vms-client/submodules/timeline/components/nx-webgl-canvas/playback-indicator/timeline-playback-indicator.component';
+import {
     TimelineScrollComponent
 } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/scroll/timeline-scroll.component';
 import {
-    WebGlTimeUnderMouseComponent
-} from '@vms-client/submodules/timeline/components/nx-webgl-canvas/time-under-mouse/time-under-mouse.component';
-import {
-    WebGlTimelinePlaybackIndicatorComponent
-} from '@vms-client/submodules/timeline/components/nx-webgl-canvas/timeline-playback-indicator/timeline-playback-indicator.component';
+    WebGlTimelineSelectionActionPanelComponent
+} from '@vms-client/submodules/timeline/components/nx-webgl-canvas/selection-action-panel/timeline-selection-action-panel.component';
 import {
     WebGlTimelineSelectionComponent
-} from '@vms-client/submodules/timeline/components/nx-webgl-canvas/timeline-selection/timeline-selection.component';
+} from '@vms-client/submodules/timeline/components/nx-webgl-canvas/selection/timeline-selection.component';
+import {
+    WebGlTimeUnderMouseComponent
+} from '@vms-client/submodules/timeline/components/nx-webgl-canvas/time-under-mouse/time-under-mouse.component';
 import {
     NxWebGLCanvasComponent
 } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-canvas.component';
@@ -33,6 +36,7 @@ import {
         WebGlTimelinePlaybackIndicatorComponent,
         WebGlTimelineSelectionComponent,
         WebGlTimelineZoomComponent,
+        WebGlTimelineSelectionActionPanelComponent,
     ],
     exports: [
         NxWebGLCanvasComponent,

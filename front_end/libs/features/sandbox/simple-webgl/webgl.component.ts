@@ -2,16 +2,16 @@
 import { Component } from '@angular/core';
 
 import { NxMenuService } from '@app/menu/menu.service';
-import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
-import { animationFrameScheduler, interval } from 'rxjs';
+import { UntilDestroy/*, untilDestroyed*/ } from "@ngneat/until-destroy";
+// import { /*animationFrameScheduler, */interval } from "rxjs";
 
 @UntilDestroy()
 @Component({
-    selector: 'webgl',
+    selector: 'simple-webgl',
     templateUrl: 'webgl.component.html',
     styleUrls: ['webgl.component.scss'],
 })
-export class WebglComponent {
+export class SimpleWebglComponent {
     data: Array<{ durationMs: string; startTimeMs: string; }>;
     newData: Array<{ durationMs: string; startTimeMs: string; }>;
 
@@ -21,14 +21,14 @@ export class WebglComponent {
 
     ngOnInit(): void {
         this.menuService.section = 'colors';
-        this.menuService.detail = 'webgl';
+        this.menuService.detail = 'simple-webgl';
 
-        interval(0, animationFrameScheduler)
-            .pipe(untilDestroyed(this))
-            .subscribe(() => {
-                this.newData = [];
-                this.newData.push({ durationMs: '1000', startTimeMs: `${Date.now()}` });
-            });
+        // interval(1000)
+        //     .pipe(untilDestroyed(this))
+        //     .subscribe(() => {
+        //         this.newData = [];
+        //         this.newData.push({ durationMs: '1000', startTimeMs: `${new Date().getTime()}` });
+        //     });
     }
 
     initData(): void {

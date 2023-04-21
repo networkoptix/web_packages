@@ -11,6 +11,8 @@ export interface ExportSelection {
     leftTime: string;
     rightDate: string;
     rightTime: string;
+    timelineStart: Date;
+    timelineEnd: Date;
 }
 
 export enum SELECTION_ACTION {

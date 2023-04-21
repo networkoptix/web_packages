@@ -53,6 +53,11 @@ export class NxSandboxComponent {
                             label: 'WebGL',
                             path: '/webgl',
                         },
+                        {
+                            id: 'simple-webgl',
+                            label: 'Simple WebGL',
+                            path: '/simple-webgl',
+                        },
                     ],
                 },
                 {

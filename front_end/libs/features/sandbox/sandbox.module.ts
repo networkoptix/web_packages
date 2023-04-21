@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
-// import { NxWebGLComponent } from '@components/../systems/view/components/webgl/webgl.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
@@ -17,6 +16,7 @@ import { NxSliderModule } from '@components/slider/slider.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
+import { SimpleWebglComponent } from '@pages/sandbox/simple-webgl/webgl.component';
 import { SandboxTableComponent } from '@pages/sandbox/table/sandbox-table.component';
 import { _NxTestBoxComponent } from '@pages/sandbox/test-box.component';
 import { WebglComponent } from '@pages/sandbox/webgl/webgl.component';
@@ -24,6 +24,9 @@ import {
     VmsClientModule
 } from '@pages/systems/view/vms-client/vms-client.module';
 import { WebGLTimelineModule } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-timeline.module';
+import {
+    SimpleWebGLTimelineModule
+} from '@vms-client/submodules/timeline/components/simple-chart/webgl-timeline.module';
 import { VmsClientTimelineModule } from '@vms-client/submodules/timeline/timeline.module';
 
 import { NxAccountSettingsModule } from '../account/settings/settings.module';
@@ -72,6 +75,10 @@ const appRoutes: Routes = [
             {
                 path: 'webgl',
                 component: WebglComponent,
+            },
+            {
+                path: 'simple-webgl',
+                component: SimpleWebglComponent,
             },
             {
                 path: 'custom-colors',
@@ -171,7 +178,8 @@ const appRoutes: Routes = [
         NxSliderModule,
         VmsClientTimelineModule,
         WebGLTimelineModule,
-        AngularSvgIconModule
+        SimpleWebGLTimelineModule,
+        AngularSvgIconModule,
     ],
     providers: [
     ],
@@ -194,6 +202,7 @@ const appRoutes: Routes = [
         NxThemeColorsComponent,
         NxHSLThemeColorsComponent,
         WebglComponent,
+        SimpleWebglComponent,
     ],
     bootstrap: [
     ],

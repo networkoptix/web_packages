@@ -1,0 +1,49 @@
+<a
+    class="close"
+    (click)="clearSelection()"
+></a>
+
+<div
+    #timeBtn
+    class="set-time-button"
+    (click)="initSetTimeDialog()"
+    (mouseenter)="showLegend(popLegendSetTimeTemplate, timeBtn)"
+    (mouseout)="closeLegend()"
+>
+    <svg-icon
+        nx-add-svg-src
+        [src]="icons.dir + 'clock.svg'"
+        [svgStyle]="{
+            'width.px': '20',
+            'height.px': '20'
+        }"
+    ></svg-icon>
+</div>
+
+<a
+    #exportBtn
+    [ngClass]="{ disabled: !exportEnabled }"
+    class="export-link"
+    href="#"
+    (click)="downloadFile()"
+    (mouseenter)="showLegend(popLegendExportTemplate, exportBtn)"
+    (mouseout)="closeLegend()"
+    [download]="exportName"
+>
+    <svg-icon
+        nx-add-svg-src
+        [src]="icons.dir + 'download.svg'"
+        [svgStyle]="{
+            'width.px': '20',
+            'height.px': '20'
+        }"
+    ></svg-icon>
+</a>
+
+<ng-template #popLegendSetTimeTemplate>
+    <span translate>Set Time</span>
+</ng-template>
+
+<ng-template #popLegendExportTemplate>
+    <span translate>Export</span>
+</ng-template>

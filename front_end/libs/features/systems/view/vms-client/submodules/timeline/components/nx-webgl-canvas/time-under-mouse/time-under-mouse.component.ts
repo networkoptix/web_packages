@@ -42,8 +42,10 @@ export class WebGlTimeUnderMouseComponent implements OnChanges {
         if (changes.position) {
             this.setMarkerPosition();
 
-            this.time = dateFormat(this.timeUnder, TIME_FORMAT);
-            this.date = dateFormat(this.timeUnder, DATE_FORMAT);
+            if (this.timeUnder) {
+                this.time = dateFormat(this.timeUnder, TIME_FORMAT);
+                this.date = dateFormat(this.timeUnder, DATE_FORMAT);
+            }
         }
     }
 

@@ -1,0 +1,98 @@
+<form
+    name="select-time-range-form"
+    novalidate
+    [ngClass]="{ 'hide-errors': hideErrors }"
+    (submit)="hideErrors = false"
+>
+    <div class="modal-header">
+        <h1
+            class="modal-title"
+            translate
+        >
+            Selection
+        </h1>
+        <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="closeModal($event)"
+        >
+            <span class="close-content"></span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <div class="date-form-group">
+            <label
+                class="control-label m-0"
+                translate
+                >Start</label
+            >
+            <div class="col-12 px-0">
+                <input
+                    class="form-control"
+                    [ngClass]="themeClass"
+                    name="start-date"
+                    type="date"
+                    [max]="timelineEnd"
+                    [min]="timelineStart"
+                    (blur)="checkMaxMinDate()"
+                    [(ngModel)]="startDate"
+                />
+                <input
+                    class="form-control ml-3"
+                    [ngClass]="themeClass"
+                    name="start-time"
+                    type="time"
+                    (blur)="checkMaxMinDate()"
+                    [(ngModel)]="startTime"
+                />
+            </div>
+        </div>
+
+        <div class="date-form-group">
+            <label
+                class="control-label m-0"
+                translate
+                >End</label
+            >
+            <div class="col-12 px-0">
+                <input
+                    class="form-control"
+                    [ngClass]="themeClass"
+                    name="end-date"
+                    type="date"
+                    [max]="timelineEnd"
+                    [min]="timelineStart"
+                    (blur)="checkMaxMinDate()"
+                    [(ngModel)]="endDate"
+                />
+                <input
+                    class="form-control ml-3"
+                    [ngClass]="themeClass"
+                    name="end-time"
+                    type="time"
+                    (blur)="checkMaxMinDate()"
+                    [(ngModel)]="endTime"
+                />
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button
+            class="btn btn-primary"
+            (click)="save($event)"
+            translate
+        >
+            Set
+        </button>
+        <button
+            class="btn btn-default"
+            (click)="closeModal($event)"
+            translate
+        >
+            Cancel
+        </button>
+    </div>
+</form>

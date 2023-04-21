@@ -4,6 +4,8 @@ import type { EventEmitter, TemplateRef } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
 import type { Bookmark } from '@pages/systems/bookmarks/bookmarks.types';
+import type { ExportSelection } from '@pages/systems/view/vms-client/submodules/timeline/components/nx-webgl-canvas/selection/selection.types';
+import type { SELECTION_DATE_RANGE } from '@pages/systems/view/vms-client/submodules/timeline/components/nx-webgl-canvas/services/webgl.types';
 import type { Translatable } from '@pipes/nx-translate.types';
 import type { CloudResponse, SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { Process } from '@services/process.service/process';
@@ -216,3 +218,6 @@ export interface CloudLayoutsInfoData {
 }
 export type NewFeatureData = NewFeatureDynamicData | CloudStorageInfoData | CloudLayoutsInfoData;
 export type NewFeature = DialogType<NewFeatureData, boolean>;
+
+/* View */
+export type WebGlSelectTimeRange = DialogType<ExportSelection, SELECTION_DATE_RANGE>;

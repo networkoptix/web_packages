@@ -600,4 +600,10 @@ export class NxDialogsService extends DialogBase {
 
     cloudStorageInfo = this.newFeatureFactory<Dt.CloudStorageInfoData>(NewFeatureTemplate.CloudStorage);
     cloudLayoutsInfo = this.newFeatureFactory<Dt.CloudLayoutsInfoData>(NewFeatureTemplate.CloudLayouts);
+
+    /* View */
+    selectWebGlTimeRange = this.dialogV2Factory<Dt.WebGlSelectTimeRange>(
+        () => import('./webgl-select-time-range/select-time-range.component').then(m => m.WebGlSelectTimeRangeModalContent),
+        { width: DIALOG_SIZE_V2.SMALL, autoFocus: 'input' },
+    );
 }

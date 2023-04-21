@@ -1,22 +1,24 @@
 import { DOCUMENT } from '@angular/common';
-import { AfterViewInit, Component, Inject, Input, ViewEncapsulation } from '@angular/core';
-// import * as fcWebgl from '@d3fc/d3fc-webgl';
-import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
+import { AfterViewInit, Component, Inject, Input, OnChanges, ViewEncapsulation } from '@angular/core';
+import { extentDate } from '@d3fc/d3fc-extent';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import * as d3 from 'd3';
 import * as fc from 'd3fc';
 import { largestTriangleThreeBucket } from 'd3fc';
-import { interval, animationFrameScheduler, Subject, takeUntil } from 'rxjs';
+import { animationFrameScheduler, interval, Subject, takeUntil } from 'rxjs';
 
+import { NgChanges } from '@utils/ng-changes';
 import {
     CONSTANT_SCROLL_FACTOR_PX,
     SCROLL_DIRECTION,
-    SCROLL_FACTOR_PX,
+    SCROLL_FACTOR_PX
 } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/scroll/scroll.types';
 import { NxWebGLService } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/services/webgl.service';
 import {
     CONSTANT_ZOOM_FACTOR,
     FORCE_ZOOM_FACTOR,
-    ZOOM_DIRECTION, ZOOM_DURATION,
+    ZOOM_DIRECTION,
+    ZOOM_DURATION,
     ZOOM_FACTOR
 } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/zoom/zoom.types';
 
@@ -40,8 +42,9 @@ enum TICK_BREAKPOINTS {
     styleUrls: ['webgl-canvas.component.scss'],
     encapsulation: ViewEncapsulation.None,
 })
-export class NxWebGLCanvasComponent implements AfterViewInit {
+export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
     @Input() initialData: Array<Record<string, string>>;
+    @Input() pushData: Array<Record<string, string>>;
 
     // eslint-disable-next-line nx/no-untyped-init
     chart;
@@ -59,6 +62,8 @@ export class NxWebGLCanvasComponent implements AfterViewInit {
 
     container: HTMLDivElement;
     barSeries: never;
+
+    xScaleOriginal: d3.ScaleTime<number, number>;
 
     xAxisMajor: typeof fc.axisBottom;
     xAxisMinor: typeof fc.axisTop;
@@ -85,7 +90,35 @@ export class NxWebGLCanvasComponent implements AfterViewInit {
     constructor(
         private webglService: NxWebGLService,
         @Inject(DOCUMENT) private document: Document,
-    ) {}
+    ) {
+    }
+
+    ngOnChanges(changes: NgChanges<NxWebGLCanvasComponent>): void {
+        if (changes.pushData.currentValue) {
+            const obj = this.pushData.map((chunk: Record<string, string>) => {
+                const chunkStart = parseInt(chunk.startTimeMs);
+                const chunkEnd = parseInt(chunk.durationMs);
+
+                return { x: chunkStart, y: 30, width: chunkEnd };
+            });
+
+            this.data.push(obj);
+
+            this.initStartEndTime();
+            // const xScale = d3.scaleUtc()
+            //     .domain([this.start, obj[0].x])
+            // // .domain(d3.extent(data, d => d.x))
+            // // .nice() // this will round domain to a whole year
+            //     .range([0, this.webglService.canvasWidth$.value]);
+            // this.webglService.xScale$.next(xScale);
+            this.webglService.updateTimelineRange();
+
+            // this.singleScroll(SCROLL_DIRECTION.right);
+            // this.xScaleOriginal = xScale.copy();
+
+            // this.redraw();
+        }
+    }
 
     ngAfterViewInit(): void {
         this.container = this.document.querySelector('#chart');
@@ -99,20 +132,16 @@ export class NxWebGLCanvasComponent implements AfterViewInit {
         }
     }
 
-    initData(): void {
+    initStartEndTime(): void {
         // const startYear = new Date('2015-06-01');
         this.start = parseInt(this.initialData[0].startTimeMs);
         this.end = new Date().getTime();
         this.timeFrameInS = Math.ceil((this.end - this.start) / 1000);
+        // timeFrameInS updates ~75 to ~100 times per second
+        // console.log('timeFrameInS => ', this.timeFrameInS);
+    }
 
-        // eslint-disable-next-line array-callback-return
-        this.data = this.initialData.map((chunk: Record<string, string>) => {
-            const chunkStart = parseInt(chunk.startTimeMs);
-            const chunkEnd = parseInt(chunk.durationMs);
-
-            return { x: chunkStart, y: 30, width: chunkEnd };
-        });
-
+    initSampler(): void {
         // Create the sampler
         const sampler = largestTriangleThreeBucket();
 
@@ -124,8 +153,21 @@ export class NxWebGLCanvasComponent implements AfterViewInit {
         // Configure the size of the buckets used to downsample the data.
         sampler.bucketSize(200);
 
-        // Run the sampler
         this.sampledData = sampler(this.data);
+    }
+
+    initData(): void {
+        this.initStartEndTime();
+
+        // eslint-disable-next-line array-callback-return
+        this.data = this.initialData.map((chunk: Record<string, string>) => {
+            const chunkStart = parseInt(chunk.startTimeMs);
+            const chunkEnd = parseInt(chunk.durationMs);
+
+            return { x: chunkStart, y: 30, width: chunkEnd };
+        });
+
+        this.initSampler();
     }
 
     initBars(
@@ -160,8 +202,9 @@ export class NxWebGLCanvasComponent implements AfterViewInit {
             // .nice() // this will round domain to a whole year
             .range([0, this.webglService.canvasWidth$.value]);
         this.webglService.xScale$.next(xScale);
+        this.webglService.updateTimelineRange();
 
-        const xScaleOriginal = xScale.copy();
+        this.xScaleOriginal = xScale.copy();
 
         this.initBars(this.data, xScale, yScale);
 
@@ -324,8 +367,8 @@ export class NxWebGLCanvasComponent implements AfterViewInit {
 
         const checkVisibleArea = (zoom: number): void => {
             this.webglService.canScroll$.next({
-                left: zoom > 1 && xScaleOriginal.domain()[0].getTime() < xScale.domain()[0].getTime(),
-                right: zoom > 1 && xScaleOriginal.domain()[1].getTime() > xScale.domain()[1].getTime()
+                left: zoom > 1 && this.xScaleOriginal.domain()[0].getTime() < xScale.domain()[0].getTime(),
+                right: zoom > 1 && this.xScaleOriginal.domain()[1].getTime() > xScale.domain()[1].getTime()
             });
         };
 
@@ -334,14 +377,14 @@ export class NxWebGLCanvasComponent implements AfterViewInit {
             .scaleExtent([1, this.timeFrameInS])
             .translateExtent([[0, 0], [this.webglService.canvasWidth$.value, this.webglService.canvasHeight$.value]])
             .on('zoom', event => {
-                const newScale = event.transform.rescaleX(xScaleOriginal);
+                const newScale = event.transform.rescaleX(this.xScaleOriginal);
                 xScale.domain(newScale.domain());
 
                 checkVisibleArea(event.transform.k);
                 removeMissingLabel();
 
-                nxXAxisMajor.call(this.xAxisMajor.scale(newScale));
-                nxXAxisMajor.call(this.xAxisMajor.ticks(this.periodModifier));
+                // nxXAxisMajor.call(this.xAxisMajor.scale(newScale));
+                // nxXAxisMajor.call(this.xAxisMajor.ticks(this.periodModifier));
 
                 nxXAxisMinor.call(this.xAxisMinor.scale(newScale));
                 nxXAxisMinor.call(this.xAxisMinor);
@@ -354,6 +397,7 @@ export class NxWebGLCanvasComponent implements AfterViewInit {
                     out: this.webglService.levelZoom$.value > 1
                 });
 
+                console.log(' => ', event.transform.x, this.currentPointer);
                 this.xPos = Math.trunc(event.transform.x);
 
                 // eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -369,12 +413,17 @@ export class NxWebGLCanvasComponent implements AfterViewInit {
                 this.currentPointer = xScale.invert(coord.x);
             });
 
+        const yExtent = fc.extentLinear().accessors([d => d.high, d => d.low]);
+        const xExtent = extentDate().accessors([d => d.date]);
+
         this.chart = fc.chartCartesian({
             xScale,
             yScale,
         })
             .xOrient('top')
             .yOrient('left')
+            .xDomain(xExtent(this.data))
+            .yDomain(yExtent(this.data))
             .webglPlotArea(this.barSeries)
             .decorate(sel =>
                 sel
@@ -391,7 +440,7 @@ export class NxWebGLCanvasComponent implements AfterViewInit {
                         this.webglService.canvasHeight$.next(event.detail.height);
                         this.webglService.canvasRect$.next(event.target.getBoundingClientRect());
 
-                        xScaleOriginal.range([0, this.webglService.canvasWidth$.value]);
+                        this.xScaleOriginal.range([0, this.webglService.canvasWidth$.value]);
                     })
                     .on('click', (event, data) => {
                         // console.log('1 =>', event);
@@ -446,8 +495,12 @@ export class NxWebGLCanvasComponent implements AfterViewInit {
                 position = this.xPos - SCROLL_FACTOR_PX;
                 break;
             case SCROLL_DIRECTION.beginning:
-                position = 0;
+                position = this.xScaleOriginal.range()[0];
                 break;
+            case SCROLL_DIRECTION.end:
+                position = this.xScaleOriginal.range()[1];
+                break;
+            default: position = 0;
         }
 
         return d3.zoomIdentity
