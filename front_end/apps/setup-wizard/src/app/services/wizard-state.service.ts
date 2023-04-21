@@ -172,7 +172,7 @@ export class WizardStateService {
             name: '',
             value: ''
         },
-        remoteLogin: '',
+        remoteLogin: 'admin',
         remotePassword: '',
         mergeDataState: FORM_STATE.INVALID,
     };
