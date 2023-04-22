@@ -55,7 +55,7 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget<
     }
 
     fileLeave(): void {
-        console.log('leave');
+        // console.log('leave');
     }
 
     fileDropped = (files): void => {

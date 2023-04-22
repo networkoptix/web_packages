@@ -34,7 +34,7 @@ export class NxSwPromptUpdateService {
             }));
         if (environment.production && !environment.isLocal) {
             updates.available.subscribe(evt => {
-                console.log(`New app version available: ${evt.available.hash}`);
+                // console.log(`New app version available: ${evt.available.hash}`);
                 this.ribbonService.show(this.LANG.ribbon.newVersionAvailable.notification,
                     [{
                         type: 'process-button',

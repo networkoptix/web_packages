@@ -71,7 +71,7 @@ const handleResult = map((res: JsonRpcResponse) => {
 const reportWinner = (aggregateMethods: 'jsonRpcAggregate' | 'ogAggregate', endpoint: string, start: number): ReturnType<typeof tap> => tap(() => {
     const end = performance.now();
     const time = end - start;
-    console.count(aggregateMethods);
+    // console.count(aggregateMethods);
     console.info(`Endpoint: ${decodeURIComponent(endpoint)} took ${Math.round(time)}ms`);
 });
 

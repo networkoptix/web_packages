@@ -225,7 +225,7 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget<
         name = '',
         ...element
     } = {}): void => {
-        console.log(element);
+        // console.log(element);
         const queryParams = id ? { id } : {};
         const childRoute = resourceId || key;
         const route = [menus.systemSettings.baseUrl, this.system.id, 'health', childRoute];

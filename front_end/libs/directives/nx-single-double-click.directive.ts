@@ -27,7 +27,7 @@ export class NxClickDoubleDirective implements OnInit {
             .subscribe((event: MouseEvent) => {
                 if (event.type === 'mousedown') {
                     if (!this.mouseUp$.value) {
-                        console.log('hold => ');
+                        // console.log('hold => ');
                         this.holdStart.emit(event);
                     } else {
                         this.singleClick.emit(event);

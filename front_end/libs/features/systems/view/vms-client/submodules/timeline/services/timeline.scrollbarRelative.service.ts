@@ -1,4 +1,4 @@
-import { Injectable, isDevMode } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 import { calcOffsetX } from '@vms-client/utils/calculate-coordinates';
@@ -13,23 +13,6 @@ import type { TimelineScrollbarRelativeServiceStatus } from './timeline.services
     providedIn: 'root'
 })
 export class TimelineScrollbarRelativeService {
-    protected _logPrefix: string = 'SCROLLBAR_RELATIVE_SERVICE ::';
-    protected _logDisable: boolean = true;
-
-    protected _log(...args: any[]): void {
-        if (isDevMode() && !this._logDisable) {
-            // eslint-disable-next-line no-useless-call
-            console.log.apply(console, [this._logPrefix, ...arguments]);
-        }
-    }
-
-    protected _warn(...args: any[]): void {
-        if (isDevMode() && !this._logDisable) {
-            // eslint-disable-next-line no-useless-call
-            console.warn.apply(console, [this._logPrefix, ...arguments]);
-        }
-    }
-
     constructor(protected timeline: TimelineService) {
         this.timeline.subject.subscribe(this._emit.bind(this));
     }

@@ -56,7 +56,6 @@ export class NxSettingsService implements OnDestroy {
             }),
         ),
         filter(val => {
-            console.log(val);
             return !!Object.values(val).pop();
         }),
         catchError(() => Promise.resolve(null)),

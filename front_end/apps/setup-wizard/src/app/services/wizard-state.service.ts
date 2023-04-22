@@ -219,10 +219,9 @@ export class WizardStateService {
         this.currentState$
             .pipe(untilDestroyed(this))
             .subscribe(state => {
-                console.log(state);
                 this.router.navigate([state || '/'], { skipLocationChange: true })
                     .catch(err => {
-                        console.log('nav failed handle it', err);
+                        console.error('nav failed handle it', err);
                     });
             });
 
@@ -490,7 +489,6 @@ export class WizardStateService {
 
     next(): void {
         const state = this.wizardFSM[this.currentState];
-        console.log(this.currentState); // Todo: remove
         if (state.validate && !state?.validate()) {
             this.formValidateSubject.next(true);
             return;

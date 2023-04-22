@@ -113,7 +113,7 @@ export class TimelineScrollComponent implements OnChanges {
             ? 0
             : 1;
         this.currentPos = e.source.getFreeDragPosition().x;
-        console.log('e => ', e.source.getFreeDragPosition());
+        // console.log('e => ', e.source.getFreeDragPosition());
         this.singleScroll.emit(dir);
     }
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { environment } from '@environments/environment';
 
 enum LogLevel {

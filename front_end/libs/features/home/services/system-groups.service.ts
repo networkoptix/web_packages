@@ -70,7 +70,7 @@ export class NxSystemGroupsService {
                     // Assuming that we never want to deliberately close the
                     // socket while in the component so if it does close we
                     // try to reconnect
-                    console.log('WebSocket connection closed');
+                    console.info('WebSocket connection closed');
                     if (this.router.url.startsWith('/groups')) {
                         this.progressiveDelayReconnect();
                     }

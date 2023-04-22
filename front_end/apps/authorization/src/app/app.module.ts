@@ -1,6 +1,6 @@
-import { isPlatformBrowser } from '@angular/common';
+// import { isPlatformBrowser } from '@angular/common';
 import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
-import { APP_ID, APP_INITIALIZER, Inject, NgModule, PLATFORM_ID } from '@angular/core';
+import { APP_INITIALIZER, NgModule/* , Inject, APP_ID, PLATFORM_ID */ } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
 import { MESSAGE_FORMAT_CONFIG, TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
@@ -49,13 +49,13 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
     bootstrap: [AppComponent]
 })
 export class AppModule {
-    constructor(
-        @Inject(PLATFORM_ID) platformId: object,
-        @Inject(APP_ID) appId: string
-    ) {
-        const platform = isPlatformBrowser(platformId)
-            ? 'in the browser'
-            : 'on the server';
-        console.log(`Running ${platform} with appId=${appId}`);
-    }
+    // constructor(
+    //     @Inject(PLATFORM_ID) platformId: object,
+    //     @Inject(APP_ID) appId: string
+    // ) {
+    //     const platform = isPlatformBrowser(platformId)
+    //         ? 'in the browser'
+    //         : 'on the server';
+    //     console.log(`Running ${platform} with appId=${appId}`);
+    // }
 }

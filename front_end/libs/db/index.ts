@@ -88,6 +88,6 @@ export class AppDB extends Dexie {
 
     async populate(): Promise<void> {
         // TODO: Replicate to remote db
-        console.log('Populating database...');
+        // console.log('Populating database...');
     }
 }

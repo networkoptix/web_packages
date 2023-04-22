@@ -79,5 +79,5 @@ export const unknownSystemVersion: NxSystemBase = systemWithMultipleModules;
 export const accessInvalid = unknownSystemVersion.someMethod; // Error: Property 'someMethod' does not exist on type 'NxSystemBase'.
 if (unknownSystemVersion.implements(NxModernModule)) {
     // This works since we've asserted that system implements this module.
-    console.log(unknownSystemVersion.someMethod());
+    // console.log(unknownSystemVersion.someMethod());
 }

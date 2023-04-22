@@ -326,14 +326,14 @@ export class BirdViewTree {
 
     public getSubrangeIndicies(sr: ISimpleTimeRange): SubrangeIndicies {
         if (sr.contains(this._originalArchiveRange)) {
-            console.log('contains');
+            // console.log('contains');
             return {
                 firstIndex: 0,
                 lastIndex: this._originalArchive.length - 1
             };
         }
         if (this._originalArchiveRange.isDisjointWith(sr)) {
-            console.log('no overlap');
+            // console.log('no overlap');
             return {
                 firstIndex: -1,
                 lastIndex: -1

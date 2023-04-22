@@ -292,6 +292,7 @@ module.exports = {
                 }],
                 'multiline-ternary': 'off',
                 'no-case-declarations': 'off',
+                'no-console': ['error', { allow: ['error', 'warn', 'info'] }],
                 'no-dupe-else-if': 'error',
                 'no-extra-semi': 'error',
                 'no-mixed-operators': 'off',
@@ -515,9 +516,10 @@ module.exports = {
             },
         },
         {
-            // Don't need to enforce naming on sandbox components
+            // Don't need to enforce some rules for internal sandbox
             files: ['**/sandbox/**/*.ts'],
             rules: {
+                'no-console': 'off',
                 '@angular-eslint/component-class-suffix': 'off',
                 '@angular-eslint/component-selector': 'off',
                 '@angular-eslint/directive-class-suffix': 'off',

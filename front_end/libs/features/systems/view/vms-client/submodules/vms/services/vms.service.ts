@@ -1,4 +1,4 @@
-import { Injectable, isDevMode } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 import type { ServerTimeInfo } from '@services/system.service/system-types';
@@ -27,31 +27,13 @@ type tweakedMs = ms;
 export class VideoManagementSystemService {
     static readonly statusRefreshInterval = 15000;
 
-    protected _logPrefix: string = 'VMS_SERVICE ::';
-    protected _logDisable: boolean = true;
-
-    protected _log(...args: any[]): void {
-        if (isDevMode() && !this._logDisable) {
-            // eslint-disable-next-line no-useless-call
-            console.log.apply(console, [this._logPrefix, ...arguments]);
-        }
-    }
-
-    protected _warn(...args: any[]): void {
-        if (isDevMode() && !this._logDisable) {
-            // eslint-disable-next-line no-useless-call
-            console.warn.apply(console, [this._logPrefix, ...arguments]);
-        }
-    }
-
     constructor(
     ) {
-        this._log('constructor');
         this.reset();
     }
 
     public reset(): void {
-        this._log('reset');
+        // console.log('reset');
         this._state = createNotInitializedState();
         this._serverTimes = undefined;
         this._emit();
@@ -61,7 +43,7 @@ export class VideoManagementSystemService {
     protected _selectedCamera = new BehaviorSubject<ICamera>(undefined);
 
     protected _emit(): void {
-        this._log('_emit', { ...this.state });
+        // console.log('_emit', { ...this.state });
         this._subject.next(this.state);
     }
 
@@ -92,7 +74,7 @@ export class VideoManagementSystemService {
     protected _serverTimes: Array<ServerTimeInfo>;
 
     public set serverTimes(st: Array<ServerTimeInfo>) {
-        this._log('serverTimes set', st.map(i => i.timeZoneOffset), st);
+        // console.log('serverTimes set', st.map(i => i.timeZoneOffset), st);
         this._serverTimes = [...st];
     }
 
@@ -138,9 +120,9 @@ export class VideoManagementSystemService {
     public get timeZoneOffset(): ms {
         let result = 0;
         if (!this.serverTimes?.length) {
-            this._warn('TZO no server times data');
+            // console.warn('TZO no server times data');
         } else if (this.state.mode !== VMS_MODE.CAMERA_SELECTED) {
-            this._warn('TZO no camera selected');
+            // console.warn('TZO no camera selected');
         } else {
             const preferredServerTime =
                 this.serverTimes.find(st =>
@@ -153,7 +135,7 @@ export class VideoManagementSystemService {
             if (serverTZO === undefined) {
                 return 0;
             }
-            // this._log('TZO', preferredServerTime, serverTZO, clientTZO, serverTZO - clientTZO)
+            // console.log('TZO', preferredServerTime, serverTZO, clientTZO, serverTZO - clientTZO)
             result = serverTZO - clientTZO;
         }
         return result;
@@ -172,7 +154,7 @@ export class VideoManagementSystemService {
         mediaServers: Array<IMediaServer>,
         updateCamerasOnly = false
     ): void {
-        this._log('setMediaServers', systemId, mediaServers, updateCamerasOnly);
+        // console.log('setMediaServers', systemId, mediaServers, updateCamerasOnly);
         this._systemId = systemId;
         // @ts-expect-error
         const prevSelectedCameraId: GUID | undefined = this._state?.selectedCameraId;
@@ -193,11 +175,11 @@ export class VideoManagementSystemService {
         if (this._state.mode !== VMS_MODE.NOT_INITIALIZED) {
             this.selectedCamera.pushRecordedChunks(records);
         } else {
-            this._warn(
-                'attempt to set camera newly recorded records while in NOT_INITIALIZED state',
-                cameraId,
-                records
-            );
+            // console.warn(
+            //     'attempt to set camera newly recorded records while in NOT_INITIALIZED state',
+            //     cameraId,
+            //     records
+            // );
         }
     }
 
@@ -208,24 +190,24 @@ export class VideoManagementSystemService {
 
     public selectCamera(cameraId: GUID): void {
         if (this._state.mode === VMS_MODE.NOT_INITIALIZED) {
-            this._warn('attempt to select camera while VMS is not initialized yet');
+            // console.warn('attempt to select camera while VMS is not initialized yet');
             return;
         }
         if (this._state.mediaServers.length === 0) {
-            this._warn('Attempt to select camera with no mediaservers');
+            // console.warn('Attempt to select camera with no mediaservers');
             return;
         }
         this._state = createCameraSelectedState(this._state, cameraId);
         if (this._state.mode === VMS_MODE.CAMERA_SELECTED) {
             this.selectedCamera = this._state.selectedCamera;
         }
-        this._log('camera selected', this.selectedCamera);
+        // console.log('camera selected', this.selectedCamera);
         this._emit();
     }
 
     public clearCameraSelection(): void {
         if (this._state.mode === VMS_MODE.NOT_INITIALIZED) {
-            this._warn('attempt to clear camera selection while VMS is not initialized yet');
+            // console.warn('attempt to clear camera selection while VMS is not initialized yet');
             return;
         }
         this._state = createCameraNotSelectedState(this.systemId, this._state.mediaServers);

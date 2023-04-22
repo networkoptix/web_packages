@@ -397,7 +397,7 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
                     out: this.webglService.levelZoom$.value > 1
                 });
 
-                console.log(' => ', event.transform.x, this.currentPointer);
+                // console.log(' => ', event.transform.x, this.currentPointer);
                 this.xPos = Math.trunc(event.transform.x);
 
                 // eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -444,26 +444,26 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
                     })
                     .on('click', (event, data) => {
                         // console.log('1 =>', event);
-                        console.log('clicked =>', this.currentPointer.getTime());
-                        const found = this.sampledData.find(chunk => {
-                            const currentTime = this.currentPointer.getTime();
-                            if (chunk.x <= currentTime && chunk.x + chunk.width >= currentTime) {
-                                console.log('In chunk => ');
-                                this.playbackPointer = this.currentPointer;
-                                this.playbackLabelPosition = event.offsetX;
-                                return true;
-                            } else if (chunk.x > currentTime) {
-                                this.playbackPointer = this.currentPointer;
-                                this.playbackLabelPosition = event.offsetX; // this will need tuning
-                                console.log('Next chunk => ');
-                                return true;
-                            } else {
-                                this.playbackLabelPosition = undefined;
-                                return false;
-                            }
-                        });
+                        // console.log('clicked =>', this.currentPointer.getTime());
+                        // const found = this.sampledData.find(chunk => {
+                        //     const currentTime = this.currentPointer.getTime();
+                        //     if (chunk.x <= currentTime && chunk.x + chunk.width >= currentTime) {
+                        //         // console.log('In chunk => ');
+                        //         this.playbackPointer = this.currentPointer;
+                        //         this.playbackLabelPosition = event.offsetX;
+                        //         return true;
+                        //     } else if (chunk.x > currentTime) {
+                        //         this.playbackPointer = this.currentPointer;
+                        //         this.playbackLabelPosition = event.offsetX; // this will need tuning
+                        //         // console.log('Next chunk => ');
+                        //         return true;
+                        //     } else {
+                        //         this.playbackLabelPosition = undefined;
+                        //         return false;
+                        //     }
+                        // });
 
-                        console.log('found =>', found);
+                        // console.log('found =>', found);
                     })
                     .call(this.zoom)
                     .call(pointer));

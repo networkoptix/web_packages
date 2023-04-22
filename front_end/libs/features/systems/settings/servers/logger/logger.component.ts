@@ -132,7 +132,6 @@ export class NxServerLoggerComponent implements OnChanges {
             value,
             originalValue: value
         }));
-        console.log(this.systemLoggers);
 
         this.loggerWatcher.reset();
         this.applyService.addWatchersAndFunctionsFromChild(

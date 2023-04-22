@@ -73,7 +73,7 @@ export class NxPartnerOrganizationsListComponent implements OnInit, OnDestroy {
 
             this.elements = this.elements.filter(item => {
                 const s = searchBy(item, query);
-                console.log('s ->', s);
+                // console.log('s ->', s);
                 return s;
             });
         }

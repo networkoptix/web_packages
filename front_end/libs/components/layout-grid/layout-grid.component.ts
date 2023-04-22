@@ -201,9 +201,9 @@ export class NxLayoutGridComponent {
         filter(layout => !!layout),
         map(layout => ({ ...layout, items: this.filterRemovedResources(layout.items || []) })),
         map(initial => this.parseLayout(initial)),
-        tap(layout => {
-            console.log(layout);
-        }),
+        // tap(layout => {
+        //     console.log(layout);
+        // }),
         map(({ items, renderConfig, ...layout }) => ({
             ...layout,
             renderConfig,
@@ -730,7 +730,7 @@ export class NxLayoutGridComponent {
     });
 
     entered(event: CdkDragEnter): void {
-        console.log(event);
+        // console.log(event);
     }
 
     updateBackground = (

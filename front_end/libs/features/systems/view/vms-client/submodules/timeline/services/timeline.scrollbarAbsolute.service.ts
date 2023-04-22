@@ -1,4 +1,4 @@
-import { Injectable, isDevMode } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 import { calcClientX } from '@vms-client/utils/calculate-coordinates';
@@ -14,23 +14,6 @@ const MIN_BAR_WIDTH_PX = 50;
     providedIn: 'root'
 })
 export class TimelineScrollbarAbsoluteService {
-    protected _logPrefix: string = 'SCROLLBAR_ABSOLUTE_SERVICE ::';
-    protected _logDisable: boolean = true;
-
-    protected _log(...args: any[]): void {
-        if (isDevMode() && !this._logDisable) {
-            // eslint-disable-next-line no-useless-call
-            console.log.apply(console, [this._logPrefix, ...arguments]);
-        }
-    }
-
-    protected _warn(...args: any[]): void {
-        if (isDevMode() && !this._logDisable) {
-            // eslint-disable-next-line no-useless-call
-            console.warn.apply(console, [this._logPrefix, ...arguments]);
-        }
-    }
-
     constructor(
         protected timeline: TimelineService,
         protected relative: TimelineScrollbarRelativeService,
@@ -74,7 +57,6 @@ export class TimelineScrollbarAbsoluteService {
     }
 
     public set backgroundWidth(w: px) {
-        this._log('new width', w);
         this._backgroundWidth = w;
         this._emit();
     }
