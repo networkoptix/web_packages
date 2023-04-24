@@ -281,7 +281,6 @@ export class NxBookmarksComponent implements OnInit {
                     bks = bks.filter(bk =>
                         searches.some(
                             s =>
-                                caseInsenstiveSearch(bk.name, s) ||
                                 caseInsenstiveSearch(bk.deviceName, s) ||
                                 bk.tags.some(t => caseInsenstiveSearch(t, s)),
                         ),
