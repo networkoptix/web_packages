@@ -402,8 +402,8 @@ export class NxLayoutViewComponent {
                     [`${this.router.url.split('layouts')[0]}layouts/${layoutId}`],
                     { queryParams },
                 );
-                this.pageService.pageTitle(staticLang.pageTitles.layouts);
             }
+            this.pageService.pageTitle(staticLang.pageTitles.layouts);
             return layoutId;
         }),
     );
