@@ -187,11 +187,10 @@ export class NxLayoutViewComponent {
                             map(times =>
                                 cameras.map(({ status, ...camera }) => ({
                                     ...camera,
-                                    status:
-                                        ['Online', 'Offline'].includes(status) &&
-                                        times.find(({ cameraId }) => cameraId === camera.id)
-                                            ? 'archive'
-                                            : status,
+                                    unauthorized: status === 'Unauthorized',
+                                    status: times.find(({ cameraId }) => cameraId === camera.id)
+                                        ? 'archive'
+                                        : status,
                                 })),
                             ),
                         ),

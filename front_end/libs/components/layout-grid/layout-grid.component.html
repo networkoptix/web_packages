@@ -137,6 +137,8 @@
                                   errorIcons[node.details.id] || node.details.status
                               )
                                   ? errorIcons[node.details.id] || node.details.status
+                                  : node.details.unauthorized
+                                  ? 'unauthorized'
                                   : node.details.online
                                   ? 'online'
                                   : 'offline')
@@ -479,6 +481,8 @@
                                             errors[itemDetail.details.id] ||
                                             (itemDetail.details.status !== 'archive'
                                                 ? itemDetail.details.status
+                                                : itemDetail.details.unauthorized
+                                                ? 'unauthorized'
                                                 : 'offline') as status
                                         "
                                         cdkDragHandle
