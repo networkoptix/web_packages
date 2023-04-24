@@ -31,7 +31,10 @@
             ></nx-groups-sidebar>
         </ng-template>
     </div>
-    <div class="cards">
+    <div
+        class="cards"
+        [ngClass]="{ 'back-button': inChannelPartners }"
+    >
         <ng-container [ngSwitch]="loadingState">
             <nx-pre-loader *ngSwitchCase="LoadingState.LOADING"></nx-pre-loader>
             <ng-container *ngSwitchCase="LoadingState.LOADED">
@@ -54,27 +57,23 @@
                     <nx-groups-cards [inRoot]="true"></nx-groups-cards>
                 </ng-container>
                 <ng-template #organization>
-                    <div>
-                        <div class="header">
-                            <a
-                                *ngIf="inChannelPartners"
-                                (click)="toRoot()"
-                                translate
-                            >
-                                All Organizations</a
-                            >
-                            <h2 class="pb-3 pt-2">{{ (rootGroup$ | async).name }}</h2>
-                        </div>
-
-                        <nx-tabs
-                            [onLoadTab]="currentTab"
-                            (tabClick)="onTabClick($event)"
-                        >
-                            <ng-container *ngFor="let tab of tabs">
-                                <div *tab="tab"></div>
-                            </ng-container>
-                        </nx-tabs>
+                    <a
+                        (click)="toRoot()"
+                        translate
+                    >
+                        All Organizations</a
+                    >
+                    <div class="pb-3">
+                        <h2>{{ (rootGroup$ | async).name }}</h2>
                     </div>
+                    <nx-tabs
+                        [onLoadTab]="currentTab"
+                        (tabClick)="onTabClick($event)"
+                    >
+                        <ng-container *ngFor="let tab of tabs">
+                            <div *tab="tab"></div>
+                        </ng-container>
+                    </nx-tabs>
                     <router-outlet></router-outlet>
                 </ng-template>
             </ng-container>

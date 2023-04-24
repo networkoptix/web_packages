@@ -20,6 +20,7 @@ const statusOptions = ['online', 'suspended', 'offline', 'paused'];
     styleUrls: [
         'channel-partners.component.scss',
         '../components/groups-cards/groups-cards.component.scss',
+        '../components/system-card/system-card.component.scss',
     ],
 })
 export class NxChannelPartnersComponent implements OnInit, OnDestroy {

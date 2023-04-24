@@ -1,8 +1,46 @@
 .channel-partner {
-  flex: 1;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
+  height: 100%;
+
+  .header {
+    padding-top: 1.2rem;
+  }
+
+  &.root {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .card-body{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    img {
+      width: 70%;
+      height: 70%;
+    }
+
+    .status {
+      border: 1px solid var(--channel-partner-card-status-background);
+      background-color: var(--channel-partner-card-status-background);
+      border-radius: 8px;
+    }
+
+    .bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      h3{
+        width: 70%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+
   a {
     padding-left: 1rem;
      

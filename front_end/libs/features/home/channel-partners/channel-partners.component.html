@@ -1,14 +1,12 @@
 <div
     class="channel-partner"
+    [ngClass]="{ root: !inOrganization }"
     *ngIf="loadingState$ | async as loadingState"
 >
     <ng-container *ngIf="!inOrganization; else outlet">
-        <h2
-            class="py-3 pl-3"
-            translate
-        >
-            Channel Partners
-        </h2>
+        <div class="header pb-3">
+            <h2 translate>Channel Partners</h2>
+        </div>
         <nx-tabs
             [onLoadTab]="currentTab"
             (tabClick)="onTabClick($event)"
@@ -42,7 +40,7 @@
                 <div class="px-3 cards-container">
                     <ng-container *ngFor="let organization of channelPartners$ | async">
                         <div
-                            class="system-button card card-condensed"
+                            class="system-button card-condensed system-card"
                             (click)="handleOrgClick(organization.id)"
                         >
                             <div class="card-body">
