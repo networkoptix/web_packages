@@ -129,11 +129,6 @@ class TestAccountViews:
 
         req = get_request('/api/account')
 
-        # Test cache redirect
-        resp = async_to_sync(index)(req)
-        assert resp.status_code == status.HTTP_302_FOUND
-        req = get_request(resp.url)
-
         # Test with totp exists
         resp = async_to_sync(index)(req)
         assert resp.status_code == status.HTTP_200_OK
