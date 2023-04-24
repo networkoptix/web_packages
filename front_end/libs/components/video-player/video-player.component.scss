@@ -4,18 +4,22 @@ video {
     width: 100%;
     height: 100%;
     position: relative;
-    transition: background 0.5s;
+    transition: background 0.25s;
 }
 
 video {
     opacity: 1;
-    transition: opacity 0.5s;
+    transition: opacity 0.25s;
 }
 
-:host:not(.playing) {
-    background: var(--header-bg);
-    video {
-        opacity: 0;
+:host:not(.playing) video {
+    opacity: 0;
+}
+
+:host {
+    &:not(.playing),
+    &:hover {
+        background: var(--header-bg);
     }
 }
 

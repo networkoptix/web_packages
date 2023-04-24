@@ -212,7 +212,6 @@ open-source:open-source-checker:
     expose_as: open-source-check-report
     when: always
     paths: ['report.txt']
-  allow_failure: true
   variables:
     GIT_STRATEGY: "fetch"
   rules:

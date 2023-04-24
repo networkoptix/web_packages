@@ -33,7 +33,7 @@ export class NxVideoPlayerComponent {
     @ViewChild('webRtcPlayer') webRtcPlayerRef: ElementRef<HTMLVideoElement>;
     @HostBinding('class') get class() {
         const { paused, currentTime } = this.webRtcPlayerRef?.nativeElement || { paused: true, currentTime: 0 };
-        return !paused && currentTime? 'playing' : '';
+        return !paused && currentTime && !document.fullscreenElement ? 'playing' : '';
     }
 
     static POSTER_RETRIES = 5
