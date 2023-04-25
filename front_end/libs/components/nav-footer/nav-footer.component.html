@@ -1,37 +1,39 @@
-<ng-container *ngIf="!(scrollMechanicsService.isMobile$ | async); else mobileFooter">
-    <div class="footer">
-        <a
-            [href]="CONFIG.company.links.website"
-            class="copyright"
-            >©{{ CONFIG.company.name }}</a
-        >
-        <ul class="nav navbar-nav flex-row">
-            <li
-                *ngFor="let item of footerItems"
-                class="item"
+<ng-container *ngIf="visible$ | async">
+    <ng-container *ngIf="!(scrollMechanicsService.isMobile$ | async); else mobileFooter">
+        <div class="footer">
+            <a
+                [href]="CONFIG.company.links.website"
+                class="copyright"
+                >©{{ CONFIG.company.name }}</a
             >
-                <a
-                    *ngIf="item.new_window || inAuthorization; else internalLink"
-                    [href]="item.url | safe: 'url'"
-                    [target]="item.new_window ? '_blank' : '_self'"
-                    >{{ item.display_name | translate }}</a
+            <ul class="nav navbar-nav flex-row">
+                <li
+                    *ngFor="let item of footerItems"
+                    class="item"
                 >
-                <ng-template #internalLink>
-                    <a [routerLink]="item.url">{{ item.display_name | translate }}</a>
-                </ng-template>
-            </li>
-        </ul>
-        <div
-            [ngClass]="{
-                invisible: (scrollMechanicsService.windowScrollSubject | async) === 0
-            }"
-            class="return-to-top"
-            *ngIf="returnToTopVisible$ | async"
-            (click)="scrollToTop()"
-        >
-            <svg-icon [src]="icons.dirHeader + 'footer_arrow.svg'"></svg-icon>
+                    <a
+                        *ngIf="item.new_window || inAuthorization; else internalLink"
+                        [href]="item.url | safe: 'url'"
+                        [target]="item.new_window ? '_blank' : '_self'"
+                        >{{ item.display_name | translate }}</a
+                    >
+                    <ng-template #internalLink>
+                        <a [routerLink]="item.url">{{ item.display_name | translate }}</a>
+                    </ng-template>
+                </li>
+            </ul>
+            <div
+                [ngClass]="{
+                    invisible: (scrollMechanicsService.windowScrollSubject | async) === 0
+                }"
+                class="return-to-top"
+                *ngIf="returnToTopVisible$ | async"
+                (click)="scrollToTop()"
+            >
+                <svg-icon [src]="icons.dirHeader + 'footer_arrow.svg'"></svg-icon>
+            </div>
         </div>
-    </div>
+    </ng-container>
 </ng-container>
 
 <ng-template #mobileFooter>

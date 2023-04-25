@@ -1,9 +1,11 @@
 :host {
-    position: sticky;
-    top: calc(100vh - 32px);
     width: 100%;
+    z-index: 80;
 
     .footer {
+        position: fixed;
+        width: 100%;
+        top: calc(100vh - 32px);
         height: 32px;
         background-color: var(--footer-bg);
         color: var(--footer-text-color);
@@ -22,6 +24,7 @@
     }
 
     .mobile-footer {
+        top: calc(100vh - 90px);
         height: 90px;
         background-color: var(--footer-bg);
         color: var(--footer-text-color);
@@ -60,7 +63,7 @@
     .lang {
         position: fixed;
         right: 0;
-        margin: 2px auto auto 24px;
+        margin: 0px auto auto 24px;
     }
 
     .navbar-nav {
@@ -69,8 +72,8 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        padding: 6px 0 0 16px;
-
+        padding: 6px 70px 0 70px;
+        max-width: calc(100% - 140px);
         .item {
             margin-right: 24px;
 

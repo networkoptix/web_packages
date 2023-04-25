@@ -10,7 +10,6 @@ import { MenuNode } from '@services/menus.service.types';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
-import { GridBreakpoints } from '@styles/theme-variables-common';
 
 @UntilDestroy()
 @Component({
@@ -34,12 +33,6 @@ export class NxNavFooterComponent implements OnInit {
     ) {
         this.inAuthorization = this.router.url.includes('/authorize');
         this.CONFIG = config.getConfig();
-
-        this.scrollMechanicsService.windowSizeSubject
-            .pipe(untilDestroyed(this))
-            .subscribe(({ width }) => {
-                this.checkVisible(this.router.url, width);
-            });
 
         this.router.events
             .pipe(
@@ -72,10 +65,7 @@ export class NxNavFooterComponent implements OnInit {
         this.scrollMechanicsService.windowScrollSubject.next(0);
     }
 
-    checkVisible(
-        url: string,
-        width = this.scrollMechanicsService.windowSizeSubject.value.width,
-    ): void {
-        this.visible$.next(width > GridBreakpoints.SM && !url.includes('/systems'));
+    checkVisible(url: string): void {
+        this.visible$.next(!url.includes('/systems'));
     }
 }
