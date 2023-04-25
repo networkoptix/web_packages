@@ -306,12 +306,22 @@ cdk-tree,
             flex-direction: row;
         }
 
+        h3 {
+            text-align: center;
+        }
+
         h4 {
             text-align: center;
             width: 100%;
             padding: 8px;
             color: var(--error) !important;
         }
+    }
+}
+
+.tooltip-error-wrapper {
+    h3, h4 {
+        color: unset !important;
     }
 }
 

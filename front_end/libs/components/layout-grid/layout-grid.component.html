@@ -422,6 +422,7 @@
                     >
                         <div
                             cdkDrag
+                            #dragContainer
                             [cdkDragDisabled]="layout.locked"
                             [cdkDragData]="item"
                             (cdkDragReleased)="dragging = false; moveItem(item)"
@@ -624,14 +625,24 @@
                                                         </div>
                                                     </ng-template>
                                                     <svg-icon
+                                                        *ngIf="
+                                                            dragContainer.getBoundingClientRect()
+                                                                .height - 16 as containerHeight
+                                                        "
                                                         [nxTooltip]="
                                                             item.renderConfig.showTooltip &&
                                                             errorTooltip
                                                         "
                                                         nx-add-svg-src
                                                         [svgStyle]="{
-                                                            'max-width.px': '64',
-                                                            'max-height.px': '64',
+                                                            'max-width.px':
+                                                                containerHeight < 64
+                                                                    ? containerHeight
+                                                                    : 64,
+                                                            'max-height.px':
+                                                                containerHeight < 64
+                                                                    ? containerHeight
+                                                                    : 64,
                                                             'margin.px': '16',
                                                             width: '100%',
                                                             height: '100%'
