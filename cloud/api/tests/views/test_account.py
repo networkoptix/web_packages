@@ -128,13 +128,15 @@ class TestAccountViews:
             return req
 
         req = get_request('/api/account')
+        init_session_key = req.session.session_key
 
         # Test cache redirect
         resp = async_to_sync(index)(req)
         assert resp.status_code == status.HTTP_302_FOUND
         req = get_request(resp.url)
+        req.session.session_key = init_session_key
 
-        # Test with totp exists
+        # Test with cache hit
         resp = async_to_sync(index)(req)
         assert resp.status_code == status.HTTP_200_OK
         expected_data = AccountSerializer(req).data
@@ -219,7 +221,7 @@ class TestAccountViews:
 
         req = self.arf.post('/api/account/security', data=data)
         req.user = active_user
-        req.session = {}
+        req.session = self.mocker.MagicMock()
         return req
 
     def test_security_missing_activate(self, active_user):
@@ -299,7 +301,7 @@ class TestAccountViews:
         self.mocker.patch.object(Auth, 'delete_2fa_key', return_value={})
         req = self.arf.delete('/api/account/security')
         req.user = active_user
-        req.session = {}
+        req.session = self.mocker.MagicMock()
 
         view = async_to_sync(AccountSecurity().as_view())
         assert view(req).status_code == status.HTTP_200_OK
