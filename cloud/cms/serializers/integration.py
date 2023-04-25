@@ -37,7 +37,7 @@ class OverviewSerializer(serializers.Serializer):
 
 class InstructionsSerializer(serializers.Serializer):
     installationInstructions = serializers.CharField(required=False)
-    installationVideo = serializers.CharField(required=False)
+    instructionVideo = serializers.CharField(required=False)
     screenshots = ScreenShotSerializer(required=False, many=True)
 
 
