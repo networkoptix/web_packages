@@ -25,7 +25,7 @@ import { MotionMaskState } from './MotionMaskState';
     selector: 'nx-motion-detection-overlay',
     templateUrl: 'motion-detection-overlay.component.html',
     styleUrls: ['motion-detection-overlay.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked {
     @Input() height: number;
@@ -42,8 +42,17 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
     motionMaskRenderer: MotionMaskRenderer;
     readonly cameraSettings: CameraSettings = {
         sensitivityColors: [
-            '#FFFFFF', '#627CD6', '#23A4CB', '#31BAA2', '#79BC66', '#B8BC37', '#FBA405', '#E97119', '#D24729', '#C22626'
-        ]
+            '#FFFFFF',
+            '#627CD6',
+            '#23A4CB',
+            '#31BAA2',
+            '#79BC66',
+            '#B8BC37',
+            '#FBA405',
+            '#E97119',
+            '#D24729',
+            '#C22626',
+        ],
     };
 
     @Output() updateMask: EventEmitter<string> = new EventEmitter();
@@ -58,9 +67,7 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
     }
 
     ngOnChanges({ initialMask, height, width }: NgChanges<NxMotionDetectionOverlay>): void {
-        const initialMaskChanged = initialMask &&
-            !initialMask.isFirstChange() &&
-            this.motionMask;
+        const initialMaskChanged = initialMask && !initialMask.isFirstChange() && this.motionMask;
         const heightChanged = height && !height.isFirstChange();
         const widthChanged = width && !width.isFirstChange();
         const changed = initialMaskChanged || heightChanged || widthChanged;
@@ -68,22 +75,14 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
             this.motionMask.reInitialize(this.initialMask);
         }
 
-        if (
-            changed &&
-            this.motionMaskRenderer &&
-            this.motionMaskRenderer.canvas
-        ) {
-            this.motionMaskRenderer.initCanvas(
-                this.motionCanvas,
-                this.selectionCanvas
-            );
+        if (changed && this.motionMaskRenderer && this.motionMaskRenderer.canvas) {
+            this.motionMaskRenderer.initCanvas(this.motionCanvas, this.selectionCanvas);
         }
     }
 
     ngAfterContentChecked(): void {
-        const firstRender = !this.motionMaskRenderer &&
-            this.motionCanvas &&
-            this.motionCanvas.nativeElement;
+        const firstRender =
+            !this.motionMaskRenderer && this.motionCanvas && this.motionCanvas.nativeElement;
         if (firstRender) {
             this.initRenderer();
         }
@@ -101,7 +100,7 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
             this.sensitivityButtons$,
             this.unsub$,
             this.updateMask,
-            this.rotation as number
+            this.rotation as number,
         );
     }
 

@@ -573,7 +573,7 @@ module.exports = {
                 'libs/features/systems/bookmarks/**/*.ts',
                 'libs/features/systems/settings/*.ts',
                 'libs/features/systems/settings/admin/**/*.ts',
-                'libs/features/systems/settings/cameras/cameras.component.ts',
+                'libs/features/systems/settings/cameras/**/*.ts',
                 // 'libs/features/systems/settings//**/*.ts',
                 // 'libs/features/systems/view//**/*.ts',
                 'libs/interceptors/**/*.ts',
