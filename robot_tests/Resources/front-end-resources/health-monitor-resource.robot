@@ -151,7 +151,8 @@ Count All Alerts and Validate Totals Shown
 
 Health Monitor Suite Teardown
     Close All Browsers
-    Teardown Servers    ${servers}
+    Run Keyword and Warn on Failure    Teardown Servers    ${servers}
+    Cleanup Containers    ${random}
 #    Delete Base System    ${server 1}
 #    Delete Base System    ${server 2}
 
@@ -173,7 +174,8 @@ Health Monitor Details Setup
     ...    AND    Log Out
     
 Health Monitor Details Tear Down
-    Teardown Servers      ${servers} 
+    Run Keyword and Warn on Failure    Teardown Servers    ${servers}
+    Cleanup Containers    ${random}
     Close All Connections
     Close All Browsers
   

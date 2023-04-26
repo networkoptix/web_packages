@@ -59,7 +59,8 @@ Account Server Suite Setup
     Go to    ${url}
     
 Account Server Suite Tear Down
-    Teardown Servers    ${servers}
+    Run Keyword and Warn on Failure    Teardown Servers    ${servers}
+    Cleanup Containers    ${random}
     Close All Browsers
 
 Account Suite Tear Down

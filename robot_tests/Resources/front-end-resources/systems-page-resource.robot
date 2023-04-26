@@ -30,7 +30,8 @@ Systems Page Test Setup
     Common Restart Logout    ${ENV}
 
 Systems Page Suite Teardown
-    Teardown Servers    ${servers}
+    Run Keyword and Warn on Failure    Teardown Servers    ${servers}
+    Cleanup Containers    ${random}
     Delete Account    ${no sys user}    ${base password}
     Close All Browsers
 

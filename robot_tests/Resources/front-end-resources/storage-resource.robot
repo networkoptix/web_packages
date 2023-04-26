@@ -85,7 +85,8 @@ Storage Suite Setup
     Verify Storages    1    owner=${server 1['cloudOwner']}    system=${server 2['id']}    login=${TRUE}
 
 Storage Suite Teardown
-    Teardown Servers    ${servers}
+    Run Keyword and Warn on Failure    Teardown Servers    ${servers}
+    Cleanup Containers    ${random}
     FOR    ${n}    IN RANGE    5
         Delete Virtual Disk    ${disk[${n}]}[img]    ${disk[${n}]}[folder]
     END

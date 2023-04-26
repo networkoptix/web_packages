@@ -25,7 +25,8 @@ Restart
 
 2fa Suite Teardown
     Close All Browsers
-    Teardown Servers    ${servers}
+    Run Keyword and Warn on Failure    Teardown Servers    ${servers}
+    Cleanup Containers    ${random}
 
 2fa Test Teardown
     ${totp}=    Get 2fa Verification Code    ${2fa key value}

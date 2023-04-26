@@ -33,7 +33,8 @@ Cloud Suite Setup
     Log Out
 
 Owner Transfer Teardown
-    Teardown Servers    ${servers}
+    Run Keyword and Warn on Failure    Teardown Servers    ${servers}
+    Cleanup Containers    ${random}
 #    Delete Base System    ${server 1}
 #    Delete Base System    ${server 2}
     Close All Browsers

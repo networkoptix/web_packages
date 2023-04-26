@@ -20,7 +20,8 @@ System Admin Suite Setup
     Go To    ${url}
 
 System Admin Suite Teardown
-    Teardown Servers    ${servers}
+    Run Keyword and Warn on Failure    Teardown Servers    ${servers}
+    Cleanup Containers    ${random}
     Run Keyword If    '''${mode}'''=='''webadmin'''    Delete container   ${local system}[container]
     Close All Browsers
     Run Keyword And Ignore Error    Delete Docker Server    ${4.0 cont}
@@ -426,7 +427,8 @@ System Offline Suite Setup
     Go to    ${ENV}
 
 System Offline Suite Teardown
-    Teardown Servers     ${servers}
+    Run Keyword and Warn on Failure    Teardown Servers    ${servers}
+    Cleanup Containers    ${random}
     Close All Browsers
 
 System Offline Restart

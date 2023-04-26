@@ -33,7 +33,8 @@ Header Suite Setup
 
 Header Suite Teardown
     Close All Browsers
-    Teardown Servers    ${systems}
+    Run Keyword and Warn on Failure    Teardown Servers    ${servers}
+    Cleanup Containers    ${random}
 
 Header Test Setup
     Skip If Irrelevant

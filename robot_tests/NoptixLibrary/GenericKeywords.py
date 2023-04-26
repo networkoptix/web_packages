@@ -924,3 +924,10 @@ class GenericKeywords(object):
         with codecs.open(path, encoding="utf-8") as featuresJson:
             featuresDict = json.load(featuresJson)
             return featuresDict
+    
+    @keyword
+    def cleanup_containers(self, run_name):
+        for container in self.docker_api.list_containers():
+            if run_name in container["Names"][0]:
+                self.docker_api.delete_container(container["Id"])
+

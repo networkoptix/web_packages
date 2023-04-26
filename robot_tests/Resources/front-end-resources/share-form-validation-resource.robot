@@ -20,7 +20,8 @@ Share Form Setup
     ...    AND    Log Out
     
 Share Form Tear Down
-    Teardown Servers    ${servers}
+    Run Keyword and Warn on Failure    Teardown Servers    ${servers}
+    Cleanup Containers    ${random}
     FOR    ${user}    IN    @{server['cloud users'].values()}
          Run Keyword If    '''${mode}'''=='''cloud'''    Delete Account    ${user}      ${password}  
     END

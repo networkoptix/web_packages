@@ -1,6 +1,7 @@
 *** Settings ***
 Resource     variables-env.robot
 Resource     variables.robot
+Variables    docker_load.py
 Resource     Resources/cms-resources.robot
 
 Library      String

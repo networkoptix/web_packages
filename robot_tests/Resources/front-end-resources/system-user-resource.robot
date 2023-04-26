@@ -50,14 +50,8 @@ Users Test Tear Down
     END
 
 Users Teardown
-    # Disconnect Server via API    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${password}    ${system['owner']}
-    # Disconnect Server via API    ${server 2['cloud auth']}    ${server 2['cloud id']}    ${password}    ${system['owner']}
-    # Open Connection    ${QA BURBANK IP}
-    # SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    # ${results}    Execute Command    docker container stop ${system['cont']} ${system 2['cont']}
-    # ${results}    Execute Command    docker container rm ${system['cont']} ${system 2['cont']}
-    # Remove Temporary Users
-    Teardown Servers    ${servers}
+    Run Keyword and Warn on Failure    Teardown Servers    ${servers}
+    Cleanup Containers    ${random}
     Close All Browsers
 
 Remove Temporary Users

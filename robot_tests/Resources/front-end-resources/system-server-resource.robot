@@ -117,7 +117,8 @@ Advanced Server Test Teardown
 
 Server Advanced Settings Suite Teardown
     Close All Browsers
-    Teardown Servers    ${servers}
+    Run Keyword and Warn on Failure    Teardown Servers    ${servers}
+    Cleanup Containers    ${random}
 
 Server Settings Suite Setup
     Open Browser and go to URL    ${url}
@@ -198,7 +199,8 @@ Cloud Suite Setup
 
 
 Server Settings Suite Tear Down
-    Teardown Servers    ${servers}
+    Run Keyword and Warn on Failure    Teardown Servers    ${servers}
+    Cleanup Containers    ${random}
     Close All Connections
     Close All Browsers
 
