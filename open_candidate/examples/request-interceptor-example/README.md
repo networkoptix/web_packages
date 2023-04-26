@@ -50,7 +50,8 @@ You could then make authenticated request to that system.
 
 ## Demo Source code
 
-The relevant part of the source code related to the `@networkoptix/request-interceptor` package is in the [main.ts](./src/main.ts) file.
+The relevant part of the source code related to the `@networkoptix/request-interceptor` package
+is in the [main.ts](./src/main.ts) file.
 
 ```typescript
 import {

@@ -8,6 +8,7 @@
     "excluded_file_name_patterns": [
         "*.json",
         ".gitignore",
-        "README.md"
+        "README.md",
+        ".npmignore"
     ]
 }

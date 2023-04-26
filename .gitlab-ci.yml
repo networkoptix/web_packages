@@ -203,7 +203,7 @@ open-source:open-source-checker:
   - |
     if [[ -s changed_open_source_files.txt ]]; then
       /workdir/open_source_check.py \
-        --config open-source-checker-config.json --check-file-list changed_open_source_files.txt --display-relative-paths \
+        --config open_source_check_config.json --check-file-list changed_open_source_files.txt --display-relative-paths \
         --repo-dir . 2>&1 | tee report.txt
     else
       echo "No new or modified open-source files in git diff." | tee report.txt
