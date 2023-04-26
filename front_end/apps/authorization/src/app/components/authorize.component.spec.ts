@@ -71,6 +71,7 @@ describe('NxAuthorizeComponent', () => {
     //         loginSystemSubheader: 'With your %CLOUD_NAME% Account',
     //         toAccountSubheader: 'To {accountEmail}',
     //         asAccountSubheader: 'As {accountEmail}',
+    //         passwordApply: 'to apply changes',
     //         passwordDisconnect: 'to disconnect system from %CLOUD_NAME%',
     //         passwordMerge: 'to merge systems',
     //         passwordBackup: 'to create backup',
@@ -416,6 +417,17 @@ describe('NxAuthorizeComponent', () => {
         expect(buttons[2].innerText).toBe('Log In');
         const icons = el.nativeElement.querySelectorAll('svg-icon');
         expect(icons.length).toBe(4);
+    });
+
+    it('should load confirm password apply changes', () => {
+        fixture.detectChanges();
+        component.currentState = AuthorizeState.password;
+        component.emailLocked = true;
+        component.clientType = ClientType.passwordApply;
+        fixture.detectChanges();
+        const message = el.nativeElement.querySelectorAll('p');
+        expect(message.length).toBe(1);
+        expect(message[0].innerText).toBe('to apply changes');
     });
 
     it('should load confirm password disconnect from system component', () => {
