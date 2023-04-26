@@ -271,7 +271,6 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             this.initialData.redirect_uri ||= this.initialData.redirect_url || '/systems';
 
             const { access_token, access_code, code, email, redirect_uri } = this.initialData;
-            this.isMobileClient = Boolean(redirect_uri) && this.deviceService.isMobile();
             const skipTo2FaClientTypes = [
                 'renewSessionDesktop',
                 'renewSessionWeb',
