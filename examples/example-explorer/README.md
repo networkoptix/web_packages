@@ -10,7 +10,7 @@ This is mostly used internally for our CI to deploy static deploy targets like G
 
 ## Install workspace dependencies
 
-From the root folder run `npm install`. This will install shared workspace dependencies and link local packages.
+From the root folder run `npm install`. This will install shared workspace dependenciesand link local packages.
 
 ```sh
 npm install

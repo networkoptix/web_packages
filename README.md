@@ -7,7 +7,8 @@
 ## Introduction
 
 This repository `nx_open_web` contains **Network Optix Meta Platform open source web packages** - the
-source code and published packages are used in building Nx Meta Cloud Portal, Webadmin, and various web projects within Network Optix.
+source code and published packages are used in building Nx Meta Cloud Portal, Webadmin, and various
+web projects within Network Optix.
 
 ### Contribution policy
 
@@ -18,37 +19,45 @@ is likely that a policy for contributions will be developed and offered in the f
 
 ## Published Packages
 
-For libraries contained in this repository the compiled packages will be published to the appropriate package manager.
+For libraries contained in this repository the compiled packages will be published to the
+appropriate package manager.
 
 ### Published packages can be found on the links below.
 
--   Javascript / Typescript (NPM): https://www.npmjs.com/org/networkoptix
+- Javascript / Typescript (NPM): https://www.npmjs.com/org/networkoptix
 
 ---
 
 ## Project Structure
 
-The repository is setup as a monorepo with root folder contains shared files for maintaining the project. Source code relevant to external developers will be in `/packages` and `/examples`.
+The repository is setup as a monorepo with root folder contains shared files for maintaining
+the project. Source code relevant to external developers will be in `/packages` and `/examples`.
 
 ### Packages / Libraries
 
-The `/packages` directory will contain the source code for our published packages. The Javascript packages are all written in Typescript with type definitions and source maps included so it's suggested that these are added to your project through NPM.
+The `/packages` directory contains the source code for our published packages. The Javascript packages
+are all written in Typescript with type definitions and source maps included so it's suggested that
+these are added to your project through NPM.
 
 ### Demos and Examples
 
-The `/examples` directory will contain usage examples for some of the packages in `/packages` and also some general examples for interacting with the Nx Witness Video Management System (VMS) server.
+The `/examples` directory constains usage examples for some of the packages in `/packages` and also
+some general examples for interacting with the Nx Witness Video Management System (VMS) server.
 
-All Javascript/Node examples will contain an `npm start` script for running the demo/example.
+All Javascript/Node examples contain an `npm start` script for running the demo/example.
 
-Examples for a specific package in `/packages` will end with `-example` so the `/webrtc-stream-manager-example` will be for the `/webrtc-stream-manager` package.
+Examples for a specific package in `/packages` ends with `-example` so the
+`/webrtc-stream-manager-example` will be for the `/webrtc-stream-manager` package.
 
-General demos for interacting with the VMS server will end with `-demo`. These demos will probably use one or more packages from `/packages` but is purposed with demonstrating interactions instead of being instructional on a specific package.
+General demos for interacting with the VMS server ends with `-demo`. These demos will probably use
+one or more packages from `/packages` but are purposed with demonstrating interactions instead of
+being instructional on a specific package.
 
 ---
 
 ## Free and Open-Source Software Notices
 
-The Network Optix VMS Open Source Components software incorporates, depends upon, interacts with,
+The Nx Meta Platform Open Source Web Packages incorporates, depends upon, interacts with,
 or was developed using a number of free and open-source software components. The full list of such
 components can be found at [OPEN SOURCE SOFTWARE DISCLOSURE](https://meta.nxvms.com/content/libraries/).
 Please see the linked component websites for additional licensing, dependency, and use information,
