@@ -1,0 +1,20 @@
+{
+  "baseUrl": "",
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "target": "es2020",
+    "module": "es2020",
+    "lib": ["es2020", "dom", "DOM.Iterable"],
+    "strict": true,
+    "sourceMap": true,
+    "declaration": true,
+    "strictNullChecks": false,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "declarationMap": true,
+    "typeRoots": ["node_modules/@types"]
+  }
+}

@@ -1,0 +1,15 @@
+{
+    "name": "@networkoptix/webrtc-stream-manager",
+    "version": "0.1.1",
+    "author": "Network Optix",
+    "main": "dist/lib/index.js",
+    "types": "dist/types/index.d.ts",
+    "license": "MPL-2.0",
+    "scripts": {
+        "build": "tsc --outDir dist/lib --declarationDir dist/types",
+        "ci:check": "echo 'Additional CI checks can be added here'"
+    },
+    "dependencies": {
+        "rxjs": "^7.5.5"
+    }
+}

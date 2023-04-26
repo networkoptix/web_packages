@@ -1,0 +1,28 @@
+{
+  "name": "nx-open-web",
+  "version": "0.0.0",
+  "license": "MPL-2.0",
+  "scripts": {
+    "build": "nx run-many --target=build --all",
+    "build:demo": "nx run-many --target=build:demo --all --exclude example-explorer",
+    "run:demo": "npm run build:demo && nx run example-explorer:serve",
+    "deploy:demo": "npm run build:demo && nx run example-explorer:deploy:demo",
+    "ci:check": "nx run-many --target=ci:check --all"
+  },
+  "private": true,
+  "devDependencies": {
+    "@nrwl/nx-cloud": "latest",
+    "@types/node": "^18.15.5",
+    "nx": "15.8.7",
+    "prettier": "^2.6.2",
+    "typescript": "^5.0.2"
+  },
+  "//": "Lock peer dependencies to the same versions we use internally",
+  "dependencies": {
+    "rxjs": "7.5.5"
+  },
+  "workspaces": [
+    "packages/*",
+    "examples/*"
+  ]
+}

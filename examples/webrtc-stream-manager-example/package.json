@@ -1,0 +1,23 @@
+{
+  "name": "webrtc-stream-manager-example",
+  "description": "WebRTC Stream Manager Example",
+  "private": true,
+  "includeInDemo": true,
+  "version": "0.0.0",
+  "license": "MPL-2.0",
+  "type": "module",
+  "scripts": {
+    "start": "nx run webrtc-stream-manager-example:serve",
+    "serve": "vite",
+    "build:demo": "tsc --outDir ../dist/webrtc-stream-manager-example && vite build --outDir ../dist/webrtc-stream-manager-example --emptyOutDir --base ./ && cp ./package.json ../dist/webrtc-stream-manager-example/package.json",
+    "deploy:demo": "echo 'FUTURE TODO: Add UI wrapper to display show all buildable demos and deploy them statically'",
+    "ci:check": "echo 'Additional CI checks can be added here'"
+  },
+  "dependencies": {
+    "@networkoptix/webrtc-stream-manager": "*"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.3",
+    "vite": "^4.2.0"
+  }
+}
