@@ -48,7 +48,7 @@ export class NxAccountSecurityComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.accountService.get(true).then(account => {
+        this.accountService.get().then(account => {
             this.account = account;
             this.account2faEnabled = account.account2faEnabled;
             this.account2faEnabledCheck = account.account2faEnabled;

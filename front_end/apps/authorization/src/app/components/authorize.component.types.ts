@@ -47,6 +47,7 @@ export enum AuthorizeState {
 export enum ClientType {
     loginCloud = 'loginToCloud',
     loginWebadmin = 'loginToWebadmin',
+    passwordApply = 'confirmPasswordApplyChanges',
     passwordDisconnect = 'confirmPasswordDisconnect',
     passwordMerge = 'confirmPasswordMerge',
     passwordBackup = 'confirmPasswordCreateBackup',

@@ -195,9 +195,9 @@ export class NxMenusService {
 
         if (node.name === 'Support') {
             const supportUrl = node.url;
-            if (supportUrl.includes('@')) {
+            if (supportUrl.includes('@') && !supportUrl.includes('mailto:')) {
                 node.url = `mailto:${supportUrl}`;
-            } else if ((/\d{3}-\d{3}-\d{4}/g).test(supportUrl)) {
+            } else if ((/\d{3}-\d{3}-\d{4}/g).test(supportUrl) && !supportUrl.includes('tel:')) {
                 node.url = `tel:${supportUrl.replace(/ \(Option (\d*)\)/, ';$1')}`;
             }
         }

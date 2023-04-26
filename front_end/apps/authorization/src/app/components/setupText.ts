@@ -40,6 +40,11 @@ export function setupText(
         loginToCloud: login,
         loginToWebadmin: login,
         system2faAuth: login,
+        confirmPasswordApplyChanges: {
+            header: auth.loginCloudHeader,
+            subHeader,
+            subHeaderSuffix: auth.passwordApply
+        },
         confirmPasswordDisconnect: {
             header: auth.loginCloudHeader,
             subHeader,

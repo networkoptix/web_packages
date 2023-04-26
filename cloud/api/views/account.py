@@ -291,6 +291,25 @@ async def time_since_password(request):
     })
 
 
+class AccountCache:
+    @staticmethod
+    def get(request):
+        key = None
+        if getattr(request, 'session'):
+            key = caches['requests'].get(request.session.session_key)
+        return key
+
+    @staticmethod
+    def set(request, key):
+        if getattr(request, 'session'):
+            caches['requests'].set(request.session.session_key, key)
+
+    @staticmethod
+    def delete(request):
+        if getattr(request, 'session'):
+            caches['requests'].delete(request.session.session_key)
+
+
 @swagger_auto_schema(method="GET",  # auto_schema=None,
                      operation_description="Returns info about the current logged in user.",
                      responses={"200": account__response})
@@ -317,13 +336,13 @@ async def index(request):
         # Redirect if no version
         # Add indefinite cache heading
         # Removing the caching for now!!
-        # cached = request.query_params.get('cached')
-        # current_version = not request.query_params.get('force') and caches['requests'].get(request.user.email)
-        # if not cached or not current_version or cached != current_version:
-        #     if not current_version:
-        #         current_version = str(uuid4())
-        #         caches['requests'].set(request.user.email, current_version)
-        #     return redirect(f'{reverse("account")}?cached={current_version}')
+        cached = request.query_params.get('cached')
+        current_version = not request.query_params.get('force') and AccountCache.get(request)
+        if not cached or not current_version or cached != current_version:
+            if not current_version:
+                current_version = str(uuid4())
+                AccountCache.set(request, current_version)
+            return redirect(f'{reverse("account")}?cached={current_version}')
         serializer = await sync_to_async(lambda: AccountSerializer(request, many=False))()
 
         return api_success(
@@ -340,6 +359,7 @@ async def index(request):
 
     await sync_to_async(Account.update)(
         request, request.data['first_name'], request.data['last_name'])
+    AccountCache.set(request, str(uuid4()))
     # if not success:
     #    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     await sync_to_async(serializer.save)()
@@ -460,11 +480,11 @@ class SecurityAction(enum.Enum):
 class AccountSecurity(APIView):
     permission_classes = [IsAuthenticated]
 
-    def invalidate_user_cache(self, email):
+    def invalidate_user_cache(self, request):
         """
         Clears the cached version for a user to invalidate browser cached version on next request.
         """
-        caches['requests'].delete(email)
+        AccountCache.delete(request)
 
     @method_decorator_async(swagger_auto_schema(
         # auto_schema=None,
@@ -475,7 +495,7 @@ class AccountSecurity(APIView):
         account_security_serializer = AccountSecuritySerializer(
             data=request.data)
         account_security_serializer.is_valid(raise_exception=True)
-        self.invalidate_user_cache(request.user.email)
+        self.invalidate_user_cache(request)
 
         mfa_code = account_security_serializer.validated_data.get("mfaCode")
         action = account_security_serializer.validated_data.get("action")
@@ -508,7 +528,7 @@ class AccountSecurity(APIView):
         if (await sync_to_async(Account.get, thread_sensitive=False)(request)).get("account2faEnabled"):
             raise APIRequestException('Cannot delete totp while 2fa is enabled', ErrorCodes.bad_request)
         request.session["has2fa"] = False
-        caches['requests'].delete(request.user.email)
+        self.invalidate_user_cache(request)
         return api_success(await sync_to_async(Auth.delete_2fa_key, thread_sensitive=False)(request))
 
 

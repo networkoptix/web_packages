@@ -586,16 +586,18 @@ export class NxCloudApiService {
     }
 
     private getAllAccountInfo(forceUpdate = false): Observable<Account> {
-        return forkJoin([
-            this.getAccount(forceUpdate),
-            this.currentAccount?.accessToken ? this.cloudDbApi.getAccountSecurity() : of({ account2faEnabled: false, totpExistsForAccount: false })
-        ]).pipe(switchMap(([cloudInfo, security]) => (cloudInfo.accessToken ? this.cloudDbApi.validateToken(cloudInfo.accessToken) : of({ sessionExpires: Infinity }))
-            .pipe(map(tokenInfo => {
+        return this.getAccount(forceUpdate).pipe(
+            switchMap(cloudInfo => forkJoin([
+                of(cloudInfo),
+                cloudInfo.accessToken ? this.cloudDbApi.getAccountSecurity() : of({ account2faEnabled: false, totpExistsForAccount: false }),
+                cloudInfo.accessToken ? this.cloudDbApi.validateToken(cloudInfo.accessToken) : of({ sessionExpires: Infinity })
+            ])),
+            map(([cloudInfo, security, tokenInfo]) => {
                 cloudInfo.sessionVerified = cloudInfo.sessionVerified || security.account2faEnabled;
                 this.currentAccount = { ...cloudInfo, ...security, ...tokenInfo };
                 return this.currentAccount;
-            }))
-        ));
+            })
+        );
     }
 
     checkFeatureNotice = <T>(
