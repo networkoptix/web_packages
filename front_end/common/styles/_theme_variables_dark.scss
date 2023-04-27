@@ -651,6 +651,11 @@ html[data-theme="dark"] {
     --card-context-bg: var(--dark9);
     --card-context-shadow: 0 1rem 2rem rgba(var(--light6--rgb), 0.4);
 
+    --CP-pane-background: var(--dark3);
+    --CP-pane-border: var(--dark5);
+    --CP-pane-header-background: var(--dark4);
+    --CP-pane-header-border: var(--dark7);
+
     /*  */
     --new-feature-gradient: linear-gradient(242.24deg, var(--dark2) 0.43%, var(--brand-d4) 122.68%);
     --cloud-storage-spot-gradient: radial-gradient(50% 50% at 50% 50%, var(--dark2) 0%, var(--brand-d4) 0.01%, transparent 98.65%);

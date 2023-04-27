@@ -624,6 +624,11 @@ html[data-theme="light-gray"] {
     --card-context-bg: var(--light_gray_4);//
     --card-context-shadow: 0 1rem 2rem rgba(var(--dark_gray_15--rgb), 0.4);
 
+    --CP-pane-background: var(--light_gray_1);
+    --CP-pane-border: var(--light_gray_3);
+    --CP-pane-header-background: var(--light_gray_1);
+    --CP-pane-header-border: var(--light_gray_7);
+
     /* Bookmarks */
     --bookmarks-calendar-today-border: rgba(0, 0, 0, 0.38);
     --bookmarks-calendar-today-highlight-shadow: var(--light1);

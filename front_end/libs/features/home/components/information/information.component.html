@@ -1,2 +1,60 @@
-<!-- eslint-disable-next-line nx/template/no-untranslated -->
-<div>Placeholder for information</div>
+<div class="information">
+    <div
+        class="systems pane"
+        *ngIf="systems"
+    >
+        <div class="base">
+            <h4
+                class="header"
+                translate
+            >
+                Base parameters
+            </h4>
+            <div class="body">
+                <div class="data-row">
+                    <span translate>Count of systems</span>
+                    <span>{{ systems.length }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="additional">
+            <h4
+                class="header"
+                translate
+            >
+                Additional Parameters
+            </h4>
+            <div class="body">
+                <div class="data-row">
+                    <span translate>Count of systems</span>
+                    <span>{{ systems.length }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="description pane">
+        <div class="header">
+            <h4 translate>About</h4>
+            <svg-icon [src]="icons.dir + 'edit.svg'"></svg-icon>
+        </div>
+        <div class="body">
+            {{ information.description }}
+        </div>
+    </div>
+
+    <div class="contact pane">
+        <div class="header">
+            <h4 translate>Support</h4>
+            <svg-icon [src]="icons.dir + 'edit.svg'"></svg-icon>
+        </div>
+        <div class="body">
+            <div
+                class="data-row"
+                *ngFor="let contact of information.contactInfo"
+            >
+                <span>{{ contact.name }}</span
+                ><span>{{ contact.email || contact.number }}</span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -651,6 +651,11 @@ html[data-theme="light"] {
     --card-context-bg: var(--light4);
     --card-context-shadow: 0 1rem 2rem rgba(var(--dark15--rgb), 0.4);
 
+    --CP-pane-background: var(--light2);
+    --CP-pane-border: var(--light3);
+    --CP-pane-header-background: var(--light1);
+    --CP-pane-header-border: var(--light4);
+
     /*  */
     --new-feature-gradient: linear-gradient(242.24deg, var(--light2) 0.43%, var(--brand-l4) 122.68%);
     --cloud-storage-spot-gradient: radial-gradient(50% 50% at 50% 50%, #D9D9D9 0%, #A8E1FE 0.01%, rgba(255, 255, 255, 0) 98.65%);

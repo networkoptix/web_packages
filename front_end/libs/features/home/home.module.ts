@@ -20,6 +20,7 @@ import { NxUsersTableComponent } from '@pages/home/components/users-table/users-
 import { NxChannelPartnersComponent } from './channel-partners/channel-partners.component';
 import { NxGroupCardComponent } from './components/group-card/group-card.component';
 import { NxGroupsCardsComponent } from './components/groups-cards/groups-cards.component';
+import { NxChannelPartnerInformationComponent } from './components/information/information.component';
 import { NxOrganizationReportsComponent } from './components/reports/reports.component';
 import { NxOrganizationSettingsComponent } from './components/settings/settings.component';
 import { NxGroupsSidebarLevelComponent } from './components/sidebar-level/sidebar-level.component';
@@ -88,7 +89,8 @@ const homeRoutes: Routes = [
         NxOrganizationUsersComponent,
         NxGroupsSystemsComponent,
         NxUsersTableComponent,
-        NxChannelPartnersComponent
+        NxChannelPartnersComponent,
+        NxChannelPartnerInformationComponent
     ],
     providers: [
         TabResolver,
