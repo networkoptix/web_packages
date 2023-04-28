@@ -7,15 +7,17 @@ import {
     UrlTree,
 } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Observable } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
 
 import { environment } from '@environments/environment';
 import { NxSettingsService } from '@pages/systems/settings/settings.service';
 import { NxAccountService } from '@services/account.service';
 import { NxMenusService } from '@services/menus.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
+import { NxSystemsService } from '@services/systems.service';
 
 @Injectable()
 export class SystemGuard implements CanActivate {
@@ -25,7 +27,9 @@ export class SystemGuard implements CanActivate {
         private router: Router,
         private accountService: NxAccountService,
         private systemService: NxSystemService,
+        systemsService: NxSystemsService,
         private settingsService: NxSettingsService,
+        private cloudApi: NxCloudApiService,
         private menusService: NxMenusService,
         private configService: NxConfigService,
         private deviceService: DeviceDetectorService,
@@ -63,13 +67,14 @@ export class SystemGuard implements CanActivate {
             const permissions = system.userManager.permissions;
             const isOwner = system.userManager.isMySystem;
             const isAdmin = permissions.isAdmin || isOwner;
+            const sysVersion = system.version || parseFloat(system.info.version);
 
             // https://networkoptix.atlassian.net/wiki/spaces/FS/pages/2786951363/Bookmarks+on+Cloud#User-Permissions-new
             /* This condition should be kept in sync with the node add condition
             for header in menus.service.ts */
             const canViewBookmarks =
                 this.configService.flagsEnabled('bookmarks') &&
-                system.version >= 5 &&
+                sysVersion >= 5 &&
                 system.userManager.currentUser.permissions.includes(
                     'GlobalViewBookmarksPermission',
                 ) &&
@@ -83,7 +88,7 @@ export class SystemGuard implements CanActivate {
                 advanced: isAdmin,
                 servers: isAdmin,
                 monitoring: isAdmin,
-                layouts: (system.version || parseFloat(system.info.version)) >= 5.1,
+                layouts: sysVersion >= 5.1,
                 bookmarks: canViewBookmarks,
             };
 
@@ -111,15 +116,26 @@ export class SystemGuard implements CanActivate {
                         account.email,
                     );
                 } else {
-                    currSystem = this.systemService.createSystem(account.email, systemId);
+                    const [sysInfo] = await firstValueFrom(
+                        this.cloudApi.cloudDbApi.systems(systemId),
+                    );
+                    // TODO: Clean up create system args
+                    currSystem = this.systemService.createSystem(
+                        account.email,
+                        systemId,
+                        null,
+                        false,
+                        false,
+                        parseFloat(sysInfo.version),
+                    );
+                    /* Need to initialize with actual version here for bookmarks
+                    since without it the mediaserver will default to legacy */
                 }
 
                 await currSystem.update();
                 this.settingsService.system = currSystem;
             }
             if (currSystem.userManager.users === undefined) {
-                currSystem.userManager.currentUserEmail ||= account.email;
-                // Patch for systems.service creating systems with no user email
                 try {
                     await currSystem.userManager.getUsersDataFromTheSystem();
                 } catch (e) {

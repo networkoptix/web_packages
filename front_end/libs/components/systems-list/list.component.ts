@@ -88,7 +88,6 @@ export class NxSystemsListComponent implements OnInit {
         this.accountService.get().then(account => {
             if (account?.email) {
                 this.account = account;
-                this.systemsService.getSystems(account.email);
             }
 
             this.systemsService.systemsSubject.pipe(untilDestroyed(this)).subscribe(systems => {
@@ -143,10 +142,7 @@ export class NxSystemsListComponent implements OnInit {
 
         if (search) {
             this.filteredSystems = this.systems.filter(system => {
-                const ownerText = this.systemsService.getSystemOwnerName(
-                    system,
-                    this.account.email,
-                );
+                const ownerText = this.systemsService.getSystemOwnerName(system);
                 return (
                     caseInsenstiveSearch(system.name, search) ||
                     (ownerText !== this.LANG.system.yourSystem &&

@@ -39,7 +39,7 @@ export class SystemCardComponent {
     }
 
     getSystemOwnerName(): string {
-        return this.systemsService.getSystemOwnerName(this.system, this.account?.email);
+        return this.systemsService.getSystemOwnerName(this.system);
     }
 
     canShowTag(): boolean {

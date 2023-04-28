@@ -398,14 +398,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                             this.headerService.nodes.push(systemGroupsNode);
                         }
                     }
-                    if (!this.environment.isLocal) {
-                        setTimeout(() => {
-                            this.systemsService
-                                .forceUpdateSystems(this.userEmail)
-                                .toPromise()
-                                .then(() => this.updateActive());
-                        });
-                    }
                 } else {
                     this.loginState = false;
                     this.renderer.removeClass(this.document.body, 'authorized');

@@ -36,7 +36,8 @@ export class NxSystemService {
         systemId: string,
         serverId: string = null,
         skipPoll = false,
-        skipSettingSystem = false
+        skipSettingSystem = false,
+        version: number = undefined,
     ): NxSystem {
         const id = systemId || serverId;
         const cloudSystemInfo =
@@ -50,7 +51,7 @@ export class NxSystemService {
                 systemId,
                 serverId,
                 undefined,
-                cloudSystemInfo?.version
+                cloudSystemInfo?.version || version
             );
 
             if (cloudSystemInfo?.version) {

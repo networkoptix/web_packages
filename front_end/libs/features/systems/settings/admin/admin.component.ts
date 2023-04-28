@@ -51,7 +51,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     user: Account;
     system: NxSystem;
-    systems: NxSystemInfo[];
+    mergeTargetSystems: NxSystemInfo[];
 
     emptyName = false;
 
@@ -454,7 +454,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     updateAndGoToSystems = (): void => {
         // this.userDisconnectSystem = true;
         this.systemsService.userDisconnectSystem = true;
-        this.systemsService.forceUpdateSystems(this.accountService.email).subscribe(() => {
+        this.systemsService.forceUpdateSystems().subscribe(() => {
             setTimeout(() => {
                 this.router.navigate([redirect.authorised]).catch(error => {
                     console.error(error);
@@ -517,18 +517,16 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     mergeSystems() {
-        this.systems = this.systemsService.getMySystems(
-            // this.accountService.email, // doesn't work as it was never set; looks like it's out of sync conceptually
-            this.accountService.account.email,
-            this.system.id,
+        this.mergeTargetSystems = this.systemsService.systems.filter(
+            system => system.ownerAccountEmail === this.user.email && system.id !== this.system.id,
         );
         this.currentlyMerging = true;
         this.updateSettings(this.currentlyMerging);
         this.settingsService.system = this.system;
         // TODO: investigate how to switch from the dialog service instead
         const mergeDialog = this.CONFIG.featureFlags.mergeRefactorEnabled
-            ? this.dialogs.mergeRefactored(this.system, this.systems)
-            : this.dialogs.merge(this.system, this.systems);
+            ? this.dialogs.mergeRefactored(this.system, this.mergeTargetSystems)
+            : this.dialogs.merge(this.system, this.mergeTargetSystems);
         return mergeDialog
             .then(
                 (mergeInfo: any) => {

@@ -1,7 +1,7 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { DateRange } from '@angular/material/datepicker';
-import { ActivatedRoute, Router, Params } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, switchMap, Observable, timer, zip } from 'rxjs';
 import { distinctUntilChanged, map, take } from 'rxjs/operators';
 
@@ -9,7 +9,6 @@ import staticLang from '@common/language/language_i18n_static.json';
 import type { SuggestionSections } from '@components/simple-search/simple-search.types';
 import { icons } from '@lib/variables/static-variables';
 import { pollingTimeout } from '@pages/static-variables-features';
-import { NxAccountService } from '@services/account.service';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type {
@@ -114,7 +113,6 @@ export class NxBookmarksComponent implements OnInit {
 
     constructor(
         configService: NxConfigService,
-        private accountService: NxAccountService,
         private systemService: NxSystemService,
         private route: ActivatedRoute,
         public router: Router,
@@ -129,45 +127,41 @@ export class NxBookmarksComponent implements OnInit {
             this.CONFIG.isDarkTheme ? '' : '-cloud'
         }.svg`;
 
-        combineLatest<[BookmarkParams, Params]>([this.route.queryParams, this.route.params])
-            .pipe(take(1))
-            .subscribe(([queryParams, params]) => {
-                this.queryParams = { ...queryParams };
-                /* (ngModelChange) for <nx-simple-search> and <nx-checkbox>
-                fire on initial values, which then causes the url to
-                be updated as we're trying to read values from it,
-                so we preemptively copy over the url values to the component
-                property so the update doesn't do anything */
+        this.route.params.pipe(take(1)).subscribe(queryParams => {
+            this.queryParams = { ...queryParams };
+            /* (ngModelChange) for <nx-simple-search> and <nx-checkbox>
+            fire on initial values, which then causes the url to
+            be updated as we're trying to read values from it,
+            so we preemptively copy over the url values to the component
+            property so the update doesn't do anything */
 
-                if (Object.keys(queryParams).length) {
-                    if (queryParams.search) {
-                        this.search = queryParams.search;
-                    }
-                    if (queryParams.startDate && queryParams.endDate) {
-                        this.dateFilter = new DateRange(
-                            new Date(Number(queryParams.startDate)),
-                            new Date(Number(queryParams.endDate)),
-                        );
-                    }
-                    if (queryParams.startTime) {
-                        this.timeFilter.start = Number(queryParams.startTime);
-                    }
-                    if (queryParams.endTime) {
-                        this.timeFilter.end = Number(queryParams.endTime);
-                    }
-                    if (queryParams.devices) {
-                        this.deviceFilter.select(...cssaToStrArray(queryParams.devices));
-                    }
-                    if (queryParams.tags) {
-                        this.tagFilter.select(...cssaToStrArray(queryParams.tags));
-                    }
+            if (Object.keys(queryParams).length) {
+                if (queryParams.search) {
+                    this.search = queryParams.search;
                 }
+                if (queryParams.startDate && queryParams.endDate) {
+                    this.dateFilter = new DateRange(
+                        new Date(Number(queryParams.startDate)),
+                        new Date(Number(queryParams.endDate)),
+                    );
+                }
+                if (queryParams.startTime) {
+                    this.timeFilter.start = Number(queryParams.startTime);
+                }
+                if (queryParams.endTime) {
+                    this.timeFilter.end = Number(queryParams.endTime);
+                }
+                if (queryParams.devices) {
+                    this.deviceFilter.select(...cssaToStrArray(queryParams.devices));
+                }
+                if (queryParams.tags) {
+                    this.tagFilter.select(...cssaToStrArray(queryParams.tags));
+                }
+            }
 
-                this.accountService.get().then(account => {
-                    this.system = this.systemService.createSystem(account.email, params.systemId);
-                    this.bookmarksPoll();
-                });
-            });
+            this.system = this.systemService.getCurrentSystem();
+            this.bookmarksPoll();
+        });
     }
 
     updateTags(tags: BookmarksTags): void {
