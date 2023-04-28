@@ -3,7 +3,7 @@ import { ICamera } from './ICamera';
 export interface IMediaServer {
     id: string;
     name: string;
-    status: string;
+    status?: string;
     networkAddresses: string;
     ip?: string;
     port?: string;

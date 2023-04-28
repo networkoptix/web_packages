@@ -114,18 +114,13 @@ export class RestartServerModalContent {
                     .pipe(
                         map(res => {
                             if (res) {
-                                // maps server status into serverObj
-                                const serverObj: { id?: string } = {};
-                                Object.entries(res).forEach((server: [
-                                        string,
-                                        { id: string; status: string }
-                                    ]) => {
-                                    serverObj[server[1].id] = server[1].status;
-                                });
-                                if (!serverObj[this.serverId]) {
+                                const serverStatuses = Object.fromEntries(
+                                    res.map(server => [server.id, server.status])
+                                );
+                                if (!serverStatuses[this.serverId]) {
                                     throw Error('server not found');
                                 }
-                                if (serverObj[this.serverId] === 'Offline') {
+                                if (serverStatuses[this.serverId] === 'Offline') {
                                     serverHasGoneOfflineOnce = true;
                                     throw Error('still restarting');
                                 }

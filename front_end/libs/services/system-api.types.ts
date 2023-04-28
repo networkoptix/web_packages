@@ -441,23 +441,22 @@ export interface ec2MediaServerEx extends ec2MediaServer {
     storages: ec2Storage[];
 }
 
-type RestServerSharedKeys =
-    | 'flags'
-    | 'id'
-    | 'maxCameras'
-    | 'metadataStorageId'
-    | 'name'
-    | 'status'
-    | 'storages'
-    | 'url'
-    | 'version';
-export interface RestServer extends Pick<ec2MediaServerEx, RestServerSharedKeys> {
+export interface RestServer {
     endpoints: string[];
+    flags: string;
+    id: string;
+    maxCameras: number;
+    metadataStorageId: string;
+    name: string;
     osInfo: {
         platform: string;
         variant: string;
         variantVersion: string;
     };
+    status: string;
+    storages: ec2Storage[];
+    url: string;
+    version: string;
     parameters: Record<string, unknown>;
 }
 
@@ -470,19 +469,24 @@ export const getRestServerKeys = [
     'status',
     'version',
 ] as const;
-export type GetRestServer = Pick<RestServer, typeof getRestServerKeys[number]>;
-export type RestPartialServer = {
-    /* Because of the API inheritance, we still need all of the type properties from ec2Ex
-    on the rest server type for now */
-    [key in keyof Omit<ec2MediaServerEx, keyof GetRestServer | 'networkAddresses'>]: never;
-} & Omit<GetRestServer, 'osInfo'> &
-    Pick<ec2MediaServer, 'osInfo' | 'networkAddresses'>;
-// Compatibility patch for now
+export type RestServerPartial = Pick<RestServer, typeof getRestServerKeys[number]>;
 
-export type AggregatedServersAndCameras = NormalResponse<{
+export interface RestServerPartialCompat extends Omit<RestServerPartial, 'osInfo'> {
+    networkAddresses: string; // Reconstruct network addresses from endpoints
+    osInfo: string; // Revert osInfo to JSON string
+}
+
+export type Ec2ServersAndCameras = NormalResponse<{
     '/ec2/getMediaServers': ec2MediaServer[];
     'ec2/getCamerasEx': ec2CameraEx[];
 }>;
+
+export type RestServersAndCameras = NormalResponse<{
+    '/ec2/getMediaServers': RestServerPartialCompat[];
+    'ec2/getCamerasEx': ec2CameraEx[];
+}>;
+
+export type ServersAndCameras = Ec2ServersAndCameras | RestServersAndCameras;
 
 export type CameraManagerUpdateResp = NormalResponse<{
     '/api/moduleInformation': NormalResponse<ModuleInformationReply>;

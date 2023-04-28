@@ -129,7 +129,7 @@ export class ServerManager {
                             return [];
                         }
 
-                        this.servers = res // might need to cast as NxSystemServer[]
+                        this.servers = res
                             .map(setServerIpAndPort)
                             .sort(alphabeticalSort(this.locale, server => server.name));
                         return this.servers;

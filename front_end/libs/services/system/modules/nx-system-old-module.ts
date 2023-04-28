@@ -35,10 +35,9 @@ import { memoizeAsyncPersistent, memoizeDecorator } from '@utils/memoize';
 import { setServerIpAndPort } from '@utils/nx';
 
 import {
-    AggregatedServersAndCameras,
+    ServersAndCameras,
     EventRule,
     EventTypes,
-    ec2MediaServer,
     PtzCommand,
     RawRule,
     SystemConfigSettings,
@@ -50,7 +49,7 @@ import { CloudStorageManager } from '../../system.service/cloud-storage-manager/
 import { LicenseManager } from '../../system.service/license-manager/licence-manager';
 import { ServerManager } from '../../system.service/server-manager/server-manager';
 import { NxSystem } from '../../system.service/system';
-import { NxMediaServer, ServerTimeInfo } from '../../system.service/system-types';
+import { NxMediaServer, ServerPreprocess, ServerTimeInfo } from '../../system.service/system-types';
 import { UserManager } from '../../system.service/user-manager/user-manager';
 import { NxUser, CloudUserCompat } from '../../system.service/user-manager/user-manager-types';
 import { NxSystemsService } from '../../systems.service';
@@ -577,13 +576,13 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     }
 
     protected processMediaServersAndCameras(
-        apiReply: AggregatedServersAndCameras
+        apiReply: ServersAndCameras
     ): NxMediaServer[] {
-        const msIds: KeyFilter<ec2MediaServer, string>[] = [
-            'authKey',
+        const msIds: KeyFilter<ServerPreprocess, string>[] = [
+            // 'authKey',
             'id',
             // 'metadataStorageId',
-            'typeId',
+            // 'typeId',
         ];
         const camIds: KeyFilter<ec2CameraEx, string>[] = [
             'id',
@@ -591,7 +590,6 @@ export class NxSystemOldModule extends NxSystemModuleBase {
             'preferredServerId',
             'typeId',
         ];
-        // Todo: Check how this works when getMediaServersEx -> getMediaServers
         // ID properties with enclosing brackets {} that we want to trim
         // while ignoring JSON strings
         const mediaServers = apiReply.reply['/ec2/getMediaServers'].map(ms => {

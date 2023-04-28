@@ -345,8 +345,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             const cachedServer = cachedServers.find(cached =>
                 cached.id === server.id
             );
-            // @ts-expect-error: Legacy non-Ex server doesn't include status,
-            // worth the tradeoff for the lighter network request
             if (!cachedServer || server.status !== cachedServer.status) {
                 return true;
             }
@@ -387,7 +385,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             c.name,
             c.model,
             c.url,
-            // @ts-expect-error: See note in .mediaServerChanged()
             ms.status === 'Offline'
                 ? 'Offline'
                 : (
@@ -506,7 +503,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
                     await this.findCamerasWithArchive(mediaServers, archiveRanges);
 
-                    // @ts-expect-error: See note in .mediaServerChanged()
                     const processedMediaServers: IMediaServer[] = mediaServers.map(ms => ({
                         ...ms,
                         cameras: ms.cameras.map(c =>

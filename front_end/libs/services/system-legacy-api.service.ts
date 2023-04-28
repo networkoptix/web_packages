@@ -39,6 +39,7 @@ import * as t from './system-api.types';
 import type {
     SaveCameraUserAttributes
 } from './system.service/camera-manager/camera-manager-types';
+import type { ServerPreprocess } from './system.service/system-types';
 import { NxUriCacheService } from './uri-cache.service';
 import { WINDOW } from './window-provider';
 
@@ -1023,7 +1024,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         useCache => !useCache,
         60 * 1000
     )
-    getMediaServers(useCache: boolean): Observable<t.ec2MediaServerEx[]> {
+    getMediaServers(useCache: boolean): Observable<ServerPreprocess[]> {
         const endpoint = '/ec2/getMediaServersEx';
         return this.get<t.ec2MediaServerEx[]>(
             endpoint,
@@ -1033,9 +1034,9 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     }
 
     @memoizeAsyncMedium
-    getMediaServersAndCameras(): Observable<t.AggregatedServersAndCameras> {
+    getMediaServersAndCameras(): Observable<t.ServersAndCameras> {
         const routes = ['/ec2/getMediaServers', 'ec2/getCamerasEx'];
-        return this.getRequestAggregator<t.AggregatedServersAndCameras>(routes);
+        return this.getRequestAggregator<t.Ec2ServersAndCameras>(routes);
     }
 
     @memoizeAsyncPersistent

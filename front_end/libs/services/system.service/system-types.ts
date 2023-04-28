@@ -1,11 +1,6 @@
 import type { ParsedNetworkAddresses } from '@utils/nx';
 
-import type {
-    ec2CameraEx,
-    ec2MediaServer,
-    ec2MediaServerEx,
-    RestPartialServer,
-} from '../system-api.types';
+import type { ec2CameraEx } from '../system-api.types';
 
 export interface AddResponseTypeHere extends IParams {}
 
@@ -13,9 +8,18 @@ export interface IParams<Value = any> {
     [key: string]: Value;
 }
 
-export type NxSystemServer =
-    | ParsedNetworkAddresses<ec2MediaServerEx>
-    | ParsedNetworkAddresses<RestPartialServer>;
+export interface ServerPreprocess {
+    backupType?: string;
+    id: string;
+    name: string;
+    networkAddresses: string;
+    osInfo: string;
+    /** Note: Legacy ec2 non-Ex server does not include status */
+    status?: string;
+    version: string;
+}
+
+export type NxSystemServer = ParsedNetworkAddresses<ServerPreprocess>;
 
 export interface ModuleInfo {
     brand: string;
@@ -54,7 +58,7 @@ export interface ServerTimeInfo {
     timeZoneOffset: number;
 }
 
-export interface NxMediaServer extends ParsedNetworkAddresses<ec2MediaServer> {
+export interface NxMediaServer extends ParsedNetworkAddresses<ServerPreprocess> {
     cameras: ec2CameraEx[];
 }
 

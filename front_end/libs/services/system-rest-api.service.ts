@@ -61,7 +61,7 @@ import type { IConfig } from './nx-config/config-types';
 import * as t from './system-api.types';
 import { SystemConfigSettings } from './system-api.types';
 import { NxSystemAPI } from './system-legacy-api.service';
-import type { IParams } from './system.service/system-types';
+import type { IParams, ServerPreprocess } from './system.service/system-types';
 import { NxUriCacheService } from './uri-cache.service';
 
 /**
@@ -712,30 +712,28 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         ).pipe(map(data => <t.NormalResponse<t.SystemSettings>>({ error: '', errorString: '', reply: { settings: data } })));
     }
 
-    getMediaServers(useCache: boolean): Observable<t.RestPartialServer[]> {
+    getMediaServers(useCache: boolean): Observable<ServerPreprocess[]> {
         const endpoint = '/rest/v1/servers';
         const params = {
             _keepDefault: true,
             _with: t.getRestServerKeys.toString(),
         };
-        return this.get<t.GetRestServer[]>(
+        return this.get<t.RestServerPartial[]>(
             endpoint,
             params,
             { [useCache ? 'cache-request' : 'reset-cache']: 'true' }
         ).pipe(
             map(res => {
-                const servers = res.map(server => {
+                const servers = res.map<t.RestServerPartialCompat>(server => {
                     return {
                         ...server,
-                        // Reconstruct network addresses from endpoints for now
                         networkAddresses: server.endpoints.join(';'),
-                        // Revert to string for consistency with ec2 for now
                         osInfo: typeof server.osInfo !== 'string'
                             ? JSON.stringify(server.osInfo)
                             : server.osInfo,
                     };
                 });
-                return servers as t.RestPartialServer[];
+                return servers;
             })
         );
     }
@@ -764,20 +762,20 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             )
         );
     }
-    getMediaServersAndCameras(): Observable<t.AggregatedServersAndCameras> {
+    getMediaServersAndCameras(): Observable<t.ServersAndCameras> {
+        const servers = this.getMediaServers(false) as Observable<t.RestServerPartialCompat[]>;
         const cameras = this.get<t.ec2CameraEx[]>('/ec2/getCamerasEx');
-        const servers = this.getMediaServers(false);
-        // TODO: Use correct RestPartialServer type eventually once the system/API are refactored
-        return combineLatest<[t.ec2MediaServer[], t.ec2CameraEx[]]>([servers, cameras]).pipe(
-            map<[t.ec2MediaServer[], t.ec2CameraEx[]], t.AggregatedServersAndCameras>(([mediaServers, cameras]) => ({
-                error: '0',
-                errorId: 'ok',
-                errorString: '',
-                reply: {
-                    '/ec2/getMediaServers': mediaServers,
-                    'ec2/getCamerasEx': cameras
-                }
-            })));
+        return combineLatest<[t.RestServerPartialCompat[], t.ec2CameraEx[]]>([servers, cameras])
+            .pipe(
+                map<[t.RestServerPartialCompat[], t.ec2CameraEx[]], t.ServersAndCameras>(([mediaServers, cameras]) => ({
+                    error: '0',
+                    errorId: 'ok',
+                    errorString: '',
+                    reply: {
+                        '/ec2/getMediaServers': mediaServers,
+                        'ec2/getCamerasEx': cameras
+                    }
+                })));
     }
 
     updateSystemServersCameras(): Observable<t.CameraManagerRestUpdate> {
