@@ -19,6 +19,7 @@ import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
@@ -33,8 +34,9 @@ import {
 import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 
-import { accountReducer } from '@common/store/account';
-import { LoginWebadminModule } from '@components/login-webadmin/login-webadmin.module';
+import { accountReducer, AccountSync } from '@common/store/account';
+import { SystemsSync } from '@common/store/systems/systems.sync';
+// import { LoginWebadminModule } from '@components/login-webadmin/login-webadmin.module';
 import { NavFooterModule } from '@components/nav-footer/nav-footer.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { PopoverModule } from '@components/popover/popover.module';
@@ -77,6 +79,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
                 (navigator && /iPhone OS (8|9|10|11|12|13)_/.test(navigator.userAgent)),
         }),
         StoreModule.forRoot({ account: accountReducer }),
+        EffectsModule.forRoot([AccountSync, SystemsSync]),
         ...(!environment.production ? [StoreDevtoolsModule.instrument()] : []),
         HttpClientModule,
         HttpClientXsrfModule.withOptions({
@@ -110,7 +113,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         TourStepModule,
         NgxMaskModule.forRoot(),
         TourMatMenuModule.forRoot(),
-        LoginWebadminModule
+        // LoginWebadminModule
     ],
     providers: [
         Location,

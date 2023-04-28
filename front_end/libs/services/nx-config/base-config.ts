@@ -171,7 +171,8 @@ const FeatureFlagKeys = [
     'requestCaching',
     'requestCachingRemoteSync',
     'useJsonRpc',
-    'restCookieLogin'
+    'restCookieLogin',
+    'crossTabSyncEnabled',
 ] as const;
 
 export type FeatureFlagType = typeof FeatureFlagKeys[number];

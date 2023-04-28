@@ -1,5 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 
+import { onSyncState } from '../sync.utils';
+
 import * as accountActions from './account.actions';
 import type { AccountState } from './account.state';
 
@@ -20,4 +22,5 @@ export const accountReducer = createReducer(
             currentUser: { ...state.currentUser, ...update }
         })
     ),
+    onSyncState
 );
