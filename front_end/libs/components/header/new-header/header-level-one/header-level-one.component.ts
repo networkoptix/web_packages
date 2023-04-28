@@ -27,7 +27,9 @@ export class NxHeaderLevelOneComponent {
     }
 
     handleNavigation(node: MenuNode, event: MouseEvent): void {
-        const firstNodeWithURL = node.nodes.find(subNode => subNode.url && !subNode.new_window);
+        const firstNodeWithURL = node.nodes.find(
+            subNode => subNode.url !== undefined && !subNode.new_window,
+        );
         if (firstNodeWithURL) {
             let navNode = firstNodeWithURL;
             if (firstNodeWithURL.url === '/systems') {

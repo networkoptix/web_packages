@@ -52,13 +52,6 @@ export class NxNewHeaderComponent {
                 untilDestroyed(this),
             )
             .subscribe((event: NavigationEnd) => {
-                if (event.url === '/') {
-                    this.selectedNode = this.findNodeBasedOnURL(
-                        this.displayedNodes,
-                        '/content/about',
-                    );
-                    return;
-                }
                 if (event.url.includes('/systems/')) {
                     menusService.updateActiveSystemMenu(
                         this.headerService.activeSystem || this.headerService.lastActive$.value,
@@ -96,10 +89,6 @@ export class NxNewHeaderComponent {
             .subscribe(({ width }) => {
                 this.isMobile$.next(width < GridBreakpoints.MD);
             });
-
-        if (router.url === '/') {
-            this.selectedNode = this.findNodeBasedOnURL(this.displayedNodes, 'content/about');
-        }
 
         this.systemCount$ = systemsService.systemsSubject.pipe(map(systems => systems.length));
     }

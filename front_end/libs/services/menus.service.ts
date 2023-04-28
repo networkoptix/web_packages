@@ -267,8 +267,8 @@ export class NxMenusService {
 
     makeWelcomeNode() {
         const welcomeLang = this.LANG.appHeader.headerMenuNodes.welcome;
-        const welcomeNode = new MenuNode(welcomeLang.displayName, 'content/about');
-        welcomeNode.nodes.push(new MenuNode(welcomeLang.nodes[0].displayName, 'content/about'));
+        const welcomeNode = new MenuNode(welcomeLang.displayName, '/');
+        welcomeNode.nodes.push(new MenuNode(welcomeLang.nodes[0].displayName, '/'));
         return welcomeNode;
     }
 

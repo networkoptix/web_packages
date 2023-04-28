@@ -29,9 +29,7 @@
                     active:
                         node === optimisticSelectedSubNode ||
                         (!optimisticSelectedSubNode &&
-                            (headerService.currentLocation?.path === node.url ||
-                                (!headerService.currentLocation?.path &&
-                                    node.url === 'content/about')))
+                            headerService.currentLocation?.path === node.url)
                 }"
             >
                 {{ node.display_name | translate }}
