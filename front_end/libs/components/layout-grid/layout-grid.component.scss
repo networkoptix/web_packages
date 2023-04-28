@@ -185,6 +185,11 @@ div.tab {
     border: 1px solid var(--border-color);
     border-left-color: transparent;
 
+    & .st0 {
+        stroke: var(--body-text-color);
+        fill: var(--body-text-color);
+    }
+
     &>svg-icon {
         transform: rotate(270deg);
     }
@@ -323,7 +328,9 @@ cdk-tree,
 }
 
 .locked {
-    .layout-item, .layout-item-wrapper {
+
+    .layout-item,
+    .layout-item-wrapper {
         outline: unset !important;
         cursor: unset !important;
     }
@@ -473,7 +480,7 @@ iframe {
         fill: var(--svg-path-accent-color);
     }
 
-    &:hover .st1{
+    &:hover .st1 {
         fill: var(--left-menu-l3-selected-bg);
     }
 

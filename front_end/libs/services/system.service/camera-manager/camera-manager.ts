@@ -1,9 +1,10 @@
 import { LOCALE_ID } from '@angular/core';
-import { isEqual } from 'lodash-es';
+import { flatten, isEqual } from 'lodash-es';
 import {
     animationFrameScheduler,
     distinctUntilChanged,
     firstValueFrom,
+    forkJoin,
     interval,
     map,
     Observable,
@@ -200,7 +201,9 @@ export class CameraManager {
                 return this.serverManager.mediaserverConnections[camera.parentId].getPlaybackUrl(camera.id, 'webRtc', 'low', position);
             }
             : null;
-        const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });
+        const online = ['Online', 'Recording'].includes(camera.status);
+        const unauthorized = camera.status === 'Unauthorized';
+        const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday }).toLowerCase();
         const isStream = [
             'GENERIC_RTSP',
             'GENERIC_MULTICAST',
@@ -211,7 +214,6 @@ export class CameraManager {
             MotionType.NoMotion,
             MotionType.None
         ].includes(camera.motionType as MotionType);
-        const online = ['Online', 'Recording', 'Unauthorized'].includes(camera.status);
 
         let defaultRatio = 0;
         const { bitrateInfos } = parsedAddParams;
@@ -286,6 +288,7 @@ export class CameraManager {
             secondsToday,
             webRtcUrl,
             online,
+            unauthorized
         };
     }
 
@@ -371,7 +374,7 @@ export class CameraManager {
         { status, scheduleEnabled, scheduleTasks }: ec2CameraEx,
         { dayOfWeek, secondsToday }: Pick<NxSystemCamera, 'dayOfWeek' | 'secondsToday'>
     ): string {
-        if (status !== 'Online' || !scheduleEnabled) {
+        if (!scheduleEnabled) {
             return status;
         }
         const recording = scheduleTasks.some(task => (
@@ -380,7 +383,17 @@ export class CameraManager {
             task.startTime < secondsToday &&
             secondsToday < task.endTime
         ));
-        return recording ? 'Recording' : 'Scheduled';
+        return recording && status !== 'Offline' ? 'Recording' : 'Scheduled';
+    }
+
+    public hasArchives(cameraId: string[]): Observable<string[]> {
+        // .recordedTimePeriods({ cameraId, groupBy: 'cameraId', keepSmallChunks: true, detail: 1 })
+        return forkJoin(
+            Object.values(this.serverManager.mediaserverConnections).reduce((acc, connection) => [
+                ...acc,
+                connection.recordedTimePeriods({ cameraId, groupBy: 'cameraId', keepSmallChunks: true, detail: 1 }).pipe(map(res => res.map(({ guid }) => guid)))
+            ], [])
+        ).pipe(map(flatten));
     }
 
     public getRecordedTimes(cameraId: string[], baseCanvasSize = 36000): Observable<TimeDetail[]> {

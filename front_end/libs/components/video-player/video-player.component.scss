@@ -10,9 +10,10 @@ video {
 video {
     opacity: 1;
     transition: opacity 0.25s;
+    object-fit: fill;
 }
 
-:host:not(.playing) video {
+:host:not(.playing):not(.fullscreen) video {
     opacity: 0;
 }
 

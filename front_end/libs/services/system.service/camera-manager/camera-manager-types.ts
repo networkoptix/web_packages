@@ -24,6 +24,7 @@ export interface NxSystemCamera extends Omit<ec2CameraEx, 'addParams'> {
     secondsToday: number;
     webRtcUrl: (params?: Record<string, unknown>) => string;
     online: boolean;
+    unauthorized: boolean;
 }
 
 export type TaskUpdate = Pick<Task, 'fps' | 'recordingType' | 'streamQuality'>;

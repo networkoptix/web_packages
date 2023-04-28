@@ -48,10 +48,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxPageService } from '@services/page.service';
 import { Layouts, Layout, WebPages, LayoutItem } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
-import {
-    NxSystemCamera,
-    TimeDetail,
-} from '@services/system.service/camera-manager/camera-manager-types';
+import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
@@ -182,15 +179,16 @@ export class NxLayoutViewComponent {
             combineLatest([
                 defer(() => cameraManager.getCameras()).pipe(
                     switchMap(cameras =>
-                        cameraManager.getRecordedTimes(cameras.map(({ id }) => id)).pipe(
-                            catchError(async () => [] as TimeDetail[]),
+                        cameraManager.hasArchives(cameras.map(({ id }) => id)).pipe(
+                            catchError(async () => [] as string[]),
                             map(times =>
                                 cameras.map(({ status, ...camera }) => ({
                                     ...camera,
-                                    unauthorized: status === 'Unauthorized',
-                                    status: times.find(({ cameraId }) => cameraId === camera.id)
-                                        ? 'archive'
-                                        : status,
+                                    status:
+                                        ['recording', 'scheduled'].includes(status) ||
+                                        !times.includes(camera.id)
+                                            ? status
+                                            : 'archive',
                                 })),
                             ),
                         ),
@@ -413,7 +411,7 @@ export class NxLayoutViewComponent {
         this.#layoutId$,
         this.availableLayouts$,
     ]).pipe(
-        map(([system, layoutId, layouts]): Layout => {
+        switchMap(async ([system, layoutId, layouts]): Promise<Layout> => {
             if (layoutId && system.mediaserver instanceof NxSystemRestAPI) {
                 const existingLayout = layouts.find(({ id }) => cleanId(id) === layoutId);
                 if (existingLayout) {
@@ -580,57 +578,63 @@ export class NxLayoutViewComponent {
         parentId: parentId || this.accountService.account.id,
     });
 
-    createFocusLayout = (systemId: string, id: string): Layout => ({
-        backgroundHeight: -1,
-        backgroundImageFilename: '',
-        backgroundOpacity: 0.699999988079071,
-        backgroundWidth: -1,
-        cellAspectRatio: 0,
-        cellSpacing: 0.0001,
-        fixedHeight: 0,
-        fixedWidth: 0,
-        id,
-        items: [
-            {
-                bottom: 1,
-                contrastParams: {
-                    blackLevel: 0.001,
-                    enabled: false,
-                    gamma: 1,
-                    whiteLevel: 0.0005,
+    createFocusLayout = async (systemId: string, id: string): Promise<Layout> => {
+        const layoutItems = await firstValueFrom(this.layoutItemLookup$);
+        const { details } = layoutItems[`{${id}}`];
+        const rotation = details.parsedAddParams.rotation || 0;
+        return {
+            backgroundHeight: -1,
+            backgroundImageFilename: '',
+            backgroundOpacity: 0.699999988079071,
+            backgroundWidth: -1,
+            cellAspectRatio: 0,
+            cellSpacing: 0.0001,
+            fixedHeight: 0,
+            fixedWidth: 0,
+            id,
+            items: [
+                {
+                    bottom: 1,
+                    contrastParams: {
+                        blackLevel: 0.001,
+                        enabled: false,
+                        gamma: 1,
+                        whiteLevel: 0.0005,
+                    },
+                    controlPtz: false,
+                    dewarpingParams: {
+                        enabled: false,
+                        fov: 1.2217304763960306,
+                        panoFactor: 1,
+                        xAngle: 0,
+                        yAngle: 0,
+                    },
+                    displayAnalyticsObjects: false,
+                    displayInfo: false,
+                    displayRoi: false,
+                    flags: 1,
+                    id: `{${id}}`,
+                    left: 0,
+                    resourceId: `{${id}}`,
+                    resourcePath: '',
+                    right: 1,
+                    rotation,
+                    top: 0,
+                    zoomBottom: 0,
+                    zoomLeft: 0,
+                    zoomRight: 0,
+                    zoomTargetId: '{00000000-0000-0000-0000-000000000000}',
+                    zoomTop: 0,
                 },
-                controlPtz: false,
-                dewarpingParams: {
-                    enabled: false,
-                    fov: 1.2217304763960306,
-                    panoFactor: 1,
-                    xAngle: 0,
-                    yAngle: 0,
-                },
-                displayAnalyticsObjects: false,
-                displayInfo: false,
-                displayRoi: false,
-                flags: 1,
-                id: `{${id}}`,
-                left: 0,
-                resourceId: `{${id}}`,
-                resourcePath: '',
-                right: 1,
-                rotation: 0,
-                top: 0,
-                zoomBottom: 0,
-                zoomLeft: 0,
-                zoomRight: 0,
-                zoomTargetId: '{00000000-0000-0000-0000-000000000000}',
-                zoomTop: 0,
-            },
-        ],
-        locked: !this.CONFIG.featureFlags.layoutsEditable && !this.CONFIG.featureFlags.layoutsDemo,
-        logicalId: 0,
-        name: 'Focus View',
-        systemId,
-        parentId: this.accountService.account.id,
-    });
+            ],
+            locked:
+                !this.CONFIG.featureFlags.layoutsEditable && !this.CONFIG.featureFlags.layoutsDemo,
+            logicalId: 0,
+            name: 'Focus View',
+            systemId,
+            parentId: this.accountService.account.id,
+        };
+    };
 
     updateLayout = (layoutId: string): Promise<string> => {
         this.changeLayout(layoutId);

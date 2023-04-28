@@ -43,6 +43,7 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxPageService } from '@services/page.service';
 import { Layout, LayoutItem, LayoutItems } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
@@ -437,6 +438,7 @@ export class NxLayoutGridComponent {
         public tourService: TourService,
         private cloudApi: NxCloudApiService,
         @Inject(WINDOW) private window: Window,
+        private pageService: NxPageService,
     ) {
         this.CONFIG = configService.config;
         if (this.CONFIG.featureFlags.layoutsTimeline) {
@@ -682,11 +684,11 @@ export class NxLayoutGridComponent {
             return;
         }
 
-        // const tooWide = width > height * item.aspectRatio;
-        // renderConfig.child = {
-        //     'max-height': `${tooWide ? height : width / item.aspectRatio}px`,
-        //     'max-width': `${tooWide ? height * item.aspectRatio : width}px`
-        // };
+        const tooWide = width > height * item.aspectRatio;
+        renderConfig.child = {
+            ...renderConfig.child,
+            'max-width': `${tooWide ? height * item.aspectRatio : width}px`,
+        };
         this.cd.markForCheck();
     };
 
@@ -922,6 +924,7 @@ export class NxLayoutGridComponent {
             this.additionalErrorMessages = {};
             this.layoutChanged.emit(id);
         }
+        this.pageService.pageTitle(staticLang.pageTitles.layouts);
     }
 
     handleVideoError(
