@@ -72,6 +72,8 @@ export abstract class BaseCloudServiceAPI {
 
     protected post = <T>(endpoint: string, options?: PostRequestOptions): Observable<T> => this.#handle<T>(endpoint, (url, { body, ...options }) => this.http.post<T>(url, body, options), this.#processOptionsFactory(options));
 
+    protected patch = <T>(endpoint: string, options?: PostRequestOptions): Observable<T> => this.#handle<T>(endpoint, (url, { body, ...options }) => this.http.patch<T>(url, body, options), this.#processOptionsFactory(options));
+
     protected put = <T>(endpoint: string, options?: PostRequestOptions): Observable<T> => this.#handle<T>(endpoint, (url, { body, ...options }) => this.http.put<T>(url, body, options), this.#processOptionsFactory(options));
 
     protected delete = <T>(endpoint: string, options?: PostRequestOptions): Observable<T> => this.#handle<T>(endpoint, (url, { body, ...options }) => this.http.delete<T>(url, { ...options, body }), this.#processOptionsFactory(options));

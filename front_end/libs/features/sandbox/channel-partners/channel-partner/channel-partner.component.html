@@ -1,0 +1,61 @@
+<div
+    class="mb-3 d-flex"
+    [style]="{ gap: '5px' }"
+>
+    <button
+        class="btn btn-default"
+        (click)="back()"
+    >
+        <h2>⬅️ Back</h2>
+    </button>
+    <button
+        *ngIf="(channelPartner$ | async)?.parentChannelPartner as parent"
+        class="btn btn-default"
+        (click)="up(parent)"
+    >
+        <h2>⬆️ Up</h2>
+    </button>
+</div>
+
+<h1>{{ (channelPartner$ | async)?.name }}</h1>
+<ul>
+    <li *ngFor="let prop of channelPartner$ | async | keyvalue">
+        {{ prop.key }}: {{ prop.value | json }}
+    </li>
+</ul>
+
+<h2>Sub Channel Partners</h2>
+<div *ngFor="let partner of subPartners$ | async">
+    <h4>
+        <a [routerLink]="'../' + partner.id">{{ partner.name }}</a>
+    </h4>
+    <ul>
+        <li *ngFor="let prop of partner | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
+    </ul>
+</div>
+
+<h2>Organizations</h2>
+<div *ngFor="let org of organizations$ | async">
+    <h4>
+        <!-- Some organizations 403, not entirely sure about permissions yet -->
+        <a
+            *ngIf="(channelPartner$ | async)?.id === org.channelPartner; else text"
+            [routerLink]="'../org/' + org.id"
+            >{{ org.name }}</a
+        >
+        <ng-template #text>
+            {{ org.name }}
+        </ng-template>
+    </h4>
+    <ul>
+        <li *ngFor="let prop of org | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
+    </ul>
+</div>
+
+<h2>Users</h2>
+<div *ngFor="let user of users$ | async">
+    <h4>{{ user.email }}</h4>
+    <ul>
+        <li *ngFor="let prop of user | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
+    </ul>
+</div>

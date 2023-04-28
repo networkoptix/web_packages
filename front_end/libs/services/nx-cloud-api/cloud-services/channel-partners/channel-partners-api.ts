@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import {
-    BrandInfo,
-    OrganizationInfo,
-    PartnerInfo,
-    UserInfo,
-} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+// import {
+//     BrandInfo,
+//     OrganizationInfo,
+//     PartnerInfo,
+//     UserInfo,
+// } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { slashJoin } from '@utils/general';
 
 import { WithFreshSession } from '../../nx-cloud-api.types';
 import {
@@ -14,6 +15,8 @@ import {
     CreateApiFactory,
     implementsCloudServiceApi,
 } from '../base-cloud-service-api';
+
+import type { ChannelPartner, ChannelPartnerRole, ChannelPartnerUser, CreateChannelParterUser, CreateChannelPartner, Id, Organization, OrganizationRole, UpdateChannelPartner } from './channel-partners-api.types';
 
 // function updateCachedLicenseServer(targetProperty: string) {
 //     return function (target: unknown, propertyKey: string, descriptor: PropertyDescriptor) {
@@ -62,31 +65,115 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         );
     }
 
-    public getCustomisations(): Observable<BrandInfo[]> {
-        return this.get('/customizations/');
+    private cpUrl(parts: (string | number)[], trailing: boolean = true): string {
+        return slashJoin(['channel_partners', ...parts], { leading: true, trailing });
     }
 
-    public addCustomization(body: BrandInfo): Observable<BrandInfo> {
-        return this.post('/customizations/', { body });
+    private orgUrl(parts: (string | number)[], trailing: boolean = true): string {
+        return slashJoin(['organizations', ...parts], { leading: true, trailing });
     }
 
-    public getPartners(customizationId: number): Observable<PartnerInfo[]> {
-        return this.get(`/customizations/${customizationId}/channel_partners/`);
-    }
+    /* Channel Partners */
+    public getChannelPartners = (): Observable<ChannelPartner[]> => {
+        return this.get('/channel_partners/');
+    };
 
-    public addCustomizationPartner(customizationId: number, body: PartnerInfo): Observable<PartnerInfo> {
-        return this.post(`/customizations/${customizationId}/channel_partners/`, { body });
-    }
+    public createChannelPartner = (body: CreateChannelPartner): Observable<ChannelPartner> => {
+        return this.post('/channel_partners/', { body });
+    };
 
-    public getOrganizations(customizationId: number, partner: PartnerInfo): Observable<OrganizationInfo[]> {
-        return this.get(`/customizations/${customizationId}/channel_partners/${partner.id}/organizations/`);
-    }
+    getSubChannelPartners = (parentPartnerId: Id): Observable<ChannelPartner[]> => {
+        return this.get(this.cpUrl([parentPartnerId, 'sub_channel_partners']));
+    };
 
-    public getUsers(customizationId: number): Observable<UserInfo[]> {
-        return this.get(`/customizations/${customizationId}/users/`);
-    }
+    getChannelPartner = (partnerId: Id): Observable<ChannelPartner> => {
+        return this.get(this.cpUrl([partnerId]));
+    };
 
-    public addCustomizationUser(customizationId: number, body: UserInfo): Observable<UserInfo> {
-        return this.post(`/customizations/${customizationId}/users/`, { body });
-    }
+    updateChannelPartner = (partnerId: Id, body: UpdateChannelPartner): Observable<ChannelPartner> => {
+        return this.patch(this.cpUrl([partnerId]), { body });
+    };
+
+    removeChannelPartner = (partnerId: Id): Observable<void> => {
+        return this.delete(this.cpUrl([partnerId]));
+    };
+
+    /* Channel Partner Users */
+    getChannelPartnerRoles = () : Observable<ChannelPartnerRole[]> => {
+        return this.get('/channel_partner_roles');
+    };
+
+    getChannelPartnerUsers = (partnerId: Id): Observable<ChannelPartnerUser[]> => {
+        return this.get(this.cpUrl([partnerId, 'users']));
+    };
+
+    createChannelPartnerUser = (partnerId: Id, body: CreateChannelParterUser): Observable<ChannelPartnerUser> => {
+        return this.post(this.cpUrl([partnerId, 'users']), { body });
+    };
+
+    // updateChannelPartnerUser = (partnerId: Id, body: any): Observable<any> => {
+    //     return this.post(this.cpUrl([partnerId, 'users']), { body });
+    // };
+
+    getChannelPartnerUser = (partnerId: Id, userId: Id): Observable<ChannelPartnerUser> => {
+        return this.get(this.cpUrl([partnerId, 'users', userId]));
+    };
+
+    deleteChannelPartnerUser = (partnerId: Id, userId: Id): Observable<void> => {
+        return this.delete(this.cpUrl([partnerId, 'users', userId]));
+    };
+
+    /* Organizations */
+    public getPartnerOrganizations = (partnerId: Id): Observable<Organization[]> => {
+        return this.get(this.cpUrl([partnerId, 'organizations']));
+    };
+
+    getOrganizations = (): Observable<Organization[]> => {
+        return this.get('/organizations/');
+    };
+
+    // createOrganization = (body: CreateOrganization): Observable<Organization> => {
+    //     return this.post('/organizations/', { body });
+    // };
+
+    getOrganization = (orgId: Id): Observable<Organization> => {
+        return this.get(this.orgUrl([orgId]));
+    };
+
+    // updateOrganization = (orgId: Id, body: any): Observable<any> => {
+    //     return this.patch(this.orgUrl([orgId]), { body });
+    // };
+
+    // removeOrganization = (orgId: Id): Observable<void> => {
+    //     return this.delete(this.orgUrl([orgId]));
+    // };
+
+    /* Organization Users */
+    getOrganizationRoles = (): Observable<OrganizationRole[]> => {
+        return this.get('/organization_roles');
+    };
+
+    // getOrganizationUsers = (orgId: Id): Observable<any[]> => {
+    //     return this.get(this.orgUrl([orgId, 'users']));
+    // };
+
+    // createOrganizationUser = (orgId: Id, body: any): Observable<any> => {
+    //     return this.post(this.orgUrl([orgId, 'users']), { body });
+    // };
+
+    // updateOrganizationUser = (orgId: Id, body: any): Observable<any> => {
+    //     return this.post(this.orgUrl([orgId, 'users']), { body });
+    // };
+
+    // getOrganizationUser = (orgId: Id, userId: Id): Observable<any> => {
+    //     return this.get(this.orgUrl([orgId, 'users', userId]));
+    // };
+
+    // deleteOrganizationUser = (orgId: Id, userId: Id): Observable<void> => {
+    //     return this.delete(this.orgUrl([orgId, 'users', userId]));
+    // };
+
+    /* Systems */
+
+    /* Internal */
 }

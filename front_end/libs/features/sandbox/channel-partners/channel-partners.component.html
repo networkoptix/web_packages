@@ -1,0 +1,64 @@
+<div
+    class="mb-3 d-flex"
+    [style]="{ gap: '5px' }"
+>
+    <!-- <button
+        class="btn-primary"
+        (click)="newChannelPartner()"
+    >
+        New Channel Partner
+    </button>
+    <button
+        class="btn-primary"
+        (click)="createOrganization()"
+    >
+        New Organization
+    </button> -->
+</div>
+
+<h2>Channel Partners</h2>
+<div *ngFor="let partner of channelParters$ | async">
+    <h4>
+        <a [routerLink]="partner.id.toString()">{{ partner.name }}</a>
+    </h4>
+    <div
+        class="d-flex mb-2"
+        [style]="{ gap: '5px' }"
+    >
+        <!-- <button
+            class="btn-primary"
+            (click)="createOrganization(partner.id)"
+        >
+            New Organization
+        </button> -->
+    </div>
+    <ul>
+        <li *ngFor="let prop of partner | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
+    </ul>
+</div>
+
+<h2>Partner Roles</h2>
+<div *ngFor="let role of channelPartnerRoles$ | async">
+    <h4>{{ role.name }}</h4>
+    <ul>
+        <li *ngFor="let prop of role | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
+    </ul>
+</div>
+
+<h2>Organizations</h2>
+<div *ngFor="let org of organizations$ | async">
+    <!-- <h4>{{ org.name }}</h4>
+    <ul>
+        <li *ngFor="let prop of org | keyvalue">
+            {{ prop.key }}: {{ prop.value | json }}
+        </li>
+    </ul> -->
+</div>
+
+<h2>Organization Roles</h2>
+<div *ngFor="let role of organizationRoles$ | async">
+    <h4>{{ role.name }}</h4>
+    <ul>
+        <li *ngFor="let prop of role | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
+    </ul>
+</div>

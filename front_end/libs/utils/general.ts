@@ -2,6 +2,7 @@
 /* General-purpose utilities. If a function/type involves in-house or
 third party data/types it should probably go in nx.ts instead. */
 
+import { Location } from '@angular/common';
 import { last } from 'lodash-es';
 import { combineLatest, Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -57,6 +58,20 @@ export function caseInsenstiveSearch(text: string, search: string): boolean {
 export function spaceSplitSearch(items: string[], search: string): string[] {
     const searches = search.trim().split(/\s+/);
     return items.filter(item => searches.some(search => caseInsenstiveSearch(item, search)));
+}
+
+export function slashJoin(
+    parts: (string | number)[],
+    opts: { leading?: boolean; trailing?: boolean } = {},
+): string {
+    const parts_ = parts.map(p => (typeof p === 'string' ? p : p.toString()));
+    if (opts?.leading) {
+        parts_.splice(0, 0, '/');
+    }
+    if (opts?.trailing) {
+        parts_.push('/');
+    }
+    return parts_.reduce(Location.joinWithSlash);
 }
 
 /* Number */

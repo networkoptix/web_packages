@@ -150,7 +150,11 @@ const appRoutes: Routes = [
             },
             {
                 path: '_test',
-                component: _NxTestBoxComponent
+                loadComponent: () => import('./test-box.component').then(m => m._NxTestBoxComponent)
+            },
+            {
+                path: 'channel-partners',
+                loadChildren: () => import('./channel-partners/channel-partners.module').then(m => m.NxChannelPartnersModule),
             },
         ]
     }

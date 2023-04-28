@@ -1,34 +1,72 @@
 /** Swagger on {{licenseServerInstance}}/nxlicensed/api-docs-internal */
 
-// import { uuid, int, email, datetime } from '../base-cloud-service-api.types';
+/** Integer for now, UUID string eventually */
+export type Id = number;
 
-export interface BrandInfo {
-    id?: number;
-    users?: string;
-    channel_partners?: string;
+// e.g. https://nxlicensed.test.hdw.mx/nxlicensed/api/v2/partners/organizations/5/users/
+type Url = string;
+
+/* Channel Partners */
+export interface ChannelPartner {
+    effectiveState: string;
+    id: Id;
     name: string;
-    brand: number;
+    organizations: Url;
+    parentChannelPartner: Id | null;
+    state: string;
+    users: Url;
 }
 
-export interface UserInfo {
-    id?: number;
+export interface CreateChannelPartner {
+    name: string;
+    parentChannelPartner: Id;
+}
+
+export type UpdateChannelPartner = Partial<{
+    state: string;
+    parentChannelPartner: Id;
+    name: string;
+}>;
+
+/* Channel Partner Users */
+export interface ChannelPartnerRole {
+    id: Id;
+    name: string;
+    permissions: string[];
+}
+
+export interface ChannelPartnerUser {
     email: string;
+    roles: string[];
+    userId: Id;
 }
 
-export interface PartnerInfo {
-    id?: number;
-    users?: string;
-    organizations?: string;
-    name: string;
-    customization?: number;
-    parent_channel_partner: number;
+export interface CreateChannelParterUser {
+    email: string;
+    role: string;
 }
 
-export interface OrganizationInfo {
-    id: number;
-    users: string;
-    cloud_systems: string;
+/* Organizations */
+export interface Organization {
+    channelPartner: Id;
+    channelPartnerCanAdminster: boolean;
+    cloudSystems: Url;
+    effectiveState: string;
+    id: Id;
     name: string;
-    channel_partner: number;
-    customization: number;
+    state: string;
+    users: Url;
+}
+
+export interface CreateOrganization {
+    name: string;
+    channelPartner: Id;
+}
+
+/* Oraganization users */
+export interface OrganizationRole {
+    id: Id;
+    name: string;
+    permissions: string[];
+    systemRole: string;
 }

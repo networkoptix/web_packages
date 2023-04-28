@@ -1,0 +1,25 @@
+<div
+    class="mb-3 d-flex"
+    [style]="{ gap: '5px' }"
+>
+    <button
+        class="btn btn-default"
+        (click)="back()"
+    >
+        <h2>⬅️ Back</h2>
+    </button>
+    <button
+        *ngIf="organization$ | async as org"
+        class="btn btn-default"
+        (click)="up(org.channelPartner)"
+    >
+        <h2>⬆️ Up</h2>
+    </button>
+</div>
+
+<h1>{{ (organization$ | async)?.name }}</h1>
+<ul>
+    <li *ngFor="let prop of organization$ | async | keyvalue">
+        {{ prop.key }}: {{ prop.value | json }}
+    </li>
+</ul>

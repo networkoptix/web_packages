@@ -26,6 +26,7 @@ export class AddPartnerModalContent extends ModalBase<DT['return']> {
     ngOnInit(): void {}
 
     savePartner(): void {
+        // @ts-expect-error: TODO
         this.partnerService.addPartner({
             name: this.name,
             parent_channel_partner: 1

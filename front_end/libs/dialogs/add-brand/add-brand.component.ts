@@ -5,6 +5,7 @@ import staticLang from '@common/language/language_i18n_static.json';
 import type { AddPartnerBrand as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { NxPartnersService } from '@pages/channel-partners/partners.service';
+// @ts-expect-error TODO
 import { BrandInfo } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 @Component({
@@ -47,6 +48,7 @@ export class AddPartnerBrandModalContent extends ModalBase<DT['return']> {
         // this.newChannel.id = Date.now();
         this.newBrand.brand = this.brands.selected.value;
 
+        // @ts-expect-error TODO
         this.partnerService.addBrand({
             name: this.newBrand.name,
             brand: this.newBrand.brand

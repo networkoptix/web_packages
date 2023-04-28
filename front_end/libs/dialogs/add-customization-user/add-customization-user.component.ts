@@ -26,6 +26,7 @@ export class AddCustomizationUserModalContent extends ModalBase<DT['return']> {
     ngOnInit(): void {}
 
     saveCustomizationUser(): void {
+        // @ts-expect-error TODO
         this.partnerService.addUser({ email: this.email });
 
         this.close();

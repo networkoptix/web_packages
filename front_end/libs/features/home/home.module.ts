@@ -53,11 +53,11 @@ const homeRoutes: Routes = [
         loadChildren: () => import('@pages/home/organizations/organization.module').then(m => m.NxOrganizationModule),
         canActivate: [AuthGuard],
     },
-    {
-        path: 'channelPartners',
-        loadChildren: () => import('@pages/home/channel-partners/channel-partners.module').then(m => m.NxChannelPartnersModule),
-        canActivate: [AuthGuard],
-    },
+    // {
+    //     path: 'channelPartners',
+    //     loadChildren: () => import('@pages/home/channel-partners/channel-partners.module').then(m => m.NxChannelPartnersModule),
+    //     canActivate: [AuthGuard],
+    // },
 ];
 
 @NgModule({
