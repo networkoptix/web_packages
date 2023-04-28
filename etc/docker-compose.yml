@@ -18,7 +18,7 @@ services:
       - ./my.cnf:/etc/mysql/conf.d/custom.cnf
 
   redis:
-    image: redis:3.2.8-alpine
+    image: redis:5.0.6-alpine
     container_name: redis1
     restart: always
     ports:
