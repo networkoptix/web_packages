@@ -39,7 +39,8 @@ export class NxSystemLicensesComponent implements OnInit {
         this.settingsService.systemSubject$
             .pipe(
                 untilDestroyed(this),
-                filter(data => data !== undefined && data.id !== this.system?.id))
+                filter(data => data !== undefined && data.id !== this.system?.id),
+            )
             .subscribe((system: NxSystem) => {
                 this.system = system;
                 this.updateLicenses();
@@ -49,11 +50,9 @@ export class NxSystemLicensesComponent implements OnInit {
 
     private updateLicenses(): void {
         this.resetLicense$.next(true);
-        this.system.licensesModifiedSubject
-            .pipe(takeUntil(this.resetLicense$))
-            .subscribe(() => {
-                this.getLicenses();
-            });
+        this.system.licensesModifiedSubject.pipe(takeUntil(this.resetLicense$)).subscribe(() => {
+            this.getLicenses();
+        });
     }
 
     // private updateMediaServers(): void {
@@ -105,19 +104,18 @@ export class NxSystemLicensesComponent implements OnInit {
             expired: false,
             status: '',
             expiration: '',
-            deactivations: '-'
+            deactivations: '-',
         };
 
         const dynamicLicense = getDynamicLicense({
-            CONFIG: this.CONFIG, licenseTypeTitles: this.LANG.license.licenseTypeTitles
+            CONFIG: this.CONFIG,
+            licenseTypeTitles: this.LANG.license.licenseTypeTitles,
         });
 
-        item.licenseBlock
-            .split('\n')
-            .forEach(property => {
-                const prop = property.split('=');
-                item.info[prop[0].toLowerCase()] = prop[1];
-            });
+        item.licenseBlock.split('\n').forEach(property => {
+            const prop = property.split('=');
+            item.info[prop[0].toLowerCase()] = prop[1];
+        });
 
         if (!item.info.class || !item.info.brand || !item.info.hwid) {
             item.info.serial = item.key;
@@ -166,10 +164,7 @@ export class NxSystemLicensesComponent implements OnInit {
         const license = this.licenseSummaries.find(ls => ls.type === type);
 
         let avail = parseInt(item.info.count) || 0;
-        if (
-            item.info.serverStatus !== this.LANG.license.info.online ||
-            item.info.expired
-        ) {
+        if (item.info.serverStatus !== this.LANG.license.info.online || item.info.expired) {
             avail = 0;
         }
 
@@ -183,7 +178,7 @@ export class NxSystemLicensesComponent implements OnInit {
                 count: parseInt(item.info.count) || 0,
                 countAvail: avail,
                 inUse: 'N/A',
-                required: item.info.required
+                required: item.info.required,
             });
         }
     }
@@ -201,12 +196,16 @@ export class NxSystemLicensesComponent implements OnInit {
             licensesInfo.forEach(item => {
                 this.createLicenseInfo(item);
 
-                const boundServer = hardwareIds.find((server: { hardwareIds: string[]; serverId: string }) => {
-                    return server.hardwareIds.find((id: string) => id === item.info.hwid);
-                });
+                const boundServer = hardwareIds.find(
+                    (server: { hardwareIds: string[]; serverId: string }) => {
+                        return server.hardwareIds.find((id: string) => id === item.info.hwid);
+                    },
+                );
 
-                const server: NxSystemServer | any = (boundServer)
-                    ? this.system.serverManager.servers.find(server => server.id === boundServer.serverId) || {}
+                const server: NxSystemServer | any = boundServer
+                    ? this.system.serverManager.servers.find(
+                          server => server.id === boundServer.serverId,
+                      ) || {}
                     : {};
 
                 if (Object.keys(server).length) {
@@ -215,16 +214,18 @@ export class NxSystemLicensesComponent implements OnInit {
                     }).vmsTime;
 
                     // format date to standard format ... Safari doesn't recognize "yyyy-MM-dd HH:mm:ss"
-                    item.info.expiration = new Date(item.info.expiration.replace(/-/g, '/')).getTime();
+                    item.info.expiration = new Date(
+                        item.info.expiration.replace(/-/g, '/'),
+                    ).getTime();
 
                     item.info.expired = item.info.expiration < item.info.serverTime; // serverTime is in milliseconds
                     item.info.serverName = server.name;
                     item.info.serverStatus = this.LANG.license.info[server.status.toLowerCase()];
-                    item.info.status = (item.info.expired)
+                    item.info.status = item.info.expired
                         ? this.LANG.license.info.expired
-                        : (item.info.serverStatus === this.LANG.license.info.online)
-                            ? item.info.status
-                            : this.LANG.license.info.error;
+                        : item.info.serverStatus === this.LANG.license.info.online
+                        ? item.info.status
+                        : this.LANG.license.info.error;
 
                     // monkey patch -> turn off all NVR licenses and then flip only the one with higher channels
                     if (item.info.type === this.LANG.license.licenseTypeTitles.NVR) {

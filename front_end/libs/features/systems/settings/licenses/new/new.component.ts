@@ -43,60 +43,76 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
     @ViewChild('errorDivMirror') errorDivMirror: HTMLDivElement;
 
     private setupDefaults(): void {
-        this.activateKey = this.processService.createProcess(() => {
-            this.hideErrors = false;
-            if (!this.system.isOnline) {
-                return new Promise((resolve, reject) => {
-                    this.licenseForm.controls.licenseKey.setErrors({ offline: true });
-                    this.licenseForm.controls.licenseKey.markAsTouched();
+        this.activateKey = this.processService.createProcess(
+            () => {
+                this.hideErrors = false;
+                if (!this.system.isOnline) {
+                    return new Promise((resolve, reject) => {
+                        this.licenseForm.controls.licenseKey.setErrors({ offline: true });
+                        this.licenseForm.controls.licenseKey.markAsTouched();
 
-                    return reject('offline');
-                });
-            } else if (this.isActivated(this.license)) {
-                return new Promise((resolve, reject) => {
-                    this.licenseForm.controls.licenseKey.setErrors({ alreadyRegistered: true });
-                    this.licenseForm.controls.licenseKey.markAsTouched();
-
-                    return reject('alreadyRegistered');
-                });
-            } else {
-                // this.system.serverManager.initSystemMediaServers();
-                return this.system.serverManager
-                    .activateLicense(this.selectedServer.value, this.formatLicenseKey(this.license))
-                    .then((response: any) => {
-                        if (response.reply) {
-                            this.system.licensesModified = this.license;
-                            this.license = '';
-                            this.formattedKey = '';
-                            this.licenseForm.controls.licenseKey.markAsUntouched();
-
-                            this.dialogsService
-                                .notify(this.LANG.license.messages.activated, 'success');
-
-                            return;
-                        }
-
-                        // legacy license api returns 200
-                        this.processErrors(response);
-                    }, fail => {
-                        if (fail.name === 'HttpErrorResponse' || fail.error && fail.error.type === 'error') {
-                            // license api v2 returns 422
-                            this.processErrors(fail.error);
-                        } else {
-                            if (fail.name === 'TimeoutError') {
-                                this.dialogsService
-                                    .notify(this.LANG.errorCodes.licenseTimeout, 'danger');
-                            }
-                            console.error(fail);
-                        }
+                        return reject('offline');
                     });
-            }
-        }, {
-            errorCodes: {
-                offline: () => {},
-                alreadyRegistered: () => {}
-            }
-        });
+                } else if (this.isActivated(this.license)) {
+                    return new Promise((resolve, reject) => {
+                        this.licenseForm.controls.licenseKey.setErrors({ alreadyRegistered: true });
+                        this.licenseForm.controls.licenseKey.markAsTouched();
+
+                        return reject('alreadyRegistered');
+                    });
+                } else {
+                    // this.system.serverManager.initSystemMediaServers();
+                    return this.system.serverManager
+                        .activateLicense(
+                            this.selectedServer.value,
+                            this.formatLicenseKey(this.license),
+                        )
+                        .then(
+                            (response: any) => {
+                                if (response.reply) {
+                                    this.system.licensesModified = this.license;
+                                    this.license = '';
+                                    this.formattedKey = '';
+                                    this.licenseForm.controls.licenseKey.markAsUntouched();
+
+                                    this.dialogsService.notify(
+                                        this.LANG.license.messages.activated,
+                                        'success',
+                                    );
+
+                                    return;
+                                }
+
+                                // legacy license api returns 200
+                                this.processErrors(response);
+                            },
+                            fail => {
+                                if (
+                                    fail.name === 'HttpErrorResponse' ||
+                                    (fail.error && fail.error.type === 'error')
+                                ) {
+                                    // license api v2 returns 422
+                                    this.processErrors(fail.error);
+                                } else {
+                                    if (fail.name === 'TimeoutError') {
+                                        this.dialogsService.notify(
+                                            this.LANG.errorCodes.licenseTimeout,
+                                            'danger',
+                                        );
+                                    }
+                                    console.error(fail);
+                                }
+                            },
+                        );
+                }
+            },
+            {
+                errorCodes: {
+                    offline: () => {},
+                    alreadyRegistered: () => {},
+                },
+            },
+        );
     }
 
     constructor(
@@ -117,7 +133,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                     const option: ServerOption = {
                         name: server.name,
                         value: server.id,
-                        status: server.status
+                        status: server.status,
                     };
 
                     if (server.status !== 'Online') {
@@ -128,14 +144,14 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                 });
 
                 // prevent server change
-                const serverMatch = this.serverOptions.find(server =>
-                    server.value === this.selectedServer?.value
+                const serverMatch = this.serverOptions.find(
+                    server => server.value === this.selectedServer?.value,
                 );
 
                 if (!serverMatch) {
-                    this.selectedServer = this.serverOptions.find(server =>
-                        server.status === 'Online'
-                    ) ?? this.serverOptions[0];
+                    this.selectedServer =
+                        this.serverOptions.find(server => server.status === 'Online') ??
+                        this.serverOptions[0];
                 }
             }
         }
@@ -147,46 +163,46 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
 
         switch (response.error) {
             case '1':
-                this.dialogsService
-                    .notify(response.errorString, 'danger'); // missing param?
+                this.dialogsService.notify(response.errorString, 'danger'); // missing param?
                 break;
 
             case '2':
-                // Invalid license serial number provided. Serial number MUST be in format AAAA-BBBB-CCCC-DDDD
+            // Invalid license serial number provided. Serial number MUST be in format AAAA-BBBB-CCCC-DDDD
 
-                // eslint-disable-next-line no-fallthrough
+            // eslint-disable-next-line no-fallthrough
             case '3':
-            // Network/Http error has occurred during license activation. Error code: -1
+                // Network/Http error has occurred during license activation. Error code: -1
                 if (matchError('error has occurred during license activation')) {
-                    this.dialogsService
-                        .notify(this.LANG.errorCodes.licenseServerError, 'danger');
+                    this.dialogsService.notify(this.LANG.errorCodes.licenseServerError, 'danger');
                     break;
                 }
                 if (matchError('license is expired')) {
-                // Can't activate license: License is expired.
+                    // Can't activate license: License is expired.
                     this.licenseForm.controls.licenseKey.setErrors({ expired: true });
                 } else if (matchError('only one nvr license')) {
-                // Only one NVR license is allowed per System.↵You already have one active NVR license.
+                    // Only one NVR license is allowed per System.↵You already have one active NVR license.
                     this.licenseForm.controls.licenseKey.setErrors({ nvrError: true });
                 } else if (matchError('only one starter license is allowed')) {
-                // Can't activate license: Only one Starter license is allowed per System.↵You already have one active Starter license.
-                // Can't activate license: Only one starter license is allowed per System.
+                    // Can't activate license: Only one Starter license is allowed per System.↵You already have one active Starter license.
+                    // Can't activate license: Only one starter license is allowed per System.
                     this.licenseForm.controls.licenseKey.setErrors({ starter: true });
                 } else if (matchError('license key you have entered is invalid')) {
-                // Can't activate license:  license key you have entered is invalid.
+                    // Can't activate license:  license key you have entered is invalid.
                     this.licenseForm.controls.licenseKey.setErrors({ mask: true });
-                } else if ([
-                    'requires higher software version', 'you are trying to activate a license incompatible with your software.'
-                ].some(matchError)
+                } else if (
+                    [
+                        'requires higher software version',
+                        'you are trying to activate a license incompatible with your software.',
+                    ].some(matchError)
                 ) {
-                // Can't activate license: This license type requires higher software version
-                // Can't activate license: You are trying to activate a license incompatible with your software.
+                    // Can't activate license: This license type requires higher software version
+                    // Can't activate license: You are trying to activate a license incompatible with your software.
                     this.licenseForm.controls.licenseKey.setErrors({ compatibility: true });
                 } else {
-                // Can't activate license:   This License Key has been previously activated to Hardware Id 052f2577426947...
+                    // Can't activate license:   This License Key has been previously activated to Hardware Id 052f2577426947...
                     let matchStart = response.errorString.indexOf('activated to Hardware Id');
                     if (matchStart !== -1) {
-                    // get HWID
+                        // get HWID
                         matchStart += 'activated to Hardware Id '.length;
                         const matchEnd = response.errorString.substr(matchStart).indexOf(' ');
                         this.keyUsedIn = response.errorString.substr(matchStart, matchEnd);
@@ -197,8 +213,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                 break;
 
             default:
-                this.dialogsService
-                    .notify(this.LANG.errorCodes.licenseFail, 'danger');
+                this.dialogsService.notify(this.LANG.errorCodes.licenseFail, 'danger');
         }
     }
 

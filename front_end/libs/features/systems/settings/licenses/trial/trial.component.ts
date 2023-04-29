@@ -15,7 +15,6 @@ import { NgChanges } from '@utils/ng-changes';
     templateUrl: 'trial.component.html',
     styleUrls: ['trial.component.scss'],
 })
-
 export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
     CONFIG: IConfig;
     LANG = staticLang;
@@ -39,8 +38,7 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
             }
             switch (response.error) {
                 case '1':
-                    this.dialogsService
-                        .notify(response.errorString, 'danger'); // missing param?
+                    this.dialogsService.notify(response.errorString, 'danger'); // missing param?
                     break;
 
                 case '2':
@@ -50,8 +48,7 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
                 case '3':
                     // Can't activate license:  License Key you have entered is invalid.
                     // This should not happen as keys are predefined per customization
-                    this.dialogsService
-                        .notify(response.errorString, 'danger');
+                    this.dialogsService.notify(response.errorString, 'danger');
             }
         };
 
@@ -61,28 +58,30 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
         this.activateTrialKey = this.processService.createProcess(() => {
             return this.system.serverManager
                 .activateLicense(this.selectedServer.value, this.trialLicense)
-                .then((response: any) => {
-                    if (response.reply) {
-                        this.system.licensesModified = this.trialLicense;
-                        this.haveTrialLicense = true;
+                .then(
+                    (response: any) => {
+                        if (response.reply) {
+                            this.system.licensesModified = this.trialLicense;
+                            this.haveTrialLicense = true;
 
-                        this.dialogsService.notify(
-                            this.LANG.license.messages.trialActivated,
-                            'success'
-                        );
-                    }
+                            this.dialogsService.notify(
+                                this.LANG.license.messages.trialActivated,
+                                'success',
+                            );
+                        }
 
-                    if (response.error) {
-                        notifyError(response);
-                    }
-                }, fail => {
-                    if (fail.error.type === 'error') {
-                        this.dialogsService
-                            .notify(this.LANG.errorCodes.licenseFail, 'danger');
-                    } else if (fail?.error) {
-                        notifyError(fail.error);
-                    }
-                });
+                        if (response.error) {
+                            notifyError(response);
+                        }
+                    },
+                    fail => {
+                        if (fail.error.type === 'error') {
+                            this.dialogsService.notify(this.LANG.errorCodes.licenseFail, 'danger');
+                        } else if (fail?.error) {
+                            notifyError(fail.error);
+                        }
+                    },
+                );
         });
     }
 
@@ -98,9 +97,10 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
 
     ngOnChanges(changes: NgChanges<NxLicenseTrialComponent>): void {
         if (changes.licenses && changes.licenses.currentValue) {
-            this.haveTrialLicense = changes.licenses.currentValue.find(lic => {
-                return lic.key === this.trialLicense;
-            }) || false;
+            this.haveTrialLicense =
+                changes.licenses.currentValue.find(lic => {
+                    return lic.key === this.trialLicense;
+                }) || false;
         }
     }
 

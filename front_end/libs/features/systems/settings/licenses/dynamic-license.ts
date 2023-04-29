@@ -7,18 +7,17 @@ export interface DynamicLicense {
     };
 }
 
-export const getDynamicLicense = (
-    instance: {
-        CONFIG: IConfig;
-        licenseTypeTitles: { [key: string]: string };
-    }
-): DynamicLicense => instance.CONFIG.licenseTypes.reduce((
-    licenses,
-    { name, deactivationsAllowed, title }
-) => ({
-    ...licenses,
-    [name]: {
-        deactivationsAllowed,
-        title: instance.licenseTypeTitles[title] || title
-    }
-}), {} as DynamicLicense);
+export const getDynamicLicense = (instance: {
+    CONFIG: IConfig;
+    licenseTypeTitles: { [key: string]: string };
+}): DynamicLicense =>
+    instance.CONFIG.licenseTypes.reduce(
+        (licenses, { name, deactivationsAllowed, title }) => ({
+            ...licenses,
+            [name]: {
+                deactivationsAllowed,
+                title: instance.licenseTypeTitles[title] || title,
+            },
+        }),
+        {} as DynamicLicense,
+    );

@@ -67,16 +67,14 @@ export class NxCloudStorageComponent implements OnInit {
     // Need to figure out how how we'll get this info and also when server storage settings will be updated
     cloudStorageNotUsed = false;
 
-    #totalSize$ = this.systemLicenses$.pipe(
-        map(([license]) => license ? license.sizeBytes : 0)
-    );
+    #totalSize$ = this.systemLicenses$.pipe(map(([license]) => (license ? license.sizeBytes : 0)));
 
     usageMessage$ = this.#totalSize$.pipe(
-        switchMap(sizeBytes => this.cloudStorageManager.getUsageMessage(sizeBytes))
+        switchMap(sizeBytes => this.cloudStorageManager.getUsageMessage(sizeBytes)),
     );
 
     usages$ = this.#totalSize$.pipe(
-        switchMap(sizeBytes => this.cloudStorageManager.getUsages(sizeBytes))
+        switchMap(sizeBytes => this.cloudStorageManager.getUsages(sizeBytes)),
     );
 
     sort(column: KeyTableFieldsKey): void {
@@ -90,19 +88,27 @@ export class NxCloudStorageComponent implements OnInit {
         this.#sort$.next(column);
     }
 
-    perform = (actionId: string) => this.dialogService[`cloudStorage${startCase(actionId)}`](this.licenseManager, this.cloudStorageManager);
+    perform = (actionId: string) =>
+        this.dialogService[`cloudStorage${startCase(actionId)}`](
+            this.licenseManager,
+            this.cloudStorageManager,
+        );
 
     showPopover = <T>(template: TemplateRef<T>, target: HTMLElement): void => {
-        this.usages$.subscribe(usages => usages.length && this.popoverService.open(
-            template,
-            target,
-            {
-                panelClass: 'rounded-popover',
-                arrowOffset: 4,
-                positionStrategy: POS_STRATEGY.BOTTOM
-            },
-            this.viewContainerRef
-        ));
+        this.usages$.subscribe(
+            usages =>
+                usages.length &&
+                this.popoverService.open(
+                    template,
+                    target,
+                    {
+                        panelClass: 'rounded-popover',
+                        arrowOffset: 4,
+                        positionStrategy: POS_STRATEGY.BOTTOM,
+                    },
+                    this.viewContainerRef,
+                ),
+        );
     };
 
     closePopover = () => this.popoverService.close();
@@ -118,20 +124,26 @@ export class NxCloudStorageComponent implements OnInit {
         if (environment.isLocal) {
             this.serverSettings = '/settings/servers';
         } else {
-            settingsService.systemSubject$.pipe(
-                filter(system => !!system?.id),
-                take(1)).toPromise().then(system => {
-                this.serverSettings = `/systems/${system.id}/servers`;
-            });
+            settingsService.systemSubject$
+                .pipe(
+                    filter(system => !!system?.id),
+                    take(1),
+                )
+                .toPromise()
+                .then(system => {
+                    this.serverSettings = `/systems/${system.id}/servers`;
+                });
         }
 
-        settingsService.systemSubject$.pipe(
-            filter(system => !!system),
-            tap(this.initCloudStorageManager),
-            switchMap(system => system.getLicenseManager()),
-            tap(this.initLicenseManager),
-            untilDestroyed(this)
-        ).subscribe();
+        settingsService.systemSubject$
+            .pipe(
+                filter(system => !!system),
+                tap(this.initCloudStorageManager),
+                switchMap(system => system.getLicenseManager()),
+                tap(this.initLicenseManager),
+                untilDestroyed(this),
+            )
+            .subscribe();
     }
 
     initCloudStorageManager = (system: NxSystem) => {
@@ -140,31 +152,41 @@ export class NxCloudStorageComponent implements OnInit {
 
     initLicenseManager = (licenseManager: LicenseManager) => {
         this.licenseManager = licenseManager;
-        combineLatest([this.#sort$, this.licenseManager.userKeys$, this.showKeys$]).pipe(
-            map(([sortBy, licenses]) => !sortBy ? licenses : licenses.sort((a, b) => {
-                const dir = this.asc ? 1 : -1;
-                const aVal = a[sortBy];
-                const bVal = b[sortBy];
+        combineLatest([this.#sort$, this.licenseManager.userKeys$, this.showKeys$])
+            .pipe(
+                map(([sortBy, licenses]) =>
+                    !sortBy
+                        ? licenses
+                        : licenses.sort((a, b) => {
+                              const dir = this.asc ? 1 : -1;
+                              const aVal = a[sortBy];
+                              const bVal = b[sortBy];
 
-                if (aVal === bVal) {
-                    return 0;
-                }
+                              if (aVal === bVal) {
+                                  return 0;
+                              }
 
-                return aVal < bVal ? dir : -dir;
-            })),
-            shareReplay({ bufferSize: 1, refCount: true }),
-            untilDestroyed(this)
-        ).subscribe(this.userLicenses$);
-        this.licenseManager.systemKeys$.pipe(
-            untilDestroyed(this)
-        ).subscribe(this.systemLicenses$);
+                              return aVal < bVal ? dir : -dir;
+                          }),
+                ),
+                shareReplay({ bufferSize: 1, refCount: true }),
+                untilDestroyed(this),
+            )
+            .subscribe(this.userLicenses$);
+        this.licenseManager.systemKeys$.pipe(untilDestroyed(this)).subscribe(this.systemLicenses$);
 
-        this.systemLicenses$.pipe(distinctUntilChanged(isEqual), untilDestroyed(this)).subscribe(() => this.cloudStorageManager.updateState(CloudStorageUpdate.SYSTEM));
+        this.systemLicenses$
+            .pipe(distinctUntilChanged(isEqual), untilDestroyed(this))
+            .subscribe(() => this.cloudStorageManager.updateState(CloudStorageUpdate.SYSTEM));
     };
 
     ngOnInit(): void {
         if (this.type !== 'servers') {
-            this.cloudApi.checkFeatureNotice('cloudStorage', () => this.dialogService.cloudStorageInfo(this.licenseManager)).toPromise();
+            this.cloudApi
+                .checkFeatureNotice('cloudStorage', () =>
+                    this.dialogService.cloudStorageInfo(this.licenseManager),
+                )
+                .toPromise();
             this.menuService.section = menus.systemSettings.admin.id;
             this.menuService.detail = menus.systemSettings.cloudStorage.id;
         }

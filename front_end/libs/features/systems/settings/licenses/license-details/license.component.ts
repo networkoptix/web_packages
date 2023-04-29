@@ -23,7 +23,6 @@ import { getDynamicLicense } from '../dynamic-license';
     templateUrl: 'license.component.html',
     styleUrls: ['license.component.scss'],
 })
-
 export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
     CONFIG: IConfig;
     LANG = staticLang;
@@ -50,9 +49,7 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
     ngOnChanges(changes: NgChanges<NxLicenseDetailComponent>): void {
         if (changes.licenses && changes.licenses.currentValue) {
             this.orderedLicense = [];
-            this.newlyAddedLicense = this.formatLicenseKey(
-                this.system.licensesModified
-            );
+            this.newlyAddedLicense = this.formatLicenseKey(this.system.licensesModified);
             this.licenses.forEach(lic => {
                 this.orderedDetails(lic.info);
             });
@@ -83,7 +80,7 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
     private orderedDetails(info): void {
         const dynamicLicense = getDynamicLicense({
             CONFIG: this.CONFIG,
-            licenseTypeTitles: this.LANG.license.licenseTypeTitles
+            licenseTypeTitles: this.LANG.license.licenseTypeTitles,
         });
         const next30days = new Date();
         next30days.setDate(next30days.getDate() + 30);
@@ -95,9 +92,7 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
                 : '';
         }
 
-        const warning = info.expiration
-            ? info.expiration < next30days.getTime()
-            : false;
+        const warning = info.expiration ? info.expiration < next30days.getTime() : false;
 
         let deactivationsRemaining;
         if (info.status === this.LANG.license.info.error) {
@@ -108,47 +103,37 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
                 (info.deactivations === '-' ? 0 : info.deactivations);
         }
 
-        const block = new InfoBlockSection(
-            [
-                new InfoBlockLine(
-                    this.LANG.license.info.type,
-                    info.type
-                ),
-                new InfoBlockLine(this.LANG.license.info.channels, info.count),
-                new InfoBlockLine(
-                    this.LANG.license.info.server,
-                    info.serverName || this.LANG.common.unknown,
-                    !info.serverStatus
-                        ? InfoDetailClass.ERROR
-                        : undefined
-                ),
-                new InfoBlockLine(this.LANG.license.info.hwid, info.hwid),
-                new InfoBlockLine(
-                    this.LANG.license.info.status,
-                    info.status,
-                    info.expired ||
-                        info.status === this.LANG.license.info.error ||
-                        !info.serverStatus ? InfoDetailClass.ERROR : undefined
-                ),
-                new InfoBlockLine(
-                    this.LANG.license.info.expires,
-                    info.expiration
-                        ? this.datePipe.transform(
-                            info.expiration,
-                            'dd MMM yyyy, hh:mm a'
-                        )
-                        : '-',
-                    warning ? InfoDetailClass.ERROR : undefined
-                ),
-                new InfoBlockLine(
-                    this.LANG.license.info.deactivations,
-                    deactivationsRemaining,
-                    deactivationsRemaining <= 0 ? InfoDetailClass.ERROR : null,
-                    null,
-                    !info.expiration && !info.expired && info.class !== 'nvr'
-                )
-            ]
-        );
+        const block = new InfoBlockSection([
+            new InfoBlockLine(this.LANG.license.info.type, info.type),
+            new InfoBlockLine(this.LANG.license.info.channels, info.count),
+            new InfoBlockLine(
+                this.LANG.license.info.server,
+                info.serverName || this.LANG.common.unknown,
+                !info.serverStatus ? InfoDetailClass.ERROR : undefined,
+            ),
+            new InfoBlockLine(this.LANG.license.info.hwid, info.hwid),
+            new InfoBlockLine(
+                this.LANG.license.info.status,
+                info.status,
+                info.expired || info.status === this.LANG.license.info.error || !info.serverStatus
+                    ? InfoDetailClass.ERROR
+                    : undefined,
+            ),
+            new InfoBlockLine(
+                this.LANG.license.info.expires,
+                info.expiration
+                    ? this.datePipe.transform(info.expiration, 'dd MMM yyyy, hh:mm a')
+                    : '-',
+                warning ? InfoDetailClass.ERROR : undefined,
+            ),
+            new InfoBlockLine(
+                this.LANG.license.info.deactivations,
+                deactivationsRemaining,
+                deactivationsRemaining <= 0 ? InfoDetailClass.ERROR : null,
+                null,
+                !info.expiration && !info.expired && info.class !== 'nvr',
+            ),
+        ]);
 
         this.orderedLicense[info.serial] = [block];
     }
