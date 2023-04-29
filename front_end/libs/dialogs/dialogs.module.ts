@@ -54,7 +54,7 @@ import { ReserveSpaceWarningModalContent } from './reserve-space-warning/reserve
 import { ResetBackupModalContent } from './reset-backup/reset-backup.component';
 import { ResetServerModalContent } from './reset-server/reset-server.component';
 import { RestartServerModalContent } from './restart-server/restart-server.component';
-import { SelectTimeRangeModalContent } from './select-time-range-native-fallback/select-time-range.component';
+import { SelectTimeRangeModalModule } from './select-time-range-native-fallback/select-time-range.module';
 import { TransferOwnershipModule } from './transfer-ownership/transfer-ownership.module';
 import { TwoFAModalModule } from './two-fa/two-fa.module';
 import { UpdateCameraCredentialsModalModule } from './update-camera-credentials/update-camera-credentials.module';
@@ -115,6 +115,7 @@ import { WizardModalContent } from './wizard/wizard.component';
         ChangePasswordModalModule,
         UpdateCameraCredentialsModalModule,
         NxWebGlSelectTimeRangeModalModule,
+        SelectTimeRangeModalModule
     ],
     declarations: [
         AddStorageModalContent,
@@ -128,7 +129,6 @@ import { WizardModalContent } from './wizard/wizard.component';
         AddStorageModalContent,
         EditModalContent,
         AddWidgetModalContent,
-        SelectTimeRangeModalContent,
         ReserveSpaceWarningModalContent,
     ],
     providers: [],

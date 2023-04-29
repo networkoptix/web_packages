@@ -24,8 +24,6 @@ import { TimelineSelectionService } from '../../services/timeline.selection.serv
 import { TimelineService } from '../../services/timeline.service';
 import type { TimelineSelectionServiceStatus } from '../../services/timeline.services.types';
 
-type ssRange = { start: number; end: number };
-
 @UntilDestroy()
 @Component({
     selector: 'nx-timeline-selection-action-panel',
@@ -58,7 +56,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
     public ngOnInit(): void {
         this.selection.subject
             .pipe(untilDestroyed(this))
-            .subscribe((s: TimelineSelectionServiceStatus) => {
+            .subscribe(s => {
                 this.onSubjectChange(s);
             });
 
@@ -139,18 +137,14 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
     }
 
     public initSetTimeDialog(): void {
-        const dialog = this.dialogs.selectTimeRange(
-            this.selection,
-            this.timeline.fullRange.start,
-            this.timeline.fullRange.end
-        );
-        dialog.then(this._onTimeSetDialogDone);
+        this.dialogs.selectTimeRange({
+            selection: this.selection,
+            start: this.timeline.fullRange.start,
+            end: this.timeline.fullRange.end,
+        }).then(result => {
+            if (result?.start) {
+                this.selection.range = result as TimeRange;
+            }
+        });
     }
-
-    public _onTimeSetDialogDone = (result: boolean | ssRange): void => {
-        // eslint-disable-next-line @typescript-eslint/dot-notation
-        if (result['start']) {
-            this.selection.range = result as TimeRange;
-        }
-    };
 }

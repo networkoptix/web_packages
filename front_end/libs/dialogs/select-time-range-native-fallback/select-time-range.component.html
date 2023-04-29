@@ -16,7 +16,7 @@
             class="close"
             data-dismiss="modal"
             aria-label="Close"
-            (click)="closeModal($event)"
+            (click)="close()"
         >
             <span class="close-content"></span>
         </button>
@@ -89,7 +89,7 @@
         </button>
         <button
             class="btn btn-default"
-            (click)="closeModal($event)"
+            (click)="close()"
             translate
         >
             Cancel

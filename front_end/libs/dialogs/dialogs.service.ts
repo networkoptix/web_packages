@@ -15,7 +15,6 @@ import { StorageManager } from '@services/system.service/storage-manager/storage
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { pickFrom } from '@utils/general';
-import { TimelineSelectionService } from '@vms-client/submodules/timeline/services/timeline.selection.service';
 
 import { toast } from '../variables/static-variables';
 
@@ -268,24 +267,6 @@ export class NxDialogsService extends DialogBase {
 
         await this.preloadDialogsModule();
         const component = await import('./reset-backup/reset-backup.component').then(m => m.ResetBackupModalContent);
-
-        return this.open(component, dialogConfig)
-            .afterClosed();
-    }
-
-    public async selectTimeRange(selection: TimelineSelectionService, start: number, end: number) {
-        const config: Partial<DialogConfig> = {
-            width: DIALOG_SIZE.SMALL,
-            data: {
-                selection,
-                start,
-                end
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-        const component = await import('./select-time-range-native-fallback/select-time-range.component').then(m => m.SelectTimeRangeModalContent);
 
         return this.open(component, dialogConfig)
             .afterClosed();
@@ -602,6 +583,11 @@ export class NxDialogsService extends DialogBase {
     cloudLayoutsInfo = this.newFeatureFactory<Dt.CloudLayoutsInfoData>(NewFeatureTemplate.CloudLayouts);
 
     /* View */
+    selectTimeRange = this.dialogV2Factory<Dt.SelectTimeRange>(
+        () => import('./select-time-range-native-fallback/select-time-range.component').then(m => m.SelectTimeRangeModalContent),
+        { width: DIALOG_SIZE_V2.SMALL, autoFocus: 'input' },
+    );
+
     selectWebGlTimeRange = this.dialogV2Factory<Dt.WebGlSelectTimeRange>(
         () => import('./webgl-select-time-range/select-time-range.component').then(m => m.WebGlSelectTimeRangeModalContent),
         { width: DIALOG_SIZE_V2.SMALL, autoFocus: 'input' },

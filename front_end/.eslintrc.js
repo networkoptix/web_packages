@@ -68,7 +68,6 @@ const typeLintBlacklist = [
     '**/merge/stateMachine.ts',
     '**/reset-backup/reset-backup.component.ts',
     '**/reset-server/reset-server.component.ts',
-    '**/select-time-range-native-fallback/select-time-range.component.ts',
     '**/two-fa/two-fa.component.ts',
     /* Directives */
     '**/nx-editable.directive.ts',

@@ -1,8 +1,10 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
+import { Component, Inject, OnInit } from '@angular/core';
 import dateFormat from 'dateformat';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
+import type { SelectTimeRange as DT } from '@dialogs/dialogs.types';
+import { ModalBase } from '@dialogs/modal-base';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { pickFrom } from '@utils/general';
@@ -18,7 +20,7 @@ const TIME_FORMAT_STRING = 'HH:MM:ss';
     templateUrl: 'select-time-range.component.html',
     styleUrls: ['select-time-range.component.scss'],
 })
-export class SelectTimeRangeModalContent implements OnInit {
+export class SelectTimeRangeModalContent extends ModalBase<DT['return']> implements OnInit {
     CONFIG: IConfig;
     LANG = staticLang;
     hideErrors = true;
@@ -40,32 +42,21 @@ export class SelectTimeRangeModalContent implements OnInit {
     timelineStart: string;
     timelineEnd: string;
 
-    @Input() closable = true;
-
     constructor(
         configService: NxConfigService,
-        private dialogRef: DialogRef,
+        dialogRef: DialogRef<DT['return']>,
         private vms: VideoManagementSystemService,
         private timeline: TimelineService,
-        @Inject(DIALOG_DATA)
-        private dialogData: {
-            selection: TimelineSelectionService;
-            start: Date;
-            end: Date;
-        },
+        @Inject(DIALOG_DATA) private dialogData: DT['data'],
     ) {
+        super(dialogRef);
         pickFrom(this.dialogData, ['selection', 'start', 'end'], this);
 
         this.CONFIG = configService.getConfig();
         this.themeClass = this.CONFIG.isDarkTheme ? 'dark' : 'light';
     }
 
-    public closeModal = $event => {
-        $event.preventDefault();
-        return this.close(false);
-    };
-
-    public save = $event => {
+    public save = ($event: MouseEvent): void => {
         $event.preventDefault();
         const nowTime = this.vms.tweakT(new Date().getTime());
         const startTime = new Date(
@@ -77,13 +68,13 @@ export class SelectTimeRangeModalContent implements OnInit {
         const end = this.vms.untweakT(Math.min(nowTime, endTime));
 
         if (start > end) {
-            return this.close({ start: end, end: start });
+            this.close({ start: end, end: start });
         } else {
-            return this.close({ start, end });
+            this.close({ start, end });
         }
     };
 
-    checkMaxMinDate() {
+    checkMaxMinDate(): void {
         const newStartDate = new Date(
             this.startDate + 'T' + this.startTime
         ).getTime();
@@ -140,8 +131,4 @@ export class SelectTimeRangeModalContent implements OnInit {
         this.initSelectionDates();
         this.initTimelineDates();
     }
-
-    close = (msg: boolean | {}): void => {
-        this.dialogRef.close(msg);
-    };
 }
