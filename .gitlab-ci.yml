@@ -99,7 +99,7 @@ no-changes:
   services:
     - name: mysql:5.7
       alias: mysql
-    - name: redis:3.2.8-alpine
+    - name: redis:5.0.6-alpine
       alias: redis
   variables:
     TESTING: "true"
