@@ -23,3 +23,11 @@
         {{ prop.key }}: {{ prop.value | json }}
     </li>
 </ul>
+
+<h2>Users</h2>
+<div *ngFor="let user of users$ | async">
+    <h4>{{ user.email }}</h4>
+    <ul>
+        <li *ngFor="let prop of user | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
+    </ul>
+</div>

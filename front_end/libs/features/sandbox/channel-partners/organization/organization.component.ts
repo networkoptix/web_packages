@@ -13,6 +13,7 @@ import { Id } from '@services/nx-cloud-api/cloud-services/channel-partners/chann
 export class NxOrganizationComponent implements OnInit {
     private id$ = this.route.params.pipe(map<Params, number>(p => Number(p.id)));
     organization$ = this.id$.pipe(mergeMap(this.cpService.getOrganization));
+    users$ = this.id$.pipe(mergeMap(this.cpService.getOrganizationUsers));
 
     constructor(
         private cpService: NxChannelPartnersService,

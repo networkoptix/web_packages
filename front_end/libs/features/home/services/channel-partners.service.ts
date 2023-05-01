@@ -35,23 +35,23 @@ export class NxChannelPartnersService {
     getChannelPartnerRoles = this.cpApi.getChannelPartnerRoles;
     getChannelPartnerUsers = this.cpApi.getChannelPartnerUsers;
     createChannelPartnerUser = this.cpApi.createChannelPartnerUser;
-    // updateChannelPartnerUser = this.cpApi.updateChannelPartnerUser;
+    updateChannelPartnerUser = this.cpApi.updateChannelPartnerUser;
     getChannelPartnerUser = this.cpApi.getChannelPartnerUser;
     deleteChannelPartnerUser = this.cpApi.deleteChannelPartnerUser;
 
     /* Organizations */
     getPartnerOrganizations = this.cpApi.getPartnerOrganizations;
     getOrganizations = this.cpApi.getOrganizations;
-    // createOrganization = this.cpApi.createOrganization;
+    createOrganization = this.cpApi.createOrganization;
     getOrganization = this.cpApi.getOrganization;
-    // updateOrganization = this.cpApi.updateOrganization;
-    // removeOrganization = this.cpApi.removeOrganization;
+    updateOrganization = this.cpApi.updateOrganization;
+    removeOrganization = this.cpApi.removeOrganization;
 
     /* Organization Users */
     getOrganizationRoles = this.cpApi.getOrganizationRoles;
-    // getOrganizationUsers = this.cpApi.getOrganizationUsers;
-    // createOrganizationUser = this.cpApi.createOrganizationUser;
-    // updateOrganizationUser = this.cpApi.updateOrganizationUser;
-    // getOrganizationUser = this.cpApi.getOrganizationUser;
-    // deleteOrganizationUser = this.cpApi.deleteOrganizationUser;
+    getOrganizationUsers = this.cpApi.getOrganizationUsers;
+    createOrganizationUser = this.cpApi.createOrganizationUser;
+    updateOrganizationUser = this.cpApi.updateOrganizationUser;
+    getOrganizationUser = this.cpApi.getOrganizationUser;
+    deleteOrganizationUser = this.cpApi.deleteOrganizationUser;
 }

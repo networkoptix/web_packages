@@ -23,9 +23,9 @@ export interface CreateChannelPartner {
 }
 
 export type UpdateChannelPartner = Partial<{
-    state: string;
-    parentChannelPartner: Id;
     name: string;
+    parentChannelPartner: Id;
+    state: string;
 }>;
 
 /* Channel Partner Users */
@@ -41,10 +41,12 @@ export interface ChannelPartnerUser {
     userId: Id;
 }
 
-export interface CreateChannelParterUser {
+export interface CreateChannelPartnerUser {
     email: string;
     role: string;
 }
+
+export type UpdateChannelPartnerUser = CreateChannelPartnerUser;
 
 /* Organizations */
 export interface Organization {
@@ -58,9 +60,16 @@ export interface Organization {
     users: Url;
 }
 
-export interface CreateOrganization {
-    name: string;
+export type UpdateOrganization = Partial<{
     channelPartner: Id;
+    channelPartnerCanAdminister: boolean;
+    name: string;
+    state: string;
+}>;
+
+export interface CreateOrganization {
+    channelPartner: Id;
+    name: string;
 }
 
 /* Oraganization users */
@@ -70,3 +79,16 @@ export interface OrganizationRole {
     permissions: string[];
     systemRole: string;
 }
+
+export interface OrganizationUser {
+    email: string;
+    roles: string[];
+    userId: string;
+}
+
+export interface CreateOrganizationUser {
+    email: string;
+    role: string;
+}
+
+export type UpdateOrganizationUser = CreateOrganizationUser;
