@@ -684,7 +684,12 @@ export class NxLayoutGridComponent {
             return;
         }
 
+        if (!item.aspectRatio) {
+            item.aspectRatio = renderConfig.aspect;
+        }
+
         const tooWide = width > height * item.aspectRatio;
+
         renderConfig.child = {
             ...renderConfig.child,
             'max-width': `${tooWide ? height * item.aspectRatio : width}px`,

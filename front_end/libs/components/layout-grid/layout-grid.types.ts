@@ -43,6 +43,7 @@ export interface LayoutItemRenderConfig {
         'max-height': string;
         'max-width': string;
     };
+    aspect?: number;
     showTooltip: boolean;
 }
 
