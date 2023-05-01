@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { map, Observable, take } from 'rxjs';
@@ -7,7 +7,6 @@ import { selectCurrentUser } from '@common/store/account/account.selectors';
 import { Account } from '@services/account.service/account';
 
 import { GroupsItem, LoadingState, SharedItems } from '../home.types';
-import { NxSystemGroupsService } from '../services/system-groups.service';
 import * as GroupActions from '../store/groups.actions';
 import { selectCurrentSystemItems, selectLoadingState } from '../store/groups.selectors';
 
@@ -16,20 +15,14 @@ import { selectCurrentSystemItems, selectLoadingState } from '../store/groups.se
     templateUrl: 'systems.component.html',
     styleUrls: ['systems.component.scss'],
 })
-export class NxGroupsSystemsComponent implements OnInit, OnDestroy {
+export class NxGroupsSystemsComponent implements OnInit {
     systems$: Observable<SharedItems>;
     userEmail: string;
     showPersonal: boolean = this.route.snapshot.url[0]?.path !== 'shared';
     loadingState$ = this.store.select<LoadingState>(selectLoadingState);
     LoadingState = LoadingState;
 
-    constructor(
-        private route: ActivatedRoute,
-        private store: Store,
-        private groupsService: NxSystemGroupsService,
-    ) {
-        this.groupsService.connect();
-    }
+    constructor(private route: ActivatedRoute, private store: Store) {}
 
     ngOnInit(): void {
         this.store.dispatch(GroupActions.setCurrentGroupId({ currentGroupId: undefined }));
@@ -60,10 +53,6 @@ export class NxGroupsSystemsComponent implements OnInit, OnDestroy {
                 return result;
             }),
         );
-    }
-
-    ngOnDestroy(): void {
-        this.groupsService.disconnect();
     }
 
     trackItem(_index: number, item: GroupsItem): string {

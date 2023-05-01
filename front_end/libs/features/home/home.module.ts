@@ -9,6 +9,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { accountReducer } from '@common/store/account';
 import { CheckboxModule } from '@components/checkbox/checkbox.module';
 import { ComponentsCoreModule } from '@components/components-core.module';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { NxSearchHighlightModule } from '@components/search-highlight/search-highlight.module';
 import { NxBaseTableModule } from '@components/table/table.module';
@@ -27,6 +28,7 @@ import { NxGroupsSidebarLevelComponent } from './components/sidebar-level/sideba
 import { NxSystemGroupsSidebarComponent } from './components/sidebar/sidebar.component';
 import { NxSystemCardComponent } from './components/system-card/system-card.component';
 import { NxOrganizationUsersComponent } from './components/users/users.component';
+import { NxHomeComponent } from './home.component';
 import { NxOrganizationsComponent } from './organizations/organization.component';
 import { groupsReducer } from './store/groups.reducer';
 import { NxGroupsSystemsComponent } from './systems/systems.component';
@@ -35,29 +37,31 @@ import { TabResolver } from './tab-resolver';
 const homeRoutes: Routes = [
     {
         path: '',
-        redirectTo: 'personal',
-        pathMatch: 'full'
-    },
-    {
-        path: 'personal',
-        component: NxGroupsSystemsComponent,
+        component: NxHomeComponent,
         canActivate: [AuthGuard],
+        children: [
+            {
+                path: '',
+                component: NxPreLoaderComponent
+            },
+            {
+                path: 'personal',
+                component: NxGroupsSystemsComponent,
+            },
+            {
+                path: 'shared',
+                component: NxGroupsSystemsComponent,
+            },
+            {
+                path: 'organization',
+                loadChildren: () => import('@pages/home/organizations/organization.module').then(m => m.NxOrganizationModule),
+            },
+            {
+                path: 'channelPartners',
+                loadChildren: () => import('@pages/home/channel-partners/channel-partners.module').then(m => m.NxChannelPartnersModule),
+            },
+        ]
     },
-    {
-        path: 'shared',
-        component: NxGroupsSystemsComponent,
-        canActivate: [AuthGuard],
-    },
-    {
-        path: 'organization',
-        loadChildren: () => import('@pages/home/organizations/organization.module').then(m => m.NxOrganizationModule),
-        canActivate: [AuthGuard],
-    },
-    // {
-    //     path: 'channelPartners',
-    //     loadChildren: () => import('@pages/home/channel-partners/channel-partners.module').then(m => m.NxChannelPartnersModule),
-    //     canActivate: [AuthGuard],
-    // },
 ];
 
 @NgModule({
@@ -90,7 +94,8 @@ const homeRoutes: Routes = [
         NxGroupsSystemsComponent,
         NxUsersTableComponent,
         NxChannelPartnersComponent,
-        NxChannelPartnerInformationComponent
+        NxChannelPartnerInformationComponent,
+        NxHomeComponent
     ],
     providers: [
         TabResolver,

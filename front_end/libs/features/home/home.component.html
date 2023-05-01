@@ -1,0 +1,5 @@
+<nx-pre-loader *ngIf="isLoading; else outlet"></nx-pre-loader>
+
+<ng-template #outlet>
+    <router-outlet></router-outlet>
+</ng-template>

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { map, Observable } from 'rxjs';
@@ -6,7 +6,6 @@ import { map, Observable } from 'rxjs';
 import { Tab, TabEmit } from '@components/tabs/tabs.types';
 
 import { LoadingState, Organization } from '../home.types';
-import { NxSystemGroupsService } from '../services/system-groups.service';
 import { selectLoadingState, selectRootGroupItems } from '../store/groups.selectors';
 
 const getRandomInt = (max: number): number => {
@@ -23,7 +22,7 @@ const statusOptions = ['online', 'suspended', 'offline', 'paused'];
         '../components/system-card/system-card.component.scss',
     ],
 })
-export class NxChannelPartnersComponent implements OnInit, OnDestroy {
+export class NxChannelPartnersComponent implements OnInit {
     LoadingState = LoadingState;
     inOrganization: boolean;
     loadingState$ = this.store.select<LoadingState>(selectLoadingState);
@@ -69,22 +68,11 @@ export class NxChannelPartnersComponent implements OnInit, OnDestroy {
         },
     ];
 
-    constructor(
-        private store: Store,
-        private groupsService: NxSystemGroupsService,
-        private router: Router,
-        private route: ActivatedRoute,
-    ) {
-        this.groupsService.connect();
-    }
+    constructor(private store: Store, private router: Router, private route: ActivatedRoute) {}
 
     ngOnInit(): void {
         this.currentTab = this.tabs.find(tab => tab.route === this.route.snapshot.data.currentTab);
         this.inOrganization = this.route.snapshot.children[0].url[0]?.path === 'organization';
-    }
-
-    ngOnDestroy(): void {
-        this.groupsService.disconnect();
     }
 
     newOrgDialog(): void {

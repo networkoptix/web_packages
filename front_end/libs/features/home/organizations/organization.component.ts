@@ -1,5 +1,5 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
@@ -36,7 +36,7 @@ interface SidebarSettings {
     templateUrl: 'organization.component.html',
     styleUrls: ['organization.component.scss'],
 })
-export class NxOrganizationsComponent implements OnInit, OnDestroy {
+export class NxOrganizationsComponent implements OnInit {
     icons = icons;
     LoadingState = LoadingState;
     LANG = staticLang;
@@ -77,9 +77,7 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private router: Router,
         private cloudApi: NxCloudApiService,
-    ) {
-        this.groupsService.connect();
-    }
+    ) {}
 
     ngOnInit(): void {
         this.currentTab = this.tabs.find(tab => tab.route === this.route.snapshot.data.currentTab);
@@ -104,10 +102,6 @@ export class NxOrganizationsComponent implements OnInit, OnDestroy {
                     { showSidebarState: true },
                 );
             });
-    }
-
-    ngOnDestroy(): void {
-        this.groupsService.disconnect();
     }
 
     public handleSidebarTogglingEarClick(): void {
