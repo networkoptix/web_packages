@@ -193,6 +193,7 @@
         margin           : 0px 0px 10px auto;
 
         .user-section {
+            display: flex;
             text-decoration : inherit;
             color           : var(--header-profile-color);
 
@@ -220,7 +221,12 @@
             }
 
             .displayed-name {
-                margin-top : 1px;
+                margin-top    : 1px;
+                margin-left   : 3px;
+                text-overflow : ellipsis;
+                overflow      : hidden;
+                max-width     : 140px;
+                display       : inline-block;
             }
 
             .dropdown-arrow-wrapper {

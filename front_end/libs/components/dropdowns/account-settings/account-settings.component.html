@@ -131,7 +131,10 @@
                     [src]="icons.dir + 'user.svg'"
                 ></svg-icon>
             </span>
-            <span class="displayed-name">
+            <span
+                class="displayed-name"
+                [nxTooltip]="displayedFullName.length > 24 ? displayedFullName : ''"
+            >
                 {{ displayedFullName }}
             </span>
             <div class="dropdown-arrow-wrapper">
