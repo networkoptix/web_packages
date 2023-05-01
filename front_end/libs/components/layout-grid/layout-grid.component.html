@@ -480,10 +480,10 @@
                                         *ngIf="
                                             status ||
                                             errors[itemDetail.details.id] ||
-                                            (itemDetail.details.status !== 'archive'
-                                                ? itemDetail.details.status
-                                                : itemDetail.details.unauthorized
+                                            (itemDetail.details.unauthorized
                                                 ? 'unauthorized'
+                                                : itemDetail.details.status !== 'archive'
+                                                ? itemDetail.details.status
                                                 : 'offline') as status
                                         "
                                         cdkDragHandle
@@ -576,6 +576,7 @@
                                 <div
                                     *ngIf="
                                         !errors[itemDetail.details.id] &&
+                                            !itemDetail.details.unauthorized &&
                                             (playable.includes(itemDetail.details.status) ||
                                                 itemDetail.details.online ||
                                                 itemDetail.type === RESOURCE_TYPE.WEB_PAGE);
