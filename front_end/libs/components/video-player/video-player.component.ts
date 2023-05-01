@@ -78,7 +78,7 @@ export class NxVideoPlayerComponent {
     }
 
     ngAfterViewInit(): void {
-        const stream$ = this.pingServer().pipe(
+        this.pingServer().pipe(
             switchMap(() => WebRTCStreamManager.connect(this.camera.webRtcUrl, this.webRtcPlayerRef.nativeElement)),
             tap(([stream, error]) => {
                 if (stream) {
@@ -91,29 +91,6 @@ export class NxVideoPlayerComponent {
                     this.showError.emit(error);
                 }
                 this.loading = false;
-            }))
-
-        /**
-         * There seems to be a bug on initiating the WebRTC connection from the server side that allows the connection to be established even if the credentials are wrong.
-         *
-         * This is a workaround to check for the 403 error using the previewUrl and display the correct error message.
-         *
-         * This could probably be removed once the server side bug is fixed.
-         */
-        this.camera.previewUrl
-            .pipe(
-                switchMap(async objectgUrl => {
-                    const text = await fetch(objectgUrl).then(r => r.blob()).then(b => b.text()).catch(() => null);
-                    return !!text
-                }),
-                switchMap(authorized => {
-                    if (authorized) {
-                        return stream$;
-                    }
-                    this.showError.emit(ConnectionError.authorization);
-                    return Promise.resolve();
-                }),
-                untilDestroyed(this)
-            ).subscribe();
+            })).subscribe()
     }
 }
