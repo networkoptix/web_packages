@@ -6,6 +6,12 @@
     "Version": "20.2.0"
   },
   {
+    "License": "Apache Software License",
+    "Name": "Cython",
+    "URL": "http://cython.org/",
+    "Version": "0.29.33"
+  },
+  {
     "License": "MIT License",
     "Name": "Deprecated",
     "URL": "https://github.com/tantale/deprecated",
@@ -88,6 +94,12 @@
     "Name": "asn1crypto",
     "URL": "https://github.com/wbond/asn1crypto",
     "Version": "1.4.0"
+  },
+  {
+    "License": "Apache Software License",
+    "Name": "async-timeout",
+    "URL": "https://github.com/aio-libs/async-timeout",
+    "Version": "4.0.2"
   },
   {
     "License": "MIT License",
@@ -782,8 +794,8 @@
   {
     "License": "MIT License",
     "Name": "redis",
-    "URL": "https://github.com/andymccurdy/redis-py",
-    "Version": "3.2.1"
+    "URL": "https://github.com/redis/redis-py",
+    "Version": "4.4.4"
   },
   {
     "License": "Apache Software License",
@@ -884,7 +896,7 @@
   {
     "License": "BSD License",
     "Name": "uvicorn",
-    "URL": "UNKNOWN",
+    "URL": "https://www.uvicorn.org/",
     "Version": "0.18.3"
   },
   {
