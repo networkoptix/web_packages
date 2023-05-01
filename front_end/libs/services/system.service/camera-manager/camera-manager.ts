@@ -42,7 +42,7 @@ import {
     SaveCameraUserAttributes,
 } from './camera-manager-types';
 
-type PartialSystem = Pick<NxSystemOldModule, 'serverManager' | 'version'>;
+type PartialSystem = Pick<NxSystemOldModule, 'serverManager' | 'version' | 'useRest'>;
 
 const updateDuration = (chunk: Pick<Partial<TimeDetail>, 'durationMs'> & Omit<TimeDetail, 'durationMs'>): TimeDetail => {
     chunk.durationMs = chunk.endTimeMs - chunk.startTimeMs;
@@ -203,7 +203,7 @@ export class CameraManager {
             : null;
         const online = ['Online', 'Recording'].includes(camera.status);
         const unauthorized = camera.status === 'Unauthorized';
-        const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday }).toLowerCase();
+        const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday }, this.system.useRest).toLowerCase();
         const isStream = [
             'GENERIC_RTSP',
             'GENERIC_MULTICAST',
@@ -372,11 +372,17 @@ export class CameraManager {
 
     private parseCameraStatus(
         { status, scheduleEnabled, scheduleTasks }: ec2CameraEx,
-        { dayOfWeek, secondsToday }: Pick<NxSystemCamera, 'dayOfWeek' | 'secondsToday'>
+        { dayOfWeek, secondsToday }: Pick<NxSystemCamera, 'dayOfWeek' | 'secondsToday'>,
+        restSystem = true
     ): string {
         if (!scheduleEnabled) {
             return status;
         }
+
+        if (restSystem) {
+            return status === 'Recording' ? status : 'Scheduled';
+        }
+
         const recording = scheduleTasks.some(task => (
             ![RecordingType.NEVER, RecordingType.META_NEVER].includes(task.recordingType as RecordingType) &&
             task.dayOfWeek === dayOfWeek &&
