@@ -41,8 +41,8 @@ System Admin Test Restart
 
     Set System Name    ${server url}    ${system}[localAuth]    ${system}[name]
     ${settings}=   Create Dictionary    videoTrafficEncryptionForced=false
-    Set System Settings    ${system}[localAuth]    ${server url}    ${settings}
-    Set System Settings    ${system}[localAuth]    ${server url}    ${default advanced settings}
+    Set System Settings    ${server url}    ${settings}    ${system}[token]
+    Set System Settings    ${server url}    ${default advanced settings}    ${system}[token]
 # Waits
 Wait until settings are visible
     [Arguments]    ${timeout}=${selenium timeout}    ${old system}=${False}
@@ -407,11 +407,11 @@ Show Advanced Settings
     Go To    ${location}${ADVANCED SETTINGS}
 
 Reset Settings To Default
-    [Arguments]    ${auth}    ${server url}
+    [Arguments]    ${token}    ${server url}    
     IF    "${IMAGE}" == "5.0" or "${IMAGE}" == "5.1"
-        Set System Settings    ${auth}    ${server url}    ${default settings5}
+        Set System Settings    ${server url}    ${default settings5}    ${token}
     ELSE
-        Set System Settings    ${auth}    ${server url}    ${default settings}
+        Set System Settings    ${server url}    ${default settings}    ${token}
     END
 
 System Offline Suite Setup

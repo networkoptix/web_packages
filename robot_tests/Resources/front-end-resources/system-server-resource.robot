@@ -190,12 +190,11 @@ Cloud Suite Setup
     Open Browser and go to URL    ${ENV}
     Stop Container     ${servers}[1][container]
 
-    @{local users}=   Reset Local Users    ${server auth}    ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]    password=${password}
-    Set Suite Variable    ${admin}          Local+${local users[1]}
-    Set Suite Variable    ${viewer}         Local+${local users[4]}
-    Set Suite Variable    ${live viewer}    Local+${local users[3]}
-    Set Suite Variable    ${adv viewer}     Local+${local users[0]}
-    Set Suite Variable    ${custom}         Local+${local users[2]}
+    Set Suite Variable    ${admin}          ${servers}[0][cloudUsers][cloudAdmin]
+    Set Suite Variable    ${viewer}         ${servers}[0][cloudUsers][viewer]
+    Set Suite Variable    ${live viewer}    ${servers}[0][cloudUsers][liveViewer]
+    Set Suite Variable    ${adv viewer}     ${servers}[0][cloudUsers][advancedViewer]
+    Set Suite Variable    ${custom}         ${servers}[0][cloudUsers][custom]
 
 
 Server Settings Suite Tear Down
@@ -215,7 +214,7 @@ Server Settings Test Setup
 
 Cloud Test Setup System Servers
     [Arguments]    ${server}    ${user}    ${verify}
-    Log in to user and system    ${user}    ${server}[id]    password=${password}
+    Log in to user and system   ${user}    ${server}[id]    password=${password}
     Sleep    5
     Run Keyword If    ${verify}    Wait Until Element is Visible    ${SERVERS LINK}
     Run Keyword If    ${verify}    Go To Servers

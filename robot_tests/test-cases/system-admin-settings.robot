@@ -75,7 +75,7 @@ Force Tags        system    cloud    webadmin    system settings
 7. Systems Settings Block is Available for Administrator or Owner
     [Tags]    C69736
     Log    Preconditions
-    Reset Settings To Default    ${system['local auth']}    ${server url}
+    Reset Settings To Default    ${system['token']}    ${server url}
     FOR    ${user}    IN    ${system}[owner]    ${system}[cloud users][cloudAdmin]
         Log in to system    ${system}    ${user}
         Wait Until Settings Are Visible
@@ -102,7 +102,7 @@ Force Tags        system    cloud    webadmin    system settings
 9. Cancel changes in System Settings block
     [Tags]    C69738
     Log    Preconditions
-    Reset Settings To Default    ${system['local auth']}    ${server url}
+    Reset Settings To Default    ${system['token']}    ${server url}
     ${tested settings}=   Create List    ${ENABLE AUTO DISCOVERY CHECKBOX}    ${SEND ANONYMOUS USAGE CHECKBOX}    ${ALLOW SYSTEM OPTIMIZE CHECKBOX}
     Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
@@ -120,7 +120,7 @@ Force Tags        system    cloud    webadmin    system settings
 10. Moving to a different page after making changes in System Settings without saving them first
     [Tags]    C69739
     Log    Preconditions
-    Reset Settings To Default    ${system['local auth']}    ${server url}
+    Reset Settings To Default    ${system['token']}    ${server url}
     ${tested settings}=   Create List    ${ENABLE AUTO DISCOVERY CHECKBOX}    ${SEND ANONYMOUS USAGE CHECKBOX}    ${ALLOW SYSTEM OPTIMIZE CHECKBOX}
 
     Log    Step 1
@@ -202,7 +202,7 @@ Force Tags        system    cloud    webadmin    system settings
     Log    Testrail: Changes in the security block are displayed in the thick client
     Log    Testrail: Changes in the System Settings block are displayed in the thick client
     Log    Preconditions
-    Reset Settings To Default    ${system['local auth']}    ${server url}
+    Reset Settings To Default    ${system['token']}    ${server url}
 
     Log    Steps 1 - 8
     Log in to system    ${system}    ${system}[owner]
@@ -214,59 +214,59 @@ Force Tags        system    cloud    webadmin    system settings
 12. Changes made in the thick client are displayed in System Settings block in Cloud Portal
     [Tags]    C69741
     Log    Preconditions
-    Reset Settings To Default    ${system['local auth']}    ${server url}
+    Reset Settings To Default    ${system['token']}    ${server url}
     Log    Step 1
     ${settings}=   Create Dictionary    autoDiscoveryEnabled=${false}
-    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}   ${system}[token]
     Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${false}
 
     Log    Step 2
     ${settings}=   Create Dictionary    autoDiscoveryEnabled=${true}
-    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}   ${system}[token]
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${true}
 
     Log    Step 3
     ${settings}=   Create Dictionary    statisticsAllowed=${false}
-    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}   ${system}[token]
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${false}
 
     Log    Step 4
     ${settings}=   Create Dictionary    statisticsAllowed=${true}
-    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}   ${system}[token]
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${true}
 
     Log    Step 5
     ${settings}=   Create Dictionary    cameraSettingsOptimization=${false}
-    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}   ${system}[token]
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${false}
 
     Log    Step 6
     ${settings}=   Create Dictionary    cameraSettingsOptimization=${true}
-    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}   ${system}[token]
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${true}
 
     Log    Step 7
     ${settings}=   Create Dictionary    autoDiscoveryEnabled=${false}   statisticsAllowed=${false}    cameraSettingsOptimization=${false}
-    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}   ${system}[token]
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${false}
     Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${false}
 
     Log    Step 8
-    Reset Settings To Default    ${system['local auth']}    ${server url}
+    Reset Settings To Default    ${system['token']}    ${server url}
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${true}
@@ -276,7 +276,7 @@ Force Tags        system    cloud    webadmin    system settings
 13. Checking the dependency of system settings checkboxes
     [Tags]    C69742
     Log    Preconditions
-    Reset Settings To Default    ${system['local auth']}    ${server url}
+    Reset Settings To Default    ${system['token']}    ${server url}
 
     Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
@@ -314,53 +314,53 @@ Force Tags        system    cloud    webadmin    system settings
 14. Changes made in the thick client are displayed in the security block in Cloud Portal
     [Tags]    C65723
     Log    Preconditions
-    Reset Settings To Default    ${system['local auth']}    ${server url}
+    Reset Settings To Default    ${system['token']}    ${server url}
 
     Log    Step 1
     ${settings}=   Create Dictionary    autoDiscoveryEnabled=${false}
-    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}   ${system}[token]
     Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${False}
 
     Log    Step 2
     ${settings}=   Create Dictionary    auditTrailEnabled=${true}
-    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}   ${system}[token]
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ENABLE AUDIT TRAIL CHECKBOX}    ${True}
 
     Log    Step 3
     ${settings}=   Create Dictionary    trafficEncryptionForced=${true}
-    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}   ${system}[token]
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${True}
 
     Log    Step 4
     ${settings}=   Create Dictionary    videoTrafficEncryptionForced=${true}
-    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}   ${system}[token]
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${True}
 
     Log    Step 5
     ${settings}=   Create Dictionary    videoTrafficEncryptionForced=${False}
-    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}   ${system}[token]
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${False}
 
     Log    Step 6
     ${settings}=   Create Dictionary    trafficEncryptionForced=${False}
-    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}   ${system}[token]
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${False}
 
     Log    Step 7
     ${settings}=   Create Dictionary    sessionLimitMinutes=${30}
-    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}   ${system}[token]
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
@@ -369,7 +369,7 @@ Force Tags        system    cloud    webadmin    system settings
     
     Log    Step 8
     ${settings}=   Create Dictionary    sessionLimitMinutes=${0}
-    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}   ${system}[token]
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${False}
@@ -377,7 +377,7 @@ Force Tags        system    cloud    webadmin    system settings
 15. Security block is available for administrator or owner
     [Tags]    C65697
     Log    Preconditions
-    Reset Settings To Default    ${system['local auth']}    ${server url}
+    Reset Settings To Default    ${system['token']}    ${server url}
 
     Log    Step 1, 2
     FOR    ${user}    IN    ${system}[owner]    ${system}[cloud users][cloudAdmin]
@@ -436,7 +436,7 @@ Force Tags        system    cloud    webadmin    system settings
 17. Cancel changes in Security block
     [Tags]    C65724
     Log    Preconditions
-    Reset Settings To Default    ${system['local auth']}    ${server url}
+    Reset Settings To Default    ${system['token']}    ${server url}
 
     Log    Step 1
     Log in to system    ${system}    ${system}[owner]
@@ -518,7 +518,7 @@ Force Tags        system    cloud    webadmin    system settings
 18. Check Limit session duration
     [Tags]    C65703
     Log    Preconditions
-    Reset Settings To Default    ${system['local auth']}    ${server url}
+    Reset Settings To Default    ${system['token']}    ${server url}
 
     Log    Step 1
     Log in to system    ${system}    ${system}[owner]
@@ -680,7 +680,7 @@ Force Tags        system    cloud    webadmin    system settings
     Skip If Image Is    5.0    5.1    5.2    msg=5.0 and above not supported
     Log    Preconditions
     ${settings}=   Create Dictionary    trafficEncryptionForced=${true}
-    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}   ${system}[token]
     
     Log    Step 1
     Log in to system    ${system}    ${system}[owner]
@@ -741,7 +741,7 @@ Force Tags        system    cloud    webadmin    system settings
 20. Changes in System Settings block are displayed in thick client
     [Tags]    C69740
     Log    Preconditions
-    Reset Settings To Default    ${system['local auth']}    ${server url}
+    Reset Settings To Default    ${system['token']}    ${server url}
     Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
 

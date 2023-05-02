@@ -136,8 +136,8 @@ ${RENAME SYSTEM}                      ${SYSTEM NAME}/following-sibling::div[cont
 ${THIS PAGE CANNOT BE LOADED}         //h2[@name="NO_SETTINGS" and contains(text(),"${THIS PAGE CANNOT BE LOADED TEXT}")]
 ${SYSTEM USER DETAILS}                //nx-system-settings-component//nx-block/..
 
-${SYSTEM SAVE}                        //button[@data-testid="saveSettingsBtn"]
-${SYSTEM CANCEL}                      //button[@data-testid="cancelSettingsBtn"]
+${SYSTEM SAVE}                        //button[text()="${SAVE BUTTON TEXT}"]
+${SYSTEM CANCEL}                      //button[text()="${CANCEL BUTTON TEXT}"]
 
 ${YOUR ACCESS LEVEL}                  ${SYSTEM USER DETAILS}//nx-section//span[contains(@class,'system-owner')]/span[contains(text(),"${YOUR ACCESS LEVEL TEXT}")]
 

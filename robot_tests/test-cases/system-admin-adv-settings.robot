@@ -76,7 +76,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
         ...    autoUpdateThumbnails=${true}
         ...    backupSettings=${BACKUP SETTINGS DEFAULT TEXT}
         ...    clientStatisticsSettingsUrl=${EMPTY}
-    Set System Settings    ${system}[localAuth]    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}    ${system}[token]
     Log in to system New   ${system}    ${system}[cloudOwner]
     Show Advanced Settings
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    ONE    timeout=70
@@ -121,7 +121,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
        ...    disabledVendors=${EMPTY}
        ...    downloaderPeers={}
        ...    ec2AliveUpdateIntervalSec=60
-    Set System Settings    ${system}[localAuth]    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}    ${system}[token]
     Log in to system new   ${system}    ${system}[cloudOwner]
     Show Advanced Settings
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    TWO    timeout=70
@@ -164,7 +164,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
        ...    crossdomainEnabled=false
        ...    defaultExportVideoCodec=mpeg4
        ...    defaultVideoCodec=h263p
-    Set System Settings    ${system}[localAuth]    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}    ${system}[token]
 
     Log in to system new   ${system}    ${system}[cloudOwner]
     Show Advanced Settings
@@ -200,7 +200,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
        ...    keepHanwhaIoPortStateIntactOnInitialization=false
        ...    lastMergeMasterId=${EMPTY}
        ...    lastMergeSlaveId=${EMPTY}
-    Set System Settings    ${system}[localAuth]    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}    ${system}[token]
     Log in to system new   ${system}    ${system}[cloudOwner]
     Show Advanced Settings
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    FOUR    timeout=60
@@ -237,7 +237,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
        ...    ldapSearchTimeoutS=30
        ...    ldapUri=${EMPTY}
        ...    licenseServer=https://licensing.vmsproxy.com
-    Set System Settings    ${system}[localAuth]    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}    ${system}[token]
     Log in to system new   ${system}    ${system}[cloudOwner]
     Show Advanced Settings
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    FIVE    timeout=60
@@ -268,7 +268,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
        ...    maxDifferenceBetweenSynchronizedAndInternetTime=2000
        ...    maxDifferenceBetweenSynchronizedAndLocalTimeMs=5000
        ...    maxEventLogRecords=100000
-    Set System Settings    ${system}[localAuth]    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}    ${system}[token]
 
     Log in to system new   ${system}    ${system}[cloudOwner]
     Show Advanced Settings
@@ -295,7 +295,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
        ...    maxRecordQueueSizeBytes=25165824
        ...    maxRecordQueueSizeElements=1000
        ...    maxRemoteArchiveSynchronizationThreads=-1
-    Set System Settings    ${system}[localAuth]    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}    ${system}[token]
     Log in to system new   ${system}    ${system}[cloudOwner]
     Show Advanced Settings
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    SEVEN    timeout=70
@@ -324,7 +324,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
        ...    maxSceneItems=0
        ...    maxVirtualCameraArchiveSynchronizationThreads=-1
        ...    maxHttpTranscodingSessions=2
-    Set System Settings    ${system}[localAuth]    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}    ${system}[token]
     Log in to system new   ${system}    ${system}[cloudOwner]
     Show Advanced Settings
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    EIGHT    timeout=60
@@ -358,7 +358,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
        ...    osTimeChangeCheckPeriodMs=1000
        ...    proxyConnectTimeoutSec=5
        ...    pushNotificationsLanguage=${EMPTY}
-    Set System Settings    ${system}[localAuth]    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}    ${system}[token]
     Log in to system new   ${system}    ${system}[cloudOwner]
     Show Advanced Settings
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    NINE    timeout=60
@@ -387,7 +387,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
        ...    rtpTimeoutMs=10000
        ...    sequentialFlirOnvifSearcherEnabled=false
        ...    serverDiscoveryPingTimeoutSec=60
-    Set System Settings    ${system}[localAuth]    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}    ${system}[token]
     Log in to system new   ${system}    ${system}[cloudOwner]
     Show Advanced Settings
 
@@ -409,7 +409,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
     Log    Preconditions
     ${settings}=   Create Dictionary
        ...    serverDiscoveryPingTimeoutSec=60
-    Set System Settings    ${system}[localAuth]    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}    ${system}[token]
     Log in to system new   ${system}    ${system}[cloudOwner]
     Show Advanced Settings
 
@@ -428,7 +428,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
        ...    smtpSimple=true
        ...    smtpTimeout=300
        ...    smtpUser=${EMPTY}
-    Set System Settings    ${system}[localAuth]    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}    ${system}[token]
     Log in to system new   ${system}    ${system}[cloudOwner]
     Show Advanced Settings
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    ELEVEN    timeout=70
@@ -462,7 +462,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
        ...    statisticsReportTimeCycle=${EMPTY}
        ...    statisticsReportUpdateDelay=${EMPTY}
 
-    Set System Settings    ${system}[localAuth]    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}    ${system}[token]
     Log in to system new   ${system}    ${system}[cloudOwner]
     Show Advanced Settings
 
@@ -497,7 +497,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
        ...    syncTimeExchangePeriod=600000
        ...    systemName=Advanced Settings
 
-    Set System Settings    ${system}[localAuth]    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}    ${system}[token]
     Log in to system new   ${system}    ${system}[cloudOwner]
     Show Advanced Settings
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    THIRTEEN    timeout=60
@@ -517,7 +517,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
     ${settings}=   Create Dictionary
        ...    takeCameraOwnershipWithoutLock=true
 
-    Set System Settings    ${system}[localAuth]    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}    ${system}[token]
     Log in to system new   ${system}    ${system}[cloudOwner]
     Show Advanced Settings
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    FOURTEEN    timeout=60
@@ -532,7 +532,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
        ...    timeSynchronizationEnabled=true
        ...    updateNotificationsEnabled=true
     
-    Set System Settings    ${system}[localAuth]    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}    ${system}[token]
     Log in to system new   ${system}    ${system}[cloudOwner]
     Show Advanced Settings
     Wait Until Advanced Settings Are Visible    FIFTEEN    timeout=60
@@ -551,7 +551,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
        ...    useTextEmailFormat=false
        ...    useWindowsEmailLineFeed=false
     
-    Set System Settings    ${system}[localAuth]    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}    ${system}[token]
     Log in to system new   ${system}    ${system}[cloudOwner]
     Show Advanced Settings
     IF    "${LANGUAGE}"=="he_IL"
@@ -575,7 +575,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
     ${settings}=   Create Dictionary
         ...    webSocketEnabled=true
     
-    Set System Settings    ${system}[localAuth]    ${server url}    ${settings}
+    Set System Settings    ${server url}    ${settings}    ${system}[token]
     Log in to system new   ${system}    ${system}[cloudOwner]
     Show Advanced Settings
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    SEVENTEEN    timeout=60

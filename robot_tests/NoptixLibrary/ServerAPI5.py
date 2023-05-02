@@ -54,7 +54,9 @@ class ServerAPI5(ServerAPI):
             )
             if r.status_code != 200:
                 raise APIError(f'Cannot setup local system: {r.status_code}')
-            self.set_system_settings(["admin","qweasd 123"], serverUrl, {"statisticsAllowed": False})
+            credentials = {"username": "admin", "password": newPassword, "setCookie": True}
+            t = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            self.set_system_settings(serverUrl, {"statisticsAllowed": False}, t.json()['token'])
     
     @keyword
     def setup_local_system_42(self, server_url, new_password, system_name):
@@ -155,13 +157,9 @@ class ServerAPI5(ServerAPI):
 
 
     @keyword
-    def set_system_settings(self, auth, serverUrl, settings):
-        with requests.Session() as s:
-            credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
-            s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
-            r = s.patch(f'{serverUrl}/rest/v1/system/settings', json=settings, auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
-            s.delete(f"{serverUrl}/rest/v1/login/sessions")
-            return r.json()
+    def set_system_settings(self, serverUrl, settings, token):
+        r = requests.patch(f'{serverUrl}/rest/v1/system/settings', headers={"x-runtime-guid": token}, json=settings, verify=False)
+        return r.json()
 
     @keyword
     def set_system_settings_42(self, auth, serverUrl, settings):
@@ -247,16 +245,11 @@ class ServerAPI5(ServerAPI):
             return r.json()
 
     @keyword
-    def change_server_port_via_api(self, auth, serverUrl, newPort, serverId):
-        with requests.Session() as s:
-            credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
-            s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
-
-            s.headers.update({'X-Runtime-Guid': s.cookies['x-runtime-guid'], "X-Server-guid": serverId})
-            body = {"port": newPort}
-            r = s.post(f'{serverUrl}/api/configure', json=body, verify=False)
-            assert r.status_code == 200, f'Changing port failed with {r}'
-            return r
+    def change_server_port_via_api(self, serverUrl, newPort, token):
+        body = {"port": newPort}
+        r = requests.post(f'{serverUrl}/api/configure', headers={"x-runtime-guid": token}, json=body, verify=False)
+        assert r.status_code == 200, f'Changing port failed with {r}'
+        return r
             
     @keyword
     def save_user_role(self, auth, serverUrl, name, permissions):

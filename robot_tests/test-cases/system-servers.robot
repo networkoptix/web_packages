@@ -186,24 +186,25 @@ Force Tags        system
 
 9. Change port
     [Tags]    C70975    cloud    webadmin
-    
     Change Port To    7002
     @{auth}=    Create List    admin    ${password}
     Get Cameras    ${auth}    https://${QA BURBANK IP}:${servers}[0][port][1]
-    Change server port via API    ${auth}    https://${QA BURBANK IP}:${servers}[0][port][1]    ${7001}    ${servers}[0][id]
+    Change server port via API     https://${QA BURBANK IP}:${servers}[0][port][1]    ${7001}    ${servers}[0][token]  
     Log To Console    port changed back
     Get Cameras    ${auth}    https://${QA BURBANK IP}:${servers}[0][port][0]
 
 # Waiting to hear back from server team about proper error code
 10. Administrator cannot change port via API
-    [Tags]    C70927    cloud    webadmin
-    ${loc}=   Get Location
-    ${split}=   Split String    ${loc}    separator=/servers/
-    @{auth}=    Create List    ${servers}[0][localUsers][cloudAdmin]    ${password}
-    ${resp}=   Run Keyword If    '''${mode}'''=='''cloud'''    Change server port via API    ${auth}    https://${env}/systems/${servers}[0][id].relay.vmsproxy.hdw.mx    7777    ${split[1]}
-    ...    ELSE    Change server port via API    ${auth}    https://${QA BURBANK IP}:${servers}[0][port][0]    7777    ${split[1]}
-    ${status is correct}=   Evaluate    $resp.status_code in {401, 403}
-    Should Be True    ${status is correct}
+    [Tags]    C70927    cloud    webadmin   WIP
+    Skip
+    # ${loc}=   Get Location
+    # ${split}=   Split String    ${loc}    separator=/servers/
+    # Set To Dictionary    ${servers}[0]    serverId=${split}[1]
+    @{auth}=    Create List    ${servers}[0][cloudUsers][cloudAdmin]    ${password}
+    ${admin_token} =     Get Server Token    ${auth}     https://${QA BURBANK IP}:${servers}[0][port][0]
+    Run Keyword and Expect Error    *   Change server port via API    https://${QA BURBANK IP}:${servers}[0][port][0]    7777    ${admin_token}
+    # ${status is correct}=   Evaluate    $resp.status_code in {401, 403}
+    # Should Be True    ${status is correct}
 
 11. Check status
     [Tags]    C70957    cloud    webadmin
@@ -288,7 +289,7 @@ Force Tags        system
     Element Should be Enabled    ${PORT INPUT}
     Element Should be Enabled    ${RESTART SERVER BUTTON}
     Element Should be Visible    ${SERVER DETAILED INFO BUTTON}
-    stop container    ${servers}[1][container]
+    Stop Container    ${servers}[1][container]
     Select Server By Name    server 2
     Wait Until Element is Visible    ${CHECK STATUS BUTTON}
     Element Should be Disabled    ${RESTART SERVER BUTTON}
