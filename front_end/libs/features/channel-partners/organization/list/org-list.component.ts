@@ -9,7 +9,7 @@ import { environment } from '@environments/environment';
 import { NxPartnersService } from '@pages/channel-partners/partners.service';
 import {
     OrganizationInfo,
-    PartnerInfo,
+    // PartnerInfo,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxUriService } from '@services/uri.service';
 
@@ -28,12 +28,12 @@ export class NxPartnerOrganizationsListComponent implements OnInit, OnDestroy {
     filterModel: SearchFilter = { query: '', tags: [] };
     params: Params;
 
-    private partner: PartnerInfo = {
-        customization: 1,
-        parent_channel_partner: 1,
-        id: 1,
-        name: 'Cool partner',
-    };
+    // private partner: PartnerInfo = {
+    //     customization: 1,
+    //     parent_channel_partner: 1,
+    //     id: 1,
+    //     name: 'Cool partner',
+    // };
 
     constructor(private uri: NxUriService, private partnersService: NxPartnersService) {}
 
@@ -52,7 +52,7 @@ export class NxPartnerOrganizationsListComponent implements OnInit, OnDestroy {
             this.setFilter();
         });
 
-        this.partnersService.getOrganizations(this.partner);
+        // this.partnersService.getOrganizations(this.partner);
     }
 
     setFilter(): void {

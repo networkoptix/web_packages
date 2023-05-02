@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
 import staticLang from '@common/language/language_i18n_static.json';
 import type { AddPartner as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
-import { NxPartnersService } from '@pages/channel-partners/partners.service';
+// import { NxPartnersService } from '@pages/channel-partners/partners.service';
 
 @Component({
     selector: 'nx-modal-add-partner-content',
@@ -18,7 +18,7 @@ export class AddPartnerModalContent extends ModalBase<DT['return']> {
 
     constructor(
         dialogRef: DialogRef<DT['return']>,
-        private partnerService: NxPartnersService,
+        // private partnerService: NxPartnersService,
     ) {
         super(dialogRef);
     }

@@ -30,6 +30,7 @@ import { NxSystemCardComponent } from './components/system-card/system-card.comp
 import { NxOrganizationUsersComponent } from './components/users/users.component';
 import { NxHomeComponent } from './home.component';
 import { NxOrganizationsComponent } from './organizations/organization.component';
+import { channelPartnersReducer } from './store/channel-partners/channel-partners.reducer';
 import { groupsReducer } from './store/groups.reducer';
 import { NxGroupsSystemsComponent } from './systems/systems.component';
 import { TabResolver } from './tab-resolver';
@@ -74,6 +75,7 @@ const homeRoutes: Routes = [
         CdkMenuModule,
         StoreModule.forFeature('groups', groupsReducer),
         StoreModule.forFeature('account', accountReducer),
+        StoreModule.forFeature('channelPartners', channelPartnersReducer),
         RouterModule.forChild(homeRoutes),
         CheckboxModule,
         NxBaseTableModule
