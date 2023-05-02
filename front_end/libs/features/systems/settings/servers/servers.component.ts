@@ -24,7 +24,6 @@ import { NxSettingsService } from '../settings.service';
     templateUrl: 'servers.component.html',
     styleUrls: ['servers.component.scss'],
 })
-
 export class NxSystemServersComponent implements OnInit, OnDestroy {
     readonly environment = environment;
     LANG = staticLang;
@@ -64,14 +63,12 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                     return;
                 }
 
-                this.serverIdFromParams = serverId
-                    .replace('%7B', '{')
-                    .replace('%7D', '}');
+                this.serverIdFromParams = serverId.replace('%7B', '{').replace('%7D', '}');
 
                 if (this.serverIdFromParams.includes('?')) {
                     this.serverIdFromParams = this.serverIdFromParams.substring(
                         0,
-                        this.serverIdFromParams.indexOf('?')
+                        this.serverIdFromParams.indexOf('?'),
                     );
                 }
 
@@ -91,14 +88,14 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 this.setServer(true);
             });
 
-        this.route.queryParams
-            .pipe(untilDestroyed(this))
-            .subscribe(params => {
-                this.advanced = (params.advanced !== undefined);
-            });
+        this.route.queryParams.pipe(untilDestroyed(this)).subscribe(params => {
+            this.advanced = params.advanced !== undefined;
+        });
 
         if (!this.advanced) {
-            this.advanced = this.router.url.includes(`servers/${this.route.snapshot.params.serverId}/advanced`);
+            this.advanced = this.router.url.includes(
+                `servers/${this.route.snapshot.params.serverId}/advanced`,
+            );
         }
 
         this.applyService.initPageWatcher(this.applyContainerRef);
@@ -112,18 +109,20 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                         this.system = system;
                     }
                 }),
-                switchMap(() => this.system.infoSubject.pipe(
-                    map(system => {
-                        if (
-                            !system.serverManager.servers ||
-                            system.serverManager.servers.length === 0
-                        ) {
-                            throw new Error();
-                        }
-                        return system;
-                    }),
-                    retryWhen(err => err.pipe(delay(1000)))
-                )),
+                switchMap(() =>
+                    this.system.infoSubject.pipe(
+                        map(system => {
+                            if (
+                                !system.serverManager.servers ||
+                                system.serverManager.servers.length === 0
+                            ) {
+                                throw new Error();
+                            }
+                            return system;
+                        }),
+                        retryWhen(err => err.pipe(delay(1000))),
+                    ),
+                ),
                 switchMap(async () => {
                     this.system.serverManager
                         .initSystemMediaServers()
@@ -138,16 +137,15 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                     this.isOffline = !this.system.isOnline;
                     if (this.system && !this.system.userManager.permissions.isAdmin) {
                         this.uriService
-                            .navigateSystem(
-                                `${menus.systemSettings.baseUrl}SYSTEM_ID`,
-                                this.system
-                            ).catch(error => {
+                            .navigateSystem(`${menus.systemSettings.baseUrl}SYSTEM_ID`, this.system)
+                            .catch(error => {
                                 console.error(error);
                             });
                     }
                 }),
-                untilDestroyed(this)
-            ).subscribe();
+                untilDestroyed(this),
+            )
+            .subscribe();
     }
 
     ngOnDestroy(): void {
@@ -158,50 +156,43 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         const queryParams: Params = {};
         queryParams.advanced = undefined;
 
-        this.uriService
-            .updateURI(this.uriService.getURL(), queryParams, true)
-            .then(() => {
-                this.advanced = false;
-            });
+        this.uriService.updateURI(this.uriService.getURL(), queryParams, true).then(() => {
+            this.advanced = false;
+        });
     }
 
     setServer(initWatcher: boolean = true): void {
         if (initWatcher) {
             this.applyService.initPageWatcher(this.applyContainerRef);
         }
-        if (
-            this.system?.serverManager?.servers &&
-            this.system.serverManager.servers.length > 0
-        ) {
+        if (this.system?.serverManager?.servers && this.system.serverManager.servers.length > 0) {
             let server: NxSystemServer;
             if (this.serverIdFromParams) {
-                server = this.system.serverManager.servers.find(server =>
-                    server.id === `{${this.serverIdFromParams}}`
+                server = this.system.serverManager.servers.find(
+                    server => server.id === `{${this.serverIdFromParams}}`,
                 );
             }
             if (server === undefined) {
                 if (
                     this.system.serverManager.servers.length > 0 ||
-                    this.environment.isLocal && this.location.path() === '/settings/servers'
+                    (this.environment.isLocal && this.location.path() === '/settings/servers')
                 ) {
                     server = this.system.serverManager.servers[0];
                     const id = cleanId(server.id);
                     let path = menus.systemSettings.baseUrl;
-                    path += (this.environment.isLocal) ? '' : `${this.system.id}`;
+                    path += this.environment.isLocal ? '' : `${this.system.id}`;
                     path += `/servers/${id}`;
 
-                    this.uriService
-                        .updateURI(path, {}, true)
-                        .catch(error => {
-                            console.error(error);
-                        });
+                    this.uriService.updateURI(path, {}, true).catch(error => {
+                        console.error(error);
+                    });
                 } else {
                     return;
                 }
             }
 
             this._selectedServer$.next(server);
-            this.isServerOffline = (server.status === 'Offline');
+            this.isServerOffline = server.status === 'Offline';
 
             if (!this.isServerOffline && !this.storageTimer) {
                 // remove when storages update with normal 30 second poll

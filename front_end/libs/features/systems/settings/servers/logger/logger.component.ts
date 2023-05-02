@@ -44,26 +44,19 @@ export class NxServerLoggerComponent implements OnChanges {
         private dialogsService: NxDialogsService,
         private applyService: NxApplyService,
     ) {
-        this.loggerOptions = [
-            'none',
-            'error',
-            'warning',
-            'info',
-            'debug',
-            'verbose',
-        ].map(level => ({
-            value: level,
-            name: this.LANG.system.loggers[level].text,
-            help: this.LANG.system.loggers[level].help
-        }));
+        this.loggerOptions = ['none', 'error', 'warning', 'info', 'debug', 'verbose'].map(
+            level => ({
+                value: level,
+                name: this.LANG.system.loggers[level].text,
+                help: this.LANG.system.loggers[level].help,
+            }),
+        );
 
         this.saveLoggers = this.processService.createProcess(
-            () => this.system.serverManager
-                .setLogLevels(
+            () =>
+                this.system.serverManager.setLogLevels(
                     this.serverId,
-                    this.systemLoggers.filter(logger =>
-                        logger.value !== logger.originalValue
-                    )
+                    this.systemLoggers.filter(logger => logger.value !== logger.originalValue),
                 ),
             { ignoreError: true },
             () => {
@@ -83,20 +76,26 @@ export class NxServerLoggerComponent implements OnChanges {
                     });
                 };
                 if (err.errorId === servers.errors.oldSessionErrorId) {
-                    this.dialogsService.updateSession({
-                        sessionState: SessionState.RenewWeb,
-                        system: this.system,
-                    }).then(res => {
-                        if (res) {
-                            this.saveLoggers.run();
-                        } else {
-                            handleError();
-                        }
-                    }, error => console.error(error));
+                    this.dialogsService
+                        .updateSession({
+                            sessionState: SessionState.RenewWeb,
+                            system: this.system,
+                        })
+                        .then(
+                            res => {
+                                if (res) {
+                                    this.saveLoggers.run();
+                                } else {
+                                    handleError();
+                                }
+                            },
+                            error => console.error(error),
+                        );
                 } else {
                     handleError();
                 }
-            });
+            },
+        );
     }
 
     ngOnChanges(changes: NgChanges<NxServerLoggerComponent>): void {
@@ -116,7 +115,8 @@ export class NxServerLoggerComponent implements OnChanges {
                 this.initializeLoggerLevels(response.reply);
                 this.showLoggers = this.systemLoggers.length > 1;
                 this.loading = false;
-            }).catch(console.error);
+            })
+            .catch(console.error);
     };
 
     resetForm = (): void => {
@@ -130,14 +130,14 @@ export class NxServerLoggerComponent implements OnChanges {
         this.systemLoggers = Object.entries(loggers).map(([key, value]) => ({
             key,
             value,
-            originalValue: value
+            originalValue: value,
         }));
 
         this.loggerWatcher.reset();
         this.applyService.addWatchersAndFunctionsFromChild(
             [this.loggerWatcher],
             this.saveLoggers,
-            this.resetForm
+            this.resetForm,
         );
     };
 
@@ -147,8 +147,8 @@ export class NxServerLoggerComponent implements OnChanges {
 
     onLevelSelect($selected: LoggerOption, target: Logger): void {
         target.value = $selected.value;
-        this.loggerWatcher.value = this.systemLoggers.some(logger =>
-            logger.value !== logger.originalValue
+        this.loggerWatcher.value = this.systemLoggers.some(
+            logger => logger.value !== logger.originalValue,
         );
     }
 }
