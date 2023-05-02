@@ -335,14 +335,14 @@ async def index(request):
         # get authorized user here
         # Redirect if no version
         # Add indefinite cache heading
-        # Removing the caching for now!!
-        cached = request.query_params.get('cached')
-        current_version = not request.query_params.get('force') and AccountCache.get(request)
-        if not cached or not current_version or cached != current_version:
-            if not current_version:
-                current_version = str(uuid4())
-                AccountCache.set(request, current_version)
-            return redirect(f'{reverse("account")}?cached={current_version}')
+        # Removing the caching for now!! Until CLOUD-10609 is finished
+        # cached = request.query_params.get('cached')
+        # current_version = not request.query_params.get('force') and AccountCache.get(request)
+        # if not cached or not current_version or cached != current_version:
+        #     if not current_version:
+        #         current_version = str(uuid4())
+        #         AccountCache.set(request, current_version)
+        #     return redirect(f'{reverse("account")}?cached={current_version}')
         serializer = await sync_to_async(lambda: AccountSerializer(request, many=False))()
 
         return api_success(
