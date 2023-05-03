@@ -4,8 +4,11 @@
     *ngIf="loadingState$ | async as loadingState"
 >
     <ng-container *ngIf="!inOrganization; else outlet">
-        <div class="header pb-3">
-            <h2 translate>Channel Partners</h2>
+        <div
+            class="header pb-3"
+            *ngIf="channelPartner$ | async as channelPartner"
+        >
+            <h2>{{ channelPartner.name }}</h2>
         </div>
         <nx-tabs
             [onLoadTab]="currentTab"
@@ -38,7 +41,7 @@
             ></nx-pre-loader>
             <ng-template #cards>
                 <div class="px-3 cards-container">
-                    <ng-container *ngFor="let organization of channelPartners$ | async">
+                    <ng-container *ngFor="let organization of mockOrganizations$ | async">
                         <div
                             class="system-button card-condensed system-card"
                             (click)="handleOrgClick(organization.id)"

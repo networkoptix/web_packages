@@ -18,3 +18,19 @@ export const selectVisitedPartners = createSelector(
     selectChannelPartnersState,
     state => state.visitedPartners,
 );
+
+export const selectCurrentPartnerId = createSelector(
+    selectChannelPartnersState,
+    state => state.currentPartnerId,
+);
+
+export const selectCurrentPartner = createSelector(
+    selectChannelPartners,
+    selectCurrentPartnerId,
+    (partners, id) => partners.find(partner => partner.id === id),
+);
+
+export const selectCurrentOrganizations = createSelector(
+    selectCurrentPartner,
+    partner => partner.organizations,
+);

@@ -4,9 +4,10 @@ import * as ChannelPartnerActions from './channel-partners.actions';
 import { ChannelPartnersState } from './channel-partners.state';
 
 const initialState: ChannelPartnersState = {
+    currentPartnerId: null,
     channelPartners: [],
     organizations: [],
-    visitedPartners: [],
+    visitedPartners: {},
 };
 
 export const channelPartnersReducer = createReducer(
@@ -26,10 +27,11 @@ export const channelPartnersReducer = createReducer(
         }),
     ),
     on(
-        ChannelPartnerActions.setVisitedPartners,
-        (state, { visitedPartners }): ChannelPartnersState => ({
+        ChannelPartnerActions.setCurrentPartnerId,
+        (state, { currentPartnerId }): ChannelPartnersState => ({
             ...state,
-            visitedPartners,
+            visitedPartners: { ...state.visitedPartners, currentPartnerId: true },
+            currentPartnerId,
         }),
     ),
 );

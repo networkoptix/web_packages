@@ -1,11 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { map, Observable } from 'rxjs';
 
 import { Tab, TabEmit } from '@components/tabs/tabs.types';
 
 import { LoadingState, Organization } from '../home.types';
+import * as CPActions from '../store/channel-partners/channel-partners.actions';
+import {
+    selectCurrentOrganizations,
+    selectCurrentPartner,
+} from '../store/channel-partners/channel-partners.selectors';
 import { selectLoadingState, selectRootGroupItems } from '../store/groups.selectors';
 
 const getRandomInt = (max: number): number => {
@@ -13,6 +19,7 @@ const getRandomInt = (max: number): number => {
 };
 const statusOptions = ['online', 'suspended', 'offline', 'paused'];
 
+@UntilDestroy()
 @Component({
     selector: 'nx-channel-partners',
     templateUrl: 'channel-partners.component.html',
@@ -26,8 +33,9 @@ export class NxChannelPartnersComponent implements OnInit {
     LoadingState = LoadingState;
     inOrganization: boolean;
     loadingState$ = this.store.select<LoadingState>(selectLoadingState);
+    currentPartnerId: number;
     // Todo: Temporary mock data
-    channelPartners$: Observable<Organization[]> = this.store.select(selectRootGroupItems).pipe(
+    mockOrganizations$: Observable<Organization[]> = this.store.select(selectRootGroupItems).pipe(
         // eslint-disable-next-line ngrx/avoid-mapping-selectors
         map(groups => {
             if (!groups) {
@@ -43,6 +51,8 @@ export class NxChannelPartnersComponent implements OnInit {
             });
         }),
     );
+    channelPartner$ = this.store.select(selectCurrentPartner);
+    organizations$ = this.store.select(selectCurrentOrganizations);
     isAdmin: boolean = false;
     currentTab: Tab;
     tabs: Tab[] = [
@@ -73,6 +83,10 @@ export class NxChannelPartnersComponent implements OnInit {
     ngOnInit(): void {
         this.currentTab = this.tabs.find(tab => tab.route === this.route.snapshot.data.currentTab);
         this.inOrganization = this.route.snapshot.children[0].url[0]?.path === 'organization';
+        this.route.params.pipe(untilDestroyed(this)).subscribe(({ id }) => {
+            this.store.dispatch(CPActions.setCurrentPartnerId({ currentPartnerId: Number(id) }));
+            this.currentPartnerId = id;
+        });
     }
 
     newOrgDialog(): void {
@@ -82,8 +96,8 @@ export class NxChannelPartnersComponent implements OnInit {
     onTabClick(tab: TabEmit): void {
         this.currentTab = this.tabs[tab.index];
         tab.route
-            ? this.router.navigate(['home', 'channelPartners', 'testId', tab.route])
-            : this.router.navigate(['home', 'channelPartners', 'testId']);
+            ? this.router.navigate(['home', 'channelPartners', this.currentPartnerId, tab.route])
+            : this.router.navigate(['home', 'channelPartners', this.currentPartnerId]);
     }
 
     handleOrgClick(id: string): void {

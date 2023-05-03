@@ -15,7 +15,7 @@ export const setOrganizations = createAction(
     props<{ organizations: Organization[] }>(),
 );
 
-export const setVisitedPartners = createAction(
-    '[Channel Partners] Set visited partners',
-    props<{ visitedPartners: number[] }>(),
+export const setCurrentPartnerId = createAction(
+    '[Channel Parnters] Set current partner',
+    props<{ currentPartnerId: number }>(),
 );

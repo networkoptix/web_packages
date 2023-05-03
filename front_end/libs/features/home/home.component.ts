@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { BehaviorSubject, combineLatest, filter, map, Observable, of } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { combineLatest, filter, map, Observable, of } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { MenuNode } from '@services/menus.service.types';
@@ -9,7 +10,10 @@ import { NxHeaderService } from '@services/nx-header.service';
 import { NxSystemsService } from '@services/systems.service';
 
 import { Organization } from './home.types';
+import { NxChannelPartnersService } from './services/channel-partners.service';
 import { NxSystemGroupsService } from './services/system-groups.service';
+import * as CPActions from './store/channel-partners/channel-partners.actions';
+import { selectChannelPartners } from './store/channel-partners/channel-partners.selectors';
 
 const getOrganizations = (): Observable<Organization[]> => {
     const mockData: Organization[] = [
@@ -52,14 +56,19 @@ export class NxHomeComponent implements OnInit, OnDestroy {
 
     constructor(
         private router: Router,
+        private route: ActivatedRoute,
+        private store: Store,
         private groupsService: NxSystemGroupsService,
         private systemsService: NxSystemsService,
         private headerService: NxHeaderService,
+        private CPService: NxChannelPartnersService,
     ) {
         this.groupsService.connect();
+        this.initChannelPartners();
     }
 
     ngOnInit(): void {
+        const redirect = !this.route.snapshot.children[0].routeConfig.path;
         const systems$ = this.systemsService.systemsSubject;
         const homeNode = this.headerService.nodes$.pipe(
             filter(res => !!res),
@@ -67,14 +76,17 @@ export class NxHomeComponent implements OnInit, OnDestroy {
         );
         // Temporary until API hooked up
         const organizations$ = getOrganizations();
-        const channelPartners$ = new BehaviorSubject(null);
+        const channelPartners$ = this.store.select(selectChannelPartners);
         let redirectPath = 'personal';
 
         combineLatest([homeNode, channelPartners$, organizations$, systems$])
             .pipe(untilDestroyed(this))
             .subscribe(([homeNode, channelPartners, organizations, systems]) => {
                 const nodes = [
-                    homeNode.nodes.shift(),
+                    new MenuNode('', '/home'),
+                    ...channelPartners.map(partner => {
+                        return new MenuNode(partner.name, `/home/channelPartners/${partner.id}`);
+                    }),
                     ...organizations
                         .sort((a, b) =>
                             a.orgName.toLowerCase().localeCompare(b.orgName.toLowerCase()),
@@ -86,21 +98,22 @@ export class NxHomeComponent implements OnInit, OnDestroy {
                             );
                         }),
                 ];
+                nodes[0].invisible = true;
 
                 if (systems.some(sys => sys.accessRole !== 'owner')) {
-                    nodes.push(
-                        new MenuNode(
-                            this.LANG.appHeader.headerMenuNodes.systemGroups.nodes.personal.displayName,
-                            '/home/personal',
-                        ),
-                    );
-                }
-                if (systems.some(sys => sys.accessRole === 'owner')) {
                     redirectPath = 'shared';
                     nodes.push(
                         new MenuNode(
                             this.LANG.appHeader.headerMenuNodes.systemGroups.nodes.shared.displayName,
                             '/home/shared',
+                        ),
+                    );
+                }
+                if (systems.some(sys => sys.accessRole === 'owner')) {
+                    nodes.push(
+                        new MenuNode(
+                            this.LANG.appHeader.headerMenuNodes.systemGroups.nodes.personal.displayName,
+                            '/home/personal',
                         ),
                     );
                 }
@@ -110,17 +123,27 @@ export class NxHomeComponent implements OnInit, OnDestroy {
                     redirectPath = 'organizations/testId';
                 }
                 if (channelPartners) {
-                    const CPid = 'testId';
+                    const CPid = channelPartners[0].id;
                     redirectPath = `channelPartners/${CPid}`;
                 }
                 homeNode.nodes = nodes;
                 this.isLoading = false;
-                this.router.navigateByUrl(`home/${redirectPath}`);
+                if (redirect) {
+                    this.router.navigateByUrl(`home/${redirectPath}`);
+                }
             });
-        channelPartners$.next(true);
     }
 
     ngOnDestroy(): void {
         this.groupsService.disconnect();
+    }
+
+    initChannelPartners(): void {
+        this.CPService.getChannelPartners().subscribe(partners =>
+            this.store.dispatch(CPActions.setChannelPartners({ channelPartners: partners })),
+        );
+        this.CPService.getOrganizations().subscribe(orgs =>
+            this.store.dispatch(CPActions.setOrganizations({ organizations: orgs })),
+        );
     }
 }
