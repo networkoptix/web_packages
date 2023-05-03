@@ -580,7 +580,7 @@ module.exports = {
                 'libs/features/systems/settings/servers/servers.component.ts',
                 'libs/features/systems/settings/servers/logger/logger.component.ts',
                 'libs/features/systems/settings/servers/standard/server-standard.component.ts',
-                // 'libs/features/systems/settings/servers/storage/server-storage-standard.component.ts',
+                'libs/features/systems/settings/servers/storage/server-storage-standard.component.ts',
                 // 'libs/features/systems/settings/servers/storage-advanced/server-storage-adv.component.ts',
                 // 'libs/features/systems/settings/servers/storage-advanced/size/size.component.ts',
                 // 'libs/features/systems/settings//**/*.ts',
