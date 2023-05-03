@@ -91,7 +91,9 @@ async def create_user(email, first_name=None, last_name=None, customization=None
 async def login_helper(request, token, user):
     await sync_to_async(django.contrib.auth.login)(request, user)
     request.session['access_token'] = token['access_token']
-    request.session['refresh_token'] = token['refresh_token']
+    if refresh_token := token.get('refresh_token', ''):
+        request.session['refresh_token'] = refresh_token
+
 
     # If the user does not have an activated_date set it to the current time
     if not user.activated_date:
@@ -254,13 +256,16 @@ async def login_with_code(request):
 
 
 @api_view(["POST"])
-@permission_classes((IsAuthenticated, ))
+@permission_classes((AllowAny, ))
 async def login_with_tokens(request):
-    require_params(request, ["access_token", "refresh_token"])
+    require_params(request, ["access_token"])
     tokens = {
-        "access_token": request.data["access_token"],
-        "refresh_token": request.data["refresh_token"]
+        "access_token": request.data["access_token"]
     }
+
+    if (refresh_token := request.data.get("refresh_token")):
+        tokens['refresh_token'] = refresh_token
+
     validate_token = await sync_to_async(Auth.validate_token)(tokens["access_token"])
     try:
         user = await models.Account.objects.aget(email=validate_token['username'])
@@ -336,13 +341,13 @@ async def index(request):
         # Redirect if no version
         # Add indefinite cache heading
         # Removing the caching for now!! Until CLOUD-10609 is finished
-        # cached = request.query_params.get('cached')
-        # current_version = not request.query_params.get('force') and AccountCache.get(request)
-        # if not cached or not current_version or cached != current_version:
-        #     if not current_version:
-        #         current_version = str(uuid4())
-        #         AccountCache.set(request, current_version)
-        #     return redirect(f'{reverse("account")}?cached={current_version}')
+        cached = request.query_params.get('cached')
+        current_version = not request.query_params.get('force') and AccountCache.get(request)
+        if not cached or not current_version or cached != current_version:
+            if not current_version:
+                current_version = str(uuid4())
+                AccountCache.set(request, current_version)
+            return redirect(f'{reverse("account")}?cached={current_version}')
         serializer = await sync_to_async(lambda: AccountSerializer(request, many=False))()
 
         return api_success(

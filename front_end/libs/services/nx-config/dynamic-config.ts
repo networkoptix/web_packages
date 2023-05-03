@@ -2,6 +2,7 @@ import { InjectionToken } from '@angular/core';
 
 import { environment } from '@environments/environment';
 import type { NxSystemRole } from '@services/system.service/user-manager/user-manager-types.bak';
+import { InterceptorManager } from '@utils/interceptor-manager';
 
 import { nxConfig } from './config';
 import { IConfig } from './config-types';
@@ -14,7 +15,18 @@ export class DynamicConfig {
             DynamicConfig.getTranslation()
         ]).then(res => res.map(res => res.status === 'fulfilled' && res.value));
 
+        // Need to find out why featureFlag override not working for this flag
+        // data.featureFlags.useAuthenticationInterceptor = true;
+
+        if (data?.featureFlags?.useAuthenticationInterceptor) {
+            await DynamicConfig.registerAuthenticationInterceptor(preloadedAccount?.accessToken, data.trafficRelayHost);
+        }
+
         return { provide: DynamicConfig, useValue: new DynamicConfig({ ...data, preloadedAccount, preloadedTranslation }) };
+    }
+
+    static async registerAuthenticationInterceptor(accessToken: string, trafficRelayHost: string): Promise<void> {
+        InterceptorManager.getInstance(accessToken, trafficRelayHost).enabled = true;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -38,15 +50,44 @@ export class DynamicConfig {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    static getAccount(): Promise<any> {
-        // Eventualy we should also handle code and auth login here also
-        return fetch(
+    static async getAccount(): Promise<any> {
+        const getCurrentAccount = (): Promise<unknown> => fetch(
             environment.isLocal ? '/rest/v1/login/sessions/current' : '/api/account'
         ).then(
             res => res.json()
         ).then(
             result => result.resultCode || !result?.is_authenticated || environment.isLocal ? null : result
         ).catch(() => null);
+
+        const loginCode = (code: string): Promise<unknown> => (
+            environment.isLocal
+                ? Promise.resolve()
+                : fetch(
+                    '/api/account/loginCode',
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ code })
+                    }
+                )
+        ).then(res => res.json()).then(account => {
+            const searchParams = new URLSearchParams(location.search);
+            searchParams.delete('code');
+            const path = location.protocol + '//' + location.host + location.pathname + '?' + searchParams.toString();
+            history.replaceState({ path }, '', path);
+            return account;
+        }).catch(() => null);
+
+        const current = await getCurrentAccount();
+
+        if (current) {
+            return current;
+        }
+
+        const code = new URLSearchParams(location.search).get('code');
+        if (code) {
+            return loginCode(code);
+        }
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

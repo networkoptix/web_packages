@@ -9,21 +9,22 @@ import { WithBearerMiddleware } from '../concrete/authentication';
  */
 class VmsClientApi {
     private sessionToken: Promise<string>;
+    private cloudToken: Promise<string>;
 
     private vmsReady = false;
 
-    public async hasToken(): Promise<boolean> {
-        return this.vmsReady && Boolean(await this.sessionToken);
+    public async hasToken(targetToken: 'sessionToken' | 'cloudToken'): Promise<boolean> {
+        return this.vmsReady && Boolean(await this[targetToken]);
     }
 
-    public async getSessionToken(): Promise<string> {
+    public async handleToken(tokenName: 'sessionToken' | 'cloudToken'): Promise<string> {
         if (!this.vmsReady) {
             return ''
         }
         // @ts-expect-error vms is a global variable
-        const getToken = (): Promise<string> => window.vms?.auth?.sessionToken();
-        this.sessionToken ||= getToken();
-        return await this.sessionToken.catch(() => '');
+        const getToken = (): Promise<string> => window.vms?.auth?.[tokenName]();
+        this[tokenName] ||= getToken();
+        return await this[tokenName].catch(() => '');
     }
 
     constructor(vmsReadyCallback?: (clientInstance: VmsClientApi) => Promise<unknown>) {
@@ -50,20 +51,21 @@ export class WithVmsSessionMiddleware extends WithBearerMiddleware {
      */
     constructor(
         vmsTokenCallback?: (token: string) => unknown,
-        shouldAuthenticate: (request?: Request) => boolean | Promise<boolean> = () => true
+        shouldAuthenticate: (request?: Request) => boolean | Promise<boolean> = () => true,
+        private targetToken: 'sessionToken' | 'cloudToken' = 'sessionToken'
     ) {
         /**
          * Triggers the session token permission request when client is ready.
          */
         let token = Promise.resolve('')
         const client = new VmsClientApi(client => {
-            token = client.getSessionToken();
+            token = client.handleToken(this.targetToken);
             return token.then(vmsTokenCallback)
         });
 
         super(
             () => token,
-            async (request: Request) => await client.hasToken() && await shouldAuthenticate(request)
+            async (request: Request) => await client.hasToken(this.targetToken) && await shouldAuthenticate(request)
         );
     }
 }

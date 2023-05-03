@@ -33,6 +33,7 @@ import { getPredefinedRolesLegacy } from '@services/mediaserver-apis/endpoints/g
 import { getUserRolesRestV1 } from '@services/mediaserver-apis/endpoints/get-user-roles';
 import { getUsersRestV1 } from '@services/mediaserver-apis/endpoints/get-users';
 import { NxStorageService } from '@services/storage.service';
+import { InterceptorManager } from '@utils/interceptor-manager';
 import {
     defaultHashFunction,
     memoizeAsync,
@@ -144,12 +145,12 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     public get accessToken() {
-        return this.sessionStorage.retrieve(this.cloudAccessTokenName);
+        return this.CONFIG.featureFlags.useAuthenticationInterceptor ? `${InterceptorManager.USE_SYSTEM_TOKEN}:${this.systemId}` : this.sessionStorage.retrieve(this.cloudAccessTokenName);
     }
 
     public set accessToken(token) {
         const { accessToken, cloudAccessToken } = this.getTokens();
-        if (this.isSessionOauth && accessToken && cloudAccessToken) {
+        if (this.isSessionOauth && (accessToken || '').replace(InterceptorManager.USE_SYSTEM_TOKEN, '') && cloudAccessToken) {
             this.deleteToken(cloudAccessToken, accessToken).toPromise();
         }
         this.sessionStorage.clear(this.cloudAccessTokenName);

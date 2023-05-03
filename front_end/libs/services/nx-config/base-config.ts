@@ -173,6 +173,7 @@ const FeatureFlagKeys = [
     'useJsonRpc',
     'restCookieLogin',
     'crossTabSyncEnabled',
+    'useAuthenticationInterceptor',
 ] as const;
 
 export type FeatureFlagType = typeof FeatureFlagKeys[number];

@@ -88,6 +88,7 @@ class FLAGS(metaclass=_FlagType):
     request_caching_remote_sync = ('Request Caching Remote Sync', 'requestCachingRemoteSync', '%REQUEST_CACHING_REMOTE_SYNC_ENABLED%')
 
     cross_tab_sync_enabled = ('Cross Tab Sync Enabled', 'crossTabSyncEnabled', '%CROSS_TAB_SYNC_ENABLED%')
+    use_authentication_interceptor = ('Use Authentication Interceptor', 'useAuthenticationInterceptor', '%USE_AUTHENTICATION_INTERCEPTOR%')
 
     # TODO: Remove this with https://networkoptix.atlassian.net/browse/CLOUD-8667 *********
     five_r = ('Paginator(experimental)', 'paginatorExperimental', '%FIVE_R_ENABLED%')

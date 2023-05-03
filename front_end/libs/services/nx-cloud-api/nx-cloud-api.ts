@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import * as FullStory from '@fullstory/browser';
 import { CookieService } from 'ngx-cookie-service';
-import { EMPTY, of, from, BehaviorSubject, throwError, defer, firstValueFrom, forkJoin } from 'rxjs';
+import { EMPTY, of, from, BehaviorSubject, throwError, defer, forkJoin } from 'rxjs';
 import type { Observable } from 'rxjs';
 import { catchError, concatMap, switchMap, map, tap, shareReplay, filter } from 'rxjs/operators';
 
@@ -35,6 +35,7 @@ import { ChannelPartnersApi } from './cloud-services/channel-partners/channel-pa
 import { CloudDbAPI } from './cloud-services/cloud-db/cloud-db-api';
 import { CloudStorageAPI } from './cloud-services/cloud-storage/cloud-storage-api';
 import { LicenseServerAPI } from './cloud-services/license-server/license-server-api';
+import { TokenSessionManager } from './cloud-session-manager';
 import { CustomAccountProperty } from './custom-account-property';
 import { CustomClientAPI } from './custom-client-api';
 import * as t from './nx-cloud-api.types';
@@ -566,6 +567,7 @@ export class NxCloudApiService {
         );
     }
 
+    // @memoizeAsyncShort
     private getAccount(forceUpdate = false): Observable<CloudAccount> {
         let headers = new HttpHeaders();
         const params: { force?: true } = {};
@@ -585,6 +587,7 @@ export class NxCloudApiService {
         );
     }
 
+    @memoizeAsyncShort
     private getAllAccountInfo(forceUpdate = false): Observable<Account> {
         return this.getAccount(forceUpdate).pipe(
             switchMap(cloudInfo => forkJoin([
@@ -897,6 +900,7 @@ export class NxCloudApiService {
         return this.http.get<Record<string, string>>(`${this.CONFIG.cloudHost}/oauth/token/`, { params });
     }
 
+    @memoizeAsyncLong
     refreshAccessTokens() {
         return this.http.post<Record<string, string>>(`${this.CONFIG.cloudHost}${apiBase}/account/refreshAccessToken`, {}).pipe(map(({ access_token }) => ({ accessToken: access_token })));
     }
@@ -909,37 +913,7 @@ export class NxCloudApiService {
      * @param minSessionSeconds : number
      * @returns wraps: (observableInputFactory: ({ accessToken, getFreshAccessToken }) => ObservableInput<unknown>)
      */
-    #withFreshSession: t.WithFreshSession = (
-        minSessionSeconds = 300
-    ) => observableInputFactory => {
-        const getAccountFromDb = async (force = false) => {
-            const key = 'account';
-            let value: Account = null;
-            let currentSession = !force && await this.db.personal.unstructured.get(key) as UnstructuredTable<Account>;
-
-            if (!currentSession?.value || force) {
-                value = await firstValueFrom(this.getAllAccountInfo(true));
-                currentSession = { key, value };
-            }
-
-            if (!minSessionSeconds || ((Date.now() + minSessionSeconds * 1000) > currentSession.value.sessionExpires)) {
-                const { accessToken } = await firstValueFrom(this.refreshAccessTokens());
-                currentSession = { key, value: { ...currentSession.value, accessToken } };
-            }
-
-            await this.db.personal.unstructured.put(currentSession);
-            return currentSession.value;
-        };
-
-        return from(getAccountFromDb()).pipe(
-            switchMap(({
-                accessToken
-            }) => observableInputFactory({
-                accessToken,
-                getFreshAccessToken: () => from(getAccountFromDb(true)).pipe(map(({ accessToken }) => accessToken))
-            }))
-        );
-    };
+    #withFreshSession: t.WithFreshSession = TokenSessionManager.getInstance('/api/account/refreshAccessToken');
 
     @memoizeAsyncShort
     getTokenInfo(token: string) {

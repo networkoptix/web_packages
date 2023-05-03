@@ -5,7 +5,7 @@ import { Observable, zip } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 import { WINDOW } from '@services/window-provider';
-import { memoizeAsyncMedium } from '@utils/memoize';
+import { memoizeAsyncMedium, memoizeAsyncPersistent, memoizeAsyncShort } from '@utils/memoize';
 
 import { CloudResponse, CloudUser, System, WithFreshSession } from '../../nx-cloud-api.types';
 import {
@@ -190,12 +190,14 @@ export class CloudDbAPI extends BaseCloudServiceAPI {
         return this.get(this.authEndpoint('getNonce'), { params: { systemId } });
     }
 
+    @memoizeAsyncPersistent
     public validateToken(token: string): Observable<{ sessionExpires: number }> {
         return this.get<{ expires_at: string }>(this.authEndpoint('token', token)).pipe(
             map(info => ({ sessionExpires: parseInt(info.expires_at || '0') }))
         );
     }
 
+    @memoizeAsyncShort
     public getAccountSecurity(): Observable<{ account2faEnabled: boolean; totpExistsForAccount: boolean }> {
         return this.get('/account/self/settings/security').pipe(
             map(({ account2faEnabled, totpExistsForAccount }) => ({ account2faEnabled, totpExistsForAccount }))

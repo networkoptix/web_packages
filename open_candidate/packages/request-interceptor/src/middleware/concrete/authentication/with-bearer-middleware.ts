@@ -8,7 +8,7 @@ import { AuthenticationMiddleware } from '../../abstract/authentication-middlewa
 
 export class WithBearerMiddleware extends AuthenticationMiddleware {
     async authenticate(request: Request): Promise<void> {
-        request.headers.set('authorization', `Bearer ${await this.getToken()}`);
+        request.headers.set('authorization', `Bearer ${await this.getToken(request)}`);
     }
 
     /**

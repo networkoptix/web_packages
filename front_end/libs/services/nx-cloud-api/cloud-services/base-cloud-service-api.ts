@@ -5,6 +5,7 @@ import { catchError, Observable, switchMap } from 'rxjs';
 import { environment } from '@environments/environment';
 import { WINDOWS_PROVIDERS, WINDOW } from '@services/window-provider';
 import { staticImplements } from '@utils/general';
+import { InterceptorManager } from '@utils/interceptor-manager';
 import { startWithCache } from '@utils/start-with-cached';
 
 import { WithFreshSession } from '../nx-cloud-api.types';
@@ -19,7 +20,7 @@ interface BaseRequestOptions {
     body?: unknown;
 }
 
-interface PostRequestOptions extends BaseRequestOptions {}
+interface PostRequestOptions extends BaseRequestOptions { }
 
 export type CreateApiFactory<ApiType = unknown> = (http: HttpClient, withFreshSession: WithFreshSession, refreshToken?: Observable<string>) => (serverUrl?: string, cloudHost?: () => string) => ApiType;
 
@@ -101,8 +102,12 @@ export abstract class BaseCloudServiceAPI {
     };
 
     #handle<T>(endpoint: string, request: (url: string, options: BaseRequestOptions) => Observable<T>, getOptions: (accessToken: string) => BaseRequestOptions): Observable<T> {
+        const url = this.serverUrl + this.apiBase + endpoint;
+        if (InterceptorManager.enabled) {
+            return request(url, getOptions(InterceptorManager.USE_CLOUD_TOKEN));
+        }
+
         return this.withFreshSession()(({ accessToken, getFreshAccessToken }) => {
-            const url = this.serverUrl + this.apiBase + endpoint;
             return request(
                 url, getOptions(accessToken)
             ).pipe(

@@ -10,6 +10,7 @@ import { catchError, flatMap, map, mergeMap, retryWhen, timeout, tap, share, swi
 import { environment } from '@environments/environment';
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
 import { NxHealthService } from '@pages/health/health.service';
+import { InterceptorManager } from '@utils/interceptor-manager';
 import {
     memoizeAsync,
     memoizeAsyncLong,
@@ -154,6 +155,10 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     }
 
     protected cookieLogin(auth, remember = false, maxAge = 365) {
+        if (InterceptorManager.enabled) {
+            return of(true);
+        }
+
         return this.post('/api/cookieLogin', { auth }).pipe(
             tap(() => {
                 const cookie = 'x-runtime-guid';
