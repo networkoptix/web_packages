@@ -46,6 +46,6 @@ export class NxCustomizationUsersComponent implements OnInit, OnDestroy {
     }
 
     addUser(): void {
-        this.dialogService.addBrandUser();
+        this.dialogService.addPartnerUser();
     }
 }

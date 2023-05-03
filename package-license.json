@@ -3518,6 +3518,13 @@
             "path": "cloud_portal/front_end/node_modules/@ngneat/until-destroy",
             "licenseFile": "cloud_portal/front_end/node_modules/@ngneat/until-destroy/README.md"
         },
+        "@ngrx/component@13.0.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/ngrx/platform",
+            "publisher": "NgRx",
+            "path": "cloud_portal/front_end/node_modules/@ngrx/component",
+            "licenseFile": "cloud_portal/front_end/node_modules/@ngrx/component/README.md"
+        },
         "@ngrx/effects@13.0.2": {
             "licenses": "MIT",
             "repository": "https://github.com/ngrx/platform",

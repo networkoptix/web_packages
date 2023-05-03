@@ -25,8 +25,22 @@
 </ul>
 
 <h2>Users</h2>
+<button
+    *ngrxLet="organization$ as org"
+    class="btn-primary"
+    (click)="newOrgUser(org.id)"
+>
+    New User
+</button>
 <div *ngFor="let user of users$ | async">
     <h4>{{ user.email }}</h4>
+    <button
+        *ngrxLet="organization$ as org"
+        class="btn-danger"
+        (click)="deleteOrgUser(org.id, user.userId)"
+    >
+        Delete
+    </button>
     <ul>
         <li *ngFor="let prop of user | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
     </ul>

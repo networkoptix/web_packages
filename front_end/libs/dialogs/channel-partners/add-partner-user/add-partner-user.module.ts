@@ -4,12 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
-import { MultiSelectModule } from '@components/dropdowns/multi-select/multi-select.module';
 import { EmailModule } from '@components/email-input/email.module';
 import { ProcessButtonModule } from '@components/process-button/process-button.module';
 import { ProcessCancelButtonModule } from '@components/process-cancel-Button/process-cancel-Button.module';
 
-import { NxAddOrgUserModalContent } from './add-org-user.component';
+import { AddPartnerUserModalContent } from './add-partner-user.component';
 
 @NgModule({
     imports: [
@@ -20,16 +19,15 @@ import { NxAddOrgUserModalContent } from './add-org-user.component';
 
         EmailModule,
         NxGenericDropdownModule,
-        MultiSelectModule,
         ProcessButtonModule,
         ProcessCancelButtonModule,
     ],
     declarations: [
-        NxAddOrgUserModalContent,
+        AddPartnerUserModalContent,
     ],
     providers: [],
     exports: [
-        NxAddOrgUserModalContent,
+        AddPartnerUserModalContent,
     ]
 })
-export class NxAddOrgUserModule {}
+export class AddPartnerUserModalModule {}

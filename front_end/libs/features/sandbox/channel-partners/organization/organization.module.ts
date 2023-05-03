@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 // import { FormsModule } from '@angular/forms';
+import { ReactiveComponentModule } from '@ngrx/component';
 
 import { NxOrganizationComponent } from './organization.component';
 
@@ -10,6 +11,8 @@ import { NxOrganizationComponent } from './organization.component';
         // FormsModule,
         // AngularSvgIconModule.forRoot(),
         // TranslateModule,
+
+        ReactiveComponentModule,
     ],
     declarations: [
         NxOrganizationComponent,

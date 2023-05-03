@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
+import type { Id } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 // import type { Id } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 @Component({
@@ -15,29 +16,23 @@ export class NxChannelPartnersComponent implements OnInit {
     organizations$ = this.cpService.getOrganizations();
     organizationRoles$ = this.cpService.getOrganizationRoles();
 
-    constructor(private cpService: NxChannelPartnersService, dialogs: NxDialogsService) {}
+    constructor(private cpService: NxChannelPartnersService, private dialogs: NxDialogsService) {}
 
     ngOnInit(): void {
         // this.cpService.getPartnerOrganizations(4).subscribe(console.log);
         // this.cpService.getChannelPartnerUsers(7).subscribe(console.log);
         // this.cpService.getOrganization(4).subscribe(console.log);
         /* eslint-disable prettier/prettier */
-        // this.cpService
-        //     .getOrganization
-        //     (5).subscribe(console.log);
+        this.cpService
+            .createChannelPartnerUser
+            (11, { email: 'awu@networkoptix.com', role: 'Administrator'})
+            .subscribe(console.log);
         /* eslint-enable prettier/prettier */
     }
 
-    // newChannelPartner(): void {
-    //     this.dialogs.addBrandUser();
-    //     this.cpService.createChannelPartner({
-    //         name: 'myNewChannel2',
-    //         parentChannelPartner: 4,
-    //     });
-    //     .subscribe(res => {
-    //         console.log(res);
-    //     });
-    // }
+    newChannelPartner(parentChannelPartner: Id): void {
+        this.dialogs.createChannelPartner(parentChannelPartner);
+    }
 
     // createOrganization(partnerId?: Id): void {
     //     this.dialogs.addBrandPartner();

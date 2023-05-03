@@ -83,7 +83,7 @@ export interface OrganizationRole {
 export interface OrganizationUser {
     email: string;
     roles: string[];
-    userId: string;
+    userId: Id;
 }
 
 export interface CreateOrganizationUser {

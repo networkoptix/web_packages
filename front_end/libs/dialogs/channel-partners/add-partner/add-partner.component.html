@@ -7,7 +7,7 @@
             class="modal-title"
             translate
         >
-            Add Partner
+            New Channel Partner
         </h1>
         <button
             type="button"
@@ -34,12 +34,14 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button
-            class="btn btn-default"
-            (click)="savePartner()"
-            translate
-        >
-            Save
-        </button>
+        <nx-process-button
+            [process]="addPartnerProcess"
+            [buttonText]="'Create' | translate"
+        ></nx-process-button>
+        <nx-cancel-button
+            [process]="addPartnerProcess"
+            [cancelFn]="unlock"
+            [discardFn]="close"
+        ></nx-cancel-button>
     </div>
 </form>

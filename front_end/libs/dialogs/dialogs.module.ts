@@ -20,10 +20,6 @@ import { TagModule } from '@components/tag/tag.module';
 import { ThirdsPartyWidgetModule } from '@components/widgets/third-party/third-party-widget.module';
 import { DirectivesModule } from '@directives/directives.module';
 
-import { AddPartnerBrandModalModule } from './add-brand/add-brand.module';
-import { AddCustomizationUserModalModule } from './add-customization-user/add-customization-user.module';
-import { NxAddOrgUserModule } from './add-org-user/add-org-user.module';
-import { AddPartnerModalModule } from './add-partner/add-partner.module';
 import { AddStorageModalContent } from './add-storage/add-storage.component';
 import { AddUserModalModule } from './add-user/add-user.module';
 import { AddWidgetModalContent } from './add-widget/add-widget.component';
@@ -33,6 +29,11 @@ import { NxMoreDevicesModule } from './bookmarks/more-devices/more-devices.modul
 import { NxMoreTagsModule } from './bookmarks/more-tags/more-tags.module';
 import { ChangePasswordModalModule } from './change-password/change-password.module';
 import { ChangeStorageModalContent } from './change-storage/change-storage.component';
+import { NxAddOrgUserModule } from './channel-partners/add-org-user/add-org-user.module';
+import { AddOrganizationModalModule } from './channel-partners/add-organization/add-organization.module';
+import { AddPartnerUserModalModule } from './channel-partners/add-partner-user/add-partner-user.module';
+import { AddPartnerModalModule } from './channel-partners/add-partner/add-partner.module';
+import { NxEditOrgUserModule } from './channel-partners/edit-org-user/edit-org-user.module';
 import { Client2faWarningModalModule } from './client-2fa-warning/client-2fa-warning.module';
 import { CloudStorageModule } from './cloud-storage/cloud-storage.module';
 import { ConnectCloudModalModule } from './connect-cloud/connect-cloud.module';
@@ -40,7 +41,6 @@ import { CreateSystemGroupModalModule } from './create-system-group/create-syste
 import { DeleteCloudUserModalModule } from './delete-cloud-user/delete-cloud-user.module';
 import { DetachServerModalContent } from './detach-server/detach-server.component';
 import { DisconnectModalModule } from './disconnect/disconnect.module';
-import { NxEditOrgUserModule } from './edit-org-user/edit-org-user.module';
 import { EditModalContent } from './edit/edit.component';
 import { GenericDialogModule } from './generic/generic.module';
 import { Mandatory2faModalModule } from './mandatory-2fa/mandatory-2fa.module';
@@ -104,9 +104,9 @@ import { WizardModalContent } from './wizard/wizard.component';
         RemoveSystemModalModule,
         Mandatory2faModalModule,
         CreateSystemGroupModalModule,
-        AddPartnerBrandModalModule,
-        AddCustomizationUserModalModule,
+        AddPartnerUserModalModule,
         AddPartnerModalModule,
+        AddOrganizationModalModule,
         CloudStorageModule,
         NewFeatureInformationModalModule,
         NxAddOrgUserModule,

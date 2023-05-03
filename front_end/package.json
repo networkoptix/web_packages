@@ -123,6 +123,7 @@
     "@d3fc/d3fc-element": "^6.2.0",
     "@fullstory/browser": "^1.6.1",
     "@ngneat/until-destroy": "9.2.2",
+    "@ngrx/component": "^13.0.2",
     "@ngrx/effects": "^13.0.2",
     "@ngrx/store": "13.0.2",
     "@nguniversal/express-engine": "^14.2.0",

@@ -35,11 +35,27 @@
                 componentId="userEmail"
                 [(ngModel)]="email"
                 [setFocus]="true"
+                [form]="addUserForm"
                 #userEmail="ngModel"
             >
             </nx-email-input>
         </div>
         <div class="form-group">
+            <label
+                for="userRole"
+                translate
+                >Role</label
+            >
+            <nx-select
+                id="userRole"
+                name="userRole"
+                [stillLoading]="!roles.length"
+                [items]="roles"
+                [selected]="selectedRole"
+                [(ngModel)]="selectedRole"
+            ></nx-select>
+        </div>
+        <!-- <div class="form-group">
             <label
                 for="targetGroup"
                 translate
@@ -67,16 +83,15 @@
                 [ngModel]="selectedPermissions"
                 (ngModelChange)="updatePermissions($event)"
             ></nx-multi-select>
-        </div>
+        </div> -->
     </div>
     <div class="modal-footer">
         <nx-process-button
-            [form]="addUserForm"
-            [process]="addProcess"
+            [process]="addUserProcess"
             [buttonText]="'Add' | translate"
         ></nx-process-button>
         <nx-cancel-button
-            [process]="addProcess"
+            [process]="addUserProcess"
             [cancelFn]="unlock"
             [discardFn]="close"
         ></nx-cancel-button>

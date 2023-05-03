@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { ReactiveComponentModule } from '@ngrx/component';
 // import { FormsModule } from '@angular/forms';
 
 import { NxChannelPartnerComponent } from './channel-partner.component';
@@ -12,6 +13,8 @@ import { NxChannelPartnerComponent } from './channel-partner.component';
         RouterModule,
         // AngularSvgIconModule.forRoot(),
         // TranslateModule,
+
+        ReactiveComponentModule,
     ],
     declarations: [
         NxChannelPartnerComponent,

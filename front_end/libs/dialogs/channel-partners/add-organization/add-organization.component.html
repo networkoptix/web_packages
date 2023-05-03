@@ -1,0 +1,47 @@
+<form
+    name="addPartnerForm"
+    novalidate
+>
+    <div class="modal-header">
+        <h1
+            class="modal-title"
+            translate
+        >
+            New Organization
+        </h1>
+        <button
+            type="button"
+            class="close"
+            id="closeAddPartner"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="close()"
+            *ngIf="closable"
+        >
+            <div class="close-content"></div>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label translate>Name</label>
+            <input
+                class="form-control"
+                id="partnerName"
+                name="partnerName"
+                [(ngModel)]="name"
+                required
+            />
+        </div>
+    </div>
+    <div class="modal-footer">
+        <nx-process-button
+            [process]="addOrganizationProcess"
+            [buttonText]="'Create' | translate"
+        ></nx-process-button>
+        <nx-cancel-button
+            [process]="addOrganizationProcess"
+            [cancelFn]="unlock"
+            [discardFn]="close"
+        ></nx-cancel-button>
+    </div>
+</form>

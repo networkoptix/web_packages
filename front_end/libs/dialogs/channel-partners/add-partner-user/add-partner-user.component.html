@@ -7,7 +7,7 @@
             class="modal-title"
             translate
         >
-            Add User
+            Add Channel Partner User
         </h1>
         <button
             type="button"
@@ -43,15 +43,32 @@
                     #createUser="ngModel"
                 ></nx-email-input>
             </div>
+            <div class="form-group">
+                <label
+                    for="userRole"
+                    translate
+                    >Role</label
+                >
+                <nx-select
+                    id="userRole"
+                    name="userRole"
+                    [stillLoading]="!roles.length"
+                    [items]="roles"
+                    [selected]="selectedRole"
+                    [(ngModel)]="selectedRole"
+                ></nx-select>
+            </div>
         </form>
     </div>
     <div class="modal-footer">
-        <button
-            class="btn btn-default"
-            (click)="saveCustomizationUser()"
-            translate
-        >
-            Save
-        </button>
+        <nx-process-button
+            [process]="createUserProcess"
+            [buttonText]="'Add' | translate"
+        ></nx-process-button>
+        <nx-cancel-button
+            [process]="createUserProcess"
+            [cancelFn]="unlock"
+            [discardFn]="close"
+        ></nx-cancel-button>
     </div>
 </form>

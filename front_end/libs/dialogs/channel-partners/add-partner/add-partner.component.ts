@@ -1,0 +1,55 @@
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { Component, Inject } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+
+import staticLang from '@common/language/language_i18n_static.json';
+import type { AddChannelPartner as DT } from '@dialogs/dialogs.types';
+import { ModalBase } from '@dialogs/modal-base';
+import { NxToastService } from '@dialogs/toast.service';
+import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
+import { NxProcessService } from '@services/process.service';
+import type { Process } from '@services/process.service/process';
+
+@Component({
+    selector: 'nx-modal-add-partner-content',
+    templateUrl: 'add-partner.component.html',
+    styleUrls: [],
+})
+export class AddPartnerModalContent extends ModalBase<DT['return']> {
+    LANG = staticLang;
+
+    name: string;
+
+    addPartnerProcess: Process;
+
+    /* Assuming no way to create top level partners for now, also assuming that
+    create partner buttons will be all associated with a parent partner */
+    constructor(
+        dialogRef: DialogRef<DT['return']>,
+        @Inject(DIALOG_DATA) parentChannelPartner: DT['data'],
+        private cpService: NxChannelPartnersService,
+        processService: NxProcessService,
+        toastService: NxToastService,
+    ) {
+        super(dialogRef);
+        this.addPartnerProcess = processService.createProcess(
+            () => {
+                this.lock();
+                return firstValueFrom(this.cpService.createChannelPartner({
+                    name: this.name,
+                    parentChannelPartner
+                }));
+            },
+            {},
+            res => this.close(res),
+            err => {
+                this.unlock();
+                console.error(err);
+                const msg = err.error ? `${err.status} ${err.error.detail}` : err.detail || err;
+                toastService.notify(msg, 'danger');
+            },
+        );
+    }
+
+    ngOnInit(): void {}
+}

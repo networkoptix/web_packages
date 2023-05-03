@@ -25,36 +25,68 @@
 </ul>
 
 <h2>Sub Channel Partners</h2>
+<button
+    *ngrxLet="channelPartner$ as partner"
+    class="btn-primary"
+    (click)="newChannelPartner(partner.id)"
+>
+    New Sub Partner
+</button>
 <div *ngFor="let partner of subPartners$ | async">
     <h4>
         <a [routerLink]="'../' + partner.id">{{ partner.name }}</a>
     </h4>
+    <button
+        class="btn-danger"
+        (click)="deleteChannelPartner(partner.id)"
+    >
+        Delete
+    </button>
     <ul>
         <li *ngFor="let prop of partner | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
     </ul>
 </div>
 
 <h2>Organizations</h2>
+<button
+    *ngrxLet="channelPartner$ as partner"
+    class="btn-primary"
+    (click)="newOrganization(partner.id)"
+>
+    New Organization
+</button>
 <div *ngFor="let org of organizations$ | async">
     <h4>
-        <!-- Some organizations 403, not entirely sure about permissions yet -->
-        <a
-            *ngIf="(channelPartner$ | async)?.id === org.channelPartner; else text"
-            [routerLink]="'../org/' + org.id"
-            >{{ org.name }}</a
-        >
-        <ng-template #text>
-            {{ org.name }}
-        </ng-template>
+        <a [routerLink]="'../org/' + org.id">{{ org.name }}</a>
     </h4>
+    <button
+        class="btn-danger"
+        (click)="deleteOrganization(org.id)"
+    >
+        Delete
+    </button>
     <ul>
         <li *ngFor="let prop of org | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
     </ul>
 </div>
 
 <h2>Users</h2>
+<button
+    *ngrxLet="channelPartner$ as partner"
+    class="btn-primary"
+    (click)="newPartnerUser(partner.id)"
+>
+    New User
+</button>
 <div *ngFor="let user of users$ | async">
     <h4>{{ user.email }}</h4>
+    <button
+        *ngrxLet="channelPartner$ as partner"
+        class="btn-danger"
+        (click)="deletePartnerUser(partner.id, user.userId)"
+    >
+        Delete
+    </button>
     <ul>
         <li *ngFor="let prop of user | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
     </ul>

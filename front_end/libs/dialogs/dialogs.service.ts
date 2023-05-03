@@ -431,6 +431,29 @@ export class NxDialogsService extends DialogBase {
 
     /* Systems */
 
+    /* Channel partners */
+    createChannelPartner = this.dialogV2Factory<Dt.AddChannelPartner>(
+        () => import('./channel-partners/add-partner/add-partner.component').then(m => m.AddPartnerModalContent),
+        { autoFocus: 'input' },
+    );
+
+    addPartnerUser = this.dialogV2Factory<Dt.AddPartnerUser>(
+        () => import('./channel-partners/add-partner-user/add-partner-user.component').then(m => m.AddPartnerUserModalContent),
+    );
+
+    createOrganization = this.dialogV2Factory<Dt.AddOrganization>(
+        () => import('./channel-partners/add-organization/add-organization.component').then(m => m.AddOrganizationModalContent),
+        { autoFocus: 'input' },
+    );
+
+    addOrgUser = this.dialogV2Factory<Dt.AddOrgUser>(
+        () => import('./channel-partners/add-org-user/add-org-user.component').then(m => m.NxAddOrgUserModalContent),
+    );
+
+    editOrgUser = this.dialogV2Factory<Dt.AddOrgUser>(
+        () => import('./channel-partners/edit-org-user/edit-org-user.component').then(m => m.NxEditOrgUserModalContent),
+    );
+
     /* Groups */
     createSystemGroup = this.dialogV2Factory<Dt.CreateSystemGroup>(
         () => import('./create-system-group/create-system-group.component').then(m => m.CreateSystemGroupModalContent),
@@ -532,29 +555,6 @@ export class NxDialogsService extends DialogBase {
 
     bookmarkDetails = this.dialogV2Factory<Dt.BookmarkDetails>(
         () => import('./bookmarks/card-modal/bookmarks-card-modal.component').then(m => m.NxBookmarksCardModalComponent),
-    );
-
-    /* Partners */
-    addPartnerBrand = this.dialogV2Factory<Dt.AddPartnerBrand>(
-        () => import('./add-brand/add-brand.component').then(m => m.AddPartnerBrandModalContent),
-        { autoFocus: 'input' },
-    );
-
-    addBrandUser = this.dialogV2Factory<Dt.AddCustomizationUser>(
-        () => import('./add-customization-user/add-customization-user.component').then(m => m.AddCustomizationUserModalContent),
-    );
-
-    addBrandPartner = this.dialogV2Factory<Dt.AddPartner>(
-        () => import('./add-partner/add-partner.component').then(m => m.AddPartnerModalContent),
-        { autoFocus: 'input' },
-    );
-
-    addOrgUser = this.dialogV2Factory<Dt.AddOrgUser>(
-        () => import('./add-org-user/add-org-user.component').then(m => m.NxAddOrgUserModalContent),
-    );
-
-    editOrgUser = this.dialogV2Factory<Dt.AddOrgUser>(
-        () => import('./edit-org-user/edit-org-user.component').then(m => m.NxEditOrgUserModalContent),
     );
 
     /* New feature */

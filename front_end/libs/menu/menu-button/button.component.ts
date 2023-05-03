@@ -62,26 +62,15 @@ export class NxMenuButtonComponent {
                     })
                     .catch(err => console.error(err));
                 break;
-            case 'addCustomization':
-                this.dialogs.addPartnerBrand().then(customizationId => {
-                    if (customizationId) {
-                        const idStr = customizationId.toString();
-                        this.menuService.detail = idStr;
-                        this.uriService
-                            .updateURI('/partners/' + idStr, {})
-                            .catch(error => console.error(error));
-                    }
-                });
-                break;
-            case 'addPartner':
-                this.dialogs.addBrandPartner().then(partnerId => {
-                    if (partnerId) {
-                        this.menuService.detail = partnerId.toString();
-                        // this.uriService
-                        //     .updateURI('/partners/' + customizationId, {})
-                        //     .catch(error => console.error(error));
-                    }
-                });
+            // case 'addPartner':
+            //     this.dialogs.addChannelPartner().then(partnerId => {
+            //         if (partnerId) {
+            //             this.menuService.detail = partnerId.toString();
+            //             // this.uriService
+            //             //     .updateURI('/partners/' + customizationId, {})
+            //             //     .catch(error => console.error(error));
+            //         }
+            //     });
         }
     }
 }

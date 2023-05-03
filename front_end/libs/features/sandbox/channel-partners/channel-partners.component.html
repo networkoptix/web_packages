@@ -21,17 +21,23 @@
     <h4>
         <a [routerLink]="partner.id.toString()">{{ partner.name }}</a>
     </h4>
-    <div
+    <!-- <div
         class="d-flex mb-2"
         [style]="{ gap: '5px' }"
     >
-        <!-- <button
+        <button
+            class="btn-primary"
+            (click)="newChannelPartner(partner.id)"
+        >
+            New Sub Partner
+        </button>
+        <button
             class="btn-primary"
             (click)="createOrganization(partner.id)"
         >
             New Organization
-        </button> -->
-    </div>
+        </button>
+    </div> -->
     <ul>
         <li *ngFor="let prop of partner | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
     </ul>

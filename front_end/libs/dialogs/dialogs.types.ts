@@ -8,6 +8,13 @@ import type { ExportSelection } from '@pages/systems/view/vms-client/submodules/
 import type { SELECTION_DATE_RANGE } from '@pages/systems/view/vms-client/submodules/timeline/components/nx-webgl-canvas/services/webgl.types';
 import type { TimelineSelectionService } from '@pages/systems/view/vms-client/submodules/timeline/services/timeline.selection.service';
 import type { Translatable } from '@pipes/nx-translate.types';
+import type {
+    ChannelPartner,
+    ChannelPartnerUser,
+    Id as CpId,
+    Organization,
+    OrganizationUser,
+} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import type { CloudResponse, SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { Process } from '@services/process.service/process';
 import type { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
@@ -115,6 +122,13 @@ export type Account2faReturn = string;
 
 /* Systems */
 
+/* Channel partners */
+export type AddChannelPartner = DialogType<CpId, ChannelPartner>;
+export type AddPartnerUser = DialogType<CpId, ChannelPartnerUser>;
+export type AddOrganization = DialogType<CpId, Organization>;
+export type AddOrgUser = DialogType<CpId, OrganizationUser>;
+export type EditOrgUser = DialogType<void, void>;
+
 /* Groups */
 export type CreateSystemGroup = DialogType<
     {
@@ -196,13 +210,6 @@ export type BookmarkDetails = DialogType<
     },
     void
 >;
-
-/* Partners */
-export type AddPartnerBrand = DialogType<void, number>;
-export type AddCustomizationUser = DialogType<void, number>;
-export type AddPartner = DialogType<void, number>;
-export type AddOrgUser = DialogType<void, void>;
-export type EditOrgUser = DialogType<void, void>;
 
 /* New feature */
 export interface NewFeatureDynamicData {
