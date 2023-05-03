@@ -15,7 +15,7 @@ const proxyTargetConfig = {
 const target = process.env.CLOUD_TARGET || 'cloud-test';
 const rewriteLegacy = target in legacyTargetConfigs;
 const rewritePaths = {
-    '/api/cms': '/api',
+    // '/api/cms': '/api',
     '/api/notifications': '/api'
 };
 
