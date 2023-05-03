@@ -145,7 +145,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     public get accessToken() {
-        return this.CONFIG.featureFlags.useAuthenticationInterceptor ? `${InterceptorManager.USE_SYSTEM_TOKEN}:${this.systemId}` : this.sessionStorage.retrieve(this.cloudAccessTokenName);
+        return this.CONFIG.featureFlags.useAuthenticationInterceptor ? `${InterceptorManager.USE_SYSTEM_TOKEN}|${this.systemId}|${this.urlBase}/rest/v1/login/sessions/{accessToken}?setCookie=true` : this.sessionStorage.retrieve(this.cloudAccessTokenName);
     }
 
     public set accessToken(token) {
@@ -226,7 +226,8 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         Infinity
     )
     public setAccessTokenAsCookie() {
-        if (this.CONFIG.newSystem || !this.accessToken) {
+        // Short circuit for new system, or if the token is already set as a cookie by the interceptor.
+        if (this.CONFIG.newSystem || !this.accessToken || this.accessToken.includes(InterceptorManager.USE_SYSTEM_TOKEN)) {
             return of(true);
         }
         return this.get(

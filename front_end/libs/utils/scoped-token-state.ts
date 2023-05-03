@@ -5,11 +5,11 @@ export class ScopedTokenState {
     accessToken?: Promise<string>;
     expiresAt?: Promise<number>;
 
-    initialSync = false;
+    initialSync: Promise<unknown>;
 
     private cacheLock: Promise<ScopedTokenState>;
 
-    public async ensureFresh(minimumSession?: number): Promise<ScopedTokenState> {
+    public ensureFresh = async (minimumSession?: number): Promise<ScopedTokenState> => {
         let resolveLock: (value: ScopedTokenState) => void;
         let currentLock: Promise<ScopedTokenState>;
 
@@ -22,9 +22,7 @@ export class ScopedTokenState {
             return this.cacheLock;
         }
 
-        if (!this.initialSync) {
-            await this.syncState();
-        }
+        await this.initialSync;
 
         const cleanUp = (): void => {
             if (currentLock) {
@@ -55,14 +53,14 @@ export class ScopedTokenState {
 
         if (expiresSoon) {
             this.accessToken = this.refreshAccessToken();
-            this.expiresAt = this.getExpiresAt(token);
+            this.expiresAt ||= this.getExpiresAt(token);
             this.emitState();
         }
 
         cleanUp();
 
         return this;
-    }
+    };
 
     private async emitState(): Promise<void> {
         if (this.accessToken && this.expiresAt) {
@@ -73,9 +71,10 @@ export class ScopedTokenState {
         }
     }
 
-    private syncState(): Promise<ScopedTokenState> {
+    private syncState = (): Promise<ScopedTokenState> => {
         return new Promise(resolve => {
-            const autoResolve = setTimeout(() => resolve(this), 1000);
+            // Response from BroadcastChannel should be nearly instant
+            const autoResolve = setTimeout(() => resolve(this), 10);
             const syncHandler = ({
                 data,
             }: {
@@ -90,16 +89,15 @@ export class ScopedTokenState {
                 }
                 this.handleFresh(data);
                 this.tokenBc.removeEventListener('message', syncHandler);
-                this.initialSync = true;
                 resolve(this);
             };
             this.tokenBc.addEventListener('message', syncHandler);
             this.tokenBc.postMessage({ sync: true });
             // Resolve after 10ms to prevent blocking if previous state isn't available on BroadcastChannel
         });
-    }
+    };
 
-    private handleFresh(data: ScopedTokenState): void {
+    private handleFresh = (data: ScopedTokenState): void => {
         if (data.accessToken) {
             this.accessToken = Promise.resolve(data.accessToken);
         }
@@ -107,9 +105,9 @@ export class ScopedTokenState {
         if (data.expiresAt) {
             this.expiresAt = Promise.resolve(data.expiresAt);
         }
-    }
+    };
 
-    private async getExpiresAt(token: string): Promise<number> {
+    private getExpiresAt = async (token: string): Promise<number> => {
         const res = await fetch(`/cdb/oauth2/token/${token}`, {
             headers: { authorization: `Bearer ${token}` },
         })
@@ -119,9 +117,9 @@ export class ScopedTokenState {
         this.expiresAt = Promise.resolve(res.expires_at ? parseInt(res.expires_at) : 0);
 
         return this.expiresAt;
-    }
+    };
 
-    private async refreshAccessToken(): Promise<string> {
+    private refreshAccessToken = async (): Promise<string> => {
         // eslint-disable-next-line nx/ban-global-variables
         const csrf = getCsrf();
         if (!csrf) {
@@ -142,19 +140,35 @@ export class ScopedTokenState {
             this.expiresAt = Promise.resolve(parseInt(res.expires_at));
         }
 
+        const cookieLoginUrl = this.getCookieLoginUrl(res.access_token);
+
+        if (cookieLoginUrl) {
+            await fetch(cookieLoginUrl, {
+                headers: {
+                    RequestInterceptorRequest: 'true',
+                    'x-csrftoken': csrf,
+                },
+            });
+        }
+
         this.accessToken = Promise.resolve(res.access_token);
 
         this.emitState();
 
         return this.accessToken;
-    }
+    };
 
     static INSTANCES: Record<string, ScopedTokenState> = {};
 
-    static getInstance(refreshTokenEndpoint: string, lockTimeout = 2500): ScopedTokenState {
+    static getInstance(
+        refreshTokenEndpoint: string,
+        cookieLoginUrl: string = '',
+        lockTimeout = 2500,
+    ): ScopedTokenState {
         if (!ScopedTokenState.INSTANCES[refreshTokenEndpoint]) {
             ScopedTokenState.INSTANCES[refreshTokenEndpoint] = new ScopedTokenState(
                 refreshTokenEndpoint,
+                (accessToken: string) => cookieLoginUrl.replace('{accessToken}', accessToken),
                 lockTimeout,
             );
         }
@@ -162,7 +176,11 @@ export class ScopedTokenState {
         return ScopedTokenState.INSTANCES[refreshTokenEndpoint];
     }
 
-    constructor(public refreshTokenEndpoint: string, private lockTimeout: number) {
+    constructor(
+        public refreshTokenEndpoint: string,
+        public getCookieLoginUrl: (accessToken: string) => string,
+        private lockTimeout: number,
+    ) {
         this.tokenBc = new BroadcastChannel(refreshTokenEndpoint);
         this.tokenBc.onmessage = async ({ data }) => {
             if (data.sync) {
@@ -171,5 +189,6 @@ export class ScopedTokenState {
             }
             this.handleFresh(data);
         };
+        this.initialSync = this.syncState();
     }
 }

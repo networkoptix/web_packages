@@ -48,7 +48,7 @@ export class InterceptorManager {
         cloud: ScopedTokenState.getInstance('/api/account/refreshAccessToken'),
     };
 
-    minimumSession = 1000 * 60 * 5; // 5 minutes
+    minimumSession = 60 * 5; // 5 minutes
 
     public existingSessionCheck: Promise<boolean>;
 
@@ -86,7 +86,7 @@ export class InterceptorManager {
         const getScope = (request: Request): string =>
             request.headers
                 .get('authorization')
-                .split(`${InterceptorManager.USE_SYSTEM_TOKEN}:`)
+                .split(`${InterceptorManager.USE_SYSTEM_TOKEN}|`)
                 .pop();
 
         const shouldAuthenticateWithScopedToken = async (request?: Request): Promise<boolean> =>
@@ -97,9 +97,10 @@ export class InterceptorManager {
         const useCloudToken = (): Promise<string> => this.scopedTokens.cloud.accessToken;
 
         const useSystemScopedToken = async (request: Request): Promise<string> => {
-            const scope = getScope(request);
+            const [scope, cookieLoginUrl] = getScope(request).split('|');
             this.scopedTokens[scope] ||= ScopedTokenState.getInstance(
                 `/api/systems/${scope}/token`,
+                cookieLoginUrl || '',
             );
 
             const target = await this.scopedTokens[scope];
