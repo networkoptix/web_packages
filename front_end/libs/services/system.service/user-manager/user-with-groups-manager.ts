@@ -170,7 +170,7 @@ export class UserWithGroupsManager extends UserManager {
             [id: string]: Set<string>;
         } = {};
         userGroups.forEach((userGroup: NxUserGroup) => {
-            processedGroups[userGroup.id] = new Set(userGroup.permissions.split('|'));
+            processedGroups[userGroup.id] = new Set(userGroup?.permissions?.split('|'));
             if (!userGroup.description && userGroup.isPredefined) {
                 userGroup.description = this.LANG.accessRoles[userGroup.name].description || userGroup.name;
             }

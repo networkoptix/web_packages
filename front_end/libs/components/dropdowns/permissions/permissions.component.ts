@@ -60,8 +60,9 @@ export class NxPermissionsDropdown extends BaseDropdown {
     writeValue(value: AccessLevelItem | null): void {
         if (value !== null && !this.applyService.locked) {
             this.selected = value;
+            const name = value?.name;
             this.selection =
-                this.LANG.accessRoles[value.name]?.label || value.name || this.LANG.pleaseSelect;
+                (name && (this.LANG.accessRoles[name]?.label || name)) || this.LANG.pleaseSelect;
         }
     }
 

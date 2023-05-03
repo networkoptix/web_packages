@@ -62,9 +62,10 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
     }
 
     private getAccessDescription(): string {
-        return this.LANG.accessRoles[this.selectedPermission.name]
-            ? this.LANG.accessRoles[this.selectedPermission.name].description
-            : this.LANG.accessRoles.customRole.description;
+        const name = this.selectedPermission?.name;
+        return name && this.LANG.accessRoles[name] &&
+            this.LANG.accessRoles[name].description ||
+            this.LANG.accessRoles.customRole.description;
     }
 
     preSubmit = (): void => {
