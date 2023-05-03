@@ -128,13 +128,15 @@ class TestAccountViews:
             return req
 
         req = get_request('/api/account')
-        init_session_key = req.session.session_key
+
+        # Removing the caching until 23.2 release
+        # init_session_key = req.session.session_key
 
         # Test cache redirect
-        resp = async_to_sync(index)(req)
-        assert resp.status_code == status.HTTP_302_FOUND
-        req = get_request(resp.url)
-        req.session.session_key = init_session_key
+        # resp = async_to_sync(index)(req)
+        # assert resp.status_code == status.HTTP_302_FOUND
+        # req = get_request(resp.url)
+        # req.session.session_key = init_session_key
 
         # Test with cache hit
         resp = async_to_sync(index)(req)
