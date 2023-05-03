@@ -58,9 +58,12 @@
                                         </ng-container>
                                     </b>
                                 </h2>
-                                <p *ngIf="downloadsData.releaseNotes">
+                                <p>
                                     <a
-                                        [href]="downloadsData.releaseNotes"
+                                        [href]="
+                                            downloadsData.releaseNotes ||
+                                            '/downloads/' + downloadsData.version
+                                        "
                                         target="_blank"
                                         translate
                                         >What's New?</a
