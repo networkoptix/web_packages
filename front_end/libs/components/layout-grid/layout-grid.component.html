@@ -486,26 +486,26 @@
                                                 ? itemDetail.details.status
                                                 : 'offline') as status
                                         "
+                                        (click)="
+                                            itemDetail.type === RESOURCE_TYPE.CAMERA &&
+                                                system.userManager.permissions.editCameras &&
+                                                (status === 'defaultPassword' ||
+                                                    itemDetail.details.unauthorized) &&
+                                                updateCameraCredentials(system, itemDetail.details)
+                                        "
+                                        [ngClass]="{
+                                            'has-action':
+                                                itemDetail.type === RESOURCE_TYPE.CAMERA &&
+                                                system.userManager.permissions.editCameras &&
+                                                (status === 'defaultPassword' ||
+                                                    itemDetail.details.unauthorized)
+                                        }"
                                         cdkDragHandle
                                         class="item-error drag-container"
                                     >
                                         <div class="item-error">
                                             <ng-template #errorMsg>
-                                                <h3
-                                                    (click)="
-                                                        system.userManager.permissions
-                                                            .editCameras &&
-                                                            openCameraSettings(
-                                                                itemDetail.details.id
-                                                            )
-                                                    "
-                                                    [ngClass]="{
-                                                        'default-password':
-                                                            system.userManager.permissions
-                                                                .editCameras &&
-                                                            status === 'defaultPassword'
-                                                    }"
-                                                >
+                                                <h3>
                                                     {{
                                                         (itemDetail.type === RESOURCE_TYPE.CAMERA
                                                             ? LANG.common.cameraStates

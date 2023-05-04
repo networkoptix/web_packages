@@ -181,7 +181,8 @@
             }
         },
         "errors": {
-            "webpage": "Error loading webpage"
+            "webpage": "Error loading webpage",
+            "unableToAuthorizeCamera": "Unable to authorize \"{name}\" camera"
         }
     },
     "deviceTypes": {

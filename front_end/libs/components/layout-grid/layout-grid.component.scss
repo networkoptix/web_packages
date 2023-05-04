@@ -302,6 +302,13 @@ cdk-tree,
         align-items: center;
         background: var(--header-bg);
 
+        &.has-action:hover {
+            cursor: pointer;
+            h3 {
+                text-decoration: underline;
+            }
+        }
+
         &>.item-error {
             flex-direction: row;
         }
@@ -705,8 +712,4 @@ iframe {
 
 .ellipsis {
     line-height: inherit;
-}
-
-.default-password:hover {
-    text-decoration: underline;
 }

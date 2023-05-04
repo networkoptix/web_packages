@@ -1442,6 +1442,7 @@
     "USB": "USB",
     "Ubuntu": "Ubuntu",
     "Ubuntu Linux": "Ubuntu Linux",
+    "Unable to authorize \"{name}\" camera": "Unable to authorize \"{name}\" camera",
     "Unable to connect to %CLOUD_NAME%, please check your network connection.": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
     "Unable to connect to selected system": "Unable to connect to selected system",
     "Unassigned": "Unassigned",

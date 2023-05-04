@@ -15,6 +15,9 @@ import {
     Subject,
     timer,
     firstValueFrom,
+    from,
+    of,
+    throwError,
 } from 'rxjs';
 import {
     distinctUntilChanged,
@@ -29,6 +32,8 @@ import {
     takeUntil,
     startWith,
     catchError,
+    delay,
+    retry,
 } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 
@@ -986,6 +991,59 @@ export class NxLayoutGridComponent {
             ? '/settings/cameras'
             : `/systems/${this.system.id}/cameras`;
         this.window.open(`${base}/${cleanId(cameraId)}`, '_blank');
+    }
+
+    updateCameraCredentials(system: NxSystem, camera: NxSystemCamera): void {
+        const cameraCredentialUpdateTimeout = 1500;
+        const update = (): Promise<void> => {
+            return of('')
+                .pipe(
+                    delay(cameraCredentialUpdateTimeout),
+                    switchMap(() =>
+                        from(system.cameraManager.getCameras()).pipe(
+                            switchMap(cameras => {
+                                const selectedCamera = cameras.find(({ id }) => id === camera.id);
+                                const unauthorized = selectedCamera.status === 'unauthorized';
+                                if (unauthorized) {
+                                    return throwError('Camera Unauthorized');
+                                }
+                                return of(selectedCamera);
+                            }),
+                            delay(cameraCredentialUpdateTimeout),
+                        ),
+                    ),
+                    retry(5),
+                    delay(cameraCredentialUpdateTimeout),
+                    catchError(err => {
+                        console.error(err);
+                        return of(err);
+                    }),
+                )
+                .toPromise()
+                .finally(() => {
+                    const selectedCamera = system.cameraManager.cameras.find(
+                        ({ id }) => id === camera.id,
+                    );
+
+                    pickFrom(selectedCamera, ['unauthorized', 'status'], camera);
+
+                    if (camera.unauthorized) {
+                        this.dialogsService.notify(
+                            {
+                                value: staticLang.layouts.errors.unableToAuthorizeCamera,
+                                params: pickFrom(selectedCamera, ['name']),
+                            },
+                            'warning',
+                        );
+                    }
+                });
+        };
+
+        this.dialogsService.updateCameraCredentials({
+            camera,
+            system,
+            updateCallback: update,
+        });
     }
 
     generateLayoutItem = (
