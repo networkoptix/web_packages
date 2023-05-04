@@ -44,7 +44,7 @@ ${IPVD MANUFACTURERS PANE}            //nx-ipvd//nx-vendor-list/nx-block[@id='ve
 ${IPVD MANUFACTURERS PANE ITEM}       ${IPVD MANUFACTURERS PANE}//*[contains(@class,"float-left mr-1 mb-1")]
 ${IPVD AND MORE}                      ${IPVD MANUFACTURERS PANE}//div[@class="manufacture-info"]
 #IPVD Devices
-${IPVD DEVICES PANE}                  //nx-ipvd//nx-vendor-list/nx-block[@id='cameras']
+${IPVD DEVICES PANE}                  //nx-ipvd//nx-vendor-list/nx-block[@id='cameras-block']
 ${IPVD DEVS FILTER EXTRA HIGH RES CAMERAS}    ${IPVD DEVICES PANE}//nx-tag/a[contains(text(),'${IPVD DEV FILTER EXTRA HIGH RES CAMERAS}')]/..
 ${IPVD DEVS FILTER CAMERAS WITH ADV PTZ}      ${IPVD DEVICES PANE}//nx-tag/a[contains(text(),'${IPVD DEV FILTER CAMERAS WITH ADV PTZ}')]/..
 ${IPVD DEVS FILTER PTZ CAMERAS}               ${IPVD DEVICES PANE}//nx-tag/a[contains(text(),'${IPVD DEV FILTER PTZ CAMERAS}')]/..

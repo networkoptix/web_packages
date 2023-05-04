@@ -31,6 +31,8 @@
 "restCookieLogin": false,
 "requestCaching": false,
 "requestCachingRemoteSync": false,
+"crossTabSyncEnabled": false,
+"useAuthenticationInterceptor": false,
 "paginatorExperimental": true,
 "landingPage": false,
 "kbInstantSearch": true,
