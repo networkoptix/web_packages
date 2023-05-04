@@ -1,4 +1,9 @@
-import { getCsrf } from './interceptor-manager';
+export const getCsrf = (): string =>
+    document.cookie
+        .split('; ')
+        .find(row => row.startsWith('csrftoken'))
+        ?.split('=')
+        .pop();
 
 export class ScopedTokenState {
     tokenBc: BroadcastChannel;

@@ -7,13 +7,6 @@ import {
 
 import { ScopedTokenState } from './scoped-token-state';
 
-export const getCsrf = (): string =>
-    document.cookie
-        .split('; ')
-        .find(row => row.startsWith('csrftoken'))
-        ?.split('=')
-        .pop();
-
 export class InterceptorManager {
     static INSTANCE: InterceptorManager;
 
