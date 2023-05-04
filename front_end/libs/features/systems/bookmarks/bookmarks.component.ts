@@ -127,7 +127,7 @@ export class NxBookmarksComponent implements OnInit {
             this.CONFIG.isDarkTheme ? '' : '-cloud'
         }.svg`;
 
-        this.route.params.pipe(take(1)).subscribe(queryParams => {
+        this.route.queryParams.pipe(take(1)).subscribe(queryParams => {
             this.queryParams = { ...queryParams };
             /* (ngModelChange) for <nx-simple-search> and <nx-checkbox>
             fire on initial values, which then causes the url to
