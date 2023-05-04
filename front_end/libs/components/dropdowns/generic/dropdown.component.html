@@ -58,10 +58,15 @@
         [nxArrowNav]="show"
         [style]="{
             display: show ? 'inline-block' : 'none',
-            width: forcePosition?.width ? forcePosition.width + 'px' : '100%'
+            width: forcePosition?.width ? forcePosition.width + 'px' : '100%',
+            top:
+                forcePosition?.top === 'auto'
+                    ? 'auto'
+                    : (forcePosition?.top || nativeElementTop - (forcePosition?.offsetTop || 0)) +
+                      'px',
+            bottom: forcePosition?.bottom === 'auto' ? 'auto' : forcePosition?.bottom + 'px' || 0
         }"
         [style.left.px]="forcePosition?.left || 0"
-        [style.top.px]="forcePosition?.top || nativeElementTop - (forcePosition?.offsetTop || 0)"
         [attr.aria-labelledby]="id"
     >
         <div

@@ -9,8 +9,8 @@ import { NgChanges } from '@utils/ng-changes';
     encapsulation: ViewEncapsulation.None,
 })
 export class BoolIconComponent implements OnInit {
-    @Input() param: string;
-    @Input() value: string;
+    @Input() param: string | unknown;
+    @Input() value: string | unknown;
     @Input() align: string;
 
     public additional: string;

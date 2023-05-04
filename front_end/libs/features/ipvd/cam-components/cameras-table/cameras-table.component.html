@@ -1,0 +1,46 @@
+<div class="nx-new-table-container">
+    <nx-table
+        class="cameras"
+        set-pagination
+        set-sorting
+        set-rows
+        [set-arrange]="headerFlow"
+        [data]="elements"
+    >
+        <ng-template #header>
+            <div
+                class="position-relative"
+                *ngFor="let head of showHeaders"
+                #sortItem
+            >
+                <span
+                    class="head-title ellipsis"
+                    title="{{ head.value }}"
+                    >{{ head.value }}</span
+                >
+            </div>
+        </ng-template>
+        <ng-template
+            #rows
+            let-row
+        >
+            <div
+                *ngFor="let prop of row | keyvalue; let idx = index"
+                [style.justify-content]="isBoolIcon(prop.value) ? 'center' : 'flex-start'"
+                class="div-container-wrapper"
+                data-id="1"
+                style="grid-area: {{ prop.key }}"
+            >
+                <div *ngIf="!isBoolIcon(prop.value); else icon">
+                    {{ prop.value }}
+                </div>
+                <ng-template #icon>
+                    <nx-bool-icon
+                        [param]="prop.key"
+                        [value]="prop.value"
+                    ></nx-bool-icon>
+                </ng-template>
+            </div>
+        </ng-template>
+    </nx-table>
+</div>

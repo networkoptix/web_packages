@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 
-import { NxBaseTableModule } from '@components/table/table.module';
-
 import { ApplyModule } from './apply/apply.module';
 import { CarouselModule } from './carousel/carousel.module';
 import { CheckboxModule } from './checkbox/checkbox.module';
@@ -67,7 +65,6 @@ import { TooltipModule } from './tooltip/tooltip.module';
         TagModule,
         TooltipModule,
         MultiLineEllipsisModule,
-        NxBaseTableModule,
     ],
     exports: [
         ActiveSystemModule,
@@ -101,7 +98,6 @@ import { TooltipModule } from './tooltip/tooltip.module';
         TagModule,
         TooltipModule,
         MultiLineEllipsisModule,
-        NxBaseTableModule,
     ]
 })
 

@@ -1,4 +1,7 @@
-<div class="d-flex pl-2 pb-3">
+<div
+    style="display: none !important"
+    class="d-flex pl-2 pb-3"
+>
     <nx-checkbox
         componentId="showSubLevels"
         [labelText]="'Include sub-levels'"
@@ -6,10 +9,7 @@
     >
     </nx-checkbox>
 </div>
-<div
-    class="nx-new-table-container"
-    style="border: 1px solid lightgray; height: 355px"
->
+<div class="nx-new-table-container">
     <nx-table
         set-pagination
         set-sorting
@@ -20,7 +20,7 @@
         (onRowExpand)="expandRow($event)"
     >
         <ng-template #header>
-            <div [ngStyle]="{ order: 0 }">
+            <div style="grid-area: userId">
                 <nx-checkbox
                     componentId="checkAll"
                     style="margin-left: 6px"
@@ -31,47 +31,41 @@
             <div
                 #sortItem
                 data-sort-string
-                [ngStyle]="{ order: headers['login'].order }"
+                style="grid-area: email"
             >
-                {{ headers['login'].name }}
+                {{ headers['email'].name }}
             </div>
             <div
                 #sortItem
                 data-sort-string
-                [ngStyle]="{ order: headers['fullName'].order }"
+                style="grid-area: fullName"
             >
                 {{ headers['fullName'].name }}
             </div>
-            <div
-                #sortItem
-                [ngStyle]="{ order: headers['accessLevel'].order }"
-            >
+            <div style="grid-area: accessLevel">
                 {{ headers['accessLevel'].name }}
             </div>
-            <div
-                #sortItem
-                [ngStyle]="{ order: headers['groups'].order }"
-            >
-                {{ headers['groups'].name }}
+            <div style="grid-area: roles">
+                {{ headers['roles'].name }}
             </div>
-            <div [ngStyle]="{ order: 6 }">&nbsp;</div>
+            <div>&nbsp;</div>
         </ng-template>
         <ng-template
             #rows
             let-row
         >
             <div
-                data-id="{{ row.id }}"
-                [ngStyle]="{ order: 0 }"
+                data-id="{{ row.userId }}"
+                style="grid-area: userId"
             >
                 <nx-checkbox
-                    componentId="check{{ row.login }}"
+                    componentId="checkBox{{ row.email }}"
                     style="margin-left: 6px"
                     (onClick)="selectRecord(row)"
                 >
                 </nx-checkbox>
                 <svg-icon
-                    *ngIf="subLevels && (row.group.length > 1 || row.accessLevel.length > 1)"
+                    *ngIf="subLevels && (row.roles.length > 1 || row.accessLevel.length > 1)"
                     nx-add-svg-src
                     class="icon-expand"
                     [src]="icons.dirTextButtons + 'arrow_expand.svg'"
@@ -82,39 +76,39 @@
 
             <div
                 class="div-container-wrapper"
-                data-id="{{ row.id }}"
-                [ngClass]="row.id === expandRowId ? 'expanded' : ''"
-                [ngStyle]="{ order: headers['login'].order }"
+                data-id="{{ row.userId }}"
+                style="grid-area: email"
+                [ngClass]="row.userId === expandRowId ? 'expanded' : ''"
             >
-                {{ row.login }}
+                {{ row.email }}
             </div>
 
             <div
-                data-id="{{ row.id }}"
-                [ngStyle]="{ order: headers['fullName'].order }"
+                data-id="{{ row.userId }}"
+                style="grid-area: fullName"
             >
                 {{ row.fullName }}
             </div>
 
             <div
                 class="div-container-wrapper"
-                data-id="{{ row.id }}"
-                [ngStyle]="{ order: headers['accessLevel'].order }"
+                data-id="{{ row.userId }}"
+                style="grid-area: accessLevel"
                 *ngIf="row.accessLevel.length === 1"
             >
-                {{ row.accessLevel[0].name }}
+                {{ row.accessLevel[0] }}
             </div>
             <div
                 class="div-container-wrapper"
-                data-id="{{ row.id }}"
-                [ngStyle]="{ order: headers['accessLevel'].order }"
+                data-id="{{ row.userId }}"
+                style="grid-area: accessLevel"
                 *ngIf="row.accessLevel.length > 1"
             >
                 <div
                     class="div-container"
                     *ngIf="!subLevels"
                 >
-                    {{ row.accessLevel[0].name }}
+                    {{ row.accessLevel[0] }}
                 </div>
                 <div
                     class="div-container"
@@ -125,35 +119,35 @@
 
                 <div
                     class="div-container-wrapper"
-                    *ngIf="subLevels && row.id === expandRowId"
+                    *ngIf="subLevels && row.userId === expandRowId"
                 >
                     <div *ngFor="let level of row.accessLevel">
-                        {{ level.name }}
+                        {{ level }}
                     </div>
                 </div>
             </div>
 
             <div
                 class="div-container-wrapper"
-                data-id="{{ row.id }}"
-                [ngStyle]="{ order: headers['groups'].order }"
-                *ngIf="row.group.length === 1"
+                data-id="{{ row.userId }}"
+                style="grid-area: roles"
+                *ngIf="row.roles.length === 1"
             >
                 <div class="div-container">
-                    {{ row.group[0].name }}
+                    {{ row.roles[0].name }}
                 </div>
             </div>
             <div
                 class="div-container-wrapper"
-                data-id="{{ row.id }}"
-                [ngStyle]="{ order: headers['groups'].order }"
-                *ngIf="row.group.length > 1"
+                data-id="{{ row.userId }}"
+                style="grid-area: roles"
+                *ngIf="row.roles.length > 1"
             >
                 <div
                     class="div-container"
                     *ngIf="!subLevels"
                 >
-                    {{ row.group[0].name }}
+                    {{ row.roles[0] }}
                 </div>
                 <div
                     class="div-container"
@@ -164,21 +158,18 @@
 
                 <div
                     class="div-container-wrapper"
-                    *ngIf="subLevels && row.id === expandRowId"
+                    *ngIf="subLevels && row.userId === expandRowId"
                 >
                     <div
                         class="div-container"
-                        *ngFor="let group of row.group"
+                        *ngFor="let group of row.roles"
                     >
-                        {{ group.name }}
+                        {{ group }}
                     </div>
                 </div>
             </div>
 
-            <div
-                class="div-container-wrapper"
-                [ngStyle]="{ order: 6 }"
-            >
+            <div class="div-container-wrapper">
                 <svg-icon
                     nx-add-svg-src
                     [src]="icons.dir + 'delete.svg'"
@@ -187,24 +178,4 @@
             </div>
         </ng-template>
     </nx-table>
-</div>
-
-<div
-    class="mb-3 row m-0 p-3 d-flex align-items-end"
-    style="border: 1px solid gray"
->
-    <div
-        style="margin-right: 1rem"
-        class="d-flex flex-column"
-        *ngFor="let header of headers | keyvalue"
-        [ngStyle]="{ order: header.value.order }"
-    >
-        <div>{{ header.value.name }}</div>
-        <input
-            type="number"
-            style="width: 80px"
-            [(ngModel)]="header.value.order"
-            [value]="header.value.order"
-        />
-    </div>
 </div>

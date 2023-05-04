@@ -1,11 +1,14 @@
-<div class="">
+<div class="h-100">
     <div class="h-100">
         <div
-            class="block-container mt-3"
+            class="block-container mt-3 h-100"
             *ngIf="menuReady"
         >
             <h1>SANDBOX</h1>
-            <div class="row">
+            <div
+                class="row"
+                style="height: calc(100% - 100px)"
+            >
                 <div class="col-12 col-md-4 col-xl-3">
                     <nx-menu [content]="content"></nx-menu>
                 </div>

@@ -128,27 +128,51 @@
 
 .nx-new-table {
     &-container {
-        margin : 0 0 1rem;
-        padding :1rem;
+        height: calc(100% - 1rem);
+        margin : 1rem 0 1rem;
     }
 
-    .header div {
-        display: flex;
-        flex-wrap: wrap;
-        align-content: center;
-        justify-items: flex-start;
-        line-height: 22px;
-        cursor: default;
+    .header {
+        grid-template-columns: 50px repeat(4, 1fr) 32px;
+
+        & > div {
+            display: flex;
+            flex-wrap: wrap;
+            align-content: center;
+            justify-items: flex-start;
+            line-height: 22px;
+            cursor: default;
+            border-right: 1px solid var(--border-color);
+            padding-left: 8px;
+
+            &:last-child {
+                border-right: none;
+                padding-left: 0;
+            }
+
+            .head-title {
+                padding-right: 24px;
+                pointer-events: none;
+            }
+
+            .sort-svg {
+                position: absolute;
+                top: 8px;
+                right: 0;
+            }
+        }
     }
 
     .big-row {
         display: grid;
-        grid-template-columns: 50px 1fr 1fr 1fr 1fr 30px;
+        grid-template-columns: 50px repeat(4, 1fr) 32px;
         grid-template-rows: minmax(2.5rem, auto);
+        background-color: var(--card-body-bg);
+        border-bottom: 1px solid var(--border-color);
 
-        &:nth-child(even) {
-            background-color: var(--card-header-bg);
-        }
+        //&:last-child {
+        //    border-bottom: none;
+        //}
 
         & div {
             display: flex;
@@ -158,6 +182,16 @@
 
             svg-icon.icon-expand {
                 transform: rotate(-90deg);
+            }
+        }
+
+        & > div {
+            border-right: 1px solid var(--border-color);
+            padding-left: 8px;
+
+            &:last-child {
+                border-right: none;
+                padding-left: 4px;
             }
         }
 
@@ -180,6 +214,23 @@
         .div-container-wrapper svg-icon svg .st0 {
             fill: var(--svg-std-icon-fill);
             stroke: none;
+        }
+    }
+}
+
+.cameras {
+    .nx-new-table {
+        .header {
+            grid-template-columns: repeat(2, 150px) repeat(2, 100px) repeat(9, 80px);
+        }
+        .big-row {
+            grid-template-columns: repeat(2, 150px) repeat(2, 100px) repeat(9, 80px);
+            grid-template-rows: 40px;
+
+            & > div:last-child {
+                border-right: 1px solid var(--border-color);
+                padding-left: 8px;
+            }
         }
     }
 }

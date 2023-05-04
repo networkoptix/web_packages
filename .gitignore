@@ -31,3 +31,4 @@ etc/rabbitmq
 cloud/.coverage
 node_modules
 quart_env/
+.python-version

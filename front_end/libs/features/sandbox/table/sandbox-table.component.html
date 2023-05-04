@@ -1,4 +1,7 @@
-<div class="d-flex pl-2 py-3">
+<div
+    style="display: none !important"
+    class="d-flex pl-2 py-3"
+>
     <nx-checkbox
         componentId="showSubLevels"
         [labelText]="'Include sub-levels'"
@@ -6,10 +9,7 @@
     >
     </nx-checkbox>
 </div>
-<div
-    class="nx-new-table-container"
-    style="border: 1px solid lightgray; height: 355px"
->
+<div class="nx-new-table-container">
     <nx-table
         set-pagination
         set-sorting
@@ -20,7 +20,7 @@
         (onRowExpand)="expandRow($event)"
     >
         <ng-template #header>
-            <div [ngStyle]="{ order: 0 }">
+            <div style="grid-area: id">
                 <nx-checkbox
                     componentId="checkAll"
                     style="margin-left: 6px"
@@ -31,30 +31,24 @@
             <div
                 #sortItem
                 data-sort-string
-                [ngStyle]="{ order: headers['login'].order }"
+                style="grid-area: login"
             >
                 {{ headers['login'].name }}
             </div>
             <div
                 #sortItem
                 data-sort-string
-                [ngStyle]="{ order: headers['fullName'].order }"
+                style="grid-area: fullName"
             >
                 {{ headers['fullName'].name }}
             </div>
-            <div
-                #sortItem
-                [ngStyle]="{ order: headers['accessLevel'].order }"
-            >
+            <div style="grid-area: accessLevel">
                 {{ headers['accessLevel'].name }}
             </div>
-            <div
-                #sortItem
-                [ngStyle]="{ order: headers['groups'].order }"
-            >
+            <div style="grid-area: group">
                 {{ headers['groups'].name }}
             </div>
-            <div [ngStyle]="{ order: 6 }">&nbsp;</div>
+            <div>&nbsp;</div>
         </ng-template>
         <ng-template
             #rows
@@ -62,7 +56,7 @@
         >
             <div
                 data-id="{{ row.id }}"
-                [ngStyle]="{ order: 0 }"
+                style="grid-area: id"
             >
                 <nx-checkbox
                     componentId="check{{ row.login }}"
@@ -83,15 +77,15 @@
             <div
                 class="div-container-wrapper"
                 data-id="{{ row.id }}"
+                style="grid-area: login"
                 [ngClass]="row.id === expandRowId ? 'expanded' : ''"
-                [ngStyle]="{ order: headers['login'].order }"
             >
                 {{ row.login }}
             </div>
 
             <div
                 data-id="{{ row.id }}"
-                [ngStyle]="{ order: headers['fullName'].order }"
+                style="grid-area: fullName"
             >
                 {{ row.fullName }}
             </div>
@@ -99,7 +93,7 @@
             <div
                 class="div-container-wrapper"
                 data-id="{{ row.id }}"
-                [ngStyle]="{ order: headers['accessLevel'].order }"
+                style="grid-area: accessLevel"
                 *ngIf="row.accessLevel.length === 1"
             >
                 {{ row.accessLevel[0].name }}
@@ -107,7 +101,7 @@
             <div
                 class="div-container-wrapper"
                 data-id="{{ row.id }}"
-                [ngStyle]="{ order: headers['accessLevel'].order }"
+                style="grid-area: accessLevel"
                 *ngIf="row.accessLevel.length > 1"
             >
                 <div
@@ -136,7 +130,7 @@
             <div
                 class="div-container-wrapper"
                 data-id="{{ row.id }}"
-                [ngStyle]="{ order: headers['groups'].order }"
+                style="grid-area: group"
                 *ngIf="row.group.length === 1"
             >
                 <div class="div-container">
@@ -146,7 +140,7 @@
             <div
                 class="div-container-wrapper"
                 data-id="{{ row.id }}"
-                [ngStyle]="{ order: headers['groups'].order }"
+                style="grid-area: group"
                 *ngIf="row.group.length > 1"
             >
                 <div
@@ -175,10 +169,7 @@
                 </div>
             </div>
 
-            <div
-                class="div-container-wrapper"
-                [ngStyle]="{ order: 6 }"
-            >
+            <div class="div-container-wrapper">
                 <svg-icon
                     nx-add-svg-src
                     [src]="icons.dir + 'delete.svg'"
@@ -187,24 +178,4 @@
             </div>
         </ng-template>
     </nx-table>
-</div>
-
-<div
-    class="mb-3 row m-0 p-3 d-flex align-items-end"
-    style="border: 1px solid gray"
->
-    <div
-        style="margin-right: 1rem"
-        class="d-flex flex-column"
-        *ngFor="let header of headers | keyvalue"
-        [ngStyle]="{ order: header.value.order }"
-    >
-        <div>{{ header.value.name }}</div>
-        <input
-            type="number"
-            style="width: 80px"
-            [(ngModel)]="header.value.order"
-            [value]="header.value.order"
-        />
-    </div>
 </div>

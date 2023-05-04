@@ -1,48 +1,113 @@
-<div class="nx-new-table container">
-    <div class="header">
-        <ng-container
-            *ngTemplateOutlet="header || defaultHeaderTemplate; context: { $implicit: data }"
-        ></ng-container>
-    </div>
-    <div class="body">
-        <div class="content">
-            <div
-                *ngFor="let row of pagedItems; trackBy: trackItem"
-                class="big-row"
-                [ngClass]="row.id === expandRowId ? 'expanded' : ''"
-                (click)="onRowClick($event)"
+<nx-pre-loader *ngIf="!data.length"></nx-pre-loader>
+
+<div
+    class="controls"
+    *ngIf="setRearrange && data.length"
+>
+    <button
+        class="btn btn-default"
+        (click)="restore()"
+        translate
+    >
+        Restore
+    </button>
+    <div
+        cdkDropList
+        [style.margin]="'20px 0'"
+        (cdkDropListDropped)="drop($event)"
+        [style.display]="'flex'"
+        [style.flex-direction]="'row'"
+        [style.justifyContent]="'space-between'"
+    >
+        <div
+            *ngFor="let head of headers | keyvalue; index as i"
+            class="drag-item"
+            cdkDrag
+        >
+            <button
+                class="btn btn-default-clear mr-2"
+                (click)="removeKey(i)"
+                translate
             >
-                <ng-container
-                    *ngTemplateOutlet="rows || defaultRowTemplate; context: { $implicit: row }"
-                ></ng-container>
-            </div>
+                X
+            </button>
+            <span>{{ head.value }}</span>
         </div>
     </div>
+</div>
+
+<div
+    class="nx-new-table"
+    *ngIf="data.length"
+>
+    <div class="nx-new-table-horizontal-wrapper">
+        <div class="nx-new-table-table-wrapper">
+            <div
+                class="header"
+                [style.display]="'grid'"
+                [style.gridTemplateAreas]="template"
+            >
+                <ng-container
+                    *ngTemplateOutlet="
+                        header || defaultHeaderTemplate;
+                        context: { $implicit: data }
+                    "
+                ></ng-container>
+            </div>
+
+            <div class="body">
+                <div class="content">
+                    <div
+                        *ngFor="let row of pagedItems"
+                        class="big-row"
+                        [style.display]="'grid'"
+                        [style.gridTemplateAreas]="template"
+                        (click)="onRowClick($event)"
+                    >
+                        <ng-container
+                            *ngTemplateOutlet="
+                                rows || defaultRowTemplate;
+                                context: { $implicit: row }
+                            "
+                        ></ng-container>
+                    </div>
+                </div>
+                <!--        <div class="grid-background">-->
+                <!--            <div *ngFor="let _ of [].constructor(30 * 6)"></div>-->
+                <!--        </div>-->
+            </div>
+        </div>
+
+        <!--        <div class="sidebar"></div>-->
+    </div>
+
     <div class="footer">
         <div
             *ngIf="setPagination"
             class="paginator-wrapper"
         >
-            <div
-                class="rows-selector"
-                *ngIf="setRows"
-            >
-                <span translate>Rows per page:</span>
-                <nx-select
-                    type="transparent-button"
-                    [selected]="perPageSelectedOption"
-                    [items]="perPageOptions"
-                    (onSelected)="setRowsPerPage($event)"
-                ></nx-select>
-            </div>
-
             <div [innerText]="'{n} of {m}' | translate: { n: nDisplayed, m: data.length }"></div>
+            <div class="d-flex">
+                <div
+                    class="rows-selector"
+                    *ngIf="setRows"
+                >
+                    <span translate>Rows per page</span>
+                    <nx-select
+                        type="transparent-button"
+                        [forcePosition]="{ top: 'auto', bottom: 32 }"
+                        [selected]="perPageSelectedOption"
+                        [items]="perPageOptions"
+                        (onSelected)="setRowsPerPage($event)"
+                    ></nx-select>
+                </div>
 
-            <nx-paginator
-                [numPages]="numPages"
-                [pagesToShow]="3"
-                (onChange)="setPage($event)"
-            ></nx-paginator>
+                <nx-paginator
+                    [numPages]="numPages"
+                    [pagesToShow]="3"
+                    (onChange)="setPage($event)"
+                ></nx-paginator>
+            </div>
         </div>
     </div>
 

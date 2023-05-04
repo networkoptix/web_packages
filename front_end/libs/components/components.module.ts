@@ -6,6 +6,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { SharedComponentsModule } from '@components/shared-components.module';
 // import { HeaderModule } from './header/header.module';
+import { NxBaseTableModule } from '@components/table/table.module';
 import {
     NxImageComponent
 } from '@pages/health/table-components/image/image.component';
@@ -20,6 +21,7 @@ import { NxGenericDropdownModule } from './dropdowns/generic/dropdown.module';
         ComponentsCoreModule,
         ComponentsCommonModule,
         SharedComponentsModule,
+        NxBaseTableModule,
     ],
     declarations: [
         NxImageComponent,
@@ -38,6 +40,7 @@ import { NxGenericDropdownModule } from './dropdowns/generic/dropdown.module';
         ComponentsCoreModule,
         ComponentsCommonModule,
         SharedComponentsModule,
+        NxBaseTableModule,
     ]
 })
 export class ComponentsModule {

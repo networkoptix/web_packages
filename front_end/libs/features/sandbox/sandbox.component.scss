@@ -46,6 +46,11 @@ $theme-map : null;
     @return map-get($theme-map, $key);
 }
 
+:host {
+    height: calc(100% - 20px);
+    display: block;
+}
+
 .theme-container {
     @include themify($themes) {
         color: themed("textColor");

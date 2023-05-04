@@ -145,6 +145,6 @@ export class NxOrganizationsComponent implements OnInit {
     }
 
     toRoot(): void {
-        this.router.navigate(['home', 'channelPartners', 'testId']);
+        this.router.navigate(['home', 'channelPartners', '4']);
     }
 }

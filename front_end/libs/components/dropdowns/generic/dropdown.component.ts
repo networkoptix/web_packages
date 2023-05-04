@@ -60,7 +60,8 @@ export class NxGenericDropdown<
     @Input() noMatchMsg: string;
     @Input() forcePosition: {
         left?: number;
-        top?: number;
+        top?: number | 'auto';
+        bottom?: number | 'auto';
         width?: number;
         offsetTop?: number;
     };

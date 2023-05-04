@@ -1,3 +1,4 @@
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
     AfterContentInit,
     Component,
@@ -8,6 +9,7 @@ import {
     Inject,
     Input,
     LOCALE_ID,
+    OnChanges,
     OnInit,
     Output,
     QueryList,
@@ -18,13 +20,17 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import staticLang from '@app/language/language_i18n_static.json';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+// import { TData } from '@components/table/table.types';
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
+import { NgChanges } from '@utils/ng-changes';
 
 /* USAGE
  <nx-table
     set-pagination                              // set pagination
     set-sorting                                 // set sorting
     set-rows                                    // allow row per page adjustment (dropdown)
+    set-rearrange                               // allow columns to be re-arranged
+    [set-arrange]="id name login ..."           // external control of column arranging
     [rows-per-page]="[{name: '5', value: 5}]"
     [set-row-expand]="subLevels"                // control if rows can be expanded
     (onRowExpand)="expandRow($event)"
@@ -35,19 +41,24 @@ import { CoercedBoolInput, IBool } from '@decorators/ibool';
  .. see sandbox/table
 */
 
+type Prop = [];
+
 @UntilDestroy()
 @Component({
     selector: 'nx-table',
     templateUrl: 'table.component.html',
     styleUrls: ['table.component.scss'],
 })
-export class NxBaseTableComponent implements OnInit, AfterContentInit {
-    @Input() data: Record<string, string | boolean | Record<string, string>[]>[];
+export class NxBaseTableComponent<T> implements OnInit, AfterContentInit, OnChanges {
+    @Input() data: T[];
+
     @IBool() @Input('set-pagination') setPagination: CoercedBoolInput;
     @IBool() @Input('set-rows') setRows: CoercedBoolInput;
     @IBool() @Input('set-sorting') setSorting: CoercedBoolInput;
+    @IBool() @Input('set-rearrange') setRearrange: CoercedBoolInput;
+    @Input('set-arrange') setArrange: string[] = [];
     @Input('set-row-expand') setRowExpand: boolean = false;
-    @Input('rows-per-page') rowsPerPage: Array<number> = [25, 50, 100];
+    @Input('rows-per-page') rowsPerPage: Array<number> = [5, 10, 20, 50];
 
     @Output() onRowExpand = new EventEmitter<string>();
 
@@ -63,25 +74,58 @@ export class NxBaseTableComponent implements OnInit, AfterContentInit {
     currentPage: number = 1;
     numPages: number;
     nDisplayed: string;
-    pagedItems: Record<string, string | boolean | Record<string, string>[]>[];
+    pagedItems: T[];
     perPageOptions: DropdownItem<number>[] = [];
     perPageSelectedOption: DropdownItem<number>;
 
     public selectedHeader: string;
     public sortOrderASC: boolean = true;
 
+    template: string = '';
+    _headers: Prop = [];
+    headers: Prop = [];
+
     constructor(private renderer: Renderer2, @Inject(LOCALE_ID) private locale: string) {}
+
+    private createTemplate(): void {
+        this.template = this.setArrange?.length
+            ? `"${this.setArrange.join(' ')}"`
+            : `"${this.headers.join(' ')}"`;
+    }
+
+    drop(event: CdkDragDrop<Prop[]>): void {
+        moveItemInArray(this.headers, event.previousIndex, event.currentIndex);
+        this.createTemplate();
+    }
+
+    removeKey(index: number): void {
+        this.headers.splice(index, 1);
+        this.createTemplate();
+    }
+
+    restore(): void {
+        this.headers = [...this._headers];
+        this.createTemplate();
+    }
 
     ngOnInit(): void {
         this.rowsPerPage.forEach(item => {
             this.perPageOptions.push({ name: `${item}`, value: item });
         });
+    }
 
-        this.perPageOptions.push({ name: this.LANG.search.All, value: this.data.length });
-        this.perPageSelectedOption = this.perPageOptions[0];
+    ngOnChanges(changes: NgChanges<NxBaseTableComponent<T>>): void {
+        if (changes.data?.currentValue.length) {
+            this._headers = <Prop>Object.keys(this.data[0]);
+            this.headers = [...this._headers];
+            this.createTemplate();
 
-        this.numPages = Math.ceil(this.data.length / this.perPageSelectedOption.value);
-        this.setPage(1);
+            this.perPageOptions.push({ name: this.LANG.search.All, value: this.data.length });
+            this.perPageSelectedOption = this.perPageOptions[0];
+
+            this.numPages = Math.ceil(this.data.length / this.perPageSelectedOption.value);
+            this.setPage(1);
+        }
     }
 
     ngAfterContentInit(): void {
@@ -100,10 +144,7 @@ export class NxBaseTableComponent implements OnInit, AfterContentInit {
     }
 
     private toggleSort(param: string, sortType: DOMStringMap, keepURI?: boolean): void {
-        let byParam: (
-            a: Record<string, string | boolean | Record<string, string>[]>,
-            b: Record<string, string | boolean | Record<string, string>[]>,
-        ) => number;
+        let byParam: (a: T, b: T) => number;
 
         let dataParam = param;
         for (const key in this.data[0]) {
@@ -142,7 +183,7 @@ export class NxBaseTableComponent implements OnInit, AfterContentInit {
         const targetId = item.target?.id || item.id;
         let target = item;
         if ('target' in item) {
-            // @ts-expect-error type error
+            // @ts-expect-error compile type error
             target = item.target as EventTarget;
         }
 
@@ -241,12 +282,12 @@ export class NxBaseTableComponent implements OnInit, AfterContentInit {
         this.setPage(1);
     }
 
-    trackItem(
-        _index: number,
-        item: Record<string, string | boolean | Record<string, string>[]>,
-    ): string | boolean | Record<string, string>[] {
-        return item ? item.id : undefined;
-    }
+    // trackItem(
+    //     _index: number,
+    //     item: Record<string, string | boolean | Record<string, string>[]>,
+    // ): string | boolean | Record<string, string>[] {
+    //     return item ? item.id : undefined;
+    // }
 
     onRowClick(event: MouseEvent): void {
         if (this.expandRowId === (event.target as HTMLTableElement).id || !this.setRowExpand) {
