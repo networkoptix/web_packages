@@ -31,6 +31,7 @@ import { ChannelPartnersApi } from './cloud-services/channel-partners/channel-pa
 import { CloudDbAPI } from './cloud-services/cloud-db/cloud-db-api';
 import { CloudStorageAPI } from './cloud-services/cloud-storage/cloud-storage-api';
 import { LicenseServerAPI } from './cloud-services/license-server/license-server-api';
+import { TokenSessionManager } from './cloud-session-manager';
 import { CustomAccountProperty } from './custom-account-property';
 import { CustomClientAPI } from './custom-client-api';
 import * as t from './nx-cloud-api.types';
@@ -853,27 +854,7 @@ export class NxCloudApiService {
      * @param minSessionSeconds : number
      * @returns wraps: (observableInputFactory: ({ accessToken, getFreshAccessToken }) => ObservableInput<unknown>)
      */
-    #withFreshSession: t.WithFreshSession = (
-        minSessionSeconds = 300
-    ) => observableInputFactory => {
-        const getAccessToken = (minSession?: number) => {
-            return this.getAccount(false).pipe(switchMap(({ accessToken }) => {
-                const { sessionExpires } = this.currentAccount || {};
-                return !minSession || !sessionExpires || ((Date.now() + (minSession * 1000)) > sessionExpires)
-                    ? this.refreshAccessTokens()
-                    : of({ accessToken });
-            }));
-        };
-
-        return getAccessToken(minSessionSeconds).pipe(
-            switchMap(({
-                accessToken
-            }) => observableInputFactory({
-                accessToken,
-                getFreshAccessToken: () => getAccessToken().pipe(map(({ accessToken }) => accessToken))
-            }))
-        );
-    };
+    #withFreshSession: t.WithFreshSession = TokenSessionManager.getInstance('/api/account/refreshAccessToken');
 
     getTokenInfo(token: string) {
         return this.http.get(this.CONFIG.cloudHost + '/oauth/introspect/', { params: { token } });

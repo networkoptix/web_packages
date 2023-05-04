@@ -10,6 +10,11 @@ export interface ILanguage {
     name: string;
 }
 
+export interface FreshSeshConfig {
+    accessToken: string;
+    getFreshAccessToken: () => Observable<string>;
+}
+
 export type WithFreshSession = (minSessionSeconds?: number) => <T>(observableInputFactory: (config: { accessToken: string, getFreshAccessToken: () => Observable<string> }) => ObservableInput<T>) => Observable<T>;
 
 export type ILanguages = ILanguage[];
