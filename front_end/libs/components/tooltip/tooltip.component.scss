@@ -10,14 +10,22 @@
         border-radius: 0.25rem;
         position: relative;
         text-align: left;
+        word-wrap: break-word;
+        word-break: break-word;
+        max-width: 200px;
 
-        &:not(.alternate) {
-            max-width: 200px;
+        &.alternate,
+        &.alternateSecondary {
+            color: var(--popover-color) !important;
+            background: var(--popover-bg) !important;
         }
 
         &.alternate {
-            color: var(--popover-color) !important;
-            background: var(--popover-bg) !important;
+            max-width: unset;
+        }
+
+        &.alternateSecondary {
+            box-shadow: 0px 4px 8px var(--tooltip-box-shadow-color);
         }
     }
 

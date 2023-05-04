@@ -39,6 +39,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             grid-gap: 15px;
+            padding: 5px;
 
             &-preloader {
                 position: absolute;
@@ -52,13 +53,6 @@
                 width: 100%;
                 margin-bottom: 5px;
                 justify-self: center;
-            }
-
-            &-tooltip {
-                position: absolute;
-                right: 0;
-                bottom: 20%;
-                max-width: 320px;
             }
         }
 

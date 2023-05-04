@@ -99,6 +99,7 @@ html[data-theme="dark"] {
     --tooltip-shadow-color : #000000;  //$dark1;
     --tooltip-bg : #3F545F; //$dark13;
     --tooltip-color : #E1E7EA; //$light4;
+    --tooltip-box-shadow-color: rgba(73, 98, 111, 0.4);
 
     --popover-shadow-color : none;
     --popover-bg           : #3F545F; //$dark13;
@@ -633,7 +634,7 @@ html[data-theme="dark"] {
     --group-card-bg: var(--dark6);
     --group-card-bg-hover: var(--dark7);
     --group-card-border-color: var(--dark10);
-    
+
     --channel-partner-card-status-background: var(--dark11);
 
     @include generateVarAndRgb(--system-card-bg-grad0, $dark4);
@@ -677,12 +678,20 @@ html[data-theme="dark"] {
     --bookmarks-filter-button-bg: var(--dark6);
     --bookmarks-filter-filled-text: var(--light2);
     --bookmarks-text-highlight-bg: var(--dark12);
-    --bookmarks-duration-bg: rgba(0, 0, 0, .5);
+    --bookmarks-duration-bg: rgba(0, 0, 0, 0.5);
     --bookmarks-card-background-color: var(--dark5);
     --bookmarks-card-background-color-hover: var(--dark7);
     --bookmarks-card-border-color: inherit;
-    --bookmarks-card-title-gradient: linear-gradient(to right, rgba(var(--dark5--rgb), 0), rgba(var(--dark5--rgb), 1)); 
-    --bookmarks-card-title-gradient-hover: linear-gradient(to right, rgba(var(--dark7--rgb), 0), rgba(var(--dark7--rgb), 1)); 
+    --bookmarks-card-title-gradient: linear-gradient(
+        to right,
+        rgba(var(--dark5--rgb), 0),
+        rgba(var(--dark5--rgb), 1)
+    );
+    --bookmarks-card-title-gradient-hover: linear-gradient(
+        to right,
+        rgba(var(--dark7--rgb), 0),
+        rgba(var(--dark7--rgb), 1)
+    );
 
     --tour-background: rgba(var(--dark9--rgb), 0.4);
 

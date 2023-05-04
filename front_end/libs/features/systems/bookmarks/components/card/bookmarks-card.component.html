@@ -1,8 +1,16 @@
 <div
+    #targetThis
+    class="bookmarks-tooltip"
+></div>
+<div
     (click)="openBookmarkModal()"
     role="button"
     (nxOnIntersect)="bookmark.isVisible = $event === 'Visible'"
     [intersectionThreshold]="0.01"
+    [nxTooltip]="enableTooltip ? bookmark.name : ''"
+    alternateSecondary
+    horizontal
+    [alternativeTargetRef]="targetThis"
 >
     <div class="bookmarks-image-wrapper">
         <span class="bookmarks-duration">
@@ -44,6 +52,7 @@
             [viewHeight]="40"
             [viewLineHeight]="19"
             [viewLines]="2"
+            (longText)="enableTooltip = $event"
         >
             {{ bookmark.name }}
         </nx-ml-ellipsis>

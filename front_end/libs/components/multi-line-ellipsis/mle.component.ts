@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { NgChanges } from '@utils/ng-changes';
@@ -23,6 +23,7 @@ export class NxMultiLineEllipsisComponent implements OnChanges {
     @Input() viewHeight: number;
     @Input() viewLineHeight: number;
     @Input() viewLines: number;
+    @Output() longText = new EventEmitter<boolean>();
 
     more: boolean | string = false;
     height: number | string = 75;

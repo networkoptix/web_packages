@@ -81,15 +81,7 @@
                 <div
                     *ngFor="let bookmark of bookmarks; trackBy: trackBookmarkById"
                     class="bookmarks-container"
-                    [nxTooltip]="bookmark.name"
-                    alternateStyle
-                    horizontal
-                    [alternativeTargetRef]="targetThis"
                 >
-                    <div
-                        #targetThis
-                        class="bookmarks-tooltip"
-                    ></div>
                     <nx-bookmarks-card [bookmark]="bookmark"></nx-bookmarks-card>
                 </div>
             </div>

@@ -7,7 +7,10 @@
         class="before"
         [style.height]="viewHeight + 'px'"
     ></div>
-    <div class="body">
+    <div
+        class="body"
+        (resize)="longText.emit($event.height > height)"
+    >
         <ng-content></ng-content>
     </div>
 
