@@ -24,7 +24,7 @@ export class NxBookmarksCardModalComponent {
         @Inject(DIALOG_DATA) { bookmark, startTime, startDate }: DT['data'],
     ) {
         this.bookmark = bookmark;
-        this.exportName = `${bookmark.deviceId}.mp4`;
+        this.exportName = `${bookmark.deviceId}.mkv`; // Will switch to mp4 in the future
         this.time = startTime;
         this.date = startDate;
     }

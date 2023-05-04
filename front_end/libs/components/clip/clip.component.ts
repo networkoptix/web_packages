@@ -12,6 +12,7 @@ export class ClipComponent {
     @Input() sourceUrl: string;
     @Input() posterUrl: string;
     @IBool() @Input() disableDownload: CoercedBoolInput;
+    @IBool() @Input() disablePictureInPicture: CoercedBoolInput;
     @Output() error = new EventEmitter<void>();
 
     readonly internalPoster: string;

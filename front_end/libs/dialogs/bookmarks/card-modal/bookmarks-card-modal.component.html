@@ -22,6 +22,7 @@
                     [sourceUrl]="bookmark.src"
                     [posterUrl]="bookmark.thumbnail | async"
                     disableDownload
+                    disablePictureInPicture
                     (error)="videoError = true"
                 >
                 </nx-clip>
@@ -81,7 +82,7 @@
             View Full Recording
         </a>
         <a
-            [href]="bookmark.src"
+            [href]="bookmark.downloadSrc"
             [download]="exportName"
             class="download-button btn-default btn"
             target="_blank"

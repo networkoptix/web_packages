@@ -213,17 +213,21 @@ export class NxBookmarksComponent implements OnInit {
                     const timeZoneOffset = device
                         ? this.getServerOffsetTime(serverTimes, device.serverId)
                         : 0;
-
-                    return {
-                        ...bk,
-                        tags: bk.tags ?? [],
-                        src: this.system.mediaserver.getExportUrl({
+                    const getLink = (transport: string): string => {
+                        return this.system.mediaserver.getExportUrl({
                             cameraId: bk.deviceId,
                             duration: Math.floor(bk.durationMs / 1000),
                             endPos: bk.startTimeMs + bk.durationMs,
                             pos: bk.startTimeMs,
-                            transport: 'mkv',
-                        }),
+                            transport,
+                        });
+                    };
+
+                    return {
+                        ...bk,
+                        tags: bk.tags ?? [],
+                        src: getLink('mp4'),
+                        downloadSrc: getLink('mkv'),
                         thumbnail: this.system.serverManager.getPreviewUrl(
                             bk.deviceId,
                             bk.startTimeMs,
