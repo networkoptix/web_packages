@@ -40,7 +40,7 @@ ${IPVD ADV FEATURES H.265}            ${IPVD ADV FEATURES}//nx-tag/a[contains(te
 ${IPVD ADV FEATURES MULTI SENSOR}     ${IPVD ADV FEATURES}//nx-tag/a[contains(text(),'${IPVD ADV FEATURE MULTI SENSOR}')]/..
 ${IPVD ADV FEATURES CLOSE BUTTON}     //span[contains(@class,'close-button')]
 #IPVD Manufacturers
-${IPVD MANUFACTURERS PANE}            //nx-ipvd//nx-vendor-list/nx-block[@id='vendors']
+${IPVD MANUFACTURERS PANE}            //nx-ipvd//nx-vendor-list/nx-block[@id='vendors-block']
 ${IPVD MANUFACTURERS PANE ITEM}       ${IPVD MANUFACTURERS PANE}//*[contains(@class,"float-left mr-1 mb-1")]
 ${IPVD AND MORE}                      ${IPVD MANUFACTURERS PANE}//div[@class="manufacture-info"]
 #IPVD Devices

@@ -213,7 +213,7 @@ class ServerAPI5(ServerAPI):
     @keyword
     def set_system_name(self, serverUrl, auth, newName):
         settings = {"systemName": newName}
-        response = ServerAPI5.set_system_settings(self, auth, serverUrl, settings)
+        response = ServerAPI5.set_system_settings(self, serverUrl, settings, auth)
         return response
 
     @keyword

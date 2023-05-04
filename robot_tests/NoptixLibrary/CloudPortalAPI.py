@@ -557,6 +557,7 @@ class CloudPortalAPI(object):
                           auth=HTTPBasicAuth(self.baseEmail, self.password),
                           json=body,
                           verify=False)
+        logger.trace(r.status_code)
         assert r.status_code == 200
         return r.json()
 

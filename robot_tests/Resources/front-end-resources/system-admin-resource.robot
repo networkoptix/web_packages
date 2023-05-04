@@ -39,11 +39,12 @@ System Admin Test Restart
         ...    Start container    ${system}[container]
         ...    AND    Sleep    10
 
-    Set System Name    ${server url}    ${system}[localAuth]    ${system}[name]
+    Set System Name    ${server url}    ${system}[token]    ${system}[name]
     ${settings}=   Create Dictionary    videoTrafficEncryptionForced=false
     Set System Settings    ${server url}    ${settings}    ${system}[token]
     Set System Settings    ${server url}    ${default advanced settings}    ${system}[token]
 # Waits
+
 Wait until settings are visible
     [Arguments]    ${timeout}=${selenium timeout}    ${old system}=${False}
     Wait Until Elements Are Visible
