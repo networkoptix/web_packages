@@ -239,10 +239,11 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                        '%INTEGRATION_SEO_PAGE_DESCRIPTION%']
         email = ['%MAIL_FROM_NAME%', '%MAIL_FROM_EMAIL%', '%REPLY_TO_EMAIL%', '%SMTP_HOST%', '%SMTP_PORT%',
                  '%SMTP_USER%', '%SMTP_PASSWORD%', '%SMTP_TLS%']
-        config = ['%APP_TYPES_FOR_PLATFORM%', '%AVAILABLE_DOWNLOADS_PLATFORM%', '%ALEXA_INTEGRATION_ENABLED%',
-                  '%BOOKMARKS_ENABLED%', '%CLOUD_STORAGE_ENABLED%', '%CLOUD_STORAGE_ENABLED%', '%CLOUD_STORAGE_SIZE%',
-                  '%COPYRIGHT_YEAR%', '%COMPANY_NAME%', '%COMPANY_LINK%', '%DEVELOPERS_ENABLED%', '%FEEDBACK_ENABLED%',
-                  '%INTEGRATION_FILTER_ITEMS%', '%INTEGRATION_SHOW_FILTER_LIMITATION%', '%HM_CACHE_TIMEOUT%',
+        config = ['%ANDROID_APPLICATION_LINK%', '%APP_TYPES_FOR_PLATFORM%', '%AVAILABLE_DOWNLOADS_PLATFORM%',
+                  '%ALEXA_INTEGRATION_ENABLED%', '%BOOKMARKS_ENABLED%', '%CLIENT_PROTOCOL%', '%CLOUD_STORAGE_ENABLED%',
+                  '%CLOUD_STORAGE_ENABLED%', '%CLOUD_STORAGE_SIZE%', '%COPYRIGHT_YEAR%', '%COMPANY_NAME%',
+                  '%COMPANY_LINK%', '%DEVELOPERS_ENABLED%', '%FEEDBACK_ENABLED%', '%INTEGRATION_FILTER_ITEMS%',
+                  '%INTEGRATION_SHOW_FILTER_LIMITATION%', '%IOS_APPLICATION_LINK%', '%HM_CACHE_TIMEOUT%',
                   '%PUBLIC_CUSTOM_CLIENTS%', '%PUBLIC_DOWNLOADS%', '%PUBLIC_RELEASE_HISTORY%', '%SHOW_ALL_BETAS%',
                   '%SHOW_ANALYTICS_EVENTS%', '%SORT_SUPPORTED_DEVICES_BY_POPULARITY%', '%SUPPORT_LINK%',
                   '%PRIVACY_LINK%', '%SUPPORTED_RESOLUTIONS%', '%SUPPORTED_HARDWARE_TYPES%', '%SEARCH_TAGS%',
@@ -288,6 +289,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'available_downloads_platform': ds_data.get('%AVAILABLE_DOWNLOADS_PLATFORM%'),
                 'alexa_integration_enabled': ds_data.get("%ALEXA_INTEGRATION_ENABLED%"),
                 'bookmarks_enabled': ds_data.get("%BOOKMARKS_ENABLED%"),
+                'client_protocol': ds_data.get('%CLIENT_PROTOCOL%'),
                 'cloud_storage_enabled': ds_data.get("%CLOUD_STORAGE_ENABLED%"),
                 'cloud_storage_size': ds_data.get('%CLOUD_STORAGE_SIZE%'),
                 'copyright_year': ds_data.get("%COPYRIGHT_YEAR%"),
@@ -301,6 +303,10 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'integration_store_enabled': integration_store_enabled,
                 'landing_description': landing_description,
                 'health_monitor_cache_timeout': ds_data.get('%HM_CACHE_TIMEOUT%'),
+                'mobile_links': {
+                    'android_application_link': ds_data.get('%ANDROID_APPLICATION_LINK%'),
+                    'ios_application_link': ds_data.get('%IOS_APPLICATION_LINK%')
+                },
                 'public_custom_clients': ds_data.get('%PUBLIC_CUSTOM_CLIENTS%'),
                 'public_downloads': ds_data.get("%PUBLIC_DOWNLOADS%"),
                 'public_releases': ds_data.get("%PUBLIC_RELEASE_HISTORY%"),

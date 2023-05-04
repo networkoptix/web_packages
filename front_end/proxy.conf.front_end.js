@@ -7,7 +7,7 @@ const proxyTargetConfig = {
     regress: 'https://regress.cloud.hdw.mx',
     dev2: 'https://dev2.cloud.hdw.mx',
     dev3: 'https://dev3.cloud.hdw.mx',
-    local: 'http://localhost:8000',
+    local: 'http://0.0.0.0:8000',
     'cloud-test': 'https://cloud-test.hdw.mx',
     ...legacyTargetConfigs
 };

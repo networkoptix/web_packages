@@ -128,8 +128,12 @@ export class NxBootstrapProvider {
         const customStrings = {
             '%CLOUD_NAME%': this.CONFIG.cloudName,
             '%VMS_NAME%': this.CONFIG.vmsName,
+            '%CLIENT_PROTOCOL%': this.CONFIG.clientProtocol,
+            '%PRIVACY_LINK%': this.CONFIG.company.links.privacy,
             '%SUPPORT_LINK%': this.CONFIG.company.links.website,
-            '%COMPANY_NAME%': this.CONFIG.company.name
+            '%COMPANY_NAME%': this.CONFIG.company.name,
+            '%ANDROID_APPLICATION_LINK%': this.CONFIG.mobileLinks.androidApplicationLink,
+            '%IOS_APPLICATION_LINK%': this.CONFIG.mobileLinks.iosApplicationLink
         };
         const processLanguage = processLanguageFactory(customStrings);
         this.languageService.setTranslations(data.language, processLanguage(data));
