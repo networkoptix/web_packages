@@ -35,20 +35,21 @@ export class NxPageService {
         this.metaService.updateLookups('viewport', this.meta.viewport.desktopLayout);
     }
 
-    public redirect404 = (message = ''): void => {
+    public redirect404 = (message = ''): ReturnType<Router['navigate']> => {
         const queryParams: Record<string, string> = {};
 
         if (message && typeof message === 'string') {
             queryParams.message = message;
         }
 
-        this.router
+        return this.router
             .navigate(['404'], {
                 replaceUrl: true,
                 queryParams
             })
             .catch(error => {
                 console.error(error);
+                return false;
             });
     };
 }

@@ -580,7 +580,13 @@ export class NxLayoutViewComponent {
 
     createFocusLayout = async (systemId: string, id: string): Promise<Layout> => {
         const layoutItems = await firstValueFrom(this.layoutItemLookup$);
-        const { details } = layoutItems[`{${id}}`];
+        const { details } = layoutItems[`{${id}}`] || {};
+
+        if (!details) {
+            // Redirect to 404 if no layout or device found.
+            await this.pageService.redirect404();
+        }
+
         const rotation = details.parsedAddParams.rotation || 0;
         return {
             backgroundHeight: -1,
