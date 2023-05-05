@@ -392,6 +392,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             }
             this.systemInfoSubscription = this.system.infoSubject
                 .pipe(
+                    untilDestroyed(this),
                     filter(system => system?.id === this.route.snapshot.params.systemId),
                     tap(({ isOnline }) => {
                         this.applyService.isOnline$.next(!!isOnline);
