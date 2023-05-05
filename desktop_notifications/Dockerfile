@@ -15,11 +15,12 @@ RUN set -ex \
     apk update \
     && apk add --no-cache bash ca-certificates gettext libwebp openjpeg tini wget gcc musl-dev \
         libcrypto1.1 libcurl libffi libgcc libjpeg-turbo libssl1.1 libstdc++ libwebp libxml2 libxslt musl openjpeg tiff yaml zlib \
-        curl jq netcat-openbsd
+        curl jq netcat-openbsd \
+    && python -m pip install --upgrade pip
 
 
 ENV VERSION=$VERSION \
-    POETRY_VERSION="1.1.13" \
+    POETRY_VERSION="1.4.2" \
     POETRY_HOME="/opt/poetry"
 
 ENV PATH="$POETRY_HOME/bin:$PATH"
