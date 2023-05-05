@@ -1,12 +1,11 @@
 import {
-    AfterViewInit,
     Component,
     ContentChildren,
     EventEmitter,
     Input,
+    OnInit,
     Output,
     QueryList,
-    TemplateRef,
 } from '@angular/core';
 
 import { NxTabsDirective } from './tabs.directive';
@@ -17,35 +16,23 @@ import { Tab, TabEmit } from './tabs.types';
     templateUrl: 'tabs.component.html',
     styleUrls: ['tabs.component.scss'],
 })
-export class NxTabsComponent implements AfterViewInit {
+export class NxTabsComponent implements OnInit {
     @Input() onLoadTab: Tab;
     @Output() tabClick = new EventEmitter<TabEmit>();
     @ContentChildren(NxTabsDirective)
     tabs: QueryList<NxTabsDirective>;
-    tabsMap: string[] = [];
+    selectedTab: string;
 
-    currentTabTemplate: TemplateRef<unknown>;
-    currentTabIndex: number = 0;
-
-    ngAfterViewInit(): void {
-        this.tabs.forEach((tab, index) => {
-            this.tabsMap[index] = tab.data.displayName;
-        });
-        this.currentTabTemplate = this.onLoadTab
-            ? this.tabs.find((tab, index) => {
-                  this.currentTabIndex = index;
-                  return tab.data.displayName === this.onLoadTab.displayName;
-              }).template
-            : this.tabs.first.template;
+    ngOnInit(): void {
+        this.selectedTab = this.onLoadTab.displayName;
     }
 
     handleClick(tab: NxTabsDirective, index: number): void {
-        this.currentTabTemplate = tab.template;
-        this.currentTabIndex = index;
-        const data: TabEmit = {
+        this.selectedTab = tab.data.displayName;
+        const response: TabEmit = {
             route: tab.data.route,
             index,
         };
-        this.tabClick.emit(data);
+        this.tabClick.emit(response);
     }
 }

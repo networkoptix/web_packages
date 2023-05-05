@@ -4,13 +4,9 @@
             class="tab"
             *ngFor="let tab of tabs; index as i"
             (click)="handleClick(tab, i)"
-            [ngClass]="{ selected: tab.data.displayName === tabsMap[currentTabIndex] }"
+            [ngClass]="{ selected: tab.data.displayName === selectedTab }"
         >
             {{ tab.data.displayName }}
         </button>
-    </div>
-
-    <div class="display">
-        <ng-container *ngTemplateOutlet="currentTabTemplate"></ng-container>
     </div>
 </div>
