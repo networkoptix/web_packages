@@ -44,16 +44,13 @@ class BitConverter {
     }
 
     constructor(initialBits: number) {
-        this._unit.value = initialBits > 1073741824 * 1024 / 4 ? 'TB' : 'GB';
+        this._unit.value = initialBits > (1073741824 * 1024) / 4 ? 'TB' : 'GB';
 
         if (this._unit.value === 'GB') {
-            this._bits.value = Math.round(
-                (Math.round(initialBits / this.bitsGb)) * this.bitsGb
-            );
+            this._bits.value = Math.round(Math.round(initialBits / this.bitsGb) * this.bitsGb);
         } else {
-            this._bits.value = (
-                Math.round(initialBits / (this.bitsTb / 1000)) * this.bitsTb
-            ) / 1000;
+            this._bits.value =
+                (Math.round(initialBits / (this.bitsTb / 1000)) * this.bitsTb) / 1000;
         }
     }
 
@@ -75,7 +72,7 @@ class BitConverter {
         const roundBy = this.bitsTb / 1000;
         const rounded = Math.round(this.bits / roundBy) * roundBy;
         this.bits = rounded;
-        return Math.round(this.bits / this.bitsTb * 1000) / 1000;
+        return Math.round((this.bits / this.bitsTb) * 1000) / 1000;
     }
 
     set TB(tb: number) {
@@ -118,9 +115,7 @@ interface AdvancedStorage extends Pick<Storage, AdvancedPicked> {
     totalSpace: BitConverter;
 }
 
-function mapStorages(
-    storages: Storage[]
-): [AdvancedStorage[], Watcher<unknown>[]] {
+function mapStorages(storages: Storage[]): [AdvancedStorage[], Watcher<unknown>[]] {
     const advancedStorages: AdvancedStorage[] = [];
     const watchers: Watcher<unknown>[] = [];
 
@@ -130,7 +125,7 @@ function mapStorages(
         const freeSpace = new BitConverter(s.freeSpace);
         const remainingSpace = new FreeSpace(
             new BitConverter(freeSpace.bits - reservedSpace.bits),
-            reservedSpace
+            reservedSpace,
         );
         const maxReserve = new BitConverter(freeSpace.bits + s.vmsSpace);
         const isUsedForWriting = new Watcher<boolean>();
@@ -230,78 +225,80 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
     }
 
     updateAndGetStorage(): void {
-        this.system.storageManager.storageState$.pipe(
-            filter(({ storageInfoLoaded }) => storageInfoLoaded)
-        ).subscribe(currentState => {
-            this.loading = false;
-            this.failedToLoad = false;
-            this.showStorage = !!currentState.locations.length;
+        this.system.storageManager.storageState$
+            .pipe(filter(({ storageInfoLoaded }) => storageInfoLoaded))
+            .subscribe(currentState => {
+                this.loading = false;
+                this.failedToLoad = false;
+                this.showStorage = !!currentState.locations.length;
 
-            if (
-                this.showStorage &&
-                this.currentStorageState?.locations?.length ===
-                currentState.locations?.length &&
-                this.watchersChanged
-            ) {
-                return; // if things seem same do not interrupt user
-            }
+                if (
+                    this.showStorage &&
+                    this.currentStorageState?.locations?.length ===
+                        currentState.locations?.length &&
+                    this.watchersChanged
+                ) {
+                    return; // if things seem same do not interrupt user
+                }
 
-            this.currentStorageState = currentState;
-            if (!this.showStorage) {
-                this.storages = [];
-                this.watchers = [];
-            } else {
-                [this.storages, this.watchers] = mapStorages(
-                    currentState.locations
-                );
-                this.updateSaveProcess();
-            }
-        });
+                this.currentStorageState = currentState;
+                if (!this.showStorage) {
+                    this.storages = [];
+                    this.watchers = [];
+                } else {
+                    [this.storages, this.watchers] = mapStorages(currentState.locations);
+                    this.updateSaveProcess();
+                }
+            });
     }
 
     private saveStorages(): void {
         this.storages.forEach(({ storageId: id, isUsedForWriting, reservedSpace }) => {
-            const storage = this.currentStorageState.locations
-                .find(({ storageId }) => storageId === id);
+            const storage = this.currentStorageState.locations.find(
+                ({ storageId }) => storageId === id,
+            );
             storage.usedForWriting = isUsedForWriting.value;
             storage.reservedSpace = Math.round(reservedSpace.bits);
         });
 
-        this.currentStorageState.saveStorages()
-            .toPromise().then(response => {
-                if (response.error !== undefined && response.error !== '0') {
+        this.currentStorageState
+            .saveStorages()
+            .toPromise()
+            .then(
+                response => {
+                    if (response.error !== undefined && response.error !== '0') {
+                        this.dialogsService.alert({
+                            title: this.LANG.dialogs.titles.error,
+                            message: response.errorString,
+                        });
+                    } else {
+                        this.dialogsService.alert({
+                            title: this.LANG.dialogs.titles.success,
+                            message: this.LANG.dialogs.message.storageSettingsSaved,
+                        });
+                    }
+                },
+                () => {
                     this.dialogsService.alert({
                         title: this.LANG.dialogs.titles.error,
-                        message: response.errorString,
+                        message: this.LANG.dialogs.message.storageSettingsNotSaved,
                     });
-                } else {
-                    this.dialogsService.alert({
-                        title: this.LANG.dialogs.titles.success,
-                        message: this.LANG.dialogs.message.storageSettingsSaved,
-                    });
-                }
-            }, () => {
-                this.dialogsService.alert({
-                    title: this.LANG.dialogs.titles.error,
-                    message: this.LANG.dialogs.message.storageSettingsNotSaved,
-                });
-            }).then(() => {
+                },
+            )
+            .then(() => {
                 this.updateWatchers();
             });
     }
 
     updateSaveProcess(): void {
         this.saveSettings = this.processService.createProcess(() => {
-            const overwrite = this.storages.some(s =>
-                s.remainingSpace.bits < 0
-            );
+            const overwrite = this.storages.some(s => s.remainingSpace.bits < 0);
             if (overwrite) {
-                return this.dialogsService.reserveSpaceWarning()
-                    .then((res: string | void) => {
-                        if (res === 'accept') {
-                            this.saveStorages();
-                        }
-                    });
+                return this.dialogsService.reserveSpaceWarning().then((res: string | void) => {
+                    if (res === 'accept') {
+                        this.saveStorages();
+                    }
+                });
             } else {
                 this.saveStorages();
                 return Promise.resolve();
@@ -311,13 +308,10 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
 
     friendlyBytes(bits: number, gbTb?: GbOrTb): string {
         const { locale } = this;
-        return bitsToString(
-            bits,
-            {
-                locale,
-                roundTo: gbTb === 'TB' ? 1073741824 * 102.4 : 1073741824
-            }
-        );
+        return bitsToString(bits, {
+            locale,
+            roundTo: gbTb === 'TB' ? 1073741824 * 102.4 : 1073741824,
+        });
     }
 
     ngOnDestroy(): void {}

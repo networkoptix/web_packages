@@ -45,18 +45,15 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewIn
     archivePercentage: number;
 
     get inaccessible(): boolean {
-        return [
-            STORAGE_STATUS.INACCESSIBLE,
-            STORAGE_STATUS.BEING_CHECKED
-        ].includes(this.store.status);
+        return [STORAGE_STATUS.INACCESSIBLE, STORAGE_STATUS.BEING_CHECKED].includes(
+            this.store.status,
+        );
     }
 
     get cachedSizesClean(): CachedSizes {
         return pick(
             this.cachedSizes,
-            Object.keys(this.cachedSizes).filter(k =>
-                this.cachedSizes[k].total > 0
-            )
+            Object.keys(this.cachedSizes).filter(k => this.cachedSizes[k].total > 0),
         );
     }
 
@@ -64,9 +61,7 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewIn
         private popoverService: NxPopoverService,
         private _viewContainerRef: ViewContainerRef,
         @Inject(LOCALE_ID) private locale: string,
-    ) {
-
-    }
+    ) {}
 
     showLegend(template: TemplateRef<unknown>, target: HTMLElement): void {
         if (this.store.status === STORAGE_STATUS.INACCESSIBLE) {
@@ -78,9 +73,10 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewIn
             {
                 panelClass: 'size-popover',
                 arrowOffset: 4,
-                positionStrategy: POS_STRATEGY.BOTTOM
+                positionStrategy: POS_STRATEGY.BOTTOM,
             },
-            this._viewContainerRef);
+            this._viewContainerRef,
+        );
     }
 
     closeLegend(): void {
@@ -100,8 +96,10 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewIn
     }
 
     init(): void {
-        this.store.totalSpace = this.cachedSizesClean?.[this.store.storageId]?.total || this.store.totalSpace;
-        this.store.vmsSpace = this.cachedSizesClean?.[this.store.storageId]?.vms || this.store.vmsSpace;
+        this.store.totalSpace =
+            this.cachedSizesClean?.[this.store.storageId]?.total || this.store.totalSpace;
+        this.store.vmsSpace =
+            this.cachedSizesClean?.[this.store.storageId]?.vms || this.store.vmsSpace;
         if (this.store.status === STORAGE_STATUS.INACCESSIBLE) {
             this.totalSpace = '&mdash;';
             this.reserved = '0';
@@ -128,7 +126,9 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewIn
         const usedSpace = this.store.totalSpace - this.store.freeSpace - this.store.vmsSpace;
         this.totalSpace = this.toFriendlyBytes(this.store.totalSpace) || '&mdash;';
         this.reserved = this.toFriendlyBytes(this.store.reservedSpace);
-        this.reservedPercentage = this.toPercentageOfTotal(Math.min(this.store.reservedSpace, this.store.freeSpace));
+        this.reservedPercentage = this.toPercentageOfTotal(
+            Math.min(this.store.reservedSpace, this.store.freeSpace),
+        );
         this.used = this.toFriendlyBytes(usedSpace);
         this.usedPercentage = this.toPercentageOfTotal(usedSpace);
         this.available = this.toFriendlyBytes(this.store.freeSpace - this.store.reservedSpace);
@@ -170,7 +170,7 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewIn
         const [size, units] = friendlySize.split(' ');
         const fixed = {
             GB: 1,
-            TB: 2
+            TB: 2,
         };
         return `${new NumberParser(locale).parse(size).toFixed(fixed[units])} ${units}`;
     }

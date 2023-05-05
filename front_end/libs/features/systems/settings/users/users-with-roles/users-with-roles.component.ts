@@ -16,7 +16,6 @@ import type {
     templateUrl: 'users-with-roles.component.html',
     styleUrls: ['users-with-roles.component.scss'],
 })
-
 export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent {
     // TODO: Remove this once user groups is typed
     selectedUser: NxUser;
@@ -27,35 +26,37 @@ export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent 
 
     protected initProcesses(): void {
         // DO not attempt to set the process correctly!!! Due to issues with multiple for watchers it's best to leave this alone for now.
-        this.editUser = this.processService.createProcess(async () => {
-            await this.checkIfEditable();
-            const user = this.formatUser(this.selectedUser);
-            this.locked.add(user.email);
-            try {
-                await this.system.userManager.saveUser(user);
-                await this.system.getUsers(true).catch(err => console.error(err));
-            } catch (err) {
-                if (err?.error?.errorId === servers.errors.oldSessionErrorId) {
-                    const ready = await this.dialogs.updateSession({
-                        sessionState: SessionState.RenewWeb,
-                        system: this.system,
-                    });
-                    if (ready) {
-                        await this.system.userManager.saveUser(user);
-                        await this.system.getUsers(true);
+        this.editUser = this.processService.createProcess(
+            async () => {
+                await this.checkIfEditable();
+                const user = this.formatUser(this.selectedUser);
+                this.locked.add(user.email);
+                try {
+                    await this.system.userManager.saveUser(user);
+                    await this.system.getUsers(true).catch(err => console.error(err));
+                } catch (err) {
+                    if (err?.error?.errorId === servers.errors.oldSessionErrorId) {
+                        const ready = await this.dialogs.updateSession({
+                            sessionState: SessionState.RenewWeb,
+                            system: this.system,
+                        });
+                        if (ready) {
+                            await this.system.userManager.saveUser(user);
+                            await this.system.getUsers(true);
+                        }
+                    } else {
+                        this.showUserChangedToast();
                     }
-                } else {
-                    this.showUserChangedToast();
+                } finally {
+                    this.locked.delete(user.email);
+                    this.setUser();
                 }
-            } finally {
-                this.locked.delete(user.email);
-                this.setUser();
-            }
-        }, {
-            ignoreError: true
-        },
-        undefined,
-        () => {} // Added to suppress the default logging in processes
+            },
+            {
+                ignoreError: true,
+            },
+            undefined,
+            () => {}, // Added to suppress the default logging in processes
         );
     }
 
@@ -74,22 +75,20 @@ export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent 
             this.applyService.resetFormWatchers();
             this.setUserHelper(user);
             this.setPermission(this.selectedUser.role);
-            this.role = !user.isCloud && user.name === 'admin'
-                ? 'Owner'
-                : user.role.name;
+            this.role = !user.isCloud && user.name === 'admin' ? 'Owner' : user.role.name;
 
             setTimeout(() => {
                 this.applyService.createFormWatcher(
                     'userEnabledForm',
                     this.userEnabledForm,
-                    this.editUser
+                    this.editUser,
                 );
 
                 if (this.selectedUser.canBeEdited) {
                     this.applyService.createFormWatcher(
                         'userRoleForm',
                         this.userRoleForm,
-                        this.editUser
+                        this.editUser,
                     );
                 }
 
@@ -97,7 +96,7 @@ export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent 
                     this.applyService.createFormWatcher(
                         'userSettingsForm',
                         this.userSettingsForm,
-                        this.editUser
+                        this.editUser,
                     );
                 }
             });

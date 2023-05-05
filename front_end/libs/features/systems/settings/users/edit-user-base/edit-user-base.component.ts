@@ -54,7 +54,8 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy {
     protected passwordChanged: boolean = false;
     protected userSubscription: Subscription;
 
-    @ViewChild('pageApply', { read: ViewContainerRef, static: true }) protected pageApply: ViewContainerRef;
+    @ViewChild('pageApply', { read: ViewContainerRef, static: true })
+    protected pageApply: ViewContainerRef;
     @ViewChild('userEnabledForm', { read: NgForm }) protected userEnabledForm: NgForm;
     @ViewChild('userSettingsForm', { read: NgForm }) protected userSettingsForm: NgForm;
 
@@ -105,10 +106,7 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy {
                 // Route guard did not work :( ... so doing it the old way
                 if (!this.system.userManager.permissions?.editUsers) {
                     this.uriService
-                        .navigateSystem(
-                            `${menus.systemSettings.baseUrl}SYSTEM_ID`,
-                            this.system
-                        )
+                        .navigateSystem(`${menus.systemSettings.baseUrl}SYSTEM_ID`, this.system)
                         .catch(error => {
                             console.error(error);
                         });
@@ -119,8 +117,8 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy {
                 this.userSubscription = this.system.infoSubject
                     .pipe(untilDestroyed(this))
                     .subscribe(() => {
-                        this.systemAvailable = this.system.isAvailable &&
-                            this.system.mergeInfo === undefined;
+                        this.systemAvailable =
+                            this.system.isAvailable && this.system.mergeInfo === undefined;
 
                         const updatedUser = this.findUser();
 
@@ -128,11 +126,10 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy {
                         delete cleanUser.role?.optionLabel;
 
                         if (
-                            !this.applyService.locked && (
-                                this.paramUser === undefined ||
+                            !this.applyService.locked &&
+                            (this.paramUser === undefined ||
                                 this.paramUser !== cleanId(this.selectedUser?.id) ||
-                                !isEqual(updatedUser, cleanUser)
-                            )
+                                !isEqual(updatedUser, cleanUser))
                         ) {
                             this.setUser();
                         }
@@ -162,8 +159,9 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy {
                 this.uriService
                     .navigateSystem(
                         `${menus.systemSettings.baseUrl}SYSTEM_ID/users/${nextUserId}`,
-                        this.system
-                    ).catch(error => {
+                        this.system,
+                    )
+                    .catch(error => {
                         console.error(error);
                     });
 
@@ -186,9 +184,8 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy {
         });
         const incIndex = currentUserIndex + 1;
         const decIndex = currentUserIndex - 1;
-        const nextIndex = (incIndex !== this.system.userManager.users?.length)
-            ? incIndex
-            : decIndex; // single-user list case check required here, too?
+        const nextIndex = incIndex !== this.system.userManager.users?.length ? incIndex : decIndex;
+        // single-user list case check required here, too?
         return cleanId(this.system.userManager.users[nextIndex].id);
     }
 
@@ -205,9 +202,7 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy {
     }
 
     protected findUser(): NxSystemUser {
-        return this.system.userManager.users.find(user =>
-            cleanId(user.id) === this.paramUser
-        );
+        return this.system.userManager.users.find(user => cleanId(user.id) === this.paramUser);
     }
 
     protected formatUser(user: NxSystemUser): NxSystemUser {
@@ -218,11 +213,9 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy {
     }
 
     protected routeToAccountSettings(): void {
-        this.uriService
-            .updateURI('/account')
-            .catch(error => {
-                console.error(error);
-            });
+        this.uriService.updateURI('/account').catch(error => {
+            console.error(error);
+        });
     }
 
     protected routeToFirstUser(): Promise<boolean | void> {
@@ -230,10 +223,8 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy {
         const userId = cleanId(user.id);
 
         return this.uriService
-            .navigateSystem(
-                `${menus.systemSettings.baseUrl}SYSTEM_ID/users/${userId}`,
-                this.system
-            ).catch(error => {
+            .navigateSystem(`${menus.systemSettings.baseUrl}SYSTEM_ID/users/${userId}`, this.system)
+            .catch(error => {
                 console.error(error);
             });
     }
@@ -257,9 +248,6 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy {
     }
 
     protected showUserChangedToast(): void {
-        this.toastService.notify(
-            this.LANG.toastMessage.userChangesFail,
-            toast.warning,
-        );
+        this.toastService.notify(this.LANG.toastMessage.userChangesFail, toast.warning);
     }
 }

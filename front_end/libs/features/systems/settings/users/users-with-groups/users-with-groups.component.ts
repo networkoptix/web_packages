@@ -23,7 +23,6 @@ import { NxSystemUsersBaseComponent } from '../edit-user-base/edit-user-base.com
     templateUrl: 'users-with-groups.component.html',
     styleUrls: ['users-with-groups.component.scss'],
 })
-
 export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent {
     roles: string[];
     selectedGroups: string[];
@@ -35,36 +34,40 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
 
     protected initProcesses(): void {
         // DO not attempt to set the process correctly!!! Due to issues with multiple for watchers it's best to leave this alone for now.
-        this.editUser = this.processService.createProcess(async () => {
-            await this.checkIfEditable();
-            const user = this.formatUser(this.selectedUser);
-            this.locked.add(user.email);
-            try {
-                user.groupIds = this.selectedGroups;
-                await (this.system.userManager as UserWithGroupsManager).modifyUser(user);
-                await this.system.getUsers(true).catch(err => console.error(err));
-            } catch (err) {
-                if (err?.error?.errorId === servers.errors.oldSessionErrorId) {
-                    const ready = await this.dialogs.updateSession({
-                        sessionState: SessionState.RenewWeb,
-                        system: this.system,
-                    });
-                    if (ready) {
-                        await (this.system.userManager as UserWithGroupsManager).modifyUser(user);
-                        await this.system.getUsers(true);
+        this.editUser = this.processService.createProcess(
+            async () => {
+                await this.checkIfEditable();
+                const user = this.formatUser(this.selectedUser);
+                this.locked.add(user.email);
+                try {
+                    user.groupIds = this.selectedGroups;
+                    await (this.system.userManager as UserWithGroupsManager).modifyUser(user);
+                    await this.system.getUsers(true).catch(err => console.error(err));
+                } catch (err) {
+                    if (err?.error?.errorId === servers.errors.oldSessionErrorId) {
+                        const ready = await this.dialogs.updateSession({
+                            sessionState: SessionState.RenewWeb,
+                            system: this.system,
+                        });
+                        if (ready) {
+                            await (this.system.userManager as UserWithGroupsManager).modifyUser(
+                                user,
+                            );
+                            await this.system.getUsers(true);
+                        }
+                    } else {
+                        this.showUserChangedToast();
                     }
-                } else {
-                    this.showUserChangedToast();
+                } finally {
+                    this.locked.delete(user.email);
+                    this.setUser();
                 }
-            } finally {
-                this.locked.delete(user.email);
-                this.setUser();
-            }
-        }, {
-            ignoreError: true
-        },
-        undefined,
-        () => {} // Added to suppress the default logging in processes
+            },
+            {
+                ignoreError: true,
+            },
+            undefined,
+            () => {}, // Added to suppress the default logging in processes
         );
     }
 
@@ -89,8 +92,8 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
                 this.selectedGroupsList = [
                     {
                         name: this.LANG.accessRoles.Owner.label,
-                        description: this.LANG.accessRoles.Owner.description
-                    }
+                        description: this.LANG.accessRoles.Owner.description,
+                    },
                 ];
             } else {
                 this.selectedGroups = this.selectedUser.groupIds;
@@ -103,14 +106,14 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
                 this.applyService.createFormWatcher(
                     'userEnabledForm',
                     this.userEnabledForm,
-                    this.editUser
+                    this.editUser,
                 );
 
                 if (this.selectedUser.canBeEdited) {
                     this.applyService.createFormWatcher(
                         'userGroupsForm',
                         this.userGroupsForm,
-                        this.editUser
+                        this.editUser,
                     );
                 }
 
@@ -118,7 +121,7 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
                     this.applyService.createFormWatcher(
                         'userSettingsForm',
                         this.userSettingsForm,
-                        this.editUser
+                        this.editUser,
                     );
                 }
             });
@@ -129,18 +132,20 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
         const { defaultUserGroupText, customUserGroupText } = this.LANG.dialogs.titles;
         this.processedGroups = [{ id: 'title', label: defaultUserGroupText }];
         let customTitleNeeded = false;
-        (this.system.userManager as UserWithGroupsManager).userGroups.forEach(({ id, name, description, isPredefined }) => {
-            if (name !== 'Owner') {
-                if (!customTitleNeeded && !isPredefined) {
-                    customTitleNeeded = true;
-                    this.processedGroups.push(
-                        { id: 'horizontal', label: 'horizontal' },
-                        { id: 'title', label: customUserGroupText }
-                    );
+        (this.system.userManager as UserWithGroupsManager).userGroups.forEach(
+            ({ id, name, description, isPredefined }) => {
+                if (name !== 'Owner') {
+                    if (!customTitleNeeded && !isPredefined) {
+                        customTitleNeeded = true;
+                        this.processedGroups.push(
+                            { id: 'horizontal', label: 'horizontal' },
+                            { id: 'title', label: customUserGroupText },
+                        );
+                    }
+                    this.processedGroups.push({ id, label: name, tooltip: description });
                 }
-                this.processedGroups.push({ id, label: name, tooltip: description });
-            }
-        });
+            },
+        );
     }
 
     toggleGroup(newList: string[]): void {
@@ -150,13 +155,15 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
 
     private processSelectedGroupsList(newList: string[], localOwner = false): void {
         this.selectedGroupsList = [];
-        (this.system.userManager as UserWithGroupsManager).userGroups.forEach(({ id, name, description }) => {
-            if (newList.includes(id)) {
-                if (localOwner) {
-                    description = this.LANG.accessRoles.Administrator.description;
+        (this.system.userManager as UserWithGroupsManager).userGroups.forEach(
+            ({ id, name, description }) => {
+                if (newList.includes(id)) {
+                    if (localOwner) {
+                        description = this.LANG.accessRoles.Administrator.description;
+                    }
+                    this.selectedGroupsList.push({ name, description });
                 }
-                this.selectedGroupsList.push({ name, description });
-            }
-        });
+            },
+        );
     }
 }
