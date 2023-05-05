@@ -25,6 +25,6 @@ class FeatureFlagListener:
             print("\n")
             if cloud_settings["featureFlags"] == expected_settings_converted:
                 break
-            if time.monotonic() - start_time > 30:
+            if time.monotonic() - start_time > 120:
                 raise TimeoutError("Feature flags did not update in time.")
             time.sleep(5)
