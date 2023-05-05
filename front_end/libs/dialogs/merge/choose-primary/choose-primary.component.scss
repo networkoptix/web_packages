@@ -1,15 +1,11 @@
+@use "../merge.refactor.component.scss" as *;
+
 .svg-icon {
-    min-height: 24px;
-    min-width: 24px;
-    svg {
-        height: 24px;
-        width: 24px;
-    }
+    @include svg-icon;
 }
 
 .modal-footer {
-    display: flex;
-    justify-content: space-between !important;
+    @include modal-footer;
 }
 
 .modal-body p {
