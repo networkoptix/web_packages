@@ -9,13 +9,14 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { settingsConfig } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';
 import { FormWatcher } from '@services/apply.service/watcher';
+import { SettingsConfig } from '@services/nx-config/base-config';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
 
-interface SystemSetting {
-    [key: string]: unknown;
-}
+type SystemSetting = {
+    [key in keyof SettingsConfig]?: string | number | boolean | object;
+};
 
 @UntilDestroy()
 @Component({
@@ -94,8 +95,18 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
         this.applyService.removeWatchers();
     }
 
-    canSee(key) {
-        return ['number', 'text', 'password'].includes(settingsConfig[key]?.type);
+    editable(key) {
+        return ['number', 'text', 'password', 'checkbox', 'object'].includes(
+            settingsConfig[key]?.type,
+        );
+    }
+
+    systemSettingsChanged(value, key): void {
+        this.systemSettings[key] = value;
+    }
+
+    trackSettingsObject(index: number): number {
+        return index;
     }
 
     getAdvancedSettings(): void {

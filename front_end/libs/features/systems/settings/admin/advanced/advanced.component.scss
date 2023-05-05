@@ -140,4 +140,8 @@
         margin-left: -8px !important;
         margin-right: -24px !important;
     }
+
+    .setting-title {
+        @include typography.regular14dark10;
+    }
 }

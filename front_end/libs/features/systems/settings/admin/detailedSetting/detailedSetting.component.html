@@ -1,0 +1,36 @@
+<div
+    class="detailed-setting-container form-group col-12 row"
+    *ngFor="let setting of settingsObject | keyvalue; trackBy: trackSettingsObject"
+    [ngClass]="{ 'checkbox-order': getType(setting.value) === 'boolean' }"
+>
+    <div class="text-muted break-long">
+        {{ setting.key | translate }}
+    </div>
+    <ng-container [ngSwitch]="getType(setting.value)">
+        <input
+            *ngSwitchCase="'number'"
+            type="number"
+            [ngModel]="setting.value"
+            (ngModelChange)="onSettingChanged($event, setting.key)"
+            class="form-control input-sm"
+            disabled
+        />
+        <nx-checkbox
+            *ngSwitchCase="'boolean'"
+            [componentId]="setting.key"
+            name="{{ setting.key }}"
+            [ngModel]="setting.value"
+            (ngModelChange)="onSettingChanged($event, setting.key)"
+            disabled
+        >
+        </nx-checkbox>
+        <input
+            *ngSwitchDefault
+            type="text"
+            [ngModel]="setting.value"
+            (ngModelChange)="onSettingChanged($event, setting.key)"
+            class="form-control input-sm"
+            disabled
+        />
+    </ng-container>
+</div>

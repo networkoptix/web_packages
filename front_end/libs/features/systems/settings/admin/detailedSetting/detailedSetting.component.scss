@@ -1,0 +1,16 @@
+:host {
+    width: 100%;
+
+    .detailed-setting-container {
+        padding-right: 0;
+        padding-left: 0;
+        margin-left: 0;
+        flex-direction: column;
+        flex-wrap: nowrap;
+    }
+
+    .checkbox-order {
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+    }
+}

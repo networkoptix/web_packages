@@ -15,6 +15,7 @@ import { DirectivesModule } from '@directives/directives.module';
 
 import { NxSystemAdminComponent } from './admin.component';
 import { NxSystemAdvancedAdminComponent } from './advanced/advanced.component';
+import { NxSystemDetailedSettingComponent } from './detailedSetting/detailedSetting.component';
 import { NxSystemStandardAdminComponent } from './standard/standard.component';
 
 @NgModule({
@@ -37,7 +38,8 @@ import { NxSystemStandardAdminComponent } from './standard/standard.component';
     declarations: [
         NxSystemAdminComponent,
         NxSystemStandardAdminComponent,
-        NxSystemAdvancedAdminComponent
+        NxSystemAdvancedAdminComponent,
+        NxSystemDetailedSettingComponent
     ],
     bootstrap: [
     ],
