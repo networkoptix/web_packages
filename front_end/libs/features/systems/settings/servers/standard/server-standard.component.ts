@@ -173,23 +173,20 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                             },
                         }),
                         // Return an empty array so the subscription doesn't complete.
-                        catchError(() => of([])),
+                        catchError(() => of<NxSystemServer[]>([])),
                     ),
                 ),
                 tap(() => {
                     fetchingServersLock = false;
                 }),
-                filter((servers: NxSystemServer[]) => servers.length > 0),
+                filter(servers => servers.length > 0),
                 untilDestroyed(this),
             )
-            .subscribe((servers: NxSystemServer[]) => {
+            .subscribe(servers => {
                 Array.from(this.system.currentBusyServerIds.values())
                     .map(serverId => servers.find(({ id }) => id === serverId))
-                    .filter(
-                        (server: NxSystemServer) =>
-                            server.status?.toLowerCase() === this.servers.status.online,
-                    )
-                    .forEach((server: NxSystemServer) => {
+                    .filter(server => server.status?.toLowerCase() === this.servers.status.online)
+                    .forEach(server => {
                         this.system.currentBusyServerIds.delete(server.id);
                         if (server.id === this.selectedServer.id) {
                             this.setStatus('');
