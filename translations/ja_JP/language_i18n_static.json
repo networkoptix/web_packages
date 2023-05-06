@@ -1082,8 +1082,8 @@
     },
     "systemGroups": {
         "root": "ルート",
-        "groupCount": "{count, plural, =0{# グループ} one{# グループ} other{# グループ}}",
-        "systemCount": "{count, plural, =0{# システム} one{# システム} other{# システム}}",
+        "groupCount": "{count, plural, =0{# グループ}  other{# グループ}}",
+        "systemCount": "{count, plural, =0{# システム} other{# システム}}",
         "connectionLost": "切断されました。再接続しています…",
         "connectionRestored": "接続が復旧しました",
         "couldNotReconnect": "接続を復旧できませんでした",
