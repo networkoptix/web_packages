@@ -362,7 +362,7 @@ def send_to_all_users(notification_id, message, customizations, force=False):
 def async_task_test(x, y):
     from time import sleep
     print(f"x: {x}\ty:{y}")
-    sleep(y * 60)
+    sleep(y)
     print(f"total: {x * y}")
     with open('task.log', 'w') as f:
         f.write(f"Task Done: {x} * {y} = {x*y}")
