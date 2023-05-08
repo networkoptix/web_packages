@@ -88,58 +88,6 @@
                 }
             }
         }
-
-        &:hover {
-            .displayed-name {
-                color : var(--header-profile-hover-color);
-            }
-
-            .user-svg-wrapper {
-                background : var(--header-profile-hover-bg);
-
-                .user-svg {
-                    .icon-with-fill {
-                        fill : var(--header-profile-hover-color);
-                    }
-                }
-            }
-
-            .dropdown-arrow-wrapper {
-                background-color : var(--header-profile-hover-bg);
-
-                .dropdown-arrow {
-                    .profile-dropdown-arrow {
-                        fill : var(--header-profile-hover-color);
-                    }
-                }
-            }
-        }
-
-        &:active {
-            .displayed-name {
-                color : var(--header-profile-active-color);
-            }
-
-            .user-svg-wrapper {
-                background : var(--header-profile-active-bg);
-
-                .user-svg {
-                    .icon-with-fill {
-                        fill : var(--header-profile-active-color);
-                    }
-                }
-            }
-
-            .dropdown-arrow-wrapper {
-                background-color : var(--header-profile-active-bg);
-
-                .dropdown-arrow {
-                    .profile-dropdown-arrow {
-                        fill : var(--header-profile-active-color);
-                    }
-                }
-            }
-        }
     }
 
     .popup {
@@ -241,6 +189,32 @@
                     position : relative;
                     left     : 6.5px;
                     top      : 1px;
+                }
+            }
+        }
+
+        &:hover {
+            .displayed-name {
+                color : var(--header-profile-hover-color);
+            }
+
+            .user-svg-wrapper {
+                background : var(--header-profile-hover-bg) !important;
+
+                .user-svg {
+                    .icon-with-fill {
+                        fill : var(--header-profile-hover-color) !important;
+                    }
+                }
+            }
+
+            .dropdown-arrow-wrapper {
+                background-color : var(--header-profile-hover-bg);
+
+                .dropdown-arrow {
+                    .profile-dropdown-arrow {
+                        fill : var(--header-profile-hover-color);
+                    }
                 }
             }
         }

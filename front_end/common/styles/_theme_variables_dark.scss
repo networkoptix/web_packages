@@ -634,7 +634,7 @@ html[data-theme="dark"] {
     --group-card-bg: var(--dark6);
     --group-card-bg-hover: var(--dark7);
     --group-card-border-color: var(--dark10);
-
+    
     --channel-partner-card-status-background: var(--dark11);
 
     @include generateVarAndRgb(--system-card-bg-grad0, $dark4);
