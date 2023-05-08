@@ -112,7 +112,7 @@ class BaseCacheV2(object):
 
     def __init__(self, lookup_key: str = None, customization_name: str = None, request=None, **kwargs):
 
-        self._cache_key = self._cache_key or kwargs.get('cache_key')
+        self._cache_key = kwargs.get('cache_key') or self._cache_key
         if not self._cache_key:
             raise ImproperlyConfigured("'cache_key' must be set in class definition or keyword argument.")
 
@@ -154,7 +154,7 @@ class BaseCacheV2(object):
         Returns:
             doc: returns cached doc or None if not in cache
         """
-        return self.cache.get(self._lookup_key, None)
+        return self.cache.get(self.lookup_key, None)
 
     async def aget_cached_item(self):
         """Checks cache for doc using the lookup_key attribute.
@@ -164,21 +164,29 @@ class BaseCacheV2(object):
         """
         return await self.cache.aget(self.lookup_key, None)
 
-    def set_cached_item(self, doc):
+    def set_cached_item(self, doc, timeout=None):
         """Sets doc to cache using the lookup_key attribute.
 
         Args:
             doc: Doc to be added to cache
+            timeout: cache key ttl
         """
-        self.cache.set(self._lookup_key, doc)
+        kwargs = {}
+        if timeout is not None:
+            kwargs['timeout'] = timeout
+        self.cache.set(self.lookup_key, doc)
 
-    async def aset_cached_item(self, doc):
+    async def aset_cached_item(self, doc, timeout=None):
         """Sets doc to cache using the lookup_key attribute.
 
         Args:
             doc: Doc to be added to cache
+            timeout: cache key ttl
         """
-        await self.cache.aset(self.lookup_key, doc)
+        kwargs = {}
+        if timeout is not None:
+            kwargs['timeout'] = timeout
+        await self.cache.aset(self.lookup_key, doc, **kwargs)
 
     def clear_cache(self):
         self.cache.clear()
@@ -206,9 +214,9 @@ class IntegrationCache(BaseCacheV2):
     _cache_key = 'integrations'
     _customization_required = True
 
-    def __init__(self, language=None, state=None, identifier=None, version='latest',
+    def __init__(self, language=None, state: str = None, identifier=None, version='latest',
                  customization_name=None, request=None, **kwargs):
-        self.language = language
+        self.language_code: str = language if isinstance(language, str) else language.code
         self.state = state
         self.identifier = identifier
         self.version = version
@@ -217,7 +225,7 @@ class IntegrationCache(BaseCacheV2):
     def get_lookup_key(self):
         draft = self.state == "draft"
 
-        return f'{self.customization_name}-{self.language.code}-{self.identifier}-' \
+        return f'{self.customization_name}-{self.language_code}-{self.identifier}-' \
                f'{self.state}-{"latest" if draft else self.version}'
 
 

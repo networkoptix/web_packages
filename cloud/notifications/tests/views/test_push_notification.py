@@ -365,7 +365,7 @@ class TestSubscriptions(WithInstanceFixture):
         res = api_client.put(url)
         assert res.data == 'updated'
 
-    def test_delete(self, mocker, patch_get_object, api_client, instance):
+    def test_delete(self, mocker, patch_get_object, api_client, instance, disable_feature_flags):
         patch_get_object()
 
         # Test no device to delete

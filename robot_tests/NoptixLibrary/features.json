@@ -37,5 +37,6 @@
 "landingPage": false,
 "kbInstantSearch": true,
 "serverSideMetadata": true,
-"readonlyAPIs": true
+"readonlyAPIs": true,
+"tosRequired": false
  }

@@ -17,6 +17,28 @@
             "optional": false
           },
           {
+            "name": "type",
+            "label": "Type",
+            "value": "contributor",
+            "description": "This will be used as the type of the agreement",
+            "type": "select",
+            "optional": false,
+            "meta": {
+              "options": [
+                "contributor",
+                "tos"
+              ]
+            }
+          },
+          {
+            "name": "grace_period",
+            "label": "Grace period",
+            "value": "10",
+            "description": "Period in days after which agreement will be enforced",
+            "type": "integer",
+            "optional": false
+          },
+          {
             "name": "comment",
             "label": "Comment",
             "value": "",

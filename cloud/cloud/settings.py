@@ -152,6 +152,7 @@ MIDDLEWARE = (
     'waffle.middleware.WaffleMiddleware',
     'cloud.middleware.CatchExceptionMiddleware',
     'cloud.middleware.FilterErrorMiddleware',
+    'cloud.middleware.TOSAgreementMiddleware',
 )
 
 ROOT_URLCONF = 'cloud.urls'

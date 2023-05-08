@@ -66,6 +66,7 @@ class FLAGS(metaclass=_FlagType):
     cloud_storage = ('Cloud Storage', 'cloudStorage', '%CLOUD_STORAGE_FEATURE_ENABLED%')
     log_rocket = ('Log Rocket', 'logRocket', '%LOGROCKET_ENABLED%')
     full_story = ('Full Story', 'fullStory', '%FULLSTORY_ENABLED%')
+    require_tos_agreement = ('TOS Agreement required', 'tosRequired', '%TOS_AGREEMENT_REQUIRED%')
     layouts = ('Layouts', 'layouts', '%LAYOUTS_ENABLED%')
 
     layouts_editable = ('Layouts Editable', 'layoutsEditable', '%LAYOUTS_EDITABLE%')
@@ -141,6 +142,10 @@ def get_feature_flag_error(flag, user):
 
 
 def flag_is_active_for_user(user, flag_name, overrides=None, *, customization=None, request=None):
+    """
+    Do not use this function to check flag state because it does not create flag in db.
+    Use waffle.flag_is_active instead.
+    """
     customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
     flag = get_waffle_flag_model().get(flag_name)
     return flag.is_active_for_user(user, overrides, customization=customization) or flag.everyone

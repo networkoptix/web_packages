@@ -23,6 +23,7 @@ class ErrorCodes(Enum):
     ok = 'ok'
 
     # not authorizes
+    tos_not_accepted = 'tosNotAccepted'
 
     # Cloud DB errors:
     cloud_invalid_response = 'cloudInvalidResponse'
@@ -83,7 +84,9 @@ info_level_errors = (
                 ErrorCodes.not_authorized,
                 ErrorCodes.not_found,
                 ErrorCodes.wrong_old_password,
-                ErrorCodes.wrong_password)
+                ErrorCodes.wrong_password,
+                ErrorCodes.tos_not_accepted,
+)
 
 warning_level_errors = (
                 ErrorCodes.account_blocked,
@@ -96,9 +99,9 @@ warning_level_errors = (
                 ErrorCodes.credentials_removed_permanently)
 
 
-def create_response_with_cookies(data, status_code, cookies, additional_headers=None):
+def create_response_with_cookies(data, status_code, cookies, additional_headers=None, **kwargs):
     from rest_framework.response import Response
-    response = Response(data, status=status_code, headers=additional_headers)
+    response = Response(data, status=status_code, headers=additional_headers, **kwargs)
     if cookies is not None:
         for name, value in cookies.items():
             if value == '':
@@ -110,12 +113,12 @@ def create_response_with_cookies(data, status_code, cookies, additional_headers=
     return response
 
 
-def api_success(data=None, status_code=status.HTTP_200_OK, cookies=None, additional_headers=None):
+def api_success(data=None, status_code=status.HTTP_200_OK, cookies=None, additional_headers=None, **kwargs):
     if data is None:
         data = {
             'resultCode': ErrorCodes.ok.value
         }
-    return create_response_with_cookies(data, status_code, cookies, additional_headers)
+    return create_response_with_cookies(data, status_code, cookies, additional_headers, **kwargs)
 
 
 def require_params(request, param_list_or_dict: Union[List[str], Tuple[str], Dict[str, Callable]]):
@@ -251,11 +254,22 @@ class APIRequestException(APIException):
                                                   status_code=status.HTTP_400_BAD_REQUEST)
 
 
+
+
 class APILogicException(APIException):
     # 200. but some error occurred
     def __init__(self, error_text, error_code, error_data=None):
         super(APILogicException, self).__init__(error_text, error_code, error_data=error_data,
                                                 status_code=status.HTTP_200_OK)
+
+
+class APITosAcceptanceRequired(APIException):
+    def __init__(self, error_text, error_code=ErrorCodes.tos_not_accepted, error_data=None):
+        super(APITosAcceptanceRequired, self).__init__(error_text,
+                                                       error_code,
+                                                       error_data=error_data,
+                                                       status_code=status.HTTP_451_UNAVAILABLE_FOR_LEGAL_REASONS)
+
 
 vms_errors = {
     status.HTTP_500_INTERNAL_SERVER_ERROR: APIInternalException,

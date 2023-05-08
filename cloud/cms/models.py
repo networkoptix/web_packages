@@ -32,7 +32,7 @@ from django.apps import apps
 from django.core.cache import cache, caches
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models, connections
-from django.db.models import Q, Count
+from django.db.models import Q, Count, Max
 from django.db.models.deletion import Collector
 from django.db.models.signals import post_delete, m2m_changed, post_save, pre_delete
 from django.db.utils import ProgrammingError, OperationalError
@@ -128,6 +128,11 @@ DEFAULT_MANIFEST = """[
                 ]
             }
         ]"""
+
+
+class AgreementTypes:
+    tos = "tos"
+    contributor = "contributor"
 
 
 def get_name_factory(base_group_name):
@@ -2108,17 +2113,25 @@ class ContributorAgreement(models.Model):
         return super().save(*args, **kwargs)
 
     @staticmethod
-    def get_current(*, customization=None, request=None):
+    def get_current(*, customization=None, request=None, agreement_type=AgreementTypes.contributor):
         customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
-        return AssetCustomizationReview.objects.filter(
-            version__asset__asset_type__type=AssetType.ASSET_TYPES.agreement,
-            state=AssetCustomizationReview.REVIEW_STATES.accepted, customization__name=customization
-        ).last()
+        tos_reviews = get_tos_reviews(customization)
+        if agreement_type == AgreementTypes.tos:
+            reviews = tos_reviews
+        else:
+            # Just exclude all TOS
+            reviews = AssetCustomizationReview.objects.filter(
+                version__asset__asset_type__type=AssetType.ASSET_TYPES.agreement,
+                state=AssetCustomizationReview.REVIEW_STATES.accepted, customization__name=customization
+            ).exclude(id__in=[r.id for r in tos_reviews]).order_by('id')
 
-    def is_valid(self, *, customization=None, request=None):
+        return reviews.last()
+
+    def is_valid(self, *, customization=None, request=None, agreement_type=AgreementTypes.contributor):
         if not customization:
-            customization = self.accepted_agreement.customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
-        review = self.get_current(customization=customization)
+            customization = self.accepted_agreement.customization or\
+                            getattr(request, 'CUSTOMIZATION', customization_ctx.get())
+        review = self.get_current(customization=customization, agreement_type=agreement_type)
         return review and self.accepted_agreement == review
 
 
@@ -3467,7 +3480,9 @@ class Flag(AbstractUserFlag):
 
 
     def is_active_for_user(self, user, overrides=None, *, customization=None, request=None):
-
+        """
+        Do not use this method directly. Use waffle.flag_is_active instead.
+        """
         customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
         if override := (overrides or {}).get(f'HTTP_FEATURE_{self.get_json_key()}'.upper()):
             with suppress(ValueError):
@@ -3508,3 +3523,45 @@ class Flag(AbstractUserFlag):
         caches['customization'].delete('features_cache_key')
         Flag.flush_global_vals()
         return ret
+
+
+def get_reviews_by_value_from_db(asset_type, customization: str, ds_name: str, value):
+    """
+    Returns accepted reviews queryset by given data structure name and data record value.
+    NOTE! searching works by existing DB values. It does not count defaults values
+    used by 'find_actual_value'
+    Args:
+        asset_type: asset type
+        customization: customization name
+        ds_name: data structure name
+        value: data record value
+
+    Returns:
+        AssetCustomizationReview queryset
+    """
+    # accepted reviews
+    qs = AssetCustomizationReview.objects.filter(version__asset__asset_type__type=asset_type,
+                                                 customization__name=customization,
+                                                 state=AssetCustomizationReview.REVIEW_STATES.accepted)
+    # get max id (latest) for data records by asset
+    qs = qs.filter(version__asset__datarecord__version_id__isnull=False,
+                   version__asset__datarecord__data_structure__name=ds_name)\
+        .annotate(latest_dr_id=Max('version__asset__datarecord__id'))
+    dr_ids = qs.values_list('latest_dr_id', flat=True)
+
+    # get assets which last data record is equal to value
+    assets = Asset.objects.filter(asset_type__type=asset_type)
+    assets_id = assets.filter(datarecord__value=value,
+                              datarecord__id__in=dr_ids).values_list('id', flat=True)
+    # get reviews for assets
+    reviews = AssetCustomizationReview.objects.filter(version__asset__id__in=assets_id,
+                                                      customization__name=customization,
+                                                      state=AssetCustomizationReview.REVIEW_STATES.accepted)
+    # Todo. Add ordering by `AssetCustomizationReview.reviewed_date`
+    return reviews.order_by('id')
+
+
+def get_tos_reviews(customization: str):
+    qs = get_reviews_by_value_from_db(asset_type=AssetType.ASSET_TYPES.agreement, customization=customization,
+                                      ds_name='type', value=AgreementTypes.tos)
+    return qs

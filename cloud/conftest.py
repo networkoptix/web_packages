@@ -439,6 +439,50 @@ def mock_session(mocker):
     return _mock_session
 
 
+def make_agreement_ds():
+    ctx = Context.objects.get(asset_type=get_asset_type(AssetType.ASSET_TYPES.agreement), name='content')
+    agreement_structures = DataStructure.objects.filter(
+        context=ctx,
+    )
+    ds_type = agreement_structures.get(name="type")
+    ds_grace_period = agreement_structures.get(name="grace_period")
+    return ctx, ds_type, ds_grace_period
+
+
+def make_tos_agreement(agreement):
+    ctx, ds_type, ds_grace_period = make_agreement_ds()
+    version_id = agreement.version_id(customization=settings.TEST_CUSTOMIZATION)
+    DataRecord(asset_id=agreement.id, value='tos', data_structure=ds_type, version_id=version_id).save()
+
+
+def make_test_agreement(customization):
+    return baker.make('Asset', asset_type=get_asset_type(AssetType.ASSET_TYPES.agreement),
+                      customizations=[customization],
+                      name=f'agree tos {str(uuid4())}')
+
+
+def make_test_version_with_records(agreement, agreement_type=None, grace_period=None):
+    ctx, ds_type, ds_grace_period = make_agreement_ds()
+    version = baker.make('ContentVersion', asset=agreement)
+    title_ds, _ = DataStructure.objects.get_or_create(
+        context=ctx, name='title', default="", type=0)
+    DataRecord(value=f'title for {agreement.name}', data_structure=title_ds,
+               version=version, asset=agreement).save()
+    if agreement_type:
+        DataRecord(value=agreement_type, data_structure=ds_type,
+                   version=version, asset=agreement).save()
+    if grace_period:
+        DataRecord(value=grace_period, data_structure=ds_grace_period,
+                   version=version, asset=agreement).save()
+    return version
+
+
+def make_test_review(customization, version):
+    return baker.make('AssetCustomizationReview', version=version,
+                      customization=customization, reviewed_date=datetime.now(),
+                      state=AssetCustomizationReview.REVIEW_STATES.accepted)
+
+
 @pytest.fixture(autouse=True, scope='function')
 def clear_caches():
     if not settings.LOCAL_ENVIRONMENT:

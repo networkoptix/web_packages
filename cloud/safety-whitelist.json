@@ -121,5 +121,13 @@
   "53315": {
     "name": "django",
     "note": "Django 4.1.7, 4.0.10 and 3.2.18 include a fix for CVE-2023-24580: Potential denial-of-service vulnerability in file uploads. https://www.djangoproject.com/weblog/2023/feb/14/security-releases CVE-2023-24580 For more information, please visit https://pyup.io/v/53315/f17"
+  },
+  "53325": {
+    "name": "werkzeug",
+    "note": "Werkzeug 2.2.3 includes a fix for CVE-2023-25577: Prior to version 2.2.3, Werkzeug's multipart form data parser will parse an unlimited number of parts, including file parts. Parts can be a small amount of bytes, but each requires CPU time to parse and may use more memory as Python data. If a request can be made to an endpoint that accesses 'request.data', 'request.form', 'request.files', or 'request.get_data(parse_form_data=False)', it can cause unexpectedly high resource usage."
+  },
+  "53326": {
+    "name": "werkzeug",
+    "note": "Werkzeug 2.2.3 includes a fix for CVE-2023-23934: Browsers may allow \"nameless\" cookies that look like '=value' instead of 'key=value'. A vulnerable browser may allow a compromised application on an adjacent subdomain to exploit this to set a cookie like '=__Host-test=bad' for another subdomain. Werkzeug prior to 2.2.3 will parse the cookie '=__Host-test=bad' as __Host-test=bad'. If a Werkzeug application is running next to a vulnerable or malicious subdomain which sets such a cookie using a vulnerable browser, the Werkzeug application will see the bad cookie value but the valid cookie key.://www.djangoproject.com/weblog/2023/feb/14/security-releases CVE-2023-24580 For more information, please visit https://pyup.io/v/53315/f17"
   }
 }

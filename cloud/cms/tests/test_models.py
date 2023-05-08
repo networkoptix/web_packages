@@ -10,7 +10,8 @@ from model_bakery import baker, seq
 from django.test import TestCase
 from django_mock_queries.query import MockSet
 from cms.models import *
-from conftest import get_asset_type
+from conftest import make_tos_agreement, make_agreement_ds, make_test_agreement, make_test_version_with_records, \
+    make_test_review, get_asset_type
 
 
 class TestModelFunctions:
@@ -1420,10 +1421,22 @@ class TestContributorAgreement:
         agreement_type = asset_type_factory(AssetType.ASSET_TYPES.agreement)
         agreement = baker.make('Asset', asset_type=agreement_type, name='agree')
         version = baker.make('ContentVersion', asset=agreement)
-        review = baker.make('AssetCustomizationReview', version=version, customization=default_customization, state=AssetCustomizationReview.REVIEW_STATES.accepted)
+        review = baker.make('AssetCustomizationReview', version=version, customization=default_customization,
+                            state=AssetCustomizationReview.REVIEW_STATES.accepted)
         version2 = baker.make('ContentVersion', asset=agreement)
-        review2 = baker.make('AssetCustomizationReview', version=version2, customization=default_customization, state=AssetCustomizationReview.REVIEW_STATES.accepted)
+        tos_agreement = baker.make('Asset', asset_type=agreement_type, name='agree tos')
+        tos_version = baker.make('ContentVersion', asset=tos_agreement)
+        tos_review = baker.make('AssetCustomizationReview', version=tos_version, customization=default_customization,
+                                state=AssetCustomizationReview.REVIEW_STATES.accepted)
+        make_tos_agreement(tos_agreement)
+        review2 = baker.make('AssetCustomizationReview', version=version2, customization=default_customization,
+                             state=AssetCustomizationReview.REVIEW_STATES.accepted)
         assert ContributorAgreement.get_current(customization=default_customization) == review2
+        assert ContributorAgreement.get_current(customization=default_customization,
+                                                agreement_type=AgreementTypes.contributor) == review2
+        assert ContributorAgreement.get_current(customization=default_customization,
+                                                agreement_type=AgreementTypes.tos) == tos_review
+
 
     def test_is_valid(self, mocker, db):
         review = baker.prepare('AssetCustomizationReview')
@@ -2185,3 +2198,79 @@ class TestDataStructure:
         assert ds.has_file_field
         ds.type = DataStructure.DATA_TYPES.external_file
         assert ds.has_file_field
+
+
+class TestGetTosReviews:
+    @pytest.fixture(autouse=True)
+    def setup(self, db, asset_type_factory, default_customization):
+        self.agreement_asset_type = asset_type_factory(AssetType.ASSET_TYPES.agreement)
+        self.ctx, self.ds_type, self.ds_grace_period = make_agreement_ds()
+        self.customization = default_customization
+
+    def make_review(self, version):
+        return make_test_review(self.customization, version)
+
+    def set_type(self, agreement, agreement_type=AgreementTypes.contributor):
+
+        version = make_test_version_with_records(agreement, agreement_type=agreement_type)
+        review = self.make_review(version)
+        return version, review
+
+    def set_grace_period(self, agreement, grace_period=5):
+        version = make_test_version_with_records(agreement, grace_period=grace_period)
+        review = self.make_review(version)
+        return version, review
+
+    def test_without_any_tos(self):
+        reviews = get_tos_reviews(self.customization.name)
+        assert reviews.count() == 0
+
+    def test_get_tos_reviews(self):
+        agreement_1 = make_test_agreement(self.customization)
+        agreement_2 = make_test_agreement(self.customization)
+        agreement_3 = make_test_agreement(self.customization)
+
+        # test without reviews
+        reviews = get_tos_reviews(self.customization.name)
+        assert reviews.count() == 0
+        # test without single TOS
+        version_1, review_1 = self.set_type(agreement_1, AgreementTypes.tos)
+        reviews = get_tos_reviews(self.customization.name)
+        assert reviews.count() == 1
+        assert reviews.last().id == review_1.id
+        assert reviews.last().version.id == version_1.id
+        assert reviews.last().version.asset.id == agreement_1.id
+
+        # test with TOS and contributor
+        version_2, review_2 = self.set_type(agreement_2, AgreementTypes.contributor)
+        reviews = get_tos_reviews(self.customization.name)
+        assert reviews.count() == 1
+        assert reviews.last().id == review_1.id
+        assert reviews.last().version.id == version_1.id
+        assert reviews.last().version.asset.id == agreement_1.id
+
+        # setting agreements 2, 3 to TOS, latest 3
+        version_2, review_2 = self.set_type(agreement_2, AgreementTypes.tos)
+        version_3, review_3 = self.set_type(agreement_3, AgreementTypes.tos)
+
+        reviews = get_tos_reviews(self.customization.name)
+        assert reviews.count() == 4
+        assert reviews.last().id == review_3.id
+        assert reviews.last().version.id == version_3.id
+        assert reviews.last().version.asset.id == agreement_3.id
+
+        # changing agreement_3 to contributor, latest TOS is agreement_2
+        version_3, review_3 = self.set_type(agreement_3, AgreementTypes.contributor)
+        reviews = get_tos_reviews(self.customization.name)
+        assert reviews.count() == 3
+        assert reviews.last().id == review_2.id
+        assert reviews.last().version.id == version_2.id
+        assert reviews.last().version.asset.id == agreement_2.id
+
+        # change grace period. latest TOS is agreement_1
+        version_1, review_1 = self.set_grace_period(agreement_1)
+        reviews = get_tos_reviews(self.customization.name)
+        assert reviews.count() == 4
+        assert reviews.last().id == review_1.id
+        assert reviews.last().version.id == version_1.id
+        assert reviews.last().version.asset.id == agreement_1.id

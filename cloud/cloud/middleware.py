@@ -1,17 +1,25 @@
 import traceback
 import logging
 
+import waffle
 from django.conf import settings
 from django.urls import reverse_lazy
 from django.utils.deprecation import MiddlewareMixin
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect
 from rest_framework import status
+from django.http import HttpRequest
+from rest_framework.renderers import JSONRenderer
 
-from cloud.helpers.exceptions import APIInternalException, ErrorCodes
+from cloud.helpers.exceptions import (
+    APIInternalException, ErrorCodes, api_success,
+)
+from cms.feature_flags import FLAGS, flag_is_active_for_user
+from cms.views.agreement import check_required_tos
 from util.helpers import get_customization_name_from_cloud_host
 
 logger = logging.getLogger(__name__)
+
 
 class CatchExceptionMiddleware(MiddlewareMixin):
     @staticmethod
@@ -77,3 +85,41 @@ class CustomizationMiddleware(MiddlewareMixin):
                                        error_code=ErrorCodes.wrong_parameters)
         request.META['CUSTOMIZATION'] = customization_name
         request.CUSTOMIZATION = customization_name
+
+
+class TOSAgreementMiddleware(MiddlewareMixin):
+    EXCLUDE_ENDPOINTS = [
+        '',
+        '/',
+        reverse_lazy('get_agreement'),
+        reverse_lazy('accept_agreement'),
+        reverse_lazy('get_settings'),
+        reverse_lazy('account'),
+    ]
+    EXCLUDE_PATHS = [
+        '/api/notifications/'
+    ]
+
+    def process_request(self, request: HttpRequest):
+        customization = request.CUSTOMIZATION
+        if not waffle.flag_is_active(request=request, flag_name=FLAGS.require_tos_agreement):
+            return
+        if request.user.is_superuser or not request.user.is_authenticated:
+            return
+        if request.path in self.EXCLUDE_ENDPOINTS:
+            return
+        for path in self.EXCLUDE_PATHS:
+            if request.path.startswith(path):
+                return
+        required_tos = check_required_tos(customization, request.user)
+        if not required_tos:
+            return
+
+        response = api_success({'message': "TOS Agreement requires for user acceptance.", "agreement": required_tos},
+                               status_code=status.HTTP_451_UNAVAILABLE_FOR_LEGAL_REASONS)
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = "application/json"
+        response.renderer_context = {}
+        response.render()
+        return response
+

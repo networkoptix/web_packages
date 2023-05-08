@@ -5,7 +5,7 @@ Serializers for CMS views.
 from django.conf import settings
 from rest_framework import serializers
 
-from cms.models import ReadOnlyAPI, ReadOnlyAPIFile, PortalNotification
+from cms.models import ReadOnlyAPI, ReadOnlyAPIFile, PortalNotification, AgreementTypes
 
 from .asset_cms import *
 from .cms_structs import *
@@ -76,9 +76,43 @@ class PortalNotificationListSerializer(serializers.Serializer):
 
 class AgreementSerializer(serializers.Serializer):
     title = serializers.CharField()
+    type = serializers.CharField(default=AgreementTypes.contributor)
+    grace_period = serializers.IntegerField()
     shortDescription = serializers.CharField()
     body = serializers.CharField()
     id = serializers.IntegerField()
     review_id = serializers.IntegerField()
     preview = serializers.BooleanField()
     accepted = serializers.BooleanField()
+
+
+class RequiredTosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AssetCustomizationReview
+        fields = ['id', 'asset_id', 'version_id', 'reviewed_date',
+                  'grace_period', 'customization_name', 'customization_id']
+
+    customization_name = serializers.SerializerMethodField('get_customization_name')
+    grace_period = serializers.SerializerMethodField('get_grace_period')
+    asset_id = serializers.SerializerMethodField('get_asset_id')
+
+    def get_customization_name(self, obj):
+        return obj.customization.name
+
+    def get_asset_id(self, obj):
+        return obj.version.asset_id
+
+    def get_actual_value(self, obj, ds_name):
+        data_structure = DataStructure.objects.filter(
+            context__asset_type__type=AssetType.ASSET_TYPES.agreement,
+            name=ds_name
+        ).last()
+        return data_structure.find_actual_value(
+            asset=self.instance.version.asset, version_id=obj.version_id,
+            draft=False, customization_name=self.get_customization_name(obj))
+
+    def get_grace_period(self, obj):
+        return self.get_actual_value(obj, 'grace_period')
+
+    def get_title(self, obj):
+        return self.get_actual_value(obj, 'title')

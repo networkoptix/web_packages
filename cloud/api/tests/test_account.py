@@ -37,7 +37,7 @@ class TestLoginHistory:
         assert last_record.email == 'test@test.com'
         assert last_record.ip == '127.0.0.1'
 
-    def test_failed_login(self):
+    def test_failed_login(self, disable_feature_flags):
         self.client.post('/api/account/login', data={'email': 'test@test.com', 'password': 'wrongPass'})
         last_record = AccountLoginHistory.objects.order_by('id').last()
         assert last_record.action == 'user_login_failed'
