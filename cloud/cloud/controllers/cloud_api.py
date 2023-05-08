@@ -295,7 +295,8 @@ def cdb_logger(response, message, headers=None):
 def delete_wrapper(url, auth=None, headers=None):
     default_params = {'salt': salt_machine()}
 
-    return cdb_logger(requests.delete(url, auth=auth, headers=headers), f'\nDELETE: {url} \n Query Parameters: {default_params}', headers)
+    return cdb_logger(requests.delete(url, auth=auth, headers=headers),
+                      f'\nDELETE: {url} \n Query Parameters: {default_params}', headers)
 
 
 @basic_digest_handler()
@@ -305,7 +306,8 @@ def get_wrapper(url, params=None, auth=None, headers=None):
     if params:
         default_params.update(params)
 
-    return cdb_logger(requests.get(url, params=default_params, auth=auth, headers=headers), f'\nGET: {url} \n Query Parameters: {default_params}', headers)
+    return cdb_logger(requests.get(url, params=default_params, auth=auth, headers=headers),
+                      f'\nGET: {url} \n Query Parameters: {default_params}', headers)
 
 
 @basic_digest_handler()
@@ -315,9 +317,10 @@ def post_wrapper(url, params=None, auth=None, data=None, json=None, headers=None
     if params:
         default_params.update(params)
 
-    logger.info(f'\nPOST: {url}\nQuery Parameters: {default_params}\nJson: {json}\nData: {data}')
+    log_msg = f'\nPOST: {url}\nQuery Parameters: {default_params}\nJson: {json}\nData: {data}'
 
-    return requests.post(url, params=default_params, auth=auth, data=data, json=json, headers=headers)
+    return cdb_logger(requests.post(url, params=default_params, auth=auth, data=data, json=json, headers=headers),
+                      log_msg)
 
 
 @basic_digest_handler()
@@ -327,7 +330,8 @@ def put_wrapper(url, params=None, auth=None, json=None, headers=None):
     if params:
         default_params.update(params)
 
-    return cdb_logger(requests.put(url, params=default_params, auth=auth, json=json, headers=headers), f'\nPUT: {url}\nQuery Parameters: {default_params}\nJson: {json}')
+    return cdb_logger(requests.put(url, params=default_params, auth=auth, json=json, headers=headers),
+                      f'\nPUT: {url}\nQuery Parameters: {default_params}\nJson: {json}')
 
 
 @validate_response
