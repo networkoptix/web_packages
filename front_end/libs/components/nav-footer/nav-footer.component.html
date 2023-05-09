@@ -1,11 +1,7 @@
 <ng-container *ngIf="visible$ | async">
     <ng-container *ngIf="!(scrollMechanicsService.isMobile$ | async); else mobileFooter">
         <div class="footer">
-            <a
-                [href]="CONFIG.company.links.website"
-                class="copyright"
-                >©{{ CONFIG.company.name }}</a
-            >
+            <ng-template *ngTemplateOutlet="copyright"></ng-template>
             <ul class="nav navbar-nav flex-row">
                 <li
                     *ngFor="let item of footerItems"
@@ -87,8 +83,8 @@
 <ng-template #copyright>
     <a
         [href]="CONFIG.company.links.website"
-        target="_blank"
+        [attr.target]="'_blank'"
         class="copyright"
-        >©{{ CONFIG.company.name }}</a
+        >&copy;&nbsp;{{ CONFIG.company.name }}</a
     >
 </ng-template>

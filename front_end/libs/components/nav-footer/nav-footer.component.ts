@@ -59,7 +59,7 @@ export class NxNavFooterComponent implements OnInit {
 
     getFooterMenu(): void {
         this.menusService
-            .getMenu('footer')
+            .getMenu('new footer')
             .pipe(take(1))
             .subscribe(footer => {
                 this.footerItems = this.menusService.cleanEmptyNodes(footer.nodes);
