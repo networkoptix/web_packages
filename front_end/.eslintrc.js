@@ -579,6 +579,8 @@ module.exports = {
                 'libs/pipes/**/*.ts',
                 'libs/resolvers/**/*.ts',
                 'libs/routeGuards/**/*.ts',
+                'libs/services/account.service/**/*.ts',
+                // 'libs/services//**/*.ts',
                 'libs/utils/**/*.ts',
             ],
             excludedFiles: ['*.module.ts', '*.spec.ts'], // Lower priority

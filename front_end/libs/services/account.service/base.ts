@@ -58,14 +58,19 @@ export abstract class BaseAccount implements OnDestroy {
     // Abstract methods implemented by cloud and local versions
     abstract logoutHelper(doNotRedirect?: boolean, skipReload?: boolean): void;
     abstract get(forceUpdate?: boolean): Promise<Account>;
-    abstract login(email: string, password: string, remember?: boolean, navigateHome?: boolean): any;
+    abstract login(
+        email: string,
+        password: string,
+        remember?: boolean,
+        navigateHome?: boolean,
+    ): any;
     abstract redirectAuthorised(): void;
     abstract requireLogin(): Promise<any>;
     abstract showLogin(
         keepPage?: boolean,
         redirectClose?: boolean,
         redirectHome?: boolean,
-        blockNavigation?: boolean
+        blockNavigation?: boolean,
     ): void;
 
     constructor(
@@ -98,7 +103,8 @@ export abstract class BaseAccount implements OnDestroy {
         this.loginDialogActive = false;
 
         // Singleton service will be destroyed with application
-        this.store.select(accountSelectors.selectCurrentUser)
+        this.store
+            .select(accountSelectors.selectCurrentUser)
             // eslint-disable-next-line ngrx/no-store-subscription
             .subscribe(account => {
                 this._account = account;
@@ -134,20 +140,19 @@ export abstract class BaseAccount implements OnDestroy {
         });
     }
 
-    ngOnDestroy(): void {
-    }
+    ngOnDestroy(): void {}
 
     // Methods shared between local and cloud versions of account service.
     @memoizeAsyncPersistent
     private initStoreUpdater(account: Account) {
         this.db.updatePersonal(account);
         this.db.personal.unstructured.put({ key: 'account', value: account });
-        this.db.personal.unstructured.$.get('account').pipe(filter(({ value }) => !!value)).subscribe(({ value: currentUser }: UnstructuredTable<Account>) => {
-            this._account = currentUser;
-            this.store.dispatch(
-                accountActions.setCurrentUser({ currentUser })
-            );
-        });
+        this.db.personal.unstructured.$.get('account')
+            .pipe(filter(({ value }) => !!value))
+            .subscribe(({ value: currentUser }: UnstructuredTable<Account>) => {
+                this._account = currentUser;
+                this.store.dispatch(accountActions.setCurrentUser({ currentUser }));
+            });
     }
 
     get account(): Account {
@@ -187,7 +192,7 @@ export abstract class BaseAccount implements OnDestroy {
     }
 
     async checkCode(code: string) {
-        const { emailExists } = await this.cloudApi.checkCode(code) as any;
+        const { emailExists } = (await this.cloudApi.checkCode(code)) as any;
         return !!emailExists;
     }
 
@@ -199,37 +204,30 @@ export abstract class BaseAccount implements OnDestroy {
         return this.get()
             .then((account: Account) => {
                 if (account) {
-                    this.router
-                        .navigate([redirect.authorised])
-                        .catch(error => {
-                            console.error(error);
-                        });
-                } else {
-                    this.router
-                        .navigate([redirect.unauthorised])
-                        .catch(error => {
-                            console.error(error);
-                        });
-                }
-            }).catch(() => {
-                this.router
-                    .navigate([redirect.unauthorised])
-                    .catch(error => {
+                    this.router.navigate([redirect.authorised]).catch(error => {
                         console.error(error);
                     });
+                } else {
+                    this.router.navigate([redirect.unauthorised]).catch(error => {
+                        console.error(error);
+                    });
+                }
+            })
+            .catch(() => {
+                this.router.navigate([redirect.unauthorised]).catch(error => {
+                    console.error(error);
+                });
             });
     }
 
     redirectAfterLogout(doNotRedirect, skipReload): void {
         if (!doNotRedirect) {
-            this.router
-                .navigate([redirect.unauthorised])
-                .finally(() => {
-                    setTimeout(() => {
-                        this.account = undefined;
-                        !skipReload && this.window.location.reload();
-                    });
+            this.router.navigate([redirect.unauthorised]).finally(() => {
+                setTimeout(() => {
+                    this.account = undefined;
+                    !skipReload && this.window.location.reload();
                 });
+            });
         } else if (!skipReload) {
             setTimeout(() => {
                 this.window.location.reload();
@@ -292,71 +290,71 @@ export abstract class BaseAccount implements OnDestroy {
         const tempPassword = auth[1];
 
         return this.login(tempLogin, tempPassword, false)
-            .then(() => this.clearAuthFromUri()).catch(() => {
+            .then(() => this.clearAuthFromUri())
+            .catch(() => {
                 // If the key login fails ask the user to login manually.
-                return this.loginService.login(true, true)
-                    .catch(() => {
-                        // @ts-expect-error: TODO Type Error location.path expects boolean and is being passed a string
-                        this.location.path(redirect.unauthorised);
-                    });
+                return this.loginService.login(true, true).catch(() => {
+                    // @ts-expect-error: TODO Type Error location.path expects boolean and is being passed a string
+                    this.location.path(redirect.unauthorised);
+                });
             });
     }
 
     // TODO: @Chris check for apply service in logout functions
 
     logout(doNotRedirect = false, skipReload = false): void {
-        this.applyService
-            .canMove()
-            .then((allowed: boolean) => {
-                if (allowed) {
-                    // this.account = undefined; <- moved to logout helper --TT
-                    this.logoutHelper(doNotRedirect, skipReload);
-                }
-            });
+        this.applyService.canMove().then((allowed: boolean) => {
+            if (allowed) {
+                // this.account = undefined; <- moved to logout helper --TT
+                this.logoutHelper(doNotRedirect, skipReload);
+            }
+        });
     }
 
     logoutAuthorised(skipReload = false) {
-        return this.get()
-            .then((account: Account) => {
-                // logoutAuthorisedLogoutButton
-                if (account) {
-                    const isRegister = this.router.url.includes('/register');
-                    const isRestore = this.router.url.includes('/restore_password');
-                    const isActivate = this.router.url.includes('/activate');
+        return this.get().then((account: Account) => {
+            // logoutAuthorisedLogoutButton
+            if (account) {
+                const isRegister = this.router.url.includes('/register');
+                const isRestore = this.router.url.includes('/restore_password');
+                const isActivate = this.router.url.includes('/activate');
 
-                    let cancelLabel = '';
-                    if (isRegister) {
-                        cancelLabel = this.LANG.dialogs.buttons.createAccount;
-                    } else if (isRestore) {
-                        cancelLabel = this.LANG.dialogs.buttons.logoutAuthorised;
-                    } else {
-                        cancelLabel = this.LANG.dialogs.buttons.cancel;
-                    }
-                    return this.dialogs
-                        .confirm({
-                            disableClose: true,
-                            title: { value: this.LANG.dialogs.titles.changeAccount, params: { email: account.email } },
-                            footer: {
-                                actionLabel: this.LANG.dialogs.buttons.stayLoggedIn,
-                                cancelLabel,
-                            }
-                        }).then(result => {
-                            if ((isRestore || isRegister || isActivate) && result === false) {
-                                this.logout(true, skipReload);
-                                return true;
-                            } else {
-                                this.redirectAuthorised();
-                                return false;
-                            }
-                        });
+                let cancelLabel = '';
+                if (isRegister) {
+                    cancelLabel = this.LANG.dialogs.buttons.createAccount;
+                } else if (isRestore) {
+                    cancelLabel = this.LANG.dialogs.buttons.logoutAuthorised;
+                } else {
+                    cancelLabel = this.LANG.dialogs.buttons.cancel;
                 }
-            });
+                return this.dialogs
+                    .confirm({
+                        disableClose: true,
+                        title: {
+                            value: this.LANG.dialogs.titles.changeAccount,
+                            params: { email: account.email },
+                        },
+                        footer: {
+                            actionLabel: this.LANG.dialogs.buttons.stayLoggedIn,
+                            cancelLabel,
+                        },
+                    })
+                    .then(result => {
+                        if ((isRestore || isRegister || isActivate) && result === false) {
+                            this.logout(true, skipReload);
+                            return true;
+                        } else {
+                            this.redirectAuthorised();
+                            return false;
+                        }
+                    });
+            }
+        });
     }
 
     private clearAuthFromUri() {
         const queryParams = { auth: undefined, from: undefined };
-        return this.router
-            .navigate([], { queryParams, queryParamsHandling: 'merge' });
+        return this.router.navigate([], { queryParams, queryParamsHandling: 'merge' });
     }
 
     private clearCodeFromUri(): void {
@@ -388,7 +386,9 @@ export abstract class BaseAccount implements OnDestroy {
     public async handleRefreshTokenLogin(refreshToken) {
         const url = new URL(this.window.location.href);
         url.searchParams.delete('refresh_token');
-        const { code }: any = await this.cloudApi.getTokensFromCloud(refreshToken, 'refresh_token', 'code').toPromise();
+        const { code }: any = await this.cloudApi
+            .getTokensFromCloud(refreshToken, 'refresh_token', 'code')
+            .toPromise();
         url.searchParams.set('code', code);
         this.window.history.pushState({ url: url.toString() }, '', url.toString());
         return this.handleCodeLogin(code);
@@ -397,31 +397,37 @@ export abstract class BaseAccount implements OnDestroy {
     public async handleCodeLogin(code: string) {
         const account = await this.get(true);
         if (!account || !account.is_authenticated) {
-            return this.cloudApi.loginCode(code)
+            return this.cloudApi
+                .loginCode(code)
                 .then(res => {
                     this.sessionService.loginState = res.email;
                     this.clearCodeFromUri();
                     this.window.location.reload();
                 })
-                .catch(e => this.handleCodeError(e)
-                    .then(reload => reload && this.window.location.reload())
-                ).finally(() => {
+                .catch(e =>
+                    this.handleCodeError(e).then(reload => reload && this.window.location.reload()),
+                )
+                .finally(() => {
                     this.appStateService.ready = true;
                 });
         }
 
         const logoutTokens = (tokens, reload = false) => {
-            return this.cloudApi.logoutTokens(tokens.access_token, tokens.refresh_token).then(() => {
-                this.clearCodeFromUri();
-                if (reload) {
-                    this.window.location.reload();
-                }
-            });
+            return this.cloudApi
+                .logoutTokens(tokens.access_token, tokens.refresh_token)
+                .then(() => {
+                    this.clearCodeFromUri();
+                    if (reload) {
+                        this.window.location.reload();
+                    }
+                });
         };
 
         try {
             const tokens: any = await this.cloudApi.getTokensFromCloud(code).toPromise();
-            const tokenInfo: any = await this.cloudApi.getTokenInfo(tokens.access_token).toPromise();
+            const tokenInfo: any = await this.cloudApi
+                .getTokenInfo(tokens.access_token)
+                .toPromise();
             this.appStateService.ready = true;
             if (tokenInfo.username === account.email) {
                 await logoutTokens(tokens);
@@ -434,8 +440,11 @@ export abstract class BaseAccount implements OnDestroy {
                 footer: {
                     footerClass: 'long-cancel-button',
                     actionLabel: this.LANG.dialogs.buttons.ok,
-                    cancelLabel: { value: this.LANG.dialogs.buttons.stayAs, params: { email: account.email } },
-                }
+                    cancelLabel: {
+                        value: this.LANG.dialogs.buttons.stayAs,
+                        params: { email: account.email },
+                    },
+                },
             });
             if (res) {
                 return this.loginTokens(tokens);
@@ -464,8 +473,11 @@ export abstract class BaseAccount implements OnDestroy {
                 footer: {
                     footerClass: 'long-cancel-button',
                     actionLabel: this.LANG.dialogs.buttons.ok,
-                    cancelLabel: { value: this.LANG.dialogs.buttons.stayAs, params: { email: account.email } },
-                }
+                    cancelLabel: {
+                        value: this.LANG.dialogs.buttons.stayAs,
+                        params: { email: account.email },
+                    },
+                },
             });
 
             if (response) {

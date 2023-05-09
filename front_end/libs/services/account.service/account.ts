@@ -23,7 +23,6 @@ export interface CloudAccount {
 }
 
 export interface Account extends CloudAccount {
-
     account2faEnabled: boolean;
     totpExistsForAccount: boolean;
     sessionExpires: number;
@@ -38,9 +37,10 @@ export function newLocalAccount(user: ec2User | CurrentUser): Account {
         id,
         name,
         first_name: first,
-        last_name: last((rest || [''])),
+        last_name: last(rest || ['']),
         permissions: permissions?.split('|') || [],
-        is_superuser: !environment.isLocal && (isAdmin || permissions?.includes('GlobalAdminPermission')),
+        is_superuser:
+            !environment.isLocal && (isAdmin || permissions?.includes('GlobalAdminPermission')),
         isCloud,
     } as Account;
     // TODO: This should eventually be its own LocalAccount type
@@ -64,17 +64,17 @@ export const DUMMY_ACCOUNT: Account = {
     sessionVerified: false,
     totpExistsForAccount: false,
     accessToken: 'accessToken',
-    sessionExpires: Date.now() + 1000
+    sessionExpires: Date.now() + 1000,
 };
 
 // .requiresLogin() in account service doesn't return an actual Account object
 export function isAccount(unknownObj: unknown): unknownObj is Account {
-    return typeof unknownObj === 'object' && (
+    return (
+        typeof unknownObj === 'object' &&
         Object.entries(unknownObj).every(([key, value]) => {
             return (
                 // eslint-disable-next-line no-prototype-builtins
-                DUMMY_ACCOUNT.hasOwnProperty(key) &&
-                typeof DUMMY_ACCOUNT[key] === typeof value
+                DUMMY_ACCOUNT.hasOwnProperty(key) && typeof DUMMY_ACCOUNT[key] === typeof value
             );
         })
     );

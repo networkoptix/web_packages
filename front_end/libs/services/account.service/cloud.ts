@@ -70,13 +70,13 @@ export class CloudAccount extends BaseAccount {
             bootstrapProviderService,
             store,
             dialogs,
-            db
+            db,
         );
         this.account = this.CONFIG.preloadedAccount as Account;
         const loginState$ = this.sessionService.loginStateSubject.pipe(
             debounceTime(1000),
             distinctUntilChanged(),
-            shareReplay({ bufferSize: 1, refCount: true })
+            shareReplay({ bufferSize: 1, refCount: true }),
         );
 
         // Distinct until changed is used to prevent the logout function from looping.
@@ -88,41 +88,47 @@ export class CloudAccount extends BaseAccount {
             }
         });
 
-        combineLatest([timer(0, updateInterval), loginState$]).pipe(
-            filter(([_, loginState]) => !!loginState),
-            switchMap(() => this.cloudApi.account(false)),
-            map((account: Account) => {
-                if (!account?.is_authenticated) {
-                    throw Error('unauthorized');
-                }
-                return account;
-            }),
-            catchError(res => {
-                if (res?.error?.resultCode === 'badUsername' || res?.message === 'unauthorized') {
-                    // Ensures that we logout if the user tries to leave the page.
-                    this.window.onbeforeunload = () => {
-                        this.sessionService.invalidateSession();
-                    };
-                    return this.dialogs.expiredSession()
-                        .then(() => this.logoutHelper(true));
-                }
-                return of(undefined);
-            })
-        ).subscribe((account: Account) => {
-            this.account = account;
-        });
+        combineLatest([timer(0, updateInterval), loginState$])
+            .pipe(
+                filter(([_, loginState]) => !!loginState),
+                switchMap(() => this.cloudApi.account(false)),
+                map((account: Account) => {
+                    if (!account?.is_authenticated) {
+                        throw Error('unauthorized');
+                    }
+                    return account;
+                }),
+                catchError(res => {
+                    if (
+                        res?.error?.resultCode === 'badUsername' ||
+                        res?.message === 'unauthorized'
+                    ) {
+                        // Ensures that we logout if the user tries to leave the page.
+                        this.window.onbeforeunload = () => {
+                            this.sessionService.invalidateSession();
+                        };
+                        return this.dialogs.expiredSession().then(() => this.logoutHelper(true));
+                    }
+                    return of(undefined);
+                }),
+            )
+            .subscribe((account: Account) => {
+                this.account = account;
+            });
     }
 
     get(forceUpdate = false): Promise<Account> {
         if (!forceUpdate && this.requestingLogin) {
             // login is requesting, so we wait
-            return this.requestingLogin
-                .then(() => {
+            return this.requestingLogin.then(
+                () => {
                     this.requestingLogin = undefined; // clean requestingLogin reference
                     return this.get(); // Try again
-                }, () => {
+                },
+                () => {
                     return false;
-                });
+                },
+            );
         }
 
         if (this.account && !forceUpdate) {
@@ -149,96 +155,102 @@ export class CloudAccount extends BaseAccount {
                     return null;
                 }
 
-                this.router
-                    .navigate([redirect.unauthorised])
-                    .catch(error => {
-                        console.error(error);
-                    });
+                this.router.navigate([redirect.unauthorised]).catch(error => {
+                    console.error(error);
+                });
             });
     }
 
     login(email: string, password: string, remember: boolean, navigateHome = false): Promise<any> {
         this.requestingLogin = this.cloudApi.login(email, password, remember);
 
-        return this.requestingLogin.then((result: any) => {
-            if (!this.cloudApi.checkResponseHasError(result)) {
-                if (this.sessionService.loginState) {
-                    // If the user that logged in matches the current session there's no need to show
-                    // the logout dialog.
-                    if (result.email !== this.sessionService.loginState) {
-                        return this.logoutAuthorised();
+        return this.requestingLogin
+            .then((result: any) => {
+                if (!this.cloudApi.checkResponseHasError(result)) {
+                    if (this.sessionService.loginState) {
+                        // If the user that logged in matches the current session there's no need to show
+                        // the logout dialog.
+                        if (result.email !== this.sessionService.loginState) {
+                            return this.logoutAuthorised();
+                        }
+
+                        return Promise.resolve({
+                            data: {
+                                account: result,
+                                resultCode: responseOk,
+                            },
+                        });
+                    }
+
+                    if (result.email || result.name) {
+                        // (result.data.resultCode === L.errorCodes.ok)
+                        this.sessionService.loginState = result.email || result.name; // Forcing changing loginState to reload interface
                     }
 
                     return Promise.resolve({
                         data: {
                             account: result,
-                            resultCode: responseOk
-                        }
+                            resultCode: responseOk,
+                        },
                     });
                 }
-
-                if (result.email || result.name) { // (result.data.resultCode === L.errorCodes.ok)
-                    this.sessionService.loginState = result.email || result.name; // Forcing changing loginState to reload interface
+                return Promise.reject({ error: { resultCode: result.resultCode } });
+            })
+            .then(result => {
+                // Add the reload back until we solve the issues with configservice
+                // TODO: CLOUD-7267: Handle account changes without reload
+                if (result.data?.resultCode === responseOk) {
+                    (navigateHome ? this.redirectToHome() : Promise.resolve()).then(() =>
+                        this.window.location.reload(),
+                    );
                 }
-
-                return Promise.resolve({
-                    data: {
-                        account: result,
-                        resultCode: responseOk
-                    }
-                });
-            }
-            return Promise.reject({ error: { resultCode: result.resultCode } });
-        }).then(result => {
-            // Add the reload back until we solve the issues with configservice
-            // TODO: CLOUD-7267: Handle account changes without reload
-            if (result.data?.resultCode === responseOk) {
-                (navigateHome ? this.redirectToHome() : Promise.resolve()).then(() => this.window.location.reload());
-            }
-            return result;
-        }).catch((result: any) => {
-            if (this.cloudApi.checkResponseHasError(result.error)) {
-                return Promise.reject({ resultCode: result.error.resultCode });
-            }
-        });
+                return result;
+            })
+            .catch((result: any) => {
+                if (this.cloudApi.checkResponseHasError(result.error)) {
+                    return Promise.reject({ resultCode: result.error.resultCode });
+                }
+            });
     }
 
     logoutHelper(doNotRedirect = false, skipReload = false): void {
-        this.cloudApi
-            .logout()
-            .finally(() => {
-                this.sessionService.invalidateSession(); // Clear session
-                // cookieService.deleteAll doesn't remove all the cookies most of the time
-                // known cookies getting deleted here are the csrftoken and system/code cookies
-                const cookies = this.cookieService.getAll();
-                for (const cookie in cookies) {
-                    if (cookie !== 'language') {
-                        this.cookieService.delete(cookie);
-                    }
+        this.cloudApi.logout().finally(() => {
+            this.sessionService.invalidateSession(); // Clear session
+            // cookieService.deleteAll doesn't remove all the cookies most of the time
+            // known cookies getting deleted here are the csrftoken and system/code cookies
+            const cookies = this.cookieService.getAll();
+            for (const cookie in cookies) {
+                if (cookie !== 'language') {
+                    this.cookieService.delete(cookie);
                 }
+            }
 
-                this.redirectAfterLogout(doNotRedirect, skipReload);
-            });
+            this.redirectAfterLogout(doNotRedirect, skipReload);
+        });
     }
 
     redirectAuthorised(): void {
-        this.get()
-            .then((account: Account) => {
-                if (account) {
-                    this.router
-                        .navigate([(this.CONFIG.featureFlags.dashboardRedirect || this.cookieService.get('devServer')) ? '/dashboard' : redirect.authorised])
-                        .catch(error => {
-                            console.error(error);
-                        });
-                }
-            });
+        this.get().then((account: Account) => {
+            if (account) {
+                this.router
+                    .navigate([
+                        this.CONFIG.featureFlags.dashboardRedirect ||
+                        this.cookieService.get('devServer')
+                            ? '/dashboard'
+                            : redirect.authorised,
+                    ])
+                    .catch(error => {
+                        console.error(error);
+                    });
+            }
+        });
     }
 
     showLogin(
         _keepPage?: boolean,
         _redirectClose?: boolean,
         _redirectHome?: boolean,
-        _blockNavigation?: boolean
+        _blockNavigation?: boolean,
     ): void {
         // Cloud portal no longer uses login dialog
         this.oauthService.redirectOauth();
@@ -258,7 +270,8 @@ export class CloudAccount extends BaseAccount {
                 } else if (account.is_authenticated) {
                     return account;
                 }
-            }).catch(err => {
+            })
+            .catch(err => {
                 console.error(err);
                 this.router.navigate([redirect.unauthorised]).catch(_ => {});
             });

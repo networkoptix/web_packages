@@ -72,10 +72,15 @@ export class LocalAccount extends BaseAccount {
             bootstrapProviderService,
             store,
             dialogs,
-            db
+            db,
         );
-        this.mediaServerApi = this.nxSystemAPIService
-            .createConnection(undefined, undefined, undefined, () => of(''), this.CONFIG.system.version.major);
+        this.mediaServerApi = this.nxSystemAPIService.createConnection(
+            undefined,
+            undefined,
+            undefined,
+            () => of(''),
+            this.CONFIG.system.version.major,
+        );
     }
 
     async get(forceUpdate = false): Promise<Account | undefined> {
@@ -96,38 +101,38 @@ export class LocalAccount extends BaseAccount {
     }
 
     login(login, password, remember = false, navigateHome = false): Promise<any> {
-        return this.mediaServerApi.loginToken(login, password, remember)
+        return this.mediaServerApi
+            .loginToken(login, password, remember)
             .pipe(
                 catchError(({ errorString: errorText, ...res }) => {
                     const errorLookup = {
                         'Wrong password.': 'notAuthorized',
                         'Wrong username or password.': 'notAuthorized',
-                        'This user on your IP is locked out due to many filed attempts. Please, try again later.': 'accountBlocked',
-                        'The user is locked out due to several failed attempts. Please try again later.': 'accountBlocked'
+                        'This user on your IP is locked out due to many filed attempts. Please, try again later.':
+                            'accountBlocked',
+                        'The user is locked out due to several failed attempts. Please try again later.':
+                            'accountBlocked',
                     };
                     const resultCode = errorLookup[errorText];
                     return Promise.resolve({ ...res, errorText, resultCode });
                 }),
                 tap((res: any) => {
-                    this.sessionService.loginState = (res.resultCode) ? undefined : login;
-                })
-            ).toPromise();
+                    this.sessionService.loginState = res.resultCode ? undefined : login;
+                }),
+            )
+            .toPromise();
     }
 
     logoutHelper(doNotRedirect = false, skipReload = false): void {
         if (!doNotRedirect) {
-            this.router
-                .navigate([redirect.unauthorised])
-                .finally(() => {
-                    this.mediaServerApi
-                        .logout()
-                        .finally(() => {
-                            this.cookieService.deleteAll();
-                            this.sessionService.invalidateSession(); // Clear session
-                            this.account = undefined;
-                            !skipReload && this.window.location.reload();
-                        });
+            this.router.navigate([redirect.unauthorised]).finally(() => {
+                this.mediaServerApi.logout().finally(() => {
+                    this.cookieService.deleteAll();
+                    this.sessionService.invalidateSession(); // Clear session
+                    this.account = undefined;
+                    !skipReload && this.window.location.reload();
                 });
+            });
         } else if (!skipReload) {
             setTimeout(() => {
                 this.window.location.reload();
@@ -139,26 +144,30 @@ export class LocalAccount extends BaseAccount {
         keepPage?: boolean,
         redirectClose?: boolean,
         redirectHome = false,
-        blockNavigation = false
+        blockNavigation = false,
     ): void {
         this.loginService.login(keepPage, redirectClose, redirectHome, blockNavigation);
     }
 
     private showLoginDialog(): Promise<string | Account | undefined | boolean> {
         this.loginDialogActive = true;
-        return this.loginService.login(true, true)
-            .then<string | Account | undefined, boolean>(result => {
-                if (result === 'newSystem') {
-                    return;
-                }
-                this.storageService.loginRegister = true;
-                if (result === 'register') {
-                    return this.router.navigate(['/authorize/register']).then(() => result);
-                }
-                return this.get();
-            }, (): any => {
-                this.router.navigate([redirect.unauthorised]);
-            })
+        return this.loginService
+            .login(true, true)
+            .then<string | Account | undefined, boolean>(
+                result => {
+                    if (result === 'newSystem') {
+                        return;
+                    }
+                    this.storageService.loginRegister = true;
+                    if (result === 'register') {
+                        return this.router.navigate(['/authorize/register']).then(() => result);
+                    }
+                    return this.get();
+                },
+                (): any => {
+                    this.router.navigate([redirect.unauthorised]);
+                },
+            )
             .finally(() => {
                 this.loginDialogActive = false;
             });
@@ -172,7 +181,8 @@ export class LocalAccount extends BaseAccount {
             .then(account => {
                 !account && !this.loginDialogActive && this.showLoginDialog();
                 return account;
-            }).catch(() => {
+            })
+            .catch(() => {
                 if (!this.loginDialogActive) {
                     return this.showLoginDialog();
                 } else {
