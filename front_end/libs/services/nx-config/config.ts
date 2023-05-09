@@ -279,8 +279,8 @@ export const nxConfig: IConfig = {
         light: 'light',
     },
     mobileLinks: {
-        androidApplicationLink: '',
-        iosApplicationLink: ''
+        android_application_link: '',
+        ios_application_link: ''
     }
 
 };

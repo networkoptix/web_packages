@@ -30,8 +30,8 @@ export interface ThemeConfig {
 }
 
 export interface MobileLinks {
-    androidApplicationLink: string;
-    iosApplicationLink: string;
+    android_application_link: string;
+    ios_application_link: string;
 }
 
 export interface BaseConfig {
