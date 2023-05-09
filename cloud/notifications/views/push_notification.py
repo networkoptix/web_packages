@@ -1,7 +1,12 @@
+import re
+from hashlib import sha256
+
 from django.conf import settings
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AnonymousUser
 from django.core.cache import caches
 from django.db import transaction
+from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from drf_yasg import openapi
@@ -15,6 +20,7 @@ from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.response import Response
 
 from cloud.controllers.cloud_api import Account as Clouddb_Account, System as Clouddb_System, Auth as Clouddb_Auth, CloudDbConfig
+from cloud.customization_context import customization_ctx
 from cloud.helpers.exceptions import (
     api_success, APINotAuthorisedException, APILogicException, clean_passwords
 )
@@ -52,35 +58,36 @@ class IsAuthenticatedUserOrSystem(BasePermission):
 
 
 class CloudSystemBasicAuthentication(BasicAuthentication):
-    def authenticate_credentials(self, user, password, request=None):
+    def authenticate_credentials(self, user, password: str, request=None):
+        if not password:
+            raise exceptions.AuthenticationFailed('Invalid system credentials')
         request.data['username'] = user
         request.data['password'] = password
         request.data['systemId'] = request.data.get('systemId', user)
         authentication_cache = caches['push_authentication']
-        system = authentication_cache.get(f'{user}:{password}')
+        password_hash = sha256(password.encode()).hexdigest()
+        system = authentication_cache.get(f'{user}:{password_hash}')
         if system:
             request.data['system'] = system
-        else:
+        elif re.match(
+                r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$', user):
+
             try:
-                # System credentials should fail account.get and raise an exception
-                Clouddb_Account.get(request, email=user, password=password)
-                raise exceptions.AuthenticationFailed(
-                    'Must use system credentials, not account credentials')
-            except (APINotAuthorisedException, APILogicException):
-                try:
-                    system_response = Clouddb_System.basic_get(
-                        user, password, user)
-                    if 'systems' in system_response and system_response['systems'][0]:
-                        request.data['system'] = system_response['systems'][0]
-                        authentication_cache.set(
-                            f'{user}:{password}', request.data['system'])
-                    else:
-                        raise exceptions.AuthenticationFailed(
-                            'Invalid system credentials')
-                except APINotAuthorisedException:
+                system_response = Clouddb_System.basic_get(
+                    user, password, user)
+                if 'systems' in system_response and system_response['systems'][0]:
+                    request.data['system'] = system_response['systems'][0]
+                    authentication_cache.set(
+                        f'{user}:{password_hash}', request.data['system'])
+                else:
                     raise exceptions.AuthenticationFailed(
                         'Invalid system credentials')
-
+            except APINotAuthorisedException:
+                raise exceptions.AuthenticationFailed(
+                    'Invalid system credentials')
+        else:
+            raise exceptions.AuthenticationFailed(
+                'Invalid system credentials')
         system_account = AnonymousUser()
         system_account.is_system = True
         return system_account, None
@@ -139,7 +146,7 @@ class CustomizationBearerAuthentication(TokenAuthentication):
 
     def authenticate_credentials(self, token, request):
         model = self.get_model()
-        cloud_db_url = CloudDbConfig.url(customization_name=get_customization(request))
+        cloud_db_url = CloudDbConfig.url(customization_name=getattr(request, 'CUSTOMIZATION', customization_ctx.get()))
         try:
             validate_token = Clouddb_Auth.validate_token(token, cloud_db_url=cloud_db_url)
         except APINotAuthorisedException:
@@ -150,24 +157,24 @@ class CustomizationBearerAuthentication(TokenAuthentication):
             return None, token
 
     def authenticate(self, request):
-        auth = get_authorization_header(request).split()
-
-        if not auth or auth[0].lower() != self.keyword.lower().encode():
+        auth = get_authorization_header(request)
+        auth = auth.decode().split()
+        if not auth or auth[0].lower() != self.keyword.lower():
             return None
 
         if len(auth) == 1:
-            msg = _('Invalid token header. No credentials provided.')
+            msg = 'Invalid token header. No credentials provided.'
             raise exceptions.AuthenticationFailed(msg)
         elif len(auth) > 2:
-            msg = _('Invalid token header. Token string should not contain spaces.')
+            msg = 'Invalid token header. Token string should not contain spaces.'
             raise exceptions.AuthenticationFailed(msg)
 
+        token = auth[1]
         try:
-            token = auth[1].decode()
+            token.encode()
         except UnicodeError:
             msg = _('Invalid token header. Token string should not contain invalid characters.')
             raise exceptions.AuthenticationFailed(msg)
-
         return self.authenticate_credentials(token, request)
 
 

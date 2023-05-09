@@ -113,8 +113,8 @@ class TestCloudSystemBasicAuthentication(WithInstanceFixture):
         mock_temp_login_instance.__enter__.return_value = mock_credentials
         mock_temp_login = mocker.patch(
             'cloud.controllers.cloud_api.TempLogin', return_value=mock_temp_login_instance)
-
-        login = f'{user}:{password}'
+        password_hash = sha256(password.encode()).hexdigest()
+        login = f'{user}:{password_hash}'
 
         caches['push_authentication'].set(login, system)
 
@@ -137,10 +137,28 @@ class TestCloudSystemBasicAuthentication(WithInstanceFixture):
         assert isinstance(instance.authenticate_credentials(
             user, password, mock_request)[0], AnonymousUser)
         assert caches['push_authentication'].get(login, False) == system
-        mock_clouddb_account_get.assert_called_once_with(
-            mock_request, email=user, password=password)
         mock_clouddb_system_get.assert_called_once_with(user, password, user)
         assert mock_request.data == expected_request_data
+
+        # Handle non-system credentials
+        caches['push_authentication'].delete(login)
+        mock_request.data = {}
+        err = None
+        try:
+            response = instance.authenticate_credentials(f'{uuid4()}@example.com', password, mock_request)
+        except Exception as ex:
+            err = ex
+        assert isinstance(err, exceptions.AuthenticationFailed)
+
+        #  Test empty password
+        mock_request.data = {}
+        err = None
+        try:
+            response = instance.authenticate_credentials(f'{uuid4()}@example.com', '', mock_request)
+        except Exception as ex:
+            err = ex
+        assert isinstance(err, exceptions.AuthenticationFailed)
+
 
 
 class TestCloudAccountBasicAuthentication(WithInstanceFixture):
@@ -200,6 +218,70 @@ class TestCloudSessionAuthentication(WithInstanceFixture):
         assert instance.authenticate(mock_request)[
             0] == mock_request._request.user
         assert mock_request.data == expected_request_data
+
+
+class TestCustomizationBearerAuthentication(WithInstanceFixture):
+    view_class = CustomizationBearerAuthentication
+
+    def test_authenticate_credentials(self, arf, mocker, instance, db):
+        cdb_url = f'{uuid4()}'
+        token = f'{uuid4()}'
+        username = f'{uuid4()}@test.test'
+        auth_response = {
+            'token': token,
+            'username': username
+        }
+        mock_cdb_config = mocker.patch.object(CloudDbConfig, 'url', return_value=cdb_url)
+        mock_auth = mocker.patch.object(Clouddb_Auth, 'validate_token', return_value=auth_response)
+        request = arf.get('/', headers={"Authorization": f"Bearer {token}"}, META={"HTTP_AUTHORIZATION": f"Bearer {token}"})
+        # test without user
+        assert instance.authenticate_credentials(token, request) == (None, token)
+        mock_auth.assert_called_with(token, cloud_db_url=cdb_url)
+        # test without user
+        account = baker.make(Account, email=username)
+        assert instance.authenticate_credentials(token, request) == (account, token)
+        mock_auth.assert_called_with(token, cloud_db_url=cdb_url)
+
+        # test invalid token
+        mock_auth.side_effect = APINotAuthorisedException('Invalid token')
+        assert instance.authenticate_credentials(token, request) is None
+
+    def test_authenticate(self, arf, mocker, instance):
+        token = f'{uuid4()}'
+        username = f'{uuid4()}@test.test'
+        mock_auth_cred = mocker.patch.object(CustomizationBearerAuthentication, 'authenticate_credentials',
+                                             return_value=(token, username))
+        # valid token
+        request = arf.get('/')
+        request.headers = {"Authorization": f"Bearer {token}"}
+        request.META = {"HTTP_AUTHORIZATION": f"Bearer {token}"}
+        assert instance.authenticate(request) == (token, username)
+        mock_auth_cred.assert_called_with(token, request)
+
+        # invalid keyword
+        request.headers = {"Authorization": f"Fearer {token}"}
+        request.META = {"HTTP_AUTHORIZATION": f"Fearer {token}"}
+        assert instance.authenticate(request) is None
+
+        # more spaces
+        request.headers = {"Authorization": f"Bearer {token} asdasd"}
+        request.META = {"HTTP_AUTHORIZATION": f"Bearer {token} asdasd"}
+        try:
+            instance.authenticate(request)
+        except exceptions.AuthenticationFailed as ex:
+            assert ex.detail.__str__() == 'Invalid token header. Token string should not contain spaces.'
+        else:
+            raise AssertionError("Must raise exception")
+
+        # Missed token
+        request.META = {"HTTP_AUTHORIZATION": f"Bearer "}
+        request.headers = {"Authorization": f"Bearer "}
+        try:
+            instance.authenticate(request)
+        except exceptions.AuthenticationFailed as ex:
+            assert ex.detail.__str__() == 'Invalid token header. No credentials provided.'
+        else:
+            raise AssertionError("Must raise exception")
 
 
 def test_push_notification(arf, account_factory, db, mocker, default_customization):
