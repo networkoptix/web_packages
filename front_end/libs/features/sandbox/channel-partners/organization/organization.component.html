@@ -1,47 +1,64 @@
-<div
-    class="mb-3 d-flex"
-    [style]="{ gap: '5px' }"
->
-    <button
-        class="btn btn-default"
-        (click)="back()"
+<ng-container *ngrxLet="organization$ as org">
+    <div
+        class="mb-3 d-flex"
+        [style]="{ gap: '5px' }"
     >
-        <h2>⬅️ Back</h2>
-    </button>
-    <button
-        *ngIf="organization$ | async as org"
-        class="btn btn-default"
-        (click)="up(org.channelPartner)"
-    >
-        <h2>⬆️ Up</h2>
-    </button>
-</div>
+        <button
+            class="btn btn-default"
+            (click)="back()"
+        >
+            <h2>⬅️ Back</h2>
+        </button>
+        <button
+            class="btn btn-default"
+            (click)="up(org.channelPartner)"
+        >
+            <h2>⬆️ Up</h2>
+        </button>
+    </div>
 
-<h1>{{ (organization$ | async)?.name }}</h1>
-<ul>
-    <li *ngFor="let prop of organization$ | async | keyvalue">
-        {{ prop.key }}: {{ prop.value | json }}
-    </li>
-</ul>
-
-<h2>Users</h2>
-<button
-    *ngrxLet="organization$ as org"
-    class="btn-primary"
-    (click)="newOrgUser(org.id)"
->
-    New User
-</button>
-<div *ngFor="let user of users$ | async">
-    <h4>{{ user.email }}</h4>
+    <h1>{{ (organization$ | async)?.name }}</h1>
     <button
-        *ngrxLet="organization$ as org"
-        class="btn-danger"
-        (click)="deleteOrgUser(org.id, user.userId)"
+        class="btn-primary"
+        (click)="updateOrganization(org)"
     >
-        Delete
+        Update
     </button>
     <ul>
-        <li *ngFor="let prop of user | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
+        <li *ngFor="let prop of organization$ | async | keyvalue">
+            {{ prop.key }}: {{ prop.value | json }}
+        </li>
     </ul>
-</div>
+
+    <h2>Users</h2>
+    <button
+        class="btn-primary"
+        (click)="newOrgUser(org.id)"
+    >
+        New User
+    </button>
+    <div *ngFor="let user of users$ | async">
+        <h4>{{ user.email }}</h4>
+        <div
+            class="mb-3 d-flex"
+            [style]="{ gap: '5px' }"
+        >
+            <button
+                class="btn-primary"
+                (click)="updateOrgUser(org.id, user)"
+            >
+                Update
+            </button>
+            <button
+                class="btn-danger"
+                (click)="deleteOrgUser(org.id, user.userId)"
+            >
+                Delete
+            </button>
+        </div>
+
+        <ul>
+            <li *ngFor="let prop of user | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
+        </ul>
+    </div>
+</ng-container>

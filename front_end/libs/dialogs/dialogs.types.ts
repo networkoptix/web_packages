@@ -124,10 +124,16 @@ export type Account2faReturn = string;
 
 /* Channel partners */
 export type AddChannelPartner = DialogType<CpId, ChannelPartner>;
+export type EditChannelPartner = DialogType<ChannelPartner, ChannelPartner>;
 export type AddPartnerUser = DialogType<CpId, ChannelPartnerUser>;
+export type EditPartnerUser = DialogType<
+    { channelPartner: CpId; user: ChannelPartnerUser },
+    ChannelPartnerUser
+>;
 export type AddOrganization = DialogType<CpId, Organization>;
+export type EditOrganization = DialogType<Organization, Organization>;
 export type AddOrgUser = DialogType<CpId, OrganizationUser>;
-export type EditOrgUser = DialogType<void, void>;
+export type EditOrgUser = DialogType<{ orgId: CpId; user: OrganizationUser }, OrganizationUser>;
 
 /* Groups */
 export type CreateSystemGroup = DialogType<

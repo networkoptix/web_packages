@@ -1331,6 +1331,25 @@
             "You can only move groups that you own.": "You can only move groups that you own.",
             "Adding src group to dst group would create a cycle in tree.": "Adding src group to dst group would create a cycle in tree.",
             "User does not exist in group": "User does not exist in group"
+        },
+        "status": {
+            "active": "Active",
+            "suspended": "Suspended",
+            "shutdown": "Shut down"
+        },
+        "partnerRoles": {
+            "Administrator": "Administrator",
+            "Manager": "Manager",
+            "Accountant": "Accountant"
+        },
+        "orgRoles": {
+            "Organization Administrator": "Organization Administrator",
+            "Administrator": "Administrator",
+            "Power User":  "Power User",
+            "System Health Viewer": "System Health Viewer",
+            "Advanced Viewer": "Advanced Viewer",
+            "Viewer": "Viewer",
+            "Live Viewer": "Live Viewer"
         }
     },
     "systemStatuses": {

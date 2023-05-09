@@ -1,0 +1,77 @@
+<form #editPartnerForm="ngForm">
+    <div class="modal-header">
+        <h1
+            class="modal-title"
+            translate
+        >
+            Update Channel Partner
+        </h1>
+        <button
+            *ngIf="closable"
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="close()"
+        >
+            <span class="close-content"></span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label
+                for="name"
+                translate
+                >Name</label
+            >
+            <input
+                class="form-control"
+                id="name"
+                name="name"
+                [(ngModel)]="name"
+                required
+            />
+        </div>
+        <div class="form-group">
+            <label
+                for="parentPartner"
+                translate
+                >Parent Channel Partner</label
+            >
+            <nx-select
+                id="parentPartner"
+                name="parentPartner"
+                [stillLoading]="!parentPartners.length"
+                [items]="parentPartners"
+                [selected]="selectedParent"
+                [(ngModel)]="selectedParent"
+            ></nx-select>
+        </div>
+        <div class="form-group">
+            <label
+                for="state"
+                translate
+                >State</label
+            >
+            <nx-select
+                id="state"
+                name="state"
+                [items]="states"
+                [selected]="state"
+                [(ngModel)]="state"
+            ></nx-select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <nx-process-button
+            [process]="editPartnerProcess"
+            [buttonText]="'Update' | translate"
+            [form]="editPartnerForm"
+        ></nx-process-button>
+        <nx-cancel-button
+            [process]="editPartnerProcess"
+            [cancelFn]="unlock"
+            [discardFn]="close"
+        ></nx-cancel-button>
+    </div>
+</form>

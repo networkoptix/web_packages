@@ -1,10 +1,10 @@
-<form #editOrgUserForm="ngForm">
+<form #editPartnerUserForm="ngForm">
     <div class="modal-header">
         <h1
             class="modal-title"
             translate
         >
-            Update Organization User
+            Update Channel Partner User
         </h1>
         <button
             *ngIf="closable"
@@ -19,31 +19,29 @@
     </div>
     <div class="modal-body">
         <div class="form-group">
-            <div class="form-group">
-                <label
-                    for="channelPartner"
-                    translate
-                    >Role</label
-                >
-                <nx-select
-                    id="channelPartner"
-                    name="channelPartner"
-                    [stillLoading]="!roles.length"
-                    [items]="roles"
-                    [selected]="role"
-                    [(ngModel)]="role"
-                ></nx-select>
-            </div>
+            <label
+                for="channelPartner"
+                translate
+                >Role</label
+            >
+            <nx-select
+                id="channelPartner"
+                name="channelPartner"
+                [stillLoading]="!roles.length"
+                [items]="roles"
+                [selected]="role"
+                [(ngModel)]="role"
+            ></nx-select>
         </div>
     </div>
     <div class="modal-footer">
         <nx-process-button
-            [process]="editOrgUserProcess"
+            [process]="editPartnerUserProcess"
             [buttonText]="'Update' | translate"
-            [form]="editOrgUserForm"
+            [form]="editPartnerUserForm"
         ></nx-process-button>
         <nx-cancel-button
-            [process]="editOrgUserProcess"
+            [process]="editPartnerUserProcess"
             [cancelFn]="unlock"
             [discardFn]="close"
         ></nx-cancel-button>

@@ -6,7 +6,11 @@ import { map, mergeMap, withLatestFrom } from 'rxjs';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
-import { Id } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import {
+    ChannelPartner,
+    ChannelPartnerUser,
+    Id,
+} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 @Component({
     selector: 'nx-channel-partner',
@@ -54,6 +58,22 @@ export class NxChannelPartnerComponent implements OnInit {
         });
     }
 
+    updateChannelPartner(channelPartner: ChannelPartner): void {
+        this.dialogs.updateChannelPartner(channelPartner).then(res => {
+            if (res) {
+                this.channelPartner$ = this.id$.pipe(mergeMap(this.cpService.getChannelPartner));
+                this.subPartners$ = this.id$.pipe(mergeMap(this.cpService.getSubChannelPartners));
+                this.organizations$ = this.id$.pipe(
+                    mergeMap(id => this.cpService.getPartnerOrganizations(id)),
+                    withLatestFrom(this.id$),
+                    map(([orgs, id]) => {
+                        return orgs.filter(org => org.channelPartner === id);
+                    }),
+                );
+            }
+        });
+    }
+
     deleteChannelPartner(channelPartner: Id): void {
         this.cpService.removeChannelPartner(channelPartner).subscribe({
             next: () => {
@@ -68,6 +88,14 @@ export class NxChannelPartnerComponent implements OnInit {
 
     newPartnerUser(channelPartner: Id): void {
         this.dialogs.addPartnerUser(channelPartner).then(res => {
+            if (res) {
+                this.users$ = this.id$.pipe(mergeMap(this.cpService.getChannelPartnerUsers));
+            }
+        });
+    }
+
+    updatePartnerUser(channelPartner: Id, user: ChannelPartnerUser): void {
+        this.dialogs.updatePartnerUser({ channelPartner, user }).then(res => {
             if (res) {
                 this.users$ = this.id$.pipe(mergeMap(this.cpService.getChannelPartnerUsers));
             }

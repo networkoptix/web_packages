@@ -6,6 +6,12 @@ export type Id = number;
 // e.g. https://nxlicensed.test.hdw.mx/nxlicensed/api/v2/partners/organizations/5/users/
 type Url = string;
 
+export enum State {
+    Active = 'active',
+    Suspended = 'suspended',
+    ShutDown = 'shutdown',
+}
+
 /* Channel Partners */
 export interface ChannelPartner {
     effectiveState: string;
@@ -13,7 +19,7 @@ export interface ChannelPartner {
     name: string;
     organizations: Url;
     parentChannelPartner: Id | null;
-    state: string;
+    state: State;
     users: Url;
 }
 
@@ -25,7 +31,7 @@ export interface CreateChannelPartner {
 export type UpdateChannelPartner = Partial<{
     name: string;
     parentChannelPartner: Id;
-    state: string;
+    state: State;
 }>;
 
 /* Channel Partner Users */
@@ -51,12 +57,12 @@ export type UpdateChannelPartnerUser = CreateChannelPartnerUser;
 /* Organizations */
 export interface Organization {
     channelPartner: Id;
-    channelPartnerCanAdminster: boolean;
+    channelPartnerCanAdminister: boolean;
     cloudSystems: Url;
     effectiveState: string;
     id: Id;
     name: string;
-    state: string;
+    state: State;
     users: Url;
 }
 
@@ -64,7 +70,7 @@ export type UpdateOrganization = Partial<{
     channelPartner: Id;
     channelPartnerCanAdminister: boolean;
     name: string;
-    state: string;
+    state: State;
 }>;
 
 export interface CreateOrganization {

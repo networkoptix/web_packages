@@ -3,7 +3,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
-import type { EditOrgUser as DT } from '@dialogs/dialogs.types';
+import type { EditPartnerUser as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { NxToastService } from '@dialogs/toast.service';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
@@ -12,35 +12,39 @@ import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
 
 @Component({
-    selector: 'nx-edit-org-user',
-    templateUrl: 'edit-org-user.component.html',
-    styleUrls: ['edit-org-user.component.scss'],
+    selector: 'nx-edit-partner-user',
+    templateUrl: 'edit-partner-user.component.html',
+    styleUrls: ['edit-partner-user.component.scss'],
 })
-export class NxEditOrgUserModalContent extends ModalBase<DT['return']> implements OnInit {
+export class NxEditPartnerUserModalContent extends ModalBase<DT['return']> implements OnInit {
     roles: DropdownItem<Id>[] = [];
     role: DropdownItem<Id>;
-    editOrgUserProcess: Process;
+
+    editPartnerUserProcess: Process;
 
     constructor(
         dialogRef: DialogRef<DT['return']>,
-        @Inject(DIALOG_DATA) { orgId, user: { email, roles: [role] } }: DT['data'],
+        @Inject(DIALOG_DATA) {
+            channelPartner,
+            user: { email, roles: [role] },
+        }: DT['data'],
         processService: NxProcessService,
         cpService: NxChannelPartnersService,
         toastService: NxToastService,
     ) {
         super(dialogRef);
-        cpService.getOrganizationRoles().subscribe(roles => {
+        cpService.getChannelPartnerRoles().subscribe(roles => {
             this.roles = roles.map<DropdownItem<Id>>(r => ({
                 name: r.name,
                 value: r.id,
             }));
             this.role = this.roles.find(r => r.name === role);
         });
-        this.editOrgUserProcess = processService.createProcess(
+        this.editPartnerUserProcess = processService.createProcess(
             () => {
                 this.lock();
                 return firstValueFrom(
-                    cpService.updateOrganizationUser(orgId, {
+                    cpService.updateChannelPartnerUser(channelPartner, {
                         email,
                         role: this.role.name
                     })

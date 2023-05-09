@@ -34,6 +34,9 @@ import { AddOrganizationModalModule } from './channel-partners/add-organization/
 import { AddPartnerUserModalModule } from './channel-partners/add-partner-user/add-partner-user.module';
 import { AddPartnerModalModule } from './channel-partners/add-partner/add-partner.module';
 import { NxEditOrgUserModule } from './channel-partners/edit-org-user/edit-org-user.module';
+import { NxEditOrganizationModalModule } from './channel-partners/edit-organization/edit-organization.module';
+import { NxEditPartnerUserModalModule } from './channel-partners/edit-partner-user/edit-partner-user.module';
+import { NxEditPartnerModalModule } from './channel-partners/edit-partner/edit-partner.module';
 import { Client2faWarningModalModule } from './client-2fa-warning/client-2fa-warning.module';
 import { CloudStorageModule } from './cloud-storage/cloud-storage.module';
 import { ConnectCloudModalModule } from './connect-cloud/connect-cloud.module';
@@ -104,13 +107,16 @@ import { WizardModalContent } from './wizard/wizard.component';
         RemoveSystemModalModule,
         Mandatory2faModalModule,
         CreateSystemGroupModalModule,
-        AddPartnerUserModalModule,
         AddPartnerModalModule,
+        NxEditPartnerModalModule,
+        AddPartnerUserModalModule,
+        NxEditPartnerUserModalModule,
         AddOrganizationModalModule,
-        CloudStorageModule,
-        NewFeatureInformationModalModule,
+        NxEditOrganizationModalModule,
         NxAddOrgUserModule,
         NxEditOrgUserModule,
+        CloudStorageModule,
+        NewFeatureInformationModalModule,
         NxUpdateSessionModalModule,
         ChangePasswordModalModule,
         UpdateCameraCredentialsModalModule,

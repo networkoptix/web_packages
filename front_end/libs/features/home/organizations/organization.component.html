@@ -36,21 +36,6 @@
     >
         <nx-pre-loader *ngIf="isLoading; else cards"></nx-pre-loader>
         <ng-template #cards>
-            <!-- Putting this here for now until actual page is completed -->
-            <!-- eslint-disable nx/template/no-untranslated -->
-            <!-- <button
-                    class="btn btn-default"
-                    (click)="addOrgUser()"
-                >
-                    Add org user
-                </button>
-                <button
-                    class="btn btn-default"
-                    (click)="editOrgUser()"
-                >
-                    Edit org user
-                </button> -->
-            <!-- eslint-enable nx/template/no-untranslated -->
             <ng-container *ngIf="!inChannelPartners; else organization">
                 <h2 class="pb-3">
                     {{ (currentOrganization$ | async).name }}

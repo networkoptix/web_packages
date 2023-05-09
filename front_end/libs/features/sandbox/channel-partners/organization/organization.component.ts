@@ -6,7 +6,11 @@ import { map, mergeMap } from 'rxjs';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
-import { Id } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import {
+    Id,
+    Organization,
+    OrganizationUser,
+} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 @Component({
     selector: 'nx-organization',
@@ -36,8 +40,24 @@ export class NxOrganizationComponent implements OnInit {
         this.router.navigate(['../../', parent], { relativeTo: this.route });
     }
 
+    updateOrganization(org: Organization): void {
+        this.dialogs.updateOrganization(org).then(res => {
+            if (res) {
+                this.organization$ = this.id$.pipe(mergeMap(this.cpService.getOrganization));
+            }
+        });
+    }
+
     newOrgUser(orgId: Id): void {
         this.dialogs.addOrgUser(orgId).then(res => {
+            if (res) {
+                this.users$ = this.id$.pipe(mergeMap(this.cpService.getOrganizationUsers));
+            }
+        });
+    }
+
+    updateOrgUser(orgId: Id, user: OrganizationUser): void {
+        this.dialogs.editOrgUser({ orgId, user }).then(res => {
             if (res) {
                 this.users$ = this.id$.pipe(mergeMap(this.cpService.getOrganizationUsers));
             }

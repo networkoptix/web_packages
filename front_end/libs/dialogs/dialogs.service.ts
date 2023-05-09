@@ -437,8 +437,16 @@ export class NxDialogsService extends DialogBase {
         { autoFocus: 'input' },
     );
 
+    updateChannelPartner = this.dialogV2Factory<Dt.EditChannelPartner>(
+        () => import('./channel-partners/edit-partner/edit-partner.component').then(m => m.NxEditPartnerModalContent)
+    );
+
     addPartnerUser = this.dialogV2Factory<Dt.AddPartnerUser>(
         () => import('./channel-partners/add-partner-user/add-partner-user.component').then(m => m.AddPartnerUserModalContent),
+    );
+
+    updatePartnerUser = this.dialogV2Factory<Dt.EditPartnerUser>(
+        () => import('./channel-partners/edit-partner-user/edit-partner-user.component').then(m => m.NxEditPartnerUserModalContent),
     );
 
     createOrganization = this.dialogV2Factory<Dt.AddOrganization>(
@@ -446,11 +454,15 @@ export class NxDialogsService extends DialogBase {
         { autoFocus: 'input' },
     );
 
+    updateOrganization = this.dialogV2Factory<Dt.EditOrganization>(
+        () => import('./channel-partners/edit-organization/edit-organization.component').then(m => m.NxEditOrganizationModalContent),
+    );
+
     addOrgUser = this.dialogV2Factory<Dt.AddOrgUser>(
         () => import('./channel-partners/add-org-user/add-org-user.component').then(m => m.NxAddOrgUserModalContent),
     );
 
-    editOrgUser = this.dialogV2Factory<Dt.AddOrgUser>(
+    editOrgUser = this.dialogV2Factory<Dt.EditOrgUser>(
         () => import('./channel-partners/edit-org-user/edit-org-user.component').then(m => m.NxEditOrgUserModalContent),
     );
 

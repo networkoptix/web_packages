@@ -23,10 +23,10 @@ export class NxChannelPartnersComponent implements OnInit {
         // this.cpService.getChannelPartnerUsers(7).subscribe(console.log);
         // this.cpService.getOrganization(4).subscribe(console.log);
         /* eslint-disable prettier/prettier */
-        this.cpService
-            .createChannelPartnerUser
-            (11, { email: 'awu@networkoptix.com', role: 'Administrator'})
-            .subscribe(console.log);
+        // this.cpService
+        //     .createChannelPartnerUser
+        //     (11, { email: 'awu@networkoptix.com', role: 'Administrator'})
+        //     .subscribe(console.log);
         /* eslint-enable prettier/prettier */
     }
 
