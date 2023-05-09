@@ -550,7 +550,7 @@ export class NxCloudApiService {
         return this.getAccount(forceUpdate).pipe(
             switchMap(cloudInfo => forkJoin([
                 of(cloudInfo),
-                cloudInfo ? this.cloudDbApi.getAccountSecurity() : of({ account2faEnabled: false, totpExistsForAccount: false })
+                cloudInfo?.email ? this.cloudDbApi.getAccountSecurity() : of({ account2faEnabled: false, totpExistsForAccount: false })
             ])),
             map(([cloudInfo, security]) => {
                 cloudInfo.sessionVerified = cloudInfo.sessionVerified || security.account2faEnabled;
