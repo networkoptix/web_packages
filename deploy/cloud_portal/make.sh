@@ -23,6 +23,7 @@ function stage()
     rm -rf stage
 
     mkdir -p stage/cloud/static/common/static
+    cp $NX_PORTAL_DIR/package-license.json $NX_PORTAL_DIR/cloud/
     rsync -a $NX_PORTAL_DIR/cloud stage
     rm -rf stage/cloud/.idea
 }

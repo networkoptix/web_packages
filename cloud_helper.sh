@@ -3,19 +3,51 @@
 DOCKER_COMPOSE='etc/docker-compose.yml'
 SQL='./etc/*.sql'
 
+function pyenv_checker() {
+    if ! which pyenv &> /dev/null ; then
+        echo "There is no pyenv accessible."
+        echo "If you are using pyenv ensure that it is set up properly."
+        exit 1
+    fi
+}
+
+function env_checker() {
+    if ! which python &> /dev/null ; then
+        echo "There is no python version accessible by alias 'python'."
+        echo "If you are using pyenv ensure that it is set up properly."
+        exit 1
+    fi
+
+    if [[ $(python -V | grep -c "3.8.10") -eq 0 ]]; then
+        echo "Python version must be 3.8.10 Got: $(python -V) instead"
+        exit 1
+    fi
+
+    if ! which poetry &> /dev/null ; then
+        echo "Poetry is not installed or not set up properly."
+        exit 1
+    fi
+}
+
 function build_frontend(){
-    ./build_scripts/build.sh
+    env_checker
+    echo "Running build script within venv environment"
+    bash build_scripts/build.sh
 }
 
 function brew_install() {
     echo 'Checking for openssl'
-    brew install node n pyenv openssl docker docker-compose mysql mysql-client
-
+    brew install node n pyenv openssl docker docker-compose mysql-client
+    echo "installing virtualenv"
+    pip install virtualenv
+    echo "installing poetry"
+    echo install poetry==1.4.0
     echo 'Installing node v12.18.4'
     n 12.18.4
-    echo 'Installing python 3.8'
-    pyenv install 3.8
-    pip install virtualenv
+    echo 'Installing python 3.8.10'
+    pyenv install 3.8.10
+    pyenv local 3.8.10
+    virtualenv -p "$(pyenv which python)" env
     echo 'Brew install complete.'
 }
 
@@ -47,6 +79,8 @@ function modify_bashprofile(){
 }
 
 function setup_cms(){
+    printf "Installing all dependencies...\n\n"
+
     printf "Moving into cloud directory\n\n"
     pushd cloud
 
@@ -99,8 +133,9 @@ function setup_env() {
 
     printf "Installing pip packages for build_scripts and cloud\n\n"
     export PYCURL_SSL_LIBRARY=openssl
-    pip install -r build_scripts/requirements.txt
-    pip install -r cloud/requirements.txt
+    export_poetry_requirements
+    pip install --upgrade -r cloud/requirements.txt
+    source ./env/bin/activate
     npm run node-modules --prefix cloud
 }
 
@@ -128,13 +163,21 @@ function setup_robot_env() {
 }
 
 function setup_or_activate_virtualenv() {
-    [[ ! -d "env" ]] && printf "Creating virtualenv named 'env'\n\n" && virtualenv env -p python3.8
+    env_checker
+    VENV_DIR="$(pwd)/env"
+    if [[ ! -d $(pwd)/cloud ]]; then
+        echo "You are not in project root!"
+        exit 1
+    fi
+    if ! pip -V | grep "$VENV_DIR" ; then
+        echo "Virtualenv is not active trying to activate it in $VENV_DIR"
+        if ! source "$VENV_DIR/bin/activate" ; then
+            echo "Failed to activate virtualenv in $VENV_DIR. Exiting..."
+            exit 1
+        fi
+    fi
 
-    # Copy necessary config for virutalenv
-    cp etc/virtual_env_template/* env
 
-    printf "Activating python3.8 env\n\n"
-    . ./env/bin/activate
 }
 
 function start_celery() {
@@ -291,48 +334,33 @@ function install_cli() {
     popd
 }
 
+function export_poetry_requirements() {
+    poetry -C cloud/ export --with test,front-build,prod --without-hashes --without-urls -o cloud/requirements.txt
+    sed -i '' '1s/^/# NOTE!!! This requirements file is used in development only.\n/' cloud/requirements.txt
+    sed -i '' '2s/^/# Production requirements file is generated during build.\n/' cloud/requirements.txt
+    sed -i '' '3s/^/\n/' cloud/requirements.txt
+}
+
 function check_licenses() {
     # pip-licenses --format=json --allow-only="MIT License;BSD License;GNU General Public License v3 (GPLv3);Python Software Foundation License;GNU General Public License (GPL);Apache Software License;Apache License 2.0;GNU Lesser General Public License v3 or later (LGPLv3+);MPL2;Historical Permission Notice and Disclaimer (HPND);BSD;MIT;Public Domain;GNU Library or Lesser General Public License (LGPL);"
-    pip-licenses --format=json --with-urls --allow-only="MIT License;BSD License;GNU General Public License v3 (GPLv3);Python Software Foundation License;GNU General Public License (GPL);Apache Software License;Apache License 2.0;GNU Lesser General Public License v3 or later (LGPLv3+);MPL2;Historical Permission Notice and Disclaimer (HPND);BSD;MIT;Public Domain;GNU Library or Lesser General Public License (LGPL);Mozilla Public License 2.0 (MPL 2.0);LGPLv3+"
+    pip-licenses --format=json --with-urls --allow-only="MIT License;BSD License;GNU General Public License v3 (GPLv3);Python Software Foundation License;GNU General Public License (GPL);Apache 2.0;Apache Software License;Apache License 2.0;GNU Lesser General Public License v3 or later (LGPLv3+);MPL2;Historical Permission Notice and Disclaimer (HPND);BSD;MIT;Public Domain;GNU Library or Lesser General Public License (LGPL);Mozilla Public License 2.0 (MPL 2.0);LGPLv3+"
 }
 
 function update_requirements_licenses() {
-    CI_OUTPUT=cloud/ci-license.json
-    UPDATE_OUTPUT=cloud/requirements-license.json
+    echo "Command deprecated. Licenses list is checked and generated in CI and build."
+    exit 1
+}
 
-    if [[ $CI_PIPELINE_SOURCE = *[!\ ]* ]]
-    then
-        LICENSE_OUTPUT_FILE=$CI_OUTPUT
-    else
-        LICENSE_OUTPUT_FILE=$UPDATE_OUTPUT
-    fi
-
-    echo "results will be output to $LICENSE_OUTPUT_FILE"
-
-    check_licenses > "$LICENSE_OUTPUT_FILE"
-
-    if [ -s $LICENSE_OUTPUT_FILE ]
-    then
-        if [[ $CI_PIPELINE_SOURCE = *[!\ ]* ]]
-        then
-            echo "checking $UPDATE_OUTPUT against $CI_OUTPUT"
-
-            DIFF=$(diff $UPDATE_OUTPUT $CI_OUTPUT)
-
-            if [ "$DIFF" != "" ]
-            then
-                echo "Please update $UPDATE_OUTPUT before trying to merge"
-                exit 1
-            else
-                echo "python licenses up to date"
-            fi
-        else
-            echo "updated $UPDATE_OUTPUT"
-        fi
-    else
+function check_poetry_lock() {
+    if poetry -C cloud/ lock --check; then
+        echo "Poetry lock file is not up to date."
         exit 1
     fi
+}
 
+function update_requirements_licenses_poetry() {
+    echo "Command deprecated. Licenses list is checked and generated in CI and build."
+    exit 1
 }
 
 for command in $@
@@ -527,11 +555,17 @@ do
             python tools/scripts/setup_system.py $WEBADMIN_HOST "$PORTS" $LOCAL_PASSWORD
             break
             ;;
+        check_licenses)
+            check_licenses
+            ;;
         update_requirements_licenses)
             update_requirements_licenses
             ;;
         update_package_licenses)
             npx recursive-check-licenses -a licenses_whitelist.json -e licenses_excluded_packages.json
+            ;;
+        export_poetry_requirements)
+            export_poetry_requirements
             ;;
         install_cli)
             install_cli
@@ -563,7 +597,9 @@ do
             echo 'build_local_vms - Builds webadmin locally, stops any running mediaservers, builds a new medisserver, runs a mediaserver, and places external.dat the new docker image. Usage "./cloud_helper.sh build_local_vms {version} {port} {copy}"'
             echo 'update_remote_vms - Copy locally built webadmin (external.dat) to a target machine. Usage "./cloud_helper.sh update_remote_vms {target-ip}"'
             echo 'start_https_tunnel - Start a secure tunnel on port 8001 to the local django server on port 8000'
-            echo 'update_requirements_licenses - Updates requirements-license.json when run locally else checks if updated when CI'
+            echo 'update_requirements_licenses - DEPRECATED! Updates requirements-license.json when run locally else checks if updated when CI'
+            echo 'check_licenses - just checks licenses and exits with error code if check failed'
+            echo 'export_poetry_requirements - export poetry requirements to cloud/requirements.tx which is used in deployment'
             echo 'update_package_licenses - Update package-license.json with latest licensing information for cloud_portal project'
             echo 'install_cli - Installs cloud-helper CLI command globally'
             echo ''

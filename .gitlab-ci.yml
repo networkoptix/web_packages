@@ -142,6 +142,7 @@ django-checks:
     USE_SQLITE: "true"
   script:
     - cd cloud
+    - python -m pip install safety==2.2.0
     - if ! python safety-check.py ; then echo PIP packages need to be updated && exit 1 ; fi
     - if ! python manage.py makemigrations --dry-run --check ; then echo Missing above migrations && exit 1 ; fi
     - if ! python manage.py check ; then echo System check failed && exit 1 ; fi
@@ -454,7 +455,7 @@ check-python-licenses:
   script:
 #    - /usr/local/bin/python -m pip install -r cloud/requirements.txt
     - /usr/local/bin/python -m pip install pip-licenses
-    - ./cloud_helper.sh update_requirements_licenses
+    - ./cloud_helper.sh check_licenses
 
 fail-on-python-license-check:
   extends: .fail-on

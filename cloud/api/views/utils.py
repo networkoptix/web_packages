@@ -3,6 +3,7 @@ import datetime
 import json
 import logging
 import re
+import os
 from django.urls import reverse
 from py import process
 from uuid import uuid4
@@ -20,14 +21,16 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from waffle import flag_is_active, switch_is_active, sample_is_active
 
+from cloud import settings
 from cloud.customization_context import customization_ctx
 from cloud.helpers.exceptions import api_success, handle_exceptions, require_params, \
     APIRequestException, APIForbiddenException, APINotFoundException, ErrorCodes, APIInternalException
-from cloud.drf_async import async_api_view as api_view
+from cloud.drf_async import async_api_view as api_view, async_api_view
 from api.serializers import CustomizationCacheSerializer, SettingsSerializer, IpvdSerializer
 from cms.models import Customization, cloud_portal_customization_cache, get_cached_menu, UserGroupsToAssetPermissions, \
     cached_doc_menu_map, LicenseType, cloud_portal_customization_cache_async, global_version_key
 from cms.feature_flags import *
+from cms.permissions import IsSuperuser
 
 logger = logging.getLogger(__name__)
 
@@ -538,3 +541,33 @@ def get_customizations(request):
         raise APIForbiddenException(CUSTOMIZATIONS_STAFF_ONLY)
 
     return Response(Customization.objects.filter(enabled=True).values_list('name', flat=True))
+
+
+PY_LICENSES = 'requirements-license.json'
+if settings.LOCAL_ENVIRONMENT or settings.TESTING:
+    PKG_LICENSES = '../package-license.json'
+else:
+    PKG_LICENSES = 'package-license.json'
+
+
+def load_licences(rel_path):
+    path = os.path.join(settings.BASE_DIR, rel_path)
+    with open(path, 'rb') as f:
+        licences = json.load(f)
+    return licences
+
+
+@api_view(['GET'])
+@permission_classes([IsSuperuser])
+@handle_exceptions
+def python_licenses(request):
+    licenses = load_licences(PY_LICENSES)
+    return Response(licenses)
+
+
+@api_view(['GET'])
+@permission_classes([IsSuperuser])
+@handle_exceptions
+def package_licenses(request):
+    licenses = load_licences(PKG_LICENSES)
+    return Response(licenses)

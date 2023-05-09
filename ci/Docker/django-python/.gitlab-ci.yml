@@ -20,7 +20,6 @@ docker:build-django-python:
   before_script:
   - |
     DOCKER_DIR="ci/Docker/django-python"
-    cp cloud/requirements.txt .
     touch build-django.env
     if [[ "${CI_PIPELINE_SOURCE}" == "merge_request_event" ]]; then
       DJANGO_PYTHON_IMAGE_TAG="${DJANGO_PYTHON_IMAGE_TAG}.${CI_MERGE_REQUEST_ID}.SNAPSHOT"

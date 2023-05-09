@@ -4,6 +4,7 @@ set -e
 NODE_VERSION="18.15.0"
 NPM_VERSION="9.5.0"
 
+
 function build_frontend () {
     echo "Building front_end"
     echo "Build statics"
@@ -45,7 +46,7 @@ PORTAL_REPOSITORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
 #If we are not using the repository we should update necessary files
 if [[ ! $PWD =~ $REPO ]]; then
     echo -e "\nUpdating Cloud Portal sources"
-    rsync -pr --exclude="robot_tests" --exclude="env" --exclude="node_modules" $PORTAL_REPOSITORY .
+    rsync -pr --exclude="robot_tests" --exclude="env*" --exclude=".venv*" --exclude="node_modules" $PORTAL_REPOSITORY .
 else
     echo -e "\nIn repository skip copying sources *************"
 fi
@@ -63,6 +64,7 @@ nodeenv --node=$NODE_VERSION --npm=$NPM_VERSION nenv
 . ./nenv/bin/activate
 echo "Active Node.js: " && node -v
 echo "Active npm: " && npm -v
+
 
 cd $PORTAL_REPOSITORY
 

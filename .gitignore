@@ -17,6 +17,7 @@ env_*
 nenv
 nenv_*
 venv
+.venv
 cloud/.idea
 cloud/static
 cloud/node_modules
@@ -32,3 +33,5 @@ cloud/.coverage
 node_modules
 quart_env/
 .python-version
+cloud/requirements.txt
+cloud/requirements-license.json
