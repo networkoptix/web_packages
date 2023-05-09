@@ -13,16 +13,19 @@ import { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 
-import { GroupsItem, Crumb, OpenGroups, LoadingState, GroupPath } from '../home.types';
+import { GroupsItem, Crumb, OpenGroups, GroupPath } from '../home.types';
 import { NxSystemGroupsService } from '../services/system-groups.service';
+import * as CPActions from '../store/channel-partners/channel-partners.actions';
+import {
+    selectCurrentOrganization,
+    selectCurrentPartnerId,
+} from '../store/channel-partners/channel-partners.selectors';
 import * as GroupActions from '../store/groups.actions';
 import {
     selectCurrentGroupId,
     selectCurrentPath,
     selectCurrentRootGroup,
-    selectHasCurrentIndexes,
     selectHasGroups,
-    selectLoadingState,
     selectOpenGroups,
 } from '../store/groups.selectors';
 
@@ -38,17 +41,16 @@ interface SidebarSettings {
 })
 export class NxOrganizationsComponent implements OnInit {
     icons = icons;
-    LoadingState = LoadingState;
+    isLoading = true;
     LANG = staticLang;
     openGroups$ = this.store.select<OpenGroups>(selectOpenGroups);
     currentPath$ = this.store.select<GroupPath[]>(selectCurrentPath);
     sidebarSettings: CustomAccountProperty<SidebarSettings>;
     userEmail: string;
     hasGroups$ = this.store.select<boolean>(selectHasGroups);
-    loadingState$ = this.store.select<LoadingState>(selectLoadingState);
     currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
-    inRoot$ = this.store.select<boolean>(selectHasCurrentIndexes);
-    inChannelPartners: boolean;
+    inChannelPartners = false;
+    currentOrganization$ = this.store.select(selectCurrentOrganization);
 
     currentTab: Tab;
     rootGroup$ = this.store.select<Crumb>(selectCurrentRootGroup);
@@ -80,14 +82,15 @@ export class NxOrganizationsComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
+        if (this.router.url.includes('channelPartners')) {
+            this.inChannelPartners = true;
+        } else {
+            this.store.dispatch(CPActions.setCurrentPartnerId({ currentPartnerId: null }));
+        }
         this.currentTab = this.tabs.find(tab => tab.route === this.route.snapshot.data.currentTab);
-        this.inChannelPartners = this.router.url.includes('channelPartners');
         this.route.params.pipe(untilDestroyed(this)).subscribe(({ id }) => {
-            this.store.dispatch(
-                GroupActions.setCurrentGroupId({
-                    currentGroupId: id,
-                }),
-            );
+            this.store.dispatch(CPActions.setCurrentOrgId({ currentOrgId: Number(id) }));
+            this.isLoading = false;
         });
 
         this.store
@@ -145,6 +148,11 @@ export class NxOrganizationsComponent implements OnInit {
     }
 
     toRoot(): void {
-        this.router.navigate(['home', 'channelPartners', '4']);
+        this.store
+            .select(selectCurrentPartnerId)
+            .pipe(take(1))
+            .subscribe(id => {
+                this.router.navigate(['home', 'channelPartners', id]);
+            });
     }
 }

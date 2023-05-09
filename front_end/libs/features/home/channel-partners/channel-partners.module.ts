@@ -7,6 +7,7 @@ import { NxChannelPartnerInformationComponent } from '../components/information/
 import { NxOrganizationSettingsComponent } from '../components/settings/settings.component';
 import { NxChannelPartnerSubchannelComponent } from '../components/subchannel/subchannel.component';
 import { NxOrganizationUsersComponent } from '../components/users/users.component';
+import { OrgResolver } from '../org-resolver';
 import { TabResolver } from '../tab-resolver';
 
 import { NxChannelPartnersComponent } from './channel-partners.component';
@@ -15,11 +16,12 @@ const CPRoutes: Routes = [
     {
         path: ':id',
         component: NxChannelPartnersComponent,
-        resolve: { currentTab: TabResolver },
+        resolve: { currentTab: TabResolver, inOrganization: OrgResolver },
+        runGuardsAndResolvers: 'always',
         children: [
             {
                 path: '',
-                component: NxOrganizationSettingsComponent
+                component: Nx404Component
             },
             {
                 path: 'settings',

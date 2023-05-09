@@ -2,48 +2,20 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { combineLatest, filter, map, Observable, of } from 'rxjs';
+import { combineLatest, filter, map } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxSystemsService } from '@services/systems.service';
 
-import { Organization } from './home.types';
 import { NxChannelPartnersService } from './services/channel-partners.service';
 import { NxSystemGroupsService } from './services/system-groups.service';
 import * as CPActions from './store/channel-partners/channel-partners.actions';
-import { selectChannelPartners } from './store/channel-partners/channel-partners.selectors';
-
-const getOrganizations = (): Observable<Organization[]> => {
-    const mockData: Organization[] = [
-        {
-            orgName: 'superlong groupname for testing',
-            icon: 'https://picsum.photos/100/50',
-            status: 'offline',
-            id: '21cbbd87-2fbb-45a3-b070-5a381eeeb554',
-        },
-        {
-            orgName: 'add group test',
-            icon: 'https://picsum.photos/100/50',
-            status: 'offline',
-            id: 'f88aea5b-090f-495b-a27b-e731e5115912',
-        },
-        {
-            orgName: 'Real Machines',
-            icon: 'https://picsum.photos/100/50',
-            status: 'offline',
-            id: '0e1bc401-7aab-48ba-b4cc-55fde5bbcd0f',
-        },
-        {
-            orgName: 'Now Live',
-            icon: 'https://picsum.photos/100/50',
-            status: 'offline',
-            id: '47ac2d27-298e-4d3c-857b-9e05f989b334',
-        },
-    ];
-    return of(mockData);
-};
+import {
+    selectChannelPartners,
+    selectRootOrganizations,
+} from './store/channel-partners/channel-partners.selectors';
 
 @UntilDestroy()
 @Component({
@@ -75,7 +47,7 @@ export class NxHomeComponent implements OnInit, OnDestroy {
             map(nodes => nodes.find(node => node.url === '/home')),
         );
         // Temporary until API hooked up
-        const organizations$ = getOrganizations();
+        const organizations$ = this.store.select(selectRootOrganizations);
         const channelPartners$ = this.store.select(selectChannelPartners);
         let redirectPath = 'personal';
 
@@ -88,14 +60,12 @@ export class NxHomeComponent implements OnInit, OnDestroy {
                         return new MenuNode(partner.name, `/home/channelPartners/${partner.id}`);
                     }),
                     ...organizations
-                        .sort((a, b) =>
-                            a.orgName.toLowerCase().localeCompare(b.orgName.toLowerCase()),
+                        .filter(org =>
+                            channelPartners.some(partner => org.channelPartner !== partner.id),
                         )
+                        .sort((a, b) => a.name.localeCompare(b.name))
                         .map(org => {
-                            return new MenuNode(
-                                org.orgName,
-                                `/home/organization/${org.id}/systems`,
-                            );
+                            return new MenuNode(org.name, `/home/organization/${org.id}/systems`);
                         }),
                 ];
                 nodes[0].invisible = true;
@@ -118,11 +88,11 @@ export class NxHomeComponent implements OnInit, OnDestroy {
                     );
                 }
 
-                if (organizations) {
+                if (organizations.length) {
                     // Does not work at the moment, groupID required
                     redirectPath = 'organizations/testId';
                 }
-                if (channelPartners) {
+                if (channelPartners.length) {
                     const CPid = channelPartners[0].id;
                     redirectPath = `channelPartners/${CPid}`;
                 }
@@ -143,7 +113,7 @@ export class NxHomeComponent implements OnInit, OnDestroy {
             this.store.dispatch(CPActions.setChannelPartners({ channelPartners: partners })),
         );
         this.CPService.getOrganizations().subscribe(orgs =>
-            this.store.dispatch(CPActions.setOrganizations({ organizations: orgs })),
+            this.store.dispatch(CPActions.setOrganizations({ rootOrganizations: orgs })),
         );
     }
 }

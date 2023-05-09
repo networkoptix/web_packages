@@ -1,11 +1,10 @@
 <div
     id="groups"
     cdkDropListGroup
-    *ngIf="loadingState$ | async as loadingState"
 >
     <div
         class="sidebar-toggling-ear-wrapper"
-        *ngIf="loadingState === LoadingState.LOADED"
+        *ngIf="!isLoading"
         [ngClass]="{ shown: (sidebarSettings.value$ | async)?.showSidebarState }"
         (click)="handleSidebarTogglingEarClick()"
     >
@@ -19,7 +18,7 @@
     </div>
 
     <div *ngIf="(sidebarSettings.value$ | async)?.showSidebarState">
-        <nx-pre-loader *ngIf="loadingState === LoadingState.LOADING; else sidebar"></nx-pre-loader>
+        <nx-pre-loader *ngIf="isLoading; else sidebar"></nx-pre-loader>
         <ng-template #sidebar>
             <nx-groups-sidebar
                 [currentGroupId]="currentGroupId$ | async"
@@ -35,12 +34,11 @@
         class="cards"
         [ngClass]="{ 'back-button': inChannelPartners }"
     >
-        <ng-container [ngSwitch]="loadingState">
-            <nx-pre-loader *ngSwitchCase="LoadingState.LOADING"></nx-pre-loader>
-            <ng-container *ngSwitchCase="LoadingState.LOADED">
-                <!-- Putting this here for now until actual page is completed -->
-                <!-- eslint-disable nx/template/no-untranslated -->
-                <!-- <button
+        <nx-pre-loader *ngIf="isLoading; else cards"></nx-pre-loader>
+        <ng-template #cards>
+            <!-- Putting this here for now until actual page is completed -->
+            <!-- eslint-disable nx/template/no-untranslated -->
+            <!-- <button
                     class="btn btn-default"
                     (click)="addOrgUser()"
                 >
@@ -52,34 +50,35 @@
                 >
                     Edit org user
                 </button> -->
-                <!-- eslint-enable nx/template/no-untranslated -->
-                <ng-container *ngIf="inRoot$ | async; else organization">
-                    <nx-groups-cards [inRoot]="true"></nx-groups-cards>
-                </ng-container>
-                <ng-template #organization>
-                    <a
-                        (click)="toRoot()"
-                        translate
-                    >
-                        All Organizations</a
-                    >
-                    <div class="pb-3">
-                        <h2>{{ (rootGroup$ | async).name }}</h2>
-                    </div>
-                    <nx-tabs
-                        [onLoadTab]="currentTab"
-                        (tabClick)="onTabClick($event)"
-                    >
-                        <ng-container *ngFor="let tab of tabs">
-                            <div *tab="tab"></div>
-                        </ng-container>
-                    </nx-tabs>
-                    <router-outlet></router-outlet>
-                </ng-template>
+            <!-- eslint-enable nx/template/no-untranslated -->
+            <ng-container *ngIf="!inChannelPartners; else organization">
+                <h2 class="pb-3">
+                    {{ (currentOrganization$ | async).name }}
+                </h2>
+                <nx-groups-cards [inRoot]="true"></nx-groups-cards>
             </ng-container>
-            <!-- TODO: Replace with actual placeholder -->
-            <!-- eslint-disable-next-line nx/template/no-untranslated -->
-            <div *ngSwitchDefault>No group found</div>
-        </ng-container>
+            <ng-template #organization>
+                <a
+                    (click)="toRoot()"
+                    translate
+                >
+                    All Organizations</a
+                >
+                <div class="pb-3">
+                    <h2>{{ (currentOrganization$ | async).name }}</h2>
+                </div>
+                <nx-tabs
+                    [onLoadTab]="currentTab"
+                    (tabClick)="onTabClick($event)"
+                >
+                    <ng-container *ngFor="let tab of tabs">
+                        <div *tab="tab"></div>
+                    </ng-container>
+                </nx-tabs>
+                <router-outlet></router-outlet>
+            </ng-template>
+        </ng-template>
+        <!-- TODO: Replace with actual placeholder -->
+        <!-- eslint-disable-next-line nx/template/no-untranslated -->
     </div>
 </div>

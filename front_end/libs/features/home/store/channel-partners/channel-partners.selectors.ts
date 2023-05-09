@@ -9,9 +9,9 @@ export const selectChannelPartners = createSelector(
     state => state.channelPartners,
 );
 
-export const selectOrganizations = createSelector(
+export const selectRootOrganizations = createSelector(
     selectChannelPartnersState,
-    state => state.organizations,
+    state => state.rootOrganizations,
 );
 
 export const selectVisitedPartners = createSelector(
@@ -24,10 +24,23 @@ export const selectCurrentPartnerId = createSelector(
     state => state.currentPartnerId,
 );
 
+export const selectCurrentPartnerOrgs = createSelector(
+    selectChannelPartnersState,
+    state => state.currentPartnerOrganizations,
+);
+
+const selectCurrentOrgId = createSelector(selectChannelPartnersState, state => state.currentOrgId);
+
 export const selectCurrentPartner = createSelector(
     selectChannelPartners,
     selectCurrentPartnerId,
     (partners, id) => partners.find(partner => partner.id === id),
+);
+
+export const selectCurrentOrganization = createSelector(
+    selectCurrentPartnerOrgs,
+    selectCurrentOrgId,
+    (orgs, id) => orgs.find(org => org.id === id),
 );
 
 export const selectCurrentOrganizations = createSelector(

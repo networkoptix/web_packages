@@ -5,7 +5,9 @@ import {
 
 export interface ChannelPartnersState {
     currentPartnerId: number;
+    currentOrgId: number;
+    currentPartnerOrganizations: Organization[];
     channelPartners: ChannelPartner[];
-    organizations: Organization[];
+    rootOrganizations: Organization[];
     visitedPartners: Record<string, boolean>;
 }

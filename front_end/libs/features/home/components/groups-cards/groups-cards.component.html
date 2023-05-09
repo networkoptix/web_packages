@@ -1,7 +1,7 @@
 <!-- Issue with "Unable to preventDefault inside passive event listener invocation." caused by monitoring? -->
 <!-- https://github.com/angular/components/issues/24979#issuecomment-1203583528 -->
 <div
-    *ngIf="!(currentGroups$ | async).length && !(currentSystems$ | async).length; else showGroups"
+    *ngIf="!(currentGroups$ | async)?.length && !(currentSystems$ | async)?.length; else showGroups"
     class="no-systems"
     translate
 >

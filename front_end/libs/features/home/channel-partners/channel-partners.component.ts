@@ -2,22 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { map, Observable } from 'rxjs';
 
 import { Tab, TabEmit } from '@components/tabs/tabs.types';
+import {
+    ChannelPartner,
+    Organization,
+} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
-import { LoadingState, Organization } from '../home.types';
+import { NxChannelPartnersService } from '../services/channel-partners.service';
 import * as CPActions from '../store/channel-partners/channel-partners.actions';
 import {
-    selectCurrentOrganizations,
     selectCurrentPartner,
+    selectCurrentPartnerOrgs,
 } from '../store/channel-partners/channel-partners.selectors';
-import { selectLoadingState, selectRootGroupItems } from '../store/groups.selectors';
-
-const getRandomInt = (max: number): number => {
-    return Math.floor(Math.random() * max);
-};
-const statusOptions = ['online', 'suspended', 'offline', 'paused'];
 
 @UntilDestroy()
 @Component({
@@ -30,29 +27,11 @@ const statusOptions = ['online', 'suspended', 'offline', 'paused'];
     ],
 })
 export class NxChannelPartnersComponent implements OnInit {
-    LoadingState = LoadingState;
-    inOrganization: boolean;
-    loadingState$ = this.store.select<LoadingState>(selectLoadingState);
+    isLoading = true;
     currentPartnerId: number;
-    // Todo: Temporary mock data
-    mockOrganizations$: Observable<Organization[]> = this.store.select(selectRootGroupItems).pipe(
-        // eslint-disable-next-line ngrx/avoid-mapping-selectors
-        map(groups => {
-            if (!groups) {
-                return;
-            }
-            return groups.map(group => {
-                return {
-                    orgName: group.name,
-                    icon: 'https://picsum.photos/100/50',
-                    status: statusOptions[getRandomInt(3)],
-                    id: group.id,
-                };
-            });
-        }),
-    );
-    channelPartner$ = this.store.select(selectCurrentPartner);
-    organizations$ = this.store.select(selectCurrentOrganizations);
+    routeData$ = this.route.data;
+    channelPartner$ = this.store.select<ChannelPartner>(selectCurrentPartner);
+    organizations$ = this.store.select<Organization[]>(selectCurrentPartnerOrgs);
     isAdmin: boolean = false;
     currentTab: Tab;
     tabs: Tab[] = [
@@ -77,15 +56,28 @@ export class NxChannelPartnersComponent implements OnInit {
             route: 'settings',
         },
     ];
+    defaultImage = 'https://picsum.photos/100/50';
 
-    constructor(private store: Store, private router: Router, private route: ActivatedRoute) {}
+    constructor(
+        private store: Store,
+        private router: Router,
+        private route: ActivatedRoute,
+        private CPService: NxChannelPartnersService,
+    ) {}
 
     ngOnInit(): void {
         this.currentTab = this.tabs.find(tab => tab.route === this.route.snapshot.data.currentTab);
-        this.inOrganization = this.route.snapshot.children[0].url[0]?.path === 'organization';
         this.route.params.pipe(untilDestroyed(this)).subscribe(({ id }) => {
-            this.store.dispatch(CPActions.setCurrentPartnerId({ currentPartnerId: Number(id) }));
             this.currentPartnerId = id;
+            this.CPService.getPartnerOrganizations(id).subscribe(orgs => {
+                this.isLoading = false;
+                this.store.dispatch(
+                    CPActions.setCurrentPartner({
+                        currentPartnerId: Number(id),
+                        currentPartnerOrganizations: orgs,
+                    }),
+                );
+            });
         });
     }
 
@@ -100,8 +92,7 @@ export class NxChannelPartnersComponent implements OnInit {
             : this.router.navigate(['home', 'channelPartners', this.currentPartnerId]);
     }
 
-    handleOrgClick(id: string): void {
-        this.inOrganization = true;
+    handleOrgClick(id: number): void {
         this.router.navigate(['organization', id, 'systems'], { relativeTo: this.route });
     }
 }

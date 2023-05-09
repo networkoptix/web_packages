@@ -29,6 +29,7 @@ import { NxSystemGroupsSidebarComponent } from './components/sidebar/sidebar.com
 import { NxSystemCardComponent } from './components/system-card/system-card.component';
 import { NxOrganizationUsersComponent } from './components/users/users.component';
 import { NxHomeComponent } from './home.component';
+import { OrgResolver } from './org-resolver';
 import { NxOrganizationsComponent } from './organizations/organization.component';
 import { channelPartnersReducer } from './store/channel-partners/channel-partners.reducer';
 import { groupsReducer } from './store/groups.reducer';
@@ -101,6 +102,7 @@ const homeRoutes: Routes = [
     ],
     providers: [
         TabResolver,
+        OrgResolver,
     ],
     exports: [],
 })

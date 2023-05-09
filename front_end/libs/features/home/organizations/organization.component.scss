@@ -56,7 +56,12 @@
         }
 
         a {
+            width: fit-content;
             visibility: hidden;
+        }
+
+        a:hover{
+            cursor: pointer;
         }
 
         .channel-partner {
