@@ -1,3 +1,5 @@
+import asyncio
+from time import sleep
 from uuid import uuid4
 
 import pytest
@@ -96,7 +98,7 @@ class TestCustomRedisCache:
 
 class TestCustomRedisCacheAsync:
     @pytest.fixture(autouse=True)
-    def setup(self):
+    async def setup(self):
         self.cache = caches["global"]
         self.cache.clear()
         self.key = 'test_hash_key'
@@ -116,6 +118,11 @@ class TestCustomRedisCacheAsync:
         for f, v in self.test_set.items():
             val = await self.cache.ahget(self.key, f)
             assert val == v
+
+        coros = [self.cache.ahget(self.key, f) for f, v in self.test_set.items()]
+        results = await asyncio.gather(*coros)
+        for v, res in zip(self.test_set.values(), results):
+            assert v == res
 
     @pytest.mark.asyncio
     async def test_exists(self):
@@ -199,3 +206,59 @@ class TestCustomRedisCacheAsync:
         await self.cache.ahset(key, field, value)
         ret = await self.cache.ahget(key, field)
         assert ret == value
+
+    async def test_aset(self):
+        key = 'test_key'
+        value = f'{uuid4()}'
+        await self.cache.aset(key, value)
+        assert self.cache.get(key) == value
+
+    async def test_aget(self):
+        key = 'test_key'
+        value = f'{uuid4()}'
+        self.cache.set(key, value)
+        assert await self.cache.aget(key) == value
+
+    async def test_aadd(self):
+        key = 'test_key'
+        value = f'{uuid4()}'
+        assert await self.cache.aadd(key, value) is True
+        assert await self.cache.aadd(key, f'failed add') is False
+        assert await self.cache.aget(key) == value
+
+    async def test_atouch(self):
+        key = 'test_key'
+        value = f'{uuid4()}'
+        self.cache.set(key, value, timeout=60)
+        assert await self.cache.attl(key) == 60
+        assert await self.cache.atouch(key, timeout=3600) is True
+        assert await self.cache.attl(key) == 3600
+        assert await self.cache.atouch(key, timeout=None) is True
+        assert await self.cache.attl(key) == -1
+
+    async def test_adelete(self):
+        key = 'test_key'
+        value = f'{uuid4()}'
+        self.cache.set(key, value, timeout=None)
+        assert await self.cache.aget(key) == value
+        assert await self.cache.ahas_key(key) is True
+        assert await self.cache.adelete(key)
+        assert await self.cache.aget(key) is None
+        assert await self.cache.ahas_key(key) is False
+
+    async def test_aincr(self):
+        key = 'test_key'
+        self.cache.set(key, 0, timeout=60)
+        assert await self.cache.aget(key) == 0
+        await self.cache.aincr(key, 2)
+        assert await self.cache.aget(key) == 2
+        await self.cache.aincr(key, -1)
+        assert await self.cache.aget(key) == 1
+
+    async def test_aset_many(self):
+        await self.cache.aset_many(self.test_set)
+        for k, v in self.test_set.items():
+            assert await self.cache.aget(k) == v
+        await self.cache.adelete_many(self.test_set.keys())
+        for k, v in self.test_set.items():
+            assert await self.cache.ahas_key(k) is False
