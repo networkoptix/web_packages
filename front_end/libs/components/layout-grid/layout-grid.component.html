@@ -148,7 +148,12 @@
                     "
                 >
                 </svg-icon>
-                <span class="ellipsis">{{ node.name }}</span>
+                <span
+                    class="ellipsis"
+                    #nodeName
+                    (mouseenter)="setTooltip(nodeName, node.name)"
+                    >{{ node.name }}</span
+                >
                 <ng-container
                     *ngIf="
                         (CONFIG.featureFlags.layoutsEditable || CONFIG.featureFlags.layoutsDemo) &&
@@ -439,9 +444,20 @@
                                 cdkDragHandle
                                 [cdkDragHandleDisabled]="layout.locked"
                             >
-                                <span>{{
-                                    layoutItemLookup[item.resourceId]?.name || 'Not Supported'
-                                }}</span>
+                                <span
+                                    class="ellipsis"
+                                    #resourceName
+                                    (mouseenter)="
+                                        setTooltip(
+                                            resourceName,
+                                            layoutItemLookup[item.resourceId]?.name ||
+                                                'Not Supported'
+                                        )
+                                    "
+                                    >{{
+                                        layoutItemLookup[item.resourceId]?.name || 'Not Supported'
+                                    }}</span
+                                >
                                 <div *ngIf="!layout.locked">
                                     <svg-icon
                                         nx-add-svg-src
@@ -482,6 +498,8 @@
                                             errors[itemDetail.details.id] ||
                                             (itemDetail.details.unauthorized
                                                 ? 'unauthorized'
+                                                : !itemDetail.details.online
+                                                ? 'offline'
                                                 : itemDetail.details.status !== 'archive'
                                                 ? itemDetail.details.status
                                                 : 'offline') as status

@@ -393,6 +393,7 @@ export class CameraManager {
     }
 
     public hasArchives(cameraId: string[]): Observable<string[]> {
+        cameraId = cameraId.filter(cameraId => this.cameras.find(({ id }) => id === cameraId).addParams.deviceType !== 'NVR');
         // .recordedTimePeriods({ cameraId, groupBy: 'cameraId', keepSmallChunks: true, detail: 1 })
         return forkJoin(
             Object.values(this.serverManager.mediaserverConnections).reduce((acc, connection) => [

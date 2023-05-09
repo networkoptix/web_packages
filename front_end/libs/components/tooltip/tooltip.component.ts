@@ -14,9 +14,7 @@ import { Component, ComponentRef, EmbeddedViewRef, ViewChild } from '@angular/co
 })
 export class NxTooltipComponent extends BasePortalOutlet {
     _text = '';
-    alternate = false;
-    alternateSecondary = false;
-    tooltipClasses = { alternate: this.alternate, alternateSecondary: this.alternateSecondary };
+    tooltipClasses = { alternate: false, alternateSecondary: false };
 
     @ViewChild(CdkPortalOutlet) portalOutlet: CdkPortalOutlet;
 
@@ -28,14 +26,14 @@ export class NxTooltipComponent extends BasePortalOutlet {
         alternateSecondary = false,
     ): void {
         this.template = portal;
-        this.alternate = alternateStyle;
-        this.alternateSecondary = alternateSecondary;
+        this.tooltipClasses.alternate = alternateStyle;
+        this.tooltipClasses.alternateSecondary = alternateSecondary;
     }
 
     attachText(text: string, alternateStyle = false, alternateSecondary = false): void {
         this._text = text;
-        this.alternate = alternateStyle;
-        this.alternateSecondary = alternateSecondary;
+        this.tooltipClasses.alternate = alternateStyle;
+        this.tooltipClasses.alternateSecondary = alternateSecondary;
     }
 
     attachComponentPortal<T>(componentPortal: ComponentPortal<T>): ComponentRef<T> {

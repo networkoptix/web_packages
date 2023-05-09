@@ -221,6 +221,7 @@ export class NxLayoutGridComponent {
     );
 
     showTooltip$ = this.#wrapperSize$.pipe(
+        filter(Boolean),
         map(({ width }) => !this.window.matchMedia('(any-hover: none)').matches && width > 600),
     );
 
@@ -710,7 +711,7 @@ export class NxLayoutGridComponent {
         fixedHeight,
     }: Layout): LayoutRenderConfig {
         const aspectRatio = cellAspectRatio || 1.7777777910232544;
-        const spacing = cellSpacing || 0.1;
+        const spacing = cellSpacing ?? 0.1;
         const { width, height, originX: x, originY: y } = this.calculateSize(items);
         const columns = items.length <= 1 ? 1 : fixedWidth || width;
         const rows = items.length <= 1 ? 1 : fixedHeight || height;
@@ -1031,7 +1032,7 @@ export class NxLayoutGridComponent {
                         this.dialogsService.notify(
                             {
                                 value: staticLang.layouts.errors.unableToAuthorizeCamera,
-                                params: pickFrom(selectedCamera, ['name']),
+                                params: pickFrom(camera, ['name']),
                             },
                             'warning',
                         );
@@ -1200,6 +1201,10 @@ export class NxLayoutGridComponent {
     tooltipTarget$ = new BehaviorSubject<string>('');
 
     updateTooltipTarget = (id: string): void => this.tooltipTarget$.next(id);
+
+    setTooltip(target: HTMLSpanElement, title: string): void {
+        target.title = target.offsetWidth < target.scrollWidth ? title : '';
+    }
 
     pingServer =
         ({ parentId: serverId }: { parentId: string }) =>
