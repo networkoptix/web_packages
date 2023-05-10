@@ -855,6 +855,10 @@ export class NxCloudApiService {
      */
     #withFreshSession: t.WithFreshSession = TokenSessionManager.getInstance('/api/account/refreshAccessToken');
 
+    getAccessToken(): Observable<string> {
+        return this.#withFreshSession()(({ accessToken }) => of(accessToken));
+    }
+
     getTokenInfo(token: string) {
         return this.http.get(this.CONFIG.cloudHost + '/oauth/introspect/', { params: { token } });
     }
