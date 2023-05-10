@@ -71,7 +71,7 @@
             >
                 <span *cdkDragPlaceholder></span>
                 <a
-                    [routerLink]="'/home/organization/' + group.id + '/systems'"
+                    (click)="toGroup(group.id)"
                     class="level-name"
                     [nxTooltip]="group.name"
                     >{{ group.name }}</a

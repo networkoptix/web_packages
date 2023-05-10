@@ -1,6 +1,6 @@
 import type { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 
@@ -31,6 +31,7 @@ export class NxGroupsSidebarLevelComponent {
         private groupsService: NxSystemGroupsService,
         private store: Store,
         private router: Router,
+        private route: ActivatedRoute,
     ) {}
 
     trackItem(_index: number, item: GroupsItem): string {
@@ -72,5 +73,9 @@ export class NxGroupsSidebarLevelComponent {
 
         this.openGroups = { ...this.openGroups, ...updatedState };
         this.store.dispatch(GroupActions.setOpenGroups({ openGroups: updatedState }));
+    }
+
+    toGroup(groupId: string): void {
+        this.router.navigate(['group', groupId], { relativeTo: this.route });
     }
 }

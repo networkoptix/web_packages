@@ -1,5 +1,6 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, Input } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { forkJoin, take } from 'rxjs';
 
@@ -12,6 +13,7 @@ import { icons } from '@src/app/variables/static-variables';
 
 import { GroupItem, GroupsItem, SystemItem } from '../../home.types';
 import { NxSystemGroupsService } from '../../services/system-groups.service';
+import * as GroupActions from '../../store/groups.actions';
 import {
     selectCurrentGroupId,
     selectCurrentGroupItems,
@@ -41,7 +43,12 @@ export class NxGroupsCardsComponent {
         private groupsService: NxSystemGroupsService,
         private store: Store,
         private dialogsService: NxDialogsService,
-    ) {}
+        private route: ActivatedRoute,
+    ) {
+        this.route.params.subscribe(({ groupId }) => {
+            this.store.dispatch(GroupActions.setCurrentGroupId({ currentGroupId: groupId }));
+        });
+    }
 
     trackItem(_index: number, item: GroupsItem): string {
         return item.id;

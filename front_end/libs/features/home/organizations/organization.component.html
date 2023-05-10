@@ -38,7 +38,7 @@
         <ng-template #cards>
             <ng-container *ngIf="!inChannelPartners; else organization">
                 <h2 class="pb-3">
-                    {{ (currentOrganization$ | async).name }}
+                    {{ (currentOrganization$ | async)?.name }}
                 </h2>
                 <nx-groups-cards [inRoot]="true"></nx-groups-cards>
             </ng-container>
@@ -50,7 +50,7 @@
                     All Organizations</a
                 >
                 <div class="pb-3">
-                    <h2>{{ (currentOrganization$ | async).name }}</h2>
+                    <h2>{{ (currentOrganization$ | async)?.name }}</h2>
                 </div>
                 <nx-tabs
                     [onLoadTab]="currentTab"

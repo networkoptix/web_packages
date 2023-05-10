@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -8,8 +7,6 @@ import { icons } from '@lib/variables/static-variables';
 
 import type { GroupItem } from '../../home.types';
 import { NxSystemGroupsService } from '../../services/system-groups.service';
-import * as GroupActions from '../../store/groups.actions';
-
 @Component({
     selector: 'nx-group-card',
     templateUrl: 'group-card.component.html',
@@ -26,20 +23,13 @@ export class NxGroupCardComponent {
         private router: Router,
         private groupsService: NxSystemGroupsService,
         private dialogsService: NxDialogsService,
-        private store: Store,
         private route: ActivatedRoute,
     ) {}
 
     openGroup(): void {
-        this.router
-            .navigate(['organization', this.group.id, 'systems'], {
-                relativeTo: this.route.parent.parent.parent,
-            })
-            .then(() => {
-                this.store.dispatch(
-                    GroupActions.setOpenGroups({ openGroups: { [this.group.id]: true } }),
-                );
-            });
+        this.router.navigate(['group', this.group.id], {
+            relativeTo: this.route.parent,
+        });
     }
 
     deleteGroup(): void {

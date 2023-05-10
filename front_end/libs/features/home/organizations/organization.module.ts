@@ -36,6 +36,10 @@ const orgRoutes: Routes = [
                 component: NxOrganizationSettingsComponent
             },
             {
+                path: 'group/:groupId',
+                component: NxGroupsCardsComponent
+            },
+            {
                 path: '**',
                 redirectTo: 'systems'
             }
