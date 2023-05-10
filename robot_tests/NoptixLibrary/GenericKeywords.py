@@ -931,3 +931,28 @@ class GenericKeywords(object):
             if run_name in container["Names"][0]:
                 self.docker_api.delete_container(container["Id"])
 
+    @keyword
+    def create_local_users_via_api(self, token, server, locals, password):
+        local_users = {
+            "advancedViewer": {},
+            "cloudAdmin": {},
+            "custom": {},
+            "liveViewer": {},
+            "viewer": {}
+        }
+        for user in locals:
+            self.server_api.save_user(
+                token, 
+                server, 
+                f'Local+{user}', 
+                self.permissions[user],
+                f'noptixautoqa+local_{user}@gmail.com',
+                'Local User',
+                password,
+                isCloud=False
+                )
+            local_users[user].update(
+                login = f'Local+{user}',
+                email = f'noptixautoqa+local_{user}@gmail.com'
+                )
+        return local_users

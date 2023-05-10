@@ -767,21 +767,6 @@ Get the link from email
     Close Mailbox
     [Return]    ${link}
 
-Create Local Users via API
-    [Arguments]    ${token}    ${server}    ${locals}    ${password}
-    &{local users} =    Create Dictionary
-    &{advancedViewer} =    Create Dictionary
-    &{cloudAdmin} =    Create Dictionary
-    &{custom} =    Create Dictionary
-    &{liveViewer} =    Create Dictionary
-    &{viewer} =    Create Dictionary
-    FOR    ${user}    IN    @{locals}
-        Save User    ${token}    ${server}    Local+${user}    ${permissions}[${user}]    noptixautoqa+local_${user}@gmail.com    Local User    ${password}    isCloud=${False}
-        Set To Dictionary    ${${user}}    login=Local+${user}    email=noptixautoqa+local_${user}@gmail.com    #name=Local User    password=${password}
-        Set To Dictionary    ${local users}    ${user}=&{${user}}
-    END
-    [return]    ${local users}
-
 Delete All Local Users
     [Arguments]    ${locator}=//span[contains(text(),"ocal+")]
     Wait Until Element is Visible    ${locator}
