@@ -18,14 +18,16 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         # Customization name must be required for this argument.
         parser.add_argument(
-            '--customization', default='default', nargs='?', type=str)
+            '--customization', default=None, nargs='?', type=str)
         parser.add_argument(
             '--preview', nargs='?', default=False, type=bool)
 
     @timer
     def handle(self, *args, **options):
         if not (customization_option := options.get('customization')):
-            raise ValueError('customization is required')
+            logger.warning("WARNING!!! Customization has not been passed. It may "
+                           "cause errors on customization depended containers.")
+            return
 
         if (preview := options.get('preview', None)) is None:
             raise ValueError('preview is required')

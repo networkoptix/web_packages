@@ -11,7 +11,7 @@ class TestFillData:
         parser = mocker.MagicMock()
         Command().add_arguments(parser)
         parser.add_argument.assert_has_calls([
-            call('--customization', default='default', nargs='?', type=str),
+            call('--customization', default=None, nargs='?', type=str),
             call('--preview', nargs='?', default=False, type=bool)
         ])
 
@@ -27,9 +27,12 @@ class TestFillData:
             filldata, 'init_skin', return_value=None)
         mock_sleep = mocker.patch.object(time, 'sleep')
 
-        # Raise error if missing customization option
-        pytest.raises(
-            ValueError, instance.handle, match='customization is required')
+        # test clean exit on call without customization
+        warning_msg = "WARNING!!! Customization has not been passed. It may " \
+                      "cause errors on customization depended containers."
+        instance.handle()
+        mock_warning.assert_called_with(warning_msg)
+        mock_warning = mocker.patch.object(logger, 'warning')
 
         # Raise error if missing preview
         pytest.raises(
