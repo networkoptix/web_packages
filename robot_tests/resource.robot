@@ -219,7 +219,7 @@ Log in to Auto Tests System
 Log in to system
     [Arguments]    ${system}    ${email}    ${password}=${BASE PASSWORD}    ${validate}=${True}
     ${url}=   Set Variable If
-    ...    '''${mode}'''== '''cloud'''    ${ENV}/systems/${system}[cloud id]
+    ...    '''${mode}'''== '''cloud'''    ${ENV}/systems/${system}[id]
     ...    '''${mode}'''=='''webadmin'''    https://${QA BURBANK IP}:${system}[port]
     Go To    ${url}
     Log In    ${email}    ${password}    validate=${validate}    button=${None}

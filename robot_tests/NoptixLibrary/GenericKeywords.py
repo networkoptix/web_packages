@@ -956,3 +956,14 @@ class GenericKeywords(object):
                 email = f'noptixautoqa+local_{user}@gmail.com'
                 )
         return local_users
+
+    @keyword
+    def evaluate_system_settings_via_API(self, auth, server_url, key, expected_value):
+        settings = self.server_api.get_system_settings_from_server(auth, server_url)
+        expected_value_str = str(expected_value)
+        expected_value_str = expected_value_str.replace("empty", "").replace("true", "True").replace("false", "False").replace("\"", "'")
+        value = settings[key]
+        if type(value) == str and "{" in value:
+            value =   value.replace(" ", "")
+        if str(value) != expected_value_str:
+            raise RuntimeError(f"value({value}) did not match expected({expected_value_str})")

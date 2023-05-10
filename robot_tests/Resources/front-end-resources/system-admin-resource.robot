@@ -365,30 +365,6 @@ Connect To Cloud
        ...    Wait until element is not visible    ${CONNECT TO CLOUD MODAL}    AND
        ...    Wait until element is visible   ${DISCONNECT FROM NX}
 
-# API - based
-Evaluate System Settings via API
-    [Arguments]    ${auth}    ${server url}    ${key}    ${expected value}
-    ${settings}=   Get System Settings From Server    ${auth}    ${server url}
-    IF    '${IMAGE}' == '5.0'
-        ${expected value}=   Convert To String    ${expected value}
-        ${expected value}=   Replace String    ${expected value}    empty    ${EMPTY}
-        ${expected value}=   Replace String    ${expected value}    true    True
-        ${expected value}=   Replace String    ${expected value}    false    False
-        ${expected value}=   Replace String    ${expected value}    "    '
-        ${value}=   Convert To String    ${settings}[${key}]
-        ${status}=   Run Keyword and Return Status    Should Contain    ${value}    {
-        IF    ${status}
-            ${value}=   Remove String    ${value}    ${SPACE}
-        END
-        Should Be Equal As Strings    ${value}    ${expected value}
-        #Dictionary should contain item    ${settings}    ${key}    ${expected value}
-    ELSE
-        IF    '${expected value}' == 'True' or '${expected value}' == 'False'
-            ${expected value}=   Convert To Lower Case    ${expected value}
-        END
-        Dictionary should contain item    ${settings}    ${key}    ${expected value}
-    END
-
 Evaluate Log Level via API
     [Arguments]    ${auth}    ${server url}    ${key}    ${value}
     ${logLevel}=   Get Log Level    ${auth}    ${server url}
