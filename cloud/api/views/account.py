@@ -524,6 +524,7 @@ class AccountSecurity(APIView):
                 request, mfa_code, account_2fa_enabled)
             if account_2fa_enabled:
                 await sync_to_async(Auth.verify_2fa_code, thread_sensitive=False)(mfa_code, request.session.get("access_token"))
+                AccountCache.delete(request)
                 request.session["has2fa"] = True
             return api_success(res)
 

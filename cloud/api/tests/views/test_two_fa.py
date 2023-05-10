@@ -145,6 +145,7 @@ class TestTwoFAViews:
         req = arf.post('/', {'verification_code': verification_code})
         req.session = {'access_token': access_token}
         req.user = self.user
+        mocker.patch.object(AccountCache, 'delete')
         response = add_2fa_to_session(req)
 
         assert response.status_code == 200

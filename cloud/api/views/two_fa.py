@@ -6,6 +6,7 @@ from rest_framework import decorators
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
+from api.views.account import AccountCache
 from cloud.controllers.cloud_api import Auth
 from cloud.helpers.exceptions import api_success, APINotAuthorisedException
 from api.serializers import CreateBackupCodeSerializer, DeleteBackupCodeSerializer, TwoFaSerializer, CloudResponseSerializer, VerificationSerializer
@@ -46,6 +47,7 @@ class TwoFactorVerification(TwoFactorPermissionsMixin, APIView):
         if request.user and request.user.is_authenticated and request.user.email == email:
             try:
                 Auth.verify_2fa_code(data["verification_code"], request.session.get("access_token"))
+                AccountCache.delete(request)
                 request.session["has2fa"] = True
             # Slight possibility that your session conflicts with the code you are verifying
             except APINotAuthorisedException:
@@ -78,6 +80,7 @@ class BackupCode(TwoFactorPermissionsMixin, APIView):
 
         if request.user and request.user.is_authenticated and request.user.email == email:
             Auth.verify_backup_code(data["verification_code"], request.session.get("access_token"))
+            AccountCache.delete(request)
             request.session["has2fa"] = True
 
         return api_success(res)
@@ -129,6 +132,7 @@ def add_2fa_to_session(request):
         verification_code, request.session.get("access_token"))
 
     if request.user and request.user.is_authenticated:
+        AccountCache.delete(request)
         request.session["has2fa"] = True
 
     return api_success(res)
