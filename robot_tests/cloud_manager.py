@@ -17,7 +17,7 @@ _AUTH_HEADER = {'Authorization': f'Basic {_ENCODED_CREDENTIALS}'}
 
 def request_deployment(backend_revision: str, frontend_revision: str) -> str:
     request = Request(
-        f'{_JENKINS_URL}/job/qa.cloud.runner/buildWithParameters?'
+        f'{_JENKINS_URL}/job/ft.cloud.runner/buildWithParameters?'
         f'BACKEND_REVISION={backend_revision}&'
         f'FRONTEND_REVISION={frontend_revision}',
         method='POST',
@@ -64,7 +64,7 @@ def get_cloud_host(job_url: str) -> str:
 
 def _request_removal(cloud_host: str) -> str:
     request = Request(
-        f'{_JENKINS_URL}/job/qa.cloud.remove-deployment/buildWithParameters'
+        f'{_JENKINS_URL}/job/ft.cloud.remove-deployment/buildWithParameters'
         f'?CLOUD_HOST={cloud_host}',
         method='POST',
         headers=_AUTH_HEADER)
