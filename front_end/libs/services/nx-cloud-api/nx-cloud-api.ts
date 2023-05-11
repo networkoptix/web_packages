@@ -65,47 +65,52 @@ const staffSWBypass = (target: Object, propertyKey: string, descriptor: Property
                     }, 10000);
                 }
                 return originalMethod.apply(this, args);
-            })
+            }),
         );
     };
 };
 
-const swClear = (cacheName, url, toPromise) => (target: Object, propertyKey: string, descriptor: PropertyDescriptor) => {
-    // CLOUD-9104: Firefox does not support service workers in private mode.
-    // this isn't in the scope so we are using window by itself
-    if (!('serviceWorker' in window.navigator)) {
-        return;
-    }
-    const originalMethod = descriptor.value;
-    descriptor.value = function (...args) {
-        const returnPromise = this.nxSwCacheService.clearCache(cacheName, apiBase + url).then(_ => {
-            return originalMethod.apply(this, args);
-        });
-
-        if (toPromise) {
-            return returnPromise.then(response => {
-                // Clear a second time to handle small chance of race condition
-                return this.nxSwCacheService.clearCache(cacheName, apiBase + url).then(_ => {
-                    return response;
+const swClear =
+    (cacheName, url, toPromise) =>
+    (target: Object, propertyKey: string, descriptor: PropertyDescriptor) => {
+        // CLOUD-9104: Firefox does not support service workers in private mode.
+        // this isn't in the scope so we are using window by itself
+        if (!('serviceWorker' in window.navigator)) {
+            return;
+        }
+        const originalMethod = descriptor.value;
+        descriptor.value = function (...args) {
+            const returnPromise = this.nxSwCacheService
+                .clearCache(cacheName, apiBase + url)
+                .then(_ => {
+                    return originalMethod.apply(this, args);
                 });
-            });
-        } else {
-            return from(returnPromise)
-                .pipe(
+
+            if (toPromise) {
+                return returnPromise.then(response => {
+                    // Clear a second time to handle small chance of race condition
+                    return this.nxSwCacheService.clearCache(cacheName, apiBase + url).then(_ => {
+                        return response;
+                    });
+                });
+            } else {
+                return from(returnPromise).pipe(
                     switchMap((result: any) => result),
                     concatMap(response => {
                         // Clear a second time to handle small chance of race condition
-                        return this.nxSwCacheService.clearCache(cacheName, apiBase + url).then(_ => {
-                            return response;
-                        });
-                    })
+                        return this.nxSwCacheService
+                            .clearCache(cacheName, apiBase + url)
+                            .then(_ => {
+                                return response;
+                            });
+                    }),
                 );
-        }
+            }
+        };
     };
-};
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxCloudApiService {
     private CONFIG: IConfig;
@@ -113,7 +118,10 @@ export class NxCloudApiService {
     public swBypass = false;
     public swBypassTimeout: ReturnType<typeof setTimeout>;
     public customClient: CustomClientAPI;
-    public licenseServerApiFactory: (licenseServer: string, cloudHost: () => string) => LicenseServerAPI;
+    public licenseServerApiFactory: (
+        licenseServer: string,
+        cloudHost: () => string,
+    ) => LicenseServerAPI;
     public cloudStorageApi: CloudStorageAPI;
     public cloudDbApi: CloudDbAPI;
     public cloudChannelPartnersApi: ChannelPartnersApi;
@@ -137,20 +145,42 @@ export class NxCloudApiService {
 
         // check the parameters before pushing this
         this.customClient = new CustomClientAPI(this.http, this.consoleService);
-        this.licenseServerApiFactory = LicenseServerAPI.createApiFactory(this.http, this.#withFreshSession);
+        this.licenseServerApiFactory = LicenseServerAPI.createApiFactory(
+            this.http,
+            this.#withFreshSession,
+        );
         try {
-            const _targetInstance = this.cookieService.get('cloud_instance') || environment.isLocal ? this.CONFIG.cloudHost : '';
-            this.targetInstance = new URL(_targetInstance).hostname === this.window.location.hostname ? '' : _targetInstance;
+            const _targetInstance =
+                this.cookieService.get('cloud_instance') || environment.isLocal
+                    ? this.CONFIG.cloudHost
+                    : '';
+            this.targetInstance =
+                new URL(_targetInstance).hostname === this.window.location.hostname
+                    ? ''
+                    : _targetInstance;
         } catch (e) {
             this.targetInstance = '';
         }
-        this.cloudStorageApi = CloudStorageAPI.createApiFactory(this.http, this.#withFreshSession)(this.targetInstance, () => '');
-        const refreshToken = defer(() => this.getTokensFromCloud('session', 'refresh_token', 'code')).pipe(map(({ code }) => code));
-        this.cloudDbApi = CloudDbAPI.createApiFactory(this.http, this.#withFreshSession, refreshToken)(this.targetInstance, () => this.CONFIG.customization);
+        this.cloudStorageApi = CloudStorageAPI.createApiFactory(this.http, this.#withFreshSession)(
+            this.targetInstance,
+            () => '',
+        );
+        const refreshToken = defer(() =>
+            this.getTokensFromCloud('session', 'refresh_token', 'code'),
+        ).pipe(map(({ code }) => code));
+        this.cloudDbApi = CloudDbAPI.createApiFactory(
+            this.http,
+            this.#withFreshSession,
+            refreshToken,
+        )(this.targetInstance, () => this.CONFIG.customization);
 
         // TODO: Remove it
         const tempPartnersInstance = 'https://nxlicensed.test.hdw.mx';
-        this.cloudChannelPartnersApi = ChannelPartnersApi.createApiFactory(this.http, this.#withFreshSession, refreshToken)(tempPartnersInstance, () => '');
+        this.cloudChannelPartnersApi = ChannelPartnersApi.createApiFactory(
+            this.http,
+            this.#withFreshSession,
+            refreshToken,
+        )(tempPartnersInstance, () => '');
     }
 
     getSubAPI(route: ConsoleSection) {
@@ -161,7 +191,7 @@ export class NxCloudApiService {
                 return {
                     list: (...args) => new BehaviorSubject([]),
                     getManifest: () => new BehaviorSubject({ manifest: { contexts: {} } }),
-                    retrieve: id => new BehaviorSubject({})
+                    retrieve: id => new BehaviorSubject({}),
                 };
         }
     }
@@ -182,7 +212,7 @@ export class NxCloudApiService {
     disconnect(systemId: string) {
         // Use cloudDbApi once TempCredentials have been added to cloudDbApi
         return this.http.post<t.CloudResponse>(apiBase + '/systems/disconnect', {
-            system_id: systemId
+            system_id: systemId,
         });
     }
 
@@ -194,34 +224,37 @@ export class NxCloudApiService {
         if (accessToken) {
             headers = headers.set('Authorization', `Bearer ${accessToken}`);
         }
-        return this.http.post<t.CloudResponse>(this.configService.cloudHost + apiBase + '/systems/connect', {
-            name: systemName,
-            email,
-            password
-        }, { headers }).pipe(
-            tap(() => {
-                if (accessToken) {
-                    return this.oauthService.logoutTokens();
-                }
-            })
-        );
+        return this.http
+            .post<t.CloudResponse>(
+                this.configService.cloudHost + apiBase + '/systems/connect',
+                {
+                    name: systemName,
+                    email,
+                    password,
+                },
+                { headers },
+            )
+            .pipe(
+                tap(() => {
+                    if (accessToken) {
+                        return this.oauthService.logoutTokens();
+                    }
+                }),
+            );
     }
 
     verify(password) {
-        return this.http.post(apiBase + '/account/verify', {
-            password
-        }).toPromise();
+        return this.http
+            .post(apiBase + '/account/verify', {
+                password,
+            })
+            .toPromise();
     }
 
-    update2fa(
-        password: string,
-        mfaCode: string,
-        action: 'activate' | 'deactivate' | 'toggle'
-    ) {
-        return this.http.post<t.CloudResponse>(
-            apiBase + '/account/security',
-            { password, mfaCode, action }
-        ).toPromise();
+    update2fa(password: string, mfaCode: string, action: 'activate' | 'deactivate' | 'toggle') {
+        return this.http
+            .post<t.CloudResponse>(apiBase + '/account/security', { password, mfaCode, action })
+            .toPromise();
     }
 
     deactivate2FaKey() {
@@ -242,39 +275,43 @@ export class NxCloudApiService {
     }
 
     updateSessionWith2fa(verificationCode) {
-        return this.http.post<t.CloudResponse>(apiBase + '/2fa/updateSession', {
-            verification_code: verificationCode
-        }).toPromise();
+        return this.http
+            .post<t.CloudResponse>(apiBase + '/2fa/updateSession', {
+                verification_code: verificationCode,
+            })
+            .toPromise();
     }
 
     toggle2faForSystem(systemId: string, mfaCode: string) {
-        return this.http.post(
-            apiBase + '/systems/toggle2fa',
-            { systemId, mfaCode }
-        ).toPromise();
+        return this.http.post(apiBase + '/systems/toggle2fa', { systemId, mfaCode }).toPromise();
     }
 
     @memoizeAsyncPersistent
     getStaticLanding() {
         const httpOptions = {
             headers: new HttpHeaders({ 'Content-Type': 'application/text' }),
-            responseType: 'text' as any
+            responseType: 'text' as any,
         };
-        return this.cachedGet<string>('/' + this.CONFIG.viewsDir + 'static/landing.html', httpOptions);
+        return this.cachedGet<string>(
+            '/' + this.CONFIG.viewsDir + 'static/landing.html',
+            httpOptions,
+        );
     }
 
     @memoizeAsyncPersistent
     getStatic(url) {
         const httpOptions = {
             headers: new HttpHeaders({ 'Content-Type': 'application/text' }),
-            responseType: 'text' as any
+            responseType: 'text' as any,
         };
         return this.cachedGet<string>(url, httpOptions);
     }
 
     @memoizeAsyncPersistent
     getCommonPasswords() {
-        return this.cachedGet<{ [key: string]: number }>('/static/scripts/commonPasswordsList.json');
+        return this.cachedGet<{ [key: string]: number }>(
+            '/static/scripts/commonPasswordsList.json',
+        );
     }
 
     @staffSWBypass
@@ -292,18 +329,20 @@ export class NxCloudApiService {
     @memoizeAsyncLong
     getIntegrationBy(id: number, status: string) {
         let uri = apiBase + '/cms/integration/' + id;
-        uri += (status) ? '?' + status : '';
+        uri += status ? '?' + status : '';
 
         return this.cachedGet<Array<t.Integration>>(uri);
     }
 
     @memoizeAsyncLong
     getIPVD() {
-        this.cachedGet<t.IPVDCameras>(apiBase + '/ipvd').subscribe(value => this.db.shared.unstructured.put({ key: 'ipvd', value }));
+        this.cachedGet<t.IPVDCameras>(apiBase + '/ipvd').subscribe(value =>
+            this.db.shared.unstructured.put({ key: 'ipvd', value }),
+        );
 
         return this.db.shared.unstructured.$.get('ipvd').pipe(
             filter(value => !!value),
-            map(({ value }) => value as t.IPVDCameras)
+            map(({ value }) => value as t.IPVDCameras),
         );
     }
 
@@ -313,32 +352,44 @@ export class NxCloudApiService {
 
     @memoizeAsyncShort
     getSystemAuth(systemId: string) {
-        return this.cloudDbApi.getAuth(systemId).pipe(filter(res => !!res), shareReplay({ bufferSize: 1, refCount: false, windowTime: 10 * 1000 }));
+        return this.cloudDbApi.getAuth(systemId).pipe(
+            filter(res => !!res),
+            shareReplay({ bufferSize: 1, refCount: false, windowTime: 10 * 1000 }),
+        );
     }
 
     @memoizeAsyncShort
     getSystemToken(systemId: string): Observable<{ access_token: string; refresh_token: string }> {
         // Todo: Using cloud portal to avoid auth issue with clouddb. Need to revert this once cloudDbApi.getToken is fixed.
-        return this.http.post<{ access_token: string; refresh_token: string }>(`${apiBase}/systems/${systemId}/token`, {}).pipe(shareReplay({ bufferSize: 1, refCount: false, windowTime: 10 * 1000 }));
+        return this.http
+            .post<{ access_token: string; refresh_token: string }>(
+                `${apiBase}/systems/${systemId}/token`,
+                {},
+            )
+            .pipe(shareReplay({ bufferSize: 1, refCount: false, windowTime: 10 * 1000 }));
         // return this.cloudDbApi.getToken(systemId);
     }
 
     @swClear('cloudSystemAPI', '/systems', true)
     merge(masterSystemId: string, slaveSystemId: string, password: string) {
         // TODO: Move to cloudDbApi once we add oauth handlers to cloudDbApi
-        return this.http.post<t.CloudResponse>(`${apiBase}/systems/merge`, {
-            master_system_id: masterSystemId,
-            slave_system_id: slaveSystemId,
-            password
-        }).toPromise();
+        return this.http
+            .post<t.CloudResponse>(`${apiBase}/systems/merge`, {
+                master_system_id: masterSystemId,
+                slave_system_id: slaveSystemId,
+                password,
+            })
+            .toPromise();
     }
 
     notificationSend(userEmail: string, type: string, message: string) {
-        return this.http.post(`${apiBase.replace('/api', '/notifications')}/send`, {
-            user_email: userEmail,
-            type,
-            message
-        }).toPromise();
+        return this.http
+            .post(`${apiBase.replace('/api', '/notifications')}/send`, {
+                user_email: userEmail,
+                type,
+                message,
+            })
+            .toPromise();
     }
 
     @staffSWBypass
@@ -363,23 +414,23 @@ export class NxCloudApiService {
         password: string,
         firstName: string,
         lastName: string,
-        code: string
+        code: string,
     ) {
         return this.http
-            .post<t.RegisterUser>(apiBase + '/account/register',
-                {
-                    email,
-                    password,
-                    first_name: firstName,
-                    last_name: lastName,
-                    code
-                })
+            .post<t.RegisterUser>(apiBase + '/account/register', {
+                email,
+                password,
+                first_name: firstName,
+                last_name: lastName,
+                code,
+            })
             .toPromise();
     }
 
     reactivateUser(userEmail: string) {
-        return this.http.post<t.CloudResponse>(apiBase + '/account/activate',
-            { user_email: userEmail }).toPromise();
+        return this.http
+            .post<t.CloudResponse>(apiBase + '/account/activate', { user_email: userEmail })
+            .toPromise();
     }
 
     renameSystem(systemId: string, systemName: string) {
@@ -391,10 +442,14 @@ export class NxCloudApiService {
         asset: string,
         message: string,
         userName?: string,
-        userEmail?: string
+        userEmail?: string,
     ) {
         return this.http.post<t.CloudResponse>(apiBase + '/feedback', {
-            message, asset, type, userName, userEmail
+            message,
+            asset,
+            type,
+            userName,
+            userEmail,
         });
     }
 
@@ -412,7 +467,7 @@ export class NxCloudApiService {
         const body: any = {
             accountEmail: userEmail,
             accessRole: this.CONFIG.accessRoles.unshare,
-            isEnabled: false
+            isEnabled: false,
         };
         if (environment.isLocal) {
             const url = `${this.configService.cloudHost}/api/systems/${systemId}/users`;
@@ -429,11 +484,15 @@ export class NxCloudApiService {
     }
 
     visitedKey(key: string) {
-        return this.http.get<t.VisitedKey>(apiBase + '/utils/visitedKey/?key=' + encodeURIComponent(key)).toPromise();
+        return this.http
+            .get<t.VisitedKey>(apiBase + '/utils/visitedKey/?key=' + encodeURIComponent(key))
+            .toPromise();
     }
 
     checkCode(code: string) {
-        return this.http.post<t.CloudResponse>(apiBase + '/account/checkCode', { code }).toPromise();
+        return this.http
+            .post<t.CloudResponse>(apiBase + '/account/checkCode', { code })
+            .toPromise();
     }
 
     checkAuthCode(code: string) {
@@ -441,7 +500,9 @@ export class NxCloudApiService {
     }
 
     checkIfEmailExistsInCloud(email: string) {
-        return this.http.post<t.CheckEmailExists>(apiBase + '/account/check', { email }).toPromise();
+        return this.http
+            .post<t.CheckEmailExists>(apiBase + '/account/check', { email })
+            .toPromise();
     }
 
     authenticate(
@@ -451,14 +512,14 @@ export class NxCloudApiService {
         redirectUrl: string,
         responseType: string,
         state?: string,
-        scope?: string
+        scope?: string,
     ): Promise<AuthenticateResp> {
         const body: AuthorizeParams & { password: string } = {
             email,
             password,
             client_id: clientId,
             redirect_uri: redirectUrl,
-            response_type: responseType
+            response_type: responseType,
         };
         if (state) {
             body.state = state;
@@ -500,34 +561,41 @@ export class NxCloudApiService {
     @swClear('apiFresh', '/account', true)
     login(email: string, password: string, remember: boolean) {
         // clearCache();
-        return this.http.post<Account>(apiBase + '/account/login', {
-            email,
-            password,
-            remember,
-            timezone: (Intl && Intl.DateTimeFormat().resolvedOptions().timeZone) || ''
-        }).pipe(this.logIdentifyUser).toPromise();
+        return this.http
+            .post<Account>(apiBase + '/account/login', {
+                email,
+                password,
+                remember,
+                timezone: (Intl && Intl.DateTimeFormat().resolvedOptions().timeZone) || '',
+            })
+            .pipe(this.logIdentifyUser)
+            .toPromise();
     }
 
     @swClear('apiFresh', '/account', true)
     loginCode(code: string) {
-        return this.http.post(apiBase + '/account/loginCode', { code }).pipe(
-            tap((account: Account) => {
-                this.currentAccount = account;
-            }),
-            this.logIdentifyUser
-        ).toPromise();
+        return this.http
+            .post(apiBase + '/account/loginCode', { code })
+            .pipe(
+                tap((account: Account) => {
+                    this.currentAccount = account;
+                }),
+                this.logIdentifyUser,
+            )
+            .toPromise();
     }
 
     @swClear('apiFresh', '/account', true)
     loginTokens(tokensInfo) {
         const options = {
             headers: {
-                Authorization: `Bearer ${tokensInfo.access_token}`
-            }
+                Authorization: `Bearer ${tokensInfo.access_token}`,
+            },
         };
-        return this.http.post(apiBase + '/account/loginTokens', tokensInfo, options).pipe(
-            this.logIdentifyUser
-        ).toPromise();
+        return this.http
+            .post(apiBase + '/account/loginTokens', tokensInfo, options)
+            .pipe(this.logIdentifyUser)
+            .toPromise();
     }
 
     @swClear('apiFresh', '/account', true)
@@ -537,24 +605,39 @@ export class NxCloudApiService {
     }
 
     deleteCloudUser(password) {
-        return this.http.post<t.CloudResponse>(apiBase + '/account/delete', { password }).toPromise();
+        return this.http
+            .post<t.CloudResponse>(apiBase + '/account/delete', { password })
+            .toPromise();
     }
 
     account(forceUpdate = false) {
-        const checkIfShouldUpdate = () => this.db.personal.transaction('rw', this.db.personal.unstructured, async () => {
-            const lastUpdate = await this.db.personal.unstructured.get('lastAccountUpdate') as UnstructuredTable<number>;
-            const current = await this.db.personal.unstructured.get('account') as UnstructuredTable<Account>;
+        const checkIfShouldUpdate = () =>
+            this.db.personal.transaction('rw', this.db.personal.unstructured, async () => {
+                const lastUpdate = (await this.db.personal.unstructured.get(
+                    'lastAccountUpdate',
+                )) as UnstructuredTable<number>;
+                const current = (await this.db.personal.unstructured.get(
+                    'account',
+                )) as UnstructuredTable<Account>;
 
-            if (!current?.value || forceUpdate && (lastUpdate?.value || 0) < Date.now() - 10 * 1000) {
-                await this.db.personal.unstructured.put({ key: 'lastAccountUpdate', value: Date.now() });
-                return true;
-            }
-            return false;
-        });
+                if (
+                    !current?.value ||
+                    (forceUpdate && (lastUpdate?.value || 0) < Date.now() - 10 * 1000)
+                ) {
+                    await this.db.personal.unstructured.put({
+                        key: 'lastAccountUpdate',
+                        value: Date.now(),
+                    });
+                    return true;
+                }
+                return false;
+            });
         return from(checkIfShouldUpdate()).pipe(
             switchMap(force => this.getAllAccountInfo(force)),
-            switchMap(async value => value ? this.db.personal.unstructured.put({ key: 'account', value }) : null),
-            switchMap(() => this.handleAccount())
+            switchMap(async value =>
+                value ? this.db.personal.unstructured.put({ key: 'account', value }) : null,
+            ),
+            switchMap(() => this.handleAccount()),
             // skip(forceUpdate ? 1 : 0)
         );
     }
@@ -563,7 +646,7 @@ export class NxCloudApiService {
     private handleAccount(): Observable<Account> {
         return this.db.personal.unstructured.$.get('account').pipe(
             filter(current => !!current?.value),
-            map(({ value }) => value as Account)
+            map(({ value }) => value as Account),
         );
     }
 
@@ -582,54 +665,75 @@ export class NxCloudApiService {
                     account = { ...account, isCloud: true };
                 }
                 return account;
-            },
-            tap(this.logIdentifyUser)),
+            }, tap(this.logIdentifyUser)),
         );
     }
 
     @memoizeAsyncShort
     private getAllAccountInfo(forceUpdate = false): Observable<Account> {
         return this.getAccount(forceUpdate).pipe(
-            switchMap(cloudInfo => forkJoin([
-                of(cloudInfo),
-                cloudInfo.accessToken ? this.cloudDbApi.getAccountSecurity() : of({ account2faEnabled: false, totpExistsForAccount: false }),
-                cloudInfo.accessToken ? this.cloudDbApi.validateToken(cloudInfo.accessToken) : of({ sessionExpires: Infinity })
-            ])),
+            switchMap(cloudInfo =>
+                forkJoin([
+                    of(cloudInfo),
+                    cloudInfo.accessToken
+                        ? this.cloudDbApi.getAccountSecurity()
+                        : of({ account2faEnabled: false, totpExistsForAccount: false }),
+                    cloudInfo.accessToken
+                        ? this.cloudDbApi.validateToken(cloudInfo.accessToken)
+                        : of({ sessionExpires: Infinity }),
+                ]),
+            ),
             map(([cloudInfo, security, tokenInfo]) => {
                 cloudInfo.sessionVerified = cloudInfo.sessionVerified || security.account2faEnabled;
                 this.currentAccount = { ...cloudInfo, ...security, ...tokenInfo };
                 return this.currentAccount;
-            })
+            }),
         );
     }
 
-    checkFeatureNotice = <T>(
-        noticeKey: string, firstViewCallback: () => T
-    ) => this.customAccountPropertyFactory('featureNotices', {} as Record<string, boolean>).update(
-        async value => {
-            if (value[noticeKey]) {
-                return Promise.resolve(value);
-            }
+    checkFeatureNotice = <T>(noticeKey: string, firstViewCallback: () => T) =>
+        this.customAccountPropertyFactory('featureNotices', {} as Record<string, boolean>).update(
+            async value => {
+                if (value[noticeKey]) {
+                    return Promise.resolve(value);
+                }
 
-            await firstViewCallback();
+                await firstViewCallback();
 
-            return { ...value, [noticeKey]: true };
-        }
-    );
+                return { ...value, [noticeKey]: true };
+            },
+        );
 
     customAccountPropertyFactory<T>(property: string, initialValue: T): CustomAccountProperty<T>;
-    customAccountPropertyFactory<T>(property: string, username: string, initialValue: T): CustomAccountProperty<T>;
-    customAccountPropertyFactory<T>(property: string, usernameOrInitialValue: string | T, initialValue?: T): CustomAccountProperty<T> {
-        const username = initialValue && usernameOrInitialValue ? usernameOrInitialValue as string : '';
+    customAccountPropertyFactory<T>(
+        property: string,
+        username: string,
+        initialValue: T,
+    ): CustomAccountProperty<T>;
+    customAccountPropertyFactory<T>(
+        property: string,
+        usernameOrInitialValue: string | T,
+        initialValue?: T,
+    ): CustomAccountProperty<T> {
+        const username =
+            initialValue && usernameOrInitialValue ? (usernameOrInitialValue as string) : '';
         initialValue ||= usernameOrInitialValue as T;
-        return CustomAccountProperty.getInstance(this.http, property, initialValue, username, this.targetInstance);
+        return CustomAccountProperty.getInstance(
+            this.http,
+            property,
+            initialValue,
+            username,
+            this.targetInstance,
+        );
     }
 
     /**
         @deprecated use customAccountPropertyFactory instead.
     */
     getCustomAccountProperty(property: string, username?: string) {
-        const endpoint = `${apiBase}/custom-properties/${property}${username ? '/' + username : ''}`;
+        const endpoint = `${apiBase}/custom-properties/${property}${
+            username ? '/' + username : ''
+        }`;
         return this.http.get<any>(endpoint);
     }
 
@@ -637,7 +741,9 @@ export class NxCloudApiService {
         @deprecated use customAccountPropertyFactory instead.
     */
     saveCustomAccountProperty(payload: any, property: string, username?: string) {
-        const endpoint = `${apiBase}/custom-properties/${property}${username ? '/' + username : ''}`;
+        const endpoint = `${apiBase}/custom-properties/${property}${
+            username ? '/' + username : ''
+        }`;
         return this.http.post<any>(endpoint, payload);
     }
 
@@ -651,9 +757,11 @@ export class NxCloudApiService {
 
     @swClear('apiFresh', '/utils/language', true)
     changeLanguage(language: string) {
-        return this.http.post(apiBase + '/utils/language/', {
-            language
-        }).toPromise();
+        return this.http
+            .post(apiBase + '/utils/language/', {
+                language,
+            })
+            .toPromise();
     }
 
     @memoizeAsyncPersistent
@@ -664,7 +772,7 @@ export class NxCloudApiService {
     @memoizeAsyncPersistent
     getDownloadsHistory(build: string | undefined): Promise<t.BuildHistory | t.Build> {
         return this.cachedGet<t.BuildHistory | t.Build>(
-            apiBase + '/utils/downloads/' + (build || 'history')
+            apiBase + '/utils/downloads/' + (build || 'history'),
         ).toPromise();
     }
 
@@ -676,108 +784,121 @@ export class NxCloudApiService {
             last_name: account.last_name,
             is_staff: account.is_staff,
             is_superuser: account.is_superuser || false,
-            permissions: account.permissions
+            permissions: account.permissions,
         };
-        return this.http.post<t.AccountEdit>(apiBase + '/account', accountInfo).pipe(
-            switchMap(account => this.db.personal.transaction('rw', this.db.personal.unstructured, async () => {
-                const currentAccount = await this.db.personal.unstructured.get('account') as UnstructuredTable<Account>;
-                currentAccount.value = { ...currentAccount.value, ...account };
-                await this.db.personal.unstructured.put(currentAccount);
-                return account;
-            }))
-        ).toPromise();
+        return this.http
+            .post<t.AccountEdit>(apiBase + '/account', accountInfo)
+            .pipe(
+                switchMap(account =>
+                    this.db.personal.transaction('rw', this.db.personal.unstructured, async () => {
+                        const currentAccount = (await this.db.personal.unstructured.get(
+                            'account',
+                        )) as UnstructuredTable<Account>;
+                        currentAccount.value = { ...currentAccount.value, ...account };
+                        await this.db.personal.unstructured.put(currentAccount);
+                        return account;
+                    }),
+                ),
+            )
+            .toPromise();
     }
 
     changePassword(newPassword: string, oldPassword: string, mfaCode?: string) {
-        return this.http.post<t.CloudResponse>(apiBase + '/account/changePassword', {
-            new_password: newPassword,
-            old_password: oldPassword,
-            mfaCode
-        }).toPromise();
+        return this.http
+            .post<t.CloudResponse>(apiBase + '/account/changePassword', {
+                new_password: newPassword,
+                old_password: oldPassword,
+                mfaCode,
+            })
+            .toPromise();
     }
 
     reactivate(userEmail: string) {
-        return this.http.post<t.CloudResponse>(apiBase + '/account/activate', {
-            user_email: userEmail
-        }).toPromise();
+        return this.http
+            .post<t.CloudResponse>(apiBase + '/account/activate', {
+                user_email: userEmail,
+            })
+            .toPromise();
     }
 
     activate(code: string) {
-        return this.http.post<t.CloudResponse>(apiBase + '/account/activate', {
-            code
-        }).toPromise();
+        return this.http
+            .post<t.CloudResponse>(apiBase + '/account/activate', {
+                code,
+            })
+            .toPromise();
     }
 
     restorePasswordRequest(userEmail: string) {
-        return this.http.post<t.CloudResponse>(apiBase + '/account/restorePassword', {
-            user_email: userEmail
-        }).toPromise();
+        return this.http
+            .post<t.CloudResponse>(apiBase + '/account/restorePassword', {
+                user_email: userEmail,
+            })
+            .toPromise();
     }
 
     restorePassword(code: string, newPassword: string, mfaCode?: string, isBackup = false) {
-        return this.http.post<t.CloudResponse>(apiBase + '/account/restorePassword', {
-            code,
-            new_password: newPassword,
-            mfaCode,
-            isBackup
-        }).toPromise();
+        return this.http
+            .post<t.CloudResponse>(apiBase + '/account/restorePassword', {
+                code,
+                new_password: newPassword,
+                mfaCode,
+                isBackup,
+            })
+            .toPromise();
     }
 
     acceptAgreement(reviewId: string) {
-        return this.http.post(apiBase + '/cms/accept_agreement', {
-            review_id: reviewId
-        }).toPromise();
+        return this.http
+            .post(apiBase + '/cms/accept_agreement', {
+                review_id: reviewId,
+            })
+            .toPromise();
     }
 
     acceptReview(reviewId: number) {
-        return this.http.post(apiBase + '/cms/accept_review', {
-            review_id: reviewId
-        }).toPromise().then(response => {
-            this.cacheService.clearData();
-            return response;
-        });
+        return this.http
+            .post(apiBase + '/cms/accept_review', {
+                review_id: reviewId,
+            })
+            .toPromise()
+            .then(response => {
+                this.cacheService.clearData();
+                return response;
+            });
     }
 
     /* Ownership transfer */
     @memoizeAsyncLong
     getTransfers(): Observable<t.SystemTransferInfo[]> {
-        return this.http.get<t.SystemTransferInfo[]>(
-            `${apiBase}/transfer/`
-        );
+        return this.http.get<t.SystemTransferInfo[]>(`${apiBase}/transfer/`);
     }
 
-    startTransfer(
-        systemId: string,
-        newOwnerEmail: string,
-    ): Observable<t.SystemTransferInfo> {
-        return this.http.post<t.SystemTransferInfo>(
-            `${apiBase}/transfer/${systemId}/`,
-            { newOwnerEmail },
-        );
+    startTransfer(systemId: string, newOwnerEmail: string): Observable<t.SystemTransferInfo> {
+        return this.http.post<t.SystemTransferInfo>(`${apiBase}/transfer/${systemId}/`, {
+            newOwnerEmail,
+        });
     }
 
     cancelTransfer(systemId: string): Observable<t.CloudResponse> {
-        return this.http.delete<t.CloudResponse>(
-            `${apiBase}/transfer/${systemId}/`
-        );
+        return this.http.delete<t.CloudResponse>(`${apiBase}/transfer/${systemId}/`);
     }
 
     respondToTransfer(
         systemId: string,
-        action: 'accepted' | 'rejected'
+        action: 'accepted' | 'rejected',
     ): Observable<t.CloudResponse> {
-        return this.http.put<t.CloudResponse>(
-            `${apiBase}/transfer/${systemId}/`,
-            { action },
-        );
+        return this.http.put<t.CloudResponse>(`${apiBase}/transfer/${systemId}/`, { action });
     }
 
     // Cloud Storage
 
     enableCloudStorage(systemId: string) {
-        return this.http.post<t.CloudStorage>(apiBase + '/storage/create', {
-            systemId
-        }).toPromise();
+        return this.http
+            .post<t.CloudStorage>(apiBase + '/storage/create', {
+                systemId,
+            })
+            .toPromise();
     }
 
     /**
@@ -797,19 +918,30 @@ export class NxCloudApiService {
      */
     @memoizeAsyncShort
     getCloudStorageUsage(systemId: string): Promise<any> {
-        return this.http.get<t.CloudStorageUsage>(apiBase + '/storage/usageStats', {
-            params: {
-                systemId
-            }
-        }).toPromise();
+        return this.http
+            .get<t.CloudStorageUsage>(apiBase + '/storage/usageStats', {
+                params: {
+                    systemId,
+                },
+            })
+            .toPromise();
     }
 
     @staffSWBypass
     @memoizeAsyncPersistent
-    getDocumentation(name, type: t.DOC_TYPES, assetIdOrSearchObject?: string | number | { query: string | number; page?: number }, state?: string, assetVersion?: number) {
+    getDocumentation(
+        name,
+        type: t.DOC_TYPES,
+        assetIdOrSearchObject?: string | number | { query: string | number; page?: number },
+        state?: string,
+        assetVersion?: number,
+    ) {
         let endpoint = name ? `/${type}/${name}` : '';
         let params = new HttpParams();
-        if (typeof assetIdOrSearchObject === 'string' || typeof assetIdOrSearchObject === 'number') {
+        if (
+            typeof assetIdOrSearchObject === 'string' ||
+            typeof assetIdOrSearchObject === 'number'
+        ) {
             const urlAppend = assetIdOrSearchObject ? `/${assetIdOrSearchObject}` : '';
             if (type === t.DOC_TYPES.knowledgebase) {
                 endpoint = urlAppend;
@@ -818,7 +950,10 @@ export class NxCloudApiService {
             }
         } else if (assetIdOrSearchObject?.query) {
             params = params.set('filter', `${assetIdOrSearchObject.query}`);
-            params = params.set('page', assetIdOrSearchObject.page ? assetIdOrSearchObject.page.toString() : '1');
+            params = params.set(
+                'page',
+                assetIdOrSearchObject.page ? assetIdOrSearchObject.page.toString() : '1',
+            );
         }
         if (state) {
             params = params.set('state', state.replace('pending', 'review'));
@@ -828,14 +963,16 @@ export class NxCloudApiService {
         }
         const route = `${apiBase}/cms/documentation${endpoint}?${params.toString()}`;
         this.cacheService.addToCache(route);
-        return this.cachedGet<any>(route).pipe(catchError(error => {
-            if (error.status === 404) {
-                this.#show404();
-                return EMPTY;
-            } else {
-                return of(error);
-            }
-        }));
+        return this.cachedGet<any>(route).pipe(
+            catchError(error => {
+                if (error.status === 404) {
+                    this.#show404();
+                    return EMPTY;
+                } else {
+                    return of(error);
+                }
+            }),
+        );
     }
 
     @staffSWBypass
@@ -853,31 +990,36 @@ export class NxCloudApiService {
     @memoizeAsyncPersistent
     getDocAsset(assetId) {
         const route = `${apiBase}/cms/documentation/${assetId}`;
-        return this.cachedGet<t.DocAsset>(route)
-            .pipe(catchError(_ => of(<t.DocAsset>{ blocks: [], id: null, shortDescription: null, title: null })));
+        return this.cachedGet<t.DocAsset>(route).pipe(
+            catchError(_ =>
+                of(<t.DocAsset>{ blocks: [], id: null, shortDescription: null, title: null }),
+            ),
+        );
     }
 
     findArticleKB(assetId) {
-        return this.http.get<any>(`${apiBase}/cms/documentation/find_kb/${assetId}`).pipe(catchError(error => {
-            if (error.status === 404) {
-                if (error.error.errorText === 'Kb not found') {
-                    this.router.navigate(['/'], { skipLocationChange: true }).then(_ =>
-                        this.router.navigate([`/docs/content/${assetId}`])
-                    );
+        return this.http.get<any>(`${apiBase}/cms/documentation/find_kb/${assetId}`).pipe(
+            catchError(error => {
+                if (error.status === 404) {
+                    if (error.error.errorText === 'Kb not found') {
+                        this.router
+                            .navigate(['/'], { skipLocationChange: true })
+                            .then(_ => this.router.navigate([`/docs/content/${assetId}`]));
+                    } else {
+                        this.#show404();
+                    }
+                    return EMPTY;
                 } else {
-                    this.#show404();
+                    return of(error);
                 }
-                return EMPTY;
-            } else {
-                return of(error);
-            }
-        }));
+            }),
+        );
     }
 
     #show404 = (): void => {
         this.router
             .navigate([redirect.page404], {
-                replaceUrl: true
+                replaceUrl: true,
             })
             .catch(error => {
                 console.error(error);
@@ -890,19 +1032,30 @@ export class NxCloudApiService {
     }
 
     @memoizeAsyncShort
-    getTokensFromCloud(code: string, grant_type: 'authorization_code' | 'refresh_token' = 'authorization_code', response_type: 'token' | 'code' = null) {
+    getTokensFromCloud(
+        code: string,
+        grant_type: 'authorization_code' | 'refresh_token' = 'authorization_code',
+        response_type: 'token' | 'code' = null,
+    ) {
         response_type ||= grant_type === 'refresh_token' ? 'code' : 'token';
         const params = {
             [grant_type.replace('authorization_', '')]: code,
             grant_type,
-            response_type
+            response_type,
         };
-        return this.http.get<Record<string, string>>(`${this.CONFIG.cloudHost}/oauth/token/`, { params });
+        return this.http.get<Record<string, string>>(`${this.CONFIG.cloudHost}/oauth/token/`, {
+            params,
+        });
     }
 
     @memoizeAsyncLong
     refreshAccessTokens() {
-        return this.http.post<Record<string, string>>(`${this.CONFIG.cloudHost}${apiBase}/account/refreshAccessToken`, {}).pipe(map(({ access_token }) => ({ accessToken: access_token })));
+        return this.http
+            .post<Record<string, string>>(
+                `${this.CONFIG.cloudHost}${apiBase}/account/refreshAccessToken`,
+                {},
+            )
+            .pipe(map(({ access_token }) => ({ accessToken: access_token })));
     }
 
     /**
@@ -913,7 +1066,9 @@ export class NxCloudApiService {
      * @param minSessionSeconds : number
      * @returns wraps: (observableInputFactory: ({ accessToken, getFreshAccessToken }) => ObservableInput<unknown>)
      */
-    #withFreshSession: t.WithFreshSession = TokenSessionManager.getInstance('/api/account/refreshAccessToken');
+    #withFreshSession: t.WithFreshSession = TokenSessionManager.getInstance(
+        '/api/account/refreshAccessToken',
+    );
 
     @memoizeAsyncShort
     getTokenInfo(token: string) {
@@ -924,16 +1079,32 @@ export class NxCloudApiService {
         return this.oauthService.logoutTokens(accessToken, refreshToken);
     }
 
-    getAssets = (maxAge = 0, params) => this.http.get<{ last: string; data: t.ExplorerNode[] }>(`${apiBase}/assets`, { params: { maxAge, ...params } });
+    getAssets = (maxAge = 0, params) =>
+        this.http.get<{ last: string; data: t.ExplorerNode[] }>(`${apiBase}/assets`, {
+            params: { maxAge, ...params },
+        });
 
     testEmailNotification(emailNotificationPayload: t.EmailNotification) {
-        return this.http.post(apiBase + '/notifications/email_notification', emailNotificationPayload);
+        return this.http.post(
+            apiBase + '/notifications/email_notification',
+            emailNotificationPayload,
+        );
     }
 
     @memoizeAsyncShort
     checkLicenseServer(systemId: string, licenseServer?: string) {
         const endpoint = `${apiBase}/systems/${systemId}/licenseServer`;
-        const response = licenseServer ? this.http.post<t.LicenseServerInfo>(endpoint, { licenseServer }) : this.http.get<t.LicenseServerInfo>(endpoint);
-        return response.pipe(catchError(() => Promise.resolve({ systemId, licenseServer: this.CONFIG.licenseServer, cacheUpdated: false })));
+        const response = licenseServer
+            ? this.http.post<t.LicenseServerInfo>(endpoint, { licenseServer })
+            : this.http.get<t.LicenseServerInfo>(endpoint);
+        return response.pipe(
+            catchError(() =>
+                Promise.resolve({
+                    systemId,
+                    licenseServer: this.CONFIG.licenseServer,
+                    cacheUpdated: false,
+                }),
+            ),
+        );
     }
 }
