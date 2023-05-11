@@ -967,3 +967,12 @@ class GenericKeywords(object):
             value =   value.replace(" ", "")
         if str(value) != expected_value_str:
             raise RuntimeError(f"value({value}) did not match expected({expected_value_str})")
+
+    @keyword
+    def get_lang_list(self):
+        jsonPath = os.path.join(
+            "customizations",
+            BuiltIn().get_variable_value('${CUST LANGUAGE LIST}')
+            )
+        with open(jsonPath,  encoding="utf-8") as langDict:
+            return json.load(langDict)

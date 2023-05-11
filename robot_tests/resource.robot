@@ -876,11 +876,6 @@ Check System Text
     IF    "${user}"!="${EMAIL ADMIN}"
         Wait Until Element Is Not Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${ADMIN TEXT}')]
     END
-
-Get Lang List
-    ${lang file} =    OperatingSystem.Get File    customizations/${CUST LANGUAGE LIST}
-    ${lang dict} =    Evaluate   json.loads('''${lang file}''')    json
-    [Return]    ${lang dict}
     
 Log In If Needed
     [Arguments]    ${email}    ${password}
