@@ -18,7 +18,7 @@ export class NxScrollMechanicsService {
 
     // trigger offset change
     offsetSubject = new BehaviorSubject<boolean>(undefined);
-    isMobile$ = this.windowSizeSubject.pipe(map(({ width }) => width < GridBreakpoints.MD));
+    isMobile$ = this.windowSizeSubject.pipe(map(({ width }) => width < GridBreakpoints.SM));
 
     public static HEADER_OFFSET: number = 48;
     public static SCROLL_OFFSET: number = 48 + 16; // header + padding
