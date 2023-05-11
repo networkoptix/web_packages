@@ -126,7 +126,7 @@ export enum Commands {
     getAnalyticsEngines = 'getAnalyticsEngines',
     saveAnalyticsEngine = 'saveAnalyticsEngine',
     removeAnalyticsEngine = 'removeAnalyticsEngine',
-    serverRuntimeEvent = 'serverRuntimeEvent'
+    serverRuntimeEvent = 'serverRuntimeEvent',
 }
 
 export interface Command<C = Commands> {

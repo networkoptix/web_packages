@@ -580,6 +580,8 @@ module.exports = {
                 'libs/resolvers/**/*.ts',
                 'libs/routeGuards/**/*.ts',
                 'libs/services/account.service/**/*.ts',
+                'libs/services/apply.service/**/*.ts',
+                'libs/services/mediaserver-apis/**/*.ts',
                 // 'libs/services//**/*.ts',
                 'libs/utils/**/*.ts',
             ],

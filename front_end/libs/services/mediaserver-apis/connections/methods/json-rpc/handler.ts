@@ -1,4 +1,8 @@
-import { JsonRpcMessageTransport, JsonRpcMessageTransportConstructor, WebSocketTransport } from './transports';
+import {
+    JsonRpcMessageTransport,
+    JsonRpcMessageTransportConstructor,
+    WebSocketTransport,
+} from './transports';
 
 /**
  * JsonRpcHandler is a wrapper around a JsonRpcMessageTransport that handles sending/receiving messages using the jsonRpc protocol.
@@ -25,7 +29,10 @@ export class JsonRpcHandler extends JsonRpcMessageTransport {
     static disconnectOthers(jsonRpcHandler: JsonRpcHandler): void;
     static disconnectOthers(endpointOrHandler: string | JsonRpcHandler): void {
         Object.entries(JsonRpcHandler.#handlers).forEach(([url, handler]) => {
-            const shouldDisconnect = endpointOrHandler instanceof JsonRpcHandler ? handler !== endpointOrHandler : url !== endpointOrHandler;
+            const shouldDisconnect =
+                endpointOrHandler instanceof JsonRpcHandler
+                    ? handler !== endpointOrHandler
+                    : url !== endpointOrHandler;
             if (shouldDisconnect) {
                 handler.close();
             }
@@ -40,9 +47,13 @@ export class JsonRpcHandler extends JsonRpcMessageTransport {
      * @param TransportClass - A JsonRpcMessageTransport class to use for the connection. Defaults to WebSocketTransport.
      * @returns
      */
-    static getConnection(jsonRpcEndpoint: string, getAuth?: () => string | void, TransportClass: JsonRpcMessageTransportConstructor = WebSocketTransport): JsonRpcHandler {
+    static getConnection(
+        jsonRpcEndpoint: string,
+        getAuth?: () => string | void,
+        TransportClass: JsonRpcMessageTransportConstructor = WebSocketTransport,
+    ): JsonRpcHandler {
         JsonRpcHandler.#handlers[jsonRpcEndpoint] ||= new JsonRpcHandler(
-            new TransportClass(jsonRpcEndpoint + (getAuth?.() || ''))
+            new TransportClass(jsonRpcEndpoint + (getAuth?.() || '')),
         );
         return JsonRpcHandler.#handlers[jsonRpcEndpoint];
     }

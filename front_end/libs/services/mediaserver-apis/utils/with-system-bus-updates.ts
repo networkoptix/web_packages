@@ -14,7 +14,9 @@ interface PredicateCallbackArgs {
 }
 
 export type PredicateCallback = ({
-    originalArgs, lastResponse, transaction
+    originalArgs,
+    lastResponse,
+    transaction,
 }: PredicateCallbackArgs) => boolean;
 
 /**
@@ -23,28 +25,36 @@ export type PredicateCallback = ({
  * @param predicateFunction - A function used to filter the messages from the transaction bus.
  * @returns - Original method with the transaction bus updates.
  */
-export function withSystemBusUpdates(
-    predicateCallback: PredicateCallback
-) {
+export function withSystemBusUpdates(predicateCallback: PredicateCallback) {
     return function withSystemBusUpdates<T = unknown>(
-        target: NxSystemRestAPI, key: string, descriptor: PropertyDescriptor
+        target: NxSystemRestAPI,
+        key: string,
+        descriptor: PropertyDescriptor,
     ): void {
         const originalMethod: (...args: unknown[]) => Observable<T> = descriptor.value;
 
-        descriptor.value = function (
-            this: typeof target, ...originalArgs: unknown[]
-        ) {
+        descriptor.value = function (this: typeof target, ...originalArgs: unknown[]) {
             if (jsonRpcEnabled(this)) {
-                const transactionBusEndpoint = `${this.window.location.protocol === 'http' ? 'ws' : 'wss'}://${(this.urlBase || this.window.location.origin).split('://').pop()}/ec2/transactionBus/websocket?noInitialData=true`;
-                const connection = TransactionBusHandler.getConnection(transactionBusEndpoint, () => this.authGet ? `&auth=${this.authGet}` : '');
+                const transactionBusEndpoint = `${
+                    this.window.location.protocol === 'http' ? 'ws' : 'wss'
+                }://${(this.urlBase || this.window.location.origin)
+                    .split('://')
+                    .pop()}/ec2/transactionBus/websocket?noInitialData=true`;
+                const connection = TransactionBusHandler.getConnection(transactionBusEndpoint, () =>
+                    this.authGet ? `&auth=${this.authGet}` : '',
+                );
                 let lastResponse: T = null;
 
                 return connection.state$.pipe(
-                    filter(transaction => !transaction || predicateCallback({ originalArgs, lastResponse, transaction })),
+                    filter(
+                        transaction =>
+                            !transaction ||
+                            predicateCallback({ originalArgs, lastResponse, transaction }),
+                    ),
                     switchMap(() => originalMethod.apply(this, originalArgs)),
                     tap((response: T) => {
                         lastResponse = response;
-                    })
+                    }),
                 );
             }
 

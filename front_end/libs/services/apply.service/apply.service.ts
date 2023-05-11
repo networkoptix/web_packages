@@ -21,7 +21,7 @@ import { Watcher, SectionWatcher, FormWatcher } from './watcher';
 
 @UntilDestroy()
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 /**
  * Make sure the route has the ApplyGuard in the canDeactivate part. Otherwise, navigation will
@@ -89,7 +89,7 @@ export class NxApplyService {
     reset(hardReset = false): void {
         if (this.watchers) {
             this.watchers.forEach(watcher => {
-                hardReset ? watcher.value = undefined : watcher.reset();
+                hardReset ? (watcher.value = undefined) : watcher.reset();
             });
         }
         this.locked = false;
@@ -116,15 +116,19 @@ export class NxApplyService {
      * Two things to consider. The Process.then(successCB, errorCB) callbacks need to return something else the chain will end.
      * The other thing that still needs to be done are processes that trigger dialogs, need to find a way to only show the last.
      */
-    runProcesses = () => this.applyFunctions.reduce(
-        (prevPromise, process, _) => {
-            return prevPromise.then(prevRes => {
-                return new Promise((resolve, reject) => {
-                    process.run(res => resolve(res || prevRes), res => reject(res || prevRes));
-                }).catch(res => Promise.reject(res));
-            }).catch(res => Promise.reject(res));
-        }, Promise.resolve({ result: 'ok' })
-    );
+    runProcesses = () =>
+        this.applyFunctions.reduce((prevPromise, process, _) => {
+            return prevPromise
+                .then(prevRes => {
+                    return new Promise((resolve, reject) => {
+                        process.run(
+                            res => resolve(res || prevRes),
+                            res => reject(res || prevRes),
+                        );
+                    }).catch(res => Promise.reject(res));
+                })
+                .catch(res => Promise.reject(res));
+        }, Promise.resolve({ result: 'ok' }));
 
     /**
      * Creates the NxApplyComponent for the current page and sets the watchers.
@@ -146,7 +150,7 @@ export class NxApplyService {
         form?: NgForm,
         submitFn?: () => any,
         nonSystem = false,
-        onlyShowSectionWatchers = false
+        onlyShowSectionWatchers = false,
     ): void {
         // restore discardFunction in case previous page used form watcher
         // this should go away once we convert all components to use form watcher
@@ -160,12 +164,12 @@ export class NxApplyService {
         this.applyFunction = this.processService.createProcess(
             this.runProcesses,
             {
-                ignoreError: true
+                ignoreError: true,
             },
             res => {
                 this.reset();
                 return res;
-            }
+            },
         );
         if (discardFunction) {
             this.discardFunctions = [discardFunction];
@@ -182,8 +186,8 @@ export class NxApplyService {
         if (submitFn) {
             this.submitFunctions = [submitFn];
         }
-        this.applyComponentRef.instance.submitFn =
-            () => this.submitFunctions.forEach(submitFn => submitFn());
+        this.applyComponentRef.instance.submitFn = () =>
+            this.submitFunctions.forEach(submitFn => submitFn());
         this.applyComponentRef.instance.discard = this.discardFunction;
         this.applyComponentRef.instance.save = this.applyFunction;
     }
@@ -198,10 +202,7 @@ export class NxApplyService {
      */
     forms: any = {};
 
-    initPageFormsWatcher(
-        component: ViewContainerRef,
-        nonSystem = false
-    ): void {
+    initPageFormsWatcher(component: ViewContainerRef, nonSystem = false): void {
         this.nonSystem$.next(nonSystem);
         this.component = component;
         this.forms = {};
@@ -241,47 +242,45 @@ export class NxApplyService {
     ) {
         const updateOriginalForm = () => {
             const forms = this.applyComponentInstance.forms;
-            Object.keys(forms)
-                .forEach(key => {
-                    const item = forms[key];
-                    item.hasChange = false;
-                    item.changedFields.clear();
+            Object.keys(forms).forEach(key => {
+                const item = forms[key];
+                item.hasChange = false;
+                item.changedFields.clear();
 
-                    const form = item.form.form;
-                    Object.keys(form.controls).forEach(key => {
-                        item.originalForm[key] = form.controls[key].value;
-                        form.controls[key].markAsPristine();
-                        form.controls[key].markAsUntouched();
-                    });
-                    form.markAsPristine();
-                    form.markAsUntouched();
+                const form = item.form.form;
+                Object.keys(form.controls).forEach(key => {
+                    item.originalForm[key] = form.controls[key].value;
+                    form.controls[key].markAsPristine();
+                    form.controls[key].markAsUntouched();
                 });
+                form.markAsPristine();
+                form.markAsUntouched();
+            });
 
             this.applyComponentInstance.show = false;
         };
 
         const revertOriginalValues = () => {
             const forms = this.applyComponentInstance.forms;
-            Object.keys(forms)
-                .forEach(key => {
-                    const item = forms[key];
-                    if (item.hasChange) {
-                        item.hasChange = false;
-                        item.changedFields.clear();
+            Object.keys(forms).forEach(key => {
+                const item = forms[key];
+                if (item.hasChange) {
+                    item.hasChange = false;
+                    item.changedFields.clear();
 
-                        Object.keys(item.originalForm).forEach(key => {
-                            item.form.form.controls[key].setValue(item.originalForm[key]);
-                            setTimeout(() => {
-                                item.form.form.controls[key].touched = false;
-                                item.form.form.controls[key].pristine = true;
-                            });
+                    Object.keys(item.originalForm).forEach(key => {
+                        item.form.form.controls[key].setValue(item.originalForm[key]);
+                        setTimeout(() => {
+                            item.form.form.controls[key].touched = false;
+                            item.form.form.controls[key].pristine = true;
                         });
+                    });
 
-                        item.form.form.touched = false;
-                        item.form.form.pristine = true;
-                        item.discard && item.discard();
-                    }
-                });
+                    item.form.form.touched = false;
+                    item.form.form.pristine = true;
+                    item.discard && item.discard();
+                }
+            });
         };
 
         const runFormProcesses = () => {
@@ -296,18 +295,18 @@ export class NxApplyService {
                 }
             }
 
-            return this.applyFormFunctions.reduce(
-                (prevPromise, process, _) => {
-                    return prevPromise.then(prevRes => {
+            return this.applyFormFunctions.reduce((prevPromise, process, _) => {
+                return prevPromise
+                    .then(prevRes => {
                         return new Promise((resolve, reject) => {
                             process.run(
                                 res => resolve(res || prevRes),
-                                res => reject(res || prevRes)
+                                res => reject(res || prevRes),
                             );
                         }).catch(res => Promise.reject(res));
-                    }).catch(res => Promise.reject(res));
-                }, Promise.resolve({ result: 'ok' })
-            );
+                    })
+                    .catch(res => Promise.reject(res));
+            }, Promise.resolve({ result: 'ok' }));
         };
 
         this.nonSystem$.next(nonSystem);
@@ -343,13 +342,14 @@ export class NxApplyService {
             };
 
             extNgForm.form.valueChanges
-                .pipe(
-                    untilDestroyed(this),
-                    takeUntil(extNgForm.reset$))
+                .pipe(untilDestroyed(this), takeUntil(extNgForm.reset$))
                 .subscribe(change => {
                     // Init phase ... in some cases form doesn't provide initial controls
                     // but valueChanges triggers on every control init
-                    if (Object.values(extNgForm.originalForm).length !== Object.values(change).length) {
+                    if (
+                        Object.values(extNgForm.originalForm).length !==
+                        Object.values(change).length
+                    ) {
                         // if form contain multiselect (array) spread is not enough
                         extNgForm.originalForm = cloneDeep(change);
                         return;
@@ -358,20 +358,21 @@ export class NxApplyService {
                         // filter out ddMultiSelect as selected items are represented as
                         // an array (same as dynamic form fields)
                         if (extNgForm.isDynamicForm) {
-                            Object.keys(change)
-                                .forEach(key => {
-                                    if (Array.isArray(change[key])) {
-                                        if (change[key].length !== extNgForm.originalForm[key].length) {
-                                            extNgForm.originalForm[key] = cloneDeep(change[key]);
-                                        }
+                            Object.keys(change).forEach(key => {
+                                if (Array.isArray(change[key])) {
+                                    if (change[key].length !== extNgForm.originalForm[key].length) {
+                                        extNgForm.originalForm[key] = cloneDeep(change[key]);
                                     }
-                                });
+                                }
+                            });
                         }
                     }
 
                     extNgForm.changedFields.clear();
                     Object.keys(extNgForm.originalForm).forEach(key => {
-                        const isNotPrimitive = isObject(extNgForm.originalForm[key]) || isArray(extNgForm.originalForm[key]);
+                        const isNotPrimitive =
+                            isObject(extNgForm.originalForm[key]) ||
+                            isArray(extNgForm.originalForm[key]);
 
                         if (isNotPrimitive && !isEqual(extNgForm.originalForm[key], change[key])) {
                             extNgForm.changedFields.add(key);
@@ -379,12 +380,13 @@ export class NxApplyService {
                             extNgForm.changedFields.add(key);
                         }
                     });
-                    extNgForm.hasChange = (extNgForm.changedFields.size > 0);
+                    extNgForm.hasChange = extNgForm.changedFields.size > 0;
 
                     if (this.applyComponentRef) {
                         this.applyComponentInstance.show = extNgForm.hasChange;
-                        const hasInvalid = Object.keys(this.applyComponentInstance.forms)
-                            .some(key => this.applyComponentInstance.forms[key].form.invalid);
+                        const hasInvalid = Object.keys(this.applyComponentInstance.forms).some(
+                            key => this.applyComponentInstance.forms[key].form.invalid,
+                        );
 
                         this.applyComponentInstance.setInvalid(hasInvalid);
                     }
@@ -395,14 +397,18 @@ export class NxApplyService {
             this.applyComponentInstance.forms = this.forms;
             this.applyComponentInstance.applyVisible = true;
 
-            this.applyComponentInstance.save = this.processService.createProcess(() => {
-                return runFormProcesses();
-            }, { ignoreError: true, ignoreUnauthorized: true }, result => {
-                if (result) {
-                    updateOriginalForm();
-                }
-            }, () => {
-            });
+            this.applyComponentInstance.save = this.processService.createProcess(
+                () => {
+                    return runFormProcesses();
+                },
+                { ignoreError: true, ignoreUnauthorized: true },
+                result => {
+                    if (result) {
+                        updateOriginalForm();
+                    }
+                },
+                () => {},
+            );
 
             this.applyComponentInstance.discard = () => {
                 revertOriginalValues();
@@ -440,7 +446,7 @@ export class NxApplyService {
         discardFunction: () => void,
         watchers: Watcher<any>[],
         form?: NgForm,
-        submitFn?: () => void
+        submitFn?: () => void,
     ) => {
         const sectionWatcher = new SectionWatcher(watchers);
         if (!component) {
@@ -467,7 +473,7 @@ export class NxApplyService {
     applyDialog(
         applyFunc: Process,
         discardFunc: () => void,
-        form: NgForm
+        form: NgForm,
     ): Promise<DialogTypes['return']> {
         // Blur activeElement to prevent ExpressionChangedAfterItHasBeenCheckedError
         if (this.document.activeElement instanceof HTMLElement) {
@@ -481,14 +487,11 @@ export class NxApplyService {
         }
 
         return firstValueFrom(
-            this.dialog.open<DialogTypes['return'], DialogTypes['data']>(
-                ApplyModalContent,
-                {
-                    width: DIALOG_SIZE.NORMAL,
-                    disableClose: true,
-                    data: { applyFunc, discardFunc, form }
-                }
-            ).closed
+            this.dialog.open<DialogTypes['return'], DialogTypes['data']>(ApplyModalContent, {
+                width: DIALOG_SIZE.NORMAL,
+                disableClose: true,
+                data: { applyFunc, discardFunc, form },
+            }).closed,
         );
     }
 
@@ -514,7 +517,7 @@ export class NxApplyService {
                 (status: string) => {
                     this.applyOnNavSubject.next(status);
                     return false;
-                }
+                },
             )
             .finally(() => {
                 this.popupActive = false;
@@ -545,10 +548,11 @@ export class NxApplyService {
             this.applyComponentRef.instance.showSectionWarning = onlyShowSectionWatchers;
         }
         this.applyComponentRef.instance.applyVisible = false;
-        this.nonSystem$.pipe(combineLatest(this.isOnline$, (nonSystem, isOnline) => nonSystem || isOnline)
-        ).subscribe(isOnline => {
-            this.applyComponentRef.instance.isOnline = isOnline;
-        });
+        this.nonSystem$
+            .pipe(combineLatest(this.isOnline$, (nonSystem, isOnline) => nonSystem || isOnline))
+            .subscribe(isOnline => {
+                this.applyComponentRef.instance.isOnline = isOnline;
+            });
     }
 
     public setForm(form: NgForm): void {
@@ -557,7 +561,7 @@ export class NxApplyService {
     }
 
     public setVisible(state?: boolean): void {
-        state = (state === undefined) ? true : state;
+        state = state === undefined ? true : state;
         if (this.applyComponentRef) {
             setTimeout(() => {
                 this.applyComponentRef.instance.applyVisible = state;
@@ -602,42 +606,40 @@ export class NxApplyService {
      */
     public addWatchers(watchers: (Watcher<any> | SectionWatcher)[], owner?: any): void {
         this.updatedWatchers$.next('update');
-        const watchersFilterOutCurrentOwner = (
-            owner
+        const watchersFilterOutCurrentOwner =
+            (owner
                 ? this.watchers.filter(watcher => !watcher.owner || watcher.owner !== owner)
-                : this.watchers
-        ) || [];
+                : this.watchers) || [];
         const symbols = new Set<symbol>();
-        this.watchers =
-            [...watchers, ...watchersFilterOutCurrentOwner].filter(({ identity }) => {
-                if (symbols.has(identity)) {
-                    return false;
-                }
-                symbols.add(identity);
-                return true;
-            });
-
-        const changedWatchers$ = Object.values(
-            this.watchers
-        ).map(watcher => watcher.valueSubject.pipe(
-            map(current => {
-                if (isObject(current)) {
-                    // Form watcher
-                    return !isEqual(current, watcher.originalValue);
-                }
-
-                return watcher.originalValue !== undefined && current !== watcher.originalValue;
-            }),
-            startWith(false)
-        ));
-        combineLatestFrom(
-            changedWatchers$
-        ).pipe(
-            map(changedArray => changedArray.some(changed => changed)),
-            takeUntil(this.updatedWatchers$)
-        ).subscribe(changed => {
-            this.locked = changed;
+        this.watchers = [...watchers, ...watchersFilterOutCurrentOwner].filter(({ identity }) => {
+            if (symbols.has(identity)) {
+                return false;
+            }
+            symbols.add(identity);
+            return true;
         });
+
+        const changedWatchers$ = Object.values(this.watchers).map(watcher =>
+            watcher.valueSubject.pipe(
+                map(current => {
+                    if (isObject(current)) {
+                        // Form watcher
+                        return !isEqual(current, watcher.originalValue);
+                    }
+
+                    return watcher.originalValue !== undefined && current !== watcher.originalValue;
+                }),
+                startWith(false),
+            ),
+        );
+        combineLatestFrom(changedWatchers$)
+            .pipe(
+                map(changedArray => changedArray.some(changed => changed)),
+                takeUntil(this.updatedWatchers$),
+            )
+            .subscribe(changed => {
+                this.locked = changed;
+            });
     }
 
     public addWatchersAndFunctionsFromChild(
@@ -645,7 +647,7 @@ export class NxApplyService {
         applyFunction: Process,
         discardFunction,
         submitFunction?,
-        owner?
+        owner?,
     ): void {
         this.addWatchers([...this.watchers, ...watchers], owner);
         this.extendApplyFunction(applyFunction);

@@ -48,7 +48,11 @@ export abstract class JsonRpcMessageTransport {
      * @param send
      * @param close
      */
-    constructor(state$: HandlerState, send: (message: JsonRpcRequest) => HandlerState, close: () => void);
+    constructor(
+        state$: HandlerState,
+        send: (message: JsonRpcRequest) => HandlerState,
+        close: () => void,
+    );
     constructor(
         stateOrHandler: HandlerState | JsonRpcMessageTransport,
         send?: (message: JsonRpcRequest) => HandlerState,
@@ -71,5 +75,5 @@ export abstract class JsonRpcMessageTransport {
  * Type definition for a JsonRpcMessageTransport constructor.
  */
 export interface JsonRpcMessageTransportConstructor<T = JsonRpcMessageTransport> {
-    new(url: string): T;
+    new (url: string): T;
 }

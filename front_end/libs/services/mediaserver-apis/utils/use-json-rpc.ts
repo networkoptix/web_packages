@@ -8,11 +8,12 @@ import { JsonRpcHandler, JsonRpcPayload, JsonRpcResponse } from '../connections/
 import { jsonRpcEnabled } from './json-rpc-enabled';
 
 function parseUrlJsonRpcMethod(
-    urlWithoutParams: string, httpMethod: 'list' | 'get' | 'post' | 'patch' | 'delete' = 'get'
+    urlWithoutParams: string,
+    httpMethod: 'list' | 'get' | 'post' | 'patch' | 'delete' = 'get',
 ): string {
     const methodLookup = {
         patch: 'update',
-        post: 'create'
+        post: 'create',
     };
 
     // const listSegment = '/*/';
@@ -22,31 +23,43 @@ function parseUrlJsonRpcMethod(
     //     httpMethod = 'list';
     // }
 
-    return `${urlWithoutParams.split('/').filter(val => !!val).join('.')}.${methodLookup[httpMethod] || httpMethod}`;
+    return `${urlWithoutParams
+        .split('/')
+        .filter(val => !!val)
+        .join('.')}.${methodLookup[httpMethod] || httpMethod}`;
 }
 function generateJsonRpcPayload<T>(
-    url: string, params: T = {} as T, httpMethod: 'list' | 'get' | 'post' | 'patch' | 'delete' = 'get'
+    url: string,
+    params: T = {} as T,
+    httpMethod: 'list' | 'get' | 'post' | 'patch' | 'delete' = 'get',
 ): JsonRpcPayload<unknown> {
     return { method: parseUrlJsonRpcMethod(url.split('?').shift(), httpMethod), params };
 }
 
 type executeCallback = (endpoint: string) => Observable<unknown>;
 
-function mapAggregatedJsonRpcCalls(url: string, callback: executeCallback): Record<string, Observable<unknown>> {
-    return url.split('?').pop().split('&').reduce((acc, param) => {
-        const [key, _value] = param.split('=');
-        if (key === 'exec_cmd') {
-            const endpoint = decodeURIComponent(_value);
-            acc[endpoint] = callback(endpoint.startsWith('/') ? endpoint : `/${endpoint}`);
-        }
-        return acc;
-    }, {} as Record<string, Observable<unknown>>);
+function mapAggregatedJsonRpcCalls(
+    url: string,
+    callback: executeCallback,
+): Record<string, Observable<unknown>> {
+    return url
+        .split('?')
+        .pop()
+        .split('&')
+        .reduce((acc, param) => {
+            const [key, _value] = param.split('=');
+            if (key === 'exec_cmd') {
+                const endpoint = decodeURIComponent(_value);
+                acc[endpoint] = callback(endpoint.startsWith('/') ? endpoint : `/${endpoint}`);
+            }
+            return acc;
+        }, {} as Record<string, Observable<unknown>>);
 }
 
 const excludedEndpoints = [
     'get',
     '/login/sessions',
-    '/ec2/recordedTimePeriods'
+    '/ec2/recordedTimePeriods',
     // '/api/aggregator'
 ];
 
@@ -68,12 +81,17 @@ const handleResult = map((res: JsonRpcResponse) => {
  * @param start - number
  * @returns
  */
-const reportWinner = (aggregateMethods: 'jsonRpcAggregate' | 'ogAggregate', endpoint: string, start: number): ReturnType<typeof tap> => tap(() => {
-    const end = performance.now();
-    const time = end - start;
-    // console.count(aggregateMethods);
-    console.info(`Endpoint: ${decodeURIComponent(endpoint)} took ${Math.round(time)}ms`);
-});
+const reportWinner = (
+    aggregateMethods: 'jsonRpcAggregate' | 'ogAggregate',
+    endpoint: string,
+    start: number,
+): ReturnType<typeof tap> =>
+    tap(() => {
+        const end = performance.now();
+        const time = end - start;
+        // console.count(aggregateMethods);
+        console.info(`Endpoint: ${decodeURIComponent(endpoint)} took ${Math.round(time)}ms`);
+    });
 
 type HttpMethods = 'get' | 'post' | 'put' | 'patch' | 'post' | 'delete';
 
@@ -89,7 +107,11 @@ type HttpMethods = 'get' | 'post' | 'put' | 'patch' | 'post' | 'delete';
  * @param key - Should only be used on 'get', 'post', 'put', 'patch', or 'delete' methods.
  * @param descriptor
  */
-export function useJsonRpc(target: NxSystemRestAPI, key: HttpMethods, descriptor: PropertyDescriptor): void {
+export function useJsonRpc(
+    target: NxSystemRestAPI,
+    key: HttpMethods,
+    descriptor: PropertyDescriptor,
+): void {
     const originalMethod = descriptor.value;
     descriptor.value = function (this: typeof target, ...args) {
         /**
@@ -97,7 +119,10 @@ export function useJsonRpc(target: NxSystemRestAPI, key: HttpMethods, descriptor
          *
          * Use JSON-RPC for all endpoints except the ones in excludedEndpoints.
          */
-        if (jsonRpcEnabled(this) && excludedEndpoints.every(endpoint => !args[0].includes(endpoint))) {
+        if (
+            jsonRpcEnabled(this) &&
+            excludedEndpoints.every(endpoint => !args[0].includes(endpoint))
+        ) {
             const endpoint = args[0];
 
             const handleError = catchError(err => {
@@ -125,21 +150,31 @@ export function useJsonRpc(target: NxSystemRestAPI, key: HttpMethods, descriptor
                  */
                 const start = performance.now();
                 return race(
-                    forkJoin(mapAggregatedJsonRpcCalls(endpoint, url => this.get(url))).pipe(
-                        map(reply => ({ reply })),
-                        handleError
-                    ).pipe(reportWinner('jsonRpcAggregate', endpoint, start)),
-                    originalMethod.apply(this, args).pipe(reportWinner('ogAggregate', endpoint, start))
+                    forkJoin(mapAggregatedJsonRpcCalls(endpoint, url => this.get(url)))
+                        .pipe(
+                            map(reply => ({ reply })),
+                            handleError,
+                        )
+                        .pipe(reportWinner('jsonRpcAggregate', endpoint, start)),
+                    originalMethod
+                        .apply(this, args)
+                        .pipe(reportWinner('ogAggregate', endpoint, start)),
                 );
             }
 
             /**
              * Parse request to generate JSON-RPC payload.
              */
-            const jsonRpcEndpoint = `${this.window.location.protocol === 'http' ? 'ws' : 'wss'}://${(this.urlBase || this.window.location.origin).split('://').pop()}/jsonrpc`;
-            const connection = JsonRpcHandler.getConnection(jsonRpcEndpoint, () => this.authGet ? `?auth=${this.authGet}` : '');
+            const jsonRpcEndpoint = `${
+                this.window.location.protocol === 'http' ? 'ws' : 'wss'
+            }://${(this.urlBase || this.window.location.origin).split('://').pop()}/jsonrpc`;
+            const connection = JsonRpcHandler.getConnection(jsonRpcEndpoint, () =>
+                this.authGet ? `?auth=${this.authGet}` : '',
+            );
             const method = originalMethod.name === 'put' ? 'patch' : originalMethod.name;
-            const params = ['post', 'put', 'patch'].includes(method) ? { ...args[1], ...args[2] } : args[1];
+            const params = ['post', 'put', 'patch'].includes(method)
+                ? { ...args[1], ...args[2] }
+                : args[1];
             const payload = generateJsonRpcPayload(endpoint, params, method);
             const isGet = method === 'get';
             const timeoutMs = isGet ? 1000 : 2500;
@@ -161,7 +196,7 @@ export function useJsonRpc(target: NxSystemRestAPI, key: HttpMethods, descriptor
                 retry(retries),
                 handleResult,
                 first(),
-                handleError
+                handleError,
             );
         }
         return originalMethod.apply(this, args);

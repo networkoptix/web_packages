@@ -13,7 +13,7 @@ export interface SetResourceStatusTransactionParams {
 
 /**
  * When a resource Online/Offline status changes, this transaction is sent to the transaction bus.
-*/
+ */
 export class SetResourceStatusTransaction extends SystemBusTransaction {
     command = Commands.setResourceStatus;
     params: SetResourceStatusTransactionParams;

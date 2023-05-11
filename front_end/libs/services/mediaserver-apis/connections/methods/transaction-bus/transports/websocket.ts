@@ -10,11 +10,14 @@ export class WebSocketTransport extends TransactionBusTransport {
     constructor(websocketUrl: string) {
         WebSocketTransport.#connections[websocketUrl] ||= webSocket<SystemBusMessage>(websocketUrl);
         super(
-            WebSocketTransport.#connections[websocketUrl].asObservable().pipe(map(({ tran }) => tran), shareReplay({ bufferSize: 1, refCount: false })),
+            WebSocketTransport.#connections[websocketUrl].asObservable().pipe(
+                map(({ tran }) => tran),
+                shareReplay({ bufferSize: 1, refCount: false }),
+            ),
             (): void => {
                 WebSocketTransport.#connections[websocketUrl].complete();
                 delete WebSocketTransport.#connections[websocketUrl];
-            }
+            },
         );
     }
 }

@@ -7,7 +7,7 @@ import { SetResourceStatusTransaction } from './set-resource-status';
 
 const definedTransactions = {
     [Commands.setResourceStatus]: SetResourceStatusTransaction,
-    [Commands.runtimeInfoRemoved]: RuntimeInfoRemovedTransaction
+    [Commands.runtimeInfoRemoved]: RuntimeInfoRemovedTransaction,
 };
 
 const generatedTransactions = Object.keys(Commands).reduce((acc, command: Commands) => {
@@ -29,7 +29,7 @@ const generatedTransactions = Object.keys(Commands).reduce((acc, command: Comman
  */
 export const transactionClasses = {
     ...generatedTransactions,
-    ...definedTransactions
+    ...definedTransactions,
 };
 
 /**
@@ -39,7 +39,10 @@ export const transactionClasses = {
  *
  * This can be used to filter out transactions that we don't care about or to narrow the type within a code block.
  */
-export const assertTransaction = Object.entries(transactionClasses).reduce((acc, [command, Transaction]) => {
-    acc[command] = new Transaction().assert;
-    return acc;
-}, {} as Record<Commands, SystemBusTransaction['assert']>);
+export const assertTransaction = Object.entries(transactionClasses).reduce(
+    (acc, [command, Transaction]) => {
+        acc[command] = new Transaction().assert;
+        return acc;
+    },
+    {} as Record<Commands, SystemBusTransaction['assert']>,
+);

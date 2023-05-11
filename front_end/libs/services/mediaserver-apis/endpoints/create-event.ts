@@ -14,8 +14,10 @@ export interface Event {
     reasonCode: string;
     inputPortId: string;
     analyticsEngineId: string;
-
 }
-export function createEventLegacyV1(this: MediaserverLegacyConnection, params: EventParams): Promise<Event> {
+export function createEventLegacyV1(
+    this: MediaserverLegacyConnection,
+    params: EventParams,
+): Promise<Event> {
     return this.post<Event>('/api/createEvent', params as Record<string, unknown>).toPromise();
 }

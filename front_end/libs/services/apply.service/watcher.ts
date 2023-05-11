@@ -1,4 +1,3 @@
-
 import { NgForm } from '@angular/forms';
 import { isEqual } from 'lodash-es';
 import { BehaviorSubject } from 'rxjs';
@@ -49,7 +48,8 @@ export class Watcher<T extends any, Owner = any> {
     };
 
     static extendedWatcherFactory<T extends any, Extended extends { [key: string]: any }>(
-        value: T, extendedProperties: Extended
+        value: T,
+        extendedProperties: Extended,
     ) {
         const watcher = new Watcher(value) as Watcher<T> & Extended;
         Object.assign(watcher, extendedProperties);

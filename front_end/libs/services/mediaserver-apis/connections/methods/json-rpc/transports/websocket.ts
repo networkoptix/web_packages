@@ -34,7 +34,9 @@ export class WebSocketTransport extends JsonRpcMessageTransport {
 
     constructor(websocketUrl: string) {
         WebSocketTransport.#connections[websocketUrl] ||= webSocket<JsonRpcMessage>(websocketUrl);
-        const state$ = WebSocketTransport.#connections[websocketUrl].asObservable().pipe(shareReplay({ bufferSize: 1, refCount: false }));
+        const state$ = WebSocketTransport.#connections[websocketUrl]
+            .asObservable()
+            .pipe(shareReplay({ bufferSize: 1, refCount: false }));
         const send = (message: JsonRpcRequest): Observable<JsonRpcMessage<unknown, unknown>> => {
             WebSocketTransport.#connections[websocketUrl].next(message);
             return state$.pipe(filter(({ id }) => id === message.id));

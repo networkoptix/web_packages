@@ -1,6 +1,9 @@
 import { Observable } from 'rxjs';
 
-import { MediaserverLegacyConnection, MediaserverRestConnection } from '../connections/adapters/adapter-target-types';
+import {
+    MediaserverLegacyConnection,
+    MediaserverRestConnection,
+} from '../connections/adapters/adapter-target-types';
 
 export function templateLegacyV1(this: MediaserverLegacyConnection): Observable<unknown> {
     return this.get('/some/method');

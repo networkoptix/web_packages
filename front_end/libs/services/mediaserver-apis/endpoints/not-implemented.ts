@@ -12,7 +12,9 @@ import { MediaserverLegacyConnection } from '../connections/adapters/adapter-tar
  */
 export function notImplementedCustomMessage<T = unknown>(message?: string) {
     return function (this: MediaserverLegacyConnection, ...args: unknown[]): Observable<T> {
-        throw new Error(message || this.notImplementedMsg || 'This method not implemented for this version');
+        throw new Error(
+            message || this.notImplementedMsg || 'This method not implemented for this version',
+        );
     };
 }
 
