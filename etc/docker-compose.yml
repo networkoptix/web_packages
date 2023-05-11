@@ -25,6 +25,10 @@ services:
       - "6379:6379"
     expose:
       - "6379"
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    command: >
+      --include /usr/local/etc/redis/redis.conf
 
   meilisearch:
     image: getmeili/meilisearch:v0.24.0
