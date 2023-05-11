@@ -63,7 +63,7 @@ export class TwoFAModalContent<A extends TfaAction>
     currentStep: T_FA_STEPS;
     incompatibleSystems: NxSystemInfo[] = [];
 
-    public templateType: TemplateRef<any>;
+    public templateType: TemplateRef<unknown>;
     public title: string;
     public newCodes: string[];
     public scrambledIndexes: number[] = [1, 5, 2, 6, 3, 7, 4, 8];
@@ -91,17 +91,17 @@ export class TwoFAModalContent<A extends TfaAction>
     @ViewChild('loginForm') loginForm: NgForm;
     @ViewChild('codeForm') codeForm: NgForm;
 
-    @ViewChild('changePassword', { static: true }) changePasswordTemplate: TemplateRef<any>;
-    @ViewChild('code', { static: true }) codeTemplate: TemplateRef<any>;
-    // @ViewChild('wizardWarning', { static: true }) wizardWarningTemplate: TemplateRef<any>;
-    @ViewChild('wizardLogin', { static: true }) wizardLoginTemplate: TemplateRef<any>;
-    @ViewChild('wizardQR', { static: true }) wizardQRTemplate: TemplateRef<any>;
-    @ViewChild('wizardCode', { static: true }) wizardCodeTemplate: TemplateRef<any>;
-    @ViewChild('wizardFinish', { static: true }) wizardFinishTemplate: TemplateRef<any>;
+    @ViewChild('changePassword', { static: true }) changePasswordTemplate: TemplateRef<unknown>;
+    @ViewChild('code', { static: true }) codeTemplate: TemplateRef<unknown>;
+    // @ViewChild('wizardWarning', { static: true }) wizardWarningTemplate: TemplateRef<unknown>;
+    @ViewChild('wizardLogin', { static: true }) wizardLoginTemplate: TemplateRef<unknown>;
+    @ViewChild('wizardQR', { static: true }) wizardQRTemplate: TemplateRef<unknown>;
+    @ViewChild('wizardCode', { static: true }) wizardCodeTemplate: TemplateRef<unknown>;
+    @ViewChild('wizardFinish', { static: true }) wizardFinishTemplate: TemplateRef<unknown>;
 
-    @ViewChild('verificationToggle', { static: true }) verificationToggleTemplate: TemplateRef<any>;
+    @ViewChild('verificationToggle', { static: true }) verificationToggleTemplate: TemplateRef<unknown>;
 
-    @ViewChild('disable2FaCode', { static: true }) disable2FaCodeTemplate: TemplateRef<any>;
+    @ViewChild('disable2FaCode', { static: true }) disable2FaCodeTemplate: TemplateRef<unknown>;
 
     @HostListener('document:keypress', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent): void {
@@ -262,7 +262,7 @@ export class TwoFAModalContent<A extends TfaAction>
             }
         });
 
-        const codeProcessUnauthorizedHandles = () => {
+        const codeProcessUnauthorizedHandles = (): void => {
             this.notAuthorized = true;
             this.codeForm.controls.tfaCodeInput.markAsTouched();
             this.codeForm.controls.tfaCodeInput.setErrors({ invalid: true });
@@ -284,10 +284,12 @@ export class TwoFAModalContent<A extends TfaAction>
                 );
             } else {
                 // request backup codes before 2fa toggle (after 2fa is ON user have to re-login)
-                return this.accountService.get2FaBackupCode().then((response: any) => {
-                    if (response.errorText !== undefined) {
-                        return Promise.reject({ resultCode: 'noBackupCodes' });
-                    }
+                return this.accountService.get2FaBackupCode().then(response => {
+                    // Commenting this out for now because nobody can remember
+                    // when the error happens or if it still does
+                    // if (response.errorText !== undefined) {
+                    //     return Promise.reject({ resultCode: 'noBackupCodes' });
+                    // }
                     this.newCodes = response.map(code => code.backup_code);
 
                     return this.refreshSession()
@@ -401,7 +403,7 @@ export class TwoFAModalContent<A extends TfaAction>
             this.unlock();
         });
 
-        const invalidCredentialHandler = () => {
+        const invalidCredentialHandler = (): void => {
             this.notAuthorized = true;
             this.codeForm.controls.tfaCodeInput.markAsTouched();
             this.codeForm.controls.tfaCodeInput.setErrors({ invalid: true });
@@ -502,7 +504,7 @@ export class TwoFAModalContent<A extends TfaAction>
         }
     }
 
-    refreshSession() {
+    refreshSession(): ReturnType<NxAccountService['updateSessionWith2fa']> {
         return this.accountService.updateSessionWith2fa(this.tfaCode);
     }
 

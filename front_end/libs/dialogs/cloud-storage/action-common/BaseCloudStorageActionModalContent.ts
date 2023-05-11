@@ -51,7 +51,7 @@ export class BaseCloudStorageActionModalContent extends ModalBase<DT['return']> 
     mask = this.DEFAULT_MASK;
     success = false;
     dashes = /-/g;
-    errors = [];
+    errors: Translatable[] = [];
 
     licenses$: Observable<LicenseTagInfo[]>;
 
@@ -65,7 +65,7 @@ export class BaseCloudStorageActionModalContent extends ModalBase<DT['return']> 
         this.#updateMessages(licenseInfo);
     };
 
-    updateMessage = (licenseKey): void => {
+    updateMessage = (licenseKey: string): void => {
         this.licenses$.pipe(
             map(licenses => licenses.find(({ key }) => key.toUpperCase() === licenseKey.toUpperCase()))
         ).subscribe(license => {
@@ -73,14 +73,14 @@ export class BaseCloudStorageActionModalContent extends ModalBase<DT['return']> 
         });
     };
 
-    updateCursorPosition(event): void {
+    updateCursorPosition(event: ClipboardEvent): void {
         setTimeout(() => {
             const cursorPosition = this.license.length + Math.floor(this.license.length / 4);
-            event.target.setSelectionRange(cursorPosition, cursorPosition);
+            (event.target as HTMLInputElement).setSelectionRange(cursorPosition, cursorPosition);
         });
     }
 
-    showSuccess = (activate = false) => {
+    showSuccess = (activate = false): void => {
         if (!this.LANG.dialogs.cloudStorage.actions[this.actionType]?.success) {
             return this.close();
         }
@@ -106,8 +106,8 @@ export class BaseCloudStorageActionModalContent extends ModalBase<DT['return']> 
         password: LicenseTranslationBaseKeys[];
         non_field_errors: LicenseTranslationBaseKeys[];
         status: string;
-    }) => {
-        const errors = [];
+    }): void => {
+        const errors: Translatable[] = [];
 
         const [licenseError, ...otherLicenseErrors] = licenseKey.map(k => this.licenseManager.translateMessage(k));
 

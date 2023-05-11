@@ -57,7 +57,6 @@ const typeLintBlacklist = [
     '**/add-storage/add-storage.component.ts',
     '**/add-widget/add-widget.component.ts',
     '**/change-storage/change-storage.component.ts',
-    '**/cloud-storage/action-common/BaseCloudStorageActionModalContent.ts',
     '**/detach-server/detach-server.component.ts',
     '**/dialog-config.ts',
     '**/dialog-ref.ts',
@@ -68,7 +67,6 @@ const typeLintBlacklist = [
     '**/merge/stateMachine.ts',
     '**/reset-backup/reset-backup.component.ts',
     '**/reset-server/reset-server.component.ts',
-    '**/two-fa/two-fa.component.ts',
     /* Directives */
     '**/nx-editable.directive.ts',
     '**/nx-intersection.directive.ts',
