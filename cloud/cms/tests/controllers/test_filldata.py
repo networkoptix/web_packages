@@ -170,7 +170,7 @@ class TestContextProcessor(ContextSetup):
     def test_process_context_structure(self, non_global_context):
         assert self.context_processor.process_context_structure(non_global_context, 'replace %ds_1%', False) == 'replace val_1'
 
-    def test_process_context_structure_custom_data(self, non_global_context):
+    def test_process_context_structure_custom_data(self, non_global_context, default_customization_ctx):
         self.context_processor.custom = True
         self.context_processor.custom_data = {'%ds_1%': 'custom_val_1'}
         assert self.context_processor.process_context_structure(non_global_context, 'replace %ds_1% %ds_2%', False) == \
@@ -212,7 +212,7 @@ class TestPackageExporter(ContextSetup):
             content = file.read()
             assert content.decode('utf-8') == 'Template with val_1 val_2'
 
-    def test_zip_package(self):
+    def test_zip_package(self, default_customization_ctx):
         zip_data = self.exporter.get_zip_package()
         zip_data = BytesIO(zip_data)
         zip_file = zipfile.ZipFile(zip_data, "r", zipfile.ZIP_DEFLATED, False)

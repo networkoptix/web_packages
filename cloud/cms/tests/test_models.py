@@ -9,6 +9,9 @@ from model_bakery import baker, seq
 
 from django.test import TestCase
 from django_mock_queries.query import MockSet
+
+from cms.controllers.asset_json import get_contexts_and_datastructures_of_asset_type
+from cms.helpers.cached_asset import AssetCacheLoaderBase
 from cms.models import *
 from conftest import make_tos_agreement, make_agreement_ds, make_test_agreement, make_test_version_with_records, \
     make_test_review, get_asset_type
@@ -2004,6 +2007,7 @@ class TestDataStructure:
     @pytest.fixture(autouse=True)
     def setup(self):
         self.ds: DataStructure = baker.prepare('DataStructure')
+        caches["assets_values"].clear()
 
     def test_str(self):
         name = 'nice data structure'
@@ -2122,15 +2126,17 @@ class TestDataStructure:
         assert ds.find_actual_value(asset) == ds.default
 
         dr = baker.make('DataRecord', data_structure=ds, version=version, value='new value', asset=asset)
-        assert ds.find_actual_value(asset) == dr.value
+        assert ds.find_actual_value(asset, use_cached=True) == dr.value
+        assert ds.find_actual_value(asset, use_cached=False) == dr.value
 
     def test_find_actual_values(self, setup_accepted_review):
         # Find actual value requires for customization contextvar.
         customization_ctx.set(settings.TEST_CUSTOMIZATION)
         asset, version, review = setup_accepted_review
+        ctx = baker.make('Context', asset_type=asset.asset_type, name="TEST CONTEXT", translatable=False)
         data_structures = baker.make(
             'DataStructure', type=DataStructure.DATA_TYPES.text, default='default text', translatable=False,
-            _quantity=3, name=seq('%ds_', suffix='%'),
+            _quantity=3, name=seq('%ds_', suffix='%'), context=ctx
         )
 
         for idx, ds in enumerate(data_structures):
@@ -2141,6 +2147,11 @@ class TestDataStructure:
             assert values[ds] == f'val_{idx + 1}'
 
         assert len(values) == len(data_structures)
+
+        cached_values = AssetCacheLoaderBase.get_values(asset=asset, datastructures=data_structures)
+        for idx, ds in enumerate(data_structures):
+            assert cached_values[ds] == f'val_{idx + 1}'
+        assert len(cached_values) == len(data_structures)
 
     def test_to_string_str(self):
         ds = baker.prepare('DataStructure')

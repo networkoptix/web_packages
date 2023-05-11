@@ -1,7 +1,6 @@
-from calendar import c
 import json
+
 from celery import shared_task, current_task
-from celery.exceptions import Ignore
 from django.core.exceptions import PermissionDenied
 from django.core.cache import cache
 
@@ -9,8 +8,6 @@ from cloud.customization_context import customization_ctx, needs_customization_c
 from cms.controllers import filldata, generate_structure, structure, structure_to_html
 from api.models import Account
 from cms.models import Asset, Menu, PackagesCache, UserGroupsToAssetPermissions, CustomClient
-from celery.result import AsyncResult
-
 
 PACKAGE_CACHE = PackagesCache()
 

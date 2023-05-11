@@ -1,3 +1,4 @@
+import hashlib
 import logging
 import os
 import sys
@@ -50,3 +51,16 @@ def get_config(customization=None):
 
     return yaml.safe_load(open(file_path))
 
+
+def get_structures_hash():
+    conf_dir = os.path.dirname(__file__)
+    struct_dir = os.path.join(conf_dir, os.path.pardir, 'cms/structures')
+    dirpath, _, filenames = next(os.walk(struct_dir))
+    md5hash = hashlib.md5()
+    for fn in filenames:
+        if not fn.endswith('.json'):
+            continue
+        with open(os.path.join(dirpath, fn), 'rb') as f:
+            for chunk in iter(lambda: f.read(4096), b''):
+                md5hash.update(chunk)
+    return md5hash.hexdigest()

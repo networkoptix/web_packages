@@ -16,7 +16,7 @@ class TestAddCloudAdmin:
             call('email', type=str), call('password', type=str)])
 
     def test_handle(self, mocker, db):
-        customization = 'default'
+        customization = "default"
         email = f'{uuid4()}@{uuid4()}.com'
         password = str(uuid4())
         environ = {

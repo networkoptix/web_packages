@@ -16,6 +16,7 @@ from PIL import Image
 
 from api.models import Account
 from cms.models import *
+from util.base_cache import BaseCache
 from util.config import UnableToFetchConfigException
 
 

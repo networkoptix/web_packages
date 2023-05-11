@@ -142,7 +142,7 @@ class SpecialStructures:
             vms_asset, vms_dss, config = struct_data
             advanced_path_ds = SpecialStructures.filter_ds(vms_dss, config, 'advanced_ds')
             if advanced_path_ds:
-                win_path = SpecialStructures.find_value(advanced_path_ds, asset)
+                win_path = SpecialStructures.find_value(advanced_path_ds, vms_asset)
             if not win_path:
                 company_name_ds = SpecialStructures.filter_ds(vms_dss, config, 'default_ds')
                 if company_name_ds:

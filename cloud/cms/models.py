@@ -1,18 +1,16 @@
-import ast
 import asyncio
 import hashlib
 import json
 from json.decoder import JSONDecodeError
 import os
-from pydoc import doc
 import re
 import sys
 import copy
+from logging import getLogger
+from time import sleep
 from typing import Any, List
 import uuid
 from contextlib import suppress
-from itertools import chain
-from functools import reduce
 from concurrent.futures import as_completed
 from datetime import datetime, timedelta
 from distutils.util import strtobool
@@ -21,15 +19,12 @@ from uuid import uuid4
 from asgiref.sync import async_to_sync, sync_to_async
 from django.core.validators import RegexValidator
 
-from django.db.models.aggregates import Count
-
 from cloud.customization_context import customization_ctx, ContextExecutor
 from cloud.helpers.exceptions import ErrorCodes, APIInternalException
-from util.base_cache import BaseCache, ReadOnlyAPICache, BaseCacheV2
+from util.base_cache import ReadOnlyAPICache, BaseCacheV2
 
 from redis.exceptions import ConnectionError
 from django.apps import apps
-from django.core.cache import cache, caches
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models, connections
 from django.db.models import Q, Count, Max
@@ -46,13 +41,15 @@ from model_utils import Choices
 from django.core.cache import cache, caches
 from model_utils import FieldTracker
 from waffle.models import AbstractUserFlag, keyfmt, get_cache
-from waffle import flag_is_active, switch_is_active
+from waffle import switch_is_active
 
 from .feature_flags import FLAGS, SWITCHES, flag_is_active_for_user
 
 from django.contrib.auth.models import Group, Permission
 from django.template.defaultfilters import truncatechars
 from cloud.storage_backend import MediaStorage
+
+logger = getLogger(__name__)
 
 INITIALIZATION_TASK_TIMEOUT = 60 * 5
 
@@ -197,10 +194,9 @@ def rename_permission_group(group, asset):
 
 
 def get_cloud_portal_asset(*, customization=None, request=None, no_create=False):
-    # Todo. Function can be called from out of Asset.from_dict without request
-    #  or customization. As temporary solution settings.CUSTOMIZATION is left.
     customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
-    if asset := Asset.objects.filter(customizations__name__in=[customization], asset_type__name="", asset_type__type=AssetType.ASSET_TYPES.cloud_portal).first():
+    if asset := Asset.objects.filter(customizations__name__in=[customization], asset_type__name="",
+                                     asset_type__type=AssetType.ASSET_TYPES.cloud_portal).first():
         return asset
 
     if no_create:
@@ -279,8 +275,8 @@ async def cloud_portal_customization_cache_async(customization_name, value=None,
             while not (await customization_cache.aadd(lock_key, lock_val, timeout=60)):
                 connections.close_all()
                 await asyncio.sleep(0.5)
-            release_lock(lock_key, lock_val)
-            return cloud_portal_customization_cache_async(customization_name, value, False)
+            await release_lock(lock_key, lock_val)
+            return await cloud_portal_customization_cache_async(customization_name, value, False)
         else:
             try:
 
@@ -924,9 +920,9 @@ class Asset(models.Model):
             customization = self.customizations.first().name
         data_structures = DataStructure.objects.filter(
                 name__in=record_names, context__in=self.asset_type.context_set.filter(is_global=True))
+        # request actual values without version is similar to get latest
         data = DataStructure.find_actual_values(
-            data_structures, asset=self, customization_name=customization, version_id=self.version_id(),
-            language=language)
+            data_structures, asset=self, customization_name=customization, language=language)
         return {ds.name: value for ds, value in data.items()}
 
     def replace_global_values(self, content: str, global_contexts_dict=None):
@@ -1031,6 +1027,9 @@ class Context(models.Model):
         if self.asset_type:
             return f"{self.asset_type} - {self.name}"
         return self.name
+
+    def save(self, *args, **kwargs):
+        super(Context, self).save(*args, **kwargs)
 
     def get_nice_name(self):
         return self.label if self.label else self.name
@@ -1210,14 +1209,38 @@ class DataStructure(models.Model):
     def __str__(self):
         return self.name
 
-    def find_actual_value(self, asset=None, language=None, version_id=None, draft=False, customization_name=None):
+    def save(self, *args, **kwargs):
+        super(DataStructure, self).save(*args, **kwargs)
+        from cms.helpers.cached_asset import AssetCacheLoaderBase
+        AssetCacheLoaderBase.invalidate_changed_ds(self)
+
+    def delete(self, *args, **kwargs):
+        from cms.helpers.cached_asset import AssetCacheLoaderBase
+        AssetCacheLoaderBase.invalidate_changed_ds(self)
+        super(DataStructure, self).delete(*args, **kwargs)
+
+    def find_actual_value(self, asset=None, language=None, version_id=None, draft=False, customization_name=None,
+                          use_cached=True):
         content_value = ""
         if not asset:
             return DataStructure.cast_value(self, self.default)
         content_record = DataRecord.objects.filter(
             asset=asset, data_structure=self)
+
+        from cms.helpers.cached_asset import AssetCacheLoaderBase
+        loader = AssetCacheLoaderBase(asset, version_id=version_id, language=language,
+                                      customization_name=customization_name, datastructure=self)
+        if use_cached and not draft and self.type not in [DataStructure.DATA_TYPES.file,
+                                                          DataStructure.DATA_TYPES.image]:
+            cached_value = loader.get_value()
+            if cached_value is not None:
+                return cached_value
+
         if not draft:
             if not asset.is_single_customization and customization_name:
+                # Method can be requested without customization name and behavior is different from one using
+                # "server's" customization. Potentially, this leads to bugs. At least, cached values cannot be
+                # set without customization and method kwarg or request customization are used.
                 content_record = content_record.filter(
                     version__assetcustomizationreview__customization__name=customization_name,
                     version__assetcustomizationreview__state__in=[
@@ -1226,22 +1249,16 @@ class DataStructure(models.Model):
                         AssetCustomizationReview.REVIEW_STATES.blocked
                     ])
             else:
-                content_record = content_record.\
+                content_record = content_record. \
                     exclude(
-                        version__assetcustomizationreview__state=AssetCustomizationReview.REVIEW_STATES.rejected)
+                    version__assetcustomizationreview__state=AssetCustomizationReview.REVIEW_STATES.rejected)
             content_record = content_record.order_by('version_id')
 
         # try to get translated content
         if self.translatable:
-            # Old version:
-            # default_lang = Customization.objects.get(
-            #     name=settings.CUSTOMIZATION).default_language
-            # Default language was gotten as a default language of a server. For now, it is hard to
-            # determined it here, because find_actual_value(s) can be called with customization
-            # different from a caller one or even None value. So, customization_ctx must be always
-            # set to handle this value correctly.
             default_lang = Customization.objects.get(
-                name=customization_name or customization_ctx.get()).default_language
+                name=customization_name or customization_ctx.get()
+            ).default_language
             content_record_language = content_record.filter(language=language)
             content_record_default = content_record.filter(
                 language=default_lang)
@@ -1303,7 +1320,9 @@ class DataStructure(models.Model):
                                                                     DataStructure.DATA_TYPES.multiselect,
                                                                     DataStructure.DATA_TYPES.object]):
             content_value = DataStructure.cast_value(self, self.default)
-
+        if not draft and self.type not in [DataStructure.DATA_TYPES.file, DataStructure.DATA_TYPES.image]:
+            # save to cache any requested value omitting file content
+            loader.save_data_to_cache(content_value)
         return content_value
 
     def validate_value(self, value: Any) -> List[str]:
@@ -1342,7 +1361,8 @@ class DataStructure(models.Model):
 
     @classmethod
     def find_actual_values(cls, data_structures, asset=None, language=None, version_id=None, draft=False,
-                           customization_name=None, as_records=False, only_review=False):
+                           customization_name=None, as_records=False, only_review=False, use_cached=True):
+
         def fish(data_structures_needed: set, **kwargs):
             remaining = data_structures_needed.copy()
             while remaining:
@@ -1358,6 +1378,14 @@ class DataStructure(models.Model):
                         if not remaining:
                             return remaining
             return remaining
+
+        from cms.helpers.cached_asset import AssetCacheLoaderBase
+        cached_values = {}
+        if not draft and use_cached and not as_records:
+            cached_values = AssetCacheLoaderBase.get_values(
+                asset=asset, datastructures=data_structures, version_id=version_id,
+                language=language, customization_name=customization_name
+            )
 
         records = DataRecord.objects.filter(asset=asset)
         if version_id:
@@ -1379,34 +1407,31 @@ class DataStructure(models.Model):
                     AssetCustomizationReview.REVIEW_STATES.rejected,
                     AssetCustomizationReview.REVIEW_STATES.blocked
                 ]).order_by('-version_id')
-
-        data_structure_set = set(data_structures)
-        translatable_ds_set = {ds for ds in data_structures if ds.translatable}
-        nontranslatable_ds_set = data_structure_set - translatable_ds_set
-        # Old version:
-        # default_lang = Customization.objects.get(
-        #     name=settings.CUSTOMIZATION).default_language
-        # Default language was gotten as a default language of a server. For now, it is hard to determined it here,
-        # because find_actual_value(s) can be called with customization different from a caller one or even None value.
-        # So, customization_ctx must be always set to handle this value correctly.
-        default_lang = Customization.objects.get(
-            name=customization_name or customization_ctx.get()).default_language
+        cached_ds_set = set(cached_values.keys())
+        data_structure_set = set(data_structures) - cached_ds_set
         fished_records = {}
+        if data_structure_set:
+            translatable_ds_set = {ds for ds in data_structures if ds.translatable}
+            nontranslatable_ds_set = data_structure_set - translatable_ds_set
+            default_lang = Customization.objects.get(
+                name=customization_name or customization_ctx.get()).default_language
 
-        # Get translatable records
-        if language:
-            translatable_ds_set = fish(translatable_ds_set, language=language)
-        if translatable_ds_set and language != default_lang:
-            translatable_ds_set = fish(
-                translatable_ds_set, language=default_lang)
-        if translatable_ds_set:
-            fish(translatable_ds_set, language__code='en_US')
+            # Get translatable records
+            if language:
+                translatable_ds_set = fish(translatable_ds_set, language=language)
+            if translatable_ds_set and language != default_lang:
+                translatable_ds_set = fish(
+                    translatable_ds_set, language=default_lang)
+            if translatable_ds_set:
+                fish(translatable_ds_set, language__code='en_US')
 
-        # Get nontranslatable records
-        fish(nontranslatable_ds_set)
+            # Get nontranslatable records
+            fish(nontranslatable_ds_set)
 
-        final_values = {}
-
+        final_values = cached_values
+        if not draft and not as_records:
+            loader = AssetCacheLoaderBase(asset=asset, version_id=version_id, language=language,
+                                          customization_name=customization_name)
         for ds in data_structure_set:
             if ds not in fished_records:
                 if as_records:
@@ -1427,6 +1452,16 @@ class DataStructure(models.Model):
                                                                        DataStructure.DATA_TYPES.multiselect,
                                                                        DataStructure.DATA_TYPES.object]):
                 final_values[ds] = DataStructure.cast_value(ds, ds.default)
+
+            # caching all cast values
+            if not draft and not as_records:
+                loader.datastructure = ds
+                if ds.type in [DataStructure.DATA_TYPES.file, DataStructure.DATA_TYPES.image]:
+                    # omitting caching file content
+                    continue
+                else:
+                    loader.save_data_to_cache(final_values[ds])
+
         return final_values
 
     def is_protected(self, asset):
@@ -1792,6 +1827,23 @@ class AssetCustomizationReview(models.Model):
     def __str__(self):
         return self.version.asset.__str__()
 
+    def save(self, *args, **kwargs):
+        super(AssetCustomizationReview, self).save(*args, **kwargs)
+        if self.state in (self.REVIEW_STATES.accepted,
+                          self.REVIEW_STATES.rejected,
+                          self.REVIEW_STATES.blocked):
+            # invalidate cache for latest values
+            from cms.helpers.cached_asset import AssetCacheLoaderBase
+            AssetCacheLoaderBase.invalidate_asset_latest_values(asset=self.version.asset)
+
+    def delete(self, using=None, keep_parents=False):
+        from cms.helpers.cached_asset import AssetCacheLoaderBase
+        if self.version_id:
+            AssetCacheLoaderBase.invalidate_asset_version_values(asset=self.version.asset,
+                                                                 version_id=self.version_id)
+            AssetCacheLoaderBase.invalidate_asset_latest_values(asset=self.version.asset)
+        super(AssetCustomizationReview, self).delete(using=using, keep_parents=keep_parents)
+
     def update_children_reviews(self):
         reviews = self.version.assetcustomizationreview_set.\
             filter(customization__in=self.customization.children_customizations.all())
@@ -2071,6 +2123,13 @@ class DataRecord(models.Model):
                 self.data_structure, self.value)
 
         super(DataRecord, self).save(*args, **kwargs)
+        from cms.helpers.cached_asset import AssetCacheLoaderBase
+        AssetCacheLoaderBase.invalidate_changed_dr(self)
+
+    def delete(self, *args, **kwargs):
+        from cms.helpers.cached_asset import AssetCacheLoaderBase
+        AssetCacheLoaderBase.invalidate_changed_dr(self)
+        super(DataRecord, self).delete(*args, **kwargs)
 
 
 @receiver(post_delete, sender=DataRecord)
@@ -3464,7 +3523,6 @@ class Flag(AbstractUserFlag):
             for cust_name in customizations
         ]
         flag_cache = get_cache()
-        # keys must be presented, empty list is not allowed for redis cache
         if keys:
             flag_cache.delete_many(keys)
 

@@ -2,10 +2,11 @@ import asyncio
 import random
 import typing
 import types
+import pickle
 from asgiref.sync import sync_to_async
 from django.utils.module_loading import import_string
 from django.utils.functional import cached_property
-from django.core.cache.backends.redis import RedisCacheClient, RedisCache, RedisSerializer
+from django.core.cache.backends.redis import RedisCacheClient, RedisCache
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from redis.asyncio import Redis as AsyncRedis, ConnectionPool as AsyncConnectionPool
 from redis.asyncio.connection import DefaultParser
@@ -24,10 +25,31 @@ def _wrap_close(cache_client, loop):
     loop.close = types.MethodType(_wrapper, loop)
 
 
+class RedisSerializer:
+    def __init__(self, protocol=None):
+        self.protocol = pickle.HIGHEST_PROTOCOL if protocol is None else protocol
+
+    def dumps(self, obj):
+        # Only skip pickling for integers, a int subclasses as bool should be
+        # pickled.
+        if type(obj) is int:
+            return obj
+        if asyncio.iscoroutine(obj) or asyncio.isfuture(obj) or asyncio.iscoroutinefunction(obj):
+            # Catch awaitable before it is saved to cache.
+            raise ValueError(f"Awaitable cannot be cached. Got object: {obj!r}")
+        return pickle.dumps(obj, self.protocol)
+
+    def loads(self, data):
+        try:
+            return int(data)
+        except ValueError:
+            return pickle.loads(data)
+
+
 class AsyncRedisSerializer(RedisSerializer):
     async def adumps(self, obj):
         return await sync_to_async(self.dumps)(obj)
-    
+
     async def aloads(self, obj):
         return await sync_to_async(self.loads)(obj)
 
@@ -324,6 +346,24 @@ class AsyncCacheClient:
 
 
 class CustomRedisClient(RedisCacheClient):
+    def __init__(
+        self,
+        servers,
+        serializer=None,
+        pool_class=None,
+        parser_class=None,
+        **options,
+    ):
+        # rewrite serializer class to custom one to avoid awaitable caching
+        super().__init__(
+            servers, serializer=RedisSerializer,
+            pool_class=pool_class, parser_class=parser_class,
+            **options
+        )
+
+    def keys(self, pattern):
+        client = self.get_client(None, write=False)
+        return client.keys(pattern=pattern)
 
     def hdel(self, key, *fields):
         """
@@ -428,7 +468,7 @@ class CustomRedisClient(RedisCacheClient):
             k: self._serializer.loads(v) for k, v in zip(fields, ret) if v is not None
         }
 
-    def hmset(self, key, data, timeout):
+    def hmset(self, key, data, timeout=None):
         """
         Set many values to hash.
         Args:
@@ -450,7 +490,7 @@ class CustomRedisClient(RedisCacheClient):
                 pipeline.expire(key, timeout)
         pipeline.execute()
 
-    def hscan(self, key, cursor=0, match=None, count=None):
+    def hscan(self, key, cursor=0, match=None, count=None) -> typing.Tuple[int, dict]:
 
         client = self.get_client(key)
         cur, ret = client.hscan(key, cursor=cursor, match=match, count=count)
@@ -467,6 +507,10 @@ class CustomRedisClient(RedisCacheClient):
         client = self.get_client(key, write=True)
         client.unlink(key)
 
+    def expire(self, key, timeout):
+        client = self.get_client(key)
+        return client.expire(key, timeout)
+
 
 class CustomRedisCache(RedisCache):
     def __init__(self, server, params):
@@ -477,6 +521,10 @@ class CustomRedisCache(RedisCache):
     @cached_property
     def _async_cache(self):
         return self._async_class(self._servers, **self._options)
+
+    def keys(self, pattern, version=None):
+        key = self.make_and_validate_key(pattern, version=version)
+        return self._cache.keys(key)
 
     def hdel(self, key, *fields, version=None):
         key = self.make_and_validate_key(key, version=version)
@@ -603,7 +651,7 @@ class CustomRedisCache(RedisCache):
         key = self.make_and_validate_key(key, version=version)
         self.validate_key(field)
         return await self._async_cache.hset(key, field, value)
-    
+
     async def aadd(self, key, value, timeout=DEFAULT_TIMEOUT, version=None):
         key = self.make_and_validate_key(key, version=version)
         return await self._async_cache.add(key, value, self.get_backend_timeout(timeout))
@@ -653,6 +701,14 @@ class CustomRedisCache(RedisCache):
             key = self.make_and_validate_key(key, version=version)
             safe_keys.append(key)
         await self._async_cache.delete_many(safe_keys)
+
+    async def aexpire(self, key, timeout, version=None):
+        key = self.make_and_validate_key(key, version=version)
+        return await sync_to_async(self._cache.expire)(key, timeout)
+
+    def expire(self, key, timeout, version=None):
+        key = self.make_and_validate_key(key, version=version)
+        return self._cache.expire(key, timeout)
 
     async def attl(self, key, version=None):
         key = self.make_and_validate_key(key, version=version)

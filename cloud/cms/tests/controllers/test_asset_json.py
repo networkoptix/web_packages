@@ -152,10 +152,11 @@ class TestGenerateAssetStateDictionary:
 
 class TestGenerateContextDictsWithActualValues:
     @pytest.fixture(autouse=True)
-    def setup(self, db, mocker, arf):
+    def setup(self, db, mocker, arf, default_portal):
+        self.asset = default_portal
         self.datastructure_count = randint(3,10)
         ids = sample(range(1000,4000), self.datastructure_count)
-        self.context = baker.make("Context")
+        self.context = baker.make("Context", asset_type=self.asset.asset_type)
         datastructures = []
         self.mock_records = {}  # records structure: { datastructure_id: datastructure_value }
         for id in ids:
@@ -170,7 +171,7 @@ class TestGenerateContextDictsWithActualValues:
 
     def test_success(self):
         for context, context_dict in generate_context_dicts_with_actual_values(
-                False, False, [self.context], self.datastructures, None, None, request=self.request
+                False, False, [self.context], self.datastructures, self.asset, None, request=self.request
         ):
             assert context == self.context
             for key in context_dict:
@@ -188,7 +189,7 @@ class TestGenerateContextDictsWithActualValues:
         self.mock_records[external_file.id] = f"Test {S3_LINK} Test"
 
         for context, context_dict in generate_context_dicts_with_actual_values(
-                False, False, [self.context], self.datastructures, None, None, request=self.request
+                False, False, [self.context], self.datastructures, self.asset, None, request=self.request
         ):
             for key in context_dict:
                 assert S3_LINK not in context_dict[key]
@@ -201,7 +202,7 @@ class TestGenerateContextDictsWithActualValues:
         private_ds.save()
 
         for context, context_dict in generate_context_dicts_with_actual_values(
-                False, False, [self.context], self.datastructures, None, None, request=self.request
+                False, False, [self.context], self.datastructures, self.asset, None, request=self.request
         ):
             for key in context_dict:
                 assert key != private_ds.name
@@ -216,7 +217,7 @@ class TestGenerateContextDictsWithActualValues:
 
         for context, context_dict in \
                 generate_context_dicts_with_actual_values(
-                    False, False, [self.context], self.datastructures, None, None, request=self.request
+                    False, False, [self.context], self.datastructures, self.asset, None, request=self.request
                 ):
             multiselect_ds_found = False
             for key in context_dict:

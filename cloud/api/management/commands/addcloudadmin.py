@@ -49,7 +49,7 @@ class Command(BaseCommand):
 
         try:
             cloud_api.Account.register(email, password, first, last,
-                                       customization='default')
+                                       customization="default")
             self.stdout.write(self.style.SUCCESS(
                 f"Successfully created user with {email} for email."))
         except APINotFoundException:

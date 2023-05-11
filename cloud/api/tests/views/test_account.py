@@ -90,7 +90,7 @@ class TestAccountViews:
         active_user.is_active = False
         active_user.save()
         resp = self.register(active_user.email)
-        assert self.manager_mock.return_value.register_cloud_invite_user.called_with(
+        assert async_to_sync(self.manager_mock.return_value.register_cloud_invite_user.called_with)(
             self.expected_data['email'], self.expected_data['password'], self.expected_data
         )
         assert resp.data == {'activated': False}

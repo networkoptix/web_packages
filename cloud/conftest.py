@@ -1,23 +1,16 @@
 from typing import Iterable
 
-import os
-import json
-from uuid import uuid4
-from asgiref.sync import sync_to_async
 import pytest
 from random import randint
 import model_bakery
 from model_bakery import baker
 
 from api.tests.utils import NxTestClient, NxAPIClient, MockCache
-from cloud.customization_context import customization_ctx
-from cloud.utils import is_async
 from cms.controllers.structure import read_structure_json
 from cms.models import *
 from api.models import Account
 
 from rest_framework.test import APIRequestFactory
-from rest_framework.test import APIClient
 from django_mock_queries.query import MockSet
 
 
@@ -489,3 +482,43 @@ def clear_caches():
         return
     for cache in caches.all():
         cache.clear()
+
+
+@pytest.fixture()
+def default_customization_ctx():
+    customization_ctx.set("default")
+
+
+def create_version(asset, customization):
+    version = baker.make(ContentVersion, asset=asset, customization=customization)
+    return version
+
+
+@pytest.fixture()
+def version_factory():
+    return create_version
+
+
+@pytest.fixture()
+def record_factory():
+    def create_record_with_version(
+            ds, asset, value, version=None, language=None, customization=None
+    ) -> DataRecord:
+        if not version:
+            version = create_version(asset, customization)
+        record = baker.make(DataRecord, data_structure=ds, version=version, asset=asset,
+                            language=language, customization=customization, value=value)
+        return record
+
+    return create_record_with_version
+
+
+@pytest.fixture()
+def review_factory():
+    def make_review(
+            version=None, customization=None, state=AssetCustomizationReview.REVIEW_STATES.pending
+    ) -> AssetCustomizationReview:
+        return baker.make(AssetCustomizationReview, version=version, customization=customization, state=state)
+
+    return make_review
+

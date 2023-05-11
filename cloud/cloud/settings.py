@@ -35,7 +35,7 @@ import sys
 from botocore.config import Config
 from django.core.exceptions import ImproperlyConfigured
 
-from util.config import get_config
+from util.config import get_config, get_structures_hash
 from cloud.logger import downgrade_requests
 
 
@@ -367,6 +367,12 @@ CACHES = {
         "LOCATION": REDIS_CACHE['LOCATION'] + '/13',
         "KEY_PREFIX": 'rate_limits'
     },
+    "assets_values": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "TIMEOUT": REDIS_CACHE['TIMEOUT'],
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/6',
+        "KEY_PREFIX": 'assets_values'
+    },
     "local": {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         'LOCATION': 'local'
@@ -660,6 +666,13 @@ if PUSH_WORKER:
     CELERY_WORKER_PREFETCH_MULTIPLIER = 30
     CELERY_RESULT_BACKEND = None
 
+# Run celery tasks locally if set to true
+CELERY_TASK_ALWAYS_EAGER = False
+# IMPORTANT!!! This is useful to test cached assets actual values as soon as
+# they are stored in cache and cache filling/updating is done in celery task
+if LOCAL_ENVIRONMENT and os.environ.get('TEST_ALL_WITH_VALUES_CACHE'):
+    CELERY_TASK_ALWAYS_EAGER = True
+
 DJANGO_CELERY_BEAT_TZ_AWARE = False
 
 
@@ -911,3 +924,5 @@ UPLOAD_SEPARATOR = '--CHUNKED--UPLOAD--SEPARATOR--'
 #     # Create upload bucket if doesn't exist
 #     s3.create_bucket(Bucket=UPLOAD_BUCKET)
 #     s3.put_bucket_cors(Bucket=UPLOAD_BUCKET, CORSConfiguration=CORS_CONFIG)
+
+STRUCTURES_HASH = get_structures_hash()

@@ -1,7 +1,7 @@
 import asyncio
 from time import sleep
 from uuid import uuid4
-
+import typing
 import pytest
 from django.core.cache import caches
 
@@ -18,6 +18,15 @@ class TestCustomRedisCache:
         }
         self.fill_test_set()
         self.cache.touch(self.key, 3600)
+        
+    def test_compat(self):
+        import redis
+        annotations = {
+            'name': str, 'key': typing.Union[str, None], 'value': typing.Union[str, None],
+            'mapping': typing.Union[dict, None], 'items': typing.Union[list, None],
+            'return': typing.Union[typing.Awaitable[int], int]
+        }
+        assert redis.Redis.hset.__annotations__ == annotations
 
     def fill_test_set(self):
         for f, v in self.test_set.items():
@@ -94,6 +103,18 @@ class TestCustomRedisCache:
         self.cache.hmset(key, test_set)
         cur, ret = self.cache.hscan(key, cursor=0, count=100)
         assert all([k in test_set for k in ret.keys()])
+
+    def test_caching_awaitable(self):
+        async def future():
+            return f'{uuid4()}'
+        err = None
+        try:
+            self.cache.set('awaitable', future())
+        except Exception as ex:
+            err = ex
+
+        assert isinstance(err, ValueError)
+        assert err.args[0].startswith('Awaitable cannot be cached. Got object:')
 
 
 class TestCustomRedisCacheAsync:
@@ -262,3 +283,15 @@ class TestCustomRedisCacheAsync:
         await self.cache.adelete_many(self.test_set.keys())
         for k, v in self.test_set.items():
             assert await self.cache.ahas_key(k) is False
+
+    async def test_caching_awaitable(self):
+        async def future():
+            return f'{uuid4()}'
+        err = None
+        try:
+            await self.cache.aset('awaitable', future())
+        except Exception as ex:
+            err = ex
+
+        assert isinstance(err, ValueError)
+        assert err.args[0].startswith('Awaitable cannot be cached. Got object:')
