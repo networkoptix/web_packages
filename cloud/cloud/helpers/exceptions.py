@@ -8,6 +8,7 @@ import functools
 from enum import Enum
 from typing import Union, List, Tuple, Dict, Callable
 
+from asgiref.sync import sync_to_async
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from requests.exceptions import HTTPError
@@ -514,7 +515,7 @@ def handle_exceptions(func):
                     return Response(data, status=status.HTTP_200_OK)
                 return data
             except Exception as exception:
-                return handler(args[0], exception)
+                return await sync_to_async(handler)(args[0], exception)
     else:
         @functools.wraps(func)
         def caller(*args, **kwargs):
