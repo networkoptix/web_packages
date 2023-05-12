@@ -39,21 +39,12 @@
                 <nx-mat-like-input
                     componentId="userField"
                     name="userField"
-                    [label]="'Login' | translate"
-                    [(ngModel)]="user"
-                    [autocomplete]="'off'"
-                    [required]="true"
-                    #userField="ngModel"
-                ></nx-mat-like-input>
-                <!--                <input-->
-                <!--                    name="userField"-->
-                <!--                    id="userField"-->
-                <!--                    class="form-control"-->
-                <!--                    [(ngModel)]="user"-->
-                <!--                    [placeholder]="'Login' | translate"-->
-                <!--                    #userField="ngModel"-->
-                <!--                    required-->
-                <!--                />-->
+                    id="userField"
+                    class="form-control"
+                    value="admin"
+                    readonly
+                    disabled
+                />
             </div>
             <div class="form-group">
                 <nx-mat-like-password-input
