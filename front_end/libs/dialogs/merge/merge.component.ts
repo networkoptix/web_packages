@@ -18,9 +18,9 @@ import type {
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { SessionState } from '@dialogs/update-session/update-session.component.types';
+import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
-import { icons, servers } from '@lib/variables/static-variables';
+import { icons, servers, toast } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import type { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -139,6 +139,7 @@ export class MergeModalContent {
         private cdRef: ChangeDetectorRef,
         private processService: NxProcessService,
         private dialogs: NxDialogsService,
+        private toastService: NxToastService,
         private systemService: NxSystemService,
         private systemsService: NxSystemsService,
         private ribbonService: NxRibbonService,
@@ -409,7 +410,7 @@ export class MergeModalContent {
         }
     }
 
-    private handleOldSession(process: Process): void {
+    private handleOldSession(): void {
         const { currentState } = this.machine;
         let noConnectionMsg: string;
         const { dialogs: { updateSession: { merge } } } = this.LANG;
@@ -425,16 +426,10 @@ export class MergeModalContent {
                 secondarySystem: this.secondaryName,
             });
         }
-        this.dialogs.updateSession({
-            sessionState: SessionState.Merge,
-            system: this.system,
+        this.toastService.notify(
             noConnectionMsg,
-            openingRef: this.dialogRef,
-        }).then(ready => {
-            if (ready) {
-                process.run();
-            }
-        });
+            toast.warning,
+        );
     }
 
     initProcesses(): void {
@@ -481,7 +476,7 @@ export class MergeModalContent {
                 },
                 err => {
                     if (err.errorId === servers.errors.oldSessionErrorId) {
-                        return this.handleOldSession(this.checkMergeabilityProcess);
+                        return this.handleOldSession();
                     } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
                         return this.dialogs.expiredSession().then(() => this.window.location.reload());
                     }
@@ -597,7 +592,7 @@ export class MergeModalContent {
                     return;
                 }
                 if (err.errorId === servers.errors.oldSessionErrorId) {
-                    return this.handleOldSession(this.checkPasswordProcess);
+                    return this.handleOldSession();
                 } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
                     return this.dialogs.expiredSession().then(() => this.window.location.reload());
                 }
@@ -701,7 +696,7 @@ export class MergeModalContent {
                     return;
                 }
                 if (error.errorId === servers.errors.oldSessionErrorId || error.resultCode === 'vmsRequestFailure') {
-                    return this.handleOldSession(this.mergingProcess);
+                    return this.handleOldSession();
                 } else if (error.status === 403 || error.errorId === servers.errors.unauthorized) {
                     return this.dialogs.expiredSession().then(() => this.window.location.reload());
                 }

@@ -43,7 +43,7 @@ import {
 import { startWithCache } from '@utils/start-with-cached';
 
 import { SECURITY_LEVEL } from '../../apps/setup-wizard/src/app/types/wizard-state.types';
-import { apiTool } from '../variables/static-variables';
+import { apiTool, servers } from '../variables/static-variables';
 
 import { MediaserverRestConnection } from './mediaserver-apis/connections/adapters/adapter-target-types';
 import { assertTransaction } from './mediaserver-apis/connections/methods/transaction-bus/types/transactions';
@@ -287,14 +287,16 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                     error: { status: number; resultCode: string; error: { error: string; errorId: string }; url: string },
                     attempt: number
                 ) => {
-                    if (attempt === 0) {
+                    if (attempt === 0 && error?.error?.errorId !== servers.errors.oldSessionErrorId) {
                         const storageService = this.storageService;
                         const refreshToken = storageService.refreshToken;
                         const errorId = error?.error?.errorId;
+
                         const isLoginRequest = error.url.includes('/rest/v1/login/sessions/');
-                        const expiredSession = isLoginRequest &&
-                            (error.status === 422 && ['sessionExpired', 'invalidParameter'].includes(errorId) ||
-                                error.status === 400 && errorId === 'badRequest');
+                        const isInvalidParamterError = error.status === 422 && errorId === servers.errors.invalidParameter;
+                        const isBadRequestError = error.status === 400 && errorId === servers.errors.badRequest;
+
+                        const expiredSession = isLoginRequest && (isInvalidParamterError || isBadRequestError);
                         const authorizationError = !isLoginRequest && error.status >= 400 && error.status < 500 || error.resultCode === 'forbidden';
 
                         if (error.status === 503) {
@@ -711,7 +713,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return (Object.keys(updateParams).length > 0
             ? this.patch('/rest/v1/system/settings', updateParams)
             : this.getSystemSettingsHandler()
-        ).pipe(map(data => <t.NormalResponse<t.SystemSettings>>({ error: '', errorString: '', reply: { settings: data } })));
+        ).pipe(map(data => <t.NormalResponse<t.SystemSettings>>({ error: '0', errorString: '', reply: { settings: data } })));
     }
 
     getMediaServers(useCache: boolean): Observable<ServerPreprocess[]> {

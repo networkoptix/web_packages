@@ -98,7 +98,7 @@ interface UpdateSessionData {
     processAction?: string;
     openingRef?: DialogRef | CdkDialogRef;
 }
-export type UpdateSession = DialogType<UpdateSessionData, true>;
+export type UpdateSession = DialogType<UpdateSessionData, boolean>;
 export type Client2faWarning = DialogType<void, void>;
 
 /* Account */

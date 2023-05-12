@@ -4,10 +4,9 @@ import type { NgForm } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { NxDialogsService } from '@dialogs/dialogs.service';
 import { ModalBase } from '@dialogs/modal-base';
-import { SessionState } from '@dialogs/update-session/update-session.component.types';
-import { servers } from '@lib/variables/static-variables';
+import { NxToastService } from '@dialogs/toast.service';
+import { toast } from '@lib/variables/static-variables';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
@@ -44,7 +43,7 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
     constructor(
         configService: NxConfigService,
         private processService: NxProcessService,
-        private dialogs: NxDialogsService,
+        private toastService: NxToastService,
         public dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) public system: DT['data'],
     ) {
@@ -128,32 +127,12 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
                 this.hideErrors = true;
                 this.close(user.id);
             },
-            err => {
-                if (err?.resultCode === 'alreadyExists') {
-                    this.unlock();
-                    return;
-                } else if (err?.resultCode === 'cantEditAdmin') {
-                    this.unlock();
-                    return;
-                }
-                if (err.errorId === servers.errors.oldSessionErrorId) {
-                    this.dialogs
-                        .updateSession({
-                            sessionState: SessionState.RenewWeb,
-                            system: this.system,
-                            noConnectionMsg: this.LANG.dialogs.updateSession.addUser,
-                            openingRef: this.dialogRef,
-                        })
-                        .then(ready => {
-                            if (ready) {
-                                this.addUser.run();
-                            } else {
-                                this.unlock();
-                            }
-                        });
-                } else {
-                    this.unlock();
-                }
+            () => {
+                this.toastService.notify(
+                    this.LANG.dialogs.updateSession.addUser,
+                    toast.warning,
+                );
+                this.unlock();
             },
         );
     }

@@ -142,9 +142,9 @@ export class NxUpdateSessionModalContent extends ModalBase<DT['return']> {
 
         loginService.currentSystem = system;
         loginService.updateSession(sessionState).then(ready => {
-            if (ready) {
-                this.close(true);
-            }
+            this.close(ready);
+        }).catch(() => {
+            this.close(false);
         });
     }
 }

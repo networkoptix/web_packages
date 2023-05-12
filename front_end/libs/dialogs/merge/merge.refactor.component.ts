@@ -21,8 +21,9 @@ import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.t
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { SessionState } from '@dialogs/update-session/update-session.component.types';
+import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
+import { toast } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import type { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -176,7 +177,7 @@ export class NxMergeComponent implements OnInit, OnDestroy {
     genericMergeErrorCode: string;
 
     // update webadmin session
-    noConnectionMsg: string;
+    alertMessage: string;
 
     @HostListener('document:keypress', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent): void {
@@ -194,6 +195,7 @@ export class NxMergeComponent implements OnInit, OnDestroy {
         private cloudApi: NxCloudApiService,
         private processService: NxProcessService,
         private dialogs: NxDialogsService,
+        private toastService: NxToastService,
         // private cdRef: ChangeDetectorRef, // verify whether this is needed
         // private simpleDialogService: NxSimpleDialogsService,
         private systemService: NxSystemService,
@@ -272,7 +274,7 @@ export class NxMergeComponent implements OnInit, OnDestroy {
     setupUpdateWebadminSession(state: MergeStateType): void {
         this.currentProcess = this[`${stateProcesses[state]}Process`];
         const message = this.LANG.dialogs.merge.updateWebadminSession[state];
-        this.noConnectionMsg = state === 'confirm'
+        this.alertMessage = state === 'confirm'
             ? this.translateService.instant(message, {
                 primarySystem: this.primaryName,
                 secondarySystem: this.secondaryName
@@ -410,7 +412,7 @@ export class NxMergeComponent implements OnInit, OnDestroy {
                 err => {
                     this.checking = false;
                     if (err.errorId === servers.errors.oldSessionErrorId) {
-                        return this.handleOldSession(this.selectSystemProcess);
+                        return this.showSessionExpiredAlert();
                     } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
                         return this.dialogs.expiredSession().then(() => this.window.location.reload());
                     }
@@ -483,7 +485,7 @@ export class NxMergeComponent implements OnInit, OnDestroy {
                     return;
                 }
                 if (err.errorId === servers.errors.oldSessionErrorId) {
-                    return this.handleOldSession(this.adminPasswordProcess);
+                    return this.showSessionExpiredAlert();
                 } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
                     return this.dialogs.expiredSession().then(() => this.window.location.reload());
                 }
@@ -582,7 +584,7 @@ export class NxMergeComponent implements OnInit, OnDestroy {
                     return;
                 }
                 if (error.errorId === servers.errors.oldSessionErrorId || error.resultCode === 'vmsRequestFailure') {
-                    return this.handleOldSession(this.confirmMergeProcess);
+                    return this.showSessionExpiredAlert();
                 } else if (error.status === 403 || error.errorId === servers.errors.unauthorized) {
                     return this.dialogs.expiredSession().then(() => this.window.location.reload());
                 }
@@ -769,17 +771,11 @@ export class NxMergeComponent implements OnInit, OnDestroy {
         );
     }
 
-    private handleOldSession(process: Process): void {
-        this.dialogs.updateSession({
-            sessionState: SessionState.Merge,
-            system: this.system,
-            noConnectionMsg: this.noConnectionMsg,
-            openingRef: this.dialogRef,
-        }).then(ready => {
-            if (ready) {
-                process.run();
-            }
-        });
+    private showSessionExpiredAlert(): void {
+        this.toastService.notify(
+            this.alertMessage,
+            toast.warning,
+        );
     }
 
     // goBack(): void {

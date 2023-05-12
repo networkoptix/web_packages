@@ -51,6 +51,7 @@ import { CloudUnavailableInterceptor } from '@interceptors/cloud-unavailable-int
 import { NxCurrentRelayInterceptor } from '@interceptors/current-relay-interceptor';
 import { FeatureInterceptor } from '@interceptors/feature-interceptor';
 import { LocalSystemStatusInterceptor } from '@interceptors/local-system-status-interceptor.service';
+import { SessionExpiredInterceptor } from '@interceptors/session-expired-interceptor';
 import { NxSwCacheInterceptor } from '@interceptors/sw-cache-interceptor.interceptor';
 import { NxUriCachingInterceptor } from '@interceptors/uri-cache-interceptor.service';
 import { initializeApp } from '@pages/push-notifications/push-notifications.module';
@@ -148,6 +149,11 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         {
             provide: HTTP_INTERCEPTORS,
             useClass: NxCurrentRelayInterceptor,
+            multi: true
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: SessionExpiredInterceptor,
             multi: true
         },
         NxConfigService,

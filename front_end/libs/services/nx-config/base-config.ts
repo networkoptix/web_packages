@@ -675,6 +675,8 @@ export interface ServerError {
     invalidParameter: string;
     oldSessionErrorId: string;
     unauthorized: string;
+    badRequest: string;
+    userPasswordRequired: string;
 }
 
 export interface ServersStatus {

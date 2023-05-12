@@ -2,8 +2,6 @@ import { Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { SessionState } from '@dialogs/update-session/update-session.component.types';
-import { servers } from '@lib/variables/static-variables';
 import { NxSystemUsersBaseComponent } from '@pages/systems/settings/users/edit-user-base/edit-user-base.component';
 import type {
     NxAccessRole,
@@ -35,18 +33,7 @@ export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent 
                     await this.system.userManager.saveUser(user);
                     await this.system.getUsers(true).catch(err => console.error(err));
                 } catch (err) {
-                    if (err?.error?.errorId === servers.errors.oldSessionErrorId) {
-                        const ready = await this.dialogs.updateSession({
-                            sessionState: SessionState.RenewWeb,
-                            system: this.system,
-                        });
-                        if (ready) {
-                            await this.system.userManager.saveUser(user);
-                            await this.system.getUsers(true);
-                        }
-                    } else {
-                        this.showUserChangedToast();
-                    }
+                    this.showUserChangeFailedToast();
                 } finally {
                     this.locked.delete(user.email);
                     this.setUser();

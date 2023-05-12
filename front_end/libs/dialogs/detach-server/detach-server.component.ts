@@ -3,7 +3,6 @@ import { Component, Inject, Input } from '@angular/core';
 import staticLang from '@common/language/language_i18n_static.json';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { SessionState } from '@dialogs/update-session/update-session.component.types';
 import { servers, toast } from '@lib/variables/static-variables';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -62,17 +61,10 @@ export class DetachServerModalContent {
                 },
                 err => {
                     if (err.errorId === servers.errors.oldSessionErrorId) {
-                        this.dialogs.updateSession({
-                            sessionState: SessionState.Detach,
-                            system: this.system,
-                            noConnectionMsg: this.LANG.dialogs.updateSession.detachServer,
-                            openingRef: this.dialogRef,
-                            processAction: 'danger',
-                        }).then(ready => {
-                            if (ready) {
-                                this.detachServer.run();
-                            }
-                        });
+                        this.toastService.notify(
+                            this.LANG.dialogs.updateSession.detachServer,
+                            toast.warning,
+                        );
                     } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
                         return this.dialogs.expiredSession().then(() => this.window.location.reload());
                     } else {

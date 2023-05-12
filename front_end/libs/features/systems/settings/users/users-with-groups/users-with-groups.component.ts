@@ -2,8 +2,6 @@ import { Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { SessionState } from '@dialogs/update-session/update-session.component.types';
-import { servers } from '@lib/variables/static-variables';
 import type { NxSystemUser } from '@services/system.service/user-manager/user-manager-types.bak';
 import { UserWithGroupsManager } from '@services/system.service/user-manager/user-with-groups-manager';
 
@@ -44,20 +42,7 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
                     await (this.system.userManager as UserWithGroupsManager).modifyUser(user);
                     await this.system.getUsers(true).catch(err => console.error(err));
                 } catch (err) {
-                    if (err?.error?.errorId === servers.errors.oldSessionErrorId) {
-                        const ready = await this.dialogs.updateSession({
-                            sessionState: SessionState.RenewWeb,
-                            system: this.system,
-                        });
-                        if (ready) {
-                            await (this.system.userManager as UserWithGroupsManager).modifyUser(
-                                user,
-                            );
-                            await this.system.getUsers(true);
-                        }
-                    } else {
-                        this.showUserChangedToast();
-                    }
+                    this.showUserChangeFailedToast();
                 } finally {
                     this.locked.delete(user.email);
                     this.setUser();

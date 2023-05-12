@@ -3,8 +3,8 @@ import { Component, Input, OnChanges, ViewEncapsulation } from '@angular/core';
 import staticLang from '@common/language/language_i18n_static.json';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { SessionState } from '@dialogs/update-session/update-session.component.types';
-import { servers } from '@lib/variables/static-variables';
+import { NxToastService } from '@dialogs/toast.service';
+import { toast } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';
 import { Watcher } from '@services/apply.service/watcher';
 import { NxProcessService } from '@services/process.service';
@@ -42,6 +42,7 @@ export class NxServerLoggerComponent implements OnChanges {
     constructor(
         private processService: NxProcessService,
         private dialogsService: NxDialogsService,
+        private toastService: NxToastService,
         private applyService: NxApplyService,
     ) {
         this.loggerOptions = ['none', 'error', 'warning', 'info', 'debug', 'verbose'].map(
@@ -68,32 +69,11 @@ export class NxServerLoggerComponent implements OnChanges {
                     message: this.LANG.dialogs.message.logLevelsSaved,
                 });
             },
-            err => {
-                const handleError = (): void => {
-                    this.dialogsService.alert({
-                        title: this.LANG.dialogs.titles.error,
-                        message: this.LANG.dialogs.message.logLevelsNotSaved,
-                    });
-                };
-                if (err.errorId === servers.errors.oldSessionErrorId) {
-                    this.dialogsService
-                        .updateSession({
-                            sessionState: SessionState.RenewWeb,
-                            system: this.system,
-                        })
-                        .then(
-                            res => {
-                                if (res) {
-                                    this.saveLoggers.run();
-                                } else {
-                                    handleError();
-                                }
-                            },
-                            error => console.error(error),
-                        );
-                } else {
-                    handleError();
-                }
+            () => {
+                this.toastService.notify(
+                    this.LANG.dialogs.message.logLevelsNotSaved,
+                    toast.warning,
+                );
             },
         );
     }

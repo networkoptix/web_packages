@@ -601,6 +601,7 @@
     "Failed to merge { primarySystem } and { secondarySystem }.": "Failed to merge { primarySystem } and { secondarySystem }.",
     "Failed to merge {primarySystem} and {secondarySystem}.": "Failed to merge {primarySystem} and {secondarySystem}.",
     "Failed to remove the server from system.": "Failed to remove the server from system.",
+    "Failed to remove user from the system.": "Failed to remove user from the system.",
     "Failed to reset server.": "Failed to reset server.",
     "Failed to reset server. Please check if password you entered is correct and server is online and try again.": "Failed to reset server. Please check if password you entered is correct and server is online and try again.",
     "Failed to the check current system's password.": "Failed to the check current system's password.",

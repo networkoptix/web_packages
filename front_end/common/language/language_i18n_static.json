@@ -743,6 +743,7 @@
         },
         "updateSession": {
             "addUser": "Failed to add user to system.",
+            "removeUser": "Failed to remove user from the system.",
             "changePassword": "Failed to change user password.",
             "detachServer": "Failed to detach server from system.",
             "disconnect": "Failed to disconnect system from %CLOUD_NAME%.",

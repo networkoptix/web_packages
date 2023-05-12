@@ -10,11 +10,10 @@ import {
 import type { NgForm } from '@angular/forms';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { ChangePassword as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
-import { SessionState } from '@dialogs/update-session/update-session.component.types';
-import { servers } from '@lib/variables/static-variables';
+import { NxToastService } from '@dialogs/toast.service';
+import { toast } from '@lib/variables/static-variables';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
@@ -46,7 +45,7 @@ export class ChangePasswordModalContent extends ModalBase<DT['return']> implemen
     constructor(
         private renderer: Renderer2,
         private processService: NxProcessService,
-        private dialogs: NxDialogsService,
+        private toastService: NxToastService,
         dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) private dialogData: DT['data'],
     ) {
@@ -109,24 +108,12 @@ export class ChangePasswordModalContent extends ModalBase<DT['return']> implemen
                 ignoreError: true
             },
             undefined,
-            err => {
-                if (err.errorId === servers.errors.oldSessionErrorId) {
-                    this.dialogs.updateSession({
-                        sessionState: SessionState.RenewWeb,
-                        system: this.system,
-                        noConnectionMsg: this.LANG.dialogs.updateSession.changePassword,
-                        openingRef: this.dialogRef,
-                        processAction: 'danger',
-                    }).then(ready => {
-                        if (ready) {
-                            this.changePassword.run();
-                        } else {
-                            this.unlock();
-                        }
-                    });
-                } else {
-                    this.unlock();
-                }
+            () => {
+                this.toastService.notify(
+                    this.LANG.dialogs.updateSession.changePassword,
+                    toast.warning,
+                );
+                this.unlock();
             });
     }
 

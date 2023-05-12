@@ -242,7 +242,7 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy {
         this.username = user.isCloud ? user.email : user.name;
     }
 
-    protected showUserChangedToast(): void {
+    protected showUserChangeFailedToast(): void {
         this.toastService.notify(this.LANG.toastMessage.userChangesFail, toast.warning);
     }
 }

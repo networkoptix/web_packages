@@ -491,7 +491,9 @@ export const servers: configTypes.Servers = {
     errors: {
         invalidParameter: 'invalidParameter',
         oldSessionErrorId: 'sessionExpired',
-        unauthorized: 'unauthorized'
+        unauthorized: 'unauthorized',
+        badRequest: 'badRequest',
+        userPasswordRequired: 'userPasswordRequired',
     }
 };
 

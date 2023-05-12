@@ -13,7 +13,6 @@ import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
-import { SessionState } from '@dialogs/update-session/update-session.component.types';
 import { environment } from '@environments/environment';
 import { servers, toast } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';
@@ -203,15 +202,10 @@ export class RestartServerModalContent {
                     this.close(servers.status.offline);
                     this.toastService.notify(message, toast.warning);
                 } else if (err.errorId === servers.errors.oldSessionErrorId) {
-                    this.dialogs.updateSession({
-                        sessionState: SessionState.Restart,
-                        system: this.system,
-                        openingRef: this.dialogRef,
-                    }).then(ready => {
-                        if (ready) {
-                            this.restartServer.run();
-                        }
-                    });
+                    this.toastService.notify(
+                        this.LANG.servers.restartFailed,
+                        toast.warning,
+                    );
                 } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
                     return this.dialogs.expiredSession().then(() => this.window.location.reload());
                 } else {

@@ -9,7 +9,6 @@ import staticLang from '@common/language/language_i18n_static.json';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
-import { SessionState } from '@dialogs/update-session/update-session.component.types';
 import { environment } from '@environments/environment';
 import { servers, toast } from '@lib/variables/static-variables';
 import { NxAppStateService } from '@services/nx-app-state.service';
@@ -164,17 +163,10 @@ export class ResetServerModalContent {
                     .catch(err => handleResetFailError('restartServer', err));
             }, err => {
                 if (err.errorId === servers.errors.oldSessionErrorId) {
-                    this.dialogs.updateSession({
-                        sessionState: SessionState.Reset,
-                        system: this.system,
-                        noConnectionMsg: this.LANG.dialogs.updateSession.resetServer,
-                        openingRef: this.dialogRef,
-                        processAction: 'danger',
-                    }).then(ready => {
-                        if (ready) {
-                            this.resetServer.run();
-                        }
-                    });
+                    this.toastService.notify(
+                        this.LANG.dialogs.updateSession.resetServer,
+                        toast.warning,
+                    );
                 } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
                     return this.dialogs.expiredSession().then(() => this.window.location.reload());
                 }

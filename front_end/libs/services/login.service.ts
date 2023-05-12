@@ -73,8 +73,7 @@ export class NxLoginService extends DialogBase {
             sessionRenewal = this._currentSystem.mediaserver.logout()
                 .then(() => this._currentSystem.mediaserver.loginOauth(code).toPromise());
         }
-        return sessionRenewal.then(() => Promise.resolve(true))
-            .catch(() => Promise.resolve(false));
+        return sessionRenewal.then(() => Promise.resolve(true)).catch(() => Promise.reject(false));
     }
 
     private pingCloud(): Promise<boolean> {
