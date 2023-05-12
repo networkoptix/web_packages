@@ -2,7 +2,15 @@ import { ArrayDataSource } from '@angular/cdk/collections';
 import { CdkDrag, CdkDragEnter, CdkDropList } from '@angular/cdk/drag-drop';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, Output } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    HostListener,
+    Inject,
+    Input,
+    Output,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep, isEqual, omit } from 'lodash-es';
@@ -54,6 +62,7 @@ import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
 import { WINDOW } from '@services/window-provider';
+import { ViewportBreakpoints } from '@styles/theme-variables-common';
 import { cleanId, pickFrom } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -169,6 +178,29 @@ export class NxLayoutGridComponent {
         resourceType: ResourceType;
         details: Record<string, unknown>;
     }>();
+
+    #lastWidth: number = Infinity;
+
+    @HostListener('window:resize', ['$event'])
+    onResize({ target: { innerWidth: width } }: { target: Window }): void {
+        const closeOnResize = this.#lastWidth > width && width <= ViewportBreakpoints.Tablet.width;
+
+        if (closeOnResize) {
+            this.layoutSettings.update(
+                curr =>
+                    curr.openMenu
+                        ? {
+                              ...curr,
+                              previousOpenMenu: curr.openMenu,
+                              openMenu: null,
+                          }
+                        : curr,
+                true,
+            );
+        }
+
+        this.#lastWidth = width;
+    }
 
     SAVE_DELAY = 0;
 
@@ -504,6 +536,10 @@ export class NxLayoutGridComponent {
                 untilDestroyed(this),
             )
             .subscribe();
+    }
+
+    ngAfterViewInit(): void {
+        this.onResize({ target: this.window });
     }
 
     async ngOnDestroy(): Promise<void> {

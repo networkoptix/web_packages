@@ -61,14 +61,14 @@
     // Responsive menu positioned overlaying the grid
     @media (max-width: 768px) {
         --columns: 8;
-        --container-limit: min(576px, 100vw);
-        --column-limit: 10;
+        --container-limit: calc(100vw - 40px);
+        --column-limit: 12;
         position: absolute;
     }
 
-    @media (max-width: 576px) {
-        --columns: 10;
-    }
+    // @media (max-width: 576px) {
+    //     --columns: 12;
+    // }
 
     --base-width: calc(var(--column-width) * var(--columns));
     --tab-size: 25px;
