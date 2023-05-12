@@ -126,8 +126,11 @@ function setup_env() {
         echo 'Installing openssl'
         brew install openssl
     fi
-    export LDFLAGS="-L/usr/local/opt/openssl@1.1/lib"
-    export CPPFLAGS="-I/usr/local/opt/openssl@1.1/include"
+    echo "Exporting homebrew paths"
+    echo "export LDFLAGS=-L$(brew --prefix openssl)/lib"
+    export LDFLAGS="-L$(brew --prefix openssl)/lib"
+    echo "export CPPFLAGS=-I$(brew --prefix openssl)/include"
+    export CPPFLAGS="-I$(brew --prefix openssl)/include"
     printf "Setting up cloud portal locally\n\n"
     setup_or_activate_virtualenv
 
@@ -335,20 +338,20 @@ function install_cli() {
 }
 
 function export_poetry_requirements() {
-    poetry -C cloud/ export --with test,front-build,prod --without-hashes --without-urls -o cloud/requirements.txt
+    poetry -C cloud/ export --with test,front-build,prod,piplicenses --without-hashes --without-urls -o cloud/requirements.txt
     sed -i '' '1s/^/# NOTE!!! This requirements file is used in development only.\n/' cloud/requirements.txt
     sed -i '' '2s/^/# Production requirements file is generated during build.\n/' cloud/requirements.txt
     sed -i '' '3s/^/\n/' cloud/requirements.txt
 }
 
 function check_licenses() {
-    # pip-licenses --format=json --allow-only="MIT License;BSD License;GNU General Public License v3 (GPLv3);Python Software Foundation License;GNU General Public License (GPL);Apache Software License;Apache License 2.0;GNU Lesser General Public License v3 or later (LGPLv3+);MPL2;Historical Permission Notice and Disclaimer (HPND);BSD;MIT;Public Domain;GNU Library or Lesser General Public License (LGPL);"
-    pip-licenses --format=json --with-urls --allow-only="MIT License;BSD License;GNU General Public License v3 (GPLv3);Python Software Foundation License;GNU General Public License (GPL);Apache 2.0;Apache Software License;Apache License 2.0;GNU Lesser General Public License v3 or later (LGPLv3+);MPL2;Historical Permission Notice and Disclaimer (HPND);BSD;MIT;Public Domain;GNU Library or Lesser General Public License (LGPL);Mozilla Public License 2.0 (MPL 2.0);LGPLv3+"
+    check_poetry_lock
+    ALLOWED="$(cat etc/allowed_licenses.txt)"
+    pip-licenses --format=json --with-urls --allow-only="$ALLOWED"
 }
 
-function update_requirements_licenses() {
-    echo "Command deprecated. Licenses list is checked and generated in CI and build."
-    exit 1
+function poetry_lock() {
+    poetry -C cloud/ lock
 }
 
 function check_poetry_lock() {
@@ -558,8 +561,8 @@ do
         check_licenses)
             check_licenses
             ;;
-        update_requirements_licenses)
-            update_requirements_licenses
+        poetry_lock)
+            poetry_lock
             ;;
         update_package_licenses)
             npx recursive-check-licenses -a licenses_whitelist.json -e licenses_excluded_packages.json
@@ -597,7 +600,7 @@ do
             echo 'build_local_vms - Builds webadmin locally, stops any running mediaservers, builds a new medisserver, runs a mediaserver, and places external.dat the new docker image. Usage "./cloud_helper.sh build_local_vms {version} {port} {copy}"'
             echo 'update_remote_vms - Copy locally built webadmin (external.dat) to a target machine. Usage "./cloud_helper.sh update_remote_vms {target-ip}"'
             echo 'start_https_tunnel - Start a secure tunnel on port 8001 to the local django server on port 8000'
-            echo 'update_requirements_licenses - DEPRECATED! Updates requirements-license.json when run locally else checks if updated when CI'
+            echo 'poetry_lock - Updates poetry lock file which is used for checking consistency of dependencies version'
             echo 'check_licenses - just checks licenses and exits with error code if check failed'
             echo 'export_poetry_requirements - export poetry requirements to cloud/requirements.tx which is used in deployment'
             echo 'update_package_licenses - Update package-license.json with latest licensing information for cloud_portal project'

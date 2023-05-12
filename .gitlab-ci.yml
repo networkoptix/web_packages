@@ -89,6 +89,10 @@ no-changes:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
         - cloud/**/*
+        - cloud/poetry.toml
+        - cloud/poetry.lock
+        - cloud/pyproject.toml
+        - cloud/allowed_licenses.txt
 
 .django-python:
   extends: .backend-changes
@@ -442,16 +446,22 @@ check-python-licenses:
   stage: check
   needs:
     - job: docker:build-django-python
-      optional: true
-  artifacts:
-    paths:
-      - cloud/ci-license.json
-    when: on_failure
+# Docker must be rebuilt before licenses check
+      optional: false
+# Does not produce artifacts anymore, see job logs
+#  artifacts:
+#    paths:
+#      - cloud/ci-license.json
+#    when: on_failure
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
         - cloud/**/requirements.txt
         - build_scripts/**/requirements.txt
+        - cloud/**/pyproject.toml
+        - cloud/**/poetry.lock
+        - cloud/**/poetry.toml
+        - cloud/**/allowed_licenses.txt
   script:
 #    - /usr/local/bin/python -m pip install -r cloud/requirements.txt
     - /usr/local/bin/python -m pip install pip-licenses
@@ -465,4 +475,8 @@ fail-on-python-license-check:
       changes:
         - cloud/**/requirements.txt
         - build_scripts/**/requirements.txt
+        - cloud/**/pyproject.toml
+        - cloud/**/poetry.lock
+        - cloud/**/poetry.toml
+        - cloud/**/allowed_licenses.txt
       when: on_failure

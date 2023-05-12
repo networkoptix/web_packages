@@ -57,6 +57,7 @@ packaging = "~21.0"
 pandas="==1.5.0"
 Pillow = "9.0.1"
 py = "1.10.0"
+pycurl = "~7.44.1"
 pystache = "0.6.0"
 pytz = "2022.2.1"
 PyYAML = "5.4"
@@ -80,7 +81,7 @@ pytest-cov = "2.12.1"
 pytest-django = "4.3.0"
 pytest-env = "0.6.2"
 pytest-mock = "3.6.1"
-moto = "^2"
+moto = { version = "^2", extras = ["s3"] }
 
 [tool.poetry.group.front-build]
 optional = true
