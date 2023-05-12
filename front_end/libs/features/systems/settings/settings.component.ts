@@ -260,8 +260,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.db.personal.menuContent.get({ base: this.content.base }).then(exists => {
             if (!exists) {
                 this.db.personal.menuContent.put(this.content);
-            } else {
-                this.menuData$.next(exists);
             }
         });
 
