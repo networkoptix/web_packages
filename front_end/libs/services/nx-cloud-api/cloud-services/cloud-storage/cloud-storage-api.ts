@@ -39,10 +39,17 @@ export class CloudStorageAPI extends BaseCloudServiceAPI {
      * @param withFreshSession WithFreshSession
      * @returns (serverUrl?: string, cloudHost?: string) => CloudStorageAPI
      */
-    static createApiFactory: CreateApiFactory<CloudStorageAPI> = (http: HttpClient, withFreshSession: WithFreshSession) => (serverUrl: string = '', cloudHost: () => string = () => '') => {
-        CloudStorageAPI.INSTANCES[serverUrl] ||= new CloudStorageAPI(serverUrl, cloudHost, http, withFreshSession);
-        return CloudStorageAPI.INSTANCES[serverUrl];
-    };
+    static createApiFactory: CreateApiFactory<CloudStorageAPI> =
+        (http: HttpClient, withFreshSession: WithFreshSession) =>
+        (serverUrl: string = '', cloudHost: () => string = () => '') => {
+            CloudStorageAPI.INSTANCES[serverUrl] ||= new CloudStorageAPI(
+                serverUrl,
+                cloudHost,
+                http,
+                withFreshSession,
+            );
+            return CloudStorageAPI.INSTANCES[serverUrl];
+        };
 
     constructor(
         serverUrl: string,
@@ -90,7 +97,9 @@ export class CloudStorageAPI extends BaseCloudServiceAPI {
     private handleGetStorages(systemId: uuid = ''): Observable<StorageInfo[]> {
         return this.storageUpdater$.pipe(
             filter(updatedId => !updatedId || updatedId === systemId),
-            switchMap(() => this.get<StorageInfo[]>(this.endpoint(), { params: systemId ? { systemId } : {} }))
+            switchMap(() =>
+                this.get<StorageInfo[]>(this.endpoint(), { params: systemId ? { systemId } : {} }),
+            ),
         );
     }
 
@@ -121,7 +130,10 @@ export class CloudStorageAPI extends BaseCloudServiceAPI {
      * @returns Observable<StorageInfo>
      */
     @disabledMethod
-    public mergeStorages({ storageId, ...body }: StorageId & SlaveStorageId): Observable<StorageInfo> {
+    public mergeStorages({
+        storageId,
+        ...body
+    }: StorageId & SlaveStorageId): Observable<StorageInfo> {
         return this.post(this.endpoint(storageId, 'merged-storages'), { body });
     }
 
@@ -146,8 +158,14 @@ export class CloudStorageAPI extends BaseCloudServiceAPI {
      * @param param BoundSystem
      * @returns Observable<BoundSystem>
      */
-    public bindSystem({ storageId, ...body }: BoundSystem, replaceExisting = true): Observable<BoundSystem> {
-        return this.post(this.endpoint(storageId, 'systems'), { body, params: { 'replace-existing': replaceExisting } });
+    public bindSystem(
+        { storageId, ...body }: BoundSystem,
+        replaceExisting = true,
+    ): Observable<BoundSystem> {
+        return this.post(this.endpoint(storageId, 'systems'), {
+            body,
+            params: { 'replace-existing': replaceExisting },
+        });
     }
 
     /**

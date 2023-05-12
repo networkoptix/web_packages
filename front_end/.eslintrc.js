@@ -580,7 +580,7 @@ module.exports = {
                 'libs/services/account.service/**/*.ts',
                 'libs/services/apply.service/**/*.ts',
                 'libs/services/mediaserver-apis/**/*.ts',
-                'libs/services/nx-cloud-api/nx-cloud-api.ts',
+                'libs/services/nx-cloud-api/**/*.ts',
                 // 'libs/services//**/*.ts',
                 'libs/utils/**/*.ts',
             ],

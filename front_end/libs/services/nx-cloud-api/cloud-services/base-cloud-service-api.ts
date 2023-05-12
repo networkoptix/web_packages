@@ -11,18 +11,26 @@ import { startWithCache } from '@utils/start-with-cached';
 import { WithFreshSession } from '../nx-cloud-api.types';
 
 interface BaseRequestOptions {
-    headers?: HttpHeaders | {
-        [header: string]: string | string[];
-    };
-    params?: HttpParams | {
-        [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
-    };
+    headers?:
+        | HttpHeaders
+        | {
+              [header: string]: string | string[];
+          };
+    params?:
+        | HttpParams
+        | {
+              [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
     body?: unknown;
 }
 
-interface PostRequestOptions extends BaseRequestOptions { }
+interface PostRequestOptions extends BaseRequestOptions {}
 
-export type CreateApiFactory<ApiType = unknown> = (http: HttpClient, withFreshSession: WithFreshSession, refreshToken?: Observable<string>) => (serverUrl?: string, cloudHost?: () => string) => ApiType;
+export type CreateApiFactory<ApiType = unknown> = (
+    http: HttpClient,
+    withFreshSession: WithFreshSession,
+    refreshToken?: Observable<string>,
+) => (serverUrl?: string, cloudHost?: () => string) => ApiType;
 
 /**
  * Static properties methods required for using BaseCloudServiceAPI abstract class.
@@ -41,7 +49,11 @@ export const implementsCloudServiceApi = staticImplements<CloudServiceAPI>();
 /**
  * Decorator to mark method as disabled.
  */
-export function disabledMethod(target: unknown, name: string, descriptor: PropertyDescriptor): void {
+export function disabledMethod(
+    target: unknown,
+    name: string,
+    descriptor: PropertyDescriptor,
+): void {
     descriptor.value = function () {
         throw new Error('This method is not currently enabled');
     };
@@ -66,59 +78,100 @@ export abstract class BaseCloudServiceAPI {
             this.serverUrl = this.serverUrl.slice(0, -1);
         }
 
-        this.hostOrCustomization ||= () => (environment.cloudHost || Injector.create({ providers: WINDOWS_PROVIDERS }).get(WINDOW).location.hostname);
+        this.hostOrCustomization ||= () =>
+            environment.cloudHost ||
+            Injector.create({ providers: WINDOWS_PROVIDERS }).get(WINDOW).location.hostname;
     }
 
-    protected get = <T>(endpoint: string, options?: BaseRequestOptions): Observable<T> => this.#handle<T>(endpoint, (url, { body, ...options }) => this.http.get<T>(url, options).pipe(startWithCache(url, options)), this.#processOptionsFactory(options));
+    protected get = <T>(endpoint: string, options?: BaseRequestOptions): Observable<T> =>
+        this.#handle<T>(
+            endpoint,
+            (url, { body, ...options }) =>
+                this.http.get<T>(url, options).pipe(startWithCache(url, options)),
+            this.#processOptionsFactory(options),
+        );
 
-    protected post = <T>(endpoint: string, options?: PostRequestOptions): Observable<T> => this.#handle<T>(endpoint, (url, { body, ...options }) => this.http.post<T>(url, body, options), this.#processOptionsFactory(options));
+    protected post = <T>(endpoint: string, options?: PostRequestOptions): Observable<T> =>
+        this.#handle<T>(
+            endpoint,
+            (url, { body, ...options }) => this.http.post<T>(url, body, options),
+            this.#processOptionsFactory(options),
+        );
 
-    protected patch = <T>(endpoint: string, options?: PostRequestOptions): Observable<T> => this.#handle<T>(endpoint, (url, { body, ...options }) => this.http.patch<T>(url, body, options), this.#processOptionsFactory(options));
+    protected patch = <T>(endpoint: string, options?: PostRequestOptions): Observable<T> =>
+        this.#handle<T>(
+            endpoint,
+            (url, { body, ...options }) => this.http.patch<T>(url, body, options),
+            this.#processOptionsFactory(options),
+        );
 
-    protected put = <T>(endpoint: string, options?: PostRequestOptions): Observable<T> => this.#handle<T>(endpoint, (url, { body, ...options }) => this.http.put<T>(url, body, options), this.#processOptionsFactory(options));
+    protected put = <T>(endpoint: string, options?: PostRequestOptions): Observable<T> =>
+        this.#handle<T>(
+            endpoint,
+            (url, { body, ...options }) => this.http.put<T>(url, body, options),
+            this.#processOptionsFactory(options),
+        );
 
-    protected delete = <T>(endpoint: string, options?: PostRequestOptions): Observable<T> => this.#handle<T>(endpoint, (url, { body, ...options }) => this.http.delete<T>(url, { ...options, body }), this.#processOptionsFactory(options));
+    protected delete = <T>(endpoint: string, options?: PostRequestOptions): Observable<T> =>
+        this.#handle<T>(
+            endpoint,
+            (url, { body, ...options }) => this.http.delete<T>(url, { ...options, body }),
+            this.#processOptionsFactory(options),
+        );
 
-    #processOptionsFactory = <T extends BaseRequestOptions>(baseOptions?: T) => (accessToken: string): T | BaseRequestOptions => {
-        const options = baseOptions || <BaseRequestOptions>{};
-        options.headers ||= new HttpHeaders();
+    #processOptionsFactory =
+        <T extends BaseRequestOptions>(baseOptions?: T) =>
+        (accessToken: string): T | BaseRequestOptions => {
+            const options = baseOptions || <BaseRequestOptions>{};
+            options.headers ||= new HttpHeaders();
 
-        const additionalHeaders = {
-            Authorization: `Bearer ${accessToken}`,
-            'cloud-host': this.hostOrCustomization() || environment.cloudHostDev || environment.cloudHost || ''
+            const additionalHeaders = {
+                Authorization: `Bearer ${accessToken}`,
+                'cloud-host':
+                    this.hostOrCustomization() ||
+                    environment.cloudHostDev ||
+                    environment.cloudHost ||
+                    '',
+            };
+
+            const updateHeading = ([key, value]: [string, string]): void => {
+                if (options.headers instanceof HttpHeaders) {
+                    options.headers = options.headers.set(key, value);
+                } else {
+                    options.headers[key] = value;
+                }
+            };
+
+            Object.entries(additionalHeaders).forEach(entry => updateHeading(entry));
+
+            return options;
         };
 
-        const updateHeading = ([key, value]: [string, string]): void => {
-            if (options.headers instanceof HttpHeaders) {
-                options.headers = options.headers.set(key, value);
-            } else {
-                options.headers[key] = value;
-            }
-        };
-
-        Object.entries(additionalHeaders).forEach(entry => updateHeading(entry));
-
-        return options;
-    };
-
-    #handle<T>(endpoint: string, request: (url: string, options: BaseRequestOptions) => Observable<T>, getOptions: (accessToken: string) => BaseRequestOptions): Observable<T> {
+    #handle<T>(
+        endpoint: string,
+        request: (url: string, options: BaseRequestOptions) => Observable<T>,
+        getOptions: (accessToken: string) => BaseRequestOptions,
+    ): Observable<T> {
         const url = this.serverUrl + this.apiBase + endpoint;
         if (InterceptorManager.enabled) {
             return request(url, getOptions(InterceptorManager.USE_CLOUD_TOKEN));
         }
 
         return this.withFreshSession()(({ accessToken, getFreshAccessToken }) => {
-            return request(
-                url, getOptions(accessToken)
-            ).pipe(
+            return request(url, getOptions(accessToken)).pipe(
                 // Retry once with fresh token else raise error.
-                catchError(() => getFreshAccessToken().pipe(switchMap(accessToken => request(url, getOptions(accessToken))))));
+                catchError(() =>
+                    getFreshAccessToken().pipe(
+                        switchMap(accessToken => request(url, getOptions(accessToken))),
+                    ),
+                ),
+            );
         });
     }
 
     public verify(password: string): Observable<unknown> {
         return this.http.post('/api/account/verify', {
-            password
+            password,
         });
     }
 }

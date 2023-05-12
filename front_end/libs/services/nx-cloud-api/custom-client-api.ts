@@ -1,4 +1,3 @@
-
 import type { HttpClient } from '@angular/common/http';
 import { v4 as uuid } from 'uuid';
 
@@ -17,7 +16,13 @@ export class CustomClientAPI {
     create = (name: string, baseVms?, values: Record<string, string> = {}) => {
         if (!Object.keys(values).length) {
             const id = uuid();
-            this.consoleService.unsavedAssets[id] = { name, base_vms: baseVms, id, unsaved: true, values: {} };
+            this.consoleService.unsavedAssets[id] = {
+                name,
+                base_vms: baseVms,
+                id,
+                unsaved: true,
+                values: {},
+            };
             return Promise.reject(id);
         }
         const body: any = { name };
@@ -43,7 +48,12 @@ export class CustomClientAPI {
         return this.http.put<t.CustomClient>(`${this.apiBase}${id}/`, { name, values });
     };
 
-    partialUpdate = (id, name?, data: Record<string, any> = {}, values: Record<string, any> = {}) => {
+    partialUpdate = (
+        id,
+        name?,
+        data: Record<string, any> = {},
+        values: Record<string, any> = {},
+    ) => {
         if (name !== undefined) {
             data.name = name;
         }
@@ -64,8 +74,11 @@ export class CustomClientAPI {
     };
 
     checkPackage = (id: string, downloadId: string) => {
-        return this.http.get<t.PackageStatus>(`${this.apiBase}${id}/check_package/?downloadId=${downloadId}`);
+        return this.http.get<t.PackageStatus>(
+            `${this.apiBase}${id}/check_package/?downloadId=${downloadId}`,
+        );
     };
 
-    getDownloadUrl = (id: string, downloadId: string) => `${this.apiBase}${id}/download_package/?downloadId=${downloadId}`;
+    getDownloadUrl = (id: string, downloadId: string) =>
+        `${this.apiBase}${id}/download_package/?downloadId=${downloadId}`;
 }

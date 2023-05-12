@@ -20,12 +20,18 @@ export class CustomAccountProperty<T> {
         property: string,
         initialValue: T,
         username: string,
-        targetInstance: string
+        targetInstance: string,
     ): CustomAccountProperty<T> {
         if (CustomAccountProperty.INSTANCES[property]) {
             CustomAccountProperty.INSTANCES[property].get(true, true);
         } else {
-            CustomAccountProperty.INSTANCES[property] = new CustomAccountProperty(http, property, initialValue, username, targetInstance);
+            CustomAccountProperty.INSTANCES[property] = new CustomAccountProperty(
+                http,
+                property,
+                initialValue,
+                username,
+                targetInstance,
+            );
         }
         return CustomAccountProperty.INSTANCES[property] as CustomAccountProperty<T>;
     }
@@ -37,7 +43,9 @@ export class CustomAccountProperty<T> {
         username: string,
         targetInstance: string,
     ) {
-        this.#endpoint = `${targetInstance}${apiBase}/custom-properties/${property}${username ? '/' + username : ''}`;
+        this.#endpoint = `${targetInstance}${apiBase}/custom-properties/${property}${
+            username ? '/' + username : ''
+        }`;
         const updater$ = new Subject<T>();
 
         const saveValue = (val: T): Promise<T> => {
@@ -45,21 +53,19 @@ export class CustomAccountProperty<T> {
             return Promise.resolve(val);
         };
 
-        const getValue = (): Observable<T> => this.http.get<T>(this.#endpoint).pipe(
-            catchError(() => saveValue(initialValue))
-        );
+        const getValue = (): Observable<T> =>
+            this.http.get<T>(this.#endpoint).pipe(catchError(() => saveValue(initialValue)));
 
-        updater$.pipe(
-            debounceTime(1500),
-            switchMap(val => this.http.post<T>(this.#endpoint, val))
-        ).subscribe();
+        updater$
+            .pipe(
+                debounceTime(1500),
+                switchMap(val => this.http.post<T>(this.#endpoint, val)),
+            )
+            .subscribe();
 
         this.value$ = this.#value$.pipe(
-            switchMap(val => val
-                ? saveValue(val)
-                : getValue()
-            ),
-            shareReplay({ bufferSize: 1, refCount: false })
+            switchMap(val => (val ? saveValue(val) : getValue())),
+            shareReplay({ bufferSize: 1, refCount: false }),
         );
     }
 
@@ -91,7 +97,7 @@ export class CustomAccountProperty<T> {
                 const result = mappingCallback(current);
                 return result instanceof Observable ? firstValueFrom(result) : result;
             }),
-            switchMap(updated => this.save(updated))
+            switchMap(updated => this.save(updated)),
         );
 
         return toPromise ? firstValueFrom(observable) : observable;

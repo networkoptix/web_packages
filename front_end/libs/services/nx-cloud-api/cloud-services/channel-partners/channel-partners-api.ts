@@ -55,10 +55,17 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
      * @param withFreshSession WithFreshSession
      * @returns  (serverUrl?: string, cloudHost?: string) => LicenseServerAPI
      */
-    static createApiFactory: CreateApiFactory<ChannelPartnersApi> = (http: HttpClient, withFreshSession: WithFreshSession) => (serverUrl: string, cloudHost: () => string) => {
-        ChannelPartnersApi.INSTANCES[serverUrl] ||= new ChannelPartnersApi(serverUrl, cloudHost, http, withFreshSession);
-        return ChannelPartnersApi.INSTANCES[serverUrl];
-    };
+    static createApiFactory: CreateApiFactory<ChannelPartnersApi> =
+        (http: HttpClient, withFreshSession: WithFreshSession) =>
+        (serverUrl: string, cloudHost: () => string) => {
+            ChannelPartnersApi.INSTANCES[serverUrl] ||= new ChannelPartnersApi(
+                serverUrl,
+                cloudHost,
+                http,
+                withFreshSession,
+            );
+            return ChannelPartnersApi.INSTANCES[serverUrl];
+        };
 
     constructor(
         serverUrl: string,
@@ -66,13 +73,7 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         http: HttpClient,
         withFreshSession: WithFreshSession,
     ) {
-        super(
-            serverUrl,
-            ChannelPartnersApi.API_BASE,
-            cloudHost,
-            http,
-            withFreshSession
-        );
+        super(serverUrl, ChannelPartnersApi.API_BASE, cloudHost, http, withFreshSession);
     }
 
     private cpUrl(parts: (string | number)[], trailing: boolean = true): string {
@@ -100,7 +101,10 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         return this.get(this.cpUrl([partnerId]));
     };
 
-    updateChannelPartner = (partnerId: Id, body: UpdateChannelPartner): Observable<ChannelPartner> => {
+    updateChannelPartner = (
+        partnerId: Id,
+        body: UpdateChannelPartner,
+    ): Observable<ChannelPartner> => {
         return this.patch(this.cpUrl([partnerId]), { body });
     };
 
@@ -109,7 +113,7 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
     };
 
     /* Channel Partner Users */
-    getChannelPartnerRoles = () : Observable<ChannelPartnerRole[]> => {
+    getChannelPartnerRoles = (): Observable<ChannelPartnerRole[]> => {
         return this.get('/channel_partner_roles');
     };
 
@@ -117,12 +121,18 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         return this.get(this.cpUrl([partnerId, 'users']));
     };
 
-    createChannelPartnerUser = (partnerId: Id, body: CreateChannelPartnerUser): Observable<ChannelPartnerUser> => {
+    createChannelPartnerUser = (
+        partnerId: Id,
+        body: CreateChannelPartnerUser,
+    ): Observable<ChannelPartnerUser> => {
         return this.post(this.cpUrl([partnerId, 'users']), { body });
     };
 
     // Updates role
-    updateChannelPartnerUser = (partnerId: Id, body: UpdateChannelPartnerUser): Observable<ChannelPartnerUser> => {
+    updateChannelPartnerUser = (
+        partnerId: Id,
+        body: UpdateChannelPartnerUser,
+    ): Observable<ChannelPartnerUser> => {
         return this.post(this.cpUrl([partnerId, 'users']), { body });
     };
 
@@ -168,11 +178,17 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         return this.get(this.orgUrl([orgId, 'users']));
     };
 
-    createOrganizationUser = (orgId: Id, body: CreateOrganizationUser): Observable<OrganizationUser> => {
+    createOrganizationUser = (
+        orgId: Id,
+        body: CreateOrganizationUser,
+    ): Observable<OrganizationUser> => {
         return this.post(this.orgUrl([orgId, 'users']), { body });
     };
 
-    updateOrganizationUser = (orgId: Id, body: UpdateOrganizationUser): Observable<OrganizationUser> => {
+    updateOrganizationUser = (
+        orgId: Id,
+        body: UpdateOrganizationUser,
+    ): Observable<OrganizationUser> => {
         return this.post(this.orgUrl([orgId, 'users']), { body });
     };
 

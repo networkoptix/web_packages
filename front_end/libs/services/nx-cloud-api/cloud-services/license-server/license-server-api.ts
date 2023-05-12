@@ -39,7 +39,9 @@ function updateCachedLicenseServer(targetProperty: string) {
         const originalMethod = descriptor.value;
         descriptor.value = function (...args) {
             const systemId = args[0]?.[targetProperty];
-            return originalMethod.apply(this, args).pipe(tap(() => systemId && this.cacheLicenseServer(systemId)));
+            return originalMethod
+                .apply(this, args)
+                .pipe(tap(() => systemId && this.cacheLicenseServer(systemId)));
         };
     };
 }
@@ -61,10 +63,17 @@ export class LicenseServerAPI extends BaseCloudServiceAPI {
      * @param withFreshSession WithFreshSession
      * @returns  (serverUrl?: string, cloudHost?: string) => LicenseServerAPI
      */
-    static createApiFactory: CreateApiFactory<LicenseServerAPI> = (http: HttpClient, withFreshSession: WithFreshSession) => (serverUrl: string, cloudHost: () => string) => {
-        LicenseServerAPI.INSTANCES[serverUrl] ||= new LicenseServerAPI(serverUrl, cloudHost, http, withFreshSession);
-        return LicenseServerAPI.INSTANCES[serverUrl].update();
-    };
+    static createApiFactory: CreateApiFactory<LicenseServerAPI> =
+        (http: HttpClient, withFreshSession: WithFreshSession) =>
+        (serverUrl: string, cloudHost: () => string) => {
+            LicenseServerAPI.INSTANCES[serverUrl] ||= new LicenseServerAPI(
+                serverUrl,
+                cloudHost,
+                http,
+                withFreshSession,
+            );
+            return LicenseServerAPI.INSTANCES[serverUrl].update();
+        };
 
     constructor(
         serverUrl: string,
@@ -125,22 +134,22 @@ export class LicenseServerAPI extends BaseCloudServiceAPI {
     private licenseRequestUpdater$ = new BehaviorSubject('');
 
     /**
-    * Licenses for system.
-    *
-    * @param systemId string
-    * @returns OObservable<LicenseInfo[]>
-    */
+     * Licenses for system.
+     *
+     * @param systemId string
+     * @returns OObservable<LicenseInfo[]>
+     */
     public getSystemLicenses(systemId: uuid): Observable<LicenseInfo[]> {
         this.licenseRequestUpdater$.next(systemId);
         return this.handleLicenses(systemId);
     }
 
     /**
-    * Licenses for user.
-    *
-    * @param systemId string
-    * @returns OObservable<LicenseInfo[]>
-    */
+     * Licenses for user.
+     *
+     * @param systemId string
+     * @returns OObservable<LicenseInfo[]>
+     */
     public getUserLicenses(): Observable<LicenseInfo[]> {
         this.licenseRequestUpdater$.next('');
         return this.handleLicenses();
@@ -150,17 +159,19 @@ export class LicenseServerAPI extends BaseCloudServiceAPI {
     private handleLicenses(systemId = ''): Observable<LicenseInfo[]> {
         return this.licenseRequestUpdater$.pipe(
             filter(updatedId => !updatedId || updatedId === systemId),
-            concatMap(() => this.get<LicenseInfo[]>(`/license/cloud/licenses${systemId ? `/${systemId}` : ''}`)),
-            catchError(() => Promise.resolve([]))
+            concatMap(() =>
+                this.get<LicenseInfo[]>(`/license/cloud/licenses${systemId ? `/${systemId}` : ''}`),
+            ),
+            catchError(() => Promise.resolve([])),
         );
     }
 
     /**
-    * Security check-in for cloud license.
-    *
-    * @param body UsageReportRequest
-    * @returns Observable<unknown>
-    */
+     * Security check-in for cloud license.
+     *
+     * @param body UsageReportRequest
+     * @returns Observable<unknown>
+     */
     public usageReport(body: CloudSystemId): Observable<UsageReportRequest> {
         return this.post('/license/cloud/usage_report', { body });
     }
@@ -168,11 +179,11 @@ export class LicenseServerAPI extends BaseCloudServiceAPI {
     /** License Endpoints */
 
     /**
-    * Useful for checking a license before attempting to activate.
-    *
-    * @param key string
-    * @returns Observable<LicenseInfo>
-    */
+     * Useful for checking a license before attempting to activate.
+     *
+     * @param key string
+     * @returns Observable<LicenseInfo>
+     */
     public inspectLicense(key: uuid): Observable<LicenseInfo> {
         return this.get(`/license/inspect/${key}`);
     }
@@ -180,21 +191,21 @@ export class LicenseServerAPI extends BaseCloudServiceAPI {
     /** Cloud Storage Endpoints */
 
     /**
-    * Activate cloud storage license.
-    *
-    * @param body StorageBase
-    * @returns Observable<StorageActivation>
-    */
+     * Activate cloud storage license.
+     *
+     * @param body StorageBase
+     * @returns Observable<StorageActivation>
+     */
     public activateStorage(body: StorageBase): Observable<StorageActivation> {
         return this.post('/storage/activate', { body });
     }
 
     /**
-    * Get storage activate/deactivation events.
-    *
-    * @param params StorageEventParams
-    * @returns Observable<StorageEvent>
-    */
+     * Get storage activate/deactivation events.
+     *
+     * @param params StorageEventParams
+     * @returns Observable<StorageEvent>
+     */
     public getStorageEvents(params: StorageEventParams = {}): Observable<StorageEvent> {
         const MAX_EVENTS = 2000;
 
@@ -206,22 +217,24 @@ export class LicenseServerAPI extends BaseCloudServiceAPI {
     }
 
     /**
-    * Get storage activations for system ids.
-    *
-    * @param body CloudSystemIds
-    * @returns Observable<SystemStorage[]>
-    */
+     * Get storage activations for system ids.
+     *
+     * @param body CloudSystemIds
+     * @returns Observable<SystemStorage[]>
+     */
     public getStorageActivations(body: CloudSystemIds): Observable<SystemStorage[]> {
         return this.post('/storage/systems', { body });
     }
 
     /**
-    * Validate storage activations (10,000 maximum records).
-    *
-    * @param body ValidateSystemLicense
-    * @returns Observable<SystemLicenseInfo[]>
-    */
-    public validateStorageActivations(body: ValidateSystemLicense): Observable<SystemLicenseInfo[]> {
+     * Validate storage activations (10,000 maximum records).
+     *
+     * @param body ValidateSystemLicense
+     * @returns Observable<SystemLicenseInfo[]>
+     */
+    public validateStorageActivations(
+        body: ValidateSystemLicense,
+    ): Observable<SystemLicenseInfo[]> {
         return this.post('/storage/validate', { body });
     }
 }
