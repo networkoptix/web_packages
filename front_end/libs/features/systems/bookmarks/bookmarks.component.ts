@@ -11,13 +11,7 @@ import { icons } from '@lib/variables/static-variables';
 import { pollingTimeout } from '@pages/static-variables-features';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import type {
-    BookmarksParams,
-    BookmarksTags,
-    Device,
-    NormalResponse,
-    ServerTime,
-} from '@services/system-api.types';
+import type { BookmarksParams, BookmarksTags, Device } from '@services/system-api.types';
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
@@ -180,14 +174,6 @@ export class NxBookmarksComponent implements OnInit {
         };
     }
 
-    getServerOffsetTime(serverTimes: NormalResponse<ServerTime[]>, serverId: string): number {
-        return Number(
-            serverTimes.reply.find(server => {
-                return server.serverId === serverId;
-            }).timeZoneOffset || 0,
-        );
-    }
-
     bookmarksPoll(): void {
         const mediaserver = this.system.mediaserver as NxSystemRestAPI;
         const params: BookmarksParams = {
@@ -208,11 +194,15 @@ export class NxBookmarksComponent implements OnInit {
             map(([bks, tags, devices, serverTimes]) => {
                 this.updateTags(tags);
                 this.updateDevices(devices);
+                const offsetTimes = new Map(
+                    serverTimes.reply.map(reply => [
+                        reply.serverId,
+                        Number(reply.timeZoneOffset) ?? 0,
+                    ]),
+                );
                 return bks.map<Bookmark>(bk => {
                     const device = devices.find(item => item.id === bk.deviceId);
-                    const timeZoneOffset = device
-                        ? this.getServerOffsetTime(serverTimes, device.serverId)
-                        : 0;
+                    const timeZoneOffset = offsetTimes.get(device.serverId);
                     const getLink = (transport: string): string => {
                         return this.system.mediaserver.getExportUrl({
                             cameraId: bk.deviceId,
