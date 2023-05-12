@@ -34,6 +34,7 @@ export const nxConfig: IConfig = {
             newWindow: true
         }
     ],
+    clientProtocol: '',
     downloads: {
         mobile: [
             {
@@ -276,6 +277,10 @@ export const nxConfig: IConfig = {
         default: 'auto',
         dark: 'dark',
         light: 'light',
+    },
+    mobileLinks: {
+        android_application_link: '',
+        ios_application_link: ''
     }
 
 };

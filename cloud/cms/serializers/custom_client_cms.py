@@ -119,7 +119,11 @@ class CustomClientSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.request = kwargs.get('request', None)
-        if not settings.META or not self.context.get('request', None):
+        if getattr(self.context.get('view', None), 'swagger_fake_view', False):
+            # initialize serializer for swagger inspection
+            return
+        if not settings.META or not self.context.get('request', None)\
+                or not self.context['request'].user.is_authenticated:
             self.fields['base_vms'].read_only = True
         else:
             self.fields['base_vms'].queryset = self.context['request'].user.custom_client_vms_assets(request=self.request)

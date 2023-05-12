@@ -128,6 +128,8 @@ class TestAccountViews:
             return req
 
         req = get_request('/api/account')
+
+        # Removing the caching until 23.2 release
         init_session_key = req.session.session_key
 
         # Test cache redirect

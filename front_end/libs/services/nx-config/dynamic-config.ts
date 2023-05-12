@@ -72,7 +72,7 @@ export class DynamicConfig {
                 }
             });
 
-            const { companyLink, companyName, copyrightYear, privacyLink, supportLink, customization, licenseServer } = data;
+            const { clientProtocol, companyLink, companyName, copyrightYear, privacyLink, supportLink, mobileLinks, customization, licenseServer } = data;
             nxConfig.licenseServer = licenseServer;
             nxConfig.customization = customization;
             nxConfig.company = {
@@ -84,6 +84,8 @@ export class DynamicConfig {
                 },
                 name: companyName
             };
+            nxConfig.mobileLinks = mobileLinks;
+            nxConfig.clientProtocol = clientProtocol;
 
             const {
                 developersEnabled,

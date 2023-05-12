@@ -678,8 +678,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 const params = new URLSearchParams(search);
                 const code = params.get('code');
                 params.delete('code');
-                const { accessToken } = await this.cloudService.loginCode(code);
-                await lastValueFrom(this.authService.account(accessToken));
+                await this.cloudService.loginCode(code);
                 const paramString = params.toString();
                 route = `${link}?${paramString}`;
             } catch (err) {

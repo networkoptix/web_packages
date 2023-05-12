@@ -29,6 +29,11 @@ export interface ThemeConfig {
     light: string;
 }
 
+export interface MobileLinks {
+    android_application_link: string;
+    ios_application_link: string;
+}
+
 export interface BaseConfig {
     accountDropdown: AccountDropdown[];
     accountDropdownStaff: AccountDropdown[];
@@ -51,6 +56,7 @@ export interface BaseConfig {
     downloads: Downloads;
     newSystem: boolean;
     system: System;
+    clientProtocol: string;
     cloudCapabilities: CloudCapabilities;
     cloudName: string;
     cloudHost: string;
@@ -80,6 +86,7 @@ export interface BaseConfig {
     webadminRoutesLookup: RouteCheckTuple[];
     cloudMonitoring: CloudMonitoring;
     themeConfig: ThemeConfig;
+    mobileLinks: MobileLinks;
 }
 
 export type RouteCheckTuple = [lookup?: RegExp, replacementUrl?: string, additionalMessage?: string];

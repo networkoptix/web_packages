@@ -24,7 +24,6 @@ export interface Account extends CloudAccount {
 
     account2faEnabled: boolean;
     totpExistsForAccount: boolean;
-    sessionExpires: number;
 }
 
 export function newLocalAccount({
@@ -67,8 +66,7 @@ export const DUMMY_ACCOUNT: Account = {
     account2faEnabled: false,
     sessionVerified: false,
     totpExistsForAccount: false,
-    accessToken: 'accessToken',
-    sessionExpires: Date.now() + 1000
+    accessToken: 'accessToken'
 };
 
 // .requiresLogin() in account service doesn't return an actual Account object

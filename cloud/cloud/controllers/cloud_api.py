@@ -10,6 +10,7 @@ import logging
 import requests
 from requests.auth import HTTPBasicAuth, HTTPDigestAuth
 from django.conf import settings
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -97,7 +98,7 @@ def auto_refresh_token(no_refresh=False):
         @wraps(func)
         def wrapper(request, *args, **kwargs):
             from api.account_backend import BearerAuthentication
-            if hasattr(request, "_authenticator") and isinstance(request._authenticator, BearerAuthentication):
+            if hasattr(request, "_authenticator") and isinstance(request._authenticator, TokenAuthentication):
                 access_token = request.auth
                 refresh_token = None
             elif hasattr(request, "session"):

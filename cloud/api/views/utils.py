@@ -227,17 +227,22 @@ def downloads_history(request):
                                            "cloud portal.",
                      manual_parameters=[build__route_param])
 @api_view(['GET'])
-@permission_classes((IsAuthenticated, ))
+@permission_classes((AllowAny, ))
 def download_build(request, build):
     # TODO: later we can check specific permissions
     customization = get_customization(request)
     public_release_history = get_settings_from_cache(
         customization=customization)['publicReleases']
-    can_view_releases = UserGroupsToAssetPermissions.\
-        check_customization_permission(
-            request.user, customization, 'api.can_view_release')
+    can_view_releases = False
+    if request.user.is_authenticated:
+        can_view_releases = UserGroupsToAssetPermissions.\
+            check_customization_permission(
+                request.user, customization, 'api.can_view_release')
+
     if not public_release_history and not can_view_releases:
-        raise APIForbiddenException("Not authorized", ErrorCodes.forbidden)
+        customization_downloads = json.loads(caches['global'].get(f"downloads_{customization}", "{}"))
+        if customization_downloads.get('version') != build:
+            raise APIForbiddenException("Not authorized", ErrorCodes.forbidden)
     """
         r'(?:(?:\d*\.){2,3})?\d+(?: \w\d+)?'
         This pattern looks for version, build, and in some cases R|H + number

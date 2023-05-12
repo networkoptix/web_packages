@@ -588,12 +588,14 @@ class CloudPortalAPI(object):
     @keyword
     def toggle_2fa_off_api(self, email, password, backup_code=None, verification_code=None):
         with self._session(
-                email, password,
-                backup_code=backup_code, verification_code=verification_code) as s:
+                email, 
+                password,
+                backup_code=backup_code, 
+                verification_code=verification_code) as s:
             s.headers.update({'Referer': self.env})
-            r = s.get(f'{self.env}/api/account')
+            r = s.post(f'{self.env}/api/account/refreshAccessToken')
             logger.trace(f"/api/account json: {r.json()}")
-            s.headers.update({"Authorization": f"Bearer {r.json()['accessToken']}"})
+            s.headers.update({"Authorization": f"Bearer {r.json()['access_token']}"})
             sec = s.get(f'{self.env}/cdb/account/self/settings/security')
             del s.headers["Authorization"]
             if sec.json().get('account2faEnabled') or sec.json().get('totpExistsForAccount'):

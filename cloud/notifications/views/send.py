@@ -19,6 +19,7 @@ from cloud.helpers.exceptions import handle_exceptions, APIRequestException, API
     api_success, ErrorCodes, get_client_ip
 from api.models import Account
 from cms.models import Customization, Asset, UserGroupsToAssetPermissions, cloud_portal_customization_cache
+from cms.permissions import IsSuperuser
 from notifications import notifications_api
 from notifications.models import *
 from notifications.tasks import send_to_all_users
@@ -330,7 +331,7 @@ def cloud_notification_action(request):
 
 
 @api_view(['GET'])
-@permission_classes((AllowAny, ))
+@permission_classes((IsSuperuser, ))
 def notification_test(request):
     from notifications import tasks
     from random import seed, randint

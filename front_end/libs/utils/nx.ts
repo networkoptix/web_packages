@@ -97,7 +97,7 @@ export const generateTour = (
     return translations ? { ...config, ...translations, anchorId } : null;
 }).filter(step => !!step);
 
-interface Language {
+export interface Language {
     [key: string]: Language | string
 }
 

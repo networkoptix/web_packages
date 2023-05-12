@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 
 import { environment } from '@environments/environment';
-import { processLanguageFactory } from '@utils/nx';
 
 import type { IConfig } from './nx-config/config-types';
 import { NxConfigService } from './nx-config/nx-config.service';
@@ -87,7 +86,8 @@ export class NxBootstrapProvider {
                 this.languageService.loadLanguage(),
                 this.getModuleInfo()
             ]).then(([language, moduleInfo]: any) => {
-                this.setLanguage(language);
+                this.languageService.setTranslations(language.language, language);
+                this.CONFIG.viewsDir = 'static/lang_' + language.language + '/views/';
 
                 if (moduleInfo.reply) {
                     this.isNewSystem = moduleInfo.reply.serverFlags.includes('SF_NewSystem');
@@ -122,18 +122,4 @@ export class NxBootstrapProvider {
         this.CONFIG.localServerId = data.id;
         this.CONFIG.system.name = data.systemName || data.name;
     };
-
-    setLanguage(data) {
-        // this.languageService.newTranslation = { language: data.ajs.language, json: data.i18n };
-        const customStrings = {
-            '%CLOUD_NAME%': this.CONFIG.cloudName,
-            '%VMS_NAME%': this.CONFIG.vmsName,
-            '%SUPPORT_LINK%': this.CONFIG.company.links.website,
-            '%COMPANY_NAME%': this.CONFIG.company.name
-        };
-        const processLanguage = processLanguageFactory(customStrings);
-        this.languageService.setTranslations(data.language, processLanguage(data));
-
-        this.CONFIG.viewsDir = 'static/lang_' + data.language + '/views/';
-    }
 }

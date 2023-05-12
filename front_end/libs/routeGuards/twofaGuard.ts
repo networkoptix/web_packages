@@ -7,11 +7,12 @@ import {
     UrlTree,
     Router,
 } from '@angular/router';
-import { Observable, Subject } from 'rxjs';
+import { lastValueFrom, Observable, Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { OauthService } from '@services/oauth.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
@@ -24,6 +25,7 @@ export class TwofaGuard implements CanActivate {
     constructor(
         private router: Router,
         private accountService: NxAccountService,
+        private cloudApi: NxCloudApiService,
         private systemsService: NxSystemsService,
         private oauthService: OauthService,
         @Inject(WINDOW) private window: Window,
@@ -57,11 +59,12 @@ export class TwofaGuard implements CanActivate {
                         }
                     } else {
                         canActivateSubject.complete();
+                        const accessToken = await lastValueFrom(this.cloudApi.getAccessToken());
                         this.oauthService.redirectOauth(
                             'system2faAuth',
                             account.email,
                             undefined,
-                            account.accessToken,
+                            accessToken,
                             Location.joinWithSlash(this.window.location.origin, state.url)
                         );
                     }
