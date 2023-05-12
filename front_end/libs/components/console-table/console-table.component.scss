@@ -21,7 +21,7 @@
         @include typography.bold13dark9nocolor;
         color: var(--card-header-text);
         height: 28px;
-        background: $light3;
+        background: var(--new-light3);
         padding-left: 12px !important;
     }
 
@@ -40,11 +40,11 @@
 
         &:not(.ignore-active):active {
             & * {
-                color: $light1  !important;
-                fill: $light1  !important;
+                color: var(--new-light1)  !important;
+                fill: var(--new-light1)  !important;
             }
 
-            background : $light16;
+            background : var(--new-light16);
         }
     }
 
@@ -97,11 +97,11 @@
 
             &:active {
                 & span.status-label {
-                    color: $dark16;
+                    color: var(--new-dark16);
                 }
 
                 & .st0 {
-                    stroke: $dark16;
+                    stroke: var(--new-dark16);
                     fill: none;
                 }
             }
@@ -116,7 +116,7 @@
         }
 
         .close-svg #Line {
-            stroke: $dark1  !important;
+            stroke: var(--new-dark1)  !important;
         }
 
         .close-wrapper {
@@ -125,29 +125,29 @@
         }
 
         .in-progress-wrapper {
-            color: $light10;
+            color: var(--new-light10);
 
             .st0 {
-                fill: $light10;
+                fill: var(--new-light10);
             }
 
             &:hover {
                 & span.status-label {
-                    color: $dark9;
+                    color: var(--new-dark9);
                 }
 
                 & .st0 {
-                    fill: $dark9;
+                    fill: var(--new-dark9);
                 }
             }
 
             &:active {
                 & span.status-label {
-                    color: $dark8;
+                    color: var(--new-dark8);
                 }
 
                 & .st0 {
-                    fill: $dark8;
+                    fill: var(--new-dark8);
                 }
             }
         }
@@ -196,7 +196,7 @@
         justify-content: center;
         align-items: center;
         backdrop-filter: blur(4px);
-        border: 1px solid $light4;
+        border: 1px solid var(--new-light4);
 
         & button {
             margin-top: 16px;
@@ -241,12 +241,12 @@
 
         button {
             background: transparent;
-            color: $light16;
+            color: var(--new-light16);
             height: 1.5em !important;
 
             &.search-active {
-                background: $light16;
-                color: $light1;
+                background: var(--new-light16);
+                color: var(--new-light1);
             }
         }
     }
@@ -267,7 +267,7 @@
     }
 
     button.reset-search {
-        color: $light16;
+        color: var(--new-light16);
         display: inline-block !important;
         background: transparent;
     }
@@ -279,12 +279,12 @@
 
         &:hover,
         &.active {
-            background: $light5;
+            background: var(--new-light5);
         }
 
         &:active {
-            background: $light16;
-            color: $light1;
+            background: var(--new-light16);
+            color: var(--new-light1);
         }
     }
 
@@ -293,7 +293,7 @@
         white-space: nowrap;
         align-items: center;
         margin: 16px 16px 16px auto;
-        color: $light16;
+        color: var(--new-light16);
 
         nx-select {
             margin-left: 8px;
@@ -316,12 +316,12 @@
     .icon-modal-svg {
         &:hover {
             .st0 {
-                fill: $dark15  !important;
+                fill: var(--new-dark15)  !important;
             }
         }
     }
 
     .action-buttons-row {
-        border-top: 1px solid $light4;
+        border-top: 1px solid var(--new-light4);
     }
 }

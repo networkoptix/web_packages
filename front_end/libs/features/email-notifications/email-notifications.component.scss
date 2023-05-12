@@ -66,14 +66,14 @@ pre {
   font-weight: normal;
   letter-spacing: normal;
   font-family: robotomonoregular, monospace !important;
-  border: solid 1px $dark11;
-  background-color: $dark13;
+  border: solid 1px var(--new-dark11);
+  background-color: var(--new-dark13);
   color: $additional_light1;
   padding: 12px 8px;
 }
 
 .user-email {
-  color: $light11;
+  color: var(--new-light11);
 }
 
 .attachment {
@@ -83,7 +83,7 @@ pre {
   display: inline-block;
   background: $additional_light1;
   border-radius: 4px;
-  border: solid 1px $light6;
+  border: solid 1px var(--new-light6);
   cursor: pointer;
 
   &:after {

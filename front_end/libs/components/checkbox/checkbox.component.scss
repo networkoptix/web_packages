@@ -99,7 +99,7 @@
     input:focus~.tick {
         svg .focus {
             display: block;
-            stroke: var(--brand-d1) !important;
+            stroke: var(--new-brand-d1) !important;
             stroke-width: 2;
             fill: none;
 
@@ -161,11 +161,11 @@ nx-checkbox {
         }
 
         &.desktop {
-            @include checkboxSvgStateColors($light8,
-                $light4,
-                $light1,
-                $light4,
-                var(--brand-core),
+            @include checkboxSvgStateColors(var(--new-light8),
+                var(--new-light4),
+                var(--new-light1),
+                var(--new-light4),
+                var(--new-brand-core),
             );
         }
 
@@ -206,7 +206,7 @@ nx-checkbox {
     }
 
     .desktop .tick {
-        @include checkboxSvgColor($light10, $light4);
+        @include checkboxSvgColor(var(--new-light10), var(--new-light4));
     }
 
     :not(.desktop) .tick {

@@ -5,7 +5,7 @@
 .menu-level-2 {
     @include typography.medium13dark9;
     position: relative;
-    background-color: $light4;
+    background-color: var(--new-light4);
     border-radius: 0;
     text-decoration: none;
     padding-left: .75rem;
@@ -16,11 +16,11 @@
     line-height: 26px;
 
     &:hover {
-        background-color: $light5;
+        background-color: var(--new-light5);
     }
 
     &:active {
-        background-color: $light6;
+        background-color: var(--new-light6);
     }
 
     &>div {
@@ -38,29 +38,29 @@
     }
 
     &.selected {
-        background-color: $light16  !important;
-        color: $light1  !important;
+        background-color: var(--new-light16)  !important;
+        color: var(--new-light1)  !important;
 
         .user {
-            color: $light1  !important;
+            color: var(--new-light1)  !important;
         }
 
         .menu-level-2-additional {
-            color: $light1  !important;
+            color: var(--new-light1)  !important;
             font-family: $font-family-regular;
         }
     }
 
     &.item-disabled {
-        color: $light16;
+        color: var(--new-light16);
 
         .menu-level-2-additional {
-            color: $light16;
+            color: var(--new-light16);
         }
     }
 }
 
 .menu-level-2-additional {
-    color: $light16;
+    color: var(--new-light16);
     font-family: $font-family-regular;
 }

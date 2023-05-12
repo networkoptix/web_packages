@@ -88,7 +88,7 @@ $header-collapsing-width-1 : 1px;
         height: 100%;
 
         &.vertical-bar {
-            border-right: 1px solid $light4;
+            border-right: 1px solid var(--new-light4);
             height: 25px;
 
         }
@@ -119,7 +119,7 @@ $header-collapsing-width-1 : 1px;
             }
 
             &:hover {
-                background-color: $light2;
+                background-color: var(--new-light2);
                 text-decoration: none;
             }
         }
@@ -160,7 +160,7 @@ $header-collapsing-width-1 : 1px;
             background-color: white !important;
 
             &>a {
-                color: var(--brand-core);
+                color: var(--new-brand-core);
 
                 &:hover {
                     background-color: transparent !important;
@@ -171,7 +171,7 @@ $header-collapsing-width-1 : 1px;
                     position: absolute;
                     bottom: 0;
                     height: $active-border-width;
-                    background-color: var(--brand-core);
+                    background-color: var(--new-brand-core);
                     left: 1rem;
                     right: 1rem;
                 }
@@ -303,7 +303,7 @@ $header-collapsing-width-1 : 1px;
             &>.st0 {
                 fill-rule: evenodd;
                 clip-rule: evenodd;
-                fill: $light4;
+                fill: var(--new-light4);
             }
         }
     }
@@ -324,13 +324,13 @@ $header-collapsing-width-1 : 1px;
     }
 
     &:hover {
-        background: $light2;
-        border-bottom: 1px solid $light5;
+        background: var(--new-light2);
+        border-bottom: 1px solid var(--new-light5);
     }
 
     &:active {
-        background: $light3;
-        border-bottom: 1px solid $light6;
+        background: var(--new-light3);
+        border-bottom: 1px solid var(--new-light6);
     }
 }
 

@@ -234,7 +234,7 @@ div.tab {
         justify-content: center;
         align-items: center;
         height: 100%;
-        color: var(--brand-core);
+        color: var(--new-brand-core);
     }
 }
 
@@ -248,7 +248,7 @@ h2.auto-save-overlay {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: var(--brand-core) !important;
+    color: var(--new-brand-core) !important;
     opacity: 0.5;
     pointer-events: none;
     z-index: 300;
@@ -291,7 +291,7 @@ cdk-tree,
 
     &:active {
         background: rgba($brand_core, .1);
-        outline: 2px solid var(--brand-core);
+        outline: 2px solid var(--new-brand-core);
     }
 
     .item-error {
@@ -375,7 +375,7 @@ cdk-tree,
 
     &:active,
     :focus {
-        outline: 2px solid var(--brand-core);
+        outline: 2px solid var(--new-brand-core);
     }
 
     ::ng-deep {
@@ -511,7 +511,7 @@ iframe {
     grid-area: 1 / 1 / 2 / 2;
     opacity: 1 !important;
     background: rgba($brand_core, .1);
-    outline: 2px solid var(--brand-core);
+    outline: 2px solid var(--new-brand-core);
 }
 
 .action-button {
@@ -662,11 +662,11 @@ iframe {
                 margin: 4px 0 4px auto;
                 padding: 0px 4px;
                 background: transparent;
-                border: 1px solid var(--brand-core);
+                border: 1px solid var(--new-brand-core);
                 border-radius: 24px !important;
 
                 &:hover {
-                    background: var(--brand-core);
+                    background: var(--new-brand-core);
                     border-color: var(--left-menu-l3-selected-color) !important;
                 }
             }

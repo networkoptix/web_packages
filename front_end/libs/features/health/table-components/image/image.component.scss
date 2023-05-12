@@ -12,7 +12,7 @@ img {
 }
 
 .hm-camera-preview {
-    color: var(--light10);
+    color: var(--new-light10);
     font-size: 16px;
     opacity: 0.6;
     text-align: center;
@@ -21,19 +21,19 @@ img {
 .light-camera-preview {
     @extend .hm-camera-preview;
     font-family: $font-family-regular;
-    color: var(--light10);
+    color: var(--new-light10);
     padding: 16px;
 }
 
 .header {
-    color: var(--dark9);
+    color: var(--new-dark9);
     font-size: 13px;
     height: 16px;
     margin-bottom: 8px;
 }
 
 .thumbnail-preview {
-    background: var(--dark1);
+    background: var(--new-dark1);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -53,7 +53,7 @@ img {
     align-items: center;
     justify-content: center;
     height: 120px !important;
-    background: var(--light2);
+    background: var(--new-light2);
 
     @include bootstrap.media-breakpoint-down(xs) {
         height: 100% !important;
@@ -82,7 +82,7 @@ img {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: var(--dark1);
+    background: var(--new-dark1);
 
     img {
         width: 100%;
@@ -100,8 +100,8 @@ img {
 }
 
 .image-unavailable-border {
-    border: 1px solid var(--light4);
-    background: var(--light2);
+    border: 1px solid var(--new-light4);
+    background: var(--new-light2);
     width: 100%;
     height: 100%;
     display: flex;

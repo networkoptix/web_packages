@@ -4,11 +4,11 @@ label {
     cursor: pointer;
 
     &.control-label {
-        color: var(--dark9);
+        color: var(--new-dark9);
         text-align: left;
 
         &:hover {
-            color: var(--dark1);
+            color: var(--new-dark1);
         }
     }
 }

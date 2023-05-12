@@ -20,7 +20,7 @@ h4 {
 
 .small-alerts {
     background: $additional_light1;
-    border: 1px solid $light3;
+    border: 1px solid var(--new-light3);
     border-radius: 4px;
     padding: 8px;
 }
@@ -35,7 +35,7 @@ h4 {
         flex: 1;
         padding: 8px;
         background: $additional_light1;
-        border: 1px solid $light3;
+        border: 1px solid var(--new-light3);
         border-radius: 4px;
     }
 }
@@ -47,13 +47,13 @@ h4 {
 }
 
 .cdk-header-cell {
-    color: $dark9;
+    color: var(--new-dark9);
     background: $additional_light2;
 }
 
 .cdk-cell,
 .cdk-header-cell {
-    border: 1px solid $light3;
+    border: 1px solid var(--new-light3);
     padding: 4px 8px;
 }
 
@@ -97,6 +97,6 @@ a {
     cursor: pointer;
 
     &:hover {
-        color: $brand_core  !important;
+        color: var(--new-brand-core)  !important;
     }
 }

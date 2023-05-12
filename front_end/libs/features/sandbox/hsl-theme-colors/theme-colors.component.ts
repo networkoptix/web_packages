@@ -1,15 +1,30 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, ElementRef, Inject, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
 import { NxMenuService } from '@app/menu/menu.service';
+import { NxSessionService } from '@services/session.service';
+import { NxThemeService } from '@services/theme.service';
 
 @Component({
     selector: 'nx-hsl-theme-colors',
     templateUrl: 'theme-colors.component.html',
     styleUrls: ['theme-colors.component.scss'],
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxHSLThemeColorsComponent implements OnInit {
-    backgroundColor: string;
+    colorLuminosity = {
+        l4: 1.6,
+        l3: 1.5,
+        l2: 1.3,
+        l1: 1.1,
+        core: 1,
+        d1: 0.9,
+        d2: 0.7,
+        d3: 0.5,
+        d4: 0.3,
+        d5: 0.2,
+    };
     background = {
         hue: 0,
         saturation: 0,
@@ -25,16 +40,21 @@ export class NxHSLThemeColorsComponent implements OnInit {
         saturation: 0,
         luminosity: 0, // set to +5%
     };
+    isHSLTheme: boolean = false;
+    isLiteTheme: boolean = false;
     luminosityStep: number;
     rs: CSSStyleDeclaration;
+    scope: HTMLElement;
 
     colorNumbers: Array<number>;
     hexLight: Array<string> = [];
+    hexAdditionalLight: Array<string> = [];
     hexDark: Array<string> = [];
     hexError: Array<Record<string, string>> = [];
     hexGreen: Array<Record<string, string>> = [];
     hexYellow: Array<Record<string, string>> = [];
     hexBrand: Array<Record<string, string>> = [];
+    colorLum: Array<Record<string, string>> = [];
 
     @ViewChild('frmTheme', { static: true }) public frmTheme: NgForm;
     @ViewChild('brandInput', { static: true }) public brandInput: ElementRef<HTMLInputElement>;
@@ -42,15 +62,40 @@ export class NxHSLThemeColorsComponent implements OnInit {
     @ViewChild('backgroundInput', { static: true })
     public backgroundInput: ElementRef<HTMLInputElement>;
 
-    constructor(private self: ElementRef<HTMLElement>, private menuService: NxMenuService) {}
+    constructor(
+        private sessionStorage: NxSessionService,
+        private menuService: NxMenuService,
+        private themeService: NxThemeService,
+        @Inject(DOCUMENT) protected document: Document,
+    ) {}
 
     ngOnInit(): void {
         this.menuService.section = 'colors';
         this.menuService.detail = 'themeHSL';
 
-        this.rs = getComputedStyle(this.self.nativeElement);
+        this.scope = this.document.documentElement;
 
-        this.backgroundColor = this.rs.getPropertyValue('--new-body-bg');
+        this.isHSLTheme = this.themeService.isHSLTheme();
+        this.isHSLTheme && this.initColors();
+    }
+
+    initColors(): void {
+        this.rs = getComputedStyle(this.scope);
+
+        this.colorLuminosity.l4 = parseFloat(this.rs.getPropertyValue('--color-level-l4'));
+        this.colorLuminosity.l3 = parseFloat(this.rs.getPropertyValue('--color-level-l3'));
+        this.colorLuminosity.l2 = parseFloat(this.rs.getPropertyValue('--color-level-l2'));
+        this.colorLuminosity.l1 = parseFloat(this.rs.getPropertyValue('--color-level-l1'));
+        this.colorLuminosity.core = parseFloat(this.rs.getPropertyValue('--color-level-core'));
+        this.colorLuminosity.d1 = parseFloat(this.rs.getPropertyValue('--color-level-d1'));
+        this.colorLuminosity.d2 = parseFloat(this.rs.getPropertyValue('--color-level-d2'));
+        this.colorLuminosity.d3 = parseFloat(this.rs.getPropertyValue('--color-level-d3'));
+        this.colorLuminosity.d4 = parseFloat(this.rs.getPropertyValue('--color-level-d4'));
+        this.colorLuminosity.d5 = parseFloat(this.rs.getPropertyValue('--color-level-d5'));
+
+        this.background.hue = parseInt(this.rs.getPropertyValue('--background-h'));
+        this.background.saturation = parseInt(this.rs.getPropertyValue('--background-s'));
+        this.background.luminosity = parseInt(this.rs.getPropertyValue('--background-l'));
 
         this.brand.hue = parseInt(this.rs.getPropertyValue('--brand-h'));
         this.brand.saturation = parseInt(this.rs.getPropertyValue('--brand-s'));
@@ -60,160 +105,108 @@ export class NxHSLThemeColorsComponent implements OnInit {
         this.color.saturation = parseInt(this.rs.getPropertyValue('--color-s'));
         this.color.luminosity = parseFloat(this.rs.getPropertyValue('--color-l'));
 
-        this.luminosityStep = parseFloat(this.rs.getPropertyValue('--color-l-step'));
+        this.luminosityStep = parseFloat(this.rs.getPropertyValue('--color-l-step')) || 2.5;
+
+        this.isLiteTheme = this.themeService.themeMode$.value === 1;
 
         this.colorNumbers = Array.from(Array(20), (_, i) => i);
         this.colorNumbers.shift();
 
         this.calcHexBaseColors();
         this.setColors();
-
+        this.setBrandInput();
         this.setBackgroundInput();
+        this.setColorInput();
     }
 
     setBackgroundInput(): void {
-        this.backgroundInput.nativeElement.value = this.hslToHex(
-            this.toHSLObject(this.rs.getPropertyValue('--new-body-bg')),
+        this.backgroundInput.nativeElement.value = NxThemeService.hslToHex(
+            NxThemeService.toHSLObject(this.rs.getPropertyValue('--new-body-bg')),
         ).toUpperCase();
     }
 
+    setColorInput(): void {
+        this.colorInput.nativeElement.value = NxThemeService.hslToHex({
+            h: this.color.hue,
+            s: this.color.saturation,
+            l: this.color.luminosity,
+        }).toUpperCase();
+    }
+
     setBrandInput(): void {
-        this.brandInput.nativeElement.value = this.hslToHex({
+        this.brandInput.nativeElement.value = NxThemeService.hslToHex({
             h: this.brand.hue,
             s: this.brand.saturation,
             l: this.brand.luminosity,
         }).toUpperCase();
 
-        this.setColorHue(this.brand.hue);
-        this.setColorSaturation(this.brand.saturation);
+        // this.setColorHue(this.brand.hue);
+        // this.setColorSaturation(this.brand.saturation);
 
         this.calcHexBaseColors();
     }
 
     setBrandHue(value: number): void {
         this.brand.hue = +value;
-        this.self.nativeElement.style.setProperty('--brand-h', `${this.brand.hue}`);
+        this.themeService.setBrandHue(value);
         this.setBrandInput();
         this.setColors();
     }
 
     setBrandSaturation(value: number): void {
         this.brand.saturation = +value;
-        this.self.nativeElement.style.setProperty('--brand-s', `${this.brand.saturation}%`);
+        this.themeService.setBrandSaturation(value);
         this.setBrandInput();
         this.setColors();
     }
 
     setBrandLuminosity(value: number): void {
         this.brand.luminosity = +value;
-        this.self.nativeElement.style.setProperty('--brand-l', `${this.brand.luminosity}%`);
+        this.themeService.setBrandLuminosity(value);
         this.setBrandInput();
         this.setColors();
     }
 
+    setColorLuminosity(item: Record<string, string>): void {
+        this.colorLuminosity[item.label] = parseFloat(item.value);
+        this.themeService.setLeverLuminosity(item);
+        this.updateStorage();
+    }
+
     setColorHue(value: number): void {
-        this.color.hue = value;
-        this.self.nativeElement.style.setProperty('--color-h', `${this.color.hue}`);
+        this.themeService.setColorHue(value);
+        this.updateStorage();
     }
 
     setColorSaturation(value: number): void {
-        this.color.saturation = value;
-        this.self.nativeElement.style.setProperty('--color-s', `${this.color.saturation}%`);
+        this.themeService.setColorSaturation(value);
+        this.updateStorage();
     }
-
-    // setColorLuminosity(value: number): void {
-    //     this.color.luminosity = value;
-    //     this.self.nativeElement.style.setProperty('--color-l', `${this.color.luminosity}%`);
-    // }
 
     setColorLuminosityStep(value: number): void {
-        this.luminosityStep = value;
-        this.self.nativeElement.style.setProperty('--color-l-step', `${this.luminosityStep}%`);
+        this.themeService.setColorLuminosityStep(value);
+        this.updateStorage();
     }
-
-    hexToHSL(hex: string): Record<string, number> {
-        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        let r = parseInt(result[1], 16);
-        let g = parseInt(result[2], 16);
-        let b = parseInt(result[3], 16);
-        r /= 255;
-        g /= 255;
-        b /= 255;
-
-        const max = Math.max(r, g, b);
-        const min = Math.min(r, g, b);
-        let h: number;
-        let s: number;
-        const l = (max + min) / 2;
-        if (max === min) {
-            h = 0;
-            s = 0; // achromatic
-        } else {
-            const d = max - min;
-            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-            switch (max) {
-                case r:
-                    h = (g - b) / d + (g < b ? 6 : 0);
-                    break;
-                case g:
-                    h = (b - r) / d + 2;
-                    break;
-                case b:
-                    h = (r - g) / d + 4;
-                    break;
-            }
-            h /= 6;
-        }
-
-        return {
-            hue: Math.round(h * 360),
-            sat: Math.round(s * 100),
-            lum: Math.round(l * 100),
-        };
-    }
-
-    hslToHex(hsl: { h: number; s: number; l: number }): string {
-        const { h, s, l } = hsl;
-
-        const hDecimal = l / 100;
-        const a = (s * Math.min(hDecimal, 1 - hDecimal)) / 100;
-        const f = (n: number): string => {
-            const k = (n + h / 30) % 12;
-            const color = hDecimal - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
-
-            // Convert to Hex and prefix with "0" if required
-            return Math.round(255 * color)
-                .toString(16)
-                .padStart(2, '0');
-        };
-        return `#${f(0)}${f(8)}${f(4)}`;
-    }
-
-    toHSLObject = (hslStr: string): { s: number; h: number; l: number } => {
-        const hs = hslStr.substring(0, hslStr.indexOf('calc'));
-        // eslint-disable-next-line no-eval
-        const l = eval(hslStr.match(/[\d%\s-+*.]+/g)[4].replace(/%/g, ''));
-        const [h, s] = hs.match(/\d+/g).map(Number);
-        return { h, s, l };
-    };
 
     calcHexBaseColors(): void {
         for (const num of this.colorNumbers) {
-            const colorA = this.toHSLObject(this.rs.getPropertyValue('--new-light' + num));
-            this.hexLight[num] = this.hslToHex(colorA).toUpperCase();
+            const colorA = NxThemeService.toHSLObject(
+                this.rs.getPropertyValue('--new-light' + num),
+            );
+            this.hexLight[num] = NxThemeService.hslToHex(colorA).toUpperCase();
 
-            const colorB = this.toHSLObject(this.rs.getPropertyValue('--new-dark' + num));
-            this.hexDark[num] = this.hslToHex(colorB).toUpperCase();
+            const colorB = NxThemeService.toHSLObject(this.rs.getPropertyValue('--new-dark' + num));
+            this.hexDark[num] = NxThemeService.hslToHex(colorB).toUpperCase();
         }
     }
 
     calcErrorColors(): void {
-        const availErrorColors = ['dark', 'core', 'light'];
+        const availErrorColors = ['d1', 'core', 'l1'];
         for (const idx in availErrorColors) {
             this.hexError[idx] = {
                 label: availErrorColors[idx],
-                hex: this.hslToHex(
-                    this.toHSLObject(
+                hex: NxThemeService.hslToHex(
+                    NxThemeService.toHSLObject(
                         this.rs.getPropertyValue('--new-error-' + availErrorColors[idx]),
                     ),
                 ).toUpperCase(),
@@ -222,12 +215,12 @@ export class NxHSLThemeColorsComponent implements OnInit {
     }
 
     calcGreenColors(): void {
-        const availGreenColors = ['dark', 'core', 'light'];
+        const availGreenColors = ['d1', 'core', 'l1'];
         for (const idx in availGreenColors) {
             this.hexGreen[idx] = {
                 label: availGreenColors[idx],
-                hex: this.hslToHex(
-                    this.toHSLObject(
+                hex: NxThemeService.hslToHex(
+                    NxThemeService.toHSLObject(
                         this.rs.getPropertyValue('--new-green-' + availGreenColors[idx]),
                     ),
                 ).toUpperCase(),
@@ -236,12 +229,12 @@ export class NxHSLThemeColorsComponent implements OnInit {
     }
 
     calcYellowColors(): void {
-        const availYellowColors = ['dark', 'core', 'light'];
+        const availYellowColors = ['d1', 'core', 'l1'];
         for (const idx in availYellowColors) {
             this.hexYellow[idx] = {
                 label: availYellowColors[idx],
-                hex: this.hslToHex(
-                    this.toHSLObject(
+                hex: NxThemeService.hslToHex(
+                    NxThemeService.toHSLObject(
                         this.rs.getPropertyValue('--new-yellow-' + availYellowColors[idx]),
                     ),
                 ).toUpperCase(),
@@ -249,13 +242,20 @@ export class NxHSLThemeColorsComponent implements OnInit {
         }
     }
 
+    // calcAdditionalLightColors(): void {
+    //     for (let i = 1; i <= 8; i++) {
+    //         const color = NxThemeService.toHSLObject(this.rs.getPropertyValue('--new-additional-light' + i));
+    //         this.hexAdditionalLight[i] = NxThemeService.hslToHex(color).toUpperCase();
+    //     }
+    // }
+
     calcBrandColors(): void {
         const availBrandColors = ['l4', 'l3', 'l2', 'l1', 'core', 'd1', 'd2', 'd3', 'd4', 'd5'];
         for (const idx in availBrandColors) {
             this.hexBrand[idx] = {
                 label: availBrandColors[idx],
-                hex: this.hslToHex(
-                    this.toHSLObject(
+                hex: NxThemeService.hslToHex(
+                    NxThemeService.toHSLObject(
                         this.rs.getPropertyValue('--new-brand-' + availBrandColors[idx]),
                     ),
                 ).toUpperCase(),
@@ -263,26 +263,72 @@ export class NxHSLThemeColorsComponent implements OnInit {
         }
     }
 
+    calcColorLuminosity(): void {
+        const availColorLuminosity = ['l4', 'l3', 'l2', 'l1', 'core', 'd1', 'd2', 'd3', 'd4', 'd5'];
+        for (const idx in availColorLuminosity) {
+            this.colorLum[idx] = {
+                label: availColorLuminosity[idx],
+                value: this.rs.getPropertyValue('--color-level-' + availColorLuminosity[idx]),
+            };
+        }
+    }
+
+    updateStorage(): void {
+        this.sessionStorage.hslTheme = {
+            'theme-mode': this.isLiteTheme ? 1 : 0,
+            'brand-h': this.brand.hue,
+            'brand-s': this.brand.saturation,
+            'brand-l': this.brand.luminosity,
+            'color-h': this.color.hue,
+            'color-s': this.color.saturation,
+            'color-l': this.color.luminosity,
+            'color-l-step': this.luminosityStep,
+            'background-h': this.background.hue,
+            'background-s': this.background.saturation,
+            'background-l': this.background.luminosity,
+            'color-level-l4': this.colorLuminosity.l4,
+            'color-level-l3': this.colorLuminosity.l3,
+            'color-level-l2': this.colorLuminosity.l2,
+            'color-level-l1': this.colorLuminosity.l1,
+            'color-level-core': this.colorLuminosity.core,
+            'color-level-d1': this.colorLuminosity.d1,
+            'color-level-d2': this.colorLuminosity.d2,
+            'color-level-d3': this.colorLuminosity.d3,
+            'color-level-d4': this.colorLuminosity.d4,
+            'color-level-d5': this.colorLuminosity.d5,
+        };
+    }
+
     setColors(): void {
+        // this.calcAdditionalLightColors();
         this.calcErrorColors();
         this.calcGreenColors();
         this.calcYellowColors();
         this.calcBrandColors();
+        this.calcColorLuminosity();
+
+        this.updateStorage();
     }
 
     changeBrandColor(event: KeyboardEvent): void {
         const value = (event.target as HTMLInputElement).value;
         if (value.startsWith('#') && value.length === 7) {
-            const { hue, sat, lum } = this.hexToHSL(value);
-            this.setBrandHue(hue);
-            this.setBrandSaturation(sat);
-            this.setBrandLuminosity(lum);
+            const { hue, sat, lum } = NxThemeService.hexToHSL(value);
+            this.themeService.setBrandHue(hue);
+            this.themeService.setBrandSaturation(sat);
+            this.themeService.setBrandLuminosity(lum);
+            this.themeService.setColorHue(hue);
+            this.themeService.setColorSaturation(sat);
+
+            this.brand.hue = hue;
+            this.brand.saturation = sat;
+            this.brand.luminosity = lum;
+
+            this.color.hue = hue;
+            this.color.saturation = sat;
+            this.color.luminosity = lum;
 
             this.setColors();
-
-            this.setColorHue(hue);
-            this.setColorSaturation(sat);
-
             this.calcHexBaseColors();
         }
     }
@@ -290,24 +336,56 @@ export class NxHSLThemeColorsComponent implements OnInit {
     changeBaseColor(event: KeyboardEvent): void {
         const value = (event.target as HTMLInputElement).value;
         if (value.startsWith('#') && value.length === 7) {
-            const { hue, sat } = this.hexToHSL(value);
+            const { hue, sat } = NxThemeService.hexToHSL(value);
             this.setColorHue(hue);
             this.setColorSaturation(sat);
             // this.setBrandLuminosity(lum);
-        }
-    }
+            this.color.hue = hue;
+            this.color.saturation = sat;
+            // this.color.luminosity = lum;
 
-    setBackground(hex: string): void {
-        const { hue, sat, lum } = this.hexToHSL(hex);
-        this.self.nativeElement.style.setProperty('--background-h', `${hue}`);
-        this.self.nativeElement.style.setProperty('--background-s', `${sat}%`);
-        this.self.nativeElement.style.setProperty('--background-l', `${lum}%`);
+            this.updateStorage();
+        }
     }
 
     changeBackgroundColor(event: KeyboardEvent): void {
         const value = (event.target as HTMLInputElement).value.trim();
         if (value.startsWith('#') && value.length === 7) {
-            this.setBackground(value);
+            const { hue, sat, lum } = NxThemeService.hexToHSL(value);
+            this.themeService.setColorsFor('background', {
+                'background-h': hue,
+                'background-s': sat,
+                'background-l': lum,
+            });
+            this.background.hue = hue;
+            this.background.saturation = sat;
+            this.background.luminosity = lum;
+
+            this.setColors();
         }
+    }
+
+    setThemeMode(value: boolean): void {
+        if (value === undefined) {
+            return;
+        }
+
+        this.isLiteTheme = value;
+        this.scope.setAttribute('data-theme-mode', this.isLiteTheme ? 'light' : 'dark');
+
+        this.themeService.themeMode$.next(this.isLiteTheme ? 1 : 0);
+
+        this.initColors();
+    }
+
+    setHSLThemeMode(value: boolean): void {
+        if (value === undefined) {
+            return;
+        }
+
+        this.isHSLTheme = value;
+        this.scope.setAttribute('data-theme-source', this.isHSLTheme ? 'hsl' : 'default');
+        this.themeService.setHSLTheme(value);
+        this.isHSLTheme && this.initColors();
     }
 }

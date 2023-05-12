@@ -39,7 +39,7 @@
 
                     svg g,
                     path {
-                        fill: $light1;
+                        fill: var(--new-light1);
                     }
                 }
             }
@@ -79,7 +79,7 @@
 
     .overlay-modal {
         margin-top: 64px;
-        background-color: $light1;
+        background-color: var(--new-light1);
         max-height: calc(100vh - 580px);
         min-height: 160px;
         overflow-y: auto;
@@ -100,16 +100,16 @@
                 list-style-type: none;
 
                 a {
-                    background-color: $light1;
+                    background-color: var(--new-light1);
                     display: inline-flex;
                     align-items: center;
-                    color: $dark9;
+                    color: var(--new-dark9);
                     height: 26px;
                     padding: 0 8px 0 0;
                     text-decoration: none;
 
                     svg path.st0 {
-                        fill: $dark9  !important;
+                        fill: var(--new-dark9)  !important;
                         fill-opacity: 1;
                     }
 
@@ -122,7 +122,7 @@
                     }
 
                     &:hover {
-                        background-color: $light3;
+                        background-color: var(--new-light3);
                         border-radius: 2px;
                     }
                 }

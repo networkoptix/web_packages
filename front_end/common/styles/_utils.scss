@@ -34,6 +34,7 @@ $opacity-to-hex : (
 );
 
 @function color-opacity($color, $opacity) {
+  @debug hue($color);
   @return unquote($color + map-get($opacity-to-hex, $opacity));
 }
 

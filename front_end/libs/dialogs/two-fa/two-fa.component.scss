@@ -64,7 +64,7 @@
                 user-select: none;
 
                 &-idx {
-                    color: $light10;
+                    color: var(--new-light10);
                     margin-right: 0.5rem;
                 }
             }
@@ -95,7 +95,7 @@
             }
 
             &-note {
-                color: $light16;
+                color: var(--new-light16);
                 margin-top: 16px;
                 margin-bottom: 16px;
             }

@@ -22,7 +22,7 @@
       position: absolute;
       right: 40px;
       top: 12px;
-      stroke: rgba(var(--dark1--rgb), 0.6);
+      stroke: var(--new-dark1-t60);
       pointer-events: all;
       cursor: pointer;
     }
@@ -76,7 +76,7 @@
       }
 
       &::placeholder {
-        color: var(--light16);
+        color: var(--new-light16);
       }
     }
 
@@ -101,30 +101,30 @@
           // transition: fill .2s ease-in-out;
         // }
         > .outer-circle {
-          stroke: var(--light16);
+          stroke: var(--new-light16);
           stroke-width: 2;
           fill: transparent;
         }
         > .i-body {
-          stroke: var(--light16);
+          stroke: var(--new-light16);
           stroke-width: 2;
         }
         > .point-over-i {
           stroke-width: 0;
-          fill: var(--light16);
+          fill: var(--new-light16);
         }
       }
 
       &.active {
         > svg {
           > .outer-circle {
-            stroke: var(--brand-core);
+            stroke: var(--new-brand-core);
           }
           > .i-body {
-            stroke: var(--brand-core);
+            stroke: var(--new-brand-core);
           }
           > .point-over-i {
-            fill: var(--brand-core);
+            fill: var(--new-brand-core);
           }
         }
       }

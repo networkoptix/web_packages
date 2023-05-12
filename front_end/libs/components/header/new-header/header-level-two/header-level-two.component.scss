@@ -10,7 +10,7 @@
     background-color: var(--header-level-two-bg);
     z-index: 10;
     @include typography.regular14nocolor;
-    color: var(--light4) !important;
+    color: var(--new-light4) !important;
 
     .login {
         margin: 14px 16px 13px auto;
@@ -35,7 +35,7 @@
             }
 
             .inner-menu-item {
-                color: var(--light6);
+                color: var(--new-light6);
                 .active-border {
                     display: none;
                 }
@@ -45,14 +45,14 @@
                 }
 
                 &.active {
-                    color: var(--light4);
+                    color: var(--new-light4);
                     .active-border {
                         display: block;
                         margin-top: 16px;
                         height: 2px;
                         width: 100%;
-                        background-color: var(--brand-core);
-                        box-shadow: 0px 2px 7px var(--brand-core);
+                        background-color: var(--new-brand-core);
+                        box-shadow: 0px 2px 7px var(--new-brand-core);
                     }
                 }
 

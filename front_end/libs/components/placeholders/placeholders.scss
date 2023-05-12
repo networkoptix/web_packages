@@ -181,12 +181,12 @@ $preloader_small_circle_distance : 8px;
     transform: none;
 
     a {
-        color: $light12;
+        color: var(--new-light12);
         text-decoration: underline;
 
         &:hover,
         &:active {
-            color: $light1;
+            color: var(--new-light1);
         }
     }
 }
@@ -226,7 +226,7 @@ $preloader_small_circle_distance : 8px;
         }
 
         .brand_element {
-            fill: var(--brand-core);
+            fill: var(--new-brand-core);
         }
     }
 }

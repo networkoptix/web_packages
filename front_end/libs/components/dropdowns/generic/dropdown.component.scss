@@ -13,7 +13,7 @@
         hr {
             width        : 95%;
             margin       : 6px auto;
-            border-color : $light4;
+            border-color : var(--new-light4);
             
             &.narrow-hr {
                 width : calc(95% - 16px);
@@ -48,7 +48,7 @@
         }
         
         .selected .additional-help {
-            color : $light1 !important;
+            color : var(--new-light1) !important;
         }
         
         @include mixins.keyframe(bubblingG) {
@@ -82,7 +82,7 @@
                     width             : 8px;
                     height            : 8px;
                     margin            : auto 10px;
-                    background        : $light;
+                    background        : var(--new-light1);
                     border-radius     : 8px;
                     animation         : bubblingG 650ms infinite alternate;
                     -o-animation      : bubblingG 650ms infinite alternate;
@@ -141,7 +141,7 @@
         
         .item-icon {
             .storage-cloud {
-                fill : var(--brand-core);
+                fill : var(--new-brand-core);
             }
         }
         
@@ -157,7 +157,7 @@
                 left       : 12px;
                 width      : calc(100% - 24px);
                 height     : 1.5px;
-                background : $light7;
+                background : var(--new-light7);
             }
         }
     }

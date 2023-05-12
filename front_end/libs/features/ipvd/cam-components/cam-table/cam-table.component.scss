@@ -102,11 +102,11 @@ nx-cam-table {
           &:active,
           &:focus {
             td {
-              color: var(--light1) !important;
-              background-color: var(--light16);
+              color: var(--new-light1) !important;
+              background-color: var(--new-light16);
 
               .icon-negative {
-                color: var(--light1);
+                color: var(--new-light1);
               }
             }
           }
@@ -127,7 +127,7 @@ nx-cam-table {
       //  @include typography.regular13;
       //  padding          : 0.5rem 1rem;
       //  background-color : var(--additional_light1);
-      //  border           : 1px solid var(--light3);
+      //  border           : 1px solid var(--new-light3);
       //  border-bottom    : none;
       //  line-height      : 16px;
       //  text-transform   : none;
@@ -160,7 +160,7 @@ nx-cam-table {
 
           .page-link {
             @include typography.regular13light;
-            background-color: var(--light4);
+            background-color: var(--new-light4);
             border-radius: 2px;
             height: 32px;
             padding: 0 12px;
@@ -171,7 +171,7 @@ nx-cam-table {
             border: none;
 
             &:hover {
-              background-color: var(--light5);
+              background-color: var(--new-light5);
             }
 
             &[aria-label="Previous"] {
@@ -196,15 +196,15 @@ nx-cam-table {
           }
 
           &.active .page-link {
-            color: var(--light1) !important;
-            background-color: var(--light16);
-            border-color: var(--light16);
+            color: var(--new-light1) !important;
+            background-color: var(--new-light16);
+            border-color: var(--new-light16);
           }
 
           &.disabled .page-link {
             cursor: default;
-            background-color: rgba(var(--light6--rgb), 0.2);
-            color: rgba(var(--dark9--rgb), 0.3) !important;
+            background-color: var(--new-light6-t20);
+            color: var(--new-dark9-t30) !important;
           }
         }
       }
@@ -213,7 +213,7 @@ nx-cam-table {
 
   .vendor {
     @include bootstrap.media-breakpoint-down(md) {
-      background-color: var(--light4);
+      background-color: var(--new-light4);
     }
   }
 }

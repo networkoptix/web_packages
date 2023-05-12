@@ -54,7 +54,7 @@
             //}
 
             &:hover:not(:active):not(:focus) {
-                border: 1px solid $light8;
+                border: 1px solid var(--new-light8);
             }
 
             &:-webkit-autofill,

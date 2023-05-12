@@ -123,17 +123,17 @@ nx-health-viewer-component {
       }
 
       svg * {
-        fill: var(--light16);
+        fill: var(--new-light16);
       }
 
       &:hover svg * {
-        fill: var(--dark15);
+        fill: var(--new-dark15);
       }
 
       &:focus,
       &:active {
         svg * {
-          fill: var(--light16);
+          fill: var(--new-light16);
         }
       }
     }
@@ -152,7 +152,7 @@ nx-health-viewer-component {
     }
 
     &.ngx-file-drop__drop-zone--over {
-      background-color: var(--light16);
+      background-color: var(--new-light16);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -170,10 +170,10 @@ nx-health-viewer-component {
           height: 32px;
 
           svg path {
-            stroke: var(--light1);
+            stroke: var(--new-light1);
 
             &.corner {
-              fill: var(--light1);
+              fill: var(--new-light1);
             }
           }
         }

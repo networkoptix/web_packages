@@ -83,7 +83,7 @@ $font-size-a-bit-large : ceil(theme_variables_common.$font-size-base * 1.15); //
 
 table {
     & > thead > tr > th {
-        color : theme_variables_common.$brand-core;
+        color : var(--new-brand-core);
 
         &:first-child {
             padding-left : 15px;
@@ -96,7 +96,7 @@ table {
         }
 
         &.hoverable:hover {
-            background-color : theme_variables_common.$light2;
+            background-color : var(--new-light2);
         }
     }
 }
@@ -199,12 +199,12 @@ select {
 }
 
 .info-icon.active {
-    color : var(--brand-core, theme_variables_common.$brand_core) !important;
+    color : var(--new-brand-core) !important;
 }
 
 .video-settings-button:hover,
 .webclient-panel .dropdown-menu > li > a:hover {
-    background-color : var( --brand-l2, theme_variables_common.$brand_l2) !important;
+    background-color : var(--new-brand-l2) !important;
 }
 
 .webclient-panel .dropdown-menu {

@@ -19,7 +19,7 @@ $stripes : var(--storage-size-reserved);
     position: relative;
     width: 100%;
     /* Full width */
-    background-color: var(--light1);
+    background-color: var(--new-light1);
     /* Grey background */
     height: 20px;
     display: flex;
@@ -51,12 +51,12 @@ $stripes : var(--storage-size-reserved);
 
         &.available {
             background-color: var(--storage-size-available);
-            border: 1px solid var(--light3);
+            border: 1px solid var(--new-light3);
             border-bottom-right-radius: 0;
             border-top-right-radius: 0;
 
             &.full {
-                border-right: 1px solid var(--light3);
+                border-right: 1px solid var(--new-light3);
                 ;
             }
         }
@@ -78,8 +78,8 @@ $stripes : var(--storage-size-reserved);
         }
 
         &.used {
-            background-color: var(--light7);
-            border: 1px solid var(--light9);
+            background-color: var(--new-light7);
+            border: 1px solid var(--new-light9);
             border-bottom-right-radius: 0;
             border-top-right-radius: 0;
         }
@@ -112,7 +112,7 @@ $stripes : var(--storage-size-reserved);
 
             rect.box {
                 fill: none;
-                stroke: var(--dark9);
+                stroke: var(--new-dark9);
                 stroke-linecap: round;
                 stroke-linejoin: round;
                 stroke-miterlimit: 10;
@@ -123,13 +123,13 @@ $stripes : var(--storage-size-reserved);
                 }
 
                 &.used {
-                    fill: var(--light7);
-                    stroke: var(--light9);
+                    fill: var(--new-light7);
+                    stroke: var(--new-light9);
                 }
 
                 &.available {
                     fill: var(--storage-size-available);
-                    stroke: var(--light3);
+                    stroke: var(--new-light3);
                 }
             }
 

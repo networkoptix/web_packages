@@ -31,11 +31,11 @@
         font: $font-family-regular;
         font-size: 13px;
         line-height: 17px;
-        color: $light1;
+        color: var(--new-light1);
         margin-bottom: 0px;
 
         &>a {
-            color: $light1;
+            color: var(--new-light1);
         }
     }
 
@@ -44,7 +44,7 @@
         margin: 5px 0px 0px 32px;
 
         & .close-svg {
-            stroke: $light1;
+            stroke: var(--new-light1);
         }
 
         &:hover {
@@ -52,7 +52,7 @@
         }
 
         &:active .close-svg {
-            stroke: $light3;
+            stroke: var(--new-light3);
         }
     }
 }

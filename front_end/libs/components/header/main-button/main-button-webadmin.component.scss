@@ -52,7 +52,7 @@
     }
 
     &>svg-icon>svg>.st0 {
-        fill: $light16  !important;
+        fill: var(--new-light16)  !important;
         stroke: none !important;
     }
 }

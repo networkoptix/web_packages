@@ -30,10 +30,10 @@
                 .switch {
                     .switch-element {
                         .slider {
-                            background-color: $light7;
+                            background-color: var(--new-light7);
 
                             &.disable {
-                                background-color: $light6  !important;
+                                background-color: var(--new-light6)  !important;
                             }
 
                             &.show-warning {
@@ -167,7 +167,7 @@
         @extend .slider-icon;
 
         &.disable {
-            background: $light12;
+            background: var(--new-light12);
         }
 
         background : var(--switch-bar-color);

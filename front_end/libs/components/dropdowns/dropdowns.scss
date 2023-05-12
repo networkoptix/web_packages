@@ -234,7 +234,7 @@ header {
 
                 .text-muted {
                     font-family: $font-family-regular;
-                    color: $light16  !important;
+                    color: var(--new-light16)  !important;
                 }
             }
 
@@ -292,7 +292,7 @@ header {
 
     &.show {
         .dropdown-toggle {
-            background-color: $light5  !important;
+            background-color: var(--new-light5)  !important;
         }
 
         .dropdown-toggle-transparent {
@@ -327,7 +327,7 @@ header {
 
                     .item-icon .storage-cloud,
                     .api-icon {
-                        fill: $light1;
+                        fill: var(--new-light1);
                     }
                 }
             }

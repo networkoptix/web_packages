@@ -10,7 +10,7 @@ nx-select {
     hr {
         width: 95%;
         margin: 6px auto;
-        border-color: $light4;
+        border-color: var(--new-light4);
 
         &.narrow-hr {
             width: calc(95% - 16px);
@@ -79,7 +79,7 @@ nx-select {
                 width: 8px;
                 height: 8px;
                 margin: auto 10px;
-                background: $light;
+                background: var(--new-light10);
                 border-radius: 8px;
                 animation: bubblingG 650ms infinite alternate;
                 -o-animation: bubblingG 650ms infinite alternate;
@@ -154,7 +154,7 @@ nx-select {
             left: 12px;
             width: calc(100% - 24px);
             height: 1.5px;
-            background: $light7;
+            background: var(--new-light7);
         }
     }
 }

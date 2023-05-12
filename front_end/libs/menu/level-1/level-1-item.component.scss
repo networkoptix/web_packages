@@ -45,7 +45,7 @@ $item_height : 40px;
     }
 
     &.collapsed {
-        background-color: $light4;
+        background-color: var(--new-light4);
     }
 
     &-alerts {

@@ -70,7 +70,7 @@
             }
 
             .header-d .fill-color-main {
-                fill: $light4;
+                fill: var(--new-light4);
             }
         }
     }
@@ -106,12 +106,12 @@
 
     .main-d .stroke-color-main,
     .header-d .stroke-color-main {
-        stroke: $light16;
+        stroke: var(--new-light16);
     }
 
     .main-d .fill-color-main,
     .header-d .fill-color-main {
-        fill: $light16;
+        fill: var(--new-light16);
     }
 
     .invalid-state {
@@ -120,7 +120,7 @@
     }
 
     .fake-link {
-        color: var(--brand-core);
+        color: var(--new-brand-core);
         cursor: pointer;
         text-decoration: underline;
     }
@@ -205,40 +205,40 @@
                     }
 
                     &:not(.span-disabled):hover {
-                        background-color: $light4;
-                        border-color: $light5;
+                        background-color: var(--new-light4);
+                        border-color: var(--new-light5);
                     }
 
                     &:not(.span-disabled):active {
-                        background-color: $light5;
-                        border-color: $light6;
+                        background-color: var(--new-light5);
+                        border-color: var(--new-light6);
                     }
                 }
             }
 
             &.header-d {
-                background-color: $dark8;
-                border-bottom: 1px solid $dark6;
+                background-color: var(--new-dark8);
+                border-bottom: 1px solid var(--new-dark6);
 
                 .authorize-header {
-                    color: $light4  !important;
+                    color: var(--new-light4)  !important;
                 }
 
                 .authorize-subheader {
-                    color: $light10  !important;
+                    color: var(--new-light10)  !important;
 
                     .for-account {
-                        background-color: $dark9;
-                        border: 1px solid $dark10;
+                        background-color: var(--new-dark9);
+                        border: 1px solid var(--new-dark10);
 
                         &:not(.span-disabled):hover {
-                            background-color: $dark10;
-                            border-color: $dark11;
+                            background-color: var(--new-dark10);
+                            border-color: var(--new-dark11);
                         }
 
                         &:not(.span-disabled):active {
-                            background-color: $dark8;
-                            border-color: $dark9;
+                            background-color: var(--new-dark8);
+                            border-color: var(--new-dark9);
                         }
                     }
                 }
@@ -250,12 +250,12 @@
 
                 .authorize-header {
                     font-size: $font-size-20  !important;
-                    color: $light1  !important;
+                    color: var(--new-light1)  !important;
                     line-height: rem(22px) !important;
                 }
 
                 .authorize-subheader {
-                    color: $light10  !important;
+                    color: var(--new-light10)  !important;
 
                     .for-account {
                         background-color: $dark7;
@@ -330,17 +330,17 @@
                     background-color: var(--input-bg);
 
                     &:focus {
-                        border: 1px solid var(--brand-core) !important;
+                        border: 1px solid var(--new-brand-core) !important;
                     }
                 }
 
                 .new-backup-code {
                     color: var(--input-color);
-                    background-color: $light2;
-                    border: 2px solid $light4;
+                    background-color: var(--new-light2);
+                    border: 2px solid var(--new-light4);
 
                     &:hover {
-                        border-color: $light6;
+                        border-color: var(--new-light6);
                     }
                 }
             }
@@ -350,7 +350,7 @@
 
                 label,
                 p:not(.error-label) {
-                    color: $light16  !important;
+                    color: var(--new-light1)  !important;
                 }
 
                 .ng-untouched input.ng-valid {
@@ -380,7 +380,7 @@
                     }
 
                     &::selection {
-                        background-color: var(--brand-core);
+                        background-color: var(--new-brand-core);
                     }
 
                     // auto-complete in chrome creates background-color & color that cannot be overwritten
@@ -391,7 +391,7 @@
                 }
 
                 .new-backup-code {
-                    color: $light4;
+                    color: var(--new-light4);
                     background-color: $dark5;
 
                     &:hover {
@@ -431,7 +431,7 @@
                     }
 
                     &::selection {
-                        background-color: var(--brand-core);
+                        background-color: var(--new-brand-core);
                     }
 
                     &:-webkit-autofill {
@@ -599,7 +599,7 @@
     }
 
     .auth-overlay {
-        background-color: $light1;
+        background-color: var(--new-light1);
         position: fixed;
         top: 0;
         left: 0;

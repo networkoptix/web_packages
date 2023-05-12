@@ -166,7 +166,7 @@ export class CloudStorageManager extends Destroyable {
 
                     usages.push({
                         size: usedSpacePercentage,
-                        color: 'var(--brand-core)',
+                        color: 'var(--new-brand-core)',
                         title: this.system.info.name,
                         sizeText: this.#getSizeText(usedSpace, usedSpacePercentage)
                     });

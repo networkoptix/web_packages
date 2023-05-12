@@ -45,7 +45,7 @@
         font-size: 16px;
         text-align: center;
         margin-top: 16px;
-        color: $light16;
+        color: var(--new-light16);
     }
 
     .level-1-container {
@@ -138,7 +138,7 @@
 
     .last-level-2 {
         padding-bottom: .5rem;
-        background-color: $light4;
+        background-color: var(--new-light4);
     }
 
     .last-level-3 {

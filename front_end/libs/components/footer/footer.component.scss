@@ -46,11 +46,11 @@
                 box-shadow: none;
                 text-decoration: none !important;
                 background-color: transparent;
-                color: $dark15;
+                color: var(--new-dark15);
             }
 
             &:active {
-                color: $light16;
+                color: var(--new-light16);
                 text-decoration: none;
             }
 
@@ -60,11 +60,11 @@
 
                 &:hover,
                 &:focus {
-                    color: $dark15;
+                    color: var(--new-dark15);
                 }
 
                 &:active {
-                    color: $light16;
+                    color: var(--new-light16);
                 }
             }
         }
@@ -92,10 +92,10 @@
 
         .navbar-right>li>a,
         .navbar-right>li>span>a {
-            color: $light8;
+            color: var(--new-light8);
 
             &:hover {
-                color: $light12;
+                color: var(--new-light12);
             }
         }
     }

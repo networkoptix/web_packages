@@ -124,17 +124,17 @@ nx-system-health-component {
       }
 
       svg * {
-        fill: var(--light16);
+        fill: var(--new-light16);
       }
 
       &:hover svg * {
-        fill: var(--dark15);
+        fill: var(--new-dark15);
       }
 
       &:focus,
       &:active {
         svg * {
-          fill: var(--light16);
+          fill: var(--new-light16);
         }
       }
     }

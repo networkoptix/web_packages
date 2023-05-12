@@ -1,12 +1,12 @@
 @use "bootstrap_utils" as bootstrap;
 @use "typography";
 
-$header-background: linear-gradient(to top, rgba(var(--dark1--rgb),  0), rgba(var(--dark1--rgb), 0.3));
-$header-foreground: var(--light1);
+$header-background: linear-gradient(to top, var(--new-dark1-t0), var(--new-dark1-t30));
+$header-foreground: var(--new-light1);
 
-$player-background: var(--dark1);
+$player-background: var(--new-dark1);
 
-$border-color: var(--light6);
+$border-color: var(--new-light6);
 
 :host {
   width: 100vw;
@@ -49,7 +49,7 @@ $border-color: var(--light6);
     position: absolute;
     left: 10px;
     top: 40px;
-    background-color: rgba(var(--dark7--rgb), 0.9);
+    background-color: var(--new-dark7-t90);
     backdrop-filter: blur(15px) saturate(80%);
     padding: 10px;
     color: white;
@@ -103,7 +103,7 @@ $border-color: var(--light6);
       margin-top: 10px;
       content: "";
       display: block;
-      background-color: var(--light16);
+      background-color: var(--new-light16);
       opacity: .2;
       height: 1px;
       width: 100%;
@@ -160,7 +160,7 @@ $border-color: var(--light6);
         flex-basis: 100%;
         flex-shrink: 1;
         flex-grow: 1;
-        text-shadow: 0 1px 3px var(--dark1);
+        text-shadow: 0 1px 3px var(--new-dark1);
 
         > .quality {
           text-transform: capitalize;
@@ -191,7 +191,7 @@ $border-color: var(--light6);
     &.hasArchive {
       > .glyph {
         opacity: 1.0;
-        border-color: var(--dark15);
+        border-color: var(--new-dark15);
       }
     }
 
@@ -221,19 +221,19 @@ $border-color: var(--light6);
         height: 36px;
         padding: 8px;
         margin-right: 5px;
-        text-shadow: 0 1px 3px var(--dark1);
+        text-shadow: 0 1px 3px var(--new-dark1);
         cursor: pointer;
         > svg {
           width: 20px;
           height: 20px;
           > path {
             // transition: fill .2s ease-in-out;
-            fill: var(--light3);
+            fill: var(--new-light3);
             // fill: var(--dark9);
           }
         }
         &:hover > svg > path {
-          fill: var(--light1);
+          fill: var(--new-light1);
         }
       }
 
@@ -243,7 +243,7 @@ $border-color: var(--light6);
         height: 36px;
         padding: 5px;
         cursor: pointer;
-        text-shadow: 0 1px 3px var(--dark1);
+        text-shadow: 0 1px 3px var(--new-dark1);
 
         svg-icon {
           width  : 26px;
@@ -251,12 +251,12 @@ $border-color: var(--light6);
           line-height: initial;
 
           svg path {
-            fill : var(--light3);
+            fill : var(--new-light3);
           }
         }
 
         &:hover svg-icon svg path {
-          fill : var(--light1);
+          fill : var(--new-light1);
         }
 
         > svg {
@@ -264,12 +264,12 @@ $border-color: var(--light6);
           height: 26px;
           > path {
             // transition: fill .2s ease-in-out;
-            fill: var(--light3);
+            fill: var(--new-light3);
             // fill: var(--dark9);
           }
         }
         &:hover > svg > path {
-          fill: var(--light1);
+          fill: var(--new-light1);
         }
       }
     }
@@ -285,8 +285,8 @@ $border-color: var(--light6);
     opacity: 0;
     // transition: opacity .2s ease-in-out;
     pointer-events: none;
-    background-color: rgba(var(--dark7--rgb), 0.9);
-    color: var(--light16);
+    background-color: var(--new-dark7-t90);
+    color: var(--new-light16);
     z-index: 2000;
     padding-bottom: 8px;
     &.shown {
@@ -304,7 +304,7 @@ $border-color: var(--light6);
         &:after {
           content: "";
           display: block;
-          background-color: var(--light16);
+          background-color: var(--new-light16);
           opacity: .2;
           height: 1px;
           width: 100%;
@@ -313,7 +313,7 @@ $border-color: var(--light6);
       }
       > .options {
         > .option {
-          color: var(--light1);
+          color: var(--new-light1);
           background-color: transparent;
           // transition: background-color .2s ease-in-out;
           line-height: 20px;
@@ -325,10 +325,10 @@ $border-color: var(--light6);
             padding: 0 8px !important;
           }
           &:hover > div {
-            background-color: rgba(var(--light16), .1);
+            background-color: var(--new-light16-t10);
           }
           &.selected > div {
-            background-color: var(--brand-l1);
+            background-color: var(--new-brand-l1);
           }
           &.disabled > div {
             opacity: .2;
@@ -338,7 +338,7 @@ $border-color: var(--light6);
         > .divider:after {
           content: "";
           display: block;
-          background-color: var(--light16);
+          background-color: var(--new-light16);
           opacity: .2;
           height: 1px;
           width: calc(100% - 16px);
@@ -396,13 +396,13 @@ $border-color: var(--light6);
         > svg {
           width        : 96px;
           height       : 100px;
-          stroke       : var(--light1);
+          stroke       : var(--new-light1);
           opacity      : 0.6;
           stroke-width : 3px;
         }
 
         > span {
-          color       : var(--light1);
+          color       : var(--new-light1);
           margin-top  : 24px;
           line-height : 48px;
           opacity     : 0.6;
@@ -458,7 +458,7 @@ $border-color: var(--light6);
           width           : 40px;
           height          : 16px;
           background-color : var(--control-color);
-          box-shadow      : 0 2px 0 0 rgba(var(--dark1--rgb), 0.1);
+          box-shadow      : 0 2px 0 0 var(--new-dark1-t10);
           cursor          : pointer;
           opacity         : 0.8;
 
@@ -537,7 +537,7 @@ $border-color: var(--light6);
           font-size        : 200%;
           border-left      : 1px solid var(--border-color);
           border-right     : 1px solid var(--border-color);
-          color            : var(--light10);
+          color            : var(--new-light10);
           background-color : var(--timeline-bg);
           z-index          : 2;
         }

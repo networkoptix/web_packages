@@ -79,6 +79,14 @@ export class NxSessionService {
         this.session.store('systems', systems);
     }
 
+    get hslTheme(): Record<string, Record<string, string>[] | number> {
+        return this.session.retrieve('theme-hsl') || {};
+    }
+
+    set hslTheme(themeHsl:Record<string, Record<string, string>[] | number>) {
+        this.session.store('theme-hsl', themeHsl);
+    }
+
     get systemId(): string {
         return this.session.retrieve('systemId');
     }

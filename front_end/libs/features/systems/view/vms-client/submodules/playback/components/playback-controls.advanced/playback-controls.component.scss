@@ -48,7 +48,7 @@
       }
     }
 
-    color: var(--light4);
+    color: var(--new-light4);
     background-color: var(--additional-light2);
     transition: all .2s ease-in-out;
 
@@ -56,16 +56,16 @@
       background-color: var(--additional-light3);
     }
     &:active {
-      background-color: var(--light5) !important;
+      background-color: var(--new-light5) !important;
     }
 
     &.enabled {
       cursor: pointer;
-      color: var(--light16);
+      color: var(--new-light16);
       z-index: 1;
 
       &:hover {
-        background-color: var(--light4);
+        background-color: var(--new-light4);
       }
     }
   }

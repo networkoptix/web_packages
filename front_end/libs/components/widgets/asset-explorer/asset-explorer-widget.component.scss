@@ -23,7 +23,7 @@
 }
 
 a {
-  color: var(--dark9);
+  color: var(--new-dark9);
 }
 
 [cdktreenodetoggle],
@@ -36,16 +36,16 @@ a:not(.action-link) {
   cursor: pointer;
 
   &:hover {
-    background: var(--light2);
+    background: var(--new-light2);
   }
 }
 
 [ng-reflect-recursive=true],
 a:active {
-  background: var(--light3);
+  background: var(--new-light3);
 
   &:hover {
-    background: var(--light4);
+    background: var(--new-light4);
   }
 }
 

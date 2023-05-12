@@ -60,7 +60,7 @@
             top: 50%;
             width: 9999px;
             height: 1px;
-            background: $light7
+            background: var(--new-light7);
         }
 
         &:before {
@@ -129,7 +129,7 @@
     font-size: 16px;
     text-align: center;
     margin-top: 16px;
-    color: $light16;
+    color: var(--new-light16);
 }
 
 

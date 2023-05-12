@@ -126,7 +126,7 @@ nx-modal-wizard {
     }
 
     &-paragraph-light {
-        color: colors.$light16;
+        color: var(--new-light16);
         padding-top: 5px;
     }
 

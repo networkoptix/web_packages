@@ -99,7 +99,7 @@
 
             .cell-ellipsis {
                 margin-bottom: 2px;
-                border-bottom: 1px dotted var(--light6);
+                border-bottom: 1px dotted var(--new-light6);
                 flex-grow: 1;
             }
         }
@@ -209,7 +209,7 @@ nx-block .card {
         &:active,
         &.active {
             background-color: rgba($cameras-sensitivity-color-0, 0.5) !important;
-            border: 1px solid var(--light13) !important;
+            border: 1px solid var(--new-light13) !important;
         }
 
     }
@@ -349,10 +349,10 @@ nx-block .card {
 }
 
 .control-label {
-    color: var(--dark9);
+    color: var(--new-dark9);
 
     &:hover {
-        color: var(--dark1);
+        color: var(--new-dark1);
     }
 }
 
@@ -392,7 +392,7 @@ nx-block .card {
                     position: relative;
                     display: inline-block;
                     margin: 0 8px 4px 4px;
-                    border-bottom: 1px dotted var(--light3);
+                    border-bottom: 1px dotted var(--new-light3);
                     z-index: 1;
                     min-width: 16px;
                     flex-basis: 1;
@@ -427,7 +427,7 @@ nx-block .card {
 }
 
 .sensitivity-hint {
-    color: var(--light16);
+    color: var(--new-light16);
 }
 
 .shake-hint {

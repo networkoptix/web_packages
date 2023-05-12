@@ -2,40 +2,62 @@
     class="mb-3 container row m-0 p-3"
     style="border: 1px solid lightgray"
 >
+    <div class="col-12 p-0">
+        <label class="input-label col-12"> Current HSL: {{ isHSLTheme ? 'Yes' : 'No' }}</label>
+        <div class="col-12">
+            <label class="d-flex align-items-center">
+                <nx-checkbox
+                    [(ngModel)]="isHSLTheme"
+                    [checked]="isHSLTheme"
+                    (onClick)="setHSLThemeMode($event)"
+                ></nx-checkbox>
+                <span>Use HSL theme</span>
+            </label>
+        </div>
+    </div>
+
     <form
         class="row col-12"
         name="frmTheme"
         #frmTheme="ngForm"
         novalidete
+        *ngIf="isHSLTheme"
     >
-        <div class="row col-5">
-            <div class="col-6 p-0">
-                <div class="input-label col-12">HEX Brand</div>
-                <div class="col-12">
-                    <input
-                        #brandInput
-                        class="form-control"
-                        (keyup)="changeBrandColor($event)"
-                    />
-                </div>
-            </div>
-            <div class="col-6 p-0">
-                <div class="input-label col-12">HEX Background</div>
-                <div class="col-12">
-                    <input
-                        #backgroundInput
-                        class="form-control"
-                        (keyup)="changeBackgroundColor($event)"
-                    />
-                </div>
-            </div>
+        <hr
+            class="col-12 p-0"
+            style="background-color: lightgray"
+        />
+        <div class="col-5 align-content-start">
             <div class="row col-12">
+                <div class="col-6">
+                    <label class="input-label col-12">HEX Brand</label>
+                    <div class="col-12">
+                        <input
+                            #brandInput
+                            class="form-control"
+                            (keyup)="changeBrandColor($event)"
+                        />
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label class="input-label col-12">HEX Background</label>
+                    <div class="col-12">
+                        <input
+                            #backgroundInput
+                            class="form-control"
+                            (keyup)="changeBackgroundColor($event)"
+                        />
+                    </div>
+                </div>
+
                 <hr
                     class="col-12"
                     style="background-color: lightgray"
                 />
-                <div class="col-4 p-0">
-                    <div class="input-label col-12">Hue</div>
+            </div>
+            <div class="row col-12">
+                <div class="col-4">
+                    <label class="input-label col-12">Hue</label>
                     <div class="col-12">
                         <input
                             name="hueBrand"
@@ -45,8 +67,8 @@
                         />
                     </div>
                 </div>
-                <div class="col-4 p-0">
-                    <div class="input-label col-12">Saturation</div>
+                <div class="col-4">
+                    <label class="input-label col-12">Saturation</label>
                     <div class="col-12">
                         <input
                             name="saturationBrand"
@@ -56,8 +78,8 @@
                         />
                     </div>
                 </div>
-                <div class="col-4 p-0">
-                    <div class="input-label col-12">Luminosity</div>
+                <div class="col-4">
+                    <label class="input-label col-12">Luminosity</label>
                     <div class="col-12">
                         <input
                             name="luminosityBrand"
@@ -74,59 +96,92 @@
                 />
             </div>
 
-            <div class="col-12 p-3">
+            <div class="lum-wrapper">
                 <div
-                    class="row col-12"
+                    class=""
+                    *ngFor="let i of colorLum"
+                >
+                    <label class="input-label">{{ i.label }}</label>
+                    <div class="">
+                        <input
+                            name="colorLuminosity{{ i.label }}"
+                            class="form-control"
+                            [(ngModel)]="i.value"
+                            (ngModelChange)="setColorLuminosity(i)"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 p-0">
+                <hr
+                    class="col-12 w-auto"
+                    style="background-color: lightgray"
+                />
+
+                <br /><br />
+
+                <div
+                    class="row col-12 pl-3"
                     *ngFor="let i of hexBrand"
                 >
                     <div class="col-2 color brand-{{ i.label }}"></div>
-                    <div class="col-10 color">{{ i.hex }} - brand {{ i.label }}</div>
+                    <label class="col-10 color">{{ i.hex }} - brand {{ i.label }}</label>
                 </div>
 
                 <br /><br />
 
                 <div
-                    class="row col-12"
+                    class="row col-12 pl-3"
                     *ngFor="let i of hexError"
                 >
                     <div class="col-2 color error-{{ i.label }}"></div>
-                    <div class="col-10 color">{{ i.hex }} - error {{ i.label }}</div>
+                    <label class="col-10 color">{{ i.hex }} - error {{ i.label }}</label>
                 </div>
 
-                <br /><br />
+                <!--                <br /><br />-->
 
-                <div
-                    class="row col-12"
-                    *ngFor="let i of hexGreen"
-                >
-                    <div class="col-2 color green-{{ i.label }}"></div>
-                    <div class="col-10 color">{{ i.hex }} - green {{ i.label }}</div>
-                </div>
-
-                <br /><br />
-
-                <div
-                    class="row col-12"
-                    *ngFor="let i of hexYellow"
-                >
-                    <div class="col-2 color yellow-{{ i.label }}"></div>
-                    <div class="col-10 color">{{ i.hex }} - yellow {{ i.label }}</div>
-                </div>
+                <!--                <div-->
+                <!--                    class="row col-12"-->
+                <!--                    *ngFor="let item of hexAdditionalLight; let i = index"-->
+                <!--                >-->
+                <!--                    <div-->
+                <!--                        class="d-contents"-->
+                <!--                        *ngIf="i > 0"-->
+                <!--                    >-->
+                <!--                        <div class="col-2 color additional-light{{ i }}"></div>-->
+                <!--                        <div class="col-10 color">{{ item }} - additional-light{{ i }}</div>-->
+                <!--                    </div>-->
+                <!--                </div>-->
             </div>
         </div>
 
-        <div class="row col-6 offset-1">
-            <div class="col-12 p-0">
-                <div class="input-label col-12">
+        <div class="row col-7 align-content-start">
+            <div class="col-7 p-0">
+                <label class="input-label col-12">
                     HEX Base Color (lum set to {{ luminosityStep }})
-                </div>
+                </label>
                 <div class="col-12">
                     <input
                         #colorInput
                         class="form-control"
-                        placeholder="Will override base set by brand color"
                         (keyup)="changeBaseColor($event)"
                     />
+                </div>
+            </div>
+            <div class="col-5 p-0">
+                <label class="input-label col-12">
+                    Current mode: {{ isLiteTheme ? 'Light' : 'Dark' }}
+                </label>
+                <div class="col-12">
+                    <label class="d-flex align-items-center">
+                        <nx-checkbox
+                            [(ngModel)]="isLiteTheme"
+                            [checked]="isLiteTheme"
+                            (onClick)="setThemeMode($event)"
+                        ></nx-checkbox>
+                        <span>Use light theme</span>
+                    </label>
                 </div>
             </div>
             <div class="row col-12">
@@ -135,7 +190,7 @@
                     style="background-color: lightgray"
                 />
                 <div class="col-4 p-0">
-                    <div class="input-label col-12">Hue</div>
+                    <label class="input-label col-12">Hue</label>
                     <div class="col-12">
                         <input
                             name="hueColor"
@@ -146,7 +201,7 @@
                     </div>
                 </div>
                 <div class="col-4 p-0">
-                    <div class="input-label col-12">Saturation</div>
+                    <label class="input-label col-12">Saturation</label>
                     <div class="col-12">
                         <input
                             name="saturationColor"
@@ -157,7 +212,7 @@
                     </div>
                 </div>
                 <div class="col-4 p-0">
-                    <div class="input-label col-12">Luminosity (step in %)</div>
+                    <label class="input-label col-12">Luminosity (step in %)</label>
                     <div class="col-12">
                         <input
                             name="luminosityStep"
@@ -174,7 +229,7 @@
                 />
             </div>
 
-            <div class="col-6 px-3">
+            <div class="col-6">
                 <div class="row col-12">
                     <div class="col-2 color light0"></div>
                     <div class="col-10 color">&nbsp;</div>
@@ -184,11 +239,11 @@
                     *ngFor="let i of colorNumbers"
                 >
                     <div class="col-2 color light{{ i }}"></div>
-                    <div class="col-10 color">{{ hexLight[i] }} - light{{ i }}</div>
+                    <label class="col-10 color">{{ hexLight[i] }} - light{{ i }}</label>
                 </div>
             </div>
 
-            <div class="col-6 px-3">
+            <div class="col-6">
                 <div class="row col-12">
                     <div class="col-2 color dark0"></div>
                     <div class="col-10 color">&nbsp;</div>
@@ -198,7 +253,34 @@
                     *ngFor="let i of colorNumbers"
                 >
                     <div class="col-2 color dark{{ i }}"></div>
-                    <div class="col-10 color">{{ hexDark[i] }} - dark{{ i }}</div>
+                    <label class="col-10 color">{{ hexDark[i] }} - dark{{ i }}</label>
+                </div>
+            </div>
+
+            <hr
+                class="col-12"
+                style="background-color: lightgray"
+            />
+
+            <div class="row col-12 align-content-start">
+                <div class="col-6">
+                    <div
+                        class="row col-12"
+                        *ngFor="let i of hexGreen"
+                    >
+                        <div class="col-2 color green-{{ i.label }}"></div>
+                        <label class="col-10 color">{{ i.hex }} - green {{ i.label }}</label>
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <div
+                        class="row col-12"
+                        *ngFor="let i of hexYellow"
+                    >
+                        <div class="col-2 color yellow-{{ i.label }}"></div>
+                        <label class="col-10 color">{{ i.hex }} - yellow {{ i.label }}</label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -207,10 +289,4 @@
     <!--    <div class="row col-6">-->
     <!--        <nx-account-settings-component></nx-account-settings-component>-->
     <!--    </div>-->
-
-    <div class="row col-12 pt-3">
-        Hue: {{ this.rs.getPropertyValue('--color-h') }} Sat:
-        {{ this.rs.getPropertyValue('--color-s') }}
-        Lum: {{ this.rs.getPropertyValue('--color-l') }}
-    </div>
 </div>

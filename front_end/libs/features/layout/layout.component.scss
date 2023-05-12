@@ -45,8 +45,8 @@
             //height: 1600px;
             .header {
                 box-shadow: 0 -1rem 0 0 #F0F3F4;
-                border: 1px solid $light8;
-                background-color: $light10;
+                border: 1px solid var(--new-light8);
+                background-color: var(--new-light10);
                 position: sticky;
                 top: 1rem;
             }

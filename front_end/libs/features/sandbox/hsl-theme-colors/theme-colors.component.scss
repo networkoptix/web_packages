@@ -1,112 +1,122 @@
-@use "native-theme/theme_palette" as *;
-@use "sass:map";
+//@use "native-theme/theme_palette" as *;
+//@use "sass:map";
 
-:host {
-    --background-h: 210;
-    --background-s: 7%;
-    --background-l: 5%;
-    --new-body-bg: hsl(var(--background-h), var(--background-s), calc(var(--background-l) + 0%));
-
-    --color-l-step: 2.5%; // step between light1 and light2 .. etc. in percentage
-
-    --color-h: 200; // Hue
-    --color-s: 60%; // Saturation
-    --color-l: 50%; // Lightness
-    
-    --brand-h: 200;
-    --brand-s: 60%;
-    --brand-l: 50%;
-
-    --new-error-core: hsl(0, 60%, calc(var(--brand-l) + 0%));
-    --new-error-dark: hsl(0, 60%, calc(var(--brand-l) - 10%));
-    --new-error-light: hsl(0, 60%, calc(var(--brand-l) + 10%));
-
-    --new-green-core: hsl(110, 60%, calc(var(--brand-l) + 0%));
-    --new-green-dark: hsl(110, 60%, calc(var(--brand-l) - 10%));
-    --new-green-light: hsl(110, 60%, calc(var(--brand-l) + 10%));
-
-    --new-yellow-core: hsl(50, 60%, calc(var(--brand-l) + 0%));
-    --new-yellow-dark: hsl(50, 60%, calc(var(--brand-l) - 10%));
-    --new-yellow-light: hsl(50, 60%, calc(var(--brand-l) + 10%));
-
-    $brand-colors: (
-        'l4': 1.6,
-        'l3': 1.5,
-        'l2': 1.3,
-        'l1': 1.1,
-        'core': 1,
-        'd1': 0.9,
-        'd2': 0.7,
-        'd3': 0.5,
-        'd4': 0.3,
-        'd5': 0.2,
-    );
-
-    @each $key,
-    $value in $brand-colors {
-        --new-brand-#{$key}: hsl(var(--brand-h), var(--brand-s), calc(var(--brand-l) * #{$value}));
-    }
-
-    @for $i from 1 through 19 {
-        --new-light#{$i}: hsl(var(--color-h), var(--color-s), calc(100% - #{$i} * var(--color-l-step)));
-    }
-
-    @for $i from 1 through 19 {
-        --new-dark#{$i}: hsl(var(--color-h), var(--color-s), calc(0% + #{$i} * var(--color-l-step)));
-    }
-
-    --new-brand-inverted: hsl(calc(var(--brand-h) + 180),
-        var(--brand-s),
-        var(--brand-l));
-
-    --new-brand-dimmed: hsl(var(--brand-h),
-        calc(var(--color-s) - var(--brand-s) * 0.6),
-        var(--brand-l));
-
-    div {
-        background-color: var(--new-body-bg);
-        align-content: flex-start;
-    }
-
+:root {
+    //div {
+    //    --background-h: 210;
+    //    --background-s: 7%;
+    //    --background-l: 5%;
+    //    --new-body-bg: hsl(var(--background-h), var(--background-s), calc(var(--background-l) + 0%));
+    //
+    //    --color-l-step: 2.5%; // step between light1 and light2 .. etc. in percentage
+    //
+    //    --color-h: 200; // Hue
+    //    --color-s: 60%; // Saturation
+    //    --color-l: 50%; // Lightness
+    //
+    //    --brand-h: 200;
+    //    --brand-s: 60%;
+    //    --brand-l: 50%;
+    //
+    //    $brand-colors: (
+    //        'l4': 1.6,
+    //        'l3': 1.5,
+    //        'l2': 1.3,
+    //        'l1': 1.1,
+    //        'core': 1,
+    //        'd1': 0.9,
+    //        'd2': 0.7,
+    //        'd3': 0.5,
+    //        'd4': 0.3,
+    //        'd5': 0.2,
+    //    );
+    //
+    //    @each $key,
+    //    $value in $brand-colors {
+    //        --new-brand-#{$key}: hsl(var(--brand-h), var(--brand-s), calc(var(--brand-l) * #{$value}));
+    //    }
+    //
+    //    @for $i from 1 through 19 {
+    //        --new-light#{$i}: hsl(var(--color-h), var(--color-s), calc(100% - #{$i} * var(--color-l-step)));
+    //    }
+    //
+    //    @for $i from 1 through 19 {
+    //        --new-dark#{$i}: hsl(var(--color-h), var(--color-s), calc(0% + #{$i} * var(--color-l-step)));
+    //    }
+    //
+    //    @for $i from 1 through 8 {
+    //        --new-additional-light#{$i}: hsl(210, 25%, calc(100% - #{$i} * 1.8%));
+    //    }
+    //
+    //    //$additional_light1: #FAFBFC;
+    //    //$additional_light2: #F0F2F4;
+    //    //$additional_light3: #E6EBED;
+    //    //$additional_light4: #DCE3E6;
+    //    //$additional_light5: #FFFFF8;
+    //    //$additional_light6: #FFFFF7;
+    //    //$additional_light7: #F5F7F9;
+    //    //$additional_light8: #E1E7EA;
+    //
+    //    // fixed saturation ... keep calc() it's needed for HEX calculation
+    //    --new-error-core: hsl(0, 60%, calc(50% + 0%));
+    //    --new-error-dark: hsl(0, 60%, calc(50% - 10%));
+    //    --new-error-light: hsl(0, 60%, calc(50% + 10%));
+    //
+    //    --new-green-core: hsl(110, 60%, calc(50% + 0%));
+    //    --new-green-dark: hsl(110, 60%, calc(50% - 10%));
+    //    --new-green-light: hsl(110, 60%, calc(50% + 10%));
+    //
+    //    --new-yellow-core: hsl(50, 60%, calc(50% + 0%));
+    //    --new-yellow-dark: hsl(50, 60%, calc(50% - 10%));
+    //    --new-yellow-light: hsl(50, 60%, calc(50% + 10%));
+    //
+    //    background-color: var(--new-body-bg);
+    //    align-content: flex-start;
+    //}
+    //
     div.color {
         height: 20px;
         display: flex;
         align-items: center;
 
+        &.brand-l1-transparent {
+            background-color: var(--new-brand-l1-t50);
+        }
+
         &.error-core {
             background-color: var(--new-error-core);
         }
 
-        &.error-dark {
-            background-color: var(--new-error-dark);
+        &.error-d1 {
+            background-color: var(--new-error-d1);
         }
 
-        &.error-light {
-            background-color: var(--new-error-light);
+        &.error-l1 {
+            background-color: var(--new-error-l1);
         }
 
         &.green-core {
             background-color: var(--new-green-core);
         }
 
-        &.green-dark {
-            background-color: var(--new-green-dark);
+        &.green-d1 {
+            background-color: var(--new-green-d1);
         }
 
-        &.green-light {
-            background-color: var(--new-green-light);
+        &.green-l1 {
+            background-color: var(--new-green-l1);
         }
 
         &.yellow-core {
             background-color: var(--new-yellow-core);
         }
 
-        &.yellow-dark {
-            background-color: var(--new-yellow-dark);
+        &.yellow-d1 {
+            background-color: var(--new-yellow-d1);
         }
 
-        &.yellow-light {
-            background-color: var(--new-yellow-light);
+        &.yellow-l1 {
+            background-color: var(--new-yellow-l1);
         }
 
         @for $i from 1 through 19 {
@@ -121,19 +131,30 @@
             }
         }
 
+        @for $i from 1 through 8 {
+            &.additional-light#{$i} {
+                background-color: var(--new-additional-light#{$i});
+            }
+        }
+
+        $brand-colors: (
+            'l4': 1.6,
+            'l3': 1.5,
+            'l2': 1.3,
+            'l1': 1.1,
+            'core': 1,
+            'd1': 0.9,
+            'd2': 0.7,
+            'd3': 0.5,
+            'd4': 0.3,
+            'd5': 0.2,
+        );
+
         @each $key,
         $value in $brand-colors {
             &.brand-#{$key} {
                 background-color: var(--new-brand-#{$key});
             }
-        }
-
-        &.brand-dimmed {
-            background-color: var(--new-brand-dimmed);
-        }
-
-        &.brand-inverted {
-            background-color: var(--new-brand-inverted);
         }
     }
 
@@ -142,41 +163,44 @@
         display: flex;
         align-items: center;
         margin-right: .5rem;
-        height: 30px;
     }
 
-    .input-label {
-        color: var(--new-light19);
+    label {
+        margin: 0;
     }
 
-    --brand-core : var(--new-brand-core);
-    --brand-d4: var(--new-brand-d4);
-    --input-color : var(--new-light12);
-    --label-color: var(--new-light19);
-    --card-header-text: var(--new-light20);
-    --card-header-bg: var(--new-light4);
-    --border-color: var(--new-light6);
-    --image-box-selected-border-color: var(--new-brand-core) !important;
-
-    .input {
-        color: var(--new-light12);
-        border: 1px solid var(--new-light7);
-        border-radius: 2px;
-        background-color: var(--new-light2);
-
-        &:hover,
-        &:active,
-        &:focus {
-            border-color: var(--new-brand-core) !important;
-            outline: none !important;
-            box-shadow: none !important;
-        }
+    .lum-wrapper {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-column-gap: 10px;
+        grid-row-gap: 10px;
     }
 
-    .editable-edit {
-        padding: 0 4px;
-        margin-left: -4px;
-        width: 100px;
-        caret-color: var(--input-active-color);
-    }
+//}
+//
+//:root {
+//    body {
+//        background-color: var(--new-body-bg);
+//        color: var(--new-dark9);
+//    }
+//
+//    --body-bg :var(--new-body-bg);
+//    --alt-body-bg : var(--new-light1);
+//    --body-text-color : var(--new-dark9);
+//
+//    --header-bg : var(--new-light1);
+//    --header-border-color : var(--new-light4);
+//    --header-webadm-bg : var(--new-dark14);
+//    --header-webadm-border-color : transparent;
+//
+//    --ribbon-bg : var(--bluez-light);
+//    --ribbon-border : var(--bluez-light);
+//    --ribbon-color : var(--new-dark9);
+//
+//    --ribbon-alert-bg : var(--new-yellow_l2);
+//    --ribbon-alert-border : var(--new-yellow_l1);
+//    --ribbon-alert-color : var(--new-dark9);
+//
+//    --image-box-border-color : var(--new-light6);
+//    --image-box-selected-border-color : var(--new-brand-l1);
 }

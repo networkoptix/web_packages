@@ -128,7 +128,7 @@
                 width: 16px;
                 height: 40px;
                 background-color: var(--control-color);
-                box-shadow: 0px -2px 0px 0px rgba(var(--dark1--rgb), 0.1);
+                box-shadow: 0px -2px 0px 0px var(--new-dark1-t10);
                 cursor: pointer;
                 opacity: 0.8;
 
@@ -170,7 +170,7 @@
         font-family: $font-family-light;
         font-size: 40px;
         line-height: 48px;
-        color: var(--light10); // the spec says just "light", and it's kinda weird
+        color: var(--new-light10); // the spec says just "light", and it's kinda weird
         opacity: 0.6;
         background-color: transparent; // the spec says "light2 opacity 100%", LoL
         position: absolute;

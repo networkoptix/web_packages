@@ -33,7 +33,7 @@
         position: sticky;
         top: 0;
         z-index: 15;
-        box-shadow: 6px 0 6px -6px $light7;
+        box-shadow: 6px 0 6px -6px var(--new-light7);
         grid-area: Menu;
         width: 360px;
         display: flex;
@@ -148,7 +148,7 @@
 
     .active-widget {
         position: relative;
-        outline: 2px solid $brand_core;
+        outline: 2px solid var(--new-brand-core);
         z-index: 10;
         // box-shadow: 0 0 6px 2px $light7;
     }
@@ -166,10 +166,10 @@
     .active-action {
         position: fixed;
         border-radius: 6px;
-        border: 1px solid var(--dark9);
+        border: 1px solid var(--new-dark9);
         z-index: 10000;
         overflow: hidden;
-        box-shadow: 1px 1px 5px transparentize($dark4, 0.5);
+        box-shadow: 1px 1px 5px var(--new-dark4-t50);
 
         bottom: 48px;
         right: 48px;
@@ -187,15 +187,15 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: var(--brand-d4) !important;
-            border-bottom: 2px solid var(--dark9);
+            background: var(--new-brand-d4) !important;
+            border-bottom: 2px solid var(--new-dark9);
             height: 48px;
             padding: 16px 8px 16px 16px;
         }
 
         .action-header,
         .action-header-heading {
-            color: var(--light1) !important;
+            color: var(--new-light1) !important;
             margin: 0 !important;
         }
 
@@ -259,7 +259,7 @@
         padding: 4px 12px !important;
         margin-left: auto !important;
         border-radius: 100px !important;
-        background: $light5;
+        background: var(--new-light5);
     }
 
     .add-dashboard {
@@ -329,8 +329,8 @@
 
                     &:hover,
                     &:active {
-                        background: $light7  !important;
-                        color: $dark9  !important;
+                        background: var(--new-light7)  !important;
+                        color: var(--new-dark9)  !important;
                     }
                 }
             }

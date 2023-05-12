@@ -6,7 +6,7 @@
 .server-info {
     font-family: typography.$font-family-regular;
     font-size: typography.$font-size-base;
-    color: var(--dark9);
+    color: var(--new-dark9);
 
     .header-editable {
         display: flex;
@@ -116,11 +116,11 @@
             height: 30px;
             width: 80px;
             border-radius: 2px;
-            border: 1px solid var(--light6);
+            border: 1px solid var(--new-light6);
 
             &:disabled {
-                background-color: var(--light2);
-                border: 1px solid var(--light4);
+                background-color: var(--new-light2);
+                border: 1px solid var(--new-light4);
             }
         }
     }

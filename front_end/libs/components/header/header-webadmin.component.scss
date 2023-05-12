@@ -12,7 +12,7 @@
 
 .breadcrumb-wrapper {
     &>svg-icon>svg>.st0 {
-        fill: typography.$light16  !important;
+        fill: var(--new-light16)  !important;
     }
 }
 
@@ -20,12 +20,12 @@
     color: theme_variables_common.$additional_light1  !important;
 
     &:hover {
-        background: theme_variables_common.$dark15;
+        background: var(--new-dark15);
         border-bottom: 1px solid transparent;
     }
 
     &:active {
-        background: theme_variables_common.$dark13;
+        background: var(--new-dark13);
         border-bottom: 1px solid transparent;
     }
 

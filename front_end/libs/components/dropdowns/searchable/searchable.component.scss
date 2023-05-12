@@ -66,11 +66,11 @@
     .additional-help {
         font-family: var(--font-family-regular);
         font-size: 13px;
-        color: var(--light16);
+        color: var(--new-light16);
         margin-left: 0.25rem;
     }
 
     .selected .additional-help {
-        color: var(--light1)  !important;
+        color: var(--new-light1)  !important;
     }
 }

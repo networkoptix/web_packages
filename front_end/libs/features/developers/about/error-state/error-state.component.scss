@@ -30,13 +30,13 @@
     padding-bottom: 18px;
 
     &>h2 {
-        color: var(--brand-d2) !important;
+        color: var(--new-brand-d2) !important;
     }
 }
 
 .brand-title-span {
     font-family: $font-family-medium;
-    color: var(--brand-d2) !important;
+    color: var(--new-brand-d2) !important;
 }
 
 .error-text {
@@ -47,7 +47,7 @@
 }
 
 .error-display-block {
-    border: 2px solid $dark13;
+    border: 2px solid var(--new-dark13);
 }
 
 .error-block {
@@ -55,7 +55,7 @@
     margin-top: 12px;
     margin-left: 32px;
     padding-left: 8px;
-    border-left: 2px solid $light4;
+    border-left: 2px solid var(--new-light4);
 
     ::after,
     ::before {
@@ -63,7 +63,7 @@
         position: absolute;
         left: 0;
         height: 2px;
-        background: $light4;
+        background: var(--new-light4);
     }
 
     ::before {

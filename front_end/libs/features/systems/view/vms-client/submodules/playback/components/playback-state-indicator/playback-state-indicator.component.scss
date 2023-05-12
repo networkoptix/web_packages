@@ -26,8 +26,8 @@
 
       >.icon {
         display: inline-block;
-        border: 1px solid var(--light10);
-        background-color: var(--light7);
+        border: 1px solid var(--new-light10);
+        background-color: var(--new-light7);
         transition: all 0.2s ease-in-out;
         width: 8px;
         height: 8px;
@@ -71,7 +71,7 @@
       background-color: var(--control-active-bg);
       border-left: 1px solid var(--border-color);
       border-right: 1px solid var(--border-color);
-      box-shadow: -2px 0 0 0 rgba(var(--dark1--rgb), 0.2);
+      box-shadow: -2px 0 0 0 var(--new-dark1-t20);
       z-index: 5;
 
       &:hover {
