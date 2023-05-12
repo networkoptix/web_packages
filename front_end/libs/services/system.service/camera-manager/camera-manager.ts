@@ -19,11 +19,12 @@ import type {
     ServerTime,
     Task,
     ChangedIdReturned,
+    CameraValues,
 } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystemOldModule } from '@services/system/modules/nx-system-old-module';
 import { NxSystemBase } from '@services/system/system-base';
-import { alphabeticalSort, cleanId, KeyFilter, paramSortFunc } from '@utils/general';
+import { alphabeticalSort, cleanId, KeyFilter, MS, paramSortFunc } from '@utils/general';
 
 import type { ServerManager } from '../server-manager/server-manager';
 import { ModuleInfo } from '../system-types';
@@ -50,8 +51,7 @@ const updateDuration = (chunk: Pick<Partial<TimeDetail>, 'durationMs'> & Omit<Ti
 };
 
 export class CameraManager {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private camerasHealth: any = {};
+    private camerasHealth: CameraValues = {};
     private serverManager: ServerManager;
     private serverTimes: ServerTime[];
     private locale: string;
@@ -117,28 +117,12 @@ export class CameraManager {
         } catch (_) {
             this.camerasHealth = {};
         }
-        const mappedCameras: NxSystemCamera[] = cameras.map(camera => this.parseCamera(camera));
-        this.cameras = mappedCameras;
-        return mappedCameras;
+        this.cameras = cameras.map(this.parseCamera);
+        return this.cameras;
     }
 
     parseCamera(camera: ec2CameraEx): NxSystemCamera {
         const backupType = camera.backupType || camera.backupQuality;
-        const serverTime = this.serverTimes.find(({ serverId }) => serverId === camera.parentId);
-
-        let dayOfWeek: number;
-        let secondsToday: number;
-        if (serverTime) {
-            // Intentionally made descriptive ... I dislike time manipulation
-            const { timeZoneOffset: serverTimeZoneOffsetMs, vmsTime: vmsTimeMs } = serverTime;
-            const localTimeZoneOffsetMs = (new Date().getTimezoneOffset()) * 60 * 1000;
-            const timeZoneOffset = parseInt(serverTimeZoneOffsetMs) + localTimeZoneOffsetMs;
-            const vmsTimeFromLocal = parseInt(vmsTimeMs) + timeZoneOffset;
-            const vmsDate = new Date(vmsTimeFromLocal);
-
-            dayOfWeek = ((vmsDate.getDay() + 6) % 7) + 1;
-            secondsToday = Math.round((vmsDate.getTime() % 86400000) / 1000);
-        }
 
         if (!camera.addParams) {
             /* @ts-expect-error TODO: Figure out how to handle processing for rest cameras  */
@@ -195,15 +179,12 @@ export class CameraManager {
             120,
             addParams.rotation
         );
-        const liveUrl = this.serverManager.mediaserver.getPlaybackUrl(camera.id, 'hls');
         const webRtcUrl = this.system.version >= 5.1
             ? ({ position } = { position: null }): string => {
                 return this.serverManager.mediaserverConnections[camera.parentId].getPlaybackUrl(camera.id, 'webRtc', 'low', position);
             }
             : null;
-        const online = ['Online', 'Recording'].includes(camera.status);
-        const unauthorized = camera.status === 'Unauthorized';
-        const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday }, this.system.useRest).toLowerCase();
+        const status = this.parseCameraStatus(camera, this.system.useRest).toLowerCase();
         const isStream = [
             'GENERIC_RTSP',
             'GENERIC_MULTICAST',
@@ -267,17 +248,45 @@ export class CameraManager {
         const deviceType = this.camerasHealth[cleanId(camera.id)]
             ? this.camerasHealth[cleanId(camera.id)].info.type
             : 'Camera';
+
+        const { id, name, vendor, model, url } = camera;
+        const {
+            parentId,
+            audioEnabled,
+            controlEnabled,
+            motionType,
+            motionMask,
+            scheduleEnabled,
+            scheduleTasks,
+            backupPolicy,
+            backupQuality,
+            backupContentType,
+        } = camera;
         return {
-            ...camera,
+            id,
+            name,
+            vendor,
+            model,
+            url,
+
+            parentId,
+            audioEnabled,
+            controlEnabled,
+            motionType: motionType as MotionType,
+            motionMask,
+            scheduleEnabled,
+            scheduleTasks,
+            backupPolicy,
+            backupQuality,
+            backupContentType,
+
             addParams,
             backupType,
-            motionType: camera.motionType as MotionType,
-            status, // Added recording/scheduled statuses
-            dayOfWeek,
+            status,
+
             defaultRatio,
             deviceType,
             isStream,
-            liveUrl,
             maxFps,
             motionEnabled,
             motionLowResEnabled,
@@ -285,10 +294,7 @@ export class CameraManager {
             parsedAddParams,
             previewUrl,
             recordingSettings,
-            secondsToday,
             webRtcUrl,
-            online,
-            unauthorized
         };
     }
 
@@ -371,8 +377,7 @@ export class CameraManager {
     }
 
     private parseCameraStatus(
-        { status, scheduleEnabled, scheduleTasks }: ec2CameraEx,
-        { dayOfWeek, secondsToday }: Pick<NxSystemCamera, 'dayOfWeek' | 'secondsToday'>,
+        { status, scheduleEnabled, scheduleTasks, parentId }: ec2CameraEx,
         restSystem = true
     ): string {
         if (!scheduleEnabled) {
@@ -383,12 +388,25 @@ export class CameraManager {
             return status === 'Recording' ? status : 'Scheduled';
         }
 
-        const recording = scheduleTasks.some(task => (
-            ![RecordingType.NEVER, RecordingType.META_NEVER].includes(task.recordingType as RecordingType) &&
-            task.dayOfWeek === dayOfWeek &&
-            task.startTime < secondsToday &&
-            secondsToday < task.endTime
-        ));
+        const serverTime = this.serverTimes.find(({ serverId }) => serverId === parentId);
+        let recording = false;
+        if (serverTime) {
+            // Intentionally made descriptive ... I dislike time manipulation
+            const { timeZoneOffset: serverTimeZoneOffsetMs, vmsTime: vmsTimeMs } = serverTime;
+            const localTimeZoneOffsetMs = (new Date().getTimezoneOffset()) * MS.min;
+            const timeZoneOffset = parseInt(serverTimeZoneOffsetMs) + localTimeZoneOffsetMs;
+            const vmsTimeFromLocal = parseInt(vmsTimeMs) + timeZoneOffset;
+            const vmsDate = new Date(vmsTimeFromLocal);
+
+            const dayOfWeek = ((vmsDate.getDay() + 6) % 7) + 1;
+            const secondsToday = Math.round((vmsDate.getTime() % MS.day) / 1000);
+            recording = scheduleTasks.some(task => (
+                ![RecordingType.NEVER, RecordingType.META_NEVER].includes(task.recordingType as RecordingType) &&
+                task.dayOfWeek === dayOfWeek &&
+                task.startTime < secondsToday &&
+                secondsToday < task.endTime
+            ));
+        }
         return recording && status !== 'Offline' ? 'Recording' : 'Scheduled';
     }
 

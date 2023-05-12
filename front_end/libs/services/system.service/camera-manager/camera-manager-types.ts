@@ -1,19 +1,39 @@
-import { Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
 
-import type { ec2CameraEx, Task } from '@services/system-api.types';
+import type { Task } from '@services/system-api.types';
 
 import type { ParsedAddParams } from './add-params.types';
 
-export interface NxSystemCamera extends Omit<ec2CameraEx, 'addParams'> {
-    addParams: Record<string, string>; // Unpacked array of name/value objects
-    backupType: string; // Always defined
-    motionType: MotionType; // Specific strings
+export interface NxSystemCamera {
+    // Shared
+    id: string;
+    name: string;
+    vendor: string;
+    model: string;
+    url: string;
 
-    dayOfWeek: number;
+    // Renamed
+    parentId: string; // serverId
+    audioEnabled: boolean; // options.isAudioEnabled
+    controlEnabled: boolean; // options.isControlEnabled
+    motionType: MotionType; // motion.type
+    motionMask: string; // motion.mask
+    scheduleEnabled: boolean; // schedule.isEnabled
+    scheduleTasks: Task[]; // schedule.tasks (missing metadata types)
+    backupPolicy: string; // options.backupPolicy
+    backupQuality: string; // options.backupQuality
+    backupContentType: string; // options.backupContentType
+
+    // Modified
+    addParams: Record<string, string>; // Unpacked array of name/value objects
+    backupType: string; // || backupContentType
+    // This might be deprecated, not seen on any v5 systems
+    status: string; // Added recording/scheduled statuses
+
+    // Calculated
     defaultRatio: number;
     deviceType: string;
     isStream: boolean;
-    liveUrl: string;
     maxFps: number;
     motionEnabled: boolean;
     motionLowResEnabled: boolean;
@@ -21,10 +41,7 @@ export interface NxSystemCamera extends Omit<ec2CameraEx, 'addParams'> {
     parsedAddParams: ParsedAddParams;
     previewUrl: Observable<string>;
     recordingSettings: RecordingSettings;
-    secondsToday: number;
-    webRtcUrl: (params?: Record<string, unknown>) => string;
-    online: boolean;
-    unauthorized: boolean;
+    webRtcUrl: ((param: { position: string | null }) => string) | null;
 }
 
 export type TaskUpdate = Pick<Task, 'fps' | 'recordingType' | 'streamQuality'>;
