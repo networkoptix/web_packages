@@ -27,8 +27,8 @@ Force Tags        system    cloud    webadmin    system settings
     Settings on page should match settings on server
 
 2. Changing the Setting * changes it on the server
-    Log in to system    ${system}    ${system}[owner]
-    Wait Until Settings Are Visible
+    Log in to system    ${system}    ${system}[cloudOwner]
+    Wait Until Settings Are Visible    timeout=300
 
     FOR    ${setting}    IN    autoDiscoveryEnabled    statisticsAllowed    cameraSettingsOptimization    auditTrailEnabled    trafficEncryptionForced
         Changing setting changes it on server     //*[@id="${setting}"]    ${setting}

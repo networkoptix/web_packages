@@ -533,3 +533,14 @@ class ServerAPI5(ServerAPI):
         credentials = {"username": auth[0], "password": auth[1], "setCookie": False}
         t = requests.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
         return t.json()['token']
+    
+    @keyword
+    def get_log_level(self, auth, serverUrl):
+        with requests.session() as s:
+            credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
+            r = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            token = r.json().get("token")
+            s.headers.update({'Authorization': "Bearer " + token})
+            t = s.get(f'{serverUrl}/api/logLevel', verify=False)
+            logger.trace(t.json())
+            return t.json()['reply']

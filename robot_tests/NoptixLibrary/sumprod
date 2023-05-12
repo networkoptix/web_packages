@@ -1,0 +1,5 @@
+def remov_nb(n):
+    total = sum(n)
+    return []
+
+if

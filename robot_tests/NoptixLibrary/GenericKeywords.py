@@ -976,3 +976,9 @@ class GenericKeywords(object):
             )
         with open(jsonPath,  encoding="utf-8") as langDict:
             return json.load(langDict)
+    def evaluate_log_level_via_API(self, auth, server_url, key, value):
+        logLevel= self.server_api.get_log_level(auth, server_url)
+        if logLevel.get(key) and logLevel[key] == value.lower():
+            pass
+        else:
+            raise RuntimeError(f"Value({value}) was not in log level response {logLevel}")

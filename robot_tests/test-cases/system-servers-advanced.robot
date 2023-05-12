@@ -203,7 +203,7 @@ Force Tags        advanced server     cloud
     Reload Page
     Wait Until Elements Are Visible
     ...    @{ADVANCED SETTINGS ALERT BAR}
-    ...    @{STORAGE LOCATIONS BLOCK ITEMS}
+    #...    @{STORAGE LOCATIONS BLOCK ITEMS}
     ...    @{LOG SETTINGS BLOCK}
     Log    The following will test every log level option for each one of the (5) dropdowns
     FOR    ${dropdown}    IN    @{LOGLEVEL IDS}

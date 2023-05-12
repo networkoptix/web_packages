@@ -365,13 +365,6 @@ Connect To Cloud
        ...    Wait until element is not visible    ${CONNECT TO CLOUD MODAL}    AND
        ...    Wait until element is visible   ${DISCONNECT FROM NX}
 
-Evaluate Log Level via API
-    [Arguments]    ${auth}    ${server url}    ${key}    ${value}
-    ${logLevel}=   Get Log Level    ${auth}    ${server url}
-    ${value}=    Convert To Lower Case    ${value}
-    Dictionary should contain item    ${logLevel}    ${key}    ${value}
-
-
 # Misc
 Checkbox Is Selected
     [Arguments]    ${locator}    ${state}

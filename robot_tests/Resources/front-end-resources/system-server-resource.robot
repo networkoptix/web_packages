@@ -44,13 +44,14 @@ Test Every Loglevel Option
     [Arguments]    ${dropdown}    ${id}    ${server url}
     FOR    ${option}    IN    @{LOGLEVEL OPTIONS}
         Set Log Level Option    ${dropdown}    ${id}    ${option}
-        Evaluate Log Level via API    ${server['local auth']}    ${server url}    ${id}    ${option}
+        Evaluate Log Level via API    ${server['localAuth']}    ${server url}    ${id}    ${option}
     END
 
 Set Log Level Option
     [Arguments]    ${dropdown}    ${id}    ${option}
+    Wait Until Element Is Visible    ${dropdown}
     Click Element    ${dropdown}
-    Click Element    //div[@aria-labelledby="${id}"]//a/span[text()="${option}"]
+    Click Element    ${dropdown}/following-sibling::div//a/span[contains(text(),"${option}")]/../..
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element is Visible    ${ADVANCED SAVE MODAL CLOSE BUTTON}

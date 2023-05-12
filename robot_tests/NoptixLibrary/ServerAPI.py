@@ -292,11 +292,6 @@ class ServerAPI:
         return system_settings['reply']['settings']
 
     @keyword
-    def get_log_level(self, auth, serverUrl):
-        r = requests.get(f'{serverUrl}/api/logLevel', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
-        return r.json()['reply']
-
-    @keyword
     def get_users(self, auth, serverUrl):
         r = requests.get(f'{serverUrl}/ec2/getUsers', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
         return r.json()
