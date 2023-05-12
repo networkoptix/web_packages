@@ -19,25 +19,34 @@
         <div class="bookmarks-image">
             <div class="bookmarks-image-loaded">
                 <ng-container *ngIf="bookmark.isVisible">
-                    <nx-pre-loader *ngIf="loading"></nx-pre-loader>
-                    <div [class]="{ 'd-none': loading }">
-                        <svg-icon
-                            *ngIf="thumbnail$ | async"
-                            nx-add-svg-src
-                            [src]="icons.dir + 'play.svg'"
-                            [svgStyle]="{ 'width.px': '40', 'height.px': '40' }"
-                            class="bookmarks-image-playIcon"
-                        ></svg-icon>
-                        <img
-                            [src]="
-                                (thumbnail$ | async)
-                                    ? (thumbnail$ | async | safe: 'resourceUrl')
-                                    : icons.dirNonStandardView +
-                                      'cameras_list_placeholder_offline.svg'
-                            "
-                            [alt]="'thumbnail of ' + bookmark.name"
-                        />
-                    </div>
+                    <ng-container *ngIf="bookmark.deviceName; else cantViewBookmark">
+                        <ng-template #thumbnailPreLoader>
+                            <nx-pre-loader></nx-pre-loader>
+                        </ng-template>
+                        <div *ngIf="bookmark.thumbnail | async; else thumbnailPreLoader">
+                            <svg-icon
+                                nx-add-svg-src
+                                [src]="icons.dir + 'play.svg'"
+                                [svgStyle]="{ 'width.px': '40', 'height.px': '40' }"
+                                class="bookmarks-image-playIcon"
+                            ></svg-icon>
+                            <img
+                                [src]="
+                                    (bookmark.thumbnail | async)
+                                        ? (bookmark.thumbnail | async | safe: 'resourceUrl')
+                                        : icons.dirNonStandardView +
+                                          'cameras_list_placeholder_offline.svg'
+                                "
+                                [alt]="'thumbnail of ' + bookmark.name"
+                            />
+                        </div>
+                    </ng-container>
+                    <ng-template #cantViewBookmark>
+                        <nx-player-placeholder
+                            class="noPermissions"
+                            [description]="'Device permission required.' | translate"
+                        ></nx-player-placeholder>
+                    </ng-template>
                 </ng-container>
             </div>
         </div>

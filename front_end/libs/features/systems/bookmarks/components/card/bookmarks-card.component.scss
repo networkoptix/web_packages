@@ -49,6 +49,22 @@ nx-bookmarks-card {
                     width: 100%;
                     height: 100%;
                 }
+
+                .noPermissions {
+                    position: absolute;
+                    font-size: 13px;
+                    background-color: var(--bookmarks-card-video-background-color);
+
+                    .player-placeholder {
+                        width: 100%;
+
+                        .description {
+                            width: 100% !important;
+                            color: var(--bookmarks-card-no-permissions-description) !important;
+                            margin-top: 0 !important;
+                        }
+                    }
+                }
             }
 
             &-playIcon,

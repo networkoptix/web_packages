@@ -1,5 +1,4 @@
 import { Component, Input, OnInit, Inject, ViewEncapsulation } from '@angular/core';
-import { map, Observable } from 'rxjs';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons } from '@lib/variables/static-variables';
@@ -19,14 +18,11 @@ export class NxBookmarksCardComponent implements OnInit {
     @Input() bookmark: Bookmark;
     DATE_FORMAT = 'mmm dd, yyyy';
     icons = icons;
-    loadedThumbnail: boolean = true;
 
     private locale: string;
     startTime: string;
     startDate: string;
     duration: string;
-    thumbnail$: Observable<string>;
-    loading: boolean = true;
     enableTooltip: boolean;
 
     constructor(private dialogs: NxDialogsService, @Inject(WINDOW) window: Window) {
@@ -48,13 +44,6 @@ export class NxBookmarksCardComponent implements OnInit {
         this.duration = `${includeHours}${minutes.toString().padStart(2, '0')}:${seconds
             .toString()
             .padStart(2, '0')}`;
-
-        this.thumbnail$ = this.bookmark.thumbnail.pipe(
-            map(thumbnailUrl => {
-                this.loading = false;
-                return thumbnailUrl;
-            }),
-        );
     }
 
     openBookmarkModal(): void {

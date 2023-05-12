@@ -147,6 +147,7 @@ html[data-theme="dark"] {
     --placeholder-accent2-color : #{$light12};
     --placehoder-title-color   : #E1E7EA; //$light4;
     --placehoder-body-color    : #A5B7C0; //light10;
+    --placeholder-description-text: #{$light10};
 
     --progress-bar-color                  : #4E6977; //$dark16
     --progress-bar-border-color           : #4E6977; //$dark16
@@ -681,7 +682,9 @@ html[data-theme="dark"] {
     --bookmarks-duration-bg: rgba(0, 0, 0, 0.5);
     --bookmarks-card-background-color: var(--dark5);
     --bookmarks-card-background-color-hover: var(--dark7);
-    --bookmarks-card-border-color: inherit;
+    --bookmarks-card-no-permissions-description: var(--light12);
+    --bookmarks-card-video-background-color: var(--dark10);
+    --bookmarks-card-border-color: none;
     --bookmarks-card-title-gradient: linear-gradient(
         to right,
         rgba(var(--dark5--rgb), 0),
