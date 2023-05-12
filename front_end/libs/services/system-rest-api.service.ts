@@ -40,6 +40,7 @@ import {
     memoizeAsyncMedium,
     memoizeAsyncPersistent,
 } from '@utils/memoize';
+import { withKeyMap } from '@utils/nx';
 import { startWithCache } from '@utils/start-with-cached';
 
 import { SECURITY_LEVEL } from '../../apps/setup-wizard/src/app/types/wizard-state.types';
@@ -746,12 +747,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         const endpoint = '/rest/v1/devices';
         const params = {
             _keepDefault: true,
-            _with: [
-                ...t.getRestCameraKeys,
-                ...Object.entries(t.getRestCameraNestedKeys).flatMap(([key, nKeys]) => {
-                    return nKeys.map(nk => `${key}.${nk}`);
-                })
-            ].toString(),
+            _with: withKeyMap(t.getRestCameraKeys),
         };
         return this.get<t.GetRestCamera[]>(
             endpoint,

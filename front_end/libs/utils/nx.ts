@@ -16,6 +16,8 @@ import { nxConfig as CONFIG } from '@services/nx-config/config';
 import type { ec2MediaServer } from '@services/system-api.types';
 import type { CloudUserCompat } from '@services/system.service/user-manager/user-manager-types';
 
+import type { RecursiveKeyMap } from './general';
+
 /**
  * Pass a function that evaluates a menu node to fulfill a specific condition,
  * findMenuNode will traverse an array of menuNodes and try to find a node that fulfills the conditionalFunction
@@ -347,4 +349,26 @@ export function htmlStrConstructor(nodes: HtmlStrElem[], translate?: TranslateSe
         }
     });
     return elems.join('');
+}
+
+/** Generate string for the `_with` param for `/rest` endpoints.
+ *
+ * e.g. `'foo,bar,fizz.buzz'` => Get properties `foo`, `bar`, and `buzz` inside `fizz`
+ */
+export function withKeyMap(keys: RecursiveKeyMap<unknown>): string {
+    const props: string[] = [];
+
+    function addKeys(keys: RecursiveKeyMap<unknown>, parentKeys: string[]): void {
+        Object.entries<true | RecursiveKeyMap<unknown>>(keys).forEach(([key, value]) => {
+            const keyList = [...parentKeys, key];
+            if (value === true) {
+                props.push(keyList.join('.'));
+            } else {
+                addKeys(value, keyList);
+            }
+        });
+    }
+    addKeys(keys, []);
+
+    return props.join(',');
 }

@@ -1,3 +1,5 @@
+import type { RecursivePick } from '@utils/general';
+
 interface IParams<Value = any> {
     [key: string]: Value;
 }
@@ -391,16 +393,19 @@ export interface ec2CameraEx extends ec2Camera {
     userDefinedGroupName: string;
 }
 
-// Only works one level of nesting deep but should be fine for now
-export const getRestCameraKeys = ['id', 'deviceType', 'name', 'serverId', 'status', 'url'] as const;
-export const getRestCameraNestedKeys = {
-    schedule: ['isEnabled'],
+// Top level keys, more convenient as array for now
+const _getRestCameraKeys = ['id', 'deviceType', 'name', 'serverId', 'status', 'url'] as const;
+export const getRestCameraKeys = {
+    ...(Object.fromEntries(_getRestCameraKeys.map(k => [k, true])) as Record<
+        typeof _getRestCameraKeys[number],
+        true
+    >),
+    schedule: {
+        isEnabled: true,
+    },
 } as const;
-export type GetRestCamera = Pick<Device, typeof getRestCameraKeys[number]> & {
-    -readonly [key in keyof typeof getRestCameraNestedKeys]: {
-        [nKey in typeof getRestCameraNestedKeys[key][number]]: Device[key][nKey];
-    };
-};
+export type GetRestCamera = RecursivePick<Device, typeof getRestCameraKeys>;
+
 export type RestCamera = {
     [key in keyof Omit<
         ec2CameraEx,

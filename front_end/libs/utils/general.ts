@@ -311,3 +311,53 @@ export function staticImplements<T>() {
 export type KeyFilter<T, F> = {
     [K in keyof T]: T[K] extends F ? K : never;
 }[keyof T];
+
+/*
+for key of keyof targetType
+    if key extends keyof keys
+        // We want this property
+        if keys[key] extends true
+            targetType[key]
+            // Doesn't need recursion, get the property
+        else
+            if value extends RecursiveKeyMap<targetType[key]>:
+                // This should always be true since we know keys matches
+                // targetType in structure, but still needs to be asserted for TS
+                RecursivePick<targetType[key], value>
+            else
+                never
+                // This branch is never reached, but is syntactically needed
+    else
+        never
+        // We don't want this property
+*/
+/** A recursive version of the `Pick` utility type.
+ *
+ * The key map should be a type with keys matching the object keys you want to pick.
+ * The values on the key map should be `true` if the unchanged property value is wanted,
+ * or another key map if only specific nested properties are wanted.
+ *
+ * For example, to create a type with picked properties `foo`, `bar`,
+ * and `buzz` inside top-level `fizz`, the `RecursiveKeyMap` would be
+ * `{ foo: true; bar: true; fizz: { buzz: true } }`.
+ *
+ * Pick: https://www.typescriptlang.org/docs/handbook/utility-types.html#picktype-keys
+ *
+ * Source: https://stackoverflow.com/a/54949737
+ */
+export type RecursivePick<T, Keys extends RecursiveKeyMap<T>> = Pick<
+    {
+        [K in keyof T]: K extends keyof Keys
+            ? Keys[K] extends true
+                ? T[K]
+                : Keys[K] extends RecursiveKeyMap<T[K]>
+                ? RecursivePick<T[K], Keys[K]>
+                : never
+            : never;
+    },
+    keyof T & keyof Keys
+>;
+
+export type RecursiveKeyMap<T> = {
+    [K in keyof T]?: T[K] extends object ? RecursiveKeyMap<T[K]> : true;
+};
