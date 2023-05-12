@@ -1,7 +1,7 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import type { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { map, mergeMap } from 'rxjs';
+import { catchError, map, merge, mergeMap, of, Subject } from 'rxjs';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
@@ -18,9 +18,27 @@ import {
     styleUrls: ['organization.component.scss'],
 })
 export class NxOrganizationComponent implements OnInit {
-    private id$ = this.route.params.pipe(map<Params, number>(p => Number(p.id)));
-    organization$ = this.id$.pipe(mergeMap(this.cpService.getOrganization));
-    users$ = this.id$.pipe(mergeMap(this.cpService.getOrganizationUsers));
+    private id$ = this.route.params.pipe(map<Params, Id>(p => Number(p.id)));
+    private refresh$ = new Subject<void>();
+    private update$ = merge(this.id$, this.refresh$.pipe(mergeMap(() => this.id$)));
+
+    error: { code: number; msg: string };
+    usersError: { code: number; msg: string };
+
+    organization$ = this.update$.pipe(
+        mergeMap(this.cpService.getOrganization),
+        catchError((err: HttpErrorResponse) => {
+            this.error = { code: err.status, msg: err.error.detail };
+            return of(null);
+        }),
+    );
+    users$ = this.update$.pipe(
+        mergeMap(this.cpService.getOrganizationUsers),
+        catchError((err: HttpErrorResponse) => {
+            this.usersError = { code: err.status, msg: err.error.detail };
+            return of([]);
+        }),
+    );
 
     constructor(
         private cpService: NxChannelPartnersService,
@@ -43,7 +61,8 @@ export class NxOrganizationComponent implements OnInit {
     updateOrganization(org: Organization): void {
         this.dialogs.updateOrganization(org).then(res => {
             if (res) {
-                this.organization$ = this.id$.pipe(mergeMap(this.cpService.getOrganization));
+                this.refresh$.next();
+                this.toastService.notify(`Updated organization ${res.name}`);
             }
         });
     }
@@ -51,7 +70,8 @@ export class NxOrganizationComponent implements OnInit {
     newOrgUser(orgId: Id): void {
         this.dialogs.addOrgUser(orgId).then(res => {
             if (res) {
-                this.users$ = this.id$.pipe(mergeMap(this.cpService.getOrganizationUsers));
+                this.refresh$.next();
+                this.toastService.notify(`Added new org user ${res.email}`);
             }
         });
     }
@@ -59,7 +79,8 @@ export class NxOrganizationComponent implements OnInit {
     updateOrgUser(orgId: Id, user: OrganizationUser): void {
         this.dialogs.editOrgUser({ orgId, user }).then(res => {
             if (res) {
-                this.users$ = this.id$.pipe(mergeMap(this.cpService.getOrganizationUsers));
+                this.refresh$.next();
+                this.toastService.notify(`Updated org user ${res.email}`);
             }
         });
     }
@@ -67,7 +88,8 @@ export class NxOrganizationComponent implements OnInit {
     deleteOrgUser(orgId: Id, userId: Id): void {
         this.cpService.deleteOrganizationUser(orgId, userId).subscribe({
             next: () => {
-                this.users$ = this.id$.pipe(mergeMap(this.cpService.getOrganizationUsers));
+                this.refresh$.next();
+                this.toastService.notify(`Deleted org user`);
             },
             error: (err: HttpErrorResponse) => {
                 const msg = `${err.status} ${err.error.detail}`;

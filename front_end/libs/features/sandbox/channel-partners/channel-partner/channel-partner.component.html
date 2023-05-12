@@ -18,91 +18,99 @@
         </button>
     </div>
 
-    <h1>{{ partner?.name }}</h1>
-    <button
-        class="btn-primary"
-        (click)="updateChannelPartner(partner)"
+    <ng-container *ngIf="error as error"
+        ><h1>{{ error.code }} — {{ error.msg }}</h1></ng-container
     >
-        Update
-    </button>
-    <ul>
-        <li *ngFor="let prop of channelPartner$ | async | keyvalue">
-            {{ prop.key }}: {{ prop.value | json }}
-        </li>
-    </ul>
 
-    <h2>Sub Channel Partners</h2>
-    <button
-        class="btn-primary"
-        (click)="newChannelPartner(partner.id)"
-    >
-        New Sub Partner
-    </button>
-    <div *ngFor="let partner of subPartners$ | async">
-        <h4>
-            <a [routerLink]="'../' + partner.id">{{ partner.name }}</a>
-        </h4>
+    <ng-container *ngIf="!error">
+        <h1>{{ partner?.name }}</h1>
         <button
-            class="btn-danger"
-            (click)="deleteChannelPartner(partner.id)"
+            class="btn-primary"
+            (click)="updateChannelPartner(partner)"
         >
-            Delete
+            Update
         </button>
         <ul>
             <li *ngFor="let prop of partner | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
         </ul>
-    </div>
 
-    <h2>Organizations</h2>
-    <button
-        class="btn-primary"
-        (click)="newOrganization(partner.id)"
-    >
-        New Organization
-    </button>
-    <div *ngFor="let org of organizations$ | async">
-        <h4>
-            <a [routerLink]="'../org/' + org.id">{{ org.name }}</a>
-        </h4>
+        <h2>Sub Channel Partners</h2>
         <button
-            class="btn-danger"
-            (click)="deleteOrganization(org.id)"
+            class="btn-primary"
+            (click)="newChannelPartner(partner.id)"
         >
-            Delete
+            New Sub Partner
         </button>
-        <ul>
-            <li *ngFor="let prop of org | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
-        </ul>
-    </div>
-
-    <h2>Users</h2>
-    <button
-        class="btn-primary"
-        (click)="newPartnerUser(partner.id)"
-    >
-        New User
-    </button>
-    <div *ngFor="let user of users$ | async">
-        <h4>{{ user.email }}</h4>
-        <div
-            class="mb-3 d-flex"
-            [style]="{ gap: '5px' }"
-        >
-            <button
-                class="btn-primary"
-                (click)="updatePartnerUser(partner.id, user)"
-            >
-                Update
-            </button>
+        <div *ngFor="let partner of subPartners$ | async">
+            <h4>
+                <a [routerLink]="'../' + partner.id">{{ partner.name }}</a>
+            </h4>
             <button
                 class="btn-danger"
-                (click)="deletePartnerUser(partner.id, user.userId)"
+                (click)="deleteChannelPartner(partner.id)"
             >
                 Delete
             </button>
+            <ul>
+                <li *ngFor="let prop of partner | keyvalue">
+                    {{ prop.key }}: {{ prop.value | json }}
+                </li>
+            </ul>
         </div>
-        <ul>
-            <li *ngFor="let prop of user | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
-        </ul>
-    </div>
+
+        <h2>Organizations</h2>
+        <button
+            class="btn-primary"
+            (click)="newOrganization(partner.id)"
+        >
+            New Organization
+        </button>
+        <div *ngFor="let org of organizations$ | async">
+            <h4>
+                <a [routerLink]="'../org/' + org.id">{{ org.name }}</a>
+            </h4>
+            <button
+                class="btn-danger"
+                (click)="deleteOrganization(org.id)"
+            >
+                Delete
+            </button>
+            <ul>
+                <li *ngFor="let prop of org | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
+            </ul>
+        </div>
+
+        <h2>Users</h2>
+        <button
+            class="btn-primary"
+            (click)="newPartnerUser(partner.id)"
+        >
+            New User
+        </button>
+        <div *ngFor="let user of users$ | async">
+            <h4>{{ user.email }}</h4>
+            <div
+                class="mb-3 d-flex"
+                [style]="{ gap: '5px' }"
+            >
+                <button
+                    class="btn-primary"
+                    (click)="updatePartnerUser(partner.id, user)"
+                >
+                    Update
+                </button>
+                <button
+                    class="btn-danger"
+                    (click)="deletePartnerUser(partner.id, user.userId)"
+                >
+                    Delete
+                </button>
+            </div>
+            <ul>
+                <li *ngFor="let prop of user | keyvalue">
+                    {{ prop.key }}: {{ prop.value | json }}
+                </li>
+            </ul>
+        </div>
+    </ng-container>
 </ng-container>

@@ -1,7 +1,7 @@
 import type { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { map, mergeMap, withLatestFrom } from 'rxjs';
+import { catchError, map, merge, mergeMap, of, Subject } from 'rxjs';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
@@ -18,19 +18,28 @@ import {
     styleUrls: ['channel-partner.component.scss'],
 })
 export class NxChannelPartnerComponent implements OnInit {
-    private id$ = this.route.params.pipe(map<Params, number>(p => Number(p.id)));
-    channelPartner$ = this.id$.pipe(mergeMap(this.cpService.getChannelPartner));
-    subPartners$ = this.id$.pipe(mergeMap(this.cpService.getSubChannelPartners));
-    organizations$ = this.id$.pipe(
-        mergeMap(id => this.cpService.getPartnerOrganizations(id)),
-        withLatestFrom(this.id$),
-        map(([orgs, id]) => {
-            return orgs.filter(org => org.channelPartner === id);
+    private id$ = this.route.params.pipe(map<Params, Id>(p => Number(p.id)));
+    private refresh$ = new Subject<void>();
+    private update$ = merge(this.id$, this.refresh$.pipe(mergeMap(() => this.id$)));
+
+    error: { code: number; msg: string };
+
+    channelPartner$ = this.update$.pipe(
+        mergeMap(this.cpService.getChannelPartner),
+        catchError((err: HttpErrorResponse) => {
+            this.error = { code: err.status, msg: err.error.detail };
+            return of(null);
         }),
     );
-    users$ = this.id$.pipe(mergeMap(this.cpService.getChannelPartnerUsers));
-
-    busy = false;
+    subPartners$ = this.update$.pipe(mergeMap(this.cpService.getSubChannelPartners));
+    organizations$ = this.update$.pipe(
+        mergeMap(id =>
+            this.cpService
+                .getPartnerOrganizations(id)
+                .pipe(map(orgs => orgs.filter(org => org.channelPartner === id))),
+        ),
+    );
+    users$ = this.update$.pipe(mergeMap(this.cpService.getChannelPartnerUsers));
 
     constructor(
         private cpService: NxChannelPartnersService,
@@ -53,7 +62,8 @@ export class NxChannelPartnerComponent implements OnInit {
     newChannelPartner(parentChannelPartner: Id): void {
         this.dialogs.createChannelPartner(parentChannelPartner).then(res => {
             if (res) {
-                this.subPartners$ = this.id$.pipe(mergeMap(this.cpService.getSubChannelPartners));
+                this.refresh$.next();
+                this.toastService.notify(`Created new partner ${res.name}`);
             }
         });
     }
@@ -61,15 +71,8 @@ export class NxChannelPartnerComponent implements OnInit {
     updateChannelPartner(channelPartner: ChannelPartner): void {
         this.dialogs.updateChannelPartner(channelPartner).then(res => {
             if (res) {
-                this.channelPartner$ = this.id$.pipe(mergeMap(this.cpService.getChannelPartner));
-                this.subPartners$ = this.id$.pipe(mergeMap(this.cpService.getSubChannelPartners));
-                this.organizations$ = this.id$.pipe(
-                    mergeMap(id => this.cpService.getPartnerOrganizations(id)),
-                    withLatestFrom(this.id$),
-                    map(([orgs, id]) => {
-                        return orgs.filter(org => org.channelPartner === id);
-                    }),
-                );
+                this.refresh$.next();
+                this.toastService.notify(`Updated partner ${res.name}`);
             }
         });
     }
@@ -77,7 +80,8 @@ export class NxChannelPartnerComponent implements OnInit {
     deleteChannelPartner(channelPartner: Id): void {
         this.cpService.removeChannelPartner(channelPartner).subscribe({
             next: () => {
-                this.subPartners$ = this.id$.pipe(mergeMap(this.cpService.getSubChannelPartners));
+                this.refresh$.next();
+                this.toastService.notify('Deleted partner');
             },
             error: (err: HttpErrorResponse) => {
                 const msg = `${err.status} ${err.error.detail}`;
@@ -89,7 +93,8 @@ export class NxChannelPartnerComponent implements OnInit {
     newPartnerUser(channelPartner: Id): void {
         this.dialogs.addPartnerUser(channelPartner).then(res => {
             if (res) {
-                this.users$ = this.id$.pipe(mergeMap(this.cpService.getChannelPartnerUsers));
+                this.refresh$.next();
+                this.toastService.notify(`Added new partner user ${res.email}`);
             }
         });
     }
@@ -97,7 +102,8 @@ export class NxChannelPartnerComponent implements OnInit {
     updatePartnerUser(channelPartner: Id, user: ChannelPartnerUser): void {
         this.dialogs.updatePartnerUser({ channelPartner, user }).then(res => {
             if (res) {
-                this.users$ = this.id$.pipe(mergeMap(this.cpService.getChannelPartnerUsers));
+                this.refresh$.next();
+                this.toastService.notify(`Added new partner user ${res.email}`);
             }
         });
     }
@@ -105,7 +111,8 @@ export class NxChannelPartnerComponent implements OnInit {
     deletePartnerUser(channelPartner: Id, userId: Id): void {
         this.cpService.deleteChannelPartnerUser(channelPartner, userId).subscribe({
             next: () => {
-                this.users$ = this.id$.pipe(mergeMap(this.cpService.getChannelPartnerUsers));
+                this.refresh$.next();
+                this.toastService.notify(`Deleted partner user`);
             },
             error: (err: HttpErrorResponse) => {
                 const msg = `${err.status} ${err.error.detail}`;
@@ -117,13 +124,8 @@ export class NxChannelPartnerComponent implements OnInit {
     newOrganization(channelPartner: Id): void {
         this.dialogs.createOrganization(channelPartner).then(res => {
             if (res) {
-                this.organizations$ = this.id$.pipe(
-                    mergeMap(id => this.cpService.getPartnerOrganizations(id)),
-                    withLatestFrom(this.id$),
-                    map(([orgs, id]) => {
-                        return orgs.filter(org => org.channelPartner === id);
-                    }),
-                );
+                this.refresh$.next();
+                this.toastService.notify(`Created organization ${res.name}`);
             }
         });
     }
@@ -131,13 +133,8 @@ export class NxChannelPartnerComponent implements OnInit {
     deleteOrganization(orgId: Id): void {
         this.cpService.removeOrganization(orgId).subscribe({
             next: () => {
-                this.organizations$ = this.id$.pipe(
-                    mergeMap(id => this.cpService.getPartnerOrganizations(id)),
-                    withLatestFrom(this.id$),
-                    map(([orgs, id]) => {
-                        return orgs.filter(org => org.channelPartner === id);
-                    }),
-                );
+                this.refresh$.next();
+                this.toastService.notify(`Deleted organization`);
             },
             error: (err: HttpErrorResponse) => {
                 const msg = `${err.status} ${err.error.detail}`;
