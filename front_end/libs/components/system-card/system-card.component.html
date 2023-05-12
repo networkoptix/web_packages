@@ -27,20 +27,20 @@
                 style="display: block; margin-top: 24px"
                 [clickable]="false"
                 [type]="tagType"
-                *ngIf="canShowTag()"
+                *ngIf="canShowTag"
             >
                 <ng-container>{{ systemState | translate }}</ng-container>
             </nx-tag>
             <nx-client-button
                 [system]="system"
                 [actionType]="system ? 'default' : 'primary'"
-                *ngIf="canShowButton()"
+                *ngIf="canShowButton"
             ></nx-client-button>
             <svg-icon
                 [ngClass]="{
-                    'margin-system-list-status': canShowTag()
+                    'margin-system-list-status': canShowTag
                 }"
-                *ngIf="needToConfigureTwoFactor()"
+                *ngIf="needToConfigureTwoFactor"
                 nx-add-svg-src
                 [src]="icons.dir + 'lock.svg'"
                 [svgStyle]="{ 'height.px': '20' }"
