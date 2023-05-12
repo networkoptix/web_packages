@@ -12,7 +12,7 @@ import { takeUntil, debounceTime, startWith } from 'rxjs/operators';
 
 import { IntersectionStatus } from './nx-intersection.directive.types';
 
-async function isVisible(element: HTMLElement) {
+async function isVisible(element: HTMLElement): Promise<boolean> {
     return new Promise(resolve => {
         const observer = new IntersectionObserver(([entry]) => {
             resolve(entry.isIntersecting);
@@ -23,7 +23,7 @@ async function isVisible(element: HTMLElement) {
     });
 }
 
-function isIntersecting(entry: IntersectionObserverEntry) {
+function isIntersecting(entry: IntersectionObserverEntry): boolean {
     return entry.isIntersecting || entry.intersectionRatio > 0;
 }
 
@@ -32,7 +32,7 @@ const fromIntersectionObserver = (
     config: IntersectionObserverInit,
     debounce = 0,
     emitVisibleOnlyOnce = false,
-) =>
+): Observable<IntersectionStatus> =>
     new Observable<IntersectionStatus>(subscriber => {
         const subject$ = new Subject<{
             entry: IntersectionObserverEntry;
@@ -78,15 +78,15 @@ const fromIntersectionObserver = (
     selector: '[nxOnIntersect]',
 })
 export class NxIntersectionObserver implements OnInit, OnDestroy {
-    @Input() intersectionDebounce = 0;
-    @Input() intersectionRootMargin = '0px';
+    @Input() intersectionDebounce: number = 0;
+    @Input() intersectionRootMargin: string = '0px';
     @Input() intersectionRoot: HTMLElement;
     @Input() intersectionThreshold: number | number[];
-    @Input() emitVisibleOnlyOnce = false;
+    @Input() emitVisibleOnlyOnce: boolean = false;
 
     @Output() nxOnIntersect = new EventEmitter<IntersectionStatus>();
 
-    private destroy$ = new Subject();
+    private destroy$ = new Subject<true>();
 
     constructor(private element: ElementRef) {}
 

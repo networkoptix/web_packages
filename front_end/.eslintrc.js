@@ -67,10 +67,6 @@ const typeLintBlacklist = [
     '**/merge/stateMachine.ts',
     '**/reset-backup/reset-backup.component.ts',
     '**/reset-server/reset-server.component.ts',
-    /* Directives */
-    '**/nx-editable.directive.ts',
-    '**/nx-intersection.directive.ts',
-    '**/nx-projected-link-handler.directive.ts',
     /* Features */
     '**/api-tool/api-file-utils.ts',
     '**/api-tool/api-tool-types.ts',

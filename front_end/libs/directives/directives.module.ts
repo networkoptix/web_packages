@@ -8,7 +8,6 @@ import { NxAddSvgSrc } from './add-data.directive';
 import { FeatureFlagDirective } from './feature.directive';
 import { NxArrowNavDirective } from './nx-arrow-nav';
 import { NxClickElsewhereDirective } from './nx-click-elsewhere';
-import { NxEditableDirective } from './nx-editable.directive';
 import { NxFocusMeDirective } from './nx-focus-me';
 import { NxIntersectionObserver } from './nx-intersection.directive';
 import { NxMatchHeightDirective } from './nx-match-height.directive';
@@ -34,7 +33,6 @@ import { RotateModule } from './rotate/rotate.module';
         NxScrollHelperDirective,
         NxScrollMechanicsDirective,
         NxUrlValidatorDirective,
-        NxEditableDirective,
         NxAddSvgSrc,
         NxIntersectionObserver,
         NxProjectedLinkHandler,
@@ -51,7 +49,6 @@ import { RotateModule } from './rotate/rotate.module';
         NxScrollHelperDirective,
         NxScrollMechanicsDirective,
         NxUrlValidatorDirective,
-        NxEditableDirective,
         NxAddSvgSrc,
         NxIntersectionObserver,
         NxProjectedLinkHandler,
