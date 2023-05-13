@@ -57,9 +57,7 @@ export class NxSystemsService {
         .pipe(
             // Ignore preloaded account on cloud
             // Also ignore first assignment missing security properties
-            filter(acc => acc && (environment.isLocal ||
-                ('email' in acc && 'sessionExpires' in acc))
-            ),
+            filter(acc => acc && (environment.isLocal || 'email' in acc)),
             distinctUntilChanged(isEqual),
         );
     private updateSystems$ = new Subject<void>();
