@@ -50,6 +50,8 @@ def iterate_cms_files(skin_name, ignore_not_english):
     custom_dir = SOURCE_DIR.replace("{{skin}}", skin_name)
     for root, dirs, files in os.walk(custom_dir):
         for filename in files:
+            if 'language_' in filename:
+                continue
             file = os.path.join(root, filename)
             if customizable_file(file, ignore_not_english):
                 yield file

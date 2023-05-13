@@ -6,6 +6,8 @@ from rest_framework import decorators
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from asgiref.sync import sync_to_async
+
+from api.views.account import AccountCache
 from cloud.controllers.cloud_api import Auth
 from cloud.drf_async import async_api_view, AsyncAPIView
 from cloud.helpers.exceptions import api_success, APINotAuthorisedException
@@ -55,6 +57,7 @@ class TwoFactorVerification(TwoFactorPermissionsMixin, AsyncAPIView):
                     data["verification_code"],
                     request.session.get("access_token")
                 )
+                AccountCache.delete(request)
                 request.session["has2fa"] = True
             # Slight possibility that your session conflicts with the code you are verifying
             except APINotAuthorisedException:
@@ -91,6 +94,7 @@ class BackupCode(TwoFactorPermissionsMixin, AsyncAPIView):
             await sync_to_async(Auth.verify_backup_code, thread_sensitive=False)(
                 data["verification_code"], request.session.get("access_token")
             )
+            AccountCache.delete(request)
             request.session["has2fa"] = True
 
         return api_success(res)
@@ -142,6 +146,7 @@ async def add_2fa_to_session(request):
         verification_code, request.session.get("access_token"))
 
     if request.user and request.user.is_authenticated:
+        AccountCache.delete(request)
         request.session["has2fa"] = True
 
     return api_success(res)

@@ -13,7 +13,7 @@
             <div [innerHtml]="plugin.overview.description"></div>
         </nx-section>
 
-        <nx-section *ngIf="plugin.overview.screenshots">
+        <nx-section *ngIf="plugin.overview.screenshots?.length">
             <nx-carousel
                 type="Overview"
                 [screenshots]="plugin.overview.screenshots"

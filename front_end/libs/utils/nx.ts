@@ -119,8 +119,8 @@ export const generateTour =
             })
             .filter(step => !!step);
 
-interface Language {
-    [key: string]: Language | string;
+export interface Language {
+    [key: string]: Language | string
 }
 
 export const processLanguageFactory = (customStrings: { [key: string]: string }) =>

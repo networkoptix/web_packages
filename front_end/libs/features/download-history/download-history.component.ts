@@ -157,6 +157,10 @@ export class DownloadHistoryComponent implements OnInit {
             }
 
             if (!this.CONFIG.cloudCapabilities.publicReleases) {
+                if (this.build) {
+                    this.canViewRelease = true;
+                    return this.getData();
+                }
                 this.accountService.requireLogin().then(account => {
                     this.canViewRelease =
                         isAccount(account) &&

@@ -1,7 +1,7 @@
 const { rewriteLegacy, target, targetInstanceUrl } = require('./proxy-helper');
 
 const rewritePaths = {
-    '/api/cms': '/api',
+    // '/api/cms': '/api',
     '/api/notifications': '/api'
 };
 

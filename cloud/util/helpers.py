@@ -20,7 +20,7 @@ def get_customization(request=None, /):
     if customization := getattr(request, 'data', request.POST).get('customization'):
         return customization
 
-    return request.META.get('CUSTOMIZATION', settings.CUSTOMIZATION)
+    return request.META.get('CUSTOMIZATION') or settings.CUSTOMIZATION
 
 
 def get_customization_name_from_cloud_host(hostname):

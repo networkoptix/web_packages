@@ -675,17 +675,14 @@ export class NxCloudApiService {
             switchMap(cloudInfo =>
                 forkJoin([
                     of(cloudInfo),
-                    cloudInfo.accessToken
+                    cloudInfo?.email
                         ? this.cloudDbApi.getAccountSecurity()
-                        : of({ account2faEnabled: false, totpExistsForAccount: false }),
-                    cloudInfo.accessToken
-                        ? this.cloudDbApi.validateToken(cloudInfo.accessToken)
-                        : of({ sessionExpires: Infinity }),
+                        : of({ account2faEnabled: false, totpExistsForAccount: false })
                 ]),
             ),
-            map(([cloudInfo, security, tokenInfo]) => {
+            map(([cloudInfo, security]) => {
                 cloudInfo.sessionVerified = cloudInfo.sessionVerified || security.account2faEnabled;
-                this.currentAccount = { ...cloudInfo, ...security, ...tokenInfo };
+                this.currentAccount = { ...cloudInfo, ...security };
                 return this.currentAccount;
             }),
         );
@@ -1069,6 +1066,10 @@ export class NxCloudApiService {
     #withFreshSession: t.WithFreshSession = TokenSessionManager.getInstance(
         '/api/account/refreshAccessToken',
     );
+
+    getAccessToken(): Observable<string> {
+        return this.#withFreshSession()(({ accessToken }) => of(accessToken));
+    }
 
     @memoizeAsyncShort
     getTokenInfo(token: string) {

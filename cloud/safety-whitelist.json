@@ -129,5 +129,13 @@
   "53326": {
     "name": "werkzeug",
     "note": "Werkzeug 2.2.3 includes a fix for CVE-2023-23934: Browsers may allow \"nameless\" cookies that look like '=value' instead of 'key=value'. A vulnerable browser may allow a compromised application on an adjacent subdomain to exploit this to set a cookie like '=__Host-test=bad' for another subdomain. Werkzeug prior to 2.2.3 will parse the cookie '=__Host-test=bad' as __Host-test=bad'. If a Werkzeug application is running next to a vulnerable or malicious subdomain which sets such a cookie using a vulnerable browser, the Werkzeug application will see the bad cookie value but the valid cookie key.://www.djangoproject.com/weblog/2023/feb/14/security-releases CVE-2023-24580 For more information, please visit https://pyup.io/v/53315/f17"
+  },
+  "53868": {
+    "name": "Redis",
+    "note": "Redis before 4.5.3 leaves a connection open after canceling an async Redis command at an inopportune time, and can send response data to the client of an unrelated request in an off-by-one manner. NOTE: this CVE Record was initially created in response to reports about ChatGPT, and 4.3.6, 4.4.3, and 4.5.3 were released (changing the behavior for pipeline operations); however, please see CVE-2023-28859 about addressing data leakage across AsyncIO connections in general. CVE-2023-28858 For more information, please visit https://pyup.io/v/53868/f17"
+  },
+  "53869": {
+    "name": "Redis",
+    "note": " Redis 4.4.4 and 4.5.4 include a fix for CVE-2023-28859: Redis-py before 4.4.4 and 4.5.x before 4.5.4 leaves a connection open after canceling an async Redis command at an inopportune time, and can send response data to the client of an unrelated request. (This could, for example, happen for a non-pipeline operation.) NOTE: the solutions for CVE-2023-28859 address data leakage across AsyncIO connections in general. CVE-2023-28859 For more information, please visit https://pyup.io/v/53869/f17"
   }
 }

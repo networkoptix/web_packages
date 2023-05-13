@@ -35,13 +35,14 @@ export class MergeComponent implements OnInit, AfterViewInit {
         this.wizardService.setupConfig.remoteSystem = item;
     }
 
-    get user(): string {
-        return this.wizardService.setupConfig.remoteLogin;
-    }
-
-    set user(user: string) {
-        this.wizardService.setupConfig.remoteLogin = user;
-    }
+    // User is hardcoded to "admin" ... for now
+    // get user(): string {
+    //     return this.wizardService.setupConfig.remoteLogin;
+    // }
+    //
+    // set user(user: string) {
+    //     this.wizardService.setupConfig.remoteLogin = user;
+    // }
 
     constructor(
         private wizardService: WizardStateService

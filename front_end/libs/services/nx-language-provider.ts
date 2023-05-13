@@ -12,7 +12,9 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSwCacheService } from '@services/sw-cache.service';
 import { NxUriCacheService } from '@services/uri-cache.service';
+import { Language, processLanguageFactory } from '@utils/nx';
 
+import { IConfig } from './nx-config/config-types';
 import { NxSessionService } from './session.service';
 import { WINDOW } from './window-provider';
 
@@ -22,6 +24,7 @@ const i18nOriginal = { ...i18n };
     providedIn: 'root'
 })
 export class NxLanguageProviderService {
+    CONFIG: IConfig;
     constructor(
         configService: NxConfigService,
         private translate: TranslateService,
@@ -34,7 +37,8 @@ export class NxLanguageProviderService {
         private swCacheService: NxSwCacheService,
         @Inject(WINDOW) private window: Window,
     ) {
-        this.defaultLanguage = configService.getConfig().defaultLanguage;
+        this.CONFIG = configService.getConfig();
+        this.defaultLanguage = this.CONFIG.defaultLanguage;
 
         if (environment.isWizard) {
             const lang = new URLSearchParams(this.window.location.search).get('lang');
@@ -63,12 +67,12 @@ export class NxLanguageProviderService {
         */
     }
 
-    loadLanguage() {
+    loadLanguage(): Promise<Language> {
         const lang = this.translate.currentLang ?? this.translate.getDefaultLang();
 
         return (environment.isLocal
-            ? this.http.get(`/static/lang_${lang}/language_compiled.json`)
-            : this.http.get('/api/utils/language')).toPromise();
+            ? this.http.get<Language>(`/static/lang_${lang}/language_compiled.json`)
+            : this.http.get<Language>('/api/utils/language')).toPromise();
     }
 
     loadTimelineTranslations(): void {
@@ -82,11 +86,11 @@ export class NxLanguageProviderService {
         });
     }
 
-    setTranslations(lang: string, translation): void {
+    setTranslations(lang: string, translation: Language): void {
         // language fail may have special character or
         // syntax error ... like use of double curly braces
         try {
-            this.translate.setTranslation(lang, translation);
+            this.translate.setTranslation(lang, this.processLanguage(translation));
             this.translate.use(lang); // this will tell TranslateService to switch language -> see "breadcrumbs"
             const productName = staticLang?.[environment.isLocal ? 'metaDefaultsWebadmin' : 'metaDefaults']?.default?.site_name || '';
             this.translate.set('productName', productName);
@@ -135,5 +139,19 @@ export class NxLanguageProviderService {
         this.swCacheService
             .clearAllCache()
             .catch(err => console.error(err));
+    }
+
+    private processLanguage(translations: Language): Language {
+        const customStrings = {
+            '%CLOUD_NAME%': this.CONFIG.cloudName,
+            '%VMS_NAME%': this.CONFIG.vmsName,
+            '%CLIENT_PROTOCOL%': this.CONFIG.clientProtocol,
+            '%PRIVACY_LINK%': this.CONFIG.company.links.privacy,
+            '%SUPPORT_LINK%': this.CONFIG.company.links.website,
+            '%COMPANY_NAME%': this.CONFIG.company.name,
+            '%ANDROID_APPLICATION_LINK%': this.CONFIG.mobileLinks.android_application_link,
+            '%IOS_APPLICATION_LINK%': this.CONFIG.mobileLinks.ios_application_link
+        };
+        return processLanguageFactory(customStrings)(translations);
     }
 }

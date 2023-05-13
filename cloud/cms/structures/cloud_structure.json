@@ -780,9 +780,9 @@
             "value": {
               "arm": "<a href='/content/arm'>ARM based servers support policy</a>",
               "linux": "Ubuntu LTS: 16.04, 18.04, 20.04",
-              "macos": "MacOS 10.14: “Mojave”, 10.15 “Catalina”.",
+              "macos": "MacOS 10.14: \u201cMojave\u201d, 10.15 \u201cCatalina\u201d.",
               "sdk": "C++ cross platform SDK",
-              "windows": "Windows 7, 8, 8.1, 10/Enterprise, 2008 R2, 2012, 2012 R2, 2016 v1607, 2019"
+              "windows": "Windows 8, 8.1, 10/Enterprise, 2012, 2012 R2, 2016 v1607, 2019"
             },
             "fieldset": "Downloads"
           },

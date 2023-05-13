@@ -57,6 +57,11 @@ class DeleteBackupCodeSerializer(serializers.Serializer):
         return data
 
 
+class MobileLinksSerializer(serializers.Serializer):
+    androidApplicationLink = serializers.CharField(default='')
+    iosApplicationLink = serializers.CharField(default='')
+
+
 class VerificationSerializer(serializers.Serializer):
     code = serializers.CharField(required=True)
     verification_code = serializers.CharField(required=True)
@@ -98,6 +103,7 @@ class CustomizationCacheSerializer(serializers.Serializer):
     vmsName = serializers.CharField(default='')
     alexaIntegrationEnabled = serializers.BooleanField(default=False)
     bookmarksEnabled = serializers.BooleanField(default=False)
+    clientProtocol = serializers.CharField(default='')
     cloudStorageEnabled = serializers.BooleanField(default=False)
     cloudStorageSize = serializers.CharField(default='53687091200')
     copyrightYear = serializers.CharField(default=lambda: datetime.now().year)
@@ -115,6 +121,7 @@ class CustomizationCacheSerializer(serializers.Serializer):
     integrationStoreEnabled = serializers.BooleanField(default=False)
     landingDescription = serializers.CharField(default='')
     healthMonitorCacheTimeout = serializers.IntegerField(default=60)
+    mobileLinks = MobileLinksSerializer()
     publicDownloads = serializers.BooleanField(default=False)
     publicReleases = serializers.BooleanField(default=False)
     showAllBetas = serializers.BooleanField(default=False)

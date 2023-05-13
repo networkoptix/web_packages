@@ -414,7 +414,16 @@ async def renew_session(request):
 async def refresh_access_token(request):
     old_access_token = request.session.get('access_token')
     refresh_token = request.session.get('refresh_token')
+
+    old_token_info = await sync_to_async(Auth.validate_token)(old_access_token)
+
+    if int(old_token_info['expires_in']) > 60 * 10:
+        # If the token is still valid for more than 10 minutes, just return it.
+        # This will prevent several different requests from refreshing the token at the same time.
+        return api_success(old_token_info)
+
     tokens = await sync_to_async(Auth.get_refresh_token)(refresh_token, get_ip(request))
+
     request.session['access_token'] = tokens['access_token']
     # Shouldn't change but to be safe we'll add it anyway.
     if new_refresh_token := tokens['refresh_token'] != refresh_token:
@@ -425,9 +434,9 @@ async def refresh_access_token(request):
     except (APILogicException, APINotAuthorisedException):
         pass
 
-    return api_success({
-        'access_token': tokens['access_token']
-    })
+    tokens.pop('refresh_token', None)
+
+    return api_success(tokens)
 
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,
@@ -516,6 +525,7 @@ class AccountSecurity(APIView):
                 request, mfa_code, account_2fa_enabled)
             if account_2fa_enabled:
                 await sync_to_async(Auth.verify_2fa_code, thread_sensitive=False)(mfa_code, request.session.get("access_token"))
+                AccountCache.delete(request)
                 request.session["has2fa"] = True
             return api_success(res)
 

@@ -50,14 +50,12 @@ class CreateAccountSerializer(serializers.Serializer):  # ModelSerializer
 
 class CdbAccountMixin(serializers.Serializer):
     sessionVerified = serializers.BooleanField(required=False)
-    accessToken = serializers.CharField(required=False)
 
     class Meta:
-        fields = ('sessionVerified', 'accessToken')
+        fields = ('sessionVerified',)
 
     def get_cdb_fields(self, request):
         self.instance.sessionVerified = request.session.get("has2fa", False)
-        self.instance.accessToken = request.session.get("access_token", '')
 
 
 class BaseAccountModelSerializer(CdbAccountMixin, serializers.ModelSerializer):

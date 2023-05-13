@@ -338,7 +338,7 @@
     "UNRESTRICTED ACCESS CONNECT TEXT": "Truy cập không giới hạn bao gồm khả năng chia sẻ và kết nối / ngắt kết nối Hệ thống từ đám mây",
     "WHATS NEW TEXT": "Có gì mới?",
     "ENABLE AUTO DISCOVERY TEXT": "Cho phép tự động phát hiện máy ảnh và máy chủ",
-    "ENABLE AUTO DISCOVERY DESCRIPTION TEXT": "Khi được bật, hệ thống sẽ khám phá các camera và máy chủ mới. Ngoài ra, nó sẽ tự động và liên tục gửi yêu cầu khám phá đến máy ảnh để nhận cập nhật trạng thái của máy ảnh. Việc cấm kiểm tra trạng thái có thể được bỏ qua trên một số máy chủ đã bật chuyển đổi dự phòng.",
+    "ENABLE AUTO DISCOVERY DESCRIPTION TEXT": "Khi được bật, hệ thống sẽ phát hiện các camera và máy chủ mới. Ngoài ra, hệ thống sẽ tự động và liên tục gửi yêu cầu khám phá để cập nhật trạng thái của camera. Việc cấm kiểm tra trạng thái có thể được bỏ qua trên một số máy chủ đã bật chuyển đổi dự phòng.",
     "SEND ANONYMOUS USAGE TEXT": "Gửi sử dụng ẩn danh và thống kê sự cố cho nhà phát triển",
     "SEND ANONYMOUS USAGE DESCRIPTION TEXT": "Bao gồm thông tin về Hệ thống, chẳng hạn như mô-đun máy ảnh, phiên bản chương trình cơ sở, số lượng máy chủ, v.v. Không bao gồm bất kỳ thông tin cá nhân nào và hoàn toàn ẩn danh.",
     "ALLOW SYSTEM OPTIMIZE TEXT": "Cho phép hệ thống để tối ưu hóa các cài đặt máy ảnh",

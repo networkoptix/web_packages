@@ -1271,7 +1271,7 @@ class CustomClientViewSet(WaffleFlagMixin, ModelViewSet):
     waffle_flag = FLAGS.custom_clients
 
     def get_queryset(self):
-        if self.request.user.is_anonymous:
+        if self.request.user.is_anonymous or getattr(self, 'swagger_fake_view', False):
             return CustomClient.objects.none()
         return self.request.user.customclient_set.filter(created_customization__name=self.request.CUSTOMIZATION)
 
