@@ -677,7 +677,7 @@ export class NxCloudApiService {
                     of(cloudInfo),
                     cloudInfo?.email
                         ? this.cloudDbApi.getAccountSecurity()
-                        : of({ account2faEnabled: false, totpExistsForAccount: false })
+                        : of({ account2faEnabled: false, totpExistsForAccount: false }),
                 ]),
             ),
             map(([cloudInfo, security]) => {

@@ -149,8 +149,8 @@ export class NxLanguageProviderService {
             '%PRIVACY_LINK%': this.CONFIG.company.links.privacy,
             '%SUPPORT_LINK%': this.CONFIG.company.links.website,
             '%COMPANY_NAME%': this.CONFIG.company.name,
-            '%ANDROID_APPLICATION_LINK%': this.CONFIG.mobileLinks.android_application_link,
-            '%IOS_APPLICATION_LINK%': this.CONFIG.mobileLinks.ios_application_link
+            '%ANDROID_APPLICATION_LINK%': this.CONFIG.mobileLinks?.android_application_link,
+            '%IOS_APPLICATION_LINK%': this.CONFIG.mobileLinks?.ios_application_link
         };
         return processLanguageFactory(customStrings)(translations);
     }

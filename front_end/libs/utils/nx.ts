@@ -120,7 +120,7 @@ export const generateTour =
             .filter(step => !!step);
 
 export interface Language {
-    [key: string]: Language | string
+    [key: string]: Language | string;
 }
 
 export const processLanguageFactory = (customStrings: { [key: string]: string }) =>
