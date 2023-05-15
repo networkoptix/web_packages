@@ -65,8 +65,7 @@
             #resources
             (click)="toggleMenu('left', true)"
             nx-add-svg-src
-            [svgStyle]="{ 'width.px': '32', 'height.px': '14' }"
-            [src]="icons.dirTextButtons + 'arrow_expand.svg'"
+            [src]="icons.dirTextButtons + 'arrow_left.svg'"
         >
         </svg-icon>
     </div>
@@ -97,8 +96,8 @@
                         [svgStyle]="{
                             'width.px': '24',
                             'height.px': '24',
-                            'margin-left.px': '0',
-                            'margin-right.px': '0',
+                            'margin-left.px': '6',
+                            'margin-right.px': '-6',
                             opacity: opacity,
                             display: opacity === '0' && preview && 'none'
                         }"
@@ -112,12 +111,12 @@
                     [svgStyle]="{
                         'width.px': '24',
                         'height.px': '24',
-                        'margin-right.px': expandable ? '8' : '0',
                         fill: 'none !important',
                         opacity: expandable ? '1' : '0',
                         transform: expanded ? 'rotate(-90deg)' : 'rotate(0deg)'
                     }"
-                    [src]="icons.dirTextButtons + 'arrow_expand.svg'"
+                    svgClass="dark-17-svg"
+                    [src]="icons.dirTextButtons + 'arrow_open.svg'"
                 >
                 </svg-icon>
                 <svg-icon
@@ -125,7 +124,7 @@
                     [svgStyle]="{
                         'width.px': '24',
                         'height.px': '24',
-                        'margin-right.px': '8'
+                        'margin-right.px': '2'
                     }"
                     [src]="
                         icons.dirLayouts +
@@ -246,6 +245,7 @@
                     (cdkDragStarted)="dragging = true"
                     (cdkDragMoved)="moveAddedItem($event, currentItem)"
                     (cdkDragReleased)="dragging = false; addItem(node)"
+                    [alternativeTargetRef]="tooltipOffsetTarget"
                     [nxTooltip]="
                         (showTooltip$ | async) &&
                         (node.type === RESOURCE_TYPE.CAMERA
@@ -265,12 +265,26 @@
                               (node.type === RESOURCE_TYPE.LAYOUT ? RESOURCE_TYPE.LAYOUT : 'focus')
                             : ''
                     "
-                    [class]="{
+                    [ngClass]="{
                         selected:
                             layout?.id &&
-                            cleanId(changingLayout || layout?.id) === cleanId(node?.details?.id)
+                            cleanId(changingLayout || layout?.id) === cleanId(node?.details?.id),
+                        offline:
+                            node.type !== RESOURCE_TYPE.LAYOUT &&
+                            !node.details.unauthorized &&
+                            !node.details.online,
+                        'has-issue':
+                            node.type === RESOURCE_TYPE.CAMERA &&
+                            ['warning', 'unauthorized'].includes(
+                                errorIcons[node.details.id] || node.details.status
+                            )
                     }"
+                    class="tooltip-offset-parent"
                 >
+                    <div
+                        #tooltipOffsetTarget
+                        class="tooltip-offset-target"
+                    ></div>
                     <div *cdkDragPreview>
                         <div class="add-preview">
                             <ng-container

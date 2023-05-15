@@ -589,7 +589,7 @@ html[data-theme="light-gray"] {
     --tabs-border-color: var(--light_gray_3);
     --tabs-active-color: var(--blue1);
     --tabs-color: var(--light_gray_4);
-    
+
     // System groups
     --groups-sidebar-bg: var(--light_gray_2);
     --groups-sidebar-border: var(--light_gray_5);
@@ -665,4 +665,8 @@ html[data-theme="light-gray"] {
 	/* Bookmarks */
     --bookmarks-background-color: inherit;
     --bookmarks-duration-bg: rgba(0, 0, 0, .5);
+
+    /* Layouts */
+    --svg-toggle-arrow-color: var(--dark17);
+    --svg-tab-arrow-color: var(--dark5);
 }

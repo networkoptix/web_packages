@@ -604,7 +604,7 @@ html[data-theme="dark-gray"] {
     --tabs-border-color: var(--dark_gray_11);
     --tabs-active-color: var(--bluez);
     --tabs-color: var(--dark_gray_16);
-    
+
     // System groups
     --groups-sidebar-bg: var(--dark_gray_11);
     --groups-sidebar-border: var(--dark_gray_9);
@@ -615,7 +615,7 @@ html[data-theme="dark-gray"] {
     --groups-sidebar-folder-icon-body-fill: var(--light_gray_10);
     --groups-sidebar-folder-icon-tab-fill: var(--light_gray_16);
     --groups-sidebar-folder-icon-highlight-fill: var(--dark_gray_1);
-    --groups-sidebar-intro-text-color: var(--dark_gray_18); 
+    --groups-sidebar-intro-text-color: var(--dark_gray_18);
 
     --group-card-folder-icon-body-fill: var(--dark_gray_12);
     --group-card-folder-icon-tab-fill: var(--dark_gray_13);
@@ -684,4 +684,8 @@ html[data-theme="dark-gray"] {
 	/* Bookmarks */
     --bookmarks-background-color: inherit;
     --bookmarks-duration-bg: rgba(0, 0, 0, .5);
+
+    /* Layouts */
+    --svg-toggle-arrow-color: var(--light17);
+    --svg-tab-arrow-color: var(--light5);
 }

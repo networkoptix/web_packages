@@ -233,7 +233,8 @@ export class NxLayoutViewComponent {
                             details: {
                                 ...camera,
                                 status: camera.status.toLowerCase(),
-                                online: ['online', 'recording', 'scheduled'].includes(
+                                unauthorized: camera.status === 'unauthorized',
+                                online: ['online', 'recording', 'scheduled', 'scheduled'].includes(
                                     camera.status,
                                 ),
                                 resourceType:
