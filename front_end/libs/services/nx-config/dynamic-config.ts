@@ -12,37 +12,52 @@ export class DynamicConfig {
         const preloadedAccount = await DynamicConfig.getAccount();
         const [data, preloadedTranslation] = await Promise.allSettled([
             DynamicConfig.getData(),
-            DynamicConfig.getTranslation()
+            DynamicConfig.getTranslation(),
         ]).then(res => res.map(res => res.status === 'fulfilled' && res.value));
 
         // Need to find out why featureFlag override not working for this flag
         // data.featureFlags.useAuthenticationInterceptor = true;
 
         if (data?.featureFlags?.useAuthenticationInterceptor) {
-            await DynamicConfig.registerAuthenticationInterceptor(preloadedAccount?.accessToken, data.trafficRelayHost);
+            await DynamicConfig.registerAuthenticationInterceptor(
+                preloadedAccount?.accessToken,
+                data.trafficRelayHost,
+            );
         }
 
-        return { provide: DynamicConfig, useValue: new DynamicConfig({ ...data, preloadedAccount, preloadedTranslation }) };
+        return {
+            provide: DynamicConfig,
+            useValue: new DynamicConfig({ ...data, preloadedAccount, preloadedTranslation }),
+        };
     }
 
-    static async registerAuthenticationInterceptor(accessToken: string, trafficRelayHost: string): Promise<void> {
+    static async registerAuthenticationInterceptor(
+        accessToken: string,
+        trafficRelayHost: string,
+    ): Promise<void> {
         InterceptorManager.getInstance(accessToken, trafficRelayHost).enabled = true;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static async getData(): Promise<any> {
         if (environment.isLocal) {
-            const [webadminConfig, description, { default: defaultLanguage, supported: supportedLanguages }] = await Promise.all([
-                fetch('/static/customization/webadmin_config.json'),
-                fetch('/static/customization/description.json'),
-                fetch('/static/supported_languages.json')
-            ].map(res => res.then(res => res.json())));
+            const [
+                webadminConfig,
+                description,
+                { default: defaultLanguage, supported: supportedLanguages },
+            ] = await Promise.all(
+                [
+                    fetch('/static/customization/webadmin_config.json'),
+                    fetch('/static/customization/description.json'),
+                    fetch('/static/supported_languages.json'),
+                ].map(res => res.then(res => res.json())),
+            );
 
             return {
                 defaultLanguage,
                 supportedLanguages,
                 webadminConfig,
-                description
+                description,
             };
         } else {
             return fetch('/api/utils/settings').then(res => res.json());
@@ -51,32 +66,40 @@ export class DynamicConfig {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static async getAccount(): Promise<any> {
-        const getCurrentAccount = (): Promise<unknown> => fetch(
-            environment.isLocal ? '/rest/v1/login/sessions/current' : '/api/account'
-        ).then(
-            res => res.json()
-        ).then(
-            result => result.resultCode || !result?.is_authenticated || environment.isLocal ? null : result
-        ).catch(() => null);
-
-        const loginCode = (code: string): Promise<unknown> => (
-            environment.isLocal
-                ? Promise.resolve()
-                : fetch(
-                    '/api/account/loginCode',
-                    {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ code })
-                    }
+        const getCurrentAccount = (): Promise<unknown> =>
+            fetch(environment.isLocal ? '/rest/v1/login/sessions/current' : '/api/account')
+                .then(res => res.json())
+                .then(result =>
+                    result.resultCode || !result?.is_authenticated || environment.isLocal
+                        ? null
+                        : result,
                 )
-        ).then(res => res.json()).then(account => {
-            const searchParams = new URLSearchParams(location.search);
-            searchParams.delete('code');
-            const path = location.protocol + '//' + location.host + location.pathname + '?' + searchParams.toString();
-            history.replaceState({ path }, '', path);
-            return account;
-        }).catch(() => null);
+                .catch(() => null);
+
+        const loginCode = (code: string): Promise<unknown> =>
+            (environment.isLocal
+                ? Promise.resolve()
+                : fetch('/api/account/loginCode', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ code }),
+                  })
+            )
+                .then(res => res.json())
+                .then(account => {
+                    const searchParams = new URLSearchParams(location.search);
+                    searchParams.delete('code');
+                    const path =
+                        location.protocol +
+                        '//' +
+                        location.host +
+                        location.pathname +
+                        '?' +
+                        searchParams.toString();
+                    history.replaceState({ path }, '', path);
+                    return account;
+                })
+                .catch(() => null);
 
         const current = await getCurrentAccount();
 
@@ -92,7 +115,13 @@ export class DynamicConfig {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static getTranslation(): Promise<any> {
-        return fetch(environment.isLocal ? `/static/lang_${nxConfig.defaultLanguage}/language_compiled.json` : '/api/utils/language').then(res => res.json()).catch(() => null);
+        return fetch(
+            environment.isLocal
+                ? `/static/lang_${nxConfig.defaultLanguage}/language_compiled.json`
+                : '/api/utils/language',
+        )
+            .then(res => res.json())
+            .catch(() => null);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -106,7 +135,7 @@ export class DynamicConfig {
                 menu[name] = {
                     title: name,
                     description: '',
-                    nodes
+                    nodes,
                 };
                 return menu;
             }, {});
@@ -116,9 +145,9 @@ export class DynamicConfig {
                 copyrightYear: description.copyrightYear,
                 links: {
                     website: description.contact.companyUrl,
-                    support: description.contact.supportAddress
+                    support: description.contact.supportAddress,
                 },
-                name: description.companyName
+                name: description.companyName,
             };
             nxConfig.licenseTypes = webadminConfig.licenseTypes;
             // Fallback in case licenseTypes from webadmin_config.json is made a string in the cms
@@ -127,8 +156,11 @@ export class DynamicConfig {
             }
             nxConfig.trialLicenseKey = description.desktop.trialLicenseKey;
 
-            nxConfig.defaultLanguage = defaultLanguage || description.defaultLanguage || nxConfig.defaultLanguage;
-            nxConfig.supportedLanguages = supportedLanguages.length ? supportedLanguages : [nxConfig.defaultLanguage];
+            nxConfig.defaultLanguage =
+                defaultLanguage || description.defaultLanguage || nxConfig.defaultLanguage;
+            nxConfig.supportedLanguages = supportedLanguages.length
+                ? supportedLanguages
+                : [nxConfig.defaultLanguage];
         } else if (!environment.isLocal && Object.keys(data).length > 0) {
             // extend CONFIG ... ugly // @ts-ignore ... no implementation for // @ts-ignore-start/end
             // This was done every time a system is created. Its only need once
@@ -138,7 +170,17 @@ export class DynamicConfig {
                 }
             });
 
-            const { clientProtocol, companyLink, companyName, copyrightYear, privacyLink, supportLink, mobileLinks, customization, licenseServer } = data;
+            const {
+                clientProtocol,
+                companyLink,
+                companyName,
+                copyrightYear,
+                privacyLink,
+                supportLink,
+                mobileLinks,
+                customization,
+                licenseServer,
+            } = data;
             nxConfig.licenseServer = licenseServer;
             nxConfig.customization = customization;
             nxConfig.company = {
@@ -146,9 +188,9 @@ export class DynamicConfig {
                 links: {
                     privacy: privacyLink,
                     support: supportLink,
-                    website: companyLink
+                    website: companyLink,
                 },
-                name: companyName
+                name: companyName,
             };
             nxConfig.mobileLinks = mobileLinks;
             nxConfig.clientProtocol = clientProtocol;
@@ -164,7 +206,7 @@ export class DynamicConfig {
                 customClientsEnabled,
                 alexaIntegrationEnabled = false,
                 bookmarksEnabled = false,
-                featureFlags = {}
+                featureFlags = {},
             } = data;
             nxConfig.cloudCapabilities = {
                 developersEnabled,
@@ -185,7 +227,7 @@ export class DynamicConfig {
                 sortSupportedDevicesByPopularity,
                 supportedHardwareTypes,
                 supportedResolutions,
-                vendorsShown
+                vendorsShown,
             } = data;
             nxConfig.ipvd = Object.assign({}, nxConfig.ipvd, {
                 searchTags,
@@ -193,21 +235,23 @@ export class DynamicConfig {
                 sortSupportedDevicesByPopularity,
                 supportedHardwareTypes,
                 supportedResolutions,
-                vendorsShown: parseInt(vendorsShown)
+                vendorsShown: parseInt(vendorsShown),
             });
 
             const { integrationFilterItems, integrationFilterLimitation } = data;
             nxConfig.integration.filter = {
                 items: integrationFilterItems,
-                limitation: integrationFilterLimitation
+                limitation: integrationFilterLimitation,
             };
 
             if (data.appTypesForPlatform) {
-                Object.entries(data.appTypesForPlatform).forEach(([platform, appTypes]: [string, unknown]) => {
-                    if (platform in nxConfig.downloads.groups && appTypes) {
-                        nxConfig.downloads.groups[platform].appTypes = appTypes;
-                    }
-                });
+                Object.entries(data.appTypesForPlatform).forEach(
+                    ([platform, appTypes]: [string, unknown]) => {
+                        if (platform in nxConfig.downloads.groups && appTypes) {
+                            nxConfig.downloads.groups[platform].appTypes = appTypes;
+                        }
+                    },
+                );
             }
 
             nxConfig.cloudName = data.cloudName;

@@ -9,9 +9,7 @@
 // match the expected interface, even if the JSON is valid.
 
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
-import type {
-    MultiSelectItem
-} from '@components/dropdowns/multi-select/multi-select.component.types';
+import type { MultiSelectItem } from '@components/dropdowns/multi-select/multi-select.component.types';
 import type { SearchTag } from '@components/search/search.component.types';
 
 import type { MenuNode } from '../menus.service.types';
@@ -89,7 +87,11 @@ export interface BaseConfig {
     mobileLinks: MobileLinks;
 }
 
-export type RouteCheckTuple = [lookup?: RegExp, replacementUrl?: string, additionalMessage?: string];
+export type RouteCheckTuple = [
+    lookup?: RegExp,
+    replacementUrl?: string,
+    additionalMessage?: string,
+];
 
 export interface Developers {
     landing: {
@@ -192,7 +194,7 @@ export const FeatureFlagStrings = FeatureFlagKeys.reduce((obj, key) => {
 }, {}) as Record<FeatureFlagType, FeatureFlagType>;
 
 export type FeatureFlags = {
-    [key in FeatureFlagType]?: boolean
+    [key in FeatureFlagType]?: boolean;
 };
 
 export type APIDocType = 'main' | 'legacy' | 'deprecated';
