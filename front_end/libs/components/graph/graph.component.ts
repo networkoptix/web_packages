@@ -1,9 +1,9 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, ElementRef, Inject, Input, OnChanges } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { LegendPosition } from '@swimlane/ngx-charts';
 import { curveBasis } from 'd3-shape';
-import { Subject, timer } from 'rxjs';
-import { concatMap, takeUntil } from 'rxjs/operators';
+import { of, Subject } from 'rxjs';
+import { delay, mergeMap, repeat, retry, takeUntil, tap } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
@@ -11,6 +11,7 @@ import { NxAccountService } from '@services/account.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
+import { WINDOW } from '@services/window-provider';
 import { NgChanges } from '@utils/ng-changes';
 
 /* USAGE
@@ -29,6 +30,7 @@ export class NxMonitoringGraphComponent implements OnChanges {
     @Input() selectedServerId: string;
     @IBool() @Input() noFrame: CoercedBoolInput;
     @Input() refreshInterval: number = 1000;
+    @IBool() @Input() showFullscreen: CoercedBoolInput;
 
     LANG = staticLang;
 
@@ -64,10 +66,20 @@ export class NxMonitoringGraphComponent implements OnChanges {
         private systemsService: NxSystemsService,
         private systemService: NxSystemService,
         private accountService: NxAccountService,
+        @Inject(WINDOW) public window: Window,
+        private elRef: ElementRef,
     ) {
         this.setupDefaults();
 
         this.multi = [];
+    }
+
+    toggleFullScreen(): void {
+        if (this.window.document.fullscreenElement) {
+            this.window.document.exitFullscreen();
+        } else {
+            this.elRef.nativeElement.requestFullscreen({ navigationUI: 'hide' });
+        }
     }
 
     async ngOnChanges(changes: NgChanges<NxMonitoringGraphComponent>): Promise<void> {
@@ -96,41 +108,45 @@ export class NxMonitoringGraphComponent implements OnChanges {
     }
 
     private getStats(): void {
-        timer(0, this.refreshInterval)
+        of({})
             .pipe(
-                concatMap(() => this.system.serverManager.getStatistics(this.selectedServerId)),
+                mergeMap(() => this.system.serverManager.getStatistics(this.selectedServerId)),
+                retry(),
+                tap(response => {
+                    response.reply &&
+                        response.reply.statistics.forEach(data => {
+                            const seriesData = this.multi.find(
+                                series => series.name === data.description,
+                            );
+                            if (!seriesData) {
+                                const series = Array.from({ length: 50 }, (_, i) => {
+                                    return { name: i + 1, value: 0 };
+                                });
+                                this.multi.push({
+                                    name: data.description,
+                                    series,
+                                });
+                                this.multi[this.multi.length - 1].series.push({
+                                    name: response.reply.uptimeMs,
+                                    value: Math.round(data.value * 100),
+                                });
+                                this.multi[this.multi.length - 1].series.shift();
+                            } else {
+                                seriesData.series.push({
+                                    name: response.reply.uptimeMs,
+                                    value: Math.round(data.value * 100),
+                                });
+                                seriesData.series.shift();
+                            }
+                        });
+
+                    this.multi = [...this.multi];
+                }),
+                delay(this.refreshInterval),
+                repeat(),
                 untilDestroyed(this),
                 takeUntil(this.destroy$),
             )
-            .subscribe(response => {
-                response.reply &&
-                    response.reply.statistics.forEach(data => {
-                        const seriesData = this.multi.find(
-                            series => series.name === data.description,
-                        );
-                        if (!seriesData) {
-                            const series = Array.from({ length: 50 }, (_, i) => {
-                                return { name: i + 1, value: 0 };
-                            });
-                            this.multi.push({
-                                name: data.description,
-                                series,
-                            });
-                            this.multi[this.multi.length - 1].series.push({
-                                name: response.reply.uptimeMs,
-                                value: Math.round(data.value * 100),
-                            });
-                            this.multi[this.multi.length - 1].series.shift();
-                        } else {
-                            seriesData.series.push({
-                                name: response.reply.uptimeMs,
-                                value: Math.round(data.value * 100),
-                            });
-                            seriesData.series.shift();
-                        }
-                    });
-
-                this.multi = [...this.multi];
-            });
+            .subscribe();
     }
 }

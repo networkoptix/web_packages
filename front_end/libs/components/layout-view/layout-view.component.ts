@@ -181,6 +181,8 @@ export class NxLayoutViewComponent {
                     switchMap(cameras =>
                         cameraManager.hasArchives(cameras.map(({ id }) => id)).pipe(
                             catchError(async () => [] as string[]),
+                            // TODO: Seems that his request can take a long time. Might need to add a timeout or start with empty array.
+                            // startWith([] as string[]),
                             map(times =>
                                 cameras.map(({ status, ...camera }) => ({
                                     ...camera,
@@ -219,7 +221,10 @@ export class NxLayoutViewComponent {
                 { currentUser, currentOwner },
             ]): LayoutResourceTree => {
                 const aspectRatio = currentLayout?.cellAspectRatio || 0;
-                const parsedCameras = cameras.reduce(
+
+                const excludeIoDevices = (camera: NxSystemCamera): boolean =>
+                    !camera.addParams.ioSettings;
+                const parsedCameras = cameras.filter(excludeIoDevices).reduce(
                     (cameras, camera) => ({
                         ...cameras,
                         [camera.id]: {
@@ -228,6 +233,9 @@ export class NxLayoutViewComponent {
                             details: {
                                 ...camera,
                                 status: camera.status.toLowerCase(),
+                                online: ['online', 'recording', 'scheduled'].includes(
+                                    camera.status,
+                                ),
                                 resourceType:
                                     this.LANG.layouts.titles.resourceTypes[ResourceType.CAMERA],
                             },
@@ -587,13 +595,16 @@ export class NxLayoutViewComponent {
             await this.pageService.redirect404();
         }
 
-        const rotation = details.parsedAddParams.rotation || 0;
+        const rotation = details.parsedAddParams.rotation ?? 0;
+        const rotatedAspect = Boolean(rotation % 180);
+        const aspect = details.parsedAddParams.overrideAr || details.defaultRatio;
+        const cellAspectRatio = rotatedAspect ? 1 / aspect : aspect;
         return {
             backgroundHeight: -1,
             backgroundImageFilename: '',
             backgroundOpacity: 0.699999988079071,
             backgroundWidth: -1,
-            cellAspectRatio: 0,
+            cellAspectRatio,
             cellSpacing: 0.0001,
             fixedHeight: 0,
             fixedWidth: 0,

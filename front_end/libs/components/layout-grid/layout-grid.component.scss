@@ -713,3 +713,9 @@ iframe {
 .ellipsis {
     line-height: inherit;
 }
+
+
+.full-screen-override {
+    max-width: unset !important;
+    max-height: unset !important;
+}

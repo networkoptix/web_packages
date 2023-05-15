@@ -121,7 +121,7 @@ export class CameraManager {
         return this.cameras;
     }
 
-    parseCamera(camera: ec2CameraEx): NxSystemCamera {
+    parseCamera = (camera: ec2CameraEx): NxSystemCamera => {
         const backupType = camera.backupType || camera.backupQuality;
 
         if (!camera.addParams) {
@@ -296,7 +296,7 @@ export class CameraManager {
             recordingSettings,
             webRtcUrl,
         };
-    }
+    };
 
     updateRecordingSettings(
         updatedTask: TaskUpdate,

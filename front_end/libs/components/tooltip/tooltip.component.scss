@@ -16,6 +16,7 @@
 
         &.alternate,
         &.alternateSecondary {
+            box-shadow: 0px 4px 8px var(--tooltip-box-shadow-color);
             color: var(--popover-color) !important;
             background: var(--popover-bg) !important;
         }
@@ -25,13 +26,13 @@
         }
 
         &.alternateSecondary {
-            box-shadow: 0px 4px 8px var(--tooltip-box-shadow-color);
             max-width: 272px;
         }
     }
 
     .tooltip-arrow {
         position: absolute;
+        z-index: 5;
 
         &::before,
         &::after {

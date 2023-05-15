@@ -310,7 +310,7 @@
                             nodeInfo;
                             context: {
                                 node: node,
-                                expandable: true,
+                                expandable: node.children.length,
                                 expanded: !treeControl.isExpanded(node) && !tourService.currentStep
                             }
                         "
@@ -322,12 +322,12 @@
                     "
                     class="expanded-tree"
                 >
-                    <span
+                    <!-- <span
                         *ngIf="!node.children.length"
                         class="no-children"
                         translate
                         >No Items</span
-                    >
+                    > -->
                     <ng-container cdkTreeNodeOutlet></ng-container>
                 </div>
             </cdk-nested-tree-node>
@@ -413,6 +413,7 @@
                 <ng-container *ngFor="let item of layout.items; trackBy: itemId">
                     <div
                         *ngIf="layoutItemLookup"
+                        #layoutItemWrapper
                         cdkDropList
                         [cdkDropListDisabled]="layout.locked"
                         [cdkDropListEnterPredicate]="preventDrop"
@@ -436,7 +437,9 @@
                             class="layout-item"
                             [ngClass]="{
                                 'camera-layout-item':
-                                    layoutItemLookup[item.resourceId].type === RESOURCE_TYPE.CAMERA
+                                    layoutItemLookup[item.resourceId].type === RESOURCE_TYPE.CAMERA,
+                                'full-screen-override':
+                                    layoutItemWrapper === window.document.fullscreenElement
                             }"
                             [ngStyle]="(collisions$ | async)[item.id] || item.renderConfig.child"
                         >
@@ -571,12 +574,15 @@
                                                         'online',
                                                         'offline',
                                                         'unauthorized',
-                                                        'defaultPassword'
+                                                        'defaultPassword',
+                                                        'transcodingDisabled'
                                                     ].includes(status)
-                                                        ? status.replace(
-                                                              'defaultPassword',
-                                                              'warning'
-                                                          )
+                                                        ? status
+                                                              .replace('defaultPassword', 'warning')
+                                                              .replace(
+                                                                  'transcodingDisabled',
+                                                                  'warning'
+                                                              )
                                                         : itemDetail.type !== RESOURCE_TYPE.WEB_PAGE
                                                         ? 'offline'
                                                         : '') +
@@ -609,6 +615,7 @@
                                             cdkDragHandle
                                             [cdkDragHandleDisabled]="layout.locked"
                                             [camera]="itemDetail.details"
+                                            [fullScreenTarget]="layoutItemWrapper"
                                             [pingServer]="pingServer(itemDetail.details)"
                                             [rotation]="item.rotation"
                                             (showError)="handleVideoError(itemDetail, $event)"
@@ -619,8 +626,9 @@
                                     <ng-container *ngSwitchCase="RESOURCE_TYPE.SERVER">
                                         <nx-monitoring-graph
                                             [systemId]="layout.systemId"
-                                            [noFrame]="true"
                                             [selectedServerId]="itemDetail.details.id"
+                                            noFrame
+                                            showFullscreen
                                         ></nx-monitoring-graph>
                                     </ng-container>
                                     <ng-container *ngSwitchCase="RESOURCE_TYPE.WEB_PAGE">

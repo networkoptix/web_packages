@@ -50,3 +50,9 @@ export const calculateWindowFocusThreshold = (baseline: number): number => {
     const threshold = baseline * baseline
     return Math.round(100 / (area / threshold))
 }
+
+export const sanitizeUrl = (webRtcUrl: string): string => {
+    const { origin, search } = new URL(webRtcUrl)
+    const cameraId = new URLSearchParams(search).get('camera_id')
+    return `${origin}?camera_id=${cameraId}`
+}

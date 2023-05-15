@@ -374,7 +374,7 @@ export class ServerManager {
     }
 
     getStatistics(serverId: string, pollingInterval = 0) {
-        return this.mediaserverConnections[serverId].getStatistics();
+        return this.mediaserverConnections[serverId].getStatistics(Math.round(Date.now() / 1000));
     }
 
     getLogs(serverId: string, params) {

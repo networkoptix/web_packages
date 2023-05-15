@@ -24,7 +24,9 @@ export type SignalingMessage = SdpInit | IceInit | IceCandidate | ErrorMsg;
 
 export enum ConnectionError {
     websocket = 'websocket',
-    authorization = 'authorization'
+    authorization = 'authorization',
+    lostConnection = 'lostConnection',
+    transcodingDisabled = 'transcodingDisabled'
 }
 
 export enum StreamQuality {
@@ -110,7 +112,7 @@ export interface CandidatePairReport {
 }
 
 type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] extends N
-  ? Acc[number]
-  : Enumerate<N, [...Acc, Acc['length']]>
+    ? Acc[number]
+    : Enumerate<N, [...Acc, Acc['length']]>
 
 export type IntRange<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>

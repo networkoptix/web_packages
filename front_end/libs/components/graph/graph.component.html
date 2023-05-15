@@ -44,3 +44,23 @@
         <ng-container *ngTemplateOutlet="chart"></ng-container>
     </nx-section>
 </nx-block>
+
+<div
+    *ngIf="showFullscreen"
+    class="full-screen parent-hover"
+    [ngClass]="{ 'is-full-screen': window.document.fullscreenElement }"
+    (click)="toggleFullScreen()"
+>
+    <ng-template
+        #close
+        translate
+    >
+        Close Full Screen
+    </ng-template>
+    <ng-container
+        *ngIf="!window.document.fullscreenElement; else close"
+        translate
+    >
+        Full Screen
+    </ng-container>
+</div>

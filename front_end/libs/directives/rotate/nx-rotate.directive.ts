@@ -7,8 +7,13 @@ export class NxRotate {
         this.#updateRotation();
     }
 
+    @Input() set skipResize(skip: boolean) {
+        this.#skipResize = skip;
+    }
+
     #rotation = 0;
     #clampTo = 90;
+    #skipResize = false;
 
     resizeObserver: ResizeObserver;
 
@@ -23,7 +28,7 @@ export class NxRotate {
     #constrainToParent = ({ width, height }: { width: number; height: number }): void => {
         this.el.nativeElement.style.maxHeight = this.changeAspect ? `${width}px` : '';
         this.el.nativeElement.style.maxWidth = this.changeAspect ? `${height}px` : '';
-        if (this.changeAspect) {
+        if (this.changeAspect && !this.#skipResize) {
             const wider = height > width;
             const scale = (wider ? height / width : width / height) * 100;
             this.el.nativeElement.style[wider ? 'width' : 'height'] = `${scale}%`;

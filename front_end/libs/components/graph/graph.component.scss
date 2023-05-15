@@ -1,2 +1,20 @@
 // For some reason styles here are not applying
 // use _components.scss --TT
+
+.overlay {
+    position: absolute;
+    background: var(--body-bg);
+    padding: 2px 4px;
+    z-index: 175;
+    cursor: pointer;
+}
+
+.full-screen {
+    @extend .overlay;
+    bottom: 0;
+    left: 0;
+}
+
+.is-full-screen {
+    visibility: visible !important;
+}

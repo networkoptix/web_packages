@@ -181,22 +181,48 @@ export class NxLayoutGridComponent {
 
     #lastWidth: number = Infinity;
 
+    handleMenuClose = (): void => {
+        this.layoutSettings.update(
+            curr =>
+                curr.openMenu
+                    ? {
+                          ...curr,
+                          previousOpenMenu: curr.openMenu,
+                          openMenu: null,
+                      }
+                    : curr,
+            true,
+        );
+    };
+
+    handleMenuOpen = (): void => {
+        this.layoutSettings.update(
+            curr =>
+                curr.previousOpenMenu
+                    ? {
+                          ...curr,
+                          openMenu: curr.previousOpenMenu,
+                          previousOpenMenu: null,
+                      }
+                    : curr,
+            true,
+        );
+    };
+
     @HostListener('window:resize', ['$event'])
     onResize({ target: { innerWidth: width } }: { target: Window }): void {
-        const closeOnResize = this.#lastWidth > width && width <= ViewportBreakpoints.Tablet.width;
+        const closeOnResize =
+            this.#lastWidth > ViewportBreakpoints.Tablet.width &&
+            width <= ViewportBreakpoints.Tablet.width;
+
+        const openOnResize =
+            this.#lastWidth < ViewportBreakpoints.Tablet.width &&
+            width > ViewportBreakpoints.Tablet.width;
 
         if (closeOnResize) {
-            this.layoutSettings.update(
-                curr =>
-                    curr.openMenu
-                        ? {
-                              ...curr,
-                              previousOpenMenu: curr.openMenu,
-                              openMenu: null,
-                          }
-                        : curr,
-                true,
-            );
+            this.handleMenuClose();
+        } else if (openOnResize) {
+            this.handleMenuOpen();
         }
 
         this.#lastWidth = width;
@@ -475,7 +501,7 @@ export class NxLayoutGridComponent {
         private dialogsService: NxDialogsService,
         public tourService: TourService,
         private cloudApi: NxCloudApiService,
-        @Inject(WINDOW) private window: Window,
+        @Inject(WINDOW) public window: Window,
         private pageService: NxPageService,
     ) {
         this.CONFIG = configService.config;
@@ -717,26 +743,37 @@ export class NxLayoutGridComponent {
     }
 
     calculateItemSize = (
-        { height, width }: Size,
-        { renderConfig }: ParsedLayoutItem,
+        { height: cellHeight, width: cellWidth }: Size,
+        { renderConfig, top, bottom, right, left, rotation }: ParsedLayoutItem,
         item: ResourceNode,
     ): void => {
+        const isCamera = (item: ResourceNode<unknown>): item is ResourceNode<NxSystemCamera> =>
+            item?.type === ResourceType.CAMERA;
+        const width = cellWidth * (right - left);
+        const height = cellHeight * (bottom - top);
         renderConfig.showTooltip = width < 360;
-        if (item?.type !== ResourceType.CAMERA) {
-            return;
+        if (isCamera(item)) {
+            if (!item.aspectRatio) {
+                item.aspectRatio = renderConfig.aspect;
+            }
+
+            const isRotated = Boolean(
+                (rotation || item.details.parsedAddParams.rotation || 0) % 180,
+            );
+
+            const aspect = isRotated ? 1 / item.aspectRatio : item.aspectRatio;
+
+            const tooWide = width > height * aspect;
+            const clampTo = tooWide
+                ? { 'max-width': `${height * aspect}px` }
+                : { 'max-height': `${width / aspect}px` };
+
+            renderConfig.child = {
+                ...renderConfig.child,
+                ...clampTo,
+            };
+            this.cd.markForCheck();
         }
-
-        if (!item.aspectRatio) {
-            item.aspectRatio = renderConfig.aspect;
-        }
-
-        const tooWide = width > height * item.aspectRatio;
-
-        renderConfig.child = {
-            ...renderConfig.child,
-            'max-width': `${tooWide ? height * item.aspectRatio : width}px`,
-        };
-        this.cd.markForCheck();
     };
 
     generateRenderConfig({
@@ -944,6 +981,10 @@ export class NxLayoutGridComponent {
     };
 
     async changeView(node: ResourceNode | LayoutItem): Promise<void> {
+        if (!('children' in node) && this.#lastWidth <= ViewportBreakpoints.Tablet.width) {
+            this.handleMenuClose();
+        }
+
         const isLayoutItem = 'id' in node;
         const id = isLayoutItem ? node.id : node.details?.id;
         if (!isLayoutItem) {
@@ -995,12 +1036,19 @@ export class NxLayoutGridComponent {
             };
         };
 
+        const showTranscodingDisabledError = (): void => {
+            this.errors[itemDetail.details.id] = ConnectionError.transcodingDisabled;
+            this.errorIcons[itemDetail.details.id] = 'warning';
+        };
+
         const showDefaultPasswordError = (): void => {
             this.errors[itemDetail.details.id] = 'defaultPassword';
             this.errorIcons[itemDetail.details.id] = 'warning';
         };
 
-        if (error === ConnectionError.authorization) {
+        if (error === ConnectionError.transcodingDisabled) {
+            showTranscodingDisabledError();
+        } else if (error === ConnectionError.authorization) {
             /**
              * This error is explicitly emitted by the nx-video-player component by checking that the previewUrl loads before trying to establish a connection.
              *

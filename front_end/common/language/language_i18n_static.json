@@ -102,6 +102,10 @@
                 "camera": "Camera"
             }
         },
+        "toasts": {
+            "reconnected": "Connection to \"{name}\" camera re-established.",
+            "connectionLost": "Lost connection to \"{name}\" camera. Attempting to reconnect..."
+        },
         "helpMessages": {
             "unsaved": {
                 "title": "Unsaved Layout",
@@ -402,7 +406,8 @@
             "unauthorized": "UNAUTHORIZED",
             "defaultPassword": "Please set up camera password",
             "websocket": "Can't connect to the camera",
-            "unavailable": "UNAVAILABLE"
+            "unavailable": "UNAVAILABLE",
+            "transcodingDisabled": "Transcoding for H265 streams disabled for 5.1 systems"
         },
         "serverStates": {
             "offline": "SERVER UNAVAILABLE"

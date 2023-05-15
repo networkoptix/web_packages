@@ -598,8 +598,9 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
             });
     }
 
-    getStatistics() {
-        return this.get('/api/statistics', { salt: Date.now() });
+    @memoizeAsyncPersistent
+    getStatistics(salt: number) {
+        return this.get('/api/statistics', { salt });
     }
 
     /**

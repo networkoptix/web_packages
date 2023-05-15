@@ -9,6 +9,7 @@
         "*.json",
         ".gitignore",
         "README.md",
-        ".npmignore"
+        ".npmignore",
+        "*_check_excluded*"
     ]
 }

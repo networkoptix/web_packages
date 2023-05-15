@@ -38,7 +38,7 @@ export class MosScoreTracker extends BaseConnectionTracker<CombinedReport> {
      * @returns - number
      */
     processInboundReport(report: CombinedReport): number {
-        const averageLatency = toMs(report?.currentRoundTripTime) || 100;
+        const averageLatency = Math.min(toMs(report?.currentRoundTripTime) || 100, 1000);
         const jitter = toMs(report?.jitter) || 10;
         const packetsLost = toMs(report?.packetsLost) || 0;
         const packetsReceived = toMs(report?.packetsReceived) || 0;
