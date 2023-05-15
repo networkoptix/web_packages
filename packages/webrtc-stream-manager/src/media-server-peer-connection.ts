@@ -2,6 +2,7 @@
 
 import { WebSocketSubject } from 'rxjs/webSocket';
 import { SignalingMessage, StreamHandler } from './types';
+import { iceServers } from './config_check_excluded';
 
 export class MediaServerPeerConnection extends RTCPeerConnection {
     onicecandidate = (event: RTCPeerConnectionIceEvent): void => {
@@ -16,7 +17,7 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
             this.closeWebsocket();
         } else if (this.iceConnectionState === 'disconnected') {
             console.log('peerConnection disconnected, reconnecting websocket');
-            this.reconnectionHandler();
+            this.reconnectionHandler(true);
         } else {
             console.log('peerConnection ice state ' + this.iceConnectionState);
         }
@@ -29,16 +30,11 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
     constructor(
         private getWebSocket: () => WebSocketSubject<SignalingMessage>,
         private closeWebsocket: () => void,
-        private reconnectionHandler: () => void,
+        private reconnectionHandler: (lostConnection: number | true) => void,
         trackHandler: StreamHandler,
     ) {
         super({
-            iceServers: [
-                { urls: 'stun:stun.stunprotocol.org:3478' },
-                { urls: 'stun:stun.l.google.com:19302' },
-                { urls: 'stun:stun1.l.google.com:19302' },
-                { urls: 'stun:stun1.l.google.com:19302' },
-            ],
+            iceServers,
         });
 
         this.ontrack = (event: RTCTrackEvent): unknown => trackHandler(event.streams[0]);
