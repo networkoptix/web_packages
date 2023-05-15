@@ -133,7 +133,7 @@
             </span>
             <span
                 class="displayed-name"
-                [nxTooltip]="displayedFullName.length > 24 ? displayedFullName : ''"
+                [nxTooltip]="displayedFullName.length > 24 && !show ? displayedFullName : ''"
             >
                 {{ displayedFullName }}
             </span>
