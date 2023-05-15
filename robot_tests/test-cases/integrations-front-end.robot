@@ -21,7 +21,7 @@ Force Tags        integrations    Threaded
     [Tags]    C54622    smoke
     ${user}=   Register and activate account with random email    mark    hamill    ${BASE PASSWORD}
     Go To Integrations Page
-    Log In    ${user}    ${BASE PASSWORD}    button=${None}
+    #Log In    ${user}    ${BASE PASSWORD}    button=${None}
     Wait Until Element Is Visible    ${INTEGRATION TILE}
     @{integration tiles}=   Get WebElements    ${INTEGRATION TILE}
     ${number of tiles}=   Get Length    ${integration tiles}

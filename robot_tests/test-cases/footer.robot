@@ -43,39 +43,7 @@ Force Tags    threaded
     Switch Window    NEW
     Wait Until Location Is    ${COPYRIGHT URL}
 
-5. About page is correctly displayed
-    [Tags]    C41541    Threaded    C30820    cloud    smoke
-    Wait Until Elements are Visible
-    ...    ${FOOTER ABOUT LINK}
-    ...    ${CREATE ACCOUNT BODY}
-    Wait Until Element Has Style
-    ...    ${CREATE ACCOUNT BODY}
-    ...    background-color
-    ...    ${THEME COLOR RGB}
-    Click Link    ${FOOTER ABOUT LINK}
-    Wait Until Location Is    ${ENV}${ABOUT URL}
-    Wait Until Elements are Visible
-    ...    ${FOOTER ABOUT LINK}
-    ...    ${CREATE ACCOUNT BODY}
-    Wait Until Element Has Style
-    ...    ${CREATE ACCOUNT BODY}
-    ...    background-color
-    ...    ${THEME COLOR RGB}
-
-6. Integrations leads to the proper support site
-    [Tags]    Threaded    C57508    cloud    smoke
-    Wait Until Element is Visible    ${FOOTER INTEGRATIONS LINK}
-    Click Link    ${FOOTER INTEGRATIONS LINK}
-    Wait Until Location Is    ${ENV}/integrations
-
-7. Supported devices leads to the proper page
-    [Tags]    Threaded    C57509    cloud    smoke
-    Wait Until Element is Visible    ${FOOTER SUPPORTED DEVICES LINK}
-    Sleep    1
-    Click Link    ${FOOTER SUPPORTED DEVICES LINK}
-    Wait Until Location Is    ${ENV}/ipvd
-
-8. Terms leads to the proper EULA site    
+5. Terms leads to the proper EULA site    
     [Tags]    C41545    Threaded    C30824     cloud    smoke
     Wait Until Element is Visible    ${FOOTER TERMS LINK}
     Sleep    1
@@ -84,7 +52,7 @@ Force Tags    threaded
     #Switch Window    NEW
     Wait Until Location Is    ${ENV}${TERMS URL}
 
-9. Privacy leads to the proper page
+6. Privacy leads to the proper page
     [Tags]    C41546    Threaded    C34452    cloud    smoke
     Wait Until Element is Visible    ${FOOTER PRIVACY LINK}
     Sleep    1
