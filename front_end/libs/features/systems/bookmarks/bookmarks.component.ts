@@ -200,38 +200,43 @@ export class NxBookmarksComponent implements OnInit {
                         Number(reply.timeZoneOffset) ?? 0,
                     ]),
                 );
-                return bks.map<Bookmark>(bk => {
-                    const device = devices.find(item => item.id === bk.deviceId);
-                    const timeZoneOffset = offsetTimes.get(device.serverId);
-                    const getLink = (transport: string): string => {
-                        return this.system.mediaserver.getExportUrl({
-                            cameraId: bk.deviceId,
-                            duration: Math.floor(bk.durationMs / 1000),
-                            endPos: bk.startTimeMs + bk.durationMs,
-                            pos: bk.startTimeMs,
-                            transport,
-                        });
-                    };
+                const deviceMap = new Map(devices.map(device => [device.id, device]));
 
-                    return {
-                        ...bk,
-                        tags: bk.tags ?? [],
-                        src: getLink('mp4'),
-                        downloadSrc: getLink('mkv'),
-                        thumbnail: this.system.serverManager.getPreviewUrl(
-                            bk.deviceId,
-                            bk.startTimeMs,
-                            320,
-                            180,
-                            0,
-                        ),
-                        isVisible: false,
-                        deviceName: device?.name,
-                        deviceId: cleanId(bk.deviceId),
-                        systemId: this.system.id,
-                        timeZoneOffset,
-                    };
-                });
+                return bks
+                    .filter(bk => deviceMap.has(bk.deviceId))
+                    .map<Bookmark>(bk => {
+                        const timeZoneOffset =
+                            offsetTimes.get(deviceMap.get(bk.deviceId).serverId) || 0;
+                        const deviceName = deviceMap.get(bk.deviceId).name;
+                        const getLink = (transport: string): string => {
+                            return this.system.mediaserver.getExportUrl({
+                                cameraId: bk.deviceId,
+                                duration: Math.floor(bk.durationMs / 1000),
+                                endPos: bk.startTimeMs + bk.durationMs,
+                                pos: bk.startTimeMs,
+                                transport,
+                            });
+                        };
+
+                        return {
+                            ...bk,
+                            tags: bk.tags ?? [],
+                            src: getLink('mp4'),
+                            downloadSrc: getLink('mkv'),
+                            thumbnail: this.system.serverManager.getPreviewUrl(
+                                bk.deviceId,
+                                bk.startTimeMs,
+                                320,
+                                180,
+                                0,
+                            ),
+                            isVisible: false,
+                            deviceName,
+                            deviceId: cleanId(bk.deviceId),
+                            systemId: this.system.id,
+                            timeZoneOffset,
+                        };
+                    });
             }),
             // Merge recently created and new bookmarks together, and update vars to check if we got new bookmarks
             map(bks => {
