@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { Nx404Component } from '@pages/404/404.component';
-
 import { NxChannelPartnerInformationComponent } from '../components/information/information.component';
 import { NxOrganizationSettingsComponent } from '../components/settings/settings.component';
 import { NxChannelPartnerSubchannelComponent } from '../components/subchannel/subchannel.component';
@@ -21,47 +19,47 @@ const CPRoutes: Routes = [
         children: [
             {
                 path: '',
-                component: Nx404Component
+                component: NxChannelPartnersComponent,
             },
             {
                 path: 'settings',
-                component: NxOrganizationSettingsComponent
+                component: NxOrganizationSettingsComponent,
             },
             {
                 path: 'organization',
-                loadChildren: () => import('@pages/home/organizations/organization.module').then(m => m.NxOrganizationModule)
+                loadChildren: () =>
+                    import('@pages/home/organizations/organization.module').then(
+                        m => m.NxOrganizationModule,
+                    ),
             },
             {
                 path: 'settings',
-                component: NxOrganizationSettingsComponent
+                component: NxOrganizationSettingsComponent,
             },
             {
                 path: 'subchannel',
-                component: NxChannelPartnerSubchannelComponent
+                component: NxChannelPartnerSubchannelComponent,
             },
             {
                 path: 'information',
-                component: NxChannelPartnerInformationComponent
+                component: NxChannelPartnerInformationComponent,
             },
             {
                 path: 'users',
-                component: NxOrganizationUsersComponent
+                component: NxOrganizationUsersComponent,
             },
-        ]
+        ],
     },
     {
         path: '**',
-        component: Nx404Component
-    }
-
+        redirectTo: '/home',
+    },
 ];
 
 @NgModule({
-    imports: [
-        RouterModule.forChild(CPRoutes)
-    ],
+    imports: [RouterModule.forChild(CPRoutes)],
     declarations: [],
     providers: [],
-    exports: []
+    exports: [],
 })
-export class NxChannelPartnersModule { }
+export class NxChannelPartnersModule {}

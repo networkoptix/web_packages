@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { take } from 'rxjs';
+import { combineLatest, take } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { selectCurrentUser } from '@common/store/account/account.selectors';
@@ -19,6 +19,8 @@ import * as CPActions from '../store/channel-partners/channel-partners.actions';
 import {
     selectCurrentOrganization,
     selectCurrentPartnerId,
+    selectCurrentPartnerOrgs,
+    selectRootOrganizations,
 } from '../store/channel-partners/channel-partners.selectors';
 import * as GroupActions from '../store/groups.actions';
 import {
@@ -51,6 +53,8 @@ export class NxOrganizationsComponent implements OnInit {
     currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
     inChannelPartners = false;
     currentOrganization$ = this.store.select(selectCurrentOrganization);
+    currentPartnerOrganizations$ = this.store.select(selectCurrentPartnerOrgs);
+    organizations$ = this.store.select(selectRootOrganizations);
 
     currentTab: Tab;
     rootGroup$ = this.store.select<Crumb>(selectCurrentRootGroup);
@@ -89,7 +93,16 @@ export class NxOrganizationsComponent implements OnInit {
         }
         this.currentTab = this.tabs.find(tab => tab.route === this.route.snapshot.data.currentTab);
         this.route.params.pipe(untilDestroyed(this)).subscribe(({ id }) => {
-            this.store.dispatch(CPActions.setCurrentOrgId({ currentOrgId: Number(id) }));
+            // Temporarily converting to number until ID updated to UUID
+            const Id = Number(id);
+            this.store.dispatch(CPActions.setCurrentOrgId({ currentOrgId: Id }));
+            combineLatest([this.organizations$, this.currentPartnerOrganizations$])
+                .pipe(take(1))
+                .subscribe(([orgs, partnerOrgs]) => {
+                    if (!orgs.find(o => o.id === Id) && !partnerOrgs.find(o => o.id === Id)) {
+                        this.router.navigate(['404']);
+                    }
+                });
             this.isLoading = false;
         });
 

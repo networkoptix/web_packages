@@ -58,6 +58,9 @@
         a {
             width: fit-content;
             visibility: hidden;
+            color: inherit;
+            text-decoration: none;
+            font-size: .75rem;
         }
 
         a:hover{

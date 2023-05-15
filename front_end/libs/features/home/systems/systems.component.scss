@@ -5,9 +5,11 @@
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
-
-    &.shared {
-      flex-direction: column;
-    }
+  }
+  
+  .shared {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
   }
 }

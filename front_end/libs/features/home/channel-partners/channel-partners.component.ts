@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
+import { catchError, of, withLatestFrom } from 'rxjs';
 
 import { Tab, TabEmit } from '@components/tabs/tabs.types';
 import {
@@ -12,6 +13,7 @@ import {
 import { NxChannelPartnersService } from '../services/channel-partners.service';
 import * as CPActions from '../store/channel-partners/channel-partners.actions';
 import {
+    selectChannelPartners,
     selectCurrentPartner,
     selectCurrentPartnerOrgs,
 } from '../store/channel-partners/channel-partners.selectors';
@@ -30,6 +32,7 @@ export class NxChannelPartnersComponent implements OnInit {
     isLoading = true;
     currentPartnerId: number;
     routeData$ = this.route.data;
+    channelPartners$ = this.store.select<ChannelPartner[]>(selectChannelPartners);
     channelPartner$ = this.store.select<ChannelPartner>(selectCurrentPartner);
     organizations$ = this.store.select<Organization[]>(selectCurrentPartnerOrgs);
     isAdmin: boolean = false;
@@ -67,18 +70,31 @@ export class NxChannelPartnersComponent implements OnInit {
 
     ngOnInit(): void {
         this.currentTab = this.tabs.find(tab => tab.route === this.route.snapshot.data.currentTab);
-        this.route.params.pipe(untilDestroyed(this)).subscribe(({ id }) => {
-            this.currentPartnerId = id;
-            this.CPService.getPartnerOrganizations(id).subscribe(orgs => {
-                this.isLoading = false;
-                this.store.dispatch(
-                    CPActions.setCurrentPartner({
-                        currentPartnerId: Number(id),
-                        currentPartnerOrganizations: orgs,
-                    }),
-                );
+        this.route.params
+            .pipe(untilDestroyed(this), withLatestFrom(this.channelPartners$))
+            .subscribe(([{ id }, partners]) => {
+                // Temporarily converting to number until ID updated to UUID
+                this.currentPartnerId = Number(id);
+                if (!partners.find(p => p.id === this.currentPartnerId)) {
+                    this.router.navigate(['404']);
+                }
+                this.CPService.getPartnerOrganizations(id)
+                    .pipe(catchError(err => of(err)))
+                    .subscribe({
+                        next: orgs => {
+                            this.isLoading = false;
+                            this.store.dispatch(
+                                CPActions.setCurrentPartner({
+                                    currentPartnerId: this.currentPartnerId,
+                                    currentPartnerOrganizations: orgs,
+                                }),
+                            );
+                        },
+                        error: () => {
+                            this.router.navigate(['404']);
+                        },
+                    });
             });
-        });
     }
 
     newOrgDialog(): void {

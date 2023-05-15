@@ -14,19 +14,20 @@
         <nx-pre-loader *ngSwitchCase="LoadingState.LOADING"></nx-pre-loader>
         <ng-container *ngSwitchCase="LoadingState.LOADED">
             <div
-                class="systems-row"
                 [ngClass]="{ shared: !showPersonal }"
                 *ngFor="let user of systems$ | async | keyvalue"
             >
                 <div *ngIf="!showPersonal">
                     {{ user.key }}
                 </div>
-                <div *ngFor="let system of user.value.systems; trackBy: trackItem">
-                    <nx-system-card
-                        [system]="system"
-                        [search]="''"
-                        [showOwner]="!showPersonal"
-                    ></nx-system-card>
+                <div class="systems-row">
+                    <div *ngFor="let system of user.value.systems; trackBy: trackItem">
+                        <nx-system-card
+                            [system]="system"
+                            [search]="''"
+                            [showOwner]="!showPersonal"
+                        ></nx-system-card>
+                    </div>
                 </div>
             </div>
         </ng-container>

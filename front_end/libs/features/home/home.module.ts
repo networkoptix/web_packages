@@ -44,7 +44,7 @@ const homeRoutes: Routes = [
         children: [
             {
                 path: '',
-                component: NxPreLoaderComponent
+                component: NxPreLoaderComponent,
             },
             {
                 path: 'personal',
@@ -56,13 +56,19 @@ const homeRoutes: Routes = [
             },
             {
                 path: 'organization',
-                loadChildren: () => import('@pages/home/organizations/organization.module').then(m => m.NxOrganizationModule),
+                loadChildren: () =>
+                    import('@pages/home/organizations/organization.module').then(
+                        m => m.NxOrganizationModule,
+                    ),
             },
             {
                 path: 'channelPartners',
-                loadChildren: () => import('@pages/home/channel-partners/channel-partners.module').then(m => m.NxChannelPartnersModule),
+                loadChildren: () =>
+                    import('@pages/home/channel-partners/channel-partners.module').then(
+                        m => m.NxChannelPartnersModule,
+                    ),
             },
-        ]
+        ],
     },
 ];
 
@@ -79,7 +85,7 @@ const homeRoutes: Routes = [
         StoreModule.forFeature('channelPartners', channelPartnersReducer),
         RouterModule.forChild(homeRoutes),
         CheckboxModule,
-        NxBaseTableModule
+        NxBaseTableModule,
     ],
     declarations: [
         NxOrganizationsComponent,
@@ -98,12 +104,9 @@ const homeRoutes: Routes = [
         NxUsersTableComponent,
         NxChannelPartnersComponent,
         NxChannelPartnerInformationComponent,
-        NxHomeComponent
+        NxHomeComponent,
     ],
-    providers: [
-        TabResolver,
-        OrgResolver,
-    ],
+    providers: [TabResolver, OrgResolver],
     exports: [],
 })
 export class NxHomeModule {}

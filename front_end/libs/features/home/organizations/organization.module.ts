@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { AuthGuard } from '@guards/authGuard';
-import { Nx404Component } from '@pages/404/404.component';
 
 import { NxGroupsCardsComponent } from '../components/groups-cards/groups-cards.component';
 import { NxOrganizationReportsComponent } from '../components/reports/reports.component';
@@ -47,7 +46,7 @@ const orgRoutes: Routes = [
     },
     {
         path: '**',
-        component: Nx404Component
+        redirectTo: '/home',
     }
 ];
 
