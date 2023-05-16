@@ -525,7 +525,7 @@
     "ENTER EMAIL TEXT": "Enter email",
     "PASSWORD IS REQUIRED TEXT": "密碼是必填的",
     "2FA BACKUP CODE BTN TEXT": "No access to authentication app?",
-    "2FA LOG IN CLOUD TEXT": "Log in to %PRODUCT_NAME%",
+    "2FA LOG IN CLOUD TEXT": "登入到 %PRODUCT_NAME%",
     "2FA CODE INSTRUCTIONS TEXT": "Enter a code from your authentication app to confirm it's really you trying to log in",
     "2FA BACKUP CODE HELP TEXT": "Need help?",
     "2FA BACKUP CODE CONTACT SUPPORT TEXT": "Contact support",
@@ -548,15 +548,15 @@
     "VIEW PAGE CAMERA AUTHENTICATION TEXT": "需要身份驗證",
     "ENABLE 2FA TEXT": "Enable 2FA",
     "DISABLE 2FA TEXT": "停用",
-    "DISABLED TEXT": "DISABLED",
+    "DISABLED TEXT": "已停用",
     "ENABLED TEXT": "ENABLED",
-    "WARNING CAPS": "WARNING",
+    "WARNING CAPS": "警告",
     "OT WARNING TEXT": "Once the ownership transfer is complete, you will be removed from the system.",
     "REQUEST SENT TEXT": "Request has been sent",
     "REQUEST SENT EXPLANATION TEXT": "Ownership change will occur as soon as the new owner accepts the request",
     "TRANSFERRING OWNERSHIP TO TEXT": "Transferring ownership to",
     "WANTS TO TRANSFER TEXT": "wants to transfer ownership of this system to you",
-    "ACCEPT TEXT": "Accept",
+    "ACCEPT TEXT": "同意",
     "REJECT TEXT": "Reject",
-    "USER NOT FOUND TEXT": "User not found"
+    "USER NOT FOUND TEXT": "使用者不存在"
 }

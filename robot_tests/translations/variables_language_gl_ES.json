@@ -525,7 +525,7 @@
     "ENTER EMAIL TEXT": "Enter email",
     "PASSWORD IS REQUIRED TEXT": "Password is required",
     "2FA BACKUP CODE BTN TEXT": "No access to authentication app?",
-    "2FA LOG IN CLOUD TEXT": "Log in to %PRODUCT_NAME%",
+    "2FA LOG IN CLOUD TEXT": "Conéctate a %PRODUCT_NAME%",
     "2FA CODE INSTRUCTIONS TEXT": "Enter a code from your authentication app to confirm it's really you trying to log in",
     "2FA BACKUP CODE HELP TEXT": "Need help?",
     "2FA BACKUP CODE CONTACT SUPPORT TEXT": "Contact support",
