@@ -525,7 +525,7 @@
     "ENTER EMAIL TEXT": "请输入电邮地址",
     "PASSWORD IS REQUIRED TEXT": "密码为必填项",
     "2FA BACKUP CODE BTN TEXT": "无法访问身份验证应用程序？",
-    "2FA LOG IN CLOUD TEXT": "登录 Nx 云",
+    "2FA LOG IN CLOUD TEXT": "Log in to Nx Cloud",
     "2FA CODE INSTRUCTIONS TEXT": "Enter a code from your authentication app to confirm it's really you trying to log in",
     "2FA BACKUP CODE HELP TEXT": "需要帮助？",
     "2FA BACKUP CODE CONTACT SUPPORT TEXT": "联系支持人员",
