@@ -80,25 +80,20 @@ def generate_languages_files(languages):
     with codecs.open(os.path.join(current_generate_path, "..", "translations", "language_codes.json"), "r") as codes:
         codes_to_lang = json.load(codes)
     # Localize this language
-    with codecs.open("static/language_i18n.json", "r", "utf-8") as file_descriptor:
+    with codecs.open("static/language_compiled.json", "r", "utf-8") as file_descriptor:
         base_i18n = json.load(file_descriptor)
 
-    with codecs.open("static/language_i18n_static.json", "r", "utf-8") as file_descriptor:
-        base_i18n_static = json.load(file_descriptor)
-
     for lang in languages:
-        i18n = merge_files(base_i18n, lang, "language_i18n.json")
-        i18n_static = merge_files(base_i18n_static, lang, "language_i18n_static.json")
-        i18n_compiled = merge_two_json(i18n, i18n_static)
+        i18n = merge_files(base_i18n, lang, "language_compiled.json")
 
-        i18n_compiled["language"] = lang
-        i18n_compiled["language_name"] = codes_to_lang[lang]
+        i18n["language"] = lang
+        i18n["language_name"] = codes_to_lang[lang]
 
         # replace {{XXX}} with {XXX} so pluralization plugin will not freak out
-        prep_json_for_pluralization(i18n_compiled)
+        prep_json_for_pluralization(i18n)
 
         save_content(f"static/lang_{lang}/language_compiled.json",
-                     json.dumps(i18n_compiled, indent=4, ensure_ascii=False, sort_keys=True))
+                     json.dumps(i18n, indent=4, ensure_ascii=False, sort_keys=True))
 
 
 def prep_json_for_pluralization(adict):
