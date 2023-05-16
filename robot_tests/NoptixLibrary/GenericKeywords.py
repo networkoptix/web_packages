@@ -982,3 +982,28 @@ class GenericKeywords(object):
             pass
         else:
             raise RuntimeError(f"Value({value}) was not in log level response {logLevel}")
+
+    @keyword
+    def verify_changed_info_via_API(self, new_locals, ip, local_user="ocal+"):
+        locals = []
+        users = self.server_api.get_users(BuiltIn().get_variable_value('${server auth}'), ip)
+        local_state = True
+        for user in users:
+            if user.get("isCloud") is False:
+                local_state = False
+            elif user.get("type") == "cloud":
+                local_state = False
+            if local_state and local_user in user['name']:
+                locals.append(user)
+        shortened_dict = []
+        for user in locals:
+            shortened_dict.append({
+                "name": user["name"],
+                "fullName": user["fullName"],
+                "permissions": user["permissions"],
+                "email": user["email"]
+                }
+            )
+        for user in shortened_dict:
+            if user["name"] not in new_locals:
+                raise RuntimeError("All info was not changed")

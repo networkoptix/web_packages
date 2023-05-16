@@ -125,31 +125,6 @@ Check Special Hint
         Fail    msg=User type did not match any expected types
     END
 
-Verify Changed Info Via API
-    [Arguments]    ${new locals}    ${ip}    ${local user}=ocal+
-    @{locals} =    Create List
-    @{users} =    Get Users     ${server auth}    ${ip}
-    FOR    ${node}    IN    @{users}
-        ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ${local user}
-        ${isCloud key} =    Run Keyword and Return Status   Dictionary Should Contain Key    ${node}    isCloud
-        ${type key} =    Run Keyword and Return Status   Dictionary Should Contain Key    ${node}    type
-        IF      ${isCloud key}
-            ${local state} =    Set Variable If    ${node}[isCloud] == ${False}    ${True}    ${False}
-        ELSE IF    ${type key}
-            ${local state} =    Set Variable If    '${node}[type]' == 'cloud'    ${False}    ${True}
-        ELSE
-            ${local state} =    Set Variable    ${True}
-        END
-        Run Keyword If    ${local state} and ${name state}    Append To List    ${locals}    ${node}
-    END
-    FOR    ${user}    IN    @{locals}
-        Keep in Dictionary    ${user}    name    fullName    permissions    email
-    END
-    FOR    ${user}    IN    @{locals}
-        Dictionary Should Contain    ${new locals}    ${user}
-        #${n} =    Evaluate    ${n}+1
-    END
-
 Rename Local User
     [Arguments]    ${name}
     Click Element    ${EDITABLE TITLE}
