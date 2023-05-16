@@ -9,7 +9,7 @@ include:
 
 default:
   tags:
-    - service
+    - us-service
 
 variables:
   JENKINS_JOB_LOG: "true"
@@ -299,8 +299,6 @@ jenkings-builds:
   extends: .frontend-changes
   stage: build
   image: nx/ci
-  tags:
-  - ru-moscow
   artifacts:
     paths:
       - logs/**/*
