@@ -73,6 +73,7 @@ export enum ResourceType {
     SERVERS = 'servers',
     WEB_PAGE = 'webpage',
     WEB_PAGES = 'webpages',
+    IO_DEVICE = 'iodevice',
 }
 
 export interface BaseResourceNode {

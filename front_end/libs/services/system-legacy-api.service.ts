@@ -17,6 +17,7 @@ import {
     memoizeAsyncMedium,
     memoizeAsyncPersistent,
     defaultHashFunction,
+    memoizeAsyncShort,
 } from '@utils/memoize';
 import { startWithCache } from '@utils/start-with-cached';
 
@@ -994,7 +995,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
             .pipe(map(cameras => cameras[0]));
     }
 
-    @memoizeAsyncMedium
+    @memoizeAsyncShort
     getCamerasWithServerTime(): Observable<t.TimeAndCameras> {
         const routes = ['ec2/getTimeOfServers', 'ec2/getCamerasEx'];
         return this.getRequestAggregator<t.TimeAndCamerasResp>(routes)

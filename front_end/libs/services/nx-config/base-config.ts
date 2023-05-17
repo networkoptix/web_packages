@@ -181,6 +181,7 @@ const FeatureFlagKeys = [
     'restCookieLogin',
     'crossTabSyncEnabled',
     'useAuthenticationInterceptor',
+    'layoutsIoDevices',
 ] as const;
 
 export type FeatureFlagType = typeof FeatureFlagKeys[number];

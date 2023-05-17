@@ -104,13 +104,14 @@
             @include mixins.ellipsis;
             display: flex;
 
-            &.selected {
-                background: var(--left-menu-l3-selected-bg);
-                color: var(--left-menu-l3-selected-color);
+            &.selected:not(:hover) {
+                span {
+                    color: var(--brand-core);
+                }
 
-                & .st0 {
-                    stroke: var(--left-menu-l3-selected-color);
-                    fill: var(--left-menu-l3-selected-color);
+                .st0 {
+                    fill: var(--brand-core);
+                    stroke: var(--brand-core)
                 }
             }
         }
@@ -505,10 +506,6 @@ iframe {
     &:hover .st1 {
         fill: var(--left-menu-l3-selected-bg);
     }
-
-    &.selected:not(:hover) .st1 {
-        fill: var(--left-menu-l3-selected-color);
-    }
 }
 
 .highlight-adding {
@@ -743,16 +740,6 @@ iframe {
 .offline:not(.selected) {
     span, svg-icon {
         opacity: 0.5;
-    }
-}
-
-.has-issue:not(.selected) {
-    span {
-        color: var(--brand-core);
-    }
-
-    .st0 {
-        fill: var(--brand-core);
     }
 }
 

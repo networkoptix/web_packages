@@ -26,6 +26,7 @@ import {
     from,
     of,
     throwError,
+    fromEvent,
 } from 'rxjs';
 import {
     distinctUntilChanged,
@@ -42,6 +43,7 @@ import {
     catchError,
     delay,
     retry,
+    delayWhen,
 } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 
@@ -180,6 +182,12 @@ export class NxLayoutGridComponent {
     }>();
 
     #lastWidth: number = Infinity;
+
+    mouseMoving$ = fromEvent(this.window.document, 'mousemove').pipe(
+        switchMap(() => of(false).pipe(delay(5000), startWith(true))),
+        distinctUntilChanged(),
+        shareReplay({ bufferSize: 1, refCount: false }),
+    );
 
     handleMenuClose = (): void => {
         this.layoutSettings.update(
@@ -491,7 +499,7 @@ export class NxLayoutGridComponent {
 
     LANG = staticLang;
     CONFIG: IConfig;
-    playable: string[] = ['online', 'recording'];
+    playable: string[] = ['online', 'recording', 'scheduled'];
 
     constructor(
         configService: NxConfigService,
@@ -758,7 +766,7 @@ export class NxLayoutGridComponent {
             }
 
             const isRotated = Boolean(
-                (rotation || item.details.parsedAddParams.rotation || 0) % 180,
+                (rotation ?? (item.details.parsedAddParams.rotation || 0)) % 180,
             );
 
             const aspect = isRotated ? 1 / item.aspectRatio : item.aspectRatio;
@@ -1079,11 +1087,19 @@ export class NxLayoutGridComponent {
     }
 
     updateCameraCredentials(system: NxSystem, camera: NxSystemCamera): void {
-        const cameraCredentialUpdateTimeout = 1500;
+        const firstCheckTimeout = 15 * 1000;
+        const cameraCredentialUpdateTimeout = 6000;
+        let firstCheck = true;
         const update = (): Promise<void> => {
             return of('')
                 .pipe(
-                    delay(cameraCredentialUpdateTimeout),
+                    delayWhen(() => {
+                        if (firstCheck) {
+                            firstCheck = false;
+                            return interval(firstCheckTimeout);
+                        }
+                        return interval(cameraCredentialUpdateTimeout);
+                    }),
                     switchMap(() =>
                         from(system.cameraManager.getCameras()).pipe(
                             switchMap(cameras => {
@@ -1110,9 +1126,7 @@ export class NxLayoutGridComponent {
                         ({ id }) => id === camera.id,
                     );
 
-                    camera.status = selectedCamera.status;
-
-                    if (camera.status === 'Unauthorized') {
+                    if (selectedCamera.status === 'Unauthorized') {
                         this.dialogsService.notify(
                             {
                                 value: staticLang.layouts.errors.unableToAuthorizeCamera,
@@ -1120,6 +1134,10 @@ export class NxLayoutGridComponent {
                             },
                             'warning',
                         );
+                    } else {
+                        this.layoutItemLookup[camera.id].details.online = true;
+                        this.layoutItemLookup[camera.id].details.unauthorized = false;
+                        this.layoutItemLookup[camera.id].details.status = selectedCamera.status;
                     }
                 });
         };

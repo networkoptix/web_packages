@@ -272,12 +272,7 @@
                         offline:
                             node.type !== RESOURCE_TYPE.LAYOUT &&
                             !node.details.unauthorized &&
-                            !node.details.online,
-                        'has-issue':
-                            node.type === RESOURCE_TYPE.CAMERA &&
-                            ['warning', 'unauthorized'].includes(
-                                errorIcons[node.details.id] || node.details.status
-                            )
+                            !node.details.online
                     }"
                     class="tooltip-offset-parent"
                 >
@@ -458,6 +453,7 @@
                             [ngStyle]="(collisions$ | async)[item.id] || item.renderConfig.child"
                         >
                             <header
+                                *ngIf="mouseMoving$ | async"
                                 cdkDragHandle
                                 [cdkDragHandleDisabled]="layout.locked"
                             >
@@ -615,8 +611,8 @@
                                     *ngIf="
                                         !errors[itemDetail.details.id] &&
                                             !itemDetail.details.unauthorized &&
-                                            (playable.includes(itemDetail.details.status) ||
-                                                itemDetail.details.online ||
+                                            ((itemDetail.details.online &&
+                                                playable.includes(itemDetail.details.status)) ||
                                                 itemDetail.type === RESOURCE_TYPE.WEB_PAGE);
                                         else showError
                                     "
@@ -631,6 +627,7 @@
                                             [camera]="itemDetail.details"
                                             [fullScreenTarget]="layoutItemWrapper"
                                             [pingServer]="pingServer(itemDetail.details)"
+                                            [showFullScreenButton]="mouseMoving$ | async"
                                             [rotation]="item.rotation"
                                             (showError)="handleVideoError(itemDetail, $event)"
                                             (showPtz)="showPtz.emit($event)"
@@ -726,6 +723,65 @@
                                                 frameBorder="0"
                                             ></iframe>
                                         </ng-container>
+                                    </ng-container>
+                                    <ng-container *ngSwitchCase="RESOURCE_TYPE.IO_DEVICE">
+                                        <div class="item-error">
+                                            <div class="item-error">
+                                                <ng-template #errorMsg>
+                                                    <h3 translate>
+                                                        IO Devices not currently supported
+                                                    </h3>
+                                                    <h4 translate>
+                                                        Support will be added in a future version of
+                                                        cloud layouts
+                                                    </h4>
+                                                </ng-template>
+                                                <ng-template #errorTooltip>
+                                                    <div class="tooltip-error-wrapper">
+                                                        <ng-container
+                                                            [ngTemplateOutlet]="errorMsg"
+                                                        ></ng-container>
+                                                    </div>
+                                                </ng-template>
+                                                <svg-icon
+                                                    *ngIf="
+                                                        dragContainer.getBoundingClientRect()
+                                                            .height - 16 as containerHeight
+                                                    "
+                                                    [nxTooltip]="
+                                                        item.renderConfig.showTooltip &&
+                                                        errorTooltip
+                                                    "
+                                                    nx-add-svg-src
+                                                    [svgStyle]="{
+                                                        'max-width.px':
+                                                            containerHeight < 64
+                                                                ? containerHeight
+                                                                : 64,
+                                                        'max-height.px':
+                                                            containerHeight < 64
+                                                                ? containerHeight
+                                                                : 64,
+                                                        'margin.px': '16',
+                                                        width: '100%',
+                                                        height: '100%'
+                                                    }"
+                                                    [src]="
+                                                        icons.dirNonStandardView +
+                                                        'placeholder_preview_alert.svg'
+                                                    "
+                                                >
+                                                </svg-icon>
+                                                <div
+                                                    *ngIf="!item.renderConfig.showTooltip"
+                                                    class="text-block"
+                                                >
+                                                    <ng-container
+                                                        [ngTemplateOutlet]="errorMsg"
+                                                    ></ng-container>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </ng-container>
                                     <ng-container *ngSwitchCaseDefault>
                                         <ng-container

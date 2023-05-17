@@ -78,6 +78,7 @@ class FLAGS(metaclass=_FlagType):
     layouts_timeline = ('Layouts Timeline', 'layoutsTimeline', '%LAYOUTS_TIMELINE_ENABLED%')
     layouts_ptz_control = ('Layouts PTZ Control', 'layoutsPtz', '%LAYOUTS_PTZ_ENABLED%')
     layouts_demo = ('Layouts Demo', 'layoutsDemo', '%LAYOUTS_DEMO_ENABLED%')
+    layouts_io_devices = ('Layouts IO Devices', 'layoutsIoDevices', '%LAYOUTS_IO_DEVICES_ENABLED%')
 
     use_json_rpc = ('Use Json Rpc', 'useJsonRpc', '%USE_JSON_RPC%')
 

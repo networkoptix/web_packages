@@ -222,21 +222,26 @@ export class NxLayoutViewComponent {
             ]): LayoutResourceTree => {
                 const aspectRatio = currentLayout?.cellAspectRatio || 0;
 
-                const excludeIoDevices = (camera: NxSystemCamera): boolean =>
-                    !camera.addParams.ioSettings;
-                const parsedCameras = cameras.filter(excludeIoDevices).reduce(
+                const isIoOnly = (camera: NxSystemCamera): boolean =>
+                    !(
+                        !!camera.addParams.mediaStreams ||
+                        !camera.addParams.ioSettings ||
+                        !JSON.parse(camera.addParams.ioSettings).length
+                    );
+                const parsedCameras = cameras.reduce(
                     (cameras, camera) => ({
                         ...cameras,
                         [camera.id]: {
-                            type: ResourceType.CAMERA,
+                            type: isIoOnly(camera) ? ResourceType.IO_DEVICE : ResourceType.CAMERA,
                             name: camera.name,
                             details: {
                                 ...camera,
                                 status: camera.status.toLowerCase(),
                                 unauthorized: camera.status === 'unauthorized',
-                                online: ['online', 'recording', 'scheduled', 'scheduled'].includes(
-                                    camera.status,
-                                ),
+                                online:
+                                    servers.find(({ id }) => id === camera.parentId).status ===
+                                        'Online' &&
+                                    ['online', 'recording', 'scheduled'].includes(camera.status),
                                 resourceType:
                                     this.LANG.layouts.titles.resourceTypes[ResourceType.CAMERA],
                             },
@@ -308,7 +313,13 @@ export class NxLayoutViewComponent {
                     ),
                 };
                 const serversForTree = Object.values(parsedServers).sort(byName);
-                const camerasForTree = Object.values(parsedCameras).sort(byName);
+                const camerasForTree = Object.values(parsedCameras)
+                    .sort(byName)
+                    .filter(
+                        ({ type }) =>
+                            this.CONFIG.featureFlags.layoutsIoDevices ||
+                            type !== ResourceType.IO_DEVICE,
+                    );
                 const webPagesForTree = Object.values(parsedWebPages).sort(byName);
 
                 return {

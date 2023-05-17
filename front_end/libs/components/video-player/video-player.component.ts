@@ -6,7 +6,7 @@ import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ConnectionError, WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';
 import { BehaviorSubject, firstValueFrom, Observable, switchMap, tap } from 'rxjs';
 import { NxToastService } from '@dialogs/toast.service';
@@ -29,6 +29,7 @@ export class NxVideoPlayerComponent {
     @IBool() @Input() autoplay: CoercedBoolInput = false;
     @IBool() @Input() autopause: CoercedBoolInput = false;
     @Input() fullScreenTarget: HTMLElement;
+    @Input() showFullScreenButton: boolean = true;
 
     @Output() showPtz = new EventEmitter<NxSystemCamera>();
     @Output() showError = new EventEmitter<ConnectionError>();
@@ -155,7 +156,7 @@ export class NxVideoPlayerComponent {
             return this.showError.emit(ConnectionError.transcodingDisabled)
         }
 
-        this.reconnect$.pipe(
+        const stream$ = this.reconnect$.pipe(
             switchMap(this.pingServer),
             switchMap(() => WebRTCStreamManager.connect(this.camera.webRtcUrl, this.webRtcPlayerRef.nativeElement, hasSecondary)),
             tap(async ([stream, error]) => {
@@ -197,6 +198,25 @@ export class NxVideoPlayerComponent {
                 }
 
                 this.loading = false;
-            })).subscribe()
+            }));
+
+        /**
+         * Checks for authorization issues by fetching the preview image. Specifically for default password error.
+         */
+        this.camera.previewUrl
+            .pipe(
+                switchMap(async objectgUrl => {
+                    const text = await fetch(objectgUrl).then(r => r.blob()).then(b => b.text()).catch(() => null);
+                    return !!text
+                }),
+                switchMap(authorized => {
+                    if (authorized) {
+                        return stream$;
+                    }
+                    this.showError.emit(ConnectionError.authorization);
+                    return Promise.resolve();
+                }),
+                untilDestroyed(this)
+            ).subscribe();
     }
 }
