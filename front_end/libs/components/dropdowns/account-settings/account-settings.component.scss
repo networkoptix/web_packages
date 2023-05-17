@@ -44,7 +44,7 @@
                 bottom    : -1px !important;
             }
 
-            & > button {
+            & > button:not(.auth-section) {
                 height        : 100% !important;
                 border-radius : 4px;
                 background    : rgba(var(--btn-dropdown-toggle-active-bg), 0.75) !important;
@@ -139,6 +139,7 @@
         color            : var(--header-profile-color);
         min-height       : 24px;
         margin           : 0px 0px 10px auto;
+        border-radius: 0px !important;
 
         .user-section {
             display: flex;
@@ -178,7 +179,8 @@
             }
 
             .dropdown-arrow-wrapper {
-                bottom: 1px;
+                margin-left   : 2px;
+                bottom        : 1px;
                 width         : 20px;
                 border-radius : 4px;
                 height        : 20px;

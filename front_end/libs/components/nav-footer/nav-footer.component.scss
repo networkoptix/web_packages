@@ -16,7 +16,7 @@
     }
 
     .copyright {
-        color: var(--footer-link-color);
+    color: var(--footer-link-color);
         position: fixed;
         left: 0;
         margin: 6px auto auto 24px;
@@ -43,7 +43,12 @@
                 max-height: 25px;
                 margin-bottom: -10px;
                 flex-grow: 0;
-                row-gap: 4px;;
+                flex-shrink: 0;
+                row-gap: 4px;
+            }
+            @media screen and (max-width: 576px) {
+                max-width: calc(100% - 70px);
+                width: 90%;
             }
         }
 
