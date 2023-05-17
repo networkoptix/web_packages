@@ -46,6 +46,15 @@ export class NxNewHeaderComponent {
             );
         }
 
+        this.headerService.activeSystem$
+            .pipe(
+                untilDestroyed(this),
+                filter(activeSystem => !!activeSystem),
+            )
+            .subscribe(activeSystem => {
+                menusService.updateActiveSystemMenu(activeSystem);
+            });
+
         router.events
             .pipe(
                 filter(event => event instanceof NavigationEnd),
