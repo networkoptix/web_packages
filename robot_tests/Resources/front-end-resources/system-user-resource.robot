@@ -489,27 +489,6 @@ Get Local Users
     END
     [Return]    ${locals}
 
-Check User Full Name is None
-    [Arguments]    ${name}    ${check info}
-    FOR    ${user}    IN    @{check info}
-        ${full name} =    Set Variable If    '${name}' in '${user}[name]'    ${user}[fullName]
-        IF    '${full name}' != 'None'
-            Exit For Loop
-        END
-    END
-    Should Be Equal    ${full name}    ${None}
-
-
-Check User Email is None
-    [Arguments]    ${name}    ${check info}
-    FOR    ${user}    IN    @{check info}
-        ${email field} =    Set Variable If    'name' in '${user}[name]'    ${user}[email]
-        IF    '${email field}' != 'None'
-            Exit For Loop
-        END
-    END
-    Should Be Equal    ${email field}    ${None}
-
 Verify User is Deleted on Server
     [Arguments]    ${deleted user}    ${users}
         FOR    ${user}    IN    @{users}

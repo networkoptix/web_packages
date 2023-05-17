@@ -296,7 +296,7 @@ Force Tags        system    Threaded    users
         Log    Step 1
         Go to Users List
         Verify In Local Users UI    ${local users}    ${servers}[0][cloudOwner]
-        Click Element    //span[text()="Local+advancedViewer"]
+        Click Element    //span/nx-search-highlight[contains(text(),"Local+advancedViewer")]
         
         Log    Step 2
         Delete All Text     ${LOCAL USER NAME}
@@ -306,9 +306,8 @@ Force Tags        system    Threaded    users
         
         Log    Step 3
         @{check info}=    Get Users     ${servers}[0][localAuth]    https://${QA BURBANK IP}:${servers}[0][port][0]
-        ${full name}=   Check User Full Name is None    local+advancedviewer    ${check info}
+        Check User Full Name is None    Local+advancedViewer    ${check info}
     
-        Should Be Equal    ${full name}    ${None}   
         Exit For Loop If    '''${user}'''=='''admin'''    
         Log Out
     END
@@ -324,17 +323,18 @@ Force Tags        system    Threaded    users
         Log    Step 1
         Go to Users List
         Verify In Local Users UI    ${servers}[0][localUsers]    ${servers}[0][cloudOwner]
-        Click Element    //span[text()="Local+advancedViewer"]
+        Click Element    //span/nx-search-highlight[contains(text(),"Local+advancedViewer")]
         
         Log    Step 2
-        Delete All Text     ${LOCAL USER NAME}
+        Delete All Text     ${LOCAL USER EMAIL}
         Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${USER CANCEL}
         Click Button    ${ACCOUNT SAVE}
         Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
+        sleep    100
         
         Log    Step 3
-        @{check info} =    Get Users     ${servers}[0][localAuth]    https://${QA BURBANK IP}:${servers}[0][port][0]
-        Check User Email is None    local+advancedviewer    ${check info}
+        @{check info} =    Get Users     ${servers}[0][localAuth]    https://${QA BURBANK IP}:${servers}[0][port][0]\
+        Check User Email is None    Local+advancedViewer    ${check info}
         Exit For Loop If    '''${user}'''=='''admin'''    
         Log Out
     END

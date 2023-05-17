@@ -1007,3 +1007,13 @@ class GenericKeywords(object):
         for user in shortened_dict:
             if user["name"] not in new_locals:
                 raise RuntimeError("All info was not changed")
+
+    @keyword
+    def check_user_full_name_is_none(self, name, check_info):
+        if not any(name in user["name"] and user["fullName"] == '' for user in check_info):
+            raise RuntimeError(f"User with name {name} does not exist or does not have an empty fullName.")
+
+    @keyword
+    def check_user_email_is_none(self, name, check_info):
+        if not any(name in user["name"] and user["email"] == '' for user in check_info):
+            raise RuntimeError(f"User with name {name} does not exist or does not have an empty email.")
