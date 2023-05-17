@@ -283,7 +283,7 @@
         "name": "Privacy",
         "display_name": "Privacy",
         "url": "%PRIVACY_LINK%",
-        "new_window": false,
+        "new_window": true,
         "icon": "",
         "authentication": "both",
         "enabled": true
