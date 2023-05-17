@@ -1007,7 +1007,74 @@ class GenericKeywords(object):
         for user in shortened_dict:
             if user["name"] not in new_locals:
                 raise RuntimeError("All info was not changed")
+    
+    @keyword
+    def reset_local_users(self, auth, token, server, local_user='local+', password='BASE PASSWORD'):
+        locals_list = []
+        local_users = list(BuiltIn().get_variable_value("${role_names}").keys())
+        users = self.server_api.get_users(auth, server)
+        local_state = True
+        for user in users:
+            if user.get("isCloud") is False:
+                local_state = False
+            elif user.get("type") == "cloud":
+                local_state = False
+            if local_state and local_user in user['name']:
+                locals_list.append(user)
 
+        if len(locals_list) == 5:
+            self.reset_local_users_API(locals_list, token, server)
+        else:
+            self.create_new_local_users(
+                len(locals_list), 
+                auth, 
+                server, 
+                token, 
+                local_users, 
+                locals_list, 
+                password
+                )
+
+        return local_users
+    
+    @keyword
+    def reset_local_users_API(self, locals, token, server):
+        for user in locals:
+            name = user['name'].replace("_changed", "")
+            user_type = name[6:]
+            if user_type == 'cloudadmin':
+                user_type = 'cloudAdmin'
+            elif user_type == 'liveviewer':
+                user_type = 'liveViewer'
+            elif user_type == 'advancedviewer':
+                user_type = 'advancedViewer'
+            
+            self.server_api.save_user(
+                token,
+                server,
+                f"Local+{user_type}",
+                BuiltIn().get_variable_value("${permissions}")[user_type],
+                f"noptixautoqa+local_{user_type}@gmail.com",
+                "Local User",
+                BuiltIn().get_variable_value("${BASE_PASSWORD}"),
+                userId=user['id'],
+                isCloud=False,
+                patch=True
+            )
+            
+    @keyword
+    def create_new_local_users(self, count, auth, server, token, local_users, locals_list, password):
+        if count == 0:
+            self.create_local_users_via_api(token, server, local_users, password)
+        else:
+            self.delete_all_local_users_via_API(token, server, locals_list)
+            self.create_local_users_via_api(token, server, local_users, password)
+    
+    @keyword
+    def delete_all_local_users_via_API(self, token, server, locals_list):
+        for user in locals_list:
+            self.server_api.remove_user(token, server, user['id'])
+    
     @keyword
     def check_user_full_name_is_none(self, name, check_info):
         if not any(name in user["name"] and user["fullName"] == '' for user in check_info):

@@ -281,60 +281,6 @@ Modify All Local User Info
 	&{new local} =    Create Dictionary    email=${new local user email}    fullName=${new full name}    permissions=${permissions}[${reverse permission}]
     [Return]    ${new local}
 
-Reset Local Users
-    [Arguments]     ${auth}    ${token}   ${server}    ${local user}=ocal+    ${password}=${BASE PASSWORD}
-    @{locals} =    Create List
-    @{local users} =    Get Dictionary Keys    ${role names}
-    @{users} =    Get Users     ${auth}    ${server}
-    FOR    ${node}    IN    @{users}
-        ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ${local user}
-        ${isCloud key} =    Run Keyword and Return Status   Dictionary Should Contain Key    ${node}    isCloud
-        ${type key} =    Run Keyword and Return Status   Dictionary Should Contain Key    ${node}    type
-        IF      ${isCloud key}
-            ${local state} =    Set Variable If    ${node}[isCloud] == ${False}    ${True}    ${False}
-        ELSE IF    ${type key}
-            ${local state} =    Set Variable If    '${node}[type]' == 'cloud'    ${False}    ${True}
-        ELSE
-            ${local state} =    Set Variable    ${True}
-        END
-        Run Keyword If    ${local state} and ${name state}    Append To List    ${locals}    ${node}
-    END
-    ${count} =    Get Length    ${locals}
-    ${status} =    Run Keyword And Return Status    Should Be Equal as Numbers    ${count}    5
-    IF    ${status}==${true}
-        Reset Local Users API    ${locals}    ${token}    ${server}
-    ELSE
-        Create New Local Users    ${count}    ${auth}    ${server}   ${token}  ${local users}    ${locals}     ${password}
-    END
-    [Return]    ${local users}
-
-Create New Local Users
-    [Arguments]    ${count}    ${auth}    ${server}    ${token}   ${local users}    ${locals}    ${password}
-    IF    ${count}==0
-        Create Local Users via API    ${token}    ${server}    ${local users}    ${password}
-    ELSE
-        Delete All Local Users via API    ${token}    ${server}    ${locals}
-        Create Local Users via API    ${token}    ${server}    ${local users}    ${password}
-    END
-
-Delete All Local Users via API
-    [Arguments]    ${token}    ${server}    ${locals}
-    FOR    ${user}    IN    @{locals}
-        Remove User    ${token}    ${server}    ${user}[id]
-    END
-
-Reset Local Users API
-    [Arguments]    ${locals}    ${token}    ${server}
-    FOR    ${user}    IN    @{locals}
-        ${name} =    Remove String    ${user}[name]    _changed
-        ${variable} =    Get Substring    ${name}    6
-        ${variable} =    Set Variable If    '${variable}' == 'cloudadmin'    cloudAdmin
-        ...    '${variable}' == 'liveviewer'    liveViewer
-        ...    '${variable}' == 'advancedviewer'    advancedViewer
-        ...    ${variable}
-        Save User    ${token}    ${server}    Local+${variable}    ${permissions}[${variable}]    noptixautoqa+local_${variable}@gmail.com    Local User    ${BASE PASSWORD}    userId=${user}[id]    isCloud=${False}   patch=${True}
-    END
-
 Check Special Hints
     FOR    ${type}    IN    @{USER TYPE LIST}
         IF    "${type}"!="${OWNER TEXT}"

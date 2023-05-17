@@ -162,7 +162,7 @@ Force Tags        system    Threaded    users
 
 34. Adding New Local User Appears on Cloud Portal
     [Tags]    C76237    local_user    webadmin    cloud
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${servers}[0][cloudOwner]    ${servers}[0][cloudUsers][cloudAdmin]
+    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${servers}[0][cloudOwner]
     ...    ELSE    Create List    ${servers}[0][cloudOwner]    ${servers}[0][cloudUsers][cloudAdmin]    ${servers}[0][localUsers][cloudAdmin][login]    admin
     FOR    ${user}    IN    @{list}
         @{locals}=   Get Local Users
