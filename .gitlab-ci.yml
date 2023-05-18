@@ -14,6 +14,7 @@ default:
 variables:
   JENKINS_JOB_LOG: "true"
   JUNKSHOP_ENABLED: "false"
+  JENKINS_URL: "https://jenkins.us.nxteam.dev"
 
 workflow:
   rules:
