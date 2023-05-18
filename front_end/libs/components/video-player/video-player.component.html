@@ -5,13 +5,6 @@
     [nxRotate]="rotation"
 ></video>
 
-<img
-    #posterImage
-    [nxRotate]="rotation"
-    [skipResize]="true"
-    [src]="poster"
-/>
-
 <nx-pre-loader
     *ngIf="
         !error && (loading || lostConnection || webRtcPlayer.paused || !webRtcPlayer.currentTime)

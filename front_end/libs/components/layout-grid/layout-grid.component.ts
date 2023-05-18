@@ -68,7 +68,7 @@ import { ViewportBreakpoints } from '@styles/theme-variables-common';
 import { cleanId, pickFrom } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
-import type {
+import {
     BaseResourceNode,
     LayoutRenderConfig,
     LayoutResourceTree,
@@ -76,13 +76,15 @@ import type {
     ParsedLayout,
     ParsedLayoutItem,
     ParsedLayoutItems,
+    PlaceholderState,
     Point,
     Position,
     ResourceNode,
     Setting,
     Size,
+    ResourceType,
+    PlaceholderClasses,
 } from './layout-grid.types';
-import { ResourceType } from './layout-grid.types';
 
 const SETTINGS_CONFIG: Setting[] = [
     { label: 'Layout', type: 'heading' },
@@ -594,7 +596,7 @@ export class NxLayoutGridComponent {
             this.additionalErrorMessages[id] = message;
         }
         if (!loaded) {
-            this.errors[id] = ResourceType.WEB_PAGE;
+            this.errors[id] = `${ResourceType.WEB_PAGE}_error`;
         } else if (id in this.additionalErrorMessages) {
             delete this.additionalErrorMessages[id];
         }
@@ -689,6 +691,99 @@ export class NxLayoutGridComponent {
         return { x: width * scale - width, y: height * scale - height, scale };
     };
 
+    PLACEHOLDER_STATE = PlaceholderState;
+
+    updatePlaceholderConfig = (
+        { width, height }: Size,
+        { renderConfig, id }: ParsedLayoutItem,
+        status: string,
+    ): void => {
+        const constraint = Math.min(width, height);
+        const hasAdditionalMessage = Boolean(
+            this.additionalErrorMessages[this.layoutItemLookup[id]?.details.id || ''] ||
+                this.LANG.layouts.additionalErrorMessages[status],
+        );
+        const iconSizeConfigs: {
+            minContainer: number;
+            maxSize: number;
+            padding: number;
+            minTitleHeight: number;
+            titleSize: number;
+            minAdditionalHeight: number;
+            additionalSize: number;
+            placeholderClass: `${PlaceholderClasses}`;
+        }[] = [
+            {
+                minContainer: 288,
+                maxSize: 300,
+                padding: 48,
+                minTitleHeight: 0,
+                titleSize: 36,
+                minAdditionalHeight: 348,
+                additionalSize: 26,
+                placeholderClass: PlaceholderClasses.LARGE,
+            },
+            {
+                minContainer: 144,
+                maxSize: 180,
+                padding: 24,
+                minTitleHeight: 180,
+                titleSize: 28,
+                minAdditionalHeight: 232,
+                additionalSize: 22,
+                placeholderClass: PlaceholderClasses.MEDIUM,
+            },
+            {
+                minContainer: 0,
+                maxSize: 108,
+                padding: 12,
+                minTitleHeight: Infinity,
+                titleSize: 24,
+                minAdditionalHeight: Infinity,
+                additionalSize: 18,
+                placeholderClass: PlaceholderClasses.SMALL,
+            },
+        ];
+
+        const config = iconSizeConfigs.find(({ minContainer }) => constraint >= minContainer);
+
+        const getPlaceholderState = (height: number): PlaceholderState => {
+            if (
+                height > (hasAdditionalMessage ? config.minAdditionalHeight : config.minTitleHeight)
+            ) {
+                return PlaceholderState.FULL;
+            }
+
+            if (height > config.minTitleHeight) {
+                return PlaceholderState.WITH_TITLE;
+            }
+
+            return PlaceholderState.ICON_ONLY;
+        };
+
+        const getSizeOffset = (placeholderState: PlaceholderState): number => {
+            let baseSize = config.padding * 2;
+
+            if (placeholderState === PlaceholderState.FULL) {
+                baseSize += config.additionalSize;
+            }
+
+            if (placeholderState >= PlaceholderState.WITH_TITLE) {
+                baseSize += config.titleSize;
+            }
+
+            return baseSize;
+        };
+        renderConfig.placeholderClass = config.placeholderClass;
+        renderConfig.placeholderState = getPlaceholderState(height);
+        renderConfig.hasSecondaryPanel = renderConfig.placeholderState !== PlaceholderState.FULL;
+        renderConfig.maxPlaceholderSize = Math.min(
+            config.maxSize,
+            constraint - getSizeOffset(renderConfig.placeholderState),
+        );
+        this.cd.detectChanges();
+    };
+
     generateItemRenderConfig =
         ({ spacing, aspectRatio, origin }: LayoutRenderConfig) =>
         item => {
@@ -702,6 +797,8 @@ export class NxLayoutGridComponent {
                 'grid-column': `${calcX(left)} / ${calcX(right)}`,
                 'grid-row': `${calcY(top)} / ${calcY(bottom)}`,
                 aspect: aspectRatio,
+                placeholderState: PlaceholderState.NONE,
+                maxPlaceholderSize: 300,
             };
             return {
                 ...item,
@@ -773,8 +870,8 @@ export class NxLayoutGridComponent {
 
             const tooWide = width > height * aspect;
             const clampTo = tooWide
-                ? { 'max-width': `${height * aspect}px` }
-                : { 'max-height': `${width / aspect}px` };
+                ? { 'max-width': `${height * aspect}px`, 'max-height': 'unset' }
+                : { 'max-height': `${width / aspect}px`, 'max-width': 'unset' };
 
             renderConfig.child = {
                 ...renderConfig.child,

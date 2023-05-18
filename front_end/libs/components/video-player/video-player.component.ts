@@ -11,6 +11,11 @@ import { ConnectionError, WebRTCStreamManager } from '@openLibs/webrtc-stream-ma
 import { BehaviorSubject, firstValueFrom, Observable, switchMap, tap } from 'rxjs';
 import { NxToastService } from '@dialogs/toast.service';
 import staticLang from '@common/language/language_i18n_static.json';
+import { LayoutItem } from '@services/system-api.types';
+
+type DrawImagePartialTuple = [number, number, number, number];
+
+type DrawImageFullTuple = [number, number, number, number, number, number, number, number];
 
 @UntilDestroy()
 @Component({
@@ -30,12 +35,12 @@ export class NxVideoPlayerComponent {
     @IBool() @Input() autopause: CoercedBoolInput = false;
     @Input() fullScreenTarget: HTMLElement;
     @Input() showFullScreenButton: boolean = true;
+    @Input() zoom: Pick<LayoutItem, 'zoomTop' | 'zoomRight' | 'zoomBottom' | 'zoomLeft'>;
 
     @Output() showPtz = new EventEmitter<NxSystemCamera>();
     @Output() showError = new EventEmitter<ConnectionError>();
 
     connectionEstablished: boolean;
-    @ViewChild('posterImage') posterImageRef: ElementRef<HTMLImageElement>;
     @ViewChild('webRtcPlayer') webRtcPlayerRef: ElementRef<HTMLVideoElement>;
     @HostBinding('class') get class() {
         if (document.fullscreenElement === this.fullScreenTarget) {
@@ -69,40 +74,6 @@ export class NxVideoPlayerComponent {
             this.elRef.nativeElement.style.maxHeight = `${100 / aspect}vw`
             this.elRef.nativeElement.style.maxWidth = `${100 * aspect}vh`
             this.fullScreenTarget.requestFullscreen({ navigationUI: 'hide' })
-        }
-    }
-
-    handleLoad(success = false): void {
-        this.posterFailures = success ? 0 : this.posterFailures + 1
-    }
-
-    poster = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
-
-    updatePosterSize = (): void => {
-        this.posterImageRef.nativeElement.style.maxWidth = `${Math.round(this.webRtcPlayerRef.nativeElement.scrollWidth)}px`;
-        this.posterImageRef.nativeElement.style.maxHeight = `${Math.round(this.webRtcPlayerRef.nativeElement.scrollHeight)}px`;
-    }
-
-    updatePoster = async (): Promise<void> => {
-        if (!this.webRtcPlayerRef || this.webRtcPlayerRef.nativeElement.videoWidth < 32) {
-            return;
-        }
-
-        const canvas = document.createElement('canvas');
-        canvas.width = this.webRtcPlayerRef.nativeElement.videoWidth;
-        canvas.height = this.webRtcPlayerRef.nativeElement.videoHeight;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(this.webRtcPlayerRef.nativeElement, 0, 0, canvas.width, canvas.height);
-        const dataUrl = canvas.toDataURL();
-
-        const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
-        let allBlack = data.every(v => v === 0);
-
-        if (!allBlack && dataUrl !== 'data:,') {
-            this.poster = dataUrl;
-            this.updatePosterSize()
-            await new Promise(resolve => this.posterImageRef.nativeElement.onload = resolve)
         }
     }
 
@@ -142,8 +113,59 @@ export class NxVideoPlayerComponent {
         return this._queuedReconnect;
     }
 
-    ngOnInit(): void {
-        this.handleLoad();
+    calculateCropParams = (drawParams: DrawImagePartialTuple): DrawImagePartialTuple => {
+        const { zoomTop, zoomRight, zoomBottom, zoomLeft } = this.zoom || {};
+        const [_x, _y, width, height] = drawParams;
+
+        if ([zoomTop, zoomRight, zoomBottom, zoomLeft].some(Boolean)) {
+            const zoomHeight = (zoomBottom - zoomTop) * height;
+            const zoomWidth = (zoomRight - zoomLeft) * width;
+            const y = height * zoomTop;
+            const x = width * zoomLeft;
+            return [x, y, zoomWidth, zoomHeight];
+        }
+
+        return drawParams;
+    }
+
+    zoomStreamCleanup: () => void;
+
+    zoomStream = async (stream: MediaStream): Promise<MediaStream> => {
+        this.zoomStreamCleanup?.();
+
+        const video = this.document.createElement('video');
+        video.srcObject = stream;
+        video.muted = true;
+        video.play();
+        const canvas = this.document.createElement('canvas');
+
+        this.zoomStreamCleanup = () => {
+            stream.getTracks().forEach(track => track.stop());
+        }
+
+        await new Promise(resolve => {
+            video.onplaying = () => {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                const drawParams: DrawImagePartialTuple = [0, 0, canvas.width, canvas.height];
+                const cropParams: DrawImagePartialTuple = this.calculateCropParams(drawParams);
+                const ctx = canvas.getContext('2d');
+
+                const updateFrame = (now?: number, metadata?: { mediaTime: number }) => {
+                    if (!metadata || metadata.mediaTime > 1) {
+                        const drawImageParams: DrawImageFullTuple = [...cropParams, ...drawParams];
+                        ctx.drawImage(video, ...drawImageParams);
+                        resolve(null);
+                    }
+                    // @ts-expect-error
+                    video.requestVideoFrameCallback(updateFrame);
+                }
+
+                updateFrame();
+            }
+        })
+
+        return canvas.captureStream();
     }
 
     ngAfterViewInit(): void {
@@ -160,14 +182,8 @@ export class NxVideoPlayerComponent {
             switchMap(this.pingServer),
             switchMap(() => WebRTCStreamManager.connect(this.camera.webRtcUrl, this.webRtcPlayerRef.nativeElement, hasSecondary)),
             tap(async ([stream, error]) => {
-                await this.updatePoster();
-
-                if (this.poster) {
-                    this.posterImageRef.nativeElement.style.zIndex = '2';
-                }
-
                 if (stream) {
-                    this.webRtcPlayerRef.nativeElement.srcObject = stream;
+                    this.webRtcPlayerRef.nativeElement.srcObject = await this.zoomStream(stream);
                     this.webRtcPlayerRef.nativeElement.muted = true;
                     this.webRtcPlayerRef.nativeElement.autoplay = true;
 
@@ -175,7 +191,6 @@ export class NxVideoPlayerComponent {
                         await new Promise(resolve => setTimeout(resolve, 100));
                     }
 
-                    this.posterImageRef.nativeElement.style.zIndex = '0';
                     this.connectionEstablished = true;
 
                     if (this.lostConnection) {
@@ -207,7 +222,7 @@ export class NxVideoPlayerComponent {
             .pipe(
                 switchMap(async objectgUrl => {
                     const text = await fetch(objectgUrl).then(r => r.blob()).then(b => b.text()).catch(() => null);
-                    return !!text
+                    return text !== 'unauthorized';
                 }),
                 switchMap(authorized => {
                     if (authorized) {

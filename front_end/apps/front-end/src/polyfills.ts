@@ -4,6 +4,8 @@ import { environment } from '@environments/environment';
 
 import 'zone.js';
 
+import 'rvfc-polyfill';
+
 if (!Element.prototype.matches) {
     Element.prototype.matches = Element.prototype.webkitMatchesSelector;
 }

@@ -186,6 +186,8 @@ export class NxLayoutViewComponent {
                             map(times =>
                                 cameras.map(({ status, ...camera }) => ({
                                     ...camera,
+                                    unauthorized: status === 'unauthorized',
+                                    online: ['online', 'recording', 'scheduled'].includes(status),
                                     status:
                                         ['recording', 'scheduled'].includes(status) ||
                                         !times.includes(camera.id)
@@ -236,12 +238,10 @@ export class NxLayoutViewComponent {
                             name: camera.name,
                             details: {
                                 ...camera,
-                                status: camera.status.toLowerCase(),
-                                unauthorized: camera.status === 'unauthorized',
                                 online:
+                                    camera.online &&
                                     servers.find(({ id }) => id === camera.parentId).status ===
-                                        'Online' &&
-                                    ['online', 'recording', 'scheduled'].includes(camera.status),
+                                        'Online',
                                 resourceType:
                                     this.LANG.layouts.titles.resourceTypes[ResourceType.CAMERA],
                             },

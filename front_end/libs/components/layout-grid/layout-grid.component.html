@@ -101,6 +101,7 @@
                             opacity: opacity,
                             display: opacity === '0' && preview && 'none'
                         }"
+                        svgClass="recording-icon"
                         [src]="icons.dirLayouts + node.type + '_' + node.details.status + '.svg'"
                     >
                     </svg-icon>
@@ -431,6 +432,10 @@
                         [style.transform]="(highlightState$ | async)?.[item.id]?.transform || 'translate(0, 0)'"
                         [style.transform-origin]="(highlightState$ | async)?.[item.id]?.transformOrigin || 'top left'"
                         class="layout-item-wrapper"
+                        [ngClass]="{
+                            'full-screen-wrapper':
+                                layoutItemWrapper === window.document.fullscreenElement
+                        }"
                         (resize)="
                             calculateItemSize($event, item, layoutItemLookup[item.resourceId])
                         "
@@ -517,6 +522,7 @@
                                                 ? itemDetail.details.status
                                                 : 'offline') as status
                                         "
+                                        (resize)="updatePlaceholderConfig($event, item, status)"
                                         (click)="
                                             itemDetail.type === RESOURCE_TYPE.CAMERA &&
                                                 system.userManager.permissions.editCameras &&
@@ -529,90 +535,94 @@
                                                 itemDetail.type === RESOURCE_TYPE.CAMERA &&
                                                 system.userManager.permissions.editCameras &&
                                                 (status === 'defaultPassword' ||
-                                                    itemDetail.details.unauthorized)
+                                                    itemDetail.details.unauthorized),
+                                            'has-secondary-panel':
+                                                item.renderConfig.hasSecondaryPanel,
+                                            small: item.renderConfig.placeholderClass === 'small',
+                                            medium: item.renderConfig.placeholderClass === 'medium',
+                                            large: item.renderConfig.placeholderClass === 'large'
                                         }"
                                         cdkDragHandle
                                         class="item-error drag-container"
                                     >
-                                        <div class="item-error">
-                                            <ng-template #errorMsg>
-                                                <h3>
-                                                    {{
-                                                        (itemDetail.type === RESOURCE_TYPE.CAMERA
-                                                            ? LANG.common.cameraStates
-                                                            : LANG.common.serverStates)[status] ||
-                                                            LANG.layouts.errors[status] ||
-                                                            status | translate
-                                                    }}
-                                                </h3>
-                                                <h4
-                                                    *ngIf="
-                                                        additionalErrorMessages[
-                                                            itemDetail.details.id
-                                                        ] as additionalMessage
-                                                    "
-                                                >
-                                                    {{ additionalMessage | nxTranslate }}
-                                                </h4>
-                                            </ng-template>
-                                            <ng-template #errorTooltip>
-                                                <div class="tooltip-error-wrapper">
-                                                    <ng-container
-                                                        [ngTemplateOutlet]="errorMsg"
-                                                    ></ng-container>
-                                                </div>
-                                            </ng-template>
-                                            <svg-icon
-                                                [nxTooltip]="
-                                                    item.renderConfig.showTooltip && errorTooltip
-                                                "
-                                                nx-add-svg-src
-                                                [svgStyle]="{
-                                                    'max-width.px': '64',
-                                                    'max-height.px': '64',
-                                                    'margin.px': '16',
-                                                    width: '100%',
-                                                    height: '100%'
-                                                }"
-                                                [src]="
-                                                    icons.dirLayouts +
-                                                    itemDetail.type +
-                                                    (itemDetail.type !== RESOURCE_TYPE.WEB_PAGE
-                                                        ? '_'
-                                                        : '') +
-                                                    ([
-                                                        'online',
-                                                        'offline',
-                                                        'unauthorized',
-                                                        'defaultPassword',
-                                                        'transcodingDisabled'
-                                                    ].includes(status)
-                                                        ? status
-                                                              .replace('defaultPassword', 'warning')
-                                                              .replace(
-                                                                  'transcodingDisabled',
-                                                                  'warning'
-                                                              )
-                                                        : itemDetail.type !== RESOURCE_TYPE.WEB_PAGE
-                                                        ? 'offline'
-                                                        : '') +
-                                                    '.svg'
-                                                "
-                                            >
-                                            </svg-icon>
-                                            <ng-container
-                                                *ngIf="!item.renderConfig.showTooltip"
-                                                [ngTemplateOutlet]="errorMsg"
-                                            ></ng-container>
-                                        </div>
+                                        <svg-icon
+                                            nx-add-svg-src
+                                            [ngClass]="{
+                                                'main-panel':
+                                                    item.renderConfig.placeholderState >=
+                                                    PLACEHOLDER_STATE.ICON_ONLY
+                                            }"
+                                            [src]="
+                                                icons.dirLayouts +
+                                                'placeholders/' +
+                                                ([
+                                                    'online',
+                                                    'offline',
+                                                    'unauthorized',
+                                                    'defaultPassword',
+                                                    'transcodingDisabled'
+                                                ].includes(status)
+                                                    ? status
+                                                          .replace('defaultPassword', 'alert')
+                                                          .replace(
+                                                              'transcodingDisabled',
+                                                              'disabled'
+                                                          )
+                                                    : ![
+                                                          RESOURCE_TYPE.WEB_PAGE,
+                                                          RESOURCE_TYPE.IO_DEVICE
+                                                      ].includes(itemDetail.type)
+                                                    ? 'offline'
+                                                    : status) +
+                                                '.svg'
+                                            "
+                                            [svgStyle]="{
+                                                'width.%': '100%',
+                                                'height.%': '100%',
+                                                'max-width.px':
+                                                    item.renderConfig.maxPlaceholderSize,
+                                                'max-height.px':
+                                                    item.renderConfig.maxPlaceholderSize
+                                            }"
+                                        >
+                                        </svg-icon>
+                                        <h3
+                                            [ngClass]="{
+                                                'main-panel':
+                                                    item.renderConfig.placeholderState >=
+                                                    PLACEHOLDER_STATE.WITH_TITLE
+                                            }"
+                                        >
+                                            {{
+                                                (itemDetail.type === RESOURCE_TYPE.CAMERA
+                                                    ? LANG.common.cameraStates
+                                                    : LANG.common.serverStates)[status] ||
+                                                    LANG.layouts.errors[status] ||
+                                                    status | translate
+                                            }}
+                                        </h3>
+                                        <h4
+                                            *ngIf="
+                                                additionalErrorMessages[itemDetail.details.id] ||
+                                                LANG.layouts.additionalErrorMessages[
+                                                    status
+                                                ] as additionalMessage
+                                            "
+                                            [ngClass]="{
+                                                'main-panel':
+                                                    item.renderConfig.placeholderState ===
+                                                    PLACEHOLDER_STATE.FULL
+                                            }"
+                                        >
+                                            {{ additionalMessage | nxTranslate }}
+                                        </h4>
                                     </div>
                                 </ng-template>
                                 <div
                                     *ngIf="
                                         !errors[itemDetail.details.id] &&
                                             !itemDetail.details.unauthorized &&
-                                            ((itemDetail.details.online &&
-                                                playable.includes(itemDetail.details.status)) ||
+                                            (itemDetail.details.online ||
                                                 itemDetail.type === RESOURCE_TYPE.WEB_PAGE);
                                         else showError
                                     "
@@ -631,6 +641,7 @@
                                             [rotation]="item.rotation"
                                             (showError)="handleVideoError(itemDetail, $event)"
                                             (showPtz)="showPtz.emit($event)"
+                                            [zoom]="item"
                                         >
                                         </nx-video-player>
                                     </ng-container>
@@ -643,70 +654,19 @@
                                         ></nx-monitoring-graph>
                                     </ng-container>
                                     <ng-container *ngSwitchCase="RESOURCE_TYPE.WEB_PAGE">
-                                        <ng-template #webpagesNotSupported>
-                                            <div class="item-error">
-                                                <div class="item-error">
-                                                    <ng-template #errorMsg>
-                                                        <h3 translate>
-                                                            Webpages not currently supported
-                                                        </h3>
-                                                        <h4 translate>
-                                                            Support will be added in a future
-                                                            version of cloud layouts
-                                                        </h4>
-                                                    </ng-template>
-                                                    <ng-template #errorTooltip>
-                                                        <div class="tooltip-error-wrapper">
-                                                            <ng-container
-                                                                [ngTemplateOutlet]="errorMsg"
-                                                            ></ng-container>
-                                                        </div>
-                                                    </ng-template>
-                                                    <svg-icon
-                                                        *ngIf="
-                                                            dragContainer.getBoundingClientRect()
-                                                                .height - 16 as containerHeight
-                                                        "
-                                                        [nxTooltip]="
-                                                            item.renderConfig.showTooltip &&
-                                                            errorTooltip
-                                                        "
-                                                        nx-add-svg-src
-                                                        [svgStyle]="{
-                                                            'max-width.px':
-                                                                containerHeight < 64
-                                                                    ? containerHeight
-                                                                    : 64,
-                                                            'max-height.px':
-                                                                containerHeight < 64
-                                                                    ? containerHeight
-                                                                    : 64,
-                                                            'margin.px': '16',
-                                                            width: '100%',
-                                                            height: '100%'
-                                                        }"
-                                                        [src]="
-                                                            icons.dirNonStandardView +
-                                                            'placeholder_preview_alert.svg'
-                                                        "
-                                                    >
-                                                    </svg-icon>
-                                                    <div
-                                                        *ngIf="!item.renderConfig.showTooltip"
-                                                        class="text-block"
-                                                    >
-                                                        <ng-container
-                                                            [ngTemplateOutlet]="errorMsg"
-                                                        ></ng-container>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        <ng-template #webPageDisabled>
+                                            <ng-container
+                                                *ngTemplateOutlet="
+                                                    showError;
+                                                    context: { status: RESOURCE_TYPE.WEB_PAGE }
+                                                "
+                                            ></ng-container>
                                         </ng-template>
                                         <ng-container
                                             *ngIf="
                                                 CONFIG.featureFlags.layoutsWebpages ||
                                                     CONFIG.featureFlags.layoutsDemo;
-                                                else webpagesNotSupported
+                                                else webPageDisabled
                                             "
                                         >
                                             <nx-pre-loader></nx-pre-loader>
@@ -725,63 +685,12 @@
                                         </ng-container>
                                     </ng-container>
                                     <ng-container *ngSwitchCase="RESOURCE_TYPE.IO_DEVICE">
-                                        <div class="item-error">
-                                            <div class="item-error">
-                                                <ng-template #errorMsg>
-                                                    <h3 translate>
-                                                        IO Devices not currently supported
-                                                    </h3>
-                                                    <h4 translate>
-                                                        Support will be added in a future version of
-                                                        cloud layouts
-                                                    </h4>
-                                                </ng-template>
-                                                <ng-template #errorTooltip>
-                                                    <div class="tooltip-error-wrapper">
-                                                        <ng-container
-                                                            [ngTemplateOutlet]="errorMsg"
-                                                        ></ng-container>
-                                                    </div>
-                                                </ng-template>
-                                                <svg-icon
-                                                    *ngIf="
-                                                        dragContainer.getBoundingClientRect()
-                                                            .height - 16 as containerHeight
-                                                    "
-                                                    [nxTooltip]="
-                                                        item.renderConfig.showTooltip &&
-                                                        errorTooltip
-                                                    "
-                                                    nx-add-svg-src
-                                                    [svgStyle]="{
-                                                        'max-width.px':
-                                                            containerHeight < 64
-                                                                ? containerHeight
-                                                                : 64,
-                                                        'max-height.px':
-                                                            containerHeight < 64
-                                                                ? containerHeight
-                                                                : 64,
-                                                        'margin.px': '16',
-                                                        width: '100%',
-                                                        height: '100%'
-                                                    }"
-                                                    [src]="
-                                                        icons.dirNonStandardView +
-                                                        'placeholder_preview_alert.svg'
-                                                    "
-                                                >
-                                                </svg-icon>
-                                                <div
-                                                    *ngIf="!item.renderConfig.showTooltip"
-                                                    class="text-block"
-                                                >
-                                                    <ng-container
-                                                        [ngTemplateOutlet]="errorMsg"
-                                                    ></ng-container>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <ng-container
+                                            *ngTemplateOutlet="
+                                                showError;
+                                                context: { status: RESOURCE_TYPE.IO_DEVICE }
+                                            "
+                                        ></ng-container>
                                     </ng-container>
                                     <ng-container *ngSwitchCaseDefault>
                                         <ng-container

@@ -3,6 +3,16 @@
 @use "bootstrap_utils" as bootstrap;
 @use "mixins";
 
+@keyframes fadein {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
 :host {
     width: 100%;
     height: 100%;
@@ -109,10 +119,13 @@
                     color: var(--brand-core);
                 }
 
-                .st0 {
-                    fill: var(--brand-core);
-                    stroke: var(--brand-core)
+                svg:not(.recording-icon) {
+                    .st0 {
+                        fill: var(--brand-core);
+                        stroke: var(--brand-core)
+                    }
                 }
+
             }
         }
 
@@ -300,27 +313,96 @@ cdk-tree,
         outline: 2px solid var(--new-brand-core);
     }
 
+    &:hover .item-error.has-secondary-panel {
+        padding-top: 16px;
+
+        & > {
+            :not(.main-panel) {
+                display: block !important;
+            }
+
+            .main-panel {
+                display: none !important;
+            }
+        }
+    }
+
     .item-error {
         display: flex;
         flex-direction: column;
-        flex-wrap: wrap;
         justify-content: center;
         align-items: center;
-        background: var(--header-bg);
+        background: var(--placeholder-background);
+        height: 100%;
 
-        &.has-action:hover {
-            cursor: pointer;
-            h3 {
-                text-decoration: underline;
+        &.has-secondary-panel > {
+            :not(.main-panel) {
+                display: none !important;
+            }
+
+            .main-panel {
+                display: block !important;
             }
         }
 
-        &>.item-error {
-            flex-direction: row;
+        & > * {
+            animation: fadein 250ms ease-out forwards;
+
+            &:not(:last-child) {
+                margin-bottom: 8px;
+            }
+        }
+
+
+        &.has-action:hover {
+            cursor: pointer;
+        }
+
+        .svg-wrapper {
+            flex: 1;
+        }
+
+        &.small {
+            h3 {
+                font-size: 14px !important;
+            }
+
+            h4 {
+                font-size: 10px !important;
+            }
+        }
+
+        &.medium {
+            h3 {
+                font-size: 18px !important;
+            }
+
+            h4 {
+                font-size: 14px !important;
+            }
+        }
+
+        &.large {
+            h3 {
+                font-size: 24px !important;
+            }
+
+            h4 {
+                font-size: 18px !important;
+            }
+        }
+
+        h3,
+        h4 {
+            flex: 0;
+            margin: 0;
+            padding: 0 8px;
+            font-family: var(--font-family-light);
         }
 
         h3 {
             text-align: center;
+            color: var(--error) !important;
         }
 
         h4 {
@@ -333,7 +415,9 @@ cdk-tree,
 }
 
 .tooltip-error-wrapper {
-    h3, h4 {
+
+    h3,
+    h4 {
         color: unset !important;
     }
 }
@@ -351,7 +435,6 @@ cdk-tree,
 }
 
 .locked {
-
     .layout-item,
     .layout-item-wrapper {
         outline: unset !important;
@@ -370,10 +453,7 @@ cdk-tree,
     align-items: center;
     margin: 1px;
     overflow: hidden;
-
-    &:not(.camera-layout-item) {
-        background: var(--header-bg)
-    }
+    background: var(--placeholder-background);
 
     &:hover {
         outline: 2px solid var(--border-color);
@@ -723,6 +803,10 @@ iframe {
     max-height: unset !important;
 }
 
+.full-screen-wrapper {
+    padding: 0 !important;
+}
+
 .tooltip-offset {
     &-parent {
         position: relative;
@@ -738,7 +822,9 @@ iframe {
 }
 
 .offline:not(.selected) {
-    span, svg-icon {
+
+    span,
+    svg-icon {
         opacity: 0.5;
     }
 }

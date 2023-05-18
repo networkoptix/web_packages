@@ -38,6 +38,19 @@ export interface ParsedLayout extends Layout {
     settings: Setting[];
 }
 
+export enum PlaceholderState {
+    NONE,
+    ICON_ONLY,
+    WITH_TITLE,
+    FULL,
+}
+
+export enum PlaceholderClasses {
+    SMALL = 'small',
+    MEDIUM = 'medium',
+    LARGE = 'large',
+}
+
 export interface LayoutItemRenderConfig {
     child?: {
         'max-height': string;
@@ -45,6 +58,10 @@ export interface LayoutItemRenderConfig {
     };
     aspect?: number;
     showTooltip: boolean;
+    placeholderState: PlaceholderState;
+    placeholderClass: `${PlaceholderClasses}`;
+    maxPlaceholderSize: number;
+    hasSecondaryPanel: boolean;
 }
 
 export interface ParsedLayoutItem extends LayoutItem {

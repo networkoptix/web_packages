@@ -94,7 +94,11 @@
         "pleaseAddNew": "Please add layout on thick client to view layouts",
         "statistics": "{resourceType} \"{name}\" Statistics",
         "additionalErrorMessages": {
-            "unreachable": "Can't connect to the camera. Please, make sure the server \"{serverName}\" has Internet access."
+            "unreachable": "Can't connect to the camera. Please, make sure the server \"{serverName}\" has Internet access.",
+            "webpage": "Support for webpages will be added in future releases.",
+            "iodevice": "Support for IO Devices will be added in future releases.",
+            "defaultPassword": "click to setup password",
+            "unauthorized": "click to setup credentials"
         },
         "titles": {
             "resourceTypes": {
@@ -185,7 +189,9 @@
             }
         },
         "errors": {
-            "webpage": "Error loading webpage",
+            "webpage": "WEBPAGES NOT SUPPORTED",
+            "iodevice": "IO DEVICES NOT SUPPORTED",
+            "webpage_error": "Error loading webpage",
             "unableToAuthorizeCamera": "Unable to authorize \"{name}\" camera"
         }
     },
@@ -404,7 +410,7 @@
             "offline": "OFFLINE",
             "ubuntuNX": "This browser does not support video from ARM-based servers. Please, use Chromium browser instead.",
             "unauthorized": "UNAUTHORIZED",
-            "defaultPassword": "Please set up camera password",
+            "defaultPassword": "PASSWORD REQUIRED",
             "websocket": "Can't connect to the camera",
             "unavailable": "UNAVAILABLE",
             "transcodingDisabled": "Transcoding for H265 streams disabled for 5.1 systems"

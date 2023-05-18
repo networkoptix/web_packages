@@ -1056,7 +1056,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         }
 
         return this.get(endpoint, data, { responseType: 'blob' }).pipe(
-            catchError(e => of(new Blob())),
+            catchError(e => of(new Blob(['unauthorized']))),
             map(blob => URL.createObjectURL(blob || new Blob())),
             share()
         );

@@ -164,6 +164,7 @@
     "ngx-webstorage": "9.0.0",
     "nx-open-web": "file:../open",
     "nx-open-web-candidate": "file:../open_candidate",
+    "rvfc-polyfill": "^1.0.6",
     "rxjs": "7.5.5",
     "safe-stable-stringify": "^2.4.2",
     "swagger-ui": "4.11",
