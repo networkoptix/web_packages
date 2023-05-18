@@ -19,56 +19,65 @@
         border-collapse: collapse;
         min-width: 100%;
         height: inherit;
-        grid-template-rows: auto 40px;
+        grid-template-rows: auto var(--new-table-row-height);
         //grid-template-areas:
         //    "header header header header"
         //    "main main . sidebar"
         //    "footer footer footer footer";
 
-        .header {
-            display: grid;
-            grid-template-rows: 40px;
-            border: 1px solid var(--border-color);
-            background-color: var(--card-header-bg);
-        }
-
-        .body {
-            position: relative;
-            display: grid;
-            grid-template-columns: 1fr;
-            //overflow: hidden;
-            border: 1px solid var(--border-color);
-            border-top: none;
-
-            .content {
-                z-index: 9;
-                //overflow-y: scroll;
-                background-color: var(--card-body-bg);
-            }
-
-            //.grid-background {
-            //    position: absolute;
-            //    top: 5px;
-            //    width: calc(100% - 8px); // account for scroll area
-            //    z-index: 1;
-            //    display: grid;
-            //    grid-template-columns: 50px repeat(4, 1fr) 32px;
-            //    grid-template-rows: repeat(50, 40px);
-            //    background-color: var(--card-body-bg);
-            //    border-bottom: 1px solid var(--border-color);
-            //
-            //    & > * {
-            //        border-bottom: 1px solid var(--border-color);
-            //        border-right: 1px solid var(--border-color);
-            //    }
-            //
-            //}
-        }
 
         .nx-new-table-horizontal-wrapper {
-            //grid-area: header;
+            overflow-x: scroll;
+            overflow-y: hidden;
 
-            .nx-new-table-wrapper {}
+            .nx-new-table-wrapper {
+                height: 100%;
+
+                .header {
+                    width: fit-content;
+                    display: grid;
+                    grid-template-rows: var(--new-table-header-height);
+                    border: 1px solid var(--border-color);
+                    background-color: var(--card-header-bg);
+                }
+
+                .body {
+                    position: relative;
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    //overflow: hidden;
+                    border: 1px solid var(--border-color);
+                    border-top: none;
+                    height: calc(100% - var(--new-table-row-height));
+                    overflow-x: hidden;
+                    overflow-y: scroll;
+                    width: fit-content;
+
+                    .content {
+                        z-index: 9;
+                        //overflow-y: scroll;
+                        background-color: var(--card-body-bg);
+                    }
+
+                    //.grid-background {
+                    //    position: absolute;
+                    //    top: 5px;
+                    //    width: calc(100% - 8px); // account for scroll area
+                    //    z-index: 1;
+                    //    display: grid;
+                    //    grid-template-columns: 50px repeat(4, 1fr) 32px;
+                    //    grid-template-rows: repeat(50, 40px);
+                    //    background-color: var(--card-body-bg);
+                    //    border-bottom: 1px solid var(--border-color);
+                    //
+                    //    & > * {
+                    //        border-bottom: 1px solid var(--border-color);
+                    //        border-right: 1px solid var(--border-color);
+                    //    }
+                    //
+                    //}
+                }
+            }
         }
 
         .footer {
@@ -85,14 +94,16 @@
         }
 
         .sort-svg {
-            width: 24px;
-            height: 24px;
             cursor: pointer;
-            display: block;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-left: 8px;
+            visibility: visible;
             opacity: 1;
 
             &:not(.sort-svg-asc, .sort-svg-desc) {
-                display: none;
+                visibility: hidden;
             }
 
             &.sort-svg-asc {

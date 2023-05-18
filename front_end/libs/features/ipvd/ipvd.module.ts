@@ -13,9 +13,9 @@ import { ContentBlockModule } from '@components/content-block/content-block.modu
 import { PaginatorModule } from '@components/paginator/paginator.module';
 import { SearchModule } from '@components/search/search.module';
 import { DirectivesModule } from '@directives/directives.module';
+import { NxCamerasTableComponent } from '@pages/ipvd/cam-components/cameras-table/cameras-table.component';
 
 import { BoolIconComponent } from './cam-components/bool-icon/bool-icon.component';
-import { CamTableComponent } from './cam-components/cam-table/cam-table.component';
 import { CamViewComponent } from './cam-components/cam-view/cam-view.component';
 import { CsvButtonComponent } from './cam-components/csv-button/csv-button.component';
 import { NxVendorListComponent } from './cam-components/vendor-list/vendor-list.component';
@@ -52,11 +52,11 @@ const appRoutes: Routes = [
     ],
     declarations: [
         NxIpvdComponent,
-        CamTableComponent,
         CamViewComponent,
         CsvButtonComponent,
         BoolIconComponent,
         NxVendorListComponent,
+        NxCamerasTableComponent,
     ],
     bootstrap: [],
     exports: [

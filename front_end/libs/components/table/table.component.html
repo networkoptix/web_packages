@@ -41,9 +41,13 @@
     *ngIf="data.length"
 >
     <div class="nx-new-table-horizontal-wrapper">
-        <div class="nx-new-table-table-wrapper">
+        <div
+            class="nx-new-table-wrapper"
+            (resize)="onResize($event)"
+        >
             <div
                 class="header"
+                [ngClass]="tableClasses"
                 [style.display]="'grid'"
                 [style.gridTemplateAreas]="template"
             >
@@ -55,14 +59,18 @@
                 ></ng-container>
             </div>
 
-            <div class="body">
+            <div
+                class="body"
+                #tableBodyContainer
+            >
                 <div class="content">
                     <div
                         *ngFor="let row of pagedItems"
                         class="big-row"
+                        [ngClass]="tableClasses"
                         [style.display]="'grid'"
                         [style.gridTemplateAreas]="template"
-                        (click)="onRowClick($event)"
+                        (click)="rowClick(row)"
                     >
                         <ng-container
                             *ngTemplateOutlet="
@@ -77,8 +85,6 @@
                 <!--        </div>-->
             </div>
         </div>
-
-        <!--        <div class="sidebar"></div>-->
     </div>
 
     <div class="footer">
@@ -103,8 +109,9 @@
                 </div>
 
                 <nx-paginator
+                    showPrevNext
                     [numPages]="numPages"
-                    [pagesToShow]="3"
+                    [pagesToShow]="4"
                     (onChange)="setPage($event)"
                 ></nx-paginator>
             </div>

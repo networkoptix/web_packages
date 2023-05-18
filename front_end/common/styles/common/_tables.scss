@@ -151,14 +151,19 @@
             }
 
             .head-title {
-                padding-right: 24px;
                 pointer-events: none;
+                max-width: calc(100% - 30px); // minus sort svg and padding
+                @include medium13nocolor;
+                color: var(--card-header-text) !important;
+                white-space: normal;
+                padding: .5rem 0;
+                text-transform: none;
             }
 
             .sort-svg {
-                position: absolute;
-                top: 8px;
-                right: 0;
+                //position: absolute;
+                //top: 8px;
+                //right: 0;
             }
         }
     }
@@ -179,6 +184,7 @@
             flex-wrap: wrap;
             align-content: center;
             justify-items: flex-start;
+            line-height: 1rem;
 
             svg-icon.icon-expand {
                 transform: rotate(-90deg);
@@ -221,11 +227,27 @@
 .cameras {
     .nx-new-table {
         .header {
-            grid-template-columns: repeat(2, 150px) repeat(2, 100px) repeat(9, 80px);
+            grid-template-columns: repeat(2, 150px) repeat(2, 100px) repeat(6, 80px) 88px;
+
+            &.analytics {
+                grid-template-columns: repeat(2, 150px) repeat(2, 100px) repeat(7, 80px) 98px;
+
+                &.service {
+                    grid-template-columns: repeat(2, 150px) repeat(2, 100px) repeat(7, 80px) 90px 80px 88px;
+                }
+            }
         }
         .big-row {
-            grid-template-columns: repeat(2, 150px) repeat(2, 100px) repeat(9, 80px);
+            grid-template-columns: repeat(2, 150px) repeat(2, 100px) repeat(7, 80px);
             grid-template-rows: 40px;
+
+            &.analytics {
+                grid-template-columns: repeat(2, 150px) repeat(2, 100px) repeat(7, 80px) 90px;
+
+                &.service {
+                    grid-template-columns: repeat(2, 150px) repeat(2, 100px) repeat(7, 80px) 90px 0px 80px 80px;
+                }
+            }
 
             & > div:last-child {
                 border-right: 1px solid var(--border-color);

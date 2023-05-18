@@ -16,6 +16,9 @@ html {
     --font-family-medium  : #{$font-family-medium};
     --font-family-light   : #{$font-family-light};
     --font-family-bold    : #{$font-family-bold};
+
+    --new-table-header-height: 48px;
+    --new-table-row-height: 40px;
 }
 
 // @import "_theme_variables_light";

@@ -78,6 +78,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
 
     @Output() onFocus = new EventEmitter<void>();
     @Output() onFocusOut = new EventEmitter<void>();
+    @Output() onExpand = new EventEmitter<boolean>();
 
     public numberFilters: number = 0;
     public filtersSelected: string = '';
@@ -238,6 +239,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     toggleAdvOptions(): void {
         this.showAdvancedOptions = !this.showAdvancedOptions;
         this.scrollMechanicsService.offsetSubject.next(this.showAdvancedOptions);
+        this.onExpand.emit(this.showAdvancedOptions);
     }
 
     generateFiltersSelectedLabel(): void {
@@ -297,7 +299,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
                 const label =
                     select.searchLabelSingular !== undefined
                         ? select.searchLabelSingular
-                        : `${select.singular || select.label} –`;
+                        : `${select.singular || select.label} – `;
 
                 const selectedLabel = select.items.find(
                     item => item.id === select.selected[0],

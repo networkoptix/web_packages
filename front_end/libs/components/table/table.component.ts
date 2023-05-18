@@ -10,18 +10,23 @@ import {
     Input,
     LOCALE_ID,
     OnChanges,
-    OnInit,
     Output,
     QueryList,
     Renderer2,
     TemplateRef,
+    ViewChild,
 } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { isEqual } from 'lodash-es';
 
 import staticLang from '@app/language/language_i18n_static.json';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
-// import { TData } from '@components/table/table.types';
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
+import { Size } from '@directives/resize/nx-resize.directive.types';
+import { IpvdParams } from '@pages/ipvd/ipvd.types';
+import { NxUriService } from '@services/uri.service';
+import { paramSortFunc } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
 /* USAGE
@@ -29,9 +34,11 @@ import { NgChanges } from '@utils/ng-changes';
     set-pagination                              // set pagination
     set-sorting                                 // set sorting
     set-rows                                    // allow row per page adjustment (dropdown)
+    set-rows-auto                               // set row per page auto adjustment
     set-rearrange                               // allow columns to be re-arranged
     [set-arrange]="id name login ..."           // external control of column arranging
     [rows-per-page]="[{name: '5', value: 5}]"
+    [set-sorting-default]="'vendor'"            // set default sorting on column ASC
     [set-row-expand]="subLevels"                // control if rows can be expanded
     (onRowExpand)="expandRow($event)"
     [data]='records'>
@@ -43,34 +50,45 @@ import { NgChanges } from '@utils/ng-changes';
 
 type Prop = [];
 
+const TABLE_MARGINS = 16;
+const ROW_HEIGHT = 40; // if needed a change - do it in theme_variable_common too
+
 @UntilDestroy()
 @Component({
     selector: 'nx-table',
     templateUrl: 'table.component.html',
     styleUrls: ['table.component.scss'],
 })
-export class NxBaseTableComponent<T> implements OnInit, AfterContentInit, OnChanges {
+export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
     @Input() data: T[];
 
     @IBool() @Input('set-pagination') setPagination: CoercedBoolInput;
     @IBool() @Input('set-rows') setRows: CoercedBoolInput;
+    @IBool() @Input('set-rows-auto') setAutoRows: CoercedBoolInput;
     @IBool() @Input('set-sorting') setSorting: CoercedBoolInput;
     @IBool() @Input('set-rearrange') setRearrange: CoercedBoolInput;
     @Input('set-arrange') setArrange: string[] = [];
     @Input('set-row-expand') setRowExpand: boolean = false;
-    @Input('rows-per-page') rowsPerPage: Array<number> = [5, 10, 20, 50];
+    @Input('rows-per-page') rowsPerPage: Array<number> = [10, 25, 50, 100];
+    @Input('set-sorting-default') defaultSort: Record<string, string>;
+    @Input('set-additional-classes') additionalClasses: string[];
 
     @Output() onRowExpand = new EventEmitter<string>();
+    @Output() onRowClick = new EventEmitter<T>();
 
     @ContentChild('header') header: TemplateRef<never>;
     @ContentChild('rows') rows: TemplateRef<never>;
 
     @ContentChildren('sortItem', { descendants: true }) sortableItems: QueryList<HTMLDivElement>;
 
+    @ViewChild('tableBodyContainer', { static: false })
+    private tableBodyContainer: ElementRef<HTMLDivElement>;
+
     LANG = staticLang;
 
     expandRowId: string;
 
+    params: Params;
     currentPage: number = 1;
     numPages: number;
     nDisplayed: string;
@@ -85,7 +103,16 @@ export class NxBaseTableComponent<T> implements OnInit, AfterContentInit, OnChan
     _headers: Prop = [];
     headers: Prop = [];
 
-    constructor(private renderer: Renderer2, @Inject(LOCALE_ID) private locale: string) {}
+    tableClasses: string;
+
+    constructor(
+        private renderer: Renderer2,
+        private route: ActivatedRoute,
+        private uri: NxUriService,
+        @Inject(LOCALE_ID) private locale: string,
+    ) {
+        this.params = this.route.snapshot.queryParams;
+    }
 
     private createTemplate(): void {
         this.template = this.setArrange?.length
@@ -108,23 +135,42 @@ export class NxBaseTableComponent<T> implements OnInit, AfterContentInit, OnChan
         this.createTemplate();
     }
 
-    ngOnInit(): void {
-        this.rowsPerPage.forEach(item => {
-            this.perPageOptions.push({ name: `${item}`, value: item });
-        });
+    initPageRows(): void {
+        if (this.setAutoRows && this.tableBodyContainer && this.data.length) {
+            const autoRows = Math.floor(
+                (this.tableBodyContainer?.nativeElement.clientHeight - TABLE_MARGINS) / ROW_HEIGHT,
+            );
+            this.perPageSelectedOption = { name: 'auto', value: autoRows };
+        } else {
+            this.rowsPerPage.forEach(item => {
+                this.perPageOptions.push({ name: `${item}`, value: item });
+            });
+            this.perPageOptions.push({ name: this.LANG.search.All, value: this.data.length });
+            this.perPageSelectedOption = this.perPageOptions[1]; // 10 items per page - we need to make it dynamic
+        }
+
+        this.numPages = Math.ceil(this.data.length / this.perPageSelectedOption.value);
+
+        this.sortElements(true);
+        this.setPage(this.currentPage);
     }
 
     ngOnChanges(changes: NgChanges<NxBaseTableComponent<T>>): void {
-        if (changes.data?.currentValue.length) {
-            this._headers = <Prop>Object.keys(this.data[0]);
-            this.headers = [...this._headers];
-            this.createTemplate();
+        if (changes.data) {
+            const { data } = changes;
+            if (
+                data.firstChange ||
+                (!data.firstChange && !isEqual(data.currentValue, data.previousValue))
+            ) {
+                this._headers = <Prop>Object.keys(this.data[0]);
+                this.headers = [...this._headers];
 
-            this.perPageOptions.push({ name: this.LANG.search.All, value: this.data.length });
-            this.perPageSelectedOption = this.perPageOptions[0];
+                this.createTemplate();
+            }
+        }
 
-            this.numPages = Math.ceil(this.data.length / this.perPageSelectedOption.value);
-            this.setPage(1);
+        if (changes.additionalClasses?.currentValue) {
+            this.tableClasses = this.additionalClasses.join(' ');
         }
     }
 
@@ -143,7 +189,29 @@ export class NxBaseTableComponent<T> implements OnInit, AfterContentInit, OnChan
                 });
     }
 
-    private toggleSort(param: string, sortType: DOMStringMap, keepURI?: boolean): void {
+    private sortElements(keepURI: boolean = false): void {
+        if (this.params.sortBy) {
+            const sortBy = this.params.sortBy.split(',');
+            this.sortOrderASC = sortBy[1] === 'ASC';
+
+            // adding class removes SVG ... need to investigate -- TT
+            // const elm = this.renderer.selectRootElement(`#${sortBy[0]} div`);
+            // this.renderer.addClass(elm, this.sortOrderASC ? 'sort-svg-asc' : 'sort-svg-desc');
+            this.toggleSort(sortBy[0], this.defaultSort.type, keepURI);
+        } else {
+            this.defaultSort && this.toggleSort(this.defaultSort.name, this.defaultSort.type, true);
+        }
+
+        const pageNum = this.params?.page ? Number(this.params.page) : 1;
+
+        this.setPage(pageNum);
+    }
+
+    onResize(event: Size): void {
+        event.height && this.initPageRows();
+    }
+
+    private toggleSort(param: string, sortType: string, keepURI?: boolean): void {
         let byParam: (a: T, b: T) => number;
 
         let dataParam = param;
@@ -154,14 +222,36 @@ export class NxBaseTableComponent<T> implements OnInit, AfterContentInit, OnChan
             }
         }
 
-        if (sortType.sortString !== undefined) {
-            const collator = new Intl.Collator(this.locale);
-            // Using collator object here for speed
-            // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/localeCompare#performance
-            byParam = (a, b) => {
-                const result = collator.compare(<string>a[dataParam], <string>b[dataParam]);
-                return this.sortOrderASC ? result : -result;
-            };
+        switch (sortType) {
+            case 'string':
+                const collator = new Intl.Collator(this.locale);
+                // Using collator object here for speed
+                // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/localeCompare#performance
+                byParam = (a, b) => {
+                    const result = collator.compare(<string>a[dataParam], <string>b[dataParam]);
+                    return this.sortOrderASC ? result : -result;
+                };
+                break;
+            case 'number':
+                byParam = paramSortFunc(elm => elm[param], this.sortOrderASC);
+                break;
+            case 'boolean':
+                byParam = paramSortFunc(elm => {
+                    if (elm[param] === null) {
+                        return 0;
+                    } else if (!elm[param]) {
+                        return 1;
+                    } else {
+                        return 2;
+                    }
+                }, this.sortOrderASC);
+                break;
+            case 'resolution': // IPVD special case => 1980x1200
+                byParam = paramSortFunc((elm: T): number => {
+                    const xy = elm[param].split('x');
+                    return parseInt(xy[0]) * parseInt(xy[1]);
+                }, this.sortOrderASC);
+                break;
         }
 
         this.data.sort(byParam);
@@ -178,7 +268,7 @@ export class NxBaseTableComponent<T> implements OnInit, AfterContentInit, OnChan
         this.renderer.removeClass(item, 'sort-svg-desc');
     }
 
-    private sortColumn(item: EventTarget | HTMLDivElement, sortType: DOMStringMap): void {
+    private sortColumn(item: EventTarget | HTMLDivElement, sortType: string): void {
         // @ts-expect-error type error
         const targetId = item.target?.id || item.id;
         let target = item;
@@ -202,10 +292,19 @@ export class NxBaseTableComponent<T> implements OnInit, AfterContentInit, OnChan
 
         this.renderer.addClass(target, this.sortOrderASC ? 'sort-svg-asc' : 'sort-svg-desc');
         this.toggleSort(targetId, sortType, false);
+
+        const queryParams: IpvdParams = {
+            page: undefined,
+            sortBy: `${targetId},${this.sortOrderASC ? 'ASC' : 'DESC'}`,
+        };
+
+        this.uri.updateURI('/ipvd', queryParams).catch(error => {
+            console.error(error);
+        });
     }
 
-    private createSortElement(id: string, sortType: DOMStringMap): HTMLDivElement {
-        if (!Object.keys(sortType).length) {
+    private createSortElement(id: string, sortType: string): HTMLDivElement {
+        if (!sortType) {
             console.info(
                 '¯\\_(ツ)_/¯ => Sorting enabled for column but no datatype is set for sorting',
             );
@@ -216,12 +315,16 @@ export class NxBaseTableComponent<T> implements OnInit, AfterContentInit, OnChan
         this.renderer.addClass(sort, 'sort-svg');
         this.renderer.setAttribute(sort, 'id', id);
 
-        sort.innerHTML = `<?xml version="1.0" encoding="utf-8"?>
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="6" y="7" width="12" height="2" style="fill: lightgray; stroke: none;"></rect>
-                  <rect x="6" y="11" width="8" height="2" style="fill: lightgray; stroke: none;"></rect>
-                  <rect x="6" y="15" width="4" height="2" style="fill: lightgray; stroke: none;"></rect>
-                </svg>`;
+        sort.innerHTML = `
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <style>
+                   path {
+                      fill: var(--card-support-svg-elem-bg);
+                   }
+                </style>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M2 3H14V5H2V3ZM2 7H10V9H2V7ZM6 11H2V13H6V11Z"/>
+            </svg>`;
+
         return sort;
     }
 
@@ -250,10 +353,10 @@ export class NxBaseTableComponent<T> implements OnInit, AfterContentInit, OnChan
                 'click',
                 $event =>
                     $event.target.children[id] &&
-                    this.sortColumn($event.target.children[id], item.nativeElement.dataset),
+                    this.sortColumn($event.target.children[id], item.nativeElement.dataset.sort),
             );
 
-            const sort = this.createSortElement(id, item.nativeElement.dataset);
+            const sort = this.createSortElement(id, item.nativeElement.dataset.sort);
             this.renderer.appendChild(item.nativeElement, sort);
         });
     }
@@ -289,12 +392,16 @@ export class NxBaseTableComponent<T> implements OnInit, AfterContentInit, OnChan
     //     return item ? item.id : undefined;
     // }
 
-    onRowClick(event: MouseEvent): void {
-        if (this.expandRowId === (event.target as HTMLTableElement).id || !this.setRowExpand) {
-            this.expandRowId = '';
-        } else {
-            this.expandRowId = (event.target as HTMLTableElement).id;
-        }
-        this.setRowExpand && this.onRowExpand.emit(this.expandRowId);
+    rowExpand(selected: T): void {
+        // if (this.expandRowId === selected.id || !this.setRowExpand) {
+        //     this.expandRowId = '';
+        // } else {
+        //     this.expandRowId = selected.id;
+        // }
+        // this.setRowExpand && this.onRowExpand.emit(this.expandRowId);
+    }
+
+    rowClick(selected: T): void {
+        this.onRowClick.emit(selected);
     }
 }

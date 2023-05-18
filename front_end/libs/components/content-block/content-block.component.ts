@@ -38,6 +38,7 @@ import { CoercedBoolInput, IBool } from '@decorators/ibool';
 })
 export class NxContentBlockComponent implements OnInit {
     @Input('type') type: string;
+    @IBool() @Input('auto-height') autoHeight: CoercedBoolInput;
     @IBool() @Input('fixed-height') fixedHeight: CoercedBoolInput;
     @IBool() @Input('hoverable') hoverable: CoercedBoolInput;
     @Input('header-style') headerStyle: string;

@@ -30,6 +30,12 @@
         border-bottom: 1px solid var(--border-color);
         position: relative;
 
+        &.sticky-top {
+            position: sticky;
+            top: 0;
+            z-index: 9;
+        }
+
         header h4 {
             margin: 0;
             width: 100%;

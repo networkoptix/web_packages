@@ -1,0 +1,4 @@
+<!-- not used as file but dynamically injected in nx-new-table -->
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M2 3H14V5H2V3ZM2 7H10V9H2V7ZM6 11H2V13H6V11Z" fill="#E1E7EA"/>
+</svg>

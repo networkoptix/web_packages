@@ -1,135 +1,160 @@
 <div
-    class="ipvd"
+    class="ipvd-grid"
+    [style.grid-template-rows]="templateRows"
     [ngClass]="{ extended: showAnalytics }"
 >
-    <h1
-        class="screen-reader-only"
-        translate
-    >
-        List of cameras by manufacturer and device type
-    </h1>
-    <div
-        class="row p-3 m-0"
-        [style.display]="mobileDetailMode ? 'none' : 'block'"
-        #searchContainer
-    >
-        <nx-search
-            name="filterModel"
-            [(ngModel)]="filterModel"
-            (ngModelChange)="modelChanged($event)"
-            [placeholder]="placeholder"
+    <div data-page-grid>
+        <h1
+            class="screen-reader-only"
+            translate
         >
-        </nx-search>
+            List of cameras by manufacturer and device type
+        </h1>
+        <div
+            class="row p-3 m-0"
+            [style.display]="mobileDetailMode ? 'none' : 'block'"
+            #searchContainer
+        >
+            <nx-search
+                name="filterModel"
+                [(ngModel)]="filterModel"
+                (ngModelChange)="modelChanged($event)"
+                (onExpand)="menuChanged($event)"
+                [placeholder]="placeholder"
+            >
+            </nx-search>
+        </div>
     </div>
 
     <nx-pre-loader *ngIf="!cameras.length"></nx-pre-loader>
 
-    <div class="row px-3 m-0 d-flex">
+    <div data-page-grid>
         <div
-            class="text-placeholder order-1 order-md-0 m-0 p-0 pr-2 col-md-7 col-xl-9"
-            *ngIf="!camerasTable.length && activeCamera"
+            class="row px-3 m-0"
+            *ngIf="vendors.length && !camerasTable.length && !noResult && hasNoSearch"
+        >
+            <nx-vendor-list
+                [vendors]="vendors"
+                [numCameras]="cameras.length"
+                [ngModel]="filterModel"
+                (ngModelChange)="modelChanged($event)"
+            >
+            </nx-vendor-list>
+            <div class="mt-3">
+                <p
+                    class="m-0"
+                    *ngIf="CONFIG.cloudCapabilities.feedbackEnabled"
+                    dir="auto"
+                >
+                    <ng-container
+                        *ngIf="LANG.ipvd.disclaimer | translate: disclaimerParams as disclaimer"
+                    >
+                        {{ disclaimer | translateCut: 0
+                        }}<span
+                            class="pseudo-anchor"
+                            (click)="openPageFeedback()"
+                            >{{ disclaimer | translateCut: 1 }}</span
+                        >{{ disclaimer | translateCut: 2 }}
+                        <!-- (0) ...Please -->
+                        <!-- (1) submit a request -->
+                        <!-- (2) for addional quesions/concerns... -->
+                    </ng-container>
+                </p>
+            </div>
+            <div class="row p-0 m-0">
+                <nx-footer></nx-footer>
+            </div>
+        </div>
+        <div
+            class="row px-3 m-0 mb-3 text-placeholder d-flex align-items-center"
+            *ngIf="noResult && !activeCamera"
             translate
         >
             Nothing Found
         </div>
+    </div>
 
-        <ng-container *ngIf="camerasTable.length">
-            <div
-                class="order-1 order-md-0 m-0 p-0"
-                #tableContainer
-                [ngClass]="{
-                    toggle: toggleCamview,
-                    'pr-2': toggleCamview,
-                    'col-12': !toggleCamview,
-                    'col-md-7 col-xl-9': toggleCamview
-                }"
-                [style.display]="mobileDetailMode ? 'none' : 'block'"
-            >
-                <nx-cam-table
-                    [elements]="camerasTable"
-                    [allowedParameters]="allowedParameters"
-                    [activeCamera]="activeCamera"
-                    [params]="params"
-                    (onFeedbackClick)="openPageFeedback()"
-                    (onRowClick)="activateCamera($event)"
-                >
-                </nx-cam-table>
-            </div>
-
-            <div
-                class="row m-0 pt-3 pb-3 pl-0"
-                [style.display]="!mobileDetailMode ? 'none' : 'block'"
-            >
-                <button
-                    class="btn btn-default btn-back"
-                    (click)="resetActiveCamera()"
-                >
-                    <svg-icon
-                        nx-add-svg-src
-                        [src]="icons.dir + 'arrow_back.svg'"
-                        [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-                    ></svg-icon>
-                    <span translate>All results</span>
-                </button>
-            </div>
-        </ng-container>
-
+    <div
+        data-page-grid
+        (resize)="onResize($event)"
+    >
         <div
-            class="order-0 order-md-1 pb-3 pl-0 pl-md-2 pr-0 col-12 col-md-5 col-xl-3"
-            *ngIf="activeCamera"
-            #viewContainer
+            #tableContainer
+            class="px-3 m-0 table-grid"
+            [style.grid-template-columns]="templateTableRows"
+            [style.max-width]="tableMaxWidth"
         >
-            <nx-cam-view
-                [activeCamera]="activeCamera"
-                (onCloseView)="resetActiveCamera()"
-                (onFeedbackClick)="openDeviceFeedback()"
-            >
-            </nx-cam-view>
-        </div>
-    </div>
-
-    <div
-        class="row px-3 m-0 mb-3 text-placeholder d-flex align-items-center"
-        *ngIf="noResult && !activeCamera"
-        translate
-    >
-        Nothing Found
-    </div>
-
-    <div
-        class="row px-3 m-0"
-        *ngIf="vendors.length && !camerasTable.length && !noResult && hasNoSearch"
-    >
-        <nx-vendor-list
-            [vendors]="vendors"
-            [numCameras]="cameras.length"
-            [ngModel]="filterModel"
-            (ngModelChange)="modelChanged($event)"
-        >
-        </nx-vendor-list>
-        <div>
-            <p
-                class="m-0"
-                *ngIf="CONFIG.cloudCapabilities.feedbackEnabled"
-                dir="auto"
-            >
-                <ng-container
-                    *ngIf="LANG.ipvd.disclaimer | translate: disclaimerParams as disclaimer"
+            <ng-container *ngIf="camerasTable.length">
+                <div
+                    [style.height.px]="tableHeight"
+                    [ngClass]="{
+                        toggle: toggleCamview
+                    }"
+                    [style.display]="mobileDetailMode ? 'none' : 'block'"
                 >
-                    {{ disclaimer | translateCut: 0
-                    }}<span
-                        class="pseudo-anchor"
-                        (click)="openPageFeedback()"
-                        >{{ disclaimer | translateCut: 1 }}</span
-                    >{{ disclaimer | translateCut: 2 }}
-                    <!-- (0) ...Please -->
-                    <!-- (1) submit a request -->
-                    <!-- (2) for addional quesions/concerns... -->
-                </ng-container>
-            </p>
-        </div>
-        <div class="row p-0 m-0">
-            <nx-footer></nx-footer>
+                    <nx-cameras-table
+                        [elements]="camerasTable"
+                        [allowedParameters]="allowedParameters"
+                        [activeCamera]="activeCamera"
+                        [params]="params"
+                        (onRowClick)="activateCamera($event)"
+                    ></nx-cameras-table>
+
+                    <div class="mt-3">
+                        <p
+                            class="m-0"
+                            *ngIf="CONFIG.cloudCapabilities.feedbackEnabled"
+                            dir="auto"
+                        >
+                            <ng-container
+                                *ngIf="
+                                    LANG.ipvd.disclaimer | translate: disclaimerParams as disclaimer
+                                "
+                            >
+                                {{ disclaimer | translateCut: 0
+                                }}<span
+                                    class="pseudo-anchor"
+                                    (click)="openPageFeedback()"
+                                    >{{ disclaimer | translateCut: 1 }}</span
+                                >{{ disclaimer | translateCut: 2 }}
+                                <!-- (0) ...Please -->
+                                <!-- (1) submit a request -->
+                                <!-- (2) for addional quesions/concerns... -->
+                            </ng-container>
+                        </p>
+                    </div>
+                </div>
+
+                <div
+                    class="m-0 pt-3 pb-3 pl-0"
+                    [style.display]="!mobileDetailMode ? 'none' : 'block'"
+                >
+                    <button
+                        class="btn btn-default btn-back"
+                        (click)="resetActiveCamera()"
+                    >
+                        <svg-icon
+                            nx-add-svg-src
+                            [src]="icons.dir + 'arrow_back.svg'"
+                            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                        ></svg-icon>
+                        <span translate>All results</span>
+                    </button>
+                </div>
+            </ng-container>
+
+            <!-- subtract footer padding -->
+            <div
+                [style.height.px]="tableHeight - 8"
+                *ngIf="activeCamera"
+            >
+                <nx-cam-view
+                    [activeCamera]="activeCamera"
+                    (onCloseView)="resetActiveCamera()"
+                    (onFeedbackClick)="openDeviceFeedback()"
+                >
+                </nx-cam-view>
+            </div>
         </div>
     </div>
 </div>

@@ -1011,7 +1011,7 @@
         "vendor": "Manufacturer",
         "sortKey": "",
         "topXByVolume": "Top {value} by volume:",
-        "disclaimer": "This list is limited to devices found on { vmsName } where users have allowed auto-reporting of device specs to { companyName }. No personal information is collected and each user remains completely anonymous. Please \u200B | submit a request | \u200B for additional questions/concerns regarding supported devices."
+        "disclaimer": "This list is limited to devices found on { vmsName } where users have allowed auto-reporting of device specifications to { companyName }. No personal information is collected and each user remains completely anonymous. Please \u200B | submit a request | \u200B for additional questions/concerns regarding supported devices."
     },
     "layoutAutosave": "Auto saving in { time } seconds...",
     "systemsCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}} found",

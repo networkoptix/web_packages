@@ -114,7 +114,7 @@ export class MessageModalContent extends ModalBase<DT['return']> implements OnIn
         this.account
             .get()
             .then(account => {
-                if (account) {
+                if (account.is_authenticated) {
                     this.userName = `${account.first_name} ${account.last_name}`;
                     this.userEmail = account.email;
                 }

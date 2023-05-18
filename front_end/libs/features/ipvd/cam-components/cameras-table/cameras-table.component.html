@@ -3,18 +3,24 @@
         class="cameras"
         set-pagination
         set-sorting
-        set-rows
+        set-rows-auto
+        [set-additional-classes]="tableClasses"
+        [set-sorting-default]="{ name: 'vendor', type: 'string' }"
         [set-arrange]="headerFlow"
-        [data]="elements"
+        [data]="showRecords"
+        (onRowClick)="onRowAction($event)"
     >
         <ng-template #header>
             <div
                 class="position-relative"
                 *ngFor="let head of showHeaders"
                 #sortItem
+                [attr.id]="head.name"
+                [attr.data-sort]="head.sort"
+                [style.justify-content]="head.align || 'flex-start'"
             >
                 <span
-                    class="head-title ellipsis"
+                    class="head-title ellipsis caption"
                     title="{{ head.value }}"
                     >{{ head.value }}</span
                 >
@@ -25,20 +31,31 @@
             let-row
         >
             <div
-                *ngFor="let prop of row | keyvalue; let idx = index"
-                [style.justify-content]="isBoolIcon(prop.value) ? 'center' : 'flex-start'"
+                *ngFor="let prop of row | keyvalue; trackBy: trackItem"
                 class="div-container-wrapper"
                 data-id="1"
-                style="grid-area: {{ prop.key }}"
+                style="grid-area: {{
+                    prop.key === 'isAptzSupported'
+                        ? 'isPtzSupported'
+                        : prop.key === 'isTwAudioSupported'
+                        ? 'isAudioSupported'
+                        : prop.key
+                }}"
             >
                 <div *ngIf="!isBoolIcon(prop.value); else icon">
                     {{ prop.value }}
                 </div>
                 <ng-template #icon>
-                    <nx-bool-icon
-                        [param]="prop.key"
-                        [value]="prop.value"
-                    ></nx-bool-icon>
+                    <!-- center to label minus sort icon -->
+                    <div
+                        [style.width]="'calc(100% - 24px)'"
+                        [style.justify-content]="isBoolIcon(prop.value) ? 'center' : 'flex-start'"
+                    >
+                        <nx-bool-icon
+                            [param]="prop.key"
+                            [value]="prop.value"
+                        ></nx-bool-icon>
+                    </div>
                 </ng-template>
             </div>
         </ng-template>
