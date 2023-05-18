@@ -171,11 +171,17 @@ export class NxVideoPlayerComponent {
     ngAfterViewInit(): void {
         const { streams: [primary, secondary] } = this.camera.addParams.mediaStreams ? JSON.parse(this.camera.addParams.mediaStreams) : { streams: [] };
         const codecH265 = 173;
+        const codecMjpeg = 7;
         const primaryIsH265 = primary?.codec === codecH265;
-        const hasSecondary = secondary && secondary.codec !== codecH265;
+        const primaryIsMJPEG = primary?.codec === codecMjpeg;
+        const hasSecondary = secondary &&  ![codecH265, codecMjpeg].includes(secondary.codec);
 
         if (primaryIsH265) {
             return this.showError.emit(ConnectionError.transcodingDisabled)
+        }
+
+        if (primaryIsMJPEG) {
+            return this.showError.emit(ConnectionError.mjpegDisabled)
         }
 
         const stream$ = this.reconnect$.pipe(

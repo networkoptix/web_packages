@@ -139,6 +139,8 @@
                                   ? errorIcons[node.details.id] || node.details.status
                                   : node.details.unauthorized
                                   ? 'unauthorized'
+                                  : node.details.requiresTranscoding
+                                  ? 'warning'
                                   : node.details.online
                                   ? 'online'
                                   : 'offline')
@@ -560,7 +562,8 @@
                                                     'offline',
                                                     'unauthorized',
                                                     'defaultPassword',
-                                                    'transcodingDisabled'
+                                                    'transcodingDisabled',
+                                                    'mjpegDisabled'
                                                 ].includes(status)
                                                     ? status
                                                           .replace('defaultPassword', 'alert')
@@ -568,6 +571,7 @@
                                                               'transcodingDisabled',
                                                               'disabled'
                                                           )
+                                                          .replace('mjpegDisabled', 'disabled')
                                                     : ![
                                                           RESOURCE_TYPE.WEB_PAGE,
                                                           RESOURCE_TYPE.IO_DEVICE

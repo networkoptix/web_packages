@@ -42,6 +42,8 @@ export interface NxSystemCamera {
     previewUrl: Observable<string>;
     recordingSettings: RecordingSettings;
     webRtcUrl: ((param: { position: string | null }) => string) | null;
+    online: boolean;
+    unauthorized: boolean;
 }
 
 export type TaskUpdate = Pick<Task, 'fps' | 'recordingType' | 'streamQuality'>;

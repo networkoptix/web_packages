@@ -185,6 +185,8 @@ export class CameraManager {
             }
             : null;
         const status = this.parseCameraStatus(camera, this.system.useRest).toLowerCase();
+        const unauthorized = camera.status === 'Unauthorized';
+        const online = camera.status === 'Online';
         const isStream = [
             'GENERIC_RTSP',
             'GENERIC_MULTICAST',
@@ -249,9 +251,8 @@ export class CameraManager {
             ? this.camerasHealth[cleanId(camera.id)].info.type
             : 'Camera';
 
-        const { id, name, vendor, model, url } = camera;
         const {
-            parentId,
+            id, name, vendor, model, url, parentId,
             audioEnabled,
             controlEnabled,
             motionType,
@@ -260,7 +261,7 @@ export class CameraManager {
             scheduleTasks,
             backupPolicy,
             backupQuality,
-            backupContentType,
+            backupContentType
         } = camera;
         return {
             id,
@@ -295,6 +296,8 @@ export class CameraManager {
             previewUrl,
             recordingSettings,
             webRtcUrl,
+            online,
+            unauthorized,
         };
     };
 

@@ -1456,6 +1456,7 @@
     "Transactions/s": "Transactions/s",
     "Transcoding": "Transcoding",
     "Transcoding for H265 streams disabled for 5.1 systems": "Transcoding for H265 streams disabled for 5.1 systems",
+    "Transcoding for MJPEG streams not supported": "Transcoding for MJPEG streams not supported",
     "Transfer Ownership": "Transfer Ownership",
     "Transferring ownership to \u2013 <strong>{ newOwnerName } ({ newOwnerEmail })</strong>": "Transferring ownership to \u2013 <strong>{ newOwnerName } ({ newOwnerEmail })</strong>",
     "Transport": "Transport",

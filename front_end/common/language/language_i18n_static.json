@@ -413,7 +413,8 @@
             "defaultPassword": "PASSWORD REQUIRED",
             "websocket": "Can't connect to the camera",
             "unavailable": "UNAVAILABLE",
-            "transcodingDisabled": "Transcoding for H265 streams disabled for 5.1 systems"
+            "transcodingDisabled": "Transcoding for H265 streams disabled for 5.1 systems",
+            "mjpegDisabled": "Transcoding for MJPEG streams not supported"
         },
         "serverStates": {
             "offline": "SERVER UNAVAILABLE"

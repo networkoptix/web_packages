@@ -26,7 +26,8 @@ export enum ConnectionError {
     websocket = 'websocket',
     authorization = 'authorization',
     lostConnection = 'lostConnection',
-    transcodingDisabled = 'transcodingDisabled'
+    transcodingDisabled = 'transcodingDisabled',
+    mjpegDisabled = 'mjpegDisabled',
 }
 
 export enum StreamQuality {

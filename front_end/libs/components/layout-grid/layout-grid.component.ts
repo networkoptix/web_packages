@@ -1141,8 +1141,8 @@ export class NxLayoutGridComponent {
             };
         };
 
-        const showTranscodingDisabledError = (): void => {
-            this.errors[itemDetail.details.id] = ConnectionError.transcodingDisabled;
+        const showTranscodingDisabledError = (error: ConnectionError): void => {
+            this.errors[itemDetail.details.id] = error;
             this.errorIcons[itemDetail.details.id] = 'warning';
         };
 
@@ -1151,8 +1151,14 @@ export class NxLayoutGridComponent {
             this.errorIcons[itemDetail.details.id] = 'warning';
         };
 
-        if (error === ConnectionError.transcodingDisabled) {
-            showTranscodingDisabledError();
+        const isConnectionError = (error: string): error is ConnectionError =>
+            !!ConnectionError[error];
+
+        if (
+            isConnectionError(error) &&
+            [ConnectionError.transcodingDisabled, ConnectionError.mjpegDisabled].includes(error)
+        ) {
+            showTranscodingDisabledError(error);
         } else if (error === ConnectionError.authorization) {
             /**
              * This error is explicitly emitted by the nx-video-player component by checking that the previewUrl loads before trying to establish a connection.

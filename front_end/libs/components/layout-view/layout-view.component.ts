@@ -186,8 +186,6 @@ export class NxLayoutViewComponent {
                             map(times =>
                                 cameras.map(({ status, ...camera }) => ({
                                     ...camera,
-                                    unauthorized: status === 'unauthorized',
-                                    online: ['online', 'recording', 'scheduled'].includes(status),
                                     status:
                                         ['recording', 'scheduled'].includes(status) ||
                                         !times.includes(camera.id)
@@ -242,6 +240,12 @@ export class NxLayoutViewComponent {
                                     camera.online &&
                                     servers.find(({ id }) => id === camera.parentId).status ===
                                         'Online',
+                                requiresTranscoding: [7, 173].includes(
+                                    (camera.addParams.mediaStreams
+                                        ? JSON.parse(camera.addParams.mediaStreams)
+                                        : { streams: [] }
+                                    ).streams.shift()?.codec,
+                                ),
                                 resourceType:
                                     this.LANG.layouts.titles.resourceTypes[ResourceType.CAMERA],
                             },
