@@ -295,7 +295,7 @@ frontend-tests:
       #   popd
       # popd
 
-jenkings-builds:
+.jenkins-builds:
   extends: .frontend-changes
   stage: build
   image: nx/ci
@@ -304,10 +304,12 @@ jenkings-builds:
       - logs/**/*
   secrets:
     JENKINS_API_TOKEN_FILE: !reference [.tokens, secrets, JENKINS_API_TOKEN_FILE]
+
+jenkins-build-webadmin:
+  extends: .jenkins-builds
   script:
     - mkdir logs
-    - SOME_BUILD_FAILED=false
-    - echo "Running webadmin and frontend builds in parallel"
+    - echo "Running webadmin build"
     - runJenkinsJob.sh gitlab.vms.review.webadmin.build
       "BUILD_DESCRIPTION=$CI_COMMIT_TITLE"
       "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
@@ -315,7 +317,14 @@ jenkings-builds:
       "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
       "GITLAB_JOB_ID=$CI_JOB_ID"
       "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
-      "GITLAB_JOB_URL=$CI_JOB_URL" 1> logs/webadmin.log 2>&1  & WEBADMIN_EXIT="$?"
+      "GITLAB_JOB_URL=$CI_JOB_URL" 1> logs/webadmin.log 2>&1 & WEBADMIN_EXIT="$?"
+    - wait
+
+jenkins-build-frontend:
+  extends: .jenkins-builds
+  script:
+    - mkdir logs
+    - echo "Running frontend build"
     - runJenkinsJob.sh gitlab.cloud.frontend
       "PUSH_TO_ARTIFACTORY=true"
       "BRANCH=$TARGET_BRANCH_NAME"
@@ -328,9 +337,27 @@ jenkings-builds:
       "GITLAB_JOB_URL=$CI_JOB_URL"
       "REVISION=$CI_COMMIT_SHORT_SHA" 1> logs/frontend.log 2>&1 & FRONTEND_EXIT="$?"
     - wait
-    - if [ "$WEBADMIN_EXIT" != "0" ]; then SOME_BUILD_FAILED=true && echo "Webadmin build failed $WEBADMIN_EXIT"; else echo "Webadmin build successful"; fi
-    - if [ "$FRONTEND_EXIT" != "0" ]; then SOME_BUILD_FAILED=true && echo "Frontend build failed $FRONTEND_EXIT"; else echo "Frontend build successful"; fi
-    - if $SOME_BUILD_FAILED; then exit 1; fi
+
+conan-updater:
+  extends: .jenkins-builds
+  rules:
+    - if: '$CI_COMMIT_REF_PROTECTED == "true" && $TARGET_BRANCH_NAME == "vms_*"'
+      when: on_success
+    - if: '$CI_COMMIT_REF_PROTECTED == "true" && $TARGET_BRANCH_NAME == "develop"'
+      when: on_success
+  script:
+    - mkdir logs
+    - echo "Running webadmin build"
+    - runJenkinsJob.sh gitlab.vms.review.webadmin.build
+      "PUSH_TO_ARTIFACTORY=true"
+      "BUILD_DESCRIPTION=$CI_COMMIT_TITLE"
+      "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
+      "GITLAB_COMMIT=$CI_COMMIT_SHORT_SHA"
+      "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
+      "GITLAB_JOB_ID=$CI_JOB_ID"
+      "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
+      "GITLAB_JOB_URL=$CI_JOB_URL" 1> logs/webadmin.log 2>&1 & WEBADMIN_EXIT="$?"
+    - wait
 
 #wheel-uploader:
 #  extends: .retries
@@ -392,9 +419,9 @@ on-frontend-tests:
   extends: .fail-on-frontend
   needs: ["frontend-tests"]
 
-on-jenkings-builds:
+on-jenkins-builds:
   extends: .fail-on-frontend
-  needs: ["jenkings-builds"]
+  needs: ["jenkins-build-webadmin", "jenkins-build-frontend"]
 
 on-django-checks:
   extends: .fail-on-backend
