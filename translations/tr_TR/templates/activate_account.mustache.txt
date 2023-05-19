@@ -1,8 +1,8 @@
-Merhaba, {{message.userFullName}},
+Merhaba {{message.userFullName}},
 
-  Lütfen e-posta adresinizi onaylamak ve hesabı etkinleştirmek için aşağıdaki bağlantıyı açın.
+  E-posta adresinizi onaylamak ve hesabı etkinleştirmek için lütfen aşağıdaki bağlantıyı açın.
 
-{{config.portal_url}}/authorize/activate/{{message.code}}
+{{config.portal_url}}/yetki ver/etkinleştir/{{message.code}}
 
-%CLOUD_NAME%'e kaydolmadıysanız, bu e-postayı yok sayın.
-İletiyi veya bağlantıyı kimseyle paylaşmayın.
+%CLOUD_NAME% kaydolmadıysanız, bu e-postayı yok sayın.
+Mesajı veya bağlantıyı kimseyle paylaşmayın.
