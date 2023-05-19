@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { Component, ElementRef, EventEmitter, HostBinding, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostBinding, Input, Output, TemplateRef, ViewChild } from '@angular/core';
 import { v4 as uuid } from 'uuid';
 
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
@@ -8,10 +8,10 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ConnectionError, WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';
-import { BehaviorSubject, firstValueFrom, Observable, switchMap, tap } from 'rxjs';
-import { NxToastService } from '@dialogs/toast.service';
+import { BehaviorSubject, firstValueFrom, Observable, of, shareReplay, Subject, switchMap, tap, interval, startWith, map } from 'rxjs';
 import staticLang from '@common/language/language_i18n_static.json';
 import { LayoutItem } from '@services/system-api.types';
+import { Translatable } from '@pipes/nx-translate.types';
 
 type DrawImagePartialTuple = [number, number, number, number];
 
@@ -36,6 +36,7 @@ export class NxVideoPlayerComponent {
     @Input() fullScreenTarget: HTMLElement;
     @Input() showFullScreenButton: boolean = true;
     @Input() zoom: Pick<LayoutItem, 'zoomTop' | 'zoomRight' | 'zoomBottom' | 'zoomLeft'>;
+    @Input() lostConnectionPlaceholder: TemplateRef<any>;
 
     @Output() showPtz = new EventEmitter<NxSystemCamera>();
     @Output() showError = new EventEmitter<ConnectionError>();
@@ -64,6 +65,20 @@ export class NxVideoPlayerComponent {
     lostConnection = false;
     streamManager = WebRTCStreamManager;
 
+    ribbon$ = new Subject<{
+        message: Translatable,
+        type: 'info' | 'error' | 'success' | 'warning',
+        duration?: number,
+    }>();
+
+    ribbonContent$ = this.ribbon$.pipe(
+        switchMap(
+            ribbonContent => ribbonContent.duration
+                ? interval(ribbonContent.duration).pipe(map(() => null), startWith(ribbonContent))
+                : of(ribbonContent)), shareReplay({ bufferSize: 1, refCount: false }
+                )
+    );
+
     document = document;
 
     toggleFullScreen(): void {
@@ -80,7 +95,6 @@ export class NxVideoPlayerComponent {
     constructor(
         configService: NxConfigService,
         private elRef: ElementRef,
-        private toastService: NxToastService,
     ) {
         this.CONFIG = configService.config;
         this.playerId = uuid();
@@ -174,7 +188,7 @@ export class NxVideoPlayerComponent {
         const codecMjpeg = 7;
         const primaryIsH265 = primary?.codec === codecH265;
         const primaryIsMJPEG = primary?.codec === codecMjpeg;
-        const hasSecondary = secondary &&  ![codecH265, codecMjpeg].includes(secondary.codec);
+        const hasSecondary = secondary && ![codecH265, codecMjpeg].includes(secondary.codec);
 
         if (primaryIsH265) {
             return this.showError.emit(ConnectionError.transcodingDisabled)
@@ -200,7 +214,13 @@ export class NxVideoPlayerComponent {
                     this.connectionEstablished = true;
 
                     if (this.lostConnection) {
-                        this.toastService.notify({ value: staticLang.layouts.toasts.reconnected, params: { name: this.camera.name } }, 'success');
+                        if (!this.lostConnectionPlaceholder) {
+                            this.ribbon$.next({
+                                message: { value: staticLang.layouts.toasts.reconnected, params: { name: this.camera.name } },
+                                type: 'success',
+                                duration: 5000,
+                            })
+                        }
                         this.lostConnection = false;
                     }
                 }
@@ -210,7 +230,12 @@ export class NxVideoPlayerComponent {
                         if (!this.lostConnection) {
                             this.lostConnection = true;
                             this.queueReconnect();
-                            this.toastService.notify({ value: staticLang.layouts.toasts.connectionLost, params: { name: this.camera.name } }, 'warning');
+                            if (!this.lostConnectionPlaceholder) {
+                                this.ribbon$.next({
+                                    message: { value: staticLang.layouts.toasts.connectionLost, params: { name: this.camera.name } },
+                                    type: 'warning',
+                                });
+                            }
                         }
                         return;
                     } else {

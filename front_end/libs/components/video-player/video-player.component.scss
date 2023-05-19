@@ -1,3 +1,5 @@
+@use 'typography';
+
 :host,
 vm-player,
 video {
@@ -77,4 +79,34 @@ img.poster {
 
 .is-full-screen {
     visibility: visible !important;
+}
+
+.status-banner {
+    @include typography.light18light10;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    z-index: 60;
+    transform: translateY(-50%);
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    background: var(--placeholder-background);
+
+    &.warning {
+        color: var(--error) !important;
+    }
+
+    &.success {
+        color: var(--success) !important;
+    }
+}
+
+.placeholder-wrapper {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 100;
 }

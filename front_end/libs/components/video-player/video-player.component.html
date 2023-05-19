@@ -1,3 +1,17 @@
+<div
+    *ngIf="ribbonContent$ | async as ribbonContent"
+    class="status-banner"
+    [ngClass]="ribbonContent.type"
+>
+    {{ ribbonContent.message | nxTranslate }}
+</div>
+<div
+    *ngIf="lostConnection && lostConnectionPlaceholder"
+    class="placeholder-wrapper"
+>
+    <ng-container *ngTemplateOutlet="lostConnectionPlaceholder"></ng-container>
+</div>
+
 <video
     #webRtcPlayer
     autoplay

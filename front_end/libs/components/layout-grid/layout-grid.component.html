@@ -635,6 +635,14 @@
                                     [ngSwitch]="itemDetail.type"
                                 >
                                     <ng-container *ngSwitchCase="RESOURCE_TYPE.CAMERA">
+                                        <ng-template #offlinePlaceholder>
+                                            <ng-container
+                                                *ngTemplateOutlet="
+                                                    showError;
+                                                    context: { status: 'offline' }
+                                                "
+                                            ></ng-container>
+                                        </ng-template>
                                         <nx-video-player
                                             cdkDragHandle
                                             [cdkDragHandleDisabled]="layout.locked"
@@ -646,6 +654,7 @@
                                             (showError)="handleVideoError(itemDetail, $event)"
                                             (showPtz)="showPtz.emit($event)"
                                             [zoom]="item"
+                                            [lostConnectionPlaceholder]="offlinePlaceholder"
                                         >
                                         </nx-video-player>
                                     </ng-container>
