@@ -93,13 +93,11 @@ export class NxOrganizationsComponent implements OnInit {
         }
         this.currentTab = this.tabs.find(tab => tab.route === this.route.snapshot.data.currentTab);
         this.route.params.pipe(untilDestroyed(this)).subscribe(({ id }) => {
-            // Temporarily converting to number until ID updated to UUID
-            const Id = Number(id);
-            this.store.dispatch(CPActions.setCurrentOrgId({ currentOrgId: Id }));
+            this.store.dispatch(CPActions.setCurrentOrgId({ currentOrgId: id }));
             combineLatest([this.organizations$, this.currentPartnerOrganizations$])
                 .pipe(take(1))
                 .subscribe(([orgs, partnerOrgs]) => {
-                    if (!orgs.find(o => o.id === Id) && !partnerOrgs.find(o => o.id === Id)) {
+                    if (!orgs.find(o => o.id === id) && !partnerOrgs.find(o => o.id === id)) {
                         this.router.navigate(['404']);
                     }
                 });

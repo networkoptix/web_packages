@@ -17,15 +17,15 @@ export const setOrganizations = createAction(
 
 export const setCurrentPartnerId = createAction(
     '[Channel Parnters] Set current partner id',
-    props<{ currentPartnerId: number }>(),
+    props<{ currentPartnerId: string }>(),
 );
 
 export const setCurrentOrgId = createAction(
     '[Channel Partners] Set current org id',
-    props<{ currentOrgId: number }>(),
+    props<{ currentOrgId: string }>(),
 );
 
 export const setCurrentPartner = createAction(
     '[Channel Partners] Set current partner',
-    props<{ currentPartnerId: number; currentPartnerOrganizations: Organization[] }>(),
+    props<{ currentPartnerId: string; currentPartnerOrganizations: Organization[] }>(),
 );

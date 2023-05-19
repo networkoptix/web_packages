@@ -1,7 +1,6 @@
 /** Swagger on {{licenseServerInstance}}/nxlicensed/api-docs-internal */
 
-/** Integer for now, UUID string eventually */
-export type Id = number;
+export type Id = string;
 
 // e.g. https://nxlicensed.test.hdw.mx/nxlicensed/api/v2/partners/organizations/5/users/
 type Url = string;

@@ -18,7 +18,7 @@ import {
     styleUrls: ['channel-partner.component.scss'],
 })
 export class NxChannelPartnerComponent implements OnInit {
-    private id$ = this.route.params.pipe(map<Params, Id>(p => Number(p.id)));
+    private id$ = this.route.params.pipe(map<Params, Id>(p => p.id));
     private refresh$ = new Subject<void>();
     private update$ = merge(this.id$, this.refresh$.pipe(mergeMap(() => this.id$)));
 

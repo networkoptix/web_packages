@@ -30,7 +30,7 @@ import {
 })
 export class NxChannelPartnersComponent implements OnInit {
     isLoading = true;
-    currentPartnerId: number;
+    currentPartnerId: string;
     routeData$ = this.route.data;
     channelPartners$ = this.store.select<ChannelPartner[]>(selectChannelPartners);
     channelPartner$ = this.store.select<ChannelPartner>(selectCurrentPartner);
@@ -73,8 +73,7 @@ export class NxChannelPartnersComponent implements OnInit {
         this.route.params
             .pipe(untilDestroyed(this), withLatestFrom(this.channelPartners$))
             .subscribe(([{ id }, partners]) => {
-                // Temporarily converting to number until ID updated to UUID
-                this.currentPartnerId = Number(id);
+                this.currentPartnerId = id;
                 if (!partners.find(p => p.id === this.currentPartnerId)) {
                     this.router.navigate(['404']);
                 }
@@ -108,7 +107,7 @@ export class NxChannelPartnersComponent implements OnInit {
             : this.router.navigate(['home', 'channelPartners', this.currentPartnerId]);
     }
 
-    handleOrgClick(id: number): void {
+    handleOrgClick(id: string): void {
         this.router.navigate(['organization', id, 'systems'], { relativeTo: this.route });
     }
 }

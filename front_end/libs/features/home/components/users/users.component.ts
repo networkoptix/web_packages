@@ -17,16 +17,19 @@ interface ChannelPartnerUserExt extends ChannelPartnerUser {
 export class NxOrganizationUsersComponent implements OnInit {
     LANG = staticLang;
 
+    // Temporary Nx CP Id
+    currentPartnerId: string = '5f124fdd-9fc7-43c1-898a-0dabde021894';
     headers: Record<string, Record<string, number | string>>;
     records: ChannelPartnerUserExt[];
 
     constructor(private cpService: NxChannelPartnersService) {
         this.records = [];
-        this.cpService.getChannelPartnerUsers(4).subscribe(users => {
+        // Table only works for channelPartner users, need to add support for org users
+        this.cpService.getChannelPartnerUsers(this.currentPartnerId).subscribe(users => {
             /* current api payload
-             email: "rbarsegian@networkoptix.com"
-             roles: ["Administrator"]
-             userId: 12
+                email: "rbarsegian@networkoptix.com"
+                roles: ["Administrator"]
+                userId: 12
             */
             this.records = users.map((user: ChannelPartnerUserExt): ChannelPartnerUserExt => {
                 user.fullName = 'N/A';
