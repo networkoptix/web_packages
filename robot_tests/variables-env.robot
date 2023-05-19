@@ -130,7 +130,7 @@ ${AUTOTESTS OFFLINE OPEN NX}          ${AUTO TESTS OFFLINE TITLE}/..//nx-client-
 ${NOAUTH CAMERA PASSWORD}             qweasd123
 
 #Docker server machine info
-@{QA DOCKER IPS}                      localhost    192.168.1.157    10.1.5.48    10.1.5.34
+@{QA DOCKER IPS}                      localhost    192.168.1.244    10.1.5.48    10.1.5.34   10.9.0.92
 #${QA BURBANK IP}                      10.1.5.48
 ${QA DOCKER HOST PORT}                5555
 ${QA BURBANK USER}                    qaburbank
