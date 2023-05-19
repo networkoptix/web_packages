@@ -578,6 +578,7 @@ module.exports = {
                 'libs/services/nx-cloud-api/**/*.ts',
                 'libs/services/nx-config/**/*.ts',
                 'libs/services/process.service/**/*.ts',
+                'libs/services/system/**/*.ts',
                 // 'libs/services//**/*.ts',
                 'libs/utils/**/*.ts',
             ],

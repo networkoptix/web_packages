@@ -66,13 +66,18 @@ export const systemWithModernModule = new NxSystemV51().with(new NxModernModule(
 export const systemWithLegacyModule = new NxSystemLegacy().with(new NxLegacyModule());
 export const systemWithIncompatibleModule = new NxSystemV52().with(new NxLegacyModule()); // Won't compile since NxSystemV52 doesn't support NxLegacyModule.
 
-export const systemWithMultipleModules = new NxSystemV51().with(new NxLegacyModule()).with(new NxModernModule()); // This is fine since mixins don't collide.
+export const systemWithMultipleModules = new NxSystemV51()
+    .with(new NxLegacyModule())
+    .with(new NxModernModule()); // This is fine since mixins don't collide.
 
-export const systemWithMixinCollisions = new NxSystemV51().with(new NxLegacyModule()).with(new NxModernColidesModule()); // This won't compile since anotherMethod will shaddow the one from NxLegacyModule.
+export const systemWithMixinCollisions = new NxSystemV51()
+    .with(new NxLegacyModule())
+    .with(new NxModernColidesModule()); // This won't compile since anotherMethod will shaddow the one from NxLegacyModule.
 
 interface LegacySystemDefault extends NxSystemLegacy, NxLegacyModule {}
 
-export const legacySystemFactory = (): LegacySystemDefault => new NxSystemLegacy().with(new NxLegacyModule());
+export const legacySystemFactory = (): LegacySystemDefault =>
+    new NxSystemLegacy().with(new NxLegacyModule());
 legacySystemFactory().anotherMethod(); // This works since we've asserted that system implements this module.
 
 export const unknownSystemVersion: NxSystemBase = systemWithMultipleModules;

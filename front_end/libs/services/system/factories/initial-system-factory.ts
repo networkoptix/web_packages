@@ -30,7 +30,7 @@ const classes = {
     0: NxSystemLegacy,
     5.0: NxSystemV50,
     5.1: NxSystemV51,
-    5.2: NxSystemV52
+    5.2: NxSystemV52,
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -52,9 +52,15 @@ export function nxSystemFactory(
     systemId?: string,
     serverId?: string,
     userId?: string,
-    version?: number
+    version?: number,
 ): SystemClasses & BaseModules {
-    const nxSystemOld = new NxSystemOldModule(currentUserEmail, systemId, serverId, userId, version);
+    const nxSystemOld = new NxSystemOldModule(
+        currentUserEmail,
+        systemId,
+        serverId,
+        userId,
+        version,
+    );
     const baseSystem = getBaseSystem(version as SystemVersion).with(nxSystemOld);
 
     /**
@@ -66,12 +72,21 @@ export function nxSystemFactory(
     /**
      * Temporarily omit the serverManager property from ServerManagerModule to allow compilation.
      */
-    const withServerManager = baseSystem.with(new ServerManagerModule(baseSystem) as Omit<ServerManagerModule, 'serverManager'>);
+    const withServerManager = baseSystem.with(
+        new ServerManagerModule(baseSystem) as Omit<ServerManagerModule, 'serverManager'>,
+    );
 
-    return withServerManager
-        /**
-         * Temporarily omit the cameraManager property from CameraManagerModule to allow compilation.
-         */
-        .with(new CameraManagerModule(withServerManager) as Omit<CameraManagerModule, 'cameraManager'>)
-        .with(new StorageManagerModule(withServerManager));
+    return (
+        withServerManager
+            /**
+             * Temporarily omit the cameraManager property from CameraManagerModule to allow compilation.
+             */
+            .with(
+                new CameraManagerModule(withServerManager) as Omit<
+                    CameraManagerModule,
+                    'cameraManager'
+                >,
+            )
+            .with(new StorageManagerModule(withServerManager))
+    );
 }

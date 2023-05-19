@@ -7,7 +7,7 @@ import { SupportedVersionsBase, StaticModule, SystemVersionBase } from './types'
 // eslint-disable-next-line @typescript-eslint/ban-types
 interface GenericConstructor<T = {}> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    new(...args: any[]): T;
+    new (...args: any[]): T;
 }
 
 /**
@@ -72,7 +72,16 @@ export abstract class NxSystemBase implements SystemVersionBase {
      * @param systemModule - The system module to add to the system.
      * @returns - The system instance extended with the system module.
      */
-    with<U extends NxSystemModuleBase, T extends SystemVersionBase<U['supportedVersions'][number]>>(this: T, systemModule: U & Partial<{ [key in keyof Omit<T, keyof (NxSystemModuleBase & NxSystemBase & SupportedVersionsBase)>]: never }>): T & U {
+    with<U extends NxSystemModuleBase, T extends SystemVersionBase<U['supportedVersions'][number]>>(
+        this: T,
+        systemModule: U &
+            Partial<{
+                [key in keyof Omit<
+                    T,
+                    keyof (NxSystemModuleBase & NxSystemBase & SupportedVersionsBase)
+                >]: never;
+            }>,
+    ): T & U {
         (this as unknown as NxSystemBase).systemModules.push(systemModule);
 
         if (!NxSystemBase.PROXIES.has(this)) {
@@ -98,8 +107,8 @@ export abstract class NxSystemBase implements SystemVersionBase {
                         }
                         target[prop] = value;
                         return true;
-                    }
-                })
+                    },
+                }),
             );
         }
 
@@ -120,7 +129,10 @@ export abstract class NxSystemBase implements SystemVersionBase {
      *   baseSystem.someFeatureMethod() // If the someFeatureMethod is implemented by the NxLegacyModule class, this will compile.
      * }
      */
-    implements<S extends NxSystemBase = NxSystemBase, M extends NxSystemModuleBase = NxSystemModuleBase>(this: S, ModuleClass: GenericConstructor<M> & StaticModule): this is S & M {
+    implements<
+        S extends NxSystemBase = NxSystemBase,
+        M extends NxSystemModuleBase = NxSystemModuleBase,
+    >(this: S, ModuleClass: GenericConstructor<M> & StaticModule): this is S & M {
         return ModuleClass.moduleSymbol in this;
     }
 }

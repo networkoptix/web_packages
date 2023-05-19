@@ -15,6 +15,9 @@ export class UserManagerModule extends NxSystemModuleBase {
 
     constructor(version: number, ...args: ConstructorParameters<typeof UserWithGroupsManager>) {
         super();
-        this.userManager = version >= 5.2 && nxConfig.featureFlags.usersWithGroups ? new UserWithGroupsManager(...args) : new UserManager(...args);
+        this.userManager =
+            version >= 5.2 && nxConfig.featureFlags.usersWithGroups
+                ? new UserWithGroupsManager(...args)
+                : new UserManager(...args);
     }
 }
