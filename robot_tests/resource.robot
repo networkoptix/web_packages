@@ -993,43 +993,6 @@ Delete Base System
     ${num systems}=   Evaluate    len($systems)
     Run Keyword If    ${num systems} == 0    Delete Account    ${system}[owner]    ${password}
 
-
-Create Custom Network
-    [Arguments]    ${name}    ${num}    ${host}=${QA BURBANK IP}
-    ${driver}=   Set Variable    bridge
-    ${subnet}=   Set Variable    192.28.${num}.0/24
-    ${ip range}=   Set Variable    192.28.${num}.0/24
-    ${gateway}=    Set Variable    192.28.${num}.254
-    ${cmd}=   Set Variable    docker network create --driver=${driver} --subnet=${subnet} --ip-range=${ip range} --gateway=${gateway} ${name}
-    ${net id}=   Execute Command Remotely    ${cmd}    ${host}
-    [Return]    ${net id}
-
-Remove Custom Network
-    [Arguments]    ${net id}    ${host}=${QA BURBANK IP}
-    Execute Command Remotely    docker network rm ${net id}    ${host}
-    [Return]    ${net id}
-
-Start Docker Server
-    [Arguments]    ${name}
-    Execute Command Remotely    docker start ${name}
-
-Stop Docker Server
-    [Arguments]    ${name}
-    Execute Command Remotely    docker stop ${name}
-
-Restart Docker Servers
-    [Arguments]    @{servers}
-    FOR    ${server}    IN    @{servers}
-        Restart_Container    ${server}[container]
-        Sleep    1
-    END
-    
-Get container port by name
-    [Arguments]    ${name}
-    ${container} =    Get Container By Name    ${name}
-    ${port} =    ${container}[Ports][0][PublicPort]
-    [Return]    ${port}
-
 Page Should Not Contain Elements
     [Arguments]    @{locators}
     FOR    ${loc}    IN    @{locators}
