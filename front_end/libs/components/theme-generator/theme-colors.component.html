@@ -1,0 +1,384 @@
+<div class="mb-3 container m-0 p-3">
+    <div class="col-12 row mb-4">
+        <div class="col-3 p-0">
+            <label class="input-label col-12"
+                ><span translate>Current HSL</span>: {{ isHSLTheme ? 'Yes' : 'No' }}</label
+            >
+            <div class="col-12">
+                <label class="d-flex align-items-center">
+                    <nx-checkbox
+                        [(ngModel)]="isHSLTheme"
+                        [checked]="isHSLTheme"
+                        (onClick)="setHSLThemeMode($event)"
+                    ></nx-checkbox>
+                    <span translate>Use HSL theme</span>
+                </label>
+            </div>
+        </div>
+        <div
+            class="col-3 p-0"
+            *ngIf="isHSLTheme"
+        >
+            <label class="input-label col-12">
+                <span translate>Current mode</span>: {{ isLiteTheme ? 'Light' : 'Dark' }}
+            </label>
+            <div class="col-12">
+                <label class="d-flex align-items-center">
+                    <nx-checkbox
+                        [(ngModel)]="isLiteTheme"
+                        [checked]="isLiteTheme"
+                        (onClick)="setThemeMode($event)"
+                    ></nx-checkbox>
+                    <span translate>Use light theme</span>
+                </label>
+            </div>
+        </div>
+        <div
+            class="col-6 p-0"
+            *ngIf="isHSLTheme"
+        >
+            <div
+                *ngIf="showDisclaimer"
+                translate
+            >
+                This tool will change theme settings ONLY for current user. In some cases CSS may
+                not be loaded. To reset theme use the checkbox or select theme in "Account
+                settings".
+            </div>
+            <div
+                *ngIf="showColorOutOfBoundaries"
+                class="error-label"
+                translate
+            >
+                Brand and Base colors should not be too bland or too saturated. This is probably a
+                mistake so adjust saturation and/or luminosity between 30 and 70 or just press "Adj"
+                button.
+            </div>
+        </div>
+    </div>
+
+    <form
+        class="row col-12"
+        name="frmTheme"
+        #frmTheme="ngForm"
+        novalidete
+        *ngIf="isHSLTheme"
+    >
+        <nx-block>
+            <header>
+                <h4 [innerText]="isLiteTheme ? 'Light mode' : 'Dark Mode'"></h4>
+            </header>
+            <nx-section>
+                <div class="col-12 align-content-start">
+                    <div class="row col-12 mb-4">
+                        <div class="col-5">
+                            <label
+                                class="input-label col-12"
+                                translate
+                                >HEX Brand</label
+                            >
+                            <div class="col-12">
+                                <input
+                                    #brandInput
+                                    class="form-control"
+                                    (keyup)="changeBrandColor($event)"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <label
+                                class="input-label col-12"
+                                translate
+                                >Hue</label
+                            >
+                            <div class="col-12">
+                                <input
+                                    name="hueBrand"
+                                    class="form-control"
+                                    [(ngModel)]="brand.hue"
+                                    (ngModelChange)="setBrandHue($event)"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <label
+                                class="input-label col-12"
+                                translate
+                                >Saturation</label
+                            >
+                            <div class="col-12">
+                                <input
+                                    name="saturationBrand"
+                                    class="form-control"
+                                    [(ngModel)]="brand.saturation"
+                                    (ngModelChange)="setBrandSaturation($event)"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <label
+                                class="input-label col-12"
+                                translate
+                                >Luminosity</label
+                            >
+                            <div class="col-12">
+                                <input
+                                    name="luminosityBrand"
+                                    class="form-control"
+                                    [(ngModel)]="brand.luminosity"
+                                    (ngModelChange)="setBrandLuminosity($event)"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-1">
+                            <label class="input-label col-12">&nbsp;</label>
+                            <button
+                                class="btn btn-default"
+                                (click)="adjBrand()"
+                                translate
+                            >
+                                Adj
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row col-12 mb-4">
+                        <div class="col-5">
+                            <label class="input-label col-12">
+                                {{
+                                    LANG.theme.baseColorLumLabel
+                                        | translate: { luminosityStep: luminosityStep }
+                                }}
+                            </label>
+                            <div class="col-12">
+                                <input
+                                    #colorInput
+                                    class="form-control"
+                                    (keyup)="changeBaseColor($event)"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <label
+                                class="input-label col-12"
+                                translate
+                                >Hue</label
+                            >
+                            <div class="col-12">
+                                <input
+                                    name="hueColor"
+                                    class="form-control"
+                                    [(ngModel)]="color.hue"
+                                    (ngModelChange)="setColorHue($event)"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <label
+                                class="input-label col-12"
+                                translate
+                                >Saturation</label
+                            >
+                            <div class="col-12">
+                                <input
+                                    name="saturationColor"
+                                    class="form-control"
+                                    [(ngModel)]="color.saturation"
+                                    (ngModelChange)="setColorSaturation($event)"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <label
+                                *ngIf="advanced"
+                                class="input-label col-12"
+                                translate
+                                >Luminosity (%)</label
+                            >
+                            <div
+                                class="col-12"
+                                *ngIf="advanced"
+                            >
+                                <input
+                                    name="luminosityStep"
+                                    class="form-control"
+                                    [(ngModel)]="luminosityStep"
+                                    (ngModelChange)="setColorLuminosityStep($event)"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-1">
+                            <label class="input-label col-12">&nbsp;</label>
+                            <button
+                                class="btn btn-default"
+                                (click)="adjBaseColor()"
+                                translate
+                            >
+                                Adj
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row col-12">
+                        <div class="col-5">
+                            <label
+                                class="input-label col-12"
+                                translate
+                                >HEX Background</label
+                            >
+                            <div class="col-12">
+                                <input
+                                    #backgroundInput
+                                    class="form-control"
+                                    (keyup)="changeBackgroundColor($event)"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row col-12">
+                        <hr
+                            *ngIf="advanced"
+                            class="col-12"
+                            style="background-color: lightgray"
+                        />
+                    </div>
+
+                    <div
+                        class="lum-wrapper"
+                        *ngIf="advanced"
+                    >
+                        <div
+                            class=""
+                            *ngFor="let i of colorLum"
+                        >
+                            <label class="input-label">{{ i.label }}</label>
+                            <div class="">
+                                <input
+                                    name="colorLuminosity{{ i.label }}"
+                                    class="form-control"
+                                    [(ngModel)]="i.value"
+                                    (ngModelChange)="setColorLuminosity(i)"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 row p-0 mt-4">
+                        <div class="col-4 p-0 mt-4">
+                            <div
+                                class="row col-12 pl-3"
+                                *ngFor="let i of hexBrand"
+                            >
+                                <div class="col-2 color brand-{{ i.label }}"></div>
+                                <label class="col-10 color">
+                                    {{
+                                        LANG.theme.brandLabel
+                                            | translate: { hex: i.hex, label: i.label }
+                                    }}
+                                </label>
+                            </div>
+
+                            <br /><br />
+
+                            <div
+                                class="row col-12 pl-3"
+                                *ngFor="let i of hexError"
+                            >
+                                <div class="col-2 color error-{{ i.label }}"></div>
+                                <label class="col-10 color">
+                                    {{
+                                        LANG.theme.brandLabel
+                                            | translate: { hex: i.hex, label: i.label }
+                                    }}
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="row col-12">
+                                <div class="col-2 color light0"></div>
+                                <div class="col-10 color">&nbsp;</div>
+                            </div>
+                            <div
+                                class="row col-12"
+                                *ngFor="let i of colorNumbers"
+                            >
+                                <div class="col-2 color light{{ i }}"></div>
+                                <label class="col-10 color">
+                                    {{
+                                        LANG.theme.lightLabel
+                                            | translate: { hex: hexLight[i], number: i }
+                                    }}
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="row col-12">
+                                <div class="col-2 color dark0"></div>
+                                <div class="col-10 color">&nbsp;</div>
+                            </div>
+                            <div
+                                class="row col-12"
+                                *ngFor="let i of colorNumbers"
+                            >
+                                <div class="col-2 color dark{{ i }}"></div>
+                                <label class="col-10 color">
+                                    {{
+                                        LANG.theme.darkLabel
+                                            | translate: { hex: hexDark[i], number: i }
+                                    }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nx-section>
+        </nx-block>
+
+        <div
+            class="row col-7 align-content-start"
+            *ngIf="advanced"
+        >
+            <hr
+                class="col-12"
+                style="background-color: lightgray"
+            />
+
+            <div
+                class="row col-12 align-content-start"
+                *ngIf="advanced"
+            >
+                <div class="col-6">
+                    <div
+                        class="row col-12"
+                        *ngFor="let i of hexGreen"
+                    >
+                        <div class="col-2 color green-{{ i.label }}"></div>
+                        <label class="col-10 color">
+                            {{ LANG.theme.greenLabel | translate: { hex: i.hex, label: i.label } }}
+                        </label>
+                    </div>
+                </div>
+
+                <div
+                    class="col-6"
+                    *ngIf="advanced"
+                >
+                    <div
+                        class="row col-12"
+                        *ngFor="let i of hexYellow"
+                    >
+                        <div class="col-2 color yellow-{{ i.label }}"></div>
+                        <label class="col-10 color">
+                            {{ LANG.theme.yellowLabel | translate: { hex: i.hex, label: i.label } }}
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <!--    <div class="row col-6">-->
+    <!--        <nx-account-settings-component></nx-account-settings-component>-->
+    <!--    </div>-->
+</div>

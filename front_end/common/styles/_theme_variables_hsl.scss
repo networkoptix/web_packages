@@ -16,7 +16,7 @@ $color-transparency: (
     );
 
 html[data-theme-mode="dark"] {
-    --color-l-step: 2.5%; // step between light1 and light2 .. etc. in percentage
+    --color-l-step: 2%; // step between light1 and light2 .. etc. in percentage
 
     --color-h: 200; // Hue
     --color-s: 20%; // Saturation
@@ -121,7 +121,7 @@ html[data-theme-mode="dark"] {
 }
 
 html[data-theme-mode="light"] {
-    --color-l-step: 2.5%; // step between light1 and light2 .. etc. in percentage
+    --color-l-step: 2%; // step between light1 and light2 .. etc. in percentage
 
     --color-h: 200; // Hue
     --color-s: 20%; // Saturation

@@ -940,6 +940,16 @@
             "advanced": true
           },
           {
+            "label": "Enable theme generator",
+            "name": "%THEME_GENERATOR%",
+            "description": "Enables the theme generator tool for the cloud portal.",
+            "type": "check_box",
+            "value": false,
+            "optional": true,
+            "advanced": true,
+            "fieldset": "Themes"
+          },
+          {
             "label": "Enable themes",
             "name": "%THEMES_ENABLED%",
             "description": "Enables the theme switching for the cloud portal.",

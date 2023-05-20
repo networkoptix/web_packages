@@ -51,6 +51,15 @@ const lazyRoutes: Routes = [
         },
     },
     {
+        path: 'theme-generator',
+        loadChildren: () => import('@pages/theme-generator-demo/theme-generator-demo.module').then(m => m.NxThemeGeneratorDemoModule),
+        canLoad: [FeatureGuard],
+        canActivate: [AuthGuard],
+        data: {
+            flags: FeatureFlagStrings.themeGenerator
+        },
+    },
+    {
         path: 'health-report',
         loadChildren: () => import('@pages/health/health.module').then(m => m.NxHealthModule)
     },
