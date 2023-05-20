@@ -8,13 +8,18 @@ def get_variables(ips=BuiltIn().get_variable_value('${QA DOCKER IPS}'), port=Bui
     # Drop a server if unavailable or get how many containers are running on it, then sort by fewest containers. 
     # Default to 'localhost' for all if available
     # Each suite can overide by setting ${QA BURBANK IP} in *** Variables *** section 
-    if 'localhost' in ips:
-        if _docker_api_is_available('localhost', port):
-            docker_server = 'localhost'
-        else:
-            docker_server = None
-    if docker_server is None:
-        docker_server = _assign_docker_server(ips, port)
+    # If ${DOCKER LOAD} is ${False} (default), skips and sets QA BURBANK IP to ${QA DEFAULT HOST}
+    if BuiltIn().get_variable_value('${DOCKER LOAD}'):
+        if 'localhost' in ips:
+            if _docker_api_is_available('localhost', port):
+                docker_server = 'localhost'
+            else:
+                docker_server = None
+        if docker_server is None:
+            docker_server = _assign_docker_server(ips, port)
+    else:
+        docker_server = BuiltIn().get_variable_value('${QA DEFAULT HOST}')
+    print(docker_server)
     return {'QA BURBANK IP': docker_server}
 
 def _assign_docker_server(ips, port):

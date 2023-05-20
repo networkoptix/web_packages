@@ -21,7 +21,7 @@ Library      NoptixLibrary/DockerApi.py
 Library      pabot.PabotLib
 
 *** Variables ***
-${variables_file}    variables-env.robot
+${variables_file}    variables-env.robot     
 ${options}    true
 ${headless}    true
 @{chrome_arguments}    --disable-gpu    --no-sandbox    --ignore-certificate-errors    --log-level=3
