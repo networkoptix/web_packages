@@ -110,8 +110,8 @@
                     *ngIf="!preview && node.type !== 'camera'; else recordingIcon"
                     nx-add-svg-src
                     [svgStyle]="{
-                        'width.px': '24',
-                        'height.px': '24',
+                        'width.px': '18',
+                        'height.px': '18',
                         fill: 'none !important',
                         opacity: expandable ? '1' : '0',
                         transform: expanded ? 'rotate(-90deg)' : 'rotate(0deg)'
@@ -139,7 +139,7 @@
                                   ? errorIcons[node.details.id] || node.details.status
                                   : node.details.unauthorized
                                   ? 'unauthorized'
-                                  : node.details.requiresTranscoding
+                                  : node.details.online && node.details.requiresTranscoding
                                   ? 'warning'
                                   : node.details.online
                                   ? 'online'
@@ -559,7 +559,6 @@
                                                 'placeholders/' +
                                                 ([
                                                     'online',
-                                                    'offline',
                                                     'unauthorized',
                                                     'defaultPassword',
                                                     'transcodingDisabled',
@@ -572,12 +571,14 @@
                                                               'disabled'
                                                           )
                                                           .replace('mjpegDisabled', 'disabled')
-                                                    : ![
+                                                    : [
                                                           RESOURCE_TYPE.WEB_PAGE,
                                                           RESOURCE_TYPE.IO_DEVICE
                                                       ].includes(itemDetail.type)
-                                                    ? 'offline'
-                                                    : status) +
+                                                    ? status
+                                                    : itemDetail.type === RESOURCE_TYPE.SERVER
+                                                    ? 'unavailable'
+                                                    : 'offline') +
                                                 '.svg'
                                             "
                                             [svgStyle]="{
