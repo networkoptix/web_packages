@@ -23,11 +23,11 @@ app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 def setup_periodic_tasks(sender, **kwargs):
     logger.info("Setting up periodic tasks")
     sender.add_periodic_task(crontab(hour=0, minute=0, day_of_month='1'),
-                             clean_logs.s(), name="clean logs", queue='broadcast-notifications')
+                             clean_logs.s(), name="clean logs", queue='celery')
     sender.add_periodic_task(crontab(hour=0, minute=0, day_of_week='tue'),
-                             clean_push_logs.s(), name="clean push logs", queue='broadcast-notifications')
+                             clean_push_logs.s(), name="clean push logs", queue='celery')
     sender.add_periodic_task(crontab(hour=0, minute=0, day_of_week='wed'),
-                             clean_old_portal_notifications.s(), name="clean push logs", queue='portal-notifications')
+                             clean_old_portal_notifications.s(), name="clean push logs", queue='celery')
 
 
 @app.task(bind=True)

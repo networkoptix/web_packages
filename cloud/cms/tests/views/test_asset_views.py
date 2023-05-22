@@ -484,7 +484,7 @@ def test_handle_publish_all_customizations(arf, account_factory, db, default_por
     assert async_zendesk_push_article_mock.call_args == mocker.call(
                     args=[asset_to_review.id],
                     kwargs={'customization': customizations_with_portal[0].name},
-                    queue='broadcast-notifications'
+                    queue='celery'
     )
 
 
@@ -762,7 +762,7 @@ def test_handle_settings_from_json(mocker, arf, account_factory, db):
     mock_async_import.assert_called_once_with(
         args=[json_cache_id, user.id, True],
         kwargs={'customization': settings.TEST_CUSTOMIZATION},
-        queue='broadcast-notifications')
+        queue='celery')
     assert PackagesCache()[json_cache_id] == settings_file
 
     # Test handles update_structure
@@ -1073,7 +1073,7 @@ def test_download_all_asset_structures(arf, mocker, account_factory, db):
     mock_make_structure.assert_called_once_with(
         kwargs={'asset_type': asset_type, 'user_id': mock_request.user.id,
                 'customization': settings.TEST_CUSTOMIZATION},
-        queue='broadcast-notifications')
+        queue='celery')
 
     # Test not ready
     res = download_all_asset_structures(mock_request, asset_type)
@@ -1490,7 +1490,7 @@ class TestCustomClientViewSet:
         mock_make_custom_client.assert_called_once_with(
             args=expected_args,
             kwargs={'customization': settings.TEST_CUSTOMIZATION},
-            queue='broadcast-notifications')
+            queue='celery')
         mock_get_custom_client_package_key.assert_called_once_with(
             *expected_args, )
 

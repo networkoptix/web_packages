@@ -84,7 +84,7 @@ class MenuCache(BaseCacheV2):
             running_task = cache.get(self.init_task_key)
             if running_task:
                 app.control.revoke(running_task, terminate=True, signal='SIGUSR1')
-            task = async_generate_menus.apply_async(args=[self.customization_name, self._cache_key], queue='broadcast-notifications')
+            task = async_generate_menus.apply_async(args=[self.customization_name, self._cache_key], queue='celery')
             cache.set(self.init_task_key, str(task), INITIALIZATION_TASK_TIMEOUT)
             DocumentCache(customization_name=self.customization_name).clear_cache()
 

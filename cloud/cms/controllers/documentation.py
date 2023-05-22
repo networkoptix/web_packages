@@ -84,7 +84,7 @@ def start_reinitialization(init_task_key, customization):
     if running_task:
         app.control.revoke(running_task, terminate=True, signal='SIGUSR1')
     task = async_initialize_doc_cache.apply_async(
-        args=[customization, init_task_key], queue='broadcast-notifications')
+        args=[customization, init_task_key], queue='celery')
     cache.set(init_task_key, str(task), INITIALIZATION_TASK_TIMEOUT)
 
 

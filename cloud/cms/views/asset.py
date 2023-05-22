@@ -349,7 +349,7 @@ def publish_review(request, target_review, target_customization='', message=True
                 async_zendesk_push_article.apply_async(
                     args=[asset.id],
                     kwargs={'customization': target_customization},
-                    queue='broadcast-notifications')
+                    queue='celery')
         if message:
             return 'success', f"Version {target_review.version.id} has been accepted"
     return None, None
@@ -656,7 +656,7 @@ def handle_settings_from_json(request, is_loaded, form, file, asset):
         task = tasks.async_import_assets_from_json.apply_async(
             args=[json_cache_id, request.user.id, import_assets_from_json_publish],
             kwargs={'customization': request.CUSTOMIZATION},
-            queue='broadcast-notifications')
+            queue='celery')
         messages.info(request, 'Starting assets import')
         return [task, None, conflicts]
     elif update_structure:
@@ -812,7 +812,7 @@ def download_current_structure(request, asset_id):
             kwargs={'asset_id': asset_id, 'output_format': output_format,
                     'use_actual_values': use_actual_values, 'user_id': request.user.id,
                     'customization': request.CUSTOMIZATION},
-            queue='broadcast-notifications')
+            queue='celery')
         PACKAGES_CACHE[cache_key] = {"file": None,
                                      "is_ready": False, "task_id": str(task)}
         return api_success({"msg": f"Building the {asset} structure", "is_ready": False, "task_id": str(task)})
@@ -888,7 +888,7 @@ def download_all_asset_structures(request, asset_type):
         task = tasks.make_structure.apply_async(
             kwargs={'asset_type': asset_type, 'user_id': request.user.id,
                     'customization': request.CUSTOMIZATION},
-            queue='broadcast-notifications')
+            queue='celery')
         PACKAGES_CACHE[cache_key] = {"file": None,
                                      "is_ready": False, "task_id": str(task)}
         return api_success({"msg": f"Building the All {asset_type_name} structures", "is_ready": False, "task_id": str(task)})
@@ -971,7 +971,7 @@ def handle_cloud_portal_and_vms_package(asset, preview, version_id, customizatio
         task = tasks.make_package.apply_async(
             args=[asset.id, preview, version_id],
             kwargs={'customization': customization or customization_ctx.get()},
-            queue='broadcast-notifications'
+            queue='celery'
         )
         PACKAGES_CACHE[cache_key] = {
             "file": None, "is_ready": False, "task_id": str(task)}
@@ -1343,7 +1343,7 @@ class CustomClientViewSet(WaffleFlagMixin, ModelViewSet):
         task_id = tasks.make_custom_client.apply_async(
             args=[custom_client.pk, download_id],
             kwargs={'customization': getattr(request, 'CUSTOMIZATION', customization_ctx.get())},
-            queue='broadcast-notifications')
+            queue='celery')
         cache_key = tasks.get_custom_client_package_key(
             custom_client.pk, download_id)
         PACKAGES_CACHE[cache_key] = {"file": None,

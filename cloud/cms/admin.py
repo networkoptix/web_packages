@@ -1333,7 +1333,7 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
                 if form_export.is_valid():
                     menu_name = form_export.cleaned_data['menu'].name
                     task = async_menu_export.apply_async(
-                        args=[menu_name], queue='broadcast-notifications',
+                        args=[menu_name], queue='celery',
                         kwargs={'customization': request.CUSTOMIZATION}
                     )
                     file_name = f'menu-{menu_name}.json'
@@ -1374,7 +1374,7 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
                         task = async_menu_import.apply_async(
                             args=[cache_key, menu.name, request.user.email, accept_reviews],
                             kwargs={'customization': request.CUSTOMIZATION},
-                            queue='broadcast-notifications')
+                            queue='celery')
                     else:
                         messages.warning(request, 'Some assets contain conflicts with existing records. To force update with new values please check the "Force Update" checkbox.')
                     return render(request, 'cms/menu_porting.html',

@@ -150,7 +150,7 @@ class Message(models.Model):
         from notifications.tasks import send_email
 
         if settings.USE_ASYNC_QUEUE and USE_SQS_FOR_CLOUD_NOTIFICATIONS:
-            queue_name = ""
+            queue_name = "cloud-emails"
             if 'queue' in settings.NOTIFICATIONS_CONFIG[self.type]:
                 queue_name = settings.NOTIFICATIONS_CONFIG[self.type]['queue']
 

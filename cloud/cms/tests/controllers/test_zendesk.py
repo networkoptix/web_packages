@@ -1743,4 +1743,4 @@ def test_sync_menu(mocker, db):
     assert (created_log := ZendeskSyncLog.objects.get(
         menu=menu, zendesk_site=created_zd_site, zendesk_category=created_zd_category))
     mock_zendesk_sync.assert_called_once_with(
-        args=[menu.id, customization.name, created_log.id, True], queue='broadcast-notifications')
+        args=[menu.id, customization.name, created_log.id, True], queue='celery')
