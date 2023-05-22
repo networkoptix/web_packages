@@ -243,7 +243,7 @@ SEARCH_INDEX_UPDATING = 'Instant search index is being updated. Using legacy sea
 @permission_classes((CanViewDevelopers, ))
 @handle_exceptions
 def kb_search(request, name):
-    document_cache = DocumentCache(customization_name=request.CUSTOMIZATOIN)
+    document_cache = DocumentCache(customization_name=request.CUSTOMIZATION)
     if not settings.MEILISEARCH_ENDPOINT or not settings.MEILISEARCH_MASTER_KEY:
         raise APIInternalException(
             SEARCH_NOT_CONFIGURED, status.HTTP_501_NOT_IMPLEMENTED)
