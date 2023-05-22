@@ -691,7 +691,7 @@ Force Tags        system    Threaded    users
 
 22. User with client custom settings has access to system
     [Tags]    webadmin    cloud
-    @{custom roles}=    Get User Roles    https://${QA BURBANK IP}:${server 1['port']}    ${servers}[0][local auth]
+    @{custom roles}=    Get User Roles    https://${QA BURBANK IP}:${servers}[0][port][0]    ${servers}[0][localAuth]
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${servers}[0][cloudOwner]    ${servers}[0][cloudUsers][cloudAdmin]
     ...    ELSE    Create List    ${servers}[0][cloudOwner]    admin    ${servers}[0][cloudUsers][cloudAdmin]    ${servers}[0][local users][cloudAdmin][login]
     FOR    ${user}    IN    @{list}
@@ -700,14 +700,14 @@ Force Tags        system    Threaded    users
         &{client custom permissions}=   Get Custom Permissions    ${custom roles}    Client Custom
 
     
-        ${users}    Get Users    ${servers}[0][local auth]    https://${QA BURBANK IP}:${server 1['port']} 
-        ${user id}=   Get Cloud User Id By Email    ${servers}[0][cloudAuth]    ${client custom}    ${servers}[0][id]
+        ${users}    Get Users    ${servers}[0][localAuth]    https://${QA BURBANK IP}:${servers}[0][port][0]
+        ${user id}=   Get Cloud User Id By Email    ${servers}[0][cloudAuth]    Client Custom    ${servers}[0][id]
         Save User Existing
-        ...    ${servers}[0][local auth]
-        ...    https://${QA BURBANK IP}:${server 1['port']}
-        ...    ${client custom}
+        ...    ${servers}[0][localAuth]
+        ...    https://${QA BURBANK IP}:${server}[0][port][0]
+        ...    Client Custom
         ...    ${client custom permissions["permissions"]}
-        ...    ${client custom}
+        ...    Client Custom
         ...    ${client custom permissions["id"]}
         ...    ${user id}
     
