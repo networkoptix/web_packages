@@ -194,7 +194,6 @@ const typeLintBlacklist = [
     '**/sw-cache.service.ts',
     '**/system-api.service.ts',
     '**/system-api.types.ts',
-    '**/system-groups-data.service.ts',
     '**/system-legacy-api.service.ts',
     '**/system-rest-api-v2.service.ts',
     '**/system-rest-api.service.ts',

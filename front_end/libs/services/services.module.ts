@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
 import { NxSwCacheService } from '@services/sw-cache.service';
-// import { SystemGroupsDataService } from '@services/system-groups-data.service';
 import { NxThemeService } from '@services/theme.service';
 
 import { NxAccountService } from './account.service';
@@ -40,7 +39,6 @@ import { NxUrlProtocolService } from './url-protocol.service';
         NxSwCacheService,
         NxThemeService,
         NxDbService
-        // SystemGroupsDataService
     ],
     exports: []
 })
