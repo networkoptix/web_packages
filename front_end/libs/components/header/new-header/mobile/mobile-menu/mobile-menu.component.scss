@@ -73,7 +73,7 @@
     bottom: 0px;
     height: 88px;
     position: fixed;
-    width: 100%;
+    width: inherit;
     background-color: var(--mobile-header-bg);
 
     &.tablet {
