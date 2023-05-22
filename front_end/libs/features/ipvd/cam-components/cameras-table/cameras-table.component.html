@@ -1,5 +1,14 @@
 <div class="nx-new-table-container">
+    <div class="csv">
+        <nx-csv-button
+            [data]="csvCameraData"
+            filename="camera_list_{{ csvFilename | date: 'yyyy-MM-dd' }}"
+            [options]="csvOptions"
+        ></nx-csv-button>
+    </div>
+    <!-- set height until we find better place for CSV button -->
     <nx-table
+        [style.height]="'calc(100% - 20px)'"
         class="cameras"
         set-pagination
         set-sorting

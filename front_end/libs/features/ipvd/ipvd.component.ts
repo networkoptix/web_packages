@@ -103,6 +103,8 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
     private searchContainer: ElementRef<HTMLDivElement>;
 
     private setupDefaults(): void {
+        this.tableMaxWidth = TABLE_MAX_WIDTH;
+
         this.allowedParameters = [
             'vendor',
             'model',

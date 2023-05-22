@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core
 
 import staticLang from '@app/language/language_i18n_static.json';
 import { icons } from '@lib/variables/static-variables';
-import { Disclaimer, FilteredCamera, IpvdParams } from '@pages/ipvd/ipvd.types';
+import { csvData, Disclaimer, FilteredCamera, IpvdParams } from '@pages/ipvd/ipvd.types';
 import { Cameras } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -14,6 +14,8 @@ interface Header {
     sort?: string;
     align?: string;
 }
+
+type CsvData = Record<string, string | number>[];
 
 @Component({
     selector: 'nx-cameras-table',
@@ -50,6 +52,32 @@ export class NxCamerasTableComponent implements OnChanges {
     // private beta: boolean;
 
     icons = icons;
+
+    // Options for the CSV export
+    public csvFilename: number;
+    public csvCameraData: CsvData;
+    /* Missing filename and keys property, but README says keys is optional
+    and filename is provided as a property on the element so probably fine */
+    public csvOptions = {
+        fieldSeparator: ',',
+        headers: [
+            'Vendor',
+            'Model',
+            'Type',
+            'Max Resolution',
+            'Max FPS',
+            'Codec',
+            'Audio',
+            '2-Way Audio',
+            'PTZ',
+            'Advanced PTZ',
+            'Fisheye',
+            'Motion',
+            'I/O',
+        ],
+        showTitle: true,
+        title: 'Camera List',
+    };
 
     constructor(configService: NxConfigService) {
         this.CONFIG = configService.getConfig();
@@ -143,6 +171,9 @@ export class NxCamerasTableComponent implements OnChanges {
 
                 return element;
             });
+
+            this.csvFilename = Date.now();
+            this.csvCameraData = this.getCsvData();
         }
 
         if (changes.allowedParameters?.currentValue) {
@@ -166,6 +197,36 @@ export class NxCamerasTableComponent implements OnChanges {
                 ];
             }
         }
+    }
+
+    getCsvData(): CsvData {
+        return this.elements.map(camera => {
+            const csv: Partial<csvData> = {
+                Vendor: camera.vendor,
+                Model: camera.model,
+                Type: camera.hardwareType,
+                'Max Resolution': camera.maxResolution,
+                'Max FPS': camera.maxFps,
+                Codec: camera.primaryCodec,
+                Audio: this.yesNo(camera.isAudioSupported),
+                '2-Way Audio': this.yesNo(camera.isTwAudioSupported),
+                PTZ: this.yesNo(camera.isPtzSupported),
+                'Advanced PTZ': this.yesNo(camera.isAptzSupported),
+                Fisheye: this.yesNo(camera.isFisheye),
+                Motion: this.yesNo(camera.isMdSupported),
+                'I/O': this.yesNo(camera.isIoSupported),
+            };
+
+            return csv;
+        });
+    }
+
+    yesNo(bVal: unknown): string {
+        if (bVal === undefined || bVal === null) {
+            return 'Unknown';
+        }
+
+        return bVal ? 'Yes' : 'No';
     }
 
     isBoolIcon(value: unknown): boolean {
