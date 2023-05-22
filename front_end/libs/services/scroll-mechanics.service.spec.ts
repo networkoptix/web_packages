@@ -62,13 +62,6 @@ describe('Scroll mechanics service', () => {
         });
     });
 
-    it('should set window  subject', () => {
-        scroll.setWindowSize(800, 1280);
-        scroll.windowSizeSubject.subscribe(dimensions => {
-            expect(dimensions).toEqual({ height: 800, width: 1280 });
-        });
-    });
-
     it('should check window size (max)', () => {
         let result: boolean;
         // @ts-expect-error Need to update global for test

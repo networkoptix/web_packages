@@ -1,11 +1,11 @@
-import { ElementRef, Injectable } from '@angular/core';
+import { ElementRef, Inject, Injectable } from '@angular/core';
 import { sum } from 'lodash-es';
 import { BehaviorSubject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { layout } from '@pages/static-variables-features';
-import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { WINDOW } from '@services/window-provider';
 
 import { NxHealthService } from './health.service';
 
@@ -156,7 +156,7 @@ export class NxHealthLayoutService {
     constructor(
         private ribbonService: NxRibbonService,
         private healthService: NxHealthService,
-        private scrollMechanicsService: NxScrollMechanicsService,
+        @Inject(WINDOW) private window: Window,
     ) {
         this.pageSize = layout.tableLarge.rows;
 
@@ -238,7 +238,9 @@ export class NxHealthLayoutService {
             return;
         }
 
-        const windowSize = this.scrollMechanicsService.windowSizeSubject.getValue();
+        const { innerHeight: height, innerWidth: width } = this.window;
+
+        const windowSize = { width, height };
 
         const ELEMENTS_HEIGHT = sum(this.dimensions);
         const THEAD_HEIGHT = this.tableHeaderElement ? tableHeader.offsetHeight : 0;

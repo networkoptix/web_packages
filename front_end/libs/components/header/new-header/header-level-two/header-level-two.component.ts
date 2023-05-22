@@ -1,4 +1,12 @@
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    EventEmitter,
+    Inject,
+    Input,
+    Output,
+    ViewChild,
+} from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { icons, images } from '@lib/variables/static-variables';
@@ -6,6 +14,7 @@ import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { WINDOW } from '@services/window-provider';
 import { NgChanges } from '@utils/ng-changes';
 
 import { logoAreaState, logoClickType } from '../new-header-types';
@@ -42,6 +51,7 @@ export class NxHeaderLevelTwoComponent {
         public headerService: NxHeaderService,
         private menusService: NxMenusService,
         private scrollMechanics: NxScrollMechanicsService,
+        @Inject(WINDOW) private window: Window,
     ) {
         this.scrollMechanics.windowSizeSubject.pipe(untilDestroyed(this)).subscribe(size => {
             this.recalculateSizes(size.width);
@@ -83,7 +93,7 @@ export class NxHeaderLevelTwoComponent {
         }, 0);
     }
 
-    recalculateSizes(windowWidth = this.scrollMechanics.windowSizeSubject.value.width): void {
+    recalculateSizes(windowWidth = this.window.innerWidth): void {
         const { logoAreaWidth, margins } = this.sizeConstants;
         this.menuItemsWidth = windowWidth - logoAreaWidth - this.mainActionWidth - margins;
         this.checkNavArrowsVisible(true);

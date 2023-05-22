@@ -28,7 +28,6 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import type { ModuleInformationReply } from '@services/system-api.types';
 import { NxThemeService } from '@services/theme.service';
 import { WINDOW } from '@services/window-provider';
@@ -159,7 +158,6 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         private toastService: NxToastService,
         private themeService: NxThemeService,
         private cookieService: CookieService,
-        private scrollMechanicService: NxScrollMechanicsService,
         @Inject(WINDOW) public window: Window
     ) {
         this.CONFIG = configService.getConfig();
@@ -212,7 +210,6 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         this.footerItems = this.CONFIG.dynamicMenus?.footer?.nodes || [];
         this.companyLink = this.CONFIG.company.links.website;
         this.companyName = this.CONFIG.company.name;
-        this.scrollMechanicService.setWindowSize(this.window.innerHeight, this.window.innerWidth);
         this.initProcesses();
 
         this.action = this.route.snapshot?.data?.action;

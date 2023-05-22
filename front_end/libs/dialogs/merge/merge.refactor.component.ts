@@ -31,7 +31,6 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 // import { NxThemeService } from '@services/theme.service';
 import { DiscoveredPeersReply, ModuleInformation } from '@services/system-api.types';
 import { NxSystem } from '@services/system.service/system';
@@ -206,7 +205,6 @@ export class NxMergeComponent implements OnInit, OnDestroy {
         // private themeService: NxThemeService,
         // private cookieService: CookieService,
         private accountService: NxAccountService,
-        private scrollMechanicService: NxScrollMechanicsService,
         private elem: ElementRef<HTMLElement>,
         public dialogRef: DialogRef,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -284,7 +282,6 @@ export class NxMergeComponent implements OnInit, OnDestroy {
 
     async ngOnInit(): Promise<void> {
         this.title.setTitle(`${this.LANG.pageTitles.auth} - ${this.CONFIG.cloudName}`);
-        this.scrollMechanicService.setWindowSize(this.window.innerHeight, this.window.innerWidth);
 
         pickFrom(this.dialogData, ['system', 'systems'], this);
 
@@ -540,7 +537,7 @@ export class NxMergeComponent implements OnInit, OnDestroy {
                     // handles telling the app which systems are getting merged and the proper messaging
                     if (this.isLocal) {
                         const template =
-                            `<div class="my-1">
+                                `<div class="my-1">
                             <div class="larger"><strong>${this.secondaryName}</strong> ${this.translateService.instant(this.LANG.ribbon.beingMerged.to)}</div>
                             <div class="mt-2">${this.translateService.instant(this.LANG.ribbon.beingMerged.mayTake)}</div>
                         </div>`;
@@ -565,11 +562,11 @@ export class NxMergeComponent implements OnInit, OnDestroy {
                                 : this.CONFIG.system.status.slave
                         }
                     );
-                // wrong cloud password
+                    // wrong cloud password
                 } else if (res.errorString === this.wrongLogin) {
                     this.confirmMergeErrorCode = 'wrongPassword';
                     // this.confirmMergeInput.nativeElement.focus();
-                // wrong local admin password when checking VMS <= 4.0 systems
+                    // wrong local admin password when checking VMS <= 4.0 systems
                 } else if (res.errorString === 'UNAUTHORIZED') {
                     this.confirmMergeErrorCode = 'wrongPasswordAdmin';
                     // this.confirmMergeInput.nativeElement.focus();
@@ -598,10 +595,10 @@ export class NxMergeComponent implements OnInit, OnDestroy {
                 }
 
                 /** Get the names of the primary and secondary system.
-                    Next try to figure out which system caused the problem.
-                    If the primary system's stateOfHealth is not online set it as the failedSystem.
-                    Otherwise the secondary system is set as the failedSystem no matter what.
-                */
+                        Next try to figure out which system caused the problem.
+                        If the primary system's stateOfHealth is not online set it as the failedSystem.
+                        Otherwise the secondary system is set as the failedSystem no matter what.
+                    */
                 error.resultCode = errorCode;
                 this.handleMergeError(error);
             });
@@ -787,5 +784,5 @@ export class NxMergeComponent implements OnInit, OnDestroy {
     //     this.primaryRadio && this.primaryRadio.inputRadio.nativeElement.focus();
     // }
 
-    ngOnDestroy(): void {}
+    ngOnDestroy(): void { }
 }

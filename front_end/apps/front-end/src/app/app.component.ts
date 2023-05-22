@@ -24,7 +24,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import type { DeviceInfo } from 'ngx-device-detector';
 import { LocalStorageService } from 'ngx-webstorage';
 import { fromEvent } from 'rxjs';
-import { debounceTime, filter, take } from 'rxjs/operators';
+import { filter, take } from 'rxjs/operators';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
@@ -254,10 +254,6 @@ export class AppComponent implements OnInit {
 
         // in case user switches to a different system before setting up reset system again
         this.localStorageService.store('resetServer', false);
-        this.scrollMechanicsService.setWindowSize(
-            window.innerHeight,
-            window.innerWidth
-        );
 
         // (Smart check) Check if page is displayed inside an iframe
         // this.isInIframe = (window.location !== window.parent.location);
@@ -321,13 +317,6 @@ export class AppComponent implements OnInit {
                     this.mainContainer.nativeElement.scrollTop = 0;
                 }
             });
-
-        fromEvent<Event>(this.window, 'resize')
-            .pipe(debounceTime(100), untilDestroyed(this))
-            .subscribe(event => {
-                const { innerHeight, innerWidth } = event.target as Window;
-                this.scrollMechanicsService.setWindowSize(innerHeight, innerWidth);
-            });
     }
 
     ngOnInit(): void {
@@ -338,7 +327,7 @@ export class AppComponent implements OnInit {
                 this.initScroll();
             });
         },
-        () => {});
+        () => { });
     }
 
     headerResize(size: { width: number; height: number }): void {
