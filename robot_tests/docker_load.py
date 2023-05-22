@@ -18,6 +18,7 @@ def get_variables(ips=BuiltIn().get_variable_value('${QA DOCKER IPS}'), port=Bui
     return {'QA BURBANK IP': docker_server}
 
 def _assign_docker_server(ips, port):
+    # In multiprocessed runs, processes will all choose the same host unless spaced out.
     wait = random.randint(1,20)
     time.sleep(wait)
     servers = []
