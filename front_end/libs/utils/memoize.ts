@@ -56,48 +56,43 @@ export function memoizeDecorator(
 ): MethodDecorator {
     return function (target: unknown, functionName: string, descriptor: PropertyDescriptor) {
         const invalidiationKey = functionName + 'InvalidationKey';
+
+        function hashFunction(...args: unknown[]): string {
+            const hashOrInvalidation = hashOrInvalidFunction.apply(this, args);
+            let hash = '';
+            let invalidate = false;
+
+            if (typeof hashOrInvalidation === 'string') {
+                hash = hashOrInvalidation;
+                invalidate = invalidateFunction.apply(this, [target[invalidiationKey], ...args]);
+            } else {
+                invalidate = hashOrInvalidation;
+                hash = defaultHashFunction.apply(this, args);
+            }
+
+            if (invalidate || !target[invalidiationKey]) {
+                target[invalidiationKey] = invalidate || { uuid: uuid() };
+            } else if ((target[invalidiationKey] as InvalidationParams).ttl) {
+                if (
+                    Date.now() - target[invalidiationKey].lastUpdate >
+                    target[invalidiationKey].ttl
+                ) {
+                    target[invalidiationKey].lastUpdate = Date.now();
+                }
+            }
+
+            return hash + stringify(target[invalidiationKey]) + objectRef.apply(this);
+        }
+
         if (descriptor.get) {
             descriptor.get = memoize(
                 wrap(descriptor.get, wrapperFunctionFactory(invalidiationKey)),
-                function <T>(this: T): T {
-                    return this;
-                },
+                hashFunction,
             );
         } else {
             descriptor.value = memoize(
                 wrap(descriptor.value, wrapperFunctionFactory(invalidiationKey)),
-                function (...args: unknown[]) {
-                    if (functionName === 'getCloudStorageManager') {
-                        // console.log('pause');
-                    }
-                    const hashOrInvalidation = hashOrInvalidFunction.apply(this, args);
-                    let hash = '';
-                    let invalidate = false;
-
-                    if (typeof hashOrInvalidation === 'string') {
-                        hash = hashOrInvalidation;
-                        invalidate = invalidateFunction.apply(this, [
-                            target[invalidiationKey],
-                            ...args,
-                        ]);
-                    } else {
-                        invalidate = hashOrInvalidation;
-                        hash = defaultHashFunction.apply(this, args);
-                    }
-
-                    if (invalidate || !target[invalidiationKey]) {
-                        target[invalidiationKey] = invalidate || { uuid: uuid() };
-                    } else if ((target[invalidiationKey] as InvalidationParams).ttl) {
-                        if (
-                            Date.now() - target[invalidiationKey].lastUpdate >
-                            target[invalidiationKey].ttl
-                        ) {
-                            target[invalidiationKey].lastUpdate = Date.now();
-                        }
-                    }
-
-                    return hash + stringify(target[invalidiationKey]) + objectRef.apply(this);
-                },
+                hashFunction,
             );
         }
     };
