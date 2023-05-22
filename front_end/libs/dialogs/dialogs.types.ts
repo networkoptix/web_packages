@@ -172,6 +172,7 @@ export type UpdateCameraCredentials = DialogType<
     {
         camera: NxSystemCamera;
         system: NxSystem;
+        defaultPassword?: boolean;
         updateCallback: () => Promise<void>;
     },
     void

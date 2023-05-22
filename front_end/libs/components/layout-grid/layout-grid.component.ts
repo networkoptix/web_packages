@@ -182,6 +182,7 @@ export class NxLayoutGridComponent {
         resourceType: ResourceType;
         details: Record<string, unknown>;
     }>();
+    @Output() updateLayoutItems = new EventEmitter<null>();
 
     #lastWidth: number = Infinity;
 
@@ -1238,9 +1239,7 @@ export class NxLayoutGridComponent {
                             'warning',
                         );
                     } else {
-                        this.layoutItemLookup[camera.id].details.online = true;
-                        this.layoutItemLookup[camera.id].details.unauthorized = false;
-                        this.layoutItemLookup[camera.id].details.status = selectedCamera.status;
+                        this.updateLayoutItems.emit();
                     }
                 });
         };
@@ -1248,6 +1247,7 @@ export class NxLayoutGridComponent {
         this.dialogsService.updateCameraCredentials({
             camera,
             system,
+            defaultPassword: true,
             updateCallback: update,
         });
     }

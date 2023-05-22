@@ -31,6 +31,9 @@ export class UpdateCameraCredentialsModalContent extends ModalBase<DT['return']>
     currentCredentials: { loginName: string; password: string };
     cameraLoginCredentials = '';
     cameraPasswordCredentials = '';
+    confirmPassword = '';
+    defaultPassword: boolean;
+    error = '';
 
     constructor(
         private processService: NxProcessService,
@@ -46,17 +49,25 @@ export class UpdateCameraCredentialsModalContent extends ModalBase<DT['return']>
         }
     }
 
+    clearError(): void {
+        this.error = '';
+    }
+
     ngOnInit(): void {
-        pickFrom(this.dialogData, ['system', 'camera', 'updateCallback'], this);
+        pickFrom(this.dialogData, ['system', 'camera', 'updateCallback', 'defaultPassword'], this);
 
         const [loginName, password] = this.camera.addParams.credentials
             ? this.camera.addParams.credentials.split(':')
             : ['', ''];
         this.currentCredentials = { loginName, password };
         this.cameraLoginCredentials = loginName;
-        this.cameraPasswordCredentials = loginName && password;
+        this.cameraPasswordCredentials = (!this.defaultPassword && loginName) ? password : '';
         this.update = this.processService.createProcess(() => {
             this.lock();
+            if (this.defaultPassword && this.cameraPasswordCredentials !== this.confirmPassword) {
+                this.unlock();
+                return Promise.reject('mismatch');
+            }
             if (
                 this.cameraLoginCredentials === this.currentCredentials.loginName &&
                 this.cameraPasswordCredentials === this.currentCredentials.password
@@ -67,8 +78,12 @@ export class UpdateCameraCredentialsModalContent extends ModalBase<DT['return']>
                 this.camera.id,
                 { credentials: `${this.cameraLoginCredentials}:${this.cameraPasswordCredentials}` }
             ).then(this.updateCallback);
-        }).then(() => {
+        }, { ignoreError: true },
+        () => {
             this.close();
+        },
+        err => {
+            this.error = staticLang.dialogs.updateCameraCredentials[err];
         });
     }
 }

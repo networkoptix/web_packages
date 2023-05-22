@@ -174,7 +174,12 @@ export class NxLayoutViewComponent {
         shareReplay({ bufferSize: 1, refCount: true }),
     );
 
+    updateLayoutItems$ = new BehaviorSubject<null>(null);
+
+    updateLayoutItems = (): void => this.updateLayoutItems$.next(null);
+
     layoutItemLookup$ = this.selectedSystem$.pipe(
+        switchMap(system => this.updateLayoutItems$.pipe(map(() => system))),
         switchMap(({ mediaserver, serverManager, cameraManager, userManager }) =>
             combineLatest([
                 defer(() => cameraManager.getCameras()).pipe(
@@ -241,6 +246,10 @@ export class NxLayoutViewComponent {
                                     (camera.online &&
                                         servers.find(({ id }) => id === camera.parentId).status ===
                                             'Online'),
+                                unauthorized:
+                                    camera.unauthorized &&
+                                    servers.find(({ id }) => id === camera.parentId).status ===
+                                        'Online',
                                 requiresTranscoding: [7, 173].includes(
                                     (camera.addParams.mediaStreams
                                         ? JSON.parse(camera.addParams.mediaStreams)

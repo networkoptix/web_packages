@@ -767,6 +767,9 @@
             },
             "resetServer": "Failed to reset server.",
             "transferOnwership": "Failed to transfer ownership."
+        },
+        "updateCameraCredentials": {
+            "mismatch": "Passwords do not match"
         }
     },
     "downloads": {
