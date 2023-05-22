@@ -315,10 +315,10 @@ cdk-tree,
     }
 
     &:hover .item-error.has-secondary-panel {
-        padding-top: 16px;
 
         & > {
             :not(.main-panel) {
+                padding-top: 16px;
                 display: block !important;
             }
 
@@ -403,14 +403,14 @@ cdk-tree,
 
         h3 {
             text-align: center;
-            color: var(--error) !important;
+            color: var(--placeholder-color) !important;
         }
 
         h4 {
             text-align: center;
             width: 100%;
             padding: 8px;
-            color: var(--error) !important;
+            color: var(--placeholder-color) !important;
         }
     }
 }

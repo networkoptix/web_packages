@@ -237,9 +237,10 @@ export class NxLayoutViewComponent {
                             details: {
                                 ...camera,
                                 online:
-                                    camera.online &&
-                                    servers.find(({ id }) => id === camera.parentId).status ===
-                                        'Online',
+                                    isIoOnly(camera) ||
+                                    (camera.online &&
+                                        servers.find(({ id }) => id === camera.parentId).status ===
+                                            'Online'),
                                 requiresTranscoding: [7, 173].includes(
                                     (camera.addParams.mediaStreams
                                         ? JSON.parse(camera.addParams.mediaStreams)

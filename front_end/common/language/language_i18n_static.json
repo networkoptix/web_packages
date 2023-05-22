@@ -95,10 +95,10 @@
         "statistics": "{resourceType} \"{name}\" Statistics",
         "additionalErrorMessages": {
             "unreachable": "Can't connect to the camera. Please, make sure the server \"{serverName}\" has Internet access.",
-            "webpage": "Support for webpages will be added in future releases.",
-            "iodevice": "Support for IO Devices will be added in future releases.",
-            "defaultPassword": "click to setup password",
-            "unauthorized": "click to setup credentials"
+            "webpage": "expect in future versions",
+            "iodevice": "expect in future versions",
+            "defaultPassword": "click to set up",
+            "unauthorized": "click to set credentials"
         },
         "titles": {
             "resourceTypes": {
@@ -189,8 +189,8 @@
             }
         },
         "errors": {
-            "webpage": "WEBPAGES NOT SUPPORTED",
-            "iodevice": "IO DEVICES NOT SUPPORTED",
+            "webpage": "NOT SUPPORTED",
+            "iodevice": "NOT SUPPORTED",
             "webpage_error": "Error loading webpage",
             "unableToAuthorizeCamera": "Unable to authorize \"{name}\" camera"
         }
@@ -417,7 +417,7 @@
             "mjpegDisabled": "Transcoding for MJPEG streams not supported"
         },
         "serverStates": {
-            "offline": "SERVER UNAVAILABLE"
+            "offline": "UNAVAILABLE"
         },
         "chromeCastWarning": "Chromecast is resource intensive and may cause issues on your server.",
         "copiedToClipboard": "Copied to clipboard",
