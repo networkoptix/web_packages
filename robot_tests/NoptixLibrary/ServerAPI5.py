@@ -77,9 +77,10 @@ class ServerAPI5(ServerAPI):
     def get_server_id(self, serverUrl, auth, serverName=None):
         with requests.Session() as s:
             credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
-            login_response = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+
             r = s.get(f"{serverUrl}/rest/v1/servers")
-            s.delete(f"{serverUrl}/rest/v1/login/sessions/{login_response.json()['token']}")
+            s.delete(f"{serverUrl}/rest/v1/login/sessions")
             #logger.info(f"{systemName} has been setup on {serverUrl}")
             logger.trace(r.status_code)
             return r.json()[0]['id']
@@ -89,8 +90,7 @@ class ServerAPI5(ServerAPI):
         try:
             with requests.Session() as s:
                 logger.trace(auth[1])
-                credentials = {"username": "admin", "password": "qweasd 123", "setCookie": True}
-                login_response = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+                self.login(s, serverUrl, password=auth[1])
                 cloud_credentials = { "name": name, "email": auth[0], "password": auth[1]}
                 logger.trace(f'cloud credentials {cloud_credentials}')
                 res = s.post(f"{cloudHost}/api/systems/connect", json=cloud_credentials, verify=False)
@@ -104,7 +104,7 @@ class ServerAPI5(ServerAPI):
                 }
                 r = s.post(f"{serverUrl}/rest/v1/system/cloudBind", json=cloud_info)
                 logger.trace(r.content)
-                s.delete(f"{serverUrl}/rest/v1/login/sessions/{login_response.json()['token']}")
+                s.delete(f"{serverUrl}/rest/v1/login/sessions")
                 logger.info(f"{name} has been connected to {cloudHost} with {cloud_info['owner']}'s account.")
                 logger.trace(r)
                 return cloud_info["systemId"]
@@ -175,27 +175,27 @@ class ServerAPI5(ServerAPI):
     def get_system_settings_from_server(self, auth, serverUrl):
         with requests.Session() as s:
             credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
-            login_response = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
             r = s.get(f'{serverUrl}/rest/v1/system/settings?_keepDefault=true', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
-            s.delete(f"{serverUrl}/rest/v1/login/sessions/{login_response.json()['token']}")
+            s.delete(f"{serverUrl}/rest/v1/login/sessions")
             return r.json()
 
     @keyword
     def get_user_roles(self, serverUrl, auth):
         with requests.Session() as s:
             credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
-            login_response = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
             r = s.get(f'{serverUrl}/rest/v1/userRoles?_keepDefault=true', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
-            s.delete(f"{serverUrl}/rest/v1/login/sessions/{login_response.json()['token']}")
+            s.delete(f"{serverUrl}/rest/v1/login/sessions")
             return r.json()
 
     @keyword
     def get_users(self, auth, serverUrl):
         with requests.Session() as s:
             credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
-            login_response = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
             r = s.get(f'{serverUrl}/rest/v1/users?_format=JSON&_keepDefault=true', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
-            s.delete(f"{serverUrl}/rest/v1/login/sessions/{login_response.json()['token']}")
+            s.delete(f"{serverUrl}/rest/v1/login/sessions")
             return r.json()
 
     @keyword
@@ -226,10 +226,10 @@ class ServerAPI5(ServerAPI):
         }
         with requests.Session() as s:
             credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
-            login_response = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
             r = s.patch(f'{serverUrl}/rest/v1/users/{userId}', auth=HTTPBasicAuth(auth[0], auth[1]), json=body,
                           verify=False)
-            s.delete(f"{serverUrl}/rest/v1/login/sessions/{login_response.json()['token']}")
+            s.delete(f"{serverUrl}/rest/v1/login/sessions")
         return r.json()
 
     @keyword
@@ -239,9 +239,9 @@ class ServerAPI5(ServerAPI):
         }
         with requests.Session() as s:
             credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
-            login_response = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
             r =  r = s.patch(f'{serverUrl}/rest/v1/servers/this', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
-            s.delete(f"{serverUrl}/rest/v1/login/sessions/{login_response.json()['token']}")
+            s.delete(f"{serverUrl}/rest/v1/login/sessions")
             return r.json()
 
     @keyword
