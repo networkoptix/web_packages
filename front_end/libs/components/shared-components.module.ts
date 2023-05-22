@@ -13,6 +13,7 @@ import {
 import { NxMatLikeInputModule } from '@components/mat-like-components/mat-like-input/input.module';
 import { NxMatLikePasswordModule } from '@components/mat-like-components/mat-like-password-input/password.module';
 import { NxMatLikeTypeAheadModule } from '@components/mat-like-components/mat-like-type-ahead-select/searchable.module';
+import { NxThemeGeneratorModule } from '@components/theme-generator/theme-colors.module';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { CheckboxModule } from './checkbox/checkbox.module';
@@ -53,6 +54,7 @@ import { TooltipModule } from './tooltip/tooltip.module';
         NxMatLikeInputModule,
         NxMatLikePasswordModule,
         NxMatLikeGenericDropdownModule,
+        NxThemeGeneratorModule
     ],
     declarations: [
     ],
@@ -75,6 +77,7 @@ import { TooltipModule } from './tooltip/tooltip.module';
         NxMatLikePasswordModule,
         NxMatLikeTypeAheadModule,
         NxMatLikeGenericDropdownModule,
+        NxThemeGeneratorModule
     ]
 })
 export class SharedComponentsModule {

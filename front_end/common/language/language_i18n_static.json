@@ -1762,5 +1762,14 @@
                 "PM": "PM"
             }
         }
+    },
+    "theme": {
+        "baseColorLumLabel": "HEX Base Color (lum set to {luminosityStep}% step)",
+        "brandLabel": "{hex} - brand {label}",
+        "errorLabel": "{hex} - error {label}",
+        "greenLabel": "{hex} - green {label}",
+        "yellowLabel": "{hex} - yellow {label}",
+        "lightLabel": "{hex} - light{number}",
+        "darkLabel": "{hex} - dark{number}"
     }
 }

@@ -28,16 +28,15 @@ export type Handler = (...args: any[]) => any;
 
 export const logError = (...args) => console.error(args);
 
-export const formatError = (
-    error,
-    errorCodes,
-    lang
-): string | false => {
+export const formatError = (error, errorCodes, lang): string | false => {
     if (error?.error && typeof error.error === 'object') {
         error = error.error;
         // Unpack nested error
     }
-    if (error?.error !== '4' && errorCodes && error?.errorString &&
+    if (
+        error?.error !== '4' &&
+        errorCodes &&
+        error?.errorString &&
         (!errorCodes[error?.errorString] || errorCodes[error?.errorId])
     ) {
         delete error.errorString;
@@ -45,7 +44,7 @@ export const formatError = (
     const errorCode =
         error?.data?.resultCode ||
         error?.resultCode ||
-        error?.type === 'error' && 'networkConnection' ||
+        (error?.type === 'error' && 'networkConnection') ||
         error?.errorText ||
         error?.errorString ||
         error?.errorId ||
@@ -54,16 +53,13 @@ export const formatError = (
         return lang.errorCodes.unknownError;
     }
 
-    if (
-        error?.errorText === 'second_factor_required' &&
-        lang.dialogs?.message?.twoFactor
-    ) {
+    if (error?.errorText === 'second_factor_required' && lang.dialogs?.message?.twoFactor) {
         return lang.dialogs.message.twoFactor.required;
     }
 
-    if (errorCodes && typeof (errorCodes[errorCode]) !== 'undefined') {
-        if (typeof (errorCodes[errorCode]) === 'function') {
-            const result = (errorCodes[errorCode])(error) || false;
+    if (errorCodes && typeof errorCodes[errorCode] !== 'undefined') {
+        if (typeof errorCodes[errorCode] === 'function') {
+            const result = errorCodes[errorCode](error) || false;
             if (result !== true) {
                 return result;
             }
@@ -87,7 +83,7 @@ export class Process {
         successMessage: '',
         ignoreError: false,
         name: '',
-        timeoutMs: 0
+        timeoutMs: 0,
     };
 
     // These public methods are being accessed in the nx-process-button, for some reason typescript isn't showing it though.
@@ -109,7 +105,7 @@ export class Process {
         private _errorHandler: Handler = logError,
         // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
         // @ts-ignore: Deprecated, kept for compatibility
-        private _catchHandler: Handler = logError
+        private _catchHandler: Handler = logError,
     ) {
         this.settings.errorPrefix = settings?.errorPrefix || '';
         this.settings = { ...this.settings, ...settings };
@@ -124,7 +120,10 @@ export class Process {
         return false;
     }
 
-    public run = (successHandler = (...args: any) => null, errorHandler = (...args: any) => null) => {
+    public run = (
+        successHandler = (...args: any) => null,
+        errorHandler = (...args: any) => null,
+    ) => {
         this.processing = true;
         this.error = false;
         this.success = false;
@@ -134,17 +133,20 @@ export class Process {
             first(data);
             second(data);
         };
-        const obs = this.settings.timeoutMs ? race(
-            timer(this.settings.timeoutMs)
-                .pipe(map(() => {
-                    throw Error(`timeout of ${this.settings.timeoutMs}ms`);
-                })),
-            this.caller$
-        ) : this.caller$;
+        const obs = this.settings.timeoutMs
+            ? race(
+                  timer(this.settings.timeoutMs).pipe(
+                      map(() => {
+                          throw Error(`timeout of ${this.settings.timeoutMs}ms`);
+                      }),
+                  ),
+                  this.caller$,
+              )
+            : this.caller$;
         obs.subscribe(
             chain(successHandler, this.onSuccess),
             chain(errorHandler, this.onError),
-            this.onComplete
+            this.onComplete,
         );
         return this;
     };
@@ -157,16 +159,14 @@ export class Process {
         }
         const data = await res;
         const error = this.checkResponseHasError(data);
-        if (error || data?.error && data.error !== '0') {
+        if (error || (data?.error && data.error !== '0')) {
             return this.errorHelper(error || data);
         } else {
             this.success = true;
             if (this.settings.successMessage && data !== false) {
-                this.toastService.show(
-                    this.settings.successMessage,
-                    toast.success,
-                    { autohide: !this.settings.holdAlerts }
-                );
+                this.toastService.show(this.settings.successMessage, toast.success, {
+                    autohide: !this.settings.holdAlerts,
+                });
             }
             return this._successHandler(data);
         }
@@ -228,9 +228,11 @@ export class Process {
         }
         this.error = true;
         this.errorData = data;
-        if (!this.settings.ignoreUnauthorized && data &&
+        if (
+            !this.settings.ignoreUnauthorized &&
+            data &&
             (data.detail ||
-                (data.resultCode === 'notAuthorized') ||
+                data.resultCode === 'notAuthorized' ||
                 (data.resultCode === 'forbidden' && this.settings.logoutForbidden))
         ) {
             this.sessionService.invalidateSession();
@@ -243,15 +245,11 @@ export class Process {
         const formatted = formatError(data, this.settings.errorCodes, this.LANG);
         if (formatted !== false && !this.settings.ignoreError) {
             this.settings.errorMessage = formatted;
-            const message = `${this.settings.errorPrefix
-                ? this.settings.errorPrefix + ': '
-                : ''}${this.settings.errorMessage}`;
+            const message = `${this.settings.errorPrefix ? this.settings.errorPrefix + ': ' : ''}${
+                this.settings.errorMessage
+            }`;
 
-            this.toastService.show(
-                message,
-                toast.danger,
-                { autohide: !this.settings.holdAlerts }
-            );
+            this.toastService.show(message, toast.danger, { autohide: !this.settings.holdAlerts });
         }
         this.error = true;
         this.errorData = data;

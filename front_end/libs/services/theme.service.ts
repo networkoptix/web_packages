@@ -144,7 +144,7 @@ export class NxThemeService {
                 return;
             }
             NxConfigService.isDarkTheme = e.matches;
-            NxConfigService.isDarkTheme && this.initHslTheme();
+            // NxConfigService.isDarkTheme && this.initHslTheme();
 
             const theme = NxConfigService.isDarkTheme ? 'dark' : 'light';
 

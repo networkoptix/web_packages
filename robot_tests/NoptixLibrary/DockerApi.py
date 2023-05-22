@@ -78,3 +78,30 @@ class DockerApi(object):
         r = requests.get(f'http://{self.host_ip}:{self.host_port}/containers/json?name={name}')
         assert r.status_code == 200
         return r.json()
+    
+    @keyword
+    def remove_custom_network(self, id):
+        r = requests.delete(f'http://{self.host_ip}:{self.host_port}/networks/{id}')
+        assert r.status_code == 204
+    
+    @keyword
+    def create_custom_network(self, name, num):
+        subnet = str(f"192.28.{num}.0/24")
+        ip_range = str(f"192.28.{num}.0/24")
+        gateway = str(f"192.28.{num}.254")
+        payload = {
+            "Name": name,
+            "IPAM":{
+                "Config": [
+                    {
+                        "Subnet": subnet,
+                        "IPRange": ip_range,
+                        "Gateway": gateway
+                    }
+                ]
+            }
+        }
+        r = requests.post(f'http://{self.host_ip}:{self.host_port}/networks/create', json=payload)
+        assert r.status_code == 201
+        return r.json()['Id']
+

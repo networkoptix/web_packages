@@ -16,6 +16,7 @@ import { NxSliderModule } from '@components/slider/slider.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
+import { NxHSLThemeColorsComponent } from '@pages/sandbox/hsl-theme-colors/theme-colors.component';
 import { SimpleWebglComponent } from '@pages/sandbox/simple-webgl/webgl.component';
 import { SandboxTableComponent } from '@pages/sandbox/table/sandbox-table.component';
 import { _NxTestBoxComponent } from '@pages/sandbox/test-box.component';
@@ -43,7 +44,6 @@ import {
     FormApplyExampleComponent
 } from './form-apply-example/form-apply-example.component';
 import { FormElementsComponent } from './form-elements/form-elements.component';
-import { NxHSLThemeColorsComponent } from './hsl-theme-colors/theme-colors.component';
 import { MasonryGridComponent } from './masonry-grid/masonry-grid.component';
 import { MultiSelectComponent } from './multi-select/multi-select.component';
 import { NgrxDemoModule } from './ngrx-demo/ngrx-demo.module';

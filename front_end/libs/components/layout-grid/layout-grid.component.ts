@@ -1229,7 +1229,7 @@ export class NxLayoutGridComponent {
                         ({ id }) => id === camera.id,
                     );
 
-                    if (selectedCamera.status === 'Unauthorized') {
+                    if (selectedCamera.status === 'unauthorized') {
                         this.dialogsService.notify(
                             {
                                 value: staticLang.layouts.errors.unableToAuthorizeCamera,

@@ -1084,3 +1084,15 @@ class GenericKeywords(object):
     def check_user_email_is_none(self, name, check_info):
         if not any(name in user["name"] and user["email"] == '' for user in check_info):
             raise RuntimeError(f"User with name {name} does not exist or does not have an empty email.")
+
+        
+    @keyword
+    def restart_docker_servers(self, servers):
+        for server in servers:
+            self.docker_api.restart_container(server['container'])
+            time.sleep(1)
+
+    @keyword
+    def get_container_port_by_name(self, name):
+        r = self.docker_api.get_container_by_name(name)
+        return r.json()['Ports'][0]['PublicPort']

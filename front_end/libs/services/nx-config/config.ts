@@ -16,64 +16,64 @@ export const nxConfig: IConfig = {
         {
             name: 'Account Settings',
             route: '/account/',
-            newWindow: false
+            newWindow: false,
         },
         {
             name: 'Change Password',
             route: '/account/password/',
-            newWindow: false
+            newWindow: false,
         },
         {
             name: 'Security',
             route: '/account/security/',
-            newWindow: false
-        }
+            newWindow: false,
+        },
     ],
     accountDropdownStaff: [
         {
             name: 'Administration',
             route: '/admin/',
-            newWindow: true
-        }
+            newWindow: true,
+        },
     ],
     clientProtocol: '',
     downloads: {
         mobile: [
             {
                 name: 'ios',
-                os: 'iOS'
+                os: 'iOS',
             },
             {
                 name: 'android',
-                os: 'Android'
-            }
+                os: 'Android',
+            },
         ],
         groups: {
             windows: {
                 name: 'windows',
                 os: 'windows',
-                appTypes: ['bundle', 'client', 'server']
+                appTypes: ['bundle', 'client', 'server'],
             },
             linux: {
                 name: 'linux',
                 os: 'linux',
-                appTypes: ['bundle', 'client', 'server']
+                appTypes: ['bundle', 'client', 'server'],
             },
             macos: {
                 name: 'macos',
                 os: 'MacOS',
-                appTypes: ['client']
+                appTypes: ['client'],
             },
             arm: {
                 name: 'arm',
                 os: '',
-                appTypes: ['client', 'server']
+                appTypes: ['client', 'server'],
             },
             sdk: {
                 name: 'sdk',
                 os: '',
-                appTypes: ['universal']
-            }
+                appTypes: ['universal'],
+            },
         },
         platformMatch: {
             unix: 'Linux',
@@ -81,8 +81,8 @@ export const nxConfig: IConfig = {
             mac: 'MacOS',
             windows: 'Windows',
             arm: 'ARM',
-            skd: 'SDK'
-        }
+            skd: 'SDK',
+        },
     },
     integration: {
         adminLink: '/admin/cms/asset/%ID%/pages/',
@@ -92,24 +92,24 @@ export const nxConfig: IConfig = {
             'macos-file': 'Mac OS',
             'arm-32-file': 'ARM 32bit',
             'windows-x64-file': 'Windows x64',
-            downloadableInstructions: 'Instructions / Manual'
+            downloadableInstructions: 'Instructions / Manual',
         },
         embedInfo: {
             vimeo: {
                 link: 'https://player.vimeo.com/video/',
-                regex: 'https?:\\/\\/(?:www.)?vimeo.com\\/([0-9]{9})'
+                regex: 'https?:\\/\\/(?:www.)?vimeo.com\\/([0-9]{9})',
             },
             youtube: {
                 link: 'https://www.youtube.com/embed/',
                 // eslint-disable-next-line no-useless-escape
-                regex: '(?:https?:\\/\\/)(?:www.)youtube.com\\/(?:watch[?]v=|embed\\/)([\\w-]{11})([&=\\w-]?){0,}'
-            }
+                regex: '(?:https?:\\/\\/)(?:www.)youtube.com\\/(?:watch[?]v=|embed\\/)([\\w-]{11})([&=\\w-]?){0,}',
+            },
         },
         filter: {
             items: '',
-            limitation: ''
+            limitation: '',
         },
-        myTagId: 'mine'
+        myTagId: 'mine',
     },
     ipvd: {
         pagerMaxSizeMedium: 3,
@@ -120,43 +120,43 @@ export const nxConfig: IConfig = {
         supportedResolutions: [],
         supportedHardwareTypes: [],
         searchTags: [],
-        vendorsShown: 0
+        vendorsShown: 0,
     },
     isLocal: environment.isLocal,
     isDarkTheme: false,
     landing: {
-        description: ''
+        description: '',
     },
     licenseServer: '',
     newSystem: false,
     serverDocumentation: {
-        windowsPath: 'HKEY_LOCAL_MACHINE\SOFTWARE\{VMS Vendor}\{VMS Vendor}',
+        windowsPath: 'HKEY_LOCAL_MACHINESOFTWARE{VMS Vendor}{VMS Vendor}',
         defaultPath: '/opt/{vmsvendor}/mediaserver/etc/mediaserver.conf.',
-        tableHeaders: ['Name', 'Description', 'Default Value']
+        tableHeaders: ['Name', 'Description', 'Default Value'],
     },
     headerHeight: 48,
     moreResultsHeight: 60,
     supportedLanguages: [],
     system: {
         flags: {
-            newSystem: 'SF_NewSystem'
+            newSystem: 'SF_NewSystem',
         },
         name: '',
         status: {
             online: 'online',
             default: {
-                style: 'default'
+                style: 'default',
             },
             offline: {
-                style: 'default'
+                style: 'default',
             },
             unavailable: {
-                style: 'default'
+                style: 'default',
             },
             master: 'master',
-            slave: 'slave'
+            slave: 'slave',
         },
-        auditTime: 500
+        auditTime: 500,
     },
 
     // Dynamic from cloud_portal
@@ -172,11 +172,11 @@ export const nxConfig: IConfig = {
         cloudStorageEnabled: false,
         cloudStorageSize: 0,
         healthMonitorCacheTimeout: 60,
-        customClientsEnabled: false
+        customClientsEnabled: false,
     },
     cloudMonitoring: {
         fullStory: '',
-        isFullStoryActive: false
+        isFullStoryActive: false,
     },
     cloudName: '',
     cloudHost: '',
@@ -190,9 +190,9 @@ export const nxConfig: IConfig = {
         links: {
             privacy: '',
             support: '',
-            website: ''
+            website: '',
         },
-        name: ''
+        name: '',
     },
     dynamicMenus: {},
     docMenuMap: {},
@@ -219,34 +219,38 @@ export const nxConfig: IConfig = {
         viewArchivesPermissionFlag: 'GlobalViewArchivePermission',
         customPermission: {
             name: 'Custom',
-            permissions: 'NoPermission'
+            permissions: 'NoPermission',
         },
         predefinedRoles: [
             {
                 isOwner: true,
                 name: 'Owner',
-                permissions: 'GlobalAdminPermission|GlobalEditCamerasPermission|GlobalControlVideoWallPermission|GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission'
+                permissions:
+                    'GlobalAdminPermission|GlobalEditCamerasPermission|GlobalControlVideoWallPermission|GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission',
             },
             {
                 name: 'Administrator',
-                permissions: 'GlobalAdminPermission|GlobalEditCamerasPermission|GlobalControlVideoWallPermission|GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission'
+                permissions:
+                    'GlobalAdminPermission|GlobalEditCamerasPermission|GlobalControlVideoWallPermission|GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission',
             },
             {
                 name: 'Advanced Viewer',
-                permissions: 'GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission'
+                permissions:
+                    'GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission',
             },
             {
                 name: 'Viewer',
-                permissions: 'GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission'
+                permissions:
+                    'GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission',
             },
             {
                 name: 'Live Viewer',
-                permissions: 'GlobalAccessAllMediaPermission'
+                permissions: 'GlobalAccessAllMediaPermission',
             },
             {
                 name: 'Custom',
-                permissions: 'NoPermission'
-            }
+                permissions: 'NoPermission',
+            },
         ],
         order: [
             'Live Viewer',
@@ -260,8 +264,8 @@ export const nxConfig: IConfig = {
             'Administrator',
             'admin',
             'Owner',
-            'owner'
-        ]
+            'owner',
+        ],
     },
     metaDefaults,
     webadminRoutesLookup: [
@@ -272,7 +276,7 @@ export const nxConfig: IConfig = {
         [/^settings\/server/g, '/settings/servers'],
         [/^settings\/system/g, '/settings'],
         [/^help/g, 'supportLink'],
-        [/^info/g, '/health']
+        [/^info/g, '/health'],
         // [/^another/g, '/another-redirect', 'redirects.customMessage'] Example with custom translated message
     ],
     themeConfig: {
@@ -282,7 +286,6 @@ export const nxConfig: IConfig = {
     },
     mobileLinks: {
         android_application_link: '',
-        ios_application_link: ''
-    }
-
+        ios_application_link: '',
+    },
 };

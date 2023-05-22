@@ -373,6 +373,12 @@ CACHES = {
         "LOCATION": REDIS_CACHE['LOCATION'] + '/6',
         "KEY_PREFIX": 'assets_values'
     },
+    "sessions": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "TIMEOUT": REDIS_CACHE['TIMEOUT'],
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/6',
+        "KEY_PREFIX": 'sessions'
+    },
     "local": {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         'LOCATION': 'local'
@@ -516,7 +522,8 @@ AUTH_USER_MODEL = 'api.Account'
 AUTHENTICATION_BACKENDS = (
     'api.account_backend.AccountBackend',
 )
-
+SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
+SESSION_CACHE_ALIAS = "sessions"
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SESSION_COOKIE_SECURE = not LOCAL_ENVIRONMENT
 CSRF_COOKIE_SECURE = not LOCAL_ENVIRONMENT

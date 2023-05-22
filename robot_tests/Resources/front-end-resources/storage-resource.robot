@@ -4,7 +4,7 @@ Resource          system-camera-resource.robot
 Resource          system-server-resource.robot
 
 *** Variables ***
-${QA BURBANK IP}     10.1.5.34
+#${QA BURBANK IP}     10.1.5.34
 ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
 ${camera}      E4-30-22-4A-D1-EB

@@ -147,7 +147,8 @@
 
                 &>.cdk-drag {
                     padding: 0 0 0 24px;
-                    line-height: 20px;
+                    line-height: 14px;
+                    align-items: center;
 
                     &:not(:hover)>.action-button {
                         display: none !important;
@@ -397,7 +398,7 @@ cdk-tree,
             flex: 0;
             margin: 0;
             padding: 0 8px;
-            font-family: var(--font-family-light);
+            font-family: var(--font-family-regular);
         }
 
         h3 {
@@ -453,7 +454,7 @@ cdk-tree,
     align-items: center;
     margin: 1px;
     overflow: hidden;
-    background: var(--placeholder-background);
+    background: var(--header-bg);
 
     &:hover {
         outline: 2px solid var(--border-color);
