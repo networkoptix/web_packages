@@ -200,7 +200,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     @property
     def permissions(self):
-        if not UserGroupsToAssetPermissions.check_customization_permission(self, settings.DEF_CUSTOMIZATION):
+        if not UserGroupsToAssetPermissions.check_customization_permission(self, customization_ctx.get()):
             return []
 
         permissions = []
