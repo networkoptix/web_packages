@@ -1,5 +1,6 @@
 import { filter, Observable, switchMap, tap } from 'rxjs';
 
+import { nxConfig } from '@services/nx-config/config';
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 
 import { TransactionBusHandler } from '../connections/methods/transaction-bus';
@@ -41,7 +42,9 @@ export function withSystemBusUpdates(predicateCallback: PredicateCallback) {
                     .split('://')
                     .pop()}/ec2/transactionBus/websocket?noInitialData=true`;
                 const connection = TransactionBusHandler.getConnection(transactionBusEndpoint, () =>
-                    this.authGet ? `&auth=${this.authGet}` : '',
+                    this.authGet && !nxConfig.featureFlags.restCookieLogin
+                        ? `&auth=${this.authGet}`
+                        : '',
                 );
                 let lastResponse: T = null;
 

@@ -1,6 +1,7 @@
 import { catchError, first, forkJoin, map, Observable, race, retry, tap, timeout } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
+import { nxConfig } from '@services/nx-config/config';
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 
 import { JsonRpcHandler, JsonRpcPayload, JsonRpcResponse } from '../connections/methods/json-rpc';
@@ -169,7 +170,9 @@ export function useJsonRpc(
                 this.window.location.protocol === 'http' ? 'ws' : 'wss'
             }://${(this.urlBase || this.window.location.origin).split('://').pop()}/jsonrpc`;
             const connection = JsonRpcHandler.getConnection(jsonRpcEndpoint, () =>
-                this.authGet ? `?auth=${this.authGet}` : '',
+                this.authGet && !nxConfig.featureFlags.restCookieLogin
+                    ? `?auth=${this.authGet}`
+                    : '',
             );
             const method = originalMethod.name === 'put' ? 'patch' : originalMethod.name;
             const params = ['post', 'put', 'patch'].includes(method)

@@ -131,10 +131,6 @@ export class CloudAccount extends BaseAccount {
             );
         }
 
-        if (this.account && !forceUpdate) {
-            return Promise.resolve(this.account);
-        }
-
         return firstValueFrom(this.cloudApi.account(forceUpdate))
             .then((account: Account | any) => {
                 // eslint-disable-next-line camelcase
