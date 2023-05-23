@@ -5,7 +5,7 @@
     .footer {
         position: fixed;
         width: 100%;
-        top: calc(100vh - 32px);
+        bottom: 0;
         height: 32px;
         background-color: var(--footer-bg);
         color: var(--footer-text-color);
