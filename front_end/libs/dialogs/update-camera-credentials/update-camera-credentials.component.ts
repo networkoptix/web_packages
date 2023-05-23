@@ -76,7 +76,7 @@ export class UpdateCameraCredentialsModalContent extends ModalBase<DT['return']>
             }
             return this.system.serverManager.updateResource(
                 this.camera.id,
-                { credentials: `${this.cameraLoginCredentials}:${this.cameraPasswordCredentials}` }
+                { credentials: `${this.cameraLoginCredentials || 'admin'}:${this.cameraPasswordCredentials}` }
             ).then(this.updateCallback);
         }, { ignoreError: true },
         () => {

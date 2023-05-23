@@ -1191,6 +1191,7 @@ export class NxLayoutGridComponent {
     }
 
     updateCameraCredentials(system: NxSystem, camera: NxSystemCamera): void {
+        const defaultPassword = !camera.unauthorized;
         const firstCheckTimeout = 15 * 1000;
         const cameraCredentialUpdateTimeout = 6000;
         let firstCheck = true;
@@ -1247,7 +1248,7 @@ export class NxLayoutGridComponent {
         this.dialogsService.updateCameraCredentials({
             camera,
             system,
-            defaultPassword: true,
+            defaultPassword,
             updateCallback: update,
         });
     }
