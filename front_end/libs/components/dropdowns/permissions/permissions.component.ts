@@ -3,7 +3,6 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { icons } from '@lib/variables/static-variables';
-import { NxApplyService } from '@services/apply.service';
 import { CustomPermission } from '@services/nx-config/base-config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { NxSystem } from '@services/system.service/system';
@@ -50,7 +49,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
 
     private selected: AccessLevelItem;
 
-    constructor(configService: NxConfigService, private applyService: NxApplyService) {
+    constructor(configService: NxConfigService) {
         super(configService);
     }
 
@@ -58,7 +57,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
      * Overwrite
      */
     writeValue(value: AccessLevelItem | null): void {
-        if (value !== null && !this.applyService.locked) {
+        if (value !== null) {
             this.selected = value;
             const name = value?.name;
             this.selection =

@@ -91,11 +91,12 @@ export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent 
     }
 
     public setPermission(role: NxAccessRole): void {
-        const userRole = role?.name ?? this.selectedUser.accessRole;
+        this.selectedUser.role = { ...role };
+        const userRole = this.selectedUser.role?.name ?? this.selectedUser.accessRole;
         this.accessDescription = this.LANG.accessRoles[userRole]
             ? this.LANG.accessRoles[userRole].description
             : this.LANG.accessRoles.customRole.description;
-        this.selectedUser.role = role;
-        this.role = role.name;
+
+        this.role = this.selectedUser.role.name;
     }
 }
