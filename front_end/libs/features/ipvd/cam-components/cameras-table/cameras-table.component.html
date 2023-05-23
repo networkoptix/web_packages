@@ -42,7 +42,7 @@
             <div
                 *ngFor="let prop of row | keyvalue; trackBy: trackItem"
                 class="div-container-wrapper"
-                data-id="1"
+                data-id="{{ prop.key + '-' + row.model }}"
                 style="grid-area: {{
                     prop.key === 'isAptzSupported'
                         ? 'isPtzSupported'
