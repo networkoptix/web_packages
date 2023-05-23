@@ -7,7 +7,7 @@ import {
     UrlTree,
     Router,
 } from '@angular/router';
-import { lastValueFrom, Observable, Subject } from 'rxjs';
+import { lastValueFrom, Observable, switchMap, take } from 'rxjs';
 
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
@@ -34,44 +34,41 @@ export class TwofaGuard implements CanActivate {
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot,
     ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-        const canActivateSubject = new Subject<boolean>();
-        this.systemsService.systemsSubject.subscribe(async (systems: NxSystemInfo[]) => {
-            const { systemId } = route.params;
-            const systemInfo = systems.find(system => system.id === systemId);
-            let account: Account = await this.accountService.get();
-            if (systemInfo?.system2faEnabled && !account.sessionVerified) {
-                account = await this.accountService.get(true);
-            }
-            if (systemInfo?.system2faEnabled && !account.sessionVerified) {
-                if (!account.totpExistsForAccount) {
-                    const noRedirect = this.window.location.href.endsWith(
-                        `twofa-required?systemName=${systemInfo.name}`,
-                    );
-                    if (!noRedirect) {
-                        canActivateSubject.complete();
-                        this.router.navigate(['twofa-required'], {
-                            queryParams: { systemName: systemInfo.name },
-                        });
+        return this.systemsService.systemsSubject.pipe(
+            take(1),
+            switchMap(async (systems: NxSystemInfo[]) => {
+                const { systemId } = route.params;
+                const systemInfo = systems.find(system => system.id === systemId);
+                let account: Account = await this.accountService.get();
+                if (systemInfo?.system2faEnabled && !account.sessionVerified) {
+                    account = await this.accountService.get(true);
+                }
+                if (systemInfo?.system2faEnabled && !account.sessionVerified) {
+                    if (!account.totpExistsForAccount) {
+                        const noRedirect = this.window.location.href.endsWith(
+                            `twofa-required?systemName=${systemInfo.name}`,
+                        );
+                        if (!noRedirect) {
+                            this.router.navigate(['twofa-required'], {
+                                queryParams: { systemName: systemInfo.name },
+                            });
+                        } else {
+                            return false;
+                        }
                     } else {
-                        canActivateSubject.next(false);
-                        canActivateSubject.complete();
+                        const accessToken = await lastValueFrom(this.cloudApi.getAccessToken());
+                        this.oauthService.redirectOauth(
+                            'system2faAuth',
+                            account.email,
+                            undefined,
+                            accessToken,
+                            Location.joinWithSlash(this.window.location.origin, state.url),
+                        );
                     }
                 } else {
-                    canActivateSubject.complete();
-                    const accessToken = await lastValueFrom(this.cloudApi.getAccessToken());
-                    this.oauthService.redirectOauth(
-                        'system2faAuth',
-                        account.email,
-                        undefined,
-                        accessToken,
-                        Location.joinWithSlash(this.window.location.origin, state.url),
-                    );
+                    return true;
                 }
-            } else {
-                canActivateSubject.next(true);
-                canActivateSubject.complete();
-            }
-        });
-        return canActivateSubject;
+            }),
+        );
     }
 }
