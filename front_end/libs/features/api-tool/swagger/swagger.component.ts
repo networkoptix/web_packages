@@ -9,7 +9,7 @@ import {
     ViewContainerRef, ViewEncapsulation
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { BehaviorSubject, fromEvent } from 'rxjs';
+import { BehaviorSubject, fromEvent, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import type SwaggerUI from 'swagger-ui';
 import type { SupportedHTTPMethods, SwaggerUIOptions, SwaggerUIPlugin } from 'swagger-ui';
@@ -70,6 +70,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     customComponentsRendering = false;
     componentMap: componentMap = {}; // Contains references to created componentRefs, which makes it possible to manually destroy them
     textareaMap: textareaMap = {}; // textAreas innerHTMLs are preserved here to be reapplied to code blocks
+    resetButtonListener$: Subscription;
 
     constructor(
         public APIToolSystemService: NxAPIToolSystemService,
@@ -266,6 +267,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
             this.moveExampleResponse();
             this.modifyTitlesInResponse();
             this.addLabelToRequest();
+            this.addResetButtonEventListener();
             if (this.openAPIJSONService.searchQuery && !this.openAPIJSONService.searchMoreShowing$.getValue()) {
                 this.highlightSearchMoreQuery(this.openAPIJSONService.searchQuery);
             }
@@ -301,6 +303,27 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
                 }
             });
         }
+    };
+
+    private addResetButtonEventListener = () : void => {
+        const observer = new MutationObserver(mutations => {
+            for (const mutation of mutations) {
+                if (mutation.type === 'childList') {
+                    const resetButton = this.document.querySelector('.reset');
+                    if (resetButton && (!this.resetButtonListener$ || this.resetButtonListener$.closed)) {
+                        this.resetButtonListener$ = fromEvent<MouseEvent>(resetButton, 'click').pipe(take(1), untilDestroyed(this)).subscribe(event => {
+                            const node: MenuNode = this.activeNode;
+                            const isSingleView = this.isAPIRouteNode(node);
+                            const expand = isSingleView ? 'full' : 'list';
+                            this.initSwagger(node.name, expand);
+                        });
+                    }
+                    break;
+                }
+            }
+        });
+
+        observer.observe(this.document, { childList: true, subtree: true });
     };
 
     private changeRequestBodyText = (): void => {

@@ -1,7 +1,7 @@
 Merhaba, {{message.user_full_name}}
 
-{{message.current_owner_full_name}} ({{message.current_owner_email}}) sizi {{message.system_name}}sisteminin sahibi olmaya davet ediyor.
+{{message.current_owner_full_name}} ({{message.current_owner_email}}) sizi {{message.system_name}}sistem sahibi olmaya davet ediyor.
 
 Sistem Ayarları sayfasında oturum açın ve isteği işleyin
 
-{{config.portal_url}}/systems/{{message.system_id}}
+{{config.portal_url}}/sistemler/{{message.system_id}}
