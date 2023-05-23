@@ -233,23 +233,25 @@ export class NxLayoutViewComponent {
                         !camera.addParams.ioSettings ||
                         !JSON.parse(camera.addParams.ioSettings).length
                     );
-                const parsedCameras = cameras.reduce(
-                    (cameras, camera) => ({
+                const parsedCameras = cameras.reduce((cameras, camera) => {
+                    const parentServerOnline =
+                        servers.find(({ id }) => id === camera.parentId).status === 'Online';
+                    const online = isIoOnly(camera) || (camera.online && parentServerOnline);
+                    const unauthorized = camera.unauthorized && parentServerOnline;
+                    const status = parentServerOnline
+                        ? camera.status
+                        : camera.status
+                              .replace('unauthorized', 'offline')
+                              .replace('recording', 'scheduled');
+                    return {
                         ...cameras,
                         [camera.id]: {
                             type: isIoOnly(camera) ? ResourceType.IO_DEVICE : ResourceType.CAMERA,
                             name: camera.name,
                             details: {
                                 ...camera,
-                                online:
-                                    isIoOnly(camera) ||
-                                    (camera.online &&
-                                        servers.find(({ id }) => id === camera.parentId).status ===
-                                            'Online'),
-                                unauthorized:
-                                    camera.unauthorized &&
-                                    servers.find(({ id }) => id === camera.parentId).status ===
-                                        'Online',
+                                online,
+                                unauthorized,
                                 requiresTranscoding: [7, 173].includes(
                                     (camera.addParams.mediaStreams
                                         ? JSON.parse(camera.addParams.mediaStreams)
@@ -258,15 +260,15 @@ export class NxLayoutViewComponent {
                                 ),
                                 resourceType:
                                     this.LANG.layouts.titles.resourceTypes[ResourceType.CAMERA],
+                                status,
                             },
                             aspectRatio:
                                 camera.parsedAddParams.overrideAr ||
                                 camera.defaultRatio ||
                                 aspectRatio,
                         },
-                    }),
-                    {} as ResourceLookup<typeof cameras[0]>,
-                );
+                    };
+                }, {} as ResourceLookup<typeof cameras[0]>);
 
                 const parsedServers = servers.reduce(
                     (servers, server) => ({
