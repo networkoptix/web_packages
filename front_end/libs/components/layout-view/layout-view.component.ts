@@ -184,16 +184,14 @@ export class NxLayoutViewComponent {
             combineLatest([
                 defer(() => cameraManager.getCameras()).pipe(
                     switchMap(cameras =>
-                        cameraManager.hasArchives(cameras.map(({ id }) => id)).pipe(
+                        cameraManager.hasArchives().pipe(
                             catchError(async () => [] as string[]),
-                            // TODO: Seems that his request can take a long time. Might need to add a timeout or start with empty array.
-                            // startWith([] as string[]),
-                            map(times =>
+                            map(camerasWithArchives =>
                                 cameras.map(({ status, ...camera }) => ({
                                     ...camera,
                                     status:
                                         ['recording', 'scheduled'].includes(status) ||
-                                        !times.includes(camera.id)
+                                        !camerasWithArchives.includes(camera.id)
                                             ? status
                                             : 'archive',
                                 })),

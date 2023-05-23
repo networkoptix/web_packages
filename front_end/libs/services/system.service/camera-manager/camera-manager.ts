@@ -4,7 +4,6 @@ import {
     animationFrameScheduler,
     distinctUntilChanged,
     firstValueFrom,
-    forkJoin,
     interval,
     map,
     Observable,
@@ -413,15 +412,8 @@ export class CameraManager {
         return recording && status !== 'Offline' ? 'Recording' : 'Scheduled';
     }
 
-    public hasArchives(cameraId: string[]): Observable<string[]> {
-        cameraId = cameraId.filter(cameraId => this.cameras.find(({ id }) => id === cameraId).addParams.deviceType !== 'NVR');
-        // .recordedTimePeriods({ cameraId, groupBy: 'cameraId', keepSmallChunks: true, detail: 1 })
-        return forkJoin(
-            Object.values(this.serverManager.mediaserverConnections).reduce((acc, connection) => [
-                ...acc,
-                connection.recordedTimePeriods({ cameraId, groupBy: 'cameraId', keepSmallChunks: true, detail: 1 }).pipe(map(res => res.map(({ guid }) => guid)))
-            ], [])
-        ).pipe(map(flatten));
+    public hasArchives(): Observable<string[]> {
+        return this.serverManager.mediaserver.getCameraHistoryItems().pipe(map(res => flatten(res.map(({ archivedCameras }) => archivedCameras))));
     }
 
     public getRecordedTimes(cameraId: string[], baseCanvasSize = 36000): Observable<TimeDetail[]> {
