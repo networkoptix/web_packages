@@ -40,9 +40,9 @@ System Admin Test Restart
         ...    AND    Sleep    10
 
     Set System Name    ${server url}    ${system}[token]    ${system}[name]
-    ${settings}=   Create Dictionary    videoTrafficEncryptionForced=false
+    ${settings}=   Create Dictionary    videoTrafficEncryptionForced=${False}
     Set System Settings    ${server url}    ${settings}    ${system}[token]
-    Set System Settings    ${server url}    ${default advanced settings}    ${system}[token]
+    #Set System Settings    ${server url}    ${default advanced settings}    ${system}[token]
 # Waits
 
 Wait until settings are visible

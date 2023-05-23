@@ -44,21 +44,11 @@ class ServerAPI:
             "password": password
         }
 
-        try:
-            r = requests.session().post(f'{server_url}/rest/v1/login/sessions', json=data, verify=False)
-            if r.status_code != 200:
-                raise APIError(f'Cannot log in. Request status: {r.status_code}')
-            token = r.json()["token"]
-            self._auth = BearerAuth(token)
-
-        except APIError as e:
-            print(e)
-
-        except ConnectionError as e:
-            print('Cannot log in: connection to the server failed: ', e)
-
-        except Exception as e:
-            print('Cannot log in: unexpected error occurred: ', e)
+        r = requests.session().post(f'{server_url}/rest/v1/login/sessions', json=data, verify=False)
+        if r.status_code != 200:
+            raise APIError(f'Cannot log in. Request status: {r.status_code}')
+        token = r.json()["token"]
+        self._auth = BearerAuth(token)
 
     @keyword
     def rest_get_system_settings(self, auth, server_url):
