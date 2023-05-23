@@ -525,7 +525,7 @@
     "ENTER EMAIL TEXT": "Ange e-post",
     "PASSWORD IS REQUIRED TEXT": "Lösenord krävs",
     "2FA BACKUP CODE BTN TEXT": "Ingen tillgång till autentiseringsapp?",
-    "2FA LOG IN CLOUD TEXT": "Logga in på Nx Cloud",
+    "2FA LOG IN CLOUD TEXT": "Logga in på %PRODUCT_NAME%",
     "2FA CODE INSTRUCTIONS TEXT": "Ange en kod från din autentiseringsapp för att bekräfta att det verkligen är du som försöker logga in",
     "2FA BACKUP CODE HELP TEXT": "Behöver du hjälp?",
     "2FA BACKUP CODE CONTACT SUPPORT TEXT": "Kontakta support",
@@ -538,7 +538,7 @@
     "2FA DISABLE MODAL DESCRIPTION TEXT": "Ange verifieringskod från din autentiseringsapp eller en reservkod för att fortsätta",
     "2FA SETTINGS MODAL HEADER TEXT": "Inställningar för tvåfaktorsautentisering",
     "2FA SETTINGS MODAL DESCRIPTION TEXT1": " Verifieringskod från autentiseringsappen begärs bara för att logga in på system som kräver tvåfaktorsautentisering. ",
-    "2FA SETTINGS MODAL DESCRIPTION TEXT2": " Verifieringskod från autentiseringsappen kommer att begäras vid varje inloggning med Nx Cloud-konto. ",
+    "2FA SETTINGS MODAL DESCRIPTION TEXT2": " Verifieringskod från autentiseringsappen kommer att begäras vid varje inloggning med %PRODUCT_NAME% konto. ",
     "2FA SETTINGS MODAL INST OFF TEXT": "Ange verifieringskod från din autentiseringsapp eller en reservkod för att fortsätta",
     "2FA SETTINGS MODAL INST ON TEXT": "Ange verifieringskod från din autentiseringsapp för att fortsätta",
     "VIEW PAGE WEBM TEXT": "webm",
@@ -549,5 +549,14 @@
     "ENABLE 2FA TEXT": "Aktivera 2FA",
     "DISABLE 2FA TEXT": "Inaktivera",
     "DISABLED TEXT": "INAKTIVERAD",
-    "ENABLED TEXT": "AKTIVERAD"
+    "ENABLED TEXT": "AKTIVERAD",
+    "WARNING CAPS": "VARNING",
+    "OT WARNING TEXT": "När ägarskapsöverföringen är klar kommer du att tas bort från systemet.",
+    "REQUEST SENT TEXT": "Begäran har skickats",
+    "REQUEST SENT EXPLANATION TEXT": "Ägarbyte kommer att ske så snart den nya ägaren accepterar begäran",
+    "TRANSFERRING OWNERSHIP TO TEXT": "Transferring ownership to",
+    "WANTS TO TRANSFER TEXT": "wants to transfer ownership of this system to you",
+    "ACCEPT TEXT": "Godkänn",
+    "REJECT TEXT": "Avvisa",
+    "USER NOT FOUND TEXT": "Användaren kunde inte hittas"
 }

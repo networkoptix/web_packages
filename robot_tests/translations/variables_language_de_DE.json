@@ -525,7 +525,7 @@
     "ENTER EMAIL TEXT": "Email eingeben",
     "PASSWORD IS REQUIRED TEXT": "Passwort ist erforderlich",
     "2FA BACKUP CODE BTN TEXT": "Kein Zugang zur Authentifizierungs-App?",
-    "2FA LOG IN CLOUD TEXT": "Anmelden bei Nx Cloud",
+    "2FA LOG IN CLOUD TEXT": "Anmelden bei %PRODUCT_NAME%",
     "2FA CODE INSTRUCTIONS TEXT": "Geben Sie einen Code aus Ihrer Authentifizierungs-App ein, um zu bestätigen, dass Sie wirklich versuchen, sich anzumelden",
     "2FA BACKUP CODE HELP TEXT": "Brauchen Sie Hilfe?",
     "2FA BACKUP CODE CONTACT SUPPORT TEXT": "Support kontaktieren",
@@ -538,7 +538,7 @@
     "2FA DISABLE MODAL DESCRIPTION TEXT": "Geben Sie einen Verifizierungscode von Ihrer Authentifizierungs-App oder einen Backup-Code ein, um fortzufahren",
     "2FA SETTINGS MODAL HEADER TEXT": "Einstellungen für die Zwei-Faktor-Authentifizierung",
     "2FA SETTINGS MODAL DESCRIPTION TEXT1": " Der Verifizierungscode aus der Authentifizierungs-App wird nur für die Anmeldung bei Systemen verlangt, die eine Zwei-Faktor-Authentifizierung erfordern. ",
-    "2FA SETTINGS MODAL DESCRIPTION TEXT2": " Der Verifizierungscode aus der Authentifizierungs-App wird bei jeder Anmeldung mit dem Nx Cloud-Konto angefordert. ",
+    "2FA SETTINGS MODAL DESCRIPTION TEXT2": " Bei jeder Anmeldung mit dem %PRODUCT_NAME%-Konto wird ein Verifizierungscode von der Authentifizierungs-App angefordert. ",
     "2FA SETTINGS MODAL INST OFF TEXT": "Geben Sie einen Verifizierungscode von Ihrer Authentifizierungs-App oder einen Backup-Code ein, um fortzufahren",
     "2FA SETTINGS MODAL INST ON TEXT": "Geben Sie einen Verifizierungscode aus Ihrer Authentifizierungs-App ein, um fortzufahren",
     "VIEW PAGE WEBM TEXT": "webm",
@@ -549,5 +549,14 @@
     "ENABLE 2FA TEXT": "2FA aktivieren",
     "DISABLE 2FA TEXT": "Deaktivieren",
     "DISABLED TEXT": "DEAKTIVIERT",
-    "ENABLED TEXT": "AKTIVIERT"
+    "ENABLED TEXT": "AKTIVIERT",
+    "WARNING CAPS": "WARNUNG",
+    "OT WARNING TEXT": "Sobald die Besitzerübertragung abgeschlossen ist, werden Sie aus dem System entfernt.",
+    "REQUEST SENT TEXT": "Anfrage wurde gesendet",
+    "REQUEST SENT EXPLANATION TEXT": "Der Besitzerwechsel erfolgt, sobald der neue Besitzer den Antrag annimmt",
+    "TRANSFERRING OWNERSHIP TO TEXT": "Transferring ownership to",
+    "WANTS TO TRANSFER TEXT": "wants to transfer ownership of this system to you",
+    "ACCEPT TEXT": "Akzeptieren",
+    "REJECT TEXT": "Verwerfen",
+    "USER NOT FOUND TEXT": "Benutzer nicht gefunden"
 }
