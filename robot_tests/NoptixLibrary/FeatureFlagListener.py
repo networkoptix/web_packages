@@ -26,5 +26,8 @@ class FeatureFlagListener:
             if cloud_settings["featureFlags"] == expected_settings_converted:
                 break
             if time.monotonic() - start_time > 120:
+                for setting in cloud_settings["featureFlags"].keys():
+                    if setting not in expected_settings:
+                        raise RuntimeError(f"There was a feature flag not in the expected list: {setting}")
                 raise TimeoutError("Feature flags did not update in time.")
             time.sleep(5)
