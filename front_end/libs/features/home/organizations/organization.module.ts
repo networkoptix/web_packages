@@ -7,6 +7,7 @@ import { NxGroupsCardsComponent } from '../components/groups-cards/groups-cards.
 import { NxOrganizationReportsComponent } from '../components/reports/reports.component';
 import { NxOrganizationSettingsComponent } from '../components/settings/settings.component';
 import { NxOrganizationUsersComponent } from '../components/users/users.component';
+import { OrgResolver } from '../org-resolver';
 import { TabResolver } from '../tab-resolver';
 
 import { NxOrganizationsComponent } from './organization.component';
@@ -28,6 +29,7 @@ const orgRoutes: Routes = [
             },
             {
                 path: 'users',
+                resolve: { inOrganization: OrgResolver },
                 component: NxOrganizationUsersComponent,
             },
             {

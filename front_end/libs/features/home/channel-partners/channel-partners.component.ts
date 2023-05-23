@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 import { catchError, of, withLatestFrom } from 'rxjs';
 
 import { Tab, TabEmit } from '@components/tabs/tabs.types';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import {
     ChannelPartner,
     Organization,
@@ -31,11 +32,12 @@ import {
 export class NxChannelPartnersComponent implements OnInit {
     isLoading = true;
     currentPartnerId: string;
+    currentPartnerOrgs: Organization[];
     routeData$ = this.route.data;
     channelPartners$ = this.store.select<ChannelPartner[]>(selectChannelPartners);
     channelPartner$ = this.store.select<ChannelPartner>(selectCurrentPartner);
     organizations$ = this.store.select<Organization[]>(selectCurrentPartnerOrgs);
-    isAdmin: boolean = false;
+    isAdmin: boolean = true;
     currentTab: Tab;
     tabs: Tab[] = [
         {
@@ -66,6 +68,7 @@ export class NxChannelPartnersComponent implements OnInit {
         private router: Router,
         private route: ActivatedRoute,
         private CPService: NxChannelPartnersService,
+        private dialogsService: NxDialogsService,
     ) {}
 
     ngOnInit(): void {
@@ -82,6 +85,7 @@ export class NxChannelPartnersComponent implements OnInit {
                     .subscribe({
                         next: orgs => {
                             this.isLoading = false;
+                            this.currentPartnerOrgs = orgs;
                             this.store.dispatch(
                                 CPActions.setCurrentPartner({
                                     currentPartnerId: this.currentPartnerId,
@@ -97,7 +101,14 @@ export class NxChannelPartnersComponent implements OnInit {
     }
 
     newOrgDialog(): void {
-        // temporary placeholder
+        this.dialogsService.createOrganization(this.currentPartnerId).then((org: Organization) =>
+            this.store.dispatch(
+                CPActions.setCurrentPartner({
+                    currentPartnerId: this.currentPartnerId,
+                    currentPartnerOrganizations: [...this.currentPartnerOrgs, org],
+                }),
+            ),
+        );
     }
 
     onTabClick(tab: TabEmit): void {

@@ -26,6 +26,7 @@ import { NxOrganizationReportsComponent } from './components/reports/reports.com
 import { NxOrganizationSettingsComponent } from './components/settings/settings.component';
 import { NxGroupsSidebarLevelComponent } from './components/sidebar-level/sidebar-level.component';
 import { NxSystemGroupsSidebarComponent } from './components/sidebar/sidebar.component';
+import { NxChannelPartnerSubchannelComponent } from './components/subchannel/subchannel.component';
 import { NxSystemCardComponent } from './components/system-card/system-card.component';
 import { NxOrganizationUsersComponent } from './components/users/users.component';
 import { NxHomeComponent } from './home.component';
@@ -104,6 +105,7 @@ const homeRoutes: Routes = [
         NxUsersTableComponent,
         NxChannelPartnersComponent,
         NxChannelPartnerInformationComponent,
+        NxChannelPartnerSubchannelComponent,
         NxHomeComponent,
     ],
     providers: [TabResolver, OrgResolver],

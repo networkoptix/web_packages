@@ -1,2 +1,16 @@
-<!-- eslint-disable-next-line nx/template/no-untranslated -->
-<div>Placeholder for subchannel</div>
+<div>
+    <div class="actions p-3">
+        <button
+            [disabled]="!isAdmin"
+            class="btn btn-default"
+            translate
+            (click)="newPartnerDialog()"
+        >
+            New Partner
+        </button>
+    </div>
+
+    <div *ngFor="let channel of subchannels$ | async">
+        {{ channel.name }}
+    </div>
+</div>

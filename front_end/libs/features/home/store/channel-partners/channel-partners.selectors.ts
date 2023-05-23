@@ -29,7 +29,10 @@ export const selectCurrentPartnerOrgs = createSelector(
     state => state.currentPartnerOrganizations,
 );
 
-const selectCurrentOrgId = createSelector(selectChannelPartnersState, state => state.currentOrgId);
+export const selectCurrentOrgId = createSelector(
+    selectChannelPartnersState,
+    state => state.currentOrgId,
+);
 
 export const selectCurrentPartner = createSelector(
     selectChannelPartners,

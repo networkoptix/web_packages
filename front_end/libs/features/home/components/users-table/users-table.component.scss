@@ -1,5 +1,9 @@
 @use "typography" as *;
 
+.nx-new-table-container{
+    height: unset;
+}
+
 :host {
 
     //.nx-table {

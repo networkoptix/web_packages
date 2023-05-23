@@ -21,7 +21,7 @@
         <ng-container *ngIf="!currentTab.route; else tabOutlet">
             <div class="actions p-3">
                 <button
-                    [disabled]="isAdmin"
+                    [disabled]="!isAdmin"
                     class="btn btn-default"
                     translate
                     (click)="newOrgDialog()"

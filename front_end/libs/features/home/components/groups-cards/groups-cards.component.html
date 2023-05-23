@@ -8,10 +8,14 @@
     No systems
 </div>
 
-<ng-template #actions>
+<ng-template
+    #showGroups
+    let-groups="groups"
+    let-systems="systems"
+>
     <div class="actions p-3">
         <button
-            [disabled]="(currentGroupOwner$ | async) !== (account$ | async).email"
+            [disabled]="!isAdmin"
             class="btn btn-default"
             translate
             (click)="newGroupDialog()"
@@ -26,16 +30,7 @@
             />
         </div>
     </div>
-</ng-template>
 
-<ng-template
-    #showGroups
-    let-groups="groups"
-    let-systems="systems"
->
-    <ng-container *ngIf="!inRoot">
-        <ng-container *ngTemplateOutlet="actions"></ng-container>
-    </ng-container>
     <div class="px-3 cards-container">
         <div
             *ngFor="let group of currentGroups$ | async; trackBy: trackItem"

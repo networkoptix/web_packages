@@ -35,6 +35,7 @@ export class NxGroupsCardsComponent {
     currentGroups$ = this.store.select<GroupItem[]>(selectCurrentGroupItems);
     currentSystems$ = this.store.select<SystemItem[]>(selectCurrentSystemItems);
     account$ = this.store.select<Account>(selectCurrentUser);
+    isAdmin = true;
 
     LANG = staticLang;
     icons = icons;
