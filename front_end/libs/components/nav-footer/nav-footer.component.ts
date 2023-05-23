@@ -80,6 +80,6 @@ export class NxNavFooterComponent implements OnInit {
     }
 
     checkVisible(url: string): void {
-        this.visible$.next(!url.includes('/systems'));
+        this.visible$.next(!(url.includes('/systems') || url.includes('/health-report')));
     }
 }
