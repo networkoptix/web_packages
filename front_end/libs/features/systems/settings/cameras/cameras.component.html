@@ -383,7 +383,7 @@
                     </nx-block>
                 </div>
                 <div class="col-12 camera-settings-info mt-3">
-                    <nx-section *ngIf="!motionEnabled">
+                    <nx-section *ngIf="!system.useRest && !motionEnabled">
                         <span
                             class="d-block"
                             translate

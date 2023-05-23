@@ -840,7 +840,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             const value = enabled ? 2 : 0;
             return { name, id, enabled, value };
         });
-        this.updateMotionWarning();
+        // this.updateMotionWarning(); // Can be added back once we support recording settings again.
     };
 
     enableMotion = (updateModes = false): void => {

@@ -7,6 +7,7 @@ import { map } from 'rxjs/operators';
 
 import { NxHealthService } from '@pages/health/health.service';
 import { SettingsConfig } from '@services/nx-config/base-config';
+import { IPartialCamera, PartialCameraRest } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystemUser } from '@services/system.service/user-manager/user-manager-types';
 
 import { NxAppStateService } from './nx-app-state.service';
@@ -355,5 +356,21 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
 
     deleteUser(userId: string): Observable<ChangedIdReturned> {
         return this.delete<t.ChangedIdReturned>(`/rest/v1/users/${this.cleanId(userId)}`);
+    }
+
+    // Todo: When merged into develop use withKeyMap, but alter the keys
+    getCameras(): Observable<IPartialCamera[]> {
+        const endpoint = '/rest/v1/devices';
+        const params = {
+            _keepDefault: true,
+            _with: 'id,name,serverId,status,url,schedule.isEnabled,deviceType'
+        };
+        return this.get<PartialCameraRest[]>(
+            endpoint,
+            params
+        ).pipe(map(cameras => cameras
+            .map(({ deviceType, id, name, schedule, serverId, status, url }) => (
+                { deviceType, id, name, status, url, scheduleEnabled: schedule.isEnabled, parentId: serverId }
+            ))));
     }
 }
