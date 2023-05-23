@@ -552,7 +552,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.unsub$.next('done');
         this.getRecordsInProgress = this.id;
         this.previewUrl = this.system.serverManager.getPreviewUrl(this.id, null);
-        const camera = this.system.cameraManager.cameras.find(({ id }) => id?.includes(this.id));
+        const camera = this.system.cameraManager.cameras?.find(({ id }) => id?.includes(this.id));
         this.isNvr = camera?.deviceType?.toLowerCase() === 'nvr';
         if (!this.vms.selectedCamera.hasArchive && !this.vms.selectedCamera.isScheduleEnabled) {
             this.getRecordsInProgress = undefined;
