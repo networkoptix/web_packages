@@ -980,6 +980,10 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return this.get('/rest/v1/devices/*/bookmarks/*/tags', params);
     }
 
+    changePassword(cameraId: string, user: string, password: string): Observable<unknown> {
+        return this.post(`/rest/v1/devices/${cameraId}/changePassword`, { user, password });
+    }
+
     getDevices(
         params: t.DevicesParams = {}
     ): Observable<t.Device[]> {

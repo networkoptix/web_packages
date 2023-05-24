@@ -649,6 +649,9 @@
                                             (showPtz)="showPtz.emit($event)"
                                             [zoom]="item"
                                             [lostConnectionPlaceholder]="offlinePlaceholder"
+                                            [skipCredentialsCheck]="
+                                                skipDefaultCredentialsCheck[itemDetail.details.id]
+                                            "
                                         >
                                         </nx-video-player>
                                     </ng-container>

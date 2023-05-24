@@ -253,6 +253,7 @@ export class NxLayoutGridComponent {
     addOffset = 0;
     changingLayout: string | boolean = true;
     errors: Record<string, string> = {};
+    skipDefaultCredentialsCheck: Record<string, true> = {};
     errorIcons: Record<string, string> = {};
     additionalErrorMessages: Record<string, Translatable> = {};
     icons = icons;
@@ -1245,6 +1246,10 @@ export class NxLayoutGridComponent {
                             'warning',
                         );
                     } else {
+                        delete this.errors[selectedCamera.id];
+                        if (defaultPassword) {
+                            this.skipDefaultCredentialsCheck[selectedCamera.id] = true;
+                        }
                         this.updateLayoutItems.emit();
                     }
                 });

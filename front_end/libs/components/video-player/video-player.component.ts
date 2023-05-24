@@ -37,6 +37,7 @@ export class NxVideoPlayerComponent {
     @Input() showFullScreenButton: boolean = true;
     @Input() zoom: Pick<LayoutItem, 'zoomTop' | 'zoomRight' | 'zoomBottom' | 'zoomLeft'>;
     @Input() lostConnectionPlaceholder: TemplateRef<any>;
+    @Input() skipCredentialsCheck: boolean = false;
 
     @Output() showPtz = new EventEmitter<NxSystemCamera>();
     @Output() showError = new EventEmitter<ConnectionError>();
@@ -279,7 +280,14 @@ export class NxVideoPlayerComponent {
                 }
 
                 this.loading = false;
-            }));
+            }),
+            untilDestroyed(this),
+        );
+
+        if (this.skipCredentialsCheck) {
+            stream$.subscribe();
+            return;
+        }
 
         /**
          * Checks for authorization issues by fetching the preview image. Specifically for default password error.

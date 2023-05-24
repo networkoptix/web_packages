@@ -4,12 +4,14 @@ import {
     Inject,
     OnInit,
 } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import type { UpdateCameraCredentials as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
+import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import type {
     NxSystemCamera
 } from '@services/system.service/camera-manager/camera-manager-types';
@@ -74,10 +76,17 @@ export class UpdateCameraCredentialsModalContent extends ModalBase<DT['return']>
             ) {
                 return Promise.resolve();
             }
-            return this.system.serverManager.updateResource(
-                this.camera.id,
-                { credentials: `${this.cameraLoginCredentials || 'admin'}:${this.cameraPasswordCredentials}` }
-            ).then(this.updateCallback);
+            const updateHandler = (defaultPassword?: boolean): Promise<unknown> => {
+                if (defaultPassword && this.system.mediaserver instanceof NxSystemRestAPI) {
+                    return firstValueFrom(this.system.mediaserver.changePassword(this.camera.id, this.cameraLoginCredentials, this.cameraPasswordCredentials));
+                }
+                return this.system.serverManager.updateResource(
+                    this.camera.id,
+                    { credentials: `${this.cameraLoginCredentials || 'admin'}:${this.cameraPasswordCredentials}` }
+                );
+            };
+
+            return updateHandler(this.defaultPassword).then(this.updateCallback);
         }, { ignoreError: true },
         () => {
             this.close();
