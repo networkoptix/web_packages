@@ -361,11 +361,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         return this.selectedQuality.value === this.various.value;
     }
 
-    get motionEnabled() {
+    get motionEnabled(): boolean {
         const motionEnabled = this.motionEnabledWatcher.value;
-        return motionEnabled && ![MotionType.NoMotion, MotionType.None].includes(
-            motionEnabled
-        );
+        return motionEnabled && ![MotionType.NoMotion, MotionType.None].includes(motionEnabled);
     }
 
     set motionEnabled(enabled: boolean) {

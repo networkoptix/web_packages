@@ -325,18 +325,23 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         }
     };
 
-    private addResetButtonEventListener = () : void => {
+    private addResetButtonEventListener = (): void => {
         const observer = new MutationObserver(mutations => {
             for (const mutation of mutations) {
                 if (mutation.type === 'childList') {
                     const resetButton = this.document.querySelector('.reset');
-                    if (resetButton && (!this.resetButtonListener$ || this.resetButtonListener$.closed)) {
-                        this.resetButtonListener$ = fromEvent<MouseEvent>(resetButton, 'click').pipe(take(1), untilDestroyed(this)).subscribe(event => {
-                            const node: MenuNode = this.activeNode;
-                            const isSingleView = this.isAPIRouteNode(node);
-                            const expand = isSingleView ? 'full' : 'list';
-                            this.initSwagger(node.name, expand);
-                        });
+                    if (
+                        resetButton &&
+                        (!this.resetButtonListener$ || this.resetButtonListener$.closed)
+                    ) {
+                        this.resetButtonListener$ = fromEvent<MouseEvent>(resetButton, 'click')
+                            .pipe(take(1), untilDestroyed(this))
+                            .subscribe(event => {
+                                const node: MenuNode = this.activeNode;
+                                const isSingleView = this.isAPIRouteNode(node);
+                                const expand = isSingleView ? 'full' : 'list';
+                                this.initSwagger(node.name, expand);
+                            });
                     }
                     break;
                 }
