@@ -8,11 +8,11 @@ import { BaseConnectionTracker } from "./base-connection-tracker";
  */
 export class FrameTracker extends BaseConnectionTracker {
     override metricName = 'fps';
-    weight = 0;
+    weight = 1;
     priorityWeight = 0;
 
     override processInboundReport(report: InboundRtpReport): number {
-        return report?.framesPerSecond || 0
+        return report?.framesPerSecond ?? Infinity;
     }
 
     suggestedStream() {
