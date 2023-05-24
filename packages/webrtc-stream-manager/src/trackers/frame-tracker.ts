@@ -12,7 +12,7 @@ export class FrameTracker extends BaseConnectionTracker {
     priorityWeight = 0;
 
     override processInboundReport(report: InboundRtpReport): number {
-        return report?.framesPerSecond ?? Infinity;
+        return report?.framesPerSecond ?? 0;
     }
 
     suggestedStream() {
