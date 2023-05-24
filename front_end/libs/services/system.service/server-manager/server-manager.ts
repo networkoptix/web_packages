@@ -21,7 +21,10 @@ import { NxSystemAPIService } from '../../system-api.service';
 import { NxSystemAPI } from '../../system-legacy-api.service';
 import { NxSystemServer, ModuleInfo } from '../system-types';
 
-type PartialSystem = Pick<NxSystemOldModule, 'mediaserver' | 'currentUserEmail' | 'id' | 'useRest' | 'version'>;
+type PartialSystem = Pick<
+    NxSystemOldModule,
+    'mediaserver' | 'currentUserEmail' | 'id' | 'useRest' | 'version'
+>;
 
 export class ServerManager {
     readonly cutOff = 5.0;
@@ -57,8 +60,14 @@ export class ServerManager {
         this.locale = injector.get(LOCALE_ID);
     }
 
-    handleInitSystemMediaServers(): Record<string, NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2> {
-        if (this._mediaserverConnections && this.servers.every(({ id }) => id in this._mediaserverConnections)) {
+    handleInitSystemMediaServers(): Record<
+        string,
+        NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2
+    > {
+        if (
+            this._mediaserverConnections &&
+            this.servers.every(({ id }) => id in this._mediaserverConnections)
+        ) {
             return this._mediaserverConnections;
         }
         if (this.servers.length) {
@@ -66,25 +75,36 @@ export class ServerManager {
                 let unauthorizedCallback = () => Promise.resolve(true);
                 if (!environment.isLocal) {
                     unauthorizedCallback = this.system.useRest
-                        ? () => this.cloudApi.getSystemToken(this.systemId).toPromise().then(tokens => {
-                            (<NxSystemRestAPI> this.mediaserver)
-                                .setTokens(tokens, true)
-                                .subscribe(() => { });
-                            return Promise.resolve(true);
-                        })
-                        : () => this.cloudApi.getSystemAuth(this.systemId).toPromise().then(authKeys => {
-                            this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
-                            return true;
-                        });
+                        ? () =>
+                              this.cloudApi
+                                  .getSystemToken(this.systemId)
+                                  .toPromise()
+                                  .then(tokens => {
+                                      (<NxSystemRestAPI>this.mediaserver)
+                                          .setTokens(tokens, true)
+                                          .subscribe(() => {});
+                                      return Promise.resolve(true);
+                                  })
+                        : () =>
+                              this.cloudApi
+                                  .getSystemAuth(this.systemId)
+                                  .toPromise()
+                                  .then(authKeys => {
+                                      this.mediaserver.setAuthKeys(
+                                          authKeys.authGet,
+                                          authKeys.authPost,
+                                          authKeys.authPlay,
+                                      );
+                                      return true;
+                                  });
                 }
-                mediaserverConnections[server.id] ||= this.systemApiService
-                    .createConnection(
-                        this.currentUserEmail,
-                        this.systemId,
-                        server.id,
-                        unauthorizedCallback,
-                        this.system.version
-                    );
+                mediaserverConnections[server.id] ||= this.systemApiService.createConnection(
+                    this.currentUserEmail,
+                    this.systemId,
+                    server.id,
+                    unauthorizedCallback,
+                    this.system.version,
+                );
                 const { authGet, authPost, authPlay } = this.mediaserver.getAuthKeys();
                 mediaserverConnections[server.id].setAuthKeys(authGet, authPost, authPlay);
                 return mediaserverConnections;
@@ -109,21 +129,19 @@ export class ServerManager {
 
     getForceServers(useCache: boolean): Observable<NxSystemServer[]> {
         if (!this.serverSubscription || !useCache) {
-            this.serverSubscription = this.mediaserver
-                .getMediaServers(useCache)
-                .pipe(
-                    map(res => {
-                        if (!res) {
-                            console.error(`Request to server has failed ${res}`);
-                            return [];
-                        }
+            this.serverSubscription = this.mediaserver.getMediaServers(useCache).pipe(
+                map(res => {
+                    if (!res) {
+                        console.error(`Request to server has failed ${res}`);
+                        return [];
+                    }
 
-                        this.servers = res
-                            .map(setServerIpAndPort)
-                            .sort(alphabeticalSort(this.locale, server => server.name));
-                        return this.servers;
-                    })
-                );
+                    this.servers = res
+                        .map(setServerIpAndPort)
+                        .sort(alphabeticalSort(this.locale, server => server.name));
+                    return this.servers;
+                }),
+            );
         }
         return this.serverSubscription;
     }
@@ -134,7 +152,7 @@ export class ServerManager {
         width: number = 640,
         height: number = 480,
         rotate: number = 0,
-        auth: string = ''
+        auth: string = '',
     ): Observable<string> {
         return this.mediaserver.previewUrl(cameraId, time, width, height, rotate, auth);
     }
@@ -142,31 +160,31 @@ export class ServerManager {
     setCameraUserSettings(
         serverId: string,
         id: string,
-        params: Record<string, string>
+        params: Record<string, string>,
     ): Promise<t.ChangedIdReturned> {
-        return this.mediaserverConnections[serverId]
-            .saveCameraUserSettings(id, params);
+        return this.mediaserverConnections[serverId].saveCameraUserSettings(id, params);
     }
 
     setServerUserSettings(
         serverId: string,
-        params: Record<string, string>
+        params: Record<string, string>,
     ): Promise<t.ChangedIdReturned> {
-        return this.mediaserverConnections[serverId]
-            .saveServerUserSettings(serverId, params);
+        return this.mediaserverConnections[serverId].saveServerUserSettings(serverId, params);
     }
 
     getAnalyticsEngines(serverId: string) {
         return this.mediaserverConnections[serverId].getAnalyticsEngines();
     }
 
-    updateResource(resourceId: string, params: Record<string, string>): Promise<t.EmptyObjectReturned> {
-        const mappedParams = Object.entries(params)
-            .map<t.ResourceParam>(([name, value]) => ({
-                name,
-                value,
-                resourceId
-            }));
+    updateResource(
+        resourceId: string,
+        params: Record<string, string>,
+    ): Promise<t.EmptyObjectReturned> {
+        const mappedParams = Object.entries(params).map<t.ResourceParam>(([name, value]) => ({
+            name,
+            value,
+            resourceId,
+        }));
         return this.mediaserver.setResourceParams(mappedParams).toPromise();
     }
 
@@ -178,37 +196,53 @@ export class ServerManager {
         return this.mediaserver.getLicenses();
     }
 
-    private calcChannelsLegacy(cameras): Observable<{ total: number; used: number; available: number }> {
+    private calcChannelsLegacy(
+        cameras,
+    ): Observable<{ total: number; used: number; available: number }> {
         return this.getLicenses().pipe(
             map(({ licenses, hwids }: any) => {
                 const parsedLicenses = licenses.map(this.parseLicense);
-                const total: number = parsedLicenses.reduce((qty, { COUNT, EXPIRATION, CLASS, HWID }) => {
-                    EXPIRATION = EXPIRATION && (EXPIRATION.replace(' ', 'T') + 'Z'); // for Safari compatibility
-                    const activeLicense = hwids.includes(HWID) && (!EXPIRATION || new Date(EXPIRATION).getTime() > Date.now());
-                    return activeLicense && (CLASS === 'digital' || CLASS === 'starter' || CLASS === 'edge') ? qty + parseInt(COUNT) : qty;
-                }, 0);
-                const used = cameras.filter(({ scheduleEnabled, status }) => scheduleEnabled).length; // count all cameras - not just ONLINE ones
+                const total: number = parsedLicenses.reduce(
+                    (qty, { COUNT, EXPIRATION, CLASS, HWID }) => {
+                        EXPIRATION = EXPIRATION && EXPIRATION.replace(' ', 'T') + 'Z'; // for Safari compatibility
+                        const activeLicense =
+                            hwids.includes(HWID) &&
+                            (!EXPIRATION || new Date(EXPIRATION).getTime() > Date.now());
+                        return activeLicense &&
+                            (CLASS === 'digital' || CLASS === 'starter' || CLASS === 'edge')
+                            ? qty + parseInt(COUNT)
+                            : qty;
+                    },
+                    0,
+                );
+                const used = cameras.filter(
+                    ({ scheduleEnabled, status }) => scheduleEnabled,
+                ).length; // count all cameras - not just ONLINE ones
                 const available = total - used;
                 return { total, used, available };
-            })
+            }),
         );
     }
     private calcChannels(): Observable<{ total: number; used: number; available: number }> {
-        return this.system.mediaserver.getLicenseSummaries()
-            .pipe(map((licenses: any) => {
-                return Object.entries(licenses)
-                    .reduce((data: any, [_, { inUse, total }]: any) => {
+        return this.system.mediaserver.getLicenseSummaries().pipe(
+            map((licenses: any) => {
+                return Object.entries(licenses).reduce(
+                    (data: any, [_, { inUse, total }]: any) => {
                         data.inUse += inUse;
                         data.total += total;
                         if (inUse > 0) {
                             data.available += total - inUse;
                         }
                         return data;
-                    }, {
-                        available: 0, inUse: 0, total: 0
-                    });
-            })
-            );
+                    },
+                    {
+                        available: 0,
+                        inUse: 0,
+                        total: 0,
+                    },
+                );
+            }),
+        );
     }
 
     private updateLicenseChannels$ = new BehaviorSubject('');
@@ -221,22 +255,28 @@ export class ServerManager {
     @memoizeAsyncPersistent
     private handleGetLicenseChannels(cameras) {
         return this.updateLicenseChannels$.pipe(
-            switchMap(() => this.system.version > this.cutOff ? this.calcChannels() : this.calcChannelsLegacy(cameras)),
-            shareReplay({ bufferSize: 1, refCount: false })
+            switchMap(() =>
+                this.system.version > this.cutOff
+                    ? this.calcChannels()
+                    : this.calcChannelsLegacy(cameras),
+            ),
+            shareReplay({ bufferSize: 1, refCount: false }),
         );
     }
 
     getModuleInfo(serverId?: string): Observable<t.ModuleInformation> {
         if (serverId) {
-            return this.mediaserverConnections[serverId].getModuleInfo()
-                .pipe(tap(moduleInfo => {
+            return this.mediaserverConnections[serverId].getModuleInfo().pipe(
+                tap(moduleInfo => {
                     this.moduleInfo = moduleInfo.reply;
-                }));
+                }),
+            );
         } else {
-            return this.mediaserver.getModuleInfo()
-                .pipe(tap(moduleInfo => {
+            return this.mediaserver.getModuleInfo().pipe(
+                tap(moduleInfo => {
                     this.moduleInfo = moduleInfo.reply;
-                }));
+                }),
+            );
         }
     }
 
@@ -245,7 +285,8 @@ export class ServerManager {
     }
 
     changeServerPort(port: number, serverId: string) {
-        return this.mediaserverConnections[serverId].changePort(port)
+        return this.mediaserverConnections[serverId]
+            .changePort(port)
             .catch(err => Promise.reject(err));
     }
 
@@ -257,7 +298,7 @@ export class ServerManager {
         const promises = loggers.map<Promise<LogLevel>>(logger =>
             this.mediaserverConnections[serverId]
                 .logLevel(undefined, logger.key, logger.value)
-                .toPromise()
+                .toPromise(),
         );
 
         return Promise.all(promises)
@@ -270,13 +311,18 @@ export class ServerManager {
     }
 
     private setLogsV2(serverId: string, loggers: Logger[]): Promise<void> {
-        const logLevels = loggers.reduce((logs, log) => ({
-            ...logs,
-            [log.key]: {
-                primaryLevel: log.value
-            }
-        }), {});
-        return <Promise<void>> this.mediaserverConnections[serverId].updateLogLevel(logLevels).toPromise();
+        const logLevels = loggers.reduce(
+            (logs, log) => ({
+                ...logs,
+                [log.key]: {
+                    primaryLevel: log.value,
+                },
+            }),
+            {},
+        );
+        return <Promise<void>>(
+            this.mediaserverConnections[serverId].updateLogLevel(logLevels).toPromise()
+        );
     }
 
     setLogLevels(serverId: string, loggers: Logger[]): Promise<void> {
@@ -291,11 +337,14 @@ export class ServerManager {
 
     renameServer(serverId: string, serverName: string): Promise<t.ChangedIdReturned> {
         const cleanServerId = serverId.replace(/[{}]/g, '');
-        return this.mediaserverConnections[serverId].saveServerUserSettings(cleanServerId, { serverName });
+        return this.mediaserverConnections[serverId].saveServerUserSettings(cleanServerId, {
+            serverName,
+        });
     }
 
     restartServer(serverId: string): Promise<t.RestartServer> {
-        return this.mediaserverConnections[serverId].restartServer(serverId)
+        return this.mediaserverConnections[serverId]
+            .restartServer(serverId)
             .catch(err => Promise.reject(err));
     }
 
@@ -308,7 +357,10 @@ export class ServerManager {
     }
 
     restoreFactorySettings(serverId: string, currentPassword: string) {
-        return this.mediaserverConnections[serverId].restoreFactorySettings(currentPassword, serverId);
+        return this.mediaserverConnections[serverId].restoreFactorySettings(
+            currentPassword,
+            serverId,
+        );
     }
 
     /**
@@ -322,7 +374,7 @@ export class ServerManager {
     rebuildArchive(
         serverId: string,
         type: number,
-        action?: string
+        action?: string,
     ): Observable<RebuildArchiveResponse> {
         return this.mediaserverConnections[serverId].rebuildArchive(type, action);
     }

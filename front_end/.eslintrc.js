@@ -579,6 +579,8 @@ module.exports = {
                 'libs/services/system/**/*.ts',
                 'libs/services/system.service/camera-manager/**/*.ts',
                 'libs/services/system.service/cloud-storage-manager/**/*.ts',
+                'libs/services/system.service/license-manager/**/*.ts',
+                'libs/services/system.service/server-manager/**/*.ts',
                 // 'libs/services//**/*.ts',
                 'libs/utils/**/*.ts',
             ],
