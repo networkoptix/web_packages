@@ -44,7 +44,9 @@ import {
 
 type PartialSystem = Pick<NxSystemOldModule, 'serverManager' | 'version' | 'useRest'>;
 
-const updateDuration = (chunk: Pick<Partial<TimeDetail>, 'durationMs'> & Omit<TimeDetail, 'durationMs'>): TimeDetail => {
+const updateDuration = (
+    chunk: Pick<Partial<TimeDetail>, 'durationMs'> & Omit<TimeDetail, 'durationMs'>,
+): TimeDetail => {
     chunk.durationMs = chunk.endTimeMs - chunk.startTimeMs;
     return chunk as TimeDetail;
 };
@@ -59,25 +61,17 @@ export class CameraManager {
     cameras: NxSystemCamera[];
     moduleInfo: ModuleInfo;
 
-    constructor(
-        private system: PartialSystem,
-    ) {
+    constructor(private system: PartialSystem) {
         this.locale = NxSystemBase.INJECTOR.get(LOCALE_ID);
         this.serverManager = this.system.serverManager;
     }
 
     async updateSystemServersCameras(): Promise<void> {
         try {
-            const {
-                moduleInfo,
-                servers,
-                serverTimes,
-                cameras,
-            } = await this.serverManager.mediaserver.updateSystemServersCameras().toPromise();
+            const { moduleInfo, servers, serverTimes, cameras } =
+                await this.serverManager.mediaserver.updateSystemServersCameras().toPromise();
             this.moduleInfo = moduleInfo;
-            this.servers = servers.sort(
-                alphabeticalSort(this.locale, server => server.name)
-            );
+            this.servers = servers.sort(alphabeticalSort(this.locale, server => server.name));
             await this.processCameras({ serverTimes, cameras });
             return Promise.resolve();
         } catch (error) {
@@ -90,7 +84,8 @@ export class CameraManager {
 
     async getCameras(): Promise<NxSystemCamera[]> {
         await this.serverManager.mediaserver
-            .getCamerasWithServerTime().toPromise()
+            .getCamerasWithServerTime()
+            .toPromise()
             .then(response => {
                 if (!response) {
                     this.cameras = [];
@@ -110,9 +105,9 @@ export class CameraManager {
     }): Promise<NxSystemCamera[]> {
         this.serverTimes = serverTimes;
         try {
-            this.camerasHealth = (await firstValueFrom(this.serverManager.mediaserver.getHealthValues()))
-                .reply
-                .cameras;
+            this.camerasHealth = (
+                await firstValueFrom(this.serverManager.mediaserver.getHealthValues())
+            ).reply.cameras;
         } catch (_) {
             this.camerasHealth = {};
         }
@@ -129,7 +124,7 @@ export class CameraManager {
         }
 
         const addParams = Object.fromEntries(
-            camera.addParams.map(({ name, value }) => [name, value])
+            camera.addParams.map(({ name, value }) => [name, value]),
         );
 
         // The server sends all params as strings, parsing is required
@@ -139,33 +134,37 @@ export class CameraManager {
             'hasDualStreaming',
             'isAudioSupported',
         ];
-        Object.assign(parsedAddParams, Object.fromEntries(
-            // "0" or "1"
-            boolKeys
-                .filter(k => addParams[k] !== undefined)
-                .map(k => [k, !!Number(addParams[k])])
-        ));
+        Object.assign(
+            parsedAddParams,
+            Object.fromEntries(
+                // "0" or "1"
+                boolKeys
+                    .filter(k => addParams[k] !== undefined)
+                    .map(k => [k, !!Number(addParams[k])]),
+            ),
+        );
 
-        const numKeys: KeyFilter<APT.ParsedAddParams, number>[] = [
-            'overrideAr',
-            'rotation',
-        ];
-        Object.assign(parsedAddParams, Object.fromEntries(
-            numKeys
-                .filter(k => addParams[k] !== undefined)
-                .map(k => [k, Number(addParams[k])])
-            // Empty strings will be converted to 0
-        ));
+        const numKeys: KeyFilter<APT.ParsedAddParams, number>[] = ['overrideAr', 'rotation'];
+        Object.assign(
+            parsedAddParams,
+            Object.fromEntries(
+                numKeys.filter(k => addParams[k] !== undefined).map(k => [k, Number(addParams[k])]),
+                // Empty strings will be converted to 0
+            ),
+        );
 
         const jsonKeys: KeyFilter<APT.ParsedAddParams, object>[] = [
             'bitrateInfos',
             'mediaCapabilities',
         ];
-        Object.assign(parsedAddParams, Object.fromEntries(
-            jsonKeys
-                .filter(k => addParams[k] !== undefined)
-                .map(k => [k, JSON.parse(addParams[k])])
-        ));
+        Object.assign(
+            parsedAddParams,
+            Object.fromEntries(
+                jsonKeys
+                    .filter(k => addParams[k] !== undefined)
+                    .map(k => [k, JSON.parse(addParams[k])]),
+            ),
+        );
 
         const parentName = this.servers?.find(server => server.id === camera.parentId)?.name;
         const streamCapabilities = parsedAddParams.mediaCapabilities?.streamCapabilities;
@@ -176,13 +175,16 @@ export class CameraManager {
             null,
             parsedAddParams.overrideAr * 120,
             120,
-            addParams.rotation
+            addParams.rotation,
         );
-        const webRtcUrl = this.system.version >= 5.1
-            ? ({ position } = { position: null }): string => {
-                return this.serverManager.mediaserverConnections[camera.parentId].getPlaybackUrl(camera.id, 'webRtc', 'low', position);
-            }
-            : null;
+        const webRtcUrl =
+            this.system.version >= 5.1
+                ? ({ position } = { position: null }): string => {
+                      return this.serverManager.mediaserverConnections[
+                          camera.parentId
+                      ].getPlaybackUrl(camera.id, 'webRtc', 'low', position);
+                  }
+                : null;
         const status = this.parseCameraStatus(camera, this.system.useRest).toLowerCase();
         const unauthorized = camera.status === 'Unauthorized';
         const online = ['Online', 'Recording'].includes(camera.status);
@@ -192,10 +194,9 @@ export class CameraManager {
             'GENERIC_MULTICAST',
             'HTTP_URL_PLUGIN',
         ].includes(camera.vendor);
-        const motionEnabled = ![
-            MotionType.NoMotion,
-            MotionType.None
-        ].includes(camera.motionType as MotionType);
+        const motionEnabled = ![MotionType.NoMotion, MotionType.None].includes(
+            camera.motionType as MotionType,
+        );
 
         let defaultRatio = 0;
         const { bitrateInfos } = parsedAddParams;
@@ -204,13 +205,12 @@ export class CameraManager {
             defaultRatio = Number(x) / Number(y);
         }
         const multiStream = bitrateInfos && bitrateInfos.streams.length >= 2;
-        const motionLowResEnabled = !camera.disableDualStreaming &&
-            (multiStream || parsedAddParams.hasDualStreaming);
+        const motionLowResEnabled =
+            !camera.disableDualStreaming && (multiStream || parsedAddParams.hasDualStreaming);
 
         const newApi = this.serverManager.mediaserver instanceof NxSystemRestAPI;
         const recordingSettings: RecordingSettings = {
-            recording: camera.scheduleEnabled &&
-                !camera.scheduleTasks.every(({ fps }) => !fps),
+            recording: camera.scheduleEnabled && !camera.scheduleTasks.every(({ fps }) => !fps),
             quality: this.parseRecordingQuality(camera.scheduleTasks),
             fps: this.parseFps(camera.scheduleTasks, maxFps),
             motionEnabled,
@@ -218,40 +218,46 @@ export class CameraManager {
                 {
                     name: 'always',
                     id: newApi ? RecordingType.META_ALWAYS : RecordingType.ALWAYS,
-                    value: this.recordingScheduleForType(
-                        camera,
-                        [RecordingType.META_ONLY, RecordingType.ALWAYS]
-                    ),
-                    enabled: true
+                    value: this.recordingScheduleForType(camera, [
+                        RecordingType.META_ONLY,
+                        RecordingType.ALWAYS,
+                    ]),
+                    enabled: true,
                 },
                 {
                     name: 'motion',
                     id: newApi ? RecordingType.META_ONLY : RecordingType.MOTION_ONLY,
-                    value: this.recordingScheduleForType(
-                        camera,
-                        [RecordingType.META_ONLY, RecordingType.MOTION_ONLY]
-                    ),
-                    enabled: motionEnabled
+                    value: this.recordingScheduleForType(camera, [
+                        RecordingType.META_ONLY,
+                        RecordingType.MOTION_ONLY,
+                    ]),
+                    enabled: motionEnabled,
                 },
                 {
                     name: 'motionLowRes',
                     id: newApi ? RecordingType.META_LOW : RecordingType.MOTION_LOW,
                     value: !motionEnabled
                         ? 0
-                        : this.recordingScheduleForType(
-                            camera,
-                            [RecordingType.META_LOW, RecordingType.MOTION_LOW]
-                        ),
-                    enabled: motionLowResEnabled && motionEnabled
-                }
-            ]
+                        : this.recordingScheduleForType(camera, [
+                              RecordingType.META_LOW,
+                              RecordingType.MOTION_LOW,
+                          ]),
+                    enabled: motionLowResEnabled && motionEnabled,
+                },
+            ],
         };
         const deviceType = this.camerasHealth[cleanId(camera.id)]
             ? this.camerasHealth[cleanId(camera.id)].info.type
             : 'Camera';
 
         const {
-            id, name, vendor, model, url, parentId,
+            id,
+            name,
+            vendor,
+            model,
+            url,
+
+            parentId,
             audioEnabled,
             controlEnabled,
             motionType,
@@ -260,7 +266,7 @@ export class CameraManager {
             scheduleTasks,
             backupPolicy,
             backupQuality,
-            backupContentType
+            backupContentType,
         } = camera;
         return {
             id,
@@ -302,19 +308,22 @@ export class CameraManager {
 
     updateRecordingSettings(
         updatedTask: TaskUpdate,
-        cameraSettings: CameraUpdate
+        cameraSettings: CameraUpdate,
     ): Promise<ChangedIdReturned> {
-        const baseTask = updatedTask && cameraSettings.scheduleEnabled ? {
-            bitrateKbps: 0,
-            endTime: 86400,
-            startTime: 0,
-            recordingType: updatedTask.recordingType
-        } : {
-            bitrateKbps: 0,
-            endTime: 0,
-            startTime: 0,
-            recordingType: RecordingType.NEVER
-        };
+        const baseTask =
+            updatedTask && cameraSettings.scheduleEnabled
+                ? {
+                      bitrateKbps: 0,
+                      endTime: 86400,
+                      startTime: 0,
+                      recordingType: updatedTask.recordingType,
+                  }
+                : {
+                      bitrateKbps: 0,
+                      endTime: 0,
+                      startTime: 0,
+                      recordingType: RecordingType.NEVER,
+                  };
 
         const updateParams: SaveCameraUserAttributes = cameraSettings;
 
@@ -358,20 +367,20 @@ export class CameraManager {
 
     private recordingScheduleForType(
         { scheduleTasks }: ec2CameraEx,
-        types: RecordingType[]
+        types: RecordingType[],
     ): RecordingModes['value'] {
         let scheduled = 0;
         scheduleTasks.forEach(({ recordingType, startTime, endTime, fps }) => {
             scheduled += Number(
-                types.includes(recordingType as RecordingType) &&
-                fps > 0 &&
-                startTime < endTime
+                types.includes(recordingType as RecordingType) && fps > 0 && startTime < endTime,
             );
         });
 
-        if (scheduleTasks.length && scheduleTasks.length === scheduled) { // Full schedule
+        if (scheduleTasks.length && scheduleTasks.length === scheduled) {
+            // Full schedule
             return 2;
-        } else if (scheduled > 0) { // Partial schedule
+        } else if (scheduled > 0) {
+            // Partial schedule
             return 1;
         } else {
             return 0;
@@ -380,7 +389,7 @@ export class CameraManager {
 
     private parseCameraStatus(
         { status, scheduleEnabled, scheduleTasks, parentId }: ec2CameraEx,
-        restSystem = true
+        restSystem = true,
     ): string {
         if (!scheduleEnabled) {
             return status;
@@ -395,32 +404,44 @@ export class CameraManager {
         if (serverTime) {
             // Intentionally made descriptive ... I dislike time manipulation
             const { timeZoneOffset: serverTimeZoneOffsetMs, vmsTime: vmsTimeMs } = serverTime;
-            const localTimeZoneOffsetMs = (new Date().getTimezoneOffset()) * MS.min;
+            const localTimeZoneOffsetMs = new Date().getTimezoneOffset() * MS.min;
             const timeZoneOffset = parseInt(serverTimeZoneOffsetMs) + localTimeZoneOffsetMs;
             const vmsTimeFromLocal = parseInt(vmsTimeMs) + timeZoneOffset;
             const vmsDate = new Date(vmsTimeFromLocal);
 
             const dayOfWeek = ((vmsDate.getDay() + 6) % 7) + 1;
             const secondsToday = Math.round((vmsDate.getTime() % MS.day) / 1000);
-            recording = scheduleTasks.some(task => (
-                ![RecordingType.NEVER, RecordingType.META_NEVER].includes(task.recordingType as RecordingType) &&
-                task.dayOfWeek === dayOfWeek &&
-                task.startTime < secondsToday &&
-                secondsToday < task.endTime
-            ));
+            recording = scheduleTasks.some(
+                task =>
+                    ![RecordingType.NEVER, RecordingType.META_NEVER].includes(
+                        task.recordingType as RecordingType,
+                    ) &&
+                    task.dayOfWeek === dayOfWeek &&
+                    task.startTime < secondsToday &&
+                    secondsToday < task.endTime,
+            );
         }
         return recording && status !== 'Offline' ? 'Recording' : 'Scheduled';
     }
 
     public hasArchives(): Observable<string[]> {
-        return this.serverManager.mediaserver.getCameraHistoryItems().pipe(map(res => flatten(res.map(({ archivedCameras }) => archivedCameras))));
+        return this.serverManager.mediaserver
+            .getCameraHistoryItems()
+            .pipe(map(res => flatten(res.map(({ archivedCameras }) => archivedCameras))));
     }
 
     public getRecordedTimes(cameraId: string[], baseCanvasSize = 36000): Observable<TimeDetail[]> {
         const tenSecondsInMs = 10 * 1000;
         let first = Infinity;
         let resolution = 1;
-        const params = { cameraId, groupBy: 'cameraId', keepSmallChunks: true, detail: 1, startTime: 0, endTime: 0 };
+        const params = {
+            cameraId,
+            groupBy: 'cameraId',
+            keepSmallChunks: true,
+            detail: 1,
+            startTime: 0,
+            endTime: 0,
+        };
         return timer(0, tenSecondsInMs).pipe(
             switchMap(() => {
                 params.startTime = params.endTime;
@@ -439,9 +460,12 @@ export class CameraManager {
                             durationMs = parseInt(durationMs);
                             const endTimeMs = startTimeMs + durationMs;
                             const start = Math.round((startTimeMs - first) / resolution);
-                            const end = Math.max(Math.round((endTimeMs - first) / resolution), start + 1);
+                            const end = Math.max(
+                                Math.round((endTimeMs - first) / resolution),
+                                start + 1,
+                            );
                             return { cameraId, startTimeMs, durationMs, endTimeMs, start, end };
-                        })
+                        }),
                     );
                     return acc.sort(paramSortFunc<TimeDetail>(period => period.startTimeMs));
                 }, [] as TimeDetail[]);
@@ -460,15 +484,18 @@ export class CameraManager {
                 return acc;
             }, []),
             distinctUntilChanged(isEqual),
-            switchMap(records => !records.length || records[records.length - 1].durationMs !== -1
-                ? Promise.resolve(records)
-                : interval(0, animationFrameScheduler).pipe(
-                    map(() => {
-                        const last = records[records.length - 1];
-                        last.endTimeMs = Date.now();
-                        updateDuration(last);
-                        return records;
-                    })))
+            switchMap(records =>
+                !records.length || records[records.length - 1].durationMs !== -1
+                    ? Promise.resolve(records)
+                    : interval(0, animationFrameScheduler).pipe(
+                          map(() => {
+                              const last = records[records.length - 1];
+                              last.endTimeMs = Date.now();
+                              updateDuration(last);
+                              return records;
+                          }),
+                      ),
+            ),
         );
     }
 }

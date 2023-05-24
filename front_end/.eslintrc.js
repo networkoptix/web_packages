@@ -579,6 +579,8 @@ module.exports = {
                 'libs/services/nx-config/**/*.ts',
                 'libs/services/process.service/**/*.ts',
                 'libs/services/system/**/*.ts',
+                'libs/services/system.service/camera-manager/**/*.ts',
+                'libs/services/system.service/cloud-storage-manager/**/*.ts',
                 // 'libs/services//**/*.ts',
                 'libs/utils/**/*.ts',
             ],

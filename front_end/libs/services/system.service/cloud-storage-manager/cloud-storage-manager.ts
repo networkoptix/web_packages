@@ -28,7 +28,7 @@ export enum CloudStorageUpdate {
     SYSTEM = 'system',
     USER = 'user',
     STATISTICS = 'statistics',
-    ACTIVATE = 'activate'
+    ACTIVATE = 'activate',
 }
 
 export interface Usage {
@@ -45,12 +45,17 @@ export class CloudStorageManager extends Destroyable {
 
     static getInstance(cloudStorageApi: CloudStorageAPI, system: NxSystem): CloudStorageManager {
         if (!CloudStorageManager.INSTANCES.has(system)) {
-            CloudStorageManager.INSTANCES.set(system, new CloudStorageManager(cloudStorageApi, system));
+            CloudStorageManager.INSTANCES.set(
+                system,
+                new CloudStorageManager(cloudStorageApi, system),
+            );
         }
         return CloudStorageManager.INSTANCES.get(system).update();
     }
 
-    #updater$ = new BehaviorSubject<CloudStorageUpdate[]>(Object.values(CloudStorageUpdate).filter(val => val !== CloudStorageUpdate.ACTIVATE));
+    #updater$ = new BehaviorSubject<CloudStorageUpdate[]>(
+        Object.values(CloudStorageUpdate).filter(val => val !== CloudStorageUpdate.ACTIVATE),
+    );
 
     /** State */
 
@@ -58,28 +63,55 @@ export class CloudStorageManager extends Destroyable {
      * Storages for current system.
      */
     public readonly systemStorages$ = this.#updater$.pipe(
-        filter(updates => updates.includes(CloudStorageUpdate.SYSTEM) || updates.includes(CloudStorageUpdate.ACTIVATE)),
-        switchMap(updates => this.cloudStorageApi.getStorages(this.system.id).pipe(catchError(() => new Promise<StorageInfo[]>(resolve => setTimeout(() => {
-            const retries = !updates.every(update => update === CloudStorageUpdate.SYSTEM) ? -1 : updates.findIndex(update => update === CloudStorageUpdate.SYSTEM);
-            if (retries !== -1) {
-                updates.splice(retries);
-                this.updateState(updates);
-            }
-            resolve([] as StorageInfo[]);
-        }, 2500))))),
+        filter(
+            updates =>
+                updates.includes(CloudStorageUpdate.SYSTEM) ||
+                updates.includes(CloudStorageUpdate.ACTIVATE),
+        ),
+        switchMap(updates =>
+            this.cloudStorageApi.getStorages(this.system.id).pipe(
+                catchError(
+                    () =>
+                        new Promise<StorageInfo[]>(resolve =>
+                            setTimeout(() => {
+                                const retries = !updates.every(
+                                    update => update === CloudStorageUpdate.SYSTEM,
+                                )
+                                    ? -1
+                                    : updates.findIndex(
+                                          update => update === CloudStorageUpdate.SYSTEM,
+                                      );
+                                if (retries !== -1) {
+                                    updates.splice(retries);
+                                    this.updateState(updates);
+                                }
+                                resolve([] as StorageInfo[]);
+                            }, 2500),
+                        ),
+                ),
+            ),
+        ),
         catchError(() => Promise.resolve([] as StorageInfo[])),
         shareReplay({ bufferSize: 1, refCount: false }),
-        this.onDestroyed
+        this.onDestroyed,
     );
 
-    public readonly activating$ = this.#updater$.pipe(map(updates => updates.includes(CloudStorageUpdate.ACTIVATE) || updates.filter(update => update === CloudStorageUpdate.SYSTEM).length > 1));
+    public readonly activating$ = this.#updater$.pipe(
+        map(
+            updates =>
+                updates.includes(CloudStorageUpdate.ACTIVATE) ||
+                updates.filter(update => update === CloudStorageUpdate.SYSTEM).length > 1,
+        ),
+    );
 
     /**
      * Triggers fetching updated state from cloud storage service
      *
      * @param target CloudStorageUpdate[] | CloudStorageUpdate
      */
-    public updateState(target: CloudStorageUpdate[] | CloudStorageUpdate = CloudStorageUpdate.SYSTEM): void {
+    public updateState(
+        target: CloudStorageUpdate[] | CloudStorageUpdate = CloudStorageUpdate.SYSTEM,
+    ): void {
         if (target === CloudStorageUpdate.ACTIVATE) {
             target = Array(10).fill(CloudStorageUpdate.SYSTEM);
         } else if (typeof target === 'string') {
@@ -102,14 +134,30 @@ export class CloudStorageManager extends Destroyable {
      * @returns Observable<BoundSystem>
      */
     public move(systemId: uuid): Observable<BoundSystem> {
-        return this.systemStorages$.pipe(switchMap(([storage]) => storage?.id ? this.cloudStorageApi.bindSystem({ storageId: storage.id, systemId }) : Promise.resolve(null)));
+        return this.systemStorages$.pipe(
+            switchMap(([storage]) =>
+                storage?.id
+                    ? this.cloudStorageApi.bindSystem({ storageId: storage.id, systemId })
+                    : Promise.resolve(null),
+            ),
+        );
     }
 
     /** Cloud Storage Manager Helpers */
 
-    #translateMessage = (key: LicenseTranslationBaseKeys, params?: TranslateObject['params']): TranslateObject => ({ value: CloudStorageManager.TRANSLATION_BASE[key], params: params || {} });
+    #translateMessage = (
+        key: LicenseTranslationBaseKeys,
+        params?: TranslateObject['params'],
+    ): TranslateObject => ({
+        value: CloudStorageManager.TRANSLATION_BASE[key],
+        params: params || {},
+    });
 
-    #getSizeText = (usageSpace: number, percentage: number): TranslateObject => this.#translateMessage('usedSpace', { usageSpace: bitsToString(usageSpace), percentage: percentage.toString() });
+    #getSizeText = (usageSpace: number, percentage: number): TranslateObject =>
+        this.#translateMessage('usedSpace', {
+            usageSpace: bitsToString(usageSpace),
+            percentage: percentage.toString(),
+        });
 
     /**
      * Gets plain text usage message.
@@ -127,14 +175,19 @@ export class CloudStorageManager extends Destroyable {
         }
 
         return this.systemStorages$.pipe(
-            map(storages => storages.reduce((total, { totalSpace, freeSpace }) => total + totalSpace - freeSpace, 0)),
+            map(storages =>
+                storages.reduce(
+                    (total, { totalSpace, freeSpace }) => total + totalSpace - freeSpace,
+                    0,
+                ),
+            ),
             map(usedSpace => {
                 const total = bitsToString(totalSpace);
                 const used = usedSpace === 0 ? `0 ${total.split(' ')[1]}` : bitsToString(usedSpace);
-                const percent = Math.round(usedSpace / totalSpace * 100);
+                const percent = Math.round((usedSpace / totalSpace) * 100);
 
                 return this.#translateMessage('used', { used, total, percent: percent.toString() });
-            })
+            }),
         );
     }
 
@@ -145,7 +198,12 @@ export class CloudStorageManager extends Destroyable {
      * @returns Observable<Usage[]>
      */
     #getUsageFromSystem(totalSpace: number): Observable<Usage[]> {
-        return throwError(() => new Error(`TODO: Need to find out how the server team will provide this information. Total Space: ${totalSpace}`));
+        return throwError(
+            () =>
+                new Error(
+                    `TODO: Need to find out how the server team will provide this information. Total Space: ${totalSpace}`,
+                ),
+        );
     }
 
     /**
@@ -156,11 +214,17 @@ export class CloudStorageManager extends Destroyable {
      */
     #getUsagesFromCloudStorageService(totalSpace: number): Observable<Usage[]> {
         return this.systemStorages$.pipe(
-            map(storages => ({ usedSpace: storages.reduce((total, { totalSpace, freeSpace }) => total + totalSpace - freeSpace, 0), storages: storages.length })),
+            map(storages => ({
+                usedSpace: storages.reduce(
+                    (total, { totalSpace, freeSpace }) => total + totalSpace - freeSpace,
+                    0,
+                ),
+                storages: storages.length,
+            })),
             map(({ usedSpace, storages }) => {
                 const usages: Usage[] = [];
                 if (storages) {
-                    const usedSpacePercentage = Math.round(usedSpace / totalSpace * 100);
+                    const usedSpacePercentage = Math.round((usedSpace / totalSpace) * 100);
                     const freeSpacePercentage = 100 - usedSpacePercentage;
                     const freeSpace = totalSpace - usedSpace;
 
@@ -168,18 +232,18 @@ export class CloudStorageManager extends Destroyable {
                         size: usedSpacePercentage,
                         color: 'var(--new-brand-core)',
                         title: this.system.info.name,
-                        sizeText: this.#getSizeText(usedSpace, usedSpacePercentage)
+                        sizeText: this.#getSizeText(usedSpace, usedSpacePercentage),
                     });
 
                     usages.push({
                         size: freeSpacePercentage,
                         color: 'transparent',
                         title: this.#translateMessage('available'),
-                        sizeText: this.#getSizeText(freeSpace, freeSpacePercentage)
+                        sizeText: this.#getSizeText(freeSpace, freeSpacePercentage),
                     });
                 }
                 return usages;
-            })
+            }),
         );
     }
 
@@ -190,9 +254,11 @@ export class CloudStorageManager extends Destroyable {
      * @returns Observable<Usage[]>
      */
     public getUsages(totalSpace: number): Observable<Usage[]> {
-        return !totalSpace ? from([]) : this.#getUsageFromSystem(totalSpace).pipe(
-            catchError(() => this.#getUsagesFromCloudStorageService(totalSpace))
-        );
+        return !totalSpace
+            ? from([])
+            : this.#getUsageFromSystem(totalSpace).pipe(
+                  catchError(() => this.#getUsagesFromCloudStorageService(totalSpace)),
+              );
     }
 
     constructor(private cloudStorageApi: CloudStorageAPI, private system: NxSystem) {
