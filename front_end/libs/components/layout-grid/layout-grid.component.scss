@@ -315,10 +315,10 @@ cdk-tree,
     }
 
     &:hover .item-error.has-secondary-panel {
+        padding-top: 8px;
 
         & > {
             :not(.main-panel) {
-                padding-top: 16px;
                 display: block !important;
             }
 
@@ -365,31 +365,31 @@ cdk-tree,
 
         &.small {
             h3 {
-                font-size: 14px !important;
-            }
-
-            h4 {
-                font-size: 10px !important;
-            }
-        }
-
-        &.medium {
-            h3 {
-                font-size: 18px !important;
-            }
-
-            h4 {
-                font-size: 14px !important;
-            }
-        }
-
-        &.large {
-            h3 {
                 font-size: 24px !important;
             }
 
             h4 {
                 font-size: 18px !important;
+            }
+        }
+
+        &.medium {
+            h3 {
+                font-size: 32px !important;
+            }
+
+            h4 {
+                font-size: 24px !important;
+            }
+        }
+
+        &.large {
+            h3 {
+                font-size: 60px !important;
+            }
+
+            h4 {
+                font-size: 32px !important;
             }
         }
 
@@ -409,7 +409,6 @@ cdk-tree,
         h4 {
             text-align: center;
             width: 100%;
-            padding: 8px;
             color: var(--placeholder-color) !important;
         }
     }

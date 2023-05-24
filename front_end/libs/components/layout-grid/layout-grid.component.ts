@@ -699,13 +699,13 @@ export class NxLayoutGridComponent {
         { renderConfig, id }: ParsedLayoutItem,
         status: string,
     ): void => {
-        const constraint = Math.min(width, height);
         const hasAdditionalMessage = Boolean(
             this.additionalErrorMessages[this.layoutItemLookup[id]?.details.id || ''] ||
                 this.LANG.layouts.additionalErrorMessages[status],
         );
         const iconSizeConfigs: {
-            minContainer: number;
+            minWidth: number;
+            minHeight: number;
             maxSize: number;
             padding: number;
             minTitleHeight: number;
@@ -715,38 +715,43 @@ export class NxLayoutGridComponent {
             placeholderClass: `${PlaceholderClasses}`;
         }[] = [
             {
-                minContainer: 288,
-                maxSize: 300,
+                minWidth: 1000,
+                minHeight: 500,
+                maxSize: 320,
                 padding: 48,
                 minTitleHeight: 0,
-                titleSize: 36,
+                titleSize: 48,
                 minAdditionalHeight: 348,
-                additionalSize: 26,
+                additionalSize: 36,
                 placeholderClass: PlaceholderClasses.LARGE,
             },
             {
-                minContainer: 144,
-                maxSize: 180,
+                minWidth: 300,
+                minHeight: 188,
+                maxSize: 128,
                 padding: 24,
-                minTitleHeight: 180,
-                titleSize: 28,
-                minAdditionalHeight: 232,
-                additionalSize: 22,
+                minTitleHeight: 218,
+                titleSize: 64,
+                minAdditionalHeight: 288,
+                additionalSize: 24,
                 placeholderClass: PlaceholderClasses.MEDIUM,
             },
             {
-                minContainer: 0,
-                maxSize: 108,
+                minWidth: 0,
+                minHeight: 0,
+                maxSize: 128,
                 padding: 12,
                 minTitleHeight: Infinity,
-                titleSize: 24,
+                titleSize: 120,
                 minAdditionalHeight: Infinity,
-                additionalSize: 18,
+                additionalSize: 64,
                 placeholderClass: PlaceholderClasses.SMALL,
             },
         ];
 
-        const config = iconSizeConfigs.find(({ minContainer }) => constraint >= minContainer);
+        const config = iconSizeConfigs.find(
+            ({ minWidth, minHeight }) => width >= minWidth && height >= minHeight,
+        );
 
         const getPlaceholderState = (height: number): PlaceholderState => {
             if (
@@ -778,10 +783,10 @@ export class NxLayoutGridComponent {
         renderConfig.placeholderClass = config.placeholderClass;
         renderConfig.placeholderState = getPlaceholderState(height);
         renderConfig.hasSecondaryPanel = renderConfig.placeholderState !== PlaceholderState.FULL;
-        renderConfig.maxPlaceholderSize = Math.min(
-            config.maxSize,
-            constraint - getSizeOffset(renderConfig.placeholderState),
-        );
+        renderConfig.maxPlaceholderSize =
+            config.placeholderClass === PlaceholderClasses.SMALL
+                ? Math.min(width, height) - getSizeOffset(renderConfig.placeholderState)
+                : config.maxSize;
         this.cd.detectChanges();
     };
 
@@ -1407,10 +1412,6 @@ export class NxLayoutGridComponent {
     tooltipTarget$ = new BehaviorSubject<string>('');
 
     updateTooltipTarget = (id: string): void => this.tooltipTarget$.next(id);
-
-    setTooltip(target: HTMLSpanElement, title: string): void {
-        target.title = target.offsetWidth < target.scrollWidth ? title : '';
-    }
 
     pingServer =
         ({ parentId: serverId }: { parentId: string }) =>
