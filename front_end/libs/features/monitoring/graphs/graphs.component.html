@@ -6,6 +6,6 @@
 <ng-template #graph>
     <nx-monitoring-graph
         [system]="system"
-        [selectedServerId]="selectedServerId"
+        [selectedServerId]="selectedServerId$ | async"
     ></nx-monitoring-graph>
 </ng-template>

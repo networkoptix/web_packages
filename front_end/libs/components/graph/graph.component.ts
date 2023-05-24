@@ -111,7 +111,8 @@ export class NxMonitoringGraphComponent implements OnChanges {
         of({})
             .pipe(
                 mergeMap(() => this.system.serverManager.getStatistics(this.selectedServerId)),
-                retry(),
+                // Delay is required in case Server Manager is not initialized yet
+                retry({ delay: 50 }),
                 tap(response => {
                     response.reply &&
                         response.reply.statistics.forEach(data => {

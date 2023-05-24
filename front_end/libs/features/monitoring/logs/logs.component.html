@@ -6,6 +6,6 @@
 <ng-template #logs>
     <nx-logger
         [system]="system"
-        [selectedServerId]="selectedServerId"
+        [selectedServerId]="selectedServerId$ | async"
     ></nx-logger>
 </ng-template>

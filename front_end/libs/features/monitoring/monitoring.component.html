@@ -9,7 +9,7 @@
                 <nx-select
                     [id]="'avail-servers'"
                     [type]="'api-tool'"
-                    [items]="availServers"
+                    [items]="selectableServers"
                     [selected]="selectedServer"
                     (onSelected)="changeSelectedServer($event)"
                     class="mb-3"

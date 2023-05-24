@@ -2,7 +2,7 @@ import { HttpParams } from '@angular/common/http';
 import { Component, Inject, Input, OnChanges } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { CookieService } from 'ngx-cookie-service';
-import { Subject, timer } from 'rxjs';
+import { Subject, firstValueFrom, timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -92,13 +92,17 @@ export class NxLoggerComponent implements OnChanges {
     }
 
     async ngOnChanges(changes: NgChanges<NxLoggerComponent>): Promise<void> {
-        if (changes.system.currentValue || changes.selectedServerId?.currentValue) {
+        if (changes.system?.currentValue || changes.selectedServerId?.currentValue) {
             if (this.selectedServerId) {
                 this.logData = '';
                 if (!environment.isLocal) {
                     this.systemRequires2fa = (
                         await this.system.getInfoFromCloudDb().toPromise()
                     )[0]?.system2faEnabled;
+                }
+                // Initialize Server Manager if it is not already
+                if (!this.system.serverManager.servers.length) {
+                    await firstValueFrom(this.system.serverManager.getServers());
                 }
                 this.system.serverManager.logLevel(this.selectedServerId).then(res => {
                     this.logLevels = Object.keys(res.reply).map(level => ({

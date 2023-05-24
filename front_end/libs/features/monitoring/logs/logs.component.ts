@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { ActivatedRoute } from '@angular/router';
+import { Observable, map } from 'rxjs';
 
 import { NxMenuService } from '@app/menu/menu.service';
-import { NxMonitoringService } from '@pages/monitoring/monitoring.service';
 import { NxSystem } from '@services/system.service/system';
+import { NxSystemService } from '@services/system.service/system.service';
 
-@UntilDestroy()
 @Component({
     selector: 'nx-logs',
     templateUrl: 'logs.component.html',
@@ -13,26 +13,20 @@ import { NxSystem } from '@services/system.service/system';
 })
 export class LogsComponent implements OnInit {
     system: NxSystem;
-    selectedServerId: string;
+    selectedServerId$: Observable<string> = this.route.queryParamMap.pipe(
+        map(paramMap => paramMap.get('serverId')),
+    );
 
     constructor(
-        private monitoringService: NxMonitoringService,
         private menuService: NxMenuService,
+        private route: ActivatedRoute,
+        private systemService: NxSystemService,
     ) {}
 
     ngOnInit(): void {
         this.menuService.section = 'logs';
         this.menuService.detail = '';
 
-        this.monitoringService.systemSubject.pipe(untilDestroyed(this)).subscribe(system => {
-            this.system = system;
-            this.selectedServerId = this.monitoringService.selectedServerId;
-        });
-
-        this.monitoringService.selectedServerIdSubject
-            .pipe(untilDestroyed(this))
-            .subscribe(serverId => {
-                this.selectedServerId = serverId;
-            });
+        this.system = this.systemService.getCurrentSystem();
     }
 }

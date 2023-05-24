@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subject, filter, takeUntil } from 'rxjs';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import { Content } from '@app/menu/menu.types';
@@ -12,11 +11,8 @@ import { icons, menus } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxAppSourceService } from '@services/nx-app-source.service';
-import { NxPageService } from '@services/page.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
-
-import { NxMonitoringService } from './monitoring.service';
 
 @UntilDestroy()
 @Component({
@@ -30,25 +26,21 @@ export class NxMonitoringComponent implements OnInit {
     content: Content;
     system: NxSystem;
     account: Account;
-    availServers: DropdownItem<string>[] = [];
+    selectableServers: DropdownItem<string>[] = [];
     selectedServer: DropdownItem<string>;
     systemOnline: boolean = true;
-    systemId: string;
     icons = icons;
 
     private destroy$ = new Subject<true>();
 
     constructor(
-        private pageService: NxPageService,
         private route: ActivatedRoute,
+        private router: Router,
         private menuService: NxMenuService,
         private sourceService: NxAppSourceService,
-        private monitoringService: NxMonitoringService,
         private accountService: NxAccountService,
         private systemService: NxSystemService,
     ) {
-        this.pageService.pageTitle(this.LANG.pageTitles.monitoring);
-
         this.content = {
             base: '',
             selectedSection: 'graphs',
@@ -68,88 +60,67 @@ export class NxMonitoringComponent implements OnInit {
                 },
             ],
         };
+    }
 
-        this.menuService.selectedSectionSubject.pipe(untilDestroyed(this)).subscribe(selection => {
-            setTimeout(() => {
-                this.pageService.pageTitle(this.LANG.pageTitles.monitoring);
+    private createSelectableServers(): void {
+        this.system.serverManager
+            .getServers()
+            .pipe(untilDestroyed(this), takeUntil(this.destroy$))
+            .subscribe(servers => {
+                this.selectableServers = servers.map(server => {
+                    return {
+                        value: server.id,
+                        name: server.name,
+                        disabled: server.status !== 'Online',
+                    };
+                });
+                this.syncQueryParamWithSelectedServer();
             });
+    }
+
+    ngOnInit(): void {
+        this.route.params.pipe(untilDestroyed(this)).subscribe(() => {
+            this.setSystemValues();
+        });
+        this.menuService.selectedSectionSubject.pipe(untilDestroyed(this)).subscribe(selection => {
             if (this.content.selectedSection === selection) {
                 return;
             }
             this.content.selectedSection = selection;
             this.content = { ...this.content }; // trigger onChange
         });
-    }
-
-    private updateMonitor(system: NxSystem): void {
-        this.availServers = [];
-        // this.selectedServer = undefined;
-
-        system.serverManager.servers.forEach(server => {
-            this.availServers.push({
-                value: server.id,
-                name: server.name,
-                disabled: server.status !== 'Online',
+        // TODO: Menu navigation removes query params. remove this after Menu refactor
+        this.router.events
+            .pipe(
+                untilDestroyed(this),
+                filter(event => event instanceof NavigationStart),
+            )
+            .subscribe((routerEvent: NavigationStart) => {
+                if (routerEvent.url.includes('monitoring')) {
+                    setTimeout(() => this.syncQueryParamWithSelectedServer());
+                }
             });
-
-            if (!this.selectedServer) {
-                this.selectedServer = { value: server.id, name: server.name, disabled: false };
-                this.monitoringService.selectedServerId = server.id;
-            }
-
-            if (
-                this.selectedServer.value === server.id &&
-                this.selectedServer.disabled !== (server.status !== 'Online')
-            ) {
-                this.selectedServer.disabled = server.status !== 'Online';
-                this.monitoringService.selectedServerId = this.selectedServer.disabled
-                    ? undefined
-                    : server.id; // trigger onChange
-            }
-        });
-
-        this.monitoringService.system = system;
-    }
-
-    ngOnInit(): void {
-        this.route.params.pipe(untilDestroyed(this)).subscribe(params => {
-            this.systemId = params.systemId;
-            this.init();
+        this.route.queryParamMap.pipe(untilDestroyed(this)).subscribe(queryParamMap => {
+            const routeServerId = queryParamMap.get('serverId');
+            const serverFromRouteParam = this.selectableServers.find(
+                server => server.value === routeServerId,
+            );
+            this.selectedServer = serverFromRouteParam || this.selectedServer;
         });
     }
 
-    init(): void {
+    setSystemValues(): void {
         this.accountService.get().then(account => {
             if (!account) {
                 return;
             }
 
             this.destroy$.next(true);
-            this.system = undefined;
-            this.monitoringService.system = undefined;
-            this.monitoringService.selectedServerId = undefined;
 
             this.system = this.systemService.getCurrentSystem();
             this.systemOnline = this.system.isOnline;
-
             if (this.systemOnline) {
-                // this.system.serverManager.initSystemMediaServers()
-                //     .then(() => {
-                //         this.system.infoSubject
-                //             .pipe(
-                //                 untilDestroyed(this),
-                //                 takeUntil(this.destroy$)
-                //             )
-                //             .subscribe(() => {
-                //                 this.updateMonitor(this.system);
-                //             });
-                //     });
-
-                this.system.infoSubject
-                    .pipe(untilDestroyed(this), takeUntil(this.destroy$))
-                    .subscribe(() => {
-                        this.updateMonitor(this.system);
-                    });
+                this.createSelectableServers();
             }
 
             this.content.base = this.sourceService.getMonitoringMenuBase(this.system);
@@ -158,7 +129,28 @@ export class NxMonitoringComponent implements OnInit {
     }
 
     changeSelectedServer(item: DropdownItem<string>): void {
-        this.selectedServer = item;
-        this.monitoringService.selectedServerId = item.value;
+        this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: {
+                serverId: item.value,
+            },
+        });
+    }
+
+    syncQueryParamWithSelectedServer(): void {
+        const routeServerId = this.route.snapshot.queryParamMap.get('serverId');
+        if (!routeServerId) {
+            const serverToSetAsRouteParam = this.selectedServer || this.selectableServers[0];
+            this.changeSelectedServer(serverToSetAsRouteParam);
+        } else if (!this.selectedServer) {
+            const serverFromRouteParam = this.selectableServers.find(
+                server => server.value === routeServerId,
+            );
+            if (serverFromRouteParam) {
+                this.selectedServer = serverFromRouteParam;
+            } else {
+                this.changeSelectedServer(this.selectableServers[0]);
+            }
+        }
     }
 }

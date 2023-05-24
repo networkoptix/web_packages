@@ -1,7 +1,6 @@
 import { LOCALE_ID } from '@angular/core';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { map, shareReplay, switchMap, tap } from 'rxjs/operators';
-import stringify from 'safe-stable-stringify';
 
 import { environment } from '@environments/environment';
 import { APIDoc } from '@pages/api-tool/api-tool-types';
@@ -14,7 +13,7 @@ import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystemOldModule } from '@services/system/modules/nx-system-old-module';
 import { NxSystemBase } from '@services/system/system-base';
 import { alphabeticalSort } from '@utils/general';
-import { memoizeAsyncPersistent, memoizeDecorator } from '@utils/memoize';
+import { memoizeAsyncPersistent } from '@utils/memoize';
 import { setServerIpAndPort } from '@utils/nx';
 
 import { NxCloudApiService } from '../../nx-cloud-api';
@@ -25,20 +24,12 @@ import { NxSystemServer, ModuleInfo } from '../system-types';
 type PartialSystem = Pick<NxSystemOldModule, 'mediaserver' | 'currentUserEmail' | 'id' | 'useRest' | 'version'>;
 
 export class ServerManager {
-    static memoizeByServersAndConnections = memoizeDecorator(function (this: ServerManager) {
-        return stringify({
-            mediaserverConnections: Object.keys(this._mediaserverConnections),
-            servers: this.servers.map(server => server.id)
-        });
-    });
-
     readonly cutOff = 5.0;
 
     private _mediaserverConnections: {
         [serverId: string]: NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2;
     } = {};
 
-    @ServerManager.memoizeByServersAndConnections
     public get mediaserverConnections() {
         return this.handleInitSystemMediaServers();
     }
@@ -66,12 +57,10 @@ export class ServerManager {
         this.locale = injector.get(LOCALE_ID);
     }
 
-    @ServerManager.memoizeByServersAndConnections
     handleInitSystemMediaServers(): Record<string, NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2> {
         if (this._mediaserverConnections && this.servers.every(({ id }) => id in this._mediaserverConnections)) {
             return this._mediaserverConnections;
         }
-
         if (this.servers.length) {
             this._mediaserverConnections = this.servers.reduce((mediaserverConnections, server) => {
                 let unauthorizedCallback = () => Promise.resolve(true);
@@ -374,7 +363,7 @@ export class ServerManager {
     }
 
     getStatistics(serverId: string, pollingInterval = 0) {
-        return this.mediaserverConnections[serverId].getStatistics(Math.round(Date.now() / 1000));
+        return this.mediaserverConnections[serverId]?.getStatistics(Math.round(Date.now() / 1000));
     }
 
     getLogs(serverId: string, params) {

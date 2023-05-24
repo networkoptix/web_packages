@@ -11,29 +11,31 @@ import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeh
 import { AuthGuard } from '@guards/authGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
-import { SystemTitleResolver } from '@resolvers/system-title-resolver';
 
 import { GraphsComponent } from './graphs/graphs.component';
 import { LogsComponent } from './logs/logs.component';
 import { NxMonitoringComponent } from './monitoring.component';
-import { NxMonitoringService } from './monitoring.service';
 
 const appRoutes: Routes = [
     {
         path: '',
+        title: 'monitoring',
         component: NxMonitoringComponent,
         canActivate: [AuthGuard, SystemGuard, TwofaGuard],
         children: [
             {
                 path: '',
-                title: SystemTitleResolver,
-                component: GraphsComponent,
+                pathMatch: 'full',
+                redirectTo: 'graphs'
             },
             {
                 path: 'logs',
-                title: SystemTitleResolver,
                 component: LogsComponent,
-            }
+            },
+            {
+                path: 'graphs',
+                component: GraphsComponent,
+            },
         ]
     }
 ];
@@ -49,9 +51,7 @@ const appRoutes: Routes = [
         MonitoringGraphModule,
         AlertBlockModule
     ],
-    providers: [
-        NxMonitoringService,
-    ],
+    providers: [],
     declarations: [
         NxMonitoringComponent,
         GraphsComponent,

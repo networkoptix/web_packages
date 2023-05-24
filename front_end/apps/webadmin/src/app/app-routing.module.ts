@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, TitleStrategy } from '@angular/router';
 import { HoverPreloadStrategy } from 'ngx-hover-preload';
 
 import { PipesModule } from '@app/pipes/pipes.module';
+import { NxPageTitleStrategy } from '@app/resolvers/title-resolver';
 import { LoginWebadminModule } from '@components/login-webadmin/login-webadmin.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
@@ -94,7 +95,11 @@ const lazyRoutes: Routes = [
     declarations: [],
     providers: [
         ApplyGuard,
-        AuthGuard
+        AuthGuard,
+        {
+            provide: TitleStrategy,
+            useClass: NxPageTitleStrategy
+        },
     ],
     exports: [
         RouterModule

@@ -393,7 +393,7 @@ export const menus: configTypes.Menus = {
         graphs: {
             id: 'graphs',
             icon: 'system',
-            path: '',
+            path: 'graphs',
         },
         logs: {
             id: 'logs',
