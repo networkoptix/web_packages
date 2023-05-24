@@ -135,7 +135,7 @@ export class NxLayoutViewComponent {
 
     refreshLayouts$ = new BehaviorSubject('');
 
-    selectedSystem$ = this.activatedRoute.params.pipe(
+    selectedSystem$: Observable<NxSystem> = this.activatedRoute.params.pipe(
         switchMap(async ({ systemId }) => {
             let system: NxSystem;
             if (environment.isLocal) {
@@ -435,7 +435,14 @@ export class NxLayoutViewComponent {
                     { queryParams },
                 );
             }
-            this.pageService.pageTitle(staticLang.pageTitles.layouts);
+
+            const systemId = (await firstValueFrom(this.selectedSystem$)).id;
+            const systemName = this.systemsService.systems.find(({ id }) => id === systemId).name;
+
+            this.pageService.pageTitle(
+                [staticLang.pageTitles.layouts, systemName, this.CONFIG.cloudName].join(' - '),
+            );
+
             return layoutId;
         }),
     );
