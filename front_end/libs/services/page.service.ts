@@ -19,11 +19,11 @@ export class NxPageService {
 
     constructor(private router: Router, private metaService: NxPageMetaService) {}
 
-    public pageTitle(title: string, description: string = '') {
+    public pageTitle(title: string, description: string = ''): void {
         this.metaService.setMetaProperties(this.router.url, { title, description });
     }
 
-    public set pageDescription(content: any) {
+    public set pageDescription(content: string) {
         this.metaService.updateLookups('description', content);
     }
 

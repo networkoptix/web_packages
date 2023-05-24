@@ -9,6 +9,7 @@ import { WINDOW } from '@services/window-provider';
 import { menus } from '../variables/static-variables';
 
 import { NxConfigService } from './nx-config/nx-config.service';
+import type { NxSystem } from './system.service/system';
 import { ChildRoutes, RouteResolverParams } from './uri.service.types';
 
 @Injectable({
@@ -26,7 +27,7 @@ export class NxUriService {
         @Inject(WINDOW) private window: Window,
     ) {}
 
-    get queryParams() {
+    get queryParams(): Params {
         return this.queryParamsSubject.getValue();
     }
 
@@ -40,15 +41,15 @@ export class NxUriService {
         this._pageOffset = val;
     }
 
-    get pageOffset() {
+    get pageOffset(): number {
         return this._pageOffset;
     }
 
-    getURL() {
+    getURL(): string {
         return this.router.url.split('?')[0];
     }
 
-    changePort(newPort): void {
+    changePort(newPort: string): void {
         this.window.location.replace(
             `${this.window.location.protocol}//${this.window.location.hostname}:${newPort}/${this.window.location.hash}`
         );
@@ -58,12 +59,12 @@ export class NxUriService {
         return this.route.queryParams;
     }
 
-    navigateSystem(navigateTo, system) {
+    navigateSystem(navigateTo: string, system: NxSystem): Promise<boolean> {
         navigateTo = (environment.isLocal)
             ? navigateTo.replace('SYSTEM_ID', '')
             : navigateTo.replace('SYSTEM_ID', '/' + system.id);
 
-        return new Promise<boolean>((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             setTimeout(() => {
                 return this.router.navigate([navigateTo], {})
                     .then(success => {
@@ -145,7 +146,7 @@ export class NxUriService {
      *
      * @param params - Optionally accepts object with a systemId(for cloud) property and either a childRoute ex. { childRoute: cameras } or a param to target such as { cameraId: id-string-here }
      */
-    getSystemSettingsRoute(params: RouteResolverParams = {}) {
+    getSystemSettingsRoute(params: RouteResolverParams = {}): string {
         const { systemId = '', ..._otherParams } = params;
         const otherParams = Object.entries(_otherParams);
 

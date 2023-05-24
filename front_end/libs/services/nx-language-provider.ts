@@ -107,7 +107,7 @@ export class NxLanguageProviderService {
         }
     }
 
-    public get defaultLanguage() {
+    public get defaultLanguage(): string {
         return this.translate.defaultLang;
     }
 
@@ -115,7 +115,7 @@ export class NxLanguageProviderService {
         this.translate.setDefaultLang(language);
     }
 
-    public get currentLang() {
+    public get currentLang(): string {
         return this.translate.currentLang;
     }
 

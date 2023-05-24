@@ -10,7 +10,7 @@ import { nxConfig } from './config';
 import { IConfig } from './config-types';
 import { DynamicConfig } from './dynamic-config';
 
-const findNode = <T>(targetObject: T, nodes: string[]) =>
+const findNode = <T>(targetObject: T, nodes: (string | symbol)[]): unknown =>
     nodes.reduce((ref, nodeName) => ref[nodeName], targetObject);
 
 @Injectable({
@@ -23,7 +23,11 @@ export class NxConfigService {
     static configChanged: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
     constructor(
-        @Inject(WINDOW) private window?: Window,
+        @Inject(WINDOW)
+        private window?: Window & {
+            debugConfig: IConfig;
+            resetConfigOverrides: () => void;
+        },
         private session?: LocalStorageService,
         dynamicConfig?: DynamicConfig,
     ) {
@@ -37,10 +41,9 @@ export class NxConfigService {
         this.attachDebugConfigToWindow();
     }
 
-    public generateDebugConfigProxy() {
+    public generateDebugConfigProxy(): IConfig {
         const window = this.window;
 
-        // @ts-expect-error
         this.window.resetConfigOverrides = () =>
             this.window.confirm('Do you want to reset overrides?') &&
             this.session.store(NxConfigService.OVERRIDE_KEY, {}) &&
@@ -49,7 +52,7 @@ export class NxConfigService {
 
         const debugHandlerFactory = (
             (configRef = this.config, session = this.session) =>
-            (nodeNames = []): ProxyHandler<IConfig> => ({
+            (nodeNames: (string | symbol)[] = []): ProxyHandler<IConfig> => ({
                 set(target, property, value) {
                     const currentNodeString = [...nodeNames, property].join('.');
                     session.store(NxConfigService.OVERRIDE_KEY, {
@@ -77,7 +80,7 @@ export class NxConfigService {
                             get showPromptNewValue() {
                                 const newValue = window.prompt(
                                     `Updated Value for "${currentNodeString}"`,
-                                    value,
+                                    value as string,
                                 );
                                 session.store(NxConfigService.OVERRIDE_KEY, {
                                     ...session.retrieve(NxConfigService.OVERRIDE_KEY),
@@ -100,7 +103,10 @@ export class NxConfigService {
                         };
                     }
 
-                    return new Proxy(value, debugHandlerFactory([...nodeNames, property]));
+                    return new Proxy(
+                        value as object,
+                        debugHandlerFactory([...nodeNames, property]),
+                    );
                 },
             })
         )();
@@ -110,12 +116,11 @@ export class NxConfigService {
 
     private attachDebugConfigToWindow(): void {
         if (this.window) {
-            // @ts-expect-error
             this.window.debugConfig = this.generateDebugConfigProxy();
         }
     }
 
-    get cloudHost() {
+    get cloudHost(): string {
         return this.config.cloudHost;
     }
 
@@ -130,11 +135,11 @@ export class NxConfigService {
         );
     }
 
-    getConfig() {
+    getConfig(): IConfig {
         return this.config;
     }
 
-    flagsEnabled(flags: boolean | FeatureFlagType | (FeatureFlagType | boolean)[]) {
+    flagsEnabled(flags: boolean | FeatureFlagType | (FeatureFlagType | boolean)[]): boolean {
         return coerceArray(flags).every(key => {
             if (typeof key === 'boolean') {
                 return key;
@@ -145,7 +150,7 @@ export class NxConfigService {
         });
     }
 
-    static get isDarkTheme() {
+    static get isDarkTheme(): boolean {
         return nxConfig.isDarkTheme;
     }
 

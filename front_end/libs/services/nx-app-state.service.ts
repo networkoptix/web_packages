@@ -13,7 +13,7 @@ export class NxAppStateService {
     footerVisibleSubject = new BehaviorSubject(true);
     headerVisibleSubject = new BehaviorSubject(true);
     systemAvailable$ = new BehaviorSubject(true);
-    lastErrorStatus$ = new BehaviorSubject(undefined);
+    lastErrorStatus$ = new BehaviorSubject<number>(undefined);
     manualAccessSubject$ = new BehaviorSubject(false);
     appContainerHeight = 'calc(100% - 48px)';
     altBackground = false;
@@ -28,7 +28,7 @@ export class NxAppStateService {
         this.footerVisibleSubject.next(visible);
     }
 
-    get footerVisibility() {
+    get footerVisibility(): boolean {
         return this.footerVisibleSubject.getValue();
     }
 
@@ -36,7 +36,7 @@ export class NxAppStateService {
         this.headerVisibleSubject.next(visible);
     }
 
-    get headerVisibility() {
+    get headerVisibility(): boolean {
         return this.headerVisibleSubject.getValue();
     }
 
@@ -44,7 +44,7 @@ export class NxAppStateService {
         this.ribbonSubject.next(visible);
     }
 
-    get ribbonVisibility() {
+    get ribbonVisibility(): boolean {
         return this.ribbonSubject.getValue();
     }
 
@@ -52,11 +52,11 @@ export class NxAppStateService {
         this.readySubject.next(ready);
     }
 
-    get ready() {
+    get ready(): boolean {
         return this.readySubject.getValue();
     }
 
-    get canManuallyAccess() {
+    get canManuallyAccess(): boolean {
         return this.manualAccessSubject$.getValue();
     }
 

@@ -8,19 +8,19 @@ export class NxSwCacheService {
         return this.clearCacheByNameOrAll(undefined, true);
     }
 
-    clearByName(cache): Promise<boolean[][]> {
+    clearByName(cache: string): Promise<boolean[][]> {
         return this.clearCacheByNameOrAll(this.dataCacheName(cache), false);
     }
 
-    clearCache(cache, baseUrl: string): Promise<boolean[]> {
+    clearCache(cache: string, baseUrl: string): Promise<boolean[]> {
         return this.clearCacheByUrl(this.dataCacheName(cache), baseUrl);
     }
 
-    private dataCacheName(cache) {
+    private dataCacheName(cache: string): string {
         return `ngsw:/:1:data:dynamic:${cache}:cache`;
     }
 
-    private clearCacheByNameOrAll(nameCacheParam: string, allKeys: boolean) {
+    private clearCacheByNameOrAll(nameCacheParam: string, allKeys: boolean): Promise<boolean[][]> {
         return caches.keys().then(cacheNames => {
             return Promise.all(
                 cacheNames.filter(cacheName => {
@@ -43,7 +43,7 @@ export class NxSwCacheService {
         });
     }
 
-    private clearCacheByUrl(nameCache: string, url: string) {
+    private clearCacheByUrl(nameCache: string, url: string): Promise<boolean[]> {
         return caches.open(nameCache).then(c => {
             return c.keys().then(keys => {
                 return Promise.all(

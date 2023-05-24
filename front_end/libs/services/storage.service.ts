@@ -75,19 +75,11 @@ export class NxStorageService {
         this.storage.store('langChanged', langChanged);
     }
 
-    get restoreProcess(): any {
-        return this.storage.retrieve('restoreProcess') || undefined;
-    }
-
-    set restoreProcess(restoreProcess: any) {
-        this.storage.store('restoreProcess', restoreProcess);
-    }
-
     get cloudAccessToken(): string {
         return this.storage.retrieve('cloudAccessToken') || undefined;
     }
 
-    set cloudAccessToken(token) {
+    set cloudAccessToken(token: string) {
         this.storage.store('cloudAccessToken', token);
     }
 
@@ -95,7 +87,7 @@ export class NxStorageService {
         return this.storage.retrieve('refreshToken') || undefined;
     }
 
-    set refreshToken(token) {
+    set refreshToken(token: string) {
         this.storage.store('refreshToken', token);
     }
 
@@ -103,7 +95,7 @@ export class NxStorageService {
         return this.storage.retrieve('cloudApiAccessToken') || undefined;
     }
 
-    set cloudApiAccessToken(token) {
+    set cloudApiAccessToken(token: string) {
         this.storage.store('cloudApiAccessToken', token);
     }
 
@@ -111,7 +103,7 @@ export class NxStorageService {
         return this.storage.retrieve('cloudApiRefreshToken') || undefined;
     }
 
-    set cloudApiRefreshToken(token) {
+    set cloudApiRefreshToken(token: string) {
         this.storage.store('cloudApiRefreshToken', token);
     }
 }

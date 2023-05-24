@@ -8,6 +8,7 @@ import { debounceTime } from 'rxjs/operators';
 import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
 
+import type { BaseConfig } from './nx-config/base-config';
 import type { IConfig } from './nx-config/config-types';
 import { NxConfigService } from './nx-config/nx-config.service';
 // import { NxHeaderService } from './nx-header.service';
@@ -26,7 +27,7 @@ export class NxPageMetaService {
     LANG = staticLang;
 
     routerUrl: string = '';
-    updater$ = new Subject<unknown>();
+    updater$ = new Subject<void>();
     metaLookup: MetaLookup = {};
     defaultMetaKey = environment.isLocal ? 'metaDefaultsWebadmin' : 'metaDefaults';
     templateKey = environment.isLocal ? 'templateWebadmin' : 'template';
@@ -77,7 +78,7 @@ export class NxPageMetaService {
     }
 
     private findMatchingMeta = (url: string) => {
-        return (lookupDict): Record<never, never> => {
+        return (lookupDict: BaseConfig['metaDefaults']) => {
             return Object.entries(lookupDict)
                 .find(([partialPath]) => {
                     return url.startsWith(partialPath);
@@ -111,7 +112,7 @@ export class NxPageMetaService {
             urlProperties[property] = value;
         }
         urlProperties.url = this.getRoot() + this.routerUrl;
-        this.updater$.next('update');
+        this.updater$.next();
     }
 
     /**

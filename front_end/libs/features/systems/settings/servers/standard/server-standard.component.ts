@@ -357,7 +357,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                 (await this.system.mediaserver.checkIfConnectedToServer(serverId).toPromise())
             ) {
                 setTimeout(() => {
-                    this.uriService.changePort(newPort);
+                    this.uriService.changePort(newPort.toString());
                 });
             }
 
