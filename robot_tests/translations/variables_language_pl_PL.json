@@ -538,7 +538,7 @@
     "2FA DISABLE MODAL DESCRIPTION TEXT": "Wprowadź kod weryfikacyjny z aplikacji uwierzytelniającej lub kod zapasowy, aby kontynuować",
     "2FA SETTINGS MODAL HEADER TEXT": "Ustawienia uwierzytelniania dwuskładnikowego",
     "2FA SETTINGS MODAL DESCRIPTION TEXT1": " Kod weryfikacyjny z aplikacji uwierzytelniającej będzie wymagany tylko w celu zalogowania się do systemów wymagających uwierzytelniania dwuskładnikowego. ",
-    "2FA SETTINGS MODAL DESCRIPTION TEXT2": " Verification code from the authentication app will be requested on every login with Nx Cloud account. ",
+    "2FA SETTINGS MODAL DESCRIPTION TEXT2": " Kod weryfikacyjny z aplikacji uwierzytelniającej będzie wymagany przy każdym logowaniu do konta Nx Cloud. ",
     "2FA SETTINGS MODAL INST OFF TEXT": "Wprowadź kod weryfikacyjny z aplikacji uwierzytelniającej lub kod zapasowy, aby kontynuować",
     "2FA SETTINGS MODAL INST ON TEXT": "Wpisz kod weryfikacyjny z aplikacji uwierzytelniającej, aby kontynuować",
     "VIEW PAGE WEBM TEXT": "webm",
