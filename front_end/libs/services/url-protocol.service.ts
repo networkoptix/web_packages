@@ -1,9 +1,8 @@
 import { Inject, Injectable } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import { slashJoin } from '@utils/general';
 import { protocolCheck } from '@utils/protocolcheck';
 
 import {
@@ -13,160 +12,61 @@ import {
 } from '../variables/static-variables';
 
 import { NxAccountService } from './account.service';
-import type { LinkSettings } from './url-protocol.service.types';
+import { nxConfig as CONFIG } from './nx-config/config';
 import { WINDOW } from './window-provider';
 
+/** Service to handle opening the VMS Client from the browser
+ *
+ * Future TODO: Remove non-OAuth code once support for v4 systems is dropped
+*/
 @Injectable({
     providedIn: 'root'
 })
 export class NxUrlProtocolService {
-    LANG = staticLang;
-
     constructor(
-        private translateService: TranslateService,
         @Inject(WINDOW) private window: Window,
         private accountService: NxAccountService,
         private cloudApiService: NxCloudApiService,
     ) {}
 
-    private parseSource() {
-        // TODO: Clean up this after we retire AJS
-        const search = this.window.location.search.replace('?', '').split('&');
+    private generateLink(systemId: string, auth: string, code: string): string {
+        const host = environment.production ? this.window.location.host : environment.cloudHost;
 
-        let fromLocation = '';
-        const from = search.find(param => {
-            return param.includes('from');
-        });
-        if (from) {
-            fromLocation = from.split('=')[1];
+        const base = slashJoin(
+            [`${CONFIG.clientProtocol}://${host}`, 'client', systemId],
+            { trailing: true },
+        );
+        const url = new URL(base);
+        if (auth) {
+            url.searchParams.append('auth', auth);
+        }
+        if (code) {
+            url.searchParams.append('code', code);
         }
 
-        let contextParam = '';
-        const context = search.find(param => {
-            return param.includes('context');
-        });
-        if (context) {
-            contextParam = from.split('=')[1];
-        }
-
-        const source = {
-            from: fromLocation || 'portal',
-            context: contextParam || 'none',
-            isApp: false
-        };
-        source.isApp = (source.from === 'client' || source.from === 'mobile');
-        return source;
+        return url.toString();
     }
 
-    generateLink(linkSettings: LinkSettings = {}) {
-        let settings: LinkSettings = {
-            native: true,
-            from: 'portal', // client, mobile, portal, webadmin
-            context: undefined,
-            command: 'client', // client, cloud, system
-            systemId: undefined,
-            action: undefined,
-            actionParameters: {}, // Object with parameters
-            auth: true, // true for request, null for skipping, string for specific value
-            code: undefined
-        };
-
-        if (linkSettings.systemId) {
-            settings.command = 'client';
-        }
-
-        settings = { ...settings, ...linkSettings };
-
-        const protocol = settings.native && this.LANG.clientProtocol
-            ? this.translateService.instant(this.LANG.clientProtocol)
-            : this.window.location.protocol;
-        const host = this.window.location.host;
-
-        const getParams: LinkSettings = { ...settings.actionParameters };
-
-        if (settings.from) {
-            getParams.from = settings.from;
-        }
-        if (typeof settings.auth === 'string') {
-            getParams.auth = settings.auth;
-        }
-
-        if (settings.context) {
-            getParams.context = settings.context;
-        }
-
-        if (settings.code) {
-            getParams.code = settings.code;
-        }
-
-        let url = `${protocol}//${host}/${settings.command}/`;
-        if (linkSettings.systemId) {
-            url += `${linkSettings.systemId}/`;
-        }
-        if (linkSettings.action) {
-            url += linkSettings.action;
-        }
-
-        const uri = [];
-        Object.keys(getParams).forEach(param => {
-            uri.push(`${param}=${getParams[param]}`);
-        });
-
-        url += `?${uri.join('&')}`;
-
-        return url;
-    }
-
-    getLink(
-        linkSettings: LinkSettings
-    ): Promise<{
-        link: string;
-        authKey?: string | undefined;
-        code?: string;
-    }> {
+    private getLink(systemId: string, useOauth: boolean): Promise<string> {
         return Promise.all([
-            linkSettings.useOauth ? Promise.resolve('') : this.accountService.authKey(),
+            useOauth ? Promise.resolve('') : this.accountService.authKey(),
             environment.isLocal ? Promise.resolve({ code: '' }) : this.cloudApiService.getCode('*').toPromise()
-        ]).then(([data, { code }]) => {
-            if (linkSettings.useOauth) {
-                linkSettings.code = code;
-            } else {
-                linkSettings.auth = data;
-                linkSettings.code = code;
-            }
-            const linkData: any = {
-                link: this.generateLink(linkSettings)
-            };
-            if (linkSettings.useOauth) {
-                linkData.code = code;
-            } else {
-                linkData.authKey = data;
-                linkData.code = code;
-            }
-            return linkData;
-        }).catch(() => ({
-            link: this.generateLink(linkSettings)
-        }));
+        ]).then(([auth, { code }]) => {
+            return this.generateLink(systemId, auth, code);
+        });
+        // .catch(() => this.generateLink(systemId));
+        // Commenting this out for now because nobody remembers what this was for
     }
 
-    open(systemId: string, useOauth: boolean) {
-        return this.getLink({
-            systemId, useOauth
-        }).then(({ link }) => {
-            if (!environment.production) {
-                link = link
-                    .replace(this.LANG.clientProtocol, 'nx-vms:')
-                    .replace(this.window.location.host, environment.cloudHost);
-            }
+    open(systemId: string, useOauth: boolean): Promise<void> {
+        return this.getLink(systemId, useOauth).then(link => {
             /* The browser opens a dialog that we cannot directly detect or get a response from.
              * However, when the browser dialog opens it causes the page to blur so we use that to detect what happens.
              */
             return new Promise<void>((resolve, reject) => {
                 protocolCheck(
                     link,
-                    () => {
-                        resolve();
-                    },
+                    resolve,
                     () => {
                         reject({ resultCode: openClientError });
                     },
@@ -175,9 +75,5 @@ export class NxUrlProtocolService {
                 );
             });
         });
-    }
-
-    getSource() {
-        return this.parseSource();
     }
 }

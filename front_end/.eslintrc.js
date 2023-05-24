@@ -201,8 +201,6 @@ const typeLintBlacklist = [
     '**/system.service/system-types.ts',
     '**/system.service/system.ts',
     '**/uri.service.ts',
-    '**/url-protocol.service.ts',
-    '**/url-protocol.service.types.ts',
     /* Utils */
     '**/logger.ts',
     /* Packages */

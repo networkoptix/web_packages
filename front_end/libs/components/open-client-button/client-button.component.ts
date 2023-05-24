@@ -67,7 +67,7 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
                 if (this.account.account2faEnabled && !this.system.useRest) {
                     return this.dialogs.client2faWarning();
                 }
-                return this.urlProtocol.open(this.system && this.system.id, this.system.useRest);
+                return this.urlProtocol.open(this.system.id, this.system.useRest);
             },
             {
                 errorCodes: {

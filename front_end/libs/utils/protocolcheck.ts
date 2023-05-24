@@ -106,8 +106,8 @@ function isMobile(): boolean {
  */
 export function protocolCheck(
     uri: string,
-    successCb: Callback = () => {},
-    failCb: Callback = () => {},
+    successCb: Callback,
+    failCb: Callback,
     openClientTimeout: number,
     openMobileClientTimeout: number,
 ): void {
