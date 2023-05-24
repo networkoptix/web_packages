@@ -779,6 +779,10 @@
 			color: var(--btn-default-color);
 		}
 
+		&.reset {
+			margin-left: 10px;
+		}
+
 		&.btn-clear {
 			display: none !important;
 		}

@@ -369,4 +369,25 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
     deleteUser(userId: string): Observable<ChangedIdReturned> {
         return this.delete<t.ChangedIdReturned>(`/rest/v1/users/${this.cleanId(userId)}`);
     }
+
+    // Todo: When merged into develop use withKeyMap, but alter the keys
+    getCameras(): Observable<t.RestCamera[]> {
+        const endpoint = '/rest/v1/devices';
+        const params = {
+            _keepDefault: true,
+            _with: withKeyMap(t.getRestCameraKeys),
+        };
+        return this.get<t.GetRestCamera[]>(
+            endpoint,
+            params
+        ).pipe(
+            map(cameras => cameras
+                .map(({ schedule, serverId, ...rest }) => ({
+                    ...rest,
+                    scheduleEnabled: schedule.isEnabled,
+                    parentId: serverId,
+                }) as t.RestCamera)
+            )
+        );
+    }
 }

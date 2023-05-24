@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@angular/core';
 import { iif, mergeMap, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { WINDOW } from '@services/window-provider';
 
 type ApiData = { [key: string]: string | boolean | number };
@@ -26,11 +27,14 @@ const endpoints = {
 })
 export class AuthService {
     readonly apiBase = '/cdb';
+    readonly customization: string;
 
     constructor(
         @Inject(WINDOW) private window: Window,
+        config: NxConfigService,
         private httpClient: HttpClient
     ) {
+        this.customization = config.getConfig().customization;
     }
 
     private get(route: string, params?: ApiData, headers?: HttpHeaders): Observable<ApiData> {
@@ -144,7 +148,8 @@ export class AuthService {
     }
 
     resetPassword(email: string): Observable<ApiData> {
-        return this.post(endpoints.resetPassword, { email });
+        const { customization } = this;
+        return this.post(endpoints.resetPassword, { email, customization });
     }
 
     verifyBackupCode(backupCode: string, token: string): Observable<ApiData> {

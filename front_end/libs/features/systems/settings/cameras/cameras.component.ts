@@ -361,8 +361,11 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         return this.selectedQuality.value === this.various.value;
     }
 
-    get motionEnabled(): boolean {
-        return ![MotionType.NoMotion, MotionType.None].includes(this.motionEnabledWatcher.value);
+    get motionEnabled() {
+        const motionEnabled = this.motionEnabledWatcher.value;
+        return motionEnabled && ![MotionType.NoMotion, MotionType.None].includes(
+            motionEnabled
+        );
     }
 
     set motionEnabled(enabled: boolean) {
@@ -816,7 +819,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             const value = enabled ? 2 : 0;
             return { name, id, enabled, value };
         });
-        this.updateMotionWarning();
     };
 
     enableMotion = (updateModes = false): void => {
@@ -829,19 +831,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     : 0;
                 return { name, id, enabled, value };
             });
-        } else {
-            this.updateMotionWarning();
         }
     };
-
-    private updateMotionWarning(): void {
-        const [_always, motion, lowMotion] = this.recordingModesWatcher.originalValue;
-        const show =
-            this.motionEnabledWatcher.value &&
-            this.motionEnabledWatcher.changed &&
-            motion.value + lowMotion.value;
-        this.applyService.setWarn(show ? this.LANG.common.disableMotionWarning : '');
-    }
 
     private getSupportedMotion(): MotionType {
         const {
