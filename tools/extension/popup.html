@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Nx DevTool</title>
+    <script src="scripts/popup.js"></script>
+    <link rel="stylesheet" type="text/css" href="popup.css" />
+  </head>
+  <body>
+    <div class="heading-container">
+      <img class="icon" src="images/icon-16.png" alt="">
+      <h1 style="color: #1b2327;">DevTool</h1>
+    </div>
+    <div class="tabs">
+      <button class="left tab active" data-tab-id="tab1">Info</button>
+      <button class="tab" data-tab-id="tab2">Flags</button>
+      <div class="tab-content active" id="tab1">
+        <div>
+          <h1>Version Info</h1>
+          <div id="version-info">
+            <div class="label" id="commit-hash"></div>
+            <div class="label" id="author"></div>
+            <div class="label" id="date"></div>
+            <div class="label" id="branch"></div>
+            <div class="label" id="msg"></div>
+            <div class="label" id="no-info"></div>
+          </div>
+        </div>
+        <div>
+          <h1>Relay Host</h1>
+          <div id="relay-host"></div>
+        </div>
+        <div>
+          <h1>Full Story Link</h1>
+          <div id="full-story">
+            <p>To view the FullStory link when the feature flag is enabled,
+              open the console in DevTools and look for the log that begins
+              with 'FS - Debug session url:'.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="tab-content" id="tab2">
+        <div class="flag-container">
+          <div class="config-container">
+            <h1>Config Overrides</h1>
+            <div id="configOverrides"></div>
+          </div>
+          <div>
+            <h1>Feature Flags</h1>
+            <div id="featureFlags"></div>
+          </div>
+        </div>
+        <div class="btn-container">
+           <button class="btn" id="reload" disabled="true">Reload Page</button>
+           <button class="btn" id="update">Update Flags</button>
+        </div>
+      </div>
+    </div>
+    <div class='perf-tile' id='tile-section'></div>
+  </body>
+</html>

@@ -1,0 +1,150 @@
+:root {
+  --additional_light1: #F0F2F4;
+  --blue1: #2FA2DB;
+  --blue13: #117297;
+  --dark3: #0D0E0F;
+  --dark5: #171C1F;
+  --dark6: #1C2327;
+  --dark9: #2B383F;
+  --light4: #E1E7EA;
+  --light9: #AFBFC7;
+  --light_gray_1: #FFFFFF;
+  --light_gray_6: #D8D8D8;
+}
+
+body {
+  width: 722px;
+  height: 585px;
+  background-color: var(--additional_light1);
+}
+
+.heading-container {
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+}
+
+h1 {
+  color: var(--blue13);
+  margin-top: 14px;
+}
+
+.flag-container {
+  height: 400px;
+  overflow-y: scroll;
+}
+
+.config-container {
+  margin-bottom: 20px;
+}
+
+#featureFlags,
+#configOverrides {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 10px;
+  font-size: 14px;
+}
+
+.label,
+.host,
+#full-story,
+.link {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+#version-info,
+.host,
+#full-story,
+.link {
+  margin: 10px;
+}
+
+.label {
+  margin-bottom: 10px;
+}
+
+.checkbox-container {
+  width: 210px;
+  margin: 10px 5px;
+}
+
+.flag {
+  width: 200px;
+  margin: 0 10px;
+}
+
+.tab {
+  background-color: var(--dark5);
+  color: var(--light_gray_1);
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s;
+  flex: 1;
+  text-align: center;
+  margin-right: -5px;
+}
+
+.tab.active {
+  border-bottom: solid 1px var(--blue1);
+}
+
+.tab.left {
+  margin-left: 1px;
+}
+
+select, .btn {
+  background-color: var(--light4);
+  box-shadow: inset 0 -1px 0 var(--light9);
+  border-radius: 5px;
+  font-family: robotomedium, Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+
+select {
+  color: var(--header-level-two-bg);
+  width: 80px;
+  height: 24px;
+}
+
+.btn {
+  color: var(--dark9);
+  padding: 8px 18px;
+  margin-right: 20px;
+}
+
+.btn-container {
+  display: flex;
+  align-items: center;
+  background-color: var(--dark6);
+  margin: 3px -18px;
+  padding: 16px 30px;
+  box-shadow: 1px 0 5px 0 var(--dark3);
+}
+
+.tab-content {
+  display: none;
+  padding: 20px;
+  border: 1px solid var(--light_gray_6);
+  flex: 1;
+  max-width: 700px;
+  background-color: var(--dark5);
+  color: var(--light_gray_1);
+  margin-top: -5px;
+  height: 452px;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+#full-story p {
+  line-height: 1.5rem;
+}

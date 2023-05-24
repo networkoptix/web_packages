@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "Nx DevTool",
+  "description": "An extension for getting helpful details about Nx Cloud.",
+  "version": "1.0",
+  "icons": {
+    "16": "images/icon-16.png"
+  },
+   "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "permissions": [
+    "activeTab",
+    "tabs"
+  ],
+  "action": {
+    "default_icon": {
+      "16": "images/icon-16.png"
+    },
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "js": [
+        "scripts/content.js"
+      ],
+      "run_at": "document_end",
+      "matches": [
+        "https://sync.wavevms.com/*",
+        "https://*.nxvms.com/*",
+        "https://dwspectrum.digital-watchdog.com/*",
+        "https://*.cloud-test.hdw.mx/*",
+        "https://*.cloud.hdw.mx/*"
+      ]
+    }
+  ]
+}
