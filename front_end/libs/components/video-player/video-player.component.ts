@@ -8,7 +8,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ConnectionError, WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';
-import { BehaviorSubject, firstValueFrom, Observable, of, shareReplay, Subject, switchMap, tap, interval, startWith, map } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable, of, shareReplay, Subject, switchMap, tap, interval, startWith, map, timer, bufferCount, takeUntil } from 'rxjs';
 import staticLang from '@common/language/language_i18n_static.json';
 import { LayoutItem } from '@services/system-api.types';
 import { Translatable } from '@pipes/nx-translate.types';
@@ -64,6 +64,8 @@ export class NxVideoPlayerComponent {
     loading = true;
     lostConnection = false;
     streamManager = WebRTCStreamManager;
+
+    connection: WebRTCStreamManager;
 
     ribbon$ = new Subject<{
         message: Translatable,
@@ -182,6 +184,37 @@ export class NxVideoPlayerComponent {
         return canvas.captureStream();
     }
 
+    cancelMonitoringFps$ = new Subject<void>();
+
+    stopMonitoringFps(): void {
+        this.connection = null;
+        this.cancelMonitoringFps$.next();
+    }
+
+    monitorFps(connection: WebRTCStreamManager): void {
+        const monitoringStarted = !!this.connection;
+        this.connection = connection;
+
+        if (!monitoringStarted) {
+            const bufferSize = 30;
+            timer(5000, 1000).pipe(
+                map(() => this.connection.getPriority().fps),
+                startWith(Array(bufferSize).map(() => Infinity)),
+                bufferCount(bufferSize),
+                takeUntil(this.cancelMonitoringFps$),
+                untilDestroyed(this),
+            ).subscribe(fps => {
+                const lastFramesFrozen = (lastNumFrames: number = fps.length) => !fps.slice(-lastNumFrames).some(Boolean)
+                this.lostConnection = lastFramesFrozen(10);
+                this.loading = !this.lostConnection && lastFramesFrozen(5);
+
+                if (lastFramesFrozen()) {
+                    this.queueReconnect();
+                }
+            })
+        }
+    }
+
     ngAfterViewInit(): void {
         const { streams: [primary, secondary] } = this.camera.addParams.mediaStreams ? JSON.parse(this.camera.addParams.mediaStreams) : { streams: [] };
         const codecH265 = 173;
@@ -201,8 +234,9 @@ export class NxVideoPlayerComponent {
         const stream$ = this.reconnect$.pipe(
             switchMap(this.pingServer),
             switchMap(() => WebRTCStreamManager.connect(this.camera.webRtcUrl, this.webRtcPlayerRef.nativeElement, hasSecondary)),
-            tap(async ([stream, error]) => {
+            tap(async ([stream, error, connection]) => {
                 if (stream) {
+                    this.monitorFps(connection);
                     this.webRtcPlayerRef.nativeElement.srcObject = await this.zoomStream(stream);
                     this.webRtcPlayerRef.nativeElement.muted = true;
                     this.webRtcPlayerRef.nativeElement.autoplay = true;
@@ -226,6 +260,7 @@ export class NxVideoPlayerComponent {
                 }
 
                 if (error) {
+                    this.stopMonitoringFps();
                     if (error === ConnectionError.lostConnection) {
                         if (!this.lostConnection) {
                             this.lostConnection = true;

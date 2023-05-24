@@ -230,14 +230,6 @@ export class WebRTCStreamManager {
                 }
             })
 
-            const disconnectFrozenStreams = () => details.forEach(({ connection,fps }) => {
-                if (!fps) {
-                    console.info(`Reconnecting camera ${getCameraId(connection)} due to frozen streams`)
-                    connection.aquireLock(30);
-                    connection.start(true);
-                }
-            })
-
             if (shouldUpdateStream) {
                 const updateTarget = details.find(targetStream ? coolOff(canDowngrade)(30) : coolOff(canUpgrade)(15))
                 if (updateTarget) {
@@ -250,7 +242,6 @@ export class WebRTCStreamManager {
 
             downgradeLowPriority();
             downgradeConnnectionQuality();
-            disconnectFrozenStreams();
         })
     )
 
@@ -320,7 +311,7 @@ export class WebRTCStreamManager {
         webRtcUrlFactory: (params?: Record<string, unknown>) => string,
         videoElement?: HTMLVideoElement,
         hasSecondary = true,
-    ): Observable<[MediaStream, ConnectionError]> {
+    ): Observable<[MediaStream, ConnectionError, WebRTCStreamManager]> {
         const webRtcUrl = sanitizeUrl(webRtcUrlFactory());
 
         WebRTCStreamManager.EXISTING_CONNECTIONS[webRtcUrl] ||= new WebRTCStreamManager(
@@ -361,7 +352,7 @@ export class WebRTCStreamManager {
     updatePosition(position: number, clearStream = false): void {
         if (clearStream) {
             this.stopCurrentStream();
-            this.mediaStream$.next([null, null]);
+            this.mediaStream$.next([null, null, this]);
         }
         this.position$.next(position);
     }
@@ -374,7 +365,7 @@ export class WebRTCStreamManager {
 
     /** Public methods and properties */
     /** Updates whenever the mediasserver sends a new stream */
-    mediaStream$ = new BehaviorSubject<[MediaStream, ConnectionError]>(null);
+    mediaStream$ = new BehaviorSubject<[MediaStream, ConnectionError, WebRTCStreamManager]>(null);
 
     /**
      * Get current count of players connected to stream.
@@ -633,7 +624,7 @@ export class WebRTCStreamManager {
 
         if (lostConnection) {
             this.reconnecting = true;
-            this.mediaStream$.next([null, ConnectionError.lostConnection]);
+            this.mediaStream$.next([null, ConnectionError.lostConnection, this]);
             this.close();
             return;
         }
@@ -667,7 +658,7 @@ export class WebRTCStreamManager {
                 } else if (retriesOrLostConnection) {
                     this.start(--retries);
                 } else {
-                    this.mediaStream$.next([null, ConnectionError.websocket]);
+                    this.mediaStream$.next([null, ConnectionError.websocket, this]);
                 }
             },
         });
@@ -707,7 +698,7 @@ export class WebRTCStreamManager {
             stream => {
                 console.log(stream);
                 this.stopCurrentStream();
-                this.mediaStream$.next([stream, null]);
+                this.mediaStream$.next([stream, null, this]);
             }
         );
 
