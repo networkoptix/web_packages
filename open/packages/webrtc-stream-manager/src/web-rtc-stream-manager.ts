@@ -230,6 +230,14 @@ export class WebRTCStreamManager {
                 }
             })
 
+            const disconnectFrozenStreams = () => details.forEach(({ connection,fps }) => {
+                if (!fps) {
+                    console.info(`Reconnecting camera ${getCameraId(connection)} due to frozen streams`)
+                    connection.aquireLock(30);
+                    connection.start(true);
+                }
+            })
+
             if (shouldUpdateStream) {
                 const updateTarget = details.find(targetStream ? coolOff(canDowngrade)(30) : coolOff(canUpgrade)(15))
                 if (updateTarget) {
@@ -242,6 +250,7 @@ export class WebRTCStreamManager {
 
             downgradeLowPriority();
             downgradeConnnectionQuality();
+            disconnectFrozenStreams();
         })
     )
 
@@ -468,7 +477,8 @@ export class WebRTCStreamManager {
     public getPriority() {
         return {
             priority: this.performanceTrackers.reduce((acc, tracker) => acc + tracker.toPriority(), 0),
-            mos: <number>this.performanceTrackers.find((tracker) => tracker instanceof MosScoreTracker)?.toMetric().mosScore || 0
+            mos: <number>this.performanceTrackers.find((tracker) => tracker instanceof MosScoreTracker)?.toMetric().mosScore || 0,
+            fps: <number>this.performanceTrackers.find((tracker) => tracker instanceof FrameTracker)?.toMetric().fps ?? Infinity
         }
     }
 
