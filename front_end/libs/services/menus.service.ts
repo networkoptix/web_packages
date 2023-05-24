@@ -323,17 +323,6 @@ export class NxMenusService {
             nodes.push(monitoringNode);
         }
 
-        // Layouts only usable with webRTC
-        if (activeSystem.version >= 5.1 && this.CONFIG.featureFlags.layouts) {
-            const layoutsNode = new MenuNode(
-                'Layouts',
-                this.getUrl(activeSystem.id, { layouts: true }),
-                this.LANG?.serverTabTitles.Layouts,
-                this.endpoint.layouts || false
-            );
-            nodes.push(layoutsNode);
-        }
-
         /* This conditition should be kept in sync with the access condition
         in bookmarksGuard.ts */
         if (
@@ -349,6 +338,17 @@ export class NxMenusService {
                 this.endpoint.bookmarks || false
             );
             nodes.splice(1, 0, bookmarksNode); // Right after view
+        }
+
+        // Layouts only usable with webRTC
+        if (activeSystem.version >= 5.1 && this.CONFIG.featureFlags.layouts) {
+            const layoutsNode = new MenuNode(
+                'Layouts',
+                this.getUrl(activeSystem.id, { layouts: true }),
+                this.LANG?.serverTabTitles.Layouts,
+                this.endpoint.layouts || false
+            );
+            nodes.splice(1, 0, layoutsNode);
         }
 
         const activeSystemMenu = new MenuNode(
