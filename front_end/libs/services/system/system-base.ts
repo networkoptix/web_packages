@@ -46,7 +46,7 @@ export abstract class NxSystemBase implements SystemVersionBase {
     static INJECTOR: Injector;
 
     abstract readonly version: SystemVersion;
-    static readonly PROXIES = new Map<SystemVersionBase, SystemVersionBase>();
+    static readonly PROXIES = new Map<string, SystemVersionBase>();
 
     systemModules: NxSystemModuleBase[] = [];
 
@@ -83,10 +83,11 @@ export abstract class NxSystemBase implements SystemVersionBase {
             }>,
     ): T & U {
         (this as unknown as NxSystemBase).systemModules.push(systemModule);
+        const { systemId } = this as unknown as NxSystemBase;
 
-        if (!NxSystemBase.PROXIES.has(this)) {
+        if (!NxSystemBase.PROXIES.has(systemId)) {
             NxSystemBase.PROXIES.set(
-                this,
+                systemId,
                 new Proxy(this, {
                     get: (target, prop) => {
                         const modules = (target as unknown as NxSystemBase).systemModules;
@@ -112,7 +113,7 @@ export abstract class NxSystemBase implements SystemVersionBase {
             );
         }
 
-        return NxSystemBase.PROXIES.get(this) as T & U;
+        return NxSystemBase.PROXIES.get(systemId) as T & U;
     }
 
     /**
@@ -135,4 +136,6 @@ export abstract class NxSystemBase implements SystemVersionBase {
     >(this: S, ModuleClass: GenericConstructor<M> & StaticModule): this is S & M {
         return ModuleClass.moduleSymbol in this;
     }
+
+    constructor(public systemId: string) {}
 }

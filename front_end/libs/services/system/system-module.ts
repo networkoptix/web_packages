@@ -34,7 +34,6 @@ export abstract class NxSystemModuleBase implements SupportedVersionsBase {
      * The tuple type is required and enforced by the compiler since it's needed to derive compatible system version type.
      */
     abstract readonly supportedVersions: readonly SystemVersion[];
-
     /**
      * The getModuleSymbol method should return the moduleSymbol static property of the derived class.
      */

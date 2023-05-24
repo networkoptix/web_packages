@@ -101,6 +101,20 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     LANG = staticLang;
 
     /**
+     * @deprecated
+     * This is a tempory way to handle the this context while we're still in the
+     * process of strangling the old system module.
+     *
+     * CameraManager and ServerManager have been moved to their own sub modules
+     * and are being referenced correctly from within system proxy object.
+     *
+     * Once we move the final coupled code out of this module we can remove this.
+     */
+    get proxied(): typeof this {
+        return NxSystemBase.PROXIES.get(this.systemId) as typeof this;
+    }
+
+    /**
      * Need to figure out how we're going to break the coupling between UserManager and UserGroupsManager before we can remove this.
      */
     userManager: UserManager; // TODO: Reconcile usermanager with groups type
@@ -192,7 +206,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
 
     constructor(
         currentUserEmail: string,
-        systemId?: string,
+        public systemId?: string,
         serverId?: string,
         userId?: string,
         version?: number,
@@ -303,7 +317,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
 
     updateToken = async (force = true) => {
         if (!this.mediaserver) {
-            if (!this.serverManager) {
+            if (!this.proxied.serverManager) {
                 return '';
             }
             // await this.serverManager.initSystemMediaServers();
@@ -526,10 +540,10 @@ export class NxSystemOldModule extends NxSystemModuleBase {
             this.updatePromise = this.getInfo(true, false, true)
                 .then(() =>
                     this.isOnline
-                        ? this.cameraManager.updateSystemServersCameras()
+                        ? this.proxied.cameraManager.updateSystemServersCameras()
                         : Promise.reject({ offline: true }),
                 )
-                .then(() => this.serverManager.getForceServers(false).toPromise())
+                .then(() => this.proxied.serverManager.getForceServers(false).toPromise())
                 .then(() => (environment.isLocal ? Promise.resolve() : this.getUsers(true, true)))
                 .catch(error => {
                     if (error?.offline) {
@@ -927,7 +941,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
 
     @memoizeDecorator(function (this: NxSystem) {
         return stringify({
-            servers: this.serverManager.servers.map(server => server.id),
+            servers: this.proxied.serverManager.servers.map(server => server.id),
         });
     })
     private aggregateLicenseFactory() {
