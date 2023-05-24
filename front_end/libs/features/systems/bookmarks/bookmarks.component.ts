@@ -20,6 +20,7 @@ import {
     alphabeticalSort,
     caseInsenstiveSearch,
     cleanId,
+    MS,
     msToParts,
     offsetDate,
     paramSortFunc,
@@ -78,6 +79,7 @@ function cssaToStrArray(cssa: string): string[] {
 })
 export class NxBookmarksComponent implements OnInit {
     @ViewChild('dateAndTimeFilterComp') private dateAndTimeFilter: NxDateAndTimeFilterComponent;
+    readonly localOffsetToUTCMs: number = new Date().getTimezoneOffset() * MS.min;
     LANG = staticLang;
     CONFIG: IConfig;
     icons = icons;
@@ -201,12 +203,12 @@ export class NxBookmarksComponent implements OnInit {
                     ]),
                 );
                 const deviceMap = new Map(devices.map(device => [device.id, device]));
-
                 return bks
                     .filter(bk => deviceMap.has(bk.deviceId))
                     .map<Bookmark>(bk => {
                         const timeZoneOffset =
-                            offsetTimes.get(deviceMap.get(bk.deviceId).serverId) || 0;
+                            this.localOffsetToUTCMs +
+                            (offsetTimes.get(deviceMap.get(bk.deviceId).serverId) || 0);
                         const deviceName = deviceMap.get(bk.deviceId).name;
                         const getLink = (transport: string): string => {
                             return this.system.mediaserver.getExportUrl({
