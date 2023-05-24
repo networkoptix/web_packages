@@ -35,8 +35,8 @@ Storage Suite Setup
     Set Suite Variable    ${console}    ${console}    
     Log    Storage Suite Setup    DEBUG      console=${console}   
     Open Browser and go to URL    ${url}
-    ${owner} =    Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
-    Log    owner created ..... | PASS |    DEBUG      console=${console}
+    # ${owner} =    Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
+    # Log    owner created ..... | PASS |    DEBUG      console=${console}
     Make Directory    disk-invalid
     Log    disk-invalid created ..... | PASS |    DEBUG      console=${console}    
     @{disk} =    Create List    ${EMPTY}    ${EMPTY}    ${EMPTY}    ${EMPTY}    ${EMPTY}
@@ -120,7 +120,7 @@ Turn on Recording
             Wait Until Element Is Visible    //input[@id="cameraPasswordCredentials"]
             Input Text    //input[@id="cameraPasswordCredentials"]    ${camera password}
             Click Button    //button[@type="submit"]
-            Wait Until Element is Not Visible    //h1[contains(text(), "Authentication Credentials")]
+            Wait Until Element is Not Visible    //h1[@class="modal-title"]
         END
         Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
         Log Out
