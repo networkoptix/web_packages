@@ -371,8 +371,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     get motionEnabled() {
-        return ![MotionType.noMotion, MotionType.none].includes(
-            this.motionEnabledWatcher.value as MotionType
+        const motionEnabled = this.motionEnabledWatcher.value;
+        return motionEnabled && ![MotionType.noMotion, MotionType.none].includes(
+            motionEnabled as MotionType
         );
     }
 
@@ -840,7 +841,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             const value = enabled ? 2 : 0;
             return { name, id, enabled, value };
         });
-        // this.updateMotionWarning(); // Can be added back once we support recording settings again.
     };
 
     enableMotion = (updateModes = false): void => {
@@ -854,24 +854,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                         : 0;
                 return { name, id, enabled, value };
             });
-        } else {
-            this.updateMotionWarning();
         }
     };
-
-    updateMotionWarning(): void {
-        const [
-            _, // unused placeholder for always
-            motion,
-            lowMotion
-        ] = this.recordingModesWatcher.originalValue;
-        const show = this.motionEnabledWatcher.value &&
-            this.motionEnabledWatcher.changed &&
-            (motion.value + lowMotion.value);
-        this.applyService.setWarn(
-            show ? this.LANG.common.disableMotionWarning : ''
-        );
-    }
 
     getSupportedMotion() {
         const softwareGrid = {
