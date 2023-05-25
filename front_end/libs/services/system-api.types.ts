@@ -394,7 +394,7 @@ export interface ec2CameraEx extends ec2Camera {
 }
 
 // Top level keys, more convenient as array for now
-const _getRestCameraKeys = ['id', 'deviceType', 'name', 'serverId', 'status', 'url'] as const;
+const _getRestCameraKeys = ['id', 'name', 'serverId', 'status', 'url'] as const;
 export const getRestCameraKeys = {
     ...(Object.fromEntries(_getRestCameraKeys.map(k => [k, true])) as Record<
         typeof _getRestCameraKeys[number],
@@ -404,6 +404,11 @@ export const getRestCameraKeys = {
         isEnabled: true,
     },
 } as const;
+
+export const getRestCameraKeysWithDevice = {
+    ...getRestCameraKeys,
+    deviceType: true,
+};
 export type GetRestCamera = RecursivePick<Device, typeof getRestCameraKeys>;
 
 export type RestCamera = {

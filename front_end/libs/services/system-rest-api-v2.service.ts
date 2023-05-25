@@ -373,10 +373,10 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
 
     // Todo: When merged into develop use withKeyMap, but alter the keys
     getCameras(): Observable<t.RestCamera[]> {
-        const endpoint = '/rest/v1/devices';
+        const endpoint = '/rest/v2/devices';
         const params = {
             _keepDefault: true,
-            _with: withKeyMap(t.getRestCameraKeys),
+            _with: withKeyMap(t.getRestCameraKeysWithDevice),
         };
         return this.get<t.GetRestCamera[]>(
             endpoint,
