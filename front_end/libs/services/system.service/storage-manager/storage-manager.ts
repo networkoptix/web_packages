@@ -49,7 +49,7 @@ export class StorageManager extends StorageState {
     rebuildArchive(
         serverId: string,
         type: number,
-        action?: string
+        action?: string,
     ): Observable<RebuildArchiveResponse> {
         return this.serverManager.rebuildArchive(serverId, type, action);
     }
@@ -67,22 +67,23 @@ export class StorageManager extends StorageState {
     }
 
     async getBackupState(serverId: string) {
-        const settings = (await firstValueFrom(this.system.updateOrGetSystemSettings())).reply?.settings;
+        const settings = (await firstValueFrom(this.system.updateOrGetSystemSettings())).reply
+            ?.settings;
         try {
             const { quality, backupNewCameras } = JSON.parse((<any>settings).backupSettings);
             await this.system.cameraManager.updateSystemServersCameras();
-            const backup = this.system.cameraManager.cameras.some(
-                ({ backupPolicy }) => ['byDefault', 'on'].includes(backupPolicy)
+            const backup = this.system.cameraManager.cameras.some(({ backupPolicy }) =>
+                ['byDefault', 'on'].includes(backupPolicy),
             );
             const camerasHaveDefaults = this.system.cameraManager.cameras.every(
-                ({ backupPolicy, backupQuality, backupType, backupContentType }) => (
+                ({ backupPolicy, backupQuality, backupType, backupContentType }) =>
                     ['on', 'CameraBackupDefault', 'byDefault'].includes(backupPolicy) &&
                     ['CameraBackupBoth', 'CameraBackupDefault'].includes(backupQuality) &&
                     ['CameraBackupBoth', 'CameraBackupDefault'].includes(backupType) &&
-                    ['archive'].includes(backupContentType)
-                )
+                    ['archive'].includes(backupContentType),
             );
-            const custom = (!backupNewCameras && settings.backupNewCamerasByDefault !== 'true') ||
+            const custom =
+                (!backupNewCameras && settings.backupNewCamerasByDefault !== 'true') ||
                 quality !== 'CameraBackupBoth' ||
                 !camerasHaveDefaults;
             return { backup, custom };
@@ -91,12 +92,16 @@ export class StorageManager extends StorageState {
         }
         const backupType = this.serverManager.servers.find(({ id }) => id === serverId).backupType;
         const backup = backupType !== 'BackupManual';
-        const custom = backup && (
-            backupType === 'BackupSchedule' ||
-            !this.system.cameraManager.cameras.every(({ backupType }) => ['CameraBackupLowQuality', 'CameraBackupDefault'].includes(backupType)) ||
-            settings?.backupNewCamerasByDefault !== 'true' ||
-            !['CameraBackupDefault', 'CameraBackupLowQuality'].includes(settings?.backupQualities)
-        );
+        const custom =
+            backup &&
+            (backupType === 'BackupSchedule' ||
+                !this.system.cameraManager.cameras.every(({ backupType }) =>
+                    ['CameraBackupLowQuality', 'CameraBackupDefault'].includes(backupType),
+                ) ||
+                settings?.backupNewCamerasByDefault !== 'true' ||
+                !['CameraBackupDefault', 'CameraBackupLowQuality'].includes(
+                    settings?.backupQualities,
+                ));
         return { backup, custom };
     }
 
@@ -114,7 +119,10 @@ export class StorageManager extends StorageState {
     }
 
     constructor(
-        public system: Pick<NxSystemOldModule & ServerManagerModule, 'serverManager' | 'cameraManager' | 'updateOrGetSystemSettings'>
+        public system: Pick<
+            NxSystemOldModule & ServerManagerModule,
+            'serverManager' | 'cameraManager' | 'updateOrGetSystemSettings'
+        >,
     ) {
         super(system.serverManager);
     }

@@ -12,13 +12,13 @@ export enum STORAGE_TYPES {
     USB = 'usb',
     NETWORK = 'smb',
     SYSTEM_NETWORK = 'network',
-    CLOUD = 'cloud'
+    CLOUD = 'cloud',
 }
 
 export enum MODE {
     MAIN = 'main',
     BACKUP = 'backup',
-    NOT_IN_USE = 'notUsed'
+    NOT_IN_USE = 'notUsed',
 }
 
 export enum STORAGE_STATUS {
@@ -27,22 +27,22 @@ export enum STORAGE_STATUS {
     RESERVED = 'reserved',
     DISABLED = 'disabled',
     REINDEXING = 'reindexing',
-    BEING_CHECKED = 'beingChecked'
+    BEING_CHECKED = 'beingChecked',
 }
 
 export interface SaveStoragePayload {
     addParams: {
-        name : string;
-        value : string;
+        name: string;
+        value: string;
     };
-    id : string;
-    isBackup : boolean;
-    parentId : string;
-    spaceLimit : string;
-    storageType : string;
-    typeId : string;
-    url : string;
-    usedForWriting : boolean;
+    id: string;
+    isBackup: boolean;
+    parentId: string;
+    spaceLimit: string;
+    storageType: string;
+    typeId: string;
+    url: string;
+    usedForWriting: boolean;
 }
 
 /**
@@ -78,16 +78,19 @@ export class CurrentStorageState {
     }
 
     get reindexing(): MODE[] {
-        const reindexingLocations = this.locations.filter(({ reindexing }) => reindexing).map(({ mode }) => mode);
+        const reindexingLocations = this.locations
+            .filter(({ reindexing }) => reindexing)
+            .map(({ mode }) => mode);
         const unique = new Set(reindexingLocations);
         return [...unique];
     }
 
     get freeSpace() {
-        return this.locations.reduce((
-            totalFreeSpace,
-            { freeSpace, isBackup, usedForWriting }
-        ) => totalFreeSpace + (!isBackup && usedForWriting ? freeSpace : 0), 0);
+        return this.locations.reduce(
+            (totalFreeSpace, { freeSpace, isBackup, usedForWriting }) =>
+                totalFreeSpace + (!isBackup && usedForWriting ? freeSpace : 0),
+            0,
+        );
     }
 
     get serialized(): SaveStoragePayload[] {
@@ -127,7 +130,9 @@ export class CurrentStorageState {
      * Saves the current analyticsDb location to server.
      */
     saveAnalyticsDbLocation(metadataStorageId: string = this.currentAnalyticsDbLocation.storageId) {
-        return this.#serverManager.updateResource(this.currentAnalyticsDbLocation.serverId, { metadataStorageId });
+        return this.#serverManager.updateResource(this.currentAnalyticsDbLocation.serverId, {
+            metadataStorageId,
+        });
     }
 
     constructor(state: Partial<CurrentStorageState>, analytics: any, serverManager: ServerManager) {
@@ -141,10 +146,7 @@ export class CurrentStorageState {
     }
 
     // Helpers
-    #sortByTypeAndUrl = (
-        { storageType: aType, url: aUrl },
-        { storageType: bType, url: bUrl }
-    ) => {
+    #sortByTypeAndUrl = ({ storageType: aType, url: aUrl }, { storageType: bType, url: bUrl }) => {
         const { LOCAL, USB, NETWORK, SYSTEM_NETWORK, CLOUD } = STORAGE_TYPES;
         const typeOrder = [LOCAL, USB, SYSTEM_NETWORK, NETWORK, CLOUD];
         if (aType === bType) {
@@ -153,11 +155,10 @@ export class CurrentStorageState {
         return typeOrder.indexOf(aType) - typeOrder.indexOf(bType);
     };
 
-    #countMainAndBackup = (
-        main = true
-    ) => ({
-        isBackup, isOnline, isWritable, usedForWriting
-    }) => isBackup === !main && isOnline && isWritable && usedForWriting;
+    #countMainAndBackup =
+        (main = true) =>
+        ({ isBackup, isOnline, isWritable, usedForWriting }) =>
+            isBackup === !main && isOnline && isWritable && usedForWriting;
 
     #parseAnalytics = ({ hasAnalyticsData, hasPlugins, metadataStorageId }): void => {
         this.#metadataStorageId = cleanId(metadataStorageId || '');
@@ -171,7 +172,7 @@ export class CurrentStorageState {
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     checkAnalytics = (storage: Storage) => ({
         analyticsDbLocation: storage.storageId === this.#metadataStorageId,
-        canStoreAnalyticsDb: this.#checkCanStoreAnalytics(storage)
+        canStoreAnalyticsDb: this.#checkCanStoreAnalytics(storage),
     });
 }
 
@@ -184,15 +185,15 @@ export class StorageDataStructure {
     serverId: string;
     storageType: STORAGE_TYPES;
     totalSpace: number;
-    url : string;
+    url: string;
     urlWithCredentials: string;
-    usedForWriting : boolean;
-    freeSpace : number;
-    isExternal : boolean;
-    isOnline : boolean;
-    isWritable : boolean;
-    storageStatus : string;
-    vmsSpace : number;
+    usedForWriting: boolean;
+    freeSpace: number;
+    isExternal: boolean;
+    isOnline: boolean;
+    isWritable: boolean;
+    storageStatus: string;
+    vmsSpace: number;
     storageId: string;
     canUpdate: boolean;
     constructor(inputs?: Partial<StorageDataStructure & { status: string }>) {
@@ -214,7 +215,7 @@ export class StorageDataStructure {
             vmsSpace: 0,
             storageId: '',
             canUpdate: null,
-            urlWithCredentials: ''
+            urlWithCredentials: '',
         };
         Object.assign(this, { ...defaults, ...inputs });
     }
@@ -234,8 +235,10 @@ export class Storage extends StorageDataStructure {
     currentStorageState: CurrentStorageState;
 
     get hasAction() {
-        return [STORAGE_TYPES.NETWORK, STORAGE_TYPES.CLOUD].includes(this.storageType) ||
-            [STORAGE_STATUS.INACCESSIBLE, STORAGE_STATUS.BEING_CHECKED].includes(this.status);
+        return (
+            [STORAGE_TYPES.NETWORK, STORAGE_TYPES.CLOUD].includes(this.storageType) ||
+            [STORAGE_STATUS.INACCESSIBLE, STORAGE_STATUS.BEING_CHECKED].includes(this.status)
+        );
     }
 
     get mode() {
@@ -251,9 +254,7 @@ export class Storage extends StorageDataStructure {
     }
 
     get mainOnly() {
-        return this.usedForWriting &&
-            !this.isBackup &&
-            this.currentStorageState.onlineMains <= 1;
+        return this.usedForWriting && !this.isBackup && this.currentStorageState.onlineMains <= 1;
     }
 
     get reindexing() {
@@ -281,8 +282,8 @@ export class Storage extends StorageDataStructure {
             this.totalSpace < 0 ||
             this.storageStatus.includes('tooSmall') ||
             (this.storageId.startsWith('/') && !this.storageStatus.includes('removable')) ||
-            this.storageStatus.includes('system') &&
-            this.totalSpace < (this.currentStorageState.freeSpace / 6)
+            (this.storageStatus.includes('system') &&
+                this.totalSpace < this.currentStorageState.freeSpace / 6)
         ) {
             return STORAGE_STATUS.RESERVED;
         }
@@ -293,8 +294,8 @@ export class Storage extends StorageDataStructure {
         return this.status !== STORAGE_STATUS.RESERVED
             ? ''
             : this.storageStatus.includes('system')
-                ? 'reservedSystemTooltip'
-                : 'reservedTooSmallTooltip';
+            ? 'reservedSystemTooltip'
+            : 'reservedTooSmallTooltip';
     }
 
     get serialized() {
@@ -316,20 +317,22 @@ export class Storage extends StorageDataStructure {
     // Helpers
     #analytics = () => this.currentStorageState.checkAnalytics(this);
     #serialize = (): SaveStoragePayload => {
-        return this.canUpdate ? {
-            addParams: {
-                name: 'space',
-                value: this.totalSpace.toString()
-            },
-            id: `{${this.storageId}}`,
-            isBackup: this.isBackup,
-            parentId: this.serverId,
-            spaceLimit: this.reservedSpace.toString(),
-            storageType: this.storageType,
-            typeId: this.#typeId,
-            url: this.urlWithCredentials,
-            usedForWriting: this.usedForWriting
-        } : null;
+        return this.canUpdate
+            ? {
+                  addParams: {
+                      name: 'space',
+                      value: this.totalSpace.toString(),
+                  },
+                  id: `{${this.storageId}}`,
+                  isBackup: this.isBackup,
+                  parentId: this.serverId,
+                  spaceLimit: this.reservedSpace.toString(),
+                  storageType: this.storageType,
+                  typeId: this.#typeId,
+                  url: this.urlWithCredentials,
+                  usedForWriting: this.usedForWriting,
+              }
+            : null;
     };
 
     constructor(storageDataInputs?: Partial<StorageDataStructure>) {

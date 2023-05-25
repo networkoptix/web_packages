@@ -11,15 +11,15 @@ import { currentStorageStateFactory } from './current-storage-state';
 import { CurrentStorageState } from './storage';
 
 /**
-* Provides a fallback value for errors.
-*/
+ * Provides a fallback value for errors.
+ */
 const fallback = <T>(value: T) => catchError(() => Promise.resolve(value));
 
 export enum UpdateTriggers {
     INFO = 'info',
     METRICS = 'metrics',
     STATS = 'stats',
-    ANALYTICS = 'analytics'
+    ANALYTICS = 'analytics',
 }
 
 export type TriggerUpdateCallback = () => void;
@@ -44,7 +44,9 @@ export class StorageState extends BaseManager {
         return this.storageState$;
     };
 
-    poll = (dataToPoll: UpdateTriggers): [Observable<CurrentStorageState>, TriggerUpdateCallback] => {
+    poll = (
+        dataToPoll: UpdateTriggers,
+    ): [Observable<CurrentStorageState>, TriggerUpdateCallback] => {
         return [this.storageState$, () => this.update(dataToPoll)];
     };
 
@@ -53,11 +55,25 @@ export class StorageState extends BaseManager {
      */
     #updater$ = new Subject<UpdateTriggers>();
 
-    #updateOn = (trigger: UpdateTriggers) => this.#updater$.pipe(startWith(trigger), filter(updater => updater === trigger), switchMap(() => this.serverId$));
+    #updateOn = (trigger: UpdateTriggers) =>
+        this.#updater$.pipe(
+            startWith(trigger),
+            filter(updater => updater === trigger),
+            switchMap(() => this.serverId$),
+        );
 
     // State update handlers - These need to be arrow functions because "this" is fun.
-    #getStorageInfoHandler = id => this.serverManager.mediaserver.getStoragesInfo({ id }).pipe(startWith(false), map(info => typeof info === 'boolean' ? info : info.map(({ typeId, name, ...store }) => ({ ...store, canUpdate: true }))));
-    #getStorageStatsHandler = id => this.serverManager.getStorages(id, false, 60000).pipe(retry(5), startWith(false));
+    #getStorageInfoHandler = id =>
+        this.serverManager.mediaserver.getStoragesInfo({ id }).pipe(
+            startWith(false),
+            map(info =>
+                typeof info === 'boolean'
+                    ? info
+                    : info.map(({ typeId, name, ...store }) => ({ ...store, canUpdate: true })),
+            ),
+        );
+    #getStorageStatsHandler = id =>
+        this.serverManager.getStorages(id, false, 60000).pipe(retry(5), startWith(false));
     #getStorageMetricsHandler = id => this.serverManager.getServerStats(id).pipe(startWith(false));
     #getAnalyticsHandler = id => this.serverManager.getStorageAnalytics(id).pipe(startWith(false));
 
@@ -73,10 +89,22 @@ export class StorageState extends BaseManager {
      * Fetches storage stats from /api/storageSpace, used to get stats for each storage. Could take a long time.
      */
 
-    #storageInfoStateManager = new StateManager(this.#getStorageInfoHandler, this.#updateOn(UpdateTriggers.INFO));
-    #storageStatsStateManager = new StateManager(this.#getStorageStatsHandler, this.#updateOn(UpdateTriggers.STATS));
-    #storageMetricsStateManager = new StateManager(this.#getStorageMetricsHandler, this.#updateOn(UpdateTriggers.METRICS));
-    #storageAnalyticsStateManager = new StateManager(this.#getAnalyticsHandler, this.#updateOn(UpdateTriggers.ANALYTICS));
+    #storageInfoStateManager = new StateManager(
+        this.#getStorageInfoHandler,
+        this.#updateOn(UpdateTriggers.INFO),
+    );
+    #storageStatsStateManager = new StateManager(
+        this.#getStorageStatsHandler,
+        this.#updateOn(UpdateTriggers.STATS),
+    );
+    #storageMetricsStateManager = new StateManager(
+        this.#getStorageMetricsHandler,
+        this.#updateOn(UpdateTriggers.METRICS),
+    );
+    #storageAnalyticsStateManager = new StateManager(
+        this.#getAnalyticsHandler,
+        this.#updateOn(UpdateTriggers.ANALYTICS),
+    );
 
     storageState: CurrentStorageState;
 
@@ -88,20 +116,21 @@ export class StorageState extends BaseManager {
      * The individual storages should be updated from methods on the StorageState class.
      * This way edge cases can be checked before calling the appropriate update method on the individual Storage.
      */
-    storageState$ = combineLatest(
-        [
-            this.#storageInfoStateManager.state$.pipe(fallback([])),
-            this.#storageMetricsStateManager.state$.pipe(fallback({})),
-            this.#storageStatsStateManager.state$.pipe(fallback({ storages: [] })),
-            this.#storageAnalyticsStateManager.state$.pipe(fallback({ hasAnalyticsData: false, hasPlugins: false, metadataStorageId: '' }))
-        ]
-    ).pipe(
+    storageState$ = combineLatest([
+        this.#storageInfoStateManager.state$.pipe(fallback([])),
+        this.#storageMetricsStateManager.state$.pipe(fallback({})),
+        this.#storageStatsStateManager.state$.pipe(fallback({ storages: [] })),
+        this.#storageAnalyticsStateManager.state$.pipe(
+            fallback({ hasAnalyticsData: false, hasPlugins: false, metadataStorageId: '' }),
+        ),
+    ]).pipe(
         filter((res: any) => res[2]),
         map((res: any) => currentStorageStateFactory(res, this.serverId, this.serverManager)),
         map(cur => {
             if (
                 this.storageState &&
-                (this.storageState.storageStatsLoaded && this.storageState.vmsSpaceLoaded) &&
+                this.storageState.storageStatsLoaded &&
+                this.storageState.vmsSpaceLoaded &&
                 !cur.storageStatsLoaded &&
                 this.storageState.storageInfoLoaded
             ) {
@@ -122,28 +151,41 @@ export class StorageState extends BaseManager {
      *   previous offline server was loaded and update tick also occurred
      */
     reinitializeForOfflineToOnlineServer(): void {
-        this.#storageInfoStateManager = new StateManager(this.#getStorageInfoHandler, this.#updateOn(UpdateTriggers.INFO));
-        this.#storageStatsStateManager = new StateManager(this.#getStorageStatsHandler, this.#updateOn(UpdateTriggers.STATS));
-        this.#storageMetricsStateManager = new StateManager(this.#getStorageMetricsHandler, this.#updateOn(UpdateTriggers.METRICS));
-        this.#storageAnalyticsStateManager = new StateManager(this.#getAnalyticsHandler, this.#updateOn(UpdateTriggers.ANALYTICS));
+        this.#storageInfoStateManager = new StateManager(
+            this.#getStorageInfoHandler,
+            this.#updateOn(UpdateTriggers.INFO),
+        );
+        this.#storageStatsStateManager = new StateManager(
+            this.#getStorageStatsHandler,
+            this.#updateOn(UpdateTriggers.STATS),
+        );
+        this.#storageMetricsStateManager = new StateManager(
+            this.#getStorageMetricsHandler,
+            this.#updateOn(UpdateTriggers.METRICS),
+        );
+        this.#storageAnalyticsStateManager = new StateManager(
+            this.#getAnalyticsHandler,
+            this.#updateOn(UpdateTriggers.ANALYTICS),
+        );
 
         this.refresh$.next(true);
         this.refresh$ = new Subject<boolean>();
 
-        this.storageState$ = combineLatest(
-            [
-                this.#storageInfoStateManager.state$.pipe(fallback([])),
-                this.#storageMetricsStateManager.state$.pipe(fallback({})),
-                this.#storageStatsStateManager.state$.pipe(fallback({ storages: [] })),
-                this.#storageAnalyticsStateManager.state$.pipe(fallback({ hasAnalyticsData: false, hasPlugins: false, metadataStorageId: '' }))
-            ]
-        ).pipe(
+        this.storageState$ = combineLatest([
+            this.#storageInfoStateManager.state$.pipe(fallback([])),
+            this.#storageMetricsStateManager.state$.pipe(fallback({})),
+            this.#storageStatsStateManager.state$.pipe(fallback({ storages: [] })),
+            this.#storageAnalyticsStateManager.state$.pipe(
+                fallback({ hasAnalyticsData: false, hasPlugins: false, metadataStorageId: '' }),
+            ),
+        ]).pipe(
             filter((res: any) => res[2]),
             map((res: any) => currentStorageStateFactory(res, this.serverId, this.serverManager)),
             map(cur => {
                 if (
                     this.storageState &&
-                    (this.storageState.storageStatsLoaded && this.storageState.vmsSpaceLoaded) &&
+                    this.storageState.storageStatsLoaded &&
+                    this.storageState.vmsSpaceLoaded &&
                     !cur.storageStatsLoaded &&
                     this.storageState.storageInfoLoaded
                 ) {

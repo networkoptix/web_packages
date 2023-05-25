@@ -198,7 +198,7 @@ export class UserManager {
         if (this.mediaserver.version === 0) {
             return this.mediaserver.getAggregatedUsersData();
         }
-        const mediaserver = <NxSystemRestAPI | NxSystemRestAPI2> this.mediaserver;
+        const mediaserver = <NxSystemRestAPI | NxSystemRestAPI2>this.mediaserver;
         const predefinedRoles$ =
             this.mediaserver.version < 5.2 ? mediaserver.getPredefinedRoles() : of([]);
         return combineLatest([

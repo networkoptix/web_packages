@@ -30,16 +30,8 @@ export class UserWithGroupsManager extends UserManager {
 
     protected CONFIG = nxConfig;
 
-    constructor(
-        mediaserver: NxSystemRestAPI3,
-        currentUserEmail: string,
-        userId: string
-    ) {
-        super(
-            mediaserver,
-            currentUserEmail,
-            userId
-        );
+    constructor(mediaserver: NxSystemRestAPI3, currentUserEmail: string, userId: string) {
+        super(mediaserver, currentUserEmail, userId);
         this.locale = NxSystemBase.INJECTOR.get(LOCALE_ID);
         this.mediaserver = mediaserver;
         this.currentUserEmail = currentUserEmail;
@@ -51,8 +43,10 @@ export class UserWithGroupsManager extends UserManager {
     }
 
     get isMySystem(): boolean {
-        return (this._ownerEmail && this.currentUserEmail === this._ownerEmail) ||
-            (this.currentUser && this.isOwner(this.currentUser));
+        return (
+            (this._ownerEmail && this.currentUserEmail === this._ownerEmail) ||
+            (this.currentUser && this.isOwner(this.currentUser))
+        );
     }
 
     get userGroups(): NxUserGroup[] {
@@ -93,7 +87,7 @@ export class UserWithGroupsManager extends UserManager {
     // returns all users that are not owners
     override nonOwners({ cloud, local }: { cloud?: boolean; local?: boolean }): NxSystemUser[] {
         return this.users.filter((user: NxSystemUser) => {
-            if (user.type === 'cloud' && cloud || user.type === 'local' && local) {
+            if ((user.type === 'cloud' && cloud) || (user.type === 'local' && local)) {
                 return !user.isOwner;
             }
             return false;
@@ -102,9 +96,7 @@ export class UserWithGroupsManager extends UserManager {
 
     // TODO: Replace this with util
     protected isAdmin(userOrRole: { permissions: string }): boolean {
-        return userOrRole.permissions?.includes(
-            this.CONFIG.accessRoles.globalAdminPermissionFlag
-        );
+        return userOrRole.permissions?.includes(this.CONFIG.accessRoles.globalAdminPermissionFlag);
     }
 
     override checkPermissions(): void {
@@ -121,21 +113,21 @@ export class UserWithGroupsManager extends UserManager {
             exportArchives: isAdmin,
             isAdmin,
             editCameras: isAdmin,
-            viewArchives: isAdmin
+            viewArchives: isAdmin,
         };
 
         if (!isAdmin && this.currentUser) {
             permissions.editUsers = this.currentUser.permissions.includes(
-                this.CONFIG.accessRoles.editUserPermissionFlag
+                this.CONFIG.accessRoles.editUserPermissionFlag,
             );
             permissions.editCameras = this.currentUser.permissions.includes(
-                this.CONFIG.accessRoles.editCameraPermissionFlag
+                this.CONFIG.accessRoles.editCameraPermissionFlag,
             );
             permissions.exportArchives = this.currentUser.permissions.includes(
-                this.CONFIG.accessRoles.exportPermissionFlag
+                this.CONFIG.accessRoles.exportPermissionFlag,
             );
             permissions.viewArchives = this.currentUser.permissions.includes(
-                this.CONFIG.accessRoles.viewArchivesPermissionFlag
+                this.CONFIG.accessRoles.viewArchivesPermissionFlag,
             );
         }
 
@@ -172,16 +164,22 @@ export class UserWithGroupsManager extends UserManager {
         userGroups.forEach((userGroup: NxUserGroup) => {
             processedGroups[userGroup.id] = new Set(userGroup?.permissions?.split('|'));
             if (!userGroup.description && userGroup.isPredefined) {
-                userGroup.description = this.LANG.accessRoles[userGroup.name].description || userGroup.name;
+                userGroup.description =
+                    this.LANG.accessRoles[userGroup.name].description || userGroup.name;
             }
         });
         this._groupPermissions = processedGroups;
     }
 
-    getPermissionsFromUserGroups({ groupIds, permissions }: { groupIds?: string[]; permissions: string }): Set<string> {
-        const permissionSet = new Set<string>(permissions && permissions.includes('|')
-            ? permissions.split('|')
-            : [permissions]
+    getPermissionsFromUserGroups({
+        groupIds,
+        permissions,
+    }: {
+        groupIds?: string[];
+        permissions: string;
+    }): Set<string> {
+        const permissionSet = new Set<string>(
+            permissions && permissions.includes('|') ? permissions.split('|') : [permissions],
         );
         // cloud owner currently has no userGroupIds, but instead has permissions set on the user object permissions field
         if (groupIds?.length > 0) {
@@ -198,7 +196,7 @@ export class UserWithGroupsManager extends UserManager {
         return permissionSet;
     }
 
-    override processUsers(usersWithGroups: NxSystemUser[]): (NxSystemUser[] | false) {
+    override processUsers(usersWithGroups: NxSystemUser[]): NxSystemUser[] | false {
         if (!Array.isArray(usersWithGroups)) {
             return false;
         }
@@ -210,49 +208,50 @@ export class UserWithGroupsManager extends UserManager {
          * if so, is that parsed down in some way? all set into permissions & resourceAccessRights?
          * or do I need to iterate through and form my own set of master permissions?
          */
-        this.users = usersWithGroups.map((user: NxSystemUser) => {
-            // if local user has no fullName, do we need to add name as fullName?
-            // if (!user.fullName && user.name) {
-            //     user.fullName = user.name;
-            // }
-            user.permissionsSet = this.getPermissionsFromUserGroups(user);
-            if (user.groupIds === undefined) {
-                user.groupIds = [];
-            }
-            user.permissions = this.normalizePermissionString([
-                user.permissions,
-                Array.from(user.permissionsSet).join('|')
-            ].join('|'));
-            // should we add a list of user group names?
-            // user.userGroupNames = [];
-            // allMediaPermissionFlag exists if the all camera permission option selected...this still true?
-            user.isAdmin = this.isAdmin(user);
-            user.isCloud = user.type === 'cloud';
-            user.isLdap = user.type === 'ldap';
-            user.isCloudOwner = user.isCloud && user.isOwner;
-            user.isLocalOwner = user.type === 'local' && user.isOwner;
-            user.isMe = environment.isLocal
-                ? user.id === this._userId
-                : user.isCloud && user.email === this.currentUserEmail;
-            user.canBeEdited = this.canBeEdited(user);
-
-            if (user.isMe) {
-                this.currentUser = user;
-                // set userGroups for user?
-            }
-            return user;
-        }).sort((userA, userB) => {
-            // seems to error when >= 5.2 system is offline, type field does not exist
-            // sorts local before cloud users --> then by email for cloud & name for local
-            if (userA.type === userB.type) {
-                if (userA.type === 'cloud') {
-                    return userA.email.localeCompare(userB.email, this.locale);
-                } else {
-                    return userA.name.localeCompare(userB.name, this.locale);
+        this.users = usersWithGroups
+            .map((user: NxSystemUser) => {
+                // if local user has no fullName, do we need to add name as fullName?
+                // if (!user.fullName && user.name) {
+                //     user.fullName = user.name;
+                // }
+                user.permissionsSet = this.getPermissionsFromUserGroups(user);
+                if (user.groupIds === undefined) {
+                    user.groupIds = [];
                 }
-            }
-            return userA.type === 'cloud' ? 1 : -1;
-        });
+                user.permissions = this.normalizePermissionString(
+                    [user.permissions, Array.from(user.permissionsSet).join('|')].join('|'),
+                );
+                // should we add a list of user group names?
+                // user.userGroupNames = [];
+                // allMediaPermissionFlag exists if the all camera permission option selected...this still true?
+                user.isAdmin = this.isAdmin(user);
+                user.isCloud = user.type === 'cloud';
+                user.isLdap = user.type === 'ldap';
+                user.isCloudOwner = user.isCloud && user.isOwner;
+                user.isLocalOwner = user.type === 'local' && user.isOwner;
+                user.isMe = environment.isLocal
+                    ? user.id === this._userId
+                    : user.isCloud && user.email === this.currentUserEmail;
+                user.canBeEdited = this.canBeEdited(user);
+
+                if (user.isMe) {
+                    this.currentUser = user;
+                    // set userGroups for user?
+                }
+                return user;
+            })
+            .sort((userA, userB) => {
+                // seems to error when >= 5.2 system is offline, type field does not exist
+                // sorts local before cloud users --> then by email for cloud & name for local
+                if (userA.type === userB.type) {
+                    if (userA.type === 'cloud') {
+                        return userA.email.localeCompare(userB.email, this.locale);
+                    } else {
+                        return userA.name.localeCompare(userB.name, this.locale);
+                    }
+                }
+                return userA.type === 'cloud' ? 1 : -1;
+            });
 
         return this.users;
     }
@@ -282,7 +281,8 @@ export class UserWithGroupsManager extends UserManager {
             let existingUser: Partial<NxSystemUser> = this.users.find(u => {
                 return user.email === u.email;
             });
-            if (!existingUser) { // user not found - create a new one
+            if (!existingUser) {
+                // user not found - create a new one
                 userCreated = true;
                 existingUser = this.mediaserver.userWithGroupsObject(user.fullName, user.email);
             }
@@ -299,17 +299,15 @@ export class UserWithGroupsManager extends UserManager {
             delete user.permissions;
         }
 
-        return lastValueFrom(this.mediaserver.modifyUser(
-            this.cleanupUserObject(user),
-            cleanId(user.id)
-        ))
-            .then((savedUser: NxSystemUser) => {
-                user.id = savedUser.id;
-                if (userCreated) {
-                    this.users.push(user);
-                }
-                return savedUser;
-            });
+        return lastValueFrom(
+            this.mediaserver.modifyUser(this.cleanupUserObject(user), cleanId(user.id)),
+        ).then((savedUser: NxSystemUser) => {
+            user.id = savedUser.id;
+            if (userCreated) {
+                this.users.push(user);
+            }
+            return savedUser;
+        });
     }
 
     // modify object doesn't seem to allow for extra fields
@@ -320,7 +318,7 @@ export class UserWithGroupsManager extends UserManager {
         fullName,
         permissions,
         isEnabled,
-        groupIds
+        groupIds,
     }: NxSystemUser): Partial<NxSystemUser> {
         return {
             name,
@@ -328,7 +326,7 @@ export class UserWithGroupsManager extends UserManager {
             fullName,
             permissions,
             isEnabled,
-            groupIds
+            groupIds,
         };
     }
 }
