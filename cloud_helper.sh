@@ -91,7 +91,7 @@ function setup_cms(){
     python manage.py readstructure
 
     printf "Filling in content\n\n"
-    python manage.py filldata
+    python manage.py filldata --customization default
 
     popd
 }
