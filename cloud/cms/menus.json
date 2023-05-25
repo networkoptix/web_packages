@@ -271,6 +271,12 @@
         "enabled": true
       },
       {
+        "name": "System Calculator",
+        "url": "http://nx.networkoptix.com/calculator/",
+        "enabled": true,
+        "new_window": true
+      },
+      {
         "name": "Terms",
         "display_name": "Terms",
         "url": "/content/eula",
@@ -280,6 +286,13 @@
         "enabled": true
       },
       {
+        "name": "Support",
+        "url": "%SUPPORT_LINK%",
+        "new_window": true,
+        "enabled": true,
+        "authentication": "both"
+      },
+      {
         "name": "Privacy",
         "display_name": "Privacy",
         "url": "%PRIVACY_LINK%",
@@ -287,19 +300,6 @@
         "icon": "",
         "authentication": "both",
         "enabled": true
-      },
-      {
-        "name": "System Calculator",
-        "url": "http://nx.networkoptix.com/calculator/",
-        "enabled": true,
-        "new_window": true
-      },
-      {
-        "name": "Support",
-        "url": "%SUPPORT_LINK%",
-        "new_window": true,
-        "enabled": true,
-        "authentication": "both"
       }
     ]
   }

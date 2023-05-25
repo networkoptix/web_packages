@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, filter, take } from 'rxjs';
 
+import { accountSelectors } from '@common/store/account';
 import { environment } from '@environments/environment';
 import { icons } from '@lib/variables/static-variables';
 import { NxMenusService } from '@services/menus.service';
@@ -23,6 +25,7 @@ export class NxNavFooterComponent implements OnInit {
     CONFIG: IConfig;
     visible$ = new BehaviorSubject(true);
     returnToTopVisible$ = new BehaviorSubject(true);
+    loggedIn$ = this.store.select(accountSelectors.selectIsAuthenticated);
     icons = icons;
     inAuthorization = false;
 
@@ -30,6 +33,7 @@ export class NxNavFooterComponent implements OnInit {
         config: NxConfigService,
         private menusService: NxMenusService,
         private router: Router,
+        private store: Store,
         public scrollMechanicsService: NxScrollMechanicsService,
         translateService: TranslateService,
     ) {

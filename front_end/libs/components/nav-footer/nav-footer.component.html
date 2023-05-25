@@ -48,7 +48,10 @@
     </div>
     <div class="bottom">
         <ng-container *ngTemplateOutlet="copyright"></ng-container>
-        <div class="lang">
+        <div
+            class="lang"
+            *ngIf="!(loggedIn$ | async)"
+        >
             <nx-header-language-select
                 class="auto"
                 short="true"
