@@ -5,8 +5,11 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { first } from 'rxjs/operators';
 
 import * as staticLang from '@common/language/language_i18n_static.json';
-import { accountSelectors } from '@common/store/account';
-import { icons } from '@lib/variables/static-variables';
+import { accountActions, accountSelectors } from '@common/store/account';
+import { icons, apiBase } from '@lib/variables/static-variables';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 @UntilDestroy()
 @Component({
@@ -15,15 +18,25 @@ import { icons } from '@lib/variables/static-variables';
     styleUrls: ['./cookie-banner.component.scss'],
 })
 export class NxCookieBannerComponent implements OnInit {
+    CONFIG: IConfig;
     LANG = staticLang;
-    cookieBannerReviewed: boolean;
+    cookieBannerReviewed: boolean = false;
+    cookiePolicyExists: boolean = false;
     icons = icons;
+    readonly apiBase: string = apiBase;
+    readonly cookiePolicyURL = 'cookie-policy';
 
-    constructor(private localStorage: LocalStorageService, private store: Store) {}
-
+    constructor(
+        private localStorage: LocalStorageService,
+        private store: Store,
+        private cloudApiService: NxCloudApiService,
+        configService: NxConfigService,
+    ) {
+        this.CONFIG = configService.config;
+        this.checkCookiePolicyExists();
+    }
     ngOnInit(): void {
         this.cookieBannerReviewed = this.localStorage.retrieve('cookiereviewed') === true;
-
         this.store
             .select(accountSelectors.selectCurrentUser)
             .pipe(
@@ -47,9 +60,25 @@ export class NxCookieBannerComponent implements OnInit {
             });
     }
 
-    onCookieBannerClose(): void {
-        // will set cookie_reviewed in backend later
+    async checkCookiePolicyExists(): Promise<void> {
+        this.cloudApiService
+            .getArticle(this.cookiePolicyURL)
+            .toPromise()
+            .then(() => {
+                this.cookiePolicyExists = true;
+            });
+    }
+
+    async onCookieBannerClose(): Promise<void> {
         this.localStorage.store('cookiereviewed', true);
         this.cookieBannerReviewed = true;
+        const reviewCookie = await this.cloudApiService.reviewCookie();
+        if (reviewCookie.resultCode === 'ok') {
+            this.store.dispatch(
+                accountActions.updateCurrentUser({
+                    update: { cookie_reviewed: true },
+                }),
+            );
+        }
     }
 }

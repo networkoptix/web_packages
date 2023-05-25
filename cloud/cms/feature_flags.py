@@ -69,6 +69,7 @@ class FLAGS(metaclass=_FlagType):
     full_story = ('Full Story', 'fullStory', '%FULLSTORY_ENABLED%')
     require_tos_agreement = ('TOS Agreement required', 'tosRequired', '%TOS_AGREEMENT_REQUIRED%')
     layouts = ('Layouts', 'layouts', '%LAYOUTS_ENABLED%')
+    cookie_banner = ('Cookie Banner', 'cookieBanner', '%COOKIE_BANNER%')
 
     layouts_editable = ('Layouts Editable', 'layoutsEditable', '%LAYOUTS_EDITABLE%')
     layouts_helper = ('Layouts Helper', 'layoutsHelper', '%LAYOUTS_HELPER%')

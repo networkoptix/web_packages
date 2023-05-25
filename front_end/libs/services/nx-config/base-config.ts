@@ -182,6 +182,7 @@ const FeatureFlagKeys = [
     'requestCachingRemoteSync',
     'useJsonRpc',
     'restCookieLogin',
+    'cookieBanner',
     'crossTabSyncEnabled',
     'useAuthenticationInterceptor',
     'layoutsIoDevices',

@@ -1,12 +1,12 @@
 <!-- keep false until cookieBanner reimplemented -->
 <div
     class="banner"
-    *ngIf="false && !cookieBannerReviewed"
+    *ngIf="cookiePolicyExists && !cookieBannerReviewed"
 >
     <p>
         <span [innerHTML]="LANG.cookieWarning | translate | translateCut: 0"></span
         ><a
-            routerLink="/"
+            routerLink="content/cookie-policy"
             [innerText]="LANG.cookieWarning | translate | translateCut: 1"
         ></a
         ><span [innerHTML]="LANG.cookieWarning | translate | translateCut: 2"></span>

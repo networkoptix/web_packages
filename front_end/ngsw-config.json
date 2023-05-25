@@ -57,6 +57,18 @@
         "timeout": "0u",
         "strategy": "freshness"
       }
+    },
+    {
+      "name": "cookiePolicy",
+      "urls": [
+        "/api/cms/article/cookie-policy"
+      ],
+      "cacheConfig": {
+        "maxAge": "1d",
+        "maxSize": 10,
+        "timeout": "0u",
+        "strategy": "freshness"
+      }
     }
   ],
   "navigationUrls": [

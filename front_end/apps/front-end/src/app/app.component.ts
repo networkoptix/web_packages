@@ -115,10 +115,12 @@ export class AppComponent implements OnInit {
         const { NxToastsContainer } = await import('@components/toast/toast.container');
         this.appToast.createComponent(NxToastsContainer);
 
-        await idle();
-        await import('@components/cookie-banner/cookie-banner.module').then(m => m.CookieBannerModule);
-        const { NxCookieBannerComponent } = await import('@components/cookie-banner/cookie-banner.component');
-        this.cookieBanner.createComponent(NxCookieBannerComponent);
+        if (!this.CONFIG.featureFlags.cookieBanner) {
+            await idle();
+            await import('@components/cookie-banner/cookie-banner.module').then(m => m.CookieBannerModule);
+            const { NxCookieBannerComponent } = await import('@components/cookie-banner/cookie-banner.component');
+            this.cookieBanner.createComponent(NxCookieBannerComponent);
+        }
 
         await idle();
         await import('@components/ribbon/ribbon.module').then(m => m.RibbonModule);

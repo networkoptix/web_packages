@@ -61,7 +61,6 @@ require('what-input');
                 #mainContainer
             >
                 <nx-tour-step-component></nx-tour-step-component>
-                <ng-template #cookieBanner></ng-template>
                 <router-outlet></router-outlet>
                 <nx-nav-footer *ngIf="newHeader"></nx-nav-footer>
             </div>
@@ -94,7 +93,6 @@ export class AppComponent implements AfterViewInit {
     @ViewChild('overlayModal', { read: ViewContainerRef }) overlayModalRef: ViewContainerRef;
     @ViewChild('appToast', { read: ViewContainerRef }) appToast: ViewContainerRef;
     @ViewChild('ribbon', { read: ViewContainerRef }) ribbon: ViewContainerRef;
-    @ViewChild('cookieBanner', { read: ViewContainerRef }) cookieBanner: ViewContainerRef;
 
     lazyLoadHeader = async (): Promise<void> => {
         await import('@components/header/header.module').then(m => m.HeaderModule);
@@ -109,11 +107,6 @@ export class AppComponent implements AfterViewInit {
         await import('@components/toast/toast-container.module').then(m => m.ToastContainerModule);
         const { NxToastsContainer } = await import('@components/toast/toast.container');
         this.appToast.createComponent(NxToastsContainer);
-
-        await idle();
-        await import('@components/cookie-banner/cookie-banner.module').then(m => m.CookieBannerModule);
-        const { NxCookieBannerComponent } = await import('@components/cookie-banner/cookie-banner.component');
-        this.cookieBanner.createComponent(NxCookieBannerComponent);
 
         await idle();
         await import('@components/ribbon/ribbon.module').then(m => m.RibbonModule);

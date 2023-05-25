@@ -845,6 +845,10 @@ export class NxCloudApiService {
             .toPromise();
     }
 
+    reviewCookie() {
+        return this.http.post<t.CloudResponse>(apiBase + '/account/reviewCookie', {}).toPromise();
+    }
+
     acceptAgreement(reviewId: string) {
         return this.http
             .post(apiBase + '/cms/accept_agreement', {
@@ -1011,6 +1015,10 @@ export class NxCloudApiService {
                 }
             }),
         );
+    }
+
+    getArticle(article: string) {
+        return this.http.get<any>(`${apiBase}/cms/article/${article}/?`);
     }
 
     #show404 = (): void => {
