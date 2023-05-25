@@ -63,6 +63,7 @@ import { Layout, LayoutItem, LayoutItems } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
+import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
 import { ViewportBreakpoints } from '@styles/theme-variables-common';
 import { cleanId, pickFrom } from '@utils/general';
@@ -513,6 +514,7 @@ export class NxLayoutGridComponent {
         private dialogsService: NxDialogsService,
         public tourService: TourService,
         private cloudApi: NxCloudApiService,
+        private systemsService: NxSystemsService,
         @Inject(WINDOW) public window: Window,
         private pageService: NxPageService,
     ) {
@@ -1124,7 +1126,12 @@ export class NxLayoutGridComponent {
             this.additionalErrorMessages = {};
             this.layoutChanged.emit(id);
         }
-        this.pageService.pageTitle(staticLang.pageTitles.layouts);
+
+        const systemName = this.systemsService.systems.find(({ id }) => id === this.system.id).name;
+
+        this.pageService.pageTitle(
+            [staticLang.pageTitles.layouts, systemName, this.CONFIG.cloudName].join(' - '),
+        );
     }
 
     handleVideoError(
@@ -1199,7 +1206,7 @@ export class NxLayoutGridComponent {
     updateCameraCredentials(system: NxSystem, camera: NxSystemCamera): void {
         const defaultPassword = !camera.unauthorized;
         const firstCheckTimeout = 15 * 1000;
-        const cameraCredentialUpdateTimeout = 6000;
+        const cameraCredentialUpdateTimeout = 12000;
         let firstCheck = true;
         const update = (): Promise<void> => {
             return of('')
@@ -1215,17 +1222,22 @@ export class NxLayoutGridComponent {
                         from(system.cameraManager.getCameras()).pipe(
                             switchMap(cameras => {
                                 const selectedCamera = cameras.find(({ id }) => id === camera.id);
-                                const unauthorized = selectedCamera.status === 'unauthorized';
-                                if (unauthorized) {
-                                    return throwError('Camera Unauthorized');
+                                const keepChecking =
+                                    selectedCamera.status === 'unauthorized' ||
+                                    !selectedCamera.online;
+                                if (keepChecking) {
+                                    return throwError(
+                                        selectedCamera.online
+                                            ? 'Camera Unauthorized'
+                                            : 'Camera Offline',
+                                    );
                                 }
                                 return of(selectedCamera);
                             }),
                             delay(cameraCredentialUpdateTimeout),
                         ),
                     ),
-                    retry(5),
-                    delay(cameraCredentialUpdateTimeout),
+                    retry(10),
                     catchError(err => {
                         console.error(err);
                         return of(err);
@@ -1237,7 +1249,7 @@ export class NxLayoutGridComponent {
                         ({ id }) => id === camera.id,
                     );
 
-                    if (selectedCamera.status === 'unauthorized') {
+                    if (selectedCamera.status === 'unauthorized' && !defaultPassword) {
                         this.dialogsService.notify(
                             {
                                 value: staticLang.layouts.errors.unableToAuthorizeCamera,
@@ -1247,11 +1259,12 @@ export class NxLayoutGridComponent {
                         );
                     } else {
                         delete this.errors[selectedCamera.id];
+                        delete this.errorIcons[selectedCamera.id];
                         if (defaultPassword) {
                             this.skipDefaultCredentialsCheck[selectedCamera.id] = true;
                         }
-                        this.updateLayoutItems.emit();
                     }
+                    this.updateLayoutItems.emit();
                 });
         };
 

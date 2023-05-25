@@ -8,7 +8,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ConnectionError, WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';
-import { BehaviorSubject, firstValueFrom, Observable, of, shareReplay, Subject, switchMap, tap, interval, startWith, map, timer, bufferCount, takeUntil } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable, of, shareReplay, Subject, switchMap, tap, interval, startWith, map, timer, scan, takeUntil, filter } from 'rxjs';
 import staticLang from '@common/language/language_i18n_static.json';
 import { LayoutItem } from '@services/system-api.types';
 import { Translatable } from '@pipes/nx-translate.types';
@@ -16,6 +16,21 @@ import { Translatable } from '@pipes/nx-translate.types';
 type DrawImagePartialTuple = [number, number, number, number];
 
 type DrawImageFullTuple = [number, number, number, number, number, number, number, number];
+
+class FpsTracker {
+    private frames: number[] = [];
+
+    public reportFrame() {
+        this.frames.push(Date.now())
+    }
+
+    public get currentFps(): number {
+        this.frames = this.frames.filter(frame => frame > Date.now() - 1000 * this.sampleSizeSeconds);
+        return this.frames.length / this.sampleSizeSeconds;
+    }
+
+    constructor(private sampleSizeSeconds: number = 10) { }
+}
 
 @UntilDestroy()
 @Component({
@@ -174,6 +189,8 @@ export class NxVideoPlayerComponent {
                         ctx.drawImage(video, ...drawImageParams);
                         resolve(null);
                     }
+                    this.fpsTracker.reportFrame();
+
                     // @ts-expect-error
                     video.requestVideoFrameCallback(updateFrame);
                 }
@@ -192,24 +209,28 @@ export class NxVideoPlayerComponent {
         this.cancelMonitoringFps$.next();
     }
 
+    fpsTracker = new FpsTracker(5);
+
     monitorFps(connection: WebRTCStreamManager): void {
         const monitoringStarted = !!this.connection;
         this.connection = connection;
 
         if (!monitoringStarted) {
-            const bufferSize = 30;
+            const bufferSize = 60;
             timer(5000, 1000).pipe(
-                map(() => this.connection.getPriority().fps),
-                startWith(Array(bufferSize).map(() => Infinity)),
-                bufferCount(bufferSize),
+                map(() => this.fpsTracker.currentFps),
+                scan((acc, curr) => [...acc, curr].slice(-bufferSize), []),
+                filter(buffer => buffer.length > bufferSize / 4),
                 takeUntil(this.cancelMonitoringFps$),
                 untilDestroyed(this),
             ).subscribe(fps => {
                 const lastFramesFrozen = (lastNumFrames: number = fps.length) => !fps.slice(-lastNumFrames).some(Boolean)
-                this.lostConnection = lastFramesFrozen(10);
-                this.loading = !this.lostConnection && lastFramesFrozen(5);
+                this.lostConnection = lastFramesFrozen(bufferSize / 2);
+                this.loading = !this.lostConnection && lastFramesFrozen(bufferSize / 10);
 
-                if (lastFramesFrozen()) {
+                console.log(`FPS for ${this.camera.name}`, fps)
+
+                if (lastFramesFrozen() && fps.length === bufferSize) {
                     this.queueReconnect();
                 }
             })
