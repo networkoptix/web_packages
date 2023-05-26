@@ -40,5 +40,6 @@
     "kbInstantSearch": true,
     "serverSideMetadata": true,
     "layoutsIoDevices": false,
-    "readonlyAPIs": true
+    "readonlyAPIs": true,
+    "cookieBanner": false
 }
