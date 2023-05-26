@@ -119,6 +119,10 @@
                 opacity: 0.3;
             }
         }
+
+        svg path {
+            fill: var(--card-support-svg-elem-bg);
+        }
     }
 }
 

@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { cloneDeep } from 'lodash-es';
+import { cloneDeep, isEqual } from 'lodash-es';
 import { SubscriptionLike } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
@@ -83,7 +83,6 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
     uriPath: string;
     breakpoint: string = '(max-width: 767px)';
     showAnalytics: boolean;
-    showBeta: boolean;
     disclaimerParams: Disclaimer;
 
     locationSubscription: SubscriptionLike;
@@ -169,23 +168,45 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
             .getParams()
             .pipe(untilDestroyed(this), debounceTime(search.debounceShortTime))
             .subscribe(params => {
-                this.params = params;
+                const localParams = { ...params };
+                // remove params handled by table
+                localParams.page && delete localParams.page;
+                localParams.sortBy && delete localParams.sortBy;
+                if (isEqual(localParams, this.params)) {
+                    return;
+                }
                 // this.setDebugAndBetaMode();
+
+                this.params = localParams;
+                // Example URI
+                // /ipvd?vendors=30X&camera=IPPTZ-ELS2IRL30X-ATI
+                const numParams = Object.keys(this.params).length;
+                if (numParams !== 0) {
+                    this.debug = this.params.debug !== undefined;
+                    this.beta = this.params.beta !== undefined;
+                    this.hasNoSearch = numParams === 1 && !!(this.params.debug || this.params.beta);
+                } else {
+                    this.hasNoSearch = true;
+                    this.resetFilterModel();
+                }
 
                 this.showAnalytics =
                     this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta;
+
                 if (this.showAnalytics) {
                     this.allowedParameters = [...this.allowedParameters, ...this.cmsParameters];
                 }
 
-                this.showBeta = this.beta;
-                if (this.showBeta) {
+                if (this.beta) {
                     this.allowedParameters = [
                         ...this.allowedParameters,
                         ...this.cmsParameters,
                         ...this.serviceParameters,
                     ];
                 }
+
+                this.updateFilterModel();
+                this.searchVendor();
             });
     }
 
@@ -194,21 +215,6 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        // Example URI
-        // /ipvd?vendors=30X&camera=IPPTZ-ELS2IRL30X-ATI
-        this.params = this.route.snapshot.queryParams;
-        const numParams = Object.keys(this.params).length;
-        if (numParams !== 0) {
-            this.debug = this.params.debug !== undefined;
-            this.beta = this.params.beta !== undefined;
-            this.hasNoSearch = numParams === 1 && !!(this.params.debug || this.params.beta);
-        } else {
-            this.hasNoSearch = true;
-            this.resetFilterModel();
-        }
-
-        this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta;
-
         this.company = this.CONFIG.company.name;
         this.vmsName = this.CONFIG.vmsName;
         this.placeholder = this.LANG.search.Search;

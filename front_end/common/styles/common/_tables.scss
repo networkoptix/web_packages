@@ -161,6 +161,9 @@
             }
 
             .sort-svg {
+                svg path {
+                    fill: var(--card-support-svg-elem-bg);
+                }
                 //position: absolute;
                 //top: 8px;
                 //right: 0;

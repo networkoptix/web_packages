@@ -1,4 +1,5 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
     Component,
@@ -16,7 +17,7 @@ import {
     TemplateRef,
     ViewChild,
 } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { Params } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual } from 'lodash-es';
 
@@ -107,11 +108,17 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
 
     constructor(
         private renderer: Renderer2,
-        private route: ActivatedRoute,
         private uri: NxUriService,
         @Inject(LOCALE_ID) private locale: string,
+        @Inject(DOCUMENT) protected document: Document,
     ) {
-        this.params = this.route.snapshot.queryParams;
+        this.uri
+            .getParams()
+            .pipe(untilDestroyed(this))
+            .subscribe(params => {
+                this.params = params;
+                // TODO: add sorting
+            });
     }
 
     private createTemplate(): void {
@@ -152,20 +159,21 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
         this.numPages = Math.ceil(this.data.length / this.perPageSelectedOption.value);
 
         this.sortElements(true);
-        this.setPage(this.currentPage);
     }
 
     ngOnChanges(changes: NgChanges<NxBaseTableComponent<T>>): void {
         if (changes.data) {
-            const { data } = changes;
             if (
-                data.firstChange ||
-                (!data.firstChange && !isEqual(data.currentValue, data.previousValue))
+                changes.data.firstChange ||
+                (!changes.data.firstChange &&
+                    !isEqual(changes.data.currentValue, changes.data.previousValue))
             ) {
                 this._headers = <Prop>Object.keys(this.data[0]);
                 this.headers = [...this._headers];
 
                 this.createTemplate();
+                this.currentPage = 1;
+                this.initPageRows();
             }
         }
 
@@ -194,10 +202,17 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
             const sortBy = this.params.sortBy.split(',');
             this.sortOrderASC = sortBy[1] === 'ASC';
 
+            try {
+                // const sortElement = this.renderer.selectRootElement(`#${sortBy[0]} div`);
+                const sortElement = this.document.querySelector(`#${sortBy[0]}`);
+                const sortSvg = sortElement.querySelector('div');
+                this.selectedHeader = sortBy[0];
+                this.sortColumn(sortSvg, sortElement.attributes['data-sort'].value, false);
+            } catch (e) {}
             // adding class removes SVG ... need to investigate -- TT
             // const elm = this.renderer.selectRootElement(`#${sortBy[0]} div`);
             // this.renderer.addClass(elm, this.sortOrderASC ? 'sort-svg-asc' : 'sort-svg-desc');
-            this.toggleSort(sortBy[0], this.defaultSort.type, keepURI);
+            // this.toggleSort(sortBy[0], this.defaultSort.type, keepURI);
         } else {
             this.defaultSort && this.toggleSort(this.defaultSort.name, this.defaultSort.type, true);
         }
@@ -237,7 +252,7 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
                 break;
             case 'boolean':
                 byParam = paramSortFunc(elm => {
-                    if (elm[param] === null) {
+                    if (elm[param] === null || elm[param] === undefined) {
                         return 0;
                     } else if (!elm[param]) {
                         return 1;
@@ -246,10 +261,41 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
                     }
                 }, this.sortOrderASC);
                 break;
-            case 'resolution': // IPVD special case => 1980x1200
+            // IPVD special cases
+            case 'resolution': // 1980x1200
                 byParam = paramSortFunc((elm: T): number => {
                     const xy = elm[param].split('x');
                     return parseInt(xy[0]) * parseInt(xy[1]);
+                }, this.sortOrderASC);
+                break;
+            case 'audio': // isAudioSupported or isTwAudioSupported
+                byParam = paramSortFunc((elm: T): number => {
+                    // @ts-expect-error type
+                    const audio = elm.isAudioSupported;
+                    // @ts-expect-error type
+                    const twAudio = elm.isTwAudioSupported;
+                    if (twAudio) {
+                        return 2;
+                    } else if (audio) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }, this.sortOrderASC);
+                break;
+            case 'ptz': // isPtzSupported or isAptzSupported
+                byParam = paramSortFunc((elm: T): number => {
+                    // @ts-expect-error type
+                    const ptz = elm.isPtzSupported;
+                    // @ts-expect-error type
+                    const aPtz = elm.isAptzSupported;
+                    if (aPtz) {
+                        return 2;
+                    } else if (ptz) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
                 }, this.sortOrderASC);
                 break;
         }
@@ -268,7 +314,11 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
         this.renderer.removeClass(item, 'sort-svg-desc');
     }
 
-    private sortColumn(item: EventTarget | HTMLDivElement, sortType: string): void {
+    private sortColumn(
+        item: EventTarget | HTMLDivElement,
+        sortType: string,
+        changeSortOrder: boolean = true,
+    ): void {
         // @ts-expect-error type error
         const targetId = item.target?.id || item.id;
         let target = item;
@@ -277,7 +327,7 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
             target = item.target as EventTarget;
         }
 
-        if (!this.selectedHeader || targetId === this.selectedHeader) {
+        if (changeSortOrder && (!this.selectedHeader || targetId === this.selectedHeader)) {
             this.sortOrderASC = !this.sortOrderASC;
             this.clearCss(target);
         } else {
@@ -315,15 +365,23 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
         this.renderer.addClass(sort, 'sort-svg');
         this.renderer.setAttribute(sort, 'id', id);
 
-        sort.innerHTML = `
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <style>
-                   path {
-                      fill: var(--card-support-svg-elem-bg);
-                   }
-                </style>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M2 3H14V5H2V3ZM2 7H10V9H2V7ZM6 11H2V13H6V11Z"/>
-            </svg>`;
+        const iconSvg = this.document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        const iconPath = this.document.createElementNS('http://www.w3.org/2000/svg', 'path');
+
+        // iconSvg.setAttribute('id', id);
+        iconSvg.setAttribute('fill', 'none');
+        iconSvg.setAttribute('viewBox', '0 0 16 16');
+        iconSvg.setAttribute('width', '16');
+        iconSvg.setAttribute('height', '16');
+        iconSvg.setAttribute('stroke', 'none');
+        // iconSvg.classList.add('path');
+
+        iconPath.setAttribute('d', 'M2 3H14V5H2V3ZM2 7H10V9H2V7ZM6 11H2V13H6V11Z');
+        iconPath.setAttribute('fill-rule', 'round');
+        iconPath.setAttribute('clip-rule', 'round');
+
+        iconSvg.appendChild(iconPath);
+        this.renderer.appendChild(sort, iconSvg);
 
         return sort;
     }

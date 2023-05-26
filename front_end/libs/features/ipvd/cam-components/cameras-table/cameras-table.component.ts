@@ -105,13 +105,13 @@ export class NxCamerasTableComponent implements OnChanges {
             {
                 name: 'isAudioSupported',
                 value: this.LANG.ipvd.isAudioSupported,
-                sort: 'boolean',
+                sort: 'audio',
                 align: 'center',
             },
             {
                 name: 'isPtzSupported',
                 value: this.LANG.ipvd.isPtzSupported,
-                sort: 'boolean',
+                sort: 'ptz',
                 align: 'center',
             },
             {
@@ -159,7 +159,7 @@ export class NxCamerasTableComponent implements OnChanges {
 
     ngOnChanges(changes: NgChanges<NxCamerasTableComponent>): void {
         if (changes.elements?.currentValue) {
-            this.showRecords = [...this.elements];
+            this.showRecords = this.elements;
             this.showRecords.map((element): FilteredCamera => {
                 element.isAptzSupported
                     ? delete element.isPtzSupported
