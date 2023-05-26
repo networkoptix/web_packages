@@ -48,7 +48,7 @@ version testing:
 8. Investigate generic component's Process/History is done properly
     Supposed to be used for Section 4.7 of the spec, but wasn't tested
 
-9. Finish typing everything
+9. ~~Finish typing everything~~
 
 10. Mixins for repetitive CSS
 

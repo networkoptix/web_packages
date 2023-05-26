@@ -24,6 +24,7 @@ import type { NxSystem } from '@services/system.service/system';
 import type { NxUser } from '@services/system.service/user-manager/user-manager-types';
 
 import type { DialogRef } from './dialog-ref';
+import { MergeError, MergeInfo } from './merge/merge.refactor.component.types';
 import { NewFeatureTemplate } from './new-feature/new-feature.component.types';
 import { TfaAction } from './two-fa/two-fa.component.types';
 import type { SessionState } from './update-session/update-session.component.types';
@@ -149,6 +150,7 @@ export type CreateSystemGroup = DialogType<
 export type ConnectLocalToCloud = DialogType<NxSystem, boolean>;
 export type Disconnect = DialogType<NxSystem, boolean>;
 export type RemoveSystem = DialogType<NxSystem, boolean>;
+export type MergeRefactored = DialogType<NxSystem, MergeInfo | MergeError>;
 
 interface Mandatory2faData {
     system: NxSystem;

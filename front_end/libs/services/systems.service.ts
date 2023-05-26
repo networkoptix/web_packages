@@ -19,6 +19,7 @@ import { distinctUntilChanged, first, map, shareReplay, switchMap } from 'rxjs/o
 import staticLang from '@common/language/language_i18n_static.json';
 import { selectCurrentUser } from '@common/store/account/account.selectors';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
+import { MergeInfo } from '@dialogs/merge/merge.refactor.component.types';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { nxConfig } from '@services/nx-config/config';
@@ -39,12 +40,6 @@ import type { NxSystem } from './system.service/system';
 import { NxSystemService } from './system.service/system.service';
 import type { NxSystemInfo } from './systems.service.types';
 import { NxUriService } from './uri.service';
-
-// Only these two are needed inside the service
-interface MergeInfo {
-    primary: NxSystemInfo;
-    secondary: NxSystemInfo;
-}
 
 @UntilDestroy()
 @Injectable({
@@ -77,9 +72,9 @@ export class NxSystemsService {
         shareReplay({ bufferSize: 1, refCount: false })
     );
     finishedMerged: boolean = false;
-    systemsMerging: MergeInfo = {
+    systemsMerging: Pick<MergeInfo, 'primary' | 'secondary'> = {
         primary: undefined,
-        secondary: undefined
+        secondary: undefined,
     };
     systemsInPool: number;
 
@@ -176,7 +171,7 @@ export class NxSystemsService {
                 : this.LANG.toastMessage.system.merge.success;
             this.systemsMerging = {
                 primary: undefined,
-                secondary: undefined
+                secondary: undefined,
             };
             this.toastService.notify(message, toast.success);
             this.finishedMerged = true;

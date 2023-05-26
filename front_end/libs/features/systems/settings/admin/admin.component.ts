@@ -10,6 +10,7 @@ import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { MergeInfo } from '@dialogs/merge/merge.refactor.component.types';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { icons, clientMode, menus, redirect, toast } from '@lib/variables/static-variables';
@@ -30,7 +31,6 @@ import { NxSystemInfo } from '@services/systems.service.types';
 import { WINDOW } from '@services/window-provider';
 
 import { NxSettingsService } from '../settings.service';
-
 interface Settings {
     disconnectDisabled: boolean;
     renameDisabled: boolean;
@@ -64,7 +64,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     settingsServiceSubscription: Subscription;
     systemsSubscription: Subscription;
     systemSubscription: Subscription;
-    currentMergeInfo: any = undefined;
+    currentMergeInfo: MergeInfo;
     merging: boolean;
     editMode = false;
     enableEdit = false;
@@ -169,7 +169,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     constructor(
         configService: NxConfigService,
-        private translateService: TranslateService,
         private accountService: NxAccountService,
         private processService: NxProcessService,
         private dialogs: NxDialogsService,
@@ -181,6 +180,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         private cloudApiService: NxCloudApiService,
         private ribbonService: NxRibbonService,
         private toastService: NxToastService,
+        private translateService: TranslateService,
         @Inject(ViewContainerRef) public applyContainerRef: ViewContainerRef,
         @Inject(WINDOW) private window: Window,
         private applyService: NxApplyService,
@@ -528,31 +528,28 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             ? this.dialogs.mergeRefactored(this.system, this.mergeTargetSystems)
             : this.dialogs.merge(this.system, this.mergeTargetSystems);
         return mergeDialog
-            .then(
-                (mergeInfo: any) => {
-                    if (mergeInfo) {
-                        this.system.mergeInfo = mergeInfo;
-                        const systemId =
-                            mergeInfo.role === 'master'
-                                ? this.system.id
-                                : mergeInfo.anotherSystemId;
-                        this.systemsService.addToMergeList(systemId);
-                        this.systemsService.processMerge(mergeInfo);
-                        this.system.systemInfo = this.system;
-                    }
-                },
-                error => {
-                    if (!error.primarySystemName && !error.secondarySystemName) {
+            .then(mergeInfo => {
+                if (!mergeInfo) {
+                    return;
+                }
+                if ('primary' in mergeInfo) {
+                    this.system.mergeInfo = mergeInfo;
+                    const systemId =
+                        mergeInfo.role === 'master' ? this.system.id : mergeInfo.anotherSystemId;
+                    this.systemsService.addToMergeList(systemId);
+                    this.systemsService.processMerge(mergeInfo);
+                    this.system.systemInfo = this.system;
+                } else {
+                    if (!mergeInfo.primarySystemName && !mergeInfo.secondarySystemName) {
                         return;
                     }
                     const commonErrorMsg = this.translateService.instant(
                         'dialogs.merge.commonText',
                         {
-                            primarySystem: error.primarySystemName,
-                            secondarySystem: error.secondarySystemName,
+                            primarySystem: mergeInfo.primarySystemName,
+                            secondarySystem: mergeInfo.secondarySystemName,
                         },
                     );
-
                     let downloadHTML = `<span>${this.LANG.dialogs.merge.latestBuild}</span>`;
                     if (this.CONFIG.cloudHost) {
                         downloadHTML = `<a href=\"${
@@ -561,11 +558,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     }
 
                     const errorCodeMsg =
-                        this.LANG.errorCodes[error.errorText] ||
-                        this.LANG.errorCodes[error.resultCode] ||
+                        this.LANG.errorCodes[mergeInfo.errorText] ||
+                        this.LANG.errorCodes[mergeInfo.resultCode] ||
                         this.LANG.errorCodes.unknownMergeError;
                     const responseError = errorCodeMsg({
-                        failedSystem: error.failedSystemName,
+                        failedSystem: mergeInfo.failedSystemName,
                         downloadHTML,
                     });
 
@@ -580,8 +577,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                             actionLabel: this.LANG.dialogs.buttons.ok,
                         },
                     });
-                },
-            )
+                }
+            })
             .finally(() => {
                 this.currentlyMerging = false;
                 this.updateSettings(this.currentlyMerging);

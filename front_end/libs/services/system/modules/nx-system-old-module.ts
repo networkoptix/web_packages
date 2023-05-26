@@ -12,6 +12,7 @@ import { v4 as uuid } from 'uuid';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
+import { MergeInfo } from '@dialogs/merge/merge.refactor.component.types';
 import { environment } from '@environments/environment';
 import { updateInterval } from '@lib/variables/static-variables';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -92,7 +93,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     stateMessage: string = '';
     isOnline: boolean = true;
     info: Record<string, any>;
-    mergeInfo: Record<string, any>;
+    mergeInfo: MergeInfo;
     cloudStorageSystemEnabled: boolean = false;
     cloudStorageCapable: boolean = false;
     mediaservers: NxMediaServer[] = null;
@@ -249,7 +250,6 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     ): void => {
         this.id = systemId || serverId;
         this.info = { name: '' };
-        this.mergeInfo = {};
         this.currentUserEmail = currentUserEmail;
 
         /* Unauthorised request handler

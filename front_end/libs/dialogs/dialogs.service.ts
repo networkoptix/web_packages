@@ -222,7 +222,7 @@ export class NxDialogsService extends DialogBase {
             .afterClosed();
     }
 
-    public async merge(system: NxSystem, systems: NxSystemInfo[]) {
+    public async merge(system: NxSystem, systems: NxSystemInfo[]): Promise<Dt.MergeRefactored['return']> {
         const config: Partial<DialogConfig> = {
             data: {
                 system,
@@ -237,7 +237,7 @@ export class NxDialogsService extends DialogBase {
             .afterClosed();
     }
 
-    public async mergeRefactored(system: NxSystem, systems: NxSystemInfo[]) {
+    public async mergeRefactored(system: NxSystem, systems: NxSystemInfo[]): Promise<Dt.MergeRefactored['return']> {
         const config: Partial<DialogConfig> = {
             data: {
                 system,

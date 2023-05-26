@@ -21,6 +21,7 @@ import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.t
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { MergeRefactored as DT } from '@dialogs/dialogs.types';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { toast } from '@lib/variables/static-variables';
@@ -32,7 +33,12 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 // import { NxThemeService } from '@services/theme.service';
-import { DiscoveredPeersReply, ModuleInformation } from '@services/system-api.types';
+import {
+    DiscoveredPeersReply,
+    ModuleInformation,
+    ModuleInformationReply,
+} from '@services/system-api.types';
+import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
@@ -41,7 +47,7 @@ import { WINDOW } from '@services/window-provider';
 import { servers } from '@src/app/variables/static-variables';
 import { pickFrom, alphabeticalSort, cleanIp, strSplice, cleanId } from '@utils/general';
 
-import { MergeState, MergeStateType, MergeSystem } from './merge.refactor.component.types';
+import { MergeErrorData, MergeState, MergeStateType, MergeSystem } from './merge.refactor.component.types';
 
 require('what-input');
 
@@ -207,8 +213,11 @@ export class NxMergeComponent implements OnInit, OnDestroy {
         private accountService: NxAccountService,
         private elem: ElementRef<HTMLElement>,
         public dialogRef: DialogRef,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        @Inject(DIALOG_DATA) private dialogData: any,
+        @Inject(DIALOG_DATA)
+        private dialogData: {
+            system: NxSystem;
+            systems: NxSystemInfo;
+        },
         @Inject(WINDOW) public window: Window,
         @Inject(LOCALE_ID) private locale: string,
     ) {
@@ -257,14 +266,8 @@ export class NxMergeComponent implements OnInit, OnDestroy {
         this.checkedMergeabilityOnce = false;
     }
 
-    close(msg?: string | {
-        primary: { id: string; name: string };
-        secondary: { id: string; name: string };
-        anotherSystemId: string;
-        role: string;
-    }): void {
+    close(msg?: DT['return']): void {
         this.resetVariables(true);
-
         this.dialogRef.close(msg);
     }
 
@@ -307,10 +310,12 @@ export class NxMergeComponent implements OnInit, OnDestroy {
     }
 
     cleanUpWebadminSystem(
-        { id, cloudSystemId, localSystemId, name, systemName, cloudOwnerId, status = '', protoVersion, remoteAddresses, port, serverFlags }: DiscoveredPeersReply,
+        systemInfo: DiscoveredPeersReply | ModuleInformationReply,
         systemUrls: { [ip: string]: string },
         newSystemFlag: string
     ): MergeSystem {
+        const { id, cloudSystemId, localSystemId, name, systemName, status = '', protoVersion, remoteAddresses, port, serverFlags } = systemInfo;
+        const { cloudOwnerId } = systemInfo as DiscoveredPeersReply;
         let firstValidIp: string;
         if (remoteAddresses?.length) {
             remoteAddresses.forEach((addy: string) => {
@@ -436,7 +441,7 @@ export class NxMergeComponent implements OnInit, OnDestroy {
                     // see if this is still an issue?
                     // this.serverUrlInputFocus ? this.serverUrlInputFocus.nativeElement.focus()
                     //     : this.mergeDropdown.dropdownToggleButton.nativeElement.focus();
-                }
+                },
             );
 
         this.adminPasswordProcess = this.processService
@@ -505,9 +510,15 @@ export class NxMergeComponent implements OnInit, OnDestroy {
                 if (this.isLocal) {
                     const takeRemoteSettings = this.system.id === this.secondarySystem.id;
                     const bothAreCloud = this.isSessionOauth && !!this.targetSystem.cloudSystemId;
-                    return this.dryRunAvailable
-                        ? this.system.mediaserver.mergeSystems(this.serverUrl, bothAreCloud ? '' : this.targetSystem.id, false, password, takeRemoteSettings).toPromise()
-                        : this.deprecatedMergeSystems(password, takeRemoteSettings);
+                    return this.system.mediaserver
+                        .mergeSystems(
+                            this.serverUrl,
+                            bothAreCloud ? '' : this.targetSystem.id,
+                            false,
+                            password,
+                            takeRemoteSettings,
+                        )
+                        .toPromise();
                 } else {
                     return this.cloudApi.merge(this.primarySystem.id, this.secondarySystem.id, password);
                 }
@@ -562,11 +573,11 @@ export class NxMergeComponent implements OnInit, OnDestroy {
                                 : this.CONFIG.system.status.slave
                         }
                     );
-                    // wrong cloud password
+                // wrong cloud password
                 } else if (res.errorString === this.wrongLogin) {
                     this.confirmMergeErrorCode = 'wrongPassword';
                     // this.confirmMergeInput.nativeElement.focus();
-                    // wrong local admin password when checking VMS <= 4.0 systems
+                // wrong local admin password when checking VMS <= 4.0 systems
                 } else if (res.errorString === 'UNAUTHORIZED') {
                     this.confirmMergeErrorCode = 'wrongPasswordAdmin';
                     // this.confirmMergeInput.nativeElement.focus();
@@ -604,18 +615,6 @@ export class NxMergeComponent implements OnInit, OnDestroy {
             });
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async getServerInfoWithUrl(serverUrl: string): Promise<ModuleInformation['reply']> {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        let serverInfo: any;
-        if (this.system.useRest) {
-            serverInfo = await this.system.mediaserver.getRemoteServerInfo(serverUrl).toPromise();
-        } else {
-            serverInfo = (await this.system.serverManager.getModuleInfoUsingUrl(serverUrl).toPromise()).reply;
-        }
-        return serverInfo;
-    }
-
     cleanUpUrl = (serverUrl: string): string => {
         if (!(/^https?:\/\//).test(serverUrl)) {
             serverUrl = `${this.window.location.protocol}//${serverUrl}`;
@@ -641,11 +640,12 @@ export class NxMergeComponent implements OnInit, OnDestroy {
         if (this.isLocal) {
             this.cleanUrl = this.cleanUpUrl(this.serverUrl);
             if (this.otherSystem || !this.targetSystem.id) {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                let secondarySystem: any;
+                let secondarySystem: ModuleInformationReply;
                 try {
                     if (this.system.useRest) {
-                        secondarySystem = await this.system.mediaserver.getRemoteServerInfo(this.serverUrl).toPromise();
+                        secondarySystem = await (this.system.mediaserver as NxSystemRestAPI)
+                            .getRemoteServerInfo(this.serverUrl)
+                            .toPromise();
                     } else {
                         secondarySystem = (await this.system.serverManager.getModuleInfoUsingUrl(this.serverUrl).toPromise()).reply;
                     }
@@ -725,12 +725,8 @@ export class NxMergeComponent implements OnInit, OnDestroy {
         }
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    handleMergeError(error: any): void {
-        const err = error.data ? cloneDeep(error.data) : {};
-        err.resultCode = error && error.resultCode || '';
-        err.errorText = (error && error.errorText) || '';
-
+    handleMergeError(error: MergeErrorData): void {
+        const err = cloneDeep(error.data);
         err.primarySystemName = this.primaryName;
         err.secondarySystemName = this.secondaryName;
 
@@ -744,28 +740,18 @@ export class NxMergeComponent implements OnInit, OnDestroy {
                 if (!stateOfHealth && this.isMergeSystem(this.primarySystem)) {
                     stateOfHealth = this.primarySystem.stateOfHealth;
                 }
+
                 err.failedSystemName = stateOfHealth === 'online'
                     ? err.secondarySystemName
                     : err.primarySystemName;
 
-                const { errorText } = error;
+                const { errorText } = err;
                 if (err.resultCode === 'vmsRequestFailure' && ['FAIL', 'CONFIGURATION_ERROR', 'Service Unavailable', 'Bad Gateway'].includes(errorText)) {
                     err.errorText = errorText === 'Bad Gateway' ? 'systemUnavailable' : 'mergedSystemIsOffline';
                 }
 
                 this.close(err);
             });
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    deprecatedMergeSystems(password: string, takeRemoteSettings = false): any {
-        const adminPassword = this.serverUrl.slice(
-            this.serverUrl.indexOf('//admin') + 8,
-            this.serverUrl.lastIndexOf('@')
-        );
-        return this.system.mediaserver.deprecatedMergeSystems(
-            this.serverUrl, password, adminPassword, takeRemoteSettings
-        );
     }
 
     private showSessionExpiredAlert(): void {
