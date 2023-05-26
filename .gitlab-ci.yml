@@ -1,4 +1,4 @@
-image: nx/ci:1.20
+image: nx/ci
 
 include:
   - project: "dev/ci"
@@ -318,7 +318,7 @@ jenkins-build-webadmin:
       "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
       "GITLAB_JOB_ID=$CI_JOB_ID"
       "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
-      "GITLAB_JOB_URL=$CI_JOB_URL" 1> logs/webadmin.log 2>&1 & WEBADMIN_EXIT="$?"
+      "GITLAB_JOB_URL=$CI_JOB_URL" 2>&1 | tee logs/webadmin.log & WEBADMIN_EXIT="$?"
     - wait
 
 jenkins-build-frontend:
@@ -336,7 +336,7 @@ jenkins-build-frontend:
       "GITLAB_JOB_ID=$CI_JOB_ID"
       "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
       "GITLAB_JOB_URL=$CI_JOB_URL"
-      "REVISION=$CI_COMMIT_SHORT_SHA" 1> logs/frontend.log 2>&1 & FRONTEND_EXIT="$?"
+      "REVISION=$CI_COMMIT_SHORT_SHA" 2>&1 | tee logs/frontend.log & FRONTEND_EXIT="$?"
     - wait
 
 conan-updater:
@@ -357,7 +357,7 @@ conan-updater:
       "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
       "GITLAB_JOB_ID=$CI_JOB_ID"
       "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
-      "GITLAB_JOB_URL=$CI_JOB_URL" 1> logs/webadmin.log 2>&1 & WEBADMIN_EXIT="$?"
+      "GITLAB_JOB_URL=$CI_JOB_URL" & WEBADMIN_EXIT="$?"
     - wait
 
 #wheel-uploader:
