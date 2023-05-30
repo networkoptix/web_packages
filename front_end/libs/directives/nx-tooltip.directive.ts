@@ -38,6 +38,8 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
     @IBool() @Input() horizontal: CoercedBoolInput;
     @IBool() @Input() alternateStyle: CoercedBoolInput;
     @IBool() @Input() alternateSecondary: CoercedBoolInput;
+    @IBool() @Input() forceDark: CoercedBoolInput;
+    @IBool() @Input() forceLight: CoercedBoolInput;
 
     constructor(
         private overlayPositionBuilder: OverlayPositionBuilder,
@@ -131,12 +133,16 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
                         new TemplatePortal(this.content, this._viewContainerRef),
                         !!this.alternateStyle,
                         !!this.alternateSecondary,
+                        !!this.forceDark,
+                        !!this.forceLight,
                     );
                 } else {
                     tooltipRef.attachText(
                         this.content,
                         !!this.alternateStyle,
                         !!this.alternateSecondary,
+                        !!this.forceDark,
+                        !!this.forceLight,
                     );
                 }
             });

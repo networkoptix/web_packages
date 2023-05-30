@@ -105,6 +105,14 @@ html[data-theme="dark"] {
     --popover-bg           : #3F545F; //$dark13;
     --popover-color        : #E1E7EA; //$light4;
 
+    --popover-shadow-dark-color : none;
+    --popover-dark-bg           : #3F545F; //$dark13;
+    --popover-dark-color        : #E1E7EA; //$light4;
+
+    --popover-shadow-light-color : 0 1rem 2rem 0 #{$light15};
+    --popover-light-bg : #{$light1};
+    --popover-light-color : #{$dark9};
+
     --validation-popover-shadow-color : none;
     --validation-popover-bg           : #{$dark9};
     --validation-popover-color        : #E1E7EA; //$light4;

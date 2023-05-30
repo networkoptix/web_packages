@@ -108,6 +108,14 @@ html[data-theme="light"] {
     --popover-bg : #{$light1};
     --popover-color : #{$dark9};
 
+    --popover-shadow-dark-color : none;
+    --popover-dark-bg           : #3F545F; //$dark13;
+    --popover-dark-color        : #E1E7EA; //$light4;
+
+    --popover-shadow-light-color : 0 1rem 2rem 0 #{$light15};
+    --popover-light-bg : #{$light1};
+    --popover-light-color : #{$dark9};
+
     --radio-color : #{$dark11};
     --radio-check-color : var(--brand-core);
     --radio-hover-color : #{$dark3};

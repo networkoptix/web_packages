@@ -16,10 +16,25 @@
 
         &.alternate,
         &.alternateSecondary {
-            box-shadow: 0px 4px 8px var(--tooltip-box-shadow-color);
-            color: var(--popover-color) !important;
-            background: var(--popover-bg) !important;
+            &:not(.forceDark, .forceLight) {
+                box-shadow: 0px 4px 8px var(--tooltip-box-shadow-color);
+                color: var(--popover-color) !important;
+                background: var(--popover-bg) !important;
+            }
+
+            &.forceLight {
+                box-shadow: 0px 4px 8px var(--tooltip-box-shadow-light-color);
+                color: var(--popover-light-color) !important;
+                background: var(--popover-light-bg) !important;
+            }
+
+            &.forceDark {
+                box-shadow: 0px 4px 8px var(--tooltip-box-shadow-dark-color);
+                color: var(--popover-dark-color) !important;
+                background: var(--popover-dark-bg) !important;
+            }
         }
+
 
         &.alternate {
             max-width: unset;
@@ -49,10 +64,23 @@
             border-right-color: var(--tooltip-bg);
         }
 
-        &.alternate::before {
-            border-right-color: var(--popover-bg) !important;
-            border-width: 8px 4px 8px 0 !important;
-            margin-top: -4px;
+        &.alternate {
+            &::before {
+                border-width: 8px 4px 8px 0 !important;
+                margin-top: -4px;
+            }
+
+            &:not(.forceDark, .forceLight)::before {
+                border-right-color: var(--popover-bg) !important;
+            }
+
+            &.forceLight::before {
+                border-right-color: var(--popover-light-bg) !important;
+            }
+
+            &.forceDark::before {
+                border-right-color: var(--popover-dark-bg) !important;
+            }
         }
     }
 }

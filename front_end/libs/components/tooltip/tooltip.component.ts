@@ -14,7 +14,12 @@ import { Component, ComponentRef, EmbeddedViewRef, ViewChild } from '@angular/co
 })
 export class NxTooltipComponent extends BasePortalOutlet {
     _text = '';
-    tooltipClasses = { alternate: false, alternateSecondary: false };
+    tooltipClasses = {
+        alternate: false,
+        alternateSecondary: false,
+        forceDark: false,
+        forceLight: false,
+    };
 
     @ViewChild(CdkPortalOutlet) portalOutlet: CdkPortalOutlet;
 
@@ -24,16 +29,28 @@ export class NxTooltipComponent extends BasePortalOutlet {
         portal: TemplatePortal,
         alternateStyle = false,
         alternateSecondary = false,
+        forceDark = false,
+        forceLight = false,
     ): void {
         this.template = portal;
         this.tooltipClasses.alternate = alternateStyle;
         this.tooltipClasses.alternateSecondary = alternateSecondary;
+        this.tooltipClasses.forceDark = forceDark;
+        this.tooltipClasses.forceLight = forceLight;
     }
 
-    attachText(text: string, alternateStyle = false, alternateSecondary = false): void {
+    attachText(
+        text: string,
+        alternateStyle = false,
+        alternateSecondary = false,
+        forceDark = false,
+        forceLight = false,
+    ): void {
         this._text = text;
         this.tooltipClasses.alternate = alternateStyle;
         this.tooltipClasses.alternateSecondary = alternateSecondary;
+        this.tooltipClasses.forceDark = forceDark;
+        this.tooltipClasses.forceLight = forceLight;
     }
 
     attachComponentPortal<T>(componentPortal: ComponentPortal<T>): ComponentRef<T> {
