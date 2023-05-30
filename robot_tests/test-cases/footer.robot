@@ -57,6 +57,6 @@ Force Tags    threaded
     Wait Until Element is Visible    ${FOOTER PRIVACY LINK}
     Sleep    1
     Click Link    ${FOOTER PRIVACY LINK}
-    #Wait Until Number Of Tabs Are Open    2
-    #Switch Window    NEW
+    Wait Until Number Of Tabs Are Open    2
+    Switch Window    NEW
     Wait Until Location Is    ${PRIVACY POLICY URL FULL}
