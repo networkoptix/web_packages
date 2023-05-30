@@ -1,12 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-
-import { ComponentsCoreModule } from '@components/components-core.module';
+import { FormsModule } from '@angular/forms';
 
 import { NxCheckboxComponent } from './checkbox.component';
 
 @NgModule({
     imports: [
-        ComponentsCoreModule,
+        CommonModule,
+        FormsModule
     ],
     declarations: [
         NxCheckboxComponent

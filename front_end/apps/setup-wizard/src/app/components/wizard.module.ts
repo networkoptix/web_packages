@@ -1,20 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import {
-    // ReactiveFormsModule,
-    FormsModule
-} from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-// import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@app/pipes/pipes.module';
-import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
-import { SearchableModule } from '@components/dropdowns/searchable/searchable.module';
-import { PasswordModule } from '@components/password-input/password.module';
-import { SharedComponentsModule } from '@components/shared-components.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { AdvancedComponent } from './advanced/advanced.component';
@@ -31,7 +23,7 @@ import { StartComponent } from './start/start.component';
 import { SystemNameComponent } from './system-name/system-name.component';
 import { WizardComponent } from './wizard.component';
 
-export const authorizedRoutes: Routes = [
+export const setupWizardRoutes: Routes = [
     {
         path: '',
         component: WizardComponent,
@@ -80,33 +72,24 @@ export const authorizedRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
-        HttpClientModule,
+        FormsModule,
         TranslateModule,
-        SharedComponentsModule,
+        RouterModule.forChild(setupWizardRoutes),
+        AngularSvgIconModule.forRoot(),
         DirectivesModule,
         PipesModule,
-        NxGenericDropdownModule,
-        PasswordModule,
-        RouterModule.forChild(authorizedRoutes),
-        AngularSvgIconModule.forRoot(),
-        FormsModule,
-        SearchableModule
+        PreLoaderModule
     ],
     providers: [
     ],
     declarations: [
-        AdvancedComponent,
         ErrorComponent,
-        LocalLoginComponent,
         LocalSuccessComponent,
-        MergeComponent,
         MergeFailedComponent,
-        MergeProcessComponent,
         StartComponent,
         SystemNameComponent,
         WizardComponent,
         MergeFailedComponent,
-        LocalSuccessComponent,
         LocalFailureComponent,
         BrokenSystemComponent,
         InitFailureComponent,

@@ -1,15 +1,17 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { ComponentsCoreModule } from '@components/components-core.module';
 import { NxSearchHighlightModule } from '@components/search-highlight/search-highlight.module';
+import { DirectivesModule } from '@directives/directives.module';
 
 import { NxSearchableDropdown } from './searchable.component';
 
 @NgModule({
     imports: [
+        CommonModule,
         AngularSvgIconModule.forRoot(),
-        ComponentsCoreModule,
+        DirectivesModule,
         NxSearchHighlightModule,
     ],
     declarations: [

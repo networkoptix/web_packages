@@ -12,6 +12,12 @@
         "build": {
             "builder": "@angular-devkit/build-angular:browser",
             "options": {
+                "allowedCommonJsDependencies": [
+                    "dexie-encrypted",
+                    "dateformat",
+                    "md5",
+                    "@open-draft/until"
+                ],
                 "outputPath": "dist/setup-wizard",
                 "index": "apps/setup-wizard/src/index.html",
                 "main": "apps/setup-wizard/src/main.ts",

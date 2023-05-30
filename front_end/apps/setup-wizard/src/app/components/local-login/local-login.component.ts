@@ -1,14 +1,21 @@
+import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, HostListener, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { icons } from '@app/variables/static-variables';
+import { PasswordValidationModule } from '@components/password-input-validation/password-validation.module';
+import { PasswordModule } from '@components/password-input/password.module';
 
 import { WizardStateService } from '../../services/wizard-state.service';
 
 @UntilDestroy()
 @Component({
     selector: 'nx-local-login',
+    standalone: true,
+    imports: [CommonModule, AngularSvgIconModule, FormsModule, TranslateModule, PasswordModule, PasswordValidationModule],
     templateUrl: './local-login.component.html',
     styleUrls: ['./local-login.component.scss'],
 })

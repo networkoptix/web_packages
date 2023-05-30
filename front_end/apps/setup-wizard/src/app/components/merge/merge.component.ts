@@ -1,14 +1,19 @@
+import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
 
 import type { SearchableDropdownItem as Item } from '@components/dropdowns/searchable/searchable.component.types';
+import { SearchableModule } from '@components/dropdowns/searchable/searchable.module';
 
 import { WizardStateService } from '../../services/wizard-state.service';
 
 @UntilDestroy()
 @Component({
     selector: 'nx-merge-component',
+    standalone: true,
+    imports: [CommonModule, FormsModule, TranslateModule, SearchableModule],
     templateUrl: 'merge.component.html',
     styleUrls: ['merge.component.scss'],
 })
