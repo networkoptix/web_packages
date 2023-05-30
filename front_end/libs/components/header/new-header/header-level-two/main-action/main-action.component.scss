@@ -7,10 +7,20 @@
     padding: 13px 16px 0px 24px;
 
     .logout {
-        width: 75px;
+        // width: 75px;
+        white-space: nowrap;
+        height: 40px;
         @include typography.regular14nocolor;
         color: var(--header-logout-action-color);
         padding-top: 4px;
+        margin-right: 10px;
+        span {
+            padding-right: 6px;
+        }
+
+        svg-icon svg {
+            margin-bottom: 2px;
+        }
 
         &:hover {
             cursor: pointer;
