@@ -16,12 +16,15 @@
     }
 
     .copyright {
-    color: var(--footer-link-color);
+        color: var(--footer-link-color);
         position: fixed;
         left: 0;
         margin: 6px auto auto 24px;
         white-space: nowrap;
         text-decoration: none;
+        span {
+            text-decoration: underline;
+        }
     }
 
     .mobile-footer {
