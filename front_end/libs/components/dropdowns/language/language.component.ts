@@ -64,14 +64,15 @@ class BaseLanguageDropdown extends BaseDropdown {
     private splitLanguages(): void {
         if (this.languages.length > 12) {
             if (this.inHeader || this.inFooter) {
-                const halfWayThough = Math.ceil(this.languages.length / 2);
-                this.langColumns.push(this.languages.slice(0, halfWayThough));
-                this.langColumns.push(this.languages.slice(halfWayThough, this.languages.length));
+                const midpoint = Math.ceil(this.languages.length / 2);
+                this.langColumns.push(this.languages.slice(0, midpoint));
+                this.langColumns.push(this.languages.slice(midpoint, this.languages.length));
             } else {
                 const languagesCopy = [...this.languages];
-                const threeParts = Math.ceil(this.languages.length / 3);
-                for (let i = 3; i > 0; i--) {
-                    this.langColumns.push(languagesCopy.splice(-threeParts));
+                const colLength = Math.ceil(this.languages.length / 3);
+                for (let i = 0; i < 3; i++) {
+                    const column = languagesCopy.slice(i * colLength, (i + 1) * colLength);
+                    this.langColumns.push(column);
                 }
             }
         }
