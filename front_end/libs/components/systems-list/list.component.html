@@ -8,8 +8,10 @@
     class="auth-visible"
     [ngClass]="{ 'm-2': showCompact, container: !showCompact }"
 >
-    <nx-no-systems *ngIf="!systems.length"></nx-no-systems>
-    <ng-container *ngIf="systems.length">
+    <ng-template #noSystems>
+        <nx-no-systems></nx-no-systems>
+    </ng-template>
+    <ng-container *ngIf="systems.length; else noSystems">
         <div
             class="search-block row border-bottom"
             *ngIf="!disableSearch && showSearch"
