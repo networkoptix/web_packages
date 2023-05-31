@@ -21,12 +21,12 @@
 
     nx-account-settings-select {
         display: block;
-        position: absolute;
-        right: 0px;
+        position: relative;
+        margin: auto 0px auto auto;
     }
 
     nx-header-language-select {
-        position: absolute;
+        position: relative;
         right: 10px;
     }
 
@@ -36,7 +36,7 @@
         text-decoration: inherit;
         color: inherit;
         min-height: 24px;
-        margin: 11.5px 95px 10px auto;
+        margin: 11.5px 33px 10px auto;
     }
 
     a{
