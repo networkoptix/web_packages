@@ -79,7 +79,10 @@ export class NxNewHeaderComponent {
                 untilDestroyed(this),
             )
             .subscribe(node => {
-                if (headerService.currentLocation?.path?.includes('/systems/')) {
+                if (
+                    headerService.currentLocation?.path?.includes('/systems/') &&
+                    this.selectedNode?.url !== node.url
+                ) {
                     // specific system page
                     this.selectedNode = cloneDeep({ ...node, name: 'systems' });
                 }
