@@ -46,7 +46,7 @@ require('what-input');
 @Component({
     selector: 'nx-app',
     template: `
-        <div *ngIf="themeSet" style="height: 100vh">
+        <div *ngIf="themeSet" [style.height]="windowHeight + 'px'">
             <div *ngIf="!reauthorizing" class="headerContainer" (resize)="headerResize($event)">
                 <ng-template #header></ng-template>
                 <ng-template #ribbon></ng-template>
@@ -90,6 +90,7 @@ export class AppComponent implements OnInit {
     reauthorizing: boolean;
     headerHeight: number;
     themeSet: boolean = false;
+    windowHeight: number = this.window.innerHeight;
 
     CONFIG: IConfig;
     readonly environment = environment;
@@ -173,6 +174,14 @@ export class AppComponent implements OnInit {
                 this.appStateService.ready = true;
             });
         }
+        // Set Window height to accommodate mobile browser bars
+        fromEvent(window, 'resize')
+            .pipe(
+                untilDestroyed(this),
+            )
+            .subscribe(() => {
+                this.windowHeight = window.innerHeight;
+            });
 
         /* No real need to update often unless some browser have major upgrade
          * and we don't want to support previous releases.
