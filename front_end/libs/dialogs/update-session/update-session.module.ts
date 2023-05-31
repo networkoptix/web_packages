@@ -12,7 +12,7 @@ import { NxUpdateSessionModalContent } from './update-session.component';
     imports: [
         CommonModule,
         FormsModule,
-        // AngularSvgIconModule.forRoot(),
+        // AngularSvgIconModule,
         TranslateModule,
 
         ProcessButtonModule,

@@ -4,7 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
+import { FooterModule } from '@components/footer/footer.module';
+import { LandingDisplayModule } from '@components/landing-display/landing-display.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { DirectivesModule } from '@directives/directives.module';
 
@@ -22,12 +23,13 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
+        RouterModule.forChild(appRoutes),
         TranslateModule,
-        ComponentsModule,
         DirectivesModule,
+        FooterModule,
+        LandingDisplayModule,
         PipesModule,
         PreLoaderModule,
-        RouterModule.forChild(appRoutes)
     ],
     providers: [],
     declarations: [

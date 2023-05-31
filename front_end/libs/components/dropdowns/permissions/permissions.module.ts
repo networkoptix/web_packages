@@ -1,14 +1,18 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { ComponentsCoreModule } from '@components/components-core.module';
+import { DirectivesModule } from '@directives/directives.module';
 
 import { NxPermissionsDropdown } from './permissions.component';
 
 @NgModule({
     imports: [
-        AngularSvgIconModule.forRoot(),
-        ComponentsCoreModule,
+        CommonModule,
+        TranslateModule,
+        AngularSvgIconModule,
+        DirectivesModule,
     ],
     declarations: [
         NxPermissionsDropdown

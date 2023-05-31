@@ -7,7 +7,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
 import { NxLayoutViewComponent } from '@components/layout-view/layout-view.component';
 import { LayoutViewModule } from '@components/layout-view/layout-view.module';
 import { DirectivesModule } from '@directives/directives.module';
@@ -31,15 +30,14 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
-        RouterModule,
         FormsModule,
+        RouterModule,
+        RouterModule.forChild(appRoutes),
         TranslateModule,
-        ComponentsModule,
+        AngularSvgIconModule,
+        DragDropModule,
         DirectivesModule,
         PipesModule,
-        RouterModule.forChild(appRoutes),
-        AngularSvgIconModule.forRoot(),
-        DragDropModule,
         LayoutViewModule
     ],
     providers: [],

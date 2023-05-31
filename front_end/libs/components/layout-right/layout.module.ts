@@ -1,12 +1,14 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { ComponentsCoreModule } from '@components/components-core.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 
 import { NxLayoutRightComponent } from './layout.component';
 
 @NgModule({
     imports: [
-        ComponentsCoreModule,
+        CommonModule,
+        PreLoaderModule,
     ],
     declarations: [
         NxLayoutRightComponent

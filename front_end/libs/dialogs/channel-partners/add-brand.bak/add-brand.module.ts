@@ -11,7 +11,7 @@ import { AddPartnerBrandModalContent } from './add-brand.component';
     imports: [
         CommonModule,
         FormsModule,
-        // AngularSvgIconModule.forRoot(),
+        // AngularSvgIconModule,
         TranslateModule,
 
         NxGenericDropdownModule,

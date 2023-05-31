@@ -7,12 +7,13 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { MenuModule } from '@app/menu/menu.module';
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
+import { CheckboxModule } from '@components/checkbox/checkbox.module';
 import { AlertBlockModule } from '@components/content-block/alert/block.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
 import { SearchableModule } from '@components/dropdowns/searchable/searchable.module';
 import { SearchModule } from '@components/search/search.module';
 import { NxSliderModule } from '@components/slider/slider.module';
+import { NxBaseTableModule } from '@components/table/table.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
@@ -162,28 +163,29 @@ const appRoutes: Routes = [
 
 @NgModule({
     imports: [
-        TranslateModule,
         CommonModule,
         FormsModule,
-        ComponentsModule,
-        DirectivesModule,
-        MenuModule,
-        PipesModule,
-        NxGridLayoutModule,
-        VmsClientModule,
         ReactiveFormsModule,
         RouterModule.forChild(appRoutes),
+        TranslateModule,
+        AngularSvgIconModule,
         NgrxDemoModule,
+        AlertBlockModule,
+        CheckboxModule,
+        ContentBlockModule,
+        DirectivesModule,
+        MenuModule,
+        NxAccountSettingsModule,
+        NxBaseTableModule,
+        NxGridLayoutModule,
+        NxSliderModule,
+        PipesModule,
         SearchModule,
         SearchableModule,
-        AlertBlockModule,
-        ContentBlockModule,
-        NxAccountSettingsModule,
-        NxSliderModule,
+        SimpleWebGLTimelineModule,
+        VmsClientModule,
         VmsClientTimelineModule,
         WebGLTimelineModule,
-        SimpleWebGLTimelineModule,
-        AngularSvgIconModule,
     ],
     providers: [
     ],

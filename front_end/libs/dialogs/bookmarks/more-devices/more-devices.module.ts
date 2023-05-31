@@ -14,7 +14,7 @@ import { NxMoreDevicesModalContent } from './more-devices.component';
     imports: [
         CommonModule,
         FormsModule,
-        // AngularSvgIconModule.forRoot(),
+        // AngularSvgIconModule,
         TranslateModule,
 
         NxMoreFiltersBaseModule,

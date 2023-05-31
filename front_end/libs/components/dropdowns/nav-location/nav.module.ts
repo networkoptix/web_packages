@@ -1,12 +1,14 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { ComponentsCoreModule } from '@components/components-core.module';
+import { DirectivesModule } from '@directives/directives.module';
 
 import { NxNavLocationDropdown } from './nav.component';
 
 @NgModule({
     imports: [
-        ComponentsCoreModule,
+        CommonModule,
+        DirectivesModule
     ],
     declarations: [
         NxNavLocationDropdown

@@ -6,9 +6,10 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CookieService } from 'ngx-cookie-service';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
+import { ClientButtonModule } from '@components/open-client-button/client-button.module';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 import { PlayerPlaceholderModule } from '@components/placeholders/player/player-placeholder.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { NxCameraDetailsComponent } from './components/camera-details/camera-details.component';
@@ -26,19 +27,19 @@ import { VmsClientModule } from './vms-client/vms-client.module';
     imports: [
         CommonModule,
         RouterModule,
+        RouterModule.forChild(routes),
         TranslateModule,
-        ComponentsModule,
+        AngularSvgIconModule,
+        ClientButtonModule,
         DirectivesModule,
+        PagePlaceHolderModule,
+        PlayerPlaceholderModule,
         PipesModule,
-        AngularSvgIconModule.forRoot(),
-
+        PreLoaderModule,
         VmsClientPlaybackModule,
         VmsClientTimelineModule,
         VmsClientVmsModule,
         VmsClientModule,
-        RouterModule.forChild(routes),
-        PagePlaceHolderModule,
-        PlayerPlaceholderModule
     ],
     providers: [
         CookieService,

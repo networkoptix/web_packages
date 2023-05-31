@@ -14,7 +14,7 @@ import { ChangePasswordModalContent } from './change-password.component';
     imports: [
         CommonModule,
         FormsModule,
-        // AngularSvgIconModule.forRoot(),
+        // AngularSvgIconModule,
         TranslateModule,
 
         PasswordModule,

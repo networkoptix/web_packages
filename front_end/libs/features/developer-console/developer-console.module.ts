@@ -6,9 +6,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
 import { ConsoleTableModule } from '@components/console-table/console-table.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
+import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { ProcessButtonModule } from '@components/process-button/process-button.module';
+import { ProcessCancelButtonModule } from '@components/process-cancel-Button/process-cancel-Button.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
 
@@ -48,15 +51,18 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
-        TranslateModule,
-        ComponentsModule,
-        DirectivesModule,
         FormsModule,
-        PipesModule,
-        ConsoleTableModule,
-        AngularSvgIconModule.forRoot(),
         RouterModule.forChild(appRoutes),
-        ContentBlockModule
+        TranslateModule,
+        AngularSvgIconModule,
+        ConsoleTableModule,
+        ContentBlockModule,
+        ContentBlockSectionModule,
+        DirectivesModule,
+        PipesModule,
+        PreLoaderModule,
+        ProcessButtonModule,
+        ProcessCancelButtonModule,
     ],
     providers: [],
     declarations: [

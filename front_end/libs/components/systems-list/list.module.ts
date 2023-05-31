@@ -1,7 +1,9 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { ComponentsCoreModule } from '@components/components-core.module';
 import { FooterModule } from '@components/footer/footer.module';
 import { NoSystemsModule } from '@components/no-systems/no-systems.module';
 import { ClientButtonModule } from '@components/open-client-button/client-button.module';
@@ -14,8 +16,10 @@ import { NxSystemsListComponent } from './list.component';
 
 @NgModule({
     imports: [
-        AngularSvgIconModule.forRoot(),
-        ComponentsCoreModule,
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+        AngularSvgIconModule,
         ClientButtonModule,
         FooterModule,
         NoSystemsModule,

@@ -14,7 +14,7 @@ import { CreateSystemGroupModalContent } from './create-system-group.component';
         FormsModule,
         ProcessButtonModule,
         ProcessCancelButtonModule,
-        // AngularSvgIconModule.forRoot(),
+        // AngularSvgIconModule,
         TranslateModule,
     ],
     declarations: [

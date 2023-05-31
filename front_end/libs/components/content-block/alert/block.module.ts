@@ -1,7 +1,6 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-
-import { ComponentsCoreModule } from '@components/components-core.module';
 
 import { ContentBlockSectionModule } from '../section/section.module';
 
@@ -9,9 +8,9 @@ import { NxAlertBlockComponent } from './block.component';
 
 @NgModule({
     imports: [
-        AngularSvgIconModule.forRoot(),
+        CommonModule,
+        AngularSvgIconModule,
         ContentBlockSectionModule,
-        ComponentsCoreModule,
     ],
     declarations: [
         NxAlertBlockComponent

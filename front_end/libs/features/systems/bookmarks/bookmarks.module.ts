@@ -29,7 +29,7 @@ const appRoutes: Routes = [
 
 @NgModule({
     imports: [
-        AngularSvgIconModule.forRoot(),
+        AngularSvgIconModule,
         CommonModule,
         FormsModule,
         TranslateModule,

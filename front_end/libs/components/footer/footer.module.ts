@@ -1,12 +1,22 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
-import { ComponentsCoreModule } from '@components/components-core.module';
+import { DirectivesModule } from '@directives/directives.module';
+import { PipesModule } from '@pipes/pipes.module';
 
 import { NxFooterComponent } from './footer.component';
 
 @NgModule({
     imports: [
-        ComponentsCoreModule,
+        CommonModule,
+        FormsModule,
+        RouterModule,
+        TranslateModule,
+        PipesModule,
+        DirectivesModule
     ],
     declarations: [
         NxFooterComponent

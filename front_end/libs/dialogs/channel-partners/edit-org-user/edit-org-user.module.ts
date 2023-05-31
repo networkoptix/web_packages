@@ -14,7 +14,7 @@ import { NxEditOrgUserModalContent } from './edit-org-user.component';
     imports: [
         CommonModule,
         FormsModule,
-        // AngularSvgIconModule.forRoot(),
+        // AngularSvgIconModule,
         TranslateModule,
 
         NxGenericDropdownModule,

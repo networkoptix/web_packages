@@ -14,7 +14,7 @@ import { NxEditOrganizationModalContent } from './edit-organization.component';
     imports: [
         CommonModule,
         FormsModule,
-        // AngularSvgIconModule.forRoot(),
+        // AngularSvgIconModule,
         TranslateModule,
 
         NxGenericDropdownModule,

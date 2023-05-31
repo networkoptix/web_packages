@@ -1,12 +1,14 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { ComponentsCoreModule } from '@components/components-core.module';
+import { ResizeModule } from '@directives/resize/resize.module';
 
 import { NxMultiLineEllipsisComponent } from './mle.component';
 
 @NgModule({
     imports: [
-        ComponentsCoreModule,
+        CommonModule,
+        ResizeModule
     ],
     declarations: [
         NxMultiLineEllipsisComponent

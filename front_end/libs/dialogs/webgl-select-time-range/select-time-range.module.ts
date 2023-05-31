@@ -9,7 +9,7 @@ import { WebGlSelectTimeRangeModalContent } from './select-time-range.component'
     imports: [
         CommonModule,
         FormsModule,
-        // AngularSvgIconModule.forRoot(),
+        // AngularSvgIconModule,
         TranslateModule,
     ],
     declarations: [

@@ -41,7 +41,7 @@ import {
     ],
     imports: [
         CommonModule,
-        AngularSvgIconModule.forRoot(),
+        AngularSvgIconModule,
         TranslateModule,
     ],
     providers: []

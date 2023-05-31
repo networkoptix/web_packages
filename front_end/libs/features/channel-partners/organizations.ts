@@ -4,7 +4,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { MenuModule } from '@app/menu/menu.module';
-import { ComponentsCoreModule } from '@components/components-core.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
 import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
 import { FooterModule } from '@components/footer/footer.module';
@@ -42,17 +41,16 @@ export const cloudPartnersRoutes: Routes = [
 @NgModule({
     imports: [
         FormsModule,
-        ComponentsCoreModule,
         RouterModule.forChild(cloudPartnersRoutes),
-        AngularSvgIconModule.forRoot(),
+        AngularSvgIconModule,
         ContentBlockModule,
         ContentBlockSectionModule,
-        PreLoaderModule,
         FooterModule,
         MenuModule,
         NxCustomizationModule,
         NxPartnerOrganizationsListModule,
         NxPartnerOrganizationDetailModule,
+        PreLoaderModule,
         SearchModule,
     ],
     providers: [],

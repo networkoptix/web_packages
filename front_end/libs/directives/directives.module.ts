@@ -22,7 +22,7 @@ import { RotateModule } from './rotate/rotate.module';
 
 @NgModule({
     imports: [
-        AngularSvgIconModule.forRoot(),
+        AngularSvgIconModule,
         OverlayModule,
         ResizeModule
     ],

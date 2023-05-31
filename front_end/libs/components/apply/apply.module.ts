@@ -1,6 +1,7 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
-import { ComponentsCoreModule } from '@components/components-core.module';
 import { ProcessButtonModule } from '@components/process-button/process-button.module';
 import { ProcessCancelButtonModule } from '@components/process-cancel-Button/process-cancel-Button.module';
 
@@ -8,7 +9,8 @@ import { NxApplyComponent } from './apply.component';
 
 @NgModule({
     imports: [
-        ComponentsCoreModule,
+        CommonModule,
+        TranslateModule,
         ProcessButtonModule,
         ProcessCancelButtonModule,
     ],

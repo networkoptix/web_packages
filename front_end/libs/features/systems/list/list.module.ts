@@ -7,7 +7,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
 import { NoSystemsModule } from '@components/no-systems/no-systems.module';
 import { ClientButtonModule } from '@components/open-client-button/client-button.module';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
@@ -28,20 +27,19 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
-        RouterModule,
         FormsModule,
-        TranslateModule,
-        ComponentsModule,
-        DirectivesModule,
-        PipesModule,
+        RouterModule,
         RouterModule.forChild(appRoutes),
-        AngularSvgIconModule.forRoot(),
+        TranslateModule,
+        AngularSvgIconModule,
         DragDropModule,
-        PagePlaceHolderModule,
-        SystemListModule,
+        ClientButtonModule,
+        DirectivesModule,
         NoSystemsModule,
+        PagePlaceHolderModule,
+        PipesModule,
         SearchModule,
-        ClientButtonModule
+        SystemListModule,
     ],
     providers: [
     ],

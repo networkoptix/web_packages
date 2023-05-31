@@ -1,15 +1,19 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { ComponentsCoreModule } from '@components/components-core.module';
 import { ProcessButtonModule } from '@components/process-button/process-button.module';
+import { PipesModule } from '@pipes/pipes.module';
 
 import { NxRibbonComponent } from './ribbon.component';
 
 @NgModule({
     imports: [
-        AngularSvgIconModule.forRoot(),
-        ComponentsCoreModule,
+        CommonModule,
+        RouterModule,
+        AngularSvgIconModule,
+        PipesModule,
         ProcessButtonModule,
     ],
     declarations: [

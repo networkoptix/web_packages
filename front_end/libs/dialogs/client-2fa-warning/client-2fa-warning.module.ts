@@ -8,7 +8,7 @@ import { Client2faWarningModalContent } from './client-2fa-warning.component';
     imports: [
         CommonModule,
         // FormsModule,
-        // AngularSvgIconModule.forRoot(),
+        // AngularSvgIconModule,
         TranslateModule,
     ],
     declarations: [

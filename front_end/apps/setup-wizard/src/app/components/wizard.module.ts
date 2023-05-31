@@ -75,7 +75,7 @@ export const setupWizardRoutes: Routes = [
         FormsModule,
         TranslateModule,
         RouterModule.forChild(setupWizardRoutes),
-        AngularSvgIconModule.forRoot(),
+        AngularSvgIconModule,
         DirectivesModule,
         PipesModule,
         PreLoaderModule

@@ -10,12 +10,16 @@ import { NgxMaskModule } from 'ngx-mask';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
+import { CheckboxModule } from '@components/checkbox/checkbox.module';
 import { AlertBlockModule } from '@components/content-block/alert/block.module';
+import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { SearchableModule } from '@components/dropdowns/searchable/searchable.module';
 import { DynamicWidgetModule } from '@components/dynamic-widget/dynamic-widget.module';
 import { InfoBlockModule } from '@components/info-block/info-block.module';
 import { LoginWebadminModule } from '@components/login-webadmin/login-webadmin.module';
+import { ProcessButtonModule } from '@components/process-button/process-button.module';
+import { ProcessCancelButtonModule } from '@components/process-cancel-Button/process-cancel-Button.module';
+import { RadioModule } from '@components/radio/radio.module';
 import { TagModule } from '@components/tag/tag.module';
 import { ThirdsPartyWidgetModule } from '@components/widgets/third-party/third-party-widget.module';
 import { DirectivesModule } from '@directives/directives.module';
@@ -70,22 +74,25 @@ import { WizardModalContent } from './wizard/wizard.component';
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        TranslateModule,
-        ClipboardModule,
-        ComponentsModule,
-        DirectivesModule,
         RouterModule,
-        AngularSvgIconModule.forRoot(),
-        PipesModule,
-        QrCodeModule,
-        GenericDialogModule,
+        TranslateModule,
+        AngularSvgIconModule,
+        ClipboardModule,
         NgxTranslateCutModule,
         NgxMaskModule.forRoot(),
-        DynamicWidgetModule,
-        InfoBlockModule,
-        SearchableModule,
+        QrCodeModule,
         AlertBlockModule,
+        CheckboxModule,
+        DirectivesModule,
         DynamicWidgetModule,
+        GenericDialogModule,
+        InfoBlockModule,
+        NxGenericDropdownModule,
+        PipesModule,
+        ProcessButtonModule,
+        ProcessCancelButtonModule,
+        RadioModule,
+        SearchableModule,
         TagModule,
         ThirdsPartyWidgetModule,
 

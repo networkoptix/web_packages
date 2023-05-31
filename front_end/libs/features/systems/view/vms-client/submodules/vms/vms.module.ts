@@ -6,7 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { NxSearchHighlightModule } from '@components/search-highlight/search-highlight.module';
 import { DirectivesModule } from '@directives/directives.module';
 
@@ -22,14 +22,14 @@ import { IpInfoPipe } from './pipes/ip_info.pipe';
     ],
     imports: [
         CommonModule,
+        FormsModule,
         RouterModule,
         TranslateModule,
-        ComponentsModule,
-        FormsModule,
+        AngularSvgIconModule,
         DirectivesModule,
-        AngularSvgIconModule.forRoot(),
-        PipesModule,
         NxSearchHighlightModule,
+        PipesModule,
+        PreLoaderModule,
     ],
     exports: [
         MediaServerListComponent

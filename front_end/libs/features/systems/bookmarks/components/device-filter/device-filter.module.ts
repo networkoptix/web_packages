@@ -13,7 +13,7 @@ import { NxDeviceFilterComponent } from './device-filter.component';
     imports: [
         CommonModule,
         FormsModule,
-        AngularSvgIconModule.forRoot(),
+        AngularSvgIconModule,
         // TranslateModule,
         CheckboxModule,
         NxSimpleSearchModule,

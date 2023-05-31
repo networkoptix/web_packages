@@ -4,7 +4,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { Nx503Component } from './503.component';
@@ -20,11 +19,11 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
+
+        RouterModule.forChild(appRoutes),
         TranslateModule,
-        ComponentsModule,
         DirectivesModule,
         PipesModule,
-        RouterModule.forChild(appRoutes)
     ],
     providers: [],
     declarations: [

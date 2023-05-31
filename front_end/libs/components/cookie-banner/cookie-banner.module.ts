@@ -1,14 +1,17 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-
-import { ComponentsCoreModule } from '@components/components-core.module';
+import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
 import { NxCookieBannerComponent } from './cookie-banner.component';
 
 @NgModule({
     imports: [
-        AngularSvgIconModule.forRoot(),
-        ComponentsCoreModule,
+        CommonModule,
+        TranslateModule,
+        NgxTranslateCutModule,
+        AngularSvgIconModule,
     ],
     declarations: [
         NxCookieBannerComponent

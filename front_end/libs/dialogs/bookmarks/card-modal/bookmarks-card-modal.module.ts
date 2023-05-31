@@ -19,7 +19,7 @@ import { NxBookmarksCardModalComponent } from './bookmarks-card-modal.component'
         NxBookmarksCardModalComponent,
     ],
     imports: [
-        AngularSvgIconModule.forRoot(),
+        AngularSvgIconModule,
         CommonModule,
         ClipModule,
         ProcessButtonModule,

@@ -14,7 +14,7 @@ import { NxBookmarksCardComponent } from './bookmarks-card.component';
 
 @NgModule({
     imports: [
-        AngularSvgIconModule.forRoot(),
+        AngularSvgIconModule,
         CommonModule,
         LazyLoadImageModule,
         MultiLineEllipsisModule,

@@ -10,7 +10,7 @@ import { NxSearchableDropdown } from './searchable.component';
 @NgModule({
     imports: [
         CommonModule,
-        AngularSvgIconModule.forRoot(),
+        AngularSvgIconModule,
         DirectivesModule,
         NxSearchHighlightModule,
     ],

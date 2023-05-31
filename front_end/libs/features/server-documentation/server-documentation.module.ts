@@ -4,7 +4,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { NxServerDocumentationComponent } from './server-documentation.component';
@@ -16,11 +15,10 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
+        RouterModule.forChild(appRoutes),
         TranslateModule,
         DirectivesModule,
         PipesModule,
-        ComponentsModule,
-        RouterModule.forChild(appRoutes)
     ],
     providers: [],
     declarations: [NxServerDocumentationComponent],

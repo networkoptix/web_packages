@@ -1,6 +1,7 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { ComponentsCoreModule } from '@components/components-core.module';
+import { DirectivesModule } from '@directives/directives.module';
 
 import { AdditionalSystemsTileModule } from './additional-systems-tile/additional-systems-tile.module';
 import { NxDropMenu } from './drop-menu.component';
@@ -9,8 +10,9 @@ import { SystemTileModule } from './system-tile/system-tile.module';
 
 @NgModule({
     imports: [
+        CommonModule,
         AdditionalSystemsTileModule,
-        ComponentsCoreModule,
+        DirectivesModule,
         NavigationTileModule,
         SystemTileModule,
     ],

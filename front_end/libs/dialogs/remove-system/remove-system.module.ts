@@ -12,7 +12,7 @@ import { RemoveSystemModalContent } from './remove-system.component';
     imports: [
         CommonModule,
         FormsModule,
-        // AngularSvgIconModule.forRoot(),
+        // AngularSvgIconModule,
         TranslateModule,
 
         ProcessButtonModule,

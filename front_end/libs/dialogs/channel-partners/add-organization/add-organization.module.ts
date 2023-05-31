@@ -12,7 +12,7 @@ import { AddOrganizationModalContent } from './add-organization.component';
     imports: [
         CommonModule,
         FormsModule,
-        // AngularSvgIconModule.forRoot(),
+        // AngularSvgIconModule,
         TranslateModule,
 
         ProcessButtonModule,

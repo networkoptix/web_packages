@@ -12,7 +12,7 @@ import { AddPartnerModalContent } from './add-partner.component';
     imports: [
         CommonModule,
         FormsModule,
-        // AngularSvgIconModule.forRoot(),
+        // AngularSvgIconModule,
         TranslateModule,
 
         ProcessButtonModule,

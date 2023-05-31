@@ -23,7 +23,7 @@ import { NxMenuComponent } from './menu.component';
         FormsModule,
         RouterModule,
 
-        AngularSvgIconModule.forRoot(),
+        AngularSvgIconModule,
         TranslateModule,
 
         DirectivesModule,

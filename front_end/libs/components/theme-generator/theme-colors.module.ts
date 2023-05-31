@@ -1,17 +1,23 @@
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
-import { ComponentsCommonModule } from '@components/components-common.module';
-import { ComponentsCoreModule } from '@components/components-core.module';
+import { CheckboxModule } from '@components/checkbox/checkbox.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
+import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
+import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxThemeGeneratorComponent } from '@components/theme-generator/theme-colors.component';
 import { ThemeSwitcherModule } from '@components/theme-switcher/theme-switcher.module';
 
 @NgModule({
     imports: [
-        ComponentsCoreModule,
-        ComponentsCommonModule,
+        FormsModule,
+        TranslateModule,
+        CheckboxModule,
+        ContentBlockModule,
+        ContentBlockSectionModule,
+        NxGenericDropdownModule,
         ThemeSwitcherModule,
-        ContentBlockModule
     ],
     declarations: [
         NxThemeGeneratorComponent,

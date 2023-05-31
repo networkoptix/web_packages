@@ -13,7 +13,7 @@ import { NxMoreTagsModalContent } from './more-tags.component';
     imports: [
         CommonModule,
         FormsModule,
-        // AngularSvgIconModule.forRoot(),
+        // AngularSvgIconModule,
         TranslateModule,
 
         NxMoreFiltersBaseModule,

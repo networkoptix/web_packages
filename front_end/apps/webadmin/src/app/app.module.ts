@@ -20,6 +20,7 @@ import { RouterModule } from '@angular/router';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CookieService } from 'ngx-cookie-service';
 import { HoverPreloadModule } from 'ngx-hover-preload';
 import { NgxMaskModule } from 'ngx-mask';
@@ -32,6 +33,7 @@ import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 
 import { accountReducer } from '@common/store/account';
+import { ApplyModule } from '@components/apply/apply.module';
 import { NavFooterModule } from '@components/nav-footer/nav-footer.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { PopoverModule } from '@components/popover/popover.module';
@@ -83,6 +85,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         ServiceModule,
         AngularFireModule,
         AngularFireMessagingModule,
+        AngularSvgIconModule.forRoot(),
         TranslateModule.forRoot({
             compiler: {
                 provide: TranslateCompiler,
@@ -103,6 +106,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         NgxMaskModule.forRoot()
     ],
     providers: [
+        ApplyModule,
         Location,
         Title,
         CookieService,

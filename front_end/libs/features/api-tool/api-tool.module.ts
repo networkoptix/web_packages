@@ -8,9 +8,11 @@ import { DBConfig, NgxIndexedDBModule } from 'ngx-indexed-db';
 import { MarkdownModule } from 'ngx-markdown';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
 import { DevelopersMenuModule } from '@components/developers-menu/developers-menu.module';
+import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
+import { MultiSelectModule } from '@components/dropdowns/multi-select/multi-select.module';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 
 import { NxAPIToolComponent } from './api-tool.component';
 import { NxAPIToolDropdownsComponent } from './dropdowns/api-tool-dropdowns.component';
@@ -53,16 +55,18 @@ const dbConfig: DBConfig = {
 @NgModule({
     imports: [
         CommonModule,
-        TranslateModule,
-        ComponentsModule,
-        PipesModule,
-        MarkdownModule.forRoot(),
-        AngularSvgIconModule.forRoot(),
-        NgxIndexedDBModule.forRoot(dbConfig),
-        RouterModule.forChild(appRoutes),
         FormsModule,
+        RouterModule.forChild(appRoutes),
+        TranslateModule,
+        MarkdownModule.forRoot(),
+        AngularSvgIconModule,
+        NgxIndexedDBModule.forRoot(dbConfig),
+        DevelopersMenuModule,
+        MultiSelectModule,
+        NxGenericDropdownModule,
         PagePlaceHolderModule,
-        DevelopersMenuModule
+        PipesModule,
+        PreLoaderModule,
     ],
     providers: [],
     declarations: [

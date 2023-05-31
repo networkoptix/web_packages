@@ -6,9 +6,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
+import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
 import { DevelopersMenuModule } from '@components/developers-menu/developers-menu.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { SearchModule } from '@components/search/search.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { DevelopersGuard } from '@guards/developersGuard';
@@ -72,17 +73,18 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
-        TranslateModule,
-        ComponentsModule,
-        DirectivesModule,
         FormsModule,
-        PipesModule,
-        NxAboutModule,
-        AngularSvgIconModule.forRoot(),
         RouterModule.forChild(appRoutes),
+        TranslateModule,
+        AngularSvgIconModule,
+        ContentBlockModule,
+        ContentBlockSectionModule,
         DevelopersMenuModule,
+        DirectivesModule,
+        NxAboutModule,
+        PipesModule,
+        PreLoaderModule,
         SearchModule,
-        ContentBlockModule
     ],
     providers: [],
     declarations: [

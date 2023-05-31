@@ -1,13 +1,15 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
-import { ComponentsCoreModule } from '@components/components-core.module';
 import { ProcessButtonModule } from '@components/process-button/process-button.module';
 
 import { NxClientButtonComponent } from './client-button.component';
 
 @NgModule({
     imports: [
-        ComponentsCoreModule,
+        CommonModule,
+        TranslateModule,
         ProcessButtonModule,
     ],
     declarations: [

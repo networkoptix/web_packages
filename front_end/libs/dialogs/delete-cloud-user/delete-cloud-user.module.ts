@@ -11,7 +11,7 @@ import { DeleteCloudUserModalContent } from './delete-cloud-user.component';
     imports: [
         CommonModule,
         FormsModule,
-        // AngularSvgIconModule.forRoot(),
+        // AngularSvgIconModule,
         // TranslateModule,
 
         ProcessButtonModule,

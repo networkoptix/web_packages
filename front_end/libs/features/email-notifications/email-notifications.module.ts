@@ -1,3 +1,5 @@
+import { CdkStepperModule } from '@angular/cdk/stepper';
+import { TextFieldModule } from '@angular/cdk/text-field';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -6,8 +8,11 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NgxFileDropModule } from 'ngx-file-drop';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
+import { CheckboxModule } from '@components/checkbox/checkbox.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
+import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
+import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { StepperModule } from '@components/stepper/stepper.module';
 import { DirectivesModule } from '@directives/directives.module';
 
@@ -22,15 +27,20 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
-        TranslateModule,
-        ComponentsModule,
-        DirectivesModule,
-        PipesModule,
         FormsModule,
-        NgxFileDropModule,
         RouterModule.forChild(appRoutes),
+        TranslateModule,
+        CdkStepperModule,
+        NgxFileDropModule,
+        TextFieldModule,
+        CheckboxModule,
+        ContentBlockModule,
+        ContentBlockSectionModule,
+        DirectivesModule,
+        NxGenericDropdownModule,
+        PipesModule,
+        PreLoaderModule,
         StepperModule,
-        ContentBlockModule
     ],
     providers: [],
     declarations: [

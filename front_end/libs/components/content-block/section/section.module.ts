@@ -1,12 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-
-import { ComponentsCoreModule } from '@components/components-core.module';
 
 import { NxContentBlockSectionComponent } from './section.component';
 
 @NgModule({
     imports: [
-        ComponentsCoreModule,
+        CommonModule
     ],
     declarations: [
         NxContentBlockSectionComponent

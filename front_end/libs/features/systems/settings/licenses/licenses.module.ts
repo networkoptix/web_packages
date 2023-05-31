@@ -8,10 +8,13 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxMaskModule } from 'ngx-mask';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
+import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
+import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { InfoBlockModule } from '@components/info-block/info-block.module';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { ProcessButtonModule } from '@components/process-button/process-button.module';
 import { LicenseSummaryModule } from '@components/summary/summary.module';
 import { DirectivesModule } from '@directives/directives.module';
 
@@ -23,19 +26,22 @@ import { NxLicenseTrialComponent } from './trial/trial.component';
 @NgModule({
     imports: [
         CommonModule,
-        RouterModule,
         FormsModule,
+        RouterModule,
         TranslateModule,
-        ComponentsModule,
-        DirectivesModule,
-        PipesModule,
-        AngularSvgIconModule.forRoot(),
-        OverlayModule,
+        AngularSvgIconModule,
         NgxMaskModule.forRoot(),
-        PagePlaceHolderModule,
-        InfoBlockModule,
+        OverlayModule,
         ContentBlockModule,
-        LicenseSummaryModule
+        ContentBlockSectionModule,
+        DirectivesModule,
+        InfoBlockModule,
+        LicenseSummaryModule,
+        NxGenericDropdownModule,
+        PagePlaceHolderModule,
+        PipesModule,
+        PreLoaderModule,
+        ProcessButtonModule,
     ],
     providers: [
     ],

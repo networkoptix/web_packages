@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { NxGridLayoutComponent } from './layout.component';
@@ -16,7 +15,6 @@ import { NxGridLayoutComponent } from './layout.component';
     imports: [
         CommonModule,
         TranslateModule,
-        ComponentsModule,
         DirectivesModule,
         PipesModule
         // RouterModule.forChild(appRoutes)

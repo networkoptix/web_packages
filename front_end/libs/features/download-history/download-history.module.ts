@@ -4,7 +4,8 @@ import { ActivatedRouteSnapshot, Resolve, RouterModule, Routes } from '@angular/
 import { TranslateModule } from '@ngx-translate/core';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
+import { FooterModule } from '@components/footer/footer.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { DownloadHistoryComponent } from './download-history.component';
@@ -43,11 +44,12 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
+        RouterModule.forChild(appRoutes),
         TranslateModule,
         DirectivesModule,
+        FooterModule,
         PipesModule,
-        ComponentsModule,
-        RouterModule.forChild(appRoutes)
+        PreLoaderModule,
     ],
     providers: [
         TypeResolver

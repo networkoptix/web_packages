@@ -12,7 +12,7 @@ import { Mandatory2faModalContent } from './mandatory-2fa.component';
     imports: [
         CommonModule,
         FormsModule,
-        // AngularSvgIconModule.forRoot(),
+        // AngularSvgIconModule,
         TranslateModule,
 
         ProcessButtonModule,

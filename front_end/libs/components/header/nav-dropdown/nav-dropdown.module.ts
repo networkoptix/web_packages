@@ -1,14 +1,18 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { ComponentsCoreModule } from '@components/components-core.module';
+import { DirectivesModule } from '@directives/directives.module';
 
 import { NxNavDropdownComponent } from './nav-dropdown.component';
 
 @NgModule({
     imports: [
-        AngularSvgIconModule.forRoot(),
-        ComponentsCoreModule,
+        CommonModule,
+        RouterModule,
+        AngularSvgIconModule,
+        DirectivesModule
     ],
     declarations: [
         NxNavDropdownComponent

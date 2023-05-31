@@ -10,7 +10,7 @@ import { NxTimeSelectorComponent } from './time-selector.component';
     imports: [
         CommonModule,
         FormsModule,
-        AngularSvgIconModule.forRoot(),
+        AngularSvgIconModule,
         // TranslateModule,
         CdkMenuModule,
     ],

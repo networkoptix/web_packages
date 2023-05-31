@@ -1,8 +1,7 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
 
-import { ComponentsCommonModule } from '@components/components-common.module';
-import { ComponentsCoreModule } from '@components/components-core.module';
 import { LayoutGridModule } from '@components/layout-grid/layout-grid.module';
 import { LayoutPtzModule } from '@components/layout-ptz/layout-ptz.module';
 import { LayoutTimelineModule } from '@components/layout-timeline/layout-timeline.module';
@@ -12,8 +11,7 @@ import { NxLayoutViewComponent } from './layout-view.component';
 
 @NgModule({
     imports: [
-        ComponentsCoreModule,
-        ComponentsCommonModule,
+        CommonModule,
         LayoutGridModule,
         LayoutTimelineModule,
         LayoutPtzModule,

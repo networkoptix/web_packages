@@ -13,7 +13,7 @@ import { NxEditPartnerUserModalContent } from './edit-partner-user.component';
     imports: [
         CommonModule,
         FormsModule,
-        // AngularSvgIconModule.forRoot(),
+        // AngularSvgIconModule,
         TranslateModule,
 
         NxGenericDropdownModule,

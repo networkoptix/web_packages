@@ -12,7 +12,7 @@ import { UpdateCameraCredentialsModalContent } from './update-camera-credentials
     imports: [
         CommonModule,
         FormsModule,
-        // AngularSvgIconModule.forRoot(),
+        // AngularSvgIconModule,
         TranslateModule,
 
         ProcessButtonModule,

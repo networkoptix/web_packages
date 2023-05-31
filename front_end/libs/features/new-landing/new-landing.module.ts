@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { ComponentsModule } from '@components/components.module';
+import { FooterModule } from '@components/footer/footer.module';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { NxBackgroundGraphicComponent } from './background-graphic/background-graphic.component';
@@ -34,11 +34,11 @@ const appRoutes: Routes = [
     ],
     imports: [
         CommonModule,
-        DirectivesModule,
-        TranslateModule,
-        ComponentsModule,
         RouterModule.forChild(appRoutes),
-        AngularSvgIconModule.forRoot()
+        TranslateModule,
+        AngularSvgIconModule,
+        DirectivesModule,
+        FooterModule,
     ],
     exports: []
 })

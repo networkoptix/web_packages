@@ -1,20 +1,21 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CdkMenuModule } from '@angular/cdk/menu';
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-// import { AngularSvgIconModule } from 'angular-svg-icon';
 import { StoreModule } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { accountReducer } from '@common/store/account';
 import { CheckboxModule } from '@components/checkbox/checkbox.module';
-import { ComponentsCoreModule } from '@components/components-core.module';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { NxSearchHighlightModule } from '@components/search-highlight/search-highlight.module';
 import { NxBaseTableModule } from '@components/table/table.module';
 import { NxTabsComponent } from '@components/tabs/tabs.component';
 import { NxTabsDirective } from '@components/tabs/tabs.directive';
+import { DirectivesModule } from '@directives/directives.module';
 import { AuthGuard } from '@guards/authGuard';
 import { NxUsersTableComponent } from '@pages/home/components/users-table/users-table.component';
 
@@ -75,18 +76,20 @@ const homeRoutes: Routes = [
 
 @NgModule({
     imports: [
-        AngularSvgIconModule.forRoot(),
-        ComponentsCoreModule,
-        DragDropModule,
-        PreLoaderModule,
-        NxSearchHighlightModule,
+        CommonModule,
+        RouterModule.forChild(homeRoutes),
+        TranslateModule,
+        AngularSvgIconModule,
         CdkMenuModule,
+        DragDropModule,
         StoreModule.forFeature('groups', groupsReducer),
         StoreModule.forFeature('account', accountReducer),
         StoreModule.forFeature('channelPartners', channelPartnersReducer),
-        RouterModule.forChild(homeRoutes),
         CheckboxModule,
+        DirectivesModule,
         NxBaseTableModule,
+        NxSearchHighlightModule,
+        PreLoaderModule,
     ],
     declarations: [
         NxOrganizationsComponent,

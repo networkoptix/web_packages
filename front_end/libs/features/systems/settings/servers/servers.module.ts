@@ -6,12 +6,17 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
 import { AlertBlockModule } from '@components/content-block/alert/block.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
+import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
+import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
+import { EditableModule } from '@components/editable/editable.module';
 import { InfoBlockModule } from '@components/info-block/info-block.module';
+import { NumericModule } from '@components/numeric-input/numeric.module';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { SectionPlaceholderModule } from '@components/placeholders/section/section-placeholder.module';
+import { ProcessButtonModule } from '@components/process-button/process-button.module';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { NxCloudStorageModule } from '../cloud-storage/cloud-storage.module';
@@ -32,19 +37,24 @@ import {
 @NgModule({
     imports: [
         CommonModule,
-        RouterModule,
         FormsModule,
+        RouterModule,
         TranslateModule,
-        ComponentsModule,
-        DirectivesModule,
-        PipesModule,
-        AngularSvgIconModule.forRoot(),
-        NxCloudStorageModule,
-        PagePlaceHolderModule,
-        SectionPlaceholderModule,
-        InfoBlockModule,
+        AngularSvgIconModule,
         AlertBlockModule,
-        ContentBlockModule
+        ContentBlockModule,
+        ContentBlockSectionModule,
+        DirectivesModule,
+        EditableModule,
+        InfoBlockModule,
+        NxCloudStorageModule,
+        NxGenericDropdownModule,
+        NumericModule,
+        PagePlaceHolderModule,
+        PipesModule,
+        PreLoaderModule,
+        ProcessButtonModule,
+        SectionPlaceholderModule,
     ],
     providers: [
     ],

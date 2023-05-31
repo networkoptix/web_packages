@@ -3,12 +3,15 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
+import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
+import { FooterModule } from '@components/footer/footer.module';
 import { NavFooterModule } from '@components/nav-footer/nav-footer.module';
-import { SharedComponentsModule } from '@components/shared-components.module';
+import { ProcessButtonModule } from '@components/process-button/process-button.module';
+import { ToastContainerModule } from '@components/toast/toast-container.module';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { NxAuthorizeActivateAccountComponent } from './activate-account/activate-account.component';
@@ -67,22 +70,25 @@ export const authorizedRoutes: Routes = [
         FormsModule,
         HttpClientModule,
         RouterModule.forChild(authorizedRoutes),
-        AngularSvgIconModule.forRoot(),
+        AngularSvgIconModule,
+        StoreModule.forRoot({}),
         DirectivesModule,
         PipesModule,
-        SharedComponentsModule,
+        FooterModule,
         NavFooterModule,
+        ProcessButtonModule,
+        ToastContainerModule,
+        NxAuthorizeCreateAccountComponent,
+        NxAuthorizeResetPasswordComponent
     ],
     providers: [],
     declarations: [
         NxAuthorizeComponent,
         NxAuthorizeEmailComponent,
         NxAuthorizePasswordComponent,
-        NxAuthorizeCreateAccountComponent,
         NxAuthorizeActivateAccountComponent,
         NxAuthorizeConfirmationComponent,
         NxAuthorizeNotSecureComponent,
-        NxAuthorizeResetPasswordComponent,
         NxAuthorizeResetRequestComponent,
         NxAuthorizeConnectErrorComponent,
         NxAuthorizeAuthCodeComponent,

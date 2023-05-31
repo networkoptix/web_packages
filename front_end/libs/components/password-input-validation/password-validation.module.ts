@@ -1,12 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-
-import { ComponentsCoreModule } from '@components/components-core.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { NxPasswordValidationComponent } from './password-validation.component';
 
 @NgModule({
     imports: [
-        ComponentsCoreModule,
+        CommonModule,
+        TranslateModule
     ],
     declarations: [
         NxPasswordValidationComponent

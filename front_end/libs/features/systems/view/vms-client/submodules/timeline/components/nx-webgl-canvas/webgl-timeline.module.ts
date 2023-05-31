@@ -43,7 +43,7 @@ import {
     ],
     imports: [
         CommonModule,
-        AngularSvgIconModule.forRoot(),
+        AngularSvgIconModule,
         TranslateModule,
         DragDropModule,
         DirectivesModule,

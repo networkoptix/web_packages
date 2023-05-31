@@ -12,7 +12,7 @@ import { ConnectCloudModalContent } from './connect-cloud.component';
     imports: [
         CommonModule,
         FormsModule,
-        // AngularSvgIconModule.forRoot(),
+        // AngularSvgIconModule,
         TranslateModule,
 
         ProcessButtonModule,

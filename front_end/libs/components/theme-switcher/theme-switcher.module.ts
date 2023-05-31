@@ -1,7 +1,8 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { ComponentsCoreModule } from '@components/components-core.module';
 import { RadioModule } from '@components/radio/radio.module';
 
 import { ContentBlockModule } from '../content-block/content-block.module';
@@ -11,8 +12,9 @@ import { NxThemeSwitcherComponent } from './theme-switcher.component';
 
 @NgModule({
     imports: [
-        ComponentsCoreModule,
-        AngularSvgIconModule.forRoot(),
+        CommonModule,
+        FormsModule,
+        AngularSvgIconModule,
         ContentBlockSectionModule,
         ContentBlockModule,
         RadioModule,

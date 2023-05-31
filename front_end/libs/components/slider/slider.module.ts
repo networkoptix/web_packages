@@ -1,14 +1,11 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NgModule } from '@angular/core';
 
-import { ComponentsCoreModule } from '@components/components-core.module';
-
 import { NxSliderComponent } from './slider.component';
 
 @NgModule({
     imports: [
-        DragDropModule,
-        ComponentsCoreModule,
+        DragDropModule
     ],
     declarations: [
         NxSliderComponent

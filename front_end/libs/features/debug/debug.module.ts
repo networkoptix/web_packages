@@ -5,8 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
-import { ClientButtonModule } from '@components/open-client/open-client.module';
+import { ClientButtonModule } from '@components/open-client-button/client-button.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { AuthGuard } from '@guards/authGuard';
 
@@ -25,12 +24,11 @@ const appRoutes: Routes = [
     imports: [
         CommonModule,
         FormsModule,
+        RouterModule.forChild(appRoutes),
         TranslateModule,
-        ComponentsModule,
+        ClientButtonModule,
         DirectivesModule,
         PipesModule,
-        RouterModule.forChild(appRoutes),
-        ClientButtonModule
     ],
     providers: [],
     declarations: [

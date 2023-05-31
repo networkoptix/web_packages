@@ -1,28 +1,36 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CdkTreeModule } from '@angular/cdk/tree';
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
 
-import { ComponentsCommonModule } from '@components/components-common.module';
-import { ComponentsCoreModule } from '@components/components-core.module';
-import { ComponentsModule } from '@components/components.module';
 import { MonitoringGraphModule } from '@components/graph/graph.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { VideoPlayerModule } from '@components/video-player/video-player.module';
+import { DirectivesModule } from '@directives/directives.module';
+import { ResizeModule } from '@directives/resize/resize.module';
+import { NxImageComponent } from '@pages/health/table-components/image/image.component';
+import { PipesModule } from '@pipes/pipes.module';
 
 import { NxLayoutGridComponent } from './layout-grid.component';
 
 @NgModule({
     imports: [
-        ComponentsCoreModule,
-        VideoPlayerModule,
-        ComponentsCommonModule,
-        DragDropModule,
-        ComponentsModule,
+        CommonModule,
+        TranslateModule,
+        AngularSvgIconModule,
         CdkTreeModule,
+        DragDropModule,
+        DirectivesModule,
         MonitoringGraphModule,
+        NxImageComponent,
+        PipesModule,
+        PreLoaderModule,
+        ResizeModule,
         TourMatMenuModule,
-        AngularSvgIconModule.forRoot(),
+        VideoPlayerModule,
     ],
     declarations: [
         NxLayoutGridComponent

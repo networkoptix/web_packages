@@ -1,14 +1,18 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { ComponentsCoreModule } from '@components/components-core.module';
+import { DirectivesModule } from '@directives/directives.module';
+import { PipesModule } from '@pipes/pipes.module';
 
 import { NxLanguageDropdown, NxHeaderLanguageDropdown } from './language.component';
 
 @NgModule({
     imports: [
-        AngularSvgIconModule.forRoot(),
-        ComponentsCoreModule,
+        CommonModule,
+        PipesModule,
+        AngularSvgIconModule,
+        DirectivesModule
     ],
     declarations: [
         NxLanguageDropdown,

@@ -15,7 +15,7 @@ import { NxAddOrgUserModalContent } from './add-org-user.component';
     imports: [
         CommonModule,
         FormsModule,
-        // AngularSvgIconModule.forRoot(),
+        // AngularSvgIconModule,
         TranslateModule,
 
         EmailModule,

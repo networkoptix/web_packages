@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
-import { ComponentsCoreModule } from '@components/components-core.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
 import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
@@ -11,7 +11,7 @@ import { NxMonitoringGraphComponent } from './graph.component';
 
 @NgModule({
     imports: [
-        ComponentsCoreModule,
+        TranslateModule,
         ContentBlockModule,
         ContentBlockSectionModule,
         PreLoaderModule,

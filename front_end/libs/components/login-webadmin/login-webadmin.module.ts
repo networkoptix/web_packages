@@ -13,7 +13,7 @@ import { LoginWebadminModalContent } from './login-webadmin.component';
 @NgModule({
     imports: [
         PreLoaderModule,
-        AngularSvgIconModule.forRoot(),
+        AngularSvgIconModule,
         ProcessButtonModule,
         PipesModule,
         TranslateModule,

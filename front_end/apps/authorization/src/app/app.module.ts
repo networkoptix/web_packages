@@ -3,6 +3,7 @@ import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule/* , Inject, APP_ID, PLATFORM_ID */ } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { MESSAGE_FORMAT_CONFIG, TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 
@@ -36,6 +37,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
                 useClass: TranslateMessageFormatCompiler
             }
         }),
+        AngularSvgIconModule.forRoot(),
         NgxWebstorageModule.forRoot()
     ],
     providers: [

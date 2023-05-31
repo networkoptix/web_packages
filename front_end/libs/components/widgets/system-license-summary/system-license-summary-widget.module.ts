@@ -1,6 +1,9 @@
+import { CdkStepperModule } from '@angular/cdk/stepper';
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
-import { ComponentsCoreModule } from '@components/components-core.module';
+import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { LoggerModule } from '@components/logger/logger.module';
 import { NumericModule } from '@components/numeric-input/numeric.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
@@ -11,12 +14,15 @@ import { NxSystemLicenseSummaryWidget } from './system-license-summary-widget.co
 
 @NgModule({
     imports: [
-        ComponentsCoreModule,
+        CommonModule,
+        FormsModule,
+        CdkStepperModule,
+        LicenseSummaryModule,
         LoggerModule,
+        NumericModule,
+        NxGenericDropdownModule,
         PreLoaderModule,
         StepperModule,
-        LicenseSummaryModule,
-        NumericModule,
     ],
     declarations: [
         NxSystemLicenseSummaryWidget

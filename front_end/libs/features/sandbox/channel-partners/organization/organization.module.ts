@@ -9,7 +9,7 @@ import { NxOrganizationComponent } from './organization.component';
     imports: [
         CommonModule,
         // FormsModule,
-        // AngularSvgIconModule.forRoot(),
+        // AngularSvgIconModule,
         // TranslateModule,
 
         ReactiveComponentModule,

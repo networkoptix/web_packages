@@ -1,12 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-
-import { ComponentsCoreModule } from '@components/components-core.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { NxProcessCancelButtonComponent } from './process-cancel-button.component';
 
 @NgModule({
     imports: [
-        ComponentsCoreModule,
+        CommonModule,
+        TranslateModule
     ],
     declarations: [
         NxProcessCancelButtonComponent

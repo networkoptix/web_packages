@@ -13,7 +13,7 @@ import { NxDateAndTimeFilterComponent } from './date-and-time-filter.component';
         CommonModule,
         MatDatepickerModule,
         MatNativeDateModule,
-        AngularSvgIconModule.forRoot(),
+        AngularSvgIconModule,
 
         NxTimeSelectorModule,
     ],

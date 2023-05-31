@@ -8,16 +8,18 @@ import { NgxFileDropModule } from 'ngx-file-drop';
 
 import { MenuModule } from '@app/menu/menu.module';
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
+import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
 import { InfoBlockModule } from '@components/info-block/info-block.module';
 import { PaginatorModule } from '@components/paginator/paginator.module';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { SearchModule } from '@components/search/search.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { AuthGuard } from '@guards/authGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
+import { NxImageComponent } from '@pages/health/table-components/image/image.component';
 import { SystemTitleResolver } from '@resolvers/system-title-resolver';
 
 import { NxSystemAlertsComponent } from './alerts/alerts.component';
@@ -91,22 +93,23 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
-        RouterModule,
         FormsModule,
-        TranslateModule,
-        ComponentsModule,
-        DirectivesModule,
-        PipesModule,
-        AngularSvgIconModule.forRoot(),
-        NgxFileDropModule,
-        PipesModule,
+        RouterModule,
         RouterModule.forChild(appRoutes),
+        TranslateModule,
+        AngularSvgIconModule,
+        NgxFileDropModule,
+        ContentBlockModule,
+        ContentBlockSectionModule,
+        DirectivesModule,
+        InfoBlockModule,
         MenuModule,
+        NxImageComponent,
         PagePlaceHolderModule,
         PaginatorModule,
-        InfoBlockModule,
+        PipesModule,
+        PreLoaderModule,
         SearchModule,
-        ContentBlockModule
     ],
     providers: [NxHealthLayoutService],
     declarations: [

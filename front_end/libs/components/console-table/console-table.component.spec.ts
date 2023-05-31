@@ -15,7 +15,6 @@ import { takeUntil } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
 import { PaginatorModule } from '@components/paginator/paginator.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { SearchModule } from '@components/search/search.module';
@@ -93,10 +92,9 @@ describe('NxConsoleTableComponent', () => {
                 imports: [
                     MockModule(CommonModule),
                     MockModule(FormsModule),
-                    AngularSvgIconModule.forRoot(),
+                    AngularSvgIconModule,
                     HttpClientTestingModule,
                     TranslateModule.forRoot(),
-                    ComponentsModule,
                     DirectivesModule,
                     MockModule(PipesModule),
                     RouterTestingModule,

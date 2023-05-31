@@ -1,14 +1,14 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { ComponentsCommonModule } from '@components/components-common.module';
-import { ComponentsCoreModule } from '@components/components-core.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 
 import { NxLayoutTimelineComponent } from './layout-timeline.component';
 
 @NgModule({
     imports: [
-        ComponentsCoreModule,
-        ComponentsCommonModule
+        CommonModule,
+        PreLoaderModule,
     ],
     declarations: [
         NxLayoutTimelineComponent

@@ -1,14 +1,15 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-
-import { ComponentsCoreModule } from '@components/components-core.module';
 
 import { NxPlayerPlaceholderComponent } from './player-placeholder.component';
 
 @NgModule({
     imports: [
-        AngularSvgIconModule.forRoot(),
-        ComponentsCoreModule,
+        CommonModule,
+        RouterModule,
+        AngularSvgIconModule,
     ],
     declarations: [
         NxPlayerPlaceholderComponent

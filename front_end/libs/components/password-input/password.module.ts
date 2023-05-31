@@ -13,7 +13,7 @@ import { NxPasswordComponent } from './password.component';
         CommonModule,
         FormsModule,
         DirectivesModule,
-        AngularSvgIconModule.forRoot(),
+        AngularSvgIconModule,
         PasswordTagValidationModule,
     ],
     declarations: [

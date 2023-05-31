@@ -11,7 +11,7 @@ import { NxChannelPartnerComponent } from './channel-partner.component';
         CommonModule,
         // FormsModule,
         RouterModule,
-        // AngularSvgIconModule.forRoot(),
+        // AngularSvgIconModule,
         // TranslateModule,
 
         ReactiveComponentModule,

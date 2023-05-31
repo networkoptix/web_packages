@@ -3,10 +3,12 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
 import { MenuModule } from '@app/menu/menu.module';
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
+import { FooterModule } from '@components/footer/footer.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
@@ -51,17 +53,18 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
-        TranslateModule,
-        ComponentsModule,
-        DirectivesModule,
-        PipesModule,
         FormsModule,
+        RouterModule.forChild(appRoutes),
+        TranslateModule,
+        NgxTranslateCutModule,
+        DirectivesModule,
+        FooterModule,
+        MenuModule,
         NxAccountSettingsModule,
         NxAccountPasswordModule,
         NxAccountSecurityModule,
-
-        RouterModule.forChild(appRoutes),
-        MenuModule
+        PipesModule,
+        PreLoaderModule,
     ],
     providers: [
         TypeResolver

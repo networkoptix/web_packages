@@ -86,20 +86,6 @@ const lazyRoutes: Routes = [
         loadChildren: () => import('@pages/systems/list/list.module').then(m => m.NxSystemsListModule)
     },
     {
-        path: 'systems/groups',
-        loadChildren: () => import('@pages/systems/groups/groups.module').then(m => m.NxSystemGroupsModule),
-        // canActivate: [AuthGuard],
-        // uncomment to enable the feature flag:
-        // canLoad: [FeatureGuard],
-        // data: {
-        //     flags: FeatureFlagStrings.systemGroups
-        // },
-    },
-    // {
-    //     path: 'systems/groupsbak',
-    //     loadChildren: () => import('@pages/systems/groups.bak/groups.module').then(m => m.NxSystemGroupsModule),
-    // },
-    {
         path: 'download',
         loadChildren: () => import('@pages/download/download.module').then(m => m.DownloadModule)
     },

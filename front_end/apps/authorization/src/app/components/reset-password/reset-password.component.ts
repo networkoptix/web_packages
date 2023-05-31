@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
     Component,
     EventEmitter,
@@ -8,8 +9,14 @@ import {
     OnChanges,
 } from '@angular/core';
 // import type { NgForm } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { PasswordValidationModule } from '@components/password-input-validation/password-validation.module';
+import { PasswordModule } from '@components/password-input/password.module';
+import { ProcessButtonModule } from '@components/process-button/process-button.module';
 import { icons } from '@lib/variables/static-variables';
 import { Process } from '@services/process.service/process';
 import { NgChanges } from '@utils/ng-changes';
@@ -19,6 +26,8 @@ import type { AuthorizeStateType } from '../authorize.component.types';
 @UntilDestroy({ checkProperties: true })
 @Component({
     selector: 'nx-authorize-reset-password-component',
+    standalone: true,
+    imports: [CommonModule, FormsModule, TranslateModule, AngularSvgIconModule, PasswordModule, PasswordValidationModule, ProcessButtonModule],
     templateUrl: 'reset-password.component.html',
     styleUrls: ['reset-password.component.scss'],
 })

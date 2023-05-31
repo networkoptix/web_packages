@@ -6,24 +6,30 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
+import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
 import { PasswordTagValidationModule } from '@components/password-input-tag-validation/password-tag-validation.module';
+import { PasswordValidationModule } from '@components/password-input-validation/password-validation.module';
+import { PasswordModule } from '@components/password-input/password.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { NxAccountPasswordComponent } from '@pages/account/password/password.component';
 
 @NgModule({
     imports: [
-        AngularSvgIconModule.forRoot(),
         CommonModule,
-        RouterModule,
         FormsModule,
+        RouterModule,
         TranslateModule,
-        ComponentsModule,
+        AngularSvgIconModule,
+        ContentBlockModule,
+        ContentBlockSectionModule,
         DirectivesModule,
+        PasswordModule,
         PasswordTagValidationModule,
+        PasswordValidationModule,
         PipesModule,
-        ContentBlockModule
+        PreLoaderModule,
     ],
     providers: [],
     declarations: [

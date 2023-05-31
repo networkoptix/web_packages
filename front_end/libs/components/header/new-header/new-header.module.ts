@@ -1,6 +1,5 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-
-import { ComponentsCoreModule } from '@components/components-core.module';
 
 import { HeaderLevelOneModule } from './header-level-one/header-level-one.module';
 import { HeaderLevelTwoModule } from './header-level-two/header-level-two.module';
@@ -9,7 +8,7 @@ import { NxNewHeaderComponent } from './new-header.component';
 
 @NgModule({
     imports: [
-        ComponentsCoreModule,
+        CommonModule,
         HeaderLevelOneModule,
         HeaderLevelTwoModule,
         HeaderMobileModule,

@@ -20,7 +20,6 @@ import { of } from 'rxjs';
 
 import { PipesModule } from '@app/pipes/pipes.module';
 import staticLang from '@common/language/language_i18n_static.json';
-import { SharedComponentsModule } from '@components/shared-components.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
@@ -232,7 +231,6 @@ describe('NxAuthorizeComponent', () => {
                 AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule,
                 TranslateModule.forRoot(),
-                SharedComponentsModule,
                 DirectivesModule,
                 PipesModule,
             ],

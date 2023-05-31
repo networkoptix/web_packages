@@ -15,7 +15,7 @@ import { NxGenericDropdownItemSVG } from './item-icon/item-icon.component';
         CommonModule,
         FormsModule,
         TranslateModule,
-        AngularSvgIconModule.forRoot(),
+        AngularSvgIconModule,
         DirectivesModule,
         PipesModule,
     ],

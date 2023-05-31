@@ -23,6 +23,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
+import { TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CookieService } from 'ngx-cookie-service';
 import { HoverPreloadModule } from 'ngx-hover-preload';
 import { NgxMaskModule } from 'ngx-mask';
@@ -36,7 +38,7 @@ import { NgxWebstorageModule } from 'ngx-webstorage';
 
 import { accountReducer, AccountSync } from '@common/store/account';
 import { SystemsSync } from '@common/store/systems/systems.sync';
-// import { LoginWebadminModule } from '@components/login-webadmin/login-webadmin.module';
+import { ApplyModule } from '@components/apply/apply.module';
 import { NavFooterModule } from '@components/nav-footer/nav-footer.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { PopoverModule } from '@components/popover/popover.module';
@@ -92,6 +94,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         ServiceModule,
         AngularFireModule,
         AngularFireMessagingModule,
+        AngularSvgIconModule.forRoot(),
         TranslateModule.forRoot({
             compiler: {
                 provide: TranslateCompiler,
@@ -121,6 +124,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         Title,
         CookieService,
         NxUriCacheService,
+        ApplyModule,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: NxSwCacheInterceptor,
@@ -172,7 +176,8 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         NxBootstrapProvider,
         NxSwPromptUpdateService,
         { provide: APP_INITIALIZER, useFactory: NxBootstrapProviderFactory, deps: [NxBootstrapProvider], multi: true },
-        { provide: MESSAGE_FORMAT_CONFIG, useValue: { disablePluralKeyChecks: true } }
+        { provide: MESSAGE_FORMAT_CONFIG, useValue: { disablePluralKeyChecks: true } },
+        { provide: TINYMCE_SCRIPT_SRC, useValue: 'static/tinymce/tinymce.min.js' },
     ],
     declarations: [
         AppComponent

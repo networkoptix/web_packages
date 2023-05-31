@@ -6,8 +6,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
+import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
+import { LanguageModule } from '@components/dropdowns/language/language.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { ThemeSwitcherModule } from '@components/theme-switcher/theme-switcher.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { NxAccountSettingsComponent } from '@pages/account/settings/settings.component';
@@ -15,15 +17,17 @@ import { NxAccountSettingsComponent } from '@pages/account/settings/settings.com
 @NgModule({
     imports: [
         CommonModule,
-        RouterModule,
         FormsModule,
+        RouterModule,
         TranslateModule,
-        ComponentsModule,
+        AngularSvgIconModule,
+        ContentBlockModule,
+        ContentBlockSectionModule,
         DirectivesModule,
+        LanguageModule,
         PipesModule,
-        AngularSvgIconModule.forRoot(),
+        PreLoaderModule,
         ThemeSwitcherModule,
-        ContentBlockModule
     ],
     providers: [],
     declarations: [

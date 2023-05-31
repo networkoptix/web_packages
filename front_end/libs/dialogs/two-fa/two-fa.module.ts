@@ -16,7 +16,7 @@ import { TwoFAModalContent } from './two-fa.component';
         CommonModule,
         FormsModule,
 
-        AngularSvgIconModule.forRoot(),
+        AngularSvgIconModule,
         QrCodeModule,
         TranslateModule,
 

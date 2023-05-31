@@ -1,12 +1,16 @@
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { NgxFileDropModule } from 'ngx-file-drop';
 
-import { ComponentsCoreModule } from '@components/components-core.module';
+import { PipesModule } from '@pipes/pipes.module';
 
 import { NxThirdPartyWidgetComponent } from './third-party-widget.component';
 
 @NgModule({
     imports: [
-        ComponentsCoreModule,
+        FormsModule,
+        NgxFileDropModule,
+        PipesModule
     ],
     declarations: [
         NxThirdPartyWidgetComponent

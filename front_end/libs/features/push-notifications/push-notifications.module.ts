@@ -5,8 +5,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
+import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 
@@ -25,13 +26,14 @@ export function initializeApp(CONFIG: NxConfigService) {
 @NgModule({
     imports: [
         CommonModule,
-        TranslateModule,
-        ComponentsModule,
-        DirectivesModule,
-        PipesModule,
         FormsModule,
         RouterModule.forChild(appRoutes),
-        ContentBlockModule
+        TranslateModule,
+        ContentBlockModule,
+        ContentBlockSectionModule,
+        DirectivesModule,
+        PipesModule,
+        PreLoaderModule,
     ],
     providers: [
     ],

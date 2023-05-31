@@ -9,7 +9,7 @@ import { NewFeatureInformationModalContent } from './new-feature.component';
     imports: [
         CommonModule,
         // FormsModule,
-        AngularSvgIconModule.forRoot(),
+        AngularSvgIconModule,
         TranslateModule,
     ],
     declarations: [

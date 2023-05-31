@@ -1,6 +1,7 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
-import { ComponentsCoreModule } from '@components/components-core.module';
 import { AccountSettingsModule } from '@components/dropdowns/account-settings/account-settings.module';
 import { LanguageModule } from '@components/dropdowns/language/language.module';
 
@@ -8,7 +9,8 @@ import { NxHeaderLevelOneComponent } from './header-level-one.component';
 
 @NgModule({
     imports: [
-        ComponentsCoreModule,
+        CommonModule,
+        TranslateModule,
         AccountSettingsModule,
         LanguageModule
     ],

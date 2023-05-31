@@ -11,7 +11,7 @@ import { RemoveUserModalContent } from './remove-user.component';
     imports: [
         CommonModule,
         // FormsModule,
-        // AngularSvgIconModule.forRoot(),
+        // AngularSvgIconModule,
         TranslateModule,
 
         ProcessButtonModule,

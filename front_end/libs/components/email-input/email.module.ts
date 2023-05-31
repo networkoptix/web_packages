@@ -1,12 +1,16 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
-import { ComponentsCoreModule } from '@components/components-core.module';
+import { DirectivesModule } from '@directives/directives.module';
 
 import { NxEmailComponent } from './email.component';
 
 @NgModule({
     imports: [
-        ComponentsCoreModule,
+        CommonModule,
+        FormsModule,
+        DirectivesModule
     ],
     declarations: [
         NxEmailComponent

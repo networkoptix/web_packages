@@ -5,7 +5,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
 import { SearchModule } from '@components/search/search.module';
 import { DirectivesModule } from '@directives/directives.module';
 
@@ -24,13 +23,12 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
-        TranslateModule,
-        ComponentsModule,
-        DirectivesModule,
-        PipesModule,
         FormsModule,
-        IntegrationsListModule,
         RouterModule.forChild(appRoutes),
+        TranslateModule,
+        DirectivesModule,
+        IntegrationsListModule,
+        PipesModule,
         SearchModule
     ],
     providers: [],

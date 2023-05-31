@@ -1,7 +1,6 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-
-import { ComponentsCoreModule } from '@components/components-core.module';
 
 import { HeaderLogoAreaModule } from '../logo-area/logo-area.module';
 
@@ -10,8 +9,8 @@ import { NxHeaderMobileComponent } from './mobile.component';
 
 @NgModule({
     imports: [
-        AngularSvgIconModule.forRoot(),
-        ComponentsCoreModule,
+        CommonModule,
+        AngularSvgIconModule,
         HeaderLogoAreaModule,
         MobileHeaderMenuModule,
     ],

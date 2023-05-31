@@ -13,7 +13,7 @@ import { NxEditPartnerModalContent } from './edit-partner.component';
     imports: [
         CommonModule,
         FormsModule,
-        // AngularSvgIconModule.forRoot(),
+        // AngularSvgIconModule,
         TranslateModule,
 
         NxGenericDropdownModule,

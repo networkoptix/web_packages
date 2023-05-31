@@ -1,12 +1,17 @@
-import { NgModule } from '@angular/core';
 
-import { ComponentsCoreModule } from '@components/components-core.module';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
+
+import { PipesModule } from '@pipes/pipes.module';
 
 import { NxOverlayModalComponent } from './overlay-modal.component';
 
 @NgModule({
     imports: [
-        ComponentsCoreModule,
+        CommonModule,
+        TranslateModule,
+        PipesModule
     ],
     declarations: [
         NxOverlayModalComponent

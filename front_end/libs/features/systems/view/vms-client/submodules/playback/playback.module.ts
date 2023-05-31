@@ -4,8 +4,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
 import { PlayerPlaceholderModule } from '@components/placeholders/player/player-placeholder.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 
 import { components } from './components';
 
@@ -14,11 +14,11 @@ import { components } from './components';
     exports: components,
     imports: [
         CommonModule,
-        ComponentsModule,
         TranslateModule,
+        AngularSvgIconModule,
         PipesModule,
         PlayerPlaceholderModule,
-        AngularSvgIconModule
+        PreLoaderModule,
     ],
     providers: [] // services,
 })

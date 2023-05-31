@@ -1,12 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-
-import { ComponentsCoreModule } from '@components/components-core.module';
 
 import { NxCarouselComponent } from './carousel.component';
 
 @NgModule({
     imports: [
-        ComponentsCoreModule,
+        CommonModule
     ],
     declarations: [
         NxCarouselComponent

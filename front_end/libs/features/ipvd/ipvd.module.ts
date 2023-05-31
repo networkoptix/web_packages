@@ -8,10 +8,14 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
+import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
+import { FooterModule } from '@components/footer/footer.module';
 import { PaginatorModule } from '@components/paginator/paginator.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { SearchModule } from '@components/search/search.module';
+import { NxBaseTableModule } from '@components/table/table.module';
+import { TagModule } from '@components/tag/tag.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { NxCamerasTableComponent } from '@pages/ipvd/cam-components/cameras-table/cameras-table.component';
 
@@ -34,18 +38,22 @@ const appRoutes: Routes = [
     imports: [
         CommonModule,
         FormsModule,
-        TranslateModule,
-        NgxTranslateCutModule,
-        ComponentsModule,
-        DirectivesModule,
-        PipesModule,
         ReactiveFormsModule,
         RouterModule.forChild(appRoutes),
+        TranslateModule,
         AngularSvgIconModule,
-        PaginatorModule,
-        SearchModule,
+        NgxTranslateCutModule,
         ContentBlockModule,
-        LayoutModule
+        ContentBlockSectionModule,
+        DirectivesModule,
+        FooterModule,
+        LayoutModule,
+        NxBaseTableModule,
+        PaginatorModule,
+        PipesModule,
+        PreLoaderModule,
+        SearchModule,
+        TagModule,
     ],
     providers: [
         IpvdSearchService

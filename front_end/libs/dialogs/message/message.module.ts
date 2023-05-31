@@ -14,7 +14,7 @@ import { MessageModalContent } from './message.component';
     imports: [
         CommonModule,
         FormsModule,
-        // AngularSvgIconModule.forRoot(),
+        // AngularSvgIconModule,
         TranslateModule,
 
         PipesModule,

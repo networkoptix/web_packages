@@ -6,8 +6,12 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { MenuModule } from '@app/menu/menu.module';
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
+import { CarouselModule } from '@components/carousel/carousel.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
+import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
+import { ExternalVideoModule } from '@components/external-video/external-video.module';
+import { FooterModule } from '@components/footer/footer.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { TagModule } from '@components/tag/tag.module';
 import { DirectivesModule } from '@directives/directives.module';
 
@@ -31,16 +35,19 @@ const appRoutes: Routes = [
     imports: [
         CommonModule,
         RouterModule,
-        TranslateModule,
-        ComponentsModule,
-        PipesModule,
-        MenuModule,
-        AngularSvgIconModule,
         RouterModule.forChild(appRoutes),
-        PipesModule,
+        TranslateModule,
+        AngularSvgIconModule,
+        CarouselModule,
+        ContentBlockModule,
+        ContentBlockSectionModule,
         DirectivesModule,
+        ExternalVideoModule,
+        FooterModule,
+        MenuModule,
+        PipesModule,
+        PreLoaderModule,
         TagModule,
-        ContentBlockModule
     ],
     providers: [],
     declarations: [

@@ -6,10 +6,14 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
+import { CheckboxModule } from '@components/checkbox/checkbox.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
+import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { TagModule } from '@components/tag/tag.module';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { NxAccountSecurityComponent } from './security.component';
@@ -17,16 +21,20 @@ import { NxAccountSecurityComponent } from './security.component';
 @NgModule({
     imports: [
         CommonModule,
-        RouterModule,
         FormsModule,
+        RouterModule,
         TranslateModule,
-        ComponentsModule,
+        AngularSvgIconModule,
+        CdkScrollableModule,
+        NgxTranslateCutModule,
+        OverlayModule,
+        CheckboxModule,
+        ContentBlockModule,
+        ContentBlockSectionModule,
         DirectivesModule,
         PipesModule,
-        AngularSvgIconModule.forRoot(),
-        CdkScrollableModule,
-        OverlayModule,
-        ContentBlockModule
+        PreLoaderModule,
+        TagModule,
     ],
     providers: [],
     declarations: [

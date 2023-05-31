@@ -1,12 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-
-import { ComponentsCoreModule } from '@components/components-core.module';
+import { RouterModule } from '@angular/router';
 
 import { NxPaginatorComponent } from './paginator.component';
 
 @NgModule({
     imports: [
-        ComponentsCoreModule,
+        CommonModule,
+        RouterModule
     ],
     declarations: [
         NxPaginatorComponent

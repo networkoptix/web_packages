@@ -1,12 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-
-import { ComponentsCoreModule } from '@components/components-core.module';
 
 import { NxThreeDotDropdown } from './three-dot.component';
 
 @NgModule({
     imports: [
-        ComponentsCoreModule,
+        CommonModule
     ],
     declarations: [
         NxThreeDotDropdown

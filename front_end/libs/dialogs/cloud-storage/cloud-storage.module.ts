@@ -20,7 +20,7 @@ import { CloudStorageMoveModalContent } from './move/cloud-storage-move.componen
     imports: [
         CommonModule,
         FormsModule,
-        AngularSvgIconModule.forRoot(),
+        AngularSvgIconModule,
         NgxMaskModule.forRoot(),
         TranslateModule,
 

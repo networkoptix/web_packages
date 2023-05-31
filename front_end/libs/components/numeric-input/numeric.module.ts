@@ -1,14 +1,15 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-
-import { ComponentsCoreModule } from '@components/components-core.module';
 
 import { NxNumericComponent } from './numeric.component';
 
 @NgModule({
     imports: [
-        AngularSvgIconModule.forRoot(),
-        ComponentsCoreModule,
+        CommonModule,
+        FormsModule,
+        AngularSvgIconModule
     ],
     declarations: [
         NxNumericComponent

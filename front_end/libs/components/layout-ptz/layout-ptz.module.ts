@@ -1,14 +1,16 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
-import { ComponentsCommonModule } from '@components/components-common.module';
-import { ComponentsCoreModule } from '@components/components-core.module';
+import { DirectivesModule } from '@directives/directives.module';
 
 import { NxLayoutPtzComponent } from './layout-ptz.component';
 
 @NgModule({
     imports: [
-        ComponentsCoreModule,
-        ComponentsCommonModule
+        CommonModule,
+        TranslateModule,
+        DirectivesModule,
     ],
     declarations: [
         NxLayoutPtzComponent

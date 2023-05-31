@@ -4,7 +4,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
+import { FooterModule } from '@components/footer/footer.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { ProcessButtonModule } from '@components/process-button/process-button.module';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { NxContentComponent } from './content.component';
@@ -17,11 +19,13 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
+        RouterModule.forChild(appRoutes),
         TranslateModule,
-        ComponentsModule,
         DirectivesModule,
+        FooterModule,
         PipesModule,
-        RouterModule.forChild(appRoutes)
+        PreLoaderModule,
+        ProcessButtonModule,
     ],
     providers: [],
     declarations: [

@@ -1,12 +1,14 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { ComponentsCoreModule } from '@components/components-core.module';
+import { PipesModule } from '@pipes/pipes.module';
 
 import { NxToast } from './toast.component';
 
 @NgModule({
     imports: [
-        ComponentsCoreModule,
+        CommonModule,
+        PipesModule
     ],
     declarations: [
         NxToast

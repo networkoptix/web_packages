@@ -1,13 +1,14 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
-
-import { ComponentsCoreModule } from '@components/components-core.module';
 
 import { NxTourStepComponent } from './tour-step.component';
 
 @NgModule({
     imports: [
-        ComponentsCoreModule,
+        CommonModule,
+        TranslateModule,
         TourMatMenuModule
     ],
     declarations: [

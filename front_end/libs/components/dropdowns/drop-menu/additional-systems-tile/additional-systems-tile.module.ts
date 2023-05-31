@@ -1,12 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-
-import { ComponentsCoreModule } from '@components/components-core.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { NxAdditionalSystemsTileComponent } from './additional-systems-tile.component';
 
 @NgModule({
     imports: [
-        ComponentsCoreModule,
+        CommonModule,
+        TranslateModule
     ],
     declarations: [
         NxAdditionalSystemsTileComponent

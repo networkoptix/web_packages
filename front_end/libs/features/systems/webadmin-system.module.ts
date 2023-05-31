@@ -5,7 +5,6 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { MenuModule } from '@app/menu/menu.module';
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
 
@@ -94,17 +93,16 @@ export const localSettingsRoutes: Routes = [
     imports: [
         CommonModule,
         RouterModule,
+        RouterModule.forChild(localSettingsRoutes),
         TranslateModule,
-        ComponentsModule,
-        PipesModule,
+        MenuModule,
         NxSystemAdminModule,
         NxSystemUsersModule,
         NxSystemServersModule,
         NxCamerasModule,
+        NxSettingsModule,
         NxSystemLicensesModule,
-        RouterModule.forChild(localSettingsRoutes),
-        MenuModule,
-        NxSettingsModule
+        PipesModule,
     ],
     providers: [
     ],

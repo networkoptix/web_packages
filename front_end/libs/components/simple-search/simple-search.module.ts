@@ -13,7 +13,7 @@ import { NxSimpleSearchComponent } from './simple-search.component';
     imports: [
         CommonModule,
         FormsModule,
-        AngularSvgIconModule.forRoot(),
+        AngularSvgIconModule,
         NgxTranslateCutModule,
         TranslateModule,
         NxSearchHighlightModule,

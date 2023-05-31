@@ -30,7 +30,7 @@ const appRoutes: Routes = [
         CommonModule,
         // FormsModule,
         RouterModule.forChild(appRoutes),
-        // AngularSvgIconModule.forRoot(),
+        // AngularSvgIconModule,
         // TranslateModule,
 
         NxChannelPartnerModule,

@@ -9,7 +9,7 @@ import { SelectTimeRangeModalContent } from './select-time-range.component';
     imports: [
         CommonModule,
         FormsModule,
-        // AngularSvgIconModule.forRoot(),
+        // AngularSvgIconModule,
         TranslateModule,
     ],
     declarations: [

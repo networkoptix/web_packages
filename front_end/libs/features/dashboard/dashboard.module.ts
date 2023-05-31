@@ -7,8 +7,11 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ComponentsModule } from '@components/components.module';
+import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { DynamicWidgetModule } from '@components/dynamic-widget/dynamic-widget.module';
+import { EditableModule } from '@components/editable/editable.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { SwitchModule } from '@components/switch/switch.module';
 import { AssetExplorerWidgetModule } from '@components/widgets/asset-explorer/asset-explorer-widget.module';
 // import { BookmarksWidgetModule } from '@components/widgets/bookmarks/bookmarks-widget.module';
 import { EventGeneratorModule } from '@components/widgets/event-generator/event-generator.module';
@@ -30,14 +33,17 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
-        TranslateModule,
-        ComponentsModule,
-        DirectivesModule,
-        PipesModule,
         FormsModule,
-        AngularSvgIconModule.forRoot(),
         RouterModule.forChild(appRoutes),
+        TranslateModule,
+        AngularSvgIconModule,
         DragDropModule,
+        DirectivesModule,
+        EditableModule,
+        NxGenericDropdownModule,
+        PipesModule,
+        PreLoaderModule,
+        SwitchModule,
         AssetExplorerWidgetModule,
         // BookmarksWidgetModule,
         DynamicWidgetModule,
@@ -48,7 +54,7 @@ const appRoutes: Routes = [
         SystemLicenseSummaryModule,
         SystemListWidgetModule,
         ThirdsPartyWidgetModule,
-        EventGeneratorModule
+        EventGeneratorModule,
     ],
     providers: [],
     declarations: [

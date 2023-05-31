@@ -15,7 +15,7 @@ import { TransferOwnershipModalContent } from './transfer-ownership.component';
     imports: [
         CommonModule,
         FormsModule,
-        AngularSvgIconModule.forRoot(),
+        AngularSvgIconModule,
         TranslateModule,
         SearchableModule,
         AlertBlockModule,

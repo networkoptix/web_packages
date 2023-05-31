@@ -1,12 +1,16 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
-import { ComponentsCoreModule } from '@components/components-core.module';
+import { DirectivesModule } from '@directives/directives.module';
 
 import { NxActiveSystemDropdown } from './active-system.component';
 
 @NgModule({
     imports: [
-        ComponentsCoreModule,
+        CommonModule,
+        RouterModule,
+        DirectivesModule
     ],
     declarations: [
         NxActiveSystemDropdown

@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+import { CommonModule } from '@angular/common';
 import {
     Component,
     EventEmitter,
@@ -12,8 +13,17 @@ import {
     ElementRef,
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { CheckboxModule } from '@components/checkbox/checkbox.module';
+import { EmailModule } from '@components/email-input/email.module';
+import { PasswordValidationModule } from '@components/password-input-validation/password-validation.module';
+import { PasswordModule } from '@components/password-input/password.module';
+import { ProcessButtonModule } from '@components/process-button/process-button.module';
+import { DirectivesModule } from '@directives/directives.module';
 import { icons } from '@lib/variables/static-variables';
 import { Process } from '@services/process.service/process';
 import { WINDOW } from '@services/window-provider';
@@ -24,6 +34,8 @@ import type { AuthorizeStateType } from '../authorize.component.types';
 @UntilDestroy({ checkProperties: true })
 @Component({
     selector: 'nx-authorize-create-account-component',
+    standalone: true,
+    imports: [CommonModule, FormsModule, TranslateModule, AngularSvgIconModule, DirectivesModule, CheckboxModule, EmailModule, PasswordModule, PasswordValidationModule, ProcessButtonModule],
     templateUrl: 'create-account.component.html',
     styleUrls: ['create-account.component.scss'],
 })

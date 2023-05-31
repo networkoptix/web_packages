@@ -14,7 +14,7 @@ import { AddUserModalContent } from './add-user.component';
     imports: [
         CommonModule,
         FormsModule,
-        // AngularSvgIconModule.forRoot(),
+        // AngularSvgIconModule,
         TranslateModule,
 
         EmailModule,
