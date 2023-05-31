@@ -205,12 +205,12 @@ export class TwoFAModalContent<A extends TfaAction>
                 return Promise.reject({ resultCode: 'missingParam' });
             }
 
-            return this.accountService
+            return this.cloudApiService
                 .verify(this.password)
                 .then(() => {
                     this.listenFor2faActivation = true;
                     this.window.addEventListener('beforeunload', this.removeUnverified2faKey);
-                    return this.accountService.get2FaKey();
+                    return this.cloudApiService.get2FaKey();
                 });
         }, {
             ignoreUnauthorized: true,
@@ -277,14 +277,14 @@ export class TwoFAModalContent<A extends TfaAction>
 
             // Don't need to get backup codes or refresh session when disabling
             if (this.dialogData.action === TfaAction.Disable) {
-                return this.accountService.update2fa(
+                return this.cloudApiService.update2fa(
                     '',
                     this.tfaCode,
                     'deactivate'
                 );
             } else {
                 // request backup codes before 2fa toggle (after 2fa is ON user have to re-login)
-                return this.accountService.get2FaBackupCode().then(response => {
+                return this.cloudApiService.get2FaBackupCode().then(response => {
                     // Commenting this out for now because nobody can remember
                     // when the error happens or if it still does
                     // if (response.errorText !== undefined) {
@@ -295,7 +295,7 @@ export class TwoFAModalContent<A extends TfaAction>
                     return this.refreshSession()
                         .then(result => {
                             if (result.resultCode === 'ok') {
-                                return this.accountService.update2fa(
+                                return this.cloudApiService.update2fa(
                                     this.password,
                                     this.tfaCode,
                                     'activate'
@@ -354,7 +354,7 @@ export class TwoFAModalContent<A extends TfaAction>
             }
 
             this.lock();
-            return this.accountService.update2fa('', this.tfaCode, 'toggle');
+            return this.cloudApiService.update2fa('', this.tfaCode, 'toggle');
         }, {
             ignoreUnauthorized: true,
             ignoreError: true,
@@ -486,7 +486,7 @@ export class TwoFAModalContent<A extends TfaAction>
         ) {
             this.setTemplate(T_FA_STEPS.VerificationToggle);
         } else if (action === TfaAction.NewBackupCodes) {
-            this.accountService
+            this.cloudApiService
                 .get2FaBackupCode()
                 .then(response => {
                     this.newCodes = response.map(code => code.backup_code);
@@ -504,8 +504,8 @@ export class TwoFAModalContent<A extends TfaAction>
         }
     }
 
-    refreshSession(): ReturnType<NxAccountService['updateSessionWith2fa']> {
-        return this.accountService.updateSessionWith2fa(this.tfaCode);
+    refreshSession(): ReturnType<NxCloudApiService['updateSessionWith2fa']> {
+        return this.cloudApiService.updateSessionWith2fa(this.tfaCode);
     }
 
     override close = (action?: Account2faReturn): void => {
@@ -523,7 +523,7 @@ export class TwoFAModalContent<A extends TfaAction>
             this.window.removeEventListener('beforeunload', this.removeUnverified2faKey);
         }
         if (action === 'deactivate') {
-            this.accountService.deactivate2FaKey()
+            this.cloudApiService.deactivate2FaKey()
                 .catch(err => {
                     console.error('2FA cleanup failed ->', err);
                 });

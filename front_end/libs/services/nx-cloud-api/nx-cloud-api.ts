@@ -211,9 +211,11 @@ export class NxCloudApiService {
     @swClear('cloudSystemAPI', '/systems', false)
     disconnect(systemId: string) {
         // Use cloudDbApi once TempCredentials have been added to cloudDbApi
-        return this.http.post<t.CloudResponse>(apiBase + '/systems/disconnect', {
-            system_id: systemId,
-        });
+        return this.http
+            .post<t.CloudResponse>(apiBase + '/systems/disconnect', {
+                system_id: systemId,
+            })
+            .toPromise();
     }
 
     @swClear('cloudSystemAPI', '/systems', false)
@@ -444,13 +446,15 @@ export class NxCloudApiService {
         userName?: string,
         userEmail?: string,
     ) {
-        return this.http.post<t.CloudResponse>(apiBase + '/feedback', {
-            message,
-            asset,
-            type,
-            userName,
-            userEmail,
-        });
+        return this.http
+            .post<t.CloudResponse>(apiBase + '/feedback', {
+                message,
+                asset,
+                type,
+                userName,
+                userEmail,
+            })
+            .toPromise();
     }
 
     @memoizeAsyncShort

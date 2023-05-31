@@ -235,50 +235,6 @@ export abstract class BaseAccount implements OnDestroy {
         }
     }
 
-    reactivate(email) {
-        return this.cloudApi.reactivate(email);
-    }
-
-    disconnect(systemId) {
-        return this.cloudApi.disconnect(systemId).toPromise();
-    }
-
-    connect(systemName, userEmail, userPassword) {
-        return this.cloudApi.connect(systemName, userEmail, userPassword);
-    }
-
-    verify(password) {
-        return this.cloudApi.verify(password);
-    }
-
-    update2fa(password, mfaCode, action: 'activate' | 'deactivate' | 'toggle' = 'toggle') {
-        return this.cloudApi.update2fa(password, mfaCode, action);
-    }
-
-    get2FaKey() {
-        return this.cloudApi.get2FaKey();
-    }
-
-    deactivate2FaKey() {
-        return this.cloudApi.deactivate2FaKey();
-    }
-
-    get2FaBackupCode() {
-        return this.cloudApi.get2FaBackupCode();
-    }
-
-    verify2FaKey(code, verificationCode) {
-        return this.cloudApi.verify2FaKey(code, verificationCode);
-    }
-
-    updateSessionWith2fa(verificationCode) {
-        return this.cloudApi.updateSessionWith2fa(verificationCode);
-    }
-
-    sendMessage(subject, asset, message, userName, userEmail) {
-        return this.cloudApi.sendMessage(subject, asset, message, userName, userEmail).toPromise();
-    }
-
     // Temporary aid for AJS
     getCredentialsFromAuth(authKey: string) {
         return atob(authKey).split(':');

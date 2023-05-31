@@ -15,6 +15,7 @@ import { ModalBase } from '@dialogs/modal-base';
 import { credentialsValidation, dialogs } from '@lib/variables/static-variables';
 import { Translatable } from '@pipes/nx-translate.types';
 import { NxAccountService } from '@services/account.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { WINDOW } from '@services/window-provider';
@@ -48,6 +49,7 @@ export class MessageModalContent extends ModalBase<DT['return']> implements OnIn
         private translateService: TranslateService,
         private processService: NxProcessService,
         private account: NxAccountService,
+        private cloudApiService: NxCloudApiService,
         public dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) private dialogData: DT['data'],
         @Inject(WINDOW) private window: Window,
@@ -67,7 +69,7 @@ export class MessageModalContent extends ModalBase<DT['return']> implements OnIn
             this.lock();
             const asset = this.data.assetId || this.data.asset;
 
-            return this.account.sendMessage(
+            return this.cloudApiService.sendMessage(
                 this.subject,
                 asset,
                 this.message,

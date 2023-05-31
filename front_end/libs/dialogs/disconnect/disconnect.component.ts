@@ -9,7 +9,7 @@ import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import type { IEnvironment } from '@environments/environment-config';
 import { servers, toast } from '@lib/variables/static-variables';
-import { NxAccountService } from '@services/account.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxSystemAPIService } from '@services/system-api.service';
@@ -35,8 +35,8 @@ export class DisconnectModalContent extends ModalBase<DT['return']> {
         private dialogs: NxDialogsService,
         private systemApiService: NxSystemAPIService,
         private toastService: NxToastService,
+        private cloudApiService: NxCloudApiService,
         private systemsService: NxSystemsService,
-        private account: NxAccountService,
         public dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) public system: DT['data'],
         @Inject(WINDOW) private window: Window,
@@ -52,7 +52,7 @@ export class DisconnectModalContent extends ModalBase<DT['return']> {
                 return this.disconnectLocal();
             }
             return new Promise<void>((resolve, reject) => {
-                this.account.disconnect(this.system.id).then(() => {
+                this.cloudApiService.disconnect(this.system.id).then(() => {
                     this.systemsService.systemsSubject
                         .pipe(
                             takeUntil(this.unsub$)
