@@ -33,7 +33,7 @@
 </ng-container>
 
 <div
-    *ngIf="showFullScreenButton"
+    *ngIf="lostConnectionPlaceholder ? document.fullscreenElement : showFullScreenButton"
     class="full-screen parent-hover"
     [ngClass]="{ 'is-full-screen': document.fullscreenElement }"
     (click)="toggleFullScreen()"

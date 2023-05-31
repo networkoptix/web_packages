@@ -793,7 +793,7 @@ iframe {
 }
 
 .ellipsis {
-    line-height: inherit;
+    line-height: initial !important;
     padding-right: 8px;
 }
 
