@@ -40,10 +40,6 @@
                     display: none;
                 }
 
-                &:hover {
-                    cursor: pointer;
-                }
-
                 &.active {
                     color: var(--new-light4);
                     .active-border {
@@ -53,6 +49,9 @@
                         width: 100%;
                         background-color: var(--new-brand-core);
                         box-shadow: 0px 2px 7px var(--new-brand-core);
+                    }
+                    &:hover {
+                        cursor: default;
                     }
                 }
 
