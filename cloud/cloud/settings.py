@@ -794,6 +794,14 @@ if os.path.isfile(common_list_file):
 else:
     print(f"Warning: Can't read from {common_list_file}", file=sys.stderr)
 
+QUEUES = {
+    'celery': 'celery',
+    'notification_module': 'cloud-emails',
+    'push_notifications': 'push-notification',
+    'broadcast_notifications': 'broadcast-notifications',
+    'system_notifications': 'system-notifications'
+}
+
 NOTIFICATIONS_CONFIG = {
     'activate_account': {
         'engine': 'email'
