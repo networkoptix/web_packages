@@ -30,7 +30,6 @@ export class NxSystemService {
         return this.system;
     }
 
-    @memoizeAsyncPersistent
     createSystem(
         currentUserEmail: string,
         systemId: string,
