@@ -940,6 +940,7 @@ class GenericKeywords(object):
             "liveViewer": {},
             "viewer": {}
         }
+        logger.trace(f'create_local_users_via_api')
         for user in locals:
             self.server_api.save_user(
                 token, 
@@ -986,7 +987,7 @@ class GenericKeywords(object):
     @keyword
     def verify_changed_info_via_API(self, new_locals, ip, local_user="ocal+"):
         locals = []
-        users = self.server_api.get_users(BuiltIn().get_variable_value('${server auth}'), ip)
+        users = self.server_api.get_users(BuiltIn().get_variable_value('${servers}[0][token]'), ip)
         local_state = True
         for user in users:
             if user.get("isCloud") is False:
@@ -1009,22 +1010,27 @@ class GenericKeywords(object):
                 raise RuntimeError("All info was not changed")
     
     @keyword
-    def reset_local_users(self, auth, token, server, local_user='local+', password='BASE PASSWORD'):
+    def reset_local_users(self, auth, token, server, local_user='ocal+', password='BASE PASSWORD'):
+        clean_locals = []
         locals_list = []
         local_users = list(BuiltIn().get_variable_value("${role_names}").keys())
-        users = self.server_api.get_users(auth, server)
-        local_state = True
+        users = self.server_api.get_users(token, server)
+        logger.trace(users)
         for user in users:
+            local_state = True
             if user.get("isCloud") is False:
                 local_state = False
+                logger.trace(f"isCloud for {user['name']} is {local_state}")
             elif user.get("type") == "cloud":
                 local_state = False
+                logger.trace(f"local type for {user['name']} is {local_state}")
             if local_state and local_user in user['name']:
                 locals_list.append(user)
-
+                logger.trace(f"{user['name']} added to locals_list")
+        logger.trace(f"locals_list: {locals_list}")
         if len(locals_list) == 5:
             self.reset_local_users_API(locals_list, token, server)
-        else:
+        elif len(clean_locals) < 5:
             self.create_new_local_users(
                 len(locals_list), 
                 auth, 
@@ -1034,7 +1040,6 @@ class GenericKeywords(object):
                 locals_list, 
                 password
                 )
-
         return local_users
     
     @keyword
@@ -1048,7 +1053,7 @@ class GenericKeywords(object):
                 user_type = 'liveViewer'
             elif user_type == 'advancedviewer':
                 user_type = 'advancedViewer'
-            
+            logger.trace(f'user_type={user_type}')
             self.server_api.save_user(
                 token,
                 server,

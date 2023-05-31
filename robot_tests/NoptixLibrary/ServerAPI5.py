@@ -122,27 +122,31 @@ class ServerAPI5(ServerAPI):
         userRoleId=None,
         isEnabled=True,
         isCloud=True,
-        patch=False,
+        patch=False
         ):
         body= {
             "email":email,
             "name":name,
             "fullName":fullName,
             "permissions":permissions,
-            "isCloud":isCloud,
+            "isCloud":isCloud
         }
+        if password:
+            body["password"] = password
         if userId:
-            body["id"]=userId
+            body["id"] = userId
         if isCloud:
-            body["fullName"]=fullName
+            body["fullName"] = fullName
         else:
             body["type"] = "local"
         if userRoleId:
-            body["id"]=userRoleId
+            body["id"] = userRoleId
+        logger.trace(f'patch={patch}, name={name}')
         if patch:
             users_response = requests.patch(f'{serverUrl}/rest/v1/users/{userId}', headers={"x-runtime-guid": token}, json=body, verify=False)
         else:
             users_response = requests.post(f'{serverUrl}/rest/v1/users', headers={"x-runtime-guid": token}, json=body, verify=False)
+        logger.trace(users_response.json())    
         users_response.raise_for_status()
         return users_response.json()
 
@@ -191,14 +195,10 @@ class ServerAPI5(ServerAPI):
             return userRoles_response.json()
 
     @keyword
-    def get_users(self, auth, serverUrl):
-        with requests.Session() as s:
-            credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
-            login_response = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
-            users_response = s.get(f'{serverUrl}/rest/v1/users?_format=JSON&_keepDefault=true', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
-            s.delete(f"{serverUrl}/rest/v1/login/sessions/{login_response.json()['token']}")
-            users_response.raise_for_status()
-            return users_response.json()
+    def get_users(self, token, serverUrl):
+        users_response = requests.get(f'{serverUrl}/rest/v1/users?_format=JSON&_keepDefault=true', headers={"x-runtime-guid": token}, verify=False)
+        users_response.raise_for_status()
+        return users_response.json()
 
     @keyword
     def restart_server(self, serverUrl, auth):

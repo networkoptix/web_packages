@@ -419,7 +419,7 @@ User Should Not Exist
 Get Local Users
     [Arguments]
     ${locals}=   Create List
-    @{users} =    Get Users     ${servers}[0][localAuth]    https://${QA BURBANK IP}:${servers}[0][port][0]
+    @{users} =    Get Users     ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]
     FOR    ${node}    IN    @{users}
         ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ocal+
         ${isCloud key} =    Run Keyword and Return Status   Dictionary Should Contain Key    ${node}    isCloud
@@ -473,3 +473,8 @@ Share System With New User And Grab Email Link
     Delete Email    ${email}   
     Close Mailbox
     
+Refresh Server Tokens
+    FOR    ${server}    IN    @{servers}
+        ${token} =    Get Server Token     ${server}[localAuth]    https://${QA BURBANK IP}:${server}[port][0]  
+        Set To Dictionary    ${server}      token=${token}
+    END

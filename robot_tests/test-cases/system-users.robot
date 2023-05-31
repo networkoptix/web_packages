@@ -1,7 +1,7 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/system-user-resource.robot
 Suite Setup       Users Suite Setup
-Test Setup        Run Keywords    QA Video Recording Start       Skip If Irrelevant
+Test Setup        Run Keywords    QA Video Recording Start       Skip If Irrelevant     Refresh Server Tokens
 Test Teardown     Run Keywords    QA Video Recording Stop        Users Test Tear Down
 Suite Teardown    Run Keyword and Ignore Error    users Teardown
 Force Tags        system    Threaded    users
@@ -130,9 +130,9 @@ Force Tags        system    Threaded    users
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${servers}[0][id]
         Go to Users List
         Verify In Local Users UI    ${servers}[0][localUsers]    ${servers}[0][cloudOwner]
-        @{users} =    Get Users     ${servers}[0][localAuth]    https://${QA BURBANK IP}:${servers}[0][port][0]
+        @{users} =    Get Users     ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]
         ${user to delete} =    Set Variable    Local+viewer
-        ${user id}=   Get Local User Id By Name    ${servers}[0][localAuth]    https://${QA BURBANK IP}:${servers}[0][port][0]    Local+viewer
+        ${user id}=   Get Local User Id By Name    ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]    Local+viewer
         Remove User    ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]    ${user id}
         Reload Page
         Wait Until Element is Visible    ${ADD USER BUTTON SYSTEMS}
@@ -249,7 +249,7 @@ Force Tags        system    Threaded    users
 #    ...    ELSE    Create List    ${servers}[0][cloudOwner]    admin
 #    FOR    ${user}    IN    @{list}
 #        @{local users} =    Reset Local Users    ${servers}[0][localAuth]    https://${QA BURBANK IP}:${servers}[0][port][0]
-#        @{locals} =    Get Users     ${servers}[0][localAuth]    https://${QA BURBANK IP}:${servers}[0][port][0]
+#        @{locals} =    Get Users     ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]
 #                
 #        Log    Step 1
 #        Log In    ${user}    ${password}
@@ -271,7 +271,7 @@ Force Tags        system    Threaded    users
 #        Element Style Should Be    ${LOCAL USER LOGIN}     border-color    ${ERROR COLOR}
 #        
 #        Log    Step 3
-#        @{check info} =    Get Users     ${servers}[0][localAuth]    https://${QA BURBANK IP}:${servers}[0][port][0]
+#        @{check info} =    Get Users     ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]
 #        Lists Should Be Equal     ${check info}    ${locals}
 #    
 #        Log    Step 4
@@ -279,7 +279,7 @@ Force Tags        system    Threaded    users
 #        Wait Until Element Contains    ${LOCAL USER LOGIN}    Local+advancedViewer
 #        
 #        Log    Step 5
-#        @{check info} =    Get Users     ${servers}[0][localAuth]    https://${QA BURBANK IP}:${servers}[0][port][0]
+#        @{check info} =    Get Users     ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]
 #        Lists Should Be Equal     ${check info}    ${locals} 
 #        Exit For Loop If    '''${user}'''=='''admin'''    
 #        Log Out
@@ -305,7 +305,7 @@ Force Tags        system    Threaded    users
         Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
         
         Log    Step 3
-        @{check info}=    Get Users     ${servers}[0][localAuth]    https://${QA BURBANK IP}:${servers}[0][port][0]
+        @{check info}=    Get Users     ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]
         Check User Full Name is None    Local+advancedViewer    ${check info}
     
         Exit For Loop If    '''${user}'''=='''admin'''    
@@ -333,7 +333,7 @@ Force Tags        system    Threaded    users
         sleep    100
         
         Log    Step 3
-        @{check info} =    Get Users     ${servers}[0][localAuth]    https://${QA BURBANK IP}:${servers}[0][port][0]\
+        @{check info} =    Get Users     ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]\
         Check User Email is None    Local+advancedViewer    ${check info}
         Exit For Loop If    '''${user}'''=='''admin'''    
         Log Out
@@ -389,7 +389,7 @@ Force Tags        system    Threaded    users
         Wait Until Element Is Not Visible    ${LOCAL USER DELETE CANCEL BUTTON}
         Wait Until Element Is Not Visible    //span[text()="Local+advancedViewer"]
         Log    Step 4
-        @{current users} =    Get Users     ${servers}[0][localAuth]    https://${QA BURBANK IP}:${servers}[0][port][0]
+        @{current users} =    Get Users     ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]
         ${deleted user} =    Set Variable    Local+advancedViewer
         Verify User is Deleted on Server    Local+advancedViewer    ${current users}
         Exit For Loop If    '''${user}'''=='''${servers}[0][cloudUsers][cloudAdmin]'''    
@@ -443,7 +443,7 @@ Force Tags        system    Threaded    users
         Click Element    //span[text()="Local+advancedViewer"]
         Log    Step 4
         ${name} =    Get Text    ${LOCAL USER LOGIN}
-        @{current users} =    Get Users     ${servers}[0][localAuth]    https://${QA BURBANK IP}:${servers}[0][port][0]
+        @{current users} =    Get Users     ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]
         ${state}=   Check If User Is Enabled/Disabled    ${current users}    ${name}
         Should Be True   ${state} == ${False}
         Log    Step 5
@@ -454,7 +454,7 @@ Force Tags        system    Threaded    users
         Page Should Not Contain Element   ${USER DISABLED MSG}
         Log    Step 6
         ${name} =    Get Text    ${LOCAL USER LOGIN}
-        @{current users} =    Get Users     ${servers}[0][localAuth]    https://${QA BURBANK IP}:${servers}[0][port][0]
+        @{current users} =    Get Users     ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]
         ${state}=   Check If User Is Enabled/Disabled    ${current users}    ${name}
         Should Be True    ${state} == ${True}
         Exit For Loop If    '''${user}'''=='''${servers}[0][cloudUsers][cloudAdmin]'''    
@@ -506,7 +506,7 @@ Force Tags        system    Threaded    users
         @{local users} =    Reset Local Users    ${server auth}    ${servers}[0][token]   https://${QA BURBANK IP}:${servers}[0][port][0]
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${servers}[0][id]
-        ${id}    Get Local User Id By Name    ${servers}[0][localAuth]    https://${QA BURBANK IP}:${servers}[0][port][0]    Local+advancedViewer
+        ${id}    Get Local User Id By Name    ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]    Local+advancedViewer
         Log    Step 1 - 3
         Go to Users List
         Verify In Local Users UI    ${local users}    ${servers}[0][cloudOwner]
@@ -611,7 +611,7 @@ Force Tags        system    Threaded    users
         Element Text Should Be    //*[@id="componentId"]/span    ${role names}[advancedViewer]
         
         Log    Clean up
-        ${id}    Get Local User Id By Name    ${servers}[0][localAuth]    https://${QA BURBANK IP}:${servers}[0][port][0]    Local+newApiUser
+        ${id}    Get Local User Id By Name    ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]    Local+newApiUser
         Remove User    ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]    ${id}
         Exit For Loop If    '''${user}'''=='''admin'''    
         Log Out
