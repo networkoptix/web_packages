@@ -487,6 +487,7 @@ Go to Users List
 
 Go to System Administration
     Wait Until Element Is Visible    ${SYSTEM ADMINISTRATION LINK}
+    Sleep    1
     Click Link    ${SYSTEM ADMINISTRATION LINK}
 
 Go to Servers
@@ -548,7 +549,7 @@ Check Error Content and Reset Button Disabled
     
 Verify In System
     [arguments]    ${system name}    ${editable}=${True}
-    Go to System Administration
+    Go To System Administration
     Run Keyword If    '''${editable}'''=='''${True}'''    Wait Until Element Is Visible    //nx-editable-heading//nx-text-editable[@id="systemName-editable" and contains(text(), '${system name}')]
     ...    ELSE    Wait Until Element Is Visible    //nx-editable-heading//nx-text-editable[contains(text(), '${system name}')]
 

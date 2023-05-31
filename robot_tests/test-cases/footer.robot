@@ -38,7 +38,7 @@ Force Tags    threaded
     [Tags]    C41547    Threaded    webadmin    cloud    smoke
     Wait Until Element is Visible    ${FOOTER COPYRIGHT LINK}
     Sleep    1
-    Click Link    ${FOOTER COPYRIGHT LINK}
+    Click Link    ${FOOTER COPYRIGHT LINK}/..
     Wait Until Number Of Tabs Are Open    2
     Switch Window    NEW
     Wait Until Location Is    ${COPYRIGHT URL}
