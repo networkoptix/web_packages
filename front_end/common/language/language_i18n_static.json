@@ -94,11 +94,13 @@
         "pleaseAddNew": "Please add layout on thick client to view layouts",
         "statistics": "{resourceType} \"{name}\" Statistics",
         "additionalErrorMessages": {
-            "unreachable": "Can't connect to the camera. Please, make sure the server \"{serverName}\" has Internet access.",
+            "unreachable": "can't connect to the camera",
             "webpage": "expect in future versions",
             "iodevice": "expect in future versions",
             "defaultPassword": "click to set up",
-            "unauthorized": "click to set credentials"
+            "unauthorized": "click to set credentials",
+            "transcodingDisabled": "transcoding for H265 streams disabled for 5.1 systems",
+            "mjpegDisabled": "transcoding for MJPEG streams not supported"
         },
         "titles": {
             "resourceTypes": {
@@ -413,8 +415,8 @@
             "defaultPassword": "PASSWORD REQUIRED",
             "websocket": "Can't connect to the camera",
             "unavailable": "UNAVAILABLE",
-            "transcodingDisabled": "Transcoding for H265 streams disabled for 5.1 systems",
-            "mjpegDisabled": "Transcoding for MJPEG streams not supported"
+            "transcodingDisabled": "DISABLED",
+            "mjpegDisabled": "NOT SUPPORTED"
         },
         "serverStates": {
             "offline": "UNAVAILABLE"

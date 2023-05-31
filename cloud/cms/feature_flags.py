@@ -68,9 +68,9 @@ class FLAGS(metaclass=_FlagType):
     log_rocket = ('Log Rocket', 'logRocket', '%LOGROCKET_ENABLED%')
     full_story = ('Full Story', 'fullStory', '%FULLSTORY_ENABLED%')
     require_tos_agreement = ('TOS Agreement required', 'tosRequired', '%TOS_AGREEMENT_REQUIRED%')
-    layouts = ('Layouts', 'layouts', '%LAYOUTS_ENABLED%')
     cookie_banner = ('Cookie Banner', 'cookieBanner', '%COOKIE_BANNER%')
 
+    layouts = ('Layouts', 'layouts', '%LAYOUTS_ENABLED%')
     layouts_editable = ('Layouts Editable', 'layoutsEditable', '%LAYOUTS_EDITABLE%')
     layouts_helper = ('Layouts Helper', 'layoutsHelper', '%LAYOUTS_HELPER%')
     layouts_servers = ('Layouts Servers', 'layoutsServers', '%LAYOUTS_SERVERS%')
@@ -81,6 +81,7 @@ class FLAGS(metaclass=_FlagType):
     layouts_ptz_control = ('Layouts PTZ Control', 'layoutsPtz', '%LAYOUTS_PTZ_ENABLED%')
     layouts_demo = ('Layouts Demo', 'layoutsDemo', '%LAYOUTS_DEMO_ENABLED%')
     layouts_io_devices = ('Layouts IO Devices', 'layoutsIoDevices', '%LAYOUTS_IO_DEVICES_ENABLED%')
+    layouts_non_chrome = ('Layouts Non-Chromium Browsers', 'layoutsNonchrome', '%LAYOUTS_NON_CHROME%')
 
     use_json_rpc = ('Use Json Rpc', 'useJsonRpc', '%USE_JSON_RPC%')
 

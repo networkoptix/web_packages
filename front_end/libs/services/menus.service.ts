@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -17,6 +17,7 @@ import type { IConfig } from './nx-config/config-types';
 import { NxConfigService } from './nx-config/nx-config.service';
 import { NxSessionService } from './session.service';
 import type { NxUser } from './system.service/user-manager/user-manager-types';
+import { WINDOW } from './window-provider';
 
 @UntilDestroy({ checkProperties: true })
 @Injectable({
@@ -47,6 +48,7 @@ export class NxMenusService {
         private sessionService: NxSessionService,
         private http: HttpClient,
         private deviceService: DeviceDetectorService,
+        @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
         this.updateMenu();
@@ -341,7 +343,10 @@ export class NxMenusService {
         }
 
         // Layouts only usable with webRTC
-        if (activeSystem.version >= 5.1 && this.CONFIG.featureFlags.layouts) {
+        const layoutsEnabled = activeSystem.version >= 5.1 && this.CONFIG.featureFlags.layouts;
+        // @ts-expect-error
+        const layoutsEnabledForBrowser = this.CONFIG.featureFlags.layoutsNonChrome || !!this.window.chrome;
+        if (layoutsEnabled && layoutsEnabledForBrowser) {
             const layoutsNode = new MenuNode(
                 'Layouts',
                 this.getUrl(activeSystem.id, { layouts: true }),

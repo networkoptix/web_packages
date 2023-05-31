@@ -168,6 +168,7 @@ const FeatureFlagKeys = [
     'cloudStorage',
     'fullStory',
     'layouts',
+    'layoutsNonChrome',
     'layoutsEditable',
     'layoutsHelper',
     'layoutsServers',

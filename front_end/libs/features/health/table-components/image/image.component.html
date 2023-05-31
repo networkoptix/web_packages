@@ -41,7 +41,8 @@
         *ngIf="
             (state.toLowerCase() === 'online' ||
                 state.toLowerCase() === 'recording' ||
-                state.toLowerCase() === 'scheduled') &&
+                state.toLowerCase() === 'scheduled' ||
+                state.toLowerCase() === 'archive') &&
                 url;
             else noLivePreview
         "

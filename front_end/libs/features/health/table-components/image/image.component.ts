@@ -69,7 +69,7 @@ export class NxImageComponent implements OnChanges, OnDestroy {
         if (
             this.state.toLowerCase() === 'Unauthorized'.toLowerCase() ||
             (changes.state &&
-                !['Online', 'Recording', 'Scheduled']
+                !['Online', 'Recording', 'Scheduled', 'Archive']
                     .map(state => state.toLowerCase())
                     .includes(changes.state.currentValue.toLowerCase()))
         ) {
