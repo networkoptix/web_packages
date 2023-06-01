@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxMainActionComponent } from './main-action.component';
@@ -7,7 +8,8 @@ import { NxMainActionComponent } from './main-action.component';
 @NgModule({
     imports: [
         CommonModule,
-        AngularSvgIconModule
+        AngularSvgIconModule,
+        TranslateModule,
     ],
     declarations: [
         NxMainActionComponent
