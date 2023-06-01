@@ -1076,6 +1076,7 @@
         "activateSuccess": "Account activated",
         "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
         "auth": "Authorization",
+        "bookmarks": "Bookmarks",
         "changePassword": "Change password",
         "debug": "Debug",
         "default": "%CLOUD_NAME%",

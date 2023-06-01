@@ -11,6 +11,7 @@ import { icons } from '@lib/variables/static-variables';
 import { pollingTimeout } from '@pages/static-variables-features';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxPageService } from '@services/page.service';
 import type { BookmarksParams, BookmarksTags, Device } from '@services/system-api.types';
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem } from '@services/system.service/system';
@@ -112,6 +113,7 @@ export class NxBookmarksComponent implements OnInit {
         private systemService: NxSystemService,
         private route: ActivatedRoute,
         public router: Router,
+        private pageService: NxPageService,
         @Inject(WINDOW) window: Window,
     ) {
         this.CONFIG = configService.getConfig();
@@ -156,6 +158,15 @@ export class NxBookmarksComponent implements OnInit {
             }
 
             this.system = this.systemService.getCurrentSystem();
+
+            // We'll use pageService temporarily. We'll remove this when we update TitleResolver/SystemTitleResolver for the Browser Tab criterias from design
+            this.pageService.pageTitle(
+                [
+                    staticLang.pageTitles.bookmarks,
+                    this.system.info.name,
+                    this.CONFIG.cloudName,
+                ].join(' - '),
+            );
             this.bookmarksPoll();
         });
     }
