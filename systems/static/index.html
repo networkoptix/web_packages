@@ -16,6 +16,10 @@
     <div>
         <h3>Groups Inputs</h3>
         <div>
+            <label for="org-id">Org ID</label>
+            <input id="org-id">
+        </div>
+        <div>
             <label for="group-name">Group Name</label>
             <input id="group-name">
         </div>
@@ -69,7 +73,10 @@
         name;
         systemId;
         targetId;
-        constructor(groupIdInput, groupNameInput, systemIdInput, targetIdInput) {
+        constructor(orgIdInput, groupIdInput, groupNameInput, systemIdInput, targetIdInput) {
+            orgIdInput.addEventListener('input', (e) => {
+                this.orgId = e?.target?.value;
+            });
             groupIdInput.addEventListener('input', (e) => {
                 this.groupId = e?.target?.value;
             });
@@ -89,13 +96,14 @@
             this.action = 'list';
             this.groupId = '';
             this.name = '';
+            this.orgId = '';
             this.systemId = '';
             this.targetId = '';
         }
 
         toJson() {
-            const { action, groupId, name, systemId, targetId } = this;
-            return { action, name, group_id: groupId, system_id: systemId, target_id: targetId };
+            const { action, groupId, name, orgId, systemId, targetId } = this;
+            return { action, name, group_id: groupId, org_id: orgId, system_id: systemId, target_id: targetId };
         }
     }
 </script>
@@ -106,11 +114,12 @@
     const groupContainer = document.getElementById('group-container');
     const groupId = document.getElementById('group-id');
     const groupName = document.getElementById('group-name');
+    const orgId = document.getElementById('org-id');
     const systemId = document.getElementById('system-id');
     const targetId = document.getElementById('target-id');
     const url = document.getElementById('url');
     const pre = window.document.getElementById('systems-info');
-    const data = new Data(groupId, groupName, systemId, targetId);
+    const data = new Data(orgId, groupId, groupName, systemId, targetId);
 
     let ws;
 
@@ -203,6 +212,7 @@
 
     const reset = () => {
         data?.reset();
+        orgId.value = '';
         groupId.value = '';
         groupName.value = '';
         systemId.value = '';

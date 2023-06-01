@@ -8,7 +8,7 @@ from quart import Quart, current_app, websocket
 
 from debug_tools import PrintDebug
 from models import db
-from nx_common import CloudConnector
+from nx_common import CloudConnector, LicenseConnector
 from rest_v1 import rest_blueprint
 from views import GroupView, ParamsValidator, UserView
 
@@ -69,27 +69,31 @@ async def receiving(cloud_connector):
         'action': 'connected',
         'data': {}
     }))
+    user_email = cloud_connector.account.get('email')
+    license_api = LicenseConnector(user_email)
     while True:
         action, data = ParamsValidator.validate_group(await websocket.receive())
         res = None
-        user_email = cloud_connector.account.get('email')
+        if action in ['create_group', 'delete_group', 'move_group', 'move_system', 'update_group']:
+            license_api.update_token(await cloud_connector.get_token())
+            if not await license_api.is_admin_in_org(data.get('org_id')):
+                data.update({'msg': 'Unauthorized', 'error': 400})
         if 'error' in data:
             res = data
-        # TODO actions: import/export, rename group
         elif action == 'create_group':
-            # TODO: support assigining parent on creation
-            res = GroupView.create_group(data['name'], user_email, data.get('target_id'))
+            # TODO: support assigning parent on creation
+            res = GroupView.create_group(data['name'], data.get('org_id'), data.get('target_id'))
         elif action == 'delete_group':
-            res = await GroupView.delete_group(cloud_connector.share_system, data['group_id'], user_email)
+            res = await GroupView.delete_group(cloud_connector.share_system, data['group_id'])
         elif action == 'move_group':
             res = await GroupView.move_group_to_group(
-                cloud_connector.share_system, data['target_id'], data['group_id'], cloud_connector.account.get('email'))
+                cloud_connector.share_system, data['target_id'], data['group_id'])
         elif action == 'move_system':
             system = await cloud_connector.get_systems(system_id=data['system_id'])
             res = await GroupView.move_system_to_group(
-                cloud_connector.share_system, data['group_id'], system, cloud_connector.account.get('email'))
+                cloud_connector.share_system, data['group_id'], system)
         elif action == 'update_group':
-            res = await GroupView.update_group(data['group_id'], user_email, data['name'])
+            res = await GroupView.update_group(data['group_id'], data['name'])
         # User management
         elif action == 'create_user':
             res = await UserView.add_user_to_group(

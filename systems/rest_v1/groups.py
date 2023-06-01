@@ -2,7 +2,7 @@ from marshmallow import Schema, fields, ValidationError, validates
 from quart import Blueprint, request
 
 from views import GroupView
-from nx_common import RestConnector
+from nx_common import RestConnector, is_org_admin
 
 group_blueprint = Blueprint('group', __name__, url_prefix='/group')
 
@@ -16,17 +16,27 @@ class GroupNameSchema(Schema):
             raise ValidationError("Name cannot be blank")
 
 
-class CreateGroupSchema(GroupNameSchema):
+class GroupSchema(Schema):
     parent_id = fields.Str(required=False)
+    org_id = fields.Str(required=True)
+
+    @validates('org_id')
+    def validate_org_id(self, value):
+        if not value:
+            raise ValidationError("org_id cannot be blank")
+
+
+class CreateGroupSchema(GroupSchema, GroupNameSchema):
+    pass
 
 
 @group_blueprint.route('/', methods=['POST'])
+@is_org_admin
 async def create_group():
-    connector = RestConnector(request)
     try:
         raw_data = await request.get_json()
         data = CreateGroupSchema().load(data=raw_data)
-        return GroupView.create_group(data['name'], connector.email, parent_id=data['parent_id'])
+        return GroupView.create_group(data['name'], data['org_id'], parent_id=data.get('parent_id'))
     except ValidationError as err:
         return err.messages, 400
 
@@ -40,12 +50,12 @@ def get_group(group_id=None):
 
 
 @group_blueprint.route('/<group_id>', methods=['PATCH'])
+@is_org_admin
 async def update_group(group_id):
-    connector = RestConnector(request)
     try:
         raw_data = await request.get_json()
         data = GroupNameSchema().load(raw_data)
-        results = GroupView.update_group(group_id, connector.email, data['name'])
+        results = GroupView.update_group(group_id, data['name'])
         if error_code := results.get('error'):
             del results['error']
         return results, error_code or 200
@@ -55,6 +65,7 @@ async def update_group(group_id):
 
 
 @group_blueprint.route('/<group_id>', methods=['DELETE'])
+@is_org_admin
 async def delete_group(group_id):
     connector = RestConnector(request)
-    return await GroupView.delete_group(connector.share_system, group_id, connector.email)
+    return await GroupView.delete_group(connector.share_system, group_id)

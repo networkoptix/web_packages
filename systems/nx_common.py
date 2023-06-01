@@ -6,10 +6,36 @@ import requests
 from models import Group
 
 from debug_tools import PrintDebug
-from quart import current_app, websocket
+
+from functools import wraps
+from quart import current_app, request, websocket
+from requests.status_codes import codes
 
 CLOUD_HOST = os.getenv('CLOUD_HOST') or 'cloud-test.hdw.mx'  # or 'localhost:8001'
+LICENSE_PORTAL = os.getenv('LICENSE_PORTAL') or 'nxlicensed.test.hdw.mx'
 RELAY = os.getenv('CLOUD_RELAY') or 'https://{systemId}.relay.vmsproxy.hdw.mx'
+
+
+def is_org_admin(f):
+    @wraps(f)
+    async def check_role(*args, **kwargs):
+        raw_data = await request.get_json()
+        connector = RestConnector(request)
+        license_api = LicenseConnector(connector.email, connector.token)
+        if await license_api.is_admin_in_org(raw_data.get('id')):
+            return await f(*args, **kwargs)
+        return 'Unauthorized', codes.forbidden
+    return check_role
+
+
+class APIException(Exception):
+    error_text = 'Unexpected error'
+    status_code = codes.server_error
+
+    def __init__(self, error_text, status_code=codes.server_error):
+        self.error_text = error_text
+        self.status_code = status_code
+        super(Exception, self).__init__(error_text)
 
 
 class NxSystem:
@@ -51,6 +77,34 @@ class NxSystem:
             self.is_online = state == 'online'
         if authenticated is not None:
             self.is_logged_in = False
+
+
+class LicenseConnector:
+    def __init__(self, email, token=None):
+        self.session = requests.Session()
+        self.email = email
+        if token:
+            self.update_token(token)
+
+    def _license_get(self, route, params):
+        url = f"https://{LICENSE_PORTAL}{route}"
+        res = self.session.get(url, params=params)
+        res.raise_for_status()
+        return res.json()
+
+    def _license_post(self, route, data=None):
+        url = f"https://{LICENSE_PORTAL}{route}"
+        res = self.session.post(url, data=data)
+        res.raise_for_status()
+        return res.json()
+
+    def update_token(self, token):
+        self.session.headers.update({'Authorization': token})
+
+    async def is_admin_in_org(self, org_id):
+        route = f'/partners/organizations/{org_id}/users/self/'
+        user = self._license_post(route)
+        return self.email == user.get('email') and 'Administrator' in user.get('roles', [])
 
 
 class CloudConnector:
@@ -107,6 +161,10 @@ class CloudConnector:
                 await system.login(auth)
                 if not system.is_logged_in:
                     continue
+
+    async def get_token(self):
+        res = await self.loop.run_in_executor(None, self._post_wrapper, "/api/account/refreshAccessToken")
+        return res.get('access_token')
 
     async def login(self, code):
         res = await self.loop.run_in_executor(
@@ -182,9 +240,9 @@ class CloudConnector:
 class RestConnector:
     def __init__(self, request):
         self.session = requests.Session()
-        token = request.headers.get('Authorization')
-        self.session.headers.update({'Authorization': token})
-        self.email = self._get_username_from_token(token.split(" ")[1])
+        self.token = request.headers.get('Authorization')
+        self.session.headers.update({'Authorization': self.token})
+        self.email = self._get_username_from_token(self.token.split(" ")[1])
 
     def _get(self, route, params=None):
         url = f"https://{CLOUD_HOST}{route}"

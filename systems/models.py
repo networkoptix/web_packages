@@ -14,7 +14,7 @@ def generate_uuid():
 class Group(db.Model):
     id = db.Column(db.String(64), primary_key=True, default=generate_uuid)
     name = db.Column(db.String(1024), nullable=False)
-    owner_account_email = db.Column(db.String(255), nullable=False)
+    org_id = db.Column(db.String(64))
     parent_group_id = db.Column(db.String(64), db.ForeignKey(id), nullable=True)
     parent = db.relationship('Group', backref='groups', remote_side=id, lazy=True)
     systems = db.relationship('System', lazy="dynamic")
@@ -45,7 +45,6 @@ class Group(db.Model):
 
         })
         # Todo: Decide if this needs to be hidden
-        # del data['owner_account_email']
         # del data['parent_group_id']
         return data
 
