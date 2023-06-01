@@ -13,6 +13,8 @@
     @extend .overlay;
     bottom: 0;
     left: 0;
+    background: var(--dark3);
+    color: var(--light9);
 }
 
 .is-full-screen {

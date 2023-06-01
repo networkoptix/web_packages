@@ -94,7 +94,7 @@
         "pleaseAddNew": "Please add layout on thick client to view layouts",
         "statistics": "{resourceType} \"{name}\" Statistics",
         "additionalErrorMessages": {
-            "unreachable": "can't connect to the camera",
+            "UNAVAILABLE": "can't connect to the camera",
             "webpage": "expect in future versions",
             "iodevice": "expect in future versions",
             "defaultPassword": "click to set up",

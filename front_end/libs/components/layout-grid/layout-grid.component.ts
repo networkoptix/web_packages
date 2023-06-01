@@ -1146,13 +1146,10 @@ export class NxLayoutGridComponent {
     ): void {
         const showOfflineError = (): void => {
             itemDetail.details.online = false;
-            const serverName = this.layoutItemLookup[itemDetail.details.parentId].name;
             this.errors[itemDetail.details.id] = staticLang.common.cameraStates.unavailable;
             this.errorIcons[itemDetail.details.id] = 'offline';
-            this.additionalErrorMessages[itemDetail.details.id] = {
-                value: staticLang.layouts.additionalErrorMessages.unreachable,
-                params: { serverName },
-            };
+            this.additionalErrorMessages[itemDetail.details.id] =
+                staticLang.layouts.additionalErrorMessages.UNAVAILABLE;
         };
 
         const showTranscodingDisabledError = (error: ConnectionError): void => {

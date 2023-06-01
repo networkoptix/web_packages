@@ -197,7 +197,11 @@
                             [preloader]="true"
                             [state]="node.details.status"
                             [unavailableMessage]="'Cannot load preview' | translate"
-                            [url]="node?.details?.previewUrl | async"
+                            [url]="
+                                node?.details?.requiresTranscoding
+                                    ? ''
+                                    : (node?.details?.previewUrl | async)
+                            "
                             class="generic"
                         ></nx-health-image>
                     </div>
@@ -453,6 +457,8 @@
                             [ngClass]="{
                                 'camera-layout-item':
                                     layoutItemLookup[item.resourceId].type === RESOURCE_TYPE.CAMERA,
+                                'server-layout-item':
+                                    layoutItemLookup[item.resourceId].type === RESOURCE_TYPE.SERVER,
                                 'full-screen-override':
                                     layoutItemWrapper === window.document.fullscreenElement
                             }"

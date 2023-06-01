@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import {
     ActivatedRouteSnapshot,
     CanActivate,
@@ -14,10 +14,12 @@ import { NxSettingsService } from '@pages/systems/settings/settings.service';
 import { NxAccountService } from '@services/account.service';
 import { NxMenusService } from '@services/menus.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
+import { WINDOW } from '@services/window-provider';
 
 @Injectable()
 export class SystemGuard implements CanActivate {
@@ -33,6 +35,7 @@ export class SystemGuard implements CanActivate {
         private menusService: NxMenusService,
         private configService: NxConfigService,
         private deviceService: DeviceDetectorService,
+        @Inject(WINDOW) private window: Window,
     ) {}
 
     canActivate(
@@ -88,7 +91,11 @@ export class SystemGuard implements CanActivate {
                 advanced: isAdmin,
                 servers: isAdmin,
                 monitoring: isAdmin,
-                layouts: sysVersion >= 5.1,
+                layouts:
+                    sysVersion >= 5.1 &&
+                    (nxConfig.featureFlags.layoutsNonChrome ||
+                        // @ts-expect-error chrome property only exist on chromium browsers
+                        !!this.window.chrome),
                 bookmarks: canViewBookmarks,
             };
 

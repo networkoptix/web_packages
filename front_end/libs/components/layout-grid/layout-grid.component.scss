@@ -455,6 +455,10 @@ cdk-tree,
     overflow: hidden;
     background: var(--header-bg);
 
+    &.server-layout-item {
+        background: var(--placeholder-background);
+    }
+
     &:hover {
         outline: 2px solid var(--border-color);
     }
@@ -492,7 +496,8 @@ cdk-tree,
     header {
         display: none;
         position: absolute;
-        background: linear-gradient(to bottom, var(--body-bg), transparent);
+        background: linear-gradient(to bottom, var(--dark3) 10%, transparent);
+        color: var(--light9);
         padding: 4px 8px;
         top: 0;
         left: 0;
@@ -771,8 +776,22 @@ iframe {
     align-items: center;
     text-align: center;
 
+    & > h3, & > p {
+        color: var(--no-camera-placeholder-color) !important;
+    }
+
+    .st0 {
+        fill: var(--no-camera-placeholder-color) !important;
+    }
+
+    h3 {
+        @include typography.medium16nocolor;
+        font-size: rem(16px) !important;
+    }
+
     p {
-        margin-top: 8px;
+        margin-top: 4px;
+        font-size: rem(14px) !important;
         max-width: min(288px, calc(100vw - 32px));
     }
 }
