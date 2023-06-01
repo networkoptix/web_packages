@@ -54,21 +54,6 @@ Users Teardown
     Cleanup Containers    ${random}
     Close All Browsers
 
-Remove Temporary Users
-    [Arguments]    ${sysID}=${AUTO TESTS SYSTEM ID}    ${sysIP}=${AUTO SYS IP}
-    FOR    ${user}    IN     @{TMP USERS}
-        ${user id}=   Get Cloud User Id By Email    ${auth}    ${user}    ${sysID}
-        IF    '${user id}'!='None'
-            Remove User    ${auth}    ${sysIP}    ${user id}
-        END
-    END
-    # Open Browser and go to URL    ${url}
-    # Log in to Auto Tests System    ${email}
-    # Click Link    ${USERS LIST LINK}
-    # Run Keyword And Continue On Failure     Delete All Local Users    //span[contains(text(),"ocal+")]
-    # Close Browser
-
-
 Edit User Permissions In Systems
     [arguments]    ${user email address}    ${permissions}
     Wait Until Element Is Not Visible    ${ADD USER MODAL}
