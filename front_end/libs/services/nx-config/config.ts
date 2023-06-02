@@ -136,6 +136,7 @@ export const nxConfig: IConfig = {
     },
     headerHeight: 48,
     moreResultsHeight: 60,
+    offlineCameraPollingInterval: 30,
     supportedLanguages: [],
     system: {
         flags: {

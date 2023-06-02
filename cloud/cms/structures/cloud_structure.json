@@ -851,6 +851,15 @@
             "advanced": true
           },
           {
+            "label": "Offline Camera Polling Interval",
+            "name": "%OFFLINE_CAMERA_POLLING_INTERVAL%",
+            "description": "Time in seconds that layouts would wait before checking if an offline/unavailable camera is reachable.",
+            "type": "integer",
+            "value": 30,
+            "optional": false,
+            "advanced": true
+          },
+          {
             "label": "Enable cloud storage",
             "name": "%CLOUD_STORAGE_ENABLED%",
             "description": "Allows users to see the cloud storage tab on the system page. If disabled, it will only be shown if the system supports it.",

@@ -121,6 +121,7 @@ class CustomizationCacheSerializer(serializers.Serializer):
     integrationStoreEnabled = serializers.BooleanField(default=False)
     landingDescription = serializers.CharField(default='')
     healthMonitorCacheTimeout = serializers.IntegerField(default=60)
+    offlineCameraPollingInterval = serializers.IntegerField(default=30)
     mobileLinks = MobileLinksSerializer()
     publicDownloads = serializers.BooleanField(default=False)
     publicReleases = serializers.BooleanField(default=False)

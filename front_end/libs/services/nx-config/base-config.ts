@@ -85,6 +85,7 @@ export interface BaseConfig {
     cloudMonitoring: CloudMonitoring;
     themeConfig: ThemeConfig;
     mobileLinks: MobileLinks;
+    offlineCameraPollingInterval: number;
 }
 
 export type RouteCheckTuple = [

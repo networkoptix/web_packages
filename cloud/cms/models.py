@@ -295,7 +295,8 @@ async def cloud_portal_customization_cache_async(customization_name, value=None,
                           '%SHOW_ANALYTICS_EVENTS%', '%SORT_SUPPORTED_DEVICES_BY_POPULARITY%', '%SUPPORT_LINK%',
                           '%PRIVACY_LINK%', '%SUPPORTED_RESOLUTIONS%', '%SUPPORTED_HARDWARE_TYPES%', '%SEARCH_TAGS%',
                           '%TESTED_OPERATING_SYSTEMS%', '%VENDORS_SHOWN%', '%GOOGLE_TAG_MANAGER_ID%', '%LOGROCKET_PROJECT%',
-                          '%FULLSTORY_ID%', '%TRIAL_LICENSE_KEY%', '%DEFAULT_THEME%', '%DARK_THEME%', '%LIGHT_THEME%']
+                          '%FULLSTORY_ID%', '%TRIAL_LICENSE_KEY%', '%DEFAULT_THEME%', '%DARK_THEME%', '%LIGHT_THEME%',
+                          '%OFFLINE_CAMERA_POLLING_INTERVAL%']
                 cloud_capabilities = ['%REVIEWS_ENABLED%', '%SMTP_DISABLED%']
                 ds_data = await sync_to_async(asset.read_all_global_values)(global_vars + email + config + cloud_capabilities)
 
@@ -350,6 +351,7 @@ async def cloud_portal_customization_cache_async(customization_name, value=None,
                         'integration_store_enabled': integration_store_enabled,
                         'landing_description': landing_description,
                         'health_monitor_cache_timeout': ds_data.get('%HM_CACHE_TIMEOUT%'),
+                        'offline_camera_polling_interval': ds_data.get('%OFFLINE_CAMERA_POLLING_INTERVAL%'),
                         'mobile_links': {
                             'android_application_link': ds_data.get('%ANDROID_APPLICATION_LINK%'),
                             'ios_application_link': ds_data.get('%IOS_APPLICATION_LINK%')

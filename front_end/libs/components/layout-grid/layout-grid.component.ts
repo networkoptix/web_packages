@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { cloneDeep, isEqual, omit } from 'lodash-es';
+import { cloneDeep, flatten, groupBy, isEqual, mapValues, omit, values } from 'lodash-es';
 import { TourService } from 'ngx-ui-tour-md-menu';
 import {
     BehaviorSubject,
@@ -27,6 +27,7 @@ import {
     of,
     throwError,
     fromEvent,
+    forkJoin,
 } from 'rxjs';
 import {
     distinctUntilChanged,
@@ -44,6 +45,8 @@ import {
     delay,
     retry,
     delayWhen,
+    repeat,
+    timeout,
 } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 
@@ -52,7 +55,7 @@ import { ConfigType } from '@components/console-table/console-table.component.ty
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { icons } from '@lib/variables/static-variables';
-import { ConnectionError } from '@openLibs/webrtc-stream-manager';
+import { ConnectionError, WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';
 import { Translatable } from '@pipes/nx-translate.types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
@@ -562,7 +565,90 @@ export class NxLayoutGridComponent {
         }
     }
 
+    /**
+     * The nx-video-player player internally handles reconnect behavior for cameras
+     * that were online and successfully connected when the layout was opened.
+     *
+     * The reconnecting logic from within the nx-video-player is more aggressive
+     * because it's mostly meant to handle cases where the connection was lost
+     * for a short ammount of time.
+     *
+     * For cameras that were either offline or initial connection failed we'll
+     * assume that they're still unreachable and use more conservative as not to
+     * spam the mediaservers with requests to open a websocket connection.
+     */
+    pingOfflineCameras(pollingInterval = this.CONFIG.offlineCameraPollingInterval): void {
+        const isCamera = (node: ResourceNode<unknown>): node is ResourceNode<NxSystemCamera> =>
+            node.type === ResourceType.CAMERA;
+        const getOfflineCameras = (): Record<string, NxSystemCamera[]> => {
+            const offlineCameras = this.layout.items
+                .map(({ resourceId }) => this.layoutItemLookup[resourceId])
+                .filter(isCamera)
+                .map(({ details }) => details)
+                .filter(({ online, unauthorized }) => !online && !unauthorized);
+            return groupBy(offlineCameras, 'parentId');
+        };
+
+        const filterByOnlineServers = (
+            groupedCameras: Record<string, NxSystemCamera[]>,
+        ): Observable<NxSystemCamera[]> =>
+            forkJoin(
+                mapValues(groupedCameras, (cameras, serverId) =>
+                    this.system.serverManager.mediaserverConnections[serverId].ping().pipe(
+                        map(() => cameras),
+                        catchError(() => Promise.resolve([])),
+                    ),
+                ),
+            ).pipe(
+                map(groupedCamerasOnlineServers => flatten(values(groupedCamerasOnlineServers))),
+            );
+        const filterByReachableWithWebRtc = (cameras: NxSystemCamera[]): Observable<string[]> =>
+            forkJoin(
+                cameras.reduce(
+                    (acc, { id, webRtcUrl }) => ({
+                        ...acc,
+                        [id]: WebRTCStreamManager.connect(webRtcUrl).pipe(
+                            timeout(10000),
+                            catchError(() => of([])),
+                            take(1),
+                            map(([mediaStream]) => !!mediaStream),
+                        ),
+                    }),
+                    {} as Record<string, Observable<boolean>>,
+                ),
+            ).pipe(
+                map(webRtcStatuses =>
+                    Object.keys(webRtcStatuses).filter(cameraId => webRtcStatuses[cameraId]),
+                ),
+            );
+
+        const updateReachableCameras = (cameraIds: string[]): void =>
+            cameraIds.forEach(cameraId => {
+                const camera = this.layoutItemLookup[cameraId];
+
+                if (isCamera(camera)) {
+                    camera.details.online = true;
+                    delete this.errors[cameraId];
+                    delete this.errorIcons[cameraId];
+                    delete this.additionalErrorMessages[cameraId];
+                }
+            });
+
+        of(true)
+            .pipe(
+                delay(pollingInterval * 1000),
+                map(getOfflineCameras),
+                switchMap(filterByOnlineServers),
+                switchMap(filterByReachableWithWebRtc),
+                tap(updateReachableCameras),
+                repeat(),
+                untilDestroyed(this),
+            )
+            .subscribe();
+    }
+
     ngOnInit(): void {
+        this.pingOfflineCameras();
         this.#countdownTimer$
             .pipe(
                 debounceTime(2500),
