@@ -22,7 +22,7 @@ def is_org_admin(f):
         raw_data = await request.get_json()
         connector = RestConnector(request)
         license_api = LicenseConnector(connector.email, connector.token)
-        if await license_api.is_admin_in_org(raw_data.get('id')):
+        if await license_api.is_admin_in_org(raw_data.get('org_id')):
             return await f(*args, **kwargs)
         return 'Unauthorized', codes.forbidden
     return check_role
