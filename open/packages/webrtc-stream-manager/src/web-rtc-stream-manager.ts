@@ -13,10 +13,6 @@ import { calculateElementFocus, calculateWindowFocusThreshold, sanitizeUrl } fro
  * Manages connection negotation using websockets as well as webRTC peer connections to mediaservers.
  *
  * Reuses peer connections when possible and only opens websocket connection for negotiating connections.
- *
- * Playback sync as well as performance tuning will either be handled in this class or might end up extending a class that handles managing the playback.
- *
- * TODO: Playback sync as well as performance tuning will be blocked until data channels on VMS-35748 are implemented for position and stream switching.
  */
 
 export class WebRTCStreamManager {
@@ -269,6 +265,7 @@ export class WebRTCStreamManager {
      *         stream: 0 | 1;
      *         priority: number;
      *         mos: number;
+     *         fps: number;
      *         connection: WebRTCStreamManager;
      *     }[];
      * }
@@ -301,11 +298,12 @@ export class WebRTCStreamManager {
     ).subscribe()
 
     /**
-     * WebRTCStreamManager factory to either return existing instance to reuse exiting connection or instantiates instance. Returns observable of the MediaStreams from the mediaserver.
+     * WebRTCStreamManager factory to either return existing instance to reuse exiting connection or instantiates instance.
      *
      * @param webRtcUrlFactory () => string
      * @param videoElement HTMLVideoElement
-     * @returns Observable<MediaStream>
+     * @param hasSecondary boolean - if the camera has a secondary stream available
+     * @returns Observable<[MediaStream, ConnectionError, WebRTCStreamManager]>
      */
     static connect(
         webRtcUrlFactory: (params?: Record<string, unknown>) => string,
@@ -463,7 +461,7 @@ export class WebRTCStreamManager {
     /**
      * Returns aggregated priority score and mos score for connection using registered trackers.
      *
-     * @returns { priority: number, mos: number }
+     * @returns { priority: number, mos: number, fps: number }
      */
     public getPriority() {
         return {

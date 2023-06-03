@@ -7,10 +7,14 @@
 ## Overview
 
 The WebRtcStreamManager is able to connect to multiple streams which could put a lot of load on the
-peer connections; it is easy to saturate the connections when viewing several primary streams at once.
+peer connections; it is easy to saturate the connection from either the client side or mediaserver
+side when viewing several primary streams at once.
 
 The switching algorithm aims to address those issues by monitoring connection health and elment focus
-to determine which streams to play.
+to determine which streams to play. The FPS is indirectly taken into account as part of connection
+health but is also exposed in case the developer wants to use it to downgrade the stream on their
+own or show some indicator on the UI if the stream drops below a certain threshold for an extended
+amount of time.
 
 ---
 
@@ -31,7 +35,7 @@ The objective of the algorithm is to determine if we should attempt switching an
 *NOTES:*
 
 In the future we'll add canUpgrade and canDowngrade methods to the BaseTracker abstract class.
-To allow customizing the algorithm behavior.
+To allow customizing the algorithm behavior by registering customized trackers.
 
 ---
 
