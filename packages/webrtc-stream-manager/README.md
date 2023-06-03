@@ -8,19 +8,31 @@ This package simplifies playing back videos via `WebRTC` from `Nx Meta VMS` medi
 
 ## What can it do?
 
-The exported `WebRTCStreamManager` class handles establishing a WebRTC connection with the mediaserver. When initializing the connection, a video element could optionally be passed as an argument which would bind that element to the stream. The stream it itself is also exposed on the return `Observable` to allow flexibility.
+The exported `WebRTCStreamManager` class handles establishing a WebRTC connection with the mediaserver.
+When initializing the connection using the `connect` static method, a video element could optionally
+be passed as an argument to be used to gather metrics as part of the stream switching algorithm.
 
-The `WebRTCStreamManager` defaults to showing live but also allows for updating the playback position to play streams from archive. The playback position could also be updated; when the position is updated all `WebRTCStreamManager` instances playback positions are synced to the new time stamp.
+The `WebRTCStreamManager` defaults to showing live but also allows for updating the playback position
+to play streams from archive. The playback position could also be updated; when the position is updated
+all `WebRTCStreamManager` instances playback positions are synced to the new time stamp.
 
 ## Usage
 
-The `WebRTCStreamManager` class exposes a `connect` static method which is used to initialize a connection. Optionally it accepts a reference to a video element to automatically close the connection once the player is no longer on the DOM.
+The `WebRTCStreamManager` class exposes a `connect` static method which is used to initialize a connection.
+Optionally it accepts a reference to a video element to automatically close the connection once the player
+is no longer on the DOM.
 
 ### Example webRtcUrlFactory function:
 
-The `WebRTCStreamManager.connect` method takes as a first argument a function that returns the webrtc-tracker endpoint with auth.
+The `WebRTCStreamManager.connect` method takes as a first argument a function that returns the
+webrtc-tracker endpoint with auth.
 
-The camera_id and auth query parameters are required, pos is optional.
+The camera_id query parameters are required, pos is optional.
+
+Authentication is handled either by cookie authentication before calling `WebRTCStreamManager.connect`
+or by providing an digest auth key using the auth query param.
+
+Cookie authentication is recommended because digest auth is disabled for 2fa enabled systems.
 
 ```typescript
 // Could be a direct connection '{serverIp}:{port}` or a cloud relayed connection '{serverId}.{cloudSystemId}.{relayUrl}'
