@@ -41,9 +41,9 @@ function brew_install() {
     echo "installing virtualenv"
     pip install virtualenv
     echo "installing poetry"
-    echo install poetry==1.4.0
+    pip install poetry==1.4.0
     echo 'Installing node v12.18.4'
-    n 12.18.4
+    n 18.15.0
     echo 'Installing python 3.8.10'
     pyenv install 3.8.10
     pyenv local 3.8.10
@@ -62,8 +62,7 @@ function init_backend(){
 
 function init_frontend(){
     pushd front_end
-    echo "Installing node modules w/ legacy deps ... as new npm is strict about it"
-    npm ci
+    npm install
     npm run setSkin blue
     popd
 }
@@ -180,7 +179,8 @@ function setup_or_activate_virtualenv() {
         fi
     fi
 
-
+    # Copy necessary config for virutalenv
+    cp etc/virtual_env_template/* $VENV_DIR
 }
 
 function start_celery() {
@@ -338,7 +338,7 @@ function install_cli() {
 }
 
 function export_poetry_requirements() {
-    poetry -C cloud/ export --with test,front-build,prod,piplicenses --without-hashes --without-urls -o cloud/requirements.txt
+    poetry --directory=cloud/ export --with test,front-build,prod,piplicenses --without-hashes --without-urls -o cloud/requirements.txt
     sed -i '' '1s/^/# NOTE!!! This requirements file is used in development only.\n/' cloud/requirements.txt
     sed -i '' '2s/^/# Production requirements file is generated during build.\n/' cloud/requirements.txt
     sed -i '' '3s/^/\n/' cloud/requirements.txt
