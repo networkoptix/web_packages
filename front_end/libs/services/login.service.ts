@@ -26,7 +26,7 @@ import type { NxSystem } from './system.service/system';
 import { WINDOW } from './window-provider';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxLoginService extends DialogBase {
     CONFIG: IConfig;
@@ -67,17 +67,22 @@ export class NxLoginService extends DialogBase {
         let sessionRenewal;
 
         if (!environment.isLocal) {
-            sessionRenewal = this.http.post('/api/account/renewSession', { code }).toPromise()
+            sessionRenewal = this.http
+                .post('/api/account/renewSession', { code })
+                .toPromise()
                 .then(() => this._currentSystem.updateToken(true));
         } else {
-            sessionRenewal = this._currentSystem.mediaserver.logout()
+            sessionRenewal = this._currentSystem.mediaserver
+                .logout()
                 .then(() => this._currentSystem.mediaserver.loginOauth(code).toPromise());
         }
         return sessionRenewal.then(() => Promise.resolve(true)).catch(() => Promise.reject(false));
     }
 
     private pingCloud(): Promise<boolean> {
-        return this.http.get(`${this.CONFIG.cloudHost}/api/ping`).toPromise()
+        return this.http
+            .get(`${this.CONFIG.cloudHost}/api/ping`)
+            .toPromise()
             .then(() => Promise.resolve(true))
             .catch(() => Promise.resolve(false));
     }
@@ -86,7 +91,7 @@ export class NxLoginService extends DialogBase {
         keepPage?: boolean,
         redirectClose?: boolean,
         redirectHome = false,
-        blockNavigation = false
+        blockNavigation = false,
     ): undefined | Promise<string | boolean> {
         if (this.CONFIG.browserNotSupported) {
             return;
@@ -100,11 +105,11 @@ export class NxLoginService extends DialogBase {
                 login: system.mediaserver.loginToken,
                 cancellable: !keepPage || false,
                 location: this.location,
-                keepPage: (keepPage !== undefined) ? keepPage : true,
+                keepPage: keepPage !== undefined ? keepPage : true,
                 redirectClose: redirectClose || false,
                 redirectHome,
-                blockNavigation
-            }
+                blockNavigation,
+            },
         };
 
         if (environment.isLocal) {
@@ -114,7 +119,7 @@ export class NxLoginService extends DialogBase {
             Object.assign(config, {
                 keyboard: false,
                 backdropClass: 'webadmin-backdrop-login',
-                panelClass: 'webadmin-window' //  only one class is allowed
+                panelClass: 'webadmin-window', //  only one class is allowed
             });
         }
 
@@ -122,17 +127,20 @@ export class NxLoginService extends DialogBase {
 
         return this.open(LoginWebadminModalContent, dialogConfig)
             .afterClosed()
-            .then(result => {
-                this.closeResult = `Closed with: ${result}`;
+            .then(
+                result => {
+                    this.closeResult = `Closed with: ${result}`;
 
-                if (redirectClose && result === 'canceled') {
-                    return this.router.navigate([redirect.unauthorised]);
-                }
-                return result;
-            }, reason => {
-                this.closeResult = 'Dismissed';
-                return reason;
-            });
+                    if (redirectClose && result === 'canceled') {
+                        return this.router.navigate([redirect.unauthorised]);
+                    }
+                    return result;
+                },
+                reason => {
+                    this.closeResult = 'Dismissed';
+                    return reason;
+                },
+            );
     }
 
     cancelCodeSubscription(): void {
@@ -140,8 +148,10 @@ export class NxLoginService extends DialogBase {
     }
 
     async updateSession(state: string): Promise<boolean> {
-        if (['disconnect', 'transfer'].includes(state) && !environment.isLocal ||
-        this._currentSystem.useRest && this._currentSystem.mediaserver.isSessionOauth) {
+        if (
+            (['disconnect', 'transfer'].includes(state) && !environment.isLocal) ||
+            (this._currentSystem.useRest && this._currentSystem.mediaserver.isSessionOauth)
+        ) {
             if (!(await this.pingCloud())) {
                 this.dialogs.notify(this.LANG.toastMessage.noInternet, 'warning', true);
                 // Close dialog if any
@@ -150,14 +160,18 @@ export class NxLoginService extends DialogBase {
 
                 return Promise.resolve(false);
             }
-            const authorizeUrl = `${environment.isLocal ? '/#' : ''}/cloud-authorize${state ? '?state=' + state : ''}`;
+            const authorizeUrl = `${environment.isLocal ? '/#' : ''}/cloud-authorize${
+                state ? '?state=' + state : ''
+            }`;
             this.window.open(authorizeUrl, '_blank').focus();
-            return this.storage.observe(oauthStore.code)
+            return this.storage
+                .observe(oauthStore.code)
                 .pipe(
                     take(1),
                     switchMap(code => this.handleCode(code)),
                     takeUntil(this.done$),
-                ).toPromise();
+                )
+                .toPromise();
         }
         return Promise.resolve(false);
     }

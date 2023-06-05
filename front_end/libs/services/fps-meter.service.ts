@@ -2,7 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { Injectable, Inject } from '@angular/core';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class FpsMeterService {
     protected _isInstalled: boolean = false;
@@ -18,7 +18,7 @@ export class FpsMeterService {
 
     protected _install(): void {
         // a guard against SSR failure
-        if (typeof (this.document) === 'object') {
+        if (typeof this.document === 'object') {
             const script = this.document.createElement('script');
             script.onload = () => {
                 // @ts-expect-error

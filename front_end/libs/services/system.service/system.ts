@@ -21,4 +21,5 @@ import { NxSystemBase } from '@services/system/system-base';
  *   // More code
  * }
  */
-export type NxSystem<WithBase = false> = BaseModules & (WithBase extends true ? NxSystemBase : Partial<NxSystemBase>);
+export type NxSystem<WithBase = false> = BaseModules &
+    (WithBase extends true ? NxSystemBase : Partial<NxSystemBase>);

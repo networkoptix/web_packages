@@ -7,7 +7,7 @@ const CSV_EXTENSION = '.csv';
 const CSV_TYPE = 'text/plain;charset=utf-8';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxCsvExtractService {
     /**
@@ -41,23 +41,28 @@ export class NxCsvExtractService {
                 return true;
             }
         });
-        const title = (options.showTitle && options.title) ? options.title + '\n\n' : '';
+        const title = options.showTitle && options.title ? options.title + '\n\n' : '';
         const csvContent =
-                title +
-                keys.join(separator) +
-                '\n' +
-                rows.map(row => {
-                    return keys.map(k => {
-                        let cell = row[k] === null || row[k] === undefined ? '' : row[k];
-                        cell = cell instanceof Date
-                            ? cell.toLocaleString()
-                            : cell.toString().replace(/"/g, '""');
-                        if (cell.search(/("|,|\n)/g) >= 0) {
-                            cell = `"${cell}"`;
-                        }
-                        return cell;
-                    }).join(separator);
-                }).join('\n');
+            title +
+            keys.join(separator) +
+            '\n' +
+            rows
+                .map(row => {
+                    return keys
+                        .map(k => {
+                            let cell = row[k] === null || row[k] === undefined ? '' : row[k];
+                            cell =
+                                cell instanceof Date
+                                    ? cell.toLocaleString()
+                                    : cell.toString().replace(/"/g, '""');
+                            if (cell.search(/("|,|\n)/g) >= 0) {
+                                cell = `"${cell}"`;
+                            }
+                            return cell;
+                        })
+                        .join(separator);
+                })
+                .join('\n');
         NxCsvExtractService.saveAsFile(csvContent, `${fileName}${CSV_EXTENSION}`, CSV_TYPE);
     }
 }

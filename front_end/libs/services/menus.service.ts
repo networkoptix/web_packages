@@ -21,7 +21,7 @@ import { WINDOW } from './window-provider';
 
 @UntilDestroy({ checkProperties: true })
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxMenusService {
     private menusStructure: MenusStructure;
@@ -57,7 +57,7 @@ export class NxMenusService {
             .pipe(
                 filter(lang => lang !== null),
                 distinctUntilChanged(),
-                untilDestroyed(this)
+                untilDestroyed(this),
             )
             .subscribe(() => {
                 setTimeout(() => {
@@ -73,14 +73,23 @@ export class NxMenusService {
                 newMenu[name] = {
                     title,
                     description,
-                    nodes: nodes.map(this.translateNode())
+                    nodes: nodes.map(this.translateNode()),
                 };
                 return newMenu;
-            }, {});
+            },
+            {},
+        );
     };
 
-    getMenu = (name: string, withCurrentSystem = false, ignoreCache = false): Observable<MenuStructure> => {
-        let menu = name.toLowerCase() in this.menusStructure ? { ...this.menusStructure?.[name.toLowerCase()] } as MenuStructure : undefined;
+    getMenu = (
+        name: string,
+        withCurrentSystem = false,
+        ignoreCache = false,
+    ): Observable<MenuStructure> => {
+        let menu =
+            name.toLowerCase() in this.menusStructure
+                ? ({ ...this.menusStructure?.[name.toLowerCase()] } as MenuStructure)
+                : undefined;
         // Update to also make request if no menu
 
         if (environment.isLocal) {
@@ -88,12 +97,16 @@ export class NxMenusService {
                 menu = {
                     description: undefined,
                     nodes: [],
-                    title: name
+                    title: name,
                 };
             }
         }
 
-        if (withCurrentSystem && this.currentSystemNode$.value && !this.CONFIG.featureFlags.newHeader) {
+        if (
+            withCurrentSystem &&
+            this.currentSystemNode$.value &&
+            !this.CONFIG.featureFlags.newHeader
+        ) {
             menu.nodes = menu?.nodes?.length
                 ? [this.currentSystemNode$.value, ...menu.nodes]
                 : [this.currentSystemNode$.value];
@@ -103,23 +116,24 @@ export class NxMenusService {
             return from([menu]);
         }
 
-        return combineLatest([this.sessionService.loginStateSubject, this.languageChanged$])
-            .pipe(
-                switchMap(([login]): Promise<[string, MenuStructure]> | Observable<[string, MenuStructure]> => ignoreCache || !menu
-                    ? this.http.get<MenuStructure>(this.apiBase + `/cms/menus/${encodeURI(name)}`).pipe(
-                        map((menu): [string, MenuStructure] => [login, menu])
-                    )
-                    : Promise.resolve([login, menu])
-                ),
-                map(([login, menu]) => {
-                    const filteredMenu = this.filterMenu(
-                        menu,
-                        login || environment.isLocal ? Auth.LOGGED_IN : Auth.LOGGED_OUT
-                    );
-                    filteredMenu.nodes = filteredMenu.nodes.map(this.translateNode());
-                    return filteredMenu;
-                })
-            );
+        return combineLatest([this.sessionService.loginStateSubject, this.languageChanged$]).pipe(
+            switchMap(
+                ([login]): Promise<[string, MenuStructure]> | Observable<[string, MenuStructure]> =>
+                    ignoreCache || !menu
+                        ? this.http
+                              .get<MenuStructure>(this.apiBase + `/cms/menus/${encodeURI(name)}`)
+                              .pipe(map((menu): [string, MenuStructure] => [login, menu]))
+                        : Promise.resolve([login, menu]),
+            ),
+            map(([login, menu]) => {
+                const filteredMenu = this.filterMenu(
+                    menu,
+                    login || environment.isLocal ? Auth.LOGGED_IN : Auth.LOGGED_OUT,
+                );
+                filteredMenu.nodes = filteredMenu.nodes.map(this.translateNode());
+                return filteredMenu;
+            }),
+        );
     };
 
     filterMenu = (menu: MenuStructure, auth: Auth) => {
@@ -136,77 +150,83 @@ export class NxMenusService {
         return menu;
     };
 
-    cleanEmptyNodes = (menu: MenuNode[], checkAsset = false) => (menu || []).reduce((menu, node: MenuNode) => {
-        const nodes = this.cleanEmptyNodes(node.nodes, checkAsset);
-        return nodes.length || (checkAsset && node.asset_id) || node.url ? [...menu, { ...node, nodes }] : menu;
-    }, []);
+    cleanEmptyNodes = (menu: MenuNode[], checkAsset = false) =>
+        (menu || []).reduce((menu, node: MenuNode) => {
+            const nodes = this.cleanEmptyNodes(node.nodes, checkAsset);
+            return nodes.length || (checkAsset && node.asset_id) || node.url
+                ? [...menu, { ...node, nodes }]
+                : menu;
+        }, []);
 
-    addDraftAndPending = <T extends MenuNode>(menu: T[]) => menu.reduce((nodes: T[], node: T) => {
-        let indented = false;
-        if (node.nodes?.length) {
-            node.nodes = this.addDraftAndPending(node.nodes);
-        }
-        if (node.accepted) {
-            nodes.push({ ...node, indented });
-            indented = true;
-        }
-        if (node.pending) {
-            const state = 'pending';
-            nodes.push({
-                ...node,
-                nodes: [],
-                display_name: indented ? '⮑' : node.display_name,
-                state,
-                indented
-            });
-            indented = true;
-        }
-        if (node.draft) {
-            const state = 'draft';
-            nodes.push({
-                ...node,
-                nodes: [],
-                display_name: indented ? '⮑' : node.display_name,
-                state,
-                indented
-            });
-        }
-        return nodes;
-    }, []);
-
-    private translateNode = (breadcrumbs: MenuNode[] = []) => (node: MenuNode) => {
-        if (!node) {
-            return;
-        }
-        // eslint-disable-next-line camelcase
-        let display_name = node.display_name || node.name;
-        let name = node.name;
-        let translatedRaw = '';
-        if (node.name_raw || node.name) {
-            translatedRaw = this.translate.instant(node.name_raw || node.name);
-        }
-        if (translatedRaw && translatedRaw !== node.name_raw) {
-            name = translatedRaw;
-            // eslint-disable-next-line camelcase
-            display_name = translatedRaw;
-        } else {
-            // eslint-disable-next-line camelcase
-            display_name = this.translate.instant(display_name);
-            name = this.translate.instant(node.name);
-        }
-
-        if (node.name === 'Support') {
-            const supportUrl = node.url;
-            if (supportUrl.includes('@') && !supportUrl.includes('mailto:')) {
-                node.url = `mailto:${supportUrl}`;
-            } else if ((/\d{3}-\d{3}-\d{4}/g).test(supportUrl) && !supportUrl.includes('tel:')) {
-                node.url = `tel:${supportUrl.replace(/ \(Option (\d*)\)/, ';$1')}`;
+    addDraftAndPending = <T extends MenuNode>(menu: T[]) =>
+        menu.reduce((nodes: T[], node: T) => {
+            let indented = false;
+            if (node.nodes?.length) {
+                node.nodes = this.addDraftAndPending(node.nodes);
             }
-        }
+            if (node.accepted) {
+                nodes.push({ ...node, indented });
+                indented = true;
+            }
+            if (node.pending) {
+                const state = 'pending';
+                nodes.push({
+                    ...node,
+                    nodes: [],
+                    display_name: indented ? '⮑' : node.display_name,
+                    state,
+                    indented,
+                });
+                indented = true;
+            }
+            if (node.draft) {
+                const state = 'draft';
+                nodes.push({
+                    ...node,
+                    nodes: [],
+                    display_name: indented ? '⮑' : node.display_name,
+                    state,
+                    indented,
+                });
+            }
+            return nodes;
+        }, []);
 
-        const nodes = node.nodes?.map(this.translateNode([...breadcrumbs, node])) || [];
-        return { ...node, display_name, name, nodes, breadcrumbs };
-    };
+    private translateNode =
+        (breadcrumbs: MenuNode[] = []) =>
+        (node: MenuNode) => {
+            if (!node) {
+                return;
+            }
+            // eslint-disable-next-line camelcase
+            let display_name = node.display_name || node.name;
+            let name = node.name;
+            let translatedRaw = '';
+            if (node.name_raw || node.name) {
+                translatedRaw = this.translate.instant(node.name_raw || node.name);
+            }
+            if (translatedRaw && translatedRaw !== node.name_raw) {
+                name = translatedRaw;
+                // eslint-disable-next-line camelcase
+                display_name = translatedRaw;
+            } else {
+                // eslint-disable-next-line camelcase
+                display_name = this.translate.instant(display_name);
+                name = this.translate.instant(node.name);
+            }
+
+            if (node.name === 'Support') {
+                const supportUrl = node.url;
+                if (supportUrl.includes('@') && !supportUrl.includes('mailto:')) {
+                    node.url = `mailto:${supportUrl}`;
+                } else if (/\d{3}-\d{3}-\d{4}/g.test(supportUrl) && !supportUrl.includes('tel:')) {
+                    node.url = `tel:${supportUrl.replace(/ \(Option (\d*)\)/, ';$1')}`;
+                }
+            }
+
+            const nodes = node.nodes?.map(this.translateNode([...breadcrumbs, node])) || [];
+            return { ...node, display_name, name, nodes, breadcrumbs };
+        };
 
     getUrl(systemId: string, endpoint = this.endpoint, home = false) {
         const url = environment.isLocal ? '/settings' : '/systems/' + systemId;
@@ -239,7 +259,7 @@ export class NxMenusService {
             segment = '/layouts';
         }
 
-        return (!environment.isLocal && systemId) ? url + segment : segment;
+        return !environment.isLocal && systemId ? url + segment : segment;
     }
 
     makeSystemMenuNode() {
@@ -263,8 +283,12 @@ export class NxMenusService {
         groupsNode.invisible = true;
         groupsNode.nodes.push(new MenuNode('', '/home'));
         groupsNode.nodes[0].invisible = true;
-        groupsNode.nodes.push(new MenuNode(systemGroupsLang.nodes.personal.displayName, '/home/personal'));
-        groupsNode.nodes.push(new MenuNode(systemGroupsLang.nodes.shared.displayName, '/home/shared'));
+        groupsNode.nodes.push(
+            new MenuNode(systemGroupsLang.nodes.personal.displayName, '/home/personal'),
+        );
+        groupsNode.nodes.push(
+            new MenuNode(systemGroupsLang.nodes.shared.displayName, '/home/shared'),
+        );
         return groupsNode;
     }
 
@@ -279,15 +303,20 @@ export class NxMenusService {
         if (!activeSystem) {
             return;
         }
-        let name = activeSystem.info?.systemName || activeSystem.info?.name || activeSystem.systemName || activeSystem.name;
+        let name =
+            activeSystem.info?.systemName ||
+            activeSystem.info?.name ||
+            activeSystem.systemName ||
+            activeSystem.name;
         if (!name) {
-            name = (environment.isLocal) ? this.CONFIG.localServerId : activeSystem.moduleInfo?.id;
+            name = environment.isLocal ? this.CONFIG.localServerId : activeSystem.moduleInfo?.id;
         }
-        const icon = (
+        const icon =
             environment.isLocal ||
             activeSystem.isOnline ||
             activeSystem.stateOfHealth === this.CONFIG.system.status.online
-        ) ? 'system.svg' : 'system_offline.svg';
+                ? 'system.svg'
+                : 'system_offline.svg';
 
         const hasAdminAccess = activeSystem?.accessRole
             ? this.CONFIG.accessRoles.adminAccess.includes(activeSystem.accessRole.toLowerCase())
@@ -297,13 +326,13 @@ export class NxMenusService {
             'View',
             this.getUrl(activeSystem.id, { view: true }),
             this.LANG?.serverTabTitles.View,
-            this.endpoint.view || false
+            this.endpoint.view || false,
         );
         const settingsNode = new MenuNode(
             'Settings',
             this.getUrl(activeSystem.id, { settings: true }),
             this.LANG?.serverTabTitles.Settings,
-            this.endpoint.settings || false
+            this.endpoint.settings || false,
         );
 
         const nodes = [viewNode, settingsNode];
@@ -312,7 +341,7 @@ export class NxMenusService {
                 'Information',
                 this.getUrl(activeSystem.id, { information: true }),
                 this.LANG?.serverTabTitles.Information,
-                this.endpoint.information || false
+                this.endpoint.information || false,
             );
             nodes.push(informationNode);
 
@@ -320,7 +349,7 @@ export class NxMenusService {
                 'Monitoring',
                 this.getUrl(activeSystem.id, { monitoring: true }),
                 this.LANG?.serverTabTitles.Monitoring,
-                this.endpoint.monitoring || false
+                this.endpoint.monitoring || false,
             );
             nodes.push(monitoringNode);
         }
@@ -337,21 +366,22 @@ export class NxMenusService {
                 'Bookmarks',
                 this.getUrl(activeSystem.id, { bookmarks: true }),
                 this.LANG?.serverTabTitles.Bookmarks,
-                this.endpoint.bookmarks || false
+                this.endpoint.bookmarks || false,
             );
             nodes.splice(1, 0, bookmarksNode); // Right after view
         }
 
         // Layouts only usable with webRTC
         const layoutsEnabled = activeSystem.version >= 5.1 && this.CONFIG.featureFlags.layouts;
-        // @ts-expect-error
-        const layoutsEnabledForBrowser = this.CONFIG.featureFlags.layoutsNonChrome || !!this.window.chrome;
+        const layoutsEnabledForBrowser =
+            // @ts-expect-error window.chrome only in Chromium browsers
+            this.CONFIG.featureFlags.layoutsNonChrome || !!this.window.chrome;
         if (layoutsEnabled && layoutsEnabledForBrowser) {
             const layoutsNode = new MenuNode(
                 'Layouts',
                 this.getUrl(activeSystem.id, { layouts: true }),
                 this.LANG?.serverTabTitles.Layouts,
-                this.endpoint.layouts || false
+                this.endpoint.layouts || false,
             );
             nodes.splice(1, 0, layoutsNode);
         }
@@ -363,7 +393,7 @@ export class NxMenusService {
             false,
             icon,
             nodes,
-            Auth.LOGGED_IN
+            Auth.LOGGED_IN,
         );
 
         this.currentSystemNode$.next(activeSystemMenu);

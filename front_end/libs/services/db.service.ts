@@ -8,7 +8,7 @@ import { AppDB, generateDbName } from '../db';
 import { Account } from './account.service/account';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxDbService {
     static shared = AppDB.createDb(generateDbName('shared'));

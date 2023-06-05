@@ -12,7 +12,7 @@ import { memoizeAsyncPersistent } from '@utils/memoize';
 import { NxSystem } from './system';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxSystemService {
     private system: NxSystem;
@@ -39,8 +39,9 @@ export class NxSystemService {
         version: number = undefined,
     ): NxSystem {
         const id = systemId || serverId;
-        const cloudSystemInfo =
-            (this.systemsService.systems || []).find(system => system.id === id);
+        const cloudSystemInfo = (this.systemsService.systems || []).find(
+            system => system.id === id,
+        );
         let system: NxSystem;
         if (id in this.systemsCache) {
             system = this.systemsCache[id];
@@ -50,7 +51,7 @@ export class NxSystemService {
                 systemId,
                 serverId,
                 undefined,
-                cloudSystemInfo?.version || version
+                cloudSystemInfo?.version || version,
             );
 
             if (cloudSystemInfo?.version) {
@@ -61,7 +62,7 @@ export class NxSystemService {
         // This is done to set the auth keys for video. Local doesn't need auth keys
         // because cookies are same site and will be attached to all requests.
         if (!environment.isLocal) {
-            system.updateSystemAuth(true).catch(() => { });
+            system.updateSystemAuth(true).catch(() => {});
         }
 
         if (environment.isLocal || skipSettingSystem) {
@@ -69,9 +70,7 @@ export class NxSystemService {
         }
 
         if (cloudSystemInfo?.useRest) {
-            (system.mediaserver as NxSystemRestAPI)
-                .setAccessTokenAsCookie()
-                .subscribe(() => { });
+            (system.mediaserver as NxSystemRestAPI).setAccessTokenAsCookie().subscribe(() => {});
         }
 
         this.system = system;
@@ -83,15 +82,13 @@ export class NxSystemService {
     }
 
     @memoizeAsyncPersistent
-    createLocalSystem(mediaServer: NxSystemRestAPI | NxSystemRestAPI2, userId: string, userEmail = ''): NxSystem {
+    createLocalSystem(
+        mediaServer: NxSystemRestAPI | NxSystemRestAPI2,
+        userId: string,
+        userEmail = '',
+    ): NxSystem {
         if (this.system === undefined) {
-            this.system = nxSystemFactory(
-                userEmail,
-                '',
-                '',
-                userId,
-                mediaServer.version
-            );
+            this.system = nxSystemFactory(userEmail, '', '', userId, mediaServer.version);
             this.system.mediaserver = mediaServer;
             this.system.canMerge = true;
         }
