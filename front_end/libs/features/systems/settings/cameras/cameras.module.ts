@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
+import { CheckboxModule } from '@components/checkbox/checkbox.module';
 import { AlertBlockModule } from '@components/content-block/alert/block.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
 import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
@@ -35,6 +36,7 @@ import {
         TranslateModule,
         AngularSvgIconModule,
         AlertBlockModule,
+        CheckboxModule,
         ContentBlockModule,
         ContentBlockSectionModule,
         DirectivesModule,
