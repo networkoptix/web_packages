@@ -137,5 +137,9 @@
   "53869": {
     "name": "Redis",
     "note": " Redis 4.4.4 and 4.5.4 include a fix for CVE-2023-28859: Redis-py before 4.4.4 and 4.5.x before 4.5.4 leaves a connection open after canceling an async Redis command at an inopportune time, and can send response data to the client of an unrelated request. (This could, for example, happen for a non-pipeline operation.) NOTE: the solutions for CVE-2023-28859 address data leakage across AsyncIO connections in general. CVE-2023-28859 For more information, please visit https://pyup.io/v/53869/f17"
+  },
+  "55264": {
+    "name": "Django",
+    "note": "Django 4.2.1, 4.1.9 and 3.2.19 include a fix for CVE-2023-31047: In Django 3.2 before 3.2.19, 4.x before 4.1.9, and 4.2 before 4.2.1, it was possible to bypass validation when using one form field to upload multiple files. This multiple upload has never been supported by forms.FileField or forms.ImageField (only the last uploaded file was validated). However, Django's \"Uploading multiple files\" documentation suggested otherwise.\nhttps://www.djangoproject.com/weblog/2023/may/03/security-releases"
   }
 }

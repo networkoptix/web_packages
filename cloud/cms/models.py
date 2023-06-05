@@ -80,7 +80,8 @@ class MenuCache(BaseCacheV2):
         if immediate:
             super().clear_cache()
         elif not settings.TESTING:
-            # Possible race condition.
+            # NOTE! Menu and Document caches must be invalidated together,
+            # this method is used on Documentation Asset changes
             running_task = cache.get(self.init_task_key)
             if running_task:
                 app.control.revoke(running_task, terminate=True, signal='SIGUSR1')
