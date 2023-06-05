@@ -16,7 +16,7 @@ from cms.controllers.documentation import DocumentCache
 from cms.controllers.generate_structure import templatify_json
 from cms.controllers.modify_db import save_unrevisioned_records, send_version_for_review, update_draft_state
 from cms.models import Context, ContextTemplate, DataStructure, DataRecord, Asset, AssetType, MenuNode, Customization, \
-    Menu, AssetCustomizationReview, Permission
+    Menu, AssetCustomizationReview, Permission, MenuCache
 from util.helpers import substitute_branding
 
 logger = logging.getLogger(__name__)
@@ -617,10 +617,9 @@ def import_assets_from_json(assets_list, user, publish=False, increment_progress
                     published = True
                     update_draft_state(review.id, AssetCustomizationReview.REVIEW_STATES.accepted, user)
                 if asset_obj.is_documentation and published:
-                    # !!! import_assets_from_json() is used widely. Can cause a lot of troubles
-                    # because CUSTOMIZATION can be missed in contextvar. Reinitializing documentation
-                    # cache for each customization.
-                    DocumentCache(customization_name=customization.name).clear_cache()
+                    # Reinitializing documentation and cache for each customization.
+                    # Menu and Documentation caches must be cleared together
+                    MenuCache(customization_name=customization.name).clear_cache()
         if increment_progress:
             increment_progress()
 

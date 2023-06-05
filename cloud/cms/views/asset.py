@@ -339,7 +339,8 @@ def publish_review(request, target_review, target_customization='', message=True
         modify_db.update_draft_state(
             target_review_id, AssetCustomizationReview.REVIEW_STATES.accepted, request.user)
         if asset.is_documentation:
-            DocumentCache(customization_name=request.CUSTOMIZATION).clear_cache()
+            # Menu and Documentation caches must be cleared together
+            MenuCache(customization_name=request.CUSTOMIZATION).clear_cache()
             zd_articles = ZendeskArticle.objects.filter(
                 asset__id=asset.id, site__customization__name=target_customization)
             if zd_articles:
