@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -11,6 +12,7 @@ import { ThemeSwitcherModule } from '@components/theme-switcher/theme-switcher.m
 
 @NgModule({
     imports: [
+        CommonModule,
         FormsModule,
         TranslateModule,
         CheckboxModule,

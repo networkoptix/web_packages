@@ -9,7 +9,7 @@ import { NxThemeGeneratorDemoComponent } from './theme-generator-demo.component'
 const appRoutes: Routes = [
     {
         path: '',
-        title: 'Theme Generator',
+        title: 'themeGenerator',
         component: NxThemeGeneratorDemoComponent,
     }
 ];

@@ -14,6 +14,7 @@ import { SearchableModule } from '@components/dropdowns/searchable/searchable.mo
 import { SearchModule } from '@components/search/search.module';
 import { NxSliderModule } from '@components/slider/slider.module';
 import { NxBaseTableModule } from '@components/table/table.module';
+import { NxThemeGeneratorModule } from '@components/theme-generator/theme-colors.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
@@ -186,6 +187,7 @@ const appRoutes: Routes = [
         VmsClientModule,
         VmsClientTimelineModule,
         WebGLTimelineModule,
+        NxThemeGeneratorModule
     ],
     providers: [
     ],

@@ -1110,7 +1110,8 @@
         "betas": "Betas",
         "systemServerError": "Internal server error",
         "information": "Information",
-        "monitoring": "Monitoring"
+        "monitoring": "Monitoring",
+        "themeGenerator": "Theme Generator"
     },
     "pageDescriptions": {
         "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
