@@ -4,7 +4,6 @@ import {
     ElementRef,
     Input,
     OnChanges,
-    OnDestroy,
     ViewChild,
     Inject,
 } from '@angular/core';
@@ -28,7 +27,7 @@ interface ThumbNail {
     templateUrl: './image-section.component.html',
     styleUrls: ['./image-section.component.scss'],
 })
-export class NxImageSectionComponent implements OnChanges, AfterViewInit, OnDestroy {
+export class NxImageSectionComponent implements OnChanges, AfterViewInit {
     @Input() cameraInfo;
     @ViewChild('imageWidth', { static: false }) imageSize: ElementRef;
     cameraId: string;
@@ -43,8 +42,6 @@ export class NxImageSectionComponent implements OnChanges, AfterViewInit, OnDest
         this.thumbnails = [];
         this.ready = false;
     }
-
-    ngOnDestroy(): void {}
 
     ngAfterViewInit(): void {
         if (typeof this.imageSize === 'undefined') {

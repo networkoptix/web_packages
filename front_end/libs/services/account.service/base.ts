@@ -1,5 +1,5 @@
 import { DOCUMENT, Location } from '@angular/common';
-import { Inject, OnDestroy, Injector, Injectable } from '@angular/core';
+import { Inject, Injector, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -38,7 +38,7 @@ import { Account } from './account';
  * as BaseAccount.
  */
 @Injectable()
-export abstract class BaseAccount implements OnDestroy {
+export abstract class BaseAccount {
     protected CONFIG: IConfig;
     protected LANG = staticLang;
     protected location: Location;
@@ -139,8 +139,6 @@ export abstract class BaseAccount implements OnDestroy {
             setTimeout(() => this.window.location.reload());
         });
     }
-
-    ngOnDestroy(): void {}
 
     // Methods shared between local and cloud versions of account service.
     @memoizeAsyncPersistent

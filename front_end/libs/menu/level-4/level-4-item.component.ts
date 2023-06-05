@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { NxMenuService } from '@app/menu/menu.service';
@@ -16,7 +16,7 @@ import type { Level3Item } from '../menu.types';
     templateUrl: 'level-4-item.component.html',
     styleUrls: ['level-4-item.component.scss'],
 })
-export class NxLevel4ItemComponent implements OnInit, OnChanges, OnDestroy {
+export class NxLevel4ItemComponent implements OnInit, OnChanges {
     @Input() base: string = '';
     @Input() item: Level3Item;
     @Input() selected: boolean;
@@ -39,8 +39,6 @@ export class NxLevel4ItemComponent implements OnInit, OnChanges, OnDestroy {
             this.search = search;
         });
     }
-
-    ngOnDestroy(): void {}
 
     ngOnChanges(changes: NgChanges<NxLevel4ItemComponent>): void {
         if (changes.base?.currentValue) {

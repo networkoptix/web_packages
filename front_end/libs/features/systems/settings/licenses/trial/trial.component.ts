@@ -1,4 +1,4 @@
-import { Component, OnDestroy, Input, OnChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, ViewChild } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -15,7 +15,7 @@ import { NgChanges } from '@utils/ng-changes';
     templateUrl: 'trial.component.html',
     styleUrls: ['trial.component.scss'],
 })
-export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
+export class NxLicenseTrialComponent implements OnChanges {
     CONFIG: IConfig;
     LANG = staticLang;
 
@@ -103,6 +103,4 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
                 }) || false;
         }
     }
-
-    ngOnDestroy(): void {}
 }

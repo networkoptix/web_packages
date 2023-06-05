@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
@@ -14,7 +14,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
     templateUrl: 'org-detail.component.html',
     styleUrls: ['org-detail.component.scss'],
 })
-export class NxPartnerOrganizationDetailComponent implements OnInit, OnDestroy {
+export class NxPartnerOrganizationDetailComponent implements OnInit {
     readonly environment = environment;
     LANG = staticLang;
 
@@ -33,6 +33,4 @@ export class NxPartnerOrganizationDetailComponent implements OnInit, OnDestroy {
             this.organization = this.partnersService.getOrganization(parseInt(id));
         });
     }
-
-    ngOnDestroy(): void {}
 }

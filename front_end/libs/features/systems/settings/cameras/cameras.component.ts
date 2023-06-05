@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, Inject, ViewContainerRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Inject, ViewContainerRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -96,7 +96,7 @@ const ASPECT_RATIOS = {
     templateUrl: 'cameras.component.html',
     styleUrls: ['cameras.component.scss'],
 })
-export class NxCamerasComponent implements OnInit, OnDestroy {
+export class NxCamerasComponent implements OnInit {
     LANG = staticLang;
     isMobile: boolean;
     infoBlockSizeEnum = InfoBlockSize;
@@ -423,8 +423,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             }),
         );
     }
-
-    ngOnDestroy(): void {}
 
     // Update menu options after language is loaded
     private updateSelects(): void {

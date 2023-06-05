@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, LOCALE_ID, Input, OnChanges } from '@angular/core';
+import { Component, Inject, LOCALE_ID, Input, OnChanges } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -152,7 +152,7 @@ function mapStorages(storages: Storage[]): [AdvancedStorage[], Watcher<unknown>[
     templateUrl: 'server-storage-adv.component.html',
     styleUrls: ['server-storage-adv.component.scss'],
 })
-export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
+export class NxSystemAdvancedStorageComponent implements OnChanges {
     @Input() system: NxSystem;
     @Input() serverId: string;
 
@@ -313,6 +313,4 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
             roundTo: gbTb === 'TB' ? 1073741824 * 102.4 : 1073741824,
         });
     }
-
-    ngOnDestroy(): void {}
 }

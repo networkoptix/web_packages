@@ -1,13 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import {
-    Component,
-    Inject,
-    OnInit,
-    OnDestroy,
-    ViewEncapsulation,
-    ViewChild,
-    ElementRef,
-} from '@angular/core';
+import { Component, Inject, OnInit, ViewEncapsulation, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
@@ -39,7 +31,7 @@ import { NxHealthService } from '../health.service';
     styleUrls: ['viewer.component.scss'],
     encapsulation: ViewEncapsulation.None,
 })
-export class NxReportViewerComponent implements OnInit, OnDestroy {
+export class NxReportViewerComponent implements OnInit {
     LANG = staticLang;
     account: Account;
     system: NxSystem;
@@ -144,8 +136,6 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
     setHeaderHeight(): void {
         this.headerHeight = this.document.getElementsByClassName('headerContainer')[0].scrollHeight;
     }
-
-    ngOnDestroy(): void {}
 
     setupReport(_data) {
         const data = cloneDeep(_data);

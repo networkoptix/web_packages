@@ -28,8 +28,6 @@ export class NxNavigationTileComponent {
         this._setupIds();
     }
 
-    ngOnDestroy(): void {}
-
     checkActive(node) {
         const { childNode } = this.headerService.currentLocation;
         const { url } = node;

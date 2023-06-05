@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 
@@ -27,7 +27,7 @@ import { GridBreakpoints } from '@styles/theme-variables-common';
     templateUrl: 'partners.component.html',
     styleUrls: ['partners.component.scss'],
 })
-export class NxChannelPartnersComponent implements OnInit, OnDestroy {
+export class NxChannelPartnersComponent implements OnInit {
     readonly environment = environment;
     LANG = staticLang;
     CONFIG: IConfig;
@@ -194,8 +194,6 @@ export class NxChannelPartnersComponent implements OnInit, OnDestroy {
             ? this.CONFIG.headerHeight + ribbonHeight
             : this.CONFIG.headerHeight;
     }
-
-    ngOnDestroy(): void {}
 
     contentToggle(event: ContentToggle): void {
         this.content.level1.find(node => {

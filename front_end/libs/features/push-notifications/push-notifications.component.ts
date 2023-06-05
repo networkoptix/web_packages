@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { AngularFireMessaging } from '@angular/fire/compat/messaging';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -18,7 +18,7 @@ import { WINDOW } from '@services/window-provider';
     templateUrl: 'push-notifications.component.html',
     styleUrls: ['push-notifications.component.scss'],
 })
-export class PushComponent implements OnInit, OnDestroy {
+export class PushComponent implements OnInit {
     notification;
     systems: NxSystemInfo[];
     devices;
@@ -69,8 +69,6 @@ export class PushComponent implements OnInit, OnDestroy {
     ) {
         this.setupDefaults();
     }
-
-    ngOnDestroy(): void {}
 
     ngOnInit(): void {
         this.accountService.requireLogin().then(account => {

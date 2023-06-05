@@ -1,13 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import {
-    Component,
-    OnDestroy,
-    OnInit,
-    Renderer2,
-    Inject,
-    ViewChild,
-    ViewContainerRef,
-} from '@angular/core';
+import { Component, OnInit, Renderer2, Inject, ViewChild, ViewContainerRef } from '@angular/core';
 import {
     ActivatedRoute,
     NavigationEnd,
@@ -66,7 +58,7 @@ enum sizes {
     templateUrl: 'header.component.html',
     styleUrls: [environment.isLocal ? 'header-webadmin.component.scss' : 'header.component.scss'],
 })
-export class NxHeaderComponent implements OnInit, OnDestroy {
+export class NxHeaderComponent implements OnInit {
     CONFIG: IConfig;
     readonly environment = environment;
     LANG = staticLang;
@@ -314,8 +306,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                     ) + element.offsetWidth,
             ),
         );
-
-    ngOnDestroy(): void {}
 
     ngOnInit(): void {
         this.sessionStorage

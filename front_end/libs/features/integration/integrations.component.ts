@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
@@ -19,7 +19,7 @@ import { IntegrationService } from './integration.service';
     templateUrl: 'integrations.component.html',
     styleUrls: ['integrations.component.scss'],
 })
-export class NxIntegrationsComponent implements OnInit, OnDestroy {
+export class NxIntegrationsComponent implements OnInit {
     CONFIG: IConfig;
     LANG = staticLang;
 
@@ -51,8 +51,6 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
     ) {
         this.setupDefaults(configService);
     }
-
-    ngOnDestroy(): void {}
 
     ngOnInit(): void {
         // Example URI

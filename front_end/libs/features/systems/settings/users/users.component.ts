@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { filter } from 'rxjs/operators';
 
@@ -14,7 +14,7 @@ import { NxSettingsService } from '../settings.service';
     templateUrl: 'users.component.html',
     styleUrls: ['users.component.scss'],
 })
-export class NxSystemUsersComponent implements OnInit, OnDestroy {
+export class NxSystemUsersComponent implements OnInit {
     readonly environment = environment;
     CONFIG: IConfig;
 
@@ -41,6 +41,4 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 }
             });
     }
-
-    ngOnDestroy(): void {}
 }

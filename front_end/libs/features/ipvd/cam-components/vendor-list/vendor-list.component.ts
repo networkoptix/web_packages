@@ -5,7 +5,6 @@ import {
     Input,
     LOCALE_ID,
     OnChanges,
-    OnDestroy,
     OnInit,
     Renderer2,
     ViewEncapsulation,
@@ -57,7 +56,7 @@ interface TagFilter {
         },
     ],
 })
-export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
+export class NxVendorListComponent implements OnInit, OnChanges {
     @Input() vendors: Vendors[];
     @Input() numCameras: number;
 
@@ -134,8 +133,6 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
             },
         ];
     }
-
-    ngOnDestroy(): void {}
 
     ngOnInit(): void {
         this.uri

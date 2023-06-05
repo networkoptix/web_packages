@@ -1,4 +1,4 @@
-import { Injectable, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { Injectable, OnChanges, OnInit } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
@@ -12,7 +12,7 @@ const noop = () => {};
 
 @UntilDestroy()
 @Injectable()
-export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
+export abstract class BaseDropdown implements OnInit, OnChanges, ControlValueAccessor {
     CONFIG: IConfig;
     LANG = staticLang;
     message: string;
@@ -33,9 +33,6 @@ export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, Cont
     }
 
     ngOnInit(): void {}
-
-    // needed for @UntilDestroy
-    ngOnDestroy(): void {}
 
     ngOnChanges(changes: NgChanges<BaseDropdown>): void {}
 

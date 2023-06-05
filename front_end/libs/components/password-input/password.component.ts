@@ -4,7 +4,6 @@ import {
     Input,
     forwardRef,
     ViewEncapsulation,
-    OnDestroy,
     ViewChild,
     ElementRef,
 } from '@angular/core';
@@ -46,7 +45,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
     ],
     encapsulation: ViewEncapsulation.None,
 })
-export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {
+export class NxPasswordComponent implements OnInit, ControlValueAccessor, Validator {
     @Input() form;
     @Input() componentId: string;
     @Input() component: NgModel;
@@ -179,8 +178,6 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
         this.onChangeCallback(this.value);
         this.form.form.get(this.componentId).markAsUntouched();
     }
-
-    ngOnDestroy(): void {}
 
     ngOnInit(): void {
         this.tagWidth = 0;

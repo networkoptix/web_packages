@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { SubscriptionLike } from 'rxjs';
@@ -16,7 +16,7 @@ import { IntegrationService } from '../../integration.service';
     templateUrl: 'setup.component.html',
     styleUrls: ['setup.component.scss'],
 })
-export class NxSetupComponent implements OnInit, OnDestroy {
+export class NxSetupComponent implements OnInit {
     LANG = staticLang;
 
     plugin: Partial<Integration> = {};
@@ -47,8 +47,6 @@ export class NxSetupComponent implements OnInit, OnDestroy {
             );
         });
     }
-
-    ngOnDestroy(): void {}
 
     onSubmit(): void {}
 }

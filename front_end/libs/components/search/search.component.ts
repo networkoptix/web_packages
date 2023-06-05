@@ -1,4 +1,3 @@
-// import { Location } from '@angular/common';
 import { Direction } from '@angular/cdk/bidi';
 import {
     Component,
@@ -6,7 +5,6 @@ import {
     Input,
     forwardRef,
     ViewEncapsulation,
-    OnDestroy,
     EventEmitter,
     Output,
     Inject,
@@ -70,7 +68,7 @@ import type { SearchFilter } from './search.component.types';
     ],
     styleUrls: ['./search.component.scss'],
 })
-export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccessor {
+export class NxSearchComponent implements OnInit, ControlValueAccessor {
     @Input() layout: 'search' | 'selectors' | 'compact' | 'full' = 'full';
     @Input() layoutMod: boolean; // mod for 'selectors' layout (HM is using 100% width width Bootstrap) ... at some point we should unify this BS
     @Input() placeholder: string;
@@ -102,7 +100,6 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     constructor(
         private translateSerice: TranslateService,
         private _route: ActivatedRoute,
-        // private location: Location,
         private uri: NxUriService,
         private searchService: NxSearchService,
         private scrollMechanicsService: NxScrollMechanicsService,
@@ -140,8 +137,6 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
                 this.modelChanged();
             });
     }
-
-    ngOnDestroy(): void {}
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor

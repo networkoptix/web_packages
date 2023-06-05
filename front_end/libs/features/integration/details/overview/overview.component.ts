@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { SubscriptionLike } from 'rxjs';
 
@@ -14,7 +14,7 @@ import { IntegrationService } from '../../integration.service';
     templateUrl: 'overview.component.html',
     styleUrls: ['overview.component.scss'],
 })
-export class NxOverviewComponent implements OnInit, OnDestroy {
+export class NxOverviewComponent implements OnInit {
     plugin: Partial<Integration>;
     pluginSubscription: SubscriptionLike;
 
@@ -36,8 +36,6 @@ export class NxOverviewComponent implements OnInit, OnDestroy {
             this.pageService.pageDescription = this.plugin.information?.shortDescription;
         });
     }
-
-    ngOnDestroy(): void {}
 
     onSubmit(): void {}
 }

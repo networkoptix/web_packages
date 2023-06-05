@@ -179,6 +179,4 @@ export class NxDropMenu extends BaseDropdown {
         }
         this.systemCounter = this.systems && this.systems.length;
     }
-
-    ngOnDestroy(): void {}
 }

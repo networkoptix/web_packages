@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -14,7 +14,7 @@ import { NxSessionService } from '@services/session.service';
     templateUrl: 'account.component.html',
     styleUrls: ['account.component.scss'],
 })
-export class NxAccountComponent implements OnInit, OnDestroy {
+export class NxAccountComponent implements OnInit {
     LANG = staticLang;
 
     content: Content;
@@ -33,8 +33,6 @@ export class NxAccountComponent implements OnInit, OnDestroy {
             });
         });
     }
-
-    ngOnDestroy(): void {}
 
     ngOnInit(): void {
         this.content = {

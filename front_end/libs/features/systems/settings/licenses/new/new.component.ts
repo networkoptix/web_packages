@@ -1,4 +1,4 @@
-import { Component, OnDestroy, Input, OnChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, ViewChild } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { SubscriptionLike } from 'rxjs';
 
@@ -20,7 +20,7 @@ interface ServerOption extends DropdownItem<string> {
     templateUrl: 'new.component.html',
     styleUrls: ['new.component.scss'],
 })
-export class NxLicenseNewComponent implements OnChanges, OnDestroy {
+export class NxLicenseNewComponent implements OnChanges {
     LANG = staticLang;
 
     serverOptions: ServerOption[] = [];
@@ -237,8 +237,6 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
     displayErrors = (): void => {
         this.hideErrors = false;
     };
-
-    ngOnDestroy(): void {}
 
     private formatLicenseKey = (key: string) => {
         if (key) {

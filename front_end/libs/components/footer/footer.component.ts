@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -15,7 +15,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
     templateUrl: 'footer.component.html',
     styleUrls: ['footer.component.scss'],
 })
-export class NxFooterComponent implements OnInit, OnDestroy {
+export class NxFooterComponent implements OnInit {
     CONFIG: IConfig;
     companyLink: string;
     companyName: string;
@@ -43,8 +43,6 @@ export class NxFooterComponent implements OnInit, OnDestroy {
             });
         });
     }
-
-    ngOnDestroy(): void {}
 
     ngOnInit(): void {
         this.visible = this.oauth || !this.CONFIG.featureFlags.newHeader;

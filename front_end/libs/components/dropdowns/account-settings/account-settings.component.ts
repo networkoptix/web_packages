@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, combineLatest } from 'rxjs';
@@ -26,7 +26,7 @@ import { BaseDropdown } from '../injDropdown';
             : 'account-settings.component.scss',
     ],
 })
-export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy {
+export class NxAccountSettingsDropdown extends BaseDropdown {
     @IBool() @Input() small: CoercedBoolInput;
     @ViewChild('dropdown') dropdown: ElementRef<HTMLDivElement>;
     dropdownWidth$ = new BehaviorSubject(0);
@@ -128,8 +128,6 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
                 }
             });
     }
-
-    ngOnDestroy(): void {}
 
     logout(): void {
         this.accountService.logout(false);

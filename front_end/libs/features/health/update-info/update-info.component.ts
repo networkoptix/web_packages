@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subscription, timer } from 'rxjs';
 import { startWith } from 'rxjs/operators';
@@ -15,7 +15,7 @@ import { NxHealthService } from '../health.service';
     templateUrl: './update-info.component.html',
     styleUrls: ['update-info.component.scss'],
 })
-export class NxUpdateInfoComponent implements OnInit, OnDestroy {
+export class NxUpdateInfoComponent implements OnInit {
     @Output() updateHealth = new EventEmitter<boolean>();
 
     LANG = staticLang;
@@ -25,8 +25,6 @@ export class NxUpdateInfoComponent implements OnInit, OnDestroy {
     icons = icons;
 
     constructor(private healthService: NxHealthService, private ribbonService: NxRibbonService) {}
-
-    ngOnDestroy(): void {}
 
     ngOnInit(): void {
         this.initUpdateTime();

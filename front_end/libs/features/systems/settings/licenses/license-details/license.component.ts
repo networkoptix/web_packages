@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnDestroy, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -23,7 +23,7 @@ import { getDynamicLicense } from '../dynamic-license';
     templateUrl: 'license.component.html',
     styleUrls: ['license.component.scss'],
 })
-export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
+export class NxLicenseDetailComponent implements OnChanges {
     CONFIG: IConfig;
     LANG = staticLang;
 
@@ -65,8 +65,6 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
             });
         }
     }
-
-    ngOnDestroy(): void {}
 
     private formatLicenseKey = (key: string) => {
         if (!key) {

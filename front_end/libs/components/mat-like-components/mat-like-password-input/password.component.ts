@@ -3,8 +3,6 @@ import {
     OnInit,
     Input,
     forwardRef,
-    // ViewEncapsulation,
-    OnDestroy,
     ViewChild,
     ElementRef,
     TemplateRef,
@@ -49,11 +47,8 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
             multi: true,
         },
     ],
-    // encapsulation: ViewEncapsulation.None,
 })
-export class NxMatLikePasswordComponent
-    implements OnInit, OnDestroy, ControlValueAccessor, Validator
-{
+export class NxMatLikePasswordComponent implements OnInit, ControlValueAccessor, Validator {
     @Input() form: NgForm;
     @Input() componentId: string;
     @Input() component: NgModel;
@@ -178,8 +173,6 @@ export class NxMatLikePasswordComponent
         this.onChangeCallback(this.value);
         this.form.form.get(this.componentId).markAsUntouched();
     }
-
-    ngOnDestroy(): void {}
 
     ngOnInit(): void {
         this.fairPassword = true;

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Params } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import cloneDeep from 'lodash-es/cloneDeep';
@@ -19,7 +19,7 @@ import { NxUriService } from '@services/uri.service';
     templateUrl: 'org-list.component.html',
     styleUrls: ['org-list.component.scss'],
 })
-export class NxPartnerOrganizationsListComponent implements OnInit, OnDestroy {
+export class NxPartnerOrganizationsListComponent implements OnInit {
     readonly environment = environment;
     LANG = staticLang;
 
@@ -97,6 +97,4 @@ export class NxPartnerOrganizationsListComponent implements OnInit, OnDestroy {
         this.filterModel = cloneDeep(searchModel);
         this.setFilter();
     }
-
-    ngOnDestroy(): void {}
 }

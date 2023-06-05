@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -16,7 +16,7 @@ import { NgChanges } from '@utils/ng-changes';
     templateUrl: './image.component.html',
     styleUrls: ['./image.component.scss'],
 })
-export class NxImageComponent implements OnChanges, OnDestroy {
+export class NxImageComponent implements OnChanges {
     @Input() isPrimary: boolean;
     @Input() state: string;
     @Input() time: string;
@@ -77,6 +77,4 @@ export class NxImageComponent implements OnChanges, OnDestroy {
             this.loaded.emit(true);
         }
     }
-
-    ngOnDestroy(): void {}
 }
