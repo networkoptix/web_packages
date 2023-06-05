@@ -1,14 +1,15 @@
-import { Component, Inject, Input } from '@angular/core';
+import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
+import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angular/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import type { DetachServer as DT } from '@dialogs/dialogs.types';
+import { ModalBase } from '@dialogs/modal-base';
 import { servers, toast } from '@lib/variables/static-variables';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
 import { WINDOW } from '@services/window-provider';
-import { pickFrom } from '@utils/general';
 
 import { NxToastService } from '../toast.service';
 
@@ -17,14 +18,13 @@ import { NxToastService } from '../toast.service';
     templateUrl: 'detach-server.component.html',
     styleUrls: [],
 })
-export class DetachServerModalContent {
-    @Input() closable = true;
+export class DetachServerModalContent extends ModalBase<DT['return']> implements AfterViewInit {
+    @ViewChild('passwordInput') private passwordInput: ElementRef<HTMLInputElement>;
 
     LANG = staticLang;
 
     system: NxSystem;
     serverName: string;
-    serverId: string;
     detachServer: Process;
     password: string;
 
@@ -32,23 +32,24 @@ export class DetachServerModalContent {
         private processService: NxProcessService,
         private dialogs: NxDialogsService,
         private toastService: NxToastService,
-        public dialogRef: DialogRef,
-        @Inject(DIALOG_DATA) private dialogData: any,
+        dialogRef: DialogRef<DT['return']>,
+        @Inject(DIALOG_DATA) { system, server }: DT['data'],
         @Inject(WINDOW) private window: Window,
-    ) {}
+    ) {
+        super(dialogRef);
 
-    ngOnInit(): void {
-        pickFrom(this.dialogData, ['system', 'serverName', 'serverId'], this);
+        this.system = system;
+        this.serverName = server.name;
 
         this.detachServer = this.processService
             .createProcess(
                 () => this.system.serverManager.detachFromSystem(
-                    this.serverId,
+                    server.id,
                     this.password
                 ).toPromise(),
                 { ignoreError: true },
                 () => {
-                    this.close('success');
+                    this.close(true);
                     this.toastService.notify(
                         this.LANG.servers.detachSystemSuccess,
                         toast.success,
@@ -60,6 +61,7 @@ export class DetachServerModalContent {
                     // return this.system.update().subscribe()
                 },
                 err => {
+                    this.unlock();
                     if (err.errorId === servers.errors.oldSessionErrorId) {
                         this.toastService.notify(
                             this.LANG.dialogs.updateSession.detachServer,
@@ -78,7 +80,9 @@ export class DetachServerModalContent {
             );
     }
 
-    close = (msg?: string): void => {
-        this.dialogRef.close(msg);
-    };
+    ngAfterViewInit(): void {
+        setTimeout(() => {
+            this.passwordInput?.nativeElement.focus();
+        });
+    }
 }

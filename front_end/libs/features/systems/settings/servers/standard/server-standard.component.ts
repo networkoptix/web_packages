@@ -448,72 +448,59 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     }
 
     restartServer(): Promise<void> {
-        const { id, name } = this.selectedServer;
+        const { system, selectedServer: server } = this;
 
-        return this.dialogs.restartServer(this.system, id, name).then(
-            (res: string) => {
-                if (!res) {
-                    return; // Dialog was canceled
-                }
-                this.system.isAvailable = false;
-                this.system.storageManager.update();
-                this.setStatus(res);
-                if (environment.isLocal) {
-                    this.appState.systemAvailable$
-                        .pipe(untilDestroyed(this), takeUntil(this.destroyRestartTake$))
-                        .subscribe(status => {
-                            if (status) {
-                                this.destroyRestartTake$.next(true);
-                                this.accountService.logout(false);
-                            }
-                        });
-                }
-            },
-            (err: never) => {
-                console.error('Failed to restart server: ', err);
-            },
-        );
+        return this.dialogs.restartServer({ system, server }).then(res => {
+            if (!res) {
+                return;
+            }
+            this.system.isAvailable = false;
+            this.system.storageManager.update();
+            this.setStatus(res);
+            if (environment.isLocal) {
+                this.appState.systemAvailable$
+                    .pipe(untilDestroyed(this), takeUntil(this.destroyRestartTake$))
+                    .subscribe(status => {
+                        if (status) {
+                            this.destroyRestartTake$.next(true);
+                            this.accountService.logout(false);
+                        }
+                    });
+            }
+        });
     }
 
     detachServer(): Promise<void> {
-        const { id, name } = this.selectedServer;
+        const { system, selectedServer: server } = this;
         const currentServerIndex = this.system.serverManager.servers.findIndex(
-            server => server.id === id,
+            s => s.id === server.id,
         );
         const nextServerIndex =
             currentServerIndex + 1 !== this.system.serverManager.servers.length
                 ? currentServerIndex + 1
                 : currentServerIndex - 1;
         const nextServerId = this.system.serverManager.servers[nextServerIndex].id;
-        return this.dialogs
-            .detachServer(this.system, id, name)
-            .then(detach => {
-                if (detach === 'success') {
-                    this.uriService
-                        .updateURI(`systems/${this.system.id}/servers/${nextServerId}`)
-                        .catch(error => {
-                            console.error(error);
-                        });
+        return this.dialogs.detachServer({ system, server }).then(detached => {
+            if (detached) {
+                this.uriService
+                    .updateURI(`systems/${this.system.id}/servers/${nextServerId}`)
+                    .catch(error => {
+                        console.error(error);
+                    });
 
-                    this.menuService.detail = nextServerId;
-                }
-            })
-            .catch(() => {
-                // Dialog was canceled
-            });
+                this.menuService.detail = nextServerId;
+            }
+        });
     }
 
     resetServer(): Promise<void> {
-        const { id, name } = this.selectedServer;
-        return (
-            this.dialogs
-                .resetServer(this.system, id, name)
-                // will take some time to reset and then restart the server
-                .then(() => this.setStatus('resetting'))
-                .catch(() => {
-                    // Dialog was canceled
-                })
-        );
+        const { system, selectedServer: server } = this;
+        return this.dialogs.resetServer({ system, server }).then(resetting => {
+            if (resetting) {
+                this.setStatus('resetting');
+            }
+        });
+        // will take some time to reset and then restart the server
     }
 
     onPortChange(port: number): void {

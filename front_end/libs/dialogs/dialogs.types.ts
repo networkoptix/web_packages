@@ -21,6 +21,7 @@ import type { NxSystemCamera } from '@services/system.service/camera-manager/cam
 import type { CloudStorageManager } from '@services/system.service/cloud-storage-manager/cloud-storage-manager';
 import type { LicenseManager } from '@services/system.service/license-manager/licence-manager';
 import type { NxSystem } from '@services/system.service/system';
+import type { NxSystemServer } from '@services/system.service/system-types';
 import type { NxUser } from '@services/system.service/user-manager/user-manager-types';
 
 import type { DialogRef } from './dialog-ref';
@@ -193,6 +194,13 @@ export type DeleteCloudUser = DialogType<void, CloudResponse>;
 export type ChangePassword = DialogType<{ system: NxSystem; user: NxUser }, boolean>;
 
 /* Servers */
+interface ServerData {
+    system: NxSystem;
+    server: NxSystemServer;
+}
+export type RestartServer = DialogType<ServerData, string>;
+export type ResetServer = DialogType<ServerData, true>;
+export type DetachServer = DialogType<ServerData, true>;
 
 /* Bookmarks */
 export type MoreDevices = DialogType<

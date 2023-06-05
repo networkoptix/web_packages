@@ -157,57 +157,6 @@ export class NxDialogsService extends DialogBase {
             .afterClosed();
     }
 
-    public async restartServer(system: NxSystem, serverId: string, serverName: string) {
-        const config: Partial<DialogConfig> = {
-            data: {
-                system,
-                serverId,
-                serverName,
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-        const component = await import('./restart-server/restart-server.component').then(m => m.RestartServerModalContent);
-
-        return this.open(component, dialogConfig)
-            .afterClosed();
-    }
-
-    public async detachServer(system: NxSystem, serverId: string, serverName: string) {
-        const config: Partial<DialogConfig> = {
-            data: {
-                system,
-                serverId,
-                serverName,
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-        const component = await import('./detach-server/detach-server.component').then(m => m.DetachServerModalContent);
-
-        return this.open(component, dialogConfig)
-            .afterClosed();
-    }
-
-    public async resetServer(system: NxSystem, serverId: string, serverName: string) {
-        const config: Partial<DialogConfig> = {
-            data: {
-                system,
-                serverId,
-                serverName,
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-        const component = await import('./reset-server/reset-server.component').then(m => m.ResetServerModalContent);
-
-        return this.open(component, dialogConfig)
-            .afterClosed();
-    }
-
     public async wizard() {
         const config: Partial<DialogConfig> = {
             width: DIALOG_SIZE.SMALL,
@@ -553,6 +502,17 @@ export class NxDialogsService extends DialogBase {
     );
 
     /* Servers */
+    restartServer = this.dialogV2Factory<Dt.RestartServer>(
+        () => import('./restart-server/restart-server.component').then(m => m.RestartServerModalContent),
+    );
+
+    resetServer = this.dialogV2Factory<Dt.ResetServer>(
+        () => import('./reset-server/reset-server.component').then(m => m.ResetServerModalContent),
+    );
+
+    detachServer = this.dialogV2Factory<Dt.DetachServer>(
+        () => import('./detach-server/detach-server.component').then(m => m.DetachServerModalContent),
+    );
 
     /* Bookmarks */
     moreDevices = this.dialogV2Factory<Dt.MoreDevices>(

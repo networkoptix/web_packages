@@ -57,7 +57,6 @@ const typeLintBlacklist = [
     '**/add-storage/add-storage.component.ts',
     '**/add-widget/add-widget.component.ts',
     '**/change-storage/change-storage.component.ts',
-    '**/detach-server/detach-server.component.ts',
     '**/dialog-config.ts',
     '**/dialog-ref.ts',
     '**/dialogs.service.ts',
@@ -66,7 +65,6 @@ const typeLintBlacklist = [
     '**/merge/stateForMergeDialog.ts',
     '**/merge/stateMachine.ts',
     '**/reset-backup/reset-backup.component.ts',
-    '**/reset-server/reset-server.component.ts',
     /* Features */
     '**/api-tool/api-file-utils.ts',
     '**/api-tool/api-tool-types.ts',

@@ -46,7 +46,7 @@ import { CloudStorageModule } from './cloud-storage/cloud-storage.module';
 import { ConnectCloudModalModule } from './connect-cloud/connect-cloud.module';
 import { CreateSystemGroupModalModule } from './create-system-group/create-system-group.module';
 import { DeleteCloudUserModalModule } from './delete-cloud-user/delete-cloud-user.module';
-import { DetachServerModalContent } from './detach-server/detach-server.component';
+import { NxDetachServerModalModule } from './detach-server/detach-server.module';
 import { DisconnectModalModule } from './disconnect/disconnect.module';
 import { EditModalContent } from './edit/edit.component';
 import { GenericDialogModule } from './generic/generic.module';
@@ -59,8 +59,8 @@ import { RemoveSystemModalModule } from './remove-system/remove-system.module';
 import { RemoveUserModalModule } from './remove-user/remove-user.module';
 import { ReserveSpaceWarningModalContent } from './reserve-space-warning/reserve-space-warning.component';
 import { ResetBackupModalContent } from './reset-backup/reset-backup.component';
-import { ResetServerModalContent } from './reset-server/reset-server.component';
-import { RestartServerModalContent } from './restart-server/restart-server.component';
+import { NxResetServerModalModule } from './reset-server/reset-server.module';
+import { RestartServerModalModule } from './restart-server/restart-server.module';
 import { SelectTimeRangeModalModule } from './select-time-range-native-fallback/select-time-range.module';
 import { TransferOwnershipModule } from './transfer-ownership/transfer-ownership.module';
 import { TwoFAModalModule } from './two-fa/two-fa.module';
@@ -128,15 +128,15 @@ import { WizardModalContent } from './wizard/wizard.component';
         ChangePasswordModalModule,
         UpdateCameraCredentialsModalModule,
         NxWebGlSelectTimeRangeModalModule,
-        SelectTimeRangeModalModule
+        SelectTimeRangeModalModule,
+        RestartServerModalModule,
+        NxResetServerModalModule,
+        NxDetachServerModalModule,
     ],
     declarations: [
         AddStorageModalContent,
         ChangeStorageModalContent,
         MergeModalContent,
-        RestartServerModalContent,
-        DetachServerModalContent,
-        ResetServerModalContent,
         WizardModalContent,
         ResetBackupModalContent,
         AddStorageModalContent,

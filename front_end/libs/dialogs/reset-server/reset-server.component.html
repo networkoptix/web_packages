@@ -50,13 +50,13 @@
             </div>
             <ng-container *ngIf="system.mediaserver.requiresPassword">
                 <input
+                    #passwordInput
                     class="form-control"
                     [(ngModel)]="password"
                     id="password"
                     name="password"
                     type="password"
                     required
-                    nxFocusMe
                 />
                 <p
                     class="help-block"
@@ -83,6 +83,7 @@
         ></nx-process-button>
         <nx-cancel-button
             [process]="resetServer"
+            [cancelFn]="unlock"
             [discardFn]="close"
         ></nx-cancel-button>
     </div>

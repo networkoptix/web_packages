@@ -13,7 +13,7 @@
             class="close"
             data-dismiss="modal"
             aria-label="Close"
-            (click)="close('')"
+            (click)="close()"
             *ngIf="closable"
         >
             <div class="close-content"></div>
@@ -25,6 +25,10 @@
             [actionType]="'primary'"
             buttonText="{{ 'Restart' | translate }}"
         ></nx-process-button>
-        <nx-cancel-button [discardFn]="close"></nx-cancel-button>
+        <nx-cancel-button
+            [process]="restartServer"
+            [cancelFn]="unlock"
+            [discardFn]="close"
+        ></nx-cancel-button>
     </div>
 </div>

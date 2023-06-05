@@ -1,4 +1,5 @@
-import { Component, Input, Injector, Inject } from '@angular/core';
+import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
+import { Component, Inject } from '@angular/core';
 import { timer } from 'rxjs';
 import {
     delayWhen,
@@ -10,62 +11,49 @@ import {
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
-import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import type { RestartServer as DT } from '@dialogs/dialogs.types';
+import { ModalBase } from '@dialogs/modal-base';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { servers, toast } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import type { NxSystem } from '@services/system.service/system';
 import { WINDOW } from '@services/window-provider';
-import { pickFrom } from '@utils/general';
 
 @Component({
     selector: 'nx-modal-restart-server-content',
     templateUrl: 'restart-server.component.html',
     styleUrls: [],
 })
-export class RestartServerModalContent {
-    @Input() closable: boolean = true;
-
+export class RestartServerModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;
 
-    system: NxSystem;
     serverName: string;
-    serverId: string;
     restartServer: Process;
     readonly maxNumberServerChecked: number = 6;
-    private applyService: NxApplyService;
 
     constructor(
         private processService: NxProcessService,
         private dialogs: NxDialogsService,
         private ribbonService: NxRibbonService,
         private toastService: NxToastService,
-        public dialogRef: DialogRef,
-        @Inject(DIALOG_DATA) private dialogData: {
-            system: NxSystem;
-            serverName: string;
-            serverId: string;
-        },
+        private applyService: NxApplyService,
+        dialogRef: DialogRef<DT['return']>,
+        @Inject(DIALOG_DATA) { system, server }: DT['data'],
         @Inject(WINDOW) private window: Window,
-        injector: Injector,
     ) {
-        setTimeout(() => {
-            this.applyService = injector.get(NxApplyService);
-        }, 0);
-    }
+        super(dialogRef);
 
-    ngOnInit(): void {
-        pickFrom(this.dialogData, ['system', 'serverName', 'serverId'], this);
+        this.serverName = server.name;
 
         this.restartServer = this.processService
             .createProcess(() => {
-                const haveOnlineServers = this.system.serverManager.servers
+                this.unlock();
+                const haveOnlineServers = system.serverManager.servers
                     .some(({ status, id }) =>
-                        status === 'Online' && id !== this.serverId
+                        status === 'Online' && id !== server.id
                     );
                 if (!haveOnlineServers) {
                     this.ribbonService.show(
@@ -77,8 +65,8 @@ export class RestartServerModalContent {
                     );
                 }
                 this.applyService.isOnline$.next(haveOnlineServers);
-                this.system.isAvailable = false;
-                return this.system.serverManager.restartServer(this.serverId);
+                system.isAvailable = false;
+                return system.serverManager.restartServer(server.id);
             },
             { ignoreError: true },
             () => {
@@ -104,22 +92,22 @@ export class RestartServerModalContent {
                          *  -- there might be an instance where after server comes back online, system shows online, but then system goes offline again
                          *     --> not sure how we can handle this
                          */
-                this.system.currentBusyServerIds.add(this.serverId);
+                system.currentBusyServerIds.add(server.id);
                 this.close(servers.status.restarting);
                 let systemOfflineShown = false;
                 let serverHasGoneOfflineOnce = false;
                 let serverOnlineChecked = 0;
-                const serverSubscription = this.system.serverManager.getForceServers(false)
+                const serverSubscription = system.serverManager.getForceServers(false)
                     .pipe(
                         map(res => {
                             if (res) {
                                 const serverStatuses = Object.fromEntries(
                                     res.map(server => [server.id, server.status])
                                 );
-                                if (!serverStatuses[this.serverId]) {
+                                if (!serverStatuses[server.id]) {
                                     throw Error('server not found');
                                 }
-                                if (serverStatuses[this.serverId] === 'Offline') {
+                                if (serverStatuses[server.id] === 'Offline') {
                                     serverHasGoneOfflineOnce = true;
                                     throw Error('still restarting');
                                 }
@@ -142,9 +130,9 @@ export class RestartServerModalContent {
                                 throw Error('re-login on restart');
                             }
                             // makes sure that system is online
-                            return this.system.getInfo(true, false)
+                            return system.getInfo(true, false)
                                 .then(() => {
-                                    if (!this.system.isOnline) {
+                                    if (!system.isOnline) {
                                         this.ribbonService.show(
                                             this.LANG.ribbon.systemOffline,
                                             [],
@@ -185,16 +173,17 @@ export class RestartServerModalContent {
                         })
                     )
                     .subscribe(() => {
-                        this.system.isAvailable = true;
+                        system.isAvailable = true;
                         this.ribbonService.hide();
-                        this.system.systemInfo = this.system;
+                        system.systemInfo = system;
 
                         serverSubscription.unsubscribe();
                     });
             },
             err => {
-                this.system.currentBusyServerIds.delete(this.serverId);
-                this.system.isAvailable = true;
+                this.unlock();
+                system.currentBusyServerIds.delete(server.id);
+                system.isAvailable = true;
                 let message = this.LANG.servers.restartFailed;
 
                 if (err && (err.name === 'TimeoutError' || err.status === 503)) {
@@ -213,8 +202,4 @@ export class RestartServerModalContent {
                 }
             });
     }
-
-    close = (msg?: string): void => {
-        this.dialogRef.close(msg);
-    };
 }

@@ -1,13 +1,15 @@
+import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { DOCUMENT } from '@angular/common';
-import { Component, Inject, Input } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'ngx-webstorage';
 import { timer } from 'rxjs';
 import { delayWhen, retryWhen, map } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import type { ResetServer as DT } from '@dialogs/dialogs.types';
+import { ModalBase } from '@dialogs/modal-base';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { servers, toast } from '@lib/variables/static-variables';
@@ -17,21 +19,20 @@ import { Process } from '@services/process.service/process';
 import { ModuleInformation } from '@services/system-api.types';
 import type { NxSystem } from '@services/system.service/system';
 import { WINDOW } from '@services/window-provider';
-import { cleanId, pickFrom } from '@utils/general';
+import { cleanId } from '@utils/general';
 
 @Component({
     selector: 'nx-modal-reset-server-content',
     templateUrl: 'reset-server.component.html',
     styleUrls: [],
 })
-export class ResetServerModalContent {
-    @Input() closable: boolean = true;
+export class ResetServerModalContent extends ModalBase<DT['return']> implements AfterViewInit {
+    @ViewChild('passwordInput') private passwordInput: ElementRef<HTMLInputElement>;
 
     LANG = staticLang;
 
     system: NxSystem;
     serverName: string;
-    serverId: string;
     resetServer: Process;
     password: string;
     hideErrors = true;
@@ -43,16 +44,17 @@ export class ResetServerModalContent {
         private toastService: NxToastService,
         private localStorage: LocalStorageService,
         private router: Router,
-        public dialogRef: DialogRef,
-        @Inject(DIALOG_DATA) private dialogData: any,
+        dialogRef: DialogRef<DT['return']>,
+        @Inject(DIALOG_DATA) { system, server }: DT['data'],
         @Inject(WINDOW) private window: Window,
         @Inject(DOCUMENT) private document: Document,
-    ) {}
+    ) {
+        super(dialogRef);
+        this.system = system;
+        this.serverName = server.name;
 
-    ngOnInit(): void {
-        pickFrom(this.dialogData, ['system', 'serverName', 'serverId'], this);
-
-        const handleResetFailError = (from: string, error): void => {
+        const handleResetFailError = (from: string, error: unknown): void => {
+            this.unlock();
             console.error(`Error in reset-server dialog from ${from}:`, error);
             this.toastService.notify(
                 this.LANG.servers.resetFailed,
@@ -69,13 +71,13 @@ export class ResetServerModalContent {
         };
         const isResettingCurrentServer = (): boolean => {
             const currentServer = this.system.serverManager.servers
-                .find(server => server.id === this.serverId);
+                .find(s => s.id === server.id);
             return currentServer.networkAddresses.includes(this.document.location.host) ||
                 this.system.info.name === currentServer.name;
         };
         const routeToNextServer = (): void => {
             const { servers } = this.system.serverManager;
-            const currentServerIndex = servers.findIndex(server => server.id === this.serverId);
+            const currentServerIndex = servers.findIndex(s => s.id === server.id);
             const nextServerId = cleanId(currentServerIndex === servers.length - 1
                 ? servers[0].id : servers[currentServerIndex + 1].id);
             this.router.navigate(['/settings', 'servers', nextServerId]);
@@ -83,8 +85,9 @@ export class ResetServerModalContent {
 
         this.resetServer = this.processService
             .createProcess(() => {
+                this.lock();
                 return this.system.serverManager.restoreFactorySettings(
-                    this.serverId,
+                    server.id,
                     this.password
                 ).toPromise();
             }, {
@@ -98,7 +101,7 @@ export class ResetServerModalContent {
             }, async () => {
                 const numberOfServers = this.system.serverManager.servers?.length || 0;
                 if (environment.isLocal && numberOfServers) {
-                    this.close();
+                    this.close(true);
                     if (numberOfServers === 1) {
                         this.localStorage.store('resetServer', true);
                         setTimeout(() => this.window.location.reload(), 2000);
@@ -112,7 +115,7 @@ export class ResetServerModalContent {
 
                 let moduleInfo: ModuleInformation;
                 try {
-                    moduleInfo = await this.system.serverManager.getModuleInfo(this.serverId).toPromise();
+                    moduleInfo = await this.system.serverManager.getModuleInfo(server.id).toPromise();
                 } catch (err) {
                     if (![503, 504].includes(err.status)) {
                         return handleResetFailError('getModuleInfo', err);
@@ -123,12 +126,12 @@ export class ResetServerModalContent {
                     }
                 }
                 const { runtimeId: initialRuntimeId } = moduleInfo.reply;
-                return this.system.serverManager.restartServer(this.serverId)
+                return this.system.serverManager.restartServer(server.id)
                     .then(() => {
-                        const serverSubscription = this.system.serverManager.getModuleInfo(this.serverId)
+                        const serverSubscription = this.system.serverManager.getModuleInfo(server.id)
                             .pipe(
                                 map(res => {
-                                    if (res.reply.id !== this.serverId) {
+                                    if (res.reply.id !== server.id) {
                                         throw Error('server id should be the same');
                                     }
                                     if (res.reply.runtimeId === initialRuntimeId) {
@@ -162,6 +165,7 @@ export class ResetServerModalContent {
                     })
                     .catch(err => handleResetFailError('restartServer', err));
             }, err => {
+                this.unlock();
                 if (err.errorId === servers.errors.oldSessionErrorId) {
                     this.toastService.notify(
                         this.LANG.dialogs.updateSession.resetServer,
@@ -173,7 +177,9 @@ export class ResetServerModalContent {
             });
     }
 
-    close = (msg?: string): void => {
-        this.dialogRef.close(msg);
-    };
+    ngAfterViewInit(): void {
+        setTimeout(() => {
+            this.passwordInput?.nativeElement.focus();
+        });
+    }
 }
