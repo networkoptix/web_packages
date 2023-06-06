@@ -693,7 +693,7 @@ Force Tags        system    Threaded    users
     [Tags]    webadmin    cloud
     @{custom roles}=    Get User Roles    https://${QA BURBANK IP}:${servers}[0][port][0]    ${servers}[0][localAuth]
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${servers}[0][cloudOwner]    ${servers}[0][cloudUsers][cloudAdmin]
-    ...    ELSE    Create List    ${servers}[0][cloudOwner]    admin    ${servers}[0][cloudUsers][cloudAdmin]    ${servers}[0][local users][cloudAdmin][login]
+    ...    ELSE    Create List    ${servers}[0][cloudOwner]    admin    ${servers}[0][cloudUsers][cloudAdmin]    ${servers}[0][localUsers][cloudAdmin][login]
     FOR    ${user}    IN    @{list}
         Log in    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${servers}[0][id]

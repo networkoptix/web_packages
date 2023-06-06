@@ -721,10 +721,10 @@ class GenericKeywords(object):
 
     @keyword
     def Get_Cloud_User_Id_By_Email(self, auth, email, systemId):
-        users = CloudPortalAPI.get_cloud_system_users(auth, systemId)
+        users = self.cloud_api.get_cloud_system_users(auth, systemId)
         for user in users:
             if user == email:
-                return    user["vmsUserId"]
+                return user["vmsUserId"]
 
     @keyword
     def Convert_Code(self, code):

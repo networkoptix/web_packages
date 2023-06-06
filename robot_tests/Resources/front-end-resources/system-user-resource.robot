@@ -273,12 +273,6 @@ Check Special Hints
         END
     END
 
-Get Custom Permissions
-    [Arguments]    ${custom roles}    ${role name}
-    FOR    ${role}    IN    @{custom roles}
-        Return From Keyword If    '''${role["name"]}'''=='''${role name}'''    ${role}
-    END
-
 Change All Local Users Login
     &{local users limited}=    Create Dictionary    &{servers}[0][localUsers]
     Pop From Dictionary    ${local users limited}    cloudAdmin
