@@ -6,7 +6,7 @@ import type { ButtonArrowType, SearchModel } from './search.service.types';
 
 @UntilDestroy({ checkProperties: true })
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxSearchService {
     navDirectionSubject = new BehaviorSubject<ButtonArrowType>(null);
@@ -30,8 +30,8 @@ export class NxSearchService {
         }
 
         if (model.queryExactMatch) {
-            return model.queryExactMatch.every(queryTerm =>
-                searchFor.includes(queryTerm)
+            return model.queryExactMatch.every(
+                queryTerm => searchFor.includes(queryTerm),
                 // case sensitive!
             );
         }
@@ -47,15 +47,11 @@ export class NxSearchService {
         }
 
         if (model.queryOrMatch) {
-            return model.queryOrMatch.some(queryTerm =>
-                searchForLower.includes(queryTerm)
-            );
+            return model.queryOrMatch.some(queryTerm => searchForLower.includes(queryTerm));
         }
 
         if (model.queryAndMatch) {
-            return model.queryAndMatch.every(queryTerm =>
-                searchForLower.includes(queryTerm)
-            );
+            return model.queryAndMatch.every(queryTerm => searchForLower.includes(queryTerm));
         }
 
         return false;
@@ -72,9 +68,7 @@ export class NxSearchService {
         // "EXACT" match
         const exactMatch = model.query.match(/"(.+?)"/g);
         if (exactMatch) {
-            model.queryExactMatch = exactMatch.map(searchTerm =>
-                searchTerm.replace(/"/g, '')
-            );
+            model.queryExactMatch = exactMatch.map(searchTerm => searchTerm.replace(/"/g, ''));
             return;
         }
 
@@ -90,7 +84,8 @@ export class NxSearchService {
         }
 
         // "OR" match
-        if (model.query.indexOf('|') > 0) { // not starting with pipe
+        if (model.query.indexOf('|') > 0) {
+            // not starting with pipe
             const orMatch = model.query.toLowerCase().match(/([\w-]+)/g);
             model.queryOrMatch = orMatch || '';
             return;

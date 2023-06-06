@@ -5,7 +5,7 @@ import { shareReplay } from 'rxjs/operators';
 import { NxConfigService } from './nx-config/nx-config.service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxStaticCacheService {
     CONFIG: any;
@@ -20,14 +20,14 @@ export class NxStaticCacheService {
             return this.cache[name];
         }
 
-        this.cache[name] = this.http.get(
-            `/${this.CONFIG.viewsDir}static/${name}.html`, { responseType: 'text' }
-        ).pipe(
-            shareReplay({
-                bufferSize: 1,
-                refCount: true
-            })
-        );
+        this.cache[name] = this.http
+            .get(`/${this.CONFIG.viewsDir}static/${name}.html`, { responseType: 'text' })
+            .pipe(
+                shareReplay({
+                    bufferSize: 1,
+                    refCount: true,
+                }),
+            );
 
         return this.cache[name];
     }

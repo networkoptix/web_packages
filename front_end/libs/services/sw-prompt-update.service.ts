@@ -11,7 +11,7 @@ import { NxProcessService } from '@services/process.service';
 import { WINDOW } from '@services/window-provider';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxSwPromptUpdateService {
     LANG = staticLang;
@@ -31,20 +31,22 @@ export class NxSwPromptUpdateService {
             tap(_ => {
                 this.ribbonService = injector.get(NxRibbonService);
                 this.processService = injector.get(NxProcessService);
-            }));
+            }),
+        );
         if (environment.production && !environment.isLocal) {
             updates.available.subscribe(evt => {
                 // console.log(`New app version available: ${evt.available.hash}`);
-                this.ribbonService.show(this.LANG.ribbon.newVersionAvailable.notification,
-                    [{
+                this.ribbonService.show(this.LANG.ribbon.newVersionAvailable.notification, [
+                    {
                         type: 'process-button',
                         text: this.LANG.ribbon.newVersionAvailable.installButton,
                         value: this.processService.createProcess(() => {
                             return updates.activateUpdate().then(() => {
                                 this.window.location.reload();
                             });
-                        })
-                    }]);
+                        }),
+                    },
+                ]);
             });
         }
         const appIsStable$ = appRef.isStable.pipe(first(isStable => isStable === true));

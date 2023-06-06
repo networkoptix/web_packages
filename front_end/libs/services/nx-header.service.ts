@@ -13,7 +13,7 @@ import { WINDOW } from './window-provider';
 
 @UntilDestroy({ checkProperties: true })
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxHeaderService {
     public showSubject = new BehaviorSubject(false);
@@ -40,19 +40,15 @@ export class NxHeaderService {
         private menusService: NxMenusService,
         @Inject(WINDOW) private window: Window,
     ) {
-        this.router.events
-            .pipe(untilDestroyed(this))
-            .subscribe(event => {
-                if (event instanceof NavigationStart) {
-                    this.setLocation(event.url);
-                }
-            });
+        this.router.events.pipe(untilDestroyed(this)).subscribe(event => {
+            if (event instanceof NavigationStart) {
+                this.setLocation(event.url);
+            }
+        });
 
-        this.menusService.currentSystemNode$
-            .pipe(untilDestroyed(this))
-            .subscribe(_ => {
-                this.setLocation(this.router.url);
-            });
+        this.menusService.currentSystemNode$.pipe(untilDestroyed(this)).subscribe(_ => {
+            this.setLocation(this.router.url);
+        });
     }
 
     set currentLocation(value) {
@@ -113,19 +109,14 @@ export class NxHeaderService {
         asset: Asset,
         editBaseUrl,
         contexts: ContextManifest[],
-        url?
+        url?,
     ): void {
         const { id, name } = asset;
         const editUrl = `${editBaseUrl}/${id}`;
         for (const { name: contextName } of contexts) {
             const matchedRoute = `${editUrl}/${contextName}`;
             if (!this.getDynamicRoute(matchedRoute)) {
-                const baseNode = new MenuNode(
-                    name,
-                    matchedRoute,
-                    name,
-                    true
-                );
+                const baseNode = new MenuNode(name, matchedRoute, name, true);
                 const { breadcrumbs, childNode } = this.currentLocation;
                 childNode.queryParamsHandling = 'merge';
                 baseNode.breadcrumbs = [...breadcrumbs, { ...childNode }];
@@ -133,7 +124,7 @@ export class NxHeaderService {
                     isSystem: false,
                     breadcrumbs: [...baseNode.breadcrumbs],
                     childNode: { ...baseNode },
-                    parentNode: { ...childNode }
+                    parentNode: { ...childNode },
                 };
 
                 dynamicNode.parentNode.nodes = [{ ...baseNode, url: matchedRoute }];
@@ -153,13 +144,13 @@ export class NxHeaderService {
         if (dynamicRoute) {
             this.currentLocation = dynamicRoute;
             return;
-        } else if (url.startsWith(settingsBase) ||
-            (environment.isLocal && (
-                url.startsWith('/view') ||
-                url.startsWith('/health') ||
-                url.startsWith('/bookmarks') ||
-                url.startsWith('/monitoring')
-            ))
+        } else if (
+            url.startsWith(settingsBase) ||
+            (environment.isLocal &&
+                (url.startsWith('/view') ||
+                    url.startsWith('/health') ||
+                    url.startsWith('/bookmarks') ||
+                    url.startsWith('/monitoring')))
         ) {
             bestMatch.isSystem = true;
             bestMatch.parentNode = this.menusService.currentSystemNode$.value;
@@ -201,11 +192,7 @@ export class NxHeaderService {
         this.currentLocation = bestMatch;
     }
 
-    static findMatchFactory(
-        url: any,
-        target: Record<any, any> = {},
-        removeFirstBreadcrumb = true
-    ) {
+    static findMatchFactory(url: any, target: Record<any, any> = {}, removeFirstBreadcrumb = true) {
         return startingNodes => {
             const nodes = [...startingNodes];
             for (let i = 0; i < nodes.length; i++) {
@@ -214,15 +201,11 @@ export class NxHeaderService {
                     const node = parentNode.nodes[j];
                     nodes.push(node);
                     if (node.url) {
-                        const nodeUrl = node.url.startsWith('/')
-                            ? node.url
-                            : `/${node.url}`;
+                        const nodeUrl = node.url.startsWith('/') ? node.url : `/${node.url}`;
                         if (
                             nodeUrl === url ||
-                            (
-                                url.startsWith(nodeUrl) &&
-                                (!target.path || target.path.length < nodeUrl.length)
-                            )
+                            (url.startsWith(nodeUrl) &&
+                                (!target.path || target.path.length < nodeUrl.length))
                         ) {
                             target.path = node.url;
                             target.assetId = node.asset_id;
@@ -249,10 +232,14 @@ export class NxHeaderService {
      *
      * @param param0 - Accepts MenuNode which contains a url property
      */
-    handleNav({ url, new_window: newWindow, queryParamsHandling = '' }: MenuNodeNavProps, event: MouseEvent): void {
+    handleNav(
+        { url, new_window: newWindow, queryParamsHandling = '' }: MenuNodeNavProps,
+        event: MouseEvent,
+    ): void {
         const openNewWindow = newWindow || event?.metaKey || event?.ctrlKey;
         this.showSubject.next(false);
-        const urlPattern = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www\.|[-;:&=\+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w\-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[.!/\\\w]*))?)/;
+        const urlPattern =
+            /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www\.|[-;:&=\+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w\-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[.!/\\\w]*))?)/;
         if (urlPattern.test(url)) {
             if (!url.startsWith('http')) {
                 url = `http://${url}`;
@@ -262,10 +249,9 @@ export class NxHeaderService {
             const serializedUrl = this.router.serializeUrl(this.router.createUrlTree([url]));
             this.window.open(serializedUrl, '_blank');
         } else {
-            this.router.navigate([url], { queryParamsHandling })
-                .catch(ex => {
-                    console.error(ex);
-                });
+            this.router.navigate([url], { queryParamsHandling }).catch(ex => {
+                console.error(ex);
+            });
         }
     }
 }

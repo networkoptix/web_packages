@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxStorageService {
     private storage: LocalStorageService;
@@ -35,7 +35,7 @@ export class NxStorageService {
         this.storage.store('email', email);
     }
 
-    get loginRegister():boolean {
+    get loginRegister(): boolean {
         return this.storage.retrieve('loginRegister') || false;
     }
 

@@ -3,7 +3,7 @@ import { Observable, Subject, timer } from 'rxjs';
 import { concatMap, shareReplay, takeUntil } from 'rxjs/operators';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 /*
  * How to use the poll service.
@@ -32,15 +32,11 @@ export class NxPollService {
         this.unsub$.next('done');
     }
 
-    createPoll<T>(
-        apiCall: () => Observable<T> | Promise<T>,
-        intervalDelay: number
-    ): Observable<T> {
-        return timer(0, intervalDelay)
-            .pipe(
-                concatMap(apiCall),
-                takeUntil(this.unsub$),
-                shareReplay({ bufferSize: 1, refCount: false })
-            );
+    createPoll<T>(apiCall: () => Observable<T> | Promise<T>, intervalDelay: number): Observable<T> {
+        return timer(0, intervalDelay).pipe(
+            concatMap(apiCall),
+            takeUntil(this.unsub$),
+            shareReplay({ bufferSize: 1, refCount: false }),
+        );
     }
 }

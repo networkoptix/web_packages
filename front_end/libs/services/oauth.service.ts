@@ -10,7 +10,7 @@ import { NxStorageService } from './storage.service';
 import { WINDOW } from './window-provider';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class OauthService {
     CONFIG: IConfig;
@@ -39,16 +39,18 @@ export class OauthService {
         if (!refreshToken) {
             refreshToken = this.cloudApiRefreshToken;
         }
-        return this.http.post(
-            `${this.CONFIG.cloudHost}/oauth/logout/`,
-            { cloudAccessToken: accessToken, refreshToken }
-        )
+        return this.http
+            .post(`${this.CONFIG.cloudHost}/oauth/logout/`, {
+                cloudAccessToken: accessToken,
+                refreshToken,
+            })
             .pipe(
                 tap(() => {
                     this.storage.clear('cloudApiAccessToken');
                     this.storage.clear('cloudApiRefreshToken');
-                })
-            ).toPromise();
+                }),
+            )
+            .toPromise();
     }
 
     redirectOauth(
@@ -81,7 +83,7 @@ export class OauthService {
             reset: 'passwordReset',
             restart: 'passwordRestart',
             system2faAuth: 'system2faAuth',
-            transfer: 'passwordTransfer'
+            transfer: 'passwordTransfer',
         };
         const params = new URLSearchParams({
             client_type: clientTypes[state] || clientTypes.login,
@@ -89,12 +91,14 @@ export class OauthService {
             redirect_uri: cleanRedirect(redirectTo),
             client_id: environment.isLocal ? 'webadmin' : 'cloud_portal',
             response_type: 'code',
-            grant_type: 'password'
+            grant_type: 'password',
         });
         if (environment.isLocal) {
             params.append(
                 'scope',
-                `${this.CONFIG.cloudHost.replace(/http?s:\/\//, '')} cloudSystemId=${this.CONFIG.cloudSystemId || '*'}`
+                `${this.CONFIG.cloudHost.replace(/http?s:\/\//, '')} cloudSystemId=${
+                    this.CONFIG.cloudSystemId || '*'
+                }`,
             );
         }
         if (state) {
@@ -112,13 +116,17 @@ export class OauthService {
         }
         const host = environment.production
             ? `${this.CONFIG.cloudHost ?? ''}`
-            : environment.cloudHost ? `https://${environment.cloudHost}` : this.CONFIG.cloudHost;
+            : environment.cloudHost
+            ? `https://${environment.cloudHost}`
+            : this.CONFIG.cloudHost;
         this.window.location.href = `${host}/authorize?${params.toString()}`;
         return false;
     }
 
     add2fa(accessToken): void {
-        const authorizeUrl = `${environment.isLocal ? '/#' : ''}/cloud-authorize?state=renew&access_token=${accessToken}`;
+        const authorizeUrl = `${
+            environment.isLocal ? '/#' : ''
+        }/cloud-authorize?state=renew&access_token=${accessToken}`;
         this.window.open(authorizeUrl, '_blank').focus();
     }
 

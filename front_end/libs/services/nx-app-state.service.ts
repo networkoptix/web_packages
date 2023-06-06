@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxAppStateService {
     readySubject = new BehaviorSubject(false);

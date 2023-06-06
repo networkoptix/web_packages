@@ -9,7 +9,7 @@ import { NxLanguageProviderService } from './nx-language-provider';
 import { WINDOW } from './window-provider';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxBootstrapProvider {
     CONFIG: IConfig;
@@ -34,13 +34,14 @@ export class NxBootstrapProvider {
      *
      * @returns boolean
      */
-    #isVmsApiAvailable = () => new Promise(resolve => {
-        // @ts-expect-error
-        this.window.vmsApiInit = () => resolve(true);
-        this.window.requestIdleCallback
-            ? requestIdleCallback(() => resolve(false))
-            : setTimeout(() => resolve(false));
-    });
+    #isVmsApiAvailable = () =>
+        new Promise(resolve => {
+            // @ts-expect-error
+            this.window.vmsApiInit = () => resolve(true);
+            this.window.requestIdleCallback
+                ? requestIdleCallback(() => resolve(false))
+                : setTimeout(() => resolve(false));
+        });
 
     #useRefreshTokenFromVms = async () => {
         // @ts-expect-error
@@ -83,38 +84,42 @@ export class NxBootstrapProvider {
 
         return new Promise<boolean>((resolve, reject) => {
             return Promise.all([
-                this.CONFIG.preloadedTranslation ? Promise.resolve(this.CONFIG.preloadedTranslation) : this.languageService.loadLanguage(),
-                this.getModuleInfo()
-            ]).then(([language, moduleInfo]: any) => {
-                this.languageService.setTranslations(language.language, language);
-                this.CONFIG.viewsDir = 'static/lang_' + language.language + '/views/';
-                if (!!moduleInfo && Object.keys(moduleInfo).length > 0) {
-                    this.isNewSystem = moduleInfo.serverFlags.includes('SF_NewSystem');
-                    this.setLocalInfo(moduleInfo).then(() => {
-                        this.configService.updateConfigUsingOverrides();
+                this.CONFIG.preloadedTranslation
+                    ? Promise.resolve(this.CONFIG.preloadedTranslation)
+                    : this.languageService.loadLanguage(),
+                this.getModuleInfo(),
+            ])
+                .then(([language, moduleInfo]: any) => {
+                    this.languageService.setTranslations(language.language, language);
+                    this.CONFIG.viewsDir = 'static/lang_' + language.language + '/views/';
+                    if (!!moduleInfo && Object.keys(moduleInfo).length > 0) {
+                        this.isNewSystem = moduleInfo.serverFlags.includes('SF_NewSystem');
+                        this.setLocalInfo(moduleInfo).then(() => {
+                            this.configService.updateConfigUsingOverrides();
+                            this.isLoaded = true;
+                            resolve(true);
+                        });
+                    } else {
                         this.isLoaded = true;
                         resolve(true);
-                    });
-                } else {
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    // some fail handling is done in app component
                     this.isLoaded = true;
                     resolve(true);
-                }
-            }).catch(err => {
-                console.error(err);
-                // some fail handling is done in app component
-                this.isLoaded = true;
-                resolve(true);
-            }).finally(() => {
-                this.window.document.querySelector('body').style.backgroundColor = null;
-            });
+                })
+                .finally(() => {
+                    this.window.document.querySelector('body').style.backgroundColor = null;
+                });
         });
     }
 
     setLocalInfo = async (data): Promise<void> => {
         const hostProtocol = data.cloudHost.split('://')[0];
-        this.CONFIG.cloudHost = (hostProtocol === data.cloudHost)
-            ? `https://${data.cloudHost}`
-            : data.cloudHost;
+        this.CONFIG.cloudHost =
+            hostProtocol === data.cloudHost ? `https://${data.cloudHost}` : data.cloudHost;
         // this.CONFIG.featureFlags = await this.http.get<Record<string, unknown>>(`${this.CONFIG.cloudHost}/api/utils/webadmin_feature_flags/`, {}).toPromise().catch(() => ({}));
         this.CONFIG.cloudSystemId = data.cloudSystemId;
         this.CONFIG.localSystemId = data.localSystemId;

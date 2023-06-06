@@ -20,7 +20,7 @@ interface MetaLookup {
 
 @UntilDestroy()
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxPageMetaService {
     CONFIG: IConfig;
@@ -38,21 +38,15 @@ export class NxPageMetaService {
         protected readonly title: Title,
         protected readonly meta: Meta,
         // headerService: NxHeaderService,
-        @Inject(WINDOW) protected window: Window
+        @Inject(WINDOW) protected window: Window,
     ) {
         this.CONFIG = configService.getConfig();
 
-        this.updater$.pipe(
-            untilDestroyed(this),
-            debounceTime(50)
-        ).subscribe(_ => {
+        this.updater$.pipe(untilDestroyed(this), debounceTime(50)).subscribe(_ => {
             Object.entries(this.getMetaProperties()).forEach(([name, content]) => {
                 const property = `og:${name}`;
                 this.meta.updateTag({ name, property, content });
-                if (
-                    name === 'title' &&
-                    !this.routerUrl.startsWith('/authorize')
-                ) {
+                if (name === 'title' && !this.routerUrl.startsWith('/authorize')) {
                     this.title.setTitle(content);
                 }
             });
@@ -64,11 +58,10 @@ export class NxPageMetaService {
     }
 
     private mapMeta = (metaProperties: Record<string, string>): Record<string, string> => {
-        return Object.entries(metaProperties || {})
-            .reduce((lookup, [property, val]) => {
-                val = this.translateService.instant(val);
-                return ({ ...lookup, [property]: val });
-            }, {});
+        return Object.entries(metaProperties || {}).reduce((lookup, [property, val]) => {
+            val = this.translateService.instant(val);
+            return { ...lookup, [property]: val };
+        }, {});
     };
 
     private getBaseMeta(): Record<string, string> {
@@ -79,10 +72,11 @@ export class NxPageMetaService {
 
     private findMatchingMeta = (url: string) => {
         return (lookupDict: BaseConfig['metaDefaults']) => {
-            return Object.entries(lookupDict)
-                .find(([partialPath]) => {
+            return (
+                Object.entries(lookupDict).find(([partialPath]) => {
                     return url.startsWith(partialPath);
-                })?.[1] || {};
+                })?.[1] || {}
+            );
         };
     };
 
@@ -90,12 +84,12 @@ export class NxPageMetaService {
         const findIn = this.findMatchingMeta(url);
         return {
             ...this.mapMeta(findIn(this.LANG[this.defaultMetaKey])),
-            ...findIn(this.CONFIG.metaDefaults)
+            ...findIn(this.CONFIG.metaDefaults),
         };
     }
 
     private generateDefaultMeta = (url: string): Record<string, string> => {
-        return ({ ...this.getBaseMeta(), ...this.getPathMeta(url) });
+        return { ...this.getBaseMeta(), ...this.getPathMeta(url) };
     };
 
     /**

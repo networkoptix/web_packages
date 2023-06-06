@@ -21,7 +21,7 @@ import { WINDOW } from './window-provider';
 const i18nOriginal = { ...i18n };
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxLanguageProviderService {
     CONFIG: IConfig;
@@ -64,15 +64,17 @@ export class NxLanguageProviderService {
          * });
          * this.translate.onTranslationChange.subscribe((event: TranslationChangeEvent) => {
          * });
-        */
+         */
     }
 
     loadLanguage(): Promise<Language> {
         const lang = this.translate.currentLang ?? this.translate.getDefaultLang();
 
-        return (environment.isLocal
-            ? this.http.get<Language>(`/static/lang_${lang}/language_compiled.json`)
-            : this.http.get<Language>('/api/utils/language')).toPromise();
+        return (
+            environment.isLocal
+                ? this.http.get<Language>(`/static/lang_${lang}/language_compiled.json`)
+                : this.http.get<Language>('/api/utils/language')
+        ).toPromise();
     }
 
     loadTimelineTranslations(): void {
@@ -92,18 +94,18 @@ export class NxLanguageProviderService {
         try {
             this.translate.setTranslation(lang, this.processLanguage(translation));
             this.translate.use(lang); // this will tell TranslateService to switch language -> see "breadcrumbs"
-            const productName = staticLang?.[environment.isLocal ? 'metaDefaultsWebadmin' : 'metaDefaults']?.default?.site_name || '';
+            const productName =
+                staticLang?.[environment.isLocal ? 'metaDefaultsWebadmin' : 'metaDefaults']?.default
+                    ?.site_name || '';
             this.translate.set('productName', productName);
         } catch (e) {
             this.toastService.notify(
                 'Loaded default language due to an error while setting up desired language.',
                 toast.warning,
             );
-            this.cloudApi
-                .changeLanguage(this.translate.getDefaultLang())
-                .then(() => {
-                    this.currentLang = this.translate.getDefaultLang();
-                });
+            this.cloudApi.changeLanguage(this.translate.getDefaultLang()).then(() => {
+                this.currentLang = this.translate.getDefaultLang();
+            });
         }
     }
 
@@ -123,8 +125,7 @@ export class NxLanguageProviderService {
         // avoid undefined "language"
         if (
             !language ||
-            language === this.translate.currentLang &&
-            this.sessionService.language === language
+            (language === this.translate.currentLang && this.sessionService.language === language)
         ) {
             return;
         }
@@ -136,9 +137,7 @@ export class NxLanguageProviderService {
         });
 
         this.cacheService.clearData();
-        this.swCacheService
-            .clearAllCache()
-            .catch(err => console.error(err));
+        this.swCacheService.clearAllCache().catch(err => console.error(err));
     }
 
     private processLanguage(translations: Language): Language {
@@ -150,7 +149,7 @@ export class NxLanguageProviderService {
             '%SUPPORT_LINK%': this.CONFIG.company.links.website,
             '%COMPANY_NAME%': this.CONFIG.company.name,
             '%ANDROID_APPLICATION_LINK%': this.CONFIG.mobileLinks?.android_application_link,
-            '%IOS_APPLICATION_LINK%': this.CONFIG.mobileLinks?.ios_application_link
+            '%IOS_APPLICATION_LINK%': this.CONFIG.mobileLinks?.ios_application_link,
         };
         return processLanguageFactory(customStrings)(translations);
     }

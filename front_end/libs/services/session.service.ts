@@ -12,7 +12,7 @@ import { NxSwCacheService } from './sw-cache.service';
 import { WINDOW } from './window-provider';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxSessionService {
     readonly cloudUserCaches = ['apiFresh', 'cloudSystemAPI'];
@@ -31,11 +31,13 @@ export class NxSessionService {
         this.session = this.localStorageService;
 
         this.loginStateSubject = new BehaviorSubject(this.loginState || '');
-        this.loginParams$ = new BehaviorSubject(this.loginParams ?? {
-            code: null,
-            auth: null,
-            refreshToken: null,
-        });
+        this.loginParams$ = new BehaviorSubject(
+            this.loginParams ?? {
+                code: null,
+                auth: null,
+                refreshToken: null,
+            },
+        );
         this.language$ = new BehaviorSubject(this.session.retrieve('language'));
 
         let hasSkippedFirstNull = !!this.session.retrieve('loginState');
@@ -46,24 +48,27 @@ export class NxSessionService {
         }
 
         // Listens to changes from other browser tabs.
-        this.session.observe('loginState').pipe(
-            filter(val => {
-                if (!val && !hasSkippedFirstNull) {
-                    hasSkippedFirstNull = true;
-                    return false;
-                }
-                return true;
-            })
-        ).subscribe(() => {
-            hasSkippedFirstNull = true;
-            // Clear config overrides between sessions
-            this.session.store(NxConfigService.OVERRIDE_KEY, {});
+        this.session
+            .observe('loginState')
+            .pipe(
+                filter(val => {
+                    if (!val && !hasSkippedFirstNull) {
+                        hasSkippedFirstNull = true;
+                        return false;
+                    }
+                    return true;
+                }),
+            )
+            .subscribe(() => {
+                hasSkippedFirstNull = true;
+                // Clear config overrides between sessions
+                this.session.store(NxConfigService.OVERRIDE_KEY, {});
 
-            if (!this.window.document.hasFocus()) {
-                // Don't reload on null since that state should show a session expired dialog
-                this.window.location.reload();
-            }
-        });
+                if (!this.window.document.hasFocus()) {
+                    // Don't reload on null since that state should show a session expired dialog
+                    this.window.location.reload();
+                }
+            });
     }
 
     get systems$(): Observable<NxSystemInfo[]> {
@@ -83,7 +88,7 @@ export class NxSessionService {
         return this.session.retrieve('theme-hsl') || {};
     }
 
-    set hslTheme(themeHsl:Record<string, Record<string, string>[] | number>) {
+    set hslTheme(themeHsl: Record<string, Record<string, string>[] | number>) {
         this.session.store('theme-hsl', themeHsl);
     }
 
@@ -140,8 +145,8 @@ export class NxSessionService {
         const params = {
             ...this.loginParams,
             ...Object.fromEntries<string>(
-                Object.entries(newParams).filter(([_k, v]) => v !== null)
-            )
+                Object.entries(newParams).filter(([_k, v]) => v !== null),
+            ),
         };
         this.session.store('loginParams', params);
         this.loginParams$.next(params);

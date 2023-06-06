@@ -8,7 +8,7 @@ import { NxConfigService } from './nx-config/nx-config.service';
 import type { NxSystem } from './system.service/system';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxAppSourceService {
     readonly environment = environment;

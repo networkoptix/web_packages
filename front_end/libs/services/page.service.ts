@@ -7,14 +7,15 @@ import { NxPageMetaService } from '@services/page-meta.service';
 
 @UntilDestroy()
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxPageService {
     readonly meta: Meta = {
         viewport: {
-            default: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no',
-            desktopLayout: 'width=768, maximum-scale=1, user-scalable=yes, shrink-to-fit=no'
-        }
+            default:
+                'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no',
+            desktopLayout: 'width=768, maximum-scale=1, user-scalable=yes, shrink-to-fit=no',
+        },
     };
 
     constructor(private router: Router, private metaService: NxPageMetaService) {}
@@ -45,7 +46,7 @@ export class NxPageService {
         return this.router
             .navigate(['404'], {
                 replaceUrl: true,
-                queryParams
+                queryParams,
             })
             .catch(error => {
                 console.error(error);
