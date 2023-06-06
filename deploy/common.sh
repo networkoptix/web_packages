@@ -80,13 +80,14 @@ function push()
     [ -z "$REPOSITORY_PATH" ] && REPOSITORY_PATH=/cloud
 
     REPOSITORY=$DOCKER_REGISTRY$REPOSITORY_PATH
-    docker tag $MODULE:$VERSION $REPOSITORY/$MODULE:$VERSION
-    docker push $REPOSITORY/$MODULE:$VERSION
 
     if [ -n "${DOCKER_IMAGE_CI_TAG}" ]
     then
         docker tag $MODULE:$VERSION $REPOSITORY/$MODULE:"${DOCKER_IMAGE_CI_TAG}"
         docker push $REPOSITORY/$MODULE:"${DOCKER_IMAGE_CI_TAG}"
+    else
+        docker tag $MODULE:$VERSION $REPOSITORY/$MODULE:$VERSION
+        docker push $REPOSITORY/$MODULE:$VERSION
     fi
 }
 
