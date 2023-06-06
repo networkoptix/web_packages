@@ -4,7 +4,7 @@ export interface BaseGroupItem {
     groups: BaseGroupItem[];
     id: string;
     name: string;
-    owner_account_email: string;
+    org_id: string;
     parent_group_id: string | null;
     systems: BaseSystemItem[];
     systemsCount: number;

@@ -22,14 +22,13 @@ import {
     selectCurrentPartnerOrgs,
     selectRootOrganizations,
 } from '../store/channel-partners/channel-partners.selectors';
-import * as GroupActions from '../store/groups.actions';
 import {
     selectCurrentGroupId,
     selectCurrentPath,
     selectCurrentRootGroup,
     selectHasGroups,
     selectOpenGroups,
-} from '../store/groups.selectors';
+} from '../store/groups/groups.selectors';
 
 interface SidebarSettings {
     showSidebarState: boolean;
@@ -109,7 +108,6 @@ export class NxOrganizationsComponent implements OnInit {
             .pipe(take(1))
             .subscribe(({ email }) => {
                 this.userEmail = email;
-                this.store.dispatch(GroupActions.setAccountEmail({ accountEmail: email }));
                 this.sidebarSettings = this.cloudApi.customAccountPropertyFactory(
                     'showSidebarState',
                     email,

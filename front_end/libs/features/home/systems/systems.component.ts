@@ -7,8 +7,8 @@ import { selectCurrentUser } from '@common/store/account/account.selectors';
 import { Account } from '@services/account.service/account';
 
 import { GroupsItem, LoadingState, SharedItems } from '../home.types';
-import * as GroupActions from '../store/groups.actions';
-import { selectCurrentSystemItems, selectLoadingState } from '../store/groups.selectors';
+import * as GroupActions from '../store/groups/groups.actions';
+import { selectCurrentSystemItems, selectLoadingState } from '../store/groups/groups.selectors';
 
 @Component({
     selector: 'nx-groups-systems',

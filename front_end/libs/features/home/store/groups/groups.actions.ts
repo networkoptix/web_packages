@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 
-import type { BaseGroupsItem, OpenGroups, SystemInfo } from '../home.types';
+import type { BaseGroupsItem, OpenGroups, SystemInfo } from '../../home.types';
 
 export const reset = createAction('[System Groups] Reset');
 
@@ -17,16 +17,6 @@ export const setSystemInfo = createAction(
 export const setCurrentGroupId = createAction(
     '[System Groups] Set current group ID',
     props<{ currentGroupId: string }>(),
-);
-
-export const setCurrentSharedOwner = createAction(
-    '[System Groups] Set user filter',
-    props<{ currentSharedOwner: string }>(),
-);
-
-export const setAccountEmail = createAction(
-    '[System Groups] Set account email',
-    props<{ accountEmail: string }>(),
 );
 
 export const setOpenGroups = createAction(

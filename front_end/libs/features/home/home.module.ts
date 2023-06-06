@@ -34,7 +34,7 @@ import { NxHomeComponent } from './home.component';
 import { OrgResolver } from './org-resolver';
 import { NxOrganizationsComponent } from './organizations/organization.component';
 import { channelPartnersReducer } from './store/channel-partners/channel-partners.reducer';
-import { groupsReducer } from './store/groups.reducer';
+import { groupsReducer } from './store/groups/groups.reducer';
 import { NxGroupsSystemsComponent } from './systems/systems.component';
 import { TabResolver } from './tab-resolver';
 

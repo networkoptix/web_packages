@@ -8,8 +8,8 @@ import { icons } from '@lib/variables/static-variables';
 
 import { GroupItem, GroupsItem, OpenGroups } from '../../home.types';
 import { NxSystemGroupsService } from '../../services/system-groups.service';
-import * as GroupActions from '../../store/groups.actions';
-import { selectCurrentGroupId } from '../../store/groups.selectors';
+import * as GroupActions from '../../store/groups/groups.actions';
+import { selectCurrentGroupId } from '../../store/groups/groups.selectors';
 
 @UntilDestroy()
 @Component({
@@ -19,7 +19,6 @@ import { selectCurrentGroupId } from '../../store/groups.selectors';
 })
 export class NxGroupsSidebarLevelComponent {
     @Input() groups: GroupItem[];
-    @Input() userLevel: string;
     @Input() openGroups: OpenGroups;
     @Input() groupId: string;
 
@@ -46,16 +45,6 @@ export class NxGroupsSidebarLevelComponent {
         }
 
         this.groupsService.onDrop(dragged, droppedOn);
-    }
-
-    selectUserFilter(user: string): void {
-        this.router
-            .navigate(['/', 'groups'])
-            .then(() =>
-                this.store.dispatch(
-                    GroupActions.setCurrentSharedOwner({ currentSharedOwner: user }),
-                ),
-            );
     }
 
     toggleOpenState(groupId?: string): boolean | void {

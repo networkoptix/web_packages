@@ -13,14 +13,13 @@ import { icons } from '@src/app/variables/static-variables';
 
 import { GroupItem, GroupsItem, SystemItem } from '../../home.types';
 import { NxSystemGroupsService } from '../../services/system-groups.service';
-import * as GroupActions from '../../store/groups.actions';
+import * as GroupActions from '../../store/groups/groups.actions';
 import {
     selectCurrentGroupId,
     selectCurrentGroupItems,
-    selectCurrentGroupOwner,
     selectCurrentSystemItems,
     selectHasGroups,
-} from '../../store/groups.selectors';
+} from '../../store/groups/groups.selectors';
 
 @Component({
     selector: 'nx-groups-cards',
@@ -31,7 +30,6 @@ export class NxGroupsCardsComponent {
     @Input() inRoot: CoercedBoolInput = false;
     hasGroups$ = this.store.select<boolean>(selectHasGroups);
     currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
-    currentGroupOwner$ = this.store.select<string>(selectCurrentGroupOwner);
     currentGroups$ = this.store.select<GroupItem[]>(selectCurrentGroupItems);
     currentSystems$ = this.store.select<SystemItem[]>(selectCurrentSystemItems);
     account$ = this.store.select<Account>(selectCurrentUser);

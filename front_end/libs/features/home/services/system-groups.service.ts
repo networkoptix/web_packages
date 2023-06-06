@@ -14,7 +14,7 @@ import { WINDOW } from '@services/window-provider';
 import { isObject } from '@utils/general';
 
 import type { GroupsItem } from '../home.types';
-import * as GroupActions from '../store/groups.actions';
+import * as GroupActions from '../store/groups/groups.actions';
 
 import {
     WebSocketAction,

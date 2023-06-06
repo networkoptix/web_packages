@@ -9,8 +9,8 @@ import { icons } from '@src/app/variables/static-variables';
 
 import { GroupsItem, OpenGroups, GroupPath, GroupItem } from '../../home.types';
 import { NxSystemGroupsService } from '../../services/system-groups.service';
-import * as GroupActions from '../../store/groups.actions';
-import { selectRootGroupItems } from '../../store/groups.selectors';
+import * as GroupActions from '../../store/groups/groups.actions';
+import { selectRootGroupItems } from '../../store/groups/groups.selectors';
 
 @Component({
     selector: 'nx-groups-sidebar',

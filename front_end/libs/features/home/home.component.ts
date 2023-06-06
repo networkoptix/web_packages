@@ -46,7 +46,6 @@ export class NxHomeComponent implements OnInit, OnDestroy {
             filter(res => !!res),
             map(nodes => nodes.find(node => node.url === '/home')),
         );
-        // Temporary until API hooked up
         const organizations$ = this.store.select(selectRootOrganizations);
         const channelPartners$ = this.store.select(selectChannelPartners);
         let redirectPath = 'personal';
