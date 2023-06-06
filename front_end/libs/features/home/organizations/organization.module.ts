@@ -6,7 +6,7 @@ import { AuthGuard } from '@guards/authGuard';
 import { NxGroupsCardsComponent } from '../components/groups-cards/groups-cards.component';
 import { NxOrganizationReportsComponent } from '../components/reports/reports.component';
 import { NxOrganizationSettingsComponent } from '../components/settings/settings.component';
-import { NxOrganizationUsersComponent } from '../components/users/users.component';
+import { NxOrganizationUsersComponent } from '../components/users/org-users/org-users.component';
 import { OrgResolver } from '../org-resolver';
 import { TabResolver } from '../tab-resolver';
 

@@ -1,8 +1,9 @@
 <div class="actions p-3">
     <button
+        *ngIf="currentOrgId$ | async as id"
         class="btn btn-default"
         translate
-        (click)="newUserDialog()"
+        (click)="newUserDialog(id)"
     >
         Add User
     </button>
@@ -16,5 +17,5 @@
 </div>
 <nx-users-table
     [headers]="headers"
-    [records]="records"
+    [records]="records$ | async"
 ></nx-users-table>

@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { NxChannelPartnerInformationComponent } from '../components/information/information.component';
 import { NxOrganizationSettingsComponent } from '../components/settings/settings.component';
 import { NxChannelPartnerSubchannelComponent } from '../components/subchannel/subchannel.component';
-import { NxOrganizationUsersComponent } from '../components/users/users.component';
+import { NxChannelPartnerUsersComponent } from '../components/users/channel-partner-users/channel-partner-users.component';
 import { OrgResolver } from '../org-resolver';
 import { TabResolver } from '../tab-resolver';
 
@@ -46,7 +46,7 @@ const CPRoutes: Routes = [
             },
             {
                 path: 'users',
-                component: NxOrganizationUsersComponent,
+                component: NxChannelPartnerUsersComponent,
             },
         ],
     },

@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { combineLatest, filter, map } from 'rxjs';
+import { combineLatest, map } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { MenuNode } from '@services/menus.service.types';
@@ -43,7 +43,6 @@ export class NxHomeComponent implements OnInit, OnDestroy {
         const redirect = !this.route.snapshot.children[0].routeConfig.path;
         const systems$ = this.systemsService.systemsSubject;
         const homeNode = this.headerService.nodes$.pipe(
-            filter(res => !!res),
             map(nodes => nodes.find(node => node.url === '/home')),
         );
         const organizations$ = this.store.select(selectRootOrganizations);
@@ -53,6 +52,9 @@ export class NxHomeComponent implements OnInit, OnDestroy {
         combineLatest([homeNode, channelPartners$, organizations$, systems$])
             .pipe(untilDestroyed(this))
             .subscribe(([homeNode, channelPartners, organizations, systems]) => {
+                if (!homeNode) {
+                    return;
+                }
                 const nodes = [
                     new MenuNode('', '/home'),
                     ...channelPartners.map(partner => {
