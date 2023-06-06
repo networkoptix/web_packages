@@ -76,10 +76,10 @@ class CloudPortalAPI(object):
             s.headers.update({'X-CSRFToken': csrftoken})
             s.headers.update({'cookie': 'csrftoken=' + csrftoken + '; sessionid=' + session_id})
             s.headers.update({'Referer': self.env})
-            r = s.post(f'{self.env}/api/account/logout', verify=_ssl_certs_path)
-            logger.trace(r.content)
-            assert 200 == r.status_code, 'Log out failed.'
-            return r.status_code
+            logout_response = s.post(f'{self.env}/api/account/logout', verify=_ssl_certs_path)
+            logger.trace(logout_response.content)
+            logout_response.raise_for_status()
+            return logout_response.status_code
 
     @keyword
     def get_access_code(self, email, password):
@@ -92,10 +92,10 @@ class CloudPortalAPI(object):
             "redirect_uri": self.env
         }
         with requests.session() as s:
-            r = s.post(f'{self.env}/oauth/authenticate', data=data, verify=_ssl_certs_path)
-            logger.trace(r.content)
-            assert 200 == r.status_code, 'Log in failed.'
-            return r.json()
+            authenticate_response = s.post(f'{self.env}/oauth/authenticate', data=data, verify=_ssl_certs_path)
+            logger.trace(authenticate_response.content)
+            authenticate_response.raise_for_status()
+            return authenticate_response.json()
 
     @keyword
     def merge_cloud_systems(self, master_id, slave_id, email, password):
@@ -103,25 +103,25 @@ class CloudPortalAPI(object):
             logger.trace(f'The headers are {s.headers}')
             data = {'master_system_id': master_id, 'password': password, 'slave_system_id': slave_id}
             s.headers.update({"referer": f"{self.env}"})
-            r = s.post(f'{self.env}/api/systems/merge', data)
-            logger.trace(f'Value of r.content: {r.content}')
-            assert r.status_code == 200, f'merge failed with {r.status_code}'
-            return r.json()
+            merge_response = s.post(f'{self.env}/api/systems/merge', data)
+            logger.trace(f'Value of merge_response.content: {merge_response.content}')
+            merge_response.raise_for_status()
+            return merge_response.json()
 
     @keyword
     def cdb_merge_cloud_systems(self, master_id, slave_id, email, password):
-        r = requests.post(f'{self.env}/cdb/system/{master_id}/merged_systems/', auth=HTTPBasicAuth(email, password),
+        cdb_merge_response = requests.post(f'{self.env}/cdb/system/{master_id}/merged_systems/', auth=HTTPBasicAuth(email, password),
                           json={"systemId": slave_id}, verify=False)
-        assert 200 == r.status_code, f'Merge failed with code:{r.status_code}'
-        return r.json()
+        cdb_merge_response.raise_for_status()
+        return cdb_merge_response.json()
 
     @keyword
     def change_password(self, email, old_password, new_password):
         with self._session(email, old_password) as s:
             s.headers.update({"referer": f"{self.env}/account/password"})
             data = {'old_password': old_password, 'new_password': new_password}
-            r = s.post(f'{self.env}/api/account/changePassword', data)
-            return r.status_code
+            change_pass_response = s.post(f'{self.env}/api/account/changePassword', data)
+            return change_pass_response.raise_for_status()
 
     @keyword
     def api_restore_password(self, email, code=None, new_password=None):
@@ -130,88 +130,95 @@ class CloudPortalAPI(object):
             data = {'user_email': email}
             if code and new_password:
                 data.update({'code': code, 'new_password': new_password})
-            r = s.post(f'{self.env}/api/account/restorePassword', data, verify=_ssl_certs_path)
-            return r.status_code
+            restore_pass_response = s.post(f'{self.env}/api/account/restorePassword', data, verify=_ssl_certs_path)
+            restore_pass_response.raise_for_status()
+            return restore_pass_response.status_code
 
     @keyword
     def get_language_anonymous(self, env):
-        r = requests.get(env + '/api/utils/language', verify=_ssl_certs_path)
-        return r.json()['language']
+        language_response = requests.get(f'{env}/api/utils/language', verify=_ssl_certs_path)
+        language_response.raise_for_status()
+        return language_response.json()['language']
 
     @keyword
     def get_account_language(self, email, password):
         with self._session(email, password) as s:
             s.headers.update({"Referer": self.env})
-            r = s.get(f'{self.env}/api/utils/language')
-            return r.json()['language']
+            account_language_response = s.get(f'{self.env}/api/utils/language')
+            account_language_response.raise_for_status()
+            return account_language_response.json()['language']
 
     @keyword
     def get_account_data(self, email, password):
         with self._session(email, password) as s:
-            r = s.get(f'{self.env}/api/account/')
-            return r.json()
+            account_response = s.get(f'{self.env}/api/account/')
+            account_response.raise_for_status()
+            return account_response.json()
 
     @keyword
     def get_account_systems(self, email, password):
         with self._session(email, password) as s:
             s.headers.update({"Referer": self.env})
-            data = s.get(f'{self.env}/api/systems/')
-            return data.json()
+            systems_response = s.get(f'{self.env}/api/systems/')
+            systems_response.raise_for_status()
+            return systems_response.json()
 
     @keyword
     def set_account_language(self, email, password, new_language='en_US'):
         with self._session(email, password) as s:
             s.headers.update({"Referer":self.env})
-            r = s.post(f'{self.env}/api/utils/language/', json={'language': new_language})
-            assert 200 == r.status_code, f"api/utils/language failed: {r.status_code}"
-            return r.json()            
+            set_language_response = s.post(f'{self.env}/api/utils/language/', json={'language': new_language})
+            set_language_response.raise_for_status()
+            return set_language_response.json()
 
     @keyword
     def set_user_theme(self, email, password, theme):
         with self._session(email, password) as s:
             s.headers.update({"Referer":self.env})
-            r = s.post(
+            set_user_theme_response = s.post(
                 f'{self.env}/api/custom-properties/theme/{email}',
                 auth=HTTPBasicAuth(email, password),
                 data={"theme": f"{theme}"})
-            assert r.status_code==201
-            return r.json()
+            set_user_theme_response.raise_for_status()
+            return set_user_theme_response.json()
 
     @keyword
     def set_account_name(self, email, password, first_name, last_name):
         with self._session(email, password) as s:
             s.headers.update({"referer": f"{self.env}"})
-            r = s.post(
+            set_name_response = s.post(
                 f'{self.env}/api/account/',
                 json={'first_name': first_name, 'last_name': last_name})
-            logger.trace(r.content)
-            return r.json()
+            logger.trace(set_name_response.content)
+            set_name_response.raise_for_status()
+            return set_name_response.json()
 
     @keyword
     def disconnect(self, email, password, system_id):
         with self._session(email, password) as s:
             s.headers.update({"referer": f"{self.env}"})
-            r = s.post(
+            disconnect_system_response = s.post(
                 f'{self.env}/api/systems/disconnect',
                 json={'system_id': system_id, 'password': password})
-            assert r.status_code == 200
-            return r.json()
+            disconnect_system_response.raise_for_status()
+            return disconnect_system_response.json()
 
     @keyword
     def delete_account(self, email, password):
         with self._session(email, password, logout=False) as s:
             s.headers.update({"referer": f"{self.env}"})
-            r = s.post(
+            delete_account_response = s.post(
                 f'{self.env}/api/account/delete', json={'password': password})
             logger.trace(password)
-            logger.trace(r.json())
-            return r.json()
+            logger.trace(delete_account_response.json())
+            delete_account_response.raise_for_status()
+            return delete_account_response.json()
 
     @keyword
     def get_code_from_api(self, email, message_type):
         # If cloud is in debug mode, use anonymous call
         if self._is_debug:
-            r = requests.post(
+            get_code_response = requests.post(
                 f'{self.env}/api/robot/get_code',
                 json={'email': email, 'type': message_type},
                 verify=_ssl_certs_path
@@ -220,23 +227,23 @@ class CloudPortalAPI(object):
             with self._session(self.baseEmail, self.password) as s:
                 s.headers.update({"referer": f"{self.env}/authorize"})
                 logger.trace(message_type)
-                r = s.post(
+                get_code_response = s.post(
                     f'{self.env}/api/robot/get_code',
                     json={'email': email, 'type': message_type})
-                logger.trace(r.content)
-                return r.json()['code']
-        logger.trace(r.content)
-        return r.json()['code']
+        logger.trace(get_code_response.content)
+        get_code_response.raise_for_status()
+        return get_code_response.json()['code']
 
     @keyword
     def disconnect_from_account(self, email, password, system_id):
         """Doesn't completely remove user from system users, but sets their role to none instead.
         Should be used to emulate disconnection by clicking "Disconnect my account" button on system's page."""
         with self._session(email, password) as s:
-            r = s.post(
+            disconnect_response = s.post(
                 f'{self.env}/api/systems/{system_id}/users',
                 json={'user_email': email, 'role': 'none'})
-            return r.json()
+            disconnect_response.raise_for_status()
+            return disconnect_response.json()
 
     @keyword
     def subscribe_push_notification(self, env, email, password, token, name):
@@ -244,7 +251,7 @@ class CloudPortalAPI(object):
         auth_ascii = auth_ascii.encode('ascii')
         auth = b"Basic " + base64.b64encode(auth_ascii)
         headers = {'Authorization': auth}
-        r = requests.put(
+        subscription_response = requests.put(
             f'{self.env}/api/notifications/subscriptions/{token}', headers=headers,
             json={
                 'type': 'notification',
@@ -254,17 +261,16 @@ class CloudPortalAPI(object):
             },
             verify=_ssl_certs_path
         )
-        return r.json()
+        subscription_response.raise_for_status()
+        return subscription_response.json()
 
     @keyword
     def get_new_FCM_token(self, key, auth, body):
         headers = {'Content-Type': 'application/json', 'x-goog-api-key': key,
                    'x-goog-firebase-installations-auth': auth}
-        print(headers)
-        r = requests.post('https://fcmregistrations.googleapis.com/v1/projects/nx-push-test/registrations',
+        registration_response = requests.post('https://fcmregistrations.googleapis.com/v1/projects/nx-push-test/registrations',
                           headers=headers, data=body)
-        print(r)
-        token = r.json()['token']
+        token = registration_response.json()['token']
         return token
 
     @keyword
@@ -396,16 +402,18 @@ class CloudPortalAPI(object):
 
     @keyword
     def camera_search(self, serverUrl, cameraPort, camFile, serverIp, user='mark', password='hamill'):
-        r = requests.get(f"{serverUrl}/api/manualCamera/search", auth=HTTPDigestAuth('admin', 'qweasd 123'),
+        search_response = requests.get(f"{serverUrl}/api/manualCamera/search", auth=HTTPDigestAuth('admin', 'qweasd 123'),
                          params={'url': f'http://{serverIp}:{cameraPort}/{camFile}.mjpeg', 'user': user,
                                  'password': password}, verify=False)
-        return r.json()['reply']['processUuid']
+        search_response.raise_for_status()
+        return search_response.json()['reply']['processUuid']
 
     @keyword
     def camera_status(self, serverUrl, uuid):
-        r = requests.get(f"{serverUrl}/api/manualCamera/status", auth=HTTPDigestAuth('admin', 'qweasd 123'),
+        status_response = requests.get(f"{serverUrl}/api/manualCamera/status", auth=HTTPDigestAuth('admin', 'qweasd 123'),
                          params={'uuid': uuid}, verify=False)
-        return r.json()
+        status_response.raise_for_status()
+        return status_response.json()
 
 
     # @keyword
@@ -442,9 +450,10 @@ class CloudPortalAPI(object):
         logger.trace(cameras)
         body = {"cameras": cameras, "user": "mark", "password": "hamill"}
         logger.trace(body)
-        r = requests.post(f'{serverUrl}/api/manualCamera/add', auth=HTTPDigestAuth('admin', 'qweasd 123'),
+        add_camera_response = requests.post(f'{serverUrl}/api/manualCamera/add', auth=HTTPDigestAuth('admin', 'qweasd 123'),
                           headers={'Content-Type': 'application/json'}, json=body, verify=False)
-        return r.text
+        add_camera_response.raise_for_status()
+        return add_camera_response.text
 
     @keyword
     def bind_system(self, auth, cloudUrl, name="API made system"):
@@ -454,15 +463,17 @@ class CloudPortalAPI(object):
                 "name": name,
                 "customization": self.customization
             }
-            r = s.post(f'{cloudUrl}/cdb/system/bind', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
-            logger.trace(r.json())
-            return r.json()
+            bind_response = s.post(f'{cloudUrl}/cdb/system/bind', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
+            logger.trace(bind_response.json())
+            bind_response.raise_for_status()
+            return bind_response.json()
 
     @keyword
     def unbind_system(self, auth, cloudUrl, systemId):
-        r = requests.post(f'{cloudUrl}/cdb/system/unbind', auth=HTTPBasicAuth(auth[0], auth[1]),
+        unbind_response = requests.post(f'{cloudUrl}/cdb/system/unbind', auth=HTTPBasicAuth(auth[0], auth[1]),
                           json={"systemId": systemId}, verify=False)
-        return r.json()
+        unbind_response.raise_for_status()
+        return unbind_response.json()
 
     @keyword
     def save_cloud_system_credentials(self, auth, serverUrl, authKey, cloudSystemId, ownerEmail):
@@ -471,11 +482,11 @@ class CloudPortalAPI(object):
             "cloudSystemID": cloudSystemId,
             "cloudAccountName": ownerEmail
         }
-        r = requests.post(f"{serverUrl}/api/saveCloudSystemCredentials", auth=HTTPBasicAuth(auth[0], auth[1]),
+        save_credentials_response = requests.post(f"{serverUrl}/api/saveCloudSystemCredentials", auth=HTTPBasicAuth(auth[0], auth[1]),
                           json=body, verify=False)
-        logger.trace(f'status:{r.status_code}')
-        assert r.status_code==200
-        return r.json()
+        logger.trace(f'status:{save_credentials_response.status_code}')
+        save_credentials_response.raise_for_status()
+        return save_credentials_response.json()
 
     @keyword
     def rename_system(self, auth, systemId, newName):
@@ -483,9 +494,10 @@ class CloudPortalAPI(object):
             "systemId": systemId,
             "name": newName
         }
-        r = requests.post(f'{self.env}/cdb/system/rename', auth=HTTPBasicAuth(auth[0], auth[1]), json=body,
+        rename_response = requests.post(f'{self.env}/cdb/system/rename', auth=HTTPBasicAuth(auth[0], auth[1]), json=body,
                           verify=False)
-        return r.json()
+        rename_response.raise_for_status()
+        return rename_response.json()
 
     @keyword
     def share(self, auth, systemId, accessRole, accountEmail, customPermissions):
@@ -499,30 +511,33 @@ class CloudPortalAPI(object):
             "sendNotification": "",
             "systemId": systemId
         }
-        r = requests.post(f'{self.env}/cdb/systems/{systemId}/users', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
-        assert r.status_code == 200, r.json()
-        return r.json()
+        share_response = requests.post(f'{self.env}/cdb/systems/{systemId}/users', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
+        share_response.raise_for_status()
+        return share_response.json()
 
     @keyword
     def get_cloud_system_settings(self, auth, systemId):
-        r = requests.get(
+        get_settings_response = requests.get(
             f'{self.env}/cdb/system/get?systemId={systemId}',
             auth=HTTPBasicAuth(auth[0], auth[1]),
             verify=_ssl_certs_path)
-        return r.json()['systems'][0]
+        get_settings_response.raise_for_status()
+        return get_settings_response.json()['systems'][0]
 
     @keyword
     def get_cloud_system_users(self, auth, systemId):
-        r = requests.get(f'{self.env}/cdb/system/getCloudUsers?systemId={systemId}', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
-        return r.json()['sharing']
+        system_users_response = requests.get(f'{self.env}/cdb/system/getCloudUsers?systemId={systemId}', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
+        system_users_response.raise_for_status()
+        return system_users_response.json()['sharing']
 
     @keyword
     def get_account_info(self, email, password):
-        r = requests.get(
+        account_info_response = requests.get(
             f'{self.env}/cdb/account/get',
             auth=HTTPBasicAuth(email, password),
             verify=_ssl_certs_path)
-        return r.json()
+        account_info_response.raise_for_status()
+        return account_info_response.json()
 
     @keyword
     def set_account_password(self, email, oldPassword, newPassword):
@@ -533,17 +548,19 @@ class CloudPortalAPI(object):
             "passwordHa1Sha256": passwordHa1Sha256
 
         }
-        r = requests.post(f'{self.env}/cdb/account/update', auth=HTTPBasicAuth(email, oldPassword), json=body,
+        set_password_response = requests.post(f'{self.env}/cdb/account/update', auth=HTTPBasicAuth(email, oldPassword), json=body,
                           verify=False)
-        return r.json()
+        set_password_response.raise_for_status()
+        return set_password_response.json()
 
     @keyword
     def integration_store_is_enabled(self, auth):
-        r = requests.get(
+        capabilities_response = requests.get(
             f'{self.env}/api/utils/cloudCapabilites',
             auth=HTTPBasicAuth(auth[0], auth[1]),
             verify=_ssl_certs_path)
-        return r.json()['integrationStoreEnabled']
+        capabilities_response.raise_for_status()
+        return capabilities_response.json()['integrationStoreEnabled']
 
     @keyword
     def register_account(self, firstName, lastName, email, password):
@@ -553,23 +570,23 @@ class CloudPortalAPI(object):
             "first_name": firstName,
             "last_name": lastName
         }
-        r = requests.post(f'{self.env}/api/account/register',
+        register_response = requests.post(f'{self.env}/api/account/register',
                           auth=HTTPBasicAuth(self.baseEmail, self.password),
                           json=body,
                           verify=False)
-        logger.trace(r.status_code)
-        assert r.status_code == 200
-        return r.json()
+        logger.trace(register_response.status_code)
+        register_response.raise_for_status()
+        return register_response.json()
 
     @keyword
     def activate_account_via_api(self, email, password):
         code = self.get_code_from_api(email, "activate_account")
         code = re.sub(r'%3D', '=', code)
         code = re.sub(r'%2B', '+', code)
-        r = requests.post(f'{self.env}/api/account/activate', auth=HTTPBasicAuth(email, password), json={"code":code}, verify=False)
-        logger.trace(r)
-        assert r.status_code == 200
-        return f"{self.env}/authorize/activate/{r.json()}"
+        activate_response = requests.post(f'{self.env}/api/account/activate', auth=HTTPBasicAuth(email, password), json={"code":code}, verify=False)
+        logger.trace(activate_response)
+        activate_response.raise_for_status()
+        return f"{self.env}/authorize/activate/{activate_response.json()}"
 
     @keyword
     def disconnect_server_via_api(self, auth, sysId, password, email):
@@ -578,8 +595,9 @@ class CloudPortalAPI(object):
             "system_id": sysId,
             "email": email
         }
-        r = requests.post(f'{self.env}/api/systems/disconnect', auth=HTTPBasicAuth(auth[0], auth[1]), json=body,
+        disconnect_response = requests.post(f'{self.env}/api/systems/disconnect', auth=HTTPBasicAuth(auth[0], auth[1]), json=body,
                           verify=False)
+        disconnect_response.raise_for_status()
 
     @keyword
     def toggle_2fa_on_api(self, email, password, backup_code=None, verification_code=None):
@@ -595,9 +613,9 @@ class CloudPortalAPI(object):
             api2fa = Cloud2fa()
             totp = api2fa.get_2fa_verification_code(secretKey)
             body = {"action": "toggle", "mfaCode": totp}
-            securityRes = s.post(
+            security_response = s.post(
                 f'{self.env}/api/account/security', data=body)
-            assert securityRes.status_code == 200, 'Toggle 2fa on failed'
+            security_response.raise_for_status()
             return secretKey
 
     @keyword
@@ -608,18 +626,20 @@ class CloudPortalAPI(object):
                 backup_code=backup_code, 
                 verification_code=verification_code) as s:
             s.headers.update({'Referer': self.env})
-            r = s.post(f'{self.env}/api/account/refreshAccessToken')
-            logger.trace(f"/api/account json: {r.json()}")
-            s.headers.update({"Authorization": f"Bearer {r.json()['access_token']}"})
-            sec = s.get(f'{self.env}/cdb/account/self/settings/security')
+            refresh_response = s.post(f'{self.env}/api/account/refreshAccessToken')
+            refresh_response.raise_for_status()
+            logger.trace(f"/api/account json: {refresh_response.json()}")
+            s.headers.update({"Authorization": f"Bearer {refresh_response.json()['access_token']}"})
+            security_get_response = s.get(f'{self.env}/cdb/account/self/settings/security')
+            security_get_response.raise_for_status()
             del s.headers["Authorization"]
-            if sec.json().get('account2faEnabled') or sec.json().get('totpExistsForAccount'):
+            if security_get_response.json().get('account2faEnabled') or security_get_response.json().get('totpExistsForAccount'):
                 s.headers.update({'Referer': self.env})
                 body = {"action": "deactivate", "mfaCode": verification_code}
-                securityRes = s.post(
+                security_post_response = s.post(
                     f'{self.env}/api/account/security', data=body)
-                logger.trace(securityRes.status_code)
-                assert securityRes.status_code == 200, 'Turning off 2fa failed'
+                logger.trace(security_post_response.status_code)
+                security_post_response.raise_for_status()
 
     @keyword
     def generate_2fa_backup_codes_api(self, email, password, backup_code=None, verification_code=None):
@@ -627,10 +647,10 @@ class CloudPortalAPI(object):
                 email, password,
                 backup_code=backup_code, verification_code=verification_code) as s:
             s.headers.update({'Referer': self.env})
-            backupPostRes = s.post(
+            backup_post_response = s.post(
                 f'{self.env}/api/2fa/backup', data={"count": "8"})
-            assert backupPostRes.status_code == 200, 'Generate backup codes failed'
-            backupList = backupPostRes.json()
+            backup_post_response.raise_for_status()
+            backupList = backup_post_response.json()
             backupDict = backupList[random.randint(0, 7)]
             backupCode = backupDict.get("backup_code")
             return backupCode
@@ -641,25 +661,25 @@ class CloudPortalAPI(object):
                 email, password,
                 backup_code=backup_code, verification_code=verification_code) as s:
             s.headers.update({'Referer': self.env})
-            backupGetRes = s.get(
+            backup_code_response = s.get(
                 f'{self.env}/api/2fa/backup/codes', data=None)
-            assert backupGetRes.status_code == 200, 'Get backup codes failed'
-            backupList = backupGetRes.json()
+            backup_code_response.raise_for_status()
+            backupList = backup_code_response.json()
             backupDict = backupList[random.randint(0, 7)]
             backupCode = backupDict.get("backup_code")
             return backupCode
 
     @keyword
     def set_feature_flags(self, featuresDict):
-        res = requests.post(
+        set_flags_response = requests.post(
             f'{self.env}/api/robot/set_flags', data=featuresDict, verify=_ssl_certs_path)
-        if res.status_code != 200:
+        if set_flags_response.status_code != 200:
             raise CannotSetFeatureFlags()
 
     @keyword
     def get_cloud_settings(self):
-        res = requests.get(f'{self.env}/api/utils/settings', verify=_ssl_certs_path)
-        return res.json()
+        settings_response = requests.get(f'{self.env}/api/utils/settings', verify=_ssl_certs_path)
+        return settings_response.json()
 
     def _check_debug_status(self):
         try:
