@@ -47,6 +47,14 @@ export class NxThemeService {
         this.themeCustomProperty = this.cloudApi.customAccountPropertyFactory('theme', { theme: this.CONFIG.themeConfig.default as AvailableThemes });
         this.viewType = this.route.snapshot.queryParams.view_type || 'web';
 
+        if (this.CONFIG.themeConfig) {
+            // set availThemes //
+            Object.assign(this.availThemes, {
+                light: this.CONFIG.themeConfig.light,
+                dark: this.CONFIG.themeConfig.dark,
+            });
+        }
+
         this.route.queryParams
             .pipe(untilDestroyed(this))
             .subscribe(async (params: AuthorizeParams) => {
@@ -93,13 +101,6 @@ export class NxThemeService {
         // Don't initialize theme as desktop and mobile use ONLY dark mode
         if (this.viewType !== 'web') {
             return;
-        }
-        if (this.CONFIG.themeConfig) {
-            // set availThemes //
-            Object.assign(this.availThemes, {
-                light: this.CONFIG.themeConfig.light,
-                dark: this.CONFIG.themeConfig.dark,
-            });
         }
 
         if (!this.CONFIG.featureFlags.themesEnabled) {
