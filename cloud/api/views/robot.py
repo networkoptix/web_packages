@@ -1,5 +1,5 @@
 from asgiref.sync import sync_to_async
-from cms.feature_flags import FLAGS, SWITCHES
+from cms.feature_flags.feature_flags import FLAGS, SWITCHES
 from django.conf import settings
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import AllowAny

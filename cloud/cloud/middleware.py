@@ -5,7 +5,7 @@ import waffle
 from django.conf import settings
 from django.urls import reverse_lazy
 from django.utils.deprecation import MiddlewareMixin
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.shortcuts import redirect
 from rest_framework import status
 from django.http import HttpRequest
@@ -14,7 +14,7 @@ from rest_framework.renderers import JSONRenderer
 from cloud.helpers.exceptions import (
     APIInternalException, ErrorCodes, api_success,
 )
-from cms.feature_flags import FLAGS, flag_is_active_for_user
+from cms.feature_flags.feature_flags import FLAGS
 from cms.views.agreement import check_required_tos
 from util.helpers import get_customization_name_from_cloud_host
 

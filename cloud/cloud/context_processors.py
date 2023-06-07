@@ -1,4 +1,4 @@
-from cms.feature_flags import FLAGS, SWITCHES, SAMPLES
+from cms.feature_flags.feature_flags import FLAGS, SWITCHES, SAMPLES
 
 
 def flags_processor(request):

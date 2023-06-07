@@ -2,7 +2,9 @@ import pytest
 from random import randint
 from uuid import uuid4
 
-from cms.feature_flags import *
+from cms.feature_flags.feature_flags import *
+from cms.feature_flags.helpers import *
+
 
 class TestFeatureFlagHelpers:
     def test_get_request_argument(self, mocker):

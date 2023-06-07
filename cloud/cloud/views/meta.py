@@ -16,7 +16,7 @@ from util.helpers import detect_language_by_request, get_customization
 from cms.models import Menu, Asset, Language
 from cms.controllers import documentation
 from cms.controllers import integration
-from cms.feature_flags import SWITCHES
+from cms.feature_flags.feature_flags import SWITCHES
 
 logger = logging.getLogger(__name__)
 

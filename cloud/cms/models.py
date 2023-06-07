@@ -41,9 +41,9 @@ from model_utils import Choices
 from django.core.cache import cache, caches
 from model_utils import FieldTracker
 from waffle.models import AbstractUserFlag, keyfmt, get_cache
-from waffle import switch_is_active
+from waffle import switch_is_active, get_waffle_flag_model
 
-from .feature_flags import FLAGS, SWITCHES, flag_is_active_for_user
+from cms.feature_flags.feature_flags import FLAGS, SWITCHES
 
 from django.contrib.auth.models import Group, Permission
 from django.template.defaultfilters import truncatechars
@@ -436,6 +436,17 @@ def check_user_menu_permissions(nodes, user, overrides=None, *, customization=No
         else:
             node.pop('permissions', None)
             check_user_menu_permissions(node.get('nodes', []), user, overrides, customization=customization)
+
+
+def flag_is_active_for_user(user, flag_name, overrides=None, *, customization=None, request=None):
+    """
+    Do not use this function to check flag state because it does not create flag in db.
+    Use waffle.flag_is_active instead.
+    """
+    customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
+    flag = get_waffle_flag_model().get(flag_name)
+    return flag.is_active_for_user(user, overrides, customization=customization) or flag.everyone
+
 
 def feature_flag_is_active(feature_flag, user, overrides=None, *, customization=None, request=None):
     customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())

@@ -19,7 +19,7 @@ from waffle import switch_is_active
 
 from cloud.customization_context import customization_ctx
 from cms.controllers.asset_json import get_review_matching_current_version, process_asset_global_contexts
-from cms.feature_flags import SWITCHES
+from cms.feature_flags.feature_flags import SWITCHES
 from meilisearch.errors import MeiliSearchCommunicationError, MeiliSearchApiError
 from util.base_cache import BaseCache, BaseCacheV2
 from cms.controllers.filldata import global_contexts_to_dict, ContextProcessor

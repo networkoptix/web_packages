@@ -3,7 +3,8 @@ from django.http.request import QueryDict
 from django.urls import reverse
 from django.shortcuts import redirect
 from rest_framework.permissions import AllowAny
-from cms.feature_flags import FLAGS, check_feature_flag
+from cms.feature_flags.feature_flags import FLAGS
+from cms.feature_flags.helpers import check_feature_flag
 import time
 from cloud.helpers.exceptions import APINotFoundException, APIRequestException, ErrorCodes, api_success
 from django.conf import settings

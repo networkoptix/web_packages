@@ -29,7 +29,7 @@ from cloud.drf_async import async_api_view as api_view, async_api_view
 from api.serializers import CustomizationCacheSerializer, SettingsSerializer, IpvdSerializer
 from cms.models import Customization, cloud_portal_customization_cache, get_cached_menu, UserGroupsToAssetPermissions, \
     cached_doc_menu_map, LicenseType, cloud_portal_customization_cache_async, global_version_key
-from cms.feature_flags import *
+from cms.feature_flags.feature_flags import FLAGS, SWITCHES, SAMPLES
 from cms.permissions import IsSuperuser
 
 logger = logging.getLogger(__name__)

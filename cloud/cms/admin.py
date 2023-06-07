@@ -17,7 +17,8 @@ from waffle.admin import FlagAdmin as WaffleFlagAdmin
 from waffle import flag_is_active
 
 from cms.forms import *
-from cms.feature_flags import *
+from cms.feature_flags.feature_flags import FLAGS
+from cms.feature_flags.helpers import check_feature_flag, validate_is_superuser
 from cms.controllers.zendesk import Importer, clean_menu, CategoryNotFoundException, sync_menu
 from cms.controllers import generate_structure, structure
 from cms.controllers.modify_db import generate_preview_links, get_records_for_version, generate_preview_link
