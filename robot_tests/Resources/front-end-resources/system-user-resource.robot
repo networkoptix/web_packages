@@ -395,25 +395,6 @@ User Should Not Exist
         Run Keyword If   '${deleted user}' in '${user}[name]'   Fail    A local user "${user}[name]" was found on server
     END
 
-Get Local Users
-    [Arguments]
-    ${locals}=   Create List
-    @{users} =    Get Users     ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]
-    FOR    ${node}    IN    @{users}
-        ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ocal+
-        ${isCloud key} =    Run Keyword and Return Status   Dictionary Should Contain Key    ${node}    isCloud
-        ${type key} =    Run Keyword and Return Status   Dictionary Should Contain Key    ${node}    type
-        IF      ${isCloud key}
-            ${local state} =    Set Variable If    ${node}[isCloud] == ${False}    ${True}    ${False}
-        ELSE IF    ${type key}
-            ${local state} =    Set Variable If    '${node}[type]' == 'cloud'    ${False}    ${True}
-        ELSE
-            ${local state} =    Set Variable    ${True}
-        END
-        Run Keyword If    ${local state} and ${name state}    Append To List    ${locals}    ${node}
-    END
-    [Return]    ${locals}
-
 Verify User is Deleted on Server
     [Arguments]    ${deleted user}    ${users}
         FOR    ${user}    IN    @{users}

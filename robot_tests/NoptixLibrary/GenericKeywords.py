@@ -1019,7 +1019,7 @@ class GenericKeywords(object):
         logger.trace(users)
         for user in users:
             local_state = True
-            if user.get("isCloud") is False:
+            if user.get("isCloud"):
                 local_state = False
                 logger.trace(f"isCloud for {user['name']} is {local_state}")
             elif user.get("type") == "cloud":
@@ -1162,3 +1162,17 @@ class GenericKeywords(object):
             stdin.flush()
             logger.trace(stdout.read())
         return stdin, stdout, stderr
+
+    @keyword
+    def get_local_users(self, token, server_url):
+        locals_list = []
+        users = self.server_api.get_users(token, server_url)
+        for user in users:
+            local_state = True
+            if user.get("isCloud"):
+                local_state = False
+            elif user.get("type") == "cloud":
+                local_state = False
+            if local_state and user["name"] != "admin":
+                locals_list.append(user)
+        return locals_list

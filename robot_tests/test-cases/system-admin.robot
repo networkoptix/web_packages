@@ -20,14 +20,6 @@ Force Tags        system    cloud
     Click Button    ${DISCONNECT MODAL CANCEL}
     Wait Until Page Does Not Contain Element    ${REMOVE USER MODAL}
 
-# Commenting out below TC since login is page instead of window on 21.1
-#10. Should open System page by link to not authorized user and redirect to homepage, if he does not log in
-#    [Tags]    cloud
-#    Go To    ${ENV}/systems/${system}[id]
-#    Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
-#    Click Button    ${LOG IN CLOSE BUTTON}
-#    Wait Until Element Is Visible    ${JUMBOTRON}
-
 10. Should open System page by link to not authorized user and show it, after owner logs in
     [tags]    smoke    ci
     Go To    ${ENV}/systems/${system}[id]

@@ -165,7 +165,7 @@ Force Tags        system    Threaded    users
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${servers}[0][cloudOwner]
     ...    ELSE    Create List    ${servers}[0][cloudOwner]    ${servers}[0][cloudUsers][cloudAdmin]    ${servers}[0][localUsers][cloudAdmin][login]    admin
     FOR    ${user}    IN    @{list}
-        @{locals}=   Get Local Users
+        @{locals}=   Get Local Users    ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]
         Delete All Local Users via API    ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]    ${locals}
         Log    Step 1
         @{new local users}=   Reset Local Users    ${servers}[0][localAuth]    ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]
