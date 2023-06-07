@@ -99,14 +99,6 @@ Check Language Anonymous
         Set Language Anonymous
     END
 
-Check Language Logged In
-    [Arguments]    ${email}    ${password}=${BASE PASSWORD}
-    ${curr lang}=   Get Account Language    ${email}    ${password}
-    IF    '${curr lang}' != '${LANGUAGE}'
-        Set Account Language    ${email}    ${password}    ${LANGUAGE}
-    END
-    Sleep    2
-
 Set Language Anonymous
     [arguments]    ${lang}=${LANGUAGE}
     Log     This is temporarily disabled. Uncomment below to reactivate
@@ -434,52 +426,7 @@ Register and activate account with random email
     Register And Activate Account    ${first name}    ${last name}    ${email}    ${password}    reg=${reg}    from email=${act}
     #Go to    ${url}
     [Return]    ${email}
-
-Disconnect all systems from account
-    [Arguments]    ${email}     ${password}
-    ${systems}=   Get Account Systems    ${email}    ${password}
-    FOR    ${sys}    IN    @{systems}
-        Disconnect    ${email}    ${password}    ${sys}
-    END
     
-Get Account Id By Email
-    [Arguments]    ${email}
-    
-# Replaced with "Restore password using API"
-Restore password
-    [Arguments]    ${email}
-    #log in to user to make sure their language is set to the current
-    Log    Kyle disabled checking the user's langauge before sending. If it's not working blame him
-    # Open Browser and go to URL    ${url}
-    # Log In    ${email}    ${password}
-    # Validate Log In
-    # Log Out
-    # Validate Log Out
-    Go To    ${url}/restore_password
-    Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
-    Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${email}
-    Click Button    ${RESET PASSWORD BUTTON}
-    Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE}
-    ${link}    Get Email Link    ${email}    restore_password
-    Go To    ${link}
-    Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${SAVE PASSWORD}
-    Sleep    5
-    Input Text    ${RESET PASSWORD INPUT}    ${BASE PASSWORD}
-    Click Button    ${SAVE PASSWORD}
-    Wait Until Elements Are Visible    ${RESET SUCCESS MESSAGE}    ${RESET SUCCESS LOG IN LINK}
-    Click Link    ${RESET SUCCESS LOG IN LINK}
-    Log In    ${email}    ${BASE PASSWORD}    None
-    Close Browser
-
-Restore Password using API
-    [Arguments]    ${email}    ${new password}
-    ${resp}=   API Restore Password    ${email}    None    None
-    Should Be Equal As Strings    ${resp}    200
-    ${code}=   Get Code From API    ${email}    restore_password
-    ${code}=   Convert Code    ${code}
-    ${resp}=   API Restore Password    ${email}    ${code}   ${new password}
-    Should Be Equal As Strings    ${resp}    200
-
 Go to Users List
     Wait Until Element is Visible    ${USERS LIST LINK}
     Sleep    2
@@ -1090,63 +1037,6 @@ Input Content Editable Text
     [Arguments]    ${element}    ${text}
     Delete All Text    ${element}
     Press Keys    ${element}    ${text}
-    
-Create Virtual Disk
-    [Arguments]    ${disk location}    ${disk name}    ${disk size}    ${disk target}
-    &{disk}=   Create Dictionary
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${results}=    Execute Command     dd if=/dev/zero of=${disk location}/${disk name}.img bs=1M count=${disk size}    sudo=True    sudo_password=${QA BURBANK PASS}
-    ${results}=    Execute Command     mkfs -t ext4 ${disk location}/${disk name}.img    sudo=True    sudo_password=${QA BURBANK PASS}
-    ${results}=    Execute Command     mkdir ${disk name}    sudo=True    sudo_password=${QA BURBANK PASS}
-    ${results}=    Execute Command     mount -t auto -o loop ${disk location}/${disk name}.img ${disk name}    sudo=True    sudo_password=${QA BURBANK PASS}    return_stdout=False    return_rc=True
-    Should Be Equal As Integers   ${results}    0
-    Close Connection
-    Set To Dictionary    ${disk}    img=${disk location}/${disk name}.img
-    Set To Dictionary    ${disk}    folder=${disk name}
-    Set To Dictionary    ${disk}    size=${disk size}
-    Set To Dictionary    ${disk}    target=${disk target}
-    Set To Dictionary    ${disk}    string=--mount type=bind,source="/home/qaburbank/${disk name}",target=/${disk target}
-    Set To Dictionary    ${disk}    bind=/home/qaburbank/${disk name}:/${disk target}
-    [Return]    ${disk}
-    
-Delete Virtual Disk
-    [Arguments]    ${img path}    ${folder}
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${results}    Execute Command     umount ${folder}     sudo=True    sudo_password=${QA BURBANK PASS}
-    ${results}    Execute Command     rm ${img path}     sudo=True    sudo_password=${QA BURBANK PASS}
-    ${results}    Execute Command     rm -r ${folder}     sudo=True    sudo_password=${QA BURBANK PASS}
-    Close Connection
-    
-Make Directory
-    [Arguments]    ${dir name}
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${results}    Execute Command    mkdir ${dir name}    sudo=True    sudo_password=${QA BURBANK PASS}
-    Close Connection
-    
-Remove Directory
-    [Arguments]    ${dir name}
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${results}    Execute Command    rm -r ${dir name}   sudo=True    sudo_password=${QA BURBANK PASS}
-    Close Connection
-    
-Remove All Files 
-    [Arguments]    ${dir name}
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${results}    Execute Command    rm ${dir name}/*   sudo=True    sudo_password=${QA BURBANK PASS}
-    Close Connection
-    
-Verify File Exists
-    [Arguments]    ${folder}    ${file}
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${results}    Execute Command    find ${folder} -name ${file}    sudo=True    sudo_password=${QA BURBANK PASS}
-    Close Connection
-    Should Contain    ${results}    ${file}
 
 Create system and attach to cloud
     [Arguments]    ${server url}    ${server port}    ${system name}    ${cloud email}    ${cloud password}=${BASE PASSWORD}

@@ -45,6 +45,7 @@ class GenericKeywords(object):
         self.password = BuiltIn().get_variable_value("${BASE PASSWORD}")
         self.from_email = BuiltIn().get_variable_value("${FROM EMAIL DEFAULT}")
         self.base_email = BuiltIn().get_variable_value("${BASE EMAIL}")
+        self.language = BuiltIn().get_variable_value("${LANGUAGE}")
         self.permissions={
             "cloudAdmin":"GlobalAdminPermission|GlobalEditCamerasPermission|GlobalControlVideoWallPermission|GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission",
             "viewer":"GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission",
@@ -1101,3 +1102,63 @@ class GenericKeywords(object):
     def get_container_port_by_name(self, name):
         r = self.docker_api.get_container_by_name(name)
         return r.json()['Ports'][0]['PublicPort']
+    
+    @keyword
+    def check_language_logged_in(self, email, password):
+        current_lang = self.cloud_api.get_account_language(email, password)
+        if current_lang == self.language:
+            self.cloud_api.set_account_language(email, password, self.language)
+        time.sleep(2)
+    
+    @keyword
+    def restore_password_using_api(self, email, new_password):
+        assert self.cloud_api.api_restore_password(email, 'None', 'None') == '200'
+        code = self.convert_code(self.cloud_api.get_code_from_api(email, 'restore_password'))
+        assert self.cloud_api.api_restore_password(email, code, new_password) == '200'
+
+    @keyword
+    def create_virtual_disk(self, disk_location, disk_name, disk_size, disk_target):
+        self.execute_sudo_command(f'dd if=/dev/zero of={disk_location}/{disk_name}.img bs=1M count={disk_size}')
+        self.execute_sudo_command(f'mkfs -t ext4 {disk_location}/{disk_name}.img')
+        self.execute_sudo_command(f'mkdir {disk_name}')
+        _, ssh_stdout, _ = self.execute_sudo_command(f'mount -t auto -o loop {disk_location}/{disk_name}.img {disk_name}')
+        assert ssh_stdout.channel.recv_exit_status() == 0
+        disk = {
+            "img": f"${disk_location}/{disk_name}.img",
+            "folder": disk_name,
+            "size": disk_size,
+            "target": disk_target,
+            "bind": f"/home/qaburbank/{disk_name}:/{disk_target}"
+        }
+        return disk
+
+    @keyword
+    def delete_virtual_disk(self, disk):
+        self.execute_sudo_command(f"umount {disk['folder']}")
+        self.execute_sudo_command(f"rm {disk['img']}")
+        self.execute_sudo_command(f"rm -r {disk['folder']}")
+
+    @keyword
+    def make_directory(self, dir_name):
+        self.execute_sudo_command(f"mkdir {dir_name}")
+
+    @keyword
+    def remove_directory(self, dir_name):
+        self.execute_sudo_command(f"rm -r {dir_name}")
+        
+    @keyword
+    def remove_all_files(self, dir_name):
+        self.execute_sudo_command(f"rm {dir_name}/* ")
+
+    @keyword
+    def verify_file_exists(self, folder, file):
+        _, ssh_stdout, _ = self.execute_sudo_command(f"find {folder} -name {file}")
+        assert file in ssh_stdout 
+
+    def execute_sudo_command(self, command):
+        with self._ssh_client() as ssh_client:
+            stdin, stdout, stderr = ssh_client.exec_command(f'sudo {command}', get_pty=True)
+            stdin.write(self.docker_host_password+'\n')
+            stdin.flush()
+            logger.trace(stdout.read())
+        return stdin, stdout, stderr

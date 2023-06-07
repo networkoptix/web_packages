@@ -88,7 +88,7 @@ Storage Suite Teardown
     Run Keyword and Warn on Failure    Teardown Servers    ${servers}
     Cleanup Containers    ${random}
     FOR    ${n}    IN RANGE    5
-        Delete Virtual Disk    ${disk[${n}]}[img]    ${disk[${n}]}[folder]
+        Delete Virtual Disk    ${disk[${n}]}
     END
     Remove Directory    networkdisk/*
     Close All Browsers
