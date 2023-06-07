@@ -328,6 +328,9 @@ export class NxSystemRestAPI extends NxSystemAPI {
             headers = headers.set(this.token, accessToken || this.#vmsToken || '');
         }
         if (accessToken) {
+            if (!this.cookieLoginSupport) {
+                headers = headers.set('x-runtime-guid', accessToken); // Adding this for CLOUD-10535. Safari keeps removing the auth headers.
+            }
             headers = headers.set('Authorization', `Bearer ${accessToken}`);
         }
 
