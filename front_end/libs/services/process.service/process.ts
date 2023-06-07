@@ -103,9 +103,6 @@ export class Process {
         settings: Partial<ProcessSettings> = {},
         private _successHandler: Handler = () => {},
         private _errorHandler: Handler = logError,
-        // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
-        // @ts-ignore: Deprecated, kept for compatibility
-        private _catchHandler: Handler = logError,
     ) {
         this.settings.errorPrefix = settings?.errorPrefix || '';
         this.settings = { ...this.settings, ...settings };
@@ -197,19 +194,6 @@ export class Process {
     public then(successHandler, errorHandler = logError) {
         this._successHandler = successHandler;
         this._errorHandler = errorHandler;
-        return this;
-    }
-
-    /**
-     * @deprecated
-     * This method is to maintain compatibility with exisiting code.
-     *
-     * For readability catchHandler should be assigned when calling NxProcessService.createProcess.
-     *
-     * @param catchHandler
-     */
-    public catch(catchHandler) {
-        this._catchHandler = catchHandler;
         return this;
     }
 

@@ -29,7 +29,6 @@ export class NxProcessService {
         settings?: Partial<ProcessSettings>,
         successHandler: Handler = () => {},
         errorHandler: Handler = logError,
-        catchHandler: Handler = logError,
     ) {
         const _caller = typeof caller === 'function' ? defer(caller) : caller;
         return new Process(
@@ -39,7 +38,6 @@ export class NxProcessService {
             settings,
             successHandler,
             errorHandler,
-            catchHandler,
         );
     }
 }

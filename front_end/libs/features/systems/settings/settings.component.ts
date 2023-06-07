@@ -381,9 +381,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.route.snapshot.params.systemId,
             );
             this.system.show404 = false;
-            this.gettingSystem.run().catch(() => {
-                this.systemNoAccess = true;
-            });
+            this.gettingSystem.run();
 
             if (this.systemInfoSubscription) {
                 this.systemInfoSubscription.unsubscribe();
