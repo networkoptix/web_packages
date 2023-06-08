@@ -86,7 +86,7 @@ class LicenseConnector:
         if token:
             self.update_token(token)
 
-    def _license_get(self, route, params):
+    def _license_get(self, route, params=None):
         url = f"https://{LICENSE_PORTAL}{route}"
         res = self.session.get(url, params=params)
         res.raise_for_status()
@@ -103,7 +103,7 @@ class LicenseConnector:
 
     async def is_admin_in_org(self, org_id):
         route = f'/partners/organizations/{org_id}/users/self/'
-        user = self._license_post(route)
+        user = self._license_get(route)
         return self.email == user.get('email') and 'Administrator' in user.get('roles', [])
 
 
