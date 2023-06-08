@@ -12,6 +12,10 @@ LANGUAGE_TO_SELECT = f"//header//nx-header-language-select//span[@lang={LANGUAGE
 DOWNLOAD_LINK = f"//footer//a[@href='/download']"
 ACCOUNT_DOES_NOT_EXIST_TEXT = "Account does not exist."
 YOU_CAN_CREATE_ACCOUNT_TEXT = "You can create an account with this email address or try to enter a different one."
+ACCOUNT_CREATION_EMAIL_SUCCESS = "//nx-authorize-component//nx-authorize-activate-account-component//main//h3"
+MODAL_DIALOG = f"//nx-modal-generic-content"
+LOGGED_IN_CLOSE_BUTTON = f"{MODAL_DIALOG}//button//span[@class=close-icon]/../.."
+
 
 ENV="https://cloud-test.hdw.mx/"
 
@@ -34,4 +38,7 @@ LOG_IN_NAV_BAR = f"//header//a[contains(text(),'{LOG_IN_BUTTON_TEXT}')]/.."
 HEADER_ICON_LINK = f"//nx-header/header//div[@class='app-header-left']//a[contains(@class, 'navbar-brand')]"
 LOGO_ICON = f"{HEADER_ICON_LINK}/img"
 
+ERROR_COLOR = "rgb(240, 44, 44)"
 
+ALERT = """//div[contains(@class,'toast')]//span[contains(@class,'toast-content')]"""
+ALERT_CLOSE = """//div[contains(@class,'toast')]/button[contains(@class,'close') and @data-dismiss='alert']"""
