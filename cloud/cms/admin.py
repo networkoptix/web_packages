@@ -1235,7 +1235,7 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
 
     @staticmethod
     def on_save(obj, request):
-        MenuCache(request=request).clear_cache()
+        MenuCache(request=request).clear_cache(clear_documentation_cache=obj.type == Menu.MENU_TYPES.docs_knowledgebase)
         zendesk_sync_feature_enabled = flag_is_active(request, FLAGS.zendesk_sync) and request.user.is_superuser
         if zendesk_sync_feature_enabled:
             for _ in sync_menu(obj):
@@ -1482,16 +1482,22 @@ class MenuNodeAdmin(CMSAdmin):
 
     def save_related(self, request, form, formsets, change):
         super().save_related(request, form, formsets, change)
-        transaction.on_commit(MenuCache(customization_name=request.CUSTOMIZATION).clear_cache)
 
     def save_model(self, request, obj, form, change):
+        clear_docs = False
+
         if obj.pk:
             old_obj = MenuNode.objects.get(pk=obj.pk)
             parent = old_obj.get_parent()
+            clear_docs = parent.type == Menu.MENU_TYPES.docs_knowledgebase
             if form.cleaned_data['parent_node']:
                 obj.parent_menu = None
             else:
                 obj.parent_menu = parent
+        else:
+            clear_docs = clear_docs or obj.get_parent().type == Menu.MENU_TYPES.docs_knowledgebase
+
+        MenuCache(request=request).clear_cache(clear_documentation_cache=clear_docs)
         return super().save_model(request, obj, form, change)
 
 

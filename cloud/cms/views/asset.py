@@ -340,7 +340,8 @@ def publish_review(request, target_review, target_customization='', message=True
             target_review_id, AssetCustomizationReview.REVIEW_STATES.accepted, request.user)
         if asset.is_documentation:
             # Menu and Documentation caches must be cleared together
-            MenuCache(customization_name=request.CUSTOMIZATION).clear_cache()
+            clear_documentation_cache = any(node.get_parent().type == Menu.MENU_TYPES.docs_knowledgebase for node in asset.nodes.all())
+            MenuCache(customization_name=request.CUSTOMIZATION).clear_cache(clear_documentation_cache=clear_documentation_cache)
             zd_articles = ZendeskArticle.objects.filter(
                 asset__id=asset.id, site__customization__name=target_customization)
             if zd_articles:

@@ -69,11 +69,9 @@ class MenuCache(BaseCacheV2):
         return super().__getitem__(key.lower())
 
     def __setitem__(self, key, menu):
-        from cms.controllers.documentation import DocumentCache
-        DocumentCache(customization_name=self.customization_name).clear_cache()
         super().__setitem__(key.lower(), menu)
 
-    def clear_cache(self, immediate = False):
+    def clear_cache(self, immediate = False, clear_documentation_cache = False):
         from cms.controllers.documentation import DocumentCache
         from cms.tasks import async_generate_menus
         from notifications.celery import app
@@ -87,7 +85,8 @@ class MenuCache(BaseCacheV2):
                 app.control.revoke(running_task, terminate=True, signal='SIGUSR1')
             task = async_generate_menus.apply_async(args=[self.customization_name, self._cache_key], queue='celery')
             cache.set(self.init_task_key, str(task), INITIALIZATION_TASK_TIMEOUT)
-            DocumentCache(customization_name=self.customization_name).clear_cache()
+            if clear_documentation_cache:
+                DocumentCache(customization_name=self.customization_name).clear_cache()
 
 
 PORTAL_MANAGER_PERMISSIONS = [
