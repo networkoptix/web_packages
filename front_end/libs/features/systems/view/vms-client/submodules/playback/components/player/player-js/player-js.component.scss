@@ -452,8 +452,8 @@ video {
   display: block;
   vertical-align: top;
   box-sizing: border-box;
-  color: var(--new-light1);
-  background-color: var(--new-dark1);
+  color: var(--light1);
+  background-color: var(--dark1);
   position: relative;
   padding: 0;
   font-size: 10px;
@@ -574,8 +574,8 @@ body.vjs-full-window {
 
 .vjs-no-js {
   padding: 20px;
-  color: var(--new-light1);
-  background-color: var(--new-dark1);
+  color: var(--light1);
+  background-color: var(--dark1);
   font-size: 18px;
   font-family: Arial, Helvetica, sans-serif;
   text-align: center;
@@ -601,7 +601,7 @@ body.vjs-full-window {
   padding: 0;
   cursor: pointer;
   opacity: 1;
-  border: 0.06666em solid var(--new-light1);
+  border: 0.06666em solid var(--light1);
   background-color: rgba($pjs-dark, 0.7);
   border-radius: 0.3em;
   transition: all 0.4s;
@@ -616,7 +616,7 @@ body.vjs-full-window {
 
 .video-js:hover .vjs-big-play-button,
 .video-js .vjs-big-play-button:focus {
-  border-color: var(--new-light1);
+  border-color: var(--light1);
   background-color: rgba($pjs-gray, 0.5);
   transition: all 0s;
 }
@@ -662,8 +662,8 @@ body.vjs-full-window {
 }
 
 .video-js .vjs-modal-dialog {
-  background: var(--new-dark1-t80);
-  background: linear-gradient(180deg, var(--new-dark1-t80), var(--new-light1-t0));
+  background: rgba(var(--dark1--rgb), .8);
+  background: linear-gradient(180deg, rgba(var(--dark1--rgb), .8), rgba(var(--light1--rgb), 0));
   overflow: auto;
 }
 
@@ -726,7 +726,7 @@ body.vjs-full-window {
 .vjs-menu li.vjs-selected:focus,
 .vjs-menu li.vjs-selected:hover,
 .js-focus-visible .vjs-menu li.vjs-selected:hover {
-  background-color: var(--new-light1);
+  background-color: var(--light1);
   color: $pjs-dark;
 }
 
@@ -906,7 +906,7 @@ body.vjs-full-window {
 .video-js .vjs-control:focus:before,
 .video-js .vjs-control:hover:before,
 .video-js .vjs-control:focus {
-  text-shadow: 0 0 1em var(--new-light1);
+  text-shadow: 0 0 1em var(--light1);
 }
 
 .video-js .vjs-control-text {
@@ -984,7 +984,7 @@ body.vjs-full-window {
 }
 
 .video-js .vjs-play-progress {
-  background-color: var(--new-light1);
+  background-color: var(--light1);
 }
 
 .video-js .vjs-play-progress:before {
@@ -1004,10 +1004,9 @@ body.vjs-full-window {
 }
 
 .video-js .vjs-time-tooltip {
-  background-color: var(--new-light1);
-  background-color: var(--new-light1-t80);
+  background-color: rgba(var(--light1--rgb), .8);
   border-radius: 0.3em;
-  color: var(--new-dark1);
+  color: var(--dark1);
   float: right;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 1em;
@@ -1039,7 +1038,7 @@ body.vjs-full-window {
   position: absolute;
   width: 1px;
   height: 100%;
-  background-color: var(--new-dark1);
+  background-color: var(--dark1);
   z-index: 1;
 }
 
@@ -1062,8 +1061,8 @@ body.vjs-full-window {
 }
 
 .vjs-mouse-display .vjs-time-tooltip {
-  color: var(--new-light1);
-  background-color: var(--new-dark1--t80);
+  color: var(--light1);
+  background-color: rgba(var(--dark1--rgb), .8);
 }
 
 .video-js .vjs-slider {
@@ -1091,8 +1090,8 @@ body.vjs-full-window {
 }
 
 .video-js .vjs-slider:focus {
-  text-shadow: 0 0 1em var(--new-light1);
-  box-shadow: 0 0 1em var(--new-light1);
+  text-shadow: 0 0 1em var(--light1);
+  box-shadow: 0 0 1em var(--light1);
 }
 
 .video-js .vjs-mute-control {
@@ -1216,7 +1215,7 @@ body.vjs-full-window {
   position: absolute;
   bottom: 0;
   left: 0;
-  background-color: var(--new-light1);
+  background-color: var(--light1);
 }
 
 .video-js .vjs-volume-level:before {
@@ -1271,7 +1270,7 @@ body.vjs-full-window {
   background-repeat: no-repeat;
   background-position: 50% 50%;
   background-size: contain;
-  background-color: var(--new-dark1);
+  background-color: var(--dark1);
   cursor: pointer;
   margin: 0;
   padding: 0;
@@ -1413,7 +1412,7 @@ body.vjs-full-window {
 }
 
 .vjs-subtitles {
-  color: var(--new-light1);
+  color: var(--light1);
 }
 
 .vjs-captions {
@@ -1469,7 +1468,7 @@ video::-webkit-media-text-track-display {
 }
 
 .vjs-error .vjs-error-display:before {
-  color: var(--new-light1);
+  color: var(--light1);
   content: "X";
   font-family: Arial, Helvetica, sans-serif;
   font-size: 4em;
@@ -1477,7 +1476,7 @@ video::-webkit-media-text-track-display {
   line-height: 1;
   margin-top: -0.5em;
   position: absolute;
-  text-shadow: 0.05em 0.05em 0.1em var(--new-dark1);
+  text-shadow: 0.05em 0.05em 0.1em var(--dark1);
   text-align: center;
   top: 50%;
   vertical-align: middle;
@@ -1520,7 +1519,7 @@ video::-webkit-media-text-track-display {
   opacity: 1;
   border: inherit;
   border-color: transparent;
-  border-top-color: var(--new-light1);
+  border-top-color: var(--light1);
 }
 
 .vjs-seeking .vjs-loading-spinner:before,
@@ -1533,12 +1532,12 @@ video::-webkit-media-text-track-display {
 
 .vjs-seeking .vjs-loading-spinner:before,
 .vjs-waiting .vjs-loading-spinner:before {
-  border-top-color: var(--new-light1);
+  border-top-color: var(--light1);
 }
 
 .vjs-seeking .vjs-loading-spinner:after,
 .vjs-waiting .vjs-loading-spinner:after {
-  border-top-color: var(--new-light1);
+  border-top-color: var(--light1);
   -webkit-animation-delay: 0.44s;
   animation-delay: 0.44s;
 }
@@ -1577,7 +1576,7 @@ video::-webkit-media-text-track-display {
   }
 
   35% {
-    border-top-color: var(--new-light1);
+    border-top-color: var(--light1);
   }
 
   60% {
@@ -1599,7 +1598,7 @@ video::-webkit-media-text-track-display {
   }
 
   35% {
-    border-top-color: var(--new-light1);
+    border-top-color: var(--light1);
   }
 
   60% {
@@ -1714,7 +1713,7 @@ video::-webkit-media-text-track-display {
 
 .vjs-modal-dialog.vjs-text-track-settings {
   background-color: rgba($pjs-dark, 0.75);
-  color: var(--new-light1);
+  color: var(--light1);
   height: 70%;
 }
 
@@ -1776,7 +1775,7 @@ video::-webkit-media-text-track-display {
 }
 
 .vjs-text-track-settings legend {
-  color: var(--new-light1);
+  color: var(--light1);
   margin: 0 0 5px 0;
 }
 
@@ -1797,7 +1796,7 @@ video::-webkit-media-text-track-display {
 .vjs-track-settings-controls button:active {
   outline-style: solid;
   outline-width: medium;
-  background-image: linear-gradient(0deg, var(--new-light1) 88%, $pjs-gray 100%);
+  background-image: linear-gradient(0deg, var(--light1) 88%, $pjs-gray 100%);
 }
 
 .vjs-track-settings-controls button:hover {
@@ -1805,8 +1804,8 @@ video::-webkit-media-text-track-display {
 }
 
 .vjs-track-settings-controls button {
-  background-color: var(--new-light1);
-  background-image: linear-gradient(-180deg, var(--new-light1) 88%, $pjs-gray 100%);
+  background-color: var(--light1);
+  background-image: linear-gradient(-180deg, var(--light1) 88%, $pjs-gray 100%);
   color: $pjs-dark;
   cursor: pointer;
   border-radius: 2px;

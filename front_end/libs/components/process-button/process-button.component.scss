@@ -83,7 +83,7 @@ nx-process-button {
             }
 
             &.btn-default span {
-                background: var(--new-light16);
+                background: var(--light16);
             }
 
             .dot1 {
@@ -116,12 +116,12 @@ nx-process-button {
             .loading {
                 max-width: calc(100% - 24px);
                 margin: 0 12px;
-                border: 1px solid var(--new-light6);
+                border: 1px solid var(--light6);
             }
 
             button {
                 min-width: calc(100% - 24px);
-                border: 1px solid var(--new-light6);
+                border: 1px solid var(--light6);
                 height: 28px;
                 font-size: $font-size-base;
                 margin: 0 12px !important;

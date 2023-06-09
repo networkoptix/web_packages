@@ -258,7 +258,7 @@
 		padding: 0px !important;
 		height: 40px !important;
 		min-width: 0px;
-		border-bottom: 1px solid var(--new-light6);
+		border-bottom: 1px solid var(--light6);
 		cursor: pointer;
 
 		&:first-of-type {
@@ -599,7 +599,7 @@
 		}
 
 		&.parameters thead {
-			background-color: var(--new-light3);
+			background-color: var(--light3);
 		}
 
 		thead {
@@ -771,7 +771,7 @@
 		}
 
 		&.execute:hover:not([disabled]):not(.disabled) {
-			background-color: var(--new-brand-d2) !important;
+			background-color: var(--brand-d2) !important;
 		}
 
 		&.cancel {

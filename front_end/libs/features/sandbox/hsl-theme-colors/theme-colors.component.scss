@@ -70,7 +70,7 @@
     //    --new-yellow-dark: hsl(50, 60%, calc(50% - 10%));
     //    --new-yellow-light: hsl(50, 60%, calc(50% + 10%));
     //
-    //    background-color: var(--new-body-bg);
+    //    background-color: var(--body-bg);
     //    align-content: flex-start;
     //}
     //
@@ -80,60 +80,60 @@
         align-items: center;
 
         &.brand-l1-transparent {
-            background-color: var(--new-brand-l1-t50);
+            background-color: var(--brand-l1-t50);
         }
 
         &.error-core {
-            background-color: var(--new-error-core);
+            background-color: var(--error-core);
         }
 
         &.error-d1 {
-            background-color: var(--new-error-d1);
+            background-color: var(--error-d1);
         }
 
         &.error-l1 {
-            background-color: var(--new-error-l1);
+            background-color: var(--error-l1);
         }
 
         &.green-core {
-            background-color: var(--new-green-core);
+            background-color: var(--green-core);
         }
 
         &.green-d1 {
-            background-color: var(--new-green-d1);
+            background-color: var(--green-d1);
         }
 
         &.green-l1 {
-            background-color: var(--new-green-l1);
+            background-color: var(--green-l1);
         }
 
         &.yellow-core {
-            background-color: var(--new-yellow-core);
+            background-color: var(--yellow-core);
         }
 
         &.yellow-d1 {
-            background-color: var(--new-yellow-d1);
+            background-color: var(--yellow-d1);
         }
 
         &.yellow-l1 {
-            background-color: var(--new-yellow-l1);
+            background-color: var(--yellow-l1);
         }
 
         @for $i from 1 through 19 {
             &.light#{$i} {
-                background-color: var(--new-light#{$i});
+                background-color: var(--light#{$i});
             }
         }
 
         @for $i from 1 through 19 {
             &.dark#{$i} {
-                background-color: var(--new-dark#{$i});
+                background-color: var(--dark#{$i});
             }
         }
 
         @for $i from 1 through 8 {
             &.additional-light#{$i} {
-                background-color: var(--new-additional-light#{$i});
+                background-color: var(--additional-light#{$i});
             }
         }
 
@@ -153,7 +153,7 @@
         @each $key,
         $value in $brand-colors {
             &.brand-#{$key} {
-                background-color: var(--new-brand-#{$key});
+                background-color: var(--brand-#{$key});
             }
         }
     }
@@ -180,27 +180,27 @@
 //
 //:root {
 //    body {
-//        background-color: var(--new-body-bg);
-//        color: var(--new-dark9);
+//        background-color: var(--body-bg);
+//        color: var(--dark9);
 //    }
 //
-//    --body-bg :var(--new-body-bg);
-//    --alt-body-bg : var(--new-light1);
-//    --body-text-color : var(--new-dark9);
+//    --body-bg :var(--body-bg);
+//    --alt-body-bg : var(--light1);
+//    --body-text-color : var(--dark9);
 //
-//    --header-bg : var(--new-light1);
-//    --header-border-color : var(--new-light4);
-//    --header-webadm-bg : var(--new-dark14);
+//    --header-bg : var(--light1);
+//    --header-border-color : var(--light4);
+//    --header-webadm-bg : var(--dark14);
 //    --header-webadm-border-color : transparent;
 //
 //    --ribbon-bg : var(--bluez-light);
 //    --ribbon-border : var(--bluez-light);
-//    --ribbon-color : var(--new-dark9);
+//    --ribbon-color : var(--dark9);
 //
-//    --ribbon-alert-bg : var(--new-yellow_l2);
-//    --ribbon-alert-border : var(--new-yellow_l1);
-//    --ribbon-alert-color : var(--new-dark9);
+//    --ribbon-alert-bg : var(--yellow_l2);
+//    --ribbon-alert-border : var(--yellow_l1);
+//    --ribbon-alert-color : var(--dark9);
 //
-//    --image-box-border-color : var(--new-light6);
-//    --image-box-selected-border-color : var(--new-brand-l1);
+//    --image-box-border-color : var(--light6);
+//    --image-box-selected-border-color : var(--brand-l1);
 }

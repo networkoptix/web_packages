@@ -93,11 +93,11 @@
 
     .light-gray {
         background: $additional_light1;
-        border-bottom: 1px solid var(--new-light3);
+        border-bottom: 1px solid var(--light3);
     }
 
     .hint {
-        color: var(--new-light3);
+        color: var(--light3);
         line-height: 1rem;
     }
 }

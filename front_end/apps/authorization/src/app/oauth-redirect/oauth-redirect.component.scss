@@ -12,7 +12,7 @@
 
     &.container-d,
     &.container-m {
-        background-color: var(--new-dark8);
+        background-color: var(--dark8);
     }
 
     .container {
@@ -24,8 +24,8 @@
     }
 
     .oauth-redirect-btn {
-        color: var(--new-light1)  !important;
-        background-color: var(--new-brand-core);
+        color: var(--light1)  !important;
+        background-color: var(--brand-core);
         width: 250px;
         height: 120px !important;
         font-size: rem(32px) !important;
@@ -33,14 +33,14 @@
     }
 
     .oauth-text {
-        color: var(--new-ight1)  !important;
+        color: var(--light1)  !important;
 
         &.oauth-error {
             background-color: var(--error);
         }
 
         &:not(.oauth-error) {
-            background-color: var(--new-brand-core);
+            background-color: var(--brand-core);
         }
 
         width: 250px;

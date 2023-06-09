@@ -3,30 +3,30 @@
 :host {
     .dropdown {
         display : inline-block;
-        
+
         .custom-drop-down {
             height : 20px !important;
             width  : 20px !important;
         }
-        
+
         .dot-menu {
             width      : 20px !important;
             height     : 20px !important;
             background : transparent;
-            
+
             &:after {
                 content   : "\22EE";
                 font-size : 20px;
-                color     : var(--new-dark9);
+                color     : var(--dark9);
             }
         }
-        
+
         .custom-menu {
             width         : auto !important;
             border-radius : 2px;
             border        : none !important;
             transform     : translateX(calc(20px - 100%));
-            
+
             @media(max-width : $collapse-second-width) {
                 left      : auto;
                 top       : 40px;

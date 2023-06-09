@@ -8,7 +8,7 @@
         align-items: center;
         justify-content: space-between;
     }
-    
+
     .tfauth-checkbox {
         display     : flex;
         align-items : center;
@@ -23,7 +23,7 @@
 
     .reminder {
         font-family: theme_vars.$font-family-medium;
-        color: var(--new-light16);
+        color: var(--light16);
         margin-left: 28px;
     }
 }

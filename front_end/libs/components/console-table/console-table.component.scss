@@ -21,7 +21,7 @@
         @include typography.bold13dark9nocolor;
         color: var(--card-header-text);
         height: 28px;
-        background: var(--new-light3);
+        background: var(--light3);
         padding-left: 12px !important;
     }
 
@@ -40,11 +40,11 @@
 
         &:not(.ignore-active):active {
             & * {
-                color: var(--new-light1)  !important;
-                fill: var(--new-light1)  !important;
+                color: var(--light1)  !important;
+                fill: var(--light1)  !important;
             }
 
-            background : var(--new-light16);
+            background : var(--light16);
         }
     }
 
@@ -97,11 +97,11 @@
 
             &:active {
                 & span.status-label {
-                    color: var(--new-dark16);
+                    color: var(--dark16);
                 }
 
                 & .st0 {
-                    stroke: var(--new-dark16);
+                    stroke: var(--dark16);
                     fill: none;
                 }
             }
@@ -116,7 +116,7 @@
         }
 
         .close-svg #Line {
-            stroke: var(--new-dark1)  !important;
+            stroke: var(--dark1)  !important;
         }
 
         .close-wrapper {
@@ -125,29 +125,29 @@
         }
 
         .in-progress-wrapper {
-            color: var(--new-light10);
+            color: var(--light10);
 
             .st0 {
-                fill: var(--new-light10);
+                fill: var(--light10);
             }
 
             &:hover {
                 & span.status-label {
-                    color: var(--new-dark9);
+                    color: var(--dark9);
                 }
 
                 & .st0 {
-                    fill: var(--new-dark9);
+                    fill: var(--dark9);
                 }
             }
 
             &:active {
                 & span.status-label {
-                    color: var(--new-dark8);
+                    color: var(--dark8);
                 }
 
                 & .st0 {
-                    fill: var(--new-dark8);
+                    fill: var(--dark8);
                 }
             }
         }
@@ -196,7 +196,7 @@
         justify-content: center;
         align-items: center;
         backdrop-filter: blur(4px);
-        border: 1px solid var(--new-light4);
+        border: 1px solid var(--light4);
 
         & button {
             margin-top: 16px;
@@ -241,12 +241,12 @@
 
         button {
             background: transparent;
-            color: var(--new-light16);
+            color: var(--light16);
             height: 1.5em !important;
 
             &.search-active {
-                background: var(--new-light16);
-                color: var(--new-light1);
+                background: var(--light16);
+                color: var(--light1);
             }
         }
     }
@@ -267,7 +267,7 @@
     }
 
     button.reset-search {
-        color: var(--new-light16);
+        color: var(--light16);
         display: inline-block !important;
         background: transparent;
     }
@@ -279,12 +279,12 @@
 
         &:hover,
         &.active {
-            background: var(--new-light5);
+            background: var(--light5);
         }
 
         &:active {
-            background: var(--new-light16);
-            color: var(--new-light1);
+            background: var(--light16);
+            color: var(--light1);
         }
     }
 
@@ -293,7 +293,7 @@
         white-space: nowrap;
         align-items: center;
         margin: 16px 16px 16px auto;
-        color: var(--new-light16);
+        color: var(--light16);
 
         nx-select {
             margin-left: 8px;
@@ -316,12 +316,12 @@
     .icon-modal-svg {
         &:hover {
             .st0 {
-                fill: var(--new-dark15)  !important;
+                fill: var(--dark15)  !important;
             }
         }
     }
 
     .action-buttons-row {
-        border-top: 1px solid var(--new-light4);
+        border-top: 1px solid var(--light4);
     }
 }

@@ -169,7 +169,7 @@
                     height: 1rem;
                     width: 1rem;
                     margin-left: .25rem;
-                    color: var(--new-light12);
+                    color: var(--light12);
                     font-size: $font-size-sm;
                     line-height: 1rem;
                 }
@@ -196,14 +196,14 @@
                     margin: 4px 0;
 
                     span {
-                        background-color: var(--new-light4);
+                        background-color: var(--light4);
                         padding-right: 4px;
                         word-break: keep-all;
                     }
                 }
 
                 .row-line {
-                    border-bottom: 1px dotted var(--new-light7);
+                    border-bottom: 1px dotted var(--light7);
                     width: calc(100% - 1rem);
                     position: absolute;
                     bottom: 6px;
@@ -274,7 +274,7 @@
         }
 
         tr:hover td {
-            background: var(--new-brand-core-t90);
+            background: var(--brand-core-t90);
         }
     }
 

@@ -81,7 +81,7 @@
                     height: 1rem;
                     width: 1rem;
                     margin-left: .25rem;
-                    color: var(--new-light12);
+                    color: var(--light12);
                     font-size: $font-size-sm;
                     line-height: 1rem;
                 }
@@ -269,7 +269,7 @@
 
         .card--body {
             background-color: transparent;
-            border-top: 1px solid var(--new-brand-core-t30);
+            border-top: 1px solid var(--brand-core-t30);
 
             svg-icon svg .st0,
             svg-icon svg path {
@@ -279,27 +279,27 @@
         }
 
         .card--footer {
-            background-color: var(--new-brand-core-t10);
+            background-color: var(--brand-core-t10);
         }
     }
 
     &.menu {
-        background-color: var(--new-light5);
-        border: 1px solid var(--new-light5);
+        background-color: var(--light5);
+        border: 1px solid var(--light5);
         border-bottom: none;
 
         .card--header {
-            background-color: var(--new-light5);
-            border-bottom-color: var(--new-light7);
+            background-color: var(--light5);
+            border-bottom-color: var(--light7);
         }
 
         .card--body {
-            background-color: var(--new-light5);
-            border-top: 1px solid var(--new-light7);
+            background-color: var(--light5);
+            border-top: 1px solid var(--light7);
         }
 
         .card--footer {
-            background-color: var(--new-light5);
+            background-color: var(--light5);
         }
 
         &.top {

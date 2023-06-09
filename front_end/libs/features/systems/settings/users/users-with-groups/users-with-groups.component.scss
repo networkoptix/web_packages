@@ -76,7 +76,7 @@
 
 .group-list-item {
     display: flex;
-    align-items: center;    
+    align-items: center;
     .help-block {
         display: block;
         background-color: transparent;
@@ -91,12 +91,12 @@
     padding: 6px 0 6px 8px;
 
     .user-form-labels {
-        color: var(--new-dark9);
+        color: var(--dark9);
     }
 
     input:disabled {
-        background-color: var(--new-light2);
-        border: 1px solid var(--new-light6);
+        background-color: var(--light2);
+        border: 1px solid var(--light6);
     }
 }
 

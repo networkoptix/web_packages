@@ -114,15 +114,15 @@ $preloader_small_circle_distance : 8px;
     font-size: 130%;
     font-weight: 300;
     line-height: 30px;
-    color: var(--new-light10);
+    color: var(--light10);
 
     a {
-        color: var(--new-light12);
+        color: var(--light12);
         text-decoration: underline;
 
         &:hover,
         &:active {
-            color: var(--new-light1);
+            color: var(--light1);
         }
     }
 }
@@ -162,7 +162,7 @@ $preloader_small_circle_distance : 8px;
         }
 
         .brand_element {
-            fill: var(--new-brand-core);
+            fill: var(--brand-core);
         }
     }
 }
@@ -183,11 +183,11 @@ $preloader_small_circle_distance : 8px;
     max-width: 560px;
 
     a {
-        color: var(--new-brand-core);
+        color: var(--brand-core);
 
         &:hover,
         &:active {
-            color: var(--new-brand-l1);
+            color: var(--brand-l1);
         }
     }
 }

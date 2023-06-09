@@ -89,7 +89,7 @@ nx-radio {
 
         input:focus~.check {
             svg .circle-focus {
-                stroke: var(--new-brand-d1) !important;
+                stroke: var(--brand-d1) !important;
                 stroke-width: 2;
                 fill: none;
 
@@ -130,7 +130,7 @@ nx-radio {
     &.tristate {
         svg {
             .dot {
-                fill: var(--new-brand-core-t50);
+                fill: var(--brand-core-t50);
                 display: block;
             }
         }

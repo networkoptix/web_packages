@@ -41,7 +41,7 @@
                 outline: none !important;
                 box-shadow: none !important;
             }
-            
+
             .menu-level-3-svg-icon {
                 svg {
                     .icon-with-fill {
@@ -64,7 +64,7 @@
                 outline: none !important;
                 box-shadow: none !important;
             }
-            
+
             .menu-level-3-svg-icon {
                 svg {
                     .icon-with-fill {
@@ -82,9 +82,9 @@
 
         &,
         * {
-            color: var(--new-light1)  !important;
-            fill: var(--new-light1)  !important;
-            background-color: var(--new-light16)  !important;
+            color: var(--light1)  !important;
+            fill: var(--light1)  !important;
+            background-color: var(--light16)  !important;
             min-height: auto;
         }
     }

@@ -39,12 +39,12 @@ a {
     color: inherit !important;
 
     &:hover {
-        color: var(--new-brand-core)  !important;
+        color: var(--brand-core)  !important;
     }
 }
 
 .bookmark-wrapper {
-    border: 1px solid var(--new-light3);
+    border: 1px solid var(--light3);
     border-radius: 4px;
     margin-bottom: 8px;
 
@@ -67,7 +67,7 @@ a {
     width: 75vw;
     max-width: 640px;
     border: 2px solid $brand_core;
-    background: var(--new-light1);
+    background: var(--light1);
     padding: 16px;
     border-radius: 8px;
 }

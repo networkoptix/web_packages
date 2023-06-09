@@ -96,7 +96,7 @@ form.form-horizontal {
     }
 
     tr:hover td {
-        background: var(--new-brand-core-t90);
+        background: var(--brand-core-t90);
     }
 }
 
@@ -141,7 +141,7 @@ form.form-horizontal {
 
         .cell-ellipsis {
             margin-bottom: 2px;
-            border-bottom: 1px dotted var(--new-light6);
+            border-bottom: 1px dotted var(--light6);
             flex-grow: 1;
         }
     }
@@ -154,7 +154,7 @@ form.form-horizontal {
     }
 
     .tooltip-text {
-        color: var(--new-light1) !important;
+        color: var(--light1) !important;
     }
 
     .reindex-section {

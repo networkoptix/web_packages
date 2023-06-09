@@ -46,11 +46,11 @@
                 box-shadow: none;
                 text-decoration: none !important;
                 background-color: transparent;
-                color: var(--new-dark15);
+                color: var(--dark15);
             }
 
             &:active {
-                color: var(--new-light16);
+                color: var(--light16);
                 text-decoration: none;
             }
 
@@ -60,11 +60,11 @@
 
                 &:hover,
                 &:focus {
-                    color: var(--new-dark15);
+                    color: var(--dark15);
                 }
 
                 &:active {
-                    color: var(--new-light16);
+                    color: var(--light16);
                 }
             }
         }
@@ -92,10 +92,10 @@
 
         .navbar-right>li>a,
         .navbar-right>li>span>a {
-            color: var(--new-light8);
+            color: var(--light8);
 
             &:hover {
-                color: var(--new-light12);
+                color: var(--light12);
             }
         }
     }

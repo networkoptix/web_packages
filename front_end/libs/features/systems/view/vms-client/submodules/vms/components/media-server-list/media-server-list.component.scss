@@ -227,7 +227,7 @@
                         &.unauthorized,
                         &.error {
                             >.name {
-                                color: var(--new-light16);
+                                color: var(--light16);
                             }
 
                             >.preview {
@@ -239,7 +239,7 @@
                                     transform: translate(-50%, -50%);
 
                                     svg path {
-                                        fill: var(--new-light16) !important;
+                                        fill: var(--light16) !important;
                                     }
                                 }
 
@@ -271,7 +271,7 @@
                                 width: 10px;
                                 height: 10px;
                                 border-radius: 5px;
-                                border: 2px solid var(--new-dark15);
+                                border: 2px solid var(--dark15);
                             }
                         }
 

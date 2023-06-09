@@ -35,8 +35,8 @@ $brand-danger         : var(--error);
 // Brand colors
 // -------------------------
 
-$brand-primary:         var(--new-brand-core, $brand_core);
-$brand-info:            var(--new-brand-l2, $brand_l2);
+$brand-primary:         var(--brand-core, $brand_core);
+$brand-info:            var(--brand-l2, $brand_l2);
 
 // $gray-darker:            $dark7;     //~#222
 // $gray-dark:              $dark11;    //~#333
@@ -192,8 +192,8 @@ $form-group-margin-bottom:  rem(12px);
 
 // $table-bg-hover:              $light2;
 $table-cell-padding:          5px 16px 6px 16px;
-$link-color:                  var(--new-brand-d2);
-$link-hover-color:            var(--new-brand-core);
+$link-color:                  var(--brand-d2);
+$link-hover-color:            var(--brand-core);
 
 $grid-float-breakpoint:       420px;
 $grid-float-breakpoint-max:   $grid-float-breakpoint - 1;

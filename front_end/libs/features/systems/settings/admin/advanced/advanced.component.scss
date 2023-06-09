@@ -6,7 +6,7 @@
     .server-info {
         font-family: theme_vars.$font-family-regular;
         font-size: theme_vars.$font-size-base;
-        color: var(--new-dark9);
+        color: var(--dark9);
 
         .header-top-bar {
             display: flex;
@@ -34,7 +34,7 @@
                 }
 
                 .online {
-                    background-color: var(--new-brand-core);
+                    background-color: var(--brand-core);
                 }
 
                 .offline {
@@ -42,7 +42,7 @@
                 }
 
                 .checking {
-                    background-color: var(--new-light16);
+                    background-color: var(--light16);
                 }
             }
         }
@@ -62,7 +62,7 @@
 
                 .cell-ellipsis {
                     margin-bottom: 2px;
-                    border-bottom: 1px dotted var(--new-light6);
+                    border-bottom: 1px dotted var(--light6);
                     flex-grow: 1;
                 }
             }

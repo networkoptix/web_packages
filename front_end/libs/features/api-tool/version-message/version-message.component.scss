@@ -19,6 +19,6 @@
     &-error {
         @extend .system-message;
         border-color: #e67979;
-        background-color: var(--new-error-l1-t60);
+        background-color: var(--error-l1-t60);
     }
 }
