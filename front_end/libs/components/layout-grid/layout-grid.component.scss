@@ -44,7 +44,7 @@
     transition-property: width, background;
     transition-duration: 150ms;
     transition-timing-function: ease-in-out;
-    background: var(--header-bg);
+    background: var(--sidebar-background);
     z-index: 2;
     --column-width: calc(100vw / 12);
 
@@ -86,7 +86,6 @@
     --min-sidebar-width: calc(var(--container-limit) / 12 * var(--column-limit) + var(--tab-size));
 
     &.open-menu {
-        border-right: 1px solid var(--border-color);
         padding: 16px 0 16px 16px;
         width: max(var(--sidebar-width), var(--min-sidebar-width));
     }
@@ -192,11 +191,10 @@ div.tab {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: var(--header-bg);
+    background: var(--sidebar-background);
     position: absolute;
     top: calc(50% - 16px);
     right: -14px;
-    border: 1px solid var(--border-color);
     border-left-color: transparent;
 
     & .st0 {
@@ -214,12 +212,16 @@ div.tab {
         align-items: center;
     }
 
+    &:not(.active-menu) {
+        background: var(--sidebar-tab-closed);
+    }
+
     &.active-menu>svg-icon {
         transform: rotate(0deg);
     }
 
     &:hover {
-        background: var(--border-color);
+        background: var(--sidebar-tab-hover);
     }
 }
 

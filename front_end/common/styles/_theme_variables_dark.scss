@@ -718,4 +718,7 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --placeholder-background: #161C1F;
     --placeholder-color: #B21A1A;
     --no-camera-placeholder-color: var(--light10);
+    --sidebar-background: var(--dark4);
+    --sidebar-tab-hover: var(--dark6);
+    --sidebar-tab-closed: var(--dark8);
 }
