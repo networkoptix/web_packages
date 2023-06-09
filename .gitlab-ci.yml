@@ -31,6 +31,7 @@ stages:
   - docker image
   - check
   - build
+  - create mr
   - test
   - fail-fast
 
@@ -356,6 +357,27 @@ jenkins-build-frontend:
       "GITLAB_JOB_URL=$CI_JOB_URL"
       "REVISION=$CI_COMMIT_SHORT_SHA" 2>&1 | tee logs/frontend.log & FRONTEND_EXIT="$?"
     - wait
+
+create-vms-mr:
+  stage: create mr
+  extends: .jenkins-builds
+  rules:
+  - if: '$CI_COMMIT_REF_PROTECTED == "true" && $CI_COMMIT_REF_NAME =~ /^vms_/'
+    when: on_success
+    changes:
+    - front_end/**/*
+  - if: '$CI_COMMIT_REF_PROTECTED == "true" && $CI_COMMIT_REF_NAME == "develop"'
+    when: on_success
+    changes:
+    - front_end/**/*
+  script:
+    - runJenkinsJob.sh gitlab.vms.review.webadmin.create-vms-mr
+      "BUILD_DESCRIPTION=$CI_COMMIT_TITLE"
+      "CLOUD_PORTAL_COMMIT=$CI_COMMIT_SHA"
+      "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
+      "GITLAB_JOB_ID=$CI_JOB_ID"
+      "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
+      "GITLAB_JOB_URL=$CI_JOB_URL"
 
 #wheel-uploader:
 #  extends: .retries
