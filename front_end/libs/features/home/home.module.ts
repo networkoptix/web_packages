@@ -27,21 +27,26 @@ import { NxOrganizationReportsComponent } from './components/reports/reports.com
 import { NxOrganizationSettingsComponent } from './components/settings/settings.component';
 import { NxGroupsSidebarLevelComponent } from './components/sidebar-level/sidebar-level.component';
 import { NxSystemGroupsSidebarComponent } from './components/sidebar/sidebar.component';
-import { NxChannelPartnerSubchannelComponent } from './components/subchannel/subchannel.component';
+import { NxSubchannelComponent } from './components/subchannel/subchannel.component';
+import { NxSubchannelsComponent } from './components/subchannels/subchannels.component';
 import { NxSystemCardComponent } from './components/system-card/system-card.component';
 import { NxChannelPartnerUsersComponent } from './components/users/channel-partner-users/channel-partner-users.component';
 import { NxOrganizationUsersComponent } from './components/users/org-users/org-users.component';
 import { NxHomeComponent } from './home.component';
-import { OrgResolver } from './org-resolver';
 import { NxOrganizationsComponent } from './organizations/organization.component';
+import { WithParentDataResolver } from './resolvers/data-resolver';
+import { OrgResolver } from './resolvers/org-resolver';
+import { SubChannelResolver } from './resolvers/subchannel-resolver';
+import { TabResolver } from './resolvers/tab-resolver';
 import { channelPartnersReducer } from './store/channel-partners/channel-partners.reducer';
 import { groupsReducer } from './store/groups/groups.reducer';
 import { NxGroupsSystemsComponent } from './systems/systems.component';
-import { TabResolver } from './tab-resolver';
 
 const homeRoutes: Routes = [
     {
         path: '',
+        resolve: { inOrganization: OrgResolver, inSubchannel: SubChannelResolver },
+        runGuardsAndResolvers: 'always',
         component: NxHomeComponent,
         canActivate: [AuthGuard],
         children: [
@@ -110,10 +115,11 @@ const homeRoutes: Routes = [
         NxUsersTableComponent,
         NxChannelPartnersComponent,
         NxChannelPartnerInformationComponent,
-        NxChannelPartnerSubchannelComponent,
+        NxSubchannelsComponent,
+        NxSubchannelComponent,
         NxHomeComponent,
     ],
-    providers: [TabResolver, OrgResolver],
+    providers: [TabResolver, OrgResolver, SubChannelResolver, WithParentDataResolver],
     exports: [],
 })
 export class NxHomeModule {}

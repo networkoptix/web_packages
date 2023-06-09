@@ -3,10 +3,11 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { NxChannelPartnerInformationComponent } from '../components/information/information.component';
 import { NxOrganizationSettingsComponent } from '../components/settings/settings.component';
-import { NxChannelPartnerSubchannelComponent } from '../components/subchannel/subchannel.component';
-import { NxChannelPartnerUsersComponent } from '../components/users/channel-partner-users/channel-partner-users.component';
-import { OrgResolver } from '../org-resolver';
-import { TabResolver } from '../tab-resolver';
+import { NxSubchannelComponent } from '../components/subchannel/subchannel.component';
+import { NxSubchannelsComponent } from '../components/subchannels/subchannels.component';
+import { NxOrganizationUsersComponent } from '../components/users/org-users/org-users.component';
+import { WithParentDataResolver } from '../resolvers/data-resolver';
+import { TabResolver } from '../resolvers/tab-resolver';
 
 import { NxChannelPartnersComponent } from './channel-partners.component';
 
@@ -14,7 +15,10 @@ const CPRoutes: Routes = [
     {
         path: ':id',
         component: NxChannelPartnersComponent,
-        resolve: { currentTab: TabResolver, inOrganization: OrgResolver },
+        resolve: {
+            currentTab: TabResolver,
+            parentData: WithParentDataResolver
+        },
         runGuardsAndResolvers: 'always',
         children: [
             {
@@ -37,8 +41,25 @@ const CPRoutes: Routes = [
                 component: NxOrganizationSettingsComponent,
             },
             {
-                path: 'subchannel',
-                component: NxChannelPartnerSubchannelComponent,
+                path: 'subchannels',
+                component: NxSubchannelsComponent,
+                children: [
+                    {
+                        path: ':subchannelId',
+                        resolve: { currentTab: TabResolver },
+                        component: NxSubchannelComponent,
+                        children: [
+                            {
+                                path: '',
+                                component: NxChannelPartnerInformationComponent,
+                            },
+                            {
+                                path: 'settings',
+                                component: NxOrganizationSettingsComponent,
+                            },
+                        ],
+                    },
+                ],
             },
             {
                 path: 'information',
@@ -46,7 +67,7 @@ const CPRoutes: Routes = [
             },
             {
                 path: 'users',
-                component: NxChannelPartnerUsersComponent,
+                component: NxOrganizationUsersComponent,
             },
         ],
     },

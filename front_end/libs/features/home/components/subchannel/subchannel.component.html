@@ -1,16 +1,20 @@
-<div>
-    <div class="actions p-3">
-        <button
-            [disabled]="!isAdmin"
-            class="btn btn-default"
-            translate
-            (click)="newPartnerDialog()"
-        >
-            New Partner
-        </button>
+<div class="cards p-3">
+    <a
+        (click)="toRoot()"
+        translate
+    >
+        All Partners</a
+    >
+    <div class="pb-3">
+        <h2>{{ (currentSubchannel$ | async).name }}</h2>
     </div>
-
-    <div *ngFor="let channel of subchannels$ | async">
-        {{ channel.name }}
-    </div>
+    <nx-tabs
+        [onLoadTab]="currentTab"
+        (tabClick)="onTabClick($event)"
+    >
+        <ng-container *ngFor="let tab of tabs">
+            <div *tab="tab"></div>
+        </ng-container>
+    </nx-tabs>
+    <router-outlet></router-outlet>
 </div>

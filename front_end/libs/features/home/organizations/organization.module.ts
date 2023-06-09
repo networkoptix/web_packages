@@ -7,8 +7,8 @@ import { NxGroupsCardsComponent } from '../components/groups-cards/groups-cards.
 import { NxOrganizationReportsComponent } from '../components/reports/reports.component';
 import { NxOrganizationSettingsComponent } from '../components/settings/settings.component';
 import { NxOrganizationUsersComponent } from '../components/users/org-users/org-users.component';
-import { OrgResolver } from '../org-resolver';
-import { TabResolver } from '../tab-resolver';
+import { WithParentDataResolver } from '../resolvers/data-resolver';
+import { TabResolver } from '../resolvers/tab-resolver';
 
 import { NxOrganizationsComponent } from './organization.component';
 
@@ -17,7 +17,8 @@ const orgRoutes: Routes = [
         path: ':id',
         canActivate: [AuthGuard],
         component: NxOrganizationsComponent,
-        resolve: { currentTab: TabResolver },
+        resolve: { currentTab: TabResolver, parentData: WithParentDataResolver },
+        runGuardsAndResolvers: 'always',
         children: [
             {
                 path: 'systems',
@@ -29,39 +30,32 @@ const orgRoutes: Routes = [
             },
             {
                 path: 'users',
-                resolve: { inOrganization: OrgResolver },
                 component: NxOrganizationUsersComponent,
             },
             {
                 path: 'settings',
-                component: NxOrganizationSettingsComponent
+                component: NxOrganizationSettingsComponent,
             },
             {
                 path: 'group/:groupId',
-                component: NxGroupsCardsComponent
+                component: NxGroupsCardsComponent,
             },
             {
                 path: '**',
-                redirectTo: 'systems'
-            }
+                redirectTo: 'systems',
+            },
         ],
     },
     {
         path: '**',
         redirectTo: '/home',
-    }
+    },
 ];
 
 @NgModule({
-    imports: [
-        RouterModule.forChild(orgRoutes)
-
-    ],
-    declarations: [
-    ],
+    imports: [RouterModule.forChild(orgRoutes)],
+    declarations: [],
     providers: [],
-    exports: [
-
-    ]
+    exports: [],
 })
-export class NxOrganizationModule { }
+export class NxOrganizationModule {}

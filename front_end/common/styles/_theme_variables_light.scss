@@ -646,6 +646,11 @@ html[data-theme="light"] {
 
     --channel-partner-card-status-background: var(--light10);
 
+    --subchannel-partner-card-id-background: var(--light16);
+    --subchannel-partner-card-id-color: var(--light2);
+    --subchannel-partner-card-org-fill: var(--light16);
+    --subchannel-partner-card-color: var(--light16);
+
     @include generateVarAndRgb(--system-card-bg-grad0, $light1);
     @include generateVarAndRgb(--system-card-bg-grad100, $light3);
     --system-card-bg: var(--light4);

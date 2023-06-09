@@ -46,7 +46,7 @@ export class NxChannelPartnersComponent implements OnInit {
         },
         {
             displayName: 'Subchannel',
-            route: 'subchannel',
+            route: 'subchannels',
         },
         {
             displayName: 'Information',

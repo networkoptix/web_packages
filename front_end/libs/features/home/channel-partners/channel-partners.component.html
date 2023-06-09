@@ -1,9 +1,14 @@
 <div
     class="channel-partner"
     *ngIf="routeData$ | async as routeData"
-    [ngClass]="{ root: !routeData.inOrganization }"
+    [ngClass]="{ root: !routeData.parentData.inOrganization && !routeData.parentData.inSubchannel }"
 >
-    <ng-container *ngIf="!routeData.inOrganization; else outlet">
+    <ng-container
+        *ngIf="
+            !routeData.parentData.inOrganization && !routeData.parentData.inSubchannel;
+            else outlet
+        "
+    >
         <div
             class="header pb-3"
             *ngIf="channelPartner$ | async as channelPartner"

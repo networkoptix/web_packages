@@ -645,6 +645,11 @@ html[data-theme="dark"] {
     --group-card-border-color: var(--dark10);
 
     --channel-partner-card-status-background: var(--dark11);
+    
+    --subchannel-partner-card-id-background: var(--light16);
+    --subchannel-partner-card-id-color: var(--dark4);
+    --subchannel-partner-card-org-fill: var(--dark16);
+    --subchannel-partner-card-color: var(--dark16);
 
     @include generateVarAndRgb(--system-card-bg-grad0, $dark4);
     @include generateVarAndRgb(--system-card-bg-grad100, $dark5);

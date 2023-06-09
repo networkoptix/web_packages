@@ -1,0 +1,49 @@
+<div *ngIf="!(inSubchannels$ | async); else outlet">
+    <div class="actions p-3">
+        <button
+            [disabled]="!isAdmin"
+            class="btn btn-default"
+            translate
+            (click)="newPartnerDialog()"
+        >
+            New Partner
+        </button>
+    </div>
+    <div class="px-3 cards-container">
+        <ng-container *ngFor="let channel of subchannels$ | async">
+            <div
+                class="system-button card-condensed system-card"
+                (click)="handleChannelClick(channel.id)"
+            >
+                <div class="card-body">
+                    <h3>{{ channel.name }}</h3>
+                    <div class="bottom">
+                        <div class="px-2 id">#{{ channel.id.slice(0, 3) }}</div>
+                        <div class="organizations">
+                            <svg-icon
+                                nx-add-svg-src
+                                [src]="icons.dir + 'organization.svg'"
+                                [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                            ></svg-icon>
+                            12
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="three-dots"
+                    [cdkMenuTriggerFor]="menu"
+                >
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+            <ng-template #menu>
+                <div class="card-menu"></div>
+            </ng-template>
+        </ng-container>
+    </div>
+</div>
+<ng-template #outlet>
+    <router-outlet></router-outlet>
+</ng-template>

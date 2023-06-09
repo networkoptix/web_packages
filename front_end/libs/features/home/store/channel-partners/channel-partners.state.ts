@@ -6,6 +6,7 @@ import {
 export interface ChannelPartnersState {
     currentPartnerId: string;
     currentOrgId: string;
+    currentSubchannels: ChannelPartner[];
     currentPartnerOrganizations: Organization[];
     channelPartners: ChannelPartner[];
     rootOrganizations: Organization[];

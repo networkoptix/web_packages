@@ -29,3 +29,8 @@ export const setCurrentPartner = createAction(
     '[Channel Partners] Set current partner',
     props<{ currentPartnerId: string; currentPartnerOrganizations: Organization[] }>(),
 );
+
+export const setCurrentSubchannelPartners = createAction(
+    '[Channel Partners] Set current subchannels',
+    props<{ currentSubchannels: ChannelPartner[] }>(),
+);

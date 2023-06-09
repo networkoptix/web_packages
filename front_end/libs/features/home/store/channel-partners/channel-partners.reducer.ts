@@ -6,6 +6,7 @@ import { ChannelPartnersState } from './channel-partners.state';
 const initialState: ChannelPartnersState = {
     currentPartnerId: null,
     currentOrgId: null,
+    currentSubchannels: [],
     currentPartnerOrganizations: [],
     channelPartners: [],
     rootOrganizations: [],
@@ -49,6 +50,13 @@ export const channelPartnersReducer = createReducer(
             ...state,
             currentPartnerId,
             currentPartnerOrganizations,
+        }),
+    ),
+    on(
+        ChannelPartnerActions.setCurrentSubchannelPartners,
+        (state, { currentSubchannels }): ChannelPartnersState => ({
+            ...state,
+            currentSubchannels,
         }),
     ),
 );
