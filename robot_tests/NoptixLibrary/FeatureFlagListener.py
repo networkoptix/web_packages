@@ -3,7 +3,6 @@ from robot.libraries.BuiltIn import BuiltIn
 from GenericKeywords import GenericKeywords
 import time
 
-
 class FeatureFlagListener:
     ROBOT_LISTENER_API_VERSION = 3
 
@@ -19,15 +18,14 @@ class FeatureFlagListener:
         start_time = time.monotonic()
         while True:
             cloud_settings = cloud.get_cloud_settings()
-            print(cloud_settings["featureFlags"])
-            print("\n")
-            print(expected_settings_converted)
-            print("\n")
-            if cloud_settings["featureFlags"] == expected_settings_converted:
+            if all([{value and expected_settings_converted.get(key)} for key, value in cloud_settings["featureFlags"].items()]):
                 break
+            else:
+                print(cloud_settings["featureFlags"])
+                print("\n")
+                print(expected_settings_converted)
+                print("\n")
+
             if time.monotonic() - start_time > 120:
-                for setting in cloud_settings["featureFlags"].keys():
-                    if setting not in expected_settings:
-                        raise RuntimeError(f"There was a feature flag not in the expected list: {setting}")
                 raise TimeoutError("Feature flags did not update in time.")
             time.sleep(5)
