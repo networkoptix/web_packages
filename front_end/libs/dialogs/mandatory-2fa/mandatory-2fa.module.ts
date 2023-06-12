@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { ProcessButtonModule } from '@components/process-button/process-button.module';
@@ -14,6 +15,7 @@ import { Mandatory2faModalContent } from './mandatory-2fa.component';
         FormsModule,
         // AngularSvgIconModule,
         TranslateModule,
+        RouterModule,
 
         ProcessButtonModule,
         ProcessCancelButtonModule,
