@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
@@ -11,6 +12,7 @@ import { NxPagePlaceholderComponent } from './page-placeholder.component';
 @NgModule({
     imports: [
         CommonModule,
+        RouterModule,
         TranslateModule,
         AngularSvgIconModule,
         FooterModule,
