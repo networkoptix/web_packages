@@ -152,6 +152,10 @@ header {
         width: 100%;
         padding: 4px 0 !important;
 
+        &.upperPosition {
+            box-shadow: var(--dropdown-menu-shadow-upper);
+        }
+
         &--list {
             max-height: $dropdown-list-height;
             overflow: auto;

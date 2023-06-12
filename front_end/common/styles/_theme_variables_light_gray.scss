@@ -414,6 +414,7 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --dropdown-menu-border : none;
     --dropdown-menu-top-border : none;
     --dropdown-menu-shadow : 0 1rem 2rem 0 #{$light_gray_15};
+    --dropdown-menu-shadow-upper : 1rem 0 2rem 0 #{$light_gray_15};
     --dropdown-menu-bg : #{$additional_gray_light1};
     --drop-menu-systems-bg : #{$additional_gray_light1};
     --drop-menu-navigation-bg : #{$light_gray_1};

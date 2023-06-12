@@ -18,7 +18,7 @@
                 System is offline. This information is not available.
             </div>
             <div
-                *ngFor="let logger of systemLoggers"
+                *ngFor="let logger of systemLoggers; let idx = index"
                 class="form-group row"
             >
                 <label
@@ -29,12 +29,23 @@
                     "
                 ></label>
                 <div class="col-11 col-md-8">
+                    <!--                    <mat-select disableRipple>-->
+                    <!--                        <mat-option-->
+                    <!--                            *ngFor="let option of loggerOptions"-->
+                    <!--                            [ngModel]="selectedLevel(logger)"-->
+                    <!--                            (ngModelChange)="onLevelSelect($event, logger)"-->
+                    <!--                            [value]="option.value"-->
+                    <!--                        >-->
+                    <!--                            {{ option.name }}-->
+                    <!--                        </mat-option>-->
+                    <!--                    </mat-select>-->
                     <nx-select
                         [id]="logger.key"
                         [name]="logger.key"
                         [items]="loggerOptions"
                         [ngModel]="selectedLevel(logger)"
                         (ngModelChange)="onLevelSelect($event, logger)"
+                        [forcePosition]="idx !== 0 ? { top: 'auto', bottom: 36 } : undefined"
                     ></nx-select>
                 </div>
             </div>

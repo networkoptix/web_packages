@@ -56,6 +56,7 @@
     <div
         class="dropdown-menu"
         [nxArrowNav]="show"
+        [ngClass]="forcePosition?.bottom !== 'auto' ? 'upperPosition' : undefined"
         [style]="{
             display: show ? 'inline-block' : 'none',
             width: forcePosition?.width ? forcePosition.width + 'px' : '100%',

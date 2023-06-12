@@ -442,6 +442,7 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --dropdown-menu-border : none;
     --dropdown-menu-top-border : none;
     --dropdown-menu-shadow : 0 1rem 2rem 0 #{$light15};
+    --dropdown-menu-shadow-upper : 1rem 0 2rem 0 #{$light15};
     --dropdown-menu-bg : #{$additional_light1};
     --drop-menu-systems-bg : #{$additional_light1};
     --drop-menu-navigation-bg : #{$light1};
