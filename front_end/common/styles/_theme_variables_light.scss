@@ -3,7 +3,7 @@
 @import "./native-theme/theme_palette";
 @import "_theme_palette";
 
-html[data-theme="light"] {
+html[data-theme="light"], .theme-override[data-theme="light"] {
     body {
         background-color: #{$additional_light2};
         color: #{$dark9};

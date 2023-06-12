@@ -3,7 +3,7 @@
 @import "./native-theme/theme_palette";
 @import "_theme_palette";
 
-html[data-theme="light-gray"] {
+html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     body {
         background-color: #F4F4F4;
         color : #404040;

@@ -2,7 +2,7 @@
 @import "./native-theme/theme_palette";
 @import "_theme_palette";
 
-html[data-theme="dark-gray"] {
+html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     body {
         background-color: #101010;
         color : #B8B8B8;
