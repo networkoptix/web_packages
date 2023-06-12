@@ -2,8 +2,8 @@ import { Component, Inject, Input, LOCALE_ID, OnDestroy, OnInit } from '@angular
 import { ActivatedRoute, Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { escape } from 'lodash-es';
-import { firstValueFrom, Observable, Subject, Subscription } from 'rxjs';
-import { distinctUntilChanged, debounceTime, filter, takeUntil, tap } from 'rxjs/operators';
+import { firstValueFrom, Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, takeUntil, tap } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import type { ContentToggle, Content, Level3Item } from '@app/menu/menu.types';
@@ -37,6 +37,15 @@ import { alphabeticalSort, cleanId } from '@utils/general';
 
 import { NxSettingsService } from './settings.service';
 
+/**
+ * TODO: A lot of the observable usage in this component should be cleaned up.
+ *
+ * The observables are being used in a lot of places almost like a variable we care only
+ * about tracking a value and not a value over time we should look into moving those use
+ * signals once we upgrade to angular 16.
+ *
+ * There are also a lot of nested subscriptions, some are three levels deep.
+ */
 @UntilDestroy()
 @Component({
     selector: 'nx-system-settings-component',
@@ -50,9 +59,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG = staticLang;
     plugin;
-    private menuData$: Subject<Content> = new Subject<Content>();
     content: Content = { base: '', selectedSection: '', level1: [] };
-    content$: Observable<Content> = this.menuData$.pipe(debounceTime(0)); // It's like wrapping the next in a setTimeout
 
     menuSearchable: boolean;
 
@@ -111,12 +118,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.selectedUser = { email: '' };
     }
 
-    private systemReady(): void {
-        this.settingsService.system = this.system;
-        this.menuVisible = true;
-        this.updateArchivesPresent();
-    }
-
     private updateArchivesPresent(): void {
         this.system.mediaserver
             .getCameraHistoryItems()
@@ -133,24 +134,20 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     private async updateContent(skipPermissions = false): Promise<string> {
-        this.menuData$.next({ ...this.content });
-        if (environment.isLocal || !this.system) {
+        /**
+         * This isn't ideal since it's pretty dependent on the menu structure implementation
+         * but the alternative is to refactor the settings component and menu service
+         * to properly use observables which is too many changes during regression.
+         */
+        this.menuVisible = !!this.content.level1
+            .find(({ id }) => id === menus.systemSettings.admin.id)
+            ?.level3.find(({ id }) => id === menus.systemSettings.general.id);
+        this.content = { ...this.content };
+
+        if (environment.isLocal || !this.system || !this.menuVisible) {
             return;
         }
-        if (this.system.userManager.permissionsUpdated) {
-            return this.db.personal.menuContent.put(this.content);
-        } else if (skipPermissions) {
-            this.db.personal.transaction('rw', this.db.personal.menuContent, async () => {
-                const existing = await this.db.personal.menuContent.get(this.content);
-
-                if (existing) {
-                    existing.selectedDetailsSection = this.content.selectedDetailsSection;
-                    existing.selectedSection = this.content.selectedSection;
-                    existing.selectedSubSection = this.content.selectedSubSection;
-                }
-                await this.db.personal.menuContent.put(existing || this.content);
-            });
-        }
+        return this.db.personal.menuContent.put(this.content);
     }
 
     private canNavMenu(
@@ -170,7 +167,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         this.updateContent(true);
                     }
                 });
-        } else {
+        } else if (selection) {
             this.content[contentTarget] = selection;
             this.updateContent(true);
         }
@@ -225,7 +222,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             this.getSystemInfo();
         });
 
-        this.router.events.subscribe(route => {
+        this.router.events.pipe(untilDestroyed(this)).subscribe(route => {
             if (route instanceof NavigationStart && route.url.includes('health')) {
                 // remove unnecessary system update
                 // (ex. health monitor will trigger system update)
@@ -257,11 +254,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 },
             ],
         };
-        this.db.personal.menuContent.get({ base: this.content.base }).then(exists => {
-            if (!exists) {
-                this.db.personal.menuContent.put(this.content);
-            }
-        });
 
         this.menuService.selectedSectionSubject
             .pipe(untilDestroyed(this), distinctUntilChanged())
@@ -297,7 +289,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 },
             )
             .then(() => {
-                this.systemReady();
+                this.updateArchivesPresent();
             });
 
         // Retrieve system info
@@ -327,7 +319,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 if (this.system.userManager.permissions.editUsers) {
                     this.gettingSystemUsers.run();
                 } else {
-                    this.systemReady();
+                    this.updateArchivesPresent();
                 }
             });
 
@@ -362,87 +354,97 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             this.systemInfoSubscription?.unsubscribe();
             this.systemSubscription.unsubscribe();
         }
-        this.systemSubscription = this.systemsService.systemsSubject.subscribe(systems => {
-            if (this.systemsService.userDisconnectSystem) {
-                // don't trigger this.systemNoAccess
-                this.systemsService.userDisconnectSystem = false;
-                return;
-            }
-            const system = systems.find(system => system.id === this.systemId);
-            if (system === undefined) {
-                this.systemNoAccess = true;
-                return;
-            }
-            if (this.systemId === this.system?.id) {
-                return;
-            }
-            this.settingsService.system = this.systemService.createSystem(
-                this.account.email,
-                this.route.snapshot.params.systemId,
-            );
-            this.system.show404 = false;
-            this.gettingSystem.run().catch(() => {
-                this.systemNoAccess = true;
-            });
+        this.systemSubscription = this.systemsService.systemsSubject
+            .pipe(untilDestroyed(this))
+            .subscribe(systems => {
+                if (this.systemsService.userDisconnectSystem) {
+                    // don't trigger this.systemNoAccess
+                    this.systemsService.userDisconnectSystem = false;
+                    return;
+                }
+                const system = systems.find(system => system.id === this.systemId);
+                if (system === undefined) {
+                    this.systemNoAccess = true;
+                    return;
+                }
+                if (this.systemId === this.system?.id) {
+                    return;
+                }
+                this.settingsService.system = this.systemService.createSystem(
+                    this.account.email,
+                    this.route.snapshot.params.systemId,
+                );
+                this.system.show404 = false;
+                this.gettingSystem.run().catch(() => {
+                    this.systemNoAccess = true;
+                });
 
-            if (this.systemInfoSubscription) {
-                this.systemInfoSubscription.unsubscribe();
-            }
-            this.systemInfoSubscription = this.system.infoSubject
-                .pipe(
-                    untilDestroyed(this),
-                    filter(system => system?.id === this.route.snapshot.params.systemId),
-                    tap(({ isOnline }) => {
-                        this.applyService.isOnline$.next(!!isOnline);
-                        if (isOnline) {
-                            this.ribbonService.hide();
-                        } else {
-                            firstValueFrom(this.system.mediaserver.ping()).catch(() => {
-                                this.ribbonService.show(
-                                    this.LANG.ribbon.systemOffline,
-                                    [],
-                                    'alert',
-                                    undefined,
-                                    true,
-                                );
-                            });
+                if (this.systemInfoSubscription) {
+                    this.systemInfoSubscription.unsubscribe();
+                }
+                this.systemInfoSubscription = this.system.infoSubject
+                    .pipe(
+                        untilDestroyed(this),
+                        filter(system => system?.id === this.route.snapshot.params.systemId),
+                        tap(({ isOnline }) => {
+                            this.applyService.isOnline$.next(!!isOnline);
+                            if (isOnline) {
+                                this.ribbonService.hide();
+                            } else {
+                                firstValueFrom(this.system.mediaserver.ping()).catch(() => {
+                                    this.ribbonService.show(
+                                        this.LANG.ribbon.systemOffline,
+                                        [],
+                                        'alert',
+                                        undefined,
+                                        true,
+                                    );
+                                });
+                            }
+                        }),
+                    )
+                    .subscribe(() => {
+                        // if system is removed while on page, redirects to systems page
+                        if (
+                            this.system &&
+                            this.systemsService.systems &&
+                            !this.systemsService.systems.some(
+                                system => system.id === this.system.id,
+                            ) &&
+                            !environment.isLocal
+                        ) {
+                            this.uriService.updateURI(
+                                this.CONFIG.featureFlags.dashboardRedirect ||
+                                    'beta' in this.route.snapshot.queryParams
+                                    ? '/dashboard'
+                                    : '/systems',
+                            );
                         }
-                    }),
-                )
-                .subscribe(() => {
-                    // if system is removed while on page, redirects to systems page
-                    if (
-                        this.system &&
-                        this.systemsService.systems &&
-                        !this.systemsService.systems.some(system => system.id === this.system.id) &&
-                        !environment.isLocal
-                    ) {
-                        this.uriService.updateURI(
-                            this.CONFIG.featureFlags.dashboardRedirect ||
-                                'beta' in this.route.snapshot.queryParams
-                                ? '/dashboard'
-                                : '/systems',
-                        );
-                    }
-                    if (this.system.isAvailable) {
-                        this.updateAlert();
-                    }
-                    if (this.system.userManager.canViewInfo()) {
-                        // Makes request to get health, this is used to cache request.
-                        this.system.mediaserver.getAggregateHealthReport().subscribe();
-                    }
+                        if (this.system.isAvailable) {
+                            this.updateAlert();
+                        }
+                        if (this.system.userManager.canViewInfo()) {
+                            // Makes request to get health, this is used to cache request.
+                            this.system.mediaserver
+                                .getAggregateHealthReport()
+                                .pipe(untilDestroyed(this))
+                                .subscribe();
+                        }
 
-                    this.updateMenu();
-                });
-            if (this.connectionSubscription) {
-                this.connectionSubscription.unsubscribe();
-            }
-            this.connectionSubscription = this.system.connectionSubject
-                .pipe(filter((connectionLost: boolean) => connectionLost))
-                .subscribe(_ => {
-                    this.connectionLost();
-                });
-        });
+                        this.updateMenu();
+                    });
+                if (this.connectionSubscription) {
+                    this.connectionSubscription.unsubscribe();
+                }
+                this.connectionSubscription = this.system.connectionSubject
+                    .pipe(
+                        filter((connectionLost: boolean) => connectionLost),
+                        untilDestroyed(this),
+                    )
+                    .subscribe(_ => {
+                        this.connectionLost();
+                    });
+            });
     }
 
     getSystemInfo(): void {
@@ -472,11 +474,16 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     });
                 }
 
-                this.system.infoSubject.pipe(untilDestroyed(this)).subscribe(() => {
-                    this.systemReady();
-                    this.updateAlert();
-                    this.updateMenu();
-                });
+                this.system.infoSubject
+                    // Not ideal to add a debounce here but we're currently updating infoSubject in several places.
+                    // This triggers the subscribe callback multiple times. It works without the debounce so
+                    // it's not crucial that debounce duration is correct for all cases.
+                    .pipe(debounceTime(100), untilDestroyed(this))
+                    .subscribe(() => {
+                        this.updateArchivesPresent();
+                        this.updateAlert();
+                        this.updateMenu();
+                    });
                 this.system.update();
             }
         });
@@ -486,73 +493,77 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         if (this.checkMergeSubscription) {
             this.checkMergeSubscription.unsubscribe();
         }
-        this.checkMergeSubscription = this.system.mediaserver.checkMergeStatus(true).subscribe({
-            next: res => {
-                const mergeInProgress = res?.reply?.mergeInProgress;
-                if (environment.isLocal) {
-                    if (
-                        !mergeInProgress &&
-                        this.system.isOnline &&
-                        !this.systemsService.checkMerge(this.system)
-                    ) {
-                        this.ribbonService.hide();
-                    }
-                } else {
-                    this.secondaryMerge = false;
-                    this.ribbonService.hide();
-                    let ribbonText: string;
-                    const { primary, secondary } = this.systemsService.systemsMerging || {};
-
-                    if (!this.system.isOnline) {
-                        firstValueFrom(this.system.mediaserver.ping()).catch(() => {
-                            this.ribbonService.show(
-                                this.LANG.ribbon.systemOffline,
-                                [],
-                                'alert',
-                                undefined,
-                                true,
-                            );
-                        });
-                    } else if (primary?.id === this.system.id) {
-                        const secondarySystem = this.systemsService.systems.find(
-                            system => secondary.id === system.id,
-                        );
-                        let secondaryName =
-                            secondarySystem?.name ||
-                            secondary?.name ||
-                            this.LANG.system.mergeUnknownName;
-                        if (secondaryName.startsWith('server at ')) {
-                            secondaryName = secondaryName[0].toUpperCase() + secondaryName.slice(1);
+        this.checkMergeSubscription = this.system.mediaserver
+            .checkMergeStatus(true)
+            .pipe(untilDestroyed(this))
+            .subscribe({
+                next: res => {
+                    const mergeInProgress = res?.reply?.mergeInProgress;
+                    if (environment.isLocal) {
+                        if (
+                            !mergeInProgress &&
+                            this.system.isOnline &&
+                            !this.systemsService.checkMerge(this.system)
+                        ) {
+                            this.ribbonService.hide();
                         }
-                        ribbonText = `<div class="my-1">
+                    } else {
+                        this.secondaryMerge = false;
+                        this.ribbonService.hide();
+                        let ribbonText: string;
+                        const { primary, secondary } = this.systemsService.systemsMerging || {};
+
+                        if (!this.system.isOnline) {
+                            firstValueFrom(this.system.mediaserver.ping()).catch(() => {
+                                this.ribbonService.show(
+                                    this.LANG.ribbon.systemOffline,
+                                    [],
+                                    'alert',
+                                    undefined,
+                                    true,
+                                );
+                            });
+                        } else if (primary?.id === this.system.id) {
+                            const secondarySystem = this.systemsService.systems.find(
+                                system => secondary.id === system.id,
+                            );
+                            let secondaryName =
+                                secondarySystem?.name ||
+                                secondary?.name ||
+                                this.LANG.system.mergeUnknownName;
+                            if (secondaryName.startsWith('server at ')) {
+                                secondaryName =
+                                    secondaryName[0].toUpperCase() + secondaryName.slice(1);
+                            }
+                            ribbonText = `<div class="my-1">
                                                 <div class="larger"><strong>${secondaryName}</strong> ${this.LANG.ribbon.beingMerged.to}</div>
                                                 <div class="mt-2">${this.LANG.ribbon.beingMerged.mayTake}</div>
                                             </div>`;
-                    } else if (secondary?.id === this.system.id) {
-                        this.mergeTargetSystem = this.systemsService.systems.find(
-                            system => primary.id === system.id,
-                        ) || { name: this.LANG.system.mergeUnknownName };
-                        this.secondaryMerge = true;
-                    } else if (mergeInProgress) {
-                        ribbonText = this.LANG.ribbon.systemsMerging;
-                    }
+                        } else if (secondary?.id === this.system.id) {
+                            this.mergeTargetSystem = this.systemsService.systems.find(
+                                system => primary.id === system.id,
+                            ) || { name: this.LANG.system.mergeUnknownName };
+                            this.secondaryMerge = true;
+                        } else if (mergeInProgress) {
+                            ribbonText = this.LANG.ribbon.systemsMerging;
+                        }
 
-                    if (ribbonText) {
-                        this.ribbonService.show(ribbonText, [], 'alert');
-                    }
+                        if (ribbonText) {
+                            this.ribbonService.show(ribbonText, [], 'alert');
+                        }
 
-                    setTimeout(() => {
-                        this.setHeaderHeight();
-                    });
-                }
-            },
-            error: err => {
-                console.error('err from checkMerge', err);
-                if (err.status === 502 && this.system?.mergeInfo?.role === 'slave') {
-                    this.currentSystemBeingMergedIntoAnotherSystem();
-                }
-            },
-        });
+                        setTimeout(() => {
+                            this.setHeaderHeight();
+                        });
+                    }
+                },
+                error: err => {
+                    console.error('err from checkMerge', err);
+                    if (err.status === 502 && this.system?.mergeInfo?.role === 'slave') {
+                        this.currentSystemBeingMergedIntoAnotherSystem();
+                    }
+                },
+            });
     }
 
     currentSystemBeingMergedIntoAnotherSystem() {
@@ -581,6 +592,13 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     async updateMenu(): Promise<void> {
+        const previousContent = await this.db.personal.menuContent.get(this.content.base);
+
+        if (previousContent) {
+            this.content = previousContent;
+            this.menuVisible = true;
+        }
+
         this.systemNoAccess = false;
 
         await Promise.allSettled([
@@ -854,12 +872,15 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             (this.mergeTargetSystem && this.mergeTargetSystem.id) || ''
         }`;
         this.mergeTargetSystem = undefined;
-        this.systemsService.getSystem(this.systemId, false).subscribe(system => {
-            this.systemNoAccess = system === undefined;
-            if (this.systemNoAccess) {
-                this.system.stopPoll();
-            }
-        });
+        this.systemsService
+            .getSystem(this.systemId, false)
+            .pipe(untilDestroyed(this))
+            .subscribe(system => {
+                this.systemNoAccess = system === undefined;
+                if (this.systemNoAccess) {
+                    this.system.stopPoll();
+                }
+            });
         setTimeout(() => this.router.navigate([route]), alertTimeout);
     }
 }
