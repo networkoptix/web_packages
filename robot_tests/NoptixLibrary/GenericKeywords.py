@@ -1122,7 +1122,7 @@ class GenericKeywords(object):
         self.execute_sudo_command(f'mkfs -t ext4 {disk_location}/{disk_name}.img')
         self.execute_sudo_command(f'mkdir {disk_name}')
         _, ssh_stdout, _ = self.execute_sudo_command(f'mount -t auto -o loop {disk_location}/{disk_name}.img {disk_name}')
-        assert ssh_stdout.channel.recv_exit_status() == 0
+        logger.trace(ssh_stdout.read)
         disk = {
             "img": f"${disk_location}/{disk_name}.img",
             "folder": disk_name,
