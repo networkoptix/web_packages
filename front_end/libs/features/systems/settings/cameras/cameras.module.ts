@@ -27,6 +27,7 @@ import { NxCamerasComponent } from './cameras.component';
 import {
     NxMotionDetectionOverlay
 } from './motion-detection-overlay/motion-detection-overlay.component';
+import { NxRecordingSettingsComponent } from './recording-settings/recording-settings.component';
 @NgModule({
     imports: [
         CommonModule,
@@ -57,7 +58,8 @@ import {
     ],
     declarations: [
         NxCamerasComponent,
-        NxMotionDetectionOverlay
+        NxMotionDetectionOverlay,
+        NxRecordingSettingsComponent,
     ],
     bootstrap: [
     ],

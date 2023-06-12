@@ -1,0 +1,92 @@
+@use "typography";
+@use "mixins";
+@use "theme_variables_common" as *;
+@use "src-variables/pages/cameras" as *;
+@use "bootstrap_utils" as bootstrap;
+
+.camera-settings-info {
+    font-family: $font-family-regular;
+    font-size: $font-size-base;
+    color: var(--card-header-text);
+
+    .grid-container {
+        display: grid;
+        grid-column-gap: .5rem;
+        grid-row-gap: .5rem;
+        grid-template-columns: max-content 240px;
+
+        @include bootstrap.media-breakpoint-down(sm) {
+            grid-template-columns: 1fr;
+        }
+
+        .grid-item {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+
+            @include bootstrap.media-breakpoint-down(sm) {
+                justify-content: flex-start;
+            }
+
+            @include bootstrap.media-breakpoint-down(xs) {
+                margin-bottom: 0 !important;
+
+                .error-span {
+                    padding-left: 0;
+                }
+            }
+        }
+
+        &-with-warning {
+            @extend .grid-container;
+            grid-template-columns: max-content 240px max-content;
+
+            @include bootstrap.media-breakpoint-down(xs) {
+                grid-template-columns: 1fr;
+            }
+
+            .grid-item {
+                white-space: nowrap;
+                justify-content: flex-start;
+            }
+        }
+    }
+}
+
+.recording-hint {
+    // do not use typography as we can't overwrite color with input-error
+    font-family: $font-family-regular;
+    font-size: $font-size-base;
+    color: var(--label-color);
+    margin: -8px 0 16px 64px;
+    pointer-events: none;
+    user-select: none;
+}
+
+.shake-hint {
+    animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+@keyframes shake {
+
+    10%,
+    90% {
+        transform: translate3d(-2px, 0, 0);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(3px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-5px, 0, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(5px, 0, 0);
+    }
+}

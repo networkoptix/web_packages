@@ -561,10 +561,9 @@ export class NxApplyService {
     }
 
     public setVisible(state?: boolean): void {
-        state = state === undefined ? true : state;
         if (this.applyComponentRef) {
             setTimeout(() => {
-                this.applyComponentRef.instance.applyVisible = state;
+                this.applyComponentRef.instance.applyVisible = state ?? true;
             }, 0);
         }
     }

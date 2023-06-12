@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, Inject, ViewContainerRef } from '@angular/core';
+import { Component, OnDestroy, OnInit, Inject, ViewContainerRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -61,11 +61,8 @@ import { cleanId } from '@utils/general';
 
 import { NxSettingsService } from '../settings.service';
 
-import type {
-    AspectRatioDropdownItem,
-    RotationDropdownItem,
-    QualityDropdownItem,
-} from './cameras.component.types';
+import type { AspectRatioDropdownItem, RotationDropdownItem } from './cameras.component.types';
+import { NxRecordingSettingsComponent } from './recording-settings/recording-settings.component';
 
 type SensitivityButtonValue = number | boolean | 'reset';
 
@@ -114,6 +111,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     private settingsSubscription: Subscription;
     private cameraSubscription: Subscription;
 
+    // TODO: Remove after Forms refactor
+    @ViewChild(NxRecordingSettingsComponent)
+    private recordingSettingsComponent!: NxRecordingSettingsComponent;
+
     private viewContainerRef: ViewContainerRef;
     system: NxSystem;
     parsedCameraId: string;
@@ -122,21 +123,16 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     fullInfoPath: string;
     cameraViewPath: string;
     private alerts: Alert[] = [];
-    private saveSettings: Process;
-    private various: QualityDropdownItem;
     aspectRatios: AspectRatioDropdownItem[];
     rotations: RotationDropdownItem[];
-    streamQualities: QualityDropdownItem[];
     warnings: string[] = [];
     errors: string[] = [];
     showUnauthorized = false;
     showOffline = false;
     showOverlay = false;
     showPreloader = true;
-    availableLicenses = 0;
     noCameras = false;
     sensitivityColors = new Array(10);
-    shakeHint = false;
     cameraDetailColumns: InfoBlockColumns;
     canSeeInfo = false;
     editMode = false;
@@ -155,10 +151,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     private selectedRotationWatcher = new Watcher<number>();
     private audioEnabledWatcher = new Watcher<boolean>();
     recordingWatcher = new Watcher<boolean>();
-    private recordingModesWatcher = new Watcher<RecordingModes[]>();
-    private selectedFpsWatcher = new Watcher<number | null>();
-    private selectedQualityWatcher = new Watcher<StreamQuality>();
-    private motionEnabledWatcher = new Watcher<MotionType>();
+    recordingModesWatcher = new Watcher<RecordingModes[]>();
+    selectedFpsWatcher = new Watcher<number | null>();
+    selectedQualityWatcher = new Watcher<StreamQuality>();
+    motionEnabledWatcher = new Watcher<MotionType>();
     motionMaskWatcher = new Watcher<string>();
 
     private get cameraName(): string {
@@ -171,8 +167,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     get previewWidth(): number {
         const height = 120;
-        const aspect = this.selectedAspect.value || ASPECT_RATIOS['16:9'];
-        const rotated = (this.selectedRotation.value ?? 0) % 180;
+        const aspect = this.selectedAspect?.value || ASPECT_RATIOS['16:9'];
+        const rotated = (this.selectedRotation?.value ?? 0) % 180;
         return rotated ? height / aspect : aspect * height;
     }
 
@@ -243,151 +239,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.audioEnabledWatcher.value = value;
     }
 
-    private get recordingSettingsChanged(): boolean {
-        return (
-            this.recordingModesWatcher.changed ||
-            this.selectedFpsWatcher.changed ||
-            this.selectedQualityWatcher.changed
-        );
-    }
-
-    get existingRecordingsScheduled(): boolean {
-        let type: string;
-        let fps: number;
-        let quality: string;
-        return (
-            !this.recordingSettingsChanged &&
-            this.selectedCamera.scheduleTasks.length &&
-            !this.selectedCamera.scheduleTasks.every(
-                ({ recordingType }) => recordingType === RecordingType.NEVER,
-            ) &&
-            !this.selectedCamera.scheduleTasks.every(
-                ({ recordingType, fps: currentFps, streamQuality }, index) => {
-                    if (index === 0) {
-                        type = recordingType;
-                        fps = currentFps;
-                        quality = streamQuality;
-                        return true;
-                    }
-                    return (
-                        recordingType === type && fps === currentFps && quality === streamQuality
-                    );
-                },
-            )
-        );
-    }
-
-    get recording(): boolean {
-        return this.recordingWatcher.value;
-    }
-
-    set recording(value: boolean) {
-        if (value === this.recording) {
-            return;
-        }
-
-        if (this.recordingWatcher.originalValue !== undefined) {
-            if (this.motionEnabled) {
-                this.enableMotion(true);
-            } else {
-                this.disableMotion();
-            }
-        }
-
-        this.recordingWatcher.value = value;
-    }
-
-    get recordingModes(): RecordingModes[] {
-        return this.recordingModesWatcher.value;
-    }
-
-    set recordingModes(value: RecordingModes[]) {
-        if (!this.selectedFps) {
-            this.selectedFps = this.selectedCamera.maxFps;
-        }
-
-        if (this.selectedQuality.value === 'various') {
-            this.selectedQuality = this.streamQualities[1]; // High
-        }
-        this.recordingModesWatcher.value = value;
-    }
-
-    get existingModesSelected(): boolean {
-        return this.recordingModes.some(({ value }) => value === 1);
-    }
-
-    private get safeToUpdateRecordingSettings(): boolean {
-        return (
-            !this.recordingSettingsChanged ||
-            !this.selectedCamera.scheduleTasks.length ||
-            this.selectedCamera.scheduleTasks.every(
-                ({ recordingType }) => recordingType === RecordingType.NEVER,
-            ) ||
-            (!this.variousQualities && !this.variousFps && !this.existingModesSelected)
-        );
-    }
-
-    get selectedFps(): number {
-        return this.selectedFpsWatcher.value;
-    }
-
-    set selectedFps(value: number | 'various') {
-        if (value === 'various') {
-            this.selectedFpsWatcher.value = null;
-        } else if (!value) {
-            this.selectedFpsWatcher.value = value;
-        } else {
-            this.selectedFpsWatcher.value = Math.min(value, this.selectedCamera.maxFps);
-        }
-    }
-
-    get variousFps(): boolean {
-        return this.selectedFps === null || !this.selectedFps;
-    }
-
-    get selectedQuality(): QualityDropdownItem {
-        return this.selectedQualityWatcher.value === 'various'
-            ? this.various
-            : this.streamQualities.find(
-                  ({ value: id }) => this.selectedQualityWatcher.value === id,
-              );
-    }
-
-    set selectedQuality(item: QualityDropdownItem) {
-        this.selectedQualityWatcher.value = item.value;
-    }
-
-    get variousQualities(): boolean {
-        return this.selectedQuality.value === this.various.value;
-    }
-
-    get motionEnabled(): boolean {
-        const motionEnabled = this.motionEnabledWatcher.value;
-        return motionEnabled && ![MotionType.NoMotion, MotionType.None].includes(motionEnabled);
-    }
-
-    set motionEnabled(enabled: boolean) {
-        let value: MotionType;
-        if (!enabled) {
-            value = MotionType.NoMotion;
-        } else if (
-            ![MotionType.NoMotion, MotionType.None].includes(
-                this.motionEnabledWatcher.originalValue,
-            )
-        ) {
-            value = this.motionEnabledWatcher.originalValue;
-        } else {
-            value = this.getSupportedMotion();
-        }
-        this.motionEnabledWatcher.value = value;
-
-        this.recordingModes = this.recordingModes.map(({ id, ...mode }) => ({
-            ...mode,
-            id,
-            enabled: this.checkModeEnabled(id),
-        }));
-    }
-
     private get motionMask(): string {
         return this.motionMaskWatcher.value;
     }
@@ -454,17 +305,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 }
             }
         });
-        this.settingsService.system.serverManager
-            .getLicenseChannels(this.settingsService.system.cameraManager.cameras)
-            .pipe(untilDestroyed(this))
-            .subscribe(
-                ({ available }) => {
-                    this.availableLicenses = available;
-                },
-                _ => {
-                    this.availableLicenses = 0;
-                },
-            );
 
         this.settingsSubscription = this.settingsService.systemSubject$
             .pipe(
@@ -508,7 +348,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                                     this.system.id +
                                     '/view/' +
                                     this.parsedCameraId;
-                                this.initUpdateProcess();
                             }
 
                             const camerasEqual = isEqual(prevCameras, res.cameraManager.cameras);
@@ -535,10 +374,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                         }
                     });
             });
-        this.initUpdateProcess();
         this.applyService.initPageWatcher(
             this.viewContainerRef,
-            this.saveSettings,
+            this.saveSettingsProcess,
             () => {
                 this.toggleMotionGrid();
                 this.motionMaskWatcher.reset = function () {
@@ -590,7 +428,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     // Update menu options after language is loaded
     private updateSelects(): void {
-        this.various = { name: this.LANG.common.resolution.various, value: 'various' };
         this.aspectRatios = [
             { name: this.LANG.common.resolution.auto, value: null },
             { name: '4:3', value: 1.33333 },
@@ -603,76 +440,70 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             { name: '180˚', value: 180 },
             { name: '270˚', value: 270 },
         ];
-        this.streamQualities = [
-            { name: this.LANG.common.resolution.best, value: 'highest' },
-            { name: this.LANG.common.resolution.high, value: 'high' },
-            { name: this.LANG.common.resolution.medium, value: 'normal' },
-            { name: this.LANG.common.resolution.low, value: 'low' },
-        ];
     }
 
-    // Process for apply service
-    private initUpdateProcess(): void {
-        this.saveSettings = this.processService.createProcess(
-            () => {
-                const newApi = this.system.serverManager.mediaserver instanceof NxSystemRestAPI;
-                if (!this.safeToUpdateRecordingSettings) {
-                    this.applyService.setWarn(this.LANG.common.recordingSettingsWarning);
-                    return Promise.reject();
-                }
+    private get saveSettingsProcess(): Process {
+        return this.processService.createProcess(this.saveSettings.bind(this), {
+            ignoreError: true,
+        });
+    }
 
-                let updatedTask: TaskUpdate;
-                if (this.recordingSettingsChanged) {
-                    const fps = !this.selectedFpsWatcher.value
-                        ? this.selectedFpsWatcher.originalValue
-                        : this.selectedFpsWatcher.value;
+    private saveSettings(): Promise<NxSystemCamera[]> {
+        const newApi = this.system.serverManager.mediaserver instanceof NxSystemRestAPI;
+        if (!this.recordingSettingsComponent.safeToUpdateRecordingSettings) {
+            this.applyService.setWarn(this.LANG.common.recordingSettingsWarning);
+            return Promise.reject();
+        }
 
-                    const allScheduled = this.recordingModesWatcher.value.find(
-                        ({ value }) => value === 2,
-                    )?.id;
-                    const alwaysType = newApi ? RecordingType.META_ALWAYS : RecordingType.ALWAYS;
-                    const recordingType = allScheduled || alwaysType;
+        let updatedTask: TaskUpdate;
+        if (this.recordingSettingsComponent.recordingSettingsChanged) {
+            const fps = !this.selectedFpsWatcher.value
+                ? this.selectedFpsWatcher.originalValue
+                : this.selectedFpsWatcher.value;
 
-                    const streamQuality =
-                        this.selectedQualityWatcher.value === 'various'
-                            ? null
-                            : this.selectedQualityWatcher.value;
+            const allScheduled = this.recordingModesWatcher.value.find(
+                ({ value }) => value === 2,
+            )?.id;
+            const alwaysType = newApi ? RecordingType.META_ALWAYS : RecordingType.ALWAYS;
+            const recordingType = allScheduled || alwaysType;
 
-                    updatedTask = { fps, recordingType, streamQuality };
-                }
+            const streamQuality =
+                this.selectedQualityWatcher.value === 'various'
+                    ? null
+                    : this.selectedQualityWatcher.value;
 
-                const cameraSettings: CameraUpdate = {
-                    id: this.selectedCamera.id,
-                    name: this.cameraNameWatcher.value,
-                    audioEnabled: this.audioEnabledWatcher.value,
-                    scheduleEnabled: this.recordingWatcher.value,
-                    motionType: this.motionType,
-                    motionMask: this.motionMaskWatcher.value || settingsConfig.defaultMotionMask,
-                };
-                const overrideAr =
-                    this.selectedAspectWatcher.value === this.selectedCamera.defaultRatio
-                        ? ''
-                        : this.selectedAspectWatcher.value.toString();
-                const rotation = this.selectedRotationWatcher.value.toString();
+            updatedTask = { fps, recordingType, streamQuality };
+        }
 
-                return Promise.all([
-                    this.system.cameraManager.updateRecordingSettings(updatedTask, cameraSettings),
-                    this.system.serverManager.updateResource(cameraSettings.id, {
-                        overrideAr,
-                        rotation,
-                    }),
-                ]).then(_ => {
-                    return this.system.cameraManager.getCameras().then(res => {
-                        this.setCamera();
-                        this.toggleMotionGrid();
-                        this.settingsService.system = this.system;
-                        this.system.systemInfo = this.system;
-                        return res;
-                    });
-                });
-            },
-            { ignoreError: true },
-        );
+        const cameraSettings: CameraUpdate = {
+            id: this.selectedCamera.id,
+            name: this.cameraNameWatcher.value,
+            audioEnabled: this.audioEnabledWatcher.value,
+            scheduleEnabled: this.recordingWatcher.value,
+            motionType: this.motionType,
+            motionMask: this.motionMaskWatcher.value || settingsConfig.defaultMotionMask,
+        };
+        const overrideAr =
+            this.selectedAspectWatcher.value === this.selectedCamera.defaultRatio
+                ? ''
+                : this.selectedAspectWatcher.value.toString();
+        const rotation = this.selectedRotationWatcher.value.toString();
+
+        return Promise.all([
+            this.system.cameraManager.updateRecordingSettings(updatedTask, cameraSettings),
+            this.system.serverManager.updateResource(cameraSettings.id, {
+                overrideAr,
+                rotation,
+            }),
+        ]).then(_ => {
+            return this.system.cameraManager.getCameras().then(res => {
+                this.setCamera();
+                this.toggleMotionGrid();
+                this.settingsService.system = this.system;
+                this.system.systemInfo = this.system;
+                return res;
+            });
+        });
     }
 
     updateCredentials(): void {
@@ -769,78 +600,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.sensitivityButtons = 'reset';
     }
 
-    private checkModeEnabled(id: RecordingType, enabled: boolean = this.motionEnabled): boolean {
-        return (
-            [RecordingType.META_ALWAYS, RecordingType.ALWAYS, RecordingType.NEVER].includes(id) ||
-            (id === RecordingType.META_LOW ? this.selectedCamera.motionLowResEnabled : enabled)
-        );
-    }
-
-    handleRecordingToggle(switchValue: boolean | undefined): void {
-        const needLic =
-            !this.recording && !this.recordingWatcher.originalValue
-                ? this.availableLicenses <= 0
-                : this.availableLicenses < 0;
-
-        // value will be undefined if switch is disabled
-        if ((switchValue || switchValue === undefined) && needLic) {
-            this.shakeHint = true;
-            setTimeout(() => {
-                this.shakeHint = false;
-            }, 500);
-            return;
-        }
-
-        this.recording = switchValue;
-    }
-
-    toggleMode({ name: toggledName, enabled }: RecordingModes): void {
-        if (!enabled) {
-            return;
-        }
-        this.recordingModes = this.recordingModes.map(({ name, id, enabled }) => ({
-            name,
-            id,
-            enabled: this.checkModeEnabled(id, enabled),
-            value: name === toggledName ? 2 : 0,
-        }));
-    }
-
     updateMask(maskString: string): void {
         this.motionMask = maskString;
-    }
-
-    disableMotion = (): void => {
-        this.motionEnabled = false;
-        this.recordingModes = this.recordingModes.map(({ name, id }) => {
-            const enabled = [RecordingType.META_ALWAYS, RecordingType.ALWAYS].includes(id);
-            const value = enabled ? 2 : 0;
-            return { name, id, enabled, value };
-        });
-    };
-
-    enableMotion = (updateModes = false): void => {
-        this.motionEnabled = true;
-        if (updateModes) {
-            this.recordingModes = this.recordingModes.map(({ name, id }) => {
-                const enabled = this.checkModeEnabled(id);
-                const value = [RecordingType.MOTION_ONLY, RecordingType.META_ONLY].includes(id)
-                    ? 2
-                    : 0;
-                return { name, id, enabled, value };
-            });
-        }
-    };
-
-    private getSupportedMotion(): MotionType {
-        const {
-            selectedCamera: {
-                addParams: { supportedMotion, motionStream },
-            },
-        } = this;
-        return supportedMotion === MotionType.HardwareGrid || motionStream === undefined
-            ? MotionType.HardwareGrid
-            : MotionType.SoftwareGrid;
     }
 
     private setCamera = async (forceUpdate = false): Promise<void> => {
@@ -948,11 +709,15 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 this.rotations[0];
             this.audioEnabled = audioEnabled;
             this.recordingModesWatcher.value = recordingSettings.modes;
-            this.selectedQuality =
-                recordingSettings.quality === 'various'
-                    ? this.various
-                    : this.streamQualities.find(({ value }) => recordingSettings.quality === value);
-            this.selectedFps = recordingSettings.fps;
+            setTimeout(() => {
+                this.recordingSettingsComponent.selectedQuality =
+                    recordingSettings.quality === 'various'
+                        ? this.recordingSettingsComponent.various
+                        : this.recordingSettingsComponent.streamQualities.find(
+                              ({ value }) => recordingSettings.quality === value,
+                          );
+                this.recordingSettingsComponent.selectedFps = recordingSettings.fps;
+            }, 0);
             this.recordingWatcher.value = recordingSettings.recording;
             this.motionType = motionType;
             this.motionMaskWatcher.originalValue = motionMask || settingsConfig.defaultMotionMask;

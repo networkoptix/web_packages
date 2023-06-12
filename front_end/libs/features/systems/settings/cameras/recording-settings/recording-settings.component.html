@@ -1,0 +1,147 @@
+<div>
+    <nx-block [header-style]="system.useRest ? '' : 'no-padding'">
+        <header>
+            <div class="d-flex align-items-center">
+                <ng-template #notAvailable>
+                    <h4 translate>Recording</h4>
+                </ng-template>
+                <div *ngIf="!system.useRest; else notAvailable">
+                    <nx-switch
+                        [checked]="recording"
+                        [label]="'Recording' | translate"
+                        id="recording"
+                        name="recording"
+                        [disabled]="
+                            !recording && !recordingWatcher.originalValue && availableLicenses <= 0
+                        "
+                        (onSwitch)="handleRecordingToggle($event)"
+                    ></nx-switch>
+                    <div
+                        *ngIf="!recording && !recordingWatcher.originalValue"
+                        class="recording-hint"
+                        [ngClass]="{
+                            'input-error': recordingWatcher.originalValue
+                                ? availableLicenses < 0
+                                : availableLicenses <= 0,
+                            'shake-hint': shakeHint
+                        }"
+                    >
+                        <ng-template #licenseRequired>
+                            <span translate>Professional license is required</span>
+                        </ng-template>
+                        <span
+                            *ngIf="availableLicenses > 0; else licenseRequired"
+                            translate
+                            >1 professional license channel will be used</span
+                        >
+                    </div>
+                </div>
+            </div>
+        </header>
+        <ng-container *ngIf="system.useRest">
+            <nx-open-client-section-placeholder
+                svgFileName="system_settings_placeholder"
+                width="64"
+                [system]="system"
+                [translatedMessage]="'Recording settings are not available.' | translate"
+            >
+            </nx-open-client-section-placeholder>
+        </ng-container>
+        <ng-container *ngIf="!system.useRest && recording">
+            <nx-section>
+                <h4
+                    class="mb-3"
+                    translate
+                >
+                    Mode
+                </h4>
+                <nx-radio
+                    *ngFor="let mode of recordingModes"
+                    class="d-flex pb-2"
+                    [name]="mode.name"
+                    [componentId]="mode.name"
+                    [value]="mode.value"
+                    [label]="LANG.common.recordingModes[mode.name]"
+                    [disabled]="!mode.enabled"
+                    [(ngModel)]="mode.value"
+                    (click)="toggleMode(mode)"
+                ></nx-radio>
+                <span
+                    *ngIf="!existingRecordingsScheduled && existingModesSelected"
+                    class="input-error"
+                    translate
+                    >Please select recording mode.</span
+                >
+                <span
+                    *ngIf="!motionEnabled"
+                    class="input-error"
+                    translate
+                    >Motion detection is disabled</span
+                >
+            </nx-section>
+            <nx-section *ngIf="!selectedCamera.isStream">
+                <h4
+                    class="mb-3"
+                    translate
+                >
+                    Quality
+                </h4>
+                <div class="grid-container-with-warning">
+                    <div class="grid-item mb-2">
+                        <span
+                            class="text-right"
+                            translate
+                            >FPS</span
+                        >
+                    </div>
+                    <div class="grid-item mb-2 mb-lg-0">
+                        <div style="width: 100%">
+                            <nx-numeric
+                                id="fps"
+                                name="fps"
+                                [class]="'pl-2'"
+                                [step]="1"
+                                [min]="1"
+                                [placeholder]="selectedCamera.maxFps || 15"
+                                [max]="selectedCamera.maxFps || 15"
+                                [(ngModel)]="selectedFps"
+                            >
+                            </nx-numeric>
+                        </div>
+                    </div>
+                    <div class="grid-item mb-2">
+                        <span
+                            *ngIf="!existingRecordingsScheduled && variousFps"
+                            class="input-error error-span col-8"
+                            translate
+                            >Please select FPS.</span
+                        >
+                    </div>
+                    <div class="grid-item">
+                        <span
+                            class="text-right"
+                            translate
+                            >Quality</span
+                        >
+                    </div>
+                    <div class="grid-item">
+                        <nx-select
+                            [selected]="selectedQuality"
+                            [(ngModel)]="selectedQuality"
+                            [items]="streamQualities"
+                            id="recording-quality"
+                        ></nx-select>
+                    </div>
+                    <div class="grid-item">
+                        <span
+                            *ngIf="!existingRecordingsScheduled && variousQualities"
+                            class="input-error error-span col-8"
+                            translate
+                            >Please select recording quality</span
+                        >
+                    </div>
+                </div>
+            </nx-section>
+        </ng-container>
+    </nx-block>
+</div>
