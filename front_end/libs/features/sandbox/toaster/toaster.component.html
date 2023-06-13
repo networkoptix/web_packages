@@ -81,10 +81,12 @@
         </nx-alert-block>
     </div>
     <div class="mt-3">
-        <h6>warning</h6>
+        <h6>warning w/ theme override (always dark)</h6>
         <nx-alert-block
             type="warning"
             id="warning"
+            class="theme-override"
+            data-theme="dark"
             [iconSrc]="icons.dirNonStandard + 'warning.svg'"
             [line1]="'Restarting'"
             [btnIconSrc]="icons.dirTextButtons + 'reload.svg'"
