@@ -1,3 +1,4 @@
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { HttpClient } from '@angular/common/http';
 import {
     Component,
@@ -19,9 +20,9 @@ import staticLang from '@common/language/language_i18n_static.json';
 // import { NxToastService } from '@dialogs/toast.service';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
-import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { MergeRefactored as DT } from '@dialogs/dialogs.types';
+import { ModalBase } from '@dialogs/modal-base';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { toast } from '@lib/variables/static-variables';
@@ -82,7 +83,7 @@ const stateProcesses = {
     styleUrls: ['merge.refactor.component.scss'],
     // encapsulation: ViewEncapsulation.None
 })
-export class NxMergeComponent implements OnInit, OnDestroy {
+export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG = staticLang;
     MergeState = MergeState;
@@ -212,15 +213,12 @@ export class NxMergeComponent implements OnInit, OnDestroy {
         // private cookieService: CookieService,
         private accountService: NxAccountService,
         private elem: ElementRef<HTMLElement>,
-        public dialogRef: DialogRef,
-        @Inject(DIALOG_DATA)
-        private dialogData: {
-            system: NxSystem;
-            systems: NxSystemInfo;
-        },
+        public dialogRef: DialogRef<DT['return']>,
+        @Inject(DIALOG_DATA) private dialogData: DT['data'],
         @Inject(WINDOW) public window: Window,
         @Inject(LOCALE_ID) private locale: string,
     ) {
+        super(dialogRef);
         this.CONFIG = configService.getConfig();
         this.cloudHost = this.CONFIG.cloudHost;
     }
@@ -245,30 +243,12 @@ export class NxMergeComponent implements OnInit, OnDestroy {
             this.setupUpdateWebadminSession(state);
         }
 
-        this.resetVariables();
-
+        this.checkedMergeabilityOnce = false;
         this.currentState = state;
 
         // if going back to 'select', used to reinitialize components to update system/systems
         // removed init() due to limited value and to reduce complexity
         // may revisit with subscriptions later
-    }
-
-    // TODO: flesh this out as needed
-    resetVariables(onClose: boolean = false): void {
-        // for when closing the dialog
-        if (onClose) {
-            this.remotePassword = undefined;
-            this.serverUrl = undefined;
-        }
-
-        // vars to reset when closing AND when switching between dialog states
-        this.checkedMergeabilityOnce = false;
-    }
-
-    close(msg?: DT['return']): void {
-        this.resetVariables(true);
-        this.dialogRef.close(msg);
     }
 
     // not sure how this is going to work for the generic component yet
@@ -381,12 +361,14 @@ export class NxMergeComponent implements OnInit, OnDestroy {
         this.selectSystemProcess = this.processService
             .createProcess(
                 () => {
+                    this.lock();
                     this.checking = true;
                     this.checkedMergeabilityOnce = true;
                     return this.preCheckSystemMerge();
                 },
                 { ignoreError: true },
                 res => {
+                    this.unlock();
                     this.checking = false;
                     if (res !== 'skip') {
                         this.checkedMergeabilityOnce = false;
@@ -412,6 +394,7 @@ export class NxMergeComponent implements OnInit, OnDestroy {
                     }
                 },
                 err => {
+                    this.unlock();
                     this.checking = false;
                     if (err.errorId === servers.errors.oldSessionErrorId) {
                         return this.showSessionExpiredAlert();
@@ -441,11 +424,12 @@ export class NxMergeComponent implements OnInit, OnDestroy {
                     // see if this is still an issue?
                     // this.serverUrlInputFocus ? this.serverUrlInputFocus.nativeElement.focus()
                     //     : this.mergeDropdown.dropdownToggleButton.nativeElement.focus();
-                },
+                }
             );
 
         this.adminPasswordProcess = this.processService
             .createProcess(() => {
+                this.lock();
                 // when trying again, does not have access to previous state template
                 if (!this.dryRunAvailable) {
                     this.selectSystemProcess.processing = false;
@@ -466,6 +450,7 @@ export class NxMergeComponent implements OnInit, OnDestroy {
                 errorCodes: { [this.wrongLogin]: 'potentialErrorString' }
             },
             res => {
+                this.unlock();
                 if (!res) {
                     return;
                 }
@@ -480,6 +465,7 @@ export class NxMergeComponent implements OnInit, OnDestroy {
                     this.adminPasswordErrorCode = errorCode;
                 }
             }, err => {
+                this.unlock();
                 if (err.error && err.error !== '0') {
                     this.adminPasswordErrorCode = this.system.useRest
                         ? MergeRestServerErrorCodes[err.error]
@@ -498,6 +484,7 @@ export class NxMergeComponent implements OnInit, OnDestroy {
 
         this.confirmMergeProcess = this.processService
             .createProcess(() => {
+                this.lock();
                 let password = this.confirmPassword;
 
                 if (this.environment.isLocal) {
@@ -544,6 +531,7 @@ export class NxMergeComponent implements OnInit, OnDestroy {
                 ignoreError: true
             }
             , res => {
+                this.unlock();
                 if (res.mergeInProgress || res.error === '0' || res.resultCode === this.LANG.errorCodes.ok) {
                     // handles telling the app which systems are getting merged and the proper messaging
                     if (this.isLocal) {
@@ -586,6 +574,7 @@ export class NxMergeComponent implements OnInit, OnDestroy {
                     this.handleMergeError(res);
                 }
             }, error => {
+                this.unlock();
                 if (error.errorString === this.wrongLogin) {
                     this.confirmMergeErrorCode = 'wrongPassword';
                     // this.confirmMergeInput.nativeElement.focus();

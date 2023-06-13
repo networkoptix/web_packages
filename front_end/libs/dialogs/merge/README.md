@@ -5,7 +5,7 @@ version testing:
     webadmin: check `5.2`
     cloud: check `4.2, 5.0, 5.1, 5.2`
 
-1. We'll need to convert this to use the CDK instead of the dialog overlay
+~~1. We'll need to convert this to use the CDK instead of the dialog overlay~~
 
 2. Test error codes. We want to move from `errorString` to `error` and make sure it's being mapped to the correct error message for both rest and legacy API. We'll use `MergeServerErrorCodes` and `MergeRestServerErrorCodes`, which are at the top of `merge.refactor.component.ts`. Eg:
     ```javascript

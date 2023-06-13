@@ -23,6 +23,7 @@ import type { LicenseManager } from '@services/system.service/license-manager/li
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/system-types';
 import type { NxUser } from '@services/system.service/user-manager/user-manager-types';
+import type { NxSystemInfo } from '@services/systems.service.types';
 
 import type { DialogRef } from './dialog-ref';
 import { MergeError, MergeInfo } from './merge/merge.refactor.component.types';
@@ -151,12 +152,19 @@ export type CreateSystemGroup = DialogType<
 export type ConnectLocalToCloud = DialogType<NxSystem, boolean>;
 export type Disconnect = DialogType<NxSystem, boolean>;
 export type RemoveSystem = DialogType<NxSystem, boolean>;
-export type MergeRefactored = DialogType<NxSystem, MergeInfo | MergeError>;
+
+interface MergeRefactorData {
+    system: NxSystem;
+    systems: NxSystemInfo[];
+}
+
+export type MergeRefactored = DialogType<MergeRefactorData, MergeInfo | MergeError>;
 
 interface Mandatory2faData {
     system: NxSystem;
     system2faEnabled: boolean;
 }
+
 export type Mandatory2fa = DialogType<Mandatory2faData, boolean>;
 
 export type TransferOwnership = DialogType<NxSystem, SystemTransferInfo>;

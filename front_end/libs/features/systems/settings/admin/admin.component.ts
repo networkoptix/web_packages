@@ -523,9 +523,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.currentlyMerging = true;
         this.updateSettings(this.currentlyMerging);
         this.settingsService.system = this.system;
-        // TODO: investigate how to switch from the dialog service instead
         const mergeDialog = this.CONFIG.featureFlags.mergeRefactorEnabled
-            ? this.dialogs.mergeRefactored(this.system, this.mergeTargetSystems)
+            ? this.dialogs.mergeRefactored({
+                  system: this.system,
+                  systems: this.mergeTargetSystems,
+              })
             : this.dialogs.merge(this.system, this.mergeTargetSystems);
         return mergeDialog
             .then(mergeInfo => {

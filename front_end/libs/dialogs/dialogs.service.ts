@@ -186,22 +186,6 @@ export class NxDialogsService extends DialogBase {
             .afterClosed();
     }
 
-    public async mergeRefactored(system: NxSystem, systems: NxSystemInfo[]): Promise<Dt.MergeRefactored['return']> {
-        const config: Partial<DialogConfig> = {
-            data: {
-                system,
-                systems,
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-
-        const component = await import('./merge/merge.refactor.component').then(m => m.NxMergeComponent);
-        return this.open(component, dialogConfig)
-            .afterClosed();
-    }
-
     public async resetBackupToDefaultSettings(
         system: NxSystem,
         setDefaultBackupSettings: () => Promise<any>
@@ -527,6 +511,10 @@ export class NxDialogsService extends DialogBase {
 
     bookmarkDetails = this.dialogV2Factory<Dt.BookmarkDetails>(
         () => import('./bookmarks/card-modal/bookmarks-card-modal.component').then(m => m.NxBookmarksCardModalComponent),
+    );
+
+    mergeRefactored = this.dialogV2Factory<Dt.MergeRefactored>(
+        () => import('./merge/merge.refactor.component').then(m => m.NxMergeComponent),
     );
 
     /* New feature */
