@@ -77,7 +77,7 @@ ${IPVD TABLE}                         //nx-ipvd//nx-table
 ${IPVD TABLE HEADING MANUFACTURER}    ${IPVD TABLE}/thead//div[text()='${IPVD ADV FILTER MFR}']
 ${IPVD TABLE HEADING LABEL SORT ARROW}    /../div[2]
 ${IPVD TABLE ROWS}                    ${IPVD TABLE}/tbody/tr[not(@class='table-row-spacer')]
-${IPVD TABLE FIRST ITEM}              ${IPVD TABLE}/tbody/tr[not(@class='table-row-spacer')][1]
+${IPVD TABLE FIRST ITEM}              ${IPVD TABLE}//div[contains(@class, 'big-row')]/div[contains(@style, "vendor")]/div
 ${IPVD TABLE LAST ITEM}               ${IPVD TABLE}/tbody/tr[not(@class='table-row-spacer')][last()]
 #IPVD Pagination
 ${IPVD PAGINATION}                    //ipvd//nx-paginator
@@ -88,7 +88,6 @@ ${IPVD NEXT PAGE BUTTON}              ${IPVD PAGINATION}/a[@id="paginator-next"]
 #IPVD Export
 ${IPVD EXPORT TO CSV LINK}            //ipvd//div[@class='export-button']/a[contains(text(), "${IPVD EXPORT TO CSV TEXT}")]
 #IPVD Feedback
-${IPVD SUBMIT A REQUEST LINK}        ${IPVD LANDING PAGE TEXT}//span[@id="request"]
 ${IPVD SUBMIT A REQUEST}              //nx-ipvd//span[contains(text(),"${IPVD SUBMIT A REQUEST TEXT}")]
 ${IPVD SEND DEVICE FEEDBACK}          //nx-ipvd//a[contains(text(),"${IPVD SEND DEVICE FEEDBACK TEXT}")]
 ${IPVD FEEDBACK}                      //nx-modal-message-content//form[@name='messageForm']

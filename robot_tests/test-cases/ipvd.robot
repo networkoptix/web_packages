@@ -15,7 +15,7 @@ Force Tags        Threaded
     Go To IPVD Page
 
 3. IPVD landing page actions
-    [Tags]    C48791    CLOUD-7598    ci    #smoke
+    [Tags]    C48791    CLOUD-7598    ci    smoke
     Log    Step 1 - Validate Landing Page Contents
     Go To IPVD Page
     Validate on IPVD Page
@@ -36,9 +36,9 @@ Force Tags        Threaded
     Wait Until Element Is Visible    ${IPVD TABLE}
     Run keyword and continue on failure    Element Text Should Be    ${IPVD FILTER BUTTON}
     ...    ${IPVD ADV FILTER MFR} – ${vendor}
-    Wait Until Element is Visible    ${IPVD TABLE FIRST ITEM}/td[1]
+    Wait Until Element is Visible    ${IPVD TABLE FIRST ITEM}
     
-    Element Text Should Be    ${IPVD TABLE FIRST ITEM}/td[1]    ${vendor}
+    Element Text Should Be    ${IPVD TABLE FIRST ITEM}    ${vendor}
     Validate Landing Page Objects are not Visible
 
     Log    Step 3
@@ -50,8 +50,8 @@ Force Tags        Threaded
     Sleep    5
     Run keyword and continue on failure    Element Text Should Be    ${IPVD FILTER BUTTON}
     ...    ${IPVD ADV FILTER TYPE} – ${IPVD ADV TYPE ENCODER}
-    Wait Until Element is Visible    ${IPVD TABLE FIRST ITEM}/td[3]
-    Element Text Should Be    ${IPVD TABLE FIRST ITEM}/td[3]    Encoder
+    Wait Until Element is Visible    ${IPVD TABLE FIRST ITEM}
+    Element Text Should Be    ${IPVD TABLE FIRST ITEM}/../../div[contains(@id, "hardwareType")]    Encoder
     Validate Landing Page Objects are not Visible
 
     Log    Step 5 - Back to the landing page
@@ -59,7 +59,7 @@ Force Tags        Threaded
     Validate on IPVD page
 
     Log    Step 6 - Verify IPVD feedback link opens correct dialog
-    Click Element    ${IPVD SUBMIT A REQUEST LINK}
+    Click Element    ${IPVD SUBMIT A REQUEST}
     Wait Until Element Is Visible    ${IPVD FEEDBACK}
 
 4. Text search correctly finds Manufacturers
