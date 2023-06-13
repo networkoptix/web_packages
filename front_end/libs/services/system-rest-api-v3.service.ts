@@ -45,7 +45,7 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
             cookieService,
             healthService,
             appState,
-            injector
+            injector,
         );
         this.version = 5.2;
     }
@@ -64,7 +64,10 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
     // }
 
     // saveUser
-    modifyUser(user: Partial<NxSystemUser>, id: string): Observable<NxSystemUser | t.User | ChangedIdReturned> {
+    modifyUser(
+        user: Partial<NxSystemUser>,
+        id: string,
+    ): Observable<NxSystemUser | t.User | ChangedIdReturned> {
         return this.patch(`/rest/v3/users/${id}`, user);
     }
 
@@ -84,7 +87,11 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
     //     reply: data
     // });
 
-    userWithGroupsObject(fullName: string, email: string, type: 'local' | 'cloud' = 'cloud'): Partial<t.User> {
+    userWithGroupsObject(
+        fullName: string,
+        email: string,
+        type: 'local' | 'cloud' = 'cloud',
+    ): Partial<t.User> {
         return {
             name: '',
             email,

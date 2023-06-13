@@ -46,7 +46,13 @@ import { startWithCache } from '@utils/start-with-cached';
 import { SECURITY_LEVEL } from '../../apps/setup-wizard/src/app/types/wizard-state.types';
 import { apiTool, servers } from '../variables/static-variables';
 
-import type { MediaserverRestConnection, RequestOpts, RequestParams, WithOptionalJson, WithResponseType } from './mediaserver-apis/connections/adapters/adapter-target-types';
+import type {
+    MediaserverRestConnection,
+    RequestOpts,
+    RequestParams,
+    WithOptionalJson,
+    WithResponseType,
+} from './mediaserver-apis/connections/adapters/adapter-target-types';
 import { assertTransaction } from './mediaserver-apis/connections/methods/transaction-bus/types/transactions';
 import { getServerInfoRestV1 } from './mediaserver-apis/endpoints/get-server-info';
 import { createLayoutRestV1 } from './mediaserver-apis/endpoints/layout/create-layout';
@@ -93,7 +99,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     readonly apiDocURL: object = {
         main: '/swagger-ui/openapi_v1.json',
         legacy: '/swagger-ui/openapi_legacy.json',
-        deprecated: '/swagger-ui/openapi_deprecated.json'
+        deprecated: '/swagger-ui/openapi_deprecated.json',
     };
 
     constructor(
@@ -146,12 +152,18 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     public get accessToken() {
-        return this.CONFIG.featureFlags.useAuthenticationInterceptor ? `${InterceptorManager.USE_SYSTEM_TOKEN}|${this.systemId}|${this.urlBase}/rest/v1/login/sessions/{accessToken}?setCookie=true` : this.sessionStorage.retrieve(this.cloudAccessTokenName);
+        return this.CONFIG.featureFlags.useAuthenticationInterceptor
+            ? `${InterceptorManager.USE_SYSTEM_TOKEN}|${this.systemId}|${this.urlBase}/rest/v1/login/sessions/{accessToken}?setCookie=true`
+            : this.sessionStorage.retrieve(this.cloudAccessTokenName);
     }
 
     public set accessToken(token) {
         const { accessToken, cloudAccessToken } = this.getTokens();
-        if (this.isSessionOauth && (accessToken || '').replace(InterceptorManager.USE_SYSTEM_TOKEN, '') && cloudAccessToken) {
+        if (
+            this.isSessionOauth &&
+            (accessToken || '').replace(InterceptorManager.USE_SYSTEM_TOKEN, '') &&
+            cloudAccessToken
+        ) {
             this.deleteToken(cloudAccessToken, accessToken).toPromise();
         }
         this.sessionStorage.clear(this.cloudAccessTokenName);
@@ -180,13 +192,13 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             settingsPreset: 'security',
             settings: systemSettings,
             local: {
-                password
+                password,
             },
             cloud: {
                 systemId: cloudSystemID,
                 authKey: cloudAuthKey,
-                owner
-            }
+                owner,
+            },
         };
 
         if (securityLevel === SECURITY_LEVEL.STANDARD) {
@@ -201,7 +213,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         const params: any = {
             grant_type: 'refresh_token',
             response_type: 'token',
-            refresh_token: refreshToken
+            refresh_token: refreshToken,
         };
 
         if (isSystem || remoteSystemId) {
@@ -224,25 +236,32 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             return this.accessToken;
         },
         () => false,
-        Infinity
+        Infinity,
     )
     public setAccessTokenAsCookie(): Observable<true | t.UserSession> {
         // Short circuit for new system, or if the token is already set as a cookie by the interceptor.
-        if (this.CONFIG.newSystem || !this.accessToken || this.accessToken.includes(InterceptorManager.USE_SYSTEM_TOKEN)) {
+        if (
+            this.CONFIG.newSystem ||
+            !this.accessToken ||
+            this.accessToken.includes(InterceptorManager.USE_SYSTEM_TOKEN)
+        ) {
             return of(true);
         }
         return this.get<t.UserSession>(
             `/rest/v1/login/sessions/${this.accessToken}?setCookie=true`,
-        ).pipe(catchError(e => {
-            const location = this.window.location;
-            if (!environment.isLocal &&
-                [401, 403, 422].includes(e.status) &&
-                location.href.includes(this.systemId)
-            ) {
-                location.reload();
-            }
-            throw e;
-        }));
+        ).pipe(
+            catchError(e => {
+                const location = this.window.location;
+                if (
+                    !environment.isLocal &&
+                    [401, 403, 422].includes(e.status) &&
+                    location.href.includes(this.systemId)
+                ) {
+                    location.reload();
+                }
+                throw e;
+            }),
+        );
     }
 
     public setTokens(tokens, isSystem) {
@@ -276,7 +295,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return this.http.post(
             `${host}/api/systems/revokeToken`,
             { token },
-            { headers: { Authorization: `Bearer ${cloudAccessToken}` } }
+            { headers: { Authorization: `Bearer ${cloudAccessToken}` } },
         );
     }
 
@@ -284,20 +303,33 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return request.pipe(
             mergeMap(
                 (
-                    error: { status: number; resultCode: string; error: { error: string; errorId: string }; url: string },
-                    attempt: number
+                    error: {
+                        status: number;
+                        resultCode: string;
+                        error: { error: string; errorId: string };
+                        url: string;
+                    },
+                    attempt: number,
                 ) => {
-                    if (attempt === 0 && error?.error?.errorId !== servers.errors.oldSessionErrorId) {
+                    if (
+                        attempt === 0 &&
+                        error?.error?.errorId !== servers.errors.oldSessionErrorId
+                    ) {
                         const storageService = this.storageService;
                         const refreshToken = storageService.refreshToken;
                         const errorId = error?.error?.errorId;
 
                         const isLoginRequest = error.url.includes('/rest/v1/login/sessions/');
-                        const isInvalidParamterError = error.status === 422 && errorId === servers.errors.invalidParameter;
-                        const isBadRequestError = error.status === 400 && errorId === servers.errors.badRequest;
+                        const isInvalidParamterError =
+                            error.status === 422 && errorId === servers.errors.invalidParameter;
+                        const isBadRequestError =
+                            error.status === 400 && errorId === servers.errors.badRequest;
 
-                        const expiredSession = isLoginRequest && (isInvalidParamterError || isBadRequestError);
-                        const authorizationError = !isLoginRequest && error.status >= 400 && error.status < 500 || error.resultCode === 'forbidden';
+                        const expiredSession =
+                            isLoginRequest && (isInvalidParamterError || isBadRequestError);
+                        const authorizationError =
+                            (!isLoginRequest && error.status >= 400 && error.status < 500) ||
+                            error.resultCode === 'forbidden';
 
                         if (error.status === 503) {
                             return of('');
@@ -313,13 +345,13 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                                     this.clearTokens();
                                     return throwError(error);
                                 }),
-                                switchMap(res => this.setTokens(res, true))
+                                switchMap(res => this.setTokens(res, true)),
                             );
                         }
                     }
                     return throwError(error);
-                }
-            )
+                },
+            ),
         );
     }
 
@@ -372,14 +404,17 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return headers;
     }
 
-    #getHeaders = (customHttpHeaders: Record<string, string>, url = '') => from(this.accessToken ? Promise.resolve(this.accessToken) : this.unauthorizedCallback(true)).pipe(map(() => this.buildHeader(customHttpHeaders, this.requiresToken(url))));
+    #getHeaders = (customHttpHeaders: Record<string, string>, url = '') =>
+        from(
+            this.accessToken ? Promise.resolve(this.accessToken) : this.unauthorizedCallback(true),
+        ).pipe(map(() => this.buildHeader(customHttpHeaders, this.requiresToken(url))));
 
     @useJsonRpc
     protected delete<ResponseType = any>(
         url: string,
         params?: Record<string, unknown>,
         customHttpHeaders: Record<string, unknown> = {},
-        requestTimeout = 60000
+        requestTimeout = 60000,
     ) {
         params = params || {};
 
@@ -388,14 +423,19 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         }
         const fullUrl = `${this.urlBase}${url}`;
         return this.#getHeaders(customHttpHeaders as Record<string, string>, url).pipe(
-            switchMap(headers => this.http.delete<ResponseType>(fullUrl, { headers, params: params as Record<string, string> })),
+            switchMap(headers =>
+                this.http.delete<ResponseType>(fullUrl, {
+                    headers,
+                    params: params as Record<string, string>,
+                }),
+            ),
             retryWhen(request => this.retryHandler(request)),
             timeout(requestTimeout),
             tap(undefined, error => {
                 if (environment.isLocal && error.name === 'TimeoutError') {
                     this.appState.systemAvailable$.next(false);
                 }
-            })
+            }),
         );
     }
 
@@ -405,15 +445,8 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     ): Observable<ArrayBuffer>;
     protected override get(url: string, opts: WithResponseType<'blob'>): Observable<Blob>;
     protected override get(url: string, opts: WithResponseType<'text'>): Observable<string>;
-    protected override get<T>(
-        url: string,
-        opts?: WithOptionalJson,
-    ): Observable<T>;
-    @memoizeAsync(
-        defaultHashFunction,
-        () => false,
-        1000
-    )
+    protected override get<T>(url: string, opts?: WithOptionalJson): Observable<T>;
+    @memoizeAsync(defaultHashFunction, () => false, 1000)
     @useJsonRpc
     protected override get(url: string, opts?: RequestOpts): Observable<unknown> {
         const {
@@ -426,7 +459,8 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         if (this.requiresWeb(url)) {
             url = `/web${url}`;
         }
-        const withCredentials = this.cookieLoginSupport &&
+        const withCredentials =
+            this.cookieLoginSupport &&
             url.includes('/rest/v1/login/sessions') &&
             url.includes('?setCookie=true');
         const fullUrl = `${this.urlBase}${url}`;
@@ -443,9 +477,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                 } else if (responseType === 'text') {
                     request = this.http.get(fullUrl, { ...otherOpts, responseType });
                 }
-                return request.pipe(
-                    startWithCache(fullUrl, { ...otherOpts, responseType })
-                );
+                return request.pipe(startWithCache(fullUrl, { ...otherOpts, responseType }));
             }),
             retryWhen(request => this.retryHandler(request)),
             timeout(requestTimeout),
@@ -453,7 +485,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                 if (environment.isLocal && error.name === 'TimeoutError') {
                     this.appState.systemAvailable$.next(false);
                 }
-            })
+            }),
         );
     }
 
@@ -463,7 +495,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         data?: any,
         paramsToAdd = {},
         customHeaders = {},
-        customTimeout = 60000
+        customTimeout = 60000,
     ) {
         data = data || {};
 
@@ -474,12 +506,11 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
 
         url = `${this.urlBase}${url}`;
 
-        return this.#getHeaders(customHeaders, url)
-            .pipe(
-                switchMap(headers => this.http.post<ResponseType>(url, data, { params, headers })),
-                retryWhen(request => this.retryHandler(request)),
-                timeout(customTimeout)
-            );
+        return this.#getHeaders(customHeaders, url).pipe(
+            switchMap(headers => this.http.post<ResponseType>(url, data, { params, headers })),
+            retryWhen(request => this.retryHandler(request)),
+            timeout(customTimeout),
+        );
     }
 
     @useJsonRpc
@@ -487,7 +518,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         url: string,
         data?: Record<string, unknown>,
         paramsToAdd: Record<string, unknown> = {},
-        customTimeout = 60000
+        customTimeout = 60000,
     ) {
         data = data || {};
 
@@ -502,12 +533,11 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
 
         url = `${this.urlBase}${url}`;
 
-        return this.#getHeaders({}, url)
-            .pipe(
-                switchMap(headers => this.http.put<ResponseType>(url, data, { params, headers })),
-                retryWhen(request => this.retryHandler(request)),
-                timeout(customTimeout)
-            );
+        return this.#getHeaders({}, url).pipe(
+            switchMap(headers => this.http.put<ResponseType>(url, data, { params, headers })),
+            retryWhen(request => this.retryHandler(request)),
+            timeout(customTimeout),
+        );
     }
 
     @useJsonRpc
@@ -515,7 +545,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         url: string,
         data?: Record<string, unknown>,
         paramsToAdd: Record<string, unknown> = {},
-        customTimeout = 60000
+        customTimeout = 60000,
     ) {
         data = data || {};
 
@@ -530,37 +560,36 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
 
         url = `${this.urlBase}${url}`;
 
-        return this.#getHeaders({}, url)
-            .pipe(
-                switchMap(headers => this.http.patch<ResponseType>(url, data, { params, headers })),
-                retryWhen(request => this.retryHandler(request)),
-                timeout(customTimeout)
-            );
+        return this.#getHeaders({}, url).pipe(
+            switchMap(headers => this.http.patch<ResponseType>(url, data, { params, headers })),
+            retryWhen(request => this.retryHandler(request)),
+            timeout(customTimeout),
+        );
     }
 
-    @memoizeAsync(
-        defaultHashFunction,
-        forceReload => !!forceReload,
-        10 * 1000
-    )
+    @memoizeAsync(defaultHashFunction, forceReload => !!forceReload, 10 * 1000)
     public getCurrentUser(forceReload?: boolean): Promise<t.ec2User | t.CurrentUser> {
         let customHeaders: RequestOpts['customHeaders'];
-        if (forceReload) { // Clean cache to
+        if (forceReload) {
+            // Clean cache to
             this.currentUser = undefined;
             this.userRequest = undefined;
             customHeaders = { 'reset-cache': 'reset' };
         }
-        if (this.currentUser) { // We have user - return him right away
+        if (this.currentUser) {
+            // We have user - return him right away
             return Promise.resolve(this.currentUser);
         }
-        if (this.userRequest) { // Currently requesting user
+        if (this.userRequest) {
+            // Currently requesting user
             return this.userRequest;
         }
 
         if (this.userEmail) {
             const endpoint = '/ec2/getUsers';
             this.cacheService.addToCache(endpoint);
-            this.userRequest = this.get<t.ec2User[]>(endpoint, { customHeaders }).toPromise()
+            this.userRequest = this.get<t.ec2User[]>(endpoint, { customHeaders })
+                .toPromise()
                 .then(result => {
                     this.currentUser = result.find(user => {
                         return user.name.toLowerCase() === this.userEmail.toLowerCase();
@@ -569,21 +598,22 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                 });
         } else if (environment.isLocal && !this.CONFIG.newSystem) {
             const endpoint = `/rest/v1/login/sessions/${this.accessToken || 'current'}`;
-            this.userRequest = this
-                .get<t.UserSession>(endpoint, { customHeaders })
+            this.userRequest = this.get<t.UserSession>(endpoint, { customHeaders })
                 .toPromise()
                 .then(result => {
                     if (!this.accessToken) {
                         this.#vmsToken = result.token;
                     }
-                    return this.get<t.CurrentUser[]>(
-                        '/rest/v1/users', { params: { name: result.username } }
-                    ).toPromise();
-                }).then(result => {
+                    return this.get<t.CurrentUser[]>('/rest/v1/users', {
+                        params: { name: result.username },
+                    }).toPromise();
+                })
+                .then(result => {
                     // Todo: convert result to match getCurrentUser result.
                     this.currentUser = result[0];
                     return this.currentUser;
-                }).catch(err => {
+                })
+                .catch(err => {
                     // Unknown session token
                     if (err.errorId === 'cantProcessRequest') {
                         this.accessToken = '';
@@ -604,8 +634,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     public checkIfConnectedToServer(serverId: string): Observable<boolean> {
-        return this.getCurrentServerInfo()
-            .pipe(map(data => data.id === serverId));
+        return this.getCurrentServerInfo().pipe(map(data => data.id === serverId));
     }
 
     public isSessionFresh() {
@@ -615,19 +644,23 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return this.get<t.UserSession>(`/rest/v1/login/sessions/${this.accessToken}`).pipe(
             switchMap(res => {
                 return of(res.ageS < this.sessionFreshnessSec);
-            }));
+            }),
+        );
     }
 
     loginToken(username: string, password: string, remember: boolean): Observable<t.UserSession> {
-        return this.post(
-            '/rest/v1/login/sessions',
-            { username, password, setCookie: remember }
-        ).pipe(map(data => {
-            if (remember) {
-                this.setVmsToken(data.token);
-            }
-            return data;
-        }));
+        return this.post('/rest/v1/login/sessions', {
+            username,
+            password,
+            setCookie: remember,
+        }).pipe(
+            map(data => {
+                if (remember) {
+                    this.setVmsToken(data.token);
+                }
+                return data;
+            }),
+        );
     }
 
     loginTokenUrl(token: string): Observable<any> {
@@ -638,25 +671,24 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         const params = {
             code,
             grant_type: 'authorization_code',
-            response_type: 'token'
+            response_type: 'token',
         };
-        return this.http.get(`${this.CONFIG.cloudHost}/oauth/token/`, { params })
-            .pipe(
-                switchMap(tokens => {
-                    if (skipSetting) {
-                        return of(tokens);
-                    }
-                    return this.setTokens(tokens, false).pipe(
-                        switchMap(() =>
-                            // @ts-expect-error
-                            this.refreshTokens(tokens.refresh_token, true)
-                        )
-                    );
-                }),
-                tap(systemTokens => {
-                    !skipSetting && this.setTokens(systemTokens, true).subscribe(() => { });
-                })
-            );
+        return this.http.get(`${this.CONFIG.cloudHost}/oauth/token/`, { params }).pipe(
+            switchMap(tokens => {
+                if (skipSetting) {
+                    return of(tokens);
+                }
+                return this.setTokens(tokens, false).pipe(
+                    switchMap(() =>
+                        // @ts-expect-error
+                        this.refreshTokens(tokens.refresh_token, true),
+                    ),
+                );
+            }),
+            tap(systemTokens => {
+                !skipSetting && this.setTokens(systemTokens, true).subscribe(() => {});
+            }),
+        );
     }
 
     async redirectOauth(allSystems?: boolean): Promise<void> {
@@ -668,7 +700,10 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             client_id: 'webadmin',
             response_type: 'code',
             grant_type: 'password',
-            scope: `${this.CONFIG.cloudHost.replace(/http?s:\/\//, '')}/cdb/oauth2/token cloudSystemId=${allSystems ? '*' : this.CONFIG.cloudSystemId}`
+            scope: `${this.CONFIG.cloudHost.replace(
+                /http?s:\/\//,
+                '',
+            )}/cdb/oauth2/token cloudSystemId=${allSystems ? '*' : this.CONFIG.cloudSystemId}`,
         });
         this.window.location.href = `${this.CONFIG.cloudHost}/authorize?${params.toString()}`;
     }
@@ -680,18 +715,26 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             // Generate new tokens if they are missing
             if (!accessToken) {
                 // eslint-disable-next-line camelcase
-                accessToken = await this.refreshTokens(refreshToken, true).toPromise()?.access_token;
+                accessToken = await this.refreshTokens(refreshToken, true).toPromise()
+                    ?.access_token;
             }
             if (!cloudAccessToken) {
                 // eslint-disable-next-line camelcase
-                cloudAccessToken = await this.refreshTokens(refreshToken, false).toPromise()?.access_token;
+                cloudAccessToken = await this.refreshTokens(refreshToken, false).toPromise()
+                    ?.access_token;
             }
-            cloudLogoutObservable = this.http.post(`${this.CONFIG.cloudHost}/oauth/logout/`, { accessToken, cloudAccessToken, refreshToken });
+            cloudLogoutObservable = this.http.post(`${this.CONFIG.cloudHost}/oauth/logout/`, {
+                accessToken,
+                cloudAccessToken,
+                refreshToken,
+            });
         }
-        return cloudLogoutObservable.pipe(
-            map(() => this.delete(`/rest/v1/login/sessions/${accessToken || this.#vmsToken}`)),
-            map(() => this.clearTokens())
-        ).toPromise();
+        return cloudLogoutObservable
+            .pipe(
+                map(() => this.delete(`/rest/v1/login/sessions/${accessToken || this.#vmsToken}`)),
+                map(() => this.clearTokens()),
+            )
+            .toPromise();
     }
 
     @memoizeAsyncPersistent
@@ -706,18 +749,23 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
 
     @memoizeAsyncPersistent
     getAPIToolManifest(): Promise<MenuManifest> {
-        return this.get<MenuManifest>('/static/openapi_manifest.json').toPromise()
+        return this.get<MenuManifest>('/static/openapi_manifest.json')
+            .toPromise()
             .catch(() => apiTool.defaultManifest);
     }
 
     @memoizeAsyncPersistent
     getApiChangelog(): Promise<string> {
-        return this.http.get(`${this.urlBase}/web/static/api_changelog.md`, { responseType: 'text' }).toPromise();
+        return this.http
+            .get(`${this.urlBase}/web/static/api_changelog.md`, { responseType: 'text' })
+            .toPromise();
     }
 
     @memoizeAsyncPersistent
     getApiPreamble(): Promise<string> {
-        return this.http.get(`${this.urlBase}/web/static/api_preamble.md`, { responseType: 'text' }).toPromise();
+        return this.http
+            .get(`${this.urlBase}/web/static/api_preamble.md`, { responseType: 'text' })
+            .toPromise();
     }
 
     protected updateSystemSettings$ = new BehaviorSubject('');
@@ -731,19 +779,28 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     protected getSystemSettingsHandler() {
         return this.updateSystemSettings$.pipe(
             throttleTime(1000),
-            switchMap(() => this.get(
-                '/rest/v1/system/settings',
-                { params: { _keepDefault: true } }
-            )),
-            retry(3)
+            switchMap(() =>
+                this.get('/rest/v1/system/settings', { params: { _keepDefault: true } }),
+            ),
+            retry(3),
         );
     }
 
     updateOrGetSettings(updateParams: Partial<t.Settings> = {}) {
-        return (Object.keys(updateParams).length > 0
-            ? this.patch('/rest/v1/system/settings', updateParams)
-            : this.getSystemSettingsHandler()
-        ).pipe(map(data => <t.NormalResponse<t.SystemSettings>>({ error: '0', errorString: '', reply: { settings: data } })));
+        return (
+            Object.keys(updateParams).length > 0
+                ? this.patch('/rest/v1/system/settings', updateParams)
+                : this.getSystemSettingsHandler()
+        ).pipe(
+            map(
+                data =>
+                    <t.NormalResponse<t.SystemSettings>>{
+                        error: '0',
+                        errorString: '',
+                        reply: { settings: data },
+                    },
+            ),
+        );
     }
 
     getMediaServers(useCache: boolean): Observable<ServerPreprocess[]> {
@@ -752,25 +809,23 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             _keepDefault: true,
             _with: t.getRestServerKeys.toString(),
         };
-        return this.get<t.RestServerPartial[]>(
-            endpoint,
-            {
-                params,
-                customHeaders: this.cacheHeader(useCache),
-            }
-        ).pipe(
+        return this.get<t.RestServerPartial[]>(endpoint, {
+            params,
+            customHeaders: this.cacheHeader(useCache),
+        }).pipe(
             map(res => {
                 const servers = res.map<t.RestServerPartialCompat>(server => {
                     return {
                         ...server,
                         networkAddresses: server.endpoints.join(';'),
-                        osInfo: typeof server.osInfo !== 'string'
-                            ? JSON.stringify(server.osInfo)
-                            : server.osInfo,
+                        osInfo:
+                            typeof server.osInfo !== 'string'
+                                ? JSON.stringify(server.osInfo)
+                                : server.osInfo,
                     };
                 });
                 return servers;
-            })
+            }),
         );
     }
 
@@ -780,52 +835,57 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             _keepDefault: true,
             _with: withKeyMap(t.getRestCameraKeys),
         };
-        return this.get<t.GetRestCamera[]>(
-            endpoint,
-            { params }
-        ).pipe(
-            map(cameras => cameras
-                .map(({ schedule, serverId, ...rest }) => ({
-                    ...rest,
-                    scheduleEnabled: schedule.isEnabled,
-                    parentId: serverId,
-                }) as t.RestCamera)
-            )
+        return this.get<t.GetRestCamera[]>(endpoint, { params }).pipe(
+            map(cameras =>
+                cameras.map(
+                    ({ schedule, serverId, ...rest }) =>
+                        ({
+                            ...rest,
+                            scheduleEnabled: schedule.isEnabled,
+                            parentId: serverId,
+                        } as t.RestCamera),
+                ),
+            ),
         );
     }
     getMediaServersAndCameras(): Observable<t.ServersAndCameras> {
         const servers = this.getMediaServers(false) as Observable<t.RestServerPartialCompat[]>;
         const cameras = this.get<t.ec2CameraEx[]>('/ec2/getCamerasEx');
-        return combineLatest<[t.RestServerPartialCompat[], t.ec2CameraEx[]]>([servers, cameras])
-            .pipe(
-                map<[t.RestServerPartialCompat[], t.ec2CameraEx[]], t.ServersAndCameras>(([mediaServers, cameras]) => ({
+        return combineLatest<[t.RestServerPartialCompat[], t.ec2CameraEx[]]>([
+            servers,
+            cameras,
+        ]).pipe(
+            map<[t.RestServerPartialCompat[], t.ec2CameraEx[]], t.ServersAndCameras>(
+                ([mediaServers, cameras]) => ({
                     error: '0',
                     errorId: 'ok',
                     errorString: '',
                     reply: {
                         '/ec2/getMediaServers': mediaServers,
-                        'ec2/getCamerasEx': cameras
-                    }
-                })));
+                        'ec2/getCamerasEx': cameras,
+                    },
+                }),
+            ),
+        );
     }
 
     updateSystemServersCameras(): Observable<t.CameraManagerRestUpdate> {
-        const routes = [
-            '/api/moduleInformation',
-            '/ec2/getMediaServers',
-            'ec2/getTimeOfServers'
-        ];
-        const aggregator = this.getRequestAggregator<t.CameraManagerUpdateRestResp>(routes)
-            .pipe(
-                map(({ reply }) => ({
-                    moduleInfo: reply['/api/moduleInformation'].reply,
-                    servers: reply['/ec2/getMediaServers'],
-                    serverTimes: reply['ec2/getTimeOfServers'].reply
-                }))
-            );
+        const routes = ['/api/moduleInformation', '/ec2/getMediaServers', 'ec2/getTimeOfServers'];
+        const aggregator = this.getRequestAggregator<t.CameraManagerUpdateRestResp>(routes).pipe(
+            map(({ reply }) => ({
+                moduleInfo: reply['/api/moduleInformation'].reply,
+                servers: reply['/ec2/getMediaServers'],
+                serverTimes: reply['ec2/getTimeOfServers'].reply,
+            })),
+        );
 
         return combineLatest([aggregator, this.getCameras()]).pipe(
-            map(([{ moduleInfo, servers, serverTimes }, cameras]) => ({ moduleInfo, servers, serverTimes, cameras }))
+            map(([{ moduleInfo, servers, serverTimes }, cameras]) => ({
+                moduleInfo,
+                servers,
+                serverTimes,
+                cameras,
+            })),
         );
     }
 
@@ -834,7 +894,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return this.post(backupEndpoint, {
             caption: action,
             backupNewCameras: true,
-            quality: 'CameraBackupBoth'
+            quality: 'CameraBackupBoth',
         }).toPromise();
     }
 
@@ -847,7 +907,8 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     disconnectFromCloud(): Promise<void> {
-        return this.post('/rest/v1/system/cloudUnbind', { password: '' }).toPromise()
+        return this.post('/rest/v1/system/cloudUnbind', { password: '' })
+            .toPromise()
             .then(() => {
                 if (this.isSessionOauth) {
                     this.clearTokens();
@@ -867,10 +928,11 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return this.mergeUpdater$.pipe(
             throttleTime(10 * 1000),
             filter(force => force === forceReload),
-            switchMap(() => this.get<t.MergeStatus>(
-                '/rest/v1/system/merge',
-                { customHeaders: this.cacheHeader(!forceReload) }
-            ))
+            switchMap(() =>
+                this.get<t.MergeStatus>('/rest/v1/system/merge', {
+                    customHeaders: this.cacheHeader(!forceReload),
+                }),
+            ),
         );
     }
 
@@ -884,12 +946,10 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         remoteServerId: string,
         dryRun: boolean,
         password = '',
-        takeRemoteSettings = true
+        takeRemoteSettings = true,
     ) {
         const [basicCredentials, _] = remoteEndpoint.includes('@') ? remoteEndpoint.split('@') : [];
-        remoteEndpoint = remoteEndpoint
-            .replace(/https?:\/\/(?:.*@)?/, '')
-            .replace(/\/$/, '');
+        remoteEndpoint = remoteEndpoint.replace(/https?:\/\/(?:.*@)?/, '').replace(/\/$/, '');
         const request = remoteServerId
             ? of({ id: remoteServerId, cloudSystemId: '' })
             : this.proxy('get', 'https', remoteEndpoint, 'rest/v1/servers/this/info', {});
@@ -908,17 +968,27 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                     // Using oauth and target system is connected to cloud.
                     if (info.cloudSystemId && refreshToken) {
                         // Request for a cloud token that has the targetSystem scope.
-                        return this.refreshTokens(refreshToken, true, info.cloudSystemId)
-                            .pipe(map((res: any) => ({ token: res.access_token })));
+                        return this.refreshTokens(refreshToken, true, info.cloudSystemId).pipe(
+                            map((res: any) => ({ token: res.access_token })),
+                        );
                     } else if (password || basicCredentials) {
                         if (!password && basicCredentials) {
-                            const [_, basicPassword] = basicCredentials.replace(/https?:\/\//, '').split(':');
+                            const [_, basicPassword] = basicCredentials
+                                .replace(/https?:\/\//, '')
+                                .split(':');
                             if (basicPassword) {
                                 password = basicPassword;
                             }
                         }
                         const data = { username: 'admin', password, remember: false };
-                        return this.proxy('post', 'https', remoteEndpoint, 'rest/v1/login/sessions', data, true);
+                        return this.proxy(
+                            'post',
+                            'https',
+                            remoteEndpoint,
+                            'rest/v1/login/sessions',
+                            data,
+                            true,
+                        );
                     }
                 }
                 return of(info);
@@ -935,17 +1005,18 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                     // remoteCertificatePem          : '', // Currently optional.
                     mergeOneServer: false,
                     ignoreIncompatible: false,
-                    ignoreOfflineServerDuplicates: true
+                    ignoreOfflineServerDuplicates: true,
                 };
-                return this.post<t.MergeSystems>('/rest/v1/system/merge', data, undefined, { 'Accept-Language': 'en-US' });
-            })
+                return this.post<t.MergeSystems>('/rest/v1/system/merge', data, undefined, {
+                    'Accept-Language': 'en-US',
+                });
+            }),
         );
     }
 
     restartServer(serverId?: string) {
-        return this.post<t.RestartServer>(
-            `/rest/v1/servers/${serverId || 'this'}/restart `
-        ).toPromise()
+        return this.post<t.RestartServer>(`/rest/v1/servers/${serverId || 'this'}/restart `)
+            .toPromise()
             .catch(err => Promise.reject(err));
     }
 
@@ -956,14 +1027,13 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     saveCloudSystemCredentials(
         cloudSystemID: string,
         cloudAuthKey: string,
-        cloudAccountName: string
+        cloudAccountName: string,
     ) {
-        return this.post('/rest/v1/system/cloudBind',
-            {
-                systemId: cloudSystemID,
-                authKey: cloudAuthKey,
-                owner: cloudAccountName
-            });
+        return this.post('/rest/v1/system/cloudBind', {
+            systemId: cloudSystemID,
+            authKey: cloudAuthKey,
+            owner: cloudAccountName,
+        });
     }
 
     setupCloudSystem(
@@ -971,14 +1041,14 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         cloudSystemID: string,
         cloudAuthKey: string,
         cloudAccountName: string,
-        systemSettings: Partial<t.SystemConfigSettings>
+        systemSettings: Partial<t.SystemConfigSettings>,
     ) {
         return this.setupSystem(
             systemName,
             systemSettings,
             cloudSystemID,
             cloudAuthKey,
-            cloudAccountName
+            cloudAccountName,
         );
     }
 
@@ -999,31 +1069,26 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         );
     }
 
-    getBookmarks(params: t.BookmarksParams = {
-        order: 'desc',
-        column: 'creationTime',
-        _keepDefault: true,
-        _orderBy: 'creationTimeMs',
-    }): Observable<t.Bookmark[]> {
+    getBookmarks(
+        params: t.BookmarksParams = {
+            order: 'desc',
+            column: 'creationTime',
+            _keepDefault: true,
+            _orderBy: 'creationTimeMs',
+        },
+    ): Observable<t.Bookmark[]> {
         return this.get('/rest/v1/devices/*/bookmarks', { params });
     }
 
-    getBookmarkTags(
-        params: t.BookmarksTagsParams = {}
-    ): Observable<t.BookmarksTags> {
-        return this.get(
-            '/rest/v1/devices/*/bookmarks/*/tags',
-            { params: params as RequestParams }
-        );
+    getBookmarkTags(params: t.BookmarksTagsParams = {}): Observable<t.BookmarksTags> {
+        return this.get('/rest/v1/devices/*/bookmarks/*/tags', { params: params as RequestParams });
     }
 
     changePassword(cameraId: string, user: string, password: string): Observable<unknown> {
         return this.post(`/rest/v1/devices/${cameraId}/changePassword`, { user, password });
     }
 
-    getDevices(
-        params: t.DevicesParams = {}
-    ): Observable<t.Device[]> {
+    getDevices(params: t.DevicesParams = {}): Observable<t.Device[]> {
         return this.get('/rest/v1/devices', { params });
     }
 
@@ -1033,13 +1098,13 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
 
     // Layouts
 
-    @withSystemBusUpdates(({ transaction }) => [
-        assertTransaction.saveLayout,
-        assertTransaction.saveLayouts,
-        assertTransaction.removeLayout
-    ].some(
-        assert => assert(transaction)
-    ))
+    @withSystemBusUpdates(({ transaction }) =>
+        [
+            assertTransaction.saveLayout,
+            assertTransaction.saveLayouts,
+            assertTransaction.removeLayout,
+        ].some(assert => assert(transaction)),
+    )
     getLayouts(): ReturnType<typeof getLayoutsRestV1> {
         return getLayoutsRestV1.bind(this)();
     }
@@ -1051,7 +1116,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     @memoizeAsyncMedium
     getLicenseSummaries(): Observable<any> {
         const params = {
-            _keepDefault: true
+            _keepDefault: true,
         };
         return this.get('/rest/v1/licenseSummaries', { params });
     }
@@ -1062,7 +1127,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         width?: number | string,
         height?: number | string,
         rotate?: number | string,
-        auth?: string
+        auth?: string,
     ) {
         const data: {
             cameraId: string;
@@ -1099,7 +1164,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return this.get(endpoint, { params: data, responseType: 'blob' }).pipe(
             catchError(e => of(new Blob(['unauthorized']))),
             map(blob => URL.createObjectURL(blob || new Blob())),
-            share()
+            share(),
         );
     }
 

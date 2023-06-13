@@ -126,7 +126,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
             cookieService,
             healthService,
             appState,
-            injector
+            injector,
         );
         this.version = NxSystemRestAPI2.VERSION;
     }
@@ -134,21 +134,25 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
     private responseWrapper = (data): t.NormalResponse<any> => ({
         error: '0',
         errorString: 'ok',
-        reply: data
+        reply: data,
     });
 
     // Logger functions
-    private parseLogData = (data: LogLevelV2Response): t.LogLevel => this.responseWrapper(Object.entries(data)
-        .filter(([key, _]: [string, LogV2]) => key.includes('Log'))
-        .reduce((levels, [key, logInfo]: [string, LogV2]) => {
-            const modifiedKey = key.replace(/Log/, '').toUpperCase();
-            levels[modifiedKey] = logInfo?.primaryLevel || this.defaultLogLevel;
-            return levels;
-        }, <t.LogLevelReply>{}));
+    private parseLogData = (data: LogLevelV2Response): t.LogLevel =>
+        this.responseWrapper(
+            Object.entries(data)
+                .filter(([key, _]: [string, LogV2]) => key.includes('Log'))
+                .reduce((levels, [key, logInfo]: [string, LogV2]) => {
+                    const modifiedKey = key.replace(/Log/, '').toUpperCase();
+                    levels[modifiedKey] = logInfo?.primaryLevel || this.defaultLogLevel;
+                    return levels;
+                }, <t.LogLevelReply>{}),
+        );
 
     logLevel(): Observable<t.LogLevel> {
-        return this.get<LogLevelV2Response>('/rest/v2/servers/this/logSettings')
-            .pipe(map(this.parseLogData));
+        return this.get<LogLevelV2Response>('/rest/v2/servers/this/logSettings').pipe(
+            map(this.parseLogData),
+        );
     }
 
     /* // Removed until we either add/update the log endpoint. One solution is the blob route.
@@ -161,16 +165,18 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
     }
     */
 
-    updateLogLevel(
-        logLevel: LogLevelV2Response
-    ): Observable<t.LogLevel> {
-        const parsedLogLevels = Object.entries(logLevel)
-            .reduce((data, [key, value]) => ({
+    updateLogLevel(logLevel: LogLevelV2Response): Observable<t.LogLevel> {
+        const parsedLogLevels = Object.entries(logLevel).reduce(
+            (data, [key, value]) => ({
                 ...data,
-                [`${key.toLowerCase()}Log`]: value
-            }), {});
-        return this.patch<LogLevelV2Response>('/rest/v2/servers/this/logSettings', parsedLogLevels)
-            .pipe(map(this.parseLogData));
+                [`${key.toLowerCase()}Log`]: value,
+            }),
+            {},
+        );
+        return this.patch<LogLevelV2Response>(
+            '/rest/v2/servers/this/logSettings',
+            parsedLogLevels,
+        ).pipe(map(this.parseLogData));
     }
     // Setup wizard calls
     wizardGetSystemSettings = wizardGetSystemSettingsRestV2;
@@ -180,21 +186,21 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
         cloudSystemID: string,
         cloudAuthKey: string,
         cloudAccountName: string,
-        systemSettings: Partial<t.SystemConfigSettings>
+        systemSettings: Partial<t.SystemConfigSettings>,
     ): Observable<any> {
         return this.setupSystem(
             systemName,
             systemSettings,
             cloudSystemID,
             cloudAuthKey,
-            cloudAccountName
+            cloudAccountName,
         );
     }
 
     setupLocalSystem(
         systemName: string,
         password: string,
-        systemSettings: Partial<t.SystemConfigSettings>
+        systemSettings: Partial<t.SystemConfigSettings>,
     ): Observable<any> {
         return this.setupSystem(
             systemName,
@@ -202,7 +208,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
             undefined,
             undefined,
             undefined,
-            password
+            password,
         );
     }
 
@@ -212,19 +218,19 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
         cloudSystemID = '',
         cloudAuthKey = '',
         owner = '',
-        password = ''
+        password = '',
     ): Observable<any> {
         const config = {
             name: systemName,
             settings: systemSettings,
             local: {
-                password
+                password,
             },
             cloud: {
                 systemId: cloudSystemID,
                 authKey: cloudAuthKey,
-                owner
-            }
+                owner,
+            },
         };
         !cloudSystemID ? delete config.cloud : delete config.local;
         return this.post('/rest/v2/system/setup', config);
@@ -256,45 +262,58 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
     private getServerTimesHelper(): Observable<ModuleInfoRest[]> {
         return forkJoin({
             serversInfo: this.getServerInfo('*'),
-            serversRunTimeInfo: this.getRuntimeInfo('*')
+            serversRunTimeInfo: this.getRuntimeInfo('*'),
         }).pipe(
-            map(({ serversInfo, serversRunTimeInfo }: ServerTimes): ModuleInfoRest[] => (
+            map(({ serversInfo, serversRunTimeInfo }: ServerTimes): ModuleInfoRest[] =>
                 serversInfo.map(serverInfo => {
                     const runTimeInfo = serversRunTimeInfo.find(({ id }) => id === serverInfo.id);
-                    return { ...serverInfo, osTimeMs: runTimeInfo?.osTimeMs || 0, timeZoneOffsetMs: runTimeInfo?.timeZoneOffsetMs || 0 };
-                })
-            ))
+                    return {
+                        ...serverInfo,
+                        osTimeMs: runTimeInfo?.osTimeMs || 0,
+                        timeZoneOffsetMs: runTimeInfo?.timeZoneOffsetMs || 0,
+                    };
+                }),
+            ),
         );
     }
 
     getHardwareIdsOfServers(): Observable<t.NormalResponse<t.HardwareIds>> {
-        return this.getRuntimeInfo('*')
-            .pipe(map(servers => this.responseWrapper(
-                servers.map(({ runtimeData: { hardwareIds }, id }) => ({ hardwareIds, serverId: id })))
-            ));
+        return this.getRuntimeInfo('*').pipe(
+            map(servers =>
+                this.responseWrapper(
+                    servers.map(({ runtimeData: { hardwareIds }, id }) => ({
+                        hardwareIds,
+                        serverId: id,
+                    })),
+                ),
+            ),
+        );
     }
 
     getServerTimes(): Observable<t.NormalResponse<t.ServerTime[]>> {
         const timeToString = time => time?.toString() || '0';
-        return this.getServerTimesHelper()
-            .pipe(map(servers => this.responseWrapper(
-                servers.map(({ id, osTimeMs, synchronizedTimeMs, timeZoneOffsetMs }) => ({
-                    serverId: id,
-                    osTime: timeToString(osTimeMs),
-                    vmsTime: timeToString(synchronizedTimeMs),
-                    timeZoneOffset: timeToString(timeZoneOffsetMs)
-                }))
-            )));
+        return this.getServerTimesHelper().pipe(
+            map(servers =>
+                this.responseWrapper(
+                    servers.map(({ id, osTimeMs, synchronizedTimeMs, timeZoneOffsetMs }) => ({
+                        serverId: id,
+                        osTime: timeToString(osTimeMs),
+                        vmsTime: timeToString(synchronizedTimeMs),
+                        timeZoneOffset: timeToString(timeZoneOffsetMs),
+                    })),
+                ),
+            ),
+        );
     }
 
     configureServer(configureParams: t.ConfigureParams): Promise<any> {
-        return this.patch('/rest/v2/servers/this/runtimeInfo', configureParams as Record<string, string>).toPromise();
+        return this.patch(
+            '/rest/v2/servers/this/runtimeInfo',
+            configureParams as Record<string, string>,
+        ).toPromise();
     }
 
-    rebuildArchive(
-        location: number,
-        action?: string
-    ): Observable<t.RebuildArchiveResponse> {
+    rebuildArchive(location: number, action?: string): Observable<t.RebuildArchiveResponse> {
         let url = `/rest/v2/servers/this/rebuildArchive/${location ? 'main' : 'backup'}`;
         switch (action) {
             case 'start':
@@ -309,8 +328,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
 
     // Licenses
     activateLicense(key): Observable<any> {
-        return this.put(`/rest/v2/licenses/${key}`)
-            .pipe(map(res => this.responseWrapper(res)));
+        return this.put(`/rest/v2/licenses/${key}`).pipe(map(res => this.responseWrapper(res)));
     }
 
     /** Start of Health Monitoring **/
@@ -335,16 +353,20 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
     // TODO: Create a health manager and move this there for legacy and rest.
     @NxSystemAPI.memoizeHM
     getAggregateHealthReport(forceUpdate = false): Observable<t.AggregatedHealthReport> {
-        return forkJoin([this.getHealthAlarms(), this.getHealthManifest(), this.getHealthValues()]).pipe(
+        return forkJoin([
+            this.getHealthAlarms(),
+            this.getHealthManifest(),
+            this.getHealthValues(),
+        ]).pipe(
             map(([alarms, manifest, values]) => ({
                 error: '',
                 errorString: '',
                 reply: {
                     'ec2/metrics/alarms': alarms,
                     'ec2/metrics/manifest': manifest,
-                    'ec2/metrics/values': values
-                }
-            }))
+                    'ec2/metrics/values': values,
+                },
+            })),
         );
     }
     /** End of Health Monitoring **/
@@ -363,7 +385,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
 
         return this.patch<t.ChangedIdReturned>(
             `/rest/v1/users/${user.id}`,
-            this.cleanUserObject(user)
+            this.cleanUserObject(user),
         );
     }
 
@@ -378,17 +400,17 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
             _keepDefault: true,
             _with: withKeyMap(t.getRestCameraKeysWithDevice),
         };
-        return this.get<t.GetRestCamera[]>(
-            endpoint,
-            { params },
-        ).pipe(
-            map(cameras => cameras
-                .map(({ schedule, serverId, ...rest }) => ({
-                    ...rest,
-                    scheduleEnabled: schedule.isEnabled,
-                    parentId: serverId,
-                }) as t.RestCamera)
-            )
+        return this.get<t.GetRestCamera[]>(endpoint, { params }).pipe(
+            map(cameras =>
+                cameras.map(
+                    ({ schedule, serverId, ...rest }) =>
+                        ({
+                            ...rest,
+                            scheduleEnabled: schedule.isEnabled,
+                            parentId: serverId,
+                        } as t.RestCamera),
+                ),
+            ),
         );
     }
 }

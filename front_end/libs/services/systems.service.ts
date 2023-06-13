@@ -12,7 +12,7 @@ import {
     Subject,
     merge,
     filter,
-    withLatestFrom
+    withLatestFrom,
 } from 'rxjs';
 import { distinctUntilChanged, first, map, shareReplay, switchMap } from 'rxjs/operators';
 
@@ -43,18 +43,17 @@ import { NxUriService } from './uri.service';
 
 @UntilDestroy()
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxSystemsService {
     CONFIG: IConfig;
     LANG = staticLang;
-    private currentUser$ = this.store.select(selectCurrentUser)
-        .pipe(
-            // Ignore preloaded account on cloud
-            // Also ignore first assignment missing security properties
-            filter(acc => acc && (environment.isLocal || 'email' in acc)),
-            distinctUntilChanged(isEqual),
-        );
+    private currentUser$ = this.store.select(selectCurrentUser).pipe(
+        // Ignore preloaded account on cloud
+        // Also ignore first assignment missing security properties
+        filter(acc => acc && (environment.isLocal || 'email' in acc)),
+        distinctUntilChanged(isEqual),
+    );
     private updateSystems$ = new Subject<void>();
     mergingSystems = new Set<string>();
     systemsPoll: Observable<System[]>;
@@ -62,14 +61,16 @@ export class NxSystemsService {
         withLatestFrom(this.currentUser$),
         filter(([_, email]) => environment.isLocal || !!email),
         // Ignore manual update signal if email has not been assigned
-        switchMap(() => environment.isLocal ? Promise.resolve([]) : this._getSystems()),
+        switchMap(() => (environment.isLocal ? Promise.resolve([]) : this._getSystems())),
         map(systems => this.processSystems(systems)),
-        !nxConfig.featureFlags.requestCaching || environment.isLocal ? identity : switchMap(systems => {
-            this.db.personal.systems.clear();
-            this.db.personal.systems.bulkPut(systems);
-            return this.db.personal.systems.$.toArray();
-        }),
-        shareReplay({ bufferSize: 1, refCount: false })
+        !nxConfig.featureFlags.requestCaching || environment.isLocal
+            ? identity
+            : switchMap(systems => {
+                  this.db.personal.systems.clear();
+                  this.db.personal.systems.bulkPut(systems);
+                  return this.db.personal.systems.$.toArray();
+              }),
+        shareReplay({ bufferSize: 1, refCount: false }),
     );
     finishedMerged: boolean = false;
     systemsMerging: Pick<MergeInfo, 'primary' | 'secondary'> = {
@@ -122,7 +123,13 @@ export class NxSystemsService {
             const systemService = this.injector.get(NxSystemService);
             for (const { stateOfHealth, id, system2faEnabled } of systems) {
                 if (stateOfHealth === 'online' && !system2faEnabled) {
-                    const system = systemService.createSystem(this.userEmail, id, null, false, true);
+                    const system = systemService.createSystem(
+                        this.userEmail,
+                        id,
+                        null,
+                        false,
+                        true,
+                    );
                     try {
                         (async () => {
                             await system.update();
@@ -161,14 +168,16 @@ export class NxSystemsService {
             this.mergingSystems.delete(systemId);
             const primaryName = this.systemsMerging.primary.name;
             const secondaryName = this.systemsMerging.secondary.name;
-            const message = (primaryName && secondaryName)
-                ? {
-                    value: this.LANG.dialogs.merge.mergeSuccess,
-                    params: {
-                        primaryName, secondaryName
-                    }
-                }
-                : this.LANG.toastMessage.system.merge.success;
+            const message =
+                primaryName && secondaryName
+                    ? {
+                          value: this.LANG.dialogs.merge.mergeSuccess,
+                          params: {
+                              primaryName,
+                              secondaryName,
+                          },
+                      }
+                    : this.LANG.toastMessage.system.merge.success;
             this.systemsMerging = {
                 primary: undefined,
                 secondary: undefined,
@@ -180,10 +189,12 @@ export class NxSystemsService {
 
     @memoizeAsyncPersistent
     private _getSystems(systemId?: string): Observable<System[]> {
-        return combineLatest([timer(0, updateInterval), this.currentUser$]).pipe(switchMap(() => {
-            // console.log(systemId);
-            return this.cloudApi.systems(systemId);
-        }));
+        return combineLatest([timer(0, updateInterval), this.currentUser$]).pipe(
+            switchMap(() => {
+                // console.log(systemId);
+                return this.cloudApi.systems(systemId);
+            }),
+        );
     }
 
     forceUpdateSystems(): Observable<NxSystemInfo[]> {
@@ -221,16 +232,18 @@ export class NxSystemsService {
             system = this.systems.find(system => system.id === systemId);
         }
 
-        if (system && useCache) { // Cache success
+        if (system && useCache) {
+            // Cache success
             return of(system);
-        } else { // Cache miss
+        } else {
+            // Cache miss
             return this._getSystems(systemId).pipe(map(systems => systems[0]));
         }
     }
 
     getSystemAsPromise(
         systemId: string,
-        useCache: boolean = true
+        useCache: boolean = true,
     ): Promise<NxSystemInfo | System | undefined> {
         return firstValueFrom(this.getSystem(systemId, useCache));
     }
@@ -240,11 +253,8 @@ export class NxSystemsService {
         return sortedSystems.map(system => {
             const isMine = system.ownerAccountEmail === this.userEmail;
             const canMerge = !!(
-                isMine && (
-                    system.capabilities.cloudMerge ||
-                    clientMode.debug ||
-                    clientMode.beta
-                )
+                isMine &&
+                (system.capabilities.cloudMerge || clientMode.debug || clientMode.beta)
             );
             const versionMatch = system.version.match(/(\d*\.\d*)\.\d*\.\d*/);
             const version = parseFloat(versionMatch?.[1] ?? '0');
@@ -269,7 +279,10 @@ export class NxSystemsService {
             this.addToMergeList(system.id);
         } else if (this.mergingSystems.has(system.id)) {
             const currentSystemId = this.storageService.systemId;
-            if (this.systemsMerging.secondary && currentSystemId === this.systemsMerging.secondary.id) {
+            if (
+                this.systemsMerging.secondary &&
+                currentSystemId === this.systemsMerging.secondary.id
+            ) {
                 this.uriService.updateURI(`/systems/${this.systemsMerging.primary.id}`, {});
             }
             if (this.systemsMerging.primary && currentSystemId === this.systemsMerging.primary.id) {
