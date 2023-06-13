@@ -2,28 +2,31 @@ import { Observable, throwError } from 'rxjs';
 
 import { environment } from '@environments/environment';
 
-import { MediaserverLegacyConnection } from '../connections/adapters/adapter-target-types';
+import {
+    MediaserverLegacyConnection,
+    RequestParams,
+} from '../connections/adapters/adapter-target-types';
 
-export function proxyLegacyV1<ResponseType = unknown>(
+export function proxyLegacyV1<T>(
     this: MediaserverLegacyConnection,
     method: string,
     protocol: string,
     serverAddress: string,
     requestUrl: string,
-    data: Record<string, unknown>,
+    data: RequestParams,
     coercedEnglishError?: boolean,
-): Observable<ResponseType> {
+): Observable<T> {
     if (environment.isLocal && protocol === 'https') {
         protocol = 'https-insecure';
     }
     const url = `/proxy/${protocol}/${serverAddress}/${requestUrl}`;
 
-    const headers: Record<string, unknown> = {};
+    const headers: Record<string, string> = {};
     if (coercedEnglishError) {
         headers['Accept-Language'] = 'en-US';
     }
     if (method === 'get') {
-        return this.get(url, data, headers);
+        return this.get(url, { params: data, customHeaders: headers });
     } else if (method === 'post') {
         return this.post(url, data, headers);
     }

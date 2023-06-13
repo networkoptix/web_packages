@@ -1062,7 +1062,7 @@ export interface PtzFocusCommand extends BasePtzCommand<PtzCommands.RELATIVE_FOC
 export type PtzCommand = PtzMoveCommand | PtzFocusCommand;
 
 type HiddenParams = Partial<{
-    _filter: unknown;
+    // _filter: unknown;
     _format: 'JSON' | 'XML' | 'CSV';
     _keepDefault: boolean;
     _language: string;
@@ -1157,3 +1157,29 @@ export interface Device {
     url: string;
     vendor: string;
 }
+
+export type Ec2CameraHistoryItems = {
+    archivedCameras: string[];
+    serverGuid: string;
+}[];
+
+export type Statistics = NormalResponse<{
+    statistics: {
+        description: string;
+        deviceFlags: number;
+        deviceType: string;
+        value: number;
+    }[];
+    updatePeriod: number;
+    uptimeMs: number;
+}>;
+
+export type Ec2RecordedTimePeriods = NormalResponse<
+    {
+        guid: string;
+        periods: {
+            durationMs: string;
+            startTimeMs: string;
+        }[];
+    }[]
+>;

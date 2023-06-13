@@ -380,7 +380,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
         };
         return this.get<t.GetRestCamera[]>(
             endpoint,
-            params
+            { params },
         ).pipe(
             map(cameras => cameras
                 .map(({ schedule, serverId, ...rest }) => ({

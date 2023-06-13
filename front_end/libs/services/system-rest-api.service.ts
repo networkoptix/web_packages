@@ -46,7 +46,7 @@ import { startWithCache } from '@utils/start-with-cached';
 import { SECURITY_LEVEL } from '../../apps/setup-wizard/src/app/types/wizard-state.types';
 import { apiTool, servers } from '../variables/static-variables';
 
-import { MediaserverRestConnection } from './mediaserver-apis/connections/adapters/adapter-target-types';
+import type { MediaserverRestConnection, RequestOpts, RequestParams, WithOptionalJson, WithResponseType } from './mediaserver-apis/connections/adapters/adapter-target-types';
 import { assertTransaction } from './mediaserver-apis/connections/methods/transaction-bus/types/transactions';
 import { getServerInfoRestV1 } from './mediaserver-apis/endpoints/get-server-info';
 import { createLayoutRestV1 } from './mediaserver-apis/endpoints/layout/create-layout';
@@ -226,14 +226,13 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         () => false,
         Infinity
     )
-    public setAccessTokenAsCookie() {
+    public setAccessTokenAsCookie(): Observable<true | t.UserSession> {
         // Short circuit for new system, or if the token is already set as a cookie by the interceptor.
         if (this.CONFIG.newSystem || !this.accessToken || this.accessToken.includes(InterceptorManager.USE_SYSTEM_TOKEN)) {
             return of(true);
         }
-        return this.get(
+        return this.get<t.UserSession>(
             `/rest/v1/login/sessions/${this.accessToken}?setCookie=true`,
-            {},
         ).pipe(catchError(e => {
             const location = this.window.location;
             if (!environment.isLocal &&
@@ -400,28 +399,54 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         );
     }
 
+    protected override get(
+        url: string,
+        opts: WithResponseType<'arraybuffer'>,
+    ): Observable<ArrayBuffer>;
+    protected override get(url: string, opts: WithResponseType<'blob'>): Observable<Blob>;
+    protected override get(url: string, opts: WithResponseType<'text'>): Observable<string>;
+    protected override get<T>(
+        url: string,
+        opts?: WithOptionalJson,
+    ): Observable<T>;
     @memoizeAsync(
         defaultHashFunction,
         () => false,
         1000
     )
     @useJsonRpc
-    protected get<ResponseType = any>(
-        url: string,
-        params?: any,
-        customHttpHeaders: IParams<string> = {},
-        requestTimeout = 60000
-    ) {
-        params = params || {};
+    protected override get(url: string, opts?: RequestOpts): Observable<unknown> {
+        const {
+            params = {},
+            customHeaders = {},
+            responseType = 'json',
+            requestTimeout = 60000,
+        } = opts ?? {};
 
         if (this.requiresWeb(url)) {
             url = `/web${url}`;
         }
-        const withCredentials = this.cookieLoginSupport && url.includes('/rest/v1/login/sessions') && url.includes('?setCookie=true');
+        const withCredentials = this.cookieLoginSupport &&
+            url.includes('/rest/v1/login/sessions') &&
+            url.includes('?setCookie=true');
         const fullUrl = `${this.urlBase}${url}`;
-        const responseType = <any>(customHttpHeaders?.responseType || 'json');
-        return this.#getHeaders(customHttpHeaders, url).pipe(
-            switchMap(headers => this.http.get<ResponseType>(fullUrl, { headers, params, responseType, withCredentials }).pipe(startWithCache(fullUrl, { headers, params, responseType, withCredentials }))),
+        return this.#getHeaders(customHeaders, url).pipe(
+            switchMap(headers => {
+                let request: Observable<unknown>;
+                const otherOpts = { headers, params, withCredentials };
+                if (responseType === 'json') {
+                    request = this.http.get(fullUrl, { ...otherOpts, responseType });
+                } else if (responseType === 'arraybuffer') {
+                    request = this.http.get(fullUrl, { ...otherOpts, responseType });
+                } else if (responseType === 'blob') {
+                    request = this.http.get(fullUrl, { ...otherOpts, responseType });
+                } else if (responseType === 'text') {
+                    request = this.http.get(fullUrl, { ...otherOpts, responseType });
+                }
+                return request.pipe(
+                    startWithCache(fullUrl, { ...otherOpts, responseType })
+                );
+            }),
             retryWhen(request => this.retryHandler(request)),
             timeout(requestTimeout),
             tap(undefined, error => {
@@ -519,7 +544,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         10 * 1000
     )
     public getCurrentUser(forceReload?: boolean): Promise<t.ec2User | t.CurrentUser> {
-        let customHeaders;
+        let customHeaders: RequestOpts['customHeaders'];
         if (forceReload) { // Clean cache to
             this.currentUser = undefined;
             this.userRequest = undefined;
@@ -535,7 +560,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         if (this.userEmail) {
             const endpoint = '/ec2/getUsers';
             this.cacheService.addToCache(endpoint);
-            this.userRequest = this.get<t.ec2User[]>(endpoint, {}, customHeaders).toPromise()
+            this.userRequest = this.get<t.ec2User[]>(endpoint, { customHeaders }).toPromise()
                 .then(result => {
                     this.currentUser = result.find(user => {
                         return user.name.toLowerCase() === this.userEmail.toLowerCase();
@@ -545,14 +570,14 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         } else if (environment.isLocal && !this.CONFIG.newSystem) {
             const endpoint = `/rest/v1/login/sessions/${this.accessToken || 'current'}`;
             this.userRequest = this
-                .get<t.UserSession>(endpoint, {}, customHeaders)
+                .get<t.UserSession>(endpoint, { customHeaders })
                 .toPromise()
                 .then(result => {
                     if (!this.accessToken) {
                         this.#vmsToken = result.token;
                     }
                     return this.get<t.CurrentUser[]>(
-                        '/rest/v1/users', { name: result.username }
+                        '/rest/v1/users', { params: { name: result.username } }
                     ).toPromise();
                 }).then(result => {
                     // Todo: convert result to match getCurrentUser result.
@@ -587,7 +612,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         if (this.CONFIG.newSystem || !this.accessToken) {
             return of(false);
         }
-        return this.get(`/rest/v1/login/sessions/${this.accessToken}`).pipe(
+        return this.get<t.UserSession>(`/rest/v1/login/sessions/${this.accessToken}`).pipe(
             switchMap(res => {
                 return of(res.ageS < this.sessionFreshnessSec);
             }));
@@ -606,7 +631,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     loginTokenUrl(token: string): Observable<any> {
-        return this.get(`/rest/v1/login/sessions/${token}`, { setCookie: true });
+        return this.get(`/rest/v1/login/sessions/${token}`, { params: { setCookie: true } });
     }
 
     loginOauth(code: string, skipSetting?: boolean) {
@@ -681,7 +706,8 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
 
     @memoizeAsyncPersistent
     getAPIToolManifest(): Promise<MenuManifest> {
-        return this.get('/static/openapi_manifest.json').toPromise().catch(() => apiTool.defaultManifest);
+        return this.get<MenuManifest>('/static/openapi_manifest.json').toPromise()
+            .catch(() => apiTool.defaultManifest);
     }
 
     @memoizeAsyncPersistent
@@ -705,7 +731,10 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     protected getSystemSettingsHandler() {
         return this.updateSystemSettings$.pipe(
             throttleTime(1000),
-            switchMap(() => this.get('/rest/v1/system/settings', { _keepDefault: true })),
+            switchMap(() => this.get(
+                '/rest/v1/system/settings',
+                { params: { _keepDefault: true } }
+            )),
             retry(3)
         );
     }
@@ -725,8 +754,10 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         };
         return this.get<t.RestServerPartial[]>(
             endpoint,
-            params,
-            { [useCache ? 'cache-request' : 'reset-cache']: 'true' }
+            {
+                params,
+                customHeaders: this.cacheHeader(useCache),
+            }
         ).pipe(
             map(res => {
                 const servers = res.map<t.RestServerPartialCompat>(server => {
@@ -751,7 +782,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         };
         return this.get<t.GetRestCamera[]>(
             endpoint,
-            params
+            { params }
         ).pipe(
             map(cameras => cameras
                 .map(({ schedule, serverId, ...rest }) => ({
@@ -832,11 +863,14 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     @memoizeAsyncPersistent
-    private checkMergeStatusHandler(forceReload) {
+    private checkMergeStatusHandler(forceReload: boolean) {
         return this.mergeUpdater$.pipe(
             throttleTime(10 * 1000),
             filter(force => force === forceReload),
-            switchMap(() => this.get<t.MergeStatus>('/rest/v1/system/merge', {}, { [forceReload ? 'reset-cache' : 'cache-request']: 'true' }))
+            switchMap(() => this.get<t.MergeStatus>(
+                '/rest/v1/system/merge',
+                { customHeaders: this.cacheHeader(!forceReload) }
+            ))
         );
     }
 
@@ -971,13 +1005,16 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         _keepDefault: true,
         _orderBy: 'creationTimeMs',
     }): Observable<t.Bookmark[]> {
-        return this.get('/rest/v1/devices/*/bookmarks', params);
+        return this.get('/rest/v1/devices/*/bookmarks', { params });
     }
 
     getBookmarkTags(
         params: t.BookmarksTagsParams = {}
     ): Observable<t.BookmarksTags> {
-        return this.get('/rest/v1/devices/*/bookmarks/*/tags', params);
+        return this.get(
+            '/rest/v1/devices/*/bookmarks/*/tags',
+            { params: params as RequestParams }
+        );
     }
 
     changePassword(cameraId: string, user: string, password: string): Observable<unknown> {
@@ -987,11 +1024,11 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     getDevices(
         params: t.DevicesParams = {}
     ): Observable<t.Device[]> {
-        return this.get('/rest/v1/devices', params);
+        return this.get('/rest/v1/devices', { params });
     }
 
     getWebPages(params = {}): Observable<t.WebPages> {
-        return this.get('/rest/v1/webPages', params);
+        return this.get('/rest/v1/webPages', { params });
     }
 
     // Layouts
@@ -1016,7 +1053,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         const params = {
             _keepDefault: true
         };
-        return this.get('/rest/v1/licenseSummaries', params);
+        return this.get('/rest/v1/licenseSummaries', { params });
     }
 
     previewUrl(
@@ -1059,7 +1096,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             data.rotate = rotate;
         }
 
-        return this.get(endpoint, data, { responseType: 'blob' }).pipe(
+        return this.get(endpoint, { params: data, responseType: 'blob' }).pipe(
             catchError(e => of(new Blob(['unauthorized']))),
             map(blob => URL.createObjectURL(blob || new Blob())),
             share()

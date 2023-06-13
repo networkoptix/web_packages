@@ -101,7 +101,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     private origSelectedSubSection: string;
     private origSelectedDetailSection: string;
 
-    archivesPresent = {};
+    archivesPresent = new Set<string>();
 
     private setupDefaults(): void {
         this.debugMode = clientMode.debug;
@@ -122,13 +122,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             .getCameraHistoryItems()
             .toPromise()
             .then(response => {
-                this.archivesPresent = {};
-                this.archivesPresent = (response || {}).reduce((acc, server) => {
-                    server.archivedCameras.forEach(c => {
-                        acc[c] = true;
-                    });
-                    return acc;
-                }, {});
+                this.archivesPresent.clear();
+                response.forEach(server => {
+                    server.archivedCameras.forEach(cam => this.archivesPresent.add(cam));
+                });
             });
     }
 
@@ -819,7 +816,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         if (scheduleEnabled && !(status === 'Recording')) {
             return menus.systemSettings.cameras.statusIcons.scheduled;
         }
-        if (this.archivesPresent[id] && !(status === 'Recording')) {
+        if (this.archivesPresent.has(id) && !(status === 'Recording')) {
             return menus.systemSettings.cameras.statusIcons.archive;
         }
         return menus.systemSettings.cameras.statusIcons[status.toLowerCase()];

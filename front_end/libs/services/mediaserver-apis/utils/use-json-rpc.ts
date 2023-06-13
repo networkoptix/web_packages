@@ -94,7 +94,7 @@ const reportWinner = (
         console.info(`Endpoint: ${decodeURIComponent(endpoint)} took ${Math.round(time)}ms`);
     });
 
-type HttpMethods = 'get' | 'post' | 'put' | 'patch' | 'post' | 'delete';
+type HttpMethods = 'get' | 'post' | 'put' | 'patch' | 'delete';
 
 /**
  * Used to decorate methods in NxSystemRestAPI2 to use JSON-RPC instead of HTTP.
@@ -114,7 +114,10 @@ export function useJsonRpc(
     descriptor: PropertyDescriptor,
 ): void {
     const originalMethod = descriptor.value;
-    descriptor.value = function (this: typeof target, ...args) {
+    descriptor.value = function (
+        this: typeof target,
+        ...args: Parameters<NxSystemRestAPI[typeof key]>
+    ) {
         /**
          * Check if the feature flag is enabled and version supports JSON-RPC.
          *
@@ -175,9 +178,21 @@ export function useJsonRpc(
                     : '',
             );
             const method = originalMethod.name === 'put' ? 'patch' : originalMethod.name;
-            const params = ['post', 'put', 'patch'].includes(method)
-                ? { ...args[1], ...args[2] }
-                : args[1];
+            type GetArgs = Parameters<NxSystemRestAPI['get']>;
+            type WithDataArgs = Parameters<NxSystemRestAPI['post' | 'put' | 'patch']>;
+            type DeleteArgs = Parameters<NxSystemRestAPI['delete']>;
+            let params: Record<string, unknown>;
+            if (method === 'get') {
+                params = (args as GetArgs)[1]?.params;
+            } else if (['post', 'put', 'patch'].includes(method)) {
+                const [_url, data, paramsToAdd] = args as WithDataArgs;
+                params = { ...data, ...paramsToAdd };
+            } else {
+                params = (args as DeleteArgs)[1];
+            }
+            // const params = ['post', 'put', 'patch'].includes(method)
+            //     ? { ...args[1], ...args[2] }
+            //     : args[1];
             const payload = generateJsonRpcPayload(endpoint, params, method);
             const isGet = method === 'get';
             const timeoutMs = isGet ? 1000 : 2500;

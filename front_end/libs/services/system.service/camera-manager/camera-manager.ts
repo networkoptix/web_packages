@@ -456,15 +456,22 @@ export class CameraManager {
                 return times.reduce((acc, { guid: cameraId, periods }) => {
                     acc.push(
                         ...periods.map(({ startTimeMs, durationMs }) => {
-                            startTimeMs = parseInt(startTimeMs);
-                            durationMs = parseInt(durationMs);
-                            const endTimeMs = startTimeMs + durationMs;
-                            const start = Math.round((startTimeMs - first) / resolution);
+                            const startTimeMsNum = parseInt(startTimeMs);
+                            const durationMsNum = parseInt(durationMs);
+                            const endTimeMs = startTimeMsNum + durationMsNum;
+                            const start = Math.round((startTimeMsNum - first) / resolution);
                             const end = Math.max(
                                 Math.round((endTimeMs - first) / resolution),
                                 start + 1,
                             );
-                            return { cameraId, startTimeMs, durationMs, endTimeMs, start, end };
+                            return {
+                                cameraId,
+                                startTimeMs: startTimeMsNum,
+                                durationMs: durationMsNum,
+                                endTimeMs,
+                                start,
+                                end,
+                            };
                         }),
                     );
                     return acc.sort(paramSortFunc<TimeDetail>(period => period.startTimeMs));

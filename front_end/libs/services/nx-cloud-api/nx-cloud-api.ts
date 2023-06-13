@@ -40,6 +40,20 @@ import { CustomAccountProperty } from './custom-account-property';
 import { CustomClientAPI } from './custom-client-api';
 import * as t from './nx-cloud-api.types';
 
+type ResponseTypes = 'arraybuffer' | 'blob' | 'text' | 'json';
+
+interface RequestOpts {
+    headers?: HttpHeaders;
+    responseType?: ResponseTypes;
+}
+
+interface WithOptionalJson extends RequestOpts {
+    responseType?: 'json';
+}
+
+interface WithResponseType<RT extends ResponseTypes> extends RequestOpts {
+    responseType: RT;
+}
 const staffSWBypass = (target: Object, propertyKey: string, descriptor: PropertyDescriptor) => {
     // CLOUD-9104: Firefox does not support service workers in private mode.
     // this isn't in the scope so we are using window by itself
@@ -196,8 +210,23 @@ export class NxCloudApiService {
         }
     }
 
-    cachedGet<T = unknown>(...args: Parameters<typeof this.http.get>) {
-        return this.http.get<T>(...args).pipe(startWithCache(...args));
+    cachedGet(url: string, opts: WithResponseType<'arraybuffer'>): Observable<ArrayBuffer>;
+    cachedGet(url: string, opts: WithResponseType<'blob'>): Observable<Blob>;
+    cachedGet(url: string, opts: WithResponseType<'text'>): Observable<string>;
+    cachedGet<T>(url: string, opts?: WithOptionalJson): Observable<T>;
+    cachedGet(url: string, opts?: RequestOpts): Observable<unknown> {
+        const { responseType, ...other } = opts ?? {};
+        let request: Observable<unknown>;
+        if (responseType === 'arraybuffer') {
+            request = this.http.get(url, { responseType, ...other });
+        } else if (responseType === 'blob') {
+            request = this.http.get(url, { responseType, ...other });
+        } else if (responseType === 'text') {
+            request = this.http.get(url, { responseType, ...other });
+        } else {
+            request = this.http.get(url, { responseType, ...other });
+        }
+        return request.pipe(startWithCache(url, opts));
     }
 
     checkResponseHasError<_T extends any>(data: any) {
@@ -292,21 +321,18 @@ export class NxCloudApiService {
     getStaticLanding() {
         const httpOptions = {
             headers: new HttpHeaders({ 'Content-Type': 'application/text' }),
-            responseType: 'text' as any,
+            responseType: 'text' as const,
         };
-        return this.cachedGet<string>(
-            '/' + this.CONFIG.viewsDir + 'static/landing.html',
-            httpOptions,
-        );
+        return this.cachedGet('/' + this.CONFIG.viewsDir + 'static/landing.html', httpOptions);
     }
 
     @memoizeAsyncPersistent
     getStatic(url) {
         const httpOptions = {
             headers: new HttpHeaders({ 'Content-Type': 'application/text' }),
-            responseType: 'text' as any,
+            responseType: 'text' as const,
         };
-        return this.cachedGet<string>(url, httpOptions);
+        return this.cachedGet(url, httpOptions);
     }
 
     @memoizeAsyncPersistent
