@@ -296,7 +296,12 @@ export class NxLayoutGridComponent {
 
     showTooltip$ = this.#wrapperSize$.pipe(
         filter(Boolean),
-        map(({ width }) => !this.window.matchMedia('(any-hover: none)').matches && width > 600),
+        map(
+            ({ width }) =>
+                !this.window.matchMedia('(any-hover: none)').matches &&
+                width > 288 &&
+                this.#lastWidth >= ViewportBreakpoints.Tablet.width,
+        ),
     );
 
     aspectHandler$ = combineLatest([this.#wrapperSize$, this.layout$]).pipe(
