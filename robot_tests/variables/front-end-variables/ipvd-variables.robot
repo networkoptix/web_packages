@@ -73,7 +73,7 @@ ${IPVD DEVICE COLLAPSE LINK}                 ${IPVD DEVICE FIRMWARE INFO}//a[con
 ${IPVD DEVICE LAST UPDATED INFO}             ${IPVD DEVICE DETAILS}//span[contains(text(), "${IPVD LAST UPDATED TEXT}")]
 
 #IPVD Table
-${IPVD TABLE}                         //nx-ipvd//table
+${IPVD TABLE}                         //nx-ipvd//nx-table
 ${IPVD TABLE HEADING MANUFACTURER}    ${IPVD TABLE}/thead//div[text()='${IPVD ADV FILTER MFR}']
 ${IPVD TABLE HEADING LABEL SORT ARROW}    /../div[2]
 ${IPVD TABLE ROWS}                    ${IPVD TABLE}/tbody/tr[not(@class='table-row-spacer')]
