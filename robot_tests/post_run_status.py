@@ -18,19 +18,16 @@ def _parse_args():
 
 
 def _post_run_status(commit_id, return_code, report_url):
-    # TODO: Need to update how job status is reported so that it doesn't pass/fail the entire pipeline
-    # response = requests.post(
-    #     f'{_GITLAB_URL}/api/v4/projects/{_PROJECT_REPO_NAME}/statuses/{commit_id}',
-    #     json={
-    #         'name': 'Smoke tests',
-    #         'state': 'success' if return_code == 0 else 'failed',
-    #         'target_url': report_url,
-    #     },
-    #     headers={'PRIVATE-TOKEN': _PRIVATE_TOKEN}
-    # )
-    # response.raise_for_status()
-
-    pass
+    response = requests.post(
+        f'{_GITLAB_URL}/api/v4/projects/{_PROJECT_REPO_NAME}/statuses/{commit_id}',
+        json={
+            'name': 'Smoke tests',
+            'state': 'success' if return_code == 0 else 'failed',
+            'target_url': report_url,
+        },
+        headers={'PRIVATE-TOKEN': _PRIVATE_TOKEN}
+    )
+    response.raise_for_status()
 
 
 if __name__ == '__main__':
