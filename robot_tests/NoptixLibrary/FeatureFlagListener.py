@@ -18,7 +18,7 @@ class FeatureFlagListener:
         start_time = time.monotonic()
         while True:
             cloud_settings = cloud.get_cloud_settings()
-            if all([{value and expected_settings_converted.get(key)} for key, value in cloud_settings["featureFlags"].items()]):
+            if all([{value and expected_settings_converted.get(key)} for key, value in cloud_settings["featureFlags"].items() if value]):
                 break
             else:
                 print(cloud_settings["featureFlags"])
