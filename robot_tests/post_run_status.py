@@ -21,7 +21,7 @@ def _post_run_status(commit_id, return_code, report_url):
     response = requests.post(
         f'{_GITLAB_URL}/api/v4/projects/{_PROJECT_REPO_NAME}/statuses/{commit_id}',
         json={
-            'name': 'Smoke tests',
+            'name': 'smoke-tests',
             'state': 'success' if return_code == 0 else 'failed',
             'target_url': report_url,
         },
