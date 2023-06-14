@@ -80,8 +80,7 @@ LETSENCRYPT_STAGE_CERT_REQUIRED=1 \
   'test-cases'
 TESTS_RESULT_CODE=$?
 
-# BUILD_URL is an environment variable provided by Jenkins.
-"$PYTHON" -m 'post_run_status' "$FRONTEND_REVISION" "$TESTS_RESULT_CODE" "$BUILD_URL"
+"$PYTHON" -m 'post_run_status' "$FRONTEND_REVISION" "$TESTS_RESULT_CODE"
 
 set -e
 
