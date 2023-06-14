@@ -34,6 +34,8 @@ GOOGLE_CHROME_DIR="$(./prepare_google_chrome.sh)"
 
 set +e
 
+"$PYTHON" -m 'post_pending_status' "$FRONTEND_REVISION"
+
 BACKEND_REVISION='master'
 DEPLOYMENT_JOB_URL=$("$PYTHON" -m 'request_cloud_deployment' "$BACKEND_REVISION" "$FRONTEND_REVISION")
 CLOUD_HOST=$("$PYTHON" -m 'wait_for_cloud' "$DEPLOYMENT_JOB_URL")
