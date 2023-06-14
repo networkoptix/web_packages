@@ -1176,3 +1176,34 @@ class GenericKeywords(object):
             if local_state and user["name"] != "admin":
                 locals_list.append(user)
         return locals_list
+
+    @keyword
+    def set_default_storage_config(self, server_url, disabled, backups): 
+        storages = self.server_api.get_storages_via_api(server_url)
+        if storages == []:
+            raise RuntimeError("Storages returned an empty list.")        
+        for disk in storages:
+            if disk.get("url"):
+                url = disk["url"]
+            else:
+                url = disk["path"]
+            if BuiltIn().run_keyword_and_return_status("should_contain_any", url, *disabled):
+                disk = {
+                    "usedForWriting": False,
+                    "isUsedForWriting": False,
+                    "isBackup": False
+                }
+            elif BuiltIn().run_keyword_and_return_status("should_contain_any", url, *backups):
+                disk = {
+                    "usedForWriting": True,
+                    "isUsedForWriting": True,
+                    "isBackup": True
+                }
+            else:
+                disk = {
+                    "usedForWriting": True,
+                    "isUsedForWriting": True,
+                    "isBackup": False
+                }
+        r = self.server_api.save_storages_via_api(storages, server_url)
+        logger.trace(r)

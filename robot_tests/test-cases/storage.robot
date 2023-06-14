@@ -308,7 +308,7 @@ Force Tags        storage
     Lists Should Be Equal    ${sorted}    ${dropdown order}
 
 15. Cancel Changing "Analytics DB Storage"
-    [Tags]    C81778    Analytics
+    [Tags]    C81778    Analytics   CLOUD-9911
     Verify on Servers Page
     Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
     Log    Step 1
