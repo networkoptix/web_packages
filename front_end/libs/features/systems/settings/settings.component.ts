@@ -81,7 +81,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     headerHeight: number;
     secondaryMerge = false;
-    systemName: string;
     show2faRequired = false;
 
     get showPlaceholder(): boolean {
@@ -95,6 +94,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     get system(): NxSystem {
         return this.settingsService.system;
+    }
+
+    // TODO: We really need a standard way to get the system name
+    get systemName(): string {
+        return this.system.info.systemName || this.system.info.name;
     }
 
     private cancelPrevious$ = new Subject();
@@ -367,6 +371,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     this.systemNoAccess = true;
                     return;
                 }
+                if (system.system2faEnabled && !this.account.sessionVerified) {
+                    this.show2faRequired = true;
+                    return;
+                }
                 if (this.systemId === this.system?.id) {
                     return;
                 }
@@ -467,9 +475,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         this.system.isAvailable = true;
                         this.system.isOnline = true;
                         setTimeout(() => {
-                            this.pageService.pageTitle(
-                                this.system.info.systemName || this.system.info.name,
-                            );
+                            this.pageService.pageTitle(this.systemName);
                         });
                     });
                 }

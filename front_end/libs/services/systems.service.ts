@@ -30,6 +30,7 @@ import { memoizeAsyncPersistent } from '@utils/memoize';
 
 import { clientMode, toast, updateInterval } from '../variables/static-variables';
 
+import type { Account } from './account.service/account';
 import { NxDbService } from './db.service';
 import { NxCloudApiService } from './nx-cloud-api';
 import type { System } from './nx-cloud-api/nx-cloud-api.types';
@@ -52,16 +53,16 @@ export class NxSystemsService {
         .pipe(
             // Ignore preloaded account on cloud
             // Also ignore first assignment missing security properties
-            filter(acc => acc && (environment.isLocal || 'email' in acc)),
-            distinctUntilChanged(isEqual),
+            filter(acc => acc && (environment.isLocal || 'email' in acc && 'account2faEnabled' in acc)),
+            distinctUntilChanged<Account>(isEqual),
         );
     private updateSystems$ = new Subject<void>();
     mergingSystems = new Set<string>();
     systemsPoll: Observable<System[]>;
     systemsSubject = merge(this.currentUser$, this.updateSystems$).pipe(
         withLatestFrom(this.currentUser$),
-        filter(([_, email]) => environment.isLocal || !!email),
-        // Ignore manual update signal if email has not been assigned
+        filter(([_, account]) => environment.isLocal || !!account),
+        // Ignore manual update signal if account has not been assigned
         switchMap(() => environment.isLocal ? Promise.resolve([]) : this._getSystems()),
         map(systems => this.processSystems(systems)),
         !nxConfig.featureFlags.requestCaching || environment.isLocal ? identity : switchMap(systems => {
