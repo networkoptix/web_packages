@@ -10,14 +10,14 @@ _PRIVATE_TOKEN = os.environ.get('GITLAB_API_TOKEN')
 _REPORT_URL = os.environ.get('BUILD_URL')
 
 
-def _parse_args():
+def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument('commit_id', type=str)
     parser.add_argument('return_code', type=int)
     return parser.parse_args()
 
 
-def _post_run_status(commit_id, return_code):
+def _post_run_status(commit_id: str, return_code: int):
     response = requests.post(
         f'{_GITLAB_URL}/api/v4/projects/{_PROJECT_REPO_NAME}/statuses/{commit_id}',
         json={
