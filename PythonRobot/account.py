@@ -28,8 +28,7 @@ def cloud_login(driver, email, password, validate=True, button=LOG_IN_NAV_BAR, e
         pass
         #TODO: set user theme (ie, light or dark mode)
         pass
-    for element in [LOG_IN_MODAL, LOG_IN_NEXT_BUTTON, EMAIL_INPUT ]:
-        robot_keywords.wait_until_element_is_visible(driver, element)
+    robot_keywords.wait_until_elements_are_visible(driver, [LOG_IN_MODAL, LOG_IN_NEXT_BUTTON, EMAIL_INPUT ])
     robot_keywords.sleep(1)
     robot_keywords.input_text(driver, EMAIL_INPUT, email)
     robot_keywords.sleep(1)

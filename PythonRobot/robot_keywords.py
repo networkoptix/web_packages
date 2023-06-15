@@ -71,6 +71,10 @@ def wait_until_element_is_not_visible(driver: webdriver, locator: str, timeout: 
 def wait_until_element_is_visible(driver: webdriver, locator: str, timeout: int = 10) -> None:
     WebDriverWait(driver, timeout).until(EC.visibility_of_element_located((By.XPATH, locator)))
 
+def wait_until_elements_are_visible(driver: webdriver, locators: list[str], timeout: int = 10) -> None:
+    for locator in locators:
+        wait_until_element_is_visible(driver, locator, timeout=timeout)
+
 def wait_until_page_contains(driver: webdriver, text: str, timeout: int = 10) -> None:
     WebDriverWait(driver, timeout).until(EC.text_to_be_present_in_element((By.XPATH, "//*"), text))
 
