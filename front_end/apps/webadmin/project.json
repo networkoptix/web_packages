@@ -135,6 +135,9 @@
                             "with": "libs/routeGuards/authGuard.webadmin.ts"
                         }
                     ],
+                    "vendorChunk": false,
+                    "buildOptimizer": true,
+                    "commonChunk": false,
                     "optimization": true,
                     "outputHashing": "all",
                     "sourceMap": false,

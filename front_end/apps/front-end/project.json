@@ -130,6 +130,9 @@
                         }
                     ],
                     "deployUrl": "static/",
+                    "vendorChunk": false,
+                    "buildOptimizer": true,
+                    "commonChunk": false,
                     "optimization": true,
                     "outputHashing": "all",
                     "sourceMap": false,

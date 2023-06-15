@@ -171,6 +171,7 @@
           "namedChunks": false,
           "extractLicenses": true,
           "vendorChunk": false,
+          "commonChunk": false,
           "buildOptimizer": true,
           "budgets": [
             {
