@@ -19,10 +19,6 @@ main_replacements = {
     "%COMPANY_NAME%": description.get("companyName")
 }
 
-page_title_replacements = {
-    "%CLOUD_NAME%": "webadmin",
-}
-
 
 def traverse_and_replace(cur_dict, replacements=None):
     if type(cur_dict) is list:
@@ -46,8 +42,6 @@ for lang_path in target_json_paths:
     with open(lang_path) as lang_file:
         language_compiled = json.load(lang_file)
 
-    traverse_and_replace(
-        language_compiled['pageTitles'], replacements=page_title_replacements)
     traverse_and_replace(language_compiled, replacements=main_replacements)
     traverse_and_replace(config, replacements=main_replacements)
 
