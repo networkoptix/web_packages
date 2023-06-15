@@ -1,8 +1,8 @@
 import quart.flask_patch  # Keep needed for using flask things in quart
 import asyncio
+import httpx
 import json
 import os
-import requests
 from logging.config import dictConfig
 from quart import Quart, current_app, websocket
 
@@ -151,7 +151,7 @@ async def ws():
                     return await websocket.close(401, 'Not Authenticated')
                 p.log('starting handler')
             return await asyncio.create_task(receiving(cloud_connector))
-        except requests.exceptions.HTTPError as e:
+        except httpx.HTTPError as e:
             app.logger.error(e)
             return await websocket.close(500, 'Something went wrong')
     return await websocket.close(400, 'Missing code')
@@ -164,7 +164,7 @@ def server_health():
     return 'OK', 200
 
 
-@app.errorhandler(requests.exceptions.HTTPError)
+@app.errorhandler(httpx.HTTPError)
 def not_found(error):
     return error.response.json(), error.response.status_code
 
