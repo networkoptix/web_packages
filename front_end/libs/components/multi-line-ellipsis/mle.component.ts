@@ -50,6 +50,12 @@ export class NxMultiLineEllipsisComponent implements OnChanges {
         }
     }
 
+    handleResize(height: number): void {
+        if (typeof this.height === 'number') {
+            this.longText.emit(height > this.height);
+        }
+    }
+
     viewMoreDescr(): void {
         if (!this.viewMore) {
             return;

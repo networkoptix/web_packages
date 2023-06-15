@@ -3,7 +3,7 @@ import { Input } from '@angular/core';
 import { IBool, CoercedBoolInput } from './ibool';
 
 class TestHostComponent {
-  @IBool() @Input() booleanProperty: CoercedBoolInput;
+    @IBool() @Input() booleanProperty: CoercedBoolInput;
 }
 
 describe('@IBool()', () => {

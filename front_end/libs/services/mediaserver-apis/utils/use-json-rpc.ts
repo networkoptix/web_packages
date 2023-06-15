@@ -70,7 +70,6 @@ const handleResult = map((res: JsonRpcResponse) => {
     if ('error' in res) {
         throw Object.assign(new Error(), res.error);
     }
-
     return res.result;
 });
 

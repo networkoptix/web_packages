@@ -14,8 +14,8 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { PasswordValidationModule } from '@components/password-input-validation/password-validation.module';
 import { PasswordModule } from '@components/password-input/password.module';
+import { PasswordValidationModule } from '@components/password-input-validation/password-validation.module';
 import { ProcessButtonModule } from '@components/process-button/process-button.module';
 import { icons } from '@lib/variables/static-variables';
 import { Process } from '@services/process.service/process';

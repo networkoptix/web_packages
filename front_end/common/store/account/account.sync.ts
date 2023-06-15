@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 
 import { SyncEffects } from '../sync.effects';

@@ -27,12 +27,12 @@ import {
     NxSystemStandardServerComponent
 } from './standard/server-standard.component';
 import {
+    NxSystemStorageComponent
+} from './storage/server-storage-standard.component';
+import {
     NxSystemAdvancedStorageComponent
 } from './storage-advanced/server-storage-adv.component';
 import { NxStorageSizeComponent } from './storage-advanced/size/size.component';
-import {
-    NxSystemStorageComponent
-} from './storage/server-storage-standard.component';
 
 @NgModule({
     imports: [

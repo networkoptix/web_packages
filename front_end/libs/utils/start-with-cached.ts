@@ -75,7 +75,10 @@ export function startWithCache<T>(...argsForKey: unknown[]): OperatorFunction<T,
     try {
         const key = stringify(sanitizer(argsForKey));
         return function <T>(source: Observable<T>): Observable<T> {
-            return concat(getCachedResponse<T>(key), source.pipe(tap(saveHandlerFactory(key))));
+            return concat(
+                getCachedResponse<T>(key),
+                source.pipe(tap(saveHandlerFactory(key))),
+            ) as Observable<T>;
         };
     } catch (e) {
         // Skip unhashable arguments

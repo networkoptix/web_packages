@@ -49,7 +49,7 @@ export abstract class SyncEffects {
     /**
      * Receive actions from other browser contexts.
      */
-    receiveActions$: ReturnType<typeof createEffect>;
+    receiveActions$: Observable<AnnotatedAction>;
 
     /**
      * Handles sync actions toand from other browser contexts.

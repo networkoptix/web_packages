@@ -1,17 +1,11 @@
 import { Injectable } from '@angular/core';
-import {
-    ActivatedRouteSnapshot,
-    CanActivate,
-    CanDeactivate,
-    RouterStateSnapshot,
-    UrlTree,
-} from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { NxApplyService } from '@services/apply.service';
 
 @Injectable()
-export class ApplyGuard<T> implements CanActivate, CanDeactivate<T> {
+export class ApplyGuard<T> {
     constructor(private applyService: NxApplyService) {}
 
     canActivate(

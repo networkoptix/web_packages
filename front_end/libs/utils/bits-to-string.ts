@@ -1,9 +1,9 @@
 const BYTE_UNITS = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'] as const;
 
-export type Byte = typeof BYTE_UNITS[number];
+export type Byte = (typeof BYTE_UNITS)[number];
 
 const BIT_UNITS = ['b', 'kbit', 'Mbit', 'Gbit', 'Tbit', 'Pbit', 'Ebit', 'Zbit', 'Ybit'] as const;
-type Bit = typeof BIT_UNITS[number];
+type Bit = (typeof BIT_UNITS)[number];
 
 const BPS_UNITS = ['bps', 'kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Ebps', 'Zbps', 'Ybps'] as const;
 // type Bps = typeof BPS_UNITS[number];

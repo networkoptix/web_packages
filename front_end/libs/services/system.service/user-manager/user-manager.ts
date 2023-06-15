@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 import { nxConfig } from '@services/nx-config/config';
+import { NxSystemBase } from '@services/system/system-base';
 import type {
     ChangedIdReturned,
     ec2PredefinedRole,
@@ -13,7 +14,6 @@ import type {
 } from '@services/system-api.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
-import { NxSystemBase } from '@services/system/system-base';
 import { isAdmin, ZERO_ID } from '@utils/nx';
 
 import { NxSystemAPI } from '../../system-legacy-api.service';

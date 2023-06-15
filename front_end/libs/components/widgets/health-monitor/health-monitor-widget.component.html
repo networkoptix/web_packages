@@ -32,7 +32,7 @@
                 <div
                     *ngFor="
                         let resource of card.config.resources
-                            | as: { resourceName: HealthMonitorResource }
+                            | as : { resourceName: HealthMonitorResource }
                             | keyvalue
                     "
                     class="d-flex mb-1"
@@ -89,7 +89,7 @@
     let-source="source"
 >
     <div
-        *ngFor="let level of source | as: { key: 'value' } | keyvalue"
+        *ngFor="let level of source | as : { key: 'value' } | keyvalue"
         class="d-flex justify-content-between"
     >
         <ng-template #noAlerts>
@@ -219,7 +219,7 @@
                 *ngIf="updatingIn"
                 class="until-update"
             >
-                {{ LANG.components.widgets.updatingIn | translate: { time: updatingIn } }}
+                {{ LANG.components.widgets.updatingIn | translate : { time: updatingIn } }}
             </div>
         </ng-container>
     </div>

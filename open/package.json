@@ -11,15 +11,15 @@
   },
   "private": true,
   "devDependencies": {
-    "@nrwl/nx-cloud": "latest",
     "@types/node": "^18.15.5",
-    "nx": "15.8.7",
+    "nx": "16.3.2",
     "prettier": "^2.6.2",
-    "typescript": "^5.0.2"
+    "typescript": "^5.0.2",
+    "nx-cloud": "16.0.5"
   },
   "//": "Lock peer dependencies to the same versions we use internally",
   "dependencies": {
-    "rxjs": "7.5.5"
+    "rxjs": "7.8.1"
   },
   "workspaces": [
     "packages/*",

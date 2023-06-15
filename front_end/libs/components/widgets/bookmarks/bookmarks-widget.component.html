@@ -63,7 +63,7 @@
                         [ngClass]="{ active: accordionItem.expanded }"
                     >
                         <div>{{ bookmark.name }}</div>
-                        <div>{{ bookmark.startTimeMs | date: 'medium':'UTC' }}</div>
+                        <div>{{ bookmark.startTimeMs | date : 'medium' : 'UTC' }}</div>
                     </header>
                     <div [ngClass]="{ 'd-none': !accordionItem.expanded }">
                         <ng-template

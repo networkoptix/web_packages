@@ -6,8 +6,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { icons } from '@app/variables/static-variables';
-import { PasswordValidationModule } from '@components/password-input-validation/password-validation.module';
 import { PasswordModule } from '@components/password-input/password.module';
+import { PasswordValidationModule } from '@components/password-input-validation/password-validation.module';
 
 import { WizardStateService } from '../../services/wizard-state.service';
 

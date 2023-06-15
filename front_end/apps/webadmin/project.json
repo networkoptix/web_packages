@@ -1,16 +1,17 @@
 {
+    "name": "webadmin",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
     "projectType": "application",
-    "schematics": {
+    "generators": {
         "@schematics/angular:component": {
             "style": "scss"
         }
     },
-    "root": "apps/webadmin",
     "sourceRoot": "apps/webadmin/src",
     "prefix": "app",
-    "architect": {
+    "targets": {
         "build": {
-            "builder": "@angular-devkit/build-angular:browser",
+            "executor": "@angular-devkit/build-angular:browser",
             "options": {
                 "allowedCommonJsDependencies": [
                     "md5",
@@ -79,17 +80,10 @@
                         "output": "."
                     }
                 ],
-                "styles": [
-                    "libs/dialogs/dialogs.scss",
-                    "common/styles/main.scss"
-                ],
+                "styles": ["libs/dialogs/dialogs.scss", "common/styles/main.scss"],
                 "scripts": [],
                 "stylePreprocessorOptions": {
-                    "includePaths": [
-                        "common/styles",
-                        "common/styles/common",
-                        "libs"
-                    ]
+                    "includePaths": ["common/styles", "common/styles/common", "libs"]
                 },
                 "vendorChunk": true,
                 "extractLicenses": false,
@@ -161,17 +155,14 @@
             "defaultConfiguration": ""
         },
         "lint": {
-            "builder": "@nrwl/linter:eslint",
+            "executor": "@nrwl/linter:eslint",
             "options": {
                 "eslintConfig": "./.eslintrc.js",
-                "lintFilePatterns": [
-                    "apps/webadmin/**/*.ts",
-                    "apps/webadmin/**/*.component.html"
-                ]
+                "lintFilePatterns": ["apps/webadmin/**/*.ts", "apps/webadmin/**/*.component.html"]
             }
         },
         "serve": {
-            "builder": "@angular-devkit/build-angular:dev-server",
+            "executor": "@angular-devkit/build-angular:dev-server",
             "options": {
                 "publicHost": "localhost:9001",
                 "host": "0.0.0.0",
@@ -191,17 +182,14 @@
             }
         },
         "test": {
-            "builder": "@angular-devkit/build-angular:karma",
+            "executor": "@angular-devkit/build-angular:karma",
             "options": {
                 "main": "common/test.ts",
                 "polyfills": "apps/webadmin/src/polyfills.ts",
                 "tsConfig": "apps/webadmin/tsconfig.spec.json",
                 "karmaConfig": "apps/webadmin/karma.conf.ci.js",
                 "assets": [],
-                "styles": [
-                    "libs/dialogs/dialogs.scss",
-                    "common/styles/main.scss"
-                ],
+                "styles": ["libs/dialogs/dialogs.scss", "common/styles/main.scss"],
                 "stylePreprocessorOptions": {
                     "includePaths": [
                         "node_modules/",

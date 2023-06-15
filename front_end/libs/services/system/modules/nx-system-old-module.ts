@@ -20,11 +20,11 @@ import { CloudStorageAPI } from '@services/nx-cloud-api/cloud-services/cloud-sto
 import { nxConfig } from '@services/nx-config/config';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxPollService } from '@services/poll.service';
+import { NxSystemModuleBase } from '@services/system/system-module';
 import { NxSystemAPIService } from '@services/system-api.service';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
-import { NxSystemModuleBase } from '@services/system/system-module';
 import { cleanId, KeyFilter } from '@utils/general';
 import { memoizeAsyncPersistent, memoizeDecorator } from '@utils/memoize';
 import { setServerIpAndPort } from '@utils/nx';

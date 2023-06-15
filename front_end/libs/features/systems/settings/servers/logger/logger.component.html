@@ -24,8 +24,8 @@
                 <label
                     class="col-12 col-md-4 m-0 pr-0 d-flex align-items-center justify-content-end"
                     [innerText]="
-                        (LANG.system.loggerDropdownLabel | translate: { loggerName: logger.key }) ||
-                        logger.key
+                        (LANG.system.loggerDropdownLabel
+                            | translate : { loggerName: logger.key }) || logger.key
                     "
                 ></label>
                 <div class="col-11 col-md-8">

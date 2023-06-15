@@ -1,11 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import {
-    ActivatedRouteSnapshot,
-    CanActivate,
-    Router,
-    RouterStateSnapshot,
-    UrlTree,
-} from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Observable, firstValueFrom } from 'rxjs';
 
@@ -22,7 +16,7 @@ import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
 
 @Injectable()
-export class SystemGuard implements CanActivate {
+export class SystemGuard {
     public loading = false;
 
     constructor(

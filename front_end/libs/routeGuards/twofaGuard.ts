@@ -1,12 +1,6 @@
 import { Location } from '@angular/common';
 import { Injectable, Inject } from '@angular/core';
-import {
-    CanActivate,
-    ActivatedRouteSnapshot,
-    RouterStateSnapshot,
-    UrlTree,
-    Router,
-} from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
 import { lastValueFrom, Observable, switchMap, take } from 'rxjs';
 
 import { NxAccountService } from '@services/account.service';
@@ -20,7 +14,7 @@ import { WINDOW } from '@services/window-provider';
 @Injectable({
     providedIn: 'root',
 })
-export class TwofaGuard implements CanActivate {
+export class TwofaGuard {
     constructor(
         private router: Router,
         private accountService: NxAccountService,

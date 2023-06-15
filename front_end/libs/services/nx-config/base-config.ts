@@ -190,7 +190,7 @@ const FeatureFlagKeys = [
     'layoutsIoDevices',
 ] as const;
 
-export type FeatureFlagType = typeof FeatureFlagKeys[number];
+export type FeatureFlagType = (typeof FeatureFlagKeys)[number];
 
 export const FeatureFlagStrings = FeatureFlagKeys.reduce((obj, key) => {
     obj[key] = key;

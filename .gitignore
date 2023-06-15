@@ -35,3 +35,4 @@ quart_env/
 .python-version
 cloud/requirements.txt
 cloud/requirements-license.json
+**/migrations.json

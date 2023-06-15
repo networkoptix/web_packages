@@ -80,7 +80,9 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
     @ContentChild('header') header: TemplateRef<never>;
     @ContentChild('rows') rows: TemplateRef<never>;
 
-    @ContentChildren('sortItem', { descendants: true }) sortableItems: QueryList<HTMLDivElement>;
+    @ContentChildren('sortItem', { descendants: true }) sortableItems: QueryList<
+        ElementRef<HTMLDivElement>
+    >;
 
     @ViewChild('tableBodyContainer', { static: false })
     private tableBodyContainer: ElementRef<HTMLDivElement>;
@@ -315,24 +317,20 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
     }
 
     private sortColumn(
-        item: EventTarget | HTMLDivElement,
+        item: MouseEvent | HTMLDivElement,
         sortType: string,
         changeSortOrder: boolean = true,
     ): void {
-        // @ts-expect-error type error
-        const targetId = item.target?.id || item.id;
-        let target = item;
-        if ('target' in item) {
-            // @ts-expect-error compile type error
-            target = item.target as EventTarget;
-        }
+        const isEventTargetElement = (item: MouseEvent | HTMLDivElement): item is MouseEvent =>
+            item instanceof MouseEvent;
+        const target = isEventTargetElement(item) ? (item.target as HTMLDivElement) : item;
+        const targetId = target.id;
 
         if (changeSortOrder && (!this.selectedHeader || targetId === this.selectedHeader)) {
             this.sortOrderASC = !this.sortOrderASC;
             this.clearCss(target);
         } else {
             this.sortOrderASC = true;
-            // @ts-expect-error type error
             this.sortableItems.forEach((item: ElementRef) => {
                 if (item.nativeElement.children[this.selectedHeader]) {
                     this.clearCss(item.nativeElement.children[this.selectedHeader]);

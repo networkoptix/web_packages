@@ -4,8 +4,8 @@ import { lastValueFrom } from 'rxjs';
 import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
 import { nxConfig } from '@services/nx-config/config';
-import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxSystemBase } from '@services/system/system-base';
+import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { cleanId } from '@utils/general';
 
 import { UserManager } from './user-manager';

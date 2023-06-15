@@ -1,6 +1,6 @@
 /* Here we override some default bootstrap styles and behavior for our purposes */
 @use "_theme_variables_common";
-@import "~sass-rem/rem";
+@import "sass-rem/rem";
 
 $font-size-a-bit-large : ceil(theme_variables_common.$font-size-base * 1.15); //~16px - we just need 16px sometimes :-)
 

@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
+import { ActivatedRouteSnapshot } from '@angular/router';
 
 import { environment } from '@environments/environment';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 
 @Injectable({ providedIn: 'root' })
-export class SystemTitleResolver implements Resolve<string> {
+export class SystemTitleResolver {
     systems: NxSystemInfo[];
     systemId: string;
 

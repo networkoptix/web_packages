@@ -163,7 +163,7 @@
                 >
                     <button
                         *ngFor="let action of nodeActions"
-                        [nxTooltip]="action.tooltip | translate: node.details"
+                        [nxTooltip]="action.tooltip | translate : node.details"
                         (click)="action.handler(node.type, node.details); $event.stopPropagation()"
                         [tourAnchor]="
                             node.type === RESOURCE_TYPE.LAYOUTS ? 'cloud-layouts_add_layout' : ''
@@ -695,7 +695,9 @@
                                                         webpage
                                                     )
                                                 "
-                                                [src]="itemDetail.details.url | safe: 'resourceUrl'"
+                                                [src]="
+                                                    itemDetail.details.url | safe : 'resourceUrl'
+                                                "
                                                 frameBorder="0"
                                             ></iframe>
                                         </ng-container>

@@ -33,7 +33,7 @@
                             <img
                                 [src]="
                                     (bookmark.thumbnail | async)
-                                        ? (bookmark.thumbnail | async | safe: 'resourceUrl')
+                                        ? (bookmark.thumbnail | async | safe : 'resourceUrl')
                                         : icons.dirNonStandardView +
                                           'cameras_list_placeholder_offline.svg'
                                 "

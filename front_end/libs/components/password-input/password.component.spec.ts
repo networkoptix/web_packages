@@ -10,10 +10,10 @@ import { FormsModule, NgModel } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { MockProvider } from 'ng-mocks';
 
+import { NxPasswordComponent } from '@components/password-input/password.component';
 import {
     NxPasswordTagValidationComponent
 } from '@components/password-input-tag-validation/password-tag-validation.component';
-import { NxPasswordComponent } from '@components/password-input/password.component';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';

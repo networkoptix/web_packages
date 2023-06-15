@@ -38,7 +38,7 @@ const getBaseSystem = (version: SystemVersion, systemId: string) => {
     if (!AllSystemVersions.includes(version)) {
         version = 0;
     }
-    const SystemClass: typeof classes[SystemVersion] = classes[version];
+    const SystemClass: (typeof classes)[SystemVersion] = classes[version];
     return new SystemClass(systemId);
 };
 

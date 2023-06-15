@@ -5,7 +5,10 @@ import { createAction, on, props } from '@ngrx/store';
  */
 export const syncState = createAction(
     '[Sync] Request Sync',
-    props<{ requestor?: string; data?: unknown; bc?: BroadcastChannel }>()
+    // TODO: need to figure out how to type this. createAction takes is a generic type.
+    // Figure out how to correctly type the data property on props.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    props<{ requestor?: string; data?: any; bc?: BroadcastChannel }>()
 );
 
 /**

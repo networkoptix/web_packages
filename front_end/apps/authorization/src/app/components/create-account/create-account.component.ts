@@ -20,8 +20,8 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { CheckboxModule } from '@components/checkbox/checkbox.module';
 import { EmailModule } from '@components/email-input/email.module';
-import { PasswordValidationModule } from '@components/password-input-validation/password-validation.module';
 import { PasswordModule } from '@components/password-input/password.module';
+import { PasswordValidationModule } from '@components/password-input-validation/password-validation.module';
 import { ProcessButtonModule } from '@components/process-button/process-button.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { icons } from '@lib/variables/static-variables';

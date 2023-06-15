@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HoverPreloadStrategy } from 'ngx-hover-preload';
+// import { HoverPreloadStrategy } from 'ngx-hover-preload';
 
 import { PipesModule } from '@app/pipes/pipes.module';
 import { DirectivesModule } from '@directives/directives.module';
@@ -213,7 +213,7 @@ const lazyRoutes: Routes = [
             scrollPositionRestoration: 'enabled',
             anchorScrolling: 'enabled',
             enableTracing: false,
-            preloadingStrategy: HoverPreloadStrategy,
+            // preloadingStrategy: HoverPreloadStrategy,
             relativeLinkResolution: 'legacy'
         })
     ],

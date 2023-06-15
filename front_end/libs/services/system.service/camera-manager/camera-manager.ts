@@ -12,6 +12,8 @@ import {
     timer,
 } from 'rxjs';
 
+import { NxSystemOldModule } from '@services/system/modules/nx-system-old-module';
+import { NxSystemBase } from '@services/system/system-base';
 import type {
     ec2CameraEx,
     ec2MediaServer,
@@ -21,8 +23,6 @@ import type {
     CameraValues,
 } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
-import { NxSystemOldModule } from '@services/system/modules/nx-system-old-module';
-import { NxSystemBase } from '@services/system/system-base';
 import { alphabeticalSort, cleanId, KeyFilter, MS, paramSortFunc } from '@utils/general';
 
 import type { ServerManager } from '../server-manager/server-manager';

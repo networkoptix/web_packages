@@ -1,7 +1,7 @@
 <video
     [ngClass]="{ 'd-none': posterLoadingError && false }"
     [src]="sourceUrl"
-    [poster]="posterLoadingError ? internalPoster : (posterUrl | safe: 'resourceUrl')"
+    [poster]="posterLoadingError ? internalPoster : (posterUrl | safe : 'resourceUrl')"
     (error)="handler($event)"
     (loadeddata)="handler($event)"
     preload="auto"

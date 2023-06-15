@@ -2,10 +2,10 @@ import { Injectable, Injector } from '@angular/core';
 
 import { environment } from '@environments/environment';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
-import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { nxSystemFactory } from '@services/system/factories/initial-system-factory';
 import { NxSystemBase } from '@services/system/system-base';
+import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
+import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystemsService } from '@services/systems.service';
 import { memoizeAsyncPersistent } from '@utils/memoize';
 

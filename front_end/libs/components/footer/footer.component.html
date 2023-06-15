@@ -16,7 +16,7 @@
                     <li *ngFor="let item of footerItems; trackBy: trackItem">
                         <a
                             *ngIf="item.new_window || oauth; else internalLink"
-                            [href]="item.url | safe: 'url'"
+                            [href]="item.url | safe : 'url'"
                             [target]="item.new_window ? '_blank' : '_self'"
                             [attr.data-testid]="item.url === '/download' ? 'downloadLink' : null"
                             >{{ item.display_name | translate }}</a

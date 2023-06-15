@@ -5,7 +5,7 @@
 @use "css-variables/native-theme/theme_palette" as *;
 @import "theme_variables_light";
 @import "theme_variables_dark";
-@import "~@angular/cdk/overlay-prebuilt.css";
+@import "@angular/cdk/overlay-prebuilt.css";
 
 a {
     color: var(--new-brand-core) !important;

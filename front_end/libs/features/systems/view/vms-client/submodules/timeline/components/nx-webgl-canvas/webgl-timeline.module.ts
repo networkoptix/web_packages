@@ -12,11 +12,11 @@ import {
     TimelineScrollComponent
 } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/scroll/timeline-scroll.component';
 import {
-    WebGlTimelineSelectionActionPanelComponent
-} from '@vms-client/submodules/timeline/components/nx-webgl-canvas/selection-action-panel/timeline-selection-action-panel.component';
-import {
     WebGlTimelineSelectionComponent
 } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/selection/timeline-selection.component';
+import {
+    WebGlTimelineSelectionActionPanelComponent
+} from '@vms-client/submodules/timeline/components/nx-webgl-canvas/selection-action-panel/timeline-selection-action-panel.component';
 import {
     WebGlTimeUnderMouseComponent
 } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/time-under-mouse/time-under-mouse.component';

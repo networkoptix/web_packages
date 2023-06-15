@@ -5,7 +5,7 @@ export const createRule = ESLintUtils.RuleCreator.withoutDocs;
 /**
  * Whether a type cannot be inferred from an initial value
  */
-export function isUntypedValue(expression: TSESTree.Expression): boolean {
+export function isUntypedValue(expression: TSESTree.CallExpressionArgument): boolean {
     const isNull = (expression as TSESTree.NullLiteral).value === null;
     const isUndefined = expression.type === AST_NODE_TYPES.Identifier &&
         expression.name === 'undefined';

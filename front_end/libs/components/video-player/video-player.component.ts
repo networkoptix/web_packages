@@ -191,7 +191,6 @@ export class NxVideoPlayerComponent {
                     }
                     this.fpsTracker.reportFrame();
 
-                    // @ts-expect-error
                     video.requestVideoFrameCallback(updateFrame);
                 }
 

@@ -49,11 +49,11 @@
                     <span
                         *ngIf="
                             LANG.security.twoFa.twoFADescription
-                                | translate: { count: twoFaSystems.length } as twoFADescription
+                                | translate : { count: twoFaSystems.length } as twoFADescription
                         "
-                        >{{ twoFADescription | translateCut: 0
+                        >{{ twoFADescription | translateCut : 0
                         }}<ng-container *ngIf="!twoFaSystems.length">{{
-                            twoFADescription | translateCut: 1
+                            twoFADescription | translateCut : 1
                         }}</ng-container
                         ><span *ngIf="twoFaSystems.length"
                             ><span
@@ -63,9 +63,9 @@
                                 (click)="
                                     showPopoverWithTemplate(popLegend2faTemplate, twoFaSystemCount)
                                 "
-                                >{{ twoFADescription | translateCut: 1 }}</span
+                                >{{ twoFADescription | translateCut : 1 }}</span
                             ></span
-                        >{{ twoFADescription | translateCut: 2 }}</span
+                        >{{ twoFADescription | translateCut : 2 }}</span
                     >
                     <!-- (0) ...Currently you have -->
                     <!-- (1) # such systems -->
@@ -80,7 +80,7 @@
                     <div
                         *ngFor="
                             let system of twoFaSystems
-                                | slice: 0:(twoFaSystems.length <= 5 ? 5 : 4);
+                                | slice : 0 : (twoFaSystems.length <= 5 ? 5 : 4);
                             let i = index
                         "
                         class="d-flex align-items-center"
@@ -99,7 +99,7 @@
                         *ngIf="twoFaSystems.length > 5"
                         [innerText]="
                             LANG.security.twoFa.systemsRemainder
-                                | translate: { count: twoFaSystems.length - 4 }
+                                | translate : { count: twoFaSystems.length - 4 }
                         "
                     ></div>
                 </ng-template>
@@ -135,10 +135,10 @@
                             class="mb-1"
                             *ngIf="
                                 LANG.security.twoFa.v5Warning
-                                    | translate: { count: subV5Systems.length } as v5Warning
+                                    | translate : { count: subV5Systems.length } as v5Warning
                             "
                         >
-                            {{ v5Warning | translateCut: 0
+                            {{ v5Warning | translateCut : 0
                             }}<span
                                 #subV5SystemCount
                                 id="subV5SystemCount"
@@ -149,10 +149,10 @@
                                         subV5SystemCount
                                     )
                                 "
-                                >{{ v5Warning | translateCut: 1 }}</span
-                            >{{ v5Warning | translateCut: 2
-                            }}<strong>{{ v5Warning | translateCut: 3 }}</strong
-                            >{{ v5Warning | translateCut: 4 }}
+                                >{{ v5Warning | translateCut : 1 }}</span
+                            >{{ v5Warning | translateCut : 2
+                            }}<strong>{{ v5Warning | translateCut : 3 }}</strong
+                            >{{ v5Warning | translateCut : 4 }}
                             <!-- (0) You have -->
                             <!-- (1) # system(s) -->
                             <!-- (2) w/ version <5.0, these will be inaccessible via -->
@@ -163,7 +163,7 @@
                             class="mb-0"
                             [innerText]="
                                 LANG.security.twoFa.v5WarningExplanation
-                                    | translate: { count: subV5Systems.length }
+                                    | translate : { count: subV5Systems.length }
                             "
                         ></p>
                     </div>
@@ -180,7 +180,7 @@
                     <div
                         *ngFor="
                             let system of subV5Systems
-                                | slice: 0:(subV5Systems.length <= 5 ? 5 : 4);
+                                | slice : 0 : (subV5Systems.length <= 5 ? 5 : 4);
                             let i = index
                         "
                         class="d-flex align-items-center"
@@ -199,7 +199,7 @@
                         *ngIf="subV5Systems.length > 5"
                         [innerText]="
                             LANG.security.twoFa.systemsRemainder
-                                | translate: { count: subV5Systems.length - 4 }
+                                | translate : { count: subV5Systems.length - 4 }
                         "
                     ></div>
                 </ng-template>

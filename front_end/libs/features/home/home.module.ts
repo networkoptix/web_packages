@@ -25,8 +25,8 @@ import { NxGroupsCardsComponent } from './components/groups-cards/groups-cards.c
 import { NxChannelPartnerInformationComponent } from './components/information/information.component';
 import { NxOrganizationReportsComponent } from './components/reports/reports.component';
 import { NxOrganizationSettingsComponent } from './components/settings/settings.component';
-import { NxGroupsSidebarLevelComponent } from './components/sidebar-level/sidebar-level.component';
 import { NxSystemGroupsSidebarComponent } from './components/sidebar/sidebar.component';
+import { NxGroupsSidebarLevelComponent } from './components/sidebar-level/sidebar-level.component';
 import { NxSubchannelComponent } from './components/subchannel/subchannel.component';
 import { NxSubchannelsComponent } from './components/subchannels/subchannels.component';
 import { NxSystemCardComponent } from './components/system-card/system-card.component';

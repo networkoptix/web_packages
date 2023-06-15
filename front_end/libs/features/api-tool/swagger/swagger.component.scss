@@ -2,7 +2,7 @@
 @use "theme_variables_common" as *;
 @use "buttons" as *;
 @use "bootstrap_utils" as bootstrap;
-@import "~swagger-ui/dist/swagger-ui.css";
+@import "swagger-ui/dist/swagger-ui.css";
 
 :host {
 	@include bootstrap.media-breakpoint-down(sm) {

@@ -3,8 +3,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { PasswordValidationModule } from '@components/password-input-validation/password-validation.module';
 import { PasswordModule } from '@components/password-input/password.module';
+import { PasswordValidationModule } from '@components/password-input-validation/password-validation.module';
 import { ProcessButtonModule } from '@components/process-button/process-button.module';
 import { ProcessCancelButtonModule } from '@components/process-cancel-Button/process-cancel-Button.module';
 

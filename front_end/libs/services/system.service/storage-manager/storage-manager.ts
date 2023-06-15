@@ -1,8 +1,8 @@
 import { firstValueFrom, Observable } from 'rxjs';
 
-import type { RebuildArchiveResponse } from '@services/system-api.types';
 import { NxSystemOldModule } from '@services/system/modules/nx-system-old-module';
 import { ServerManagerModule } from '@services/system/modules/resource-managers/server-manager';
+import type { RebuildArchiveResponse } from '@services/system-api.types';
 
 import { StorageState } from './storage-state';
 

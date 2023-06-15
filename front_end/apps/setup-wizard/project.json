@@ -1,16 +1,17 @@
 {
+    "name": "setup-wizard",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
     "projectType": "application",
-    "schematics": {
+    "generators": {
         "@schematics/angular:component": {
             "style": "scss"
         }
     },
-    "root": "apps/front-end",
     "sourceRoot": "apps/setup-wizard/src",
     "prefix": "app",
-    "architect": {
+    "targets": {
         "build": {
-            "builder": "@angular-devkit/build-angular:browser",
+            "executor": "@angular-devkit/build-angular:browser",
             "options": {
                 "allowedCommonJsDependencies": [
                     "dexie-encrypted",
@@ -49,10 +50,7 @@
                         "output": "."
                     }
                 ],
-                "styles": [
-                    "common/styles/main.scss",
-                    "apps/setup-wizard/src/styles.scss"
-                ],
+                "styles": ["common/styles/main.scss", "apps/setup-wizard/src/styles.scss"],
                 "stylePreprocessorOptions": {
                     "includePaths": [
                         "node_modules/",
@@ -139,7 +137,7 @@
             }
         },
         "serve": {
-            "builder": "@angular-devkit/build-angular:dev-server",
+            "executor": "@angular-devkit/build-angular:dev-server",
             "options": {
                 "browserTarget": "setup-wizard:build",
                 "host": "0.0.0.0",
@@ -158,41 +156,36 @@
             }
         },
         "extract-i18n": {
-            "builder": "@angular-devkit/build-angular:extract-i18n",
+            "executor": "@angular-devkit/build-angular:extract-i18n",
             "options": {
                 "browserTarget": "setup-wizard:build"
             }
         },
         "test": {
-            "builder": "@angular-devkit/build-angular:karma",
+            "executor": "@angular-devkit/build-angular:karma",
             "options": {
                 "main": "apps/setup-wizard/src/test.ts",
                 "polyfills": "apps/setup-wizard/src/polyfills.ts",
                 "tsConfig": "apps/setup-wizard/tsconfig.spec.json",
                 "karmaConfig": "apps/setup-wizard/karma.conf.ci.js",
                 "codeCoverage": true,
-                "assets": [
-                    "apps/setup-wizard/src/favicon.ico",
-                    "apps/setup-wizard/src/assets"
-                ],
-                "styles": [
-                    "apps/setup-wizard/src/styles.scss"
-                ],
+                "assets": ["apps/setup-wizard/src/favicon.ico", "apps/setup-wizard/src/assets"],
+                "styles": ["apps/setup-wizard/src/styles.scss"],
                 "scripts": []
             }
         },
         "lint": {
-            "builder": "@nrwl/linter:eslint",
-                "options": {
-                    "eslintConfig": ".eslintrc.js",
-                    "lintFilePatterns": [
-                        "apps/setup-wizard/**/*.ts",
-                        "apps/setup-wizard/**/*.component.html"
-                    ]
+            "executor": "@nrwl/linter:eslint",
+            "options": {
+                "eslintConfig": ".eslintrc.js",
+                "lintFilePatterns": [
+                    "apps/setup-wizard/**/*.ts",
+                    "apps/setup-wizard/**/*.component.html"
+                ]
             }
         },
         "e2e": {
-            "builder": "@angular-devkit/build-angular:protractor",
+            "executor": "@angular-devkit/build-angular:protractor",
             "options": {
                 "protractorConfig": "apps/setup-wizard/e2e/protractor.conf.js",
                 "devServerTarget": "setup-wizard:serve"

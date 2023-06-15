@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 
 @Injectable()
-export class SubChannelResolver implements Resolve<boolean> {
+export class SubChannelResolver {
     resolve(
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot,

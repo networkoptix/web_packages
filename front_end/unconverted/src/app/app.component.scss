@@ -2,7 +2,7 @@
 @use "css-variables/native-theme/theme_palette" as *;
 @use "css-variables/theme_palette" as *;
 @use "css-variables/theme_variables" as *;
-@import "~@angular/cdk/overlay-prebuilt.css";
+@import "@angular/cdk/overlay-prebuilt.css";
 @import "theme_variables_light";
 @import "theme_variables_dark";
 

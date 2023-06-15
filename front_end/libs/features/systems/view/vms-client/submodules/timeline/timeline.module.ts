@@ -6,6 +6,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import {
     TimeUnderMouseComponent
 } from './components/time-under-mouse/time-under-mouse.component';
+import { TimelineComponent } from './components/timeline/timeline.component';
 import {
     TimelinePlaybackIndicatorComponent
 } from './components/timeline-playback-indicator/timeline-playback-indicator.component';
@@ -13,12 +14,11 @@ import {
     TimelineScrollbarComponent
 } from './components/timeline-scrollbar/timeline-scrollbar.component';
 import {
-    TimelineSelectionActionPanelComponent
-} from './components/timeline-selection-action-panel/timeline-selection-action-panel.component';
-import {
     TimelineSelectionComponent
 } from './components/timeline-selection/timeline-selection.component';
-import { TimelineComponent } from './components/timeline/timeline.component';
+import {
+    TimelineSelectionActionPanelComponent
+} from './components/timeline-selection-action-panel/timeline-selection-action-panel.component';
 import {
     ZoomControlsComponent
 } from './components/zoom-controls/zoom-controls.component';

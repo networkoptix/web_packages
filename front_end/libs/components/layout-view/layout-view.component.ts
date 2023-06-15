@@ -266,7 +266,7 @@ export class NxLayoutViewComponent {
                                 aspectRatio,
                         },
                     };
-                }, {} as ResourceLookup<typeof cameras[0]>);
+                }, {} as ResourceLookup<(typeof cameras)[0]>);
 
                 const parsedServers = servers.reduce(
                     (servers, server) => ({
@@ -284,7 +284,7 @@ export class NxLayoutViewComponent {
                             aspectRatio,
                         },
                     }),
-                    {} as ResourceLookup<typeof servers[0]>,
+                    {} as ResourceLookup<(typeof servers)[0]>,
                 );
 
                 const parsedWebPages = webPages.reduce(
@@ -297,7 +297,7 @@ export class NxLayoutViewComponent {
                             aspectRatio,
                         },
                     }),
-                    {} as ResourceLookup<typeof webPages[0]>,
+                    {} as ResourceLookup<(typeof webPages)[0]>,
                 );
                 const byName = alphabeticalSort<Pick<Resource, 'name'>>(
                     this.locale,

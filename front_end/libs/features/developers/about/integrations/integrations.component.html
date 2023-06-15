@@ -67,7 +67,7 @@
             class="card info-block"
         >
             <h3>{{ integrationsNode.nodes[0].title }}</h3>
-            <div [innerHTML]="integrationsShortDescription | safe: 'html'"></div>
+            <div [innerHTML]="integrationsShortDescription | safe : 'html'"></div>
             <button
                 *ngIf="integrationsNode.nodes[0]?.url && integrationsNode.nodes[0].title"
                 class="btn btn-default mr-auto mt-auto"

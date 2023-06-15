@@ -1,6 +1,6 @@
-import { ServerManager } from '@services/system.service/server-manager/server-manager';
 import { NxSystemModuleBase } from '@services/system/system-module';
 import { AllSystemVersions } from '@services/system/system-version';
+import { ServerManager } from '@services/system.service/server-manager/server-manager';
 
 @NxSystemModuleBase.checkStatic
 export class ServerManagerModule extends NxSystemModuleBase {

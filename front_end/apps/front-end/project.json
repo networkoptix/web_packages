@@ -1,16 +1,17 @@
 {
+    "name": "front-end",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
     "projectType": "application",
-    "schematics": {
+    "generators": {
         "@schematics/angular:component": {
             "style": "scss"
         }
     },
-    "root": "apps/front-end",
     "sourceRoot": "apps/front-end/src",
     "prefix": "app",
-    "architect": {
+    "targets": {
         "build": {
-            "builder": "@angular-devkit/build-angular:browser",
+            "executor": "@angular-devkit/build-angular:browser",
             "options": {
                 "allowedCommonJsDependencies": [
                     "md5",
@@ -79,13 +80,8 @@
                         "output": "."
                     }
                 ],
-                "styles": [
-                    "libs/dialogs/dialogs.scss",
-                    "common/styles/main.scss"
-                ],
-                "scripts": [
-                    "node_modules/marked/marked.min.js"
-                ],
+                "styles": ["libs/dialogs/dialogs.scss", "common/styles/main.scss"],
+                "scripts": ["node_modules/marked/marked.min.js"],
                 "stylePreprocessorOptions": {
                     "includePaths": [
                         "node_modules/",
@@ -158,17 +154,14 @@
             "defaultConfiguration": ""
         },
         "lint": {
-            "builder": "@nrwl/linter:eslint",
+            "executor": "@nrwl/linter:eslint",
             "options": {
                 "eslintConfig": "./.eslintrc.js",
-                "lintFilePatterns": [
-                    "apps/front-end/**/*.ts",
-                    "apps/front-end/**/*.component.html"
-                ]
+                "lintFilePatterns": ["apps/front-end/**/*.ts", "apps/front-end/**/*.component.html"]
             }
         },
         "serve": {
-            "builder": "@angular-devkit/build-angular:dev-server",
+            "executor": "@angular-devkit/build-angular:dev-server",
             "options": {
                 "publicHost": "localhost:9000",
                 "host": "0.0.0.0",
@@ -189,23 +182,20 @@
             "defaultConfiguration": "development"
         },
         "extract-i18n": {
-            "builder": "@angular-devkit/build-angular:extract-i18n",
+            "executor": "@angular-devkit/build-angular:extract-i18n",
             "options": {
                 "browserTarget": "front-end:build"
             }
         },
         "test": {
-            "builder": "@angular-devkit/build-angular:karma",
+            "executor": "@angular-devkit/build-angular:karma",
             "options": {
                 "main": "common/test.ts",
                 "polyfills": "apps/front-end/src/polyfills.ts",
                 "tsConfig": "apps/front-end/tsconfig.spec.json",
                 "karmaConfig": "apps/front-end/karma.conf.ci.js",
                 "assets": [],
-                "styles": [
-                    "libs/dialogs/dialogs.scss",
-                    "common/styles/main.scss"
-                ],
+                "styles": ["libs/dialogs/dialogs.scss", "common/styles/main.scss"],
                 "stylePreprocessorOptions": {
                     "includePaths": [
                         "node_modules/",

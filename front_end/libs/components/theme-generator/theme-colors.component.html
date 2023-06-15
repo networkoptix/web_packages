@@ -146,7 +146,7 @@
                             <label class="input-label col-12">
                                 {{
                                     LANG.theme.baseColorLumLabel
-                                        | translate: { luminosityStep: luminosityStep }
+                                        | translate : { luminosityStep: luminosityStep }
                                 }}
                             </label>
                             <div class="col-12">
@@ -272,7 +272,7 @@
                                 <label class="col-10 color">
                                     {{
                                         LANG.theme.brandLabel
-                                            | translate: { hex: i.hex, label: i.label }
+                                            | translate : { hex: i.hex, label: i.label }
                                     }}
                                 </label>
                             </div>
@@ -287,7 +287,7 @@
                                 <label class="col-10 color">
                                     {{
                                         LANG.theme.brandLabel
-                                            | translate: { hex: i.hex, label: i.label }
+                                            | translate : { hex: i.hex, label: i.label }
                                     }}
                                 </label>
                             </div>
@@ -306,7 +306,7 @@
                                 <label class="col-10 color">
                                     {{
                                         LANG.theme.lightLabel
-                                            | translate: { hex: hexLight[i], number: i }
+                                            | translate : { hex: hexLight[i], number: i }
                                     }}
                                 </label>
                             </div>
@@ -325,7 +325,7 @@
                                 <label class="col-10 color">
                                     {{
                                         LANG.theme.darkLabel
-                                            | translate: { hex: hexDark[i], number: i }
+                                            | translate : { hex: hexDark[i], number: i }
                                     }}
                                 </label>
                             </div>
@@ -355,7 +355,7 @@
                     >
                         <div class="col-2 color green-{{ i.label }}"></div>
                         <label class="col-10 color">
-                            {{ LANG.theme.greenLabel | translate: { hex: i.hex, label: i.label } }}
+                            {{ LANG.theme.greenLabel | translate : { hex: i.hex, label: i.label } }}
                         </label>
                     </div>
                 </div>
@@ -370,7 +370,9 @@
                     >
                         <div class="col-2 color yellow-{{ i.label }}"></div>
                         <label class="col-10 color">
-                            {{ LANG.theme.yellowLabel | translate: { hex: i.hex, label: i.label } }}
+                            {{
+                                LANG.theme.yellowLabel | translate : { hex: i.hex, label: i.label }
+                            }}
                         </label>
                     </div>
                 </div>

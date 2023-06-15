@@ -1,6 +1,6 @@
-import { StorageManager } from '@services/system.service/storage-manager/storage-manager';
 import { NxSystemModuleBase } from '@services/system/system-module';
 import { AllSystemVersions } from '@services/system/system-version';
+import { StorageManager } from '@services/system.service/storage-manager/storage-manager';
 
 @NxSystemModuleBase.checkStatic
 export class StorageManagerModule extends NxSystemModuleBase {

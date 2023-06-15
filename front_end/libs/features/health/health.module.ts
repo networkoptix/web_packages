@@ -24,15 +24,15 @@ import { SystemTitleResolver } from '@resolvers/system-title-resolver';
 
 import { NxSystemAlertsComponent } from './alerts/alerts.component';
 import { NxSystemAlertCardComponent } from './card/card.component';
-import { NxHealthLayoutService } from './health-layout.service';
 import { NxHealthComponent } from './health/health.component';
+import { NxHealthLayoutService } from './health-layout.service';
 import { NxSystemMetricsComponent } from './metrics/metrics.component';
-import {
-    NxDynamicTablePanelComponent
-} from './table-components/dynamic-table-panel/dynamic-table-panel.component';
 import {
     NxDynamicTableComponent
 } from './table-components/dynamic-table/dynamic-table.component';
+import {
+    NxDynamicTablePanelComponent
+} from './table-components/dynamic-table-panel/dynamic-table-panel.component';
 import {
     NxImageSectionComponent
 } from './table-components/image-section/image-section.component';

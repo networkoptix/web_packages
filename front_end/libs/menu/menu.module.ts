@@ -5,8 +5,8 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { NxSearchHighlightModule } from '@components/search-highlight/search-highlight.module';
 import { SearchModule } from '@components/search/search.module';
+import { NxSearchHighlightModule } from '@components/search-highlight/search-highlight.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@pipes/pipes.module';
 

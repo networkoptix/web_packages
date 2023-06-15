@@ -45,7 +45,7 @@ export class NxDynamicWidgetComponent {
      *
      * Example NxHealthMonitorWidgetComponent.registerWidget()
      */
-    static WIDGETS: typeof FirstPartyWidget[] = WIDGETS;
+    static WIDGETS: (typeof FirstPartyWidget)[] = WIDGETS;
 
     /**
      * Returns class for dynamic widget identifier if one exists.

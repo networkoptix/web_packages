@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { WINDOW } from '@services/window-provider';
@@ -7,7 +7,7 @@ import { WINDOW } from '@services/window-provider';
 import { redirect } from '../variables/static-variables';
 
 @Injectable()
-export class ManualAccessGuard implements CanActivate {
+export class ManualAccessGuard {
     constructor(
         @Inject(WINDOW) private window: Window,
         private router: Router,

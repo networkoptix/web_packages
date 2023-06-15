@@ -10,8 +10,8 @@ import { AdvancedFilterModule } from '@components/advanced-filter/advanced-filte
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { PaginatorModule } from '@components/paginator/paginator.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
-import { NxSearchHighlightModule } from '@components/search-highlight/search-highlight.module';
 import { SearchModule } from '@components/search/search.module';
+import { NxSearchHighlightModule } from '@components/search-highlight/search-highlight.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@pipes/pipes.module';
 

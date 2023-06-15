@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, TitleStrategy } from '@angular/router';
-import { HoverPreloadStrategy } from 'ngx-hover-preload';
+// import { HoverPreloadStrategy } from 'ngx-hover-preload';
 
 import { PipesModule } from '@app/pipes/pipes.module';
 import { NxPageTitleStrategy } from '@app/resolvers/title-resolver';
@@ -86,9 +86,8 @@ const lazyRoutes: Routes = [
             scrollPositionRestoration: 'enabled',
             anchorScrolling: 'enabled',
             enableTracing: false,
-            preloadingStrategy: HoverPreloadStrategy,
-            onSameUrlNavigation: 'reload',
-            relativeLinkResolution: 'legacy'
+            // preloadingStrategy: HoverPreloadStrategy,
+            onSameUrlNavigation: 'reload'
         }),
         LoginWebadminModule
     ],

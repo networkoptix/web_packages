@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Router, Resolve } from '@angular/router';
+import { Router } from '@angular/router';
 import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
 import { EMPTY as empty } from 'rxjs';
 
@@ -7,7 +7,7 @@ import type { PlatformMatch } from '@services/nx-config/base-config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 @Injectable()
-export class OsResolver implements Resolve<never> {
+export class OsResolver {
     deviceInfo: DeviceInfo;
     platform: string;
     platformMatch: PlatformMatch;

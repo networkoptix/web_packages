@@ -1,8 +1,8 @@
 import { nxConfig } from '@services/nx-config/config';
-import { UserManager } from '@services/system.service/user-manager/user-manager';
-import { UserWithGroupsManager } from '@services/system.service/user-manager/user-with-groups-manager';
 import { NxSystemModuleBase } from '@services/system/system-module';
 import { AllSystemVersions } from '@services/system/system-version';
+import { UserManager } from '@services/system.service/user-manager/user-manager';
+import { UserWithGroupsManager } from '@services/system.service/user-manager/user-with-groups-manager';
 
 @NxSystemModuleBase.checkStatic
 export class UserManagerModule extends NxSystemModuleBase {

@@ -21,7 +21,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
-import { HoverPreloadModule } from 'ngx-hover-preload';
+// import { HoverPreloadModule } from 'ngx-hover-preload';
 import { NgxMaskModule } from 'ngx-mask';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 import {
@@ -88,7 +88,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
             registrationStrategy: 'registerImmediately'
         }),
         CdkScrollableModule,
-        HoverPreloadModule,
+        // HoverPreloadModule,
         PreLoaderModule,
         NavFooterModule,
         ResizeModule,

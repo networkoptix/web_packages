@@ -26,7 +26,7 @@ import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
 import { TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CookieService } from 'ngx-cookie-service';
-import { HoverPreloadModule } from 'ngx-hover-preload';
+// import { HoverPreloadModule } from 'ngx-hover-preload';
 import { NgxMaskModule } from 'ngx-mask';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 import {
@@ -78,8 +78,8 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         BrowserAnimationsModule.withConfig({
             // Disable animations if not supported (on iPhone 6 / Safari 13)
             disableAnimations:
-                !('animate' in document.documentElement) ||
-                (navigator && /iPhone OS (8|9|10|11|12|13)_/.test(navigator.userAgent)),
+        !('animate' in document.documentElement) ||
+        (navigator && /iPhone OS (8|9|10|11|12|13)_/.test(navigator.userAgent)),
         }),
         StoreModule.forRoot({ account: accountReducer }),
         EffectsModule.forRoot([AccountSync, SystemsSync]),
@@ -110,7 +110,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         }),
         DialogModule,
         CdkScrollableModule,
-        HoverPreloadModule,
+        // HoverPreloadModule,
         PreLoaderModule,
         NavFooterModule,
         ResizeModule,

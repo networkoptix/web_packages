@@ -12,8 +12,8 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { MockProvider, MockModule, MockComponent } from 'ng-mocks';
 
 import { NxSafePipe } from '@app/pipes/nx-safe';
-import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxSearchComponent } from '@components/search/search.component';
+import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxApplyService } from '@services/apply.service';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';

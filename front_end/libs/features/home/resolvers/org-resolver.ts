@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
 @Injectable()
-export class OrgResolver implements Resolve<boolean> {
+export class OrgResolver {
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
         // May refactor to check children static data opposed to url check.
         return state.url.includes('organization');

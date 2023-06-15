@@ -26,7 +26,9 @@
                         >
                             <div
                                 class="setting-title"
-                                [innerHTML]="getDescription(setting.key) | translate | safe: 'html'"
+                                [innerHTML]="
+                                    getDescription(setting.key) | translate | safe : 'html'
+                                "
                             ></div>
                             <div
                                 class="text-muted break-long"
@@ -96,7 +98,7 @@
                             <div
                                 class="help-block text-left"
                                 *ngIf="settingsConfig[setting.key]?.alert"
-                                [innerHTML]="settingsConfig[setting.key]?.alert | safe: 'html'"
+                                [innerHTML]="settingsConfig[setting.key]?.alert | safe : 'html'"
                             ></div>
                         </div>
                     </div>

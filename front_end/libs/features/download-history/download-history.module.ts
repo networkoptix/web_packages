@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Injectable, NgModule } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, RouterModule, Routes } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { PipesModule } from '@app/pipes/pipes.module';
@@ -13,7 +13,7 @@ import { ReleaseComponent } from './release/release.component';
 import { TypeResolver } from './type-resolver';
 
 @Injectable({ providedIn: 'root' })
-class TitleResolver implements Resolve<string> {
+class TitleResolver {
     resolve(route: ActivatedRouteSnapshot): string {
         if (route.params.type) {
             return route.params.type;

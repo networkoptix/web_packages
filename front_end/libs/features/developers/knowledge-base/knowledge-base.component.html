@@ -16,7 +16,7 @@
             (NxProjectedLinkHandler)="projectedLinkHandler($event)"
             NxProjectedCodeBlock
             [innerHTML]="
-                (index === 0 ? pageNode.title + node.content : node.content) | safe: 'html'
+                (index === 0 ? pageNode.title + node.content : node.content) | safe : 'html'
             "
             class="article-content"
         ></div>
@@ -33,7 +33,7 @@
             (NxProjectedLinkHandler)="projectedLinkHandler($event)"
             NxProjectedCodeBlock
             [innerHTML]="
-                (index === 0 ? pageNode.title + node.content : node.content) | safe: 'html'
+                (index === 0 ? pageNode.title + node.content : node.content) | safe : 'html'
             "
             class="article-content"
         ></div>
@@ -78,7 +78,7 @@
         <nx-section>
             <div
                 [innerHTML]="
-                    (index === 0 ? pageNode.title + node.content : node.content) | safe: 'html'
+                    (index === 0 ? pageNode.title + node.content : node.content) | safe : 'html'
                 "
             ></div>
         </nx-section>
@@ -113,7 +113,7 @@
         ></a>
         <p
             *ngIf="doc.snippet as content"
-            [innerHTML]="content | safe: 'html'"
+            [innerHTML]="content | safe : 'html'"
         ></p>
     </div>
 </ng-template>
@@ -133,7 +133,7 @@
                 </ng-template>
                 <span
                     *ngIf="totalResults; else searchResults"
-                    [innerText]="LANG.result | translate: { count: totalResults }"
+                    [innerText]="LANG.result | translate : { count: totalResults }"
                 ></span>
             </ng-container>
         </ng-template>

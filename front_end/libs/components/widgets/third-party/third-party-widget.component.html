@@ -69,14 +69,14 @@
 <ng-template #widget>
     <iframe
         #widgetFrame
-        [srcdoc]="card.config.source | safe: 'html'"
+        [srcdoc]="card.config.source | safe : 'html'"
     ></iframe>
 </ng-template>
 
 <ng-template #edit>
     <iframe
         #editFrame
-        [srcdoc]="card.config.editSource | safe: 'html'"
+        [srcdoc]="card.config.editSource | safe : 'html'"
     ></iframe>
 </ng-template>
 
@@ -93,7 +93,7 @@
             <iframe
                 #widgetFrame
                 [srcdoc]="
-                    (card.editMode ? card.config.editSource : card.config.source) | safe: 'html'
+                    (card.editMode ? card.config.editSource : card.config.source) | safe : 'html'
                 "
                 (load)="passStateToIframe(widgetFrame)"
             ></iframe>
@@ -104,7 +104,7 @@
                 #widgetFrame
                 [src]="
                     (card.editMode && card.config.devEditSource) || card.config.devSource
-                        | safe: 'resourceUrl'
+                        | safe : 'resourceUrl'
                 "
                 (load)="passStateToIframe(widgetFrame)"
             ></iframe>
@@ -114,7 +114,7 @@
                 *ngIf="card.config.source; else checkDevSource"
                 #widgetFrame
                 [srcdoc]="
-                    (card.editMode ? card.config.editSource : card.config.source) | safe: 'html'
+                    (card.editMode ? card.config.editSource : card.config.source) | safe : 'html'
                 "
                 (load)="passStateToIframe(widgetFrame)"
             ></iframe>

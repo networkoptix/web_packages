@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
 type routeData = {
     inOrganization: boolean;
@@ -7,7 +7,7 @@ type routeData = {
 };
 
 @Injectable()
-export class WithParentDataResolver implements Resolve<routeData> {
+export class WithParentDataResolver {
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<routeData> {
         return new Promise(resolve => {
             setTimeout(() => {

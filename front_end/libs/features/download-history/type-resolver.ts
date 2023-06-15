@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Resolve, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { EMPTY as empty } from 'rxjs';
 
 @Injectable()
-export class TypeResolver implements Resolve<never> {
+export class TypeResolver {
     constructor(private router: Router) {}
 
     resolve(): typeof empty {

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Injectable, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRouteSnapshot, Resolve, RouterModule, Routes } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
@@ -15,7 +15,7 @@ import { DownloadComponent } from './download.component';
 import { OsResolver } from './os-resolver';
 
 @Injectable({ providedIn: 'root' })
-class TitleResolver implements Resolve<string> {
+class TitleResolver {
     resolve(route: ActivatedRouteSnapshot): string {
         if (route.params.platform && route.params.platform !== 'sdk') {
             return `

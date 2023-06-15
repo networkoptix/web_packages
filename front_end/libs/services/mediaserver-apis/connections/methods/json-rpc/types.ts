@@ -27,7 +27,7 @@ interface ErrorDetails {
 
 interface JsonRpcResult<T> {
     result: T;
-    error: ErrorDetails;
+    error?: ErrorDetails;
 }
 
 export interface JsonRpcRequest<T = unknown> extends JsonRpcBase, JsonRpcPayload<T> {}

@@ -3,7 +3,7 @@ import 'zone.js/testing';
 import { getTestBed } from '@angular/core/testing';
 import {
     BrowserDynamicTestingModule,
-    platformBrowserDynamicTesting
+    platformBrowserDynamicTesting,
 } from '@angular/platform-browser-dynamic/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { MockInstance, ngMocks } from 'ng-mocks';
@@ -33,16 +33,14 @@ nxConfig.company.name = 'Nx Cloud';
 
 const localStorageMockStore = {};
 
-const parseStaticTranslations = staticLangNode => Object.entries(
-    staticLangNode
-).reduce((
-    parsed, [key, value]
-) => ({
-    ...parsed,
-    [key]: typeof value === 'string'
-        ? () => value
-        : parseStaticTranslations(value)
-}), {});
+const parseStaticTranslations = staticLangNode =>
+    Object.entries(staticLangNode).reduce(
+        (parsed, [key, value]) => ({
+            ...parsed,
+            [key]: typeof value === 'string' ? () => value : parseStaticTranslations(value),
+        }),
+        {},
+    );
 // **************************************************
 
 // auto spy
@@ -53,21 +51,21 @@ jasmine.getEnv().addReporter({
     specDone: MockInstance.restore,
     specStarted: MockInstance.remember,
     suiteDone: MockInstance.restore,
-    suiteStarted: MockInstance.remember
+    suiteStarted: MockInstance.remember,
 });
 
 ngMocks.defaultMock(NxConfigService, () => ({
     getConfig: () => nxConfig,
-    flagsEnabled: () => false
+    flagsEnabled: () => false,
 }));
 
 ngMocks.defaultMock(NxLanguageProviderService, () => ({
     translations: parseStaticTranslations(staticLang),
-    translateSubject: new BehaviorSubject(null)
+    translateSubject: new BehaviorSubject(null),
 }));
 
 ngMocks.defaultMock(NxCloudApiService, () => ({
-    getCommonPasswords: () => of({ test1234: 1, 12345678: 1 })
+    getCommonPasswords: () => of({ test1234: 1, 12345678: 1 }),
 }));
 
 ngMocks.defaultMock(NxAccountService, () => ({
@@ -82,35 +80,35 @@ ngMocks.defaultMock(LocalStorageService, () => ({
     retrieve: (key: string) => !!localStorageMockStore[key],
     store: (key: string) => {
         localStorageMockStore[key] = true;
-    }
+    },
 }));
 
 ngMocks.defaultMock(NxAppStateService, () => ({
     footerVisibleSubject: new BehaviorSubject(true),
     systemAvailable$: new BehaviorSubject(true),
-    lastErrorStatus$: new BehaviorSubject(undefined)
+    lastErrorStatus$: new BehaviorSubject(undefined),
 }));
 
 ngMocks.defaultMock(NxSessionService, () => ({
-    loginStateSubject: new BehaviorSubject<string>(undefined)
+    loginStateSubject: new BehaviorSubject<string>(undefined),
 }));
 
 ngMocks.defaultMock(TranslateService, () => ({
-    instant: text => text
+    instant: text => text,
 }));
 
 // @ts-expect-error
 ngMocks.defaultMock(NxProcessService, () => ({
-    createProcess: () => Promise.resolve()
+    createProcess: () => Promise.resolve(),
 }));
 
 // @ts-expect-error
 ngMocks.defaultMock(Process, () => ({
-    run: () => { }
+    run: () => {},
 }));
 
 ngMocks.defaultMock(NxScrollMechanicsService, () => ({
-    windowSizeSubject: new BehaviorSubject({ height: 0, width: 0 })
+    windowSizeSubject: new BehaviorSubject({ height: 0, width: 0 }),
 }));
 
 ngMocks.defaultMock(NxSettingsService, () => ({
@@ -124,21 +122,7 @@ ngMocks.defaultMock(NxSystemsService, () => ({
 
 ngMocks.defaultMock(WINDOW, () => window);
 
-declare const require: {
-    context(path: string, deep?: boolean, filter?: RegExp): {
-        keys(): string[];
-        <T>(id: string): T;
-    };
-};
-
 // First, initialize the Angular testing environment.
-getTestBed().initTestEnvironment(
-    BrowserDynamicTestingModule,
-    platformBrowserDynamicTesting(), {
-        teardown: { destroyAfterEach: false }
-    }
-);
-// Then we find all the tests.
-const context = require.context('./', true, /\.spec\.ts$/);
-// And load the modules.
-context.keys().map(context);
+getTestBed().initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting(), {
+    teardown: { destroyAfterEach: false },
+});

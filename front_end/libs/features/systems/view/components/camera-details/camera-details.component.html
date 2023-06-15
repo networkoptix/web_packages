@@ -52,7 +52,7 @@
         >
         <span class="grid-item-value"
             ><a
-                [href]="cameraUrl | safe: 'url'"
+                [href]="cameraUrl | safe : 'url'"
                 target="_blank"
                 >{{ camera.ip }}</a
             ></span
@@ -85,7 +85,7 @@
                 <ng-container *ngFor="let transport of stream.transports; let last = last">
                     <a
                         class="text-uppercase"
-                        [href]="transport.url | safe: 'url'"
+                        [href]="transport.url | safe : 'url'"
                         target="_blank"
                         >{{ transport.name }}</a
                     >

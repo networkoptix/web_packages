@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { NxAccountService } from '@services/account.service';
@@ -8,7 +8,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { WINDOW } from '@services/window-provider';
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class AuthGuard {
     CONFIG: IConfig;
 
     constructor(

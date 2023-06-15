@@ -7,9 +7,9 @@ import { ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
 import { Injectable, TemplateRef, ViewContainerRef } from '@angular/core';
 import { timer, takeUntil, Subject, filter } from 'rxjs';
 
+import { NxPopoverComponent } from './popover/popover.component';
 import { PopoverConfig, POS_STRATEGY } from './popover-config';
 import { PopoverRef } from './popover-ref';
-import { NxPopoverComponent } from './popover/popover.component';
 
 const defaultConfig: PopoverConfig<never> = {
     hasBackdrop: false,

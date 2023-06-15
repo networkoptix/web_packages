@@ -1,6 +1,6 @@
-import { CameraManager } from '@services/system.service/camera-manager/camera-manager';
 import { NxSystemModuleBase } from '@services/system/system-module';
 import { AllSystemVersions } from '@services/system/system-version';
+import { CameraManager } from '@services/system.service/camera-manager/camera-manager';
 
 @NxSystemModuleBase.checkStatic
 export class CameraManagerModule extends NxSystemModuleBase {

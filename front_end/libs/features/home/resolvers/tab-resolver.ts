@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
+import { ActivatedRouteSnapshot } from '@angular/router';
 
 @Injectable()
-export class TabResolver implements Resolve<string> {
+export class TabResolver {
     resolve(route: ActivatedRouteSnapshot): string {
         return route.children[0].routeConfig.path;
     }

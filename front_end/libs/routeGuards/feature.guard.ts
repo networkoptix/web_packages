@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import {
-    CanActivate,
-    CanLoad,
     Route,
     UrlSegment,
     ActivatedRouteSnapshot,
@@ -17,7 +15,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 @Injectable({
     providedIn: 'root',
 })
-export class FeatureGuard implements CanActivate, CanLoad {
+export class FeatureGuard {
     constructor(
         private configService: NxConfigService,
         private cookieService: CookieService,

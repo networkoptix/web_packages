@@ -397,7 +397,7 @@ export interface ec2CameraEx extends ec2Camera {
 const _getRestCameraKeys = ['id', 'name', 'serverId', 'status', 'url'] as const;
 export const getRestCameraKeys = {
     ...(Object.fromEntries(_getRestCameraKeys.map(k => [k, true])) as Record<
-        typeof _getRestCameraKeys[number],
+        (typeof _getRestCameraKeys)[number],
         true
     >),
     schedule: {
@@ -479,7 +479,7 @@ export const getRestServerKeys = [
     'status',
     'version',
 ] as const;
-export type RestServerPartial = Pick<RestServer, typeof getRestServerKeys[number]>;
+export type RestServerPartial = Pick<RestServer, (typeof getRestServerKeys)[number]>;
 
 export interface RestServerPartialCompat extends Omit<RestServerPartial, 'osInfo'> {
     networkAddresses: string; // Reconstruct network addresses from endpoints

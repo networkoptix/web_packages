@@ -14,8 +14,8 @@
     class="timeline-tooltip"
     [style.left.px]="tooltipDetails.x"
 >
-    <h4>{{ tooltipDetails.position | date: 'mediumDate' }}</h4>
-    <h3>{{ tooltipDetails.position | date: 'HH:mm:ss' }}</h3>
+    <h4>{{ tooltipDetails.position | date : 'mediumDate' }}</h4>
+    <h3>{{ tooltipDetails.position | date : 'HH:mm:ss' }}</h3>
     <h5 translate>Devices</h5>
     <ul>
         <li *ngFor="let selected of tooltipDetails.selected">
