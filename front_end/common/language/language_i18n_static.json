@@ -1023,6 +1023,15 @@
     "foldersCount": "{count, plural, =0{# folders} one{# folder} other{# folders}}",
     "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "channelPartners": {
+        "tabNames": {
+            "information" : "Information",
+            "organizations" : "Organizations",
+            "reports" : "Reports",
+            "settings" : "Settings",
+            "subchannel" : "Subchannel",
+            "systems" : "Systems",
+            "users" : "Users"
+        },
         "usersTableHeaders": {
             "login": "Login",
             "fullName": "Full Name",

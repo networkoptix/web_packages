@@ -1,23 +1,23 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { AuthGuard } from '@guards/authGuard';
-
+import { CPResovler } from '../CP-resolver';
 import { NxGroupsCardsComponent } from '../components/groups-cards/groups-cards.component';
 import { NxOrganizationReportsComponent } from '../components/reports/reports.component';
 import { NxOrganizationSettingsComponent } from '../components/settings/settings.component';
 import { NxOrganizationUsersComponent } from '../components/users/org-users/org-users.component';
 import { WithParentDataResolver } from '../resolvers/data-resolver';
 import { TabResolver } from '../resolvers/tab-resolver';
+import { RoleResolver } from '../role-resolver';
+import { TabGuard } from '../tab-guard';
 
 import { NxOrganizationsComponent } from './organization.component';
 
 const orgRoutes: Routes = [
     {
         path: ':id',
-        canActivate: [AuthGuard],
         component: NxOrganizationsComponent,
-        resolve: { currentTab: TabResolver, parentData: WithParentDataResolver },
+        resolve: { currentTab: TabResolver, parentData: WithParentDataResolver, isAdmin: RoleResolver, inChannelPartner: CPResovler },
         runGuardsAndResolvers: 'always',
         children: [
             {
@@ -26,14 +26,17 @@ const orgRoutes: Routes = [
             },
             {
                 path: 'reports',
+                canActivate: [TabGuard],
                 component: NxOrganizationReportsComponent,
             },
             {
                 path: 'users',
+                canActivate: [TabGuard],
                 component: NxOrganizationUsersComponent,
             },
             {
                 path: 'settings',
+                canActivate: [TabGuard],
                 component: NxOrganizationSettingsComponent,
             },
             {

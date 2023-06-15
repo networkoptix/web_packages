@@ -11,15 +11,14 @@ export class WithParentDataResolver {
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<routeData> {
         return new Promise(resolve => {
             setTimeout(() => {
-                let data = Object.keys(route.parent.data).length
+                let data = Object.keys(route.parent.data).includes('inOrganization')
                     ? route.parent.data
                     : route.parent.parent.data;
                 data = data.parentData ?? data;
-                const a = {
+                resolve({
                     inOrganization: data.inOrganization,
                     inSubchannel: data.inSubchannel,
-                };
-                resolve(a);
+                });
             });
         });
     }

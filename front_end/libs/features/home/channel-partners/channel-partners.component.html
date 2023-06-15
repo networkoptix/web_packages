@@ -11,9 +11,9 @@
     >
         <div
             class="header pb-3"
-            *ngIf="channelPartner$ | async as channelPartner"
+            *ngIf="currentPartner$ | async as currentPartner"
         >
-            <h2>{{ channelPartner.name }}</h2>
+            <h2>{{ currentPartner.name }}</h2>
         </div>
         <nx-tabs
             [onLoadTab]="currentTab"
@@ -26,7 +26,7 @@
         <ng-container *ngIf="!currentTab.route; else tabOutlet">
             <div class="actions p-3">
                 <button
-                    [disabled]="!isAdmin"
+                    *ngIf="isAdmin"
                     class="btn btn-default"
                     translate
                     (click)="newOrgDialog()"

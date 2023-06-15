@@ -41,40 +41,30 @@ interface SidebarSettings {
     styleUrls: ['organization.component.scss'],
 })
 export class NxOrganizationsComponent implements OnInit {
-    icons = icons;
-    isLoading = true;
     LANG = staticLang;
+    icons = icons;
+    tabs: Tab[] = [
+        {
+            displayName: this.LANG.channelPartners.tabNames.systems,
+            route: 'systems',
+        },
+    ];
+
+    userEmail: string;
+    currentTab: Tab;
+    isLoading = true;
+    inChannelPartner = this.route.snapshot.data.inChannelPartner;
+    isAdmin = this.route.snapshot.data.isAdmin;
+
     openGroups$ = this.store.select<OpenGroups>(selectOpenGroups);
     currentPath$ = this.store.select<GroupPath[]>(selectCurrentPath);
     sidebarSettings: CustomAccountProperty<SidebarSettings>;
-    userEmail: string;
     hasGroups$ = this.store.select<boolean>(selectHasGroups);
     currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
-    inChannelPartners = false;
     currentOrganization$ = this.store.select(selectCurrentOrganization);
     currentPartnerOrganizations$ = this.store.select(selectCurrentPartnerOrgs);
     organizations$ = this.store.select(selectRootOrganizations);
-
-    currentTab: Tab;
     rootGroup$ = this.store.select<Crumb>(selectCurrentRootGroup);
-    tabs: Tab[] = [
-        {
-            displayName: 'Systems',
-            route: 'systems',
-        },
-        {
-            displayName: 'Users',
-            route: 'users',
-        },
-        {
-            displayName: 'Reports',
-            route: 'reports',
-        },
-        {
-            displayName: 'Settings',
-            route: 'settings',
-        },
-    ];
 
     constructor(
         private store: Store,
@@ -85,10 +75,26 @@ export class NxOrganizationsComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        if (this.router.url.includes('channelPartners')) {
-            this.inChannelPartners = true;
-        } else {
+        if (!this.inChannelPartner) {
             this.store.dispatch(CPActions.setCurrentPartnerId({ currentPartnerId: null }));
+        }
+        if (this.isAdmin) {
+            this.tabs.push(
+                ...[
+                    {
+                        displayName: this.LANG.channelPartners.tabNames.users,
+                        route: 'users',
+                    },
+                    {
+                        displayName: this.LANG.channelPartners.tabNames.reports,
+                        route: 'reports',
+                    },
+                    {
+                        displayName: this.LANG.channelPartners.tabNames.settings,
+                        route: 'settings',
+                    },
+                ],
+            );
         }
         this.currentTab = this.tabs.find(tab => tab.route === this.route.snapshot.data.currentTab);
         this.route.params.pipe(untilDestroyed(this)).subscribe(({ id }) => {

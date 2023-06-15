@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { catchError, of, withLatestFrom } from 'rxjs';
+import { catchError, combineLatestWith, of } from 'rxjs';
 
+import staticLang from '@common/language/language_i18n_static.json';
 import { Tab, TabEmit } from '@components/tabs/tabs.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import {
@@ -30,35 +31,30 @@ import {
     ],
 })
 export class NxChannelPartnersComponent implements OnInit {
+    LANG = staticLang;
+
     isLoading = true;
     currentPartnerId: string;
     currentPartnerOrgs: Organization[];
     routeData$ = this.route.data;
     channelPartners$ = this.store.select<ChannelPartner[]>(selectChannelPartners);
-    channelPartner$ = this.store.select<ChannelPartner>(selectCurrentPartner);
+    currentPartner$ = this.store.select<ChannelPartner>(selectCurrentPartner);
     organizations$ = this.store.select<Organization[]>(selectCurrentPartnerOrgs);
-    isAdmin: boolean = true;
+    // Update this to use Angular 16 input
+    isAdmin = this.route.snapshot.data.isAdmin;
     currentTab: Tab;
     tabs: Tab[] = [
         {
-            displayName: 'Organizations',
+            displayName: this.LANG.channelPartners.tabNames.organizations,
             route: '',
         },
         {
-            displayName: 'Subchannel',
+            displayName: this.LANG.channelPartners.tabNames.subchannel,
             route: 'subchannels',
         },
         {
-            displayName: 'Information',
+            displayName: this.LANG.channelPartners.tabNames.information,
             route: 'information',
-        },
-        {
-            displayName: 'Users',
-            route: 'users',
-        },
-        {
-            displayName: 'Settings',
-            route: 'settings',
         },
     ];
     defaultImage = 'https://picsum.photos/100/50';
@@ -72,12 +68,26 @@ export class NxChannelPartnersComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
+        if (this.isAdmin) {
+            this.tabs.push(
+                ...[
+                    {
+                        displayName: this.LANG.channelPartners.tabNames.users,
+                        route: 'users',
+                    },
+                    {
+                        displayName: this.LANG.channelPartners.tabNames.settings,
+                        route: 'settings',
+                    },
+                ],
+            );
+        }
         this.currentTab = this.tabs.find(tab => tab.route === this.route.snapshot.data.currentTab);
         this.route.params
-            .pipe(untilDestroyed(this), withLatestFrom(this.channelPartners$))
+            .pipe(untilDestroyed(this), combineLatestWith(this.channelPartners$))
             .subscribe(([{ id }, partners]) => {
                 this.currentPartnerId = id;
-                if (!partners.find(p => p.id === this.currentPartnerId)) {
+                if (partners.length && !partners.find(p => p.id === this.currentPartnerId)) {
                     this.router.navigate(['404']);
                 }
                 this.CPService.getPartnerOrganizations(id)

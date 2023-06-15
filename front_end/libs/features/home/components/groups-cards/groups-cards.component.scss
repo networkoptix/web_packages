@@ -70,10 +70,13 @@
     .input {
         display: flex;
         align-items: center;
+        height: 2rem;
         width: 40%;
         max-width: 320px;
         border: 1px solid var(--system-card-border-color);
         border-radius: 2px;
+        margin-left: auto;
+        
 
         input {
             height: 100%;

@@ -19,6 +19,7 @@ import { DirectivesModule } from '@directives/directives.module';
 import { AuthGuard } from '@guards/authGuard';
 import { NxUsersTableComponent } from '@pages/home/components/users-table/users-table.component';
 
+import { CPResovler } from './CP-resolver';
 import { NxChannelPartnersComponent } from './channel-partners/channel-partners.component';
 import { NxGroupCardComponent } from './components/group-card/group-card.component';
 import { NxGroupsCardsComponent } from './components/groups-cards/groups-cards.component';
@@ -38,9 +39,11 @@ import { WithParentDataResolver } from './resolvers/data-resolver';
 import { OrgResolver } from './resolvers/org-resolver';
 import { SubChannelResolver } from './resolvers/subchannel-resolver';
 import { TabResolver } from './resolvers/tab-resolver';
+import { RoleResolver } from './role-resolver';
 import { channelPartnersReducer } from './store/channel-partners/channel-partners.reducer';
 import { groupsReducer } from './store/groups/groups.reducer';
 import { NxGroupsSystemsComponent } from './systems/systems.component';
+import { TabGuard } from './tab-guard';
 
 const homeRoutes: Routes = [
     {
@@ -119,7 +122,7 @@ const homeRoutes: Routes = [
         NxSubchannelComponent,
         NxHomeComponent,
     ],
-    providers: [TabResolver, OrgResolver, SubChannelResolver, WithParentDataResolver],
+    providers: [TabResolver, OrgResolver, SubChannelResolver, WithParentDataResolver, TabGuard, RoleResolver, CPResovler],
     exports: [],
 })
 export class NxHomeModule {}

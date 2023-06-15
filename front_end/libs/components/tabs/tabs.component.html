@@ -6,7 +6,7 @@
             (click)="handleClick(tab, i)"
             [ngClass]="{ selected: tab.data.displayName === selectedTab }"
         >
-            {{ tab.data.displayName }}
+            {{ tab.data.displayName | translate }}
         </button>
     </div>
 </div>
