@@ -171,8 +171,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     get previewWidth(): number {
         const height = 120;
-        const aspect = this.selectedAspect.value || ASPECT_RATIOS['16:9'];
-        const rotated = (this.selectedRotation.value ?? 0) % 180;
+        const aspect = this.selectedAspect?.value || ASPECT_RATIOS['16:9'];
+        const rotated = (this.selectedRotation?.value ?? 0) % 180;
         return rotated ? height / aspect : aspect * height;
     }
 
