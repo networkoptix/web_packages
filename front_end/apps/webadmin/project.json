@@ -129,7 +129,13 @@
                             "with": "libs/routeGuards/authGuard.webadmin.ts"
                         }
                     ],
-                    "optimization": true,
+                    "optimization": {
+                        "scripts": true,
+                        "styles": {
+                          "minify": true,
+                          "inlineCritical": false
+                        }
+                    },
                     "outputHashing": "all",
                     "sourceMap": false,
                     "extractLicenses": true,

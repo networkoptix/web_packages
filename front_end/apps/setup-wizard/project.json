@@ -88,7 +88,13 @@
                         "input": "apps/setup-wizard/src/index.html",
                         "output": "inline.html"
                     },
-                    "optimization": true,
+                    "optimization": {
+                        "scripts": true,
+                        "styles": {
+                          "minify": true,
+                          "inlineCritical": false
+                        }
+                    },
                     "outputHashing": "all",
                     "sourceMap": false,
                     "namedChunks": false,
