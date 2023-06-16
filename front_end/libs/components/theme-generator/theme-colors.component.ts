@@ -57,6 +57,7 @@ export class NxThemeGeneratorComponent implements OnInit, AfterViewInit {
         saturation: 0,
         luminosity: 0, // set to +5%
     };
+    backgroundHEXValue: string;
     isHSLTheme: boolean = false;
     isLiteTheme: boolean = false;
     luminosityStep: number;
@@ -155,7 +156,7 @@ export class NxThemeGeneratorComponent implements OnInit, AfterViewInit {
     }
 
     setBackgroundInput(): void {
-        this.backgroundInput.nativeElement.value = NxThemeService.hslToHex(
+        this.backgroundHEXValue = NxThemeService.hslToHex(
             NxThemeService.toHSLObject(this.rs.getPropertyValue('--new-body-bg')),
         ).toUpperCase();
     }

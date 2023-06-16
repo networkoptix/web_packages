@@ -100,15 +100,15 @@ export class NxThemeService {
             .subscribe((mode: number) => {
                 if (mode) { // 0 - dark, 1 - light
                     this.setColorsFor('background', {
-                        'background-h': 210,
-                        'background-s': 15,
-                        'background-l': 95
+                        'background-h': 200,
+                        'background-s': 20,
+                        'background-l': 94
                     });
                 } else {
                     this.setColorsFor('background', {
-                        'background-h': 210,
-                        'background-s': 7,
-                        'background-l': 5
+                        'background-h': 200,
+                        'background-s': 20,
+                        'background-l': 6
                     });
                 }
             });

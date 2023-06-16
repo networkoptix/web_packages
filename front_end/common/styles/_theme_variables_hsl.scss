@@ -26,9 +26,9 @@ html[data-theme-mode="dark"] {
     --brand-s: 60%;
     --brand-l: 50%;
 
-    --background-h: 210;
-    --background-s: 7%;
-    --background-l: 5%;
+    --background-h: 200;
+    --background-s: 20%;
+    --background-l: 6%;
     --new-body-bg: hsl(var(--background-h), var(--background-s), calc(var(--background-l) + 0%));
 
     // fixed saturation ... keep calc() it's needed for HEX calculation
@@ -131,9 +131,9 @@ html[data-theme-mode="light"] {
     --brand-s: 70%;
     --brand-l: 52%;
 
-    --background-h: 210;
-    --background-s: 15%;
-    --background-l: 95%;
+    --background-h: 200;
+    --background-s: 20%;
+    --background-l: 94%;
     --new-body-bg: hsl(var(--background-h), var(--background-s), calc(var(--background-l) + 0%));
 
     // fixed saturation ... keep calc() it's needed for HEX calculation

@@ -222,15 +222,24 @@
                             <label
                                 class="input-label col-12"
                                 translate
-                                >HEX Background</label
+                                >HEX Background color</label
                             >
-                            <div class="col-12">
+                            <div
+                                class="col-12"
+                                *ngIf="advanced; else backgroundLabel"
+                            >
                                 <input
                                     #backgroundInput
                                     class="form-control"
+                                    [(ngModel)]="backgroundHEXValue"
                                     (keyup)="changeBackgroundColor($event)"
                                 />
                             </div>
+                            <ng-template #backgroundLabel>
+                                <div class="col-12">
+                                    {{ backgroundHEXValue }}
+                                </div>
+                            </ng-template>
                         </div>
                     </div>
 
