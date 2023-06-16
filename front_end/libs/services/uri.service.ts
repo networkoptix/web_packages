@@ -12,7 +12,7 @@ import type { NxSystem } from './system.service/system';
 import { ChildRoutes, RouteResolverParams } from './uri.service.types';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxUriService {
     private _pageOffset: number;
@@ -49,7 +49,7 @@ export class NxUriService {
 
     changePort(newPort: string): void {
         this.window.location.replace(
-            `${this.window.location.protocol}//${this.window.location.hostname}:${newPort}/${this.window.location.hash}`
+            `${this.window.location.protocol}//${this.window.location.hostname}:${newPort}/${this.window.location.hash}`,
         );
     }
 
@@ -58,18 +58,20 @@ export class NxUriService {
     }
 
     navigateSystem(navigateTo: string, system: NxSystem): Promise<boolean> {
-        navigateTo = (environment.isLocal)
+        navigateTo = environment.isLocal
             ? navigateTo.replace('SYSTEM_ID', '')
             : navigateTo.replace('SYSTEM_ID', '/' + system.id);
 
         return new Promise((resolve, reject) => {
             setTimeout(() => {
-                return this.router.navigate([navigateTo], {})
-                    .then(success => {
+                return this.router.navigate([navigateTo], {}).then(
+                    success => {
                         resolve(success);
-                    }, error => {
+                    },
+                    error => {
                         reject(error);
-                    });
+                    },
+                );
             });
         });
     }
@@ -77,7 +79,7 @@ export class NxUriService {
     updateURI(
         navigateTo?: string,
         queryParams: Params = {},
-        replace?: boolean
+        replace?: boolean,
     ): Promise<void | boolean> {
         if (!navigateTo) {
             navigateTo = this.getURL();
@@ -97,16 +99,21 @@ export class NxUriService {
         // changes the route without moving from the current view
         return new Promise<boolean>((resolve, reject) => {
             setTimeout(() => {
-                return this.router.navigate([navigateTo], {
-                    queryParams,
-                    relativeTo: this.route,
-                    replaceUrl: replace || environment.isLocal,
-                    queryParamsHandling: 'merge'
-                }).then(success => {
-                    resolve(success);
-                }, error => {
-                    reject(error);
-                });
+                return this.router
+                    .navigate([navigateTo], {
+                        queryParams,
+                        relativeTo: this.route,
+                        replaceUrl: replace || environment.isLocal,
+                        queryParamsHandling: 'merge',
+                    })
+                    .then(
+                        success => {
+                            resolve(success);
+                        },
+                        error => {
+                            reject(error);
+                        },
+                    );
             });
         });
     }
@@ -116,7 +123,7 @@ export class NxUriService {
             .navigate([navigateTo], {
                 queryParams,
                 relativeTo: this.route,
-                replaceUrl: false
+                replaceUrl: false,
             })
             .catch(error => {
                 console.error(error);
@@ -168,7 +175,7 @@ export class NxUriService {
             // const child = { ...routesConfig[0].children.find(({ path }) => path.includes(param)) };
             const isChildRoute = param === 'childRoute';
             childRoute = '/' + (isChildRoute ? value : '') + '/';
-            if (isChildRoute && value === ChildRoutes.HEALTH || value === ChildRoutes.VIEW) {
+            if ((isChildRoute && value === ChildRoutes.HEALTH) || value === ChildRoutes.VIEW) {
                 if (environment.isLocal) {
                     base = '/';
                     childRoute += '/';
@@ -179,7 +186,7 @@ export class NxUriService {
                 const routeLookup = {
                     cameraId: 'cameras',
                     serverId: 'servers',
-                    userId: 'users'
+                    userId: 'users',
                 };
                 childRoute = childRoute.slice(-1) + routeLookup[param] + '/' + value;
             }

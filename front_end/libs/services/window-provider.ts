@@ -9,9 +9,7 @@ export const windowFactory = (): Window & typeof globalThis => window;
 
 export const windowProvider: FactoryProvider = {
     provide: WINDOW,
-    useFactory: windowFactory
+    useFactory: windowFactory,
 };
 
-export const WINDOWS_PROVIDERS = [
-    windowProvider
-];
+export const WINDOWS_PROVIDERS = [windowProvider];

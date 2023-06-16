@@ -18,9 +18,9 @@ import { WINDOW } from './window-provider';
 /** Service to handle opening the VMS Client from the browser
  *
  * Future TODO: Remove non-OAuth code once support for v4 systems is dropped
-*/
+ */
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxUrlProtocolService {
     constructor(
@@ -32,10 +32,9 @@ export class NxUrlProtocolService {
     private generateLink(systemId: string, auth: string, code: string): string {
         const host = environment.production ? this.window.location.host : environment.cloudHost;
 
-        const base = slashJoin(
-            [`${CONFIG.clientProtocol}://${host}`, 'client', systemId],
-            { trailing: true },
-        );
+        const base = slashJoin([`${CONFIG.clientProtocol}://${host}`, 'client', systemId], {
+            trailing: true,
+        });
         const url = new URL(base);
         if (auth) {
             url.searchParams.append('auth', auth);
@@ -50,7 +49,9 @@ export class NxUrlProtocolService {
     private getLink(systemId: string, useOauth: boolean): Promise<string> {
         return Promise.all([
             useOauth ? Promise.resolve('') : this.accountService.authKey(),
-            environment.isLocal ? Promise.resolve({ code: '' }) : this.cloudApiService.getCode('*').toPromise()
+            environment.isLocal
+                ? Promise.resolve({ code: '' })
+                : this.cloudApiService.getCode('*').toPromise(),
         ]).then(([auth, { code }]) => {
             return this.generateLink(systemId, auth, code);
         });

@@ -3,22 +3,24 @@ import {
     ConfigType,
     ConsoleSection,
     ModalType,
-    OptionalFeatures
+    OptionalFeatures,
 } from '@components/console-table/console-table.component.types';
 import { environment } from '@environments/environment';
 import {
     GroupingOptions,
-    SortOptions
+    SortOptions,
 } from '@pages/developer-console/console/edit/console-edit.component.types';
 import * as configTypes from '@services/nx-config/base-config';
 
 export const alertTimeout: number = 3 * 1000; // Alerts are shown for 3 seconds
 export const longAlertTimeout: number = 6 * 1000; // Alerts are shown for 6 seconds
 export const apiBase: string = '/api';
-export const simpleURLRegex: string = '^(https:\\/\\/)?[a-zA-Z0-9@:%._\\+~#=]{2,256}(\\.[a-z]{2,6})?:[0-9]{2,6}$';
+export const simpleURLRegex: string =
+    '^(https:\\/\\/)?[a-zA-Z0-9@:%._\\+~#=]{2,256}(\\.[a-z]{2,6})?:[0-9]{2,6}$';
 export const buildFromEnv: string = '{{BUILD}}'.trim();
 export const buildSubstituted: boolean = buildFromEnv && !buildFromEnv.includes('BUILD');
-export const staticBase: string = buildSubstituted && !environment.isLocal ? 'static/{{BUILD}}' : 'static';
+export const staticBase: string =
+    buildSubstituted && !environment.isLocal ? 'static/{{BUILD}}' : 'static';
 export const openClientTimeout: number = 1000;
 export const openClientError: string = 'notVisited';
 export const openMobileClientTimeout: number = 300;
@@ -30,12 +32,12 @@ export const apiTool: configTypes.APIToolSettings = {
     apiTypes: {
         main: {
             type: 'main',
-            displayName: 'Current API'
+            displayName: 'Current API',
         },
         deprecated: {
             type: 'deprecated',
-            displayName: 'Deprecated API'
-        }
+            displayName: 'Deprecated API',
+        },
     },
     defaultManifest: [
         {
@@ -43,50 +45,51 @@ export const apiTool: configTypes.APIToolSettings = {
             sections: [
                 {
                     name: 'REST',
-                    scheme: 'openapi_v1.json'
+                    scheme: 'openapi_v1.json',
                 },
                 {
                     name: 'LEGACY',
-                    scheme: 'openapi_legacy.json'
-                }
-            ]
+                    scheme: 'openapi_legacy.json',
+                },
+            ],
         },
         {
             name: 'Deprecated API',
             sections: [
                 {
                     name: 'LEGACY',
-                    scheme: 'openapi_deprecated.json'
-                }
-            ]
-        }
+                    scheme: 'openapi_deprecated.json',
+                },
+            ],
+        },
     ],
     legacyManifest: [
         {
             name: 'Current API',
             sections: [
                 {
-                    scheme: 'openapi_legacy.json'
-                }
-            ]
-        }
-    ]
+                    scheme: 'openapi_legacy.json',
+                },
+            ],
+        },
+    ],
 };
 
 export const clientMode: configTypes.ClientMode = {
     beta: false,
-    debug: false
+    debug: false,
 };
 
 export const credentialsValidation: configTypes.CredentialsValidation = {
-    emailRegex: '^[-!#$%&\'*+/=?^_`{}|~0-9a-zA-Z]+(\\.[-!#$%&\'*+/=?^_`{}|~0-9a-zA-Z]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,63}\\.?$',
+    emailRegex:
+        "^[-!#$%&'*+/=?^_`{}|~0-9a-zA-Z]+(\\.[-!#$%&'*+/=?^_`{}|~0-9a-zA-Z]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,63}\\.?$",
     passwordRequirements: {
         maxLength: 255,
         minClassesCount: 2,
         minLength: 8,
         requiredRegex: '^[\x21-\x7E]$|^[\x21-\x7E][\x20-\x7E]*[\x21-\x7E]$',
-        strongClassesCount: 3
-    }
+        strongClassesCount: 3,
+    },
 };
 
 export const dialogs: configTypes.Dialogs = {
@@ -94,15 +97,15 @@ export const dialogs: configTypes.Dialogs = {
         subjects: {
             integration: ['sales_inquiry', 'technical_inquiry', 'integration_feedback'],
             ipvd_feedback_page: ['ipvd_feedback_page'],
-            ipvd_feedback_device: ['ipvd_feedback_device']
+            ipvd_feedback_device: ['ipvd_feedback_device'],
         },
         type: {
             ipvd_page: 'ipvd_feedback_page',
             ipvd_device: 'ipvd_feedback_device',
             integration: 'integration',
-            unknown: 'unknown'
-        }
-    }
+            unknown: 'unknown',
+        },
+    },
 };
 
 export const healthMonitoring: configTypes.HealthMonitoring = {
@@ -147,7 +150,7 @@ export const healthMonitoring: configTypes.HealthMonitoring = {
         'GPix/s': { multiplier: 1 / 1000 ** 3 },
         'MPix/s': { multiplier: 1 / 1000 ** 2 },
         'KPix/s': { multiplier: 1 / 1000 },
-        'Tr/s': { multiplier: 1 }
+        'Tr/s': { multiplier: 1 },
     },
     classFormats: {
         resource: 'long-text',
@@ -166,8 +169,8 @@ export const healthMonitoring: configTypes.HealthMonitoring = {
         'KB/s': '',
         'Kbit/s': '',
         'Tr/s': '',
-        unset: 'no-max-width'
-    }
+        unset: 'no-max-width',
+    },
 };
 
 export const icons: configTypes.Icons = {
@@ -177,7 +180,7 @@ export const icons: configTypes.Icons = {
         { name: 'android', src: `/${staticBase}/images/icons/platforms/android.svg` },
         { name: 'arm', src: `/${staticBase}/images/icons/platforms/arm.svg` },
         { name: 'linux', src: `/${staticBase}/images/icons/platforms/linux.svg` },
-        { name: 'windows', src: `/${staticBase}/images/icons/platforms/windows.svg` }
+        { name: 'windows', src: `/${staticBase}/images/icons/platforms/windows.svg` },
     ],
     backgrounds: `/${staticBase}/images/icons/backgrounds/`,
     dir: `/${staticBase}/images/icons/standard/`,
@@ -192,7 +195,7 @@ export const icons: configTypes.Icons = {
     dirConfirmations: `/${staticBase}/images/confirmations/`,
     dirDevCapabilities: `/${staticBase}/images/icons/dev_capabilities/`,
     dirCloudStorage: `/${staticBase}/images/icons/cloud_storage/`,
-    dirLandingIcons: `/${staticBase}/images/landing/block_icons/`
+    dirLandingIcons: `/${staticBase}/images/landing/block_icons/`,
 };
 
 export const images: configTypes.Images = {
@@ -202,14 +205,15 @@ export const images: configTypes.Images = {
     dirLanding: `/${staticBase}/images/landing/`,
     dirLandingGraphic: `/${staticBase}/images/landing/main_screen/`,
     dirHeader: `/${staticBase}/images/header/`,
-    dirTheme: `/${staticBase}/images/themes/`
+    dirTheme: `/${staticBase}/images/themes/`,
 };
 
 export const meta: configTypes.Meta = {
     viewport: {
-        default: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no',
-        desktopLayout: 'width=768, maximum-scale=1, user-scalable=yes, shrink-to-fit=no'
-    }
+        default:
+            'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no',
+        desktopLayout: 'width=768, maximum-scale=1, user-scalable=yes, shrink-to-fit=no',
+    },
 };
 
 export const manifest = {
@@ -224,7 +228,7 @@ export const manifest = {
         disabled: {
             [OptionalFeatures.FILTER]: true,
             [OptionalFeatures.SEARCH]: true,
-            [OptionalFeatures.PER_PAGE]: true
+            [OptionalFeatures.PER_PAGE]: true,
         },
         perPage: 10,
         perPageOptions: [
@@ -232,7 +236,7 @@ export const manifest = {
             { name: '10', value: '10' },
             { name: '25', value: '25' },
             { name: '100', value: '100' },
-            { name: 'All', value: '10000' }
+            { name: 'All', value: '10000' },
         ],
         pagesToShow: 4,
         excludeFromSearch: ['last_modified', 'downloadLink', 'settingsModal'],
@@ -244,9 +248,9 @@ export const manifest = {
                 meta: {
                     filter: {
                         sortable: SortOptions.TEXT,
-                        grouping: GroupingOptions.TEXT
-                    }
-                }
+                        grouping: GroupingOptions.TEXT,
+                    },
+                },
             },
             {
                 type: ConfigType.DATE,
@@ -254,14 +258,14 @@ export const manifest = {
                 label: 'Last Modified',
                 meta: {
                     options: {
-                        defaultWidth: 108
+                        defaultWidth: 108,
                     },
                     filter: {
                         sortable: SortOptions.DATE,
                         grouping: GroupingOptions.DATE_AUTO,
-                        multiSelect: true
-                    }
-                }
+                        multiSelect: true,
+                    },
+                },
             },
             {
                 type: ConfigType.ASYNC_HANDLER,
@@ -269,11 +273,11 @@ export const manifest = {
                 label: '',
                 meta: {
                     options: {
-                        defaultWidth: 184
+                        defaultWidth: 184,
                     },
                     icon: 'download.svg',
-                    tooltip: 'Download'
-                }
+                    tooltip: 'Download',
+                },
             },
             {
                 type: ConfigType.ICON_MODAL,
@@ -281,9 +285,9 @@ export const manifest = {
                 label: '',
                 meta: {
                     icon: 'settings.svg',
-                    tooltip: 'Settings'
-                }
-            }
+                    tooltip: 'Settings',
+                },
+            },
         ],
         editManifest: {
             label: 'Edit Custom Client',
@@ -296,16 +300,16 @@ export const manifest = {
                     description: 'Name is hidden from external users',
                     meta: {
                         options: {
-                            required: true
-                        }
-                    }
+                            required: true,
+                        },
+                    },
                 },
                 {
                     type: ConfigType.DROPDOWN,
                     name: 'base_vms',
-                    label: 'Based on'
-                }
-            ]
+                    label: 'Based on',
+                },
+            ],
         },
         downloadManifest: {
             label: 'Download Package',
@@ -320,11 +324,13 @@ export const manifest = {
                         options: {
                             error: 'Download Error',
                             errorHeading: 'Error Generating Package:',
-                            errorToastMessage: 'Error Generating Package for "%NAME%" custom client:',
-                            toastMessage: 'Package ready for "%NAME%" custom client. If the package doesn\'t download automatically then <a href="%URL%">click here to download</a>'
+                            errorToastMessage:
+                                'Error Generating Package for "%NAME%" custom client:',
+                            toastMessage:
+                                'Package ready for "%NAME%" custom client. If the package doesn\'t download automatically then <a href="%URL%">click here to download</a>',
                         },
-                        icon: 'download.svg'
-                    }
+                        icon: 'download.svg',
+                    },
                 },
                 {
                     // Waiting on spec. Fields could potentially be used for configurations per modal view.
@@ -334,10 +340,10 @@ export const manifest = {
                     label: 'Generating...',
                     meta: {
                         icon: 'loading.svg',
-                        styles: 'animate-rotation'
-                    }
-                }
-            ]
+                        styles: 'animate-rotation',
+                    },
+                },
+            ],
         },
         actions: [
             {
@@ -345,10 +351,10 @@ export const manifest = {
                 subheading: "You don't have any Custom Clients yet.",
                 modal: ModalType.CLIENT_CREATE,
                 icon: 'CustomClients.svg',
-                type: ActionType.PRIMARY
-            }
-        ]
-    }
+                type: ActionType.PRIMARY,
+            },
+        ],
+    },
 };
 
 export const menus: configTypes.Menus = {
@@ -358,35 +364,35 @@ export const menus: configTypes.Menus = {
         icon: 'system',
         partners: {
             id: 'channels',
-            path: ''
+            path: '',
         },
         buttons: {
-            id: 'buttons'
-        }
+            id: 'buttons',
+        },
     },
     account: {
         baseUrl: '/account',
         icon: 'user',
         settings: {
             id: 'settings',
-            path: ''
+            path: '',
         },
         password: {
             id: 'password',
-            path: '/password'
+            path: '/password',
         },
         security: {
             id: 'security',
-            path: '/security'
-        }
+            path: '/security',
+        },
     },
     systemHealth: {
         baseUrl: '/health/',
         alerts: {
             id: 'alerts',
             icon: 'alerts',
-            path: 'alerts'
-        }
+            path: 'alerts',
+        },
     },
     systemMonitoring: {
         baseUrl: '/monitoring/',
@@ -399,23 +405,23 @@ export const menus: configTypes.Menus = {
             id: 'logs',
             icon: 'server',
             path: 'logs',
-        }
+        },
     },
     systemSettings: {
         baseUrl: environment.isLocal ? '/settings/' : '/systems/',
         admin: {
             id: 'admin',
             icon: 'system',
-            path: ''
+            path: '',
         },
         cloudStorage: {
             id: 'cloudStorage',
-            path: 'cloud-storage'
+            path: 'cloud-storage',
         },
         users: {
             id: 'users',
             icon: 'users',
-            path: 'users'
+            path: 'users',
         },
         servers: {
             id: 'servers',
@@ -423,8 +429,8 @@ export const menus: configTypes.Menus = {
             path: 'servers',
             statusIcons: {
                 offline: 'device_offline',
-                online: ''
-            }
+                online: '',
+            },
         },
         cameras: {
             id: 'cameras',
@@ -436,40 +442,40 @@ export const menus: configTypes.Menus = {
                 recording: 'camera_recording',
                 scheduled: 'camera_scheduled',
                 unauthorized: 'camera_unauthorized',
-                online: ''
-            }
+                online: '',
+            },
         },
         general: {
             id: 'general',
-            path: '/'
+            path: '/',
         },
         licenses: {
             id: 'licenses',
-            path: 'licenses'
+            path: 'licenses',
         },
         buttons: {
-            id: 'buttons'
-        }
-    }
+            id: 'buttons',
+        },
+    },
 };
 
 export const oauthStore: configTypes.OauthStoreFlags = {
     code: 'code',
-    verify2fa: 'verify2fa'
+    verify2fa: 'verify2fa',
 };
 
 export const redirect: configTypes.Redirect = {
     authorised: environment.isLocal ? '/settings' : '/systems',
     unauthorised: '/',
     page404: '/404',
-    paths: ['/', '/register', '/restore_password', '/activate', '/404']
+    paths: ['/', '/register', '/restore_password', '/activate', '/404'],
 };
 
 export const search: configTypes.Search = {
     debounceShortTime: 100,
     debounceTime: 500,
     maxLength: 200,
-    minSystems: 9 // We need at least 9 system to enable search
+    minSystems: 9, // We need at least 9 system to enable search
 };
 
 export const servers: configTypes.Servers = {
@@ -478,7 +484,7 @@ export const servers: configTypes.Servers = {
     port: {
         max: 65535,
         min: 1,
-        restrictedMax: 1024
+        restrictedMax: 1024,
     },
     status: {
         online: 'online',
@@ -486,7 +492,7 @@ export const servers: configTypes.Servers = {
         restarting: 'restarting',
         resetting: 'resetting',
         checking: 'checking',
-        mismatchedcertificate: 'mismatchedcertificate'
+        mismatchedcertificate: 'mismatchedcertificate',
     },
     errors: {
         invalidParameter: 'invalidParameter',
@@ -494,14 +500,14 @@ export const servers: configTypes.Servers = {
         unauthorized: 'unauthorized',
         badRequest: 'badRequest',
         userPasswordRequired: 'userPasswordRequired',
-    }
+    },
 };
 
 export const toast: configTypes.Toast = {
     success: 'success',
     warning: 'warning',
     danger: 'danger',
-    info: 'info'
+    info: 'info',
 };
 
 export const webclient: configTypes.Webclient = {
@@ -527,7 +533,7 @@ export const webclient: configTypes.Webclient = {
     updateArchiveStateTimeout: 60 * 1000,
     updateArchiveRecordsTimeout: 2 * 1000,
     useServerTime: true,
-    useSystemTime: true
+    useSystemTime: true,
 };
 
 const OtherSystemSettings = {

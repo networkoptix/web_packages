@@ -18,12 +18,12 @@ import { CustomAccountProperty } from './nx-cloud-api/custom-account-property';
 enum AvailableThemes {
     auto = 'auto',
     light = 'light',
-    dark = 'dark'
+    dark = 'dark',
 }
 
 @UntilDestroy()
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxThemeService {
     CONFIG: IConfig;
@@ -50,25 +50,29 @@ export class NxThemeService {
         if (!this.CONFIG.featureFlags.themesEnabled) {
             return;
         }
-        this.themeCustomProperty = this.cloudApi.customAccountPropertyFactory('theme', { theme: this.CONFIG.themeConfig.default as AvailableThemes });
+        this.themeCustomProperty = this.cloudApi.customAccountPropertyFactory('theme', {
+            theme: this.CONFIG.themeConfig.default as AvailableThemes,
+        });
         this.viewType = this.route.snapshot.queryParams.view_type || 'web';
 
         this.route.queryParams
             .pipe(untilDestroyed(this))
             .subscribe(async (params: AuthorizeParams) => {
                 if (!params.view_type) {
-                    this.viewType = this.window.document.documentElement.getAttribute('data-platform');
+                    this.viewType =
+                        this.window.document.documentElement.getAttribute('data-platform');
                 }
                 this.viewType ||= 'web';
             });
 
-        this.sessionStorage.observe('theme')
+        this.sessionStorage
+            .observe('theme')
             .pipe(untilDestroyed(this))
             .subscribe(theme => {
                 if (!this.window.document.hasFocus()) {
                     this.window.document.documentElement.setAttribute(
                         'data-theme',
-                        this.getThemeRealName(theme)
+                        this.getThemeRealName(theme),
                     );
                 }
             });
@@ -79,39 +83,41 @@ export class NxThemeService {
                 if (this.viewType !== 'web') {
                     this.themeSelected = this.CONFIG.themeConfig.dark;
                 } else if (loginState && this.CONFIG.featureFlags.themesEnabled) {
-                    await this.themeCustomProperty.get(false, true)
-                        .then(result => {
+                    await this.themeCustomProperty.get(false, true).then(
+                        result => {
                             this.themeSelected = result.theme || this.CONFIG.themeConfig.default;
-                        }, err => {
+                        },
+                        err => {
                             console.error('Feature not available', err);
-                        });
+                        },
+                    );
                 } else {
-                    this.themeSelected = this.CONFIG.themeConfig.default === 'auto'
-                        ? this.CONFIG.themeConfig.default
-                        : this.getThemeRealName(this.CONFIG.themeConfig.default);
+                    this.themeSelected =
+                        this.CONFIG.themeConfig.default === 'auto'
+                            ? this.CONFIG.themeConfig.default
+                            : this.getThemeRealName(this.CONFIG.themeConfig.default);
                 }
 
                 await this.setTheme(this.themeSelected, loginState);
             });
 
         this.scope = this.document.documentElement;
-        this.themeMode$
-            .pipe(untilDestroyed(this))
-            .subscribe((mode: number) => {
-                if (mode) { // 0 - dark, 1 - light
-                    this.setColorsFor('background', {
-                        'background-h': 200,
-                        'background-s': 20,
-                        'background-l': 94
-                    });
-                } else {
-                    this.setColorsFor('background', {
-                        'background-h': 200,
-                        'background-s': 20,
-                        'background-l': 6
-                    });
-                }
-            });
+        this.themeMode$.pipe(untilDestroyed(this)).subscribe((mode: number) => {
+            if (mode) {
+                // 0 - dark, 1 - light
+                this.setColorsFor('background', {
+                    'background-h': 200,
+                    'background-s': 20,
+                    'background-l': 94,
+                });
+            } else {
+                this.setColorsFor('background', {
+                    'background-h': 200,
+                    'background-s': 20,
+                    'background-l': 6,
+                });
+            }
+        });
     }
 
     async initTheme(): Promise<void> {
@@ -150,7 +156,7 @@ export class NxThemeService {
 
             this.window.document.documentElement.setAttribute(
                 'data-theme',
-                this.getThemeRealName(theme)
+                this.getThemeRealName(theme),
             );
             this.cookieService.set('theme', theme);
         });
@@ -172,23 +178,19 @@ export class NxThemeService {
         }
         const docTheme = this.window.document.documentElement.getAttribute('data-theme');
         let { themesEnabled } = this.CONFIG.featureFlags;
-        if (
-            username === 'setup' ||
-            this.viewType !== 'web'
-        ) {
+        if (username === 'setup' || this.viewType !== 'web') {
             themesEnabled = true;
         }
 
         themeSelected = themesEnabled ? themeSelected || 'auto' : 'light';
-        if (
-            themeSelected === 'auto' ||
-            !themeSelected &&
-            !username
-        ) {
+        if (themeSelected === 'auto' || (!themeSelected && !username)) {
             this.sessionStorage.store('theme', themeSelected);
             this.themeSelected = themeSelected;
             NxConfigService.isDarkTheme = this.darkThemeMq.matches;
-            const theme = NxConfigService.isDarkTheme && themesEnabled ? this.getThemeRealName('dark') : this.getThemeRealName('light');
+            const theme =
+                NxConfigService.isDarkTheme && themesEnabled
+                    ? this.getThemeRealName('dark')
+                    : this.getThemeRealName('light');
             this.window.document.documentElement.setAttribute('data-theme', theme);
             this.cookieService.set('theme', themeSelected);
         } else {
@@ -203,7 +205,7 @@ export class NxThemeService {
             NxConfigService.isDarkTheme = themeSelected === 'dark';
             this.window.document.documentElement.setAttribute(
                 'data-theme',
-                this.getThemeRealName(themeSelected)
+                this.getThemeRealName(themeSelected),
             );
             this.cookieService.set('theme', themeSelected);
             this.themeSelected = themeSelected;
@@ -214,17 +216,16 @@ export class NxThemeService {
         }
 
         username &&
-        username !== 'setup' &&
-        this.viewType === 'web' &&
-        await this.themeCustomProperty.update(
-            curr => {
-                curr.theme = this.themeSelected as AvailableThemes;
-                return curr;
-            },
-            true
-        ).catch(err => {
-            console.warn('Cannot save theme: ', err);
-        });
+            username !== 'setup' &&
+            this.viewType === 'web' &&
+            (await this.themeCustomProperty
+                .update(curr => {
+                    curr.theme = this.themeSelected as AvailableThemes;
+                    return curr;
+                }, true)
+                .catch(err => {
+                    console.warn('Cannot save theme: ', err);
+                }));
     }
 
     // *********************************************************************
@@ -234,20 +235,16 @@ export class NxThemeService {
         this.cookieService.set('theme', theme);
         this.themeSelected = theme;
 
-        this.window.document.documentElement.setAttribute(
-            'data-theme',
-            theme
-        );
+        this.window.document.documentElement.setAttribute('data-theme', theme);
 
-        await this.themeCustomProperty.update(
-            curr => {
+        await this.themeCustomProperty
+            .update(curr => {
                 curr.theme = this.themeSelected as AvailableThemes;
                 return curr;
-            },
-            true
-        ).catch(err => {
-            console.warn('Cannot save theme: ', err);
-        });
+            }, true)
+            .catch(err => {
+                console.warn('Cannot save theme: ', err);
+            });
 
         setHSL && this.initHslTheme();
     }
@@ -265,7 +262,8 @@ export class NxThemeService {
         g /= 255;
         b /= 255;
 
-        const max = Math.max(r, g, b); const min = Math.min(r, g, b);
+        const max = Math.max(r, g, b);
+        const min = Math.min(r, g, b);
         let h: number;
         let s: number;
         const l = (max + min) / 2;
@@ -276,9 +274,15 @@ export class NxThemeService {
             const d = max - min;
             s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
             switch (max) {
-                case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-                case g: h = (b - r) / d + 2; break;
-                case b: h = (r - g) / d + 4; break;
+                case r:
+                    h = (g - b) / d + (g < b ? 6 : 0);
+                    break;
+                case g:
+                    h = (b - r) / d + 2;
+                    break;
+                case b:
+                    h = (r - g) / d + 4;
+                    break;
             }
             h /= 6;
         }
@@ -286,7 +290,7 @@ export class NxThemeService {
         return {
             hue: Math.round(h * 360),
             sat: Math.round(s * 100),
-            lum: Math.round(l * 100)
+            lum: Math.round(l * 100),
         };
     }
 
@@ -366,7 +370,10 @@ export class NxThemeService {
 
     setLeverLuminosity(item: Record<string, string>): void {
         this.colorLuminosity[item.label] = parseFloat(item.value);
-        this.scope.style.setProperty(`--color-level-${item.label}`, this.colorLuminosity[item.label]);
+        this.scope.style.setProperty(
+            `--color-level-${item.label}`,
+            this.colorLuminosity[item.label],
+        );
     }
 
     setColorHue(value: number): void {
@@ -384,7 +391,10 @@ export class NxThemeService {
         this.scope.style.setProperty('--color-l-step', `${this.luminosityStep}%`);
     }
 
-    setColorsFor(color: string, themeSelected: Record<string, Record<string, string>[] | number>): void {
+    setColorsFor(
+        color: string,
+        themeSelected: Record<string, Record<string, string>[] | number>,
+    ): void {
         this[color].hue = themeSelected[`${color}-h`];
         this[color].saturation = themeSelected[`${color}-s`];
         this[color].luminosity = themeSelected[`${color}-l`];
@@ -403,7 +413,8 @@ export class NxThemeService {
     initHslTheme(): void {
         const themeSelected = this.sessionService.hslTheme;
 
-        if (Object.keys(themeSelected).length === 21) { // on initial load some properties may not be initialized
+        if (Object.keys(themeSelected).length === 21) {
+            // on initial load some properties may not be initialized
             this.setColorsFor('brand', themeSelected);
             this.setColorsFor('color', themeSelected);
             this.setColorsFor('background', themeSelected);
@@ -414,10 +425,7 @@ export class NxThemeService {
             this.scope.style.setProperty('color-l-step', `${this.luminosityStep}%`);
 
             this.themeMode$.next(themeSelected['theme-mode']);
-            this.scope.setAttribute(
-                'data-theme-mode',
-                this.themeMode$.value ? 'light' : 'dark'
-            );
+            this.scope.setAttribute('data-theme-mode', this.themeMode$.value ? 'light' : 'dark');
 
             this.rs = getComputedStyle(this.scope);
         } else {
