@@ -1294,8 +1294,12 @@ export class NxLayoutGridComponent {
 
     updateCameraCredentials(system: NxSystem, camera: NxSystemCamera): void {
         const defaultPassword = !camera.unauthorized;
-        const firstCheckTimeout = 15 * 1000;
-        const cameraCredentialUpdateTimeout = 12000;
+        const retriesTimeout = 30 * 1000;
+        const firstCheckTimeout = 10 * 1000;
+        const cameraCredentialUpdateTimeout = 5 * 1000;
+        const retries = Math.round(
+            (retriesTimeout - firstCheckTimeout) / cameraCredentialUpdateTimeout,
+        );
         let firstCheck = true;
         const update = (): Promise<void> => {
             return of('')
@@ -1326,7 +1330,7 @@ export class NxLayoutGridComponent {
                             delay(cameraCredentialUpdateTimeout),
                         ),
                     ),
-                    retry(10),
+                    retry(retries),
                     catchError(err => {
                         console.error(err);
                         return of(err);
