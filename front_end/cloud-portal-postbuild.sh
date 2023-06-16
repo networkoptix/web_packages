@@ -23,7 +23,7 @@ rm ./dist/styles/*.scss;
 [ -e ./dist/styles/native-theme ] && rm -rf ./dist/styles/native-theme
 # target only main style
 mv ./dist/*.css ./dist/styles;
-sed -i -e 's/href="static\/styles\./href="static\/styles\/styles\./g' dist/index.html;
+sed -i -e 's/href="styles\./href="static\/styles\/styles\./g' dist/index.html;
 
 [ -e dist/index.html-e ] && rm dist/index.html-e;
 
