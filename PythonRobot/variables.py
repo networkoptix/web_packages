@@ -42,3 +42,5 @@ ERROR_COLOR = "rgb(240, 44, 44)"
 
 ALERT = """//div[contains(@class,'toast')]//span[contains(@class,'toast-content')]"""
 ALERT_CLOSE = """//div[contains(@class,'toast')]/button[contains(@class,'close') and @data-dismiss='alert']"""
+
+CHANGE_PASSWORD_BUTTON_DROPDOWN = f"//header//li//a[@href = '/account/password']"
