@@ -859,6 +859,7 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
 
     def template_allowed(self, request, customization_review):
         customization_name = customization_review.customization.name
+        # What if user is super and customization does not match.
         matching_portal = customization_name == request.CUSTOMIZATION
         asset = customization_review.version.asset
         is_cloud_portal = asset.is_cloud_portal

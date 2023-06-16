@@ -325,8 +325,9 @@ def publish_review(request, target_review, target_customization='', message=True
         # IntegrationCache(lookup_key='integrations', customization_required=False).clear_cache()
         # Todo. Using direct cache call instead. Replace it when fixed.
         caches['integrations'].clear()
-        if not asset.can_preview_on_portal:
-            return 'success', f'Version {target_review.version.id} has been published'
+        if not asset.can_preview_on_portal and not request.user.is_superuser:
+            # Todo. This check must be changed or some necessary permissions checks are missed before this point.
+            return 'error', f'Version {target_review.version.id} cannot be published for this customization.'
 
         publishing_errors = modify_db.publish_latest_version(
             asset, target_review_id, request.user)
