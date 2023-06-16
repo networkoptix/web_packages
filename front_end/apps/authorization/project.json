@@ -11,7 +11,7 @@
     "prefix": "app",
     "targets": {
         "build": {
-            "executor": "@angular-devkit/build-angular:browser",
+            "executor": "@nx/angular:webpack-browser",
             "options": {
                 "allowedCommonJsDependencies": ["md5", "uuid"],
                 "outputPath": "dist/authorization",
@@ -62,6 +62,7 @@
                     "namedChunks": false,
                     "extractLicenses": true,
                     "vendorChunk": false,
+                    "commonChunk": false,
                     "buildOptimizer": true,
                     "budgets": [
                         {
@@ -113,7 +114,7 @@
             "defaultConfiguration": ""
         },
         "build-ssr": {
-            "executor": "@angular-devkit/build-angular:browser",
+            "executor": "@nx/angular:webpack-browser",
             "options": {
                 "allowedCommonJsDependencies": ["md5", "uuid"],
                 "outputPath": "dist/authorization-ssr/browser",
@@ -218,7 +219,7 @@
             }
         },
         "serve": {
-            "executor": "@angular-devkit/build-angular:dev-server",
+            "executor": "@nx/angular:webpack-dev-server",
             "options": {
                 "browserTarget": "authorization:build:development",
                 "host": "0.0.0.0",
