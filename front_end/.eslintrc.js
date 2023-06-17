@@ -176,7 +176,6 @@ const typeLintBlacklist = [
     '**/nx-cloud-api/nx-cloud-api.ts',
     '**/nx-config/base-config.ts',
     '**/nx-header.service.ts',
-    '**/nx-static-cache.ts',
     '**/oauth.service.ts',
     '**/process.service/process.service.ts',
     '**/process.service/process.ts',
