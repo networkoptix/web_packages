@@ -38,6 +38,10 @@ def delete_all_text(driver: webdriver, locator: Tuple) -> None:
 def element_should_not_be_visible(driver: webdriver, locator: str, timeout: int = 10) -> None:
     WebDriverWait(driver, timeout).until_not(EC.visibility_of_element_located((By.XPATH, locator)))
 
+def elements_should_not_be_visible(driver: webdriver, locators: list[str]) -> None:
+    for locator in locators:
+        element_should_not_be_visible(driver, locator)
+
 def go_to_url(driver: webdriver, url: str) -> None:
     driver.get(url)
 
@@ -86,3 +90,6 @@ def  wait_until_page_does_not_contain_element(driver: webdriver, locator: str, t
 
 def wait_until_textfield_contains(driver, locator, expected_text, timeout: int = 10) -> None:
     WebDriverWait(driver, timeout).until(EC.text_to_be_present_in_element_value((By.XPATH, locator), expected_text))
+
+def reload_page(driver: webdriver):
+    driver.refresh()

@@ -7,6 +7,7 @@ f"variables/cms-variables.robot"
 #Resource     variables/cloud-merge-variables.robot
 
 
+BASE_PASSWORD = "qweasd 123"
 
 ALERT = f"//div[contains(@class,'toast')]//span[contains(@class,'toast-content')]"
 ALERT_CLOSE = f"//div[contains(@class,'toast')]/button[contains(@class,'close') and @data-dismiss='alert']"
@@ -128,6 +129,7 @@ PASSWORD_SPECIAL_CHARS = f"//div[contains(@class,input-error) and contains(text(
 PASSWORD_IS_WEAK = f"//div[contains(@class,input-error) and contains(text(),{PASSWORD_IS_WEAK_TEXT})]"
 PASSWORD_TOO_SHORT = f"//div[contains(@class,input-error) and contains(text(),{PASSWORD_TOO_SHORT_TEXT})]"
 PASSWORD_TOO_COMMON = f"//div[contains(@class,input-error) and contains(text(),{PASSWORD_TOO_COMMON_TEXT})]"
+PASSWORD_IS_REQUIRED = f"//div[contains(@class,'input-error') and contains(text(),{REQUIRED_TEXT})]"
 
 INVITED_TO_SYSTEM_EMAIL_SUBJECT_UNREGISTERED = f"{{message.sharer_name}} invites you to %PRODUCT_NAME%"
 
@@ -335,7 +337,7 @@ LOWER_UPPPER_NUMBER_PASSWORD = f"qweASD123"
 LOWER_UPPER_SYMBOL_PASSWORD = f"qweASD!@#"
 LOWER_NUMBER_SYMBOL_PASSWORD = f"qwe123!@#"
 UPPER_NUMBER_SYMBOL_PASSWORD = f"QWE123!@#"
-f"{LOWER_UPPPER_NUMBER_PASSWORD}"f"{LOWER_UPPER_SYMBOL_PASSWORD}"f"{LOWER_NUMBER_SYMBOL_PASSWORD}"f"{UPPER_NUMBER_SYMBOL_PASSWORD}"f"{BASE_PASSWORD}"
+GOOD_PASSWORDS = [LOWER_UPPPER_NUMBER_PASSWORD, LOWER_UPPER_SYMBOL_PASSWORD, LOWER_NUMBER_SYMBOL_PASSWORD, UPPER_NUMBER_SYMBOL_PASSWORD, BASE_PASSWORD]
 
 SYMBOL_PASSWORD = f"pass!@#$%^&*()_-+=;:''`~,./\|?[]{}"
 COMMON_PASSWORD = f"qweasd123"
@@ -345,8 +347,8 @@ INCORRECT_PASSWORDS = [
     SMILEY_TEXT,
     GLYPH_TEXT,
     TM_TEXT,
-    SPACE + BASE_PASSWORD,
-    BASE_PASSWORD + SPACE,
+    f" {BASE_PASSWORD}",
+    f"{BASE_PASSWORD} "
 ]
 
 #Local User in System Users
