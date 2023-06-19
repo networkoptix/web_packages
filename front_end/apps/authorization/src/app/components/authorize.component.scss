@@ -106,12 +106,12 @@
 
     .main-d .stroke-color-main,
     .header-d .stroke-color-main {
-        stroke: var(--light16);
+        stroke: var(--btn-text-color);
     }
 
     .main-d .fill-color-main,
     .header-d .fill-color-main {
-        fill: var(--light16);
+        fill: var(--btn-text-color);
     }
 
     .invalid-state {
@@ -217,8 +217,8 @@
             }
 
             &.header-d {
-                background-color: var(--dark8);
-                border-bottom: 1px solid var(--dark6);
+                //background-color: var(--new-dark8);
+                //border-bottom: 1px solid var(--new-dark6);
 
                 .authorize-header {
                     color: var(--light4)  !important;
