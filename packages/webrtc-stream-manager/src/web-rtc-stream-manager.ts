@@ -1,7 +1,7 @@
 // Copyright 2018-present Network Optix, Inc. Licensed under MPL 2.0: www.mozilla.org/MPL/2.0/
 
 import { Observable, BehaviorSubject, timer, Subject, combineLatest, firstValueFrom } from 'rxjs';
-import { filter, shareReplay, switchMap, take, map, delay, takeUntil, skip, pairwise, tap, distinctUntilChanged, timeout, catchError } from 'rxjs/operators';
+import { filter, shareReplay, switchMap, take, map, delay, takeUntil, skip, pairwise, tap, distinctUntilChanged, timeout, catchError, debounceTime } from 'rxjs/operators';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { FrameTracker, FocusTracker, MosScoreTracker } from './trackers';
 import { MediaServerPeerConnection } from './media-server-peer-connection';
@@ -357,6 +357,7 @@ export class WebRTCStreamManager {
 
     /** Internal */
     private peerConnection: MediaServerPeerConnection;
+    private wsConnectionUrl = '';
     private wsConnection: WebSocketSubject<SignalingMessage>;
     private videoElements: HTMLVideoElement[] = [];
     private closeCurrentPeerConnection = false;
@@ -509,7 +510,13 @@ export class WebRTCStreamManager {
     };
 
     /** Subject ot trigger closing open websocket observables */
-    private closeWsConnection = new Subject<string>();
+    private closeWsConnectionNotifier$ = new Subject<string>();
+
+    private closeWsConnection = (): void => {
+        this.closeWsConnectionNotifier$.next('close');
+        this.wsConnection = null;
+        this.wsConnectionUrl = '';
+    }
 
 
     /**
@@ -523,7 +530,7 @@ export class WebRTCStreamManager {
      */
     public close = (): void => {
         this.stopCurrentStream();
-        this.closeWsConnection.next('close');
+        this.closeWsConnection();
         this.peerConnection?.close();
 
         delete WebRTCStreamManager.EXISTING_CONNECTIONS[sanitizeUrl(this.webRtcUrlFactory())];
@@ -590,6 +597,7 @@ export class WebRTCStreamManager {
      */
     private errorHandler = (error: unknown): void => {
         console.log(error);
+        this.closeCurrentPeerConnection = true;
         this.initPeerConnection();
         this.wsConnection.next({ error });
     }
@@ -640,11 +648,18 @@ export class WebRTCStreamManager {
         console.info('Starting stream')
         console.table({ webRtcUrl, stream, position })
 
+        if (this.wsConnectionUrl === webRtcUrl) {
+            return;
+        }
+
+        this.wsConnectionUrl = webRtcUrl;
+        this.closeWsConnection();
+
         this.wsConnection = webSocket(
             webRtcUrl
         );
 
-        this.wsConnection.pipe(takeUntil(this.closeWsConnection)).subscribe({
+        this.wsConnection.pipe(takeUntil(this.closeWsConnectionNotifier$)).subscribe({
             next: this.gotMessageFromServer,
             error: (err: Error) => {
                 this.close();
@@ -690,8 +705,8 @@ export class WebRTCStreamManager {
         }
 
         this.peerConnection ||= new MediaServerPeerConnection(
-            () => this.getOpenWebSocketConnection(),
-            () => this.closeWsConnection.next('close'),
+            this.getOpenWebSocketConnection,
+            this.closeWsConnection,
             this.start,
             stream => {
                 console.log(stream);
@@ -717,12 +732,11 @@ export class WebRTCStreamManager {
         videoElement?: HTMLVideoElement,
         private hasSecondary = true,
     ) {
-        this.updateStream(WebRTCStreamManager.getInitialStream(videoElement))
-        this.start();
+        this.updateStream(WebRTCStreamManager.getInitialStream(videoElement));
         combineLatest([
             this.position$,
-            this.stream$.pipe(distinctUntilChanged())
-        ]).pipe(skip(1)).subscribe(() => this.start());
+            this.stream$
+        ]).pipe(distinctUntilChanged((prev, cur) => prev.every((val, i) => val === cur[i])), debounceTime(50)).subscribe(() => this.start());
         this.#initPeerConnectionCleanup();
     }
 }
