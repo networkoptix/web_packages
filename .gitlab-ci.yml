@@ -308,10 +308,35 @@ frontend-tests:
 
 jenkins-build-webadmin:
   extends: .jenkins-builds
+  rules:
+  - if: '$CI_MERGE_REQUEST_ID && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^vms_/'
+    when: on_success
+    changes:
+      - front_end/**/*
+  - if: '$CI_MERGE_REQUEST_ID && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"'
+    when: on_success
+    changes:
+      - front_end/**/*
+  - if: '$CI_COMMIT_REF_PROTECTED == "true" && $CI_COMMIT_REF_NAME =~ /^vms_/'
+    when: on_success
+    changes:
+      - front_end/**/*
+  - if: '$CI_COMMIT_REF_PROTECTED == "true" && $CI_COMMIT_REF_NAME == "develop"'
+    when: on_success
+    changes:
+      - front_end/**/*
   script:
+    - |
+      set -ex
+      if [[ "$CI_COMMIT_REF_PROTECTED" == true ]]; then
+        PUBLISH=ON
+      else
+        PUBLISH=OFF
+      fi
     - mkdir logs
     - echo "Running webadmin build"
     - runJenkinsJob.sh gitlab.vms.review.webadmin.build
+      "PUBLISH=$PUBLISH"
       "BUILD_DESCRIPTION=$CI_COMMIT_TITLE"
       "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
       "GITLAB_COMMIT=$CI_COMMIT_SHORT_SHA"
@@ -327,8 +352,7 @@ jenkins-build-frontend:
     - mkdir logs
     - echo "Running frontend build"
     - runJenkinsJob.sh gitlab.cloud.frontend
-      "PUSH_TO_ARTIFACTORY=true"
-      "BRANCH=$TARGET_BRANCH_NAME"
+      "BRANCH=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
       "BUILD_IDENTITY=$CI_PIPELINE_ID"
       "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
       "GITLAB_COMMIT=$CI_COMMIT_SHORT_SHA"
@@ -337,27 +361,6 @@ jenkins-build-frontend:
       "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
       "GITLAB_JOB_URL=$CI_JOB_URL"
       "REVISION=$CI_COMMIT_SHORT_SHA" 2>&1 | tee logs/frontend.log & FRONTEND_EXIT="$?"
-    - wait
-
-conan-updater:
-  extends: .jenkins-builds
-  rules:
-    - if: '$CI_COMMIT_REF_PROTECTED == "true" && $TARGET_BRANCH_NAME == "vms_*"'
-      when: on_success
-    - if: '$CI_COMMIT_REF_PROTECTED == "true" && $TARGET_BRANCH_NAME == "develop"'
-      when: on_success
-  script:
-    - mkdir logs
-    - echo "Running webadmin build"
-    - runJenkinsJob.sh gitlab.vms.review.webadmin.build
-      "PUSH_TO_ARTIFACTORY=true"
-      "BUILD_DESCRIPTION=$CI_COMMIT_TITLE"
-      "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
-      "GITLAB_COMMIT=$CI_COMMIT_SHORT_SHA"
-      "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
-      "GITLAB_JOB_ID=$CI_JOB_ID"
-      "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
-      "GITLAB_JOB_URL=$CI_JOB_URL" & WEBADMIN_EXIT="$?"
     - wait
 
 #wheel-uploader:
