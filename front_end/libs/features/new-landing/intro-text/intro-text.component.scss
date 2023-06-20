@@ -13,7 +13,7 @@
     text-align: center;
     width: 600px;
     height: 380px;
-    color: var(--new-dark9);
+    color: var(--dark9);
     z-index: -1;
 }
 
@@ -46,7 +46,7 @@
 .cloud-header {
     @extend .slide-down-animation;
     font-family: $font-family-medium;
-    color: var(--new-dark9);
+    color: var(--dark9);
     font-size: 64px;
     line-height: 72px;
     padding-top: 4px;
@@ -59,7 +59,7 @@
     animation-delay: 100ms;
     font-family: $font-family-regular;
     font-size: 16px;
-    color: var(--new-dark9);
+    color: var(--dark9);
     line-height: 24px;
     width: 420px;
     inline-size: 300px;
@@ -69,7 +69,7 @@
 .cloud-icon {
     margin-bottom: -180px;
     width: 250px;
-    stroke: var(--new-brand-core);
+    stroke: var(--brand-core);
 }
 
 .cloud-svg {

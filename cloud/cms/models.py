@@ -69,11 +69,9 @@ class MenuCache(BaseCacheV2):
         return super().__getitem__(key.lower())
 
     def __setitem__(self, key, menu):
-        from cms.controllers.documentation import DocumentCache
-        DocumentCache(customization_name=self.customization_name).clear_cache()
         super().__setitem__(key.lower(), menu)
 
-    def clear_cache(self, immediate = False):
+    def clear_cache(self, immediate = False, clear_documentation_cache = False):
         from cms.controllers.documentation import DocumentCache
         from cms.tasks import async_generate_menus
         from notifications.celery import app
@@ -87,7 +85,8 @@ class MenuCache(BaseCacheV2):
                 app.control.revoke(running_task, terminate=True, signal='SIGUSR1')
             task = async_generate_menus.apply_async(args=[self.customization_name, self._cache_key], queue='celery')
             cache.set(self.init_task_key, str(task), INITIALIZATION_TASK_TIMEOUT)
-            DocumentCache(customization_name=self.customization_name).clear_cache()
+            if clear_documentation_cache:
+                DocumentCache(customization_name=self.customization_name).clear_cache()
 
 
 PORTAL_MANAGER_PERMISSIONS = [
@@ -1401,7 +1400,7 @@ class DataStructure(models.Model):
 
         from cms.helpers.cached_asset import AssetCacheLoaderBase
         cached_values = {}
-        if not draft and use_cached and not as_records:
+        if not draft and not only_review and use_cached and not as_records:
             cached_values = AssetCacheLoaderBase.get_values(
                 asset=asset, datastructures=data_structures, version_id=version_id,
                 language=language, customization_name=customization_name
@@ -1449,7 +1448,7 @@ class DataStructure(models.Model):
             fish(nontranslatable_ds_set)
 
         final_values = cached_values
-        if not draft and not as_records:
+        if not draft and not only_review and not as_records:
             loader = AssetCacheLoaderBase(asset=asset, version_id=version_id, language=language,
                                           customization_name=customization_name)
         for ds in data_structure_set:
@@ -1474,7 +1473,7 @@ class DataStructure(models.Model):
                 final_values[ds] = DataStructure.cast_value(ds, ds.default)
 
             # caching all cast values
-            if not draft and not as_records:
+            if not draft and not only_review and not as_records:
                 loader.datastructure = ds
                 if ds.type in [DataStructure.DATA_TYPES.file, DataStructure.DATA_TYPES.image]:
                     # omitting caching file content
@@ -1848,13 +1847,19 @@ class AssetCustomizationReview(models.Model):
         return self.version.asset.__str__()
 
     def save(self, *args, **kwargs):
-        super(AssetCustomizationReview, self).save(*args, **kwargs)
+        from cms.helpers.cached_asset import AssetCacheLoaderBase
+        # invalidate latest cached values
         if self.state in (self.REVIEW_STATES.accepted,
                           self.REVIEW_STATES.rejected,
                           self.REVIEW_STATES.blocked):
-            # invalidate cache for latest values
-            from cms.helpers.cached_asset import AssetCacheLoaderBase
             AssetCacheLoaderBase.invalidate_asset_latest_values(asset=self.version.asset)
+
+        # invalidate version (it is possible to get cached values for not accepted
+        # asset by using not issued yet version id) these values have no impact until
+        # version is not created/accepted
+        AssetCacheLoaderBase.invalidate_asset_version_values(asset=self.version.asset,
+                                                             version_id=self.version_id)
+        super(AssetCustomizationReview, self).save(*args, **kwargs)
 
     def delete(self, using=None, keep_parents=False):
         from cms.helpers.cached_asset import AssetCacheLoaderBase

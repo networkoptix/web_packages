@@ -34,7 +34,7 @@ nx-dynamic-table {
       padding: 4px 8px;
       bottom: 35px;
       z-index: 9;
-      background-color: var(--new-light1);
+      background-color: var(--light1);
       transition: opacity, .2s linear;
     }
 
@@ -90,7 +90,7 @@ nx-dynamic-table {
 
             .group-1 {
               color: var(--card-header-text) !important;
-              border-color: var(--new-light10);
+              border-color: var(--light10);
             }
 
             .group-2 {
@@ -115,7 +115,7 @@ nx-dynamic-table {
 
             .group-6 {
               color: var(--card-header-text) !important;
-              border-color: var(--new-light10);
+              border-color: var(--light10);
             }
           }
         }
@@ -213,8 +213,8 @@ nx-dynamic-table {
           &.selected,
           &:active,
           &:focus {
-            color: var(--new-light1) !important;
-            background-color: var(--new-light16);
+            color: var(--light1) !important;
+            background-color: var(--light16);
 
             &:hover {
               background-color: var(--dynamic-table-row-hover-bg) !important;
@@ -224,22 +224,22 @@ nx-dynamic-table {
 
               &,
               span {
-                color: var(--new-light1) !important;
+                color: var(--light1) !important;
               }
 
               svg {
                 path {
-                  fill: var(--new-light1) !important;
+                  fill: var(--light1) !important;
                 }
 
                 rect,
                 polygon {
-                  fill: var(--new-light16) !important;
+                  fill: var(--light16) !important;
                 }
               }
 
               .icon-negative {
-                color: var(--new-light1);
+                color: var(--light1);
               }
             }
           }
@@ -268,7 +268,7 @@ nx-dynamic-table {
         color: var(--body-text-color);
         padding: 0.5rem 1rem;
         background-color: var(--additional-light1);
-        border: 1px solid var(--new-light3);
+        border: 1px solid var(--light3);
         border-bottom: none;
         line-height: 16px;
         text-transform: none;
@@ -301,7 +301,7 @@ nx-dynamic-table {
 
           .page-link {
             @include typography.regular13light;
-            background-color: var(--new-light4);
+            background-color: var(--light4);
             border-radius: 2px;
             height: 32px;
             padding: 0 12px;
@@ -312,7 +312,7 @@ nx-dynamic-table {
             border: none;
 
             &:hover {
-              background-color: var(--new-light5);
+              background-color: var(--light5);
             }
 
             &[aria-label="Previous"] {
@@ -337,15 +337,15 @@ nx-dynamic-table {
           }
 
           &.active .page-link {
-            color: var(--new-light1) !important;
-            background-color: var(--new-light16);
-            border-color: var(--new-light16);
+            color: var(--light1) !important;
+            background-color: var(--light16);
+            border-color: var(--light16);
           }
 
           &.disabled .page-link {
             cursor: default;
-            background-color: var(--new-light6-t20);
-            color: var(--new-dark9-t30) !important;
+            background-color: rgba(var(--light6--rgb), .2);
+            color: rgba(var(--dark9--rgb), .3) !important;
           }
         }
       }
@@ -354,7 +354,7 @@ nx-dynamic-table {
 
   .vendor {
     @include bootstrap.media-breakpoint-down(md) {
-      background-color: var(--new-light4);
+      background-color: var(--light4);
     }
   }
 

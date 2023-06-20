@@ -1,3 +1,4 @@
+import json
 from smtplib import SMTPDataError, SMTPException, SMTPServerDisconnected
 from ssl import SSLError
 import traceback
@@ -49,6 +50,18 @@ def send_email_log(_task):
             f"Start {_task.__name__} was run with args {args}, kwargs: {kwargs}")
         return _task(*args, **kwargs)
     return wrapper
+
+
+def get_email_full_name(email: str, send_individual: bool):
+    try:
+        users_emails = json.loads(email)
+    except:
+        users_emails = [email]
+
+    if send_individual and (user := Account.objects.filter(email=email).first()):
+        return user.get_full_name()
+
+    return ', '.join(users_emails)
 
 
 @shared_task
@@ -105,11 +118,8 @@ def send_email(msg_id, queue="", attempt=1, email_type='', emails = None, sessio
         for email in targets:
             if not isinstance(email_content, dict) or 'userFullName' in email_content:
                 pass
-            elif send_individual and (user := Account.objects.filter(email=email).first()):
-                # TODO: Need to break dependencies on Account
-                email_content['userFullName'] = user.get_full_name()
             else:
-                email_content['userFullName'] = email
+                email_content['userFullName'] = get_email_full_name(email, send_individual)
             try:
                 email_engine.send(email, template_type, email_content, lang, customization, subject, attachments)
             except Exception as e:

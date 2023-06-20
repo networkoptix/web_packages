@@ -214,7 +214,7 @@ def sync_search(request, name=None):
     This will mostly be available for admins in case something weird happens where the instant search gets in a weird state.
     """
     if not name:
-        index = get_meilisearch_client().index('documentation')
+        index = DocumentCache(customization_name=request.CUSTOMIZATION).get_search_index()
         index.delete_all_documents()
 
     docs = sync_search_for_menu(
@@ -266,7 +266,7 @@ def kb_search(request, name):
     perPage = int(request.query_params.get('perPage', 10))
     page = int(request.query_params.get('page', 1))
 
-    index = get_meilisearch_client().index('documentation')
+    index = document_cache.get_search_index()
 
     kb_menus_filter = [f"kbMenus = '{kb}'" for kb in kb_menus_filter if kb]
     labels_filter = [f"labels = '{label}'" for label in labels_filter if label]

@@ -619,7 +619,7 @@ def import_assets_from_json(assets_list, user, publish=False, increment_progress
                 if asset_obj.is_documentation and published:
                     # Reinitializing documentation and cache for each customization.
                     # Menu and Documentation caches must be cleared together
-                    MenuCache(customization_name=customization.name).clear_cache()
+                    MenuCache(customization_name=customization.name).clear_cache(clear_documentation_cache=True)
         if increment_progress:
             increment_progress()
 

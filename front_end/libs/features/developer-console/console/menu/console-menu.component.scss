@@ -81,15 +81,15 @@
         height: 32px;
 
         &:hover {
-            color: var(--new-dark15)  !important;
+            color: var(--dark15)  !important;
 
             .st0 {
-                fill: var(--new-dark15);
+                fill: var(--dark15);
             }
         }
 
         .st0 {
-            fill: var(--new-light16);
+            fill: var(--light16);
         }
     }
 }

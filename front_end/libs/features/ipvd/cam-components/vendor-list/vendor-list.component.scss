@@ -9,7 +9,7 @@ nx-vendor-list {
         span {
             margin: 0;
             line-height: 2rem;
-            color: var(--new-light16);
+            color: var(--light16);
             font-size: rem(20px);
         }
     }
@@ -23,7 +23,7 @@ nx-vendor-list {
             text-decoration: none;
 
             &:hover {
-                color: var(--new-dark15);
+                color: var(--dark15);
             }
         }
     }

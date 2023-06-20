@@ -4,7 +4,7 @@
 
 
 :host {
-    background: var(--new-light1);
+    background: var(--light1);
     position: absolute;
     bottom: 0;
     transform: translate(-100%, 100%);
@@ -14,7 +14,7 @@
 
 section {
     padding: 8px;
-    border-bottom: 1px solid var(--new-light4);
+    border-bottom: 1px solid var(--light4);
 
     &.shaded {
         background: $additional_light1;
@@ -31,8 +31,8 @@ button.btn.btn-default {
     &.active,
     &:active,
     &.active:hover {
-        background: var(--new-light16)  !important;
-        color: var(--new-light1)  !important;
+        background: var(--light16)  !important;
+        color: var(--light1)  !important;
     }
 }
 

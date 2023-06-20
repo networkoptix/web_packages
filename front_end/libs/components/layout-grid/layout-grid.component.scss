@@ -44,7 +44,7 @@
     transition-property: width, background;
     transition-duration: 150ms;
     transition-timing-function: ease-in-out;
-    background: var(--header-bg);
+    background: var(--sidebar-background);
     z-index: 2;
     --column-width: calc(100vw / 12);
 
@@ -86,7 +86,6 @@
     --min-sidebar-width: calc(var(--container-limit) / 12 * var(--column-limit) + var(--tab-size));
 
     &.open-menu {
-        border-right: 1px solid var(--border-color);
         padding: 16px 0 16px 16px;
         width: max(var(--sidebar-width), var(--min-sidebar-width));
     }
@@ -192,11 +191,10 @@ div.tab {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: var(--header-bg);
+    background: var(--sidebar-background);
     position: absolute;
     top: calc(50% - 16px);
     right: -14px;
-    border: 1px solid var(--border-color);
     border-left-color: transparent;
 
     & .st0 {
@@ -214,12 +212,16 @@ div.tab {
         align-items: center;
     }
 
+    &:not(.active-menu) {
+        background: var(--sidebar-tab-closed);
+    }
+
     &.active-menu>svg-icon {
         transform: rotate(0deg);
     }
 
     &:hover {
-        background: var(--border-color);
+        background: var(--sidebar-tab-hover);
     }
 }
 
@@ -254,7 +256,7 @@ div.tab {
         justify-content: center;
         align-items: center;
         height: 100%;
-        color: var(--new-brand-core);
+        color: var(--brand-core);
     }
 }
 
@@ -268,7 +270,7 @@ h2.auto-save-overlay {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: var(--new-brand-core) !important;
+    color: var(--brand-core) !important;
     opacity: 0.5;
     pointer-events: none;
     z-index: 300;
@@ -311,7 +313,7 @@ cdk-tree,
 
     &:active {
         background: rgba($brand_core, .1);
-        outline: 2px solid var(--new-brand-core);
+        outline: 2px solid var(--brand-core);
     }
 
     &:hover .item-error.has-secondary-panel {
@@ -465,7 +467,7 @@ cdk-tree,
 
     &:active,
     :focus {
-        outline: 2px solid var(--new-brand-core);
+        outline: 2px solid var(--brand-core);
     }
 
     ::ng-deep {
@@ -598,7 +600,7 @@ iframe {
     grid-area: 1 / 1 / 2 / 2;
     opacity: 1 !important;
     background: rgba($brand_core, .1);
-    outline: 2px solid var(--new-brand-core);
+    outline: 2px solid var(--brand-core);
 }
 
 .action-button {
@@ -749,11 +751,11 @@ iframe {
                 margin: 4px 0 4px auto;
                 padding: 0px 4px;
                 background: transparent;
-                border: 1px solid var(--new-brand-core);
+                border: 1px solid var(--brand-core);
                 border-radius: 24px !important;
 
                 &:hover {
-                    background: var(--new-brand-core);
+                    background: var(--brand-core);
                     border-color: var(--left-menu-l3-selected-color) !important;
                 }
             }

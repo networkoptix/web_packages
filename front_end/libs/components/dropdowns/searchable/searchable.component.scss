@@ -1,13 +1,13 @@
 .dropdown {
     width: 100%;
     display: block;
-    
+
     &.ng-dirty.ng-invalid:not(.ng-untouched) {
         .form-control {
             border-color : var(--input-error-border-color) !important;
             color        : var(--input-error-color) !important;
         }
-        
+
         .placeholder {
             color : var(--input-error-color) !important;
         }
@@ -66,11 +66,11 @@
     .additional-help {
         font-family: var(--font-family-regular);
         font-size: 13px;
-        color: var(--new-light16);
+        color: var(--light16);
         margin-left: 0.25rem;
     }
 
     .selected .additional-help {
-        color: var(--new-light1)  !important;
+        color: var(--light1)  !important;
     }
 }

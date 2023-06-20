@@ -1,6 +1,6 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { Overlay } from '@angular/cdk/overlay';
-import { Location } from '@angular/common';
+import { DOCUMENT, Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable, Injector } from '@angular/core';
 import { Router } from '@angular/router';
@@ -50,8 +50,9 @@ export class NxLoginService extends DialogBase {
         private bootstrapProvider: NxBootstrapProvider,
         private cdkDialog: Dialog,
         @Inject(WINDOW) private window: Window,
+        @Inject(DOCUMENT) document: Document,
     ) {
-        super(overlay, injector);
+        super(overlay, injector, document);
         this.CONFIG = configService.getConfig();
     }
 

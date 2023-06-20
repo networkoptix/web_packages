@@ -10,16 +10,16 @@
 
     &:not(.show) {
         &>button {
-            background: var(--new-dark14)  !important;
+            background: var(--dark14)  !important;
             color: theme_variables_common.$additional_light1  !important;
             border: 1px solid transparent !important;
 
             &:hover {
-                background: var(--new-dark15)  !important;
+                background: var(--dark15)  !important;
             }
 
             &:active {
-                background: var(--new-dark13)  !important;
+                background: var(--dark13)  !important;
             }
 
         }
@@ -28,17 +28,17 @@
     &.show {
         &>button {
             color: theme_variables_common.$additional_light1  !important;
-            border: 1px solid var(--new-dark11)  !important;
-            background: var(--new-dark12)  !important;
+            border: 1px solid var(--dark11)  !important;
+            background: var(--dark12)  !important;
 
             &:hover {
-                background: 1px var(--new-dark13)  !important;
-                border: 1px solid var(--new-dark12)  !important;
+                background: 1px var(--dark13)  !important;
+                border: 1px solid var(--dark12)  !important;
             }
 
             &:active {
-                background: var(--new-dark12)  !important;
-                border: 1px solid var(--new-dark11)  !important;
+                background: var(--dark12)  !important;
+                border: 1px solid var(--dark11)  !important;
             }
 
         }

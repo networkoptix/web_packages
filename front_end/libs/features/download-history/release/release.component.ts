@@ -26,6 +26,11 @@ export class ReleaseComponent implements OnInit {
                     ),
             );
         });
+        // Convert markdown code backticks to HTML <code> elements
+        this.release.releaseNotes = this.release.releaseNotes.replace(
+            /`(.*?)`/g,
+            `<code>$1</code>`,
+        );
         this.cardExpanded = Object.fromEntries(this.release.platforms.map(p => [p.name, false]));
     }
 }

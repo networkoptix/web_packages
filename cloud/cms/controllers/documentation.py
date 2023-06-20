@@ -128,21 +128,24 @@ class SearchableCache(BaseCacheV2):
     def being_initialized(self):
         return bool(cache.get(self.init_task_key))
 
+    @property
+    def search_index_key(self):
+        return f'{self.cache_key}-{self.customization_name}'
+
     def get_search_index(self):
         if settings.TESTING:
             return None
         if self._search_index or self.recently_checked:
             return self._search_index
-
         client = get_meilisearch_client()
-        self._search_index = client.index(self.cache_key)
+        self._search_index = client.index(self.search_index_key)
 
         try:
             self._search_index.get_stats()
             self.check_and_update_custom_settings()
         except MeiliSearchApiError:
             try:
-                self._search_index = client.create_index(self.cache_key)
+                self._search_index = client.create_index(self.search_index_key)
             except MeiliSearchApiError:
                 self._search_index = None
         except MeiliSearchCommunicationError:

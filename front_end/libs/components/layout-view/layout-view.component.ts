@@ -550,8 +550,19 @@ export class NxLayoutViewComponent {
                 filter(([layout, items]) => layout && !!items),
                 take(1),
                 delay(100),
+                untilDestroyed(this),
             )
             .subscribe(() => this.initTour());
+
+        this.selectedSystem$
+            .pipe(untilDestroyed(this))
+            .subscribe(system =>
+                this.pageService.pageTitle(
+                    [staticLang.pageTitles.layouts, system.info.name, this.CONFIG.cloudName].join(
+                        ' - ',
+                    ),
+                ),
+            );
     }
 
     initTour = (tourGroup: CloudLayoutTours = CloudLayoutTours.DEFAULT): void => {

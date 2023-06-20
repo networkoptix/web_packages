@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -6,6 +7,7 @@ import { NxMenuService } from '@app/menu/menu.service';
 import type { Content } from '@app/menu/menu.types';
 import staticLang from '@common/language/language_i18n_static.json';
 import { menus } from '@lib/variables/static-variables';
+import { NxPageTitleStrategy } from '@resolvers/title-resolver';
 import { NxSessionService } from '@services/session.service';
 
 @UntilDestroy()
@@ -22,6 +24,8 @@ export class NxAccountComponent implements OnInit {
     userEmail: string;
 
     constructor(
+        router: Router,
+        titleService: NxPageTitleStrategy,
         private translateService: TranslateService,
         private sessionService: NxSessionService,
         private menuService: NxMenuService,
@@ -30,6 +34,10 @@ export class NxAccountComponent implements OnInit {
             setTimeout(() => {
                 this.initMenu();
                 this.content = { ...this.content }; // trigger onChange
+
+                setTimeout(() => {
+                    titleService.updateTitle(router.routerState.snapshot);
+                });
             });
         });
     }

@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -44,7 +45,7 @@ export class SystemGuard {
             return true;
         }
 
-        const routesChecked = [
+        const restrictedRoutes = [
             'users',
             'cloud-storage',
             'health',
@@ -55,7 +56,7 @@ export class SystemGuard {
             'layouts',
             'bookmarks',
         ];
-        const currentRoute = routesChecked.find(route => state.url.includes(route));
+        const currentRoute = restrictedRoutes.find(route => state.url.includes(route));
         const systemId =
             environment.isLocal ||
             route.pathFromRoot.find(snapshot => snapshot.params.systemId).params.systemId;
@@ -142,6 +143,16 @@ export class SystemGuard {
                 } catch (e) {
                     if (e === 'Media server cloud not be reached.') {
                         const cloudUsers = await currSystem.getUsersCachedInCloud();
+                        if (cloudUsers instanceof HttpErrorResponse && cloudUsers.status === 403) {
+                            // User doesn't have permission to view cloud users
+                            if (currentRoute) {
+                                return this.router.navigate([
+                                    environment.isLocal ? '/settings/' : `/systems/${systemId}`,
+                                ]);
+                            } else {
+                                return true;
+                            }
+                        }
                         currSystem.userManager.processUsers(cloudUsers);
                     } else {
                         throw e;

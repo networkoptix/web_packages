@@ -15,7 +15,7 @@ $color-transparency: (
         't0' : 0
     );
 
-html[data-theme-mode="dark"] {
+html[data-theme-mode="dark"][data-theme="hsl"] {
     --color-l-step: 2%; // step between light1 and light2 .. etc. in percentage
 
     --color-h: 200; // Hue
@@ -120,7 +120,7 @@ html[data-theme-mode="dark"] {
     }
 }
 
-html[data-theme-mode="light"] {
+html[data-theme-mode="light"][data-theme="hsl"] {
     --color-l-step: 2%; // step between light1 and light2 .. etc. in percentage
 
     --color-h: 200; // Hue
@@ -615,7 +615,7 @@ html[data-theme="hsl"] {
     --dialog-header-bg : var(--new-dark6);
     --dialog-header-color: var(--new-dark17);
     --dialog-overlay-bg: var(--new-dark1-t50);
-    --dialog-box-shadow: 0px 16px 32px var(--new-dark15-t20);;
+    --dialog-box-shadow: 0px 16px 32px var(--new-dark15-t20);
 
     --svg-legend-bg : var(--new-dark5);
     --svg-legend-border-color : var(--new-dark11);

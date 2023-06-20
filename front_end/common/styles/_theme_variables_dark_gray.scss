@@ -2,7 +2,7 @@
 @import "./native-theme/theme_palette";
 @import "_theme_palette";
 
-html[data-theme="dark-gray"] {
+html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     body {
         background-color: #101010;
         color : #B8B8B8;
@@ -425,6 +425,7 @@ html[data-theme="dark-gray"] {
     --dropdown-menu-border : 1px solid #383838; //$dark_gray_8;
     --dropdown-menu-top-border : 1px solid #707070; //$dark_gray_15;
     --dropdown-menu-shadow : none;
+    --dropdown-menu-shadow-upper : none;
     --dropdown-menu-bg : #181818; //$dark_gray_4;
     --drop-menu-systems-bg    : #202020; //$dark_gray_5;
     --drop-menu-navigation-bg : #303030; //$dark_gray_7;
@@ -697,4 +698,7 @@ html[data-theme="dark-gray"] {
     --placeholder-background: #161C1F;
     --placeholder-color: #B21A1A;
     --no-camera-placeholder-color: var(--light10);
+    --sidebar-background: var(--dark4);
+    --sidebar-tab-hover: var(--dark6);
+    --sidebar-tab-closed: var(--dark8);
 }

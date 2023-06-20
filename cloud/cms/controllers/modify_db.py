@@ -10,6 +10,7 @@ from dataclasses import dataclass
 
 from django.contrib.auth.models import Permission
 from django import urls
+from django.db import transaction
 from django.db.models import Q
 from django.utils.http import urlencode
 from PIL import Image
@@ -648,7 +649,7 @@ def publish_latest_version(asset, review_id, user, state=None):
 
     if not publish_errors and asset.can_preview_on_portal:
         from cms.controllers.filldata import fill_content
-        fill_content(asset, preview=False, incremental=True)
+        transaction.on_commit(lambda: fill_content(asset, preview=False, incremental=True))
 
     if asset.is_cloud_portal:
         BaseCache.clear_global_cache()

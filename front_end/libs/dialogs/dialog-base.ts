@@ -17,6 +17,7 @@ export class DialogBase {
     constructor(
         overlay: Overlay,
         injector: Injector,
+        private document: Document,
     ) {
         this.overlay = overlay;
         this.injector = injector;
@@ -28,6 +29,9 @@ export class DialogBase {
     }
 
     open<T>(component: ComponentType<T>, config: DialogConfig = defaultConfig): DialogRef {
+        // Opening element is probably a button, but can't be sure
+        (this.document.activeElement as HTMLButtonElement)?.blur?.();
+
         const positionStrategy = this.overlay
             .position()
             .global()
@@ -64,6 +68,14 @@ export class DialogBase {
 
         const portal = new ComponentPortal(component, null, injector);
         overlayRef.attach(portal);
+        setTimeout(() => {
+            const input = this.document.querySelector('input');
+            // Assuming that input will be focused on open
+            if (!input) {
+                this.document.querySelector<HTMLButtonElement>('.modal-holder button.close')
+                    ?.focus();
+            }
+        });
         this.dialog = dialogRef;
 
         return dialogRef;

@@ -152,6 +152,10 @@ header {
         width: 100%;
         padding: 4px 0 !important;
 
+        &.upperPosition {
+            box-shadow: var(--dropdown-menu-shadow-upper);
+        }
+
         &--list {
             max-height: $dropdown-list-height;
             overflow: auto;
@@ -159,11 +163,11 @@ header {
             list-style-type: none;
             margin-bottom: 0;
         }
-        
+
         &--header {
             height: $dropdown-header-height;
         }
-        
+
         &--header,
         &--footer {
             padding: 0;
@@ -234,7 +238,7 @@ header {
 
                 .text-muted {
                     font-family: $font-family-regular;
-                    color: var(--new-light16)  !important;
+                    color: var(--light16)  !important;
                 }
             }
 
@@ -292,7 +296,7 @@ header {
 
     &.show {
         .dropdown-toggle {
-            background-color: var(--new-light5)  !important;
+            background-color: var(--light5)  !important;
         }
 
         .dropdown-toggle-transparent {
@@ -327,7 +331,7 @@ header {
 
                     .item-icon .storage-cloud,
                     .api-icon {
-                        fill: var(--new-light1);
+                        fill: var(--light1);
                     }
                 }
             }

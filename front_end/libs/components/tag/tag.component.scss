@@ -124,7 +124,7 @@ $opacity in $nx-theme-colors {
         color: var(----badge-selected-color) !important;
 
         @if $name =="brand" {
-            @include mixins.badge-selected(var(--new-brand-core), var(--new-brand-core-d10), var(--new-brand-core-d15));
+            @include mixins.badge-selected(var(--brand-core), var(--brand-core-d10), var(--brand-core-d15));
         }
 
         @else if $name =="info" {

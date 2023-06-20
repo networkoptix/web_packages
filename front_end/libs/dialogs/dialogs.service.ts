@@ -1,7 +1,7 @@
 import { Dialog, DialogConfig as CdkDialogConfig } from '@angular/cdk/dialog';
 import { ComponentType, Overlay } from '@angular/cdk/overlay';
-import { Location } from '@angular/common';
-import { Injectable, Injector } from '@angular/core';
+import { DOCUMENT, Location } from '@angular/common';
+import { Injectable, Injector, Inject } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { SubscriptionLike, firstValueFrom } from 'rxjs';
 
@@ -44,8 +44,9 @@ export class NxDialogsService extends DialogBase {
         overlay: Overlay,
         private toastService: NxToastService,
         private cdkDialog: Dialog,
+        @Inject(DOCUMENT) document: Document,
     ) {
-        super(overlay, injector);
+        super(overlay, injector, document);
         this.CONFIG = configService.getConfig();
         this.location = location;
     }

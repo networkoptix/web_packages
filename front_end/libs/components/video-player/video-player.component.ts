@@ -58,6 +58,7 @@ export class NxVideoPlayerComponent {
     @Output() showError = new EventEmitter<ConnectionError>();
 
     connectionEstablished: boolean;
+    @ViewChild('originalStream') originalStream: ElementRef<HTMLVideoElement>;
     @ViewChild('webRtcPlayer') webRtcPlayerRef: ElementRef<HTMLVideoElement>;
     @HostBinding('class') get class() {
         if (document.fullscreenElement === this.fullScreenTarget) {
@@ -165,10 +166,8 @@ export class NxVideoPlayerComponent {
     zoomStream = async (stream: MediaStream): Promise<MediaStream> => {
         this.zoomStreamCleanup?.();
 
-        const video = this.document.createElement('video');
+        const video = this.originalStream.nativeElement;
         video.srcObject = stream;
-        video.muted = true;
-        video.play();
         const canvas = this.document.createElement('canvas');
 
         this.zoomStreamCleanup = () => {
@@ -254,7 +253,7 @@ export class NxVideoPlayerComponent {
 
         const stream$ = this.reconnect$.pipe(
             switchMap(this.pingServer),
-            switchMap(() => WebRTCStreamManager.connect(this.camera.webRtcUrl, this.webRtcPlayerRef.nativeElement, hasSecondary)),
+            switchMap(() => WebRTCStreamManager.connect(this.camera.webRtcUrl, this.originalStream.nativeElement, hasSecondary)),
             tap(async ([stream, error, connection]) => {
                 if (stream) {
                     this.monitorFps(connection);

@@ -219,7 +219,7 @@ button,
 
 .btn.btn-toggle {
     color: $dark9;
-    background-color: var(--new-light4);
+    background-color: var(--light4);
     max-width: 180px;
     display: flex;
     align-content: center;
@@ -231,16 +231,16 @@ button,
     }
 
     &:hover:not([disabled]):not(.disabled) {
-        background-color: var(--new-light5);
+        background-color: var(--light5);
     }
 
     &:active,
     &.active {
-        background-color: var(--new-light6)  !important;
+        background-color: var(--light6)  !important;
     }
 
     &.selected {
-        color: var(--new-light1);
+        color: var(--light1);
         background-color: $light16  !important;
     }
 }
@@ -331,8 +331,8 @@ button,
         margin-left: 8px;
 
         svg .st0 {
-            stroke: var(--new-light1);
-            fill: var(--new-light1);
+            stroke: var(--light1);
+            fill: var(--light1);
         }
     }
 }

@@ -300,9 +300,10 @@ export class NxBookmarksComponent implements OnInit {
                         endDatetime = offsetDate(endDatetime, { day: 1 }).getTime();
                     }
 
-                    bks = bks.filter(
-                        bk => bk.startTimeMs >= startDatetime && bk.startTimeMs < endDatetime,
-                    );
+                    bks = bks.filter(bk => {
+                        const bkStartTime = bk.startTimeMs + bk.timeZoneOffset;
+                        return bkStartTime >= startDatetime && bkStartTime < endDatetime;
+                    });
                 }
 
                 if (this.queryParams.search) {

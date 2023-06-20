@@ -16,6 +16,7 @@ import { NxProjectedLinkHandler } from './nx-projected-link-handler.directive';
 import { NxScrollHelperDirective } from './nx-scroll-helper';
 import { NxScrollMechanicsDirective } from './nx-scroll-mechanics';
 import { NxTooltipDirective } from './nx-tooltip.directive';
+import { NxTranslateOverrideDirective } from './nx-translate.directive';
 import { NxUrlValidatorDirective } from './nx-url-validator';
 import { ResizeModule } from './resize/resize.module';
 import { RotateModule } from './rotate/rotate.module';
@@ -40,7 +41,8 @@ import { RotateModule } from './rotate/rotate.module';
         NxTooltipDirective,
         NxMatchHeightDirective,
         FeatureFlagDirective,
-        NxClickDoubleDirective
+        NxClickDoubleDirective,
+        NxTranslateOverrideDirective
     ],
     exports: [
         NxArrowNavDirective,
@@ -58,7 +60,8 @@ import { RotateModule } from './rotate/rotate.module';
         FeatureFlagDirective,
         NxClickDoubleDirective,
         ResizeModule,
-        RotateModule
+        RotateModule,
+        NxTranslateOverrideDirective
     ]
 })
 export class DirectivesModule {

@@ -19,7 +19,7 @@
         border-collapse: collapse;
         min-width: 100%;
         height: inherit;
-        grid-template-rows: auto var(--new-table-row-height);
+        grid-template-rows: auto var(--table-row-height);
         //grid-template-areas:
         //    "header header header header"
         //    "main main . sidebar"
@@ -36,7 +36,7 @@
                 .header {
                     width: fit-content;
                     display: grid;
-                    grid-template-rows: var(--new-table-header-height);
+                    grid-template-rows: var(--table-header-height);
                     border: 1px solid var(--border-color);
                     background-color: var(--card-header-bg);
                 }
@@ -48,7 +48,7 @@
                     //overflow: hidden;
                     border: 1px solid var(--border-color);
                     border-top: none;
-                    height: calc(100% - var(--new-table-row-height));
+                    height: calc(100% - var(--table-row-height));
                     overflow-x: hidden;
                     overflow-y: scroll;
                     width: fit-content;

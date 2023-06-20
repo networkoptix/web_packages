@@ -959,7 +959,6 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
 
     /* End of Working with users */
     /* Cameras and Servers */
-    @memoizeAsyncMedium
     getCamera(id: string): Observable<t.ec2CameraEx> {
         const params = { id: this.cleanId(id) };
         return this.get<t.ec2CameraEx[]>('/ec2/getCamerasEx', { params }).pipe(

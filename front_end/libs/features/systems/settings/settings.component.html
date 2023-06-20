@@ -53,9 +53,9 @@
                     <nx-pre-loader></nx-pre-loader>
                 </ng-template>
                 <nx-menu
-                    *ngIf="menuVisible && (content$ | async) as contentFromDb; else noMenu"
+                    *ngIf="menuVisible && content; else noMenu"
                     [ngStyle]="{ display: _menuSearchMode ? 'contents' : 'block' }"
-                    [content]="contentFromDb"
+                    [content]="content"
                     [system]="system"
                     [searchable]="menuSearchable"
                     [autoFit]="true"

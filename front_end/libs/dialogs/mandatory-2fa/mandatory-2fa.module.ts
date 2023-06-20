@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { ProcessButtonModule } from '@components/process-button/process-button.module';
 import { ProcessCancelButtonModule } from '@components/process-cancel-Button/process-cancel-Button.module';
+import { DirectivesModule } from '@directives/directives.module';
 
 import { Mandatory2faModalContent } from './mandatory-2fa.component';
 
@@ -17,6 +18,7 @@ import { Mandatory2faModalContent } from './mandatory-2fa.component';
         TranslateModule,
         RouterModule,
 
+        DirectivesModule,
         ProcessButtonModule,
         ProcessCancelButtonModule,
     ],

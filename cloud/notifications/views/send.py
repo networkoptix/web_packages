@@ -179,7 +179,7 @@ def send_event(request):
             f"ip: {ip}\t user: {request.user}\nrequest data: {request.data}")
 
         notifications_api.send_feedback(
-            request.data['type'], asset_id, request.data)
+            request.data['type'], asset_id, request.data, request=request)
 
     except ValidationError as error:
         error_data = error.detail if hasattr(error, 'detail') else None

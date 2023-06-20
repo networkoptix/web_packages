@@ -24,12 +24,13 @@ import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { nxConfig } from '@services/nx-config/config';
 import { alphabeticalSort, paramSortFunc } from '@utils/general';
-import { memoizeAsyncPersistent } from '@utils/memoize';
+import { memoizeAsyncPersistent, memoizeAsyncShort } from '@utils/memoize';
 
 // import * as SystemsActions from '../store/systems/systems.actions';
 
 import { clientMode, toast, updateInterval } from '../variables/static-variables';
 
+import type { Account } from './account.service/account';
 import { NxDbService } from './db.service';
 import { NxCloudApiService } from './nx-cloud-api';
 import type { System } from './nx-cloud-api/nx-cloud-api.types';
@@ -51,8 +52,10 @@ export class NxSystemsService {
     private currentUser$ = this.store.select(selectCurrentUser).pipe(
         // Ignore preloaded account on cloud
         // Also ignore first assignment missing security properties
-        filter(acc => acc && (environment.isLocal || 'email' in acc)),
-        distinctUntilChanged(isEqual),
+        filter(
+            acc => acc && (environment.isLocal || ('email' in acc && 'account2faEnabled' in acc)),
+        ),
+        distinctUntilChanged<Account>(isEqual),
     );
     private updateSystems$ = new Subject<void>();
     mergingSystems = new Set<string>();
@@ -187,7 +190,7 @@ export class NxSystemsService {
         }
     }
 
-    @memoizeAsyncPersistent
+    @memoizeAsyncShort
     private _getSystems(systemId?: string): Observable<System[]> {
         return combineLatest([timer(0, updateInterval), this.currentUser$]).pipe(
             switchMap(() => {

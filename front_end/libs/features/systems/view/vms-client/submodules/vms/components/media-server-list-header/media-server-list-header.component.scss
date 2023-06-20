@@ -11,7 +11,7 @@
     &:hover {
       background-color: var(--view-search-hover-bg);
     }
-    
+
     &:focus-within {
       background-color : var(--view-search-active-bg);
     }
@@ -22,7 +22,7 @@
       position: absolute;
       right: 40px;
       top: 12px;
-      stroke: var(--new-dark1-t60);
+      stroke: rgba(var(--dark1--rgb), .6);
       pointer-events: all;
       cursor: pointer;
     }
@@ -66,17 +66,17 @@
       // see https://networkoptix.atlassian.net/browse/CLOUD-6846
       // !important is the last resort against the global styling here
       box-shadow: none !important;
-  
+
       &:hover {
         color : var(--view-search-hover-color);
       }
-  
+
       &:focus {
         color : var(--view-search-active-color);
       }
 
       &::placeholder {
-        color: var(--new-light16);
+        color: var(--light16);
       }
     }
 
@@ -101,30 +101,30 @@
           // transition: fill .2s ease-in-out;
         // }
         > .outer-circle {
-          stroke: var(--new-light16);
+          stroke: var(--light16);
           stroke-width: 2;
           fill: transparent;
         }
         > .i-body {
-          stroke: var(--new-light16);
+          stroke: var(--light16);
           stroke-width: 2;
         }
         > .point-over-i {
           stroke-width: 0;
-          fill: var(--new-light16);
+          fill: var(--light16);
         }
       }
 
       &.active {
         > svg {
           > .outer-circle {
-            stroke: var(--new-brand-core);
+            stroke: var(--brand-core);
           }
           > .i-body {
-            stroke: var(--new-brand-core);
+            stroke: var(--brand-core);
           }
           > .point-over-i {
-            fill: var(--new-brand-core);
+            fill: var(--brand-core);
           }
         }
       }

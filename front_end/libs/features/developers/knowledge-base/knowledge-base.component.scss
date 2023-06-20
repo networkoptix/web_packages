@@ -249,8 +249,8 @@ $custom-xl: 1440px;
 
         pre {
             @extend .code-block-common;
-            border: solid 1px var(--new-dark11);
-            background-color: var(--new-dark13);
+            border: solid 1px var(--dark11);
+            background-color: var(--dark13);
             color: $additional_light1;
             margin: 16px 0 24px 0;
             padding: 12px 8px;
@@ -275,7 +275,7 @@ $custom-xl: 1440px;
                     position: absolute;
                     left: 0;
                     top: 0;
-                    color: var(--new-light12);
+                    color: var(--light12);
                     font-weight: 400 !important;
                 }
             }
