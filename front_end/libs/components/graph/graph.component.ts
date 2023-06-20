@@ -56,6 +56,7 @@ export class NxMonitoringGraphComponent implements OnChanges {
     yAxisLabel: string = '';
     timeline: boolean = false;
     curve = curveBasis;
+    offline: boolean = false;
 
     private setupDefaults(): void {
         // leave "view" undefined to "fitContent"
@@ -112,35 +113,34 @@ export class NxMonitoringGraphComponent implements OnChanges {
             .pipe(
                 mergeMap(() => this.system.serverManager.getStatistics(this.selectedServerId)),
                 // Delay is required in case Server Manager is not initialized yet
-                retry({ delay: 50 }),
+                retry({ delay: 10, count: 2 }),
                 tap(response => {
-                    response.reply &&
-                        response.reply.statistics.forEach(data => {
-                            const seriesData = this.multi.find(
-                                series => series.name === data.description,
-                            );
-                            if (!seriesData) {
-                                const series = Array.from({ length: 50 }, (_, i) => {
-                                    return { name: i + 1, value: 0 };
-                                });
-                                this.multi.push({
-                                    name: data.description,
-                                    series,
-                                });
-                                this.multi[this.multi.length - 1].series.push({
-                                    name: response.reply.uptimeMs,
-                                    value: Math.round(data.value * 100),
-                                });
-                                this.multi[this.multi.length - 1].series.shift();
-                            } else {
-                                seriesData.series.push({
-                                    name: response.reply.uptimeMs,
-                                    value: Math.round(data.value * 100),
-                                });
-                                seriesData.series.shift();
-                            }
-                        });
-
+                    response.reply?.statistics.forEach(data => {
+                        const seriesData = this.multi.find(
+                            series => series.name === data.description,
+                        );
+                        if (!seriesData) {
+                            const series = Array.from({ length: 50 }, (_, i) => {
+                                return { name: i + 1, value: 0 };
+                            });
+                            this.multi.push({
+                                name: data.description,
+                                series,
+                            });
+                            this.multi[this.multi.length - 1].series.push({
+                                name: response.reply.uptimeMs,
+                                value: Math.round(data.value * 100),
+                            });
+                            this.multi[this.multi.length - 1].series.shift();
+                        } else {
+                            seriesData.series.push({
+                                name: response.reply.uptimeMs,
+                                value: Math.round(data.value * 100),
+                            });
+                            seriesData.series.shift();
+                        }
+                    });
+                    this.offline = false;
                     this.multi = [...this.multi];
                 }),
                 delay(this.refreshInterval),
@@ -148,6 +148,10 @@ export class NxMonitoringGraphComponent implements OnChanges {
                 untilDestroyed(this),
                 takeUntil(this.destroy$),
             )
-            .subscribe();
+            .subscribe({
+                error: () => {
+                    this.offline = true;
+                },
+            });
     }
 }
