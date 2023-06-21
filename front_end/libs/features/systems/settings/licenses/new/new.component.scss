@@ -1,4 +1,4 @@
-@use "typography";
+@use "typography" as typography;
 @use "theme_variables_common" as *;
 @use "bootstrap_utils" as bootstrap;
 
@@ -89,8 +89,10 @@
     align-items: center;
 }
 
-.text-muted {
-    @include typography.regular11light16;
+.light-text {
+    @include typography.regular13nocolor;
+    color: var(--light-text-color);
+    opacity: var(--light-text-opacity);
 }
 
 .item {
