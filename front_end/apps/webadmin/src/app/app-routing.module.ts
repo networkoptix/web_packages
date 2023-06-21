@@ -4,7 +4,6 @@ import { RouterModule, Routes, TitleStrategy } from '@angular/router';
 
 import { PipesModule } from '@app/pipes/pipes.module';
 import { NxPageTitleStrategy } from '@app/resolvers/title-resolver';
-import { LoginWebadminModule } from '@components/login-webadmin/login-webadmin.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
@@ -89,7 +88,6 @@ const lazyRoutes: Routes = [
             // preloadingStrategy: HoverPreloadStrategy,
             onSameUrlNavigation: 'reload'
         }),
-        LoginWebadminModule
     ],
     declarations: [],
     providers: [

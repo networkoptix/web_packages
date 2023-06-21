@@ -69,8 +69,3 @@ svg-icon {
 .separator:not(:empty)::after {
     margin-left: 1em;
 }
-
-.webadmin-backdrop-login+.cdk-global-overlay-wrapper {
-    display: flex !important;
-    position: absolute !important;
-}

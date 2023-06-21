@@ -1,23 +1,15 @@
 import { Dialog } from '@angular/cdk/dialog';
-import { Overlay } from '@angular/cdk/overlay';
-import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Injectable, Injector } from '@angular/core';
-import { Router } from '@angular/router';
+import { Injectable } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
 import { Subject } from 'rxjs';
 import { switchMap, take, takeUntil } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { LoginWebadminModalContent } from '@components/login-webadmin/login-webadmin.component';
-import { DialogBase } from '@dialogs/dialog-base';
-import { DialogConfig } from '@dialogs/dialog-config';
-import { defaultConfig, DIALOG_SIZE } from '@dialogs/dialog-ref';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
-import type { NxAccountService } from '@services/account.service';
 
-import { oauthStore, redirect } from '../variables/static-variables';
+import { oauthStore } from '../variables/static-variables';
 
 import { NxBootstrapProvider } from './nx-bootstrap-provider';
 import { nxConfig } from './nx-config/config';
@@ -28,33 +20,21 @@ import { windowFactory } from './window-provider';
 @Injectable({
     providedIn: 'root',
 })
-export class NxLoginService extends DialogBase {
+export class NxLoginService {
     CONFIG: IConfig = nxConfig;
     private window: Window = windowFactory();
     LANG = staticLang;
 
-    closeResult: string;
     done$: Subject<boolean> = new Subject<boolean>();
 
-    private _accountService: NxAccountService;
     private _currentSystem: NxSystem;
 
     constructor(
-        overlay: Overlay,
-        injector: Injector,
         private http: HttpClient,
-        private location: Location,
-        private router: Router,
         private storage: LocalStorageService,
         private dialogs: NxDialogsService,
         private cdkDialog: Dialog,
-    ) {
-        super(overlay, injector, windowFactory().document);
-    }
-
-    set accountService(accountService) {
-        this._accountService = accountService;
-    }
+    ) {}
 
     set currentSystem(system) {
         this._currentSystem = system;
@@ -84,60 +64,16 @@ export class NxLoginService extends DialogBase {
             .catch(() => Promise.resolve(false));
     }
 
-    login(
-        keepPage?: boolean,
-        redirectClose?: boolean,
-        redirectHome = false,
-        blockNavigation = false,
-    ): undefined | Promise<string | boolean> {
+    login(keepPage: boolean = true): Promise<'newSystem' | void> {
         if (this.CONFIG.browserNotSupported) {
             return;
         }
 
-        const system = this._currentSystem || { mediaserver: this._accountService.mediaServerApi };
-        const config: Partial<DialogConfig> = {
-            width: DIALOG_SIZE.SMALL,
-            data: {
-                account: this._accountService,
-                login: system.mediaserver.loginToken,
-                cancellable: !keepPage || false,
-                location: this.location,
-                keepPage: keepPage !== undefined ? keepPage : true,
-                redirectClose: redirectClose || false,
-                redirectHome,
-                blockNavigation,
-            },
-        };
-
-        if (environment.isLocal) {
-            if (NxBootstrapProvider.isNewSystem) {
-                return Promise.resolve('newSystem');
-            }
-            Object.assign(config, {
-                keyboard: false,
-                backdropClass: 'webadmin-backdrop-login',
-                panelClass: 'webadmin-window', //  only one class is allowed
-            });
+        if (environment.isLocal && NxBootstrapProvider.isNewSystem) {
+            return Promise.resolve('newSystem');
         }
 
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        return this.open(LoginWebadminModalContent, dialogConfig)
-            .afterClosed()
-            .then(
-                result => {
-                    this.closeResult = `Closed with: ${result}`;
-
-                    if (redirectClose && result === 'canceled') {
-                        return this.router.navigate([redirect.unauthorised]);
-                    }
-                    return result;
-                },
-                reason => {
-                    this.closeResult = 'Dismissed';
-                    return reason;
-                },
-            );
+        return this.dialogs.loginWebAdmin(keepPage);
     }
 
     cancelCodeSubscription(): void {
@@ -152,7 +88,7 @@ export class NxLoginService extends DialogBase {
             if (!(await this.pingCloud())) {
                 this.dialogs.notify(this.LANG.toastMessage.noInternet, 'warning', true);
                 // Close dialog if any
-                this.dismissDialog();
+                this.dialogs.dismissDialog();
                 this.cdkDialog.closeAll();
 
                 return Promise.resolve(false);

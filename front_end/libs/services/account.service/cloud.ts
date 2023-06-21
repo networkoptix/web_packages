@@ -231,12 +231,7 @@ export class CloudAccount extends BaseAccount {
         });
     }
 
-    showLogin(
-        _keepPage?: boolean,
-        _redirectClose?: boolean,
-        _redirectHome?: boolean,
-        _blockNavigation?: boolean,
-    ): void {
+    showLogin(_keepPage?: boolean): void {
         // Cloud portal no longer uses login dialog
         this.oauthService.redirectOauth();
     }

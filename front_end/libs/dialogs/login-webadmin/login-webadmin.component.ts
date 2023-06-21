@@ -1,3 +1,4 @@
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { DOCUMENT, Location } from '@angular/common';
 import { Component, Inject, OnInit, Renderer2, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
@@ -5,10 +6,11 @@ import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
-import { NxDialogsService } from '@dialogs/dialogs.service';
+import type { LoginWebAdmin as DT } from '@dialogs/dialogs.types';
+import { ModalBase } from '@dialogs/modal-base';
+import { NxToastService } from '@dialogs/toast.service';
 import { icons, redirect } from '@lib/variables/static-variables';
-import type { NxAccountService } from '@services/account.service';
+import { NxAccountService } from '@services/account.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -17,7 +19,6 @@ import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
 import { NxStorageService } from '@services/storage.service';
 import { WINDOW } from '@services/window-provider';
-import { pickFrom } from '@utils/general';
 
 /**
  * Parse url string to:
@@ -54,20 +55,15 @@ function getRelativeLocation(href: string): string {
     templateUrl: 'login-webadmin.component.html',
     styleUrls: ['login-webadmin.component.scss'],
 })
-export class LoginWebadminModalContent implements OnInit {
-    account: NxAccountService;
-    keepPage: boolean;
-    blockNavigation: boolean;
-
+export class LoginWebadminModalContent extends ModalBase<DT['return']> implements OnInit {
     LANG = staticLang;
     CONFIG: IConfig;
 
     loading: boolean = true;
 
-    locationService: Location;
     auth: { email: string };
     login: Process;
-    next: string;
+    private next: string;
     password: string;
     hideErrors: boolean = true;
 
@@ -79,7 +75,7 @@ export class LoginWebadminModalContent implements OnInit {
 
     private readonly urlUpdateTimeout: number = 150;
 
-    @ViewChild('loginForm', { static: true }) loginForm: NgForm;
+    @ViewChild('loginForm', { static: true }) private loginForm: NgForm;
 
     private setupDefaults(): void {
         this.auth = { email: this.storageService.email };
@@ -91,46 +87,26 @@ export class LoginWebadminModalContent implements OnInit {
     constructor(
         configService: NxConfigService,
 
-        locationService: Location,
+        private location: Location,
+        private account: NxAccountService,
         private oauthService: OauthService,
         private renderer: Renderer2,
         private processService: NxProcessService,
         private storageService: NxStorageService,
         private appStateService: NxAppStateService,
-        private dialogs: NxDialogsService,
+        private toastService: NxToastService,
         private router: Router,
         private cookieService: CookieService,
-        private dialogRef: DialogRef,
-        @Inject(DIALOG_DATA)
-        private dialogData: {
-            account: NxAccountService;
-            keepPage: boolean;
-            blockNavigation: boolean;
-        },
+        dialogRef: DialogRef<DT['return']>,
+        @Inject(DIALOG_DATA) private keepPage: DT['data'],
         @Inject(DOCUMENT) private document: Document,
         @Inject(WINDOW) protected window: Window,
     ) {
+        super(dialogRef);
         this.CONFIG = configService.getConfig();
-
-        this.locationService = locationService;
 
         this.setupDefaults();
     }
-
-    // resendActivation(email) {
-    //     this.activeModal.close();
-
-    //     this.processService.createProcess(() => {
-    //         return this.account.reactivate(email);
-    //     }, {
-    //         errorCodes: {
-    //             forbidden: this.LANG.errorCodes.accountAlreadyActivated(),
-    //             notFound: this.LANG.errorCodes.emailNotFound()
-    //         },
-    //         holdAlerts: true,
-    //         errorPrefix: this.LANG.errorCodes.cantSendConfirmationPrefix()
-    //     });
-    // }
 
     private removeParamFromUrl(
         url: URL,
@@ -145,7 +121,7 @@ export class LoginWebadminModalContent implements OnInit {
     }
 
     private displayCloudConnectionError(): void {
-        this.dialogs.notify(this.LANG.toastMessage.noInternet, 'warning', true);
+        this.toastService.show(this.LANG.toastMessage.noInternet, 'warning');
     }
 
     resetForm(): void {
@@ -163,13 +139,6 @@ export class LoginWebadminModalContent implements OnInit {
     }
 
     ngOnInit(): void {
-        // These are passed by login service but
-        // only "account", "keepPage" and "blockNavigation" were set as @Input
-        // ******************************************
-        // account, login, cancellable, location, keepPage,
-        // redirectClose, redirectHome, blockNavigation
-        pickFrom(this.dialogData, ['account', 'keepPage', 'blockNavigation'], this);
-
         const url = new URL(this.document.location.href);
         if (url.search) {
             const { origin } = this.document.location;
@@ -250,12 +219,6 @@ export class LoginWebadminModalContent implements OnInit {
             accountBlocked: showAccountBlockedError,
         };
         errorCodes[cloudLogin] = () => this.LANG.toastMessage.webAdminCloudCredentialError;
-        /* FIXME: Type error for WebAdmin, LocalAccount.login()
-        returns an Observable which makes the first argument () => Observable,
-        but NxProcessService.createProcess() expects Observable
-        or () => PromiseLike */
-        // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error, @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         this.login = this.processService.createProcess(
             () => {
                 this.loginForm.controls.login_email.setErrors(undefined);
@@ -269,12 +232,9 @@ export class LoginWebadminModalContent implements OnInit {
                 ignoreUnauthorized: true,
                 errorCodes,
             },
-            result => {
-                this.close(result);
-                if (this.blockNavigation) {
-                    return;
-                }
-                const isRootPath = ['/', ''].includes(this.locationService.path());
+            _ => {
+                this.close();
+                const isRootPath = ['/', ''].includes(this.location.path());
 
                 // prevent manual input of url for activate routes
                 this.appStateService.canManuallyAccess = this.next.includes('activate');
@@ -309,7 +269,9 @@ export class LoginWebadminModalContent implements OnInit {
                 }
             },
             error => {
-                console.error(error);
+                if (!Object.keys(errorCodes).includes(error?.resultCode)) {
+                    console.error(error);
+                }
             },
         );
     }
@@ -375,8 +337,4 @@ export class LoginWebadminModalContent implements OnInit {
             },
         );
     }
-
-    close = (msg: string): void => {
-        this.dialogRef.close(msg);
-    };
 }

@@ -67,12 +67,7 @@ export abstract class BaseAccount {
     ): any;
     abstract redirectAuthorised(): void;
     abstract requireLogin(): Promise<any>;
-    abstract showLogin(
-        keepPage?: boolean,
-        redirectClose?: boolean,
-        redirectHome?: boolean,
-        blockNavigation?: boolean,
-    ): void;
+    abstract showLogin(keepPage?: boolean): void;
 
     constructor(
         protected translateService: TranslateService,
@@ -109,7 +104,6 @@ export abstract class BaseAccount {
         // Imperatively inject any services that cause circular dependencies here instead of passing in constructor
         // setTimeout(() => {
         this.applyService = injector.get(NxApplyService);
-        this.loginService.accountService = this;
 
         this.localStorage = injector.get(LocalStorageService);
         this.localStorage.observe(oauthStore.verify2fa).subscribe(accessToken => {
@@ -242,11 +236,7 @@ export abstract class BaseAccount {
         return this.login(tempLogin, tempPassword, false)
             .then(() => this.clearAuthFromUri())
             .catch(() => {
-                // If the key login fails ask the user to login manually.
-                return this.loginService.login(true, true).catch(() => {
-                    // @ts-expect-error: TODO Type Error location.path expects boolean and is being passed a string
-                    this.location.path(redirect.unauthorised);
-                });
+                return this.loginService.login(true);
             });
     }
 

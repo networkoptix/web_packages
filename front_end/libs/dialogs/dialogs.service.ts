@@ -33,7 +33,6 @@ export class NxDialogsService extends DialogBase {
     LANG = staticLang;
     CONFIG: IConfig;
     location: Location;
-    closeResult: string;
 
     languageSubscription: SubscriptionLike;
 
@@ -151,20 +150,6 @@ export class NxDialogsService extends DialogBase {
 
         await this.preloadDialogsModule();
         const component = await import('./change-storage/change-storage.component').then(m => m.ChangeStorageModalContent);
-
-        return this.open(component, dialogConfig)
-            .afterClosed();
-    }
-
-    public async wizard() {
-        const config: Partial<DialogConfig> = {
-            width: DIALOG_SIZE.SMALL,
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        // No need to preload all dialogs in wizard mode
-        // await this.preloadDialogsModule();
-        const component = await import('./wizard/wizard.component').then(m => m.WizardModalContent);
 
         return this.open(component, dialogConfig)
             .afterClosed();
@@ -294,6 +279,23 @@ export class NxDialogsService extends DialogBase {
     message = this.dialogV2Factory<Dt.Message>(
         () => import('./message/message.component').then(m => m.MessageModalContent),
         { autoFocus: '#message' },
+    );
+
+    /* WebAdmin */
+    wizard = this.dialogV2Factory<Dt.Wizard>(
+        () => import('./wizard/wizard.component').then(m => m.WizardModalContent),
+        { width: DIALOG_SIZE_V2.SMALL, disableClose: true }
+    );
+
+    loginWebAdmin = this.dialogV2Factory<Dt.LoginWebAdmin>(
+        () => import('./login-webadmin/login-webadmin.component').then(m => m.LoginWebadminModalContent),
+        {
+            width: DIALOG_SIZE_V2.SMALL,
+            disableClose: true,
+            backdropClass: '__foobar',
+            /* We don't need an actual class name, we just need to replace
+            the default .cdk-overlay-dark-backdrop to make it transparent */
+        },
     );
 
     /* Auth */

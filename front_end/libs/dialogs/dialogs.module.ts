@@ -16,7 +16,6 @@ import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.
 import { SearchableModule } from '@components/dropdowns/searchable/searchable.module';
 import { DynamicWidgetModule } from '@components/dynamic-widget/dynamic-widget.module';
 import { InfoBlockModule } from '@components/info-block/info-block.module';
-import { LoginWebadminModule } from '@components/login-webadmin/login-webadmin.module';
 import { ProcessButtonModule } from '@components/process-button/process-button.module';
 import { ProcessCancelButtonModule } from '@components/process-cancel-Button/process-cancel-Button.module';
 import { RadioModule } from '@components/radio/radio.module';
@@ -50,6 +49,7 @@ import { NxDetachServerModalModule } from './detach-server/detach-server.module'
 import { DisconnectModalModule } from './disconnect/disconnect.module';
 import { EditModalContent } from './edit/edit.component';
 import { GenericDialogModule } from './generic/generic.module';
+import { LoginWebadminModule } from './login-webadmin/login-webadmin.module';
 import { Mandatory2faModalModule } from './mandatory-2fa/mandatory-2fa.module';
 import { MergeModalContent } from './merge/merge.component';
 import { NxMergeModule } from './merge/merge.refactor.module';
@@ -67,7 +67,7 @@ import { TwoFAModalModule } from './two-fa/two-fa.module';
 import { UpdateCameraCredentialsModalModule } from './update-camera-credentials/update-camera-credentials.module';
 import { NxUpdateSessionModalModule } from './update-session/update-session.module';
 import { NxWebGlSelectTimeRangeModalModule } from './webgl-select-time-range/select-time-range.module';
-import { WizardModalContent } from './wizard/wizard.component';
+import { NxWizardModalModule } from './wizard/wizard.module';
 
 @NgModule({
     imports: [
@@ -132,12 +132,12 @@ import { WizardModalContent } from './wizard/wizard.component';
         RestartServerModalModule,
         NxResetServerModalModule,
         NxDetachServerModalModule,
+        NxWizardModalModule,
     ],
     declarations: [
         AddStorageModalContent,
         ChangeStorageModalContent,
         MergeModalContent,
-        WizardModalContent,
         ResetBackupModalContent,
         AddStorageModalContent,
         EditModalContent,

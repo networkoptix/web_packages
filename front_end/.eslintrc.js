@@ -163,7 +163,6 @@ const typeLintBlacklist = [
     /* Services */
     '**/account.service/base.ts',
     '**/account.service/cloud.ts',
-    '**/account.service/local.ts',
     '**/apply.service/apply.service.ts',
     '**/apply.service/apply.service.type.ts',
     '**/apply.service/watcher.ts',

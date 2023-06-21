@@ -1,4 +1,5 @@
 import { Location } from '@angular/common';
+import type { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -10,6 +11,7 @@ import { tap, catchError } from 'rxjs/operators';
 import { redirect } from '@app/variables/static-variables';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxDbService } from '@services/db.service';
+import type { UserSession } from '@services/system-api.types';
 
 import { NxLoginService } from '../login.service';
 import { NxAppStateService } from '../nx-app-state.service';
@@ -25,8 +27,6 @@ import { BaseAccount } from './base';
 
 @Injectable()
 export class LocalAccount extends BaseAccount {
-    closeResult: string;
-
     constructor(
         protected translateService: TranslateService,
         locationService: Location,
@@ -89,11 +89,16 @@ export class LocalAccount extends BaseAccount {
         }
     }
 
-    login(login, password, remember = false, navigateHome = false): Promise<any> {
+    login(
+        login: string,
+        password: string,
+        remember = false,
+        _navigateHome = false,
+    ): Promise<UserSession> {
         return this.mediaServerApi
             .loginToken(login, password, remember)
             .pipe(
-                catchError(({ errorString: errorText, ...res }) => {
+                catchError((err: HttpErrorResponse) => {
                     const errorLookup = {
                         'Wrong password.': 'notAuthorized',
                         'Wrong username or password.': 'notAuthorized',
@@ -102,11 +107,11 @@ export class LocalAccount extends BaseAccount {
                         'The user is locked out due to several failed attempts. Please try again later.':
                             'accountBlocked',
                     };
-                    const resultCode = errorLookup[errorText];
-                    return Promise.resolve({ ...res, errorText, resultCode });
+                    const resultCode = errorLookup[err.error.errorString];
+                    return Promise.reject({ resultCode });
                 }),
-                tap((res: any) => {
-                    this.sessionService.loginState = res.resultCode ? undefined : login;
+                tap(_ => {
+                    this.sessionService.loginState = login;
                 }),
             )
             .toPromise();
@@ -129,43 +134,26 @@ export class LocalAccount extends BaseAccount {
         }
     }
 
-    showLogin(
-        keepPage?: boolean,
-        redirectClose?: boolean,
-        redirectHome = false,
-        blockNavigation = false,
-    ): void {
-        this.loginService.login(keepPage, redirectClose, redirectHome, blockNavigation);
+    showLogin(keepPage?: boolean): void {
+        this.loginService.login(keepPage);
     }
 
-    private showLoginDialog(): Promise<string | Account | undefined | boolean> {
+    private showLoginDialog(): Promise<Account | undefined> {
         this.loginDialogActive = true;
-        return this.loginService
-            .login(true, true)
-            .then<string | Account | undefined, boolean>(
-                result => {
-                    if (result === 'newSystem') {
-                        return;
-                    }
-                    this.storageService.loginRegister = true;
-                    if (result === 'register') {
-                        return this.router.navigate(['/authorize/register']).then(() => result);
-                    }
-                    return this.get();
-                },
-                (): any => {
-                    this.router.navigate([redirect.unauthorised]);
-                },
-            )
-            .finally(() => {
-                this.loginDialogActive = false;
-            });
+        return this.loginService.login(true).then(result => {
+            this.loginDialogActive = false;
+            if (result === 'newSystem') {
+                return;
+            }
+            this.storageService.loginRegister = true;
+            return this.get();
+        });
     }
     redirectAuthorised(): void {
         this.get().catch(err => console.error(err));
     }
 
-    requireLogin(): Promise<string | boolean | Account | undefined> {
+    requireLogin(): Promise<Account | undefined> {
         return this.get()
             .then(account => {
                 !account && !this.loginDialogActive && this.showLoginDialog();

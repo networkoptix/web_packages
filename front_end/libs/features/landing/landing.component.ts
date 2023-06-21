@@ -72,7 +72,7 @@ export class NxLandingComponent implements OnInit {
                     this.userEmail = this.accountService.email;
                 } else {
                     if (this.startUrl.includes('/login') && !this.startParams.code) {
-                        this.accountService.showLogin(false, false);
+                        this.accountService.showLogin(false);
                     } else if (this.startParams.next) {
                         return this.router.navigate([this.startParams.next]);
                     } else {
