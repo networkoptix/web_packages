@@ -15,28 +15,7 @@
             "options": {
                 "eslintConfig": "./.eslintrc.js",
                 "lintFilePatterns": ["./**/*.ts", "./**/*.component.html"],
-                "exclude": ["**/node_modules/**", "**/src/**", "**/lib/**", "**/apps/**"]
-            }
-        },
-        "test": {
-            "executor": "@angular-devkit/build-angular:karma",
-            "options": {
-                "main": "common/test.ts",
-                "polyfills": "unconverted/src/polyfills.ts",
-                "tsConfig": "unconverted/tsconfig.spec.json",
-                "karmaConfig": "unconverted/karma.conf.ci.js",
-                "assets": [],
-                "styles": ["libs/dialogs/dialogs.scss", "common/styles/main.scss"],
-                "stylePreprocessorOptions": {
-                    "includePaths": [
-                        "node_modules/",
-                        "common/styles/common",
-                        "common/styles",
-                        "libs"
-                    ]
-                },
-                "scripts": [],
-                "codeCoverage": true
+                "exclude": ["**/node_modules/**", "**/src/**", "**/lib/**", "**/apps/**", "**/libs/*-buildable/**"]
             }
         }
     }

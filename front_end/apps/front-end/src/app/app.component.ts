@@ -1,7 +1,6 @@
 import {
     Component,
     HostListener,
-    Inject,
     ViewEncapsulation,
     ViewChild,
     ElementRef,
@@ -26,6 +25,7 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { fromEvent } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
 
+import { nxConfig } from '@app/services/nx-config/config';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
@@ -33,12 +33,11 @@ import { NxApplyService } from '@services/apply.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSessionService } from '@services/session.service';
 import { NxThemeService } from '@services/theme.service';
 import { NxUriService } from '@services/uri.service';
-import { WINDOW } from '@services/window-provider';
+import { windowFactory } from '@services/window-provider';
 
 require('what-input');
 
@@ -82,6 +81,8 @@ require('what-input');
 })
 
 export class AppComponent implements OnInit {
+    private window: Window = windowFactory();
+    CONFIG: IConfig = nxConfig;
     deviceInfo: DeviceInfo;
     browserBlacklist: Record<string, number>;
     newSystem: boolean;
@@ -92,7 +93,6 @@ export class AppComponent implements OnInit {
     themeSet: boolean = false;
     windowHeight: number = this.window.innerHeight;
 
-    CONFIG: IConfig;
     readonly environment = environment;
 
     @ViewChild('mainContainer') mainContainer: ElementRef<HTMLDivElement>;
@@ -130,8 +130,6 @@ export class AppComponent implements OnInit {
     };
 
     constructor(
-        bootstrapProvider: NxBootstrapProvider,
-        configService: NxConfigService,
         public appStateService: NxAppStateService,
         private cookieService: CookieService,
         private deviceService: DeviceDetectorService,
@@ -144,9 +142,7 @@ export class AppComponent implements OnInit {
         private accountService: NxAccountService,
         private themeService: NxThemeService,
         private sessionService: NxSessionService,
-        @Inject(WINDOW) private window: Window
     ) {
-        this.CONFIG = configService.getConfig();
         this.reauthorizing = this.window.location.href.includes('cloud-authorize');
         this.newHeader = this.CONFIG.featureFlags.newHeader;
 
@@ -175,12 +171,12 @@ export class AppComponent implements OnInit {
             });
         }
         // Set Window height to accommodate mobile browser bars
-        fromEvent(window, 'resize')
+        fromEvent(windowFactory(), 'resize')
             .pipe(
                 untilDestroyed(this),
             )
             .subscribe(() => {
-                this.windowHeight = window.innerHeight;
+                this.windowHeight = windowFactory().innerHeight;
             });
 
         /* No real need to update often unless some browser have major upgrade
@@ -231,7 +227,7 @@ export class AppComponent implements OnInit {
             }
         } // else -> unknown platform or device ... cross fingers and hope for the best
 
-        if (!bootstrapProvider.loaded) {
+        if (!NxBootstrapProvider.isLoaded) {
             if (!this.environment.isLocal) {
                 this.router.navigate(['/503'])
                     .catch(error => console.error(error))
@@ -242,7 +238,7 @@ export class AppComponent implements OnInit {
             this.appStateService.headerVisibility = false;
             this.appStateService.footerVisibility = false;
             return;
-        } else if (bootstrapProvider.newSystem) {
+        } else if (NxBootstrapProvider.isNewSystem) {
             // Cleanup any leftovers. Hard clear() cause page reload loop
             this.cookieService.deleteAll();
             this.localStorageService.clear('refreshToken');

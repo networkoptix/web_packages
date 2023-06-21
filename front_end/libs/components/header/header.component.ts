@@ -122,7 +122,6 @@ export class NxHeaderComponent implements OnInit {
         private menusService: NxMenusService,
         private sessionStorage: SessionStorageService,
         @Inject(WINDOW) private window: Window,
-        private bootstrapProvider: NxBootstrapProvider,
         private cookieService: CookieService,
         @Inject(DOCUMENT) private document: Document,
     ) {
@@ -330,7 +329,7 @@ export class NxHeaderComponent implements OnInit {
         this.active = {};
 
         this.appState.headerVisibleSubject.pipe(untilDestroyed(this)).subscribe(visible => {
-            this.viewHeader = visible || this.bootstrapProvider.newSystem;
+            this.viewHeader = visible || NxBootstrapProvider.isNewSystem;
         });
 
         this.router.events.pipe(untilDestroyed(this)).subscribe((event: RouterEvent) => {
@@ -398,7 +397,7 @@ export class NxHeaderComponent implements OnInit {
 
         if (this.environment.isLocal) {
             this.hideWebAdmin = true;
-            if (this.bootstrapProvider.newSystem) {
+            if (NxBootstrapProvider.isNewSystem) {
                 return;
             }
             this.accountService.get().then(account => {

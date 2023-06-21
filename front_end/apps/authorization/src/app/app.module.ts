@@ -43,7 +43,6 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
     providers: [
         NxUriCacheService,
         WINDOWS_PROVIDERS,
-        NxBootstrapProvider,
         { provide: APP_INITIALIZER, useFactory: NxBootstrapProviderFactory, deps: [NxBootstrapProvider], multi: true },
         { provide: MESSAGE_FORMAT_CONFIG, useValue: { disablePluralKeyChecks: true } },
 

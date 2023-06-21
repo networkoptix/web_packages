@@ -13,7 +13,7 @@ import { WizardStateService } from '../../services/wizard-state.service';
 })
 export class MergeProcessComponent implements OnInit {
     constructor(
-      private wizardService: WizardStateService
+      public wizardService: WizardStateService
     ) { }
 
     ngOnInit(): void {

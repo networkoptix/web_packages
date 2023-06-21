@@ -1,50 +1,11 @@
-import { TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { MockProvider } from 'ng-mocks';
-import { LocalStorageService } from 'ngx-webstorage';
-
-import { nxConfig } from '@services/nx-config/config';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxThemeService } from '@services/theme.service';
-import { WINDOW } from '@services/window-provider';
+import { setupComponent } from '../setup';
 
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
-    const configMock = { getConfig: () => nxConfig };
+    it('should create the app', async () => {
+        const { component } = await setupComponent(AppComponent);
 
-    beforeEach(async () => {
-        await TestBed.configureTestingModule({
-            imports: [
-                RouterTestingModule
-            ],
-            providers: [
-                { provide: NxConfigService, useValue: configMock },
-                MockProvider(LocalStorageService),
-                MockProvider(WINDOW),
-                MockProvider(NxThemeService),
-            ],
-            declarations: [
-                AppComponent
-            ],
-        }).compileComponents();
+        expect(component).toBeTruthy();
     });
-
-    it('should create the app', () => {
-        const fixture = TestBed.createComponent(AppComponent);
-        const app = fixture.componentInstance;
-
-        const config = app['configService'].getConfig();
-        config.featureFlags.themesEnabled = true;
-        fixture.detectChanges();
-        expect(app).toBeTruthy();
-    });
-
-    // looks like it was a test created during initial development?
-    // it('should render title', () => {
-    //     const fixture = TestBed.createComponent(AppComponent);
-    //     fixture.detectChanges();
-    //     const compiled = fixture.nativeElement;
-    //     expect(compiled.querySelector('.content span').textContent).toContain('authorization app is running!');
-    // });
 });

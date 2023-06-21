@@ -1,23 +1,10 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { setupComponent } from '../../../setup';
 
 import { MergeFailedComponent } from './merge-failed.component';
 
 describe('MergeFailedComponent', () => {
-    let component: MergeFailedComponent;
-    let fixture: ComponentFixture<MergeFailedComponent>;
-
-    beforeEach(async () => {
-        await TestBed.configureTestingModule({
-            declarations: [MergeFailedComponent]
-        })
-            .compileComponents();
-
-        fixture = TestBed.createComponent(MergeFailedComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
-
-    it('should create', () => {
+    it('should create', async () => {
+        const { component } = await setupComponent(MergeFailedComponent);
         expect(component).toBeTruthy();
     });
 });

@@ -10,8 +10,8 @@ import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { memoizeAsyncPersistent } from '@utils/memoize';
 
 import { NxAppStateService } from './nx-app-state.service';
+import { nxConfig } from './nx-config/config';
 import type { IConfig } from './nx-config/config-types';
-import { NxConfigService } from './nx-config/nx-config.service';
 import { NxSystemAPI } from './system-legacy-api.service';
 import { NxSystemRestAPI3 } from './system-rest-api-v3.service';
 import { NxSystemRestAPI } from './system-rest-api.service';
@@ -21,12 +21,11 @@ import { NxUriCacheService } from './uri-cache.service';
     providedIn: 'root',
 })
 export class NxSystemAPIService {
-    CONFIG: IConfig;
+    CONFIG: IConfig = nxConfig;
     localApi: NxSystemAPI;
     // systemConnections: { [serverId: string]: NxSystemAPI };
 
     constructor(
-        configService: NxConfigService,
         protected location: Location,
         protected http: HttpClient,
         protected cacheService: NxUriCacheService,
@@ -35,7 +34,6 @@ export class NxSystemAPIService {
         protected appState: NxAppStateService,
         protected injector: Injector,
     ) {
-        this.CONFIG = configService.getConfig();
         // this.systemConnections = {};
     }
 

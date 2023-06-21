@@ -14,6 +14,7 @@ import { WINDOWS_PROVIDERS } from '@services/window-provider';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { WizardModule } from './components/wizard.module';
+import { WizardStateService } from './services/wizard-state.service';
 
 // AoT requires an exported function for factories
 export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
@@ -51,9 +52,9 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
     providers: [
         NxUriCacheService,
         WINDOWS_PROVIDERS,
-        NxBootstrapProvider,
         { provide: APP_INITIALIZER, useFactory: NxBootstrapProviderFactory, deps: [NxBootstrapProvider], multi: true },
         { provide: MESSAGE_FORMAT_CONFIG, useValue: { disablePluralKeyChecks: true } },
+        WizardStateService,
     ],
     bootstrap: [AppComponent]
 })

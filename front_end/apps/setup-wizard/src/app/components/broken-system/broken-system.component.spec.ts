@@ -1,23 +1,10 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { setupComponent } from '../../../setup';
 
 import { BrokenSystemComponent } from './broken-system.component';
 
 describe('BrokenSystemComponent', () => {
-    let component: BrokenSystemComponent;
-    let fixture: ComponentFixture<BrokenSystemComponent>;
-
-    beforeEach(async () => {
-        await TestBed.configureTestingModule({
-            declarations: [BrokenSystemComponent]
-        })
-            .compileComponents();
-
-        fixture = TestBed.createComponent(BrokenSystemComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
-
-    it('should create', () => {
+    it('should create', async () => {
+        const { component } = await setupComponent(BrokenSystemComponent);
         expect(component).toBeTruthy();
     });
 });

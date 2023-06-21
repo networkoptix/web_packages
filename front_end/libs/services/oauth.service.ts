@@ -1,28 +1,22 @@
 import { HttpClient } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { tap } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 
+import { nxConfig } from './nx-config/config';
 import type { IConfig } from './nx-config/config-types';
-import { NxConfigService } from './nx-config/nx-config.service';
 import { NxStorageService } from './storage.service';
-import { WINDOW } from './window-provider';
+import { windowFactory } from './window-provider';
 
 @Injectable({
     providedIn: 'root',
 })
 export class OauthService {
-    CONFIG: IConfig;
+    CONFIG: IConfig = nxConfig;
+    protected window: Window = windowFactory();
 
-    constructor(
-        configService: NxConfigService,
-        private http: HttpClient,
-        private storage: NxStorageService,
-        @Inject(WINDOW) protected window: Window,
-    ) {
-        this.CONFIG = configService.getConfig();
-    }
+    constructor(private http: HttpClient, private storage: NxStorageService) {}
 
     get cloudApiAccessToken() {
         return this.storage.cloudApiAccessToken;

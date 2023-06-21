@@ -17,7 +17,6 @@ import { environment } from '@environments/environment';
 import { apiBase, redirect, responseOk, staticBase } from '@lib/variables/static-variables';
 import { NxConsoleService } from '@pages/developer-console/console/console.service';
 import { NxDbService } from '@services/db.service';
-import { FeatureFlagStrings } from '@services/nx-config/base-config';
 import { OauthService } from '@services/oauth.service';
 import { NxSwCacheService } from '@services/sw-cache.service';
 import { WINDOW } from '@services/window-provider';
@@ -27,8 +26,8 @@ import { memoizeAsyncLong, memoizeAsyncPersistent, memoizeAsyncShort } from '@ut
 import { startWithCache } from '@utils/start-with-cached';
 
 import { Account, CloudAccount } from '../account.service/account';
+import { nxConfig } from '../nx-config/config';
 import type { IConfig } from '../nx-config/config-types';
-import { NxConfigService } from '../nx-config/nx-config.service';
 import { NxUriCacheService } from '../uri-cache.service';
 
 import { ChannelPartnersApi } from './cloud-services/channel-partners/channel-partners-api';
@@ -127,7 +126,7 @@ const swClear =
     providedIn: 'root',
 })
 export class NxCloudApiService {
-    private CONFIG: IConfig;
+    private CONFIG: IConfig = nxConfig;
     public currentAccount: Account; // Used by staffSWBypass decorator
     public swBypass = false;
     public swBypassTimeout: ReturnType<typeof setTimeout>;
@@ -142,7 +141,6 @@ export class NxCloudApiService {
     public targetInstance: string;
 
     constructor(
-        private configService: NxConfigService,
         private http: HttpClient,
         private cacheService: NxUriCacheService,
         private router: Router,
@@ -155,8 +153,6 @@ export class NxCloudApiService {
         @Inject(WINDOW) private window: Window,
         private db: NxDbService,
     ) {
-        this.CONFIG = configService.getConfig();
-
         // check the parameters before pushing this
         this.customClient = new CustomClientAPI(this.http, this.consoleService);
         this.licenseServerApiFactory = LicenseServerAPI.createApiFactory(
@@ -257,7 +253,7 @@ export class NxCloudApiService {
         }
         return this.http
             .post<t.CloudResponse>(
-                this.configService.cloudHost + apiBase + '/systems/connect',
+                this.CONFIG.cloudHost + apiBase + '/systems/connect',
                 {
                     name: systemName,
                     email,
@@ -500,7 +496,7 @@ export class NxCloudApiService {
             isEnabled: false,
         };
         if (environment.isLocal) {
-            const url = `${this.configService.cloudHost}/api/systems/${systemId}/users`;
+            const url = `${this.CONFIG.cloudHost}/api/systems/${systemId}/users`;
             body.email = userEmail;
             body.password = password || '';
             return this.http.post(url, body);
@@ -1008,7 +1004,7 @@ export class NxCloudApiService {
 
     @staffSWBypass
     documentationInstantSearch(name, query, options?: Partial<t.InstantSearchOptions>) {
-        if (!this.configService.flagsEnabled(FeatureFlagStrings.kbInstantSearch)) {
+        if (!this.CONFIG.featureFlags.kbInstantSearch) {
             return throwError(new Error('Instant search feature not enabled'));
         }
         const params = mapValuesToStrings({ query, ...options });

@@ -1,3 +1,5 @@
+import { BroadcastChannel } from 'broadcast-channel';
+
 export const getCsrf = (): string =>
     document.cookie
         .split('; ')
@@ -125,7 +127,6 @@ export class ScopedTokenState {
     };
 
     private refreshAccessToken = async (): Promise<string> => {
-        // eslint-disable-next-line nx/ban-global-variables
         const csrf = getCsrf();
         if (!csrf) {
             return '';

@@ -33,3 +33,10 @@ src/{main,polyfills,vendor,overrides.d,app.module,app.component,ajs-upgraded-pro
 common/environments/environment.local.ts
 common/environments/environment.dev.ts
 inline-wizard/customization/custom/_custom_palette.scss
+.angular/cache
+
+.angular/cache
+
+.angular/cache
+
+*junit.xml

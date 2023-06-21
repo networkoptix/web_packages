@@ -1,23 +1,10 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { setupComponent } from '../../../setup';
 
 import { MergeComponent } from './merge.component';
 
 describe('MergeComponent', () => {
-    let component: MergeComponent;
-    let fixture: ComponentFixture<MergeComponent>;
-
-    beforeEach(async () => {
-        await TestBed.configureTestingModule({
-            declarations: [MergeComponent]
-        })
-            .compileComponents();
-
-        fixture = TestBed.createComponent(MergeComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
-
-    it('should create', () => {
+    it('should create', async () => {
+        const { component } = await setupComponent(MergeComponent, true);
         expect(component).toBeTruthy();
     });
 });

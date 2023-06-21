@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -9,7 +9,7 @@ import { NxDbService } from './db.service';
 import { NxConfigService } from './nx-config/nx-config.service';
 import type { LoginParams } from './session.service.types';
 import { NxSwCacheService } from './sw-cache.service';
-import { WINDOW } from './window-provider';
+import { windowFactory } from './window-provider';
 
 @Injectable({
     providedIn: 'root',
@@ -21,12 +21,12 @@ export class NxSessionService {
     language$: BehaviorSubject<string>;
     langChanged$: BehaviorSubject<boolean>;
     private session: LocalStorageService;
+    private window: Window = windowFactory();
 
     constructor(
         private localStorageService: LocalStorageService,
         private nxCache: NxSwCacheService,
         private db: NxDbService,
-        @Inject(WINDOW) private window: Window,
     ) {
         this.session = this.localStorageService;
 

@@ -173,7 +173,6 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         SystemGuard,
         ManualAccessGuard,
         DatePipe,
-        NxBootstrapProvider,
         NxSwPromptUpdateService,
         { provide: APP_INITIALIZER, useFactory: NxBootstrapProviderFactory, deps: [NxBootstrapProvider], multi: true },
         { provide: MESSAGE_FORMAT_CONFIG, useValue: { disablePluralKeyChecks: true } },

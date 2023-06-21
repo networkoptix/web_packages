@@ -4,7 +4,9 @@ import { Observable } from 'rxjs';
 
 type CachedData = HttpResponse<unknown> | Observable<HttpEvent<unknown>>;
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class NxUriCacheService {
     private cachedUri: string[] = [];
     private cachedData = new Map<string, CachedData>();

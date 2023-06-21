@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { Router } from '@angular/router';
 
 import { NxAppStateService } from '@services/nx-app-state.service';
-import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 
 @Component({
@@ -17,10 +15,8 @@ export class Nx503Component implements OnInit {
 
     constructor(
         private appState: NxAppStateService,
-        private router: Router,
         private sanitizer: DomSanitizer,
         private apiService: NxCloudApiService,
-        private bootstrapProvider: NxBootstrapProvider,
     ) {
         this.appState.footerVisibility = false;
         this.appState.headerVisibility = false;
@@ -36,17 +32,5 @@ export class Nx503Component implements OnInit {
             .catch(ex => {
                 console.error(ex);
             });
-    }
-
-    ngAfterViewInit(): void {
-        setTimeout(() => {
-            this.bootstrapProvider.load().then(() => {
-                if (this.bootstrapProvider.loaded) {
-                    this.router
-                        .navigate(['/'])
-                        .catch(() => console.error('Error navigating to the index'));
-                }
-            });
-        }, this.maintenanceTimeout);
     }
 }

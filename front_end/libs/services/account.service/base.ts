@@ -1,5 +1,5 @@
-import { DOCUMENT, Location } from '@angular/common';
-import { Inject, Injector, Injectable } from '@angular/core';
+import { Location } from '@angular/common';
+import { Injector, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -13,9 +13,7 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { oauthStore, redirect } from '@lib/variables/static-variables';
 import { NxDbService } from '@services/db.service';
 import { NxLoginService } from '@services/login.service';
-import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { OauthService } from '@services/oauth.service';
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { UnstructuredTable } from '@src/app/db/models/unstructured';
@@ -24,11 +22,12 @@ import { memoizeAsyncPersistent } from '@utils/memoize';
 import { NxApplyService } from '../apply.service';
 import { NxAppStateService } from '../nx-app-state.service';
 import { NxCloudApiService } from '../nx-cloud-api';
+import { nxConfig } from '../nx-config/config';
 import { NxSessionService } from '../session.service';
 import { NxStorageService } from '../storage.service';
 import { NxSystemAPIService } from '../system-api.service';
 import { NxUriService } from '../uri.service';
-import { WINDOW } from '../window-provider';
+import { windowFactory } from '../window-provider';
 
 import { Account } from './account';
 
@@ -39,7 +38,9 @@ import { Account } from './account';
  */
 @Injectable()
 export abstract class BaseAccount {
-    protected CONFIG: IConfig;
+    protected CONFIG: IConfig = nxConfig;
+    protected window: Window = windowFactory();
+    protected document: Document = this.window.document;
     protected LANG = staticLang;
     protected location: Location;
     protected requestingLogin: any;
@@ -74,11 +75,8 @@ export abstract class BaseAccount {
     ): void;
 
     constructor(
-        configService: NxConfigService,
         protected translateService: TranslateService,
         locationService: Location,
-        @Inject(DOCUMENT) protected document: Document,
-        @Inject(WINDOW) protected window: Window,
         protected cloudApi: NxCloudApiService,
         protected sessionService: NxSessionService,
         protected uriService: NxUriService,
@@ -90,12 +88,10 @@ export abstract class BaseAccount {
         protected loginService: NxLoginService,
         protected oauthService: OauthService,
         protected cookieService: CookieService,
-        protected bootstrapProviderService: NxBootstrapProvider,
         protected store: Store,
         protected dialogs: NxDialogsService,
         protected db: NxDbService,
     ) {
-        this.CONFIG = configService.getConfig();
         // language provider will be ready at this point
         // we don't support dynamic lang switch ... ==TT
         // languageService.translateSubject.subscribe(lang => { this.LANG = lang; });

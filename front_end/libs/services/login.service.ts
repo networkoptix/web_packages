@@ -1,8 +1,8 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { Overlay } from '@angular/cdk/overlay';
-import { DOCUMENT, Location } from '@angular/common';
+import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Inject, Injectable, Injector } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'ngx-webstorage';
 import { Subject } from 'rxjs';
@@ -20,16 +20,17 @@ import type { NxAccountService } from '@services/account.service';
 import { oauthStore, redirect } from '../variables/static-variables';
 
 import { NxBootstrapProvider } from './nx-bootstrap-provider';
+import { nxConfig } from './nx-config/config';
 import type { IConfig } from './nx-config/config-types';
-import { NxConfigService } from './nx-config/nx-config.service';
 import type { NxSystem } from './system.service/system';
-import { WINDOW } from './window-provider';
+import { windowFactory } from './window-provider';
 
 @Injectable({
     providedIn: 'root',
 })
 export class NxLoginService extends DialogBase {
-    CONFIG: IConfig;
+    CONFIG: IConfig = nxConfig;
+    private window: Window = windowFactory();
     LANG = staticLang;
 
     closeResult: string;
@@ -39,7 +40,6 @@ export class NxLoginService extends DialogBase {
     private _currentSystem: NxSystem;
 
     constructor(
-        configService: NxConfigService,
         overlay: Overlay,
         injector: Injector,
         private http: HttpClient,
@@ -47,13 +47,9 @@ export class NxLoginService extends DialogBase {
         private router: Router,
         private storage: LocalStorageService,
         private dialogs: NxDialogsService,
-        private bootstrapProvider: NxBootstrapProvider,
         private cdkDialog: Dialog,
-        @Inject(WINDOW) private window: Window,
-        @Inject(DOCUMENT) document: Document,
     ) {
-        super(overlay, injector, document);
-        this.CONFIG = configService.getConfig();
+        super(overlay, injector, windowFactory().document);
     }
 
     set accountService(accountService) {
@@ -114,7 +110,7 @@ export class NxLoginService extends DialogBase {
         };
 
         if (environment.isLocal) {
-            if (this.bootstrapProvider.newSystem) {
+            if (NxBootstrapProvider.isNewSystem) {
                 return Promise.resolve('newSystem');
             }
             Object.assign(config, {

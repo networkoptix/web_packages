@@ -1,5 +1,5 @@
-import { DOCUMENT, Location } from '@angular/common';
-import { Inject, Injectable, Injector } from '@angular/core';
+import { Location } from '@angular/common';
+import { Injectable, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -13,15 +13,12 @@ import { NxDbService } from '@services/db.service';
 
 import { NxLoginService } from '../login.service';
 import { NxAppStateService } from '../nx-app-state.service';
-import { NxBootstrapProvider } from '../nx-bootstrap-provider';
 import { NxCloudApiService } from '../nx-cloud-api';
-import { NxConfigService } from '../nx-config/nx-config.service';
 import { OauthService } from '../oauth.service';
 import { NxSessionService } from '../session.service';
 import { NxStorageService } from '../storage.service';
 import { NxSystemAPIService } from '../system-api.service';
 import { NxUriService } from '../uri.service';
-import { WINDOW } from '../window-provider';
 
 import { Account, newLocalAccount } from './account';
 import { BaseAccount } from './base';
@@ -31,11 +28,8 @@ export class LocalAccount extends BaseAccount {
     closeResult: string;
 
     constructor(
-        configService: NxConfigService,
         protected translateService: TranslateService,
         locationService: Location,
-        @Inject(DOCUMENT) protected document: Document,
-        @Inject(WINDOW) protected window: Window,
         protected cookieService: CookieService,
         protected cloudApi: NxCloudApiService,
         protected sessionService: NxSessionService,
@@ -47,17 +41,13 @@ export class LocalAccount extends BaseAccount {
         protected nxSystemAPIService: NxSystemAPIService,
         protected loginService: NxLoginService,
         protected oauthService: OauthService,
-        protected bootstrapProviderService: NxBootstrapProvider,
         protected store: Store,
         protected dialogs: NxDialogsService,
         protected db: NxDbService,
     ) {
         super(
-            configService,
             translateService,
             locationService,
-            document,
-            window,
             cloudApi,
             sessionService,
             uriService,
@@ -69,7 +59,6 @@ export class LocalAccount extends BaseAccount {
             loginService,
             oauthService,
             cookieService,
-            bootstrapProviderService,
             store,
             dialogs,
             db,

@@ -101,12 +101,9 @@ export class NxConfigService {
                                 }
                             },
                         };
+                    } else if (typeof value === 'object') {
+                        return new Proxy(value, debugHandlerFactory([...nodeNames, property]));
                     }
-
-                    return new Proxy(
-                        value as object,
-                        debugHandlerFactory([...nodeNames, property]),
-                    );
                 },
             })
         )();

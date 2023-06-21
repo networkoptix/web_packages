@@ -122,7 +122,6 @@ export class AppComponent implements AfterViewInit {
     };
 
     constructor(
-        bootstrapProvider: NxBootstrapProvider,
         configService: NxConfigService,
         public appStateService: NxAppStateService,
         public systemGuard: SystemGuard,
@@ -202,7 +201,7 @@ export class AppComponent implements AfterViewInit {
             }
         } // else -> unknown platform or device ... cross fingers and hope for the best
 
-        if (!bootstrapProvider.loaded) {
+        if (!NxBootstrapProvider.isLoaded) {
             if (!this.environment.isLocal) {
                 this.router.navigate(['/503'])
                     .catch(error => console.error(error))
@@ -213,7 +212,7 @@ export class AppComponent implements AfterViewInit {
             this.appStateService.headerVisibility = false;
             this.appStateService.footerVisibility = false;
             return;
-        } else if (bootstrapProvider.newSystem) {
+        } else if (NxBootstrapProvider.isNewSystem) {
             this.cleanUp();
             this.newSystem = true;
             this.localStorageService.store('resetServer', false);

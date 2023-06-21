@@ -270,31 +270,20 @@ frontend-builds:
 frontend-tests:
   extends: .frontend-node
   stage: test
-  allow_failure: true
+  coverage: /^TOTAL.+?(\d+\%)$/
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - front_end/*-junit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: front_end/coverage/**/cobertura-coverage.xml
   script:
     - |
       pushd "front_end"
         npm run test:ci
       popd
-
-      # TODO: Merge coverage
-      # pushd "front_end"
-      #   pushd "coverage"
-      #     merge_coverage_reports="npx -y cobertura-merge -o cobertura-coverage.xml"
-
-      #     echo "merging coverage reports"
-
-      #     for coverage_file in **/cobertura-coverage.xml; do
-      #         dir="$(dirname $coverage_file)""
-      #         project=$(echo "$dir" | cut -d "/" -f1)
-      #         moved_coverage="$project.xml"
-      #         cp "$coverage_file" "$moved_coverage"
-      #         merge_coverage_reports+=" $project=$moved_coverage"
-      #     done
-
-      #     eval "$merge_coverage_reports"
-      #   popd
-      # popd
 
 .jenkins-builds:
   extends: .frontend-changes

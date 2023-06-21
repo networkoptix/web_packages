@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
@@ -9,13 +9,14 @@ import { NxMenusService } from './menus.service';
 import { MenuNode } from './menus.service.types';
 import { ContextManifest } from './nx-cloud-api/nx-cloud-api.types';
 import { activeSystemType, createButtonType, MenuNodeNavProps } from './nx-header.service.types';
-import { WINDOW } from './window-provider';
+import { windowFactory } from './window-provider';
 
 @UntilDestroy({ checkProperties: true })
 @Injectable({
     providedIn: 'root',
 })
 export class NxHeaderService {
+    private window: Window = windowFactory();
     public showSubject = new BehaviorSubject(false);
     public activeSystem$ = new BehaviorSubject<activeSystemType>(null);
     public lastActive$ = new BehaviorSubject(null);
@@ -35,11 +36,7 @@ export class NxHeaderService {
         this.nodes$.next(menunodes);
     }
 
-    constructor(
-        private router: Router,
-        private menusService: NxMenusService,
-        @Inject(WINDOW) private window: Window,
-    ) {
+    constructor(private router: Router, private menusService: NxMenusService) {
         this.router.events.pipe(untilDestroyed(this)).subscribe(event => {
             if (event instanceof NavigationStart) {
                 this.setLocation(event.url);

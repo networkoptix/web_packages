@@ -16,7 +16,7 @@
             "inputs": ["production", "^production"]
         },
         "test": {
-            "inputs": ["default", "^production"]
+            "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"]
         },
         "test-headed": {
             "inputs": ["default", "^production"]
@@ -40,6 +40,19 @@
         },
         "@angular-eslint/schematics:library": {
             "setParserOptionsProject": true
+        },
+        "@nx/angular:application": {
+            "style": "css",
+            "linter": "eslint",
+            "unitTestRunner": "jest",
+            "e2eTestRunner": "none"
+        },
+        "@nx/angular:library": {
+            "linter": "eslint",
+            "unitTestRunner": "jest"
+        },
+        "@nx/angular:component": {
+            "style": "css"
         }
     },
     "namedInputs": {
@@ -49,7 +62,9 @@
             "default",
             "!{projectRoot}/**/*.spec.[jt]s",
             "!{projectRoot}/tsconfig.spec.json",
-            "!{projectRoot}/karma.conf.js"
+            "!{projectRoot}/karma.conf.js",
+            "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
+            "!{projectRoot}/jest.config.[jt]s"
         ]
     }
 }

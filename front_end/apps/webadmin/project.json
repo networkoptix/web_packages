@@ -132,8 +132,8 @@
                     "optimization": {
                         "scripts": true,
                         "styles": {
-                          "minify": true,
-                          "inlineCritical": false
+                            "minify": true,
+                            "inlineCritical": false
                         }
                     },
                     "outputHashing": "all",
@@ -191,24 +191,17 @@
             }
         },
         "test": {
-            "executor": "@angular-devkit/build-angular:karma",
+            "executor": "@nx/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
             "options": {
-                "main": "common/test.ts",
-                "polyfills": "apps/webadmin/src/polyfills.ts",
-                "tsConfig": "apps/webadmin/tsconfig.spec.json",
-                "karmaConfig": "apps/webadmin/karma.conf.ci.js",
-                "assets": [],
-                "styles": ["libs/dialogs/dialogs.scss", "common/styles/main.scss"],
-                "stylePreprocessorOptions": {
-                    "includePaths": [
-                        "node_modules/",
-                        "common/styles",
-                        "common/styles/common",
-                        "libs"
-                    ]
-                },
-                "scripts": [],
-                "codeCoverage": true
+                "jestConfig": "apps/webadmin/jest.config.ts",
+                "passWithNoTests": true
+            },
+            "configurations": {
+                "ci": {
+                    "ci": true,
+                    "codeCoverage": true
+                }
             }
         }
     }

@@ -15,8 +15,8 @@ export class NxBootstrapProvider {
     CONFIG: IConfig;
     readonly environment = environment;
 
-    private isLoaded: boolean;
-    private isNewSystem: boolean;
+    static isLoaded: boolean;
+    static isNewSystem: boolean;
 
     constructor(
         private configService: NxConfigService,
@@ -56,21 +56,13 @@ export class NxBootstrapProvider {
 
     #init = async (): Promise<void> => {
         this.CONFIG = this.configService.getConfig();
-        this.isLoaded = false;
-        this.isNewSystem = false;
+        NxBootstrapProvider.isLoaded = false;
+        NxBootstrapProvider.isNewSystem = false;
 
         if (await this.#isVmsApiAvailable()) {
             await this.#useRefreshTokenFromVms();
         }
     };
-
-    get loaded() {
-        return this.isLoaded;
-    }
-
-    get newSystem(): boolean {
-        return this.isNewSystem;
-    }
 
     private getModuleInfo(reload = true) {
         return this.environment.isLocal
@@ -93,21 +85,22 @@ export class NxBootstrapProvider {
                     this.languageService.setTranslations(language.language, language);
                     this.CONFIG.viewsDir = 'static/lang_' + language.language + '/views/';
                     if (!!moduleInfo && Object.keys(moduleInfo).length > 0) {
-                        this.isNewSystem = moduleInfo.serverFlags.includes('SF_NewSystem');
+                        NxBootstrapProvider.isNewSystem =
+                            moduleInfo.serverFlags.includes('SF_NewSystem');
                         this.setLocalInfo(moduleInfo).then(() => {
                             this.configService.updateConfigUsingOverrides();
-                            this.isLoaded = true;
+                            NxBootstrapProvider.isLoaded = true;
                             resolve(true);
                         });
                     } else {
-                        this.isLoaded = true;
+                        NxBootstrapProvider.isLoaded = true;
                         resolve(true);
                     }
                 })
                 .catch(err => {
                     console.error(err);
                     // some fail handling is done in app component
-                    this.isLoaded = true;
+                    NxBootstrapProvider.isLoaded = true;
                     resolve(true);
                 })
                 .finally(() => {

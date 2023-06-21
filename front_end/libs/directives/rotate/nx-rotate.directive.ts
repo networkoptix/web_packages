@@ -36,8 +36,8 @@ export class NxRotate {
     };
 
     constructor(private el: ElementRef<HTMLElement>) {
-        this.resizeObserver = new ResizeObserver(([{ contentRect }]) => {
-            this.#constrainToParent(contentRect);
+        this.resizeObserver = new ResizeObserver(([el]) => {
+            this.#constrainToParent(el.contentRect);
         });
         this.resizeObserver.observe(this.el.nativeElement.parentElement);
     }

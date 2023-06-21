@@ -8,7 +8,13 @@ import { nxConfig } from './config';
 import { IConfig } from './config-types';
 
 export class DynamicConfig {
-    static async bootstrap(): Promise<{ provide: typeof DynamicConfig; useValue: DynamicConfig }> {
+    static async bootstrap(): Promise<{
+        provide: typeof DynamicConfig;
+        useValue: Omit<DynamicConfig, 'mapPropertiesToConfig'>;
+    }> {
+        if (process.env.JEST_WORKER_ID !== undefined) {
+            return { provide: DynamicConfig, useValue: { config: nxConfig } };
+        }
         const preloadedAccount = await DynamicConfig.getAccount();
         const [data, preloadedTranslation] = await Promise.allSettled([
             DynamicConfig.getData(),

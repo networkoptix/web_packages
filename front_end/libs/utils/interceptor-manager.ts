@@ -5,6 +5,8 @@ import {
     WithVmsSessionMiddleware,
 } from 'nx-open-web-candidate/packages/request-interceptor';
 
+import { windowFactory } from '@app/services/window-provider';
+
 import { ScopedTokenState } from './scoped-token-state';
 
 export class InterceptorManager {
@@ -117,10 +119,7 @@ export class InterceptorManager {
                             },
                             body: JSON.stringify({ access_token }),
                             credentials: 'include',
-                        }).then(() =>
-                            // eslint-disable-next-line nx/ban-global-variables
-                            window.location.reload(),
-                        );
+                        }).then(() => windowFactory().location.reload());
                     },
                     shouldAuthenticateWithBearer,
                     'cloudToken',

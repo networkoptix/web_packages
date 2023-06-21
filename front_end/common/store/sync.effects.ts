@@ -1,6 +1,7 @@
 import { inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
+import { BroadcastChannel } from 'broadcast-channel';
 import { debounceTime, filter, fromEvent, map, Observable, tap } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 

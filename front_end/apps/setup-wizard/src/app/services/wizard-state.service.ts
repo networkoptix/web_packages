@@ -3,16 +3,18 @@ import { Inject, Injectable, LOCALE_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, from, Observable, of, Subject, timer } from 'rxjs';
+import { BehaviorSubject, from, Observable, Subject, timer } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 
+import { NxCurrentRelayInterceptor } from '@app/interceptors/current-relay-interceptor';
+import { nxConfig } from '@app/services/nx-config/config';
+import { NxSystemAPI } from '@app/services/system-legacy-api.service';
+import { NxSystemRestAPI3 } from '@app/services/system-rest-api-v3.service';
 import staticLang from '@common/language/language_i18n_static.json';
 import type { SearchableDropdownItem as Item } from '@components/dropdowns/searchable/searchable.component.types';
 import { alertTimeout, apiBase, icons, settingsConfig, simpleURLRegex } from '@lib/variables/static-variables';
 import { Setting } from '@services/nx-config/base-config';
 import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxSystemAPIService } from '@services/system-api.service';
 import { ModuleInformationReply, NormalResponse, SystemConfigSettings, UserSession } from '@services/system-api.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
@@ -137,7 +139,6 @@ export class WizardStateService {
         ifListFlag: 'SF_IfListCtrl',
         timeCtrlFlag: 'SF_timeCtrl',
     };
-    private readonly serverVersion = 5.1;
 
     public wizardFSM: { [key: string]: iState };
 
@@ -201,16 +202,12 @@ export class WizardStateService {
     formValidateSubject = new BehaviorSubject<boolean>(false);
 
     constructor(
-        config: NxConfigService,
         private http: HttpClient,
-        private nxSystemAPIService: NxSystemAPIService,
         private router: Router,
         private translate: TranslateService,
         @Inject(WINDOW) public window: Window,
         @Inject(LOCALE_ID) private locale: string,
     ) {
-        this.CONFIG = config.getConfig();
-
         const [host, port] = this.window.location.host.split(':');
         this.networkInfo = {
             ip: host,
@@ -547,7 +544,7 @@ export class WizardStateService {
     }
 
     private checkInternetOnClient(): Promise<void> {
-        return this.http.get(`${this.CONFIG.cloudHost}/api/ping`).toPromise().then(() => {
+        return this.http.get(`${nxConfig.cloudHost}/api/ping`).toPromise().then(() => {
             this.hasInternet.client = true;
         });
     }
@@ -662,7 +659,7 @@ export class WizardStateService {
         let headers = new HttpHeaders();
         headers = headers.set('Authorization', `Bearer ${accessToken}`);
         return this.http.post<BindResponse>(
-            this.CONFIG.cloudHost + apiBase + '/systems/connect',
+            nxConfig.cloudHost + apiBase + '/systems/connect',
             { name: systemName, email },
             { headers }
         );
@@ -764,7 +761,7 @@ export class WizardStateService {
     // Initializers
     discoverSystems(): Promise<void> {
         return this.server.getPeerSystems().toPromise().then(res => {
-            const cloudHost = this.CONFIG.cloudHost.replace('https://', '');
+            const cloudHost = nxConfig.cloudHost.replace('https://', '');
             this.peers = res.reply
                 .filter(system => !system.serverFlags.includes('SF_NewSystem') && system.cloudHost === cloudHost)
                 .map(_system => {
@@ -774,7 +771,7 @@ export class WizardStateService {
                         ip: _system.remoteAddresses[0],
                         name: _system.name,
                         isNew: _system.serverFlags.includes('SF_NewSystem'),
-                        compatibleCloudHost: _system.cloudHost === this.CONFIG.cloudHost,
+                        compatibleCloudHost: _system.cloudHost === nxConfig.cloudHost,
                         visibleName: '',
                         hint: ''
                     };
@@ -857,15 +854,36 @@ export class WizardStateService {
         });
     };
 
+    createConnection<
+    S extends NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2 | NxSystemRestAPI3 =
+        | NxSystemAPI
+        | NxSystemRestAPI
+        | NxSystemRestAPI2
+        | NxSystemRestAPI3,
+>(): S {
+        const unauthorizedCallback = (): Promise<string> => Promise.resolve('');
+        // eslint-disable-next-line nx/no-untyped-init
+        const serverApi = new NxSystemRestAPI2(
+            this.http,
+            null,
+            null,
+            null,
+            null,
+            null,
+            unauthorizedCallback,
+            null,
+            null,
+            null,
+            null,
+            null,
+        ) as S;
+        NxCurrentRelayInterceptor.currentRelays[serverApi.currentRelayHost] = serverApi;
+        return serverApi;
+    }
+
     init(): void {
-        this.server = this.nxSystemAPIService
-            .createConnection(
-                undefined,
-                undefined,
-                undefined,
-                () => of(''),
-                this.serverVersion
-            );
+        this.server = this
+            .createConnection();
 
         this.initWizard();
     }

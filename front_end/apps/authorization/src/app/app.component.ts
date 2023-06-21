@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { nxConfig } from '@app/services/nx-config/config';
 import { NxThemeService } from '@services/theme.service';
 
 @Component({
@@ -11,11 +11,9 @@ import { NxThemeService } from '@services/theme.service';
 })
 export class AppComponent {
     constructor(
-        private configService: NxConfigService,
         private themeService: NxThemeService,
     ) {
-        const CONFIG = this.configService.getConfig();
-        if (CONFIG.featureFlags.themesEnabled) {
+        if (nxConfig.featureFlags.themesEnabled) {
             this.themeService.initTheme().then(
                 () => {}, // weird Safari 12
                 () => {}

@@ -8,7 +8,6 @@ import { WINDOW } from '@services/window-provider';
 
 import { menus } from '../variables/static-variables';
 
-import { NxConfigService } from './nx-config/nx-config.service';
 import type { NxSystem } from './system.service/system';
 import { ChildRoutes, RouteResolverParams } from './uri.service.types';
 
@@ -21,7 +20,6 @@ export class NxUriService {
     queryParamsSubject: BehaviorSubject<Params> = new BehaviorSubject({});
 
     constructor(
-        configService: NxConfigService,
         private router: Router,
         private route: ActivatedRoute,
         @Inject(WINDOW) private window: Window,

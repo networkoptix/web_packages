@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -13,11 +13,11 @@ import { Auth, MenuNode } from '@services/menus.service.types';
 import { apiBase } from '../variables/static-variables';
 
 import { MenuStructure, MenusStructure } from './nx-config/base-config';
+import { nxConfig } from './nx-config/config';
 import type { IConfig } from './nx-config/config-types';
-import { NxConfigService } from './nx-config/nx-config.service';
 import { NxSessionService } from './session.service';
 import type { NxUser } from './system.service/user-manager/user-manager-types';
-import { WINDOW } from './window-provider';
+import { windowFactory } from './window-provider';
 
 @UntilDestroy({ checkProperties: true })
 @Injectable({
@@ -25,7 +25,8 @@ import { WINDOW } from './window-provider';
 })
 export class NxMenusService {
     private menusStructure: MenusStructure;
-    private CONFIG: IConfig;
+    private CONFIG: IConfig = nxConfig;
+    private window: Window = windowFactory();
     private LANG = staticLang;
     private languageChanged$ = new BehaviorSubject('');
     public currentSystemNode$ = new BehaviorSubject<MenuNode>(null);
@@ -43,14 +44,11 @@ export class NxMenusService {
     }> = {};
 
     constructor(
-        public configService: NxConfigService,
         private translate: TranslateService,
         private sessionService: NxSessionService,
         private http: HttpClient,
         private deviceService: DeviceDetectorService,
-        @Inject(WINDOW) private window: Window,
     ) {
-        this.CONFIG = configService.getConfig();
         this.updateMenu();
 
         translate.onTranslationChange
@@ -357,7 +355,7 @@ export class NxMenusService {
         /* This conditition should be kept in sync with the access condition
         in bookmarksGuard.ts */
         if (
-            this.configService.flagsEnabled('bookmarks') &&
+            this.CONFIG.featureFlags.bookmarks &&
             activeSystem.version >= 5 &&
             this.currentUser?.permissions.includes('GlobalViewBookmarksPermission') &&
             !this.deviceService.isMobile()

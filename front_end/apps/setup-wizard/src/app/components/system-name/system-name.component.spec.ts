@@ -1,23 +1,10 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { setupComponent } from '../../../setup';
 
 import { SystemNameComponent } from './system-name.component';
 
 describe('SystemNameComponent', () => {
-    let component: SystemNameComponent;
-    let fixture: ComponentFixture<SystemNameComponent>;
-
-    beforeEach(async () => {
-        await TestBed.configureTestingModule({
-            declarations: [SystemNameComponent]
-        })
-            .compileComponents();
-
-        fixture = TestBed.createComponent(SystemNameComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
-
-    it('should create', () => {
+    it('should create', async () => {
+        const { component } = await setupComponent(SystemNameComponent);
         expect(component).toBeTruthy();
     });
 });

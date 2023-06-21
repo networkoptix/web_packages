@@ -91,8 +91,8 @@
                     "optimization": {
                         "scripts": true,
                         "styles": {
-                          "minify": true,
-                          "inlineCritical": false
+                            "minify": true,
+                            "inlineCritical": false
                         }
                     },
                     "outputHashing": "all",
@@ -169,19 +169,6 @@
                 "browserTarget": "setup-wizard:build"
             }
         },
-        "test": {
-            "executor": "@angular-devkit/build-angular:karma",
-            "options": {
-                "main": "apps/setup-wizard/src/test.ts",
-                "polyfills": "apps/setup-wizard/src/polyfills.ts",
-                "tsConfig": "apps/setup-wizard/tsconfig.spec.json",
-                "karmaConfig": "apps/setup-wizard/karma.conf.ci.js",
-                "codeCoverage": true,
-                "assets": ["apps/setup-wizard/src/favicon.ico", "apps/setup-wizard/src/assets"],
-                "styles": ["apps/setup-wizard/src/styles.scss"],
-                "scripts": []
-            }
-        },
         "lint": {
             "executor": "@nrwl/linter:eslint",
             "options": {
@@ -201,6 +188,20 @@
             "configurations": {
                 "production": {
                     "devServerTarget": "setup-wizard:serve:production"
+                }
+            }
+        },
+        "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+            "options": {
+                "jestConfig": "apps/setup-wizard/jest.config.ts",
+                "passWithNoTests": true
+            },
+            "configurations": {
+                "ci": {
+                    "ci": true,
+                    "codeCoverage": true
                 }
             }
         }

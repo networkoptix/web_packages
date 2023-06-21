@@ -16,7 +16,7 @@
             "@app/*": ["common/*", "libs/*"],
             "@authorization/*": ["apps/authorization/*"],
             "@common/*": ["common/*"],
-            "@components/*": ["libs/components/*"],
+            "@components/*": ["libs/components/*", "libs/components-buildable/src/*", "libs/components-buildable/src/lib/*"],
             "@decorators/*": ["libs/decorators/*"],
             "@dialogs/*": ["libs/dialogs/*"],
             "@directives/*": ["libs/directives/*"],
@@ -38,10 +38,10 @@
             "@styles/*": ["common/styles/*"],
             "@utils/*": ["libs/utils/*"],
             "@view/*": ["libs/features/systems/view/*"],
-            "@vms-client/*": ["libs/features/systems/view/vms-client/*"]
+            "@vms-client/*": ["libs/features/systems/view/vms-client/*"],
+            "components-buildable-build": ["libs/components-buildable-build/src/index.ts"]
         },
-        "typeRoots": ["node_modules/@types"],
-        "types": ["jasmine", "node"]
+        "typeRoots": ["node_modules/@types"]
     },
     "angularCompilerOptions": {
         "enableIvy": true,

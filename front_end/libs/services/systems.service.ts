@@ -35,7 +35,6 @@ import { NxDbService } from './db.service';
 import { NxCloudApiService } from './nx-cloud-api';
 import type { System } from './nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from './nx-config/config-types';
-import { NxConfigService } from './nx-config/nx-config.service';
 import { NxStorageService } from './storage.service';
 import type { NxSystem } from './system.service/system';
 import { NxSystemService } from './system.service/system.service';
@@ -47,7 +46,7 @@ import { NxUriService } from './uri.service';
     providedIn: 'root',
 })
 export class NxSystemsService {
-    CONFIG: IConfig;
+    CONFIG: IConfig = nxConfig;
     LANG = staticLang;
     private currentUser$ = this.store.select(selectCurrentUser).pipe(
         // Ignore preloaded account on cloud
@@ -92,7 +91,6 @@ export class NxSystemsService {
     }
 
     constructor(
-        configService: NxConfigService,
         private storageService: NxStorageService,
         private ribbonService: NxRibbonService,
         private toastService: NxToastService,
@@ -103,7 +101,6 @@ export class NxSystemsService {
         private db: NxDbService,
         @Inject(LOCALE_ID) private locale: string,
     ) {
-        this.CONFIG = configService.getConfig();
         this.systemsSubject.subscribe(systems => {
             this.#systems = systems;
         });

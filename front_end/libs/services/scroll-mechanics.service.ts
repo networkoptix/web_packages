@@ -1,14 +1,15 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject, fromEvent, map, shareReplay, startWith } from 'rxjs';
 
 import { GridBreakpoints } from '@styles/theme-variables-common';
 
-import { WINDOW } from './window-provider';
+import { windowFactory } from './window-provider';
 
 @Injectable({
     providedIn: 'root',
 })
 export class NxScrollMechanicsService {
+    private window: Window = windowFactory();
     windowSizeSubject = fromEvent<Event>(this.window, 'resize').pipe(
         map(({ target }) => {
             const { innerWidth: width, innerHeight: height } = target as Window;
@@ -29,8 +30,6 @@ export class NxScrollMechanicsService {
 
     public static HEADER_OFFSET: number = 48;
     public static SCROLL_OFFSET: number = 48 + 16; // header + padding
-
-    constructor(@Inject(WINDOW) private window: Window) {}
 
     set elementTableWidth(width: number) {
         this.elementTableWidthSubject.next(width);
