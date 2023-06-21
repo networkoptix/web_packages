@@ -71,6 +71,53 @@ class MenuCache(BaseCacheV2):
     def __setitem__(self, key, menu):
         super().__setitem__(key.lower(), menu)
 
+    @property
+    def doc_menu_map_key(self):
+        if not self.customization_name:
+            raise ValueError("Customization must be set to perform this action.")
+        return f'{self.customization_name}-doc-dir'
+
+    def set_doc_menu_map(self, menu_map):
+        self.cache.set(self.doc_menu_map_key, menu_map)
+
+    def get_doc_menu_map(self):
+        return self.cache.get(self.doc_menu_map_key)
+
+    def del_doc_menu_map(self):
+        self.cache.delete(self.doc_menu_map_key)
+
+    @property
+    def version_key(self):
+        return f'{self.customization_name}_key'
+
+    def get_cur_version(self):
+        return self.cache.get(self.version_key)
+
+    def set_new_version(self, version=None) -> str:
+        version = version or f'{uuid4()}'
+        self.cache.set(self.version_key, version)
+        return version
+
+    @property
+    def customization_menus_key(self):
+        return f'{self.customization_name}'
+
+    def set_customization_menus(self, menus_dict: dict):
+        self.cache.set(self.customization_menus_key, menus_dict)
+
+    def get_customization_menus(self):
+        return self.cache.get(self.customization_menus_key)
+
+    def del_customization_menus(self):
+        self.cache.delete(self.customization_menus_key)
+
+    def clear_customization_data(self):
+        if not self.customization_name:
+            raise ValueError("Customization must be set to clear these values.")
+        self.cache.delete(self.doc_menu_map_key)
+        self.cache.delete(self.customization_menus_key)
+        self.cache.delete(self.version_key)
+
     def clear_cache(self, immediate = False, clear_documentation_cache = False):
         from cms.controllers.documentation import DocumentCache
         from cms.tasks import async_generate_menus
@@ -80,6 +127,7 @@ class MenuCache(BaseCacheV2):
         elif not settings.TESTING:
             # NOTE! Menu and Document caches must be invalidated together,
             # this method is used on Documentation Asset changes
+            self.clear_customization_data()
             running_task = cache.get(self.init_task_key)
             if running_task:
                 app.control.revoke(running_task, terminate=True, signal='SIGUSR1')
@@ -444,9 +492,8 @@ def feature_flag_is_active(feature_flag, user, overrides=None, *, customization=
 
 
 def cached_doc_menu_map(customization_name, refresh=False):
-    cache_key = f'{customization_name}-doc-dir'
     menu_cache = MenuCache(customization_name=customization_name)
-    menu_map = menu_cache[cache_key]
+    menu_map = menu_cache.get_doc_menu_map()
     if refresh or not menu_map:
         menu_map = {}
         for menu in Menu.objects.filter(enabled=True, type__in=[Menu.MENU_TYPES.docs_struct, Menu.MENU_TYPES.docs_knowledgebase]):
@@ -455,7 +502,7 @@ def cached_doc_menu_map(customization_name, refresh=False):
             if menu.url not in menu_map[menu.base_url]:
                 menu_map[menu.base_url][menu.url] = menu.name
 
-        menu_cache[cache_key] = menu_map
+        menu_cache.set_doc_menu_map(menu_map)
     return menu_map
 
 
@@ -2258,22 +2305,19 @@ class Menu(models.Model):
         super().save(*args, **kwargs)
 
     def clear_menu_from_cache_for_all_customizations(self):
-        # !!! Called on Menu.save(). customization contextvar can be missing
-        menu_cache = MenuCache()
         for customization in Customization.objects.all().values_list('name', flat=True):
-                doc_cache_key = f'{customization}-doc-dir'
-                menu_name = self.name.lower()
-                if cache := menu_cache[customization]:
-                    new_cache = copy.deepcopy(cache)
-                    if new_cache.get(menu_name):
-                        new_cache[menu_name] = None
-                    menu_cache[customization] = new_cache
-                if cache := menu_cache[doc_cache_key]:
-                    new_cache = copy.deepcopy(cache)
-                    if new_cache.get(menu_name):
-                        new_cache[menu_name] = None
-                    menu_cache[doc_cache_key] = new_cache
-
+            menu_cache = MenuCache(customization_name=customization)
+            menu_name = self.name.lower()
+            if cache := menu_cache.get_customization_menus():
+                new_cache = copy.deepcopy(cache)
+                if new_cache.get(menu_name):
+                    new_cache[menu_name] = None
+                menu_cache.set_customization_menus(new_cache)
+            if cache := menu_cache.get_doc_menu_map():
+                new_cache = copy.deepcopy(cache)
+                if new_cache.get(menu_name):
+                    new_cache[menu_name] = None
+                menu_cache.set_doc_menu_map(new_cache)
 
     def preview_url(self, state='draft'):
         """Preview url for menu change form.
@@ -2405,16 +2449,14 @@ class Menu(models.Model):
     def cache_all_customizations(cls, customization=None, **kwargs):
         structures = cls.generate_menus()
         # !!! customization contextvar can be missing
-        menu_cache = MenuCache(customization_name=customization)
         for customization, structure in structures.items():
-            menu_cache.__setitem__(customization, structure)
+            MenuCache(customization_name=customization).set_customization_menus(structure)
 
     @staticmethod
     def clear_all_customizations_cache():
-        menu_cache = MenuCache()
         for customization in Customization.objects.all().values_list('name', flat=True):
-            doc_cache_key = f'{customization}-doc-dir'
-            menu_cache[customization] = menu_cache[doc_cache_key] = None
+            menu_cache = MenuCache(customization_name=customization)
+            menu_cache.clear_customization_data()
 
     def to_dict(self):
         assets = set()
