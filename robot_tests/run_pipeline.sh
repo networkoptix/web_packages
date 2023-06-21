@@ -43,6 +43,9 @@ if [ ! "$CLOUD_HOST" ]; then
   echo >&2 "Failed to deploy cloud with backend revision '$BACKEND_REVISION'" \
     "and frontend revision '$FRONTEND_REVISION'"
 
+  # Unlock pending merge request.
+  "$PYTHON" -m 'post_run_status' "$FRONTEND_REVISION" '1'
+
   echo >&2 "Checking if something is left and whether it needs to be removed"
   ATTEMPTS_LEFT=5
   while true; do
