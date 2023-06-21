@@ -1,9 +1,4 @@
-import {
-    Component,
-    Input,
-    OnDestroy,
-    OnInit,
-} from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -23,8 +18,7 @@ export class NxAuthorizeConfirmationComponent implements OnInit, OnDestroy {
     @Input() clientType: string;
     @Input() confirm: (route?: string) => void;
 
-    ngOnInit(): void {
-    }
+    ngOnInit(): void {}
 
-    ngOnDestroy(): void { }
+    ngOnDestroy(): void {}
 }

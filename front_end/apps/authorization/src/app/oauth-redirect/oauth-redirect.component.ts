@@ -16,7 +16,6 @@ import { AuthorizeParams, ClientType } from '../components/authorize.component.t
     templateUrl: './oauth-redirect.component.html',
     styleUrls: ['./oauth-redirect.component.scss'],
 })
-
 export class NxOAuthRedirectComponent implements OnInit {
     initialData: AuthorizeParams;
     clientType: ClientType;
@@ -28,9 +27,8 @@ export class NxOAuthRedirectComponent implements OnInit {
         private router: Router,
         private localStorageService: LocalStorageService,
         private deviceService: DeviceDetectorService,
-        @Inject(WINDOW) public window: Window
-    ) {
-    }
+        @Inject(WINDOW) public window: Window,
+    ) {}
 
     ngOnInit(): void {
         if (this.window.nativeClient) {
@@ -70,8 +68,8 @@ export class NxOAuthRedirectComponent implements OnInit {
                 client_type: client_type || 'loginSystem',
                 redirect_uri: '/redirect-oauth',
                 view_type: view_type || 'desktop',
-                response_type: 'code'
-            }
+                response_type: 'code',
+            },
         });
     }
 }

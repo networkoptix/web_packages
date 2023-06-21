@@ -46,7 +46,8 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
 
     sendCode: () => void;
     @ViewChild('authCodeForm', { static: false }) authCodeForm: NgForm;
-    @ViewChild('backToPasswordSpan', { static: false }) backToPasswordSpan: ElementRef<HTMLSpanElement>;
+    @ViewChild('backToPasswordSpan', { static: false })
+    backToPasswordSpan: ElementRef<HTMLSpanElement>;
     needLargerFooter = false;
     restore = false;
     header: string;
@@ -56,10 +57,7 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
     templateText: TemplateText;
     icons = icons;
 
-    constructor(
-        private translateService: TranslateService,
-    ) {
-    }
+    constructor(private translateService: TranslateService) {}
 
     ngOnInit(): void {
         this.sendCode = () => {
@@ -69,13 +67,11 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
         this.restore = this.action === 'restore_password';
         this.templateText = setupText();
         this.setText();
-        this.suffixText = this.translateService.instant(
-            this.LANG.authorize.authCode.message,
-            {
-                suffix: this.restore
-                    ? this.translateService.instant(this.LANG.authorize.authCode.newPass)
-                    : this.translateService.instant(this.LANG.authorize.authCode.login)
-            });
+        this.suffixText = this.translateService.instant(this.LANG.authorize.authCode.message, {
+            suffix: this.restore
+                ? this.translateService.instant(this.LANG.authorize.authCode.newPass)
+                : this.translateService.instant(this.LANG.authorize.authCode.login),
+        });
 
         fromEvent<Event>(this.window, 'resize')
             .pipe(debounceTime(100))
@@ -86,7 +82,9 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
 
     ngOnChanges(changes: NgChanges<NxAuthorizeAuthCodeComponent>): void {
         if (changes.errorCode?.currentValue) {
-            this.authCodeForm?.controls.authCode.setErrors({ [changes.errorCode.currentValue]: true });
+            this.authCodeForm?.controls.authCode.setErrors({
+                [changes.errorCode.currentValue]: true,
+            });
         }
 
         if (!changes.clientType?.firstChange) {
@@ -102,5 +100,5 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
         }
     }
 
-    ngOnDestroy(): void { }
+    ngOnDestroy(): void {}
 }

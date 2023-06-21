@@ -27,7 +27,15 @@ import type { AuthorizeStateType } from '../authorize.component.types';
 @Component({
     selector: 'nx-authorize-reset-password-component',
     standalone: true,
-    imports: [CommonModule, FormsModule, TranslateModule, AngularSvgIconModule, PasswordModule, PasswordValidationModule, ProcessButtonModule],
+    imports: [
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+        AngularSvgIconModule,
+        PasswordModule,
+        PasswordValidationModule,
+        ProcessButtonModule,
+    ],
     templateUrl: 'reset-password.component.html',
     styleUrls: ['reset-password.component.scss'],
 })
@@ -59,5 +67,5 @@ export class NxAuthorizeResetPasswordComponent implements OnInit, OnChanges, OnD
         // }
     }
 
-    ngOnDestroy(): void { }
+    ngOnDestroy(): void {}
 }

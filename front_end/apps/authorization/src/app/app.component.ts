@@ -10,13 +10,11 @@ import { NxThemeService } from '@services/theme.service';
     encapsulation: ViewEncapsulation.None,
 })
 export class AppComponent {
-    constructor(
-        private themeService: NxThemeService,
-    ) {
+    constructor(private themeService: NxThemeService) {
         if (nxConfig.featureFlags.themesEnabled) {
             this.themeService.initTheme().then(
                 () => {}, // weird Safari 12
-                () => {}
+                () => {},
             );
         }
     }

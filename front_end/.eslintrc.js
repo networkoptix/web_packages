@@ -545,6 +545,7 @@ module.exports = {
                 // '*.js', '*.ts'
                 '*.module.ts',
                 '*types.ts',
+                'apps/authorization/**/*.ts',
                 'libs/[0-c]*/**/*.ts',
                 'libs/db/**/*.ts',
                 'libs/decorators/**/*.ts',

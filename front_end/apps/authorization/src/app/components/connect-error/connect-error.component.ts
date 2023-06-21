@@ -1,10 +1,4 @@
-import {
-    Component,
-    EventEmitter,
-    Input,
-    OnInit,
-    Output,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
 import * as staticLang from '@common/language/language_i18n_static.json';
@@ -27,8 +21,7 @@ export class NxAuthorizeConnectErrorComponent implements OnInit {
     @Input() processTryAgain: Process;
     @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
 
-    ngOnInit(): void {
-    }
+    ngOnInit(): void {}
 
     setupNonCloudSystem(): void {
         // future TO-DO

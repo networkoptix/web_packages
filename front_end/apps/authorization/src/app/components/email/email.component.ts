@@ -90,7 +90,7 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
         }
     }
 
-    ngOnDestroy(): void { }
+    ngOnDestroy(): void {}
 
     setupNonCloudSystem(): void {
         // TODO: waiting for new setup wizard

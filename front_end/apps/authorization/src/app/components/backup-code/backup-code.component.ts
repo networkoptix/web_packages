@@ -53,9 +53,7 @@ export class NxAuthorizeBackupCodeComponent implements OnInit, OnChanges, OnDest
     subHeaderSuffix: string | undefined;
     templateText: TemplateText;
 
-    constructor(
-        configService: NxConfigService
-    ) {
+    constructor(configService: NxConfigService) {
         this.CONFIG = configService.getConfig();
     }
 
@@ -76,7 +74,9 @@ export class NxAuthorizeBackupCodeComponent implements OnInit, OnChanges, OnDest
 
     ngOnChanges(changes: NgChanges<NxAuthorizeBackupCodeComponent>): void {
         if (changes.errorCode?.currentValue) {
-            this.backupCodeForm?.controls.backupCode.setErrors({ [changes.errorCode.currentValue]: true });
+            this.backupCodeForm?.controls.backupCode.setErrors({
+                [changes.errorCode.currentValue]: true,
+            });
         }
 
         if (!changes.clientType?.firstChange) {
@@ -92,5 +92,5 @@ export class NxAuthorizeBackupCodeComponent implements OnInit, OnChanges, OnDest
         }
     }
 
-    ngOnDestroy(): void { }
+    ngOnDestroy(): void {}
 }

@@ -35,7 +35,18 @@ import type { AuthorizeStateType } from '../authorize.component.types';
 @Component({
     selector: 'nx-authorize-create-account-component',
     standalone: true,
-    imports: [CommonModule, FormsModule, TranslateModule, AngularSvgIconModule, DirectivesModule, CheckboxModule, EmailModule, PasswordModule, PasswordValidationModule, ProcessButtonModule],
+    imports: [
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+        AngularSvgIconModule,
+        DirectivesModule,
+        CheckboxModule,
+        EmailModule,
+        PasswordModule,
+        PasswordValidationModule,
+        ProcessButtonModule,
+    ],
     templateUrl: 'create-account.component.html',
     styleUrls: ['create-account.component.scss'],
 })
@@ -87,10 +98,7 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
     @ViewChild('rowPassword', { static: false }) rowPassword: ElementRef<HTMLDivElement>;
     @ViewChild('rowTerms', { static: false }) rowTerms: ElementRef<HTMLElement>;
 
-    constructor(
-        @Inject(WINDOW) private window: Window
-    ) {
-    }
+    constructor(@Inject(WINDOW) private window: Window) {}
 
     ngOnInit(): void {
         if (this.loginEmail) {
@@ -106,7 +114,7 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
                 email: this.existingEmail || this.createEmail,
                 firstName: this.createFirstName,
                 lastName: this.createLastName,
-                password: this.createPassword
+                password: this.createPassword,
             });
         };
     }
@@ -117,17 +125,20 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
             this.createForm?.controls[eC[0]].setErrors({ [eC[1]]: true });
         }
         if (changes.footerItems) {
-            changes.footerItems.currentValue.forEach((item: { name: string; name_raw: string; url: string }) => {
-                if (item.name_raw === 'Terms') {
-                    this.termsUrl = item.url;
-                }
-                if (item.name_raw === 'Privacy') {
-                    this.privacyUrl = item.url;
-                }
-            });
+            changes.footerItems.currentValue.forEach(
+                (item: { name: string; name_raw: string; url: string }) => {
+                    if (item.name_raw === 'Terms') {
+                        this.termsUrl = item.url;
+                    }
+                    if (item.name_raw === 'Privacy') {
+                        this.privacyUrl = item.url;
+                    }
+                },
+            );
         }
         setTimeout(() => {
-            const insideHeight = this.rowEmail.nativeElement.offsetHeight +
+            const insideHeight =
+                this.rowEmail.nativeElement.offsetHeight +
                 this.rowName.nativeElement.offsetHeight +
                 this.rowPassword.nativeElement.offsetHeight +
                 this.rowTerms.nativeElement.offsetHeight;
@@ -135,7 +146,7 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
         });
     }
 
-    ngOnDestroy(): void { }
+    ngOnDestroy(): void {}
 
     externalLinkForDesktop(relativePath: string): false | undefined {
         if (this.window.nativeClient) {

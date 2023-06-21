@@ -6,7 +6,7 @@ import {
     OnInit,
     Output,
     OnChanges,
-    ViewChild
+    ViewChild,
 } from '@angular/core';
 import type { NgForm, NgModel } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
@@ -55,7 +55,7 @@ export class NxAuthorizeResetRequestComponent implements OnInit, OnChanges, OnDe
         if (changes.errorCode?.currentValue) {
             setTimeout(() => {
                 this.resetPasswordForm?.controls.resetPasswordEmail.setErrors({
-                    [changes.errorCode.currentValue]: true
+                    [changes.errorCode.currentValue]: true,
                 });
             });
         }
@@ -69,5 +69,5 @@ export class NxAuthorizeResetRequestComponent implements OnInit, OnChanges, OnDe
         }
     }
 
-    ngOnDestroy(): void { }
+    ngOnDestroy(): void {}
 }

@@ -17,12 +17,17 @@ if (environment.production) {
 
 function bootstrap(): void {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const bootstrapProviders = (...providers: Bootstrapable[]): Promise<any> => Promise.allSettled(providers.map(provider => provider.bootstrap())).then(providerResults => providerResults.map(res => res.status === 'fulfilled' && res.value).filter(val => !!val));
+    const bootstrapProviders = (...providers: Bootstrapable[]): Promise<any> =>
+        Promise.allSettled(providers.map(provider => provider.bootstrap())).then(providerResults =>
+            providerResults
+                .map(res => res.status === 'fulfilled' && res.value)
+                .filter(val => !!val),
+        );
 
-    bootstrapProviders(
-        DynamicConfig
-    ).then(providers => platformBrowserDynamic(providers).bootstrapModule(AppModule)
-        .catch(err => console.error(err))
+    bootstrapProviders(DynamicConfig).then(providers =>
+        platformBrowserDynamic(providers)
+            .bootstrapModule(AppModule)
+            .catch(err => console.error(err)),
     );
 }
 
