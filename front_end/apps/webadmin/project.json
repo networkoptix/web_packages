@@ -200,7 +200,13 @@
             "configurations": {
                 "ci": {
                     "ci": true,
-                    "codeCoverage": true
+                    "codeCoverage": true,
+                    "fileReplacements": [
+                        {
+                            "replace": "common/environments/environment.ts",
+                            "with": "common/environments/environment.unit.ts"
+                        }
+                    ]
                 }
             }
         }

@@ -6,4 +6,5 @@ export interface IEnvironment {
     readonly cloudHostDev?: string;
     readonly setupUrl?: string;
     readonly isWizard?: boolean;
+    readonly testing?: boolean;
 }

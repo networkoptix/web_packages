@@ -12,7 +12,7 @@ export class DynamicConfig {
         provide: typeof DynamicConfig;
         useValue: Omit<DynamicConfig, 'mapPropertiesToConfig'>;
     }> {
-        if (process.env.JEST_WORKER_ID !== undefined) {
+        if (environment.testing) {
             return { provide: DynamicConfig, useValue: { config: nxConfig } };
         }
         const preloadedAccount = await DynamicConfig.getAccount();
