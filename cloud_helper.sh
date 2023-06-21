@@ -36,13 +36,13 @@ function build_frontend(){
 }
 
 function brew_install() {
-    echo 'Checking for openssl'
-    brew install node n pyenv openssl docker docker-compose mysql-client
+    echo 'installing n pyenv openssl docker docker-compose mysql-client'
+    brew install n pyenv openssl docker docker-compose mysql-client
     echo "installing virtualenv"
     pip install virtualenv
     echo "installing poetry"
     pip install poetry==1.4.0
-    echo 'Installing node v12.18.4'
+    echo 'Installing node v18.15.0'
     n 18.15.0
     echo 'Installing python 3.8.10'
     pyenv install 3.8.10
