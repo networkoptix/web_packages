@@ -8,9 +8,9 @@ type ResponseTypes = 'arraybuffer' | 'blob' | 'text' | 'json';
 
 export interface RequestOpts {
     params?: RequestParams;
-    customHeaders?: Record<string, string>;
+    headers?: Record<string, string>;
     responseType?: ResponseTypes;
-    requestTimeout?: number;
+    timeout?: number;
 }
 
 export interface WithOptionalJson extends RequestOpts {
@@ -21,18 +21,13 @@ export interface WithResponseType<RT extends ResponseTypes> extends RequestOpts 
     responseType: RT;
 }
 
+export type WithoutRT = Omit<RequestOpts, 'responseType'>;
+
 /**
  * Defines our current api connection methods. This is used to move the endpoint definitions out of the classes.
  */
 export abstract class MediaserverBaseConnection {
     protected readonly notImplementedMsg: string;
-    protected abstract post<ResponseType = unknown>(
-        url: string,
-        data?: Record<string, unknown>,
-        paramsToAdd?: Record<string, unknown>,
-        customHeaders?: Record<string, unknown>,
-        customTimeout?: number,
-    ): Observable<ResponseType>;
 
     /* Because of how heavily overloaded the HttpClient's request methods are
     and the way they are structured, it requires a lot of overloading and
@@ -49,24 +44,18 @@ export abstract class MediaserverBaseConnection {
     protected abstract get(url: string, opts: WithResponseType<'text'>): Observable<string>;
     protected abstract get<T>(url: string, opts?: WithOptionalJson): Observable<T>;
 
-    protected patch?<ResponseType = unknown>(
+    protected abstract post<T>(
         url: string,
         data?: Record<string, unknown>,
-        paramsToAdd?: Record<string, unknown>,
-        customTimeout?: number,
-    ): Observable<ResponseType>;
-    protected put?<ResponseType = unknown>(
+        opts?: WithoutRT,
+    ): Observable<T>;
+    protected patch?<T>(
         url: string,
-        data?: Record<string, unknown>,
-        paramsToAdd?: Record<string, unknown>,
-        customTimeout?: number,
-    ): Observable<ResponseType>;
-    protected delete?<ResponseType = unknown>(
-        url: string,
-        params?: Record<string, unknown>,
-        customHttpHeaders?: Record<string, unknown>,
-        requestTimeout?: number,
-    ): Observable<ResponseType>;
+        data: Record<string, unknown>,
+        opts?: WithoutRT,
+    ): Observable<T>;
+    protected put?<T>(url: string, data?: Record<string, unknown>, opts?: WithoutRT): Observable<T>;
+    protected delete?<T>(url: string, opts?: WithoutRT): Observable<T>;
 }
 
 /**

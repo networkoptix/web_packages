@@ -13,7 +13,7 @@ export function proxyLegacyV1<T>(
     protocol: string,
     serverAddress: string,
     requestUrl: string,
-    data: RequestParams,
+    data: Record<string, unknown>,
     coercedEnglishError?: boolean,
 ): Observable<T> {
     if (environment.isLocal && protocol === 'https') {
@@ -26,9 +26,9 @@ export function proxyLegacyV1<T>(
         headers['Accept-Language'] = 'en-US';
     }
     if (method === 'get') {
-        return this.get(url, { params: data, customHeaders: headers });
+        return this.get(url, { params: data as RequestParams, headers });
     } else if (method === 'post') {
-        return this.post(url, data, headers);
+        return this.post(url, data, { headers });
     }
     throwError(new Error('Invalid http method type was passed.'));
 }

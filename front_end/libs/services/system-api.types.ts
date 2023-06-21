@@ -121,6 +121,8 @@ export interface SystemSettings {
     settings: Settings;
 }
 
+export type SystemSettingsResp = NormalResponse<SystemSettings>;
+
 interface SystemTimeReply {
     isTakenFromInternet: boolean;
     utcTimeMs: string;

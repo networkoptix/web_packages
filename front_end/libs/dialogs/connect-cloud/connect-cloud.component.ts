@@ -128,7 +128,7 @@ export class ConnectCloudModalContent extends ModalBase<DT['return']> implements
             });
     }
 
-    private handleConnectLocalToCloud(tokens: Token): Promise<void> {
+    private handleConnectLocalToCloud(tokens: Token): Promise<unknown> {
         const token = tokens.access_token;
         return this.http.get<Introspect>(
             this.CONFIG.cloudHost + '/oauth/introspect/',

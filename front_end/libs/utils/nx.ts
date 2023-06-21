@@ -372,3 +372,14 @@ export function withKeyMap(keys: RecursiveKeyMap<unknown>): string {
 
     return props.join(',');
 }
+
+/** Attach service to window for debugging from console */
+export function _attachToWindow(arg: object, name?: string): void {
+    const key = name ?? arg.constructor.name;
+    window[key] = arg;
+    console.info(
+        `${key}${
+            key !== arg.constructor.name ? ` (${arg.constructor.name})` : ''
+        } attached for debugging`,
+    );
+}

@@ -52,6 +52,7 @@ import type {
     RequestParams,
     WithOptionalJson,
     WithResponseType,
+    WithoutRT,
 } from './mediaserver-apis/connections/adapters/adapter-target-types';
 import { assertTransaction } from './mediaserver-apis/connections/methods/transaction-bus/types/transactions';
 import { getServerInfoRestV1 } from './mediaserver-apis/endpoints/get-server-info';
@@ -384,6 +385,20 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return !url.includes('rest');
     }
 
+    private parseRequestOpts(opts?: WithoutRT): {
+        params: HttpParams;
+        _headers: Record<string, string>;
+        customTimeout: number;
+    } {
+        const {
+            params: _params = {},
+            headers: _headers = {},
+            timeout: customTimeout = 60000,
+        } = opts ?? {};
+        const params = new HttpParams({ fromObject: _params });
+        return { params, _headers, customTimeout };
+    }
+
     private buildHeader(customHttpHeaders: IParams<string> = {}, useToken = false) {
         const accessToken = this.accessToken;
         let headers = new HttpHeaders();
@@ -410,27 +425,22 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         ).pipe(map(() => this.buildHeader(customHttpHeaders, this.requiresToken(url))));
 
     @useJsonRpc
-    protected delete<ResponseType = any>(
-        url: string,
-        params?: Record<string, unknown>,
-        customHttpHeaders: Record<string, unknown> = {},
-        requestTimeout = 60000,
-    ) {
-        params = params || {};
+    protected delete<T>(url: string, opts?: WithoutRT) {
+        const { params, _headers, customTimeout } = this.parseRequestOpts(opts);
 
         if (this.requiresWeb(url)) {
             url = `/web${url}`;
         }
         const fullUrl = `${this.urlBase}${url}`;
-        return this.#getHeaders(customHttpHeaders as Record<string, string>, url).pipe(
+        return this.#getHeaders(_headers, url).pipe(
             switchMap(headers =>
-                this.http.delete<ResponseType>(fullUrl, {
+                this.http.delete<T>(fullUrl, {
                     headers,
-                    params: params as Record<string, string>,
+                    params,
                 }),
             ),
             retryWhen(request => this.retryHandler(request)),
-            timeout(requestTimeout),
+            timeout(customTimeout),
             tap(undefined, error => {
                 if (environment.isLocal && error.name === 'TimeoutError') {
                     this.appState.systemAvailable$.next(false);
@@ -449,12 +459,8 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     @memoizeAsync(defaultHashFunction, () => false, 1000)
     @useJsonRpc
     protected override get(url: string, opts?: RequestOpts): Observable<unknown> {
-        const {
-            params = {},
-            customHeaders = {},
-            responseType = 'json',
-            requestTimeout = 60000,
-        } = opts ?? {};
+        const { params, _headers, customTimeout } = this.parseRequestOpts(opts);
+        const responseType = opts?.responseType ?? 'json';
 
         if (this.requiresWeb(url)) {
             url = `/web${url}`;
@@ -464,7 +470,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             url.includes('/rest/v1/login/sessions') &&
             url.includes('?setCookie=true');
         const fullUrl = `${this.urlBase}${url}`;
-        return this.#getHeaders(customHeaders, url).pipe(
+        return this.#getHeaders(_headers, url).pipe(
             switchMap(headers => {
                 let request: Observable<unknown>;
                 const otherOpts = { headers, params, withCredentials };
@@ -480,7 +486,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                 return request.pipe(startWithCache(fullUrl, { ...otherOpts, responseType }));
             }),
             retryWhen(request => this.retryHandler(request)),
-            timeout(requestTimeout),
+            timeout(customTimeout),
             tap(undefined, error => {
                 if (environment.isLocal && error.name === 'TimeoutError') {
                     this.appState.systemAvailable$.next(false);
@@ -490,78 +496,47 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     @useJsonRpc
-    protected post<ResponseType = any>(
-        url: string,
-        data?: any,
-        paramsToAdd = {},
-        customHeaders = {},
-        customTimeout = 60000,
-    ) {
-        data = data || {};
-
-        let params = new HttpParams();
-        Object.keys(paramsToAdd).forEach(key => {
-            params = params.append(key, paramsToAdd[key]);
-        });
+    protected post<T>(url: string, data?: Record<string, unknown>, opts?: WithoutRT) {
+        const { params, _headers, customTimeout } = this.parseRequestOpts(opts);
 
         url = `${this.urlBase}${url}`;
 
-        return this.#getHeaders(customHeaders, url).pipe(
-            switchMap(headers => this.http.post<ResponseType>(url, data, { params, headers })),
+        return this.#getHeaders(_headers, url).pipe(
+            switchMap(headers => this.http.post<T>(url, data || {}, { params, headers })),
             retryWhen(request => this.retryHandler(request)),
             timeout(customTimeout),
         );
     }
 
     @useJsonRpc
-    protected put<ResponseType = any>(
-        url: string,
-        data?: Record<string, unknown>,
-        paramsToAdd: Record<string, unknown> = {},
-        customTimeout = 60000,
-    ) {
-        data = data || {};
+    protected put<T>(url: string, data?: Record<string, unknown>, opts?: WithoutRT) {
+        const { params, _headers, customTimeout } = this.parseRequestOpts(opts);
 
         if (this.requiresWeb(url)) {
             url = `/web${url}`;
         }
 
-        let params = new HttpParams();
-        Object.keys(paramsToAdd).forEach(key => {
-            params = params.append(key, paramsToAdd[key] as string);
-        });
-
         url = `${this.urlBase}${url}`;
 
-        return this.#getHeaders({}, url).pipe(
-            switchMap(headers => this.http.put<ResponseType>(url, data, { params, headers })),
+        return this.#getHeaders(_headers, url).pipe(
+            switchMap(headers => this.http.put<T>(url, data || {}, { params, headers })),
             retryWhen(request => this.retryHandler(request)),
             timeout(customTimeout),
         );
     }
 
     @useJsonRpc
-    protected patch<ResponseType = unknown>(
-        url: string,
-        data?: Record<string, unknown>,
-        paramsToAdd: Record<string, unknown> = {},
-        customTimeout = 60000,
-    ) {
-        data = data || {};
+    protected patch<T>(url: string, data: Record<string, unknown>, opts?: WithoutRT) {
+        const { params, _headers, customTimeout } = this.parseRequestOpts(opts);
 
         if (this.requiresWeb(url)) {
             url = `/web${url}`;
         }
 
-        let params = new HttpParams();
-        Object.keys(paramsToAdd).forEach(key => {
-            params = params.append(key, paramsToAdd[key] as string);
-        });
-
         url = `${this.urlBase}${url}`;
 
-        return this.#getHeaders({}, url).pipe(
-            switchMap(headers => this.http.patch<ResponseType>(url, data, { params, headers })),
+        return this.#getHeaders(_headers, url).pipe(
+            switchMap(headers => this.http.patch<T>(url, data || {}, { params, headers })),
             retryWhen(request => this.retryHandler(request)),
             timeout(customTimeout),
         );
@@ -569,12 +544,12 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
 
     @memoizeAsync(defaultHashFunction, forceReload => !!forceReload, 10 * 1000)
     public getCurrentUser(forceReload?: boolean): Promise<t.ec2User | t.CurrentUser> {
-        let customHeaders: RequestOpts['customHeaders'];
+        let headers: RequestOpts['headers'];
         if (forceReload) {
             // Clean cache to
             this.currentUser = undefined;
             this.userRequest = undefined;
-            customHeaders = { 'reset-cache': 'reset' };
+            headers = { 'reset-cache': 'reset' };
         }
         if (this.currentUser) {
             // We have user - return him right away
@@ -588,7 +563,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         if (this.userEmail) {
             const endpoint = '/ec2/getUsers';
             this.cacheService.addToCache(endpoint);
-            this.userRequest = this.get<t.ec2User[]>(endpoint, { customHeaders })
+            this.userRequest = this.get<t.ec2User[]>(endpoint, { headers })
                 .toPromise()
                 .then(result => {
                     this.currentUser = result.find(user => {
@@ -598,7 +573,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                 });
         } else if (environment.isLocal && !this.CONFIG.newSystem) {
             const endpoint = `/rest/v1/login/sessions/${this.accessToken || 'current'}`;
-            this.userRequest = this.get<t.UserSession>(endpoint, { customHeaders })
+            this.userRequest = this.get<t.UserSession>(endpoint, { headers })
                 .toPromise()
                 .then(result => {
                     if (!this.accessToken) {
@@ -649,7 +624,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     loginToken(username: string, password: string, remember: boolean): Observable<t.UserSession> {
-        return this.post('/rest/v1/login/sessions', {
+        return this.post<t.UserSession>('/rest/v1/login/sessions', {
             username,
             password,
             setCookie: remember,
@@ -780,7 +755,9 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return this.updateSystemSettings$.pipe(
             throttleTime(1000),
             switchMap(() =>
-                this.get('/rest/v1/system/settings', { params: { _keepDefault: true } }),
+                this.get<t.Settings>('/rest/v1/system/settings', {
+                    params: { _keepDefault: true },
+                }),
             ),
             retry(3),
         );
@@ -789,17 +766,14 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     updateOrGetSettings(updateParams: Partial<t.Settings> = {}) {
         return (
             Object.keys(updateParams).length > 0
-                ? this.patch('/rest/v1/system/settings', updateParams)
+                ? this.patch<t.Settings>('/rest/v1/system/settings', updateParams)
                 : this.getSystemSettingsHandler()
         ).pipe(
-            map(
-                data =>
-                    <t.NormalResponse<t.SystemSettings>>{
-                        error: '0',
-                        errorString: '',
-                        reply: { settings: data },
-                    },
-            ),
+            map<t.Settings, t.SystemSettingsResp>(data => ({
+                error: '0',
+                errorString: '',
+                reply: { settings: data },
+            })),
         );
     }
 
@@ -811,7 +785,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         };
         return this.get<t.RestServerPartial[]>(endpoint, {
             params,
-            customHeaders: this.cacheHeader(useCache),
+            headers: this.cacheHeader(useCache),
         }).pipe(
             map(res => {
                 const servers = res.map<t.RestServerPartialCompat>(server => {
@@ -903,7 +877,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     detachFromSystem(currentPassword?: string, serverId?: string) {
-        return this.post(`/rest/v1/servers/${serverId || 'this'}/detach`);
+        return this.post<any>(`/rest/v1/servers/${serverId || 'this'}/detach`);
     }
 
     disconnectFromCloud(): Promise<void> {
@@ -930,7 +904,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             filter(force => force === forceReload),
             switchMap(() =>
                 this.get<t.MergeStatus>('/rest/v1/system/merge', {
-                    customHeaders: this.cacheHeader(!forceReload),
+                    headers: this.cacheHeader(!forceReload),
                 }),
             ),
         );
@@ -1007,8 +981,10 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                     ignoreIncompatible: false,
                     ignoreOfflineServerDuplicates: true,
                 };
-                return this.post<t.MergeSystems>('/rest/v1/system/merge', data, undefined, {
-                    'Accept-Language': 'en-US',
+                return this.post<t.MergeSystems>('/rest/v1/system/merge', data, {
+                    headers: {
+                        'Accept-Language': 'en-US',
+                    },
                 });
             }),
         );

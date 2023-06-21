@@ -177,21 +177,18 @@ export function useJsonRpc(
                     : '',
             );
             const method = originalMethod.name === 'put' ? 'patch' : originalMethod.name;
-            type GetArgs = Parameters<NxSystemRestAPI['get']>;
-            type WithDataArgs = Parameters<NxSystemRestAPI['post' | 'put' | 'patch']>;
-            type DeleteArgs = Parameters<NxSystemRestAPI['delete']>;
+
+            type NoDataArgs = Parameters<NxSystemRestAPI['get' | 'delete']>;
+            type WithDataArgs = Parameters<NxSystemRestAPI['post' | 'patch' | 'put']>;
             let params: Record<string, unknown>;
-            if (method === 'get') {
-                params = (args as GetArgs)[1]?.params;
-            } else if (['post', 'put', 'patch'].includes(method)) {
-                const [_url, data, paramsToAdd] = args as WithDataArgs;
-                params = { ...data, ...paramsToAdd };
+            if (['get', 'delete'].includes(method)) {
+                params = (args as NoDataArgs)[1]?.params;
             } else {
-                params = (args as DeleteArgs)[1];
+                const [_url, data = {}, opts = {}] = args as WithDataArgs;
+                const _params = opts.params ?? {};
+                params = { ...data, ..._params };
             }
-            // const params = ['post', 'put', 'patch'].includes(method)
-            //     ? { ...args[1], ...args[2] }
-            //     : args[1];
+
             const payload = generateJsonRpcPayload(endpoint, params, method);
             const isGet = method === 'get';
             const timeoutMs = isGet ? 1000 : 2500;

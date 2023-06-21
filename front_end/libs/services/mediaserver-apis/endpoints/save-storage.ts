@@ -8,5 +8,5 @@ export function saveStorageLegacyV1<T = { id: string }>(
     this: MediaserverLegacyConnection,
     updateParams: IParams,
 ): Observable<T> {
-    return this.post<T>('/ec2/saveStorage', updateParams, {}, {}, 60000);
+    return this.post<T>('/ec2/saveStorage', { params: updateParams, timeout: 60000 });
 }
