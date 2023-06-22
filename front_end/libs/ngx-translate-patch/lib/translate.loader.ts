@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
 export abstract class TranslateLoader {
-  abstract getTranslation(lang: string): Observable<any>;
+    abstract getTranslation(lang: string): Observable<any>;
 }
 
 /**

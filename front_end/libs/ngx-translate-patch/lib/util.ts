@@ -25,7 +25,11 @@ export function equals(o1: any, o2: any): boolean {
     if (o1 !== o1 && o2 !== o2) {
         return true;
     } // NaN === NaN
-    const t1 = typeof o1; const t2 = typeof o2; let length: number; let key: any; let keySet: any;
+    const t1 = typeof o1;
+    const t2 = typeof o2;
+    let length: number;
+    let key: any;
+    let keySet: any;
     if (t1 == t2 && t1 == 'object') {
         if (Array.isArray(o1)) {
             if (!Array.isArray(o2)) {
@@ -67,7 +71,7 @@ export function isDefined(value: any): boolean {
 }
 
 export function isObject(item: any): boolean {
-    return (item && typeof item === 'object' && !Array.isArray(item));
+    return item && typeof item === 'object' && !Array.isArray(item);
 }
 
 export function mergeDeep(target: any, source: any): any {
