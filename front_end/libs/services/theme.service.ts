@@ -53,6 +53,14 @@ export class NxThemeService {
         this.themeCustomProperty = this.cloudApi.customAccountPropertyFactory('theme', { theme: this.CONFIG.themeConfig.default as AvailableThemes });
         this.viewType = this.route.snapshot.queryParams.view_type || 'web';
 
+        if (this.CONFIG.themeConfig) {
+            // set availThemes //
+            Object.assign(this.availThemes, {
+                light: this.CONFIG.themeConfig.light,
+                dark: this.CONFIG.themeConfig.dark,
+            });
+        }
+
         this.route.queryParams
             .pipe(untilDestroyed(this))
             .subscribe(async (params: AuthorizeParams) => {
@@ -119,13 +127,6 @@ export class NxThemeService {
         if (this.viewType !== 'web') {
             return;
         }
-        if (this.CONFIG.themeConfig) {
-            // set availThemes //
-            Object.assign(this.availThemes, {
-                light: this.CONFIG.themeConfig.light,
-                dark: this.CONFIG.themeConfig.dark,
-            });
-        }
 
         if (!this.CONFIG.featureFlags.themesEnabled) {
             this.themeSelected = 'light';
@@ -134,10 +135,9 @@ export class NxThemeService {
         }
 
         this.themeSelected = this.sessionStorage.retrieve('theme');
-        NxConfigService.isDarkTheme = this.themeSelected === 'dark';
+        NxConfigService.isDarkTheme = this.themeSelected.startsWith('dark');
 
         this.darkThemeMq = this.window.matchMedia('(prefers-color-scheme: dark)');
-
         this.darkThemeMq.addEventListener('change', e => {
             this.themeSelected = this.sessionStorage.retrieve('theme');
             if (this.themeSelected !== 'auto') {

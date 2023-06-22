@@ -1,4 +1,4 @@
-{{#systemName}}
+{{systemName}}
 System: {{systemName}} {{systemSignature}}
 {{/systemName}}
 

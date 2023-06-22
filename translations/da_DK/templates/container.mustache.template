@@ -15,7 +15,7 @@
         <tr>
             <td class="side-spacer"></td>
             <td class="header">
-                {{#systemName}}
+                {{systemName}}
                 <div class="system-info">
                     <table>
                         <tbody>
