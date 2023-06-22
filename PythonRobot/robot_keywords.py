@@ -5,6 +5,7 @@ import selenium
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
 
 from variables import ALERT
 
@@ -34,6 +35,9 @@ def clear_element_text(driver: webdriver, locator: Tuple) -> None:
 
 def delete_all_text(driver: webdriver, locator: Tuple) -> None:
     driver.find_element(By.XPATH, locator).clear()
+
+def element_should_be_visible(driver: webdriver, locator: str, timeout: int = 10) -> None:
+    WebDriverWait(driver, timeout).until(EC.visibility_of_element_located((By.XPATH, locator)))
 
 def element_should_not_be_visible(driver: webdriver, locator: str, timeout: int = 10) -> None:
     WebDriverWait(driver, timeout).until_not(EC.visibility_of_element_located((By.XPATH, locator)))
@@ -93,3 +97,8 @@ def wait_until_textfield_contains(driver, locator, expected_text, timeout: int =
 
 def reload_page(driver: webdriver):
     driver.refresh()
+
+def mouse_over(driver, locator):
+    element = driver.find_element(locator)
+    action = ActionChains(driver)
+    action.move_to_element(element).perform()
