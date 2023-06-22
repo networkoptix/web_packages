@@ -22,6 +22,7 @@
         [buttonText]="'Apply' | translate"
         [clickFn]="apply"
         [process]="applyFunc"
+        [buttonDisabled]="isApplyDisabled"
         data-testid="applyChanges"
     ></nx-process-button>
     <nx-cancel-button

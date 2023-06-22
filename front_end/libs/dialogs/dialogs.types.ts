@@ -1,7 +1,6 @@
 import type { SelectionModel } from '@angular/cdk/collections';
 import type { DialogRef as CdkDialogRef } from '@angular/cdk/dialog';
 import type { EventEmitter, TemplateRef } from '@angular/core';
-import type { NgForm } from '@angular/forms';
 
 import type { Bookmark } from '@pages/systems/bookmarks/bookmarks.types';
 import type { ExportSelection } from '@pages/systems/view/vms-client/submodules/timeline/components/nx-webgl-canvas/selection/selection.types';
@@ -40,7 +39,7 @@ export interface DialogType<D = unknown, R = unknown> {
 interface ApplyData {
     applyFunc: Process;
     discardFunc?: () => void;
-    form: NgForm;
+    isApplyDisabled?: boolean;
 }
 export type Apply = DialogType<ApplyData, 'applied' | 'canceled' | 'discarded'>;
 

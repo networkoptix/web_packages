@@ -59,6 +59,8 @@ export class NxApplyService {
     private popupActive = false;
     private form: NgForm;
     private watchers: Watcher<any>[];
+    private isInvalid: boolean;
+    private invalidFieldsSet: Set<string> = new Set();
 
     private updatedWatchers$ = new Subject<string>();
     applyOnNavSubject = new BehaviorSubject('');
@@ -96,7 +98,7 @@ export class NxApplyService {
         this.setWarn('');
         if (this.applyComponentInstance) {
             this.applyComponentInstance.invalidFields = [];
-            this.applyComponentInstance._disabled = false;
+            this.applyComponentInstance.setIsSaveDisabled(false);
         }
     }
 
@@ -388,7 +390,7 @@ export class NxApplyService {
                             key => this.applyComponentInstance.forms[key].form.invalid,
                         );
 
-                        this.applyComponentInstance.setInvalid(hasInvalid);
+                        this.setIsInvalid(hasInvalid);
                     }
                 });
 
@@ -485,12 +487,13 @@ export class NxApplyService {
             applyFunc = this.applyComponentInstance.save;
             discardFunc = this.applyComponentInstance.discard;
         }
+        const isApplyDisabled = this.isInvalid;
 
         return firstValueFrom(
             this.dialog.open<DialogTypes['return'], DialogTypes['data']>(ApplyModalContent, {
                 width: DIALOG_SIZE.NORMAL,
                 disableClose: true,
-                data: { applyFunc, discardFunc, form },
+                data: { applyFunc, discardFunc, isApplyDisabled },
             }).closed,
         );
     }
@@ -574,22 +577,21 @@ export class NxApplyService {
         }
     }
 
-    public setInvalidField(name: string): void {
-        if (this.applyComponentRef) {
-            this.applyComponentRef.instance.setInvalidField(name);
-        }
+    public setInvalidField(fieldName: string): void {
+        this.invalidFieldsSet.add(fieldName);
+        this.setIsInvalid(!!this.invalidFieldsSet.size);
     }
 
-    public unsetInvalidField(name: string): void {
-        if (this.applyComponentRef) {
-            this.applyComponentRef.instance.unsetInvalidField(name);
-        }
+    public unsetInvalidField(fieldName: string): void {
+        this.invalidFieldsSet.delete(fieldName);
+        this.setIsInvalid(!!this.invalidFieldsSet.size);
     }
 
-    public setInvalid(flag: boolean): void {
+    public setIsInvalid(isInvalid: boolean): void {
         if (this.applyComponentRef) {
-            this.applyComponentRef.instance.setInvalid(flag);
+            this.applyComponentRef.instance.setIsSaveDisabled(isInvalid);
         }
+        this.isInvalid = isInvalid;
     }
 
     /**
@@ -597,7 +599,7 @@ export class NxApplyService {
      * 1) For each watcher create a new observable that only fires when the observable
      *     has a distinct change and the new value is not undefined.
      * 2) Clone and join all the new observables into one observable.
-     * 3) Skip watchers.length to avoid firing when the initial values are set for the watchers.
+     * 3) Skip `watchers.length` to avoid firing when the initial values are set for the watchers.
      * 4) If any of the watchers are changed show the NxApplyComponent and block navigation
      *     until the user saves or discards the changes.
      * @param watchers

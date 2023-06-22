@@ -33,10 +33,9 @@ export class NxApplyComponent {
     show = false;
     applyVisible = false;
     isOnline = false;
+    isSaveDisabled: boolean = false;
     ready = false;
     invalidFields: string[] = [];
-
-    _disabled: boolean;
 
     @HostListener('document:keypress', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent): void {
@@ -51,25 +50,9 @@ export class NxApplyComponent {
         }
     }
 
-    constructor(@Inject(DOCUMENT) private document: Document) {
-        this._disabled = false;
-    }
+    constructor(@Inject(DOCUMENT) private document: Document) {}
 
-    setInvalidField(field: string): void {
-        this.invalidFields.push(field);
-        this._disabled = !!this.invalidFields.length;
-    }
-
-    unsetInvalidField(name: string): void {
-        this.invalidFields.forEach((item, index) => {
-            if (item === name) {
-                this.invalidFields.splice(index, 1);
-                this._disabled = !!this.invalidFields.length;
-            }
-        });
-    }
-
-    setInvalid(flag: boolean): void {
-        this._disabled = flag;
+    setIsSaveDisabled(isSaveDisabled: boolean): void {
+        this.isSaveDisabled = isSaveDisabled;
     }
 }

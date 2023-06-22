@@ -25,8 +25,7 @@
             <nx-process-button
                 [process]="save"
                 [actionType]="'primary min-w-120'"
-                [buttonDisabled]="!isOnline || _disabled"
-                [form]="form"
+                [buttonDisabled]="!isOnline || isSaveDisabled"
                 [clickFn]="submitFn"
                 buttonText="{{ 'Save' | translate }}"
                 data-testid="saveSettingsBtn"

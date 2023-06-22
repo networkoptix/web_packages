@@ -4,7 +4,6 @@ import {
     Inject,
     OnInit,
 } from '@angular/core';
-import { NgForm } from '@angular/forms';
 
 import { Process } from '@services/process.service/process';
 import { pickFrom } from '@utils/general';
@@ -19,7 +18,7 @@ import type { Apply as DialogTypes } from '../dialogs.types';
 export class ApplyModalContent implements OnInit {
     applyFunc: Process;
     discardFunc?: () => void;
-    form: NgForm;
+    isApplyDisabled?: boolean = false;
 
     constructor(
         private dialogRef: DialogRef<DialogTypes['return']>,
@@ -27,13 +26,10 @@ export class ApplyModalContent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        pickFrom(this.dialogData, ['applyFunc', 'discardFunc', 'form'], this);
+        pickFrom(this.dialogData, ['applyFunc', 'discardFunc', 'isApplyDisabled'], this);
     }
 
     apply = (): void => {
-        if (this.form) {
-            this.form.form.markAllAsTouched();
-        }
         this.applyFunc.then(() => {
             this.close('applied');
         }, () => {

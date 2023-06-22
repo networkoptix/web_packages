@@ -183,7 +183,7 @@ export class Process {
 
     /**
      * @deprecated
-     * This method is to maintain compatibilty with existing code.
+     * This method is to maintain compatibility with existing code.
      *
      * For readability successHandler and errorHandler should be assigned
      * when calling NxProcessService.createProcess.
