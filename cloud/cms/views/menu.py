@@ -23,22 +23,21 @@ def get_menu(request, name):
     customization = request.CUSTOMIZATION
     menu_cache = MenuCache(customization_name=customization)
     cached = request.query_params.get('cached')
-    current_version = menu_cache[(f'{customization}_key')]
+    current_version = menu_cache.get_cur_version()
 
     if not cached or not current_version or cached != current_version:
         if not current_version:
-            current_version = str(uuid4())
-            menu_cache[(f'{customization}_key')] = current_version
+            current_version = menu_cache.set_new_version()
         return redirect(f'{reverse("get_menu", kwargs={"name": name})}?cached={current_version}')
 
     name = name.lower()
-    cached_menus = menu_cache[customization] or {}
-    menu  = cached_menus.get(name, None)
+    cached_menus = menu_cache.get_customization_menus() or {}
+    menu = cached_menus.get(name, None)
     if not menu:
         menu = Menu.generate_menu(menu_name=name, customization=customization)
         if menu:
             cached_menus = cached_menus or Menu.generate_menus(customization=customization)
-            menu_cache[customization] = {**cached_menus, name: menu}
+            menu_cache.set_customization_menus({**cached_menus, name: menu})
         else:
             raise APINotFoundException(f'Menu {name} not found')
 

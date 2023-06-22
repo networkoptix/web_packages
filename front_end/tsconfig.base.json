@@ -29,6 +29,7 @@
                 "node_modules/nx-open-web/packages/*",
                 "node_modules/nx-open-web-candidate/packages/*"
             ],
+            "@ngx-translate/core": ["libs/ngx-translate-patch/index.ts"],
             "@pages/*": ["libs/features/*"],
             "@pipes/*": ["libs/pipes/*"],
             "@resolvers/*": ["libs/resolvers/*"],

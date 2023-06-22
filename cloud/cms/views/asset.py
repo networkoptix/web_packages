@@ -254,7 +254,10 @@ def page_editor(request):
         customization_reviews = AssetCustomizationReview.objects.\
             filter(state=AssetCustomizationReview.REVIEW_STATES.pending,
                    version_id=ContentVersion.objects.filter(asset=asset).latest('created_date'))
-
+        # clear menu caches if asset is documentation
+        if asset.asset_type.type == AssetType.ASSET_TYPES.documentation:
+            for pending_review in customization_reviews:
+                MenuCache(customization_name=pending_review.customization.name).clear_customization_data()
         # If the current customization is in the list of reviews go to that one.
         # Otherwise go to the first customization in the list of reviews.
         try:
@@ -304,6 +307,7 @@ def accept_review(request):
     if can_accept and asset_review.state == AssetCustomizationReview.REVIEW_STATES.pending:
         modify_db.update_draft_state(
             review_id, AssetCustomizationReview.REVIEW_STATES.accepted, request.user)
+        MenuCache(customization_name=asset_review.customization.name).clear_customization_data()
         return api_success('Accepted')
 
     raise APIForbiddenException(CANT_ACCEPT)
@@ -313,12 +317,15 @@ def publish_review(request, target_review, target_customization='', message=True
     asset = target_review.version.asset
     customization = target_review.customization.name
     target_review_id = target_review.id
-    menu_cache = MenuCache(request=request)
-    customization_cache = menu_cache[customization]
+    # MenuCache must be invalidated for target_review customization not for the request one
+    menu_cache = MenuCache(customization_name=customization)
+    customization_cache = menu_cache.get_customization_menus()
     if customization_cache:
-        menus = {node.get_parent() for node in asset.nodes.all()}
-        if len(menus):
-            menu_cache[customization] = None
+        # menus = {node.get_parent() for node in asset.nodes.all()}
+        # if len(menus):
+        # menus length will be always more then 0 if nodes queryset exists
+        if asset.nodes.exists():
+            menu_cache.clear_customization_data()
     if asset.is_cloud_portal:
         # Integration cache does not allow partial initiation, all attributes needed for lookup
         # generation must be set.
@@ -342,7 +349,7 @@ def publish_review(request, target_review, target_customization='', message=True
         if asset.is_documentation:
             # Menu and Documentation caches must be cleared together
             clear_documentation_cache = any(node.get_parent().type == Menu.MENU_TYPES.docs_knowledgebase for node in asset.nodes.all())
-            MenuCache(customization_name=request.CUSTOMIZATION).clear_cache(clear_documentation_cache=clear_documentation_cache)
+            menu_cache.clear_cache(clear_documentation_cache=clear_documentation_cache)
             zd_articles = ZendeskArticle.objects.filter(
                 asset__id=asset.id, site__customization__name=target_customization)
             if zd_articles:
@@ -492,7 +499,8 @@ def handle_revoke(request, asset_review, can_publish):
     else:
         modify_db.update_draft_state(
             review_id, AssetCustomizationReview.REVIEW_STATES.rejected, request.user)
-
+    if asset.is_cloud_portal or asset.is_documentation:
+        MenuCache(customization_name=asset_review.customization.name).clear_customization_data()
     return 'success', f"Version {asset_review.version.id} has been revoked"
 
 
@@ -523,7 +531,8 @@ def handle_reject_or_ask(request, asset_review):
         message = f'\nMessage: {note}\n'
     asset_review.notes += message
     asset_review.save()
-
+    if asset_review.version.asset.is_cloud_portal or asset_review.version.asset.is_documentation:
+        MenuCache(customization_name=asset_review.customization.name).clear_customization_data()
     return message_to_display
 
 

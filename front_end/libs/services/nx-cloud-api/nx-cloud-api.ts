@@ -233,7 +233,7 @@ export class NxCloudApiService {
         return false;
     }
 
-    @swClear('cloudSystemAPI', '/systems', false)
+    @swClear('cloudSystemAPI', '/systems', true)
     disconnect(systemId: string) {
         // Use cloudDbApi once TempCredentials have been added to cloudDbApi
         return this.http

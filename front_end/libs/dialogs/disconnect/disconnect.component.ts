@@ -1,6 +1,7 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { Component, Inject } from '@angular/core';
-import { of, Subject, takeUntil } from 'rxjs';
+import { Observable, of, Subject, takeUntil, timer } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -10,12 +11,14 @@ import { environment } from '@environments/environment';
 import type { IEnvironment } from '@environments/environment-config';
 import { servers, toast } from '@lib/variables/static-variables';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import { System } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxSystemAPIService } from '@services/system-api.service';
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
+import { memoizeAsyncPersistent } from '@utils/memoize';
 
 import type { Disconnect as DT } from '../dialogs.types';
 
@@ -29,6 +32,7 @@ export class DisconnectModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;
     disconnect: Process;
     unsub$ = new Subject<boolean>();
+    updateInterval: number = 3000;
 
     constructor(
         private processService: NxProcessService,
@@ -45,64 +49,77 @@ export class DisconnectModalContent extends ModalBase<DT['return']> {
     }
 
     ngOnInit(): void {
-        this.disconnect = this.processService.createProcess(() => {
-            this.lock();
+        this.disconnect = this.processService.createProcess(
+            () => {
+                this.lock();
 
-            if (this.environment.isLocal) {
-                return this.disconnectLocal();
-            }
-            return new Promise<void>((resolve, reject) => {
-                this.cloudApiService.disconnect(this.system.id).then(() => {
-                    this.systemsService.systemsSubject
-                        .pipe(
-                            takeUntil(this.unsub$)
-                        )
-                        .subscribe(systems => {
-                            if (!systems.find(sys => sys.id === this.system.id)) {
-                                this.unsub$.next(true);
-                                resolve();
-                            }
-                        });
-                    this.systemsService.userDisconnectSystem = true;
-                    this.systemsService.forceUpdateSystemsAsPromise().then(() => {});
-                }).catch(e => reject(e));
-            });
-        }, {
-            ignoreError: true,
-            ignoreUnauthorized: true
-        }, res => {
-            this.close(true);
-            this.toastService.notify(
-                this.LANG.toastMessage.system.disconnected.success,
-                toast.success,
-            );
-        }, err => {
-            if (err?.resultCode === servers.errors.userPasswordRequired || err.errorId === servers.errors.oldSessionErrorId) {
+                if (this.environment.isLocal) {
+                    return this.disconnectLocal();
+                }
+                return new Promise<void>((resolve, reject) => {
+                    this.cloudApiService
+                        .disconnect(this.system.id)
+                        .then(() => {
+                            this.getSystems()
+                                .pipe(takeUntil(this.unsub$))
+                                .subscribe(systems => {
+                                    if (!systems.find(sys => sys.id === this.system.id)) {
+                                        this.unsub$.next(true);
+                                        resolve();
+                                    }
+                                });
+                            this.systemsService.userDisconnectSystem = true;
+                            this.systemsService.forceUpdateSystemsAsPromise().then(() => {});
+                        })
+                        .catch(e => reject(e));
+                });
+            },
+            {
+                ignoreError: true,
+                ignoreUnauthorized: true,
+            },
+            res => {
+                this.close(true);
                 this.toastService.notify(
-                    this.LANG.dialogs.updateSession.disconnect,
-                    toast.warning,
+                    this.LANG.toastMessage.system.disconnected.success,
+                    toast.success,
                 );
-            } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
-                this.unlock();
-                return this.dialogs.expiredSession().then(() => this.window.location.reload());
-            } else {
-                this.unlock();
-            }
-        });
+            },
+            err => {
+                if (
+                    err?.resultCode === servers.errors.userPasswordRequired ||
+                    err.errorId === servers.errors.oldSessionErrorId
+                ) {
+                    this.toastService.notify(
+                        this.LANG.dialogs.updateSession.disconnect,
+                        toast.warning,
+                    );
+                } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
+                    this.unlock();
+                    return this.dialogs.expiredSession().then(() => this.window.location.reload());
+                } else {
+                    this.unlock();
+                }
+            },
+        );
     }
 
     override close = (msg?: DT['return']): void => {
         this.dialogRef.close(msg);
     };
 
+    @memoizeAsyncPersistent
+    getSystems(): Observable<System[]> {
+        return timer(0, this.updateInterval).pipe(
+            switchMap(() => {
+                return this.cloudApiService.systems();
+            }),
+        );
+    }
+
     private disconnectLocal(): Promise<void> {
         return this.systemApiService
-            .createConnection<NxSystemRestAPI>(
-                undefined,
-                undefined,
-                undefined,
-                () => of('')
-            )
+            .createConnection<NxSystemRestAPI>(undefined, undefined, undefined, () => of(''))
             .disconnectFromCloud();
     }
 }

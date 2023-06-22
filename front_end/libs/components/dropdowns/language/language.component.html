@@ -9,8 +9,8 @@
     }"
     (nxClickElsewhere)="show = false"
 >
-    <ng-template *ngIf="inHeader; then newHeaderLangDropdown"></ng-template>
-    <ng-template *ngIf="inFooter; then newFooterLangDropdown"></ng-template>
+    <ng-template *ngIf="inHeader && newHeader; then newHeaderLangDropdown"></ng-template>
+    <ng-template *ngIf="inFooter && newHeader; then newFooterLangDropdown"></ng-template>
     <button
         *ngIf="!newHeader || (!inHeader && !inFooter)"
         class="btn btn-dropdown-toggle dropdown-toggle"

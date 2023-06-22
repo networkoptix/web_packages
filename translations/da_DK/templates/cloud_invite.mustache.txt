@@ -7,6 +7,6 @@ Du er blevet inviteret til %CLOUD_NAME%.
 
 {{/message.message}}
 Opret venligst en konto på %CLOUD_NAME%
-bruge din nuværende e-mailadresse og følge yderligere instruktioner.
+brug din nuværende e-mailadresse og følge yderligere instruktioner.
 
 Registrer din konto vha. dette link: {{ config.portal_url }}/authorize/register/{{ message.code }}

@@ -1,6 +1,11 @@
 @use "typography";
 @use "theme_variables_common" as *;
 
+:host {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 .logo-wrapper {
     width: 256px;
@@ -9,8 +14,6 @@
         @include typography.regular20nocolor;
         color: var(--header-logo-text-color) !important;
         border-right: 1px solid var(--header-logo-border);
-        height: 26px;
-        margin: 15px 0px;
 
         svg-icon {
             display: flex;

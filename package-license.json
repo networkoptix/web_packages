@@ -3968,12 +3968,6 @@
             "path": "cloud_portal/front_end/node_modules/@nguniversal/express-engine",
             "licenseFile": "cloud_portal/front_end/node_modules/@nguniversal/express-engine/README.md"
         },
-        "@ngx-translate/core@14.0.0": {
-            "licenses": "MIT",
-            "repository": "https://github.com/ngx-translate/core",
-            "publisher": "Olivier Combe",
-            "path": "cloud_portal/front_end/node_modules/@ngx-translate/core"
-        },
         "@nodelib/fs.scandir@2.1.5": {
             "licenses": "MIT",
             "repository": "https://github.com/nodelib/nodelib/tree/master/packages/fs/fs.scandir",

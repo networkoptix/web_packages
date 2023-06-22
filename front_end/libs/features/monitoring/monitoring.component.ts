@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateService } from '@ngx-translate/core';
 import { Subject, filter, takeUntil } from 'rxjs';
 
 import { NxMenuService } from '@app/menu/menu.service';
@@ -14,6 +15,10 @@ import { NxAppSourceService } from '@services/nx-app-source.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 
+type MonitoringDropdownItem = DropdownItem<string> & {
+    serverOffline: boolean;
+};
+
 @UntilDestroy()
 @Component({
     selector: 'nx-monitoring',
@@ -26,8 +31,8 @@ export class NxMonitoringComponent implements OnInit {
     content: Content;
     system: NxSystem;
     account: Account;
-    selectableServers: DropdownItem<string>[] = [];
-    selectedServer: DropdownItem<string>;
+    selectableServers: MonitoringDropdownItem[] = [];
+    selectedServer: MonitoringDropdownItem;
     systemOnline: boolean = true;
     icons = icons;
 
@@ -40,6 +45,7 @@ export class NxMonitoringComponent implements OnInit {
         private sourceService: NxAppSourceService,
         private accountService: NxAccountService,
         private systemService: NxSystemService,
+        private translateService: TranslateService,
     ) {
         this.content = {
             base: '',
@@ -68,10 +74,16 @@ export class NxMonitoringComponent implements OnInit {
             .pipe(untilDestroyed(this), takeUntil(this.destroy$))
             .subscribe(servers => {
                 this.selectableServers = servers.map(server => {
+                    const serverOffline = server.status !== 'Online';
+                    const serverName = serverOffline
+                        ? this.translateService.instant(this.LANG.healthMonitor.serverName, {
+                              name: server.name,
+                          })
+                        : server.name;
                     return {
                         value: server.id,
-                        name: server.name,
-                        disabled: server.status !== 'Online',
+                        name: serverName,
+                        serverOffline,
                     };
                 });
                 this.syncQueryParamWithSelectedServer();

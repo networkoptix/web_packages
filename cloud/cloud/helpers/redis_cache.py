@@ -340,9 +340,9 @@ class AsyncCacheClient:
         value = await self._serializer.adumps(value)
         await client.hset(key, field, value)
 
-    async def unlink(self, key):
-        client = self.get_client(key, write=True)
-        await client.unlink(key)
+    async def unlink(self, *keys):
+        client = self.get_client(key=None, write=True)
+        await client.unlink(*keys)
 
 
 class CustomRedisClient(RedisCacheClient):
@@ -503,13 +503,21 @@ class CustomRedisClient(RedisCacheClient):
         value = self._serializer.dumps(value)
         client.hset(key, field, value)
 
-    def unlink(self, key):
-        client = self.get_client(key, write=True)
-        client.unlink(key)
+    def unlink(self, *keys):
+        client = self.get_client(None, write=True)
+        client.unlink(*keys)
 
     def expire(self, key, timeout):
         client = self.get_client(key)
         return client.expire(key, timeout)
+
+    def scan(self, key, cursor=0, match='*', count=None):
+        client = self.get_client(key, write=True)
+        return client.scan(key, cursor=cursor, match=match, count=count)
+
+    def scan_iter(self, match=None, count=None):
+        client = self.get_client(match, write=True)
+        return client.scan_iter(match=match, count=count)
 
 
 class CustomRedisCache(RedisCache):
@@ -717,5 +725,11 @@ class CustomRedisCache(RedisCache):
     async def aclear(self):
         return await self._async_cache.clear()
 
-    # async def aclose(self):
-    #     await self._async_cache.aclose()
+    def scan_unlink(self, match='*', count=None, version=None):
+        match = self.make_and_validate_key(match, version=version)
+        for key in self._cache.scan_iter(match=match, count=count):
+            self._cache.unlink(key)
+
+    def unlink(self, keys, version=None):
+        keys = [self.make_and_validate_key(key, version=version) for key in keys]
+        self._cache.unlink(*keys)

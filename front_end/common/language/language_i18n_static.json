@@ -1476,7 +1476,8 @@
             "apiCalls1m": "API Calls/s",
             "thumbnails1m": "Thumbnails/s",
             "activePlugins": "Active plugins list"
-        }
+        },
+        "serverName": "{name} (Offline)"
     },
     "headerLabels": {
         "healthReportForSystem": "Health Report For System {systemName}"

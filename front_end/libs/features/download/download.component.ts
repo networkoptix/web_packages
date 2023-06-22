@@ -90,7 +90,14 @@ export class DownloadComponent implements OnInit {
                 this.otherPackages = platform.files;
             } else {
                 // Ensures the first client found is always selected for the download button.
-                const client = platform.files.find(({ appType }) => appType === 'client');
+                let client: Installer;
+                const clients = platform.files.filter(({ appType }) => appType === 'client');
+                if (platform.name === 'macos') {
+                    client = clients.find(({ platform }) => platform === 'macos_arm64');
+                }
+                if (!client) {
+                    client = clients.shift();
+                }
                 this.downloadButton = client;
                 // Remove the download button from the other packages.
                 this.otherPackages = platform.files.filter(

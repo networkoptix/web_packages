@@ -16,6 +16,7 @@
         "serve-dev3": "export CLOUD_TARGET=dev3 && npm run serve:cloud",
         "serve-stage": "export CLOUD_TARGET=stage && npm run serve:cloud",
         "serve-regress": "export CLOUD_TARGET=regress && npm run serve:cloud",
+        "serve-meta": "export CLOUD_TARGET=meta && npm run serve:cloud",
         "serve-webadmin": "npm run serve:webadmin",
         "serve-webadmin-local": "export WEBADMIN_TARGET=local && npm run serve:webadmin",
         "serve-webadmin-demo": "export WEBADMIN_TARGET=demo && npm run serve:webadmin",

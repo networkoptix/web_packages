@@ -40,7 +40,7 @@
     <header>
         <h4 translate>System Monitoring</h4>
     </header>
-    <nx-section *ngIf="selectedServerId; else unavailable">
+    <nx-section *ngIf="selectedServerId && !offline; else unavailable">
         <ng-container *ngTemplateOutlet="chart"></ng-container>
     </nx-section>
 </nx-block>

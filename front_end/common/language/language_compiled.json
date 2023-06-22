@@ -1779,6 +1779,7 @@
     "{hex} - green {label}": "{hex} - green {label}",
     "{hex} - light{number}": "{hex} - light{number}",
     "{hex} - yellow {label}": "{hex} - yellow {label}",
+    "{name} (Offline)": "{name} (Offline)",
     "{name} Requirements": "{name} Requirements",
     "{numUsers} users from this system have accounts with disabled two-factor authentication. They will not be able to log in to the system.": "{numUsers} users from this system have accounts with disabled two-factor authentication. They will not be able to log in to the system.",
     "{number} more required": "{number} more required",
