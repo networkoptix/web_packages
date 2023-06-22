@@ -28,6 +28,10 @@ class TestCustomRedisCache:
         }
         assert redis.Redis.hset.__annotations__ == annotations
 
+    def test_databases_max_index(self):
+        ret = self.cache._cache.get_client().config_get('databases')
+        assert int(ret['databases']) == 32
+
     def fill_test_set(self):
         for f, v in self.test_set.items():
             self.cache.hset(self.key, f, v)

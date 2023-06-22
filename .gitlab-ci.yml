@@ -106,6 +106,9 @@ no-changes:
       alias: mysql
     - name: redis:5.0.6-alpine
       alias: redis
+      command:
+        - redis-server
+        - --databases 32
   variables:
     TESTING: "true"
     MYSQL_DATABASE: "cloudportal"

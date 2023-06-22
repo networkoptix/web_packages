@@ -346,31 +346,31 @@ CACHES = {
     "readonly_apis": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": REDIS_CACHE['TIMEOUT'],
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/15',
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/16',
         "KEY_PREFIX": 'readonly_apis'
     },
     "license_servers": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT" : None,
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/1',
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/17',
         "KEY_PREFIX": 'license_servers'
     },
     "requests": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": REDIS_CACHE['TIMEOUT'],
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/13',
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/18',
         "KEY_PREFIX": 'requests'
     },
     "rate_limits": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": REDIS_CACHE['TIMEOUT'],
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/13',
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/19',
         "KEY_PREFIX": 'rate_limits'
     },
     "assets_values": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": REDIS_CACHE['TIMEOUT'],
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/6',
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/20',
         "KEY_PREFIX": 'assets_values'
     },
     "sessions": {
