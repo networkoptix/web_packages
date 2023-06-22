@@ -10,16 +10,12 @@ const routes: Routes = [
     {
         path: '',
         title: 'twofaRequired',
-        component: TwofaRequiredComponent
-    }
+        component: TwofaRequiredComponent,
+    },
 ];
 
 @NgModule({
     declarations: [TwofaRequiredComponent],
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes),
-        PagePlaceHolderModule
-    ]
+    imports: [CommonModule, RouterModule.forChild(routes), PagePlaceHolderModule],
 })
 export class TwofaRequiredModule {}

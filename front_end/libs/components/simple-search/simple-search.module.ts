@@ -18,12 +18,8 @@ import { NxSimpleSearchComponent } from './simple-search.component';
         TranslateModule,
         NxSearchHighlightModule,
     ],
-    declarations: [
-        NxSimpleSearchComponent,
-    ],
+    declarations: [NxSimpleSearchComponent],
     providers: [],
-    exports: [
-        NxSimpleSearchComponent,
-    ]
+    exports: [NxSimpleSearchComponent],
 })
 export class NxSimpleSearchModule {}

@@ -6,19 +6,9 @@ import { DirectivesModule } from '@directives/directives.module';
 import { NxNavLocationDropdown } from './nav.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        DirectivesModule
-    ],
-    declarations: [
-        NxNavLocationDropdown
-    ],
-    providers: [
-        NxNavLocationDropdown
-    ],
-    exports: [
-        NxNavLocationDropdown
-    ]
+    imports: [CommonModule, DirectivesModule],
+    declarations: [NxNavLocationDropdown],
+    providers: [NxNavLocationDropdown],
+    exports: [NxNavLocationDropdown],
 })
-
 export class NavModule {}

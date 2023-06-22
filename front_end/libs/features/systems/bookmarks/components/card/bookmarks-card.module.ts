@@ -22,14 +22,10 @@ import { NxBookmarksCardComponent } from './bookmarks-card.component';
         PreLoaderModule,
         PlayerPlaceholderModule,
         DirectivesModule,
-        TranslateModule
+        TranslateModule,
     ],
-    declarations: [
-        NxBookmarksCardComponent,
-    ],
+    declarations: [NxBookmarksCardComponent],
     providers: [],
-    exports: [
-        NxBookmarksCardComponent,
-    ]
+    exports: [NxBookmarksCardComponent],
 })
 export class NxBookmarksCardModule {}

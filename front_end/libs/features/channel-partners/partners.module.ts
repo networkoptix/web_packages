@@ -26,7 +26,7 @@ export const cloudPartnersRoutes: Routes = [
         canActivate: [FeatureGuard, TwofaGuard],
         data: {
             flags: FeatureFlagStrings.channelPartners,
-            override: FeatureFlagStrings.channelPartners
+            override: FeatureFlagStrings.channelPartners,
         },
         children: [
             {
@@ -48,9 +48,9 @@ export const cloudPartnersRoutes: Routes = [
                 path: 'partner/:id',
                 title: '',
                 component: NxPartnerOrganizationsListComponent,
-            }
-        ]
-    }
+            },
+        ],
+    },
 ];
 
 @NgModule({
@@ -66,16 +66,9 @@ export const cloudPartnersRoutes: Routes = [
         NxPartnerOrganizationsListModule,
         PreLoaderModule,
     ],
-    providers: [
-    ],
-    declarations: [
-        NxChannelPartnersComponent,
-    ],
-    bootstrap: [
-    ],
-    exports: [
-        NxChannelPartnersComponent
-    ]
+    providers: [],
+    declarations: [NxChannelPartnersComponent],
+    bootstrap: [],
+    exports: [NxChannelPartnersComponent],
 })
-export class NxChannelPartnersModule {
-}
+export class NxChannelPartnersModule {}

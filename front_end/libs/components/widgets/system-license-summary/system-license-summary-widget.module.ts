@@ -24,15 +24,8 @@ import { NxSystemLicenseSummaryWidget } from './system-license-summary-widget.co
         PreLoaderModule,
         StepperModule,
     ],
-    declarations: [
-        NxSystemLicenseSummaryWidget
-    ],
-    providers: [
-        NxSystemLicenseSummaryWidget
-    ],
-    exports: [
-        NxSystemLicenseSummaryWidget
-    ]
+    declarations: [NxSystemLicenseSummaryWidget],
+    providers: [NxSystemLicenseSummaryWidget],
+    exports: [NxSystemLicenseSummaryWidget],
 })
-
-export class SystemLicenseSummaryModule { }
+export class SystemLicenseSummaryModule {}

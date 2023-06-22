@@ -6,19 +6,9 @@ import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.
 import { NxLayoutRightComponent } from './layout.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        PreLoaderModule,
-    ],
-    declarations: [
-        NxLayoutRightComponent
-    ],
-    providers: [
-        NxLayoutRightComponent
-    ],
-    exports: [
-        NxLayoutRightComponent
-    ]
+    imports: [CommonModule, PreLoaderModule],
+    declarations: [NxLayoutRightComponent],
+    providers: [NxLayoutRightComponent],
+    exports: [NxLayoutRightComponent],
 })
-
 export class LayoutRightModule {}

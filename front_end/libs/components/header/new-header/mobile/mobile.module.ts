@@ -8,21 +8,9 @@ import { MobileHeaderMenuModule } from './mobile-menu/mobile-menu.module';
 import { NxHeaderMobileComponent } from './mobile.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        AngularSvgIconModule,
-        HeaderLogoAreaModule,
-        MobileHeaderMenuModule,
-    ],
-    declarations: [
-        NxHeaderMobileComponent
-    ],
-    providers: [
-        NxHeaderMobileComponent
-    ],
-    exports: [
-        NxHeaderMobileComponent
-    ]
+    imports: [CommonModule, AngularSvgIconModule, HeaderLogoAreaModule, MobileHeaderMenuModule],
+    declarations: [NxHeaderMobileComponent],
+    providers: [NxHeaderMobileComponent],
+    exports: [NxHeaderMobileComponent],
 })
-
 export class HeaderMobileModule {}

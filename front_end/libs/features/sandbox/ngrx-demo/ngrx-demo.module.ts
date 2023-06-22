@@ -34,8 +34,7 @@ const appRoutes: Routes = [
         StoreModule.forFeature('books', booksReducer),
         StoreModule.forFeature('collection', collectionReducer),
     ],
-    providers: [
-    ],
+    providers: [],
     declarations: [
         NgrxDemoCounterComponent,
 
@@ -43,10 +42,7 @@ const appRoutes: Routes = [
         NgrxDemoBookCollectionComponent,
         NgrxDemoBooksComponent,
     ],
-    bootstrap: [
-    ],
-    exports: [
-    ]
+    bootstrap: [],
+    exports: [],
 })
-export class NgrxDemoModule {
-}
+export class NgrxDemoModule {}

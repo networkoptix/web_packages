@@ -18,15 +18,8 @@ import { NxPasswordTagValidationComponent } from './password-tag-validation.comp
         TooltipModule,
         TagModule,
     ],
-    declarations: [
-        NxPasswordTagValidationComponent
-    ],
-    providers: [
-        NxPasswordTagValidationComponent
-    ],
-    exports: [
-        NxPasswordTagValidationComponent
-    ]
+    declarations: [NxPasswordTagValidationComponent],
+    providers: [NxPasswordTagValidationComponent],
+    exports: [NxPasswordTagValidationComponent],
 })
-
 export class PasswordTagValidationModule {}

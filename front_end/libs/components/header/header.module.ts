@@ -30,17 +30,10 @@ import { TabsModule } from './tabs/tabs.module';
         DropMenuModule,
         AdditionalSystemsTileModule,
         NavigationTileModule,
-        SystemTileModule
+        SystemTileModule,
     ],
-    declarations: [
-        NxHeaderComponent
-    ],
-    providers: [
-        NxHeaderComponent
-    ],
-    exports: [
-        NxHeaderComponent
-    ]
+    declarations: [NxHeaderComponent],
+    providers: [NxHeaderComponent],
+    exports: [NxHeaderComponent],
 })
-
-export class HeaderModule { }
+export class HeaderModule {}

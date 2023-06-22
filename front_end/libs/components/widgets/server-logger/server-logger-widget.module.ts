@@ -20,15 +20,8 @@ import { NxServerLoggerWidgetComponent } from './server-logger-widget.component'
         PreLoaderModule,
         StepperModule,
     ],
-    declarations: [
-        NxServerLoggerWidgetComponent
-    ],
-    providers: [
-        NxServerLoggerWidgetComponent
-    ],
-    exports: [
-        NxServerLoggerWidgetComponent
-    ]
+    declarations: [NxServerLoggerWidgetComponent],
+    providers: [NxServerLoggerWidgetComponent],
+    exports: [NxServerLoggerWidgetComponent],
 })
-
 export class ServerLoggerWidgetModule {}

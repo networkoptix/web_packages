@@ -27,18 +27,18 @@ const appRoutes: Routes = [
     {
         path: '',
         redirectTo: 'releases',
-        pathMatch: 'full'
+        pathMatch: 'full',
     },
     {
         path: 'history',
         component: DownloadHistoryComponent,
-        resolve: { type: TypeResolver }
+        resolve: { type: TypeResolver },
     },
     {
         path: ':type',
         title: TitleResolver,
-        component: DownloadHistoryComponent
-    }
+        component: DownloadHistoryComponent,
+    },
 ];
 
 @NgModule({
@@ -51,17 +51,9 @@ const appRoutes: Routes = [
         PipesModule,
         PreLoaderModule,
     ],
-    providers: [
-        TypeResolver
-    ],
-    declarations: [
-        DownloadHistoryComponent,
-        ReleaseComponent
-    ],
+    providers: [TypeResolver],
+    declarations: [DownloadHistoryComponent, ReleaseComponent],
     bootstrap: [],
-    exports: [
-        DownloadHistoryComponent
-    ]
+    exports: [DownloadHistoryComponent],
 })
-export class DownloadHistoryModule {
-}
+export class DownloadHistoryModule {}

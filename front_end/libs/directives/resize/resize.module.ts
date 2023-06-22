@@ -4,6 +4,6 @@ import { NxResizeObserver } from './nx-resize.directive';
 
 @NgModule({
     declarations: [NxResizeObserver],
-    exports: [NxResizeObserver]
+    exports: [NxResizeObserver],
 })
 export class ResizeModule {}

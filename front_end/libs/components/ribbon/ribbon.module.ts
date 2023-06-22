@@ -9,22 +9,9 @@ import { PipesModule } from '@pipes/pipes.module';
 import { NxRibbonComponent } from './ribbon.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule,
-        AngularSvgIconModule,
-        PipesModule,
-        ProcessButtonModule,
-    ],
-    declarations: [
-        NxRibbonComponent
-    ],
-    providers: [
-        NxRibbonComponent
-    ],
-    exports: [
-        NxRibbonComponent
-    ]
+    imports: [CommonModule, RouterModule, AngularSvgIconModule, PipesModule, ProcessButtonModule],
+    declarations: [NxRibbonComponent],
+    providers: [NxRibbonComponent],
+    exports: [NxRibbonComponent],
 })
-
 export class RibbonModule {}

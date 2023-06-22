@@ -28,28 +28,30 @@ const appRoutes: Routes = [
     {
         path: ':route',
         title: 'apiTool',
-        component: NxAPIToolComponent
+        component: NxAPIToolComponent,
     },
     {
         path: '',
         title: 'apiTool',
         redirectTo: 'main',
-        pathMatch: 'full'
-    }
+        pathMatch: 'full',
+    },
 ];
 
 const dbConfig: DBConfig = {
     name: 'systemJSONs',
     version: 1,
-    objectStoresMeta: [{
-        store: 'jsons',
-        storeConfig: { keyPath: 'key', autoIncrement: false },
-        storeSchema: [
-            { name: 'json', keypath: 'json', options: { unique: false } },
-            { name: 'markdown', keypath: 'markdown', options: { unique: false } },
-            { name: 'version', keypath: 'version', options: { unique: false } }
-        ]
-    }]
+    objectStoresMeta: [
+        {
+            store: 'jsons',
+            storeConfig: { keyPath: 'key', autoIncrement: false },
+            storeSchema: [
+                { name: 'json', keypath: 'json', options: { unique: false } },
+                { name: 'markdown', keypath: 'markdown', options: { unique: false } },
+                { name: 'version', keypath: 'version', options: { unique: false } },
+            ],
+        },
+    ],
 };
 
 @NgModule({
@@ -78,12 +80,9 @@ const dbConfig: DBConfig = {
         NxSwaggerDropdownComponent,
         NxSwaggerTextareaComponent,
         NxSwaggerSpinnerComponent,
-        NxSwaggerAPIInformationComponent
+        NxSwaggerAPIInformationComponent,
     ],
     bootstrap: [],
-    exports: [
-        NxAPIToolComponent
-    ]
+    exports: [NxAPIToolComponent],
 })
-export class NxApiToolModule {
-}
+export class NxApiToolModule {}

@@ -24,15 +24,8 @@ import { NxBaseTableComponent } from './table.component';
         ResizeModule,
         SectionPlaceholderModule,
     ],
-    declarations: [
-        NxBaseTableComponent,
-    ],
-    providers: [
-        NxBaseTableComponent
-    ],
-    exports: [
-        NxBaseTableComponent
-    ]
+    declarations: [NxBaseTableComponent],
+    providers: [NxBaseTableComponent],
+    exports: [NxBaseTableComponent],
 })
-
-export class NxBaseTableModule { }
+export class NxBaseTableModule {}

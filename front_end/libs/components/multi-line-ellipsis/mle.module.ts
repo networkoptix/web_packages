@@ -6,19 +6,9 @@ import { ResizeModule } from '@directives/resize/resize.module';
 import { NxMultiLineEllipsisComponent } from './mle.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        ResizeModule
-    ],
-    declarations: [
-        NxMultiLineEllipsisComponent
-    ],
-    providers: [
-        NxMultiLineEllipsisComponent
-    ],
-    exports: [
-        NxMultiLineEllipsisComponent
-    ]
+    imports: [CommonModule, ResizeModule],
+    declarations: [NxMultiLineEllipsisComponent],
+    providers: [NxMultiLineEllipsisComponent],
+    exports: [NxMultiLineEllipsisComponent],
 })
-
 export class MultiLineEllipsisModule {}

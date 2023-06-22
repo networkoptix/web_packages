@@ -7,20 +7,9 @@ import { DropMenuModule } from '@components/dropdowns/drop-menu/drop-menu.module
 import { NxHeaderMainButtonComponent } from './main-button.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        AngularSvgIconModule,
-        DropMenuModule,
-    ],
-    declarations: [
-        NxHeaderMainButtonComponent
-    ],
-    providers: [
-        NxHeaderMainButtonComponent
-    ],
-    exports: [
-        NxHeaderMainButtonComponent
-    ]
+    imports: [CommonModule, AngularSvgIconModule, DropMenuModule],
+    declarations: [NxHeaderMainButtonComponent],
+    providers: [NxHeaderMainButtonComponent],
+    exports: [NxHeaderMainButtonComponent],
 })
-
 export class MainButtonModule {}

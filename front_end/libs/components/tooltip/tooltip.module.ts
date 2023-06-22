@@ -5,19 +5,9 @@ import { NgModule } from '@angular/core';
 import { NxTooltipComponent } from './tooltip.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        PortalModule,
-    ],
-    declarations: [
-        NxTooltipComponent
-    ],
-    providers: [
-        NxTooltipComponent
-    ],
-    exports: [
-        NxTooltipComponent
-    ]
+    imports: [CommonModule, PortalModule],
+    declarations: [NxTooltipComponent],
+    providers: [NxTooltipComponent],
+    exports: [NxTooltipComponent],
 })
-
 export class TooltipModule {}

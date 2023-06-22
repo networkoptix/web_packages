@@ -13,7 +13,7 @@ import { NxContentComponent } from './content.component';
 
 const appRoutes: Routes = [
     { path: '', component: NxContentComponent },
-    { path: ':article_param', component: NxContentComponent }
+    { path: ':article_param', component: NxContentComponent },
 ];
 
 @NgModule({
@@ -28,13 +28,8 @@ const appRoutes: Routes = [
         ProcessButtonModule,
     ],
     providers: [],
-    declarations: [
-        NxContentComponent
-    ],
+    declarations: [NxContentComponent],
     bootstrap: [],
-    exports: [
-        NxContentComponent
-    ]
+    exports: [NxContentComponent],
 })
-export class ContentModule {
-}
+export class ContentModule {}

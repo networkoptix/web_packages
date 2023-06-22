@@ -8,21 +8,9 @@ import { PipesModule } from '@pipes/pipes.module';
 import { NxAdvancedFilterComponent } from './advanced-filter.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        PipesModule,
-        CheckboxModule,
-    ],
-    declarations: [
-        NxAdvancedFilterComponent
-    ],
-    providers: [
-        NxAdvancedFilterComponent
-    ],
-    exports: [
-        NxAdvancedFilterComponent
-    ]
+    imports: [CommonModule, FormsModule, PipesModule, CheckboxModule],
+    declarations: [NxAdvancedFilterComponent],
+    providers: [NxAdvancedFilterComponent],
+    exports: [NxAdvancedFilterComponent],
 })
-
 export class AdvancedFilterModule {}

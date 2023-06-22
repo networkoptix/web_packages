@@ -19,9 +19,7 @@ import { NxSystemsService } from './systems.service';
 import { NxUrlProtocolService } from './url-protocol.service';
 
 @NgModule({
-    imports: [
-        CommonModule
-    ],
+    imports: [CommonModule],
     declarations: [],
     providers: [
         NxAppSourceService,
@@ -38,9 +36,8 @@ import { NxUrlProtocolService } from './url-protocol.service';
         NxScrollMechanicsService,
         NxSwCacheService,
         NxThemeService,
-        NxDbService
+        NxDbService,
     ],
-    exports: []
+    exports: [],
 })
-export class ServiceModule {
-}
+export class ServiceModule {}

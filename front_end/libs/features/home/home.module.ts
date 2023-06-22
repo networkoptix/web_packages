@@ -122,7 +122,15 @@ const homeRoutes: Routes = [
         NxSubchannelComponent,
         NxHomeComponent,
     ],
-    providers: [TabResolver, OrgResolver, SubChannelResolver, WithParentDataResolver, TabGuard, RoleResolver, CPResovler],
+    providers: [
+        TabResolver,
+        OrgResolver,
+        SubChannelResolver,
+        WithParentDataResolver,
+        TabGuard,
+        RoleResolver,
+        CPResovler,
+    ],
     exports: [],
 })
 export class NxHomeModule {}

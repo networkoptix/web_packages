@@ -43,19 +43,14 @@ import { NxLicenseTrialComponent } from './trial/trial.component';
         PreLoaderModule,
         ProcessButtonModule,
     ],
-    providers: [
-    ],
+    providers: [],
     declarations: [
         NxLicenseNewComponent,
         NxLicenseTrialComponent,
         NxSystemLicensesComponent,
         NxLicenseDetailComponent,
     ],
-    bootstrap: [
-    ],
-    exports: [
-        NxSystemLicensesComponent
-    ]
+    bootstrap: [],
+    exports: [NxSystemLicensesComponent],
 })
-export class NxSystemLicensesModule {
-}
+export class NxSystemLicensesModule {}

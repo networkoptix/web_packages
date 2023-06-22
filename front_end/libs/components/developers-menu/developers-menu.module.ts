@@ -18,17 +18,10 @@ import { NxDevelopersMenuComponent } from './developers-menu.component';
         RouterModule,
         AngularSvgIconModule,
         PreLoaderModule,
-        SearchModule
+        SearchModule,
     ],
-    declarations: [
-        NxDevelopersMenuComponent
-    ],
-    providers: [
-        NxDevelopersMenuComponent
-    ],
-    exports: [
-        NxDevelopersMenuComponent
-    ]
+    declarations: [NxDevelopersMenuComponent],
+    providers: [NxDevelopersMenuComponent],
+    exports: [NxDevelopersMenuComponent],
 })
-
-export class DevelopersMenuModule { }
+export class DevelopersMenuModule {}

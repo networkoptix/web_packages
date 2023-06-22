@@ -15,16 +15,9 @@ import { NxCustomizationPartnerComponent } from '@pages/channel-partners/customi
         ContentBlockModule,
         ContentBlockSectionModule,
     ],
-    providers: [
-    ],
-    declarations: [
-        NxCustomizationPartnerComponent,
-    ],
-    bootstrap: [
-    ],
-    exports: [
-        NxCustomizationPartnerComponent
-    ]
+    providers: [],
+    declarations: [NxCustomizationPartnerComponent],
+    bootstrap: [],
+    exports: [NxCustomizationPartnerComponent],
 })
-export class NxCustomizationPartnerModule {
-}
+export class NxCustomizationPartnerModule {}

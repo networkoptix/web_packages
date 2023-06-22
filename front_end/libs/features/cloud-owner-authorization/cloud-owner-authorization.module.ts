@@ -7,25 +7,12 @@ import { PipesModule } from '@pipes/pipes.module';
 
 import { CloudOwnerAuthorizationComponent } from './cloud-owner-authorization.component';
 
-const appRoutes: Routes = [
-    { path: '**', component: CloudOwnerAuthorizationComponent }
-];
+const appRoutes: Routes = [{ path: '**', component: CloudOwnerAuthorizationComponent }];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        TranslateModule,
-        PipesModule,
-        RouterModule.forChild(appRoutes)
-    ],
-    declarations: [
-        CloudOwnerAuthorizationComponent
-    ],
-    providers: [
-        CloudOwnerAuthorizationComponent
-    ],
-    exports: [
-    ]
+    imports: [CommonModule, TranslateModule, PipesModule, RouterModule.forChild(appRoutes)],
+    declarations: [CloudOwnerAuthorizationComponent],
+    providers: [CloudOwnerAuthorizationComponent],
+    exports: [],
 })
-export class CloudOwnerAuthorizationModule {
-}
+export class CloudOwnerAuthorizationModule {}

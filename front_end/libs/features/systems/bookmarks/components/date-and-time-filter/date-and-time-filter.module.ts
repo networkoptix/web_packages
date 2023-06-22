@@ -17,12 +17,8 @@ import { NxDateAndTimeFilterComponent } from './date-and-time-filter.component';
 
         NxTimeSelectorModule,
     ],
-    declarations: [
-        NxDateAndTimeFilterComponent,
-    ],
+    declarations: [NxDateAndTimeFilterComponent],
     providers: [],
-    exports: [
-        NxDateAndTimeFilterComponent,
-    ]
+    exports: [NxDateAndTimeFilterComponent],
 })
 export class NxDateAndTimeFilterModule {}

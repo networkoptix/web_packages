@@ -16,15 +16,8 @@ import { SystemTileModule } from './system-tile/system-tile.module';
         NavigationTileModule,
         SystemTileModule,
     ],
-    declarations: [
-        NxDropMenu
-    ],
-    providers: [
-        NxDropMenu
-    ],
-    exports: [
-        NxDropMenu
-    ]
+    declarations: [NxDropMenu],
+    providers: [NxDropMenu],
+    exports: [NxDropMenu],
 })
-
 export class DropMenuModule {}

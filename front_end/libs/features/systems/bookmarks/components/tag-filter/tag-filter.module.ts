@@ -17,12 +17,8 @@ import { NxTagFilterComponent } from './tag-filter.component';
 
         TagModule,
     ],
-    declarations: [
-        NxTagFilterComponent,
-    ],
+    declarations: [NxTagFilterComponent],
     providers: [],
-    exports: [
-        NxTagFilterComponent,
-    ]
+    exports: [NxTagFilterComponent],
 })
 export class NxTagFilterModule {}

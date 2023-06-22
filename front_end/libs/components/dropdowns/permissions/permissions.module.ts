@@ -8,21 +8,9 @@ import { DirectivesModule } from '@directives/directives.module';
 import { NxPermissionsDropdown } from './permissions.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        TranslateModule,
-        AngularSvgIconModule,
-        DirectivesModule,
-    ],
-    declarations: [
-        NxPermissionsDropdown
-    ],
-    providers: [
-        NxPermissionsDropdown
-    ],
-    exports: [
-        NxPermissionsDropdown
-    ]
+    imports: [CommonModule, TranslateModule, AngularSvgIconModule, DirectivesModule],
+    declarations: [NxPermissionsDropdown],
+    providers: [NxPermissionsDropdown],
+    exports: [NxPermissionsDropdown],
 })
-
 export class PermissionsModule {}

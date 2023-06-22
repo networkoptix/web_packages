@@ -20,16 +20,14 @@ import { NxGetStartedComponent } from './get-started/get-started.component';
 import { NxIntegrationsComponent } from './integrations/integrations.component';
 import { NxNewCapabilitiesComponent } from './new-capabilities/capabilities.component';
 import { NxSupportComponent } from './support/support.component';
-import {
-    NxSupportedTechComponent
-} from './supported-tech/supported-tech.component';
+import { NxSupportedTechComponent } from './supported-tech/supported-tech.component';
 
 const appRoutes: Routes = [
     {
         path: ':name',
         component: NxAboutComponent,
-        canActivate: [DevelopersGuard]
-    }
+        canActivate: [DevelopersGuard],
+    },
 ];
 
 @NgModule({
@@ -54,7 +52,7 @@ const appRoutes: Routes = [
         NxSupportComponent,
         NxAboutComponent,
         NxErrorStateComponent,
-        NxNewCapabilitiesComponent
+        NxNewCapabilitiesComponent,
     ],
     bootstrap: [],
     exports: [
@@ -65,7 +63,7 @@ const appRoutes: Routes = [
         NxIntegrationsComponent,
         NxSupportComponent,
         NxAboutComponent,
-        NxErrorStateComponent
-    ]
+        NxErrorStateComponent,
+    ],
 })
 export class NxAboutModule {}

@@ -30,15 +30,8 @@ import { NxHealthMonitorWidgetComponent } from './health-monitor-widget.componen
         PreLoaderModule,
         StepperModule,
     ],
-    declarations: [
-        NxHealthMonitorWidgetComponent
-    ],
-    providers: [
-        NxHealthMonitorWidgetComponent
-    ],
-    exports: [
-        NxHealthMonitorWidgetComponent
-    ]
+    declarations: [NxHealthMonitorWidgetComponent],
+    providers: [NxHealthMonitorWidgetComponent],
+    exports: [NxHealthMonitorWidgetComponent],
 })
-
 export class HealthMonitorWidgetModule {}

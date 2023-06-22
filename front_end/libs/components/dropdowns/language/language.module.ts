@@ -8,24 +8,9 @@ import { PipesModule } from '@pipes/pipes.module';
 import { NxLanguageDropdown, NxHeaderLanguageDropdown } from './language.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        PipesModule,
-        AngularSvgIconModule,
-        DirectivesModule
-    ],
-    declarations: [
-        NxLanguageDropdown,
-        NxHeaderLanguageDropdown
-    ],
-    providers: [
-        NxLanguageDropdown,
-        NxHeaderLanguageDropdown
-    ],
-    exports: [
-        NxLanguageDropdown,
-        NxHeaderLanguageDropdown
-    ]
+    imports: [CommonModule, PipesModule, AngularSvgIconModule, DirectivesModule],
+    declarations: [NxLanguageDropdown, NxHeaderLanguageDropdown],
+    providers: [NxLanguageDropdown, NxHeaderLanguageDropdown],
+    exports: [NxLanguageDropdown, NxHeaderLanguageDropdown],
 })
-
 export class LanguageModule {}

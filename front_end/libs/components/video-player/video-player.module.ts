@@ -9,21 +9,9 @@ import { ServiceModule } from '@services/services.module';
 import { NxVideoPlayerComponent } from './video-player.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        DirectivesModule,
-        PipesModule,
-        PreLoaderModule,
-        ServiceModule
-    ],
-    declarations: [
-        NxVideoPlayerComponent
-    ],
-    providers: [
-        NxVideoPlayerComponent
-    ],
-    exports: [
-        NxVideoPlayerComponent
-    ]
+    imports: [CommonModule, DirectivesModule, PipesModule, PreLoaderModule, ServiceModule],
+    declarations: [NxVideoPlayerComponent],
+    providers: [NxVideoPlayerComponent],
+    exports: [NxVideoPlayerComponent],
 })
-export class VideoPlayerModule { }
+export class VideoPlayerModule {}

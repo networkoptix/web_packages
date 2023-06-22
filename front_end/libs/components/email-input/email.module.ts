@@ -7,20 +7,9 @@ import { DirectivesModule } from '@directives/directives.module';
 import { NxEmailComponent } from './email.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        DirectivesModule
-    ],
-    declarations: [
-        NxEmailComponent
-    ],
-    providers: [
-        NxEmailComponent
-    ],
-    exports: [
-        NxEmailComponent
-    ]
+    imports: [CommonModule, FormsModule, DirectivesModule],
+    declarations: [NxEmailComponent],
+    providers: [NxEmailComponent],
+    exports: [NxEmailComponent],
 })
-
 export class EmailModule {}

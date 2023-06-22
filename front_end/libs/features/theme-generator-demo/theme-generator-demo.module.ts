@@ -11,21 +11,14 @@ const appRoutes: Routes = [
         path: '',
         title: 'themeGenerator',
         component: NxThemeGeneratorDemoComponent,
-    }
+    },
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule.forChild(appRoutes),
-        NxThemeGeneratorModule
-    ],
+    imports: [CommonModule, RouterModule.forChild(appRoutes), NxThemeGeneratorModule],
     providers: [],
-    declarations: [
-        NxThemeGeneratorDemoComponent
-    ],
+    declarations: [NxThemeGeneratorDemoComponent],
     bootstrap: [],
-    exports: []
+    exports: [],
 })
-export class NxThemeGeneratorDemoModule {
-}
+export class NxThemeGeneratorDemoModule {}

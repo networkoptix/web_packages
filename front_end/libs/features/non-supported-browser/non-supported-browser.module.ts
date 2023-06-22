@@ -7,25 +7,13 @@ import { DirectivesModule } from '@directives/directives.module';
 
 import { NonSupportedBrowserComponent } from './non-supported-browser.component';
 
-const appRoutes: Routes = [
-    { path: '', component: NonSupportedBrowserComponent }
-];
+const appRoutes: Routes = [{ path: '', component: NonSupportedBrowserComponent }];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        DirectivesModule,
-        PipesModule,
-        RouterModule.forChild(appRoutes)
-    ],
+    imports: [CommonModule, DirectivesModule, PipesModule, RouterModule.forChild(appRoutes)],
     providers: [],
-    declarations: [
-        NonSupportedBrowserComponent
-    ],
+    declarations: [NonSupportedBrowserComponent],
     bootstrap: [],
-    exports: [
-        NonSupportedBrowserComponent
-    ]
+    exports: [NonSupportedBrowserComponent],
 })
-export class NonSupportedBrowserModule {
-}
+export class NonSupportedBrowserModule {}

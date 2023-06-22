@@ -18,12 +18,8 @@ import { NxDeviceFilterComponent } from './device-filter.component';
         CheckboxModule,
         NxSimpleSearchModule,
     ],
-    declarations: [
-        NxDeviceFilterComponent,
-    ],
+    declarations: [NxDeviceFilterComponent],
     providers: [],
-    exports: [
-        NxDeviceFilterComponent,
-    ]
+    exports: [NxDeviceFilterComponent],
 })
 export class NxDeviceFilterModule {}

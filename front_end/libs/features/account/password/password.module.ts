@@ -32,13 +32,8 @@ import { NxAccountPasswordComponent } from '@pages/account/password/password.com
         PreLoaderModule,
     ],
     providers: [],
-    declarations: [
-        NxAccountPasswordComponent
-    ],
+    declarations: [NxAccountPasswordComponent],
     bootstrap: [],
-    exports: [
-        NxAccountPasswordComponent
-    ]
+    exports: [NxAccountPasswordComponent],
 })
-export class NxAccountPasswordModule {
-}
+export class NxAccountPasswordModule {}

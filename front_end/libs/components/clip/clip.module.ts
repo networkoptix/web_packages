@@ -7,19 +7,9 @@ import { VmsClientPlaybackModule } from '@pages/systems/view/vms-client/submodul
 import { ClipComponent } from './clip.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        PipesModule,
-        VmsClientPlaybackModule,
-    ],
-    declarations: [
-        ClipComponent
-    ],
-    providers: [
-    ],
-    exports: [
-        ClipComponent
-    ]
+    imports: [CommonModule, PipesModule, VmsClientPlaybackModule],
+    declarations: [ClipComponent],
+    providers: [],
+    exports: [ClipComponent],
 })
-export class ClipModule {
-}
+export class ClipModule {}

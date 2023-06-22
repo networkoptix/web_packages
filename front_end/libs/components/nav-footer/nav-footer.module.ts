@@ -16,17 +16,10 @@ import { NxNavFooterComponent } from './nav-footer.component';
         TranslateModule,
         AngularSvgIconModule,
         LanguageModule,
-        PipesModule
+        PipesModule,
     ],
-    declarations: [
-        NxNavFooterComponent
-    ],
-    providers: [
-        NxNavFooterComponent
-    ],
-    exports: [
-        NxNavFooterComponent
-    ]
+    declarations: [NxNavFooterComponent],
+    providers: [NxNavFooterComponent],
+    exports: [NxNavFooterComponent],
 })
-
 export class NavFooterModule {}

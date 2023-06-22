@@ -19,10 +19,7 @@ import { NxGenericDropdownItemSVG } from './item-icon/item-icon.component';
         DirectivesModule,
         PipesModule,
     ],
-    declarations: [
-        NxMatLikeGenericDropdown,
-        NxGenericDropdownItemSVG,
-    ],
-    exports: [NxMatLikeGenericDropdown]
+    declarations: [NxMatLikeGenericDropdown, NxGenericDropdownItemSVG],
+    exports: [NxMatLikeGenericDropdown],
 })
 export class NxMatLikeGenericDropdownModule {}

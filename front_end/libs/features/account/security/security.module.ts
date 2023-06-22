@@ -37,13 +37,8 @@ import { NxAccountSecurityComponent } from './security.component';
         TagModule,
     ],
     providers: [],
-    declarations: [
-        NxAccountSecurityComponent
-    ],
+    declarations: [NxAccountSecurityComponent],
     bootstrap: [],
-    exports: [
-        NxAccountSecurityComponent
-    ]
+    exports: [NxAccountSecurityComponent],
 })
-export class NxAccountSecurityModule {
-}
+export class NxAccountSecurityModule {}

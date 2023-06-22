@@ -15,12 +15,8 @@ import { NxOrganizationComponent } from './organization.component';
         LetDirective,
         PushPipe,
     ],
-    declarations: [
-        NxOrganizationComponent,
-    ],
+    declarations: [NxOrganizationComponent],
     providers: [],
-    exports: [
-        NxOrganizationComponent,
-    ]
+    exports: [NxOrganizationComponent],
 })
 export class NxOrganizationModule {}

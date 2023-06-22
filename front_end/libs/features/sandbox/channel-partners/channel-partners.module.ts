@@ -36,12 +36,8 @@ const appRoutes: Routes = [
         NxChannelPartnerModule,
         NxOrganizationModule,
     ],
-    declarations: [
-        NxChannelPartnersComponent,
-    ],
+    declarations: [NxChannelPartnersComponent],
     providers: [],
-    exports: [
-        NxChannelPartnersComponent,
-    ]
+    exports: [NxChannelPartnersComponent],
 })
 export class NxChannelPartnersModule {}

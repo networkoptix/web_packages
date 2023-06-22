@@ -12,8 +12,8 @@ const appRoutes: Routes = [
     {
         path: '',
         title: 'Maintenance is in progress',
-        component: Nx503Component
-    }
+        component: Nx503Component,
+    },
 ];
 
 @NgModule({
@@ -26,13 +26,8 @@ const appRoutes: Routes = [
         PipesModule,
     ],
     providers: [],
-    declarations: [
-        Nx503Component
-    ],
+    declarations: [Nx503Component],
     bootstrap: [],
-    exports: [
-        Nx503Component
-    ]
+    exports: [Nx503Component],
 })
-export class Nx503Module {
-}
+export class Nx503Module {}

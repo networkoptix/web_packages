@@ -559,7 +559,7 @@ module.exports = {
                 'libs/features/[t-z]*/**/*.ts',
                 'libs/[g-z]*/**/*.ts',
             ],
-            excludedFiles: ['*.module.ts', '*.spec.ts'], // Lower priority
+            excludedFiles: ['*.spec.ts'], // Lower priority
             extends: ['plugin:prettier/recommended'],
             plugins: ['prettier'],
             rules: {

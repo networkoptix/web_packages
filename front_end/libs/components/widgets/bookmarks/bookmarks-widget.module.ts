@@ -9,22 +9,9 @@ import { TagModule } from '@components/tag/tag.module';
 import { NxBookmarksWidgetComponent } from './bookmarks-widget.component';
 
 @NgModule({
-    imports: [
-        AngularSvgIconModule,
-        PreLoaderModule,
-        StepperModule,
-        TagModule,
-        OverlayModule
-    ],
-    declarations: [
-        NxBookmarksWidgetComponent
-    ],
-    providers: [
-        NxBookmarksWidgetComponent
-    ],
-    exports: [
-        NxBookmarksWidgetComponent
-    ]
+    imports: [AngularSvgIconModule, PreLoaderModule, StepperModule, TagModule, OverlayModule],
+    declarations: [NxBookmarksWidgetComponent],
+    providers: [NxBookmarksWidgetComponent],
+    exports: [NxBookmarksWidgetComponent],
 })
-
-export class BookmarksWidgetModule { }
+export class BookmarksWidgetModule {}

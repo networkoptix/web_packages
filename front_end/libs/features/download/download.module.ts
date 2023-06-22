@@ -37,13 +37,13 @@ const appRoutes: Routes = [
         path: '',
         title: 'download',
         component: DownloadComponent,
-        resolve: { platform: OsResolver }
+        resolve: { platform: OsResolver },
     },
     {
         path: ':platform',
         title: TitleResolver,
         component: DownloadComponent,
-    }
+    },
 ];
 
 @NgModule({
@@ -57,16 +57,11 @@ const appRoutes: Routes = [
         FooterModule,
         PipesModule,
         PreLoaderModule,
-        SectionPlaceholderModule
+        SectionPlaceholderModule,
     ],
-    providers: [
-        OsResolver
-    ],
-    declarations: [
-        DownloadComponent
-    ],
+    providers: [OsResolver],
+    declarations: [DownloadComponent],
     bootstrap: [],
-    exports: []
+    exports: [],
 })
-export class DownloadModule {
-}
+export class DownloadModule {}

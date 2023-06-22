@@ -16,17 +16,12 @@ import { NxGridLayoutComponent } from './layout.component';
         CommonModule,
         TranslateModule,
         DirectivesModule,
-        PipesModule
+        PipesModule,
         // RouterModule.forChild(appRoutes)
     ],
     providers: [],
-    declarations: [
-        NxGridLayoutComponent
-    ],
+    declarations: [NxGridLayoutComponent],
     bootstrap: [],
-    exports: [
-        NxGridLayoutComponent
-    ]
+    exports: [NxGridLayoutComponent],
 })
-export class NxGridLayoutModule {
-}
+export class NxGridLayoutModule {}

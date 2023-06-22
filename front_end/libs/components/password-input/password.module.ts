@@ -16,15 +16,8 @@ import { NxPasswordComponent } from './password.component';
         AngularSvgIconModule,
         PasswordTagValidationModule,
     ],
-    declarations: [
-        NxPasswordComponent
-    ],
-    providers: [
-        NxPasswordComponent
-    ],
-    exports: [
-        NxPasswordComponent
-    ]
+    declarations: [NxPasswordComponent],
+    providers: [NxPasswordComponent],
+    exports: [NxPasswordComponent],
 })
-
 export class PasswordModule {}

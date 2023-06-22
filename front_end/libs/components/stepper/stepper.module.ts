@@ -4,18 +4,9 @@ import { NgModule } from '@angular/core';
 import { NxStepperComponent } from './stepper.component';
 
 @NgModule({
-    imports: [
-        CommonModule
-    ],
-    declarations: [
-        NxStepperComponent
-    ],
-    providers: [
-        NxStepperComponent
-    ],
-    exports: [
-        NxStepperComponent
-    ]
+    imports: [CommonModule],
+    declarations: [NxStepperComponent],
+    providers: [NxStepperComponent],
+    exports: [NxStepperComponent],
 })
-
 export class StepperModule {}

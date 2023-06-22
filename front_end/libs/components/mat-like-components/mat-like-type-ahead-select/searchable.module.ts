@@ -8,21 +8,9 @@ import { DirectivesModule } from '@directives/directives.module';
 import { NxMatLikeTypeAheadDropdown } from './searchable.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        AngularSvgIconModule,
-        DirectivesModule,
-        NxSearchHighlightModule,
-    ],
-    declarations: [
-        NxMatLikeTypeAheadDropdown
-    ],
-    providers: [
-        NxMatLikeTypeAheadDropdown
-    ],
-    exports: [
-        NxMatLikeTypeAheadDropdown
-    ]
+    imports: [CommonModule, AngularSvgIconModule, DirectivesModule, NxSearchHighlightModule],
+    declarations: [NxMatLikeTypeAheadDropdown],
+    providers: [NxMatLikeTypeAheadDropdown],
+    exports: [NxMatLikeTypeAheadDropdown],
 })
-
 export class NxMatLikeTypeAheadModule {}

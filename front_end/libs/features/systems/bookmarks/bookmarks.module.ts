@@ -22,9 +22,8 @@ const appRoutes: Routes = [
     {
         path: '',
         title: SystemTitleResolver,
-        component: NxBookmarksComponent
-    }
-
+        component: NxBookmarksComponent,
+    },
 ];
 
 @NgModule({
@@ -45,13 +44,8 @@ const appRoutes: Routes = [
         PagePlaceHolderModule,
     ],
     providers: [],
-    declarations: [
-        NxBookmarksComponent
-    ],
+    declarations: [NxBookmarksComponent],
     bootstrap: [],
-    exports: [
-        NxBookmarksComponent
-    ]
+    exports: [NxBookmarksComponent],
 })
-export class BookmarksModule {
-}
+export class BookmarksModule {}

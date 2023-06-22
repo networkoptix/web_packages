@@ -15,8 +15,9 @@ import { PushComponent } from './push-notifications.component';
 
 const appRoutes: Routes = [
     {
-        path: '', component: PushComponent
-    }
+        path: '',
+        component: PushComponent,
+    },
 ];
 
 export function initializeApp(CONFIG: NxConfigService) {
@@ -35,14 +36,9 @@ export function initializeApp(CONFIG: NxConfigService) {
         PipesModule,
         PreLoaderModule,
     ],
-    providers: [
-    ],
-    declarations: [
-        PushComponent
-    ],
-    bootstrap: [
-    ],
-    exports: []
+    providers: [],
+    declarations: [PushComponent],
+    bootstrap: [],
+    exports: [],
 })
-export class PushNotificationsModule {
-}
+export class PushNotificationsModule {}

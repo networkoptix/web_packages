@@ -28,20 +28,17 @@ import { NxSystemUsersComponent } from './users.component';
         PermissionsModule,
         SwitchModule,
     ],
-    providers: [
-    ],
+    providers: [],
     declarations: [
         NxSystemUsersComponent,
         NxSystemUsersWithRolesComponent,
-        NxSystemUsersWithGroupsComponent
+        NxSystemUsersWithGroupsComponent,
     ],
-    bootstrap: [
-    ],
+    bootstrap: [],
     exports: [
         NxSystemUsersComponent,
         NxSystemUsersWithRolesComponent,
-        NxSystemUsersWithGroupsComponent
-    ]
+        NxSystemUsersWithGroupsComponent,
+    ],
 })
-export class NxSystemUsersModule {
-}
+export class NxSystemUsersModule {}

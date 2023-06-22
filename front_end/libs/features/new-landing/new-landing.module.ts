@@ -18,8 +18,8 @@ import { NxMaskComponent } from './mask/mask.component';
 const appRoutes: Routes = [
     {
         path: '',
-        component: NxLandingPageComponent
-    }
+        component: NxLandingPageComponent,
+    },
 ];
 
 @NgModule({
@@ -30,7 +30,7 @@ const appRoutes: Routes = [
         NxBackgroundGraphicComponent,
         NxMaskComponent,
         NxLearnMoreComponent,
-        NxIntroTextComponent
+        NxIntroTextComponent,
     ],
     imports: [
         CommonModule,
@@ -40,6 +40,6 @@ const appRoutes: Routes = [
         DirectivesModule,
         FooterModule,
     ],
-    exports: []
+    exports: [],
 })
 export class NewLandingModule {}

@@ -8,21 +8,9 @@ import { ProcessCancelButtonModule } from '@components/process-cancel-Button/pro
 import { NxApplyComponent } from './apply.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        TranslateModule,
-        ProcessButtonModule,
-        ProcessCancelButtonModule,
-    ],
-    declarations: [
-        NxApplyComponent
-    ],
-    providers: [
-        NxApplyComponent
-    ],
-    exports: [
-        NxApplyComponent
-    ]
+    imports: [CommonModule, TranslateModule, ProcessButtonModule, ProcessCancelButtonModule],
+    declarations: [NxApplyComponent],
+    providers: [NxApplyComponent],
+    exports: [NxApplyComponent],
 })
-
 export class ApplyModule {}

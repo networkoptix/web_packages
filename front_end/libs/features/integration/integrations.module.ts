@@ -15,9 +15,8 @@ const appRoutes: Routes = [
     {
         path: '',
         title: '{ "baseTitle": "integrations", "descr": ["integration", "seoPageDesc"] }',
-        component: NxIntegrationsComponent
-    }
-
+        component: NxIntegrationsComponent,
+    },
 ];
 
 @NgModule({
@@ -29,16 +28,11 @@ const appRoutes: Routes = [
         DirectivesModule,
         IntegrationsListModule,
         PipesModule,
-        SearchModule
+        SearchModule,
     ],
     providers: [],
-    declarations: [
-        NxIntegrationsComponent
-    ],
+    declarations: [NxIntegrationsComponent],
     bootstrap: [],
-    exports: [
-        NxIntegrationsComponent
-    ]
+    exports: [NxIntegrationsComponent],
 })
-export class IntegrationsModule {
-}
+export class IntegrationsModule {}

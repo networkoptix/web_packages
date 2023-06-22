@@ -32,16 +32,9 @@ import { NxCloudStorageComponent } from './cloud-storage.component';
         PipesModule,
         PreLoaderModule,
     ],
-    providers: [
-    ],
-    declarations: [
-        NxCloudStorageComponent
-    ],
-    bootstrap: [
-    ],
-    exports: [
-        NxCloudStorageComponent
-    ]
+    providers: [],
+    declarations: [NxCloudStorageComponent],
+    bootstrap: [],
+    exports: [NxCloudStorageComponent],
 })
-export class NxCloudStorageModule {
-}
+export class NxCloudStorageModule {}

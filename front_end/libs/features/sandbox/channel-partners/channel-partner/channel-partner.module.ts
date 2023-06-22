@@ -17,12 +17,8 @@ import { NxChannelPartnerComponent } from './channel-partner.component';
         LetDirective,
         PushPipe,
     ],
-    declarations: [
-        NxChannelPartnerComponent,
-    ],
+    declarations: [NxChannelPartnerComponent],
     providers: [],
-    exports: [
-        NxChannelPartnerComponent,
-    ]
+    exports: [NxChannelPartnerComponent],
 })
 export class NxChannelPartnerModule {}

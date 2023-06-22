@@ -8,21 +8,9 @@ import { DirectivesModule } from '@directives/directives.module';
 import { NxMatLikeInputComponent } from './input.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        AngularSvgIconModule,
-        DirectivesModule
-    ],
-    declarations: [
-        NxMatLikeInputComponent
-    ],
-    providers: [
-        NxMatLikeInputComponent
-    ],
-    exports: [
-        NxMatLikeInputComponent
-    ]
+    imports: [CommonModule, FormsModule, AngularSvgIconModule, DirectivesModule],
+    declarations: [NxMatLikeInputComponent],
+    providers: [NxMatLikeInputComponent],
+    exports: [NxMatLikeInputComponent],
 })
-
 export class NxMatLikeInputModule {}

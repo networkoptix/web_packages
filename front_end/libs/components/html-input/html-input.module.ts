@@ -7,20 +7,9 @@ import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.
 import { NxHTMLComponent } from './html-input.component';
 
 @NgModule({
-    imports: [
-        FormsModule,
-        EditorModule,
-        PreLoaderModule,
-    ],
-    declarations: [
-        NxHTMLComponent
-    ],
-    providers: [
-        NxHTMLComponent
-    ],
-    exports: [
-        NxHTMLComponent
-    ]
+    imports: [FormsModule, EditorModule, PreLoaderModule],
+    declarations: [NxHTMLComponent],
+    providers: [NxHTMLComponent],
+    exports: [NxHTMLComponent],
 })
-
 export class HtmlInputModule {}

@@ -26,15 +26,8 @@ import { NxEventGeneratorWidgetComponent } from './event-generator.component';
         ProcessButtonModule,
         StepperModule,
     ],
-    declarations: [
-        NxEventGeneratorWidgetComponent
-    ],
-    providers: [
-        NxEventGeneratorWidgetComponent
-    ],
-    exports: [
-        NxEventGeneratorWidgetComponent
-    ]
+    declarations: [NxEventGeneratorWidgetComponent],
+    providers: [NxEventGeneratorWidgetComponent],
+    exports: [NxEventGeneratorWidgetComponent],
 })
-
 export class EventGeneratorModule {}

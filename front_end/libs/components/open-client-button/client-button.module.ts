@@ -7,20 +7,9 @@ import { ProcessButtonModule } from '@components/process-button/process-button.m
 import { NxClientButtonComponent } from './client-button.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        TranslateModule,
-        ProcessButtonModule,
-    ],
-    declarations: [
-        NxClientButtonComponent
-    ],
-    providers: [
-        NxClientButtonComponent
-    ],
-    exports: [
-        NxClientButtonComponent
-    ]
+    imports: [CommonModule, TranslateModule, ProcessButtonModule],
+    declarations: [NxClientButtonComponent],
+    providers: [NxClientButtonComponent],
+    exports: [NxClientButtonComponent],
 })
-
 export class ClientButtonModule {}

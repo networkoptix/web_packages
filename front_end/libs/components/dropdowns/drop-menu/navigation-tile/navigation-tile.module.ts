@@ -6,20 +6,9 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NxNavigationTileComponent } from './navigation-tile.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule,
-        AngularSvgIconModule
-    ],
-    declarations: [
-        NxNavigationTileComponent
-    ],
-    providers: [
-        NxNavigationTileComponent
-    ],
-    exports: [
-        NxNavigationTileComponent
-    ]
+    imports: [CommonModule, RouterModule, AngularSvgIconModule],
+    declarations: [NxNavigationTileComponent],
+    providers: [NxNavigationTileComponent],
+    exports: [NxNavigationTileComponent],
 })
-
 export class NavigationTileModule {}

@@ -23,29 +23,29 @@ const appRoutes: Routes = [
     {
         path: '',
         component: NxDevConsoleComponent,
-        pathMatch: 'full'
+        pathMatch: 'full',
     },
     {
         path: ':section',
         pathMatch: 'full',
-        component: NxDevConsoleComponent
+        component: NxDevConsoleComponent,
     },
     {
         path: ':section/:mode',
         pathMatch: 'full',
-        component: NxDevConsoleComponent
+        component: NxDevConsoleComponent,
     },
     {
         path: ':section/:mode/:id',
         pathMatch: 'full',
-        component: NxDevConsoleComponent
+        component: NxDevConsoleComponent,
     },
     {
         path: ':section/:mode/:id/:context',
         pathMatch: 'full',
         canDeactivate: [ApplyGuard],
-        component: NxDevConsoleComponent
-    }
+        component: NxDevConsoleComponent,
+    },
 ];
 
 @NgModule({
@@ -65,12 +65,8 @@ const appRoutes: Routes = [
         ProcessCancelButtonModule,
     ],
     providers: [],
-    declarations: [
-        NxDevConsoleComponent,
-        NxDevConsoleMenuComponent,
-        NxDevConsoleEditComponent
-    ],
+    declarations: [NxDevConsoleComponent, NxDevConsoleMenuComponent, NxDevConsoleEditComponent],
     bootstrap: [],
-    exports: []
+    exports: [],
 })
 export class NxDeveloperConsoleModule {}

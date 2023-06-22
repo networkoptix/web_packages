@@ -18,15 +18,8 @@ import { NxMatLikePasswordComponent } from './password.component';
         DirectivesModule,
         NxMatLikeInputModule,
     ],
-    declarations: [
-        NxMatLikePasswordComponent
-    ],
-    providers: [
-        NxMatLikePasswordComponent
-    ],
-    exports: [
-        NxMatLikePasswordComponent
-    ]
+    declarations: [NxMatLikePasswordComponent],
+    providers: [NxMatLikePasswordComponent],
+    exports: [NxMatLikePasswordComponent],
 })
-
 export class NxMatLikePasswordModule {}

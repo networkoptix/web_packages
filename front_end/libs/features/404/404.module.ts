@@ -14,8 +14,8 @@ const appRoutes: Routes = [
     {
         path: '',
         title: 'pageNotFound',
-        component: Nx404Component
-    }
+        component: Nx404Component,
+    },
 ];
 
 @NgModule({
@@ -29,13 +29,8 @@ const appRoutes: Routes = [
         PreLoaderModule,
     ],
     providers: [],
-    declarations: [
-        Nx404Component
-    ],
+    declarations: [Nx404Component],
     bootstrap: [],
-    exports: [
-        Nx404Component
-    ]
+    exports: [Nx404Component],
 })
-export class Nx404Module {
-}
+export class Nx404Module {}

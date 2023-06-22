@@ -23,13 +23,9 @@ import { SimpleWebglComponent } from '@pages/sandbox/simple-webgl/webgl.componen
 import { SandboxTableComponent } from '@pages/sandbox/table/sandbox-table.component';
 import { _NxTestBoxComponent } from '@pages/sandbox/test-box.component';
 import { WebglComponent } from '@pages/sandbox/webgl/webgl.component';
-import {
-    VmsClientModule
-} from '@pages/systems/view/vms-client/vms-client.module';
+import { VmsClientModule } from '@pages/systems/view/vms-client/vms-client.module';
 import { WebGLTimelineModule } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-timeline.module';
-import {
-    SimpleWebGLTimelineModule
-} from '@vms-client/submodules/timeline/components/simple-chart/webgl-timeline.module';
+import { SimpleWebGLTimelineModule } from '@vms-client/submodules/timeline/components/simple-chart/webgl-timeline.module';
 import { VmsClientTimelineModule } from '@vms-client/submodules/timeline/timeline.module';
 
 import { NxAccountSettingsModule } from '../account/settings/settings.module';
@@ -39,21 +35,15 @@ import { NxGridLayoutModule } from '../layout/layout.module';
 import { NxArchSvgComponent } from './arch-svg/arch-svg.component';
 import { NxBasicColorsComponent } from './basic-colors/colors.component';
 import { NxCustomColorsComponent } from './custom-colors/colors.component';
-import {
-    DynamicFormApplyExampleComponent
-} from './dynamic-form-apply-example/dynamic-form-apply-example.component';
-import {
-    FormApplyExampleComponent
-} from './form-apply-example/form-apply-example.component';
+import { DynamicFormApplyExampleComponent } from './dynamic-form-apply-example/dynamic-form-apply-example.component';
+import { FormApplyExampleComponent } from './form-apply-example/form-apply-example.component';
 import { FormElementsComponent } from './form-elements/form-elements.component';
 import { MasonryGridComponent } from './masonry-grid/masonry-grid.component';
 import { MultiSelectComponent } from './multi-select/multi-select.component';
 import { NgrxDemoModule } from './ngrx-demo/ngrx-demo.module';
 import { NxSandboxComponent } from './sandbox.component';
 import { SearchComponent } from './search/search.component';
-import {
-    SectionApplyExampleComponent
-} from './section-apply-example/section-apply-example.component';
+import { SectionApplyExampleComponent } from './section-apply-example/section-apply-example.component';
 import { TagsComponent } from './tags/tags.component';
 import { NxThemeColorsComponent } from './theme-colors/colors.component';
 import { ToasterComponent } from './toaster/toaster.component';
@@ -94,7 +84,7 @@ const appRoutes: Routes = [
             },
             {
                 path: 'hsl-theme',
-                component: NxHSLThemeColorsComponent
+                component: NxHSLThemeColorsComponent,
             },
             {
                 path: 'apply-service-form',
@@ -104,7 +94,7 @@ const appRoutes: Routes = [
             {
                 path: 'apply-service-section',
                 component: SectionApplyExampleComponent,
-                canDeactivate: [ApplyGuard]
+                canDeactivate: [ApplyGuard],
             },
             {
                 path: 'dropdowns',
@@ -144,22 +134,27 @@ const appRoutes: Routes = [
             },
             {
                 path: 'ngrx-demo',
-                loadChildren: () => import('./ngrx-demo/ngrx-demo.module').then(m => m.NgrxDemoModule)
+                loadChildren: () =>
+                    import('./ngrx-demo/ngrx-demo.module').then(m => m.NgrxDemoModule),
             },
             {
                 path: 'arch',
-                component: NxArchSvgComponent
+                component: NxArchSvgComponent,
             },
             {
                 path: '_test',
-                loadComponent: () => import('./test-box.component').then(m => m._NxTestBoxComponent)
+                loadComponent: () =>
+                    import('./test-box.component').then(m => m._NxTestBoxComponent),
             },
             {
                 path: 'channel-partners',
-                loadChildren: () => import('./channel-partners/channel-partners.module').then(m => m.NxChannelPartnersModule),
+                loadChildren: () =>
+                    import('./channel-partners/channel-partners.module').then(
+                        m => m.NxChannelPartnersModule,
+                    ),
             },
-        ]
-    }
+        ],
+    },
 ];
 
 @NgModule({
@@ -187,10 +182,9 @@ const appRoutes: Routes = [
         VmsClientModule,
         VmsClientTimelineModule,
         WebGLTimelineModule,
-        NxThemeGeneratorModule
+        NxThemeGeneratorModule,
     ],
-    providers: [
-    ],
+    providers: [],
     declarations: [
         NxSandboxComponent,
         SectionApplyExampleComponent,
@@ -212,14 +206,8 @@ const appRoutes: Routes = [
         WebglComponent,
         SimpleWebglComponent,
     ],
-    bootstrap: [
-    ],
-    exports: [
-        NxSandboxComponent
-    ],
-    schemas: [
-        CUSTOM_ELEMENTS_SCHEMA
-    ]
+    bootstrap: [],
+    exports: [NxSandboxComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class SandboxModule {
-}
+export class SandboxModule {}

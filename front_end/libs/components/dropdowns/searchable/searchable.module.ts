@@ -8,21 +8,9 @@ import { DirectivesModule } from '@directives/directives.module';
 import { NxSearchableDropdown } from './searchable.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        AngularSvgIconModule,
-        DirectivesModule,
-        NxSearchHighlightModule,
-    ],
-    declarations: [
-        NxSearchableDropdown
-    ],
-    providers: [
-        NxSearchableDropdown
-    ],
-    exports: [
-        NxSearchableDropdown
-    ]
+    imports: [CommonModule, AngularSvgIconModule, DirectivesModule, NxSearchHighlightModule],
+    declarations: [NxSearchableDropdown],
+    providers: [NxSearchableDropdown],
+    exports: [NxSearchableDropdown],
 })
-
 export class SearchableModule {}

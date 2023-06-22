@@ -25,7 +25,7 @@ const appRoutes: Routes = [
     {
         path: '',
         component: Nx404Component,
-        canActivate: [DevelopersGuard]
+        canActivate: [DevelopersGuard],
     },
     {
         path: ':name',
@@ -34,7 +34,7 @@ const appRoutes: Routes = [
             {
                 path: '',
                 component: NxAboutComponent,
-                pathMatch: 'full'
+                pathMatch: 'full',
             },
             {
                 path: 'dev-tools',
@@ -46,28 +46,28 @@ const appRoutes: Routes = [
                         children: [
                             {
                                 path: ':level2',
-                                component: NxDevToolsComponent
-                            }
-                        ]
-                    }
-                ]
+                                component: NxDevToolsComponent,
+                            },
+                        ],
+                    },
+                ],
             },
             {
                 path: ':kb-name',
                 children: [
                     {
                         path: ':level1',
-                        component: NxKnowledgeBaseComponent
+                        component: NxKnowledgeBaseComponent,
                     },
                     {
                         path: '',
                         component: NxKnowledgeBaseComponent,
-                        pathMatch: 'full'
-                    }
-                ]
-            }
-        ]
-    }
+                        pathMatch: 'full',
+                    },
+                ],
+            },
+        ],
+    },
 ];
 
 @NgModule({
@@ -87,13 +87,8 @@ const appRoutes: Routes = [
         SearchModule,
     ],
     providers: [],
-    declarations: [
-        NxKnowledgeBaseComponent
-    ],
+    declarations: [NxKnowledgeBaseComponent],
     bootstrap: [],
-    exports: [
-        NxAboutComponent,
-        NxKnowledgeBaseComponent
-    ]
+    exports: [NxAboutComponent, NxKnowledgeBaseComponent],
 })
 export class NxDevelopersModule {}

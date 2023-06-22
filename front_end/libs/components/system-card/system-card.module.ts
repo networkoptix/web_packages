@@ -19,16 +19,9 @@ import { SystemCardComponent } from './system-card.component';
         DirectivesModule,
         NxSearchHighlightModule,
         TagModule,
-
     ],
-    declarations: [
-        SystemCardComponent,
-    ],
-    providers: [
-        SystemCardComponent,
-    ],
-    exports: [
-        SystemCardComponent,
-    ]
+    declarations: [SystemCardComponent],
+    providers: [SystemCardComponent],
+    exports: [SystemCardComponent],
 })
 export class SystemCardModule {}

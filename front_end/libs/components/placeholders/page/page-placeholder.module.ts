@@ -16,17 +16,10 @@ import { NxPagePlaceholderComponent } from './page-placeholder.component';
         TranslateModule,
         AngularSvgIconModule,
         FooterModule,
-        PipesModule
+        PipesModule,
     ],
-    declarations: [
-        NxPagePlaceholderComponent
-    ],
-    providers: [
-        NxPagePlaceholderComponent
-    ],
-    exports: [
-        NxPagePlaceholderComponent
-    ]
+    declarations: [NxPagePlaceholderComponent],
+    providers: [NxPagePlaceholderComponent],
+    exports: [NxPagePlaceholderComponent],
 })
-
 export class PagePlaceHolderModule {}

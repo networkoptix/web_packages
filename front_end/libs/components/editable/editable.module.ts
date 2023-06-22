@@ -7,22 +7,9 @@ import { NxEditableHeading } from '@components/editable/heading/editable-heading
 import { NxTextEditableComponent } from './editable.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule
-    ],
-    declarations: [
-        NxEditableHeading,
-        NxTextEditableComponent
-    ],
-    providers: [
-        NxEditableHeading,
-        NxTextEditableComponent
-    ],
-    exports: [
-        NxEditableHeading,
-        NxTextEditableComponent
-    ]
+    imports: [CommonModule, FormsModule],
+    declarations: [NxEditableHeading, NxTextEditableComponent],
+    providers: [NxEditableHeading, NxTextEditableComponent],
+    exports: [NxEditableHeading, NxTextEditableComponent],
 })
-
 export class EditableModule {}

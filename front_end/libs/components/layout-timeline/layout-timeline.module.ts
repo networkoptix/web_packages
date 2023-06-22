@@ -6,19 +6,9 @@ import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.
 import { NxLayoutTimelineComponent } from './layout-timeline.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        PreLoaderModule,
-    ],
-    declarations: [
-        NxLayoutTimelineComponent
-    ],
-    providers: [
-        NxLayoutTimelineComponent
-    ],
-    exports: [
-        NxLayoutTimelineComponent
-    ]
+    imports: [CommonModule, PreLoaderModule],
+    declarations: [NxLayoutTimelineComponent],
+    providers: [NxLayoutTimelineComponent],
+    exports: [NxLayoutTimelineComponent],
 })
-
-export class LayoutTimelineModule { }
+export class LayoutTimelineModule {}

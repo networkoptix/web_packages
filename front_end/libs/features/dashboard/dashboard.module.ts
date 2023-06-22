@@ -26,9 +26,7 @@ import { DirectivesModule } from '@directives/directives.module';
 
 import { NxDashboardComponent } from './dashboard.component';
 
-const appRoutes: Routes = [
-    { path: '', component: NxDashboardComponent }
-];
+const appRoutes: Routes = [{ path: '', component: NxDashboardComponent }];
 
 @NgModule({
     imports: [
@@ -57,11 +55,8 @@ const appRoutes: Routes = [
         EventGeneratorModule,
     ],
     providers: [],
-    declarations: [
-        NxDashboardComponent
-    ],
+    declarations: [NxDashboardComponent],
     bootstrap: [],
-    exports: []
+    exports: [],
 })
-export class NxDashboardModule {
-}
+export class NxDashboardModule {}

@@ -7,20 +7,9 @@ import { NavDropdownModule } from '../nav-dropdown/nav-dropdown.module';
 import { NxTabsComponent } from './tabs.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule,
-        NavDropdownModule,
-    ],
-    declarations: [
-        NxTabsComponent
-    ],
-    providers: [
-        NxTabsComponent
-    ],
-    exports: [
-        NxTabsComponent
-    ]
+    imports: [CommonModule, RouterModule, NavDropdownModule],
+    declarations: [NxTabsComponent],
+    providers: [NxTabsComponent],
+    exports: [NxTabsComponent],
 })
-
 export class TabsModule {}

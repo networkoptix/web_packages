@@ -30,15 +30,8 @@ import { NxAssetExplorerWidgetComponent } from './asset-explorer-widget.componen
         PreLoaderModule,
         StepperModule,
     ],
-    declarations: [
-        NxAssetExplorerWidgetComponent
-    ],
-    providers: [
-        NxAssetExplorerWidgetComponent
-    ],
-    exports: [
-        NxAssetExplorerWidgetComponent
-    ]
+    declarations: [NxAssetExplorerWidgetComponent],
+    providers: [NxAssetExplorerWidgetComponent],
+    exports: [NxAssetExplorerWidgetComponent],
 })
-
 export class AssetExplorerWidgetModule {}

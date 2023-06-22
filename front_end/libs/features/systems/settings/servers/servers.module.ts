@@ -23,15 +23,9 @@ import { NxCloudStorageModule } from '../cloud-storage/cloud-storage.module';
 
 import { NxServerLoggerComponent } from './logger/logger.component';
 import { NxSystemServersComponent } from './servers.component';
-import {
-    NxSystemStandardServerComponent
-} from './standard/server-standard.component';
-import {
-    NxSystemStorageComponent
-} from './storage/server-storage-standard.component';
-import {
-    NxSystemAdvancedStorageComponent
-} from './storage-advanced/server-storage-adv.component';
+import { NxSystemStandardServerComponent } from './standard/server-standard.component';
+import { NxSystemStorageComponent } from './storage/server-storage-standard.component';
+import { NxSystemAdvancedStorageComponent } from './storage-advanced/server-storage-adv.component';
 import { NxStorageSizeComponent } from './storage-advanced/size/size.component';
 
 @NgModule({
@@ -56,21 +50,16 @@ import { NxStorageSizeComponent } from './storage-advanced/size/size.component';
         ProcessButtonModule,
         SectionPlaceholderModule,
     ],
-    providers: [
-    ],
+    providers: [],
     declarations: [
         NxSystemServersComponent,
         NxSystemStandardServerComponent,
         NxServerLoggerComponent,
         NxSystemStorageComponent,
         NxSystemAdvancedStorageComponent,
-        NxStorageSizeComponent
+        NxStorageSizeComponent,
     ],
-    bootstrap: [
-    ],
-    exports: [
-        NxSystemServersComponent
-    ]
+    bootstrap: [],
+    exports: [NxSystemServersComponent],
 })
-export class NxSystemServersModule {
-}
+export class NxSystemServersModule {}

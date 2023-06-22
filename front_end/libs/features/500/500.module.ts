@@ -13,8 +13,8 @@ const appRoutes: Routes = [
     {
         path: '',
         title: 'systemServerError',
-        component: Nx500Component
-    }
+        component: Nx500Component,
+    },
 ];
 
 @NgModule({
@@ -27,13 +27,8 @@ const appRoutes: Routes = [
         PipesModule,
     ],
     providers: [],
-    declarations: [
-        Nx500Component
-    ],
+    declarations: [Nx500Component],
     bootstrap: [],
-    exports: [
-        Nx500Component
-    ]
+    exports: [Nx500Component],
 })
-export class Nx500Module {
-}
+export class Nx500Module {}

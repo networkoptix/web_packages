@@ -16,17 +16,10 @@ import { NxLayoutViewComponent } from './layout-view.component';
         LayoutTimelineModule,
         LayoutPtzModule,
         TourMatMenuModule,
-        PagePlaceHolderModule
+        PagePlaceHolderModule,
     ],
-    declarations: [
-        NxLayoutViewComponent
-    ],
-    providers: [
-        NxLayoutViewComponent
-    ],
-    exports: [
-        NxLayoutViewComponent
-    ]
+    declarations: [NxLayoutViewComponent],
+    providers: [NxLayoutViewComponent],
+    exports: [NxLayoutViewComponent],
 })
-
-export class LayoutViewModule { }
+export class LayoutViewModule {}

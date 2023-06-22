@@ -21,15 +21,8 @@ import { ThemeSwitcherModule } from '@components/theme-switcher/theme-switcher.m
         NxGenericDropdownModule,
         ThemeSwitcherModule,
     ],
-    declarations: [
-        NxThemeGeneratorComponent,
-    ],
-    providers: [
-        NxThemeGeneratorComponent
-    ],
-    exports: [
-        NxThemeGeneratorComponent
-    ]
+    declarations: [NxThemeGeneratorComponent],
+    providers: [NxThemeGeneratorComponent],
+    exports: [NxThemeGeneratorComponent],
 })
-
-export class NxThemeGeneratorModule { }
+export class NxThemeGeneratorModule {}

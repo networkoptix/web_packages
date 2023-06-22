@@ -20,8 +20,9 @@ import { EmailNotificationsComponent } from './email-notifications.component';
 
 const appRoutes: Routes = [
     {
-        path: '', component: EmailNotificationsComponent
-    }
+        path: '',
+        component: EmailNotificationsComponent,
+    },
 ];
 
 @NgModule({
@@ -43,11 +44,8 @@ const appRoutes: Routes = [
         StepperModule,
     ],
     providers: [],
-    declarations: [
-        EmailNotificationsComponent
-    ],
+    declarations: [EmailNotificationsComponent],
     bootstrap: [],
-    exports: []
+    exports: [],
 })
-export class EmailNotificationsModule {
-}
+export class EmailNotificationsModule {}

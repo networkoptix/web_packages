@@ -15,16 +15,9 @@ import { NxCustomizationUsersComponent } from '@pages/channel-partners/customiza
         ContentBlockModule,
         ContentBlockSectionModule,
     ],
-    providers: [
-    ],
-    declarations: [
-        NxCustomizationUsersComponent,
-    ],
-    bootstrap: [
-    ],
-    exports: [
-        NxCustomizationUsersComponent
-    ]
+    providers: [],
+    declarations: [NxCustomizationUsersComponent],
+    bootstrap: [],
+    exports: [NxCustomizationUsersComponent],
 })
-export class NxCustomizationUsersModule {
-}
+export class NxCustomizationUsersModule {}

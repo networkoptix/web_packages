@@ -7,20 +7,9 @@ import { DirectivesModule } from '@directives/directives.module';
 import { NxLayoutPtzComponent } from './layout-ptz.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        TranslateModule,
-        DirectivesModule,
-    ],
-    declarations: [
-        NxLayoutPtzComponent
-    ],
-    providers: [
-        NxLayoutPtzComponent
-    ],
-    exports: [
-        NxLayoutPtzComponent
-    ]
+    imports: [CommonModule, TranslateModule, DirectivesModule],
+    declarations: [NxLayoutPtzComponent],
+    providers: [NxLayoutPtzComponent],
+    exports: [NxLayoutPtzComponent],
 })
-
-export class LayoutPtzModule { }
+export class LayoutPtzModule {}

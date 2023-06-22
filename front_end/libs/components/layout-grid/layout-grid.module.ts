@@ -32,15 +32,8 @@ import { NxLayoutGridComponent } from './layout-grid.component';
         TourMatMenuModule,
         VideoPlayerModule,
     ],
-    declarations: [
-        NxLayoutGridComponent
-    ],
-    providers: [
-        NxLayoutGridComponent
-    ],
-    exports: [
-        NxLayoutGridComponent
-    ]
+    declarations: [NxLayoutGridComponent],
+    providers: [NxLayoutGridComponent],
+    exports: [NxLayoutGridComponent],
 })
-
-export class LayoutGridModule { }
+export class LayoutGridModule {}

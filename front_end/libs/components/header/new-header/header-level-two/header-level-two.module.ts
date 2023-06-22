@@ -14,17 +14,10 @@ import { MainActionModule } from './main-action/main-action.module';
         TranslateModule,
         AngularSvgIconModule,
         HeaderLogoAreaModule,
-        MainActionModule
+        MainActionModule,
     ],
-    declarations: [
-        NxHeaderLevelTwoComponent
-    ],
-    providers: [
-        NxHeaderLevelTwoComponent
-    ],
-    exports: [
-        NxHeaderLevelTwoComponent
-    ]
+    declarations: [NxHeaderLevelTwoComponent],
+    providers: [NxHeaderLevelTwoComponent],
+    exports: [NxHeaderLevelTwoComponent],
 })
-
 export class HeaderLevelTwoModule {}

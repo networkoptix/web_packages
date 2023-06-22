@@ -6,19 +6,9 @@ import { ClientButtonModule } from '@components/open-client-button/client-button
 import { NxOpenClientSectionPlaceholderComponent } from './open-client-section.component';
 
 @NgModule({
-    imports: [
-        AngularSvgIconModule,
-        ClientButtonModule,
-    ],
-    declarations: [
-        NxOpenClientSectionPlaceholderComponent
-    ],
-    providers: [
-        NxOpenClientSectionPlaceholderComponent
-    ],
-    exports: [
-        NxOpenClientSectionPlaceholderComponent
-    ]
+    imports: [AngularSvgIconModule, ClientButtonModule],
+    declarations: [NxOpenClientSectionPlaceholderComponent],
+    providers: [NxOpenClientSectionPlaceholderComponent],
+    exports: [NxOpenClientSectionPlaceholderComponent],
 })
-
 export class OpenClientSectionPlaceholderModule {}

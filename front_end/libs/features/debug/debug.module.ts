@@ -16,8 +16,8 @@ const appRoutes: Routes = [
         path: 'debug',
         title: 'debug',
         component: NxDebugComponent,
-        canActivate: [AuthGuard]
-    }
+        canActivate: [AuthGuard],
+    },
 ];
 
 @NgModule({
@@ -31,13 +31,8 @@ const appRoutes: Routes = [
         PipesModule,
     ],
     providers: [],
-    declarations: [
-        NxDebugComponent
-    ],
+    declarations: [NxDebugComponent],
     bootstrap: [],
-    exports: [
-        NxDebugComponent
-    ]
+    exports: [NxDebugComponent],
 })
-export class NxDebugModule {
-}
+export class NxDebugModule {}

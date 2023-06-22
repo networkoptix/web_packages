@@ -20,15 +20,8 @@ import { NxServerMonitorWidgetComponent } from './server-monitor-widget.componen
         PreLoaderModule,
         StepperModule,
     ],
-    declarations: [
-        NxServerMonitorWidgetComponent
-    ],
-    providers: [
-        NxServerMonitorWidgetComponent
-    ],
-    exports: [
-        NxServerMonitorWidgetComponent
-    ]
+    declarations: [NxServerMonitorWidgetComponent],
+    providers: [NxServerMonitorWidgetComponent],
+    exports: [NxServerMonitorWidgetComponent],
 })
-
 export class ServerMonitorWidgetModule {}

@@ -21,7 +21,6 @@ import { NxCustomizationUsersModule } from '@pages/channel-partners/customizatio
     providers: [],
     declarations: [],
     bootstrap: [],
-    exports: []
+    exports: [],
 })
-export class NxPartnerOrganizationsListModule {
-}
+export class NxPartnerOrganizationsListModule {}

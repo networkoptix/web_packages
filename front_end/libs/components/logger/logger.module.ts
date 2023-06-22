@@ -22,15 +22,8 @@ import { NxLoggerComponent } from './logger.component';
         PreLoaderModule,
         SectionPlaceholderModule,
     ],
-    declarations: [
-        NxLoggerComponent
-    ],
-    providers: [
-        NxLoggerComponent
-    ],
-    exports: [
-        NxLoggerComponent
-    ]
+    declarations: [NxLoggerComponent],
+    providers: [NxLoggerComponent],
+    exports: [NxLoggerComponent],
 })
-
 export class LoggerModule {}

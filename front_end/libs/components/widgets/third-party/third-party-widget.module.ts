@@ -7,20 +7,9 @@ import { PipesModule } from '@pipes/pipes.module';
 import { NxThirdPartyWidgetComponent } from './third-party-widget.component';
 
 @NgModule({
-    imports: [
-        FormsModule,
-        NgxFileDropModule,
-        PipesModule
-    ],
-    declarations: [
-        NxThirdPartyWidgetComponent
-    ],
-    providers: [
-        NxThirdPartyWidgetComponent
-    ],
-    exports: [
-        NxThirdPartyWidgetComponent
-    ]
+    imports: [FormsModule, NgxFileDropModule, PipesModule],
+    declarations: [NxThirdPartyWidgetComponent],
+    providers: [NxThirdPartyWidgetComponent],
+    exports: [NxThirdPartyWidgetComponent],
 })
-
 export class ThirdsPartyWidgetModule {}

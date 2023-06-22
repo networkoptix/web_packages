@@ -47,19 +47,14 @@ import { NxSystemStandardAdminComponent } from './standard/standard.component';
         SectionPlaceholderModule,
         TagModule,
     ],
-    providers: [
-    ],
+    providers: [],
     declarations: [
         NxSystemAdminComponent,
         NxSystemStandardAdminComponent,
         NxSystemAdvancedAdminComponent,
-        NxSystemDetailedSettingComponent
+        NxSystemDetailedSettingComponent,
     ],
-    bootstrap: [
-    ],
-    exports: [
-        NxSystemAdminComponent
-    ]
+    bootstrap: [],
+    exports: [NxSystemAdminComponent],
 })
-export class NxSystemAdminModule {
-}
+export class NxSystemAdminModule {}

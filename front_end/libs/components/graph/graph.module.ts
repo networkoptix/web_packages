@@ -18,15 +18,8 @@ import { NxMonitoringGraphComponent } from './graph.component';
         SectionPlaceholderModule,
         NgxChartsModule,
     ],
-    declarations: [
-        NxMonitoringGraphComponent
-    ],
-    providers: [
-        NxMonitoringGraphComponent
-    ],
-    exports: [
-        NxMonitoringGraphComponent
-    ]
+    declarations: [NxMonitoringGraphComponent],
+    providers: [NxMonitoringGraphComponent],
+    exports: [NxMonitoringGraphComponent],
 })
-
-export class MonitoringGraphModule { }
+export class MonitoringGraphModule {}

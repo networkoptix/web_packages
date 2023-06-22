@@ -26,9 +26,9 @@ const appRoutes: Routes = [
         component: NxIntegrationDetailsComponent,
         children: [
             { path: '', component: NxOverviewComponent },
-            { path: 'how-to-setup', component: NxSetupComponent }
-        ]
-    }
+            { path: 'how-to-setup', component: NxSetupComponent },
+        ],
+    },
 ];
 
 @NgModule({
@@ -50,17 +50,8 @@ const appRoutes: Routes = [
         TagModule,
     ],
     providers: [],
-    declarations: [
-        NxIntegrationDetailsComponent,
-        NxSetupComponent,
-        NxOverviewComponent
-    ],
+    declarations: [NxIntegrationDetailsComponent, NxSetupComponent, NxOverviewComponent],
     bootstrap: [],
-    exports: [
-        NxIntegrationDetailsComponent,
-        NxSetupComponent,
-        NxOverviewComponent
-    ]
+    exports: [NxIntegrationDetailsComponent, NxSetupComponent, NxOverviewComponent],
 })
-export class IntegrationDetailModule {
-}
+export class IntegrationDetailModule {}

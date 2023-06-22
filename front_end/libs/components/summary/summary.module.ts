@@ -16,15 +16,8 @@ import { NxLicenseSummaryComponent } from './summary.component';
         ContentBlockModule,
         ContentBlockSectionModule,
     ],
-    declarations: [
-        NxLicenseSummaryComponent
-    ],
-    providers: [
-        NxLicenseSummaryComponent
-    ],
-    exports: [
-        NxLicenseSummaryComponent
-    ]
+    declarations: [NxLicenseSummaryComponent],
+    providers: [NxLicenseSummaryComponent],
+    exports: [NxLicenseSummaryComponent],
 })
-
 export class LicenseSummaryModule {}

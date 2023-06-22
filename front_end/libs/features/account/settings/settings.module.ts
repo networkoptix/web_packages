@@ -30,13 +30,8 @@ import { NxAccountSettingsComponent } from '@pages/account/settings/settings.com
         ThemeSwitcherModule,
     ],
     providers: [],
-    declarations: [
-        NxAccountSettingsComponent
-    ],
+    declarations: [NxAccountSettingsComponent],
     bootstrap: [],
-    exports: [
-        NxAccountSettingsComponent
-    ]
+    exports: [NxAccountSettingsComponent],
 })
-export class NxAccountSettingsModule {
-}
+export class NxAccountSettingsModule {}

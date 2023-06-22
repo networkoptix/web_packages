@@ -8,21 +8,9 @@ import { PipesModule } from '@pipes/pipes.module';
 import { NxInfoBlockComponent } from './info-block.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        TranslateModule,
-        AngularSvgIconModule,
-        PipesModule,
-    ],
-    declarations: [
-        NxInfoBlockComponent
-    ],
-    providers: [
-        NxInfoBlockComponent
-    ],
-    exports: [
-        NxInfoBlockComponent
-    ]
+    imports: [CommonModule, TranslateModule, AngularSvgIconModule, PipesModule],
+    declarations: [NxInfoBlockComponent],
+    providers: [NxInfoBlockComponent],
+    exports: [NxInfoBlockComponent],
 })
-
 export class InfoBlockModule {}

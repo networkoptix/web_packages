@@ -27,13 +27,8 @@ import { NxIntegrationsListComponent } from './list.component';
         TagModule,
     ],
     providers: [],
-    declarations: [
-        NxIntegrationsListComponent
-    ],
+    declarations: [NxIntegrationsListComponent],
     bootstrap: [],
-    exports: [
-        NxIntegrationsListComponent
-    ]
+    exports: [NxIntegrationsListComponent],
 })
-export class IntegrationsListModule {
-}
+export class IntegrationsListModule {}

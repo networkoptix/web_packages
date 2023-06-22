@@ -32,22 +32,22 @@ const appRoutes: Routes = [
                 path: '',
                 title: 'account',
                 component: NxAccountSettingsComponent,
-                canDeactivate: [ApplyGuard]
+                canDeactivate: [ApplyGuard],
             },
             {
                 path: 'password',
                 title: 'changePassword',
                 component: NxAccountPasswordComponent,
-                canDeactivate: [ApplyGuard]
+                canDeactivate: [ApplyGuard],
             },
             {
                 path: 'security',
                 title: 'twofa',
                 component: NxAccountSecurityComponent,
-                canDeactivate: [ApplyGuard]
-            }
-        ]
-    }
+                canDeactivate: [ApplyGuard],
+            },
+        ],
+    },
 ];
 
 @NgModule({
@@ -66,14 +66,9 @@ const appRoutes: Routes = [
         PipesModule,
         PreLoaderModule,
     ],
-    providers: [
-        TypeResolver
-    ],
-    declarations: [
-        NxAccountComponent
-    ],
+    providers: [TypeResolver],
+    declarations: [NxAccountComponent],
     bootstrap: [],
-    exports: []
+    exports: [],
 })
-export class NxAccountModule {
-}
+export class NxAccountModule {}

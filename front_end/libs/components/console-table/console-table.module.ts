@@ -39,15 +39,8 @@ import { NxConsoleTableComponent } from './console-table.component';
         SearchModule,
         NxSearchHighlightModule,
     ],
-    declarations: [
-        NxConsoleTableComponent
-    ],
-    providers: [
-        NxConsoleTableComponent
-    ],
-    exports: [
-        NxConsoleTableComponent
-    ]
+    declarations: [NxConsoleTableComponent],
+    providers: [NxConsoleTableComponent],
+    exports: [NxConsoleTableComponent],
 })
-
-export class ConsoleTableModule { }
+export class ConsoleTableModule {}

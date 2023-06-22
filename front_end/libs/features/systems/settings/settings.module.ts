@@ -39,70 +39,70 @@ export const cloudSettingsRoutes: Routes = [
                 path: '',
                 title: SystemTitleResolver,
                 component: NxSystemAdminComponent,
-                canDeactivate: [ApplyGuard]
+                canDeactivate: [ApplyGuard],
             },
             {
                 path: 'advanced',
                 title: SystemTitleResolver,
                 component: NxSystemAdminComponent,
-                canDeactivate: [ApplyGuard]
+                canDeactivate: [ApplyGuard],
             },
             {
                 path: 'users',
                 title: SystemTitleResolver,
                 component: NxSystemUsersComponent,
-                canDeactivate: [ApplyGuard]
+                canDeactivate: [ApplyGuard],
             },
             {
                 path: 'users/:userId',
                 title: SystemTitleResolver,
                 component: NxSystemUsersComponent,
-                canDeactivate: [ApplyGuard]
+                canDeactivate: [ApplyGuard],
             },
             {
                 path: 'servers',
                 title: SystemTitleResolver,
                 component: NxSystemServersComponent,
-                canDeactivate: [ApplyGuard]
+                canDeactivate: [ApplyGuard],
             },
             {
                 path: 'servers/:serverId',
                 title: SystemTitleResolver,
                 component: NxSystemServersComponent,
-                canDeactivate: [ApplyGuard]
+                canDeactivate: [ApplyGuard],
             },
             {
                 path: 'servers/:serverId/advanced',
                 title: SystemTitleResolver,
                 component: NxSystemServersComponent,
-                canDeactivate: [ApplyGuard]
+                canDeactivate: [ApplyGuard],
             },
             {
                 path: 'cameras',
                 title: SystemTitleResolver,
                 component: NxCamerasComponent,
-                canDeactivate: [ApplyGuard]
+                canDeactivate: [ApplyGuard],
             },
             {
                 path: 'cameras/:cameraId',
                 title: SystemTitleResolver,
                 component: NxCamerasComponent,
-                canDeactivate: [ApplyGuard]
+                canDeactivate: [ApplyGuard],
             },
             {
                 path: 'cloud-storage',
                 title: SystemTitleResolver,
                 component: NxCloudStorageComponent,
-                canDeactivate: [ApplyGuard]
+                canDeactivate: [ApplyGuard],
             },
             {
                 path: 'licenses',
                 title: SystemTitleResolver,
                 canActivate: [SystemGuard],
-                component: NxSystemLicensesComponent
-            }
-        ]
-    }
+                component: NxSystemLicensesComponent,
+            },
+        ],
+    },
 ];
 
 @NgModule({
@@ -123,17 +123,9 @@ export const cloudSettingsRoutes: Routes = [
         PipesModule,
         PreLoaderModule,
     ],
-    providers: [
-        NxSettingsService
-    ],
-    declarations: [
-        NxSystemSettingsComponent
-    ],
-    bootstrap: [
-    ],
-    exports: [
-        NxSystemSettingsComponent
-    ]
+    providers: [NxSettingsService],
+    declarations: [NxSystemSettingsComponent],
+    bootstrap: [],
+    exports: [NxSystemSettingsComponent],
 })
-export class NxSettingsModule {
-}
+export class NxSettingsModule {}

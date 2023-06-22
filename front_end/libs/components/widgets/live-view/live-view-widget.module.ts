@@ -20,15 +20,8 @@ import { NxLiveViewWidgetComponent } from './live-view-widget.component';
         PreLoaderModule,
         StepperModule,
     ],
-    declarations: [
-        NxLiveViewWidgetComponent
-    ],
-    providers: [
-        NxLiveViewWidgetComponent
-    ],
-    exports: [
-        NxLiveViewWidgetComponent
-    ]
+    declarations: [NxLiveViewWidgetComponent],
+    providers: [NxLiveViewWidgetComponent],
+    exports: [NxLiveViewWidgetComponent],
 })
-
 export class LiveViewWidgetModule {}

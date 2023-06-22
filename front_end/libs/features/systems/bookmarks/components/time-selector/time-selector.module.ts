@@ -14,12 +14,8 @@ import { NxTimeSelectorComponent } from './time-selector.component';
         // TranslateModule,
         CdkMenuModule,
     ],
-    declarations: [
-        NxTimeSelectorComponent,
-    ],
+    declarations: [NxTimeSelectorComponent],
     providers: [],
-    exports: [
-        NxTimeSelectorComponent,
-    ]
+    exports: [NxTimeSelectorComponent],
 })
 export class NxTimeSelectorModule {}

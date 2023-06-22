@@ -40,10 +40,6 @@ import { NxMenuComponent } from './menu.component';
         NxMenuButtonComponent,
     ],
     bootstrap: [],
-    exports: [
-        NxMenuComponent,
-        NxAlertCounter,
-    ]
+    exports: [NxMenuComponent, NxAlertCounter],
 })
-export class MenuModule {
-}
+export class MenuModule {}

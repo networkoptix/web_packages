@@ -19,15 +19,8 @@ import { NxThemeSwitcherComponent } from './theme-switcher.component';
         ContentBlockModule,
         RadioModule,
     ],
-    declarations: [
-        NxThemeSwitcherComponent
-    ],
-    providers: [
-        NxThemeSwitcherComponent
-    ],
-    exports: [
-        NxThemeSwitcherComponent
-    ]
+    declarations: [NxThemeSwitcherComponent],
+    providers: [NxThemeSwitcherComponent],
+    exports: [NxThemeSwitcherComponent],
 })
-
 export class ThemeSwitcherModule {}

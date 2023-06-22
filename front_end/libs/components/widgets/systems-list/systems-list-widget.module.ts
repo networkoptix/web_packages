@@ -20,15 +20,8 @@ import { NxSystemsListWidgetComponent } from './systems-list-widget.component';
         StepperModule,
         SystemListModule,
     ],
-    declarations: [
-        NxSystemsListWidgetComponent
-    ],
-    providers: [
-        NxSystemsListWidgetComponent
-    ],
-    exports: [
-        NxSystemsListWidgetComponent
-    ]
+    declarations: [NxSystemsListWidgetComponent],
+    providers: [NxSystemsListWidgetComponent],
+    exports: [NxSystemsListWidgetComponent],
 })
-
 export class SystemListWidgetModule {}

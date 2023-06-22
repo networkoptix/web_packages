@@ -28,7 +28,7 @@ const appRoutes: Routes = [
             {
                 path: '',
                 pathMatch: 'full',
-                redirectTo: 'graphs'
+                redirectTo: 'graphs',
             },
             {
                 path: 'logs',
@@ -38,8 +38,8 @@ const appRoutes: Routes = [
                 path: 'graphs',
                 component: GraphsComponent,
             },
-        ]
-    }
+        ],
+    },
 ];
 
 @NgModule({
@@ -56,15 +56,8 @@ const appRoutes: Routes = [
         PreLoaderModule,
     ],
     providers: [],
-    declarations: [
-        NxMonitoringComponent,
-        GraphsComponent,
-        LogsComponent,
-    ],
+    declarations: [NxMonitoringComponent, GraphsComponent, LogsComponent],
     bootstrap: [],
-    exports: [
-        NxMonitoringComponent
-    ]
+    exports: [NxMonitoringComponent],
 })
-export class NxMonitoringModule {
-}
+export class NxMonitoringModule {}

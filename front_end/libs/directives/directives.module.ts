@@ -21,11 +21,7 @@ import { ResizeModule } from './resize/resize.module';
 import { RotateModule } from './rotate/rotate.module';
 
 @NgModule({
-    imports: [
-        AngularSvgIconModule,
-        OverlayModule,
-        ResizeModule
-    ],
+    imports: [AngularSvgIconModule, OverlayModule, ResizeModule],
     declarations: [
         NxArrowNavDirective,
         NxClickElsewhereDirective,
@@ -59,7 +55,6 @@ import { RotateModule } from './rotate/rotate.module';
         NxClickDoubleDirective,
         ResizeModule,
         RotateModule,
-    ]
+    ],
 })
-export class DirectivesModule {
-}
+export class DirectivesModule {}

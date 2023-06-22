@@ -4,17 +4,9 @@ import { NgModule } from '@angular/core';
 import { NxSearchHighlightComponent } from './search-highlight.component';
 
 @NgModule({
-    imports: [
-        CommonModule
-    ],
-    declarations: [
-        NxSearchHighlightComponent,
-    ],
-    providers: [
-        NxSearchHighlightComponent,
-    ],
-    exports: [
-        NxSearchHighlightComponent,
-    ]
+    imports: [CommonModule],
+    declarations: [NxSearchHighlightComponent],
+    providers: [NxSearchHighlightComponent],
+    exports: [NxSearchHighlightComponent],
 })
 export class NxSearchHighlightModule {}

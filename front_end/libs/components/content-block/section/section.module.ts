@@ -4,18 +4,9 @@ import { NgModule } from '@angular/core';
 import { NxContentBlockSectionComponent } from './section.component';
 
 @NgModule({
-    imports: [
-        CommonModule
-    ],
-    declarations: [
-        NxContentBlockSectionComponent
-    ],
-    providers: [
-        NxContentBlockSectionComponent
-    ],
-    exports: [
-        NxContentBlockSectionComponent
-    ]
+    imports: [CommonModule],
+    declarations: [NxContentBlockSectionComponent],
+    providers: [NxContentBlockSectionComponent],
+    exports: [NxContentBlockSectionComponent],
 })
-
 export class ContentBlockSectionModule {}

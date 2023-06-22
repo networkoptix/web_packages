@@ -19,16 +19,9 @@ import { NxCustomizationUsersModule } from '@pages/channel-partners/customizatio
         NxCustomizationUsersModule,
         NxCustomizationPartnerModule,
     ],
-    providers: [
-    ],
-    declarations: [
-        NxCustomizationComponent,
-    ],
-    bootstrap: [
-    ],
-    exports: [
-        NxCustomizationComponent
-    ]
+    providers: [],
+    declarations: [NxCustomizationComponent],
+    bootstrap: [],
+    exports: [NxCustomizationComponent],
 })
-export class NxCustomizationModule {
-}
+export class NxCustomizationModule {}

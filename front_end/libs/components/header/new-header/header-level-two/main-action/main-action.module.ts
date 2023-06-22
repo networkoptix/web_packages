@@ -6,20 +6,9 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NxMainActionComponent } from './main-action.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        AngularSvgIconModule,
-        TranslateModule,
-    ],
-    declarations: [
-        NxMainActionComponent
-    ],
-    providers: [
-        NxMainActionComponent
-    ],
-    exports: [
-        NxMainActionComponent
-    ]
+    imports: [CommonModule, AngularSvgIconModule, TranslateModule],
+    declarations: [NxMainActionComponent],
+    providers: [NxMainActionComponent],
+    exports: [NxMainActionComponent],
 })
-
 export class MainActionModule {}

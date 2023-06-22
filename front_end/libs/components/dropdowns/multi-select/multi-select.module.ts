@@ -18,17 +18,10 @@ import { NxMultiSelectDropdown } from './multi-select.component';
         AngularSvgIconModule,
         CheckboxModule,
         DirectivesModule,
-        PipesModule
+        PipesModule,
     ],
-    declarations: [
-        NxMultiSelectDropdown
-    ],
-    providers: [
-        NxMultiSelectDropdown
-    ],
-    exports: [
-        NxMultiSelectDropdown
-    ]
+    declarations: [NxMultiSelectDropdown],
+    providers: [NxMultiSelectDropdown],
+    exports: [NxMultiSelectDropdown],
 })
-
 export class MultiSelectModule {}

@@ -24,9 +24,7 @@ import { DirectivesModule } from '@directives/directives.module';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
 
 import { NxCamerasComponent } from './cameras.component';
-import {
-    NxMotionDetectionOverlay
-} from './motion-detection-overlay/motion-detection-overlay.component';
+import { NxMotionDetectionOverlay } from './motion-detection-overlay/motion-detection-overlay.component';
 import { NxRecordingSettingsComponent } from './recording-settings/recording-settings.component';
 @NgModule({
     imports: [
@@ -54,18 +52,9 @@ import { NxRecordingSettingsComponent } from './recording-settings/recording-set
         SwitchModule,
         ThreeDotsModule,
     ],
-    providers: [
-    ],
-    declarations: [
-        NxCamerasComponent,
-        NxMotionDetectionOverlay,
-        NxRecordingSettingsComponent,
-    ],
-    bootstrap: [
-    ],
-    exports: [
-        NxCamerasComponent
-    ]
+    providers: [],
+    declarations: [NxCamerasComponent, NxMotionDetectionOverlay, NxRecordingSettingsComponent],
+    bootstrap: [],
+    exports: [NxCamerasComponent],
 })
-export class NxCamerasModule {
-}
+export class NxCamerasModule {}

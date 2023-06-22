@@ -27,18 +27,10 @@ import { NxSystemAlertCardComponent } from './card/card.component';
 import { NxHealthComponent } from './health/health.component';
 import { NxHealthLayoutService } from './health-layout.service';
 import { NxSystemMetricsComponent } from './metrics/metrics.component';
-import {
-    NxDynamicTableComponent
-} from './table-components/dynamic-table/dynamic-table.component';
-import {
-    NxDynamicTablePanelComponent
-} from './table-components/dynamic-table-panel/dynamic-table-panel.component';
-import {
-    NxImageSectionComponent
-} from './table-components/image-section/image-section.component';
-import {
-    NxSingleEntityComponent
-} from './table-components/single-entity/single-entity.component';
+import { NxDynamicTableComponent } from './table-components/dynamic-table/dynamic-table.component';
+import { NxDynamicTablePanelComponent } from './table-components/dynamic-table-panel/dynamic-table-panel.component';
+import { NxImageSectionComponent } from './table-components/image-section/image-section.component';
+import { NxSingleEntityComponent } from './table-components/single-entity/single-entity.component';
 import { NxUpdateInfoComponent } from './update-info/update-info.component';
 import { NxReportViewerComponent } from './viewer/viewer.component';
 
@@ -51,19 +43,19 @@ const appRoutes: Routes = [
                 path: '',
                 title: 'reportViewer',
                 component: NxSystemAlertsComponent,
-                pathMatch: 'full'
+                pathMatch: 'full',
             },
             {
                 path: 'alerts',
                 title: 'reportViewer',
-                component: NxSystemAlertsComponent
+                component: NxSystemAlertsComponent,
             },
             {
                 path: ':metric',
                 title: 'reportViewer',
-                component: NxSystemMetricsComponent
-            }
-        ]
+                component: NxSystemMetricsComponent,
+            },
+        ],
     },
     {
         path: '',
@@ -73,21 +65,21 @@ const appRoutes: Routes = [
             {
                 path: '',
                 component: NxSystemAlertsComponent,
-                pathMatch: 'full'
+                pathMatch: 'full',
             },
             {
                 path: 'alerts',
                 title: SystemTitleResolver,
-                component: NxSystemAlertsComponent
+                component: NxSystemAlertsComponent,
             },
             {
                 path: ':metric',
                 title: SystemTitleResolver,
-                component: NxSystemMetricsComponent
-            }
-        ]
+                component: NxSystemMetricsComponent,
+            },
+        ],
         // FIXME: runGuardsAndResolvers : 'always' breaks /health/
-    }
+    },
 ];
 
 @NgModule({
@@ -122,15 +114,14 @@ const appRoutes: Routes = [
         NxSingleEntityComponent,
         NxImageSectionComponent,
         NxSystemAlertCardComponent,
-        NxUpdateInfoComponent
+        NxUpdateInfoComponent,
     ],
     bootstrap: [],
     exports: [
         NxHealthComponent,
         NxReportViewerComponent,
         NxSystemAlertsComponent,
-        NxSystemMetricsComponent
-    ]
+        NxSystemMetricsComponent,
+    ],
 })
-export class NxHealthModule {
-}
+export class NxHealthModule {}

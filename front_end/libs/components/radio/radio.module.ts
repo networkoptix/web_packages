@@ -4,18 +4,9 @@ import { NgModule } from '@angular/core';
 import { NxRadioComponent } from './radio.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-    ],
-    declarations: [
-        NxRadioComponent
-    ],
-    providers: [
-        NxRadioComponent
-    ],
-    exports: [
-        NxRadioComponent
-    ]
+    imports: [CommonModule],
+    declarations: [NxRadioComponent],
+    providers: [NxRadioComponent],
+    exports: [NxRadioComponent],
 })
-
 export class RadioModule {}

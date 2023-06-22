@@ -22,15 +22,8 @@ import { NxSearchComponent } from './search.component';
         PipesModule,
         TagModule,
     ],
-    declarations: [
-        NxSearchComponent
-    ],
-    providers: [
-        NxSearchComponent
-    ],
-    exports: [
-        NxSearchComponent
-    ]
+    declarations: [NxSearchComponent],
+    providers: [NxSearchComponent],
+    exports: [NxSearchComponent],
 })
-
 export class SearchModule {}

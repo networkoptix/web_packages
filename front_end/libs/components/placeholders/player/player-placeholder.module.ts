@@ -6,20 +6,9 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NxPlayerPlaceholderComponent } from './player-placeholder.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule,
-        AngularSvgIconModule,
-    ],
-    declarations: [
-        NxPlayerPlaceholderComponent
-    ],
-    providers: [
-        NxPlayerPlaceholderComponent
-    ],
-    exports: [
-        NxPlayerPlaceholderComponent
-    ]
+    imports: [CommonModule, RouterModule, AngularSvgIconModule],
+    declarations: [NxPlayerPlaceholderComponent],
+    providers: [NxPlayerPlaceholderComponent],
+    exports: [NxPlayerPlaceholderComponent],
 })
-
 export class PlayerPlaceholderModule {}

@@ -8,8 +8,7 @@ import { TextTransformPipe } from './nx-split-text';
 import { NxTranslatePipe } from './nx-translate.pipe';
 
 @NgModule({
-    imports: [
-    ],
+    imports: [],
     declarations: [
         NxTranslatePipe,
         NxHealthDatePipe,
@@ -26,7 +25,6 @@ import { NxTranslatePipe } from './nx-translate.pipe';
         AsPipe,
         EscapeHtmlPipe,
     ],
-    providers: [NxHealthDatePipe]
+    providers: [NxHealthDatePipe],
 })
-export class PipesModule {
-}
+export class PipesModule {}

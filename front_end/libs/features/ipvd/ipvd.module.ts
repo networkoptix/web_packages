@@ -30,8 +30,8 @@ const appRoutes: Routes = [
     {
         path: '',
         title: 'supportedDevices',
-        component: NxIpvdComponent
-    }
+        component: NxIpvdComponent,
+    },
 ];
 
 @NgModule({
@@ -55,9 +55,7 @@ const appRoutes: Routes = [
         SearchModule,
         TagModule,
     ],
-    providers: [
-        IpvdSearchService
-    ],
+    providers: [IpvdSearchService],
     declarations: [
         NxIpvdComponent,
         CamViewComponent,
@@ -67,9 +65,6 @@ const appRoutes: Routes = [
         NxCamerasTableComponent,
     ],
     bootstrap: [],
-    exports: [
-        NxIpvdComponent
-    ]
+    exports: [NxIpvdComponent],
 })
-
 export class IpvdModule {}

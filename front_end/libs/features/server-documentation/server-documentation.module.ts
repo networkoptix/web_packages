@@ -23,7 +23,6 @@ const appRoutes: Routes = [
     providers: [],
     declarations: [NxServerDocumentationComponent],
     bootstrap: [],
-    exports: []
+    exports: [],
 })
-export class NxServerDocumentationModule {
-}
+export class NxServerDocumentationModule {}

@@ -7,21 +7,9 @@ import { HeaderMobileModule } from './mobile/mobile.module';
 import { NxNewHeaderComponent } from './new-header.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        HeaderLevelOneModule,
-        HeaderLevelTwoModule,
-        HeaderMobileModule,
-    ],
-    declarations: [
-        NxNewHeaderComponent,
-    ],
-    providers: [
-        NxNewHeaderComponent
-    ],
-    exports: [
-        NxNewHeaderComponent
-    ]
+    imports: [CommonModule, HeaderLevelOneModule, HeaderLevelTwoModule, HeaderMobileModule],
+    declarations: [NxNewHeaderComponent],
+    providers: [NxNewHeaderComponent],
+    exports: [NxNewHeaderComponent],
 })
-
 export class NewHeaderModule {}

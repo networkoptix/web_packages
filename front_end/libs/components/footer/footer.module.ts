@@ -16,17 +16,10 @@ import { NxFooterComponent } from './footer.component';
         RouterModule,
         TranslateModule,
         PipesModule,
-        DirectivesModule
+        DirectivesModule,
     ],
-    declarations: [
-        NxFooterComponent
-    ],
-    providers: [
-        NxFooterComponent
-    ],
-    exports: [
-        NxFooterComponent
-    ]
+    declarations: [NxFooterComponent],
+    providers: [NxFooterComponent],
+    exports: [NxFooterComponent],
 })
-
 export class FooterModule {}

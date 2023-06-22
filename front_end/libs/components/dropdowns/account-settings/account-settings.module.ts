@@ -9,22 +9,9 @@ import { DirectivesModule } from '@directives/directives.module';
 import { NxAccountSettingsDropdown } from './account-settings.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule,
-        TranslateModule,
-        AngularSvgIconModule,
-        DirectivesModule
-    ],
-    declarations: [
-        NxAccountSettingsDropdown
-    ],
-    providers: [
-        NxAccountSettingsDropdown
-    ],
-    exports: [
-        NxAccountSettingsDropdown
-    ]
+    imports: [CommonModule, RouterModule, TranslateModule, AngularSvgIconModule, DirectivesModule],
+    declarations: [NxAccountSettingsDropdown],
+    providers: [NxAccountSettingsDropdown],
+    exports: [NxAccountSettingsDropdown],
 })
-
 export class AccountSettingsModule {}

@@ -28,15 +28,8 @@ import { NxSystemsListComponent } from './list.component';
         SearchModule,
         TagModule,
     ],
-    declarations: [
-        NxSystemsListComponent
-    ],
-    providers: [
-        NxSystemsListComponent
-    ],
-    exports: [
-        NxSystemsListComponent
-    ]
+    declarations: [NxSystemsListComponent],
+    providers: [NxSystemsListComponent],
+    exports: [NxSystemsListComponent],
 })
-
-export class SystemListModule { }
+export class SystemListModule {}

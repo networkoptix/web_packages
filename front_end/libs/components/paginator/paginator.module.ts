@@ -5,19 +5,9 @@ import { RouterModule } from '@angular/router';
 import { NxPaginatorComponent } from './paginator.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule
-    ],
-    declarations: [
-        NxPaginatorComponent
-    ],
-    providers: [
-        NxPaginatorComponent
-    ],
-    exports: [
-        NxPaginatorComponent
-    ]
+    imports: [CommonModule, RouterModule],
+    declarations: [NxPaginatorComponent],
+    providers: [NxPaginatorComponent],
+    exports: [NxPaginatorComponent],
 })
-
 export class PaginatorModule {}

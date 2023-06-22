@@ -16,8 +16,8 @@ const appRoutes: Routes = [
         path: '',
         title: '{"baseTitle": "", "type": "info", "descr": ["landing", "description"]}',
         component: NxLandingComponent,
-        pathMatch: 'full'
-    }
+        pathMatch: 'full',
+    },
 ];
 
 @NgModule({
@@ -32,11 +32,8 @@ const appRoutes: Routes = [
         PreLoaderModule,
     ],
     providers: [],
-    declarations: [
-        NxLandingComponent
-    ],
+    declarations: [NxLandingComponent],
     bootstrap: [],
-    exports: []
+    exports: [],
 })
-export class LandingModule {
-}
+export class LandingModule {}

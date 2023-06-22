@@ -7,20 +7,9 @@ import { ContentBlockSectionModule } from '../section/section.module';
 import { NxAlertBlockComponent } from './block.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        AngularSvgIconModule,
-        ContentBlockSectionModule,
-    ],
-    declarations: [
-        NxAlertBlockComponent
-    ],
-    providers: [
-        NxAlertBlockComponent
-    ],
-    exports: [
-        NxAlertBlockComponent
-    ]
+    imports: [CommonModule, AngularSvgIconModule, ContentBlockSectionModule],
+    declarations: [NxAlertBlockComponent],
+    providers: [NxAlertBlockComponent],
+    exports: [NxAlertBlockComponent],
 })
-
 export class AlertBlockModule {}
