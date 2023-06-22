@@ -4,6 +4,10 @@
 	position: relative;
 	display: block;
 
+	&:hover input:enabled ~ .spinner-button {
+		display: block;
+	}
+
 	input {
 		&.ng-invalid:not(.ng-untouched) {
 			input {
@@ -11,32 +15,33 @@
 			}
 		}
 
-		&:disabled::-webkit-outer-spin-button,
-		&:disabled::-webkit-inner-spin-button {
-			-webkit-appearance: none;
-			margin: 0;
-		}
-
-
 		&:disabled ~ div.spinner-button {
 			display: none !important;
 		}
 		&:focus ~ div.spinner-button,
-		&:hover:not(:disabled) ~ div.spinner-button {
+		{
 			display: block !important;
+		}
+
+		&::-webkit-outer-spin-button,
+		&::-webkit-inner-spin-button {
+			-webkit-appearance: none;
+		}
+		& {
+			-moz-appearance:textfield;
 		}
 	}
 
 	.spinner-button {
 		display: none;
 		position: absolute;
-		cursor: default;
+		cursor: pointer;
 		z-index: 2;
 		background-color: var(--input-numeric-arrow-bg);
 		width: 15px;
 		text-align: center;
 		margin: 0;
-		pointer-events: none;
+		pointer-events: auto;
 		height: 15px;
 		line-height: 10px;
 		right: 3px;

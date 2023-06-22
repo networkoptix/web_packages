@@ -1,4 +1,5 @@
 <input
+    #input
     type="number"
     inputmode="numeric"
     pattern="[0-9]*"
@@ -14,17 +15,23 @@
     [disabled]="disabled"
     [(ngModel)]="_value"
     (paste)="onPaste($event)"
-    (change)="valueChanged($event)"
-    (keyup)="setValue($event)"
-    (keydown)="checkValue($event)"
+    (input)="valueChanged($event)"
+    (keydown)="onKeyDown($event)"
+    (keyup)="valueChanged()"
 />
-<div class="spinner-button spinner-button--increment">
+<div
+    class="spinner-button spinner-button--increment"
+    (mousedown)="increment($event)"
+>
     <svg-icon
         nx-add-svg-src
         [src]="icons.dirTextButtons + 'arrow_expand.svg'"
     ></svg-icon>
 </div>
-<div class="spinner-button spinner-button--decrement">
+<div
+    class="spinner-button spinner-button--decrement"
+    (mousedown)="decrement($event)"
+>
     <svg-icon
         nx-add-svg-src
         [src]="icons.dirTextButtons + 'arrow_expand.svg'"
