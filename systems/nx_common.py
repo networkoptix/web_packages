@@ -83,7 +83,7 @@ class LicenseConnector:
         if token:
             self.update_token(token)
 
-    def _license_get(self, route, params=None):
+    async def _license_get(self, route, params=None):
         url = f"https://{LICENSE_PORTAL}{route}"
         res = await self.session.get(url, params=params)
         res.raise_for_status()
