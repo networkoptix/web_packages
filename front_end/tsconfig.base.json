@@ -39,7 +39,8 @@
             "@openLibs/*": [
                 "node_modules/nx-open-web/packages/*",
                 "node_modules/nx-open-web-candidate/packages/*"
-            ]
+            ],
+            "@ngx-translate/core": ["libs/ngx-translate-patch/index.ts"]
         },
         "typeRoots": ["node_modules/@types"],
         "types": ["jasmine", "node"]

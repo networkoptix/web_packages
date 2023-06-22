@@ -322,7 +322,8 @@ module.exports = {
                     ],
                     pathGroups: Object.keys(
                         require('./tsconfig.base.json').compilerOptions.paths,
-                    ).map(path => ({
+                        // We're patching ngx-translate core
+                    ).filter(path => path !== '@ngx-translate/core').map(path => ({
                         pattern: `${path}*`,
                         /* Assuming that tsconfig paths end with single asterisk so
                 that the pattern here will end with double asterisk */
