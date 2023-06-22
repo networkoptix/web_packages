@@ -566,7 +566,11 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                     this.updatePromise = undefined;
                     // TODO: re-do ribbonService to handle multiple pages better
                     const { url } = this.router;
-                    if (this.isAvailable && url.includes('systems') && !url.includes('health')) {
+                    if (
+                        this.isAvailable &&
+                        url.includes('systems') &&
+                        ['health', 'layouts'].every(route => !url.includes(route))
+                    ) {
                         this.ribbonService.hide();
                     }
                 });
