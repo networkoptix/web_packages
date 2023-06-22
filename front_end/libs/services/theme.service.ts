@@ -110,10 +110,9 @@ export class NxThemeService {
         }
 
         this.themeSelected = this.sessionStorage.retrieve('theme');
-        NxConfigService.isDarkTheme = this.themeSelected === 'dark';
+        NxConfigService.isDarkTheme = this.themeSelected.startsWith('dark');
 
         this.darkThemeMq = this.window.matchMedia('(prefers-color-scheme: dark)');
-
         this.darkThemeMq.addEventListener('change', e => {
             this.themeSelected = this.sessionStorage.retrieve('theme');
             if (this.themeSelected !== 'auto') {
