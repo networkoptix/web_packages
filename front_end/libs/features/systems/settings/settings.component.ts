@@ -145,7 +145,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
          */
         this.menuVisible = !!this.content.level1
             .find(({ id }) => id === menus.systemSettings.admin.id)
-            ?.level3.find(({ id }) => id === menus.systemSettings.general.id);
+            ?.level3?.find(({ id }) => id === menus.systemSettings.general.id);
         this.content = { ...this.content };
 
         if (environment.isLocal || !this.system || !this.menuVisible) {

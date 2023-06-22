@@ -76,9 +76,9 @@ export class NxSystemService {
 
         this.system = system;
         this.system.lostConnection = false;
-        // if (!skipPoll) {
-        //     this.system.startPoll(systemId);
-        // }
+        if (!skipPoll) {
+            this.system.startPoll(systemId);
+        }
         return this.system;
     }
 
