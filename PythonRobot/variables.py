@@ -37,6 +37,7 @@ ACCOUNT_DOES_NOT_EXIST = f"//nx-authorize-component//p[contains(text(),'{ACCOUNT
 #TODO: this needs to be proper translated value
 LOG_IN_BUTTON_TEXT = "Log In"
 LOG_IN_NAV_BAR = f"//header//a[contains(text(),'{LOG_IN_BUTTON_TEXT}')]/.."
+WRONG_PASSWORD_MESSAGE = f"//nx-authorize-component//p[contains(text(),'Wrong password')]"
 
 HEADER_ICON_LINK = f"//nx-header/header//div[@class='app-header-left']//a[contains(@class, 'navbar-brand')]"
 LOGO_ICON = f"{HEADER_ICON_LINK}/img"

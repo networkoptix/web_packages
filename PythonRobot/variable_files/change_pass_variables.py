@@ -1,13 +1,15 @@
 VALID_EMAIL = "noptixqa+valid@gmail.com"
 SYMBOL_PASSWORD = '''pass!@#$%^&*()_-+=;:'"`~,./\|?[]{}'''
 SPACE_PASSWORD = "qwea sd 123"
+ALT_PASSWORD = "qweasd1234"
 
 #CHANGE_PASSWORD_LEFT_MENU_LINK = f"//nx-menu//span[contains(text(), {CHANGE_PASSWORD_LEFT_MENU_TEXT})]"
 CHANGE_PASSWORD_FORM = f"//nx-account-password-component//form"
 CURRENT_PASSWORD_INPUT = f"{CHANGE_PASSWORD_FORM}//input[@id='password']"
 NEW_PASSWORD_INPUT = f"{CHANGE_PASSWORD_FORM}//input[@id='newPassword']"
 CHANGE_PASSWORD_BUTTON = f"//nx-account-password-component//nx-apply//nx-process-button//button"
-#CANCEL_PASSWORD_CHANGES_BUTTON = f"//nx-account-password-component//nx-apply//button[contains(text(), {CANCEL_CHANGES_BUTTON_TEXT})]"
+# Todo: add back {CANCEL_CHANGES_BUTTON_TEXT} to text() call
+CANCEL_PASSWORD_CHANGES_BUTTON = f"//nx-account-password-component//nx-apply//button[contains(text(), 'Cancel')]"
 #PASSWORD_IS_REQUIRED = f"//div[contains(@class,input-error) and contains(text(),{REQUIRED_TEXT})]"
 #CHANGE_PASS_EYE_ICON_OPEN = f"{CHANGE_PASSWORD_FORM}{EYE_ICON_OPEN}"
 #CHANGE_PASS_EYE_ICON_CLOSED = f"{CHANGE_PASSWORD_FORM}{EYE_ICON_CLOSED}"

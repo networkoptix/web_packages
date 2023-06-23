@@ -36,7 +36,7 @@ def verify_in_account_page(driver: webdriver):
 
 
 def validate_log_out(driver: webdriver):
-    robot_keywords.wait_until_element_is_visible(driver, BACKDROP)
+    robot_keywords.wait_until_element_is_not_visible(driver, BACKDROP)
     robot_keywords.wait_until_page_contains_element(driver, ANONYMOUS_BODY)
     
 def verify_in_account_page(driver: webdriver):
@@ -109,4 +109,4 @@ def log_out_cloud(driver: webdriver):
     robot_keywords.click_button(driver, ACCOUNT_DROPDOWN)
     robot_keywords.wait_until_element_is_visible(driver, LOG_OUT_BUTTON)
     robot_keywords.click_on_link(driver, LOG_OUT_BUTTON)
-    validate_log_out()
+    validate_log_out(driver)
