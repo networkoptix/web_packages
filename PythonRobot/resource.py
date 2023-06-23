@@ -2,7 +2,7 @@ from account_variables import BACKDROP, ANONYMOUS_BODY
 from variable_files.variables import LOG_IN_BUTTON_TEXT, PASSWORD_BADGE, COMMON_PASSWORD, PASSWORD_IS_TOO_COMMON_BADGE, PASSWORD_IS_WEAK_BADGE, PASSWORD_IS_FAIR_BADGE, PASSWORD_IS_GOOD_BADGE 
 from variable_files.variables import PASSWORD_IS_TOO_SHORT_BADGE, PASSWORD_INCORRECT_BADGE, PASSWORD_BADGE_TOOLTIP, WEAK_PASSWORDS, INCORRECT_PASSWORDS, FAIR_PASSWORDS, GOOD_PASSWORDS, SEVEN_CHAR_PASSWORD
 from account_variables import ACCOUNT_CANCEL, ACCOUNT_DROPDOWN, ACCOUNT_EMAIL, ACCOUNT_FIRST_NAME, ACCOUNT_LANGUAGE_DROPDOWN, ACCOUNT_LAST_NAME, ACCOUNT_SETTINGS_BUTTON, DELETE_ACCOUNT_BUTTON
-
+from variables import LOG_OUT_BUTTON
 import robot_keywords
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -101,3 +101,12 @@ def move_focus_and_check_badge_stays(driver, badge, new_focus):
     robot_keywords.element_should_be_visible(driver, badge)
     robot_keywords.click_element(driver, new_focus)
     robot_keywords.element_should_be_visible(driver, badge)
+
+def log_out_cloud(driver: webdriver):
+    robot_keywords.wait_until_page_does_not_contain_element(driver, BACKDROP)
+    robot_keywords.wait_until_page_contains_element(driver, LOG_OUT_BUTTON)
+    robot_keywords.wait_until_element_is_visible(driver, ACCOUNT_DROPDOWN)
+    robot_keywords.click_button(driver, ACCOUNT_DROPDOWN)
+    robot_keywords.wait_until_element_is_visible(driver, LOG_OUT_BUTTON)
+    robot_keywords.click_on_link(driver, LOG_OUT_BUTTON)
+    validate_log_out()

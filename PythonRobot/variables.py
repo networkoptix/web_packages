@@ -28,6 +28,9 @@ EMAIL_INPUT = f"//nx-authorize-component//input[@id='authorizeEmail']"
 PASSWORD_INPUT = f"//nx-authorize-component//input[@id='authorizePassword' and @name='password' and @type='password']"
 LOG_IN_BUTTON = f"//nx-authorize-component//nx-process-button[@data-testid='btnLogin']"
 
+# TODO: Add LOG_OUT_BUTTON_TEXT back to the text() call
+LOG_OUT_BUTTON = f"//header//li[contains(@class, 'dropdown-item-container')]//a/span[contains(text(),'Log Out')]/.."
+
 YOU_CAN_CREATE_AN_ACCOUNT = f"//nx-authorize-component//p[contains(text(),{YOU_CAN_CREATE_ACCOUNT_TEXT})]"
 ACCOUNT_DOES_NOT_EXIST = f"//nx-authorize-component//p[contains(text(),'{ACCOUNT_DOES_NOT_EXIST_TEXT}')]"
 
