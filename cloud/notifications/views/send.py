@@ -247,8 +247,8 @@ def send_notification(request):
         notifications_api.send(request.data['user_email'],
                                request.data['type'],
                                request.data['message'],
-                               customization = request.CUSTOMIZATION,
-                               external_id = external_id)
+                               customization=request.data['customization'],
+                               external_id=external_id)
     except ValidationError as error:
         error_data = error.detail if hasattr(error, 'detail') else None
         raise APIRequestException(
