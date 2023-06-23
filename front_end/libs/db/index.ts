@@ -5,7 +5,6 @@ import { chunk, zip } from 'lodash-es';
 import md5 from 'md5';
 import stringify from 'safe-stable-stringify';
 
-import { environment } from '@environments/environment';
 import { getUser } from '@utils/user';
 
 // Alias the table definitions to make it easier to import them.
