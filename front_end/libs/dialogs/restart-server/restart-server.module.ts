@@ -19,12 +19,8 @@ import { RestartServerModalContent } from './restart-server.component';
         ProcessButtonModule,
         ProcessCancelButtonModule,
     ],
-    declarations: [
-        RestartServerModalContent,
-    ],
+    declarations: [RestartServerModalContent],
     providers: [],
-    exports: [
-        RestartServerModalContent,
-    ]
+    exports: [RestartServerModalContent],
 })
 export class RestartServerModalModule {}

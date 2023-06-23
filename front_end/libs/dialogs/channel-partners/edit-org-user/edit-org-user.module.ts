@@ -22,12 +22,8 @@ import { NxEditOrgUserModalContent } from './edit-org-user.component';
         ProcessButtonModule,
         ProcessCancelButtonModule,
     ],
-    declarations: [
-        NxEditOrgUserModalContent,
-    ],
+    declarations: [NxEditOrgUserModalContent],
     providers: [],
-    exports: [
-        NxEditOrgUserModalContent,
-    ]
+    exports: [NxEditOrgUserModalContent],
 })
 export class NxEditOrgUserModule {}

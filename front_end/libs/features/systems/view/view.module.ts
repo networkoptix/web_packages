@@ -41,20 +41,13 @@ import { VmsClientModule } from './vms-client/vms-client.module';
         VmsClientVmsModule,
         VmsClientModule,
     ],
-    providers: [
-        CookieService,
-        CameraQualityStorageService,
-        CameraTransportStorageService
-    ],
+    providers: [CookieService, CameraQualityStorageService, CameraTransportStorageService],
     declarations: [
         NxSystemViewIndexPageComponent,
         NxSystemViewCameraPageComponent,
         NxCameraDetailsComponent,
     ],
     bootstrap: [],
-    exports: [
-        NxSystemViewIndexPageComponent
-    ]
+    exports: [NxSystemViewIndexPageComponent],
 })
-export class NxSystemViewModule {
-}
+export class NxSystemViewModule {}

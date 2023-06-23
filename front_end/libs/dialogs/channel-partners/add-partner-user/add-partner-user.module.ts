@@ -22,12 +22,8 @@ import { AddPartnerUserModalContent } from './add-partner-user.component';
         ProcessButtonModule,
         ProcessCancelButtonModule,
     ],
-    declarations: [
-        AddPartnerUserModalContent,
-    ],
+    declarations: [AddPartnerUserModalContent],
     providers: [],
-    exports: [
-        AddPartnerUserModalContent,
-    ]
+    exports: [AddPartnerUserModalContent],
 })
 export class AddPartnerUserModalModule {}

@@ -7,8 +7,7 @@ import { VmsClientTimelineModule } from './submodules/timeline/timeline.module';
 import { VmsClientVmsModule } from './submodules/vms/vms.module';
 
 @NgModule({
-    declarations: [
-    ],
+    declarations: [],
     imports: [
         CommonModule,
         TranslateModule,
@@ -16,10 +15,7 @@ import { VmsClientVmsModule } from './submodules/vms/vms.module';
         VmsClientPlaybackModule,
         VmsClientTimelineModule,
     ],
-    providers: [
-    ],
-    exports: [
-    ]
+    providers: [],
+    exports: [],
 })
-export class VmsClientModule {
-}
+export class VmsClientModule {}

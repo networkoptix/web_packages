@@ -6,16 +6,9 @@ import { PipesModule } from '@app/pipes/pipes.module';
 import { WizardModalContent } from './wizard.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        PipesModule,
-    ],
-    declarations: [
-        WizardModalContent,
-    ],
+    imports: [CommonModule, PipesModule],
+    declarations: [WizardModalContent],
     providers: [],
-    exports: [
-        WizardModalContent,
-    ]
+    exports: [WizardModalContent],
 })
 export class NxWizardModalModule {}

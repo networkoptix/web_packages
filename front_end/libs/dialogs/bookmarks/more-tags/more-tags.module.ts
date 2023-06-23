@@ -19,12 +19,8 @@ import { NxMoreTagsModalContent } from './more-tags.component';
         NxMoreFiltersBaseModule,
         NxSimpleSearchModule,
     ],
-    declarations: [
-        NxMoreTagsModalContent,
-    ],
+    declarations: [NxMoreTagsModalContent],
     providers: [],
-    exports: [
-        NxMoreTagsModalContent,
-    ]
+    exports: [NxMoreTagsModalContent],
 })
 export class NxMoreTagsModule {}

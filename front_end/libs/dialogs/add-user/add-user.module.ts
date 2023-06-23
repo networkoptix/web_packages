@@ -22,12 +22,8 @@ import { AddUserModalContent } from './add-user.component';
         ProcessButtonModule,
         ProcessCancelButtonModule,
     ],
-    declarations: [
-        AddUserModalContent,
-    ],
+    declarations: [AddUserModalContent],
     providers: [],
-    exports: [
-        AddUserModalContent,
-    ]
+    exports: [AddUserModalContent],
 })
 export class AddUserModalModule {}

@@ -18,12 +18,8 @@ import { NxUpdateSessionModalContent } from './update-session.component';
         ProcessButtonModule,
         ProcessCancelButtonModule,
     ],
-    declarations: [
-        NxUpdateSessionModalContent,
-    ],
+    declarations: [NxUpdateSessionModalContent],
     providers: [],
-    exports: [
-        NxUpdateSessionModalContent,
-    ]
+    exports: [NxUpdateSessionModalContent],
 })
 export class NxUpdateSessionModalModule {}

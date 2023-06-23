@@ -19,13 +19,9 @@ import { LoginWebadminModalContent } from './login-webadmin.component';
         TranslateModule,
         CommonModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
     ],
-    declarations: [
-        LoginWebadminModalContent
-    ],
-    exports: [
-        LoginWebadminModalContent
-    ]
+    declarations: [LoginWebadminModalContent],
+    exports: [LoginWebadminModalContent],
 })
-export class LoginWebadminModule { }
+export class LoginWebadminModule {}

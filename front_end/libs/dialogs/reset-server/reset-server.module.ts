@@ -19,12 +19,8 @@ import { ResetServerModalContent } from './reset-server.component';
         ProcessButtonModule,
         ProcessCancelButtonModule,
     ],
-    declarations: [
-        ResetServerModalContent,
-    ],
+    declarations: [ResetServerModalContent],
     providers: [],
-    exports: [
-        ResetServerModalContent,
-    ]
+    exports: [ResetServerModalContent],
 })
 export class NxResetServerModalModule {}

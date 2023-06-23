@@ -4,20 +4,21 @@ import { Routes, RouterModule } from '@angular/router';
 const routes: Routes = [
     {
         path: 'redirect-oauth',
-        loadChildren: () => import('./oauth-redirect/oauth-redirect.module').then(m => m.NxOAuthRedirectModule)
+        loadChildren: () =>
+            import('./oauth-redirect/oauth-redirect.module').then(m => m.NxOAuthRedirectModule),
     },
     {
         path: 'authorize',
-        loadChildren: () => import('./components/authorize.module').then(m => m.NxAuthorizeModule)
+        loadChildren: () => import('./components/authorize.module').then(m => m.NxAuthorizeModule),
     },
     {
         path: '**',
-        redirectTo: '/authorize'
-    }
+        redirectTo: '/authorize',
+    },
 ];
 
 @NgModule({
     imports: [RouterModule.forRoot(routes, {})],
-    exports: [RouterModule]
+    exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

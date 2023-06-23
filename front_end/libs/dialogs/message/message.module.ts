@@ -22,12 +22,8 @@ import { MessageModalContent } from './message.component';
         ProcessButtonModule,
         ProcessCancelButtonModule,
     ],
-    declarations: [
-        MessageModalContent,
-    ],
+    declarations: [MessageModalContent],
     providers: [],
-    exports: [
-        MessageModalContent,
-    ]
+    exports: [MessageModalContent],
 })
 export class MessageModalModule {}

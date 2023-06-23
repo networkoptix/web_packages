@@ -4,7 +4,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { MESSAGE_FORMAT_CONFIG, TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
+import {
+    MESSAGE_FORMAT_CONFIG,
+    TranslateMessageFormatCompiler,
+} from 'ngx-translate-messageformat-compiler';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
@@ -22,28 +25,26 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
 }
 
 @NgModule({
-    declarations: [
-        AppComponent
-    ],
+    declarations: [AppComponent],
     imports: [
         BrowserModule,
         BrowserAnimationsModule.withConfig({
             // Disable animations if not supported (on iPhone 6 / Safari 13)
             disableAnimations:
-        !('animate' in document.documentElement) ||
-        (navigator && /iPhone OS (8|9|10|11|12|13)_/.test(navigator.userAgent)),
+                !('animate' in document.documentElement) ||
+                (navigator && /iPhone OS (8|9|10|11|12|13)_/.test(navigator.userAgent)),
         }),
         AppRoutingModule,
         HttpClientModule,
         HttpClientXsrfModule.withOptions({
             cookieName: 'csrftoken',
-            headerName: 'X-CSRFToken'
+            headerName: 'X-CSRFToken',
         }),
         TranslateModule.forRoot({
             compiler: {
                 provide: TranslateCompiler,
-                useClass: TranslateMessageFormatCompiler
-            }
+                useClass: TranslateMessageFormatCompiler,
+            },
         }),
         AngularSvgIconModule.forRoot(),
         NgxWebstorageModule.forRoot(),
@@ -52,10 +53,15 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
     providers: [
         NxUriCacheService,
         WINDOWS_PROVIDERS,
-        { provide: APP_INITIALIZER, useFactory: NxBootstrapProviderFactory, deps: [NxBootstrapProvider], multi: true },
+        {
+            provide: APP_INITIALIZER,
+            useFactory: NxBootstrapProviderFactory,
+            deps: [NxBootstrapProvider],
+            multi: true,
+        },
         { provide: MESSAGE_FORMAT_CONFIG, useValue: { disablePluralKeyChecks: true } },
         WizardStateService,
     ],
-    bootstrap: [AppComponent]
+    bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

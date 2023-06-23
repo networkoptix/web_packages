@@ -30,43 +30,54 @@ export const setupWizardRoutes: Routes = [
         children: [
             {
                 path: 'advanced',
-                component: AdvancedComponent
-            }, {
+                component: AdvancedComponent,
+            },
+            {
                 path: 'brokenSystem',
-                component: BrokenSystemComponent
-            }, {
+                component: BrokenSystemComponent,
+            },
+            {
                 path: 'initFailure',
-                component: InitFailureComponent
-            }, {
+                component: InitFailureComponent,
+            },
+            {
                 path: 'localFailure',
-                component: LocalFailureComponent
-            }, {
+                component: LocalFailureComponent,
+            },
+            {
                 path: 'localLogin',
-                component: LocalLoginComponent
-            }, {
+                component: LocalLoginComponent,
+            },
+            {
                 path: 'localSuccess',
-                component: LocalSuccessComponent
-            }, {
+                component: LocalSuccessComponent,
+            },
+            {
                 path: 'merge',
-                component: MergeComponent
-            }, {
+                component: MergeComponent,
+            },
+            {
                 path: 'mergeFailed',
-                component: MergeFailedComponent
-            }, {
+                component: MergeFailedComponent,
+            },
+            {
                 path: 'mergeProcess',
-                component: MergeProcessComponent
-            }, {
+                component: MergeProcessComponent,
+            },
+            {
                 path: 'start',
-                component: StartComponent
-            }, {
+                component: StartComponent,
+            },
+            {
                 path: 'systemName',
-                component: SystemNameComponent
-            }, {
+                component: SystemNameComponent,
+            },
+            {
                 path: '**',
-                component: ErrorComponent
-            }
-        ]
-    }
+                component: ErrorComponent,
+            },
+        ],
+    },
 ];
 
 @NgModule({
@@ -78,10 +89,9 @@ export const setupWizardRoutes: Routes = [
         AngularSvgIconModule,
         DirectivesModule,
         PipesModule,
-        PreLoaderModule
+        PreLoaderModule,
     ],
-    providers: [
-    ],
+    providers: [],
     declarations: [
         ErrorComponent,
         LocalSuccessComponent,
@@ -94,9 +104,6 @@ export const setupWizardRoutes: Routes = [
         BrokenSystemComponent,
         InitFailureComponent,
     ],
-    exports: [
-        WizardComponent
-    ]
+    exports: [WizardComponent],
 })
-export class WizardModule {
-}
+export class WizardModule {}

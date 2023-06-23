@@ -12,12 +12,8 @@ import { NewFeatureInformationModalContent } from './new-feature.component';
         AngularSvgIconModule,
         TranslateModule,
     ],
-    declarations: [
-        NewFeatureInformationModalContent,
-    ],
+    declarations: [NewFeatureInformationModalContent],
     providers: [],
-    exports: [
-        NewFeatureInformationModalContent,
-    ]
+    exports: [NewFeatureInformationModalContent],
 })
 export class NewFeatureInformationModalModule {}

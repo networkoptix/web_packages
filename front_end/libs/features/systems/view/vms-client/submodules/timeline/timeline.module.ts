@@ -3,25 +3,13 @@ import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import {
-    TimeUnderMouseComponent
-} from './components/time-under-mouse/time-under-mouse.component';
+import { TimeUnderMouseComponent } from './components/time-under-mouse/time-under-mouse.component';
 import { TimelineComponent } from './components/timeline/timeline.component';
-import {
-    TimelinePlaybackIndicatorComponent
-} from './components/timeline-playback-indicator/timeline-playback-indicator.component';
-import {
-    TimelineScrollbarComponent
-} from './components/timeline-scrollbar/timeline-scrollbar.component';
-import {
-    TimelineSelectionComponent
-} from './components/timeline-selection/timeline-selection.component';
-import {
-    TimelineSelectionActionPanelComponent
-} from './components/timeline-selection-action-panel/timeline-selection-action-panel.component';
-import {
-    ZoomControlsComponent
-} from './components/zoom-controls/zoom-controls.component';
+import { TimelinePlaybackIndicatorComponent } from './components/timeline-playback-indicator/timeline-playback-indicator.component';
+import { TimelineScrollbarComponent } from './components/timeline-scrollbar/timeline-scrollbar.component';
+import { TimelineSelectionComponent } from './components/timeline-selection/timeline-selection.component';
+import { TimelineSelectionActionPanelComponent } from './components/timeline-selection-action-panel/timeline-selection-action-panel.component';
+import { ZoomControlsComponent } from './components/zoom-controls/zoom-controls.component';
 
 @NgModule({
     declarations: [
@@ -37,14 +25,9 @@ import {
         TimelineComponent,
         ZoomControlsComponent,
         TimelineSelectionActionPanelComponent,
-        TimelineScrollbarComponent
+        TimelineScrollbarComponent,
     ],
-    imports: [
-        CommonModule,
-        AngularSvgIconModule,
-        TranslateModule,
-    ],
-    providers: []
+    imports: [CommonModule, AngularSvgIconModule, TranslateModule],
+    providers: [],
 })
-export class VmsClientTimelineModule {
-}
+export class VmsClientTimelineModule {}

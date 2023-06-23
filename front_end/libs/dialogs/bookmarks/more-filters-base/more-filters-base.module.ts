@@ -4,15 +4,9 @@ import { NgModule } from '@angular/core';
 import { NxMoreFiltersBaseModalContent } from './more-filters-base.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-    ],
-    declarations: [
-        NxMoreFiltersBaseModalContent,
-    ],
+    imports: [CommonModule],
+    declarations: [NxMoreFiltersBaseModalContent],
     providers: [],
-    exports: [
-        NxMoreFiltersBaseModalContent,
-    ]
+    exports: [NxMoreFiltersBaseModalContent],
 })
 export class NxMoreFiltersBaseModule {}

@@ -18,12 +18,8 @@ import { ConnectCloudModalContent } from './connect-cloud.component';
         ProcessButtonModule,
         ProcessCancelButtonModule,
     ],
-    declarations: [
-        ConnectCloudModalContent,
-    ],
+    declarations: [ConnectCloudModalContent],
     providers: [],
-    exports: [
-        ConnectCloudModalContent,
-    ]
+    exports: [ConnectCloudModalContent],
 })
 export class ConnectCloudModalModule {}

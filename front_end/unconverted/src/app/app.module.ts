@@ -1,14 +1,6 @@
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
-import {
-    Location,
-    PathLocationStrategy,
-    DatePipe
-} from '@angular/common';
-import {
-    HttpClientModule,
-    HttpClientXsrfModule,
-    HTTP_INTERCEPTORS
-} from '@angular/common/http';
+import { Location, PathLocationStrategy, DatePipe } from '@angular/common';
+import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { AngularFireModule, FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { AngularFireMessagingModule } from '@angular/fire/compat/messaging';
@@ -26,7 +18,7 @@ import { NgxMaskModule } from 'ngx-mask';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 import {
     TranslateMessageFormatCompiler,
-    MESSAGE_FORMAT_CONFIG
+    MESSAGE_FORMAT_CONFIG,
 } from 'ngx-translate-messageformat-compiler';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 
@@ -67,7 +59,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         HttpClientModule,
         HttpClientXsrfModule.withOptions({
             cookieName: 'csrftoken',
-            headerName: 'X-CSRFToken'
+            headerName: 'X-CSRFToken',
         }),
         PopoverModule,
         RouterModule,
@@ -77,22 +69,22 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         TranslateModule.forRoot({
             compiler: {
                 provide: TranslateCompiler,
-                useClass: TranslateMessageFormatCompiler
-            }
+                useClass: TranslateMessageFormatCompiler,
+            },
         }),
         NgxTranslateCutModule.forRoot(),
         NgxWebstorageModule.forRoot(),
         AppRoutingModule,
         ServiceWorkerModule.register('ngsw-worker.js', {
             enabled: environment.production,
-            registrationStrategy: 'registerImmediately'
+            registrationStrategy: 'registerImmediately',
         }),
         CdkScrollableModule,
         // HoverPreloadModule,
         PreLoaderModule,
         NavFooterModule,
         ResizeModule,
-        NgxMaskModule.forRoot()
+        NgxMaskModule.forRoot(),
     ],
     providers: [
         Location,
@@ -102,27 +94,27 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         {
             provide: HTTP_INTERCEPTORS,
             useClass: NxSwCacheInterceptor,
-            multi: true
+            multi: true,
         },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: NxUriCachingInterceptor,
-            multi: true
+            multi: true,
         },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: CloudUnavailableInterceptor,
-            multi: true
+            multi: true,
         },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: LocalSystemStatusInterceptor,
-            multi: true
+            multi: true,
         },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: FeatureInterceptor,
-            multi: true
+            multi: true,
         },
         NxConfigService,
         WINDOWS_PROVIDERS,
@@ -130,23 +122,23 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         {
             provide: FIREBASE_OPTIONS,
             deps: [NxConfigService],
-            useFactory: initializeApp
+            useFactory: initializeApp,
         },
         AuthGuard,
         DevelopersGuard,
         SystemGuard,
         ManualAccessGuard,
         DatePipe,
-        { provide: APP_INITIALIZER, useFactory: NxBootstrapProviderFactory, deps: [NxBootstrapProvider], multi: true },
-        { provide: MESSAGE_FORMAT_CONFIG, useValue: { disablePluralKeyChecks: true } }
+        {
+            provide: APP_INITIALIZER,
+            useFactory: NxBootstrapProviderFactory,
+            deps: [NxBootstrapProvider],
+            multi: true,
+        },
+        { provide: MESSAGE_FORMAT_CONFIG, useValue: { disablePluralKeyChecks: true } },
     ],
-    declarations: [
-        AppComponent
-    ],
-    exports: [
-    ],
-    bootstrap: [AppComponent]
+    declarations: [AppComponent],
+    exports: [],
+    bootstrap: [AppComponent],
 })
-
-export class AppModule {
-}
+export class AppModule {}

@@ -17,12 +17,8 @@ import { RemoveUserModalContent } from './remove-user.component';
         ProcessButtonModule,
         ProcessCancelButtonModule,
     ],
-    declarations: [
-        RemoveUserModalContent,
-    ],
+    declarations: [RemoveUserModalContent],
     providers: [],
-    exports: [
-        RemoveUserModalContent,
-    ]
+    exports: [RemoveUserModalContent],
 })
 export class RemoveUserModalModule {}

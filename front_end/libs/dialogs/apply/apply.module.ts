@@ -17,12 +17,8 @@ import { ApplyModalContent } from './apply.component';
         ProcessButtonModule,
         ProcessCancelButtonModule,
     ],
-    declarations: [
-        ApplyModalContent,
-    ],
+    declarations: [ApplyModalContent],
     providers: [],
-    exports: [
-        ApplyModalContent,
-    ]
+    exports: [ApplyModalContent],
 })
 export class ApplyModalModule {}

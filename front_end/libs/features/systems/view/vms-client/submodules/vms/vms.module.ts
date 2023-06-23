@@ -16,10 +16,7 @@ import { IpInfoPipe } from './pipes/ip_info.pipe';
 // import { VideoManagementSystemService } from './services/vms.service'
 
 @NgModule({
-    declarations: [
-        IpInfoPipe,
-        components
-    ],
+    declarations: [IpInfoPipe, components],
     imports: [
         CommonModule,
         FormsModule,
@@ -31,12 +28,9 @@ import { IpInfoPipe } from './pipes/ip_info.pipe';
         PipesModule,
         PreLoaderModule,
     ],
-    exports: [
-        MediaServerListComponent
-    ],
+    exports: [MediaServerListComponent],
     providers: [
         // VideoManagementSystemService,
-    ]
+    ],
 })
-export class VmsClientVmsModule {
-}
+export class VmsClientVmsModule {}

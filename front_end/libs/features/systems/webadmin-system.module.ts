@@ -31,62 +31,62 @@ export const localSettingsRoutes: Routes = [
             {
                 path: '',
                 component: NxSystemAdminComponent,
-                canDeactivate: [ApplyGuard]
+                canDeactivate: [ApplyGuard],
             },
             {
                 path: 'advanced',
                 component: NxSystemAdminComponent,
                 canDeactivate: [ApplyGuard],
-                runGuardsAndResolvers: 'always'
+                runGuardsAndResolvers: 'always',
             },
             {
                 path: 'users',
                 component: NxSystemUsersComponent,
                 canDeactivate: [ApplyGuard],
-                runGuardsAndResolvers: 'always'
+                runGuardsAndResolvers: 'always',
             },
             {
                 path: 'users/:userId',
                 component: NxSystemUsersComponent,
                 canDeactivate: [ApplyGuard],
-                runGuardsAndResolvers: 'always'
+                runGuardsAndResolvers: 'always',
             },
             {
                 path: 'servers',
                 component: NxSystemServersComponent,
                 canDeactivate: [ApplyGuard],
-                runGuardsAndResolvers: 'always'
+                runGuardsAndResolvers: 'always',
             },
             {
                 path: 'servers/:serverId',
                 component: NxSystemServersComponent,
                 canDeactivate: [ApplyGuard],
-                runGuardsAndResolvers: 'always'
+                runGuardsAndResolvers: 'always',
             },
             {
                 path: 'servers/:serverId/advanced',
                 component: NxSystemServersComponent,
-                canDeactivate: [ApplyGuard]
+                canDeactivate: [ApplyGuard],
             },
             {
                 path: 'cameras',
                 component: NxCamerasComponent,
                 canDeactivate: [ApplyGuard],
-                runGuardsAndResolvers: 'always'
+                runGuardsAndResolvers: 'always',
             },
             {
                 path: 'cameras/:cameraId',
                 component: NxCamerasComponent,
                 canDeactivate: [ApplyGuard],
-                runGuardsAndResolvers: 'always'
+                runGuardsAndResolvers: 'always',
             },
             {
                 path: 'licenses',
                 component: NxSystemLicensesComponent,
-                runGuardsAndResolvers: 'always'
-            }
-        ]
-    }
+                runGuardsAndResolvers: 'always',
+            },
+        ],
+    },
 ];
 
 @NgModule({
@@ -104,14 +104,9 @@ export const localSettingsRoutes: Routes = [
         NxSystemLicensesModule,
         PipesModule,
     ],
-    providers: [
-    ],
-    declarations: [
-    ],
-    bootstrap: [
-    ],
-    exports: [
-    ]
+    providers: [],
+    declarations: [],
+    bootstrap: [],
+    exports: [],
 })
-export class NxSystemModule {
-}
+export class NxSystemModule {}

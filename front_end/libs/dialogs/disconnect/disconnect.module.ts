@@ -18,12 +18,8 @@ import { DisconnectModalContent } from './disconnect.component';
         ProcessButtonModule,
         ProcessCancelButtonModule,
     ],
-    declarations: [
-        DisconnectModalContent,
-    ],
+    declarations: [DisconnectModalContent],
     providers: [],
-    exports: [
-        DisconnectModalContent,
-    ]
+    exports: [DisconnectModalContent],
 })
 export class DisconnectModalModule {}

@@ -19,12 +19,8 @@ import { DetachServerModalContent } from './detach-server.component';
         ProcessButtonModule,
         ProcessCancelButtonModule,
     ],
-    declarations: [
-        DetachServerModalContent,
-    ],
+    declarations: [DetachServerModalContent],
     providers: [],
-    exports: [
-        DetachServerModalContent,
-    ]
+    exports: [DetachServerModalContent],
 })
 export class NxDetachServerModalModule {}

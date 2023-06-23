@@ -18,12 +18,8 @@ import { AddOrganizationModalContent } from './add-organization.component';
         ProcessButtonModule,
         ProcessCancelButtonModule,
     ],
-    declarations: [
-        AddOrganizationModalContent,
-    ],
+    declarations: [AddOrganizationModalContent],
     providers: [],
-    exports: [
-        AddOrganizationModalContent,
-    ]
+    exports: [AddOrganizationModalContent],
 })
 export class AddOrganizationModalModule {}

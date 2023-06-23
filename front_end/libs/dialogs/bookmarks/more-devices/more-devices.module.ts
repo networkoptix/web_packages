@@ -21,12 +21,8 @@ import { NxMoreDevicesModalContent } from './more-devices.component';
         CheckboxModule,
         NxSimpleSearchModule,
     ],
-    declarations: [
-        NxMoreDevicesModalContent,
-    ],
+    declarations: [NxMoreDevicesModalContent],
     providers: [],
-    exports: [
-        NxMoreDevicesModalContent,
-    ]
+    exports: [NxMoreDevicesModalContent],
 })
 export class NxMoreDevicesModule {}

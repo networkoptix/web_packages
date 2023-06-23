@@ -20,7 +20,6 @@ import { components } from './components';
         PlayerPlaceholderModule,
         PreLoaderModule,
     ],
-    providers: [] // services,
+    providers: [], // services,
 })
-export class VmsClientPlaybackModule {
-}
+export class VmsClientPlaybackModule {}

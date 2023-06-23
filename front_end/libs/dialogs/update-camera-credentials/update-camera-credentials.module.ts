@@ -18,12 +18,8 @@ import { UpdateCameraCredentialsModalContent } from './update-camera-credentials
         ProcessButtonModule,
         ProcessCancelButtonModule,
     ],
-    declarations: [
-        UpdateCameraCredentialsModalContent,
-    ],
+    declarations: [UpdateCameraCredentialsModalContent],
     providers: [],
-    exports: [
-        UpdateCameraCredentialsModalContent,
-    ]
+    exports: [UpdateCameraCredentialsModalContent],
 })
 export class UpdateCameraCredentialsModalModule {}

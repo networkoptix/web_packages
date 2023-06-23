@@ -11,13 +11,9 @@ import { ProcessButtonModule } from '../../../components/process-button/process-
 import { NxBookmarksCardModalComponent } from './bookmarks-card-modal.component';
 
 @NgModule({
-    declarations: [
-        NxBookmarksCardModalComponent,
-    ],
+    declarations: [NxBookmarksCardModalComponent],
     providers: [],
-    exports: [
-        NxBookmarksCardModalComponent,
-    ],
+    exports: [NxBookmarksCardModalComponent],
     imports: [
         AngularSvgIconModule,
         CommonModule,
@@ -25,6 +21,6 @@ import { NxBookmarksCardModalComponent } from './bookmarks-card-modal.component'
         ProcessButtonModule,
         TranslateModule,
         PlayerPlaceholderModule,
-    ]
+    ],
 })
 export class NxBookmarksCardModalModule {}

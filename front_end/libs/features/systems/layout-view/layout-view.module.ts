@@ -17,7 +17,7 @@ const appRoutes: Routes = [
     {
         path: '',
         pathMatch: 'full',
-        redirectTo: 'new'
+        redirectTo: 'new',
     },
     {
         path: ':layoutId',
@@ -38,12 +38,11 @@ const appRoutes: Routes = [
         DragDropModule,
         DirectivesModule,
         PipesModule,
-        LayoutViewModule
+        LayoutViewModule,
     ],
     providers: [],
     declarations: [],
     bootstrap: [],
-    exports: []
+    exports: [],
 })
-export class NxLayoutViewModule {
-}
+export class NxLayoutViewModule {}

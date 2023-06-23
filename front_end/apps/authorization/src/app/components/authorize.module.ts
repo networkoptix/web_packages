@@ -79,7 +79,7 @@ export const authorizedRoutes: Routes = [
         ProcessButtonModule,
         ToastContainerModule,
         NxAuthorizeCreateAccountComponent,
-        NxAuthorizeResetPasswordComponent
+        NxAuthorizeResetPasswordComponent,
     ],
     providers: [],
     declarations: [

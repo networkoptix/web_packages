@@ -41,13 +41,9 @@ const appRoutes: Routes = [
         SearchModule,
         SystemListModule,
     ],
-    providers: [
-    ],
-    declarations: [
-    ],
-    bootstrap: [
-    ],
-    exports: []
+    providers: [],
+    declarations: [],
+    bootstrap: [],
+    exports: [],
 })
-export class NxSystemsListModule {
-}
+export class NxSystemsListModule {}

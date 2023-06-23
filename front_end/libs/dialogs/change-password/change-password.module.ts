@@ -22,12 +22,8 @@ import { ChangePasswordModalContent } from './change-password.component';
         ProcessButtonModule,
         ProcessCancelButtonModule,
     ],
-    declarations: [
-        ChangePasswordModalContent,
-    ],
+    declarations: [ChangePasswordModalContent],
     providers: [],
-    exports: [
-        ChangePasswordModalContent,
-    ]
+    exports: [ChangePasswordModalContent],
 })
 export class ChangePasswordModalModule {}

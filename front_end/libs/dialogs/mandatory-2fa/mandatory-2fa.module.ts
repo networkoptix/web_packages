@@ -22,12 +22,8 @@ import { Mandatory2faModalContent } from './mandatory-2fa.component';
         ProcessButtonModule,
         ProcessCancelButtonModule,
     ],
-    declarations: [
-        Mandatory2faModalContent,
-    ],
+    declarations: [Mandatory2faModalContent],
     providers: [],
-    exports: [
-        Mandatory2faModalContent,
-    ]
+    exports: [Mandatory2faModalContent],
 })
 export class Mandatory2faModalModule {}

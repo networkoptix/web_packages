@@ -12,12 +12,8 @@ import { WebGlSelectTimeRangeModalContent } from './select-time-range.component'
         // AngularSvgIconModule,
         TranslateModule,
     ],
-    declarations: [
-        WebGlSelectTimeRangeModalContent,
-    ],
+    declarations: [WebGlSelectTimeRangeModalContent],
     providers: [],
-    exports: [
-        WebGlSelectTimeRangeModalContent,
-    ]
+    exports: [WebGlSelectTimeRangeModalContent],
 })
 export class NxWebGlSelectTimeRangeModalModule {}

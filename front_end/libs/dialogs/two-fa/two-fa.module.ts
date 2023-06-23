@@ -24,10 +24,8 @@ import { TwoFAModalContent } from './two-fa.component';
         ProcessButtonModule,
         ProcessCancelButtonModule,
     ],
-    declarations: [
-        TwoFAModalContent,
-    ],
+    declarations: [TwoFAModalContent],
     providers: [],
-    exports: []
+    exports: [],
 })
 export class TwoFAModalModule {}

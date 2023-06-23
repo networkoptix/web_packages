@@ -5,17 +5,11 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { DirectivesModule } from '@directives/directives.module';
-import {
-    SimpleNxWebGLCanvasComponent
-} from '@vms-client/submodules/timeline/components/simple-chart/webgl-canvas.component';
+import { SimpleNxWebGLCanvasComponent } from '@vms-client/submodules/timeline/components/simple-chart/webgl-canvas.component';
 
 @NgModule({
-    declarations: [
-        SimpleNxWebGLCanvasComponent,
-    ],
-    exports: [
-        SimpleNxWebGLCanvasComponent,
-    ],
+    declarations: [SimpleNxWebGLCanvasComponent],
+    exports: [SimpleNxWebGLCanvasComponent],
     imports: [
         CommonModule,
         AngularSvgIconModule,
@@ -23,7 +17,6 @@ import {
         DragDropModule,
         DirectivesModule,
     ],
-    providers: []
+    providers: [],
 })
-export class SimpleWebGLTimelineModule {
-}
+export class SimpleWebGLTimelineModule {}

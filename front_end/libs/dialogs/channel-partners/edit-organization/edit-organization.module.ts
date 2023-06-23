@@ -22,12 +22,8 @@ import { NxEditOrganizationModalContent } from './edit-organization.component';
         ProcessButtonModule,
         ProcessCancelButtonModule,
     ],
-    declarations: [
-        NxEditOrganizationModalContent,
-    ],
+    declarations: [NxEditOrganizationModalContent],
     providers: [],
-    exports: [
-        NxEditOrganizationModalContent,
-    ]
+    exports: [NxEditOrganizationModalContent],
 })
 export class NxEditOrganizationModalModule {}

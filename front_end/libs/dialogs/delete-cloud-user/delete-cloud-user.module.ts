@@ -17,12 +17,8 @@ import { DeleteCloudUserModalContent } from './delete-cloud-user.component';
         ProcessButtonModule,
         ProcessCancelButtonModule,
     ],
-    declarations: [
-        DeleteCloudUserModalContent,
-    ],
+    declarations: [DeleteCloudUserModalContent],
     providers: [],
-    exports: [
-        DeleteCloudUserModalContent,
-    ]
+    exports: [DeleteCloudUserModalContent],
 })
 export class DeleteCloudUserModalModule {}

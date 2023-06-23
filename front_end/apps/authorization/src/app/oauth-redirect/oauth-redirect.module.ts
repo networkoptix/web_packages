@@ -13,8 +13,8 @@ const appRoutes: Routes = [
     {
         path: '',
         title: 'default',
-        component: NxOAuthRedirectComponent
-    }
+        component: NxOAuthRedirectComponent,
+    },
 ];
 
 @NgModule({
@@ -24,14 +24,11 @@ const appRoutes: Routes = [
         DirectivesModule,
         PipesModule,
         PreLoaderModule,
-        RouterModule.forChild(appRoutes)
+        RouterModule.forChild(appRoutes),
     ],
     providers: [],
-    declarations: [
-        NxOAuthRedirectComponent
-    ],
+    declarations: [NxOAuthRedirectComponent],
     bootstrap: [],
-    exports: []
+    exports: [],
 })
-export class NxOAuthRedirectModule {
-}
+export class NxOAuthRedirectModule {}

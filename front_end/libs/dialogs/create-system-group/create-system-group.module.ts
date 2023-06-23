@@ -17,12 +17,8 @@ import { CreateSystemGroupModalContent } from './create-system-group.component';
         // AngularSvgIconModule,
         TranslateModule,
     ],
-    declarations: [
-        CreateSystemGroupModalContent
-    ],
+    declarations: [CreateSystemGroupModalContent],
     providers: [],
-    exports: [
-        CreateSystemGroupModalContent,
-    ]
+    exports: [CreateSystemGroupModalContent],
 })
 export class CreateSystemGroupModalModule {}

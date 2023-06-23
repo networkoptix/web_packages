@@ -18,12 +18,8 @@ import { AddPartnerModalContent } from './add-partner.component';
         ProcessButtonModule,
         ProcessCancelButtonModule,
     ],
-    declarations: [
-        AddPartnerModalContent,
-    ],
+    declarations: [AddPartnerModalContent],
     providers: [],
-    exports: [
-        AddPartnerModalContent,
-    ]
+    exports: [AddPartnerModalContent],
 })
 export class AddPartnerModalModule {}

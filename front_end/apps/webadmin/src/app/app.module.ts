@@ -1,16 +1,7 @@
 import { DialogModule } from '@angular/cdk/dialog';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
-import {
-    Location,
-    HashLocationStrategy,
-    DatePipe,
-    LocationStrategy
-} from '@angular/common';
-import {
-    HttpClientModule,
-    HttpClientXsrfModule,
-    HTTP_INTERCEPTORS
-} from '@angular/common/http';
+import { Location, HashLocationStrategy, DatePipe, LocationStrategy } from '@angular/common';
+import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { AngularFireModule, FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { AngularFireMessagingModule } from '@angular/fire/compat/messaging';
@@ -27,7 +18,7 @@ import { NgxMaskModule } from 'ngx-mask';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 import {
     TranslateMessageFormatCompiler,
-    MESSAGE_FORMAT_CONFIG
+    MESSAGE_FORMAT_CONFIG,
 } from 'ngx-translate-messageformat-compiler';
 import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
 import { NgxWebstorageModule } from 'ngx-webstorage';
@@ -70,15 +61,15 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         BrowserAnimationsModule.withConfig({
             // Disable animations if not supported (on iPhone 6 / Safari 13)
             disableAnimations:
-        !('animate' in document.documentElement) ||
-        (navigator && /iPhone OS (8|9|10|11|12|13)_/.test(navigator.userAgent)),
+                !('animate' in document.documentElement) ||
+                (navigator && /iPhone OS (8|9|10|11|12|13)_/.test(navigator.userAgent)),
         }),
         StoreModule.forRoot({ account: accountReducer }),
         ...(!environment.production ? [StoreDevtoolsModule.instrument()] : []),
         HttpClientModule,
         HttpClientXsrfModule.withOptions({
             cookieName: 'csrftoken',
-            headerName: 'X-CSRFToken'
+            headerName: 'X-CSRFToken',
         }),
         PopoverModule,
         RouterModule,
@@ -89,8 +80,8 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         TranslateModule.forRoot({
             compiler: {
                 provide: TranslateCompiler,
-                useClass: TranslateMessageFormatCompiler
-            }
+                useClass: TranslateMessageFormatCompiler,
+            },
         }),
         NgxTranslateCutModule.forRoot(),
         NgxWebstorageModule.forRoot(),
@@ -103,7 +94,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         ResizeModule,
         TourStepModule,
         TourMatMenuModule.forRoot(),
-        NgxMaskModule.forRoot()
+        NgxMaskModule.forRoot(),
     ],
     providers: [
         ApplyModule,
@@ -114,22 +105,22 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         {
             provide: HTTP_INTERCEPTORS,
             useClass: NxUriCachingInterceptor,
-            multi: true
+            multi: true,
         },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: CloudUnavailableInterceptor,
-            multi: true
+            multi: true,
         },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: LocalSystemStatusInterceptor,
-            multi: true
+            multi: true,
         },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: FeatureInterceptor,
-            multi: true
+            multi: true,
         },
         NxConfigService,
         WINDOWS_PROVIDERS,
@@ -137,23 +128,23 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         {
             provide: FIREBASE_OPTIONS,
             deps: [NxConfigService],
-            useFactory: initializeApp
+            useFactory: initializeApp,
         },
         AuthGuard,
         DevelopersGuard,
         SystemGuard,
         ManualAccessGuard,
         DatePipe,
-        { provide: APP_INITIALIZER, useFactory: NxBootstrapProviderFactory, deps: [NxBootstrapProvider], multi: true },
-        { provide: MESSAGE_FORMAT_CONFIG, useValue: { disablePluralKeyChecks: true } }
+        {
+            provide: APP_INITIALIZER,
+            useFactory: NxBootstrapProviderFactory,
+            deps: [NxBootstrapProvider],
+            multi: true,
+        },
+        { provide: MESSAGE_FORMAT_CONFIG, useValue: { disablePluralKeyChecks: true } },
     ],
-    declarations: [
-        AppComponent
-    ],
-    exports: [
-    ],
-    bootstrap: [AppComponent]
+    declarations: [AppComponent],
+    exports: [],
+    bootstrap: [AppComponent],
 })
-
-export class AppModule {
-}
+export class AppModule {}

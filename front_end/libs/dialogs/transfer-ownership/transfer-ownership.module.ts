@@ -22,10 +22,8 @@ import { TransferOwnershipModalContent } from './transfer-ownership.component';
         ProcessButtonModule,
         ProcessCancelButtonModule,
     ],
-    declarations: [
-        TransferOwnershipModalContent,
-    ],
+    declarations: [TransferOwnershipModalContent],
     providers: [],
-    exports: []
+    exports: [],
 })
 export class TransferOwnershipModule {}

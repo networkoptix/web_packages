@@ -12,12 +12,8 @@ import { SelectTimeRangeModalContent } from './select-time-range.component';
         // AngularSvgIconModule,
         TranslateModule,
     ],
-    declarations: [
-        SelectTimeRangeModalContent,
-    ],
+    declarations: [SelectTimeRangeModalContent],
     providers: [],
-    exports: [
-        SelectTimeRangeModalContent,
-    ]
+    exports: [SelectTimeRangeModalContent],
 })
 export class SelectTimeRangeModalModule {}

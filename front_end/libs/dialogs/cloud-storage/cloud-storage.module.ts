@@ -37,6 +37,6 @@ import { CloudStorageMoveModalContent } from './move/cloud-storage-move.componen
         CloudStorageMoveModalContent,
     ],
     providers: [],
-    exports: []
+    exports: [],
 })
 export class CloudStorageModule {}

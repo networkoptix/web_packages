@@ -11,12 +11,8 @@ import { Client2faWarningModalContent } from './client-2fa-warning.component';
         // AngularSvgIconModule,
         TranslateModule,
     ],
-    declarations: [
-        Client2faWarningModalContent,
-    ],
+    declarations: [Client2faWarningModalContent],
     providers: [],
-    exports: [
-        Client2faWarningModalContent,
-    ]
+    exports: [Client2faWarningModalContent],
 })
 export class Client2faWarningModalModule {}

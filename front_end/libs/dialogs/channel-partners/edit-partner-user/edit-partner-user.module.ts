@@ -20,12 +20,8 @@ import { NxEditPartnerUserModalContent } from './edit-partner-user.component';
         ProcessButtonModule,
         ProcessCancelButtonModule,
     ],
-    declarations: [
-        NxEditPartnerUserModalContent,
-    ],
+    declarations: [NxEditPartnerUserModalContent],
     providers: [],
-    exports: [
-        NxEditPartnerUserModalContent,
-    ]
+    exports: [NxEditPartnerUserModalContent],
 })
 export class NxEditPartnerUserModalModule {}

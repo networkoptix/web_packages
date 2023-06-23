@@ -145,10 +145,6 @@ import { NxWizardModalModule } from './wizard/wizard.module';
         ReserveSpaceWarningModalContent,
     ],
     providers: [],
-    exports: [
-        GenericDialogModule,
-        DynamicWidgetModule
-    ]
+    exports: [GenericDialogModule, DynamicWidgetModule],
 })
-export class DialogsModule {
-}
+export class DialogsModule {}

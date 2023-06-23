@@ -24,12 +24,8 @@ import { NxAddOrgUserModalContent } from './add-org-user.component';
         ProcessButtonModule,
         ProcessCancelButtonModule,
     ],
-    declarations: [
-        NxAddOrgUserModalContent,
-    ],
+    declarations: [NxAddOrgUserModalContent],
     providers: [],
-    exports: [
-        NxAddOrgUserModalContent,
-    ]
+    exports: [NxAddOrgUserModalContent],
 })
 export class NxAddOrgUserModule {}

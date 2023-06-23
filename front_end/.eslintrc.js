@@ -543,6 +543,7 @@ module.exports = {
         {
             files: [
                 // '*.js', '*.ts'
+                '*.module.ts',
                 '*types.ts',
                 'libs/[0-c]*/**/*.ts',
                 'libs/db/**/*.ts',

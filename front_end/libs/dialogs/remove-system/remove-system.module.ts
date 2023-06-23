@@ -18,12 +18,8 @@ import { RemoveSystemModalContent } from './remove-system.component';
         ProcessButtonModule,
         ProcessCancelButtonModule,
     ],
-    declarations: [
-        RemoveSystemModalContent,
-    ],
+    declarations: [RemoveSystemModalContent],
     providers: [],
-    exports: [
-        RemoveSystemModalContent,
-    ]
+    exports: [RemoveSystemModalContent],
 })
 export class RemoveSystemModalModule {}
