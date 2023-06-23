@@ -188,6 +188,7 @@
     "@bartholomej/ngx-translate-extract": "8.0.2",
     "@ngrx/store-devtools": "^14.1.0",
     "@nguniversal/builders": "^14.2.0",
+    "@ngx-translate/core": "14.0.0",
     "@nrwl/nx-cloud": "^14.6.2",
     "@nrwl/workspace": "14.7.5",
     "@types/d3": "~7.4.0",
