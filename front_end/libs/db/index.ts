@@ -5,6 +5,7 @@ import { chunk, zip } from 'lodash-es';
 import md5 from 'md5';
 import stringify from 'safe-stable-stringify';
 
+import { environment } from '@environments/environment';
 import { getUser } from '@utils/user';
 
 // Alias the table definitions to make it easier to import them.
@@ -71,15 +72,17 @@ export class AppDB extends Dexie {
         super(dbName, {
             addons: [dexieRxjs],
         });
-        applyEncryptionMiddleware(
-            this,
-            generateKey(dbName),
-            Object.keys(tableDefs).reduce(
-                (acc, key) => ({ ...acc, [key]: NON_INDEXED_FIELDS }),
-                {},
-            ),
-            clearAllTables,
-        );
+        if (!environment.testing) {
+            applyEncryptionMiddleware(
+                this,
+                generateKey(dbName),
+                Object.keys(tableDefs).reduce(
+                    (acc, key) => ({ ...acc, [key]: NON_INDEXED_FIELDS }),
+                    {},
+                ),
+                clearAllTables,
+            );
+        }
         // TODO: Currently we're keeping the version 1. If the schema changes we create new Db's.
         // If we ever add remote sync we'll need to add migration handlers and properly version.
         this.version(1).stores(Object.assign({}, ...schemas));

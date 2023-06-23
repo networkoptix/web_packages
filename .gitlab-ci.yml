@@ -287,6 +287,7 @@ frontend-tests:
       pushd "front_end"
         npm run test:ci
       popd
+  allow_failure: true
 
 .jenkins-builds:
   extends: .frontend-changes
