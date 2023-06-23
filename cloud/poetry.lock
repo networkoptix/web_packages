@@ -906,7 +906,8 @@ files = [
 [package.dependencies]
 Django = "*"
 djangorestframework = "*"
-model-bakery = ">=1.0.0"
+mock = "*"
+model-bakery = {version = "==1.*", markers = "python_version >= \"3\""}
 
 [package.source]
 type = "legacy"

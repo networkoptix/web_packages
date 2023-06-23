@@ -40,6 +40,7 @@ const legacyTargetConfigs = {
 };
 
 const proxyTargetConfig = dynamicInstanceProxy({
+    qa: 'https://qa.cloud.hdw.mx',
     regress: 'https://regress.cloud.hdw.mx',
     dev2: 'https://dev2.cloud.hdw.mx',
     dev3: 'https://dev3.cloud.hdw.mx',

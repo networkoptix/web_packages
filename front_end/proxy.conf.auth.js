@@ -7,6 +7,7 @@ const proxyTargetConfig = {
     stage: 'https://stage.nxvms.com',
     meta: 'https://meta.nxvms.com',
     regress: 'https://regress.cloud.hdw.mx',
+    qa: 'https://qa.cloud.hdw.mx',
 };
 const target = process.env.CLOUD_TARGET || 'cloud-test';
 const PROXY_CONFIG = [
