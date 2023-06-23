@@ -72,7 +72,7 @@ export class AppDB extends Dexie {
         super(dbName, {
             addons: [dexieRxjs],
         });
-        if (environment.testing) {
+        if (!environment.testing) {
             applyEncryptionMiddleware(
                 this,
                 generateKey(dbName),
