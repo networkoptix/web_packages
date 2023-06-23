@@ -72,17 +72,15 @@ export class AppDB extends Dexie {
         super(dbName, {
             addons: [dexieRxjs],
         });
-        if (!environment.testing) {
-            applyEncryptionMiddleware(
-                this,
-                generateKey(dbName),
-                Object.keys(tableDefs).reduce(
-                    (acc, key) => ({ ...acc, [key]: NON_INDEXED_FIELDS }),
-                    {},
-                ),
-                clearAllTables,
-            );
-        }
+        applyEncryptionMiddleware(
+            this,
+            generateKey(dbName),
+            Object.keys(tableDefs).reduce(
+                (acc, key) => ({ ...acc, [key]: NON_INDEXED_FIELDS }),
+                {},
+            ),
+            clearAllTables,
+        );
         // TODO: Currently we're keeping the version 1. If the schema changes we create new Db's.
         // If we ever add remote sync we'll need to add migration handlers and properly version.
         this.version(1).stores(Object.assign({}, ...schemas));
