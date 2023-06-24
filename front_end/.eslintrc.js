@@ -543,6 +543,7 @@ module.exports = {
                 '*.module.ts',
                 '*types.ts',
                 'apps/authorization/**/*.ts',
+                'apps/setup-wizard/**/*.ts',
                 'libs/[0-c]*/**/*.ts',
                 'libs/db/**/*.ts',
                 'libs/decorators/**/*.ts',

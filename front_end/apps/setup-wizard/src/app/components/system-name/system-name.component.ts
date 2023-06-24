@@ -16,7 +16,7 @@ export class SystemNameComponent implements OnInit {
         this.wizardService.setupConfig.systemName = systemName;
     }
 
-    constructor(private wizardService: WizardStateService) { }
+    constructor(private wizardService: WizardStateService) {}
 
     ngOnInit(): void {
         this.systemName = this.wizardService.setupConfig.systemName;

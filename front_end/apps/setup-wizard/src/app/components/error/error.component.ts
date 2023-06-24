@@ -12,10 +12,6 @@ import { WizardStateService } from '../../services/wizard-state.service';
 export class ErrorComponent implements OnInit {
     icons = icons;
 
-    constructor(
-        public wizardService: WizardStateService
-    ) {
-    }
-    ngOnInit(): void {
-    }
+    constructor(public wizardService: WizardStateService) {}
+    ngOnInit(): void {}
 }

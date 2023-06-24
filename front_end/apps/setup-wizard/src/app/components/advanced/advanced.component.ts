@@ -25,12 +25,13 @@ export class AdvancedComponent {
 
     LANG = staticLang;
 
-    constructor(
-        public wizardService: WizardStateService
-    ) {
+    constructor(public wizardService: WizardStateService) {
         this.itemsSecurity = [
-            { value: SECURITY_LEVEL.STANDARD, name: this.LANG.setupWizard.advancedSettings.standard },
-            { value: SECURITY_LEVEL.HIGH, name: this.LANG.setupWizard.advancedSettings.high }
+            {
+                value: SECURITY_LEVEL.STANDARD,
+                name: this.LANG.setupWizard.advancedSettings.standard,
+            },
+            { value: SECURITY_LEVEL.HIGH, name: this.LANG.setupWizard.advancedSettings.high },
         ];
 
         this.selectedSecurity = this.itemsSecurity.find(item => {

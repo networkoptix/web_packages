@@ -32,23 +32,18 @@ export class WizardComponent implements OnInit {
         WIZARD_STATE.Start,
         WIZARD_STATE.BrokenSystem,
         WIZARD_STATE.LocalFailure,
-        WIZARD_STATE.MergeProcess
+        WIZARD_STATE.MergeProcess,
     ];
 
-    constructor(
-        public wizardService: WizardStateService,
-        @Inject(WINDOW) public window: Window
-    ) {}
+    constructor(public wizardService: WizardStateService, @Inject(WINDOW) public window: Window) {}
 
     ngOnInit(): void {
         this.wizardService.init();
         this.state$ = this.wizardService.currentState$;
-        this.state$
-            .pipe(untilDestroyed(this))
-            .subscribe(() => {
-                this.fsm = this.wizardService.fsm;
-                this.showFooter = !this.noFooterComponents.includes(this.state$.getValue());
-            });
+        this.state$.pipe(untilDestroyed(this)).subscribe(() => {
+            this.fsm = this.wizardService.fsm;
+            this.showFooter = !this.noFooterComponents.includes(this.state$.getValue());
+        });
     }
 
     back(): void {

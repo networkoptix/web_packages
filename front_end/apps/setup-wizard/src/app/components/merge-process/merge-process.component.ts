@@ -12,9 +12,7 @@ import { WizardStateService } from '../../services/wizard-state.service';
     styleUrls: ['./merge-process.component.scss'],
 })
 export class MergeProcessComponent implements OnInit {
-    constructor(
-      public wizardService: WizardStateService
-    ) { }
+    constructor(public wizardService: WizardStateService) {}
 
     ngOnInit(): void {
         this.wizardService.connectToAnotherSystem();

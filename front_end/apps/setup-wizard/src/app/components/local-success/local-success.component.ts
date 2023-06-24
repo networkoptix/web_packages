@@ -15,9 +15,7 @@ export class LocalSuccessComponent implements OnInit {
 
     icons = icons;
 
-    constructor(
-        private wizardService: WizardStateService
-    ) {}
+    constructor(private wizardService: WizardStateService) {}
 
     ngOnInit(): void {
         const { ip, port } = this.wizardService.networkInfo;

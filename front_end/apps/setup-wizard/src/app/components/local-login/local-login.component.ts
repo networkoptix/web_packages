@@ -15,7 +15,14 @@ import { WizardStateService } from '../../services/wizard-state.service';
 @Component({
     selector: 'nx-local-login',
     standalone: true,
-    imports: [CommonModule, AngularSvgIconModule, FormsModule, TranslateModule, PasswordModule, PasswordValidationModule],
+    imports: [
+        CommonModule,
+        AngularSvgIconModule,
+        FormsModule,
+        TranslateModule,
+        PasswordModule,
+        PasswordValidationModule,
+    ],
     templateUrl: './local-login.component.html',
     styleUrls: ['./local-login.component.scss'],
 })
@@ -40,7 +47,7 @@ export class LocalLoginComponent implements AfterViewInit {
         this.wizardService.setupConfig.localPasswordConfirmation = password;
     }
 
-    constructor(public wizardService: WizardStateService) { }
+    constructor(public wizardService: WizardStateService) {}
 
     ngAfterViewInit(): void {
         this.setAdminPasswordForm.statusChanges
@@ -49,17 +56,15 @@ export class LocalLoginComponent implements AfterViewInit {
                 this.wizardService.setupConfig.localLoginDataState = result;
             });
 
-        this.wizardService.formValidateSubject
-            .pipe(untilDestroyed(this))
-            .subscribe(() => {
-                for (const ctrl in this.setAdminPasswordForm.controls) {
+        this.wizardService.formValidateSubject.pipe(untilDestroyed(this)).subscribe(() => {
+            for (const ctrl in this.setAdminPasswordForm.controls) {
                 // eslint-disable-next-line no-prototype-builtins
-                    if (this.setAdminPasswordForm.controls.hasOwnProperty(ctrl)) {
-                        this.setAdminPasswordForm.form.get(ctrl).markAsTouched();
-                        this.setAdminPasswordForm.form.get(ctrl).markAsDirty();
-                    }
+                if (this.setAdminPasswordForm.controls.hasOwnProperty(ctrl)) {
+                    this.setAdminPasswordForm.form.get(ctrl).markAsTouched();
+                    this.setAdminPasswordForm.form.get(ctrl).markAsDirty();
                 }
-            });
+            }
+        });
     }
 
     checkPasswords(): void {

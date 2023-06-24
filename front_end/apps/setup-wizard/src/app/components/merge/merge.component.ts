@@ -49,9 +49,7 @@ export class MergeComponent implements OnInit, AfterViewInit {
     //     this.wizardService.setupConfig.remoteLogin = user;
     // }
 
-    constructor(
-        private wizardService: WizardStateService
-    ) {}
+    constructor(private wizardService: WizardStateService) {}
 
     ngOnInit(): void {
         this.urlRegex = this.wizardService.getURLRegex();
@@ -59,27 +57,23 @@ export class MergeComponent implements OnInit, AfterViewInit {
         this.items = this.wizardService.peers.map(peer => ({
             name: `${peer.name} - (${peer.ip})`,
             value: peer.url,
-            help: ''
+            help: '',
         }));
     }
 
     ngAfterViewInit(): void {
-        this.mergeForm.statusChanges
-            .pipe(untilDestroyed(this))
-            .subscribe((result: string) => {
-                this.wizardService.setupConfig.mergeDataState = result;
-            });
+        this.mergeForm.statusChanges.pipe(untilDestroyed(this)).subscribe((result: string) => {
+            this.wizardService.setupConfig.mergeDataState = result;
+        });
 
-        this.wizardService.formValidateSubject
-            .pipe(untilDestroyed(this))
-            .subscribe(() => {
-                for (const ctrl in this.mergeForm.controls) {
+        this.wizardService.formValidateSubject.pipe(untilDestroyed(this)).subscribe(() => {
+            for (const ctrl in this.mergeForm.controls) {
                 // eslint-disable-next-line no-prototype-builtins
-                    if (this.mergeForm.controls.hasOwnProperty(ctrl)) {
-                        this.mergeForm.form.get(ctrl).markAsTouched();
-                        this.mergeForm.form.get(ctrl).markAsDirty();
-                    }
+                if (this.mergeForm.controls.hasOwnProperty(ctrl)) {
+                    this.mergeForm.form.get(ctrl).markAsTouched();
+                    this.mergeForm.form.get(ctrl).markAsDirty();
                 }
-            });
+            }
+        });
     }
 }

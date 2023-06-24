@@ -8,10 +8,9 @@ import { WizardStateService } from '../../services/wizard-state.service';
     styleUrls: ['./start.component.scss'],
 })
 export class StartComponent implements OnInit {
-    constructor(private wizardService: WizardStateService) { }
+    constructor(private wizardService: WizardStateService) {}
 
-    ngOnInit(): void {
-    }
+    ngOnInit(): void {}
 
     mergeSystem(): void {
         this.wizardService.skip();

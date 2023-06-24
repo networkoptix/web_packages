@@ -12,10 +12,22 @@ import { NxSystemAPI } from '@app/services/system-legacy-api.service';
 import { NxSystemRestAPI3 } from '@app/services/system-rest-api-v3.service';
 import staticLang from '@common/language/language_i18n_static.json';
 import type { SearchableDropdownItem as Item } from '@components/dropdowns/searchable/searchable.component.types';
-import { alertTimeout, apiBase, icons, settingsConfig, simpleURLRegex } from '@lib/variables/static-variables';
+import {
+    alertTimeout,
+    apiBase,
+    icons,
+    settingsConfig,
+    simpleURLRegex,
+} from '@lib/variables/static-variables';
 import { Setting } from '@services/nx-config/base-config';
 import { IConfig } from '@services/nx-config/config-types';
-import { ModuleInformationReply, NormalResponse, SECURITY_LEVEL, SystemConfigSettings, UserSession } from '@services/system-api.types';
+import {
+    ModuleInformationReply,
+    NormalResponse,
+    SECURITY_LEVEL,
+    SystemConfigSettings,
+    UserSession,
+} from '@services/system-api.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { WINDOW } from '@services/window-provider';
@@ -45,14 +57,14 @@ interface HasInternet {
 }
 
 interface NetworkConfig {
-    'dhcp'?: boolean;
-    'dns_servers'?: string;
-    'extraParams'?: unknown;
-    'gateway'?: string;
-    'ipAddr'?: string;
-    'mac'?: string;
-    'name'?: string;
-    'netMask'?: string;
+    dhcp?: boolean;
+    dns_servers?: string;
+    extraParams?: unknown;
+    gateway?: string;
+    ipAddr?: string;
+    mac?: string;
+    name?: string;
+    netMask?: string;
 }
 
 interface NormalNetworkConfig extends NormalResponse<NetworkConfig[]> {}
@@ -96,10 +108,10 @@ interface SetupConfig {
 
 @UntilDestroy()
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class WizardStateService {
-    currentState$ = new BehaviorSubject<WIZARD_STATE >(undefined);
+    currentState$ = new BehaviorSubject<WIZARD_STATE>(undefined);
     icons = icons;
     appBusyState$ = new BehaviorSubject<boolean>(false);
 
@@ -145,12 +157,12 @@ export class WizardStateService {
     credentials = {
         isCloud: false,
         login: '',
-        password: ''
+        password: '',
     };
 
     hasInternet: HasInternet = {
         client: false,
-        server: false
+        server: false,
     };
 
     networkInfo: NetworkInfo = {};
@@ -173,7 +185,7 @@ export class WizardStateService {
 
         remoteSystem: {
             name: '',
-            value: ''
+            value: '',
         },
         remoteLogin: 'admin',
         remotePassword: '',
@@ -211,16 +223,13 @@ export class WizardStateService {
         const [host, port] = this.window.location.host.split(':');
         this.networkInfo = {
             ip: host,
-            port: parseInt(port)
+            port: parseInt(port),
         };
-        this.currentState$
-            .pipe(untilDestroyed(this))
-            .subscribe(state => {
-                this.router.navigate([state || '/'], { skipLocationChange: true })
-                    .catch(err => {
-                        console.error('nav failed handle it', err);
-                    });
+        this.currentState$.pipe(untilDestroyed(this)).subscribe(state => {
+            this.router.navigate([state || '/'], { skipLocationChange: true }).catch(err => {
+                console.error('nav failed handle it', err);
             });
+        });
 
         this.wizardFSM = {
             start: {
@@ -230,7 +239,7 @@ export class WizardStateService {
                 },
                 skip: () => {
                     this.currentState = WIZARD_STATE.Merge;
-                }
+                },
             },
             systemName: {
                 title: this.LANG.setupWizard.title.systemName,
@@ -243,7 +252,7 @@ export class WizardStateService {
                 next: () => {
                     this.currentState = WIZARD_STATE.LocalLogin;
                 },
-                validate: () => this.setupConfig.systemName.length > 0
+                validate: () => this.setupConfig.systemName.length > 0,
             },
             advanced: {
                 title: this.LANG.setupWizard.title.advanced,
@@ -252,7 +261,7 @@ export class WizardStateService {
                 },
                 next: () => {
                     this.currentState = WIZARD_STATE.SystemName;
-                }
+                },
             },
 
             /** Disabled for now
@@ -359,10 +368,10 @@ export class WizardStateService {
                 next: () => {
                     this.currentState = WIZARD_STATE.MergeProcess;
                 },
-                validate: () => this.setupConfig.mergeDataState === FORM_STATE.VALID
+                validate: () => this.setupConfig.mergeDataState === FORM_STATE.VALID,
             },
             mergeProcess: {
-                title: this.LANG.setupWizard.title.mergeProcess
+                title: this.LANG.setupWizard.title.mergeProcess,
             },
             mergeFailure: {
                 title: this.LANG.setupWizard.title.mergeFailure,
@@ -374,7 +383,7 @@ export class WizardStateService {
                 },
                 retry: () => {
                     this.currentState = WIZARD_STATE.Merge;
-                }
+                },
             },
 
             localLogin: {
@@ -390,7 +399,7 @@ export class WizardStateService {
             },
             localSuccess: {
                 title: this.LANG.setupWizard.title.localSuccess,
-                finish: true
+                finish: true,
             },
             localFailure: {
                 title: this.LANG.setupWizard.title.localFailure,
@@ -406,13 +415,13 @@ export class WizardStateService {
                 title: this.LANG.setupWizard.title.initFailure,
                 retry: () => {
                     this.initWizard();
-                }
+                },
             },
             brokenSystem: {
                 title: this.LANG.setupWizard.title.brokenSystem,
                 retry: () => {
                     this.initWizard();
-                }
+                },
             },
         };
     }
@@ -509,14 +518,18 @@ export class WizardStateService {
     }
 
     private checkInternetOnServer(): Promise<void> {
-        return this.server.getServerInfo('this').toPromise()
+        return this.server
+            .getServerInfo('this')
+            .toPromise()
             .then(({ serverFlags }) => {
                 this.hasInternet.server = serverFlags.includes('SF_HasPublicIP');
             });
     }
 
     private getServerInfoWithFlags(): Promise<ModuleInformationReply> {
-        return this.server.getServerInfo('this').toPromise()
+        return this.server
+            .getServerInfo('this')
+            .toPromise()
             .then(data => {
                 let wrongNetwork: boolean = false;
                 let noNetwork: boolean = false;
@@ -534,19 +547,25 @@ export class WizardStateService {
                     hasInternet: data.serverFlags.includes(this.flags.publicIpFlag),
                     cleanSystem: data.serverFlags.includes(this.flags.newServerFlag),
                     canSetupNetwork: data.serverFlags.includes(this.flags.ifListFlag),
-                    canSetupTime: data.serverFlags.includes(this.flags.timeCtrlFlag)
+                    canSetupTime: data.serverFlags.includes(this.flags.timeCtrlFlag),
                 };
 
-                data.flags.brokenSystem = data.flags.noHDD || data.flags.noNetwork || (data.flags.wrongNetwork && !data.flags.canSetupNetwork);
+                data.flags.brokenSystem =
+                    data.flags.noHDD ||
+                    data.flags.noNetwork ||
+                    (data.flags.wrongNetwork && !data.flags.canSetupNetwork);
                 data.flags.newSystem = data.flags.cleanSystem && !data.flags.brokenSystem;
                 return data;
             });
     }
 
     private checkInternetOnClient(): Promise<void> {
-        return this.http.get(`${nxConfig.cloudHost}/api/ping`).toPromise().then(() => {
-            this.hasInternet.client = true;
-        });
+        return this.http
+            .get(`${nxConfig.cloudHost}/api/ping`)
+            .toPromise()
+            .then(() => {
+                this.hasInternet.client = true;
+            });
     }
 
     private checkInternet(): void {
@@ -569,7 +588,8 @@ export class WizardStateService {
             if (this.serverInfo.flags.canSetupNetwork) {
                 const networkInfo = await this.getServerNetworkSettings().toPromise();
                 const settings: NetworkConfig[] = networkInfo?.reply || [];
-                const activeSettings = settings.find(networkConfig => !!networkConfig.ipAddr) || settings[0];
+                const activeSettings =
+                    settings.find(networkConfig => !!networkConfig.ipAddr) || settings[0];
                 this.networkInfo.ip = activeSettings.ipAddr;
                 this.networkInfo.port = this.serverInfo.port;
             }
@@ -586,7 +606,9 @@ export class WizardStateService {
 
             if (this.serverInfo.flags.newSystem) {
                 if (this.serverInfo.flags.canSetupNetwork) {
-                    const networkInfo = await this.setServerNetworkSettings({ interfaces: [this.networkInfo] }).toPromise();
+                    const networkInfo = await this.setServerNetworkSettings({
+                        interfaces: [this.networkInfo],
+                    }).toPromise();
                     this.networkSettings = networkInfo?.reply || {};
                     if (this.serverInfo.flags.wrongNetwork) {
                         this.currentState = WIZARD_STATE.ConfigureWrongNetwork;
@@ -611,7 +633,9 @@ export class WizardStateService {
         this.credentials.login = login;
         this.credentials.password = password;
         this.credentials.isCloud = isCloud;
-        return this.server.loginToken(login, password, true).toPromise()
+        return this.server
+            .loginToken(login, password, true)
+            .toPromise()
             .then(userData => {
                 this.server.setVmsToken(userData.token);
                 return userData;
@@ -636,32 +660,34 @@ export class WizardStateService {
         };
 
         const systemUrl = normalizeUrl(this.setupConfig.remoteSystem.value);
-        this.server.mergeSystems(
-            systemUrl,
-            undefined,
-            false,
-            this.setupConfig.remotePassword,
-            true
-        )
+        this.server
+            .mergeSystems(systemUrl, undefined, false, this.setupConfig.remotePassword, true)
             .pipe(untilDestroyed(this))
-            .subscribe(() => {
-                const { remoteLogin, remotePassword } = this.setupConfig;
-                return this.updateCredentials(remoteLogin, remotePassword, false);
-                this.appBusyState = false;
-            }, () => {
-                this.appBusyState = false;
-                this.currentState = WIZARD_STATE.MergeFailure;
-            });
+            .subscribe(
+                () => {
+                    const { remoteLogin, remotePassword } = this.setupConfig;
+                    return this.updateCredentials(remoteLogin, remotePassword, false);
+                    this.appBusyState = false;
+                },
+                () => {
+                    this.appBusyState = false;
+                    this.currentState = WIZARD_STATE.MergeFailure;
+                },
+            );
     }
 
     // Connect to cloud
-    private connect(systemName: string, email: string, accessToken: string): Observable<BindResponse> {
+    private connect(
+        systemName: string,
+        email: string,
+        accessToken: string,
+    ): Observable<BindResponse> {
         let headers = new HttpHeaders();
         headers = headers.set('Authorization', `Bearer ${accessToken}`);
         return this.http.post<BindResponse>(
             nxConfig.cloudHost + apiBase + '/systems/connect',
             { name: systemName, email },
-            { headers }
+            { headers },
         );
     }
 
@@ -676,21 +702,26 @@ export class WizardStateService {
         const email = '';
         this.connect(this.setupConfig.systemName, email, accessToken)
             .pipe(untilDestroyed(this))
-            .subscribe(data => {
-                // add link to cloud
-                this.server.setupCloudSystem(
-                    this.setupConfig.systemName,
-                    data.id,
-                    data.authKey,
-                    email,
-                    this.systemSettings
-                ).toPromise()
-                    .finally(() => {
-                        this.appBusyState = false;
-                    });
-            }, () => {
-                this.appBusyState = false;
-            });
+            .subscribe(
+                data => {
+                    // add link to cloud
+                    this.server
+                        .setupCloudSystem(
+                            this.setupConfig.systemName,
+                            data.id,
+                            data.authKey,
+                            email,
+                            this.systemSettings,
+                        )
+                        .toPromise()
+                        .finally(() => {
+                            this.appBusyState = false;
+                        });
+                },
+                () => {
+                    this.appBusyState = false;
+                },
+            );
     }
 
     // Local setup
@@ -712,7 +743,8 @@ export class WizardStateService {
             }
         });
 
-        this.server.setupLocalSystem(systemName, localPassword, settings, this.securityLevel)
+        this.server
+            .setupLocalSystem(systemName, localPassword, settings, this.securityLevel)
             .toPromise()
             .then(_ => {
                 return this.updateCredentials(this.defaultUser, localPassword, false)
@@ -727,7 +759,8 @@ export class WizardStateService {
     waitForReboot(): void {
         this.currentState = WIZARD_STATE.Start;
         const pingInterval = setInterval(() => {
-            this.server.getServerInfo('this')
+            this.server
+                .getServerInfo('this')
                 .pipe(untilDestroyed(this))
                 .subscribe(() => {
                     clearInterval(pingInterval);
@@ -738,84 +771,98 @@ export class WizardStateService {
 
     checkIfSystemIsReady(): void {
         const finishedChecking: Subject<boolean> = new Subject<boolean>();
-        timer(0, alertTimeout).pipe(
-            switchMap(() => from(this.getServerInfoWithFlags())),
-            takeUntil(finishedChecking)
-        ).subscribe(data => {
-            if (!data?.flags.cleanSystem) {
-                this.setupConfig.systemName = data.name.replace(/^Server\s/, '');
-                if (data.cloudSystemId) {
-                    this.setupConfig.cloudSystemID = data.cloudSystemId;
-                    // make portal links
-                    this.currentState = WIZARD_STATE.CloudSuccess;
-                } else {
-                    this.networkInfo.port = data.port;
-                    this.currentState = WIZARD_STATE.LocalSuccess;
+        timer(0, alertTimeout)
+            .pipe(
+                switchMap(() => from(this.getServerInfoWithFlags())),
+                takeUntil(finishedChecking),
+            )
+            .subscribe(data => {
+                if (!data?.flags.cleanSystem) {
+                    this.setupConfig.systemName = data.name.replace(/^Server\s/, '');
+                    if (data.cloudSystemId) {
+                        this.setupConfig.cloudSystemID = data.cloudSystemId;
+                        // make portal links
+                        this.currentState = WIZARD_STATE.CloudSuccess;
+                    } else {
+                        this.networkInfo.port = data.port;
+                        this.currentState = WIZARD_STATE.LocalSuccess;
+                    }
                 }
-            }
-            this.setupConfig.localPassword = '';
-            finishedChecking.next(true);
-        });
+                this.setupConfig.localPassword = '';
+                finishedChecking.next(true);
+            });
     }
 
     // Initializers
     discoverSystems(): Promise<void> {
-        return this.server.getPeerSystems().toPromise().then(res => {
-            const cloudHost = nxConfig.cloudHost.replace('https://', '');
-            this.peers = res.reply
-                .filter(system => !system.serverFlags.includes('SF_NewSystem') && system.cloudHost === cloudHost)
-                .map(_system => {
-                    const system: DiscoveredPeerSetup = {
-                        url: `${_system.remoteAddresses[0]}:${_system.port}`,
-                        systemName: _system.systemName,
-                        ip: _system.remoteAddresses[0],
-                        name: _system.name,
-                        isNew: _system.serverFlags.includes('SF_NewSystem'),
-                        compatibleCloudHost: _system.cloudHost === nxConfig.cloudHost,
-                        visibleName: '',
-                        hint: ''
-                    };
-                    system.visibleName = `${system.systemName} (${system.url} - ${system.name})`;
-                    system.hint = `${system.url} (${system.name})`;
-                    return system;
-                })
-                .sort(alphabeticalSort(this.locale, sys => sys.visibleName));
-        });
+        return this.server
+            .getPeerSystems()
+            .toPromise()
+            .then(res => {
+                const cloudHost = nxConfig.cloudHost.replace('https://', '');
+                this.peers = res.reply
+                    .filter(
+                        system =>
+                            !system.serverFlags.includes('SF_NewSystem') &&
+                            system.cloudHost === cloudHost,
+                    )
+                    .map(_system => {
+                        const system: DiscoveredPeerSetup = {
+                            url: `${_system.remoteAddresses[0]}:${_system.port}`,
+                            systemName: _system.systemName,
+                            ip: _system.remoteAddresses[0],
+                            name: _system.name,
+                            isNew: _system.serverFlags.includes('SF_NewSystem'),
+                            compatibleCloudHost: _system.cloudHost === nxConfig.cloudHost,
+                            visibleName: '',
+                            hint: '',
+                        };
+                        system.visibleName = `${system.systemName} (${system.url} - ${system.name})`;
+                        system.hint = `${system.url} (${system.name})`;
+                        return system;
+                    })
+                    .sort(alphabeticalSort(this.locale, sys => sys.visibleName));
+            });
     }
 
     getAdvancedSettings(): Promise<void> {
-        return this.server.wizardGetSystemSettings().toPromise()
+        return this.server
+            .wizardGetSystemSettings()
+            .toPromise()
             .then(systemSettings => {
-                Object.entries(settingsConfig).forEach(([settingKey, settingConfig]: [string, Setting]) => {
-                    // eslint-disable-next-line no-prototype-builtins
-                    if (!systemSettings.hasOwnProperty(settingKey)) {
-                        return;
-                    }
-                    if (!settingConfig.setupWizard) {
-                        return;
-                    }
+                Object.entries(settingsConfig).forEach(
+                    ([settingKey, settingConfig]: [string, Setting]) => {
+                        // eslint-disable-next-line no-prototype-builtins
+                        if (!systemSettings.hasOwnProperty(settingKey)) {
+                            return;
+                        }
+                        if (!settingConfig.setupWizard) {
+                            return;
+                        }
 
-                    let settingValue: boolean | number | string = systemSettings[settingKey] || false;
-                    if (settingConfig.type === 'checkbox' && settingValue === undefined) {
-                        settingValue = true;
-                    } else if (settingConfig.type === 'number') {
-                        settingValue = parseInt(<string>settingValue);
-                    } else if (['true', 'false'].includes(<string>settingValue)) {
-                        settingValue = settingValue === 'true';
-                    }
+                        let settingValue: boolean | number | string =
+                            systemSettings[settingKey] || false;
+                        if (settingConfig.type === 'checkbox' && settingValue === undefined) {
+                            settingValue = true;
+                        } else if (settingConfig.type === 'number') {
+                            settingValue = parseInt(<string>settingValue);
+                        } else if (['true', 'false'].includes(<string>settingValue)) {
+                            settingValue = settingValue === 'true';
+                        }
 
-                    let settingLabel = this.translate.instant(settingKey);
-                    if (settingLabel === settingKey && settingConfig.label) {
-                        settingLabel = settingConfig.label;
-                    }
-                    // TODO: REMOVE! ...Temporary fix for https://networkoptix.atlassian.net/browse/CLOUD-9716
-                    // until server API is fixed
-                    // rest/v1/system/settings returns null for “statisticsAllowed“
-                    if (settingKey === 'statisticsAllowed' && settingValue === null) {
-                        settingValue = true;
-                    }
-                    this.systemAdvancedSettings[settingKey] = { settingValue, settingLabel };
-                });
+                        let settingLabel = this.translate.instant(settingKey);
+                        if (settingLabel === settingKey && settingConfig.label) {
+                            settingLabel = settingConfig.label;
+                        }
+                        // TODO: REMOVE! ...Temporary fix for https://networkoptix.atlassian.net/browse/CLOUD-9716
+                        // until server API is fixed
+                        // rest/v1/system/settings returns null for “statisticsAllowed“
+                        if (settingKey === 'statisticsAllowed' && settingValue === null) {
+                            settingValue = true;
+                        }
+                        this.systemAdvancedSettings[settingKey] = { settingValue, settingLabel };
+                    },
+                );
             });
     }
 
@@ -830,37 +877,36 @@ export class WizardStateService {
     initWizard = (): void => {
         this.currentState = undefined;
         this.checkIfSystemIsReady();
-        this.updateCredentials(
-            this.setupConfig.localLogin,
-            this.setupConfig.localPassword,
-            false
-        ).then(() => {
-            Promise.all([
-                this.getAdvancedSettings(),
-                this.discoverSystems()
-            ]).catch(() => {});
-        }).catch(_ => {
-            const params = new URLSearchParams(this.window.location.search);
-            if ([WIZARD_STATE.CloudSuccess, WIZARD_STATE.LocalSuccess].includes(this.currentState)) {
-                return;
-            }
-            if (params.get('retry')) {
-                this.currentState = WIZARD_STATE.InitFailure;
-            } else {
-                params.set('retry', 'true');
-                this.window.location.search = params.toString();
-                setTimeout(() => this.window.location.reload(), 1000);
-            }
-        });
+        this.updateCredentials(this.setupConfig.localLogin, this.setupConfig.localPassword, false)
+            .then(() => {
+                Promise.all([this.getAdvancedSettings(), this.discoverSystems()]).catch(() => {});
+            })
+            .catch(_ => {
+                const params = new URLSearchParams(this.window.location.search);
+                if (
+                    [WIZARD_STATE.CloudSuccess, WIZARD_STATE.LocalSuccess].includes(
+                        this.currentState,
+                    )
+                ) {
+                    return;
+                }
+                if (params.get('retry')) {
+                    this.currentState = WIZARD_STATE.InitFailure;
+                } else {
+                    params.set('retry', 'true');
+                    this.window.location.search = params.toString();
+                    setTimeout(() => this.window.location.reload(), 1000);
+                }
+            });
     };
 
     createConnection<
-    S extends NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2 | NxSystemRestAPI3 =
-        | NxSystemAPI
-        | NxSystemRestAPI
-        | NxSystemRestAPI2
-        | NxSystemRestAPI3,
->(): S {
+        S extends NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2 | NxSystemRestAPI3 =
+            | NxSystemAPI
+            | NxSystemRestAPI
+            | NxSystemRestAPI2
+            | NxSystemRestAPI3,
+    >(): S {
         const unauthorizedCallback = (): Promise<string> => Promise.resolve('');
         // eslint-disable-next-line nx/no-untyped-init
         const serverApi = new NxSystemRestAPI2(
@@ -882,8 +928,7 @@ export class WizardStateService {
     }
 
     init(): void {
-        this.server = this
-            .createConnection();
+        this.server = this.createConnection();
 
         this.initWizard();
     }

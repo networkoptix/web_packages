@@ -11,12 +11,9 @@ import { WizardStateService } from '../../services/wizard-state.service';
 })
 export class MergeFailedComponent implements OnInit {
     icons = icons;
-    constructor(
-        public wizardService: WizardStateService
-    ) { }
+    constructor(public wizardService: WizardStateService) {}
 
-    ngOnInit(): void {
-    }
+    ngOnInit(): void {}
 
     retry(): void {
         this.wizardService.retry();
