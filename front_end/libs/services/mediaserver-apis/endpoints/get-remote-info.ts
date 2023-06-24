@@ -6,10 +6,16 @@ import { MediaserverRestConnection } from '../connections/adapters/adapter-targe
 
 import { proxyLegacyV1 } from './proxy';
 
-export function getServerInfoRestV1(
+export function getRemoteServerInfoRestV1(
     this: MediaserverRestConnection,
     remoteEndpoint: string,
 ): Observable<ModuleInformationReply> {
     remoteEndpoint = remoteEndpoint.replace(/https?:\/\/(?:.*@)?/, '');
-    return proxyLegacyV1('get', 'https', remoteEndpoint, 'rest/v1/servers/this/info', {});
+    return proxyLegacyV1.bind(this)(
+        'get',
+        'https',
+        remoteEndpoint,
+        'rest/v1/servers/this/info',
+        {},
+    );
 }

@@ -55,6 +55,7 @@ import type {
     WithoutRT,
 } from './mediaserver-apis/connections/adapters/adapter-target-types';
 import { assertTransaction } from './mediaserver-apis/connections/methods/transaction-bus/types/transactions';
+import { getRemoteServerInfoRestV1 } from './mediaserver-apis/endpoints/get-remote-info';
 import { getServerInfoRestV1 } from './mediaserver-apis/endpoints/get-server-info';
 import { createLayoutRestV1 } from './mediaserver-apis/endpoints/layout/create-layout';
 import { deleteLayoutRestV1 } from './mediaserver-apis/endpoints/layout/delete-layout';
@@ -916,7 +917,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     // serverId can be a server id, this, or *
     getServerInfo = getServerInfoRestV1;
 
-    getRemoteServerInfo = getServerInfoRestV1;
+    getRemoteServerInfo = getRemoteServerInfoRestV1;
 
     mergeSystems(
         remoteEndpoint: string,

@@ -44,6 +44,7 @@ version testing:
 7. `serverUrl` validation
     - Higher priority: not checking before touched
     - Lower priority: able to show url validation if a bad url gets automatically shown. This is related to remoteAddresses being weird, with systemId.serverId's
+    - Note: I haven't been able to reproduce this issue. If it comes up, we'll come back to address this
 
 8. Investigate generic component's Process/History is done properly
     Supposed to be used for Section 4.7 of the spec, but wasn't tested

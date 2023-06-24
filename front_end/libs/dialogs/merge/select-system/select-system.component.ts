@@ -292,14 +292,17 @@ export class NxMergeSelectSystemComponent implements OnInit, OnChanges {
         }
     }
 
-    checkMergeabilityFunction = (): void => {
+    checkMergeabilityFunction(err?: string): void {
         if (this.otherSystem) {
             this.checkIfExistingSystem(this.cleanUpUrl(this.serverUrl));
         }
         if (this.serverUrl) {
             this.serverUrlUpdate(this.serverUrlInputElement);
         }
-    };
+        if (err === 'HttpErrorResponse') {
+            this.serverUrlInputValidationErrorText = this.ti(this.LANG.dialogs.merge.urlNotValid);
+        }
+    }
 
     checkIfExistingSystem(url: string): void {
         // if using otherSystem, checks if it matches an existing system in dropdown

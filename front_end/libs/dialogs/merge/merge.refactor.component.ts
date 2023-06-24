@@ -9,6 +9,7 @@ import {
     OnInit,
     // ViewEncapsulation,
     LOCALE_ID,
+    ViewChild,
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { UntilDestroy } from '@ngneat/until-destroy';
@@ -49,6 +50,7 @@ import { servers } from '@src/app/variables/static-variables';
 import { pickFrom, alphabeticalSort, cleanIp, strSplice, cleanId } from '@utils/general';
 
 import { MergeErrorData, MergeState, MergeStateType, MergeSystem } from './merge.refactor.component.types';
+import { NxMergeSelectSystemComponent } from './select-system/select-system.component';
 
 require('what-input');
 
@@ -84,6 +86,8 @@ const stateProcesses = {
     // encapsulation: ViewEncapsulation.None
 })
 export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit, OnDestroy {
+    @ViewChild('nxMergeSelectSystem', { static: false }) selectSystem: NxMergeSelectSystemComponent;
+
     CONFIG: IConfig;
     LANG = staticLang;
     MergeState = MergeState;
@@ -639,7 +643,8 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                         secondarySystem = (await this.system.serverManager.getModuleInfoUsingUrl(this.serverUrl).toPromise()).reply;
                     }
                 } catch (err) {
-                    throw Error('secondaryOffline');
+                    this.selectSystem.checkMergeabilityFunction(err.name);
+                    throw Error(err);
                 }
                 this.targetSystem = this.cleanUpWebadminSystem(secondarySystem, this.systemUrls, this.CONFIG.system.flags.newSystem);
             }
@@ -696,6 +701,7 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
             }
             targetSystemService.stopPoll();
         }
+        this.selectSystem.checkMergeabilityFunction();
         return this.targetSystem.isNew ? isNew : { error: '0' };
     }
 

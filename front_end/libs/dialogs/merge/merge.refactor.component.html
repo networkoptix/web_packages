@@ -33,6 +33,7 @@
         [ngSwitch]="currentState"
     >
         <nx-merge-select-system-component
+            #nxMergeSelectSystem
             *ngSwitchCase="MergeState.select"
             [selectSystemProcess]="selectSystemProcess"
             [mergeSystems]="mergeSystems"
