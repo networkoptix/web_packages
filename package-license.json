@@ -1621,11 +1621,95 @@
             "licenseFile": "cloud_portal/front_end/eslint-plugin-nx/node_modules/yocto-queue/license"
         }
     },
+    "/front_end/libs/components/": {
+        "components@0.0.1": {
+            "licenses": "Unlicense",
+            "path": "cloud_portal/front_end/libs/components",
+            "licenseFile": "cloud_portal/front_end/libs/components/README.md"
+        }
+    },
     "/front_end/libs/components-buildable/": {
         "components-buildable@0.0.1": {
             "licenses": "Unlicense",
             "path": "cloud_portal/front_end/libs/components-buildable",
             "licenseFile": "cloud_portal/front_end/libs/components-buildable/README.md"
+        }
+    },
+    "/front_end/libs/dialogs/": {
+        "dialogs@0.0.1": {
+            "licenses": "Unlicense",
+            "path": "cloud_portal/front_end/libs/dialogs",
+            "licenseFile": "cloud_portal/front_end/libs/dialogs/README.md"
+        }
+    },
+    "/front_end/libs/directives/": {
+        "directives@0.0.1": {
+            "licenses": "Unlicense",
+            "path": "cloud_portal/front_end/libs/directives",
+            "licenseFile": "cloud_portal/front_end/libs/directives/README.md"
+        }
+    },
+    "/front_end/libs/features/": {
+        "features@0.0.1": {
+            "licenses": "Unlicense",
+            "path": "cloud_portal/front_end/libs/features",
+            "licenseFile": "cloud_portal/front_end/libs/features/README.md"
+        }
+    },
+    "/front_end/libs/interceptors/": {
+        "interceptors@0.0.1": {
+            "licenses": "Unlicense",
+            "path": "cloud_portal/front_end/libs/interceptors",
+            "licenseFile": "cloud_portal/front_end/libs/interceptors/README.md"
+        }
+    },
+    "/front_end/libs/menu/": {
+        "menu@0.0.1": {
+            "licenses": "Unlicense",
+            "path": "cloud_portal/front_end/libs/menu",
+            "licenseFile": "cloud_portal/front_end/libs/menu/README.md"
+        }
+    },
+    "/front_end/libs/pipes/": {
+        "pipes@0.0.1": {
+            "licenses": "Unlicense",
+            "path": "cloud_portal/front_end/libs/pipes",
+            "licenseFile": "cloud_portal/front_end/libs/pipes/README.md"
+        }
+    },
+    "/front_end/libs/resolvers/": {
+        "resolvers@0.0.1": {
+            "licenses": "Unlicense",
+            "path": "cloud_portal/front_end/libs/resolvers",
+            "licenseFile": "cloud_portal/front_end/libs/resolvers/README.md"
+        }
+    },
+    "/front_end/libs/routeGuards/": {
+        "route-guards@0.0.1": {
+            "licenses": "Unlicense",
+            "path": "cloud_portal/front_end/libs/routeGuards",
+            "licenseFile": "cloud_portal/front_end/libs/routeGuards/README.md"
+        }
+    },
+    "/front_end/libs/services/": {
+        "services@0.0.1": {
+            "licenses": "Unlicense",
+            "path": "cloud_portal/front_end/libs/services",
+            "licenseFile": "cloud_portal/front_end/libs/services/README.md"
+        }
+    },
+    "/front_end/libs/temp-project-template/": {
+        "temp-project-template@0.0.1": {
+            "licenses": "Unlicense",
+            "path": "cloud_portal/front_end/libs/temp-project-template",
+            "licenseFile": "cloud_portal/front_end/libs/temp-project-template/README.md"
+        }
+    },
+    "/front_end/libs/utils/": {
+        "utils@0.0.1": {
+            "licenses": "Unlicense",
+            "path": "cloud_portal/front_end/libs/utils",
+            "licenseFile": "cloud_portal/front_end/libs/utils/README.md"
         }
     },
     "/front_end/": {

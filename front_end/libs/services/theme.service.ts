@@ -6,7 +6,6 @@ import { CookieService } from 'ngx-cookie-service';
 import { SessionStorageService } from 'ngx-webstorage';
 import { BehaviorSubject } from 'rxjs';
 
-import { AuthorizeParams } from '@authorization/src/app/components/authorize.component.types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -14,6 +13,7 @@ import { NxSessionService } from '@services/session.service';
 import { WINDOW } from '@services/window-provider';
 
 import { CustomAccountProperty } from './nx-cloud-api/custom-account-property';
+import { AuthorizeParams } from './nx-cloud-api/nx-cloud-api.types';
 
 enum AvailableThemes {
     auto = 'auto',

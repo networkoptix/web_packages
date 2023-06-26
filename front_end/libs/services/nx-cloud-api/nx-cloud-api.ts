@@ -8,10 +8,6 @@ import { EMPTY, of, from, BehaviorSubject, throwError, defer, forkJoin } from 'r
 import type { Observable } from 'rxjs';
 import { catchError, concatMap, switchMap, map, tap, shareReplay, filter } from 'rxjs/operators';
 
-import type {
-    AuthorizeParams,
-    AuthenticateResp,
-} from '@authorization/src/app/components/authorize.component.types';
 import { ConsoleSection } from '@components/console-table/console-table.component.types';
 import { environment } from '@environments/environment';
 import { apiBase, redirect, responseOk, staticBase } from '@lib/variables/static-variables';
@@ -539,8 +535,8 @@ export class NxCloudApiService {
         responseType: string,
         state?: string,
         scope?: string,
-    ): Promise<AuthenticateResp> {
-        const body: AuthorizeParams & { password: string } = {
+    ): Promise<t.AuthenticateResp> {
+        const body: t.AuthorizeParams & { password: string } = {
             email,
             password,
             client_id: clientId,

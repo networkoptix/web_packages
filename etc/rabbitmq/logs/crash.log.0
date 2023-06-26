@@ -1,6 +1,0 @@
-2021-02-26 20:34:24 =SUPERVISOR REPORT====
-     Supervisor: {<0.1538.0>,rabbit_channel_sup}
-     Context:    shutdown_error
-     Reason:     noproc
-     Offender:   [{pid,<0.1541.0>},{id,channel},{mfargs,{rabbit_channel,start_link,[1,<0.1532.0>,<0.1539.0>,<0.1532.0>,<<"172.18.0.1:59548 -> 172.18.0.4:5672">>,rabbit_framing_amqp_0_9_1,{user,<<"guest">>,[administrator],[{rabbit_auth_backend_internal,none}]},<<"/">>,[{<<"consumer_cancel_notify">>,bool,true},{<<"connection.blocked">>,bool,true},{<<"authentication_failure_close">>,bool,true}],<0.1533.0>,<0.1540.0>]}},{restart_type,intrinsic},{shutdown,70000},{child_type,worker}]
-

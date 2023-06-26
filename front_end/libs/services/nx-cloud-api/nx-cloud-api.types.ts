@@ -41,6 +41,13 @@ export interface AuthCode {
     email: string;
 }
 
+export interface Screenshot {
+    id: string;
+    value: string;
+    sortKey: number;
+    caption?: string;
+}
+
 export interface Integration {
     information: {
         name: string;
@@ -55,12 +62,13 @@ export interface Integration {
         companyPrivacyPolicyLink: string;
         termsOfUseLink: string;
     };
-    overview: {
-        [overviewTexts: string]: string;
+    overview: Record<string, Screenshot[]> & {
+        overviewVideo: string;
+        description: string;
     };
-    instructions: {
-        [instructionScreenshots: string]: string;
+    instructions: Record<string, Screenshot[]> & {
         installationInstructions: string;
+        instructionVideo: string;
     };
     support: {
         supportEmail: string;
@@ -416,4 +424,48 @@ export enum PackageState {
     PENDING = 'pending',
     READY = 'ready',
     FAILED = 'failed',
+}
+
+export enum ClientType {
+    loginCloud = 'loginToCloud',
+    loginWebadmin = 'loginToWebadmin',
+    passwordApply = 'confirmPasswordApplyChanges',
+    passwordDisconnect = 'confirmPasswordDisconnect',
+    passwordMerge = 'confirmPasswordMerge',
+    passwordBackup = 'confirmPasswordCreateBackup',
+    passwordRestore = 'confirmPasswordRestoreBackup',
+    passwordReset = 'confirmPasswordResetServer',
+    passwordRestart = 'confirmPasswordRestartServer',
+    passwordDetach = 'confirmPasswordDetachServer',
+    passwordTransfer = 'confirmPasswordTransfer',
+    create = 'createAccount',
+    connect = 'connectSystemToCloud',
+    setup = 'setupWizard',
+    renewDesktop = 'renewSessionDesktop',
+    renewWeb = 'renewSessionWeb',
+    openClient = 'openClientFromCloud',
+    system2faAuth = 'system2faAuth',
+}
+
+export interface AuthorizeParams {
+    response_type: string;
+    client_id: string;
+    redirect_uri?: string;
+    redirect_url?: string;
+    client_type?: ClientType;
+    view_type?: 'desktop' | 'mobile' | 'web';
+    grant_type?: string;
+    scope?: string;
+    state?: string;
+    code?: string;
+    message?: 'passwordReset' | 'activated';
+    email?: string;
+    access_code?: string;
+    access_token?: string;
+    lang?: string;
+}
+
+export interface AuthenticateResp {
+    code?: string;
+    link?: string;
 }

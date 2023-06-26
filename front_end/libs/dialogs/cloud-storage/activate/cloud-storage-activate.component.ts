@@ -15,7 +15,7 @@ import { BaseCloudStorageActionModalContent, CloudStorageActionType } from '../a
 
 @Component({
     selector: 'nx-cloud-storage-activate-content',
-    templateUrl: '../action-common/license-input-template.html',
+    templateUrl: '../action-common/license-input-template.component.html',
     styleUrls: ['../action-common/styles.scss'],
 })
 export class CloudStorageActivateModalContent extends BaseCloudStorageActionModalContent {

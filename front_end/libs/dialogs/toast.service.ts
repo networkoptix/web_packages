@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import type { Toast, ToastOptions } from '@components/toast/toast.types';
+import type { Toast, ToastOptions } from '@app/components/toast-container/toast.types';
 import { Translatable } from '@pipes/nx-translate.types';
 
 import { alertTimeout, toast } from '../variables/static-variables';

@@ -15,7 +15,25 @@
             "options": {
                 "eslintConfig": "./.eslintrc.js",
                 "lintFilePatterns": ["./**/*.ts", "./**/*.component.html"],
-                "exclude": ["**/node_modules/**", "**/src/**", "**/lib/**", "**/apps/**", "**/libs/*-buildable/**"]
+                "ignorePatterns": [
+                    "**/dist/**",
+                    "**/node_modules/**",
+                    "**/src/**",
+                    "**/lib/**",
+                    "**/apps/**",
+                    "**/libs/*-buildable/**",
+                    "**/libs/components/**",
+                    "**/libs/features/**",
+                    "**/libs/services/**",
+                    "**/libs/pipes/**",
+                    "**/libs/menu/**",
+                    "**/libs/utils/**",
+                    "**/libs/dialogs/**",
+                    "**/libs/directives/**",
+                    "**/libs/interceptors/**",
+                    "**/libs/resolvers/**",
+                    "**/libs/routeGuards/**"
+                ]
             }
         }
     }

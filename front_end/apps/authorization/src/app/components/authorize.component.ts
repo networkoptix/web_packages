@@ -18,6 +18,11 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, fromEvent, lastValueFrom, Observable, of } from 'rxjs';
 import { catchError, debounceTime, map } from 'rxjs/operators';
 
+import {
+    ClientType,
+    AuthorizeParams,
+    AuthenticateResp,
+} from '@app/services/nx-cloud-api/nx-cloud-api.types';
 import { AuthService } from '@authorization/src/app/auth.service';
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxToastService } from '@dialogs/toast.service';
@@ -33,12 +38,7 @@ import { NxThemeService } from '@services/theme.service';
 import { WINDOW } from '@services/window-provider';
 import { ViewportBreakpoints } from '@styles/theme-variables-common';
 
-import {
-    AuthorizeParams,
-    AuthenticateResp,
-    AuthorizeState,
-    ClientType,
-} from './authorize.component.types';
+import { AuthorizeState } from './authorize.component.types';
 
 require('what-input');
 

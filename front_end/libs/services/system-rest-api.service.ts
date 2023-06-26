@@ -43,7 +43,6 @@ import {
 import { withKeyMap } from '@utils/nx';
 import { startWithCache } from '@utils/start-with-cached';
 
-import { SECURITY_LEVEL } from '../../apps/setup-wizard/src/app/types/wizard-state.types';
 import { apiTool, servers } from '../variables/static-variables';
 
 import type {
@@ -69,7 +68,7 @@ import { NxAppStateService } from './nx-app-state.service';
 import type { APIDocType, MenuManifest } from './nx-config/base-config';
 import type { IConfig } from './nx-config/config-types';
 import * as t from './system-api.types';
-import { SystemConfigSettings } from './system-api.types';
+import { SECURITY_LEVEL, SystemConfigSettings } from './system-api.types';
 import { NxSystemAPI } from './system-legacy-api.service';
 import type { IParams, ServerPreprocess } from './system.service/system-types';
 import { NxUriCacheService } from './uri-cache.service';

@@ -3,13 +3,13 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import staticLang from '@app/language/language_i18n_static.json';
+import { SECURITY_LEVEL } from '@app/services/system-api.types';
 import { CheckboxModule } from '@components/checkbox/checkbox.module';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { PipesModule } from '@pipes/pipes.module';
 
 import { WizardStateService } from '../../services/wizard-state.service';
-import { SECURITY_LEVEL } from '../../types/wizard-state.types';
 
 @Component({
     selector: 'nx-advanced-component',

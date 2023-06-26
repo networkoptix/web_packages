@@ -5,9 +5,8 @@ import { cloneDeep } from 'lodash-es';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { LocalStorageService } from 'ngx-webstorage';
 
+import { AuthorizeParams, ClientType } from '@app/services/nx-cloud-api/nx-cloud-api.types';
 import { WINDOW } from '@services/window-provider';
-
-import { AuthorizeParams, ClientType } from '../components/authorize.component.types';
 
 /* eslint-disable camelcase */
 @UntilDestroy()

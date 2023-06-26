@@ -5,6 +5,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
@@ -59,6 +60,7 @@ export const testBedSetupFactory = (
         DialogModule,
         StoreModule.forRoot({ account: accountReducer }),
         EffectsModule.forRoot([AccountSync, SystemsSync]),
+        NoopAnimationsModule,
     ];
 
     const commonProviders = [
@@ -102,7 +104,7 @@ export const testBedSetupFactory = (
     }
 
     const fixture = TestBed.createComponent(TargetComponent);
-    fixture.detectChanges();
+    fixture.autoDetectChanges();
     const component = fixture.componentInstance;
     const getHttpController = (): HttpTestingController => TestBed.inject(HttpTestingController);
     return { fixture, component, getHttpController };

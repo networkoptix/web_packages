@@ -1,6 +1,7 @@
 import { trigger, style, animate, transition } from '@angular/animations';
 import { Component, Input, OnInit } from '@angular/core';
 
+import { Screenshot } from '@app/services/nx-cloud-api/nx-cloud-api.types';
 import { mod } from '@utils/general';
 
 @Component({
@@ -27,7 +28,7 @@ import { mod } from '@utils/general';
     ],
 })
 export class NxCarouselComponent implements OnInit {
-    @Input() screenshots;
+    @Input() screenshots: Screenshot[] = [];
     @Input() type?: string;
 
     imageCount: number;

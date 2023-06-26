@@ -15,13 +15,13 @@ import type { SearchableDropdownItem as Item } from '@components/dropdowns/searc
 import { alertTimeout, apiBase, icons, settingsConfig, simpleURLRegex } from '@lib/variables/static-variables';
 import { Setting } from '@services/nx-config/base-config';
 import { IConfig } from '@services/nx-config/config-types';
-import { ModuleInformationReply, NormalResponse, SystemConfigSettings, UserSession } from '@services/system-api.types';
+import { ModuleInformationReply, NormalResponse, SECURITY_LEVEL, SystemConfigSettings, UserSession } from '@services/system-api.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { WINDOW } from '@services/window-provider';
 import { alphabeticalSort } from '@utils/general';
 
-import { FORM_STATE, iState, SECURITY_LEVEL, WIZARD_STATE } from '../types/wizard-state.types';
+import { FORM_STATE, iState, WIZARD_STATE } from '../types/wizard-state.types';
 
 interface BindResponse {
     id: string;

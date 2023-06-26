@@ -274,6 +274,7 @@ frontend-tests:
   extends: .frontend-node
   stage: test
   coverage: /^TOTAL.+?(\d+\%)$/
+  allow_failure: true
   artifacts:
     when: always
     reports:

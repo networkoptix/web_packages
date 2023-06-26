@@ -198,15 +198,12 @@
                 "passWithNoTests": true
             },
             "configurations": {
+                "watch": {
+                    "watch": true
+                },
                 "ci": {
                     "ci": true,
-                    "codeCoverage": true,
-                    "fileReplacements": [
-                        {
-                            "replace": "common/environments/environment.ts",
-                            "with": "common/environments/environment.unit.ts"
-                        }
-                    ]
+                    "codeCoverage": true
                 }
             }
         }

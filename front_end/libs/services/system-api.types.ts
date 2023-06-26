@@ -1185,3 +1185,8 @@ export type Ec2RecordedTimePeriods = NormalResponse<
         }[];
     }[]
 >;
+
+export const enum SECURITY_LEVEL {
+    STANDARD = 'standard',
+    HIGH = 'high',
+}

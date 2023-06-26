@@ -1,5 +1,6 @@
-import { IEnvironment } from './environment-config';
+import { IEnvironment, testing } from './environment-config';
 export const environment: IEnvironment = {
     isLocal: true,
-    production: true
+    production: true,
+    testing
 };

@@ -8,3 +8,9 @@ export interface IEnvironment {
     readonly isWizard?: boolean;
     readonly testing?: boolean;
 }
+
+export let testing = false;
+
+try {
+    testing = process.env.JEST_WORKER_ID !== undefined
+} catch(_) {}

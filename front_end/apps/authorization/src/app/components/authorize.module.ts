@@ -11,7 +11,7 @@ import { PipesModule } from '@app/pipes/pipes.module';
 import { FooterModule } from '@components/footer/footer.module';
 import { NavFooterModule } from '@components/nav-footer/nav-footer.module';
 import { ProcessButtonModule } from '@components/process-button/process-button.module';
-import { ToastContainerModule } from '@components/toast/toast-container.module';
+import { ToastContainerModule } from '@components/toast-container/toast-container.module';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { NxAuthorizeActivateAccountComponent } from './activate-account/activate-account.component';

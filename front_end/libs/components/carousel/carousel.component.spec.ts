@@ -1,71 +1,55 @@
-import {
-    ComponentFixture,
-    TestBed,
-    waitForAsync,
-} from '@angular/core/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MockProvider } from 'ng-mocks';
-
-import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { setupComponent } from '../src/setup';
 
 import { NxCarouselComponent } from './carousel.component';
 
+const screenshots = [{
+    id: 'Screenshot1',
+    value: 'https://cloud-test.hdw.mx/static/media/test-asset-011119-amironenko/overviewscreenshot1-257/Screenshot_23.png',
+    sortKey: 1,
+    caption: 'screenshot 23'
+}, {
+    id: 'Screenshot2',
+    value: 'https://cloud-test.hdw.mx/static/media/test-asset-011119-amironenko/overviewscreenshot2-259/Screenshot_25.png',
+    sortKey: 2
+}];
+
+const handleSetup = async (): ReturnType<typeof setupComponent<NxCarouselComponent>> => {
+    const setup = await setupComponent(NxCarouselComponent);
+    setup.component.screenshots = screenshots;
+    setup.component.type = 'Overview';
+    setup.component.ngOnInit();
+    setup.fixture.detectChanges();
+    await setup.fixture.whenStable();
+    return setup;
+};
+
 describe('NxCarouselComponent', () => {
-    let component: NxCarouselComponent;
-    let fixture: ComponentFixture<NxCarouselComponent>;
-    let el: HTMLDivElement;
-
-    const screenshots = [{
-        id: 'Screenshot1',
-        value: 'https://cloud-test.hdw.mx/static/media/test-asset-011119-amironenko/overviewscreenshot1-257/Screenshot_23.png',
-        sortKey: 1,
-        caption: 'screenshot 23'
-    }, {
-        id: 'Screenshot2',
-        value: 'https://cloud-test.hdw.mx/static/media/test-asset-011119-amironenko/overviewscreenshot2-259/Screenshot_25.png',
-        sortKey: 2
-    }];
-
-    beforeEach(waitForAsync(() => {
-        TestBed
-            .configureTestingModule({
-                imports: [BrowserAnimationsModule],
-                declarations: [NxCarouselComponent],
-                providers: [
-                    MockProvider(NxLanguageProviderService),
-                    MockProvider(NxConfigService)
-                ]
-            })
-            .compileComponents();
-
-        fixture = TestBed.createComponent(NxCarouselComponent);
-        component = fixture.componentInstance;
-        el = fixture.debugElement.nativeElement;
-        component.type = 'Overview';
-        component.screenshots = screenshots;
-        fixture.detectChanges();
-    }));
-
-    it('should create component', () => {
+    it('should create component', async () => {
+        const { component } = await handleSetup();
         expect(component).toBeTruthy();
     });
 
-    it('should populate image count', () => {
+    it('should populate image count', async () => {
+        const { component } = await handleSetup();
         expect(component.imageCount).toBe(2);
     });
 
-    it('should have wrapper', () => {
-        const carousel = el.querySelector<HTMLDivElement>('.carousel');
+    it('should have wrapper', async () => {
+        const { fixture } = await handleSetup();
+        const el = fixture.elementRef.nativeElement;
+        const carousel = el.querySelector('.carousel');
         expect(carousel.className).toContain('slide embed-responsive-item');
     });
 
-    it('should have left nav', () => {
+    it('should have left nav', async () => {
+        const { fixture } = await handleSetup();
+        const el = fixture.elementRef.nativeElement;
         const nav = el.querySelectorAll('.carousel .carousel-control-prev .nav-arrow.left span');
         expect(nav.length).toBe(2);
     });
 
-    it('should set index and caption', () => {
+    it('should set index and caption', async () => {
+        const { component } = await handleSetup();
         expect(component.currentIndex).toBe(0);
         component.setIndex(1);
         expect(component.currentIndex).toBe(1);
@@ -75,13 +59,17 @@ describe('NxCarouselComponent', () => {
         expect(component.caption).toBe('screenshot 23');
     });
 
-    it('should have right nav', () => {
+    it('should have right nav', async () => {
+        const { fixture } = await handleSetup();
+        const el = fixture.elementRef.nativeElement;
         const nav = el.querySelectorAll('.carousel .carousel-control-next .nav-arrow.right span');
         expect(nav.length).toBe(2);
     });
 
-    it('should have img(s)', () => {
-        const images = el.querySelectorAll<HTMLImageElement>(
+    it('should have img(s)', async () => {
+        const { fixture } = await handleSetup();
+        const el = fixture.elementRef.nativeElement;
+        const images = el.querySelectorAll(
             '.carousel .carousel-item .carousel-img img'
         );
         expect(images.length).toBe(2);
@@ -92,37 +80,43 @@ describe('NxCarouselComponent', () => {
         expect(images[1].alt).toBe('Overview carousel image 2');
     });
 
-    it('should left nav be clickable', () => {
-        const spy = spyOn(component, 'previousElement');
-        const button = el.querySelector<HTMLDivElement>(
+    it('should left nav be clickable', async () => {
+        const { component, fixture } = await handleSetup();
+        const el = fixture.elementRef.nativeElement;
+        const spy = jest.spyOn(component, 'previousElement');
+        const button = el.querySelector(
             '.carousel .carousel-control-prev'
         );
         button.dispatchEvent(new MouseEvent('click'));
-        expect(spy.calls.count()).toBe(1, 'previousElement method should be called once');
+        expect(spy).toBeCalledTimes(1);
     });
 
-    it('should right nav be clickable', () => {
-        const spy = spyOn(component, 'nextElement');
-        const button = el.querySelector<HTMLDivElement>(
+    it('should right nav be clickable', async () => {
+        const { component, fixture } = await handleSetup();
+        const el = fixture.elementRef.nativeElement;
+        const spy = jest.spyOn(component, 'nextElement');
+        const button = el.querySelector(
             '.carousel .carousel-control-next'
         );
         button.dispatchEvent(new MouseEvent('click'));
-        expect(spy.calls.count()).toBe(1, 'nextElement method should be called once');
+        expect(spy).toBeCalledTimes(1);
     });
 
-    it('should decrement currentIndex', () => {
-        const spy = spyOn(component, 'setCaption');
+    it('should decrement currentIndex', async () => {
+        const { component } = await handleSetup();
+        const spy = jest.spyOn(component, 'setCaption');
         expect(component.currentIndex).toBe(0);
         component.previousElement();
-        expect(spy.calls.count()).toBe(1, 'setCaption method should be called once');
+        expect(spy).toBeCalledTimes(1);
         expect(component.currentIndex).toBe(1);
     });
 
-    it('should increment currentIndex', () => {
-        const spy = spyOn(component, 'setCaption');
+    it('should increment currentIndex', async () => {
+        const { component } = await handleSetup();
+        const spy = jest.spyOn(component, 'setCaption');
         expect(component.currentIndex).toBe(0);
         component.nextElement();
-        expect(spy.calls.count()).toBe(1, 'setCaption method should be called once');
+        expect(spy).toBeCalledTimes(1);
         expect(component.currentIndex).toBe(1);
     });
 });
