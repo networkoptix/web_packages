@@ -11,9 +11,10 @@
     width: 256px;
 
     .logo {
+        display: flex;
+        width: 100%;
         @include typography.regular20nocolor;
         color: var(--header-logo-text-color) !important;
-        border-right: 1px solid var(--header-logo-border);
 
         svg-icon {
             display: flex;
@@ -26,24 +27,37 @@
             width: 120px;
         }
 
-        .system-list {
-            display: flex;
-            justify-content: center;
+        // .system-list {
+        //     display: flex;
+        //     justify-content: center;
 
-            svg-icon .system-icon {
-                fill: var(--header-logo-text-color) !important;
-            }
+        //     svg-icon .system-icon {
+        //         fill: var(--header-logo-text-color) !important;
+        //     }
+        // }
+
+        .partial-border {
+                display: inline-block;
+                height: 26px;
+                width: 1px;
+                margin: auto;
+                background-color: var(--header-logo-border);
+        }
+
+        a {
+            flex-grow: 1;
         }
 
         .current-system-display {
             display: flex;
+            flex-grow: 1;
 
             .system-name {
-                margin: 0 auto 4px auto;
+                margin: auto;
+                // padding: 0px 14px;
                 white-space: nowrap;
                 text-overflow: ellipsis;
                 overflow: hidden;
-                height: 39px;
                 max-width: 180px;
 
                 &:hover {
@@ -52,8 +66,7 @@
             }
 
             .arrow-btn {
-                padding-top: 16px;
-                margin-top: -15px;
+                padding-top: 17px;
                 background-color: var(--header-profile-bg);
                 height: 58px;
                 width: 48px;
