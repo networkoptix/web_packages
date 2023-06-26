@@ -182,6 +182,118 @@
     ]
   },
   {
+    "name": "New Header",
+    "depth": 2,
+    "nodes": [
+      {
+        "name": "Services",
+        "display_name": "Services",
+        "url": "/download",
+        "new_window": false,
+        "authentication": "both",
+        "enabled": true,
+        "nodes": [
+          {
+            "name": "Downloads",
+            "display_name": "Downloads",
+            "url": "/download",
+            "new_window": false,
+            "icon": "",
+            "authentication": "both",
+            "enabled": true
+          },
+          {
+            "name": "Integrations",
+            "display_name": "Integrations",
+            "url": "/integrations",
+            "new_window": false,
+            "condition": "%INTEGRATION_STORE_ENABLED%",
+            "icon": "",
+            "authentication": "both",
+            "enabled": true
+          },
+          {
+            "name": "Supported Devices",
+            "display_name": "Supported Devices",
+            "url": "/ipvd",
+            "condition": "%IPVD_ENABLED%",
+            "new_window": false,
+            "icon": "",
+            "authentication": "both",
+            "enabled": true
+          },
+          {
+            "name": "Health Report Viewer",
+            "display_name": "Health Report Viewer",
+            "url": "/health-report/viewer",
+            "new_window": false,
+            "icon": "",
+            "authentication": "both",
+            "enabled": true
+          },
+          {
+            "name": "System Calculator",
+            "url": "http://nx.networkoptix.com/calculator/",
+            "enabled": [
+              "default",
+              "default_cn",
+              "default_zh_CN",
+              "metavms"
+            ],
+            "new_window": true
+          }
+        ]
+      },
+      {
+        "name": "For Developers",
+        "display_name": "For Developers",
+        "url": "/docs/developers",
+        "new_window": false,
+        "authentication": "both",
+        "enabled": true,
+        "nodes": [
+          {
+            "name": "Platform Overview",
+            "display_name": "Platform Overview",
+            "url": "/docs/developers",
+            "authentication": "both",
+            "enabled": true
+          },
+          {
+            "name": "Knowledgebase",
+            "display_name": "Knowledgebase",
+            "authentication": "both",
+            "url": "/docs/developers/knowledgebase",
+            "enabled": true
+          },
+          {
+            "name": "API Documentation",
+            "display_name": "API Documentation",
+            "url": "/doc/developers/api-tool",
+            "new_window": false,
+            "icon": "",
+            "authentication": "both",
+            "enabled": true
+          },
+          {
+            "name": "Developers Support",
+            "display_name": "Developers Support",
+            "url": "https://support.networkoptix.com/hc/en-us/community/topics/115000552988-Developer-Forum",
+            "new_window": true,
+            "icon": "",
+            "authentication": "both",
+            "enabled": [
+              "default",
+              "default_cn",
+              "default_zh_CN",
+              "metavms"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
     "name": "Footer",
     "depth": 1,
     "nodes": [

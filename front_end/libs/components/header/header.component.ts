@@ -267,7 +267,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
     private getMenu(): void {
         this.menusService
-            .getMenu('header', true)
+            .getMenu(this.newHeader ? 'new header' : 'header', true)
             .pipe(untilDestroyed(this))
             .subscribe(header => {
                 const nodes = this.menusService.cleanEmptyNodes(header.nodes);
