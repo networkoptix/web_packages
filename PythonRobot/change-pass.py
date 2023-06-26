@@ -3,7 +3,7 @@ from selenium import webdriver
 import resource
 from resource import get_headless_chrome
 from variables import ERROR_COLOR, CHANGE_PASSWORD_BUTTON_DROPDOWN, WRONG_PASSWORD_MESSAGE
-from variable_files.change_pass_variables import CURRENT_PASSWORD_INPUT, NEW_PASSWORD_INPUT, ALT_PASSWORD, CHANGE_PASSWORD_BUTTON, CANCEL_PASSWORD_CHANGES_BUTTON, CHANGE_PASS_NO_CHANGES
+from variable_files.change_pass_variables import CURRENT_PASSWORD_INPUT, NEW_PASSWORD_INPUT, ALT_PASSWORD, CHANGE_PASSWORD_BUTTON, CANCEL_PASSWORD_CHANGES_BUTTON, CHANGE_PASS_NO_CHANGES, SYMBOL_PASSWORD
 from account_variables import ACCOUNT_DROPDOWN, ACCOUNT_SETTINGS_BUTTON, YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED
 from selenium.webdriver.common.by import By
 from resource import verify_in_account_page, validate_log_out
@@ -16,6 +16,7 @@ import robot_keywords
 password = "qweasd 123"
 login = ""
 
+# Todo in all tests, generate users for each.
 def can_be_accessed_via_dropdown():
     driver = get_headless_chrome()
     robot_keywords.go_to_url(driver, ENV)
@@ -56,7 +57,22 @@ def password_is_actually_changed_and_login_works_with_new_password():
     robot_keywords.close_browser(driver)
     print("pass")
 
-
+def password_with_symbols_is_valid():
+    driver = get_headless_chrome()
+    robot_keywords.go_to_url(driver, f"{ENV}/account/password")
+    cloud_login(driver, "noptixautoqa+advviewer@gmail.com", "qweasd 123", button=None)
+    robot_keywords.wait_until_elements_are_visible(driver, [CURRENT_PASSWORD_INPUT, NEW_PASSWORD_INPUT])
+    robot_keywords.input_text(driver, CURRENT_PASSWORD_INPUT, password)
+    robot_keywords.input_text(driver, NEW_PASSWORD_INPUT, SYMBOL_PASSWORD)
+    robot_keywords.wait_until_elements_are_visible(driver, [CHANGE_PASSWORD_BUTTON, CANCEL_PASSWORD_CHANGES_BUTTON])
+    robot_keywords.click_button(driver, CHANGE_PASSWORD_BUTTON)
+    robot_keywords.elements_should_not_be_visible(driver, [CHANGE_PASSWORD_BUTTON, CANCEL_PASSWORD_CHANGES_BUTTON])
+    robot_keywords.wait_until_element_is_visible(driver, CHANGE_PASS_NO_CHANGES)
+    resource.log_out_cloud(driver)
+    robot_keywords.go_to_url(driver, f"{ENV}/account/password")
+    cloud_login(driver, "noptixautoqa+advviewer@gmail.com", SYMBOL_PASSWORD, button=None)
+    robot_keywords.close_browser(driver)
+    print("pass")
 
 
 
@@ -64,3 +80,4 @@ if __name__ == "__main__":
     can_be_accessed_via_dropdown()
     can_be_accessed_via_direct_url()
     password_is_actually_changed_and_login_works_with_new_password()
+    password_with_symbols_is_valid()
