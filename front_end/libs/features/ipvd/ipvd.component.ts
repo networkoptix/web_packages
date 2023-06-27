@@ -314,9 +314,9 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
         this.filterModel.multiselects?.forEach(select => {
             if (this.params[select.id]) {
                 select.selected = this.params[select.id].split(',');
-            } else if (select.id === 'vendors' && this.params.camera) {
+            } else if (select.id === 'vendors' && this.params.vendors) {
                 // direct navigation to camera
-                select.selected = this.findVendorForCamera(this.params.camera);
+                select.selected = this.findVendorForCamera(this.params.vendors);
                 if (!select.selected.length) {
                     // not found. wrong camera model? try search...
                     this.filterModel.search = this.params.camera;
@@ -508,7 +508,6 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
                     this.cameras,
                     this.filterModel,
                 );
-
                 this.noResult = filteredCameras.length === 0;
                 this.camerasTable = !this.noResult
                     ? this.preFilterCameraTable(filteredCameras)
