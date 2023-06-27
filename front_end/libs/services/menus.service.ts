@@ -331,7 +331,7 @@ export class NxMenusService {
             this.configService.flagsEnabled('bookmarks') &&
             activeSystem.version >= 5 &&
             this.currentUser?.permissions.includes('GlobalViewBookmarksPermission') &&
-            !this.deviceService.isMobile()
+            !(this.deviceService.isMobile() || this.deviceService.isTablet())
         ) {
             const bookmarksNode = new MenuNode(
                 'Bookmarks',

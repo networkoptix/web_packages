@@ -20,6 +20,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
+import type { NxUser } from '@services/system.service/user-manager/user-manager-types';
 import { NxSystemsService } from '@services/systems.service';
 
 @Injectable()
@@ -80,7 +81,7 @@ export class SystemGuard implements CanActivate {
                 system.userManager.currentUser.permissions.includes(
                     'GlobalViewBookmarksPermission',
                 ) &&
-                !this.deviceService.isMobile();
+                !(this.deviceService.isMobile() || this.deviceService.isTablet());
 
             const canViewChecks = {
                 users: permissions.editUsers,
@@ -154,16 +155,20 @@ export class SystemGuard implements CanActivate {
                     if (e === 'Media server cloud not be reached.') {
                         const cloudUsers = await currSystem.getUsersCachedInCloud();
                         if (cloudUsers instanceof HttpErrorResponse && cloudUsers.status === 403) {
-                            // User doesn't have permission to view cloud users
-                            if (currentRoute) {
-                                return this.router.navigate([
-                                    environment.isLocal ? '/settings/' : `/systems/${systemId}`,
-                                ]);
-                            } else {
-                                return true;
-                            }
+                            // Non-admin user doesn't have permission to view cached cloud users
+                            const accessRole = currSystem.info.accessRole as string;
+                            const permissions = nxConfig.accessRoles.predefinedRoles.find(role => {
+                                let name = role.name.replace(' ', '');
+                                name = name.charAt(0).toLowerCase() + name.slice(1);
+                                // Live Viewer => liveViewer
+                                return accessRole === name;
+                            }).permissions;
+
+                            currSystem.userManager.currentUser = { permissions } as NxUser;
+                            // We only care about permissions here
+                        } else {
+                            currSystem.userManager.processUsers(cloudUsers);
                         }
-                        currSystem.userManager.processUsers(cloudUsers);
                     } else {
                         throw e;
                     }
