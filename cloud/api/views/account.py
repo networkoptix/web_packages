@@ -392,6 +392,8 @@ async def renew_session(request):
     tokens = await sync_to_async(Auth.get_access_token)(request.data.get("code"), get_ip(request))
     request.session["access_token"] = tokens["access_token"]
     request.session["refresh_token"] = tokens["refresh_token"]
+    account = await sync_to_async(Account.get)(request)
+    request.session["has2fa"] = account.get("account2faEnabled", False)
 
     try:
         await sync_to_async(Auth.delete_token_no_refresh)(tokens, old_tokens["access_token"])
