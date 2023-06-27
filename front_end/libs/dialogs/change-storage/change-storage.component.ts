@@ -25,48 +25,50 @@ export class ChangeStorageModalContent {
     constructor(
         private processService: NxProcessService,
         private dialogRef: DialogRef,
-        @Inject(DIALOG_DATA) dialogData: { system: NxSystem }
+        @Inject(DIALOG_DATA) dialogData: { system: NxSystem },
     ) {
         this.system = dialogData.system;
     }
 
     ngOnInit(): void {
-        this.deleteAnalyticsData = this.processService
-            .createProcess(
-                () => this.deleteAnalyticsDataProcess(),
-                { ignoreError: true },
-                () => {
-                    this.close('changeOk');
-                },
-                err => {
-                    console.error(err);
-                    this.close('error');
-                }
-            );
+        this.deleteAnalyticsData = this.processService.createProcess(
+            () => this.deleteAnalyticsDataProcess(),
+            { ignoreError: true },
+            () => {
+                this.close('changeOk');
+            },
+            err => {
+                console.error(err);
+                this.close('error');
+            },
+        );
 
-        this.keepAnalyticsData = this.processService
-            .createProcess(
-                () => this.keepAnalyticsDataProcess(),
-                { ignoreError: true },
-                () => {
-                    this.close('changeOk');
-                },
-                err => {
-                    console.error(err);
-                    this.close('error');
-                }
-            );
+        this.keepAnalyticsData = this.processService.createProcess(
+            () => this.keepAnalyticsDataProcess(),
+            { ignoreError: true },
+            () => {
+                this.close('changeOk');
+            },
+            err => {
+                console.error(err);
+                this.close('error');
+            },
+        );
     }
 
     async deleteAnalyticsDataProcess() {
         try {
             const {
-                reply: { settings: { metadataStorageChangePolicy } }
+                reply: {
+                    settings: { metadataStorageChangePolicy },
+                },
             } = await firstValueFrom(this.system.updateOrGetSystemSettings());
             if (metadataStorageChangePolicy !== 'remove') {
-                await firstValueFrom(this.system.updateOrGetSystemSettings({
-                    metadataStorageChangePolicy: 'remove'
-                }));
+                await firstValueFrom(
+                    this.system.updateOrGetSystemSettings({
+                        metadataStorageChangePolicy: 'remove',
+                    }),
+                );
             }
             return Promise.resolve();
         } catch (error) {
@@ -77,12 +79,16 @@ export class ChangeStorageModalContent {
     async keepAnalyticsDataProcess() {
         try {
             const {
-                reply: { settings: { metadataStorageChangePolicy } }
+                reply: {
+                    settings: { metadataStorageChangePolicy },
+                },
             } = await firstValueFrom(this.system.updateOrGetSystemSettings());
             if (metadataStorageChangePolicy !== 'keep') {
-                await this.system.updateOrGetSystemSettings({
-                    metadataStorageChangePolicy: 'keep'
-                }).toPromise();
+                await this.system
+                    .updateOrGetSystemSettings({
+                        metadataStorageChangePolicy: 'keep',
+                    })
+                    .toPromise();
             }
             return Promise.resolve();
         } catch (error) {

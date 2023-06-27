@@ -31,13 +31,8 @@ export class NxEditOrganizationModalContent extends ModalBase<DT['return']> impl
 
     constructor(
         dialogRef: DialogRef<DT['return']>,
-        @Inject(DIALOG_DATA) {
-            state,
-            channelPartner,
-            channelPartnerCanAdminister,
-            name,
-            id,
-        }: DT['data'],
+        @Inject(DIALOG_DATA)
+        { state, channelPartner, channelPartnerCanAdminister, name, id }: DT['data'],
         processService: NxProcessService,
         cpService: NxChannelPartnersService,
         toastService: NxToastService,
@@ -54,9 +49,7 @@ export class NxEditOrganizationModalContent extends ModalBase<DT['return']> impl
                 value: p.id,
                 help: LANG.systemGroups.status[p.state],
             }));
-            this.selectedPartner = this.channelPartners.find(
-                p => p.value === channelPartner
-            );
+            this.selectedPartner = this.channelPartners.find(p => p.value === channelPartner);
         });
         this.channelPartnerCanAdminister = channelPartnerCanAdminister;
         this.name = name;
@@ -64,12 +57,14 @@ export class NxEditOrganizationModalContent extends ModalBase<DT['return']> impl
         this.editOrgProcess = processService.createProcess(
             () => {
                 this.lock();
-                return firstValueFrom(cpService.updateOrganization(id, {
-                    state: this.state.value,
-                    channelPartner: this.selectedPartner.value,
-                    channelPartnerCanAdminister: this.channelPartnerCanAdminister,
-                    name: this.name,
-                }));
+                return firstValueFrom(
+                    cpService.updateOrganization(id, {
+                        state: this.state.value,
+                        channelPartner: this.selectedPartner.value,
+                        channelPartnerCanAdminister: this.channelPartnerCanAdminister,
+                        name: this.name,
+                    }),
+                );
             },
             {},
             this.close,
@@ -78,7 +73,7 @@ export class NxEditOrganizationModalContent extends ModalBase<DT['return']> impl
                 console.error(err);
                 const msg = err.error ? `${err.status} ${err.error.detail}` : err.detail || err;
                 toastService.notify(msg, ToastType.Danger);
-            }
+            },
         );
     }
 

@@ -36,10 +36,12 @@ export class AddPartnerModalContent extends ModalBase<DT['return']> {
         this.addPartnerProcess = processService.createProcess(
             () => {
                 this.lock();
-                return firstValueFrom(this.cpService.createChannelPartner({
-                    name: this.name,
-                    parentChannelPartner
-                }));
+                return firstValueFrom(
+                    this.cpService.createChannelPartner({
+                        name: this.name,
+                        parentChannelPartner,
+                    }),
+                );
             },
             {},
             res => this.close(res),

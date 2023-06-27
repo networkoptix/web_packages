@@ -34,10 +34,12 @@ export class AddOrganizationModalContent extends ModalBase<DT['return']> {
         this.addOrganizationProcess = processService.createProcess(
             () => {
                 this.lock();
-                return firstValueFrom(this.cpService.createOrganization({
-                    name: this.name,
-                    channelPartner
-                }));
+                return firstValueFrom(
+                    this.cpService.createOrganization({
+                        name: this.name,
+                        channelPartner,
+                    }),
+                );
             },
             {},
             res => this.close(res),

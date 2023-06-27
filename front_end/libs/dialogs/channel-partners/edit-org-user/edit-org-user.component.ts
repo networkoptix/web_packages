@@ -24,7 +24,14 @@ export class NxEditOrgUserModalContent extends ModalBase<DT['return']> implement
 
     constructor(
         dialogRef: DialogRef<DT['return']>,
-        @Inject(DIALOG_DATA) { orgId, user: { email, roles: [role] } }: DT['data'],
+        @Inject(DIALOG_DATA)
+        {
+            orgId,
+            user: {
+                email,
+                roles: [role],
+            },
+        }: DT['data'],
         processService: NxProcessService,
         cpService: NxChannelPartnersService,
         toastService: NxToastService,
@@ -43,8 +50,8 @@ export class NxEditOrgUserModalContent extends ModalBase<DT['return']> implement
                 return firstValueFrom(
                     cpService.updateOrganizationUser(orgId, {
                         email,
-                        role: this.role.name
-                    })
+                        role: this.role.name,
+                    }),
                 );
             },
             {},
@@ -54,7 +61,7 @@ export class NxEditOrgUserModalContent extends ModalBase<DT['return']> implement
                 console.error(err);
                 const msg = err.error ? `${err.status} ${err.error.detail}` : err.detail || err;
                 toastService.notify(msg, ToastType.Danger);
-            }
+            },
         );
     }
 

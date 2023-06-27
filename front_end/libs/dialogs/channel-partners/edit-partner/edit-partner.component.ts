@@ -8,7 +8,10 @@ import { ToastType } from '@components/toast-container/toast.types';
 import type { EditChannelPartner as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
-import { State, Id } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import {
+    State,
+    Id,
+} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
 import { NxToastService } from '@services/toast.service';
@@ -46,20 +49,20 @@ export class NxEditPartnerModalContent extends ModalBase<DT['return']> implement
                 value: p.id,
                 help: LANG.systemGroups.status[p.state],
             }));
-            this.selectedParent = this.parentPartners.find(
-                p => p.value === parentChannelPartner
-            );
+            this.selectedParent = this.parentPartners.find(p => p.value === parentChannelPartner);
         });
         this.name = name;
 
         this.editPartnerProcess = processService.createProcess(
             () => {
                 this.lock();
-                return firstValueFrom(cpService.updateChannelPartner(id, {
-                    state: this.state.value,
-                    parentChannelPartner: this.selectedParent.value,
-                    name: this.name,
-                }));
+                return firstValueFrom(
+                    cpService.updateChannelPartner(id, {
+                        state: this.state.value,
+                        parentChannelPartner: this.selectedParent.value,
+                        name: this.name,
+                    }),
+                );
             },
             {},
             this.close,
@@ -68,7 +71,7 @@ export class NxEditPartnerModalContent extends ModalBase<DT['return']> implement
                 console.error(err);
                 const msg = err.error ? `${err.status} ${err.error.detail}` : err.detail || err;
                 toastService.notify(msg, ToastType.Danger);
-            }
+            },
         );
     }
 

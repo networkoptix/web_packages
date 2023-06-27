@@ -49,7 +49,12 @@ export class AddPartnerUserModalContent extends ModalBase<DT['return']> {
         this.createUserProcess = processService.createProcess(
             () => {
                 this.lock();
-                return firstValueFrom(cpService.createChannelPartnerUser(partnerId, { email: this.email, role: this.selectedRole.name }));
+                return firstValueFrom(
+                    cpService.createChannelPartnerUser(partnerId, {
+                        email: this.email,
+                        role: this.selectedRole.name,
+                    }),
+                );
             },
             {},
             res => this.close(res),
@@ -58,7 +63,7 @@ export class AddPartnerUserModalContent extends ModalBase<DT['return']> {
                 console.error(err);
                 const msg = err.error ? `${err.status} ${err.error.detail}` : err.detail || err;
                 toastService.notify(msg, ToastType.Danger);
-            }
+            },
         );
     }
 

@@ -25,9 +25,13 @@ export class NxEditPartnerUserModalContent extends ModalBase<DT['return']> imple
 
     constructor(
         dialogRef: DialogRef<DT['return']>,
-        @Inject(DIALOG_DATA) {
+        @Inject(DIALOG_DATA)
+        {
             channelPartner,
-            user: { email, roles: [role] },
+            user: {
+                email,
+                roles: [role],
+            },
         }: DT['data'],
         processService: NxProcessService,
         cpService: NxChannelPartnersService,
@@ -47,8 +51,8 @@ export class NxEditPartnerUserModalContent extends ModalBase<DT['return']> imple
                 return firstValueFrom(
                     cpService.updateChannelPartnerUser(channelPartner, {
                         email,
-                        role: this.role.name
-                    })
+                        role: this.role.name,
+                    }),
                 );
             },
             {},
@@ -58,7 +62,7 @@ export class NxEditPartnerUserModalContent extends ModalBase<DT['return']> imple
                 console.error(err);
                 const msg = err.error ? `${err.status} ${err.error.detail}` : err.detail || err;
                 toastService.notify(msg, ToastType.Danger);
-            }
+            },
         );
     }
 

@@ -53,7 +53,12 @@ export class NxAddOrgUserModalContent extends ModalBase<DT['return']> implements
         this.addUserProcess = processService.createProcess(
             () => {
                 this.lock();
-                return firstValueFrom(cpService.createOrganizationUser(orgId, { email: this.email, role: this.selectedRole.name }));
+                return firstValueFrom(
+                    cpService.createOrganizationUser(orgId, {
+                        email: this.email,
+                        role: this.selectedRole.name,
+                    }),
+                );
             },
             {},
             res => this.close(res),
@@ -62,7 +67,7 @@ export class NxAddOrgUserModalContent extends ModalBase<DT['return']> implements
                 console.error(err);
                 const msg = err.error ? `${err.status} ${err.error.detail}` : err.detail || err;
                 toastService.notify(msg, ToastType.Danger);
-            }
+            },
         );
     }
 

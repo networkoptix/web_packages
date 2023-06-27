@@ -87,14 +87,22 @@ export class AddWidgetModalContent {
 
     downloadWidget = async (widgetUrl, isDevServer = false): Promise<void> => {
         // To handle cors issue when developing locally
-        widgetUrl = this.environment.isLocal ? widgetUrl : last(widgetUrl.split(this.environment.cloudHost));
+        widgetUrl = this.environment.isLocal
+            ? widgetUrl
+            : last(widgetUrl.split(this.environment.cloudHost));
         const devSource = `${widgetUrl}/widget.html`;
         const devEditSource = `${widgetUrl}/edit.html`;
         this.downloadingThirdParty = true;
         if (isDevServer) {
-            Object.assign(this.selectedWidget.value.config, { editMode: false, devSource, devEditSource });
+            Object.assign(this.selectedWidget.value.config, {
+                editMode: false,
+                devSource,
+                devEditSource,
+            });
         } else {
-            this.selectedWidget.value.config = await delayInitial(this.http.get(widgetUrl)).toPromise() as Record<string, unknown>;
+            this.selectedWidget.value.config = (await delayInitial(
+                this.http.get(widgetUrl),
+            ).toPromise()) as Record<string, unknown>;
         }
         this.downloadingThirdParty = false;
     };
@@ -110,18 +118,26 @@ export class AddWidgetModalContent {
                 'activeDashboard',
                 'updateSelectedDashboard',
             ],
-            this
+            this,
         );
 
-        this.dashboardOptions = this.dashboardMenu.map(({ dashboardName: name, id: value }) => ({ name, value }));
+        this.dashboardOptions = this.dashboardMenu.map(({ dashboardName: name, id: value }) => ({
+            name,
+            value,
+        }));
         const { dashboardName: name, id: value } = this.activeDashboard || {};
         this.selectedDashboard = { name, value };
-        const { widgetUrl, devServer = this.cookieService.get('devServer') } = this.route.snapshot.queryParams;
+        const { widgetUrl, devServer = this.cookieService.get('devServer') } =
+            this.route.snapshot.queryParams;
         this.widgetDropdownOptions = this.widgets
             .sort(alphabeticalSort(this.locale, w => w.title))
             .map(widget => ({ name: widget.title, value: { ...widget, editMode: true } }));
         if (widgetUrl || devServer) {
-            this.selectedWidget = cloneDeep(this.widgetDropdownOptions.find(({ name }) => name === NxThirdPartyWidgetComponent.NAME));
+            this.selectedWidget = cloneDeep(
+                this.widgetDropdownOptions.find(
+                    ({ name }) => name === NxThirdPartyWidgetComponent.NAME,
+                ),
+            );
             this.downloadWidget(devServer || widgetUrl, !!devServer);
         } else {
             this.selectedWidget = cloneDeep(this.widgetDropdownOptions[0]);
@@ -130,7 +146,7 @@ export class AddWidgetModalContent {
         this.addWidget = this.processService.createProcess(
             () => new Promise(resolve => setTimeout(resolve, 100)),
             {},
-            () => this.close(this.selectedWidget.value)
+            () => this.close(this.selectedWidget.value),
         );
     }
 

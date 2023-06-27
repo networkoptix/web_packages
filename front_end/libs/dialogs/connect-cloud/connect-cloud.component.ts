@@ -34,7 +34,7 @@ interface Token {
 
 type Connect = Omit<
     t.System,
-    'accessRole'
+    | 'accessRole'
     | 'capabilities'
     | 'lastLoginTime'
     | 'ownerFullName'
@@ -73,7 +73,7 @@ export class ConnectCloudModalContent extends ModalBase<DT['return']> implements
 
     auth = {
         username: '',
-        password: ''
+        password: '',
     };
 
     constructor(
@@ -96,7 +96,8 @@ export class ConnectCloudModalContent extends ModalBase<DT['return']> implements
         this.setupProcess();
         this.setupAuth();
 
-        this.codeSubscription = this.storage.observe(oauthStore.code)
+        this.codeSubscription = this.storage
+            .observe(oauthStore.code)
             .subscribe(code => this.handleCode(code));
 
         this.window.open('/#/cloud-authorize?state=connect', '_blank').focus();
@@ -108,12 +109,14 @@ export class ConnectCloudModalContent extends ModalBase<DT['return']> implements
         return this.http.post<Connect>(
             this.CONFIG.cloudHost + apiBase + '/systems/connect',
             { name: systemName, email },
-            { headers }
+            { headers },
         );
     }
 
     private handleCode(code: string): Promise<void> {
-        return this.system.mediaserver.loginOauth(code, true).toPromise()
+        return this.system.mediaserver
+            .loginOauth(code, true)
+            .toPromise()
             .then((res: Token) => {
                 this.codeExists = !!code;
                 this.cloudTokens = res;
@@ -130,34 +133,28 @@ export class ConnectCloudModalContent extends ModalBase<DT['return']> implements
 
     private handleConnectLocalToCloud(tokens: Token): Promise<unknown> {
         const token = tokens.access_token;
-        return this.http.get<Introspect>(
-            this.CONFIG.cloudHost + '/oauth/introspect/',
-            { params: { token } }
-        ).pipe(
-            switchMap(tokenInfo =>
-                this.connect(
-                    this.system.info.systemName,
-                    tokenInfo.username,
-                    token
-                )
-            ),
-            switchMap(res =>
-                this.system.mediaserver.saveCloudSystemCredentials(
-                    res.id,
-                    res.authKey,
-                    res.ownerAccountEmail
-                )
+        return this.http
+            .get<Introspect>(this.CONFIG.cloudHost + '/oauth/introspect/', { params: { token } })
+            .pipe(
+                switchMap(tokenInfo =>
+                    this.connect(this.system.info.systemName, tokenInfo.username, token),
+                ),
+                switchMap(res =>
+                    this.system.mediaserver.saveCloudSystemCredentials(
+                        res.id,
+                        res.authKey,
+                        res.ownerAccountEmail,
+                    ),
+                ),
             )
-        ).toPromise();
+            .toPromise();
     }
 
     private setupAuth(): void {
         this.auth.password = '';
-        this.account
-            .get()
-            .then(account => {
-                this.auth.username = account.name || account.email;
-            });
+        this.account.get().then(account => {
+            this.auth.username = account.name || account.email;
+        });
     }
 
     private setupProcess(): void {
@@ -169,10 +166,9 @@ export class ConnectCloudModalContent extends ModalBase<DT['return']> implements
             return true;
         };
         const successHandler = (): Promise<void> => {
-            return this.oauthService.logoutTokens(
-                this.cloudTokens.access_token,
-                this.cloudTokens.refresh_token
-            ).then(() => this.close(false));
+            return this.oauthService
+                .logoutTokens(this.cloudTokens.access_token, this.cloudTokens.refresh_token)
+                .then(() => this.close(false));
         };
         const errorHandler = (): void => {
             this.unlock();
@@ -182,20 +178,23 @@ export class ConnectCloudModalContent extends ModalBase<DT['return']> implements
             ignoreUnauthorized: true,
             errorCodes: {
                 invalidParameter: passwordError,
-                wrongPassword: passwordError
+                wrongPassword: passwordError,
             },
-            errorPrefix: this.LANG.errorCodes.cantConnectSystemPrefix
+            errorPrefix: this.LANG.errorCodes.cantConnectSystemPrefix,
         };
-        this.connectProcess = this.processService.createProcess(() => {
-            this.lock();
-            this.connectForm.controls.password.setErrors(undefined);
-            return this.system.mediaserver.loginToken(
-                this.auth.username,
-                this.auth.password,
-                true
-            ).toPromise()
-                .then(() => this.handleConnectLocalToCloud(this.cloudTokens));
-        }, settings, successHandler, errorHandler);
+        this.connectProcess = this.processService.createProcess(
+            () => {
+                this.lock();
+                this.connectForm.controls.password.setErrors(undefined);
+                return this.system.mediaserver
+                    .loginToken(this.auth.username, this.auth.password, true)
+                    .toPromise()
+                    .then(() => this.handleConnectLocalToCloud(this.cloudTokens));
+            },
+            settings,
+            successHandler,
+            errorHandler,
+        );
     }
 
     cancel = (): void => {
@@ -203,7 +202,7 @@ export class ConnectCloudModalContent extends ModalBase<DT['return']> implements
         if (this.cloudTokens) {
             close = this.oauthService.logoutTokens(
                 this.cloudTokens.access_token,
-                this.cloudTokens.refresh_token
+                this.cloudTokens.refresh_token,
             );
         }
 

@@ -1,9 +1,5 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
-import {
-    Component,
-    Inject,
-    OnInit,
-} from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 
 import { Process } from '@services/process.service/process';
 import { pickFrom } from '@utils/general';
@@ -30,11 +26,14 @@ export class ApplyModalContent implements OnInit {
     }
 
     apply = (): void => {
-        this.applyFunc.then(() => {
-            this.close('applied');
-        }, () => {
-            this.close('canceled');
-        });
+        this.applyFunc.then(
+            () => {
+                this.close('applied');
+            },
+            () => {
+                this.close('canceled');
+            },
+        );
     };
 
     close = (msg: DialogTypes['return'] = 'canceled'): void => {

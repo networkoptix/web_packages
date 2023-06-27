@@ -1,10 +1,5 @@
 import { Component, Inject, Input } from '@angular/core';
-import {
-    Validators,
-    ValidationErrors,
-    FormControl,
-    FormGroup
-} from '@angular/forms';
+import { Validators, ValidationErrors, FormControl, FormGroup } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { last } from 'lodash-es';
 import { Subscription } from 'rxjs';
@@ -17,9 +12,7 @@ import { responseOk } from '@lib/variables/static-variables';
 import { Translatable } from '@pipes/nx-translate.types';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import {
-    StorageManager
-} from '@services/system.service/storage-manager/storage-manager';
+import { StorageManager } from '@services/system.service/storage-manager/storage-manager';
 import { NxToastService } from '@services/toast.service';
 import { cleanId, pickFrom } from '@utils/general';
 
@@ -65,11 +58,7 @@ export class AddStorageModalContent {
             urlC.touched &&
             urlC.errors &&
             !urlC.errors.required &&
-            (
-                urlC.errors.alreadyExists ||
-                urlC.errors.forbiddenUrl ||
-                urlC.errors.wrongPath
-            )
+            (urlC.errors.alreadyExists || urlC.errors.forbiddenUrl || urlC.errors.wrongPath)
         ) {
             this.urlChecked = true; // shows error border around input
         }
@@ -78,18 +67,15 @@ export class AddStorageModalContent {
     validateUrl = (control: FormControl<string>): ValidationErrors | null => {
         const systemNetworkStorage = control.value?.substr(1);
         const smbStorage = `smb:${control.value}`;
-        const alreadyExistingUrl = this.storageManager.storageState.locations
-            .find(({ url }) =>
-                url === systemNetworkStorage || url === smbStorage
-            );
+        const alreadyExistingUrl = this.storageManager.storageState.locations.find(
+            ({ url }) => url === systemNetworkStorage || url === smbStorage,
+        );
         if (alreadyExistingUrl) {
             return { alreadyExists: true };
         }
-        const ipReg =
-            new RegExp(/^(\/\/)(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\/.+/);
+        const ipReg = new RegExp(/^(\/\/)(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\/.+/);
         const domainReg = new RegExp(/^(\/\/).+\/.+/);
-        const forbidden =
-            !ipReg.test(control.value) && !domainReg.test(control.value);
+        const forbidden = !ipReg.test(control.value) && !domainReg.test(control.value);
         return forbidden ? { forbiddenUrl: true } : null;
     };
 
@@ -97,41 +83,38 @@ export class AddStorageModalContent {
         pickFrom(this.dialogData, ['serverId', 'storageManager', 'cancelPolls'], this);
 
         this.storageForm = new FormGroup({
-            url: new FormControl<string>(
-                null,
-                [Validators.required, this.validateUrl.bind(this)]
-            ),
+            url: new FormControl<string>(null, [Validators.required, this.validateUrl.bind(this)]),
             login: new FormControl<string>(null),
-            password: new FormControl<string>(null)
+            password: new FormControl<string>(null),
         });
 
-        this.storageFormValueSubscription =
-            this.storageForm.valueChanges.subscribe(values => {
-                this.urlChecked = false;
-                this.url = values.url;
-                this.checkUrlValidity();
-                this.loginPasswordWrong = false;
-                this.passwordChecked = false;
-            });
+        this.storageFormValueSubscription = this.storageForm.valueChanges.subscribe(values => {
+            this.urlChecked = false;
+            this.url = values.url;
+            this.checkUrlValidity();
+            this.loginPasswordWrong = false;
+            this.passwordChecked = false;
+        });
 
-        this.addStorage = this.processService
-            .createProcess(async () => {
+        this.addStorage = this.processService.createProcess(
+            async () => {
                 const { url, login, password } = this.storageForm.value;
-                const systemStorages = (
-                    await this.storageManager.getStoragesInfo().toPromise()
-                ) || [];
-                const storageExistsOnSystem = !this.alreadyCheckedAndExists &&
+                const systemStorages =
+                    (await this.storageManager.getStoragesInfo().toPromise()) || [];
+                const storageExistsOnSystem =
+                    !this.alreadyCheckedAndExists &&
                     systemStorages.find(
-                        s => last(
-                            s.url.replace('smb:', '').replace('//', '').split('@')
-                        ) === url.replace('//', '')
+                        s =>
+                            last(s.url.replace('smb:', '').replace('//', '').split('@')) ===
+                            url.replace('//', ''),
                     );
                 if (storageExistsOnSystem) {
                     return Promise.reject(Error('alreadyExists'));
                 }
                 const id = await this.addStorageProcess(url, login, password);
                 return id;
-            }, { ignoreError: true },
+            },
+            { ignoreError: true },
             (res: any) => {
                 let toastType = ToastType.Danger;
                 let message = this.LANG.storage.failed;
@@ -148,8 +131,8 @@ export class AddStorageModalContent {
                     this.alreadyUsed = {
                         value: this.LANG.storage.alreadyUsed,
                         params: {
-                            url: this.url
-                        }
+                            url: this.url,
+                        },
                     };
                     this.alreadyCheckedAndExists = true;
                 } else if (err?.message === 'WrongAuth') {
@@ -164,15 +147,12 @@ export class AddStorageModalContent {
                         this.storageForm.reset();
                     }
                     if (message) {
-                        this.toastService.notify(
-                            message,
-                            ToastType.Danger
-                        );
+                        this.toastService.notify(message, ToastType.Danger);
                     }
                     this.addStorage.processing = false;
                 }
-            }
-            );
+            },
+        );
     }
 
     async addStorageProcess(url: string, login: string, password: string) {
@@ -180,9 +160,10 @@ export class AddStorageModalContent {
             return Promise.reject(Error('WrongAuth'));
         }
         try {
-            const credentials = login || password
-                ? `${encodeURIComponent(login)}:${encodeURIComponent(password)}@`
-                : '';
+            const credentials =
+                login || password
+                    ? `${encodeURIComponent(login)}:${encodeURIComponent(password)}@`
+                    : '';
             const smbShare = `smb://${credentials}${url.substr(2)}`;
             const { reply } = await this.storageManager
                 .getStorageStatus({ path: smbShare })
@@ -202,39 +183,45 @@ export class AddStorageModalContent {
             if (reply.status === 'InitFailed_WrongAuth') {
                 return Promise.reject(Error('WrongAuth'));
             }
-            if (
-                reply.status.toLowerCase() ===
-                responseOk && reply.storage.isWritable
-            ) {
+            if (reply.status.toLowerCase() === responseOk && reply.storage.isWritable) {
                 const size = reply.storage.totalSpace;
                 const upperBound = 107374182400; // 100GB
                 const lowerBound = upperBound / 2; // 50GB
-                const res = await this.storageManager.saveStorage({
-                    parentId: this.serverId,
-                    url: smbShare,
-                    storageType: 'smb',
-                    spaceLimit: Math.min(
-                        Math.max(Math.round(size / 10), lowerBound),
-                        upperBound,
-                        size
-                    ),
-                    usedForWriting: true,
-                    isWritable: true,
-                    isBackup: false
-                }).toPromise();
-                return res ? new Promise(resolve => {
-                    this.cancelPolls();
-                    const updateSubscription = this.storageManager.update().pipe(
-                        filter((state: any) => state.locations.find(({
-                            storageId
-                        }) => storageId === cleanId(res.id)))
-                    ).subscribe(_ => {
-                        setTimeout(() => {
-                            resolve(res);
-                            updateSubscription.unsubscribe();
-                        }, 5000);
-                    });
-                }) : Promise.reject();
+                const res = await this.storageManager
+                    .saveStorage({
+                        parentId: this.serverId,
+                        url: smbShare,
+                        storageType: 'smb',
+                        spaceLimit: Math.min(
+                            Math.max(Math.round(size / 10), lowerBound),
+                            upperBound,
+                            size,
+                        ),
+                        usedForWriting: true,
+                        isWritable: true,
+                        isBackup: false,
+                    })
+                    .toPromise();
+                return res
+                    ? new Promise(resolve => {
+                          this.cancelPolls();
+                          const updateSubscription = this.storageManager
+                              .update()
+                              .pipe(
+                                  filter((state: any) =>
+                                      state.locations.find(
+                                          ({ storageId }) => storageId === cleanId(res.id),
+                                      ),
+                                  ),
+                              )
+                              .subscribe(_ => {
+                                  setTimeout(() => {
+                                      resolve(res);
+                                      updateSubscription.unsubscribe();
+                                  }, 5000);
+                              });
+                      })
+                    : Promise.reject();
             }
             return Promise.reject();
         } catch (error) {

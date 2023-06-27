@@ -1,9 +1,5 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
-import {
-    Component,
-    Renderer2,
-    Inject
-} from '@angular/core';
+import { Component, Renderer2, Inject } from '@angular/core';
 import { defer, switchMap } from 'rxjs';
 
 import type { CloudStorage as DT } from '@dialogs/dialogs.types';
@@ -11,7 +7,10 @@ import { icons } from '@lib/variables/static-variables';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
 
-import { BaseCloudStorageActionModalContent, CloudStorageActionType } from '../action-common/BaseCloudStorageActionModalContent';
+import {
+    BaseCloudStorageActionModalContent,
+    CloudStorageActionType,
+} from '../action-common/BaseCloudStorageActionModalContent';
 
 @Component({
     selector: 'nx-cloud-storage-modify-content',
@@ -39,7 +38,7 @@ export class CloudStorageMoveModalContent extends BaseCloudStorageActionModalCon
                 this.lock();
                 return this.cloudStorageManager.move(this.targetSystem.value);
             }).pipe(
-                switchMap(() => this.licenseManager.move(this.targetSystem.value, this.license))
+                switchMap(() => this.licenseManager.move(this.targetSystem.value, this.license)),
             ),
             this.processConfig,
             this.showSuccess,

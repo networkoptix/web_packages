@@ -8,16 +8,22 @@ import { Translatable } from '@pipes/nx-translate.types';
 import { LicenseState } from '@services/nx-cloud-api/cloud-services/license-server/license-server-api.types';
 import { IConfig } from '@services/nx-config/config-types';
 import { Process, ProcessSettings } from '@services/process.service/process';
-import { CloudStorageManager, CloudStorageUpdate } from '@services/system.service/cloud-storage-manager/cloud-storage-manager';
+import {
+    CloudStorageManager,
+    CloudStorageUpdate,
+} from '@services/system.service/cloud-storage-manager/cloud-storage-manager';
 import { LicenseManager } from '@services/system.service/license-manager/licence-manager';
-import { LicenseTagInfo, LicenseTranslationBaseKeys } from '@services/system.service/license-manager/license-manager.types';
+import {
+    LicenseTagInfo,
+    LicenseTranslationBaseKeys,
+} from '@services/system.service/license-manager/license-manager.types';
 import { pickFrom } from '@utils/general';
 
 export enum CloudStorageActionType {
     ACTIVATE = 'activate',
     MODIFY = 'modify',
     MOVE = 'move',
-    DELETE = 'delete'
+    DELETE = 'delete',
 }
 
 export class BaseCloudStorageActionModalContent extends ModalBase<DT['return']> {
@@ -66,11 +72,15 @@ export class BaseCloudStorageActionModalContent extends ModalBase<DT['return']> 
     };
 
     updateMessage = (licenseKey: string): void => {
-        this.licenses$.pipe(
-            map(licenses => licenses.find(({ key }) => key.toUpperCase() === licenseKey.toUpperCase()))
-        ).subscribe(license => {
-            this.#updateMessages(license);
-        });
+        this.licenses$
+            .pipe(
+                map(licenses =>
+                    licenses.find(({ key }) => key.toUpperCase() === licenseKey.toUpperCase()),
+                ),
+            )
+            .subscribe(license => {
+                this.#updateMessages(license);
+            });
     };
 
     updateCursorPosition(event: ClipboardEvent): void {
@@ -98,7 +108,7 @@ export class BaseCloudStorageActionModalContent extends ModalBase<DT['return']> 
         cloudSystemId = [],
         licenseKey = [],
         password = [],
-        non_field_errors: nonFieldErrors = []
+        non_field_errors: nonFieldErrors = [],
     }: {
         userId: LicenseTranslationBaseKeys[];
         cloudSystemId: LicenseTranslationBaseKeys[];
@@ -109,7 +119,9 @@ export class BaseCloudStorageActionModalContent extends ModalBase<DT['return']> 
     }): void => {
         const errors: Translatable[] = [];
 
-        const [licenseError, ...otherLicenseErrors] = licenseKey.map(k => this.licenseManager.translateMessage(k));
+        const [licenseError, ...otherLicenseErrors] = licenseKey.map(k =>
+            this.licenseManager.translateMessage(k),
+        );
 
         if (licenseError) {
             this.licenseMessage = '';
@@ -121,7 +133,9 @@ export class BaseCloudStorageActionModalContent extends ModalBase<DT['return']> 
             errors.push(...otherLicenseErrors);
         }
 
-        const [systemError, ...otherSystemErrors] = cloudSystemId.map(k => this.licenseManager.translateMessage(k));
+        const [systemError, ...otherSystemErrors] = cloudSystemId.map(k =>
+            this.licenseManager.translateMessage(k),
+        );
 
         if (systemError) {
             if (this.showLicenseInput) {
@@ -132,7 +146,9 @@ export class BaseCloudStorageActionModalContent extends ModalBase<DT['return']> 
             errors.push(...otherSystemErrors);
         }
 
-        const [passwordError, ...otherPasswordErrors] = password.map(k => this.licenseManager.translateMessage(k));
+        const [passwordError, ...otherPasswordErrors] = password.map(k =>
+            this.licenseManager.translateMessage(k),
+        );
 
         if (passwordError) {
             if (this.showPasswordInput) {
@@ -157,12 +173,19 @@ export class BaseCloudStorageActionModalContent extends ModalBase<DT['return']> 
         pickFrom(this.dialogData, ['licenseManager', 'cloudStorageManager'], this);
         this.targetSystems$ = this.licenseManager.getTargetSystems();
         this.licenses$ = this.licenseManager.getLicenseTagInfo(LicenseState.INACTIVE);
-        if ([CloudStorageActionType.DELETE, CloudStorageActionType.MOVE].includes(this.actionType)) {
-            this.licenseManager.systemKeys$.pipe(map(([{ key }]) => key.replace(/-/g, ''))).subscribe(key => {
-                this.license = key;
-            });
+        if (
+            [CloudStorageActionType.DELETE, CloudStorageActionType.MOVE].includes(this.actionType)
+        ) {
+            this.licenseManager.systemKeys$
+                .pipe(map(([{ key }]) => key.replace(/-/g, '')))
+                .subscribe(key => {
+                    this.license = key;
+                });
         }
-        this.showLicenseInput = [CloudStorageActionType.ACTIVATE, CloudStorageActionType.MODIFY].includes(this.actionType);
+        this.showLicenseInput = [
+            CloudStorageActionType.ACTIVATE,
+            CloudStorageActionType.MODIFY,
+        ].includes(this.actionType);
         this.showSystemsDropdown = CloudStorageActionType.MOVE === this.actionType;
         this.showPasswordInput = CloudStorageActionType.DELETE === this.actionType;
     };

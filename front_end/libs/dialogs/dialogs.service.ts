@@ -6,7 +6,10 @@ import { Injectable, Injector, Inject } from '@angular/core';
 import { firstValueFrom, Subject, takeUntil } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { GenericEditModalContent, ModalContent } from '@components/console-table/console-table.component.types';
+import {
+    GenericEditModalContent,
+    ModalContent,
+} from '@components/console-table/console-table.component.types';
 import { DashboardConfiguration } from '@pages/dashboard/dashboard-configuration';
 import { StorageManager } from '@services/system.service/storage-manager/storage-manager';
 import type { NxSystem } from '@services/system.service/system';
@@ -261,15 +264,13 @@ export class NxDialogsService {
 
     private openV2<R, D = never, T = unknown>(
         component: ComponentType<T>,
-        customconfig: CdkDialogConfig<D> = {}
+        customconfig: CdkDialogConfig<D> = {},
     ): Promise<R> {
         const dialogConfig: CdkDialogConfig<D> = {
             width: DIALOG_SIZE_V2.NORMAL, // Default width
-            ...customconfig
+            ...customconfig,
         };
-        return firstValueFrom(
-            this.cdkDialog.open<R, D>(component, dialogConfig).closed
-        );
+        return firstValueFrom(this.cdkDialog.open<R, D>(component, dialogConfig).closed);
     }
 
     /**
@@ -286,19 +287,21 @@ export class NxDialogsService {
             const component = await componentPromise();
             const configWithData: CdkDialogConfig<DT['data']> = {
                 ...customConfig,
-                data
+                data,
             };
             return this.openV2(component, configWithData);
         };
     }
 
     /* General use */
-    generic = this.dialogV2Factory<Dt.Generic>(
-        () => import('./generic/generic.component').then(m => m.GenericModalContent)
+    generic = this.dialogV2Factory<Dt.Generic>(() =>
+        import('./generic/generic.component').then(m => m.GenericModalContent),
     );
 
     async alert(data: Dt.Alert['data']): Promise<void> {
-        const component = await import('./generic/generic.component').then(m => m.GenericModalContent);
+        const component = await import('./generic/generic.component').then(
+            m => m.GenericModalContent,
+        );
         const dialogConfig: CdkDialogConfig<Dt.Generic['data']> = {
             data: { ...data, footer: { actionable: false, ...(data.footer ?? {}) } },
             // Only close button
@@ -307,7 +310,9 @@ export class NxDialogsService {
     }
 
     async confirm(data: Dt.Confirm['data']): Promise<Dt.Confirm['return']> {
-        const component = await import('./generic/generic.component').then(m => m.GenericModalContent);
+        const component = await import('./generic/generic.component').then(
+            m => m.GenericModalContent,
+        );
         const dialogConfig: CdkDialogConfig<Dt.Generic['data']> = {
             data: { ...data, footer: { actionable: true, ...data.footer } },
             // With action/cancel buttons
@@ -323,11 +328,14 @@ export class NxDialogsService {
     /* WebAdmin */
     wizard = this.dialogV2Factory<Dt.Wizard>(
         () => import('./wizard/wizard.component').then(m => m.WizardModalContent),
-        { width: DIALOG_SIZE_V2.SMALL, disableClose: true }
+        { width: DIALOG_SIZE_V2.SMALL, disableClose: true },
     );
 
     loginWebAdmin = this.dialogV2Factory<Dt.LoginWebAdmin>(
-        () => import('./login-webadmin/login-webadmin.component').then(m => m.LoginWebadminModalContent),
+        () =>
+            import('./login-webadmin/login-webadmin.component').then(
+                m => m.LoginWebadminModalContent,
+            ),
         {
             width: DIALOG_SIZE_V2.SMALL,
             disableClose: true,
@@ -343,17 +351,22 @@ export class NxDialogsService {
             disableClose: true,
             title: staticLang.dialogs.renewAuth.title,
             message: staticLang.dialogs.renewAuth.message,
-            footer: { actionLabel: staticLang.dialogs.buttons.ok }
+            footer: { actionLabel: staticLang.dialogs.buttons.ok },
         });
     }
 
     updateSession = this.dialogV2Factory<Dt.UpdateSession>(
-        () => import('./update-session/update-session.component').then(m => m.NxUpdateSessionModalContent),
+        () =>
+            import('./update-session/update-session.component').then(
+                m => m.NxUpdateSessionModalContent,
+            ),
         { disableClose: true },
     );
 
-    client2faWarning = this.dialogV2Factory<Dt.Client2faWarning>(
-        () => import('./client-2fa-warning/client-2fa-warning.component').then(m => m.Client2faWarningModalContent)
+    client2faWarning = this.dialogV2Factory<Dt.Client2faWarning>(() =>
+        import('./client-2fa-warning/client-2fa-warning.component').then(
+            m => m.Client2faWarningModalContent,
+        ),
     );
 
     /* Account */
@@ -365,7 +378,7 @@ export class NxDialogsService {
         const configWithData: CdkDialogConfig<Dt.Account2faData<A>> = {
             width: DIALOG_SIZE_V2.SMALL,
             ...config,
-            data
+            data,
         };
         return this.openV2(component, configWithData);
     }
@@ -377,14 +390,12 @@ export class NxDialogsService {
     account2faDisable(num2FaSystems: number): Promise<Dt.Account2faReturn> {
         return this.account2fa({
             action: TfaAction.Disable,
-            data: { num2FaSystems }
+            data: { num2FaSystems },
         });
     }
 
     account2faCodeToggle(state: boolean): Promise<Dt.Account2faReturn> {
-        const action = state
-            ? TfaAction.CodeOnLoginEnable
-            : TfaAction.CodeOnLoginDisable;
+        const action = state ? TfaAction.CodeOnLoginEnable : TfaAction.CodeOnLoginDisable;
         return this.account2fa({ action }, { restoreFocus: false });
     }
 
@@ -394,11 +405,11 @@ export class NxDialogsService {
 
     account2faPasswordChange(
         oldPassword: string,
-        newPassword: string
+        newPassword: string,
     ): Promise<Dt.Account2faReturn> {
         return this.account2fa({
             action: TfaAction.PasswordChange,
-            data: { oldPassword, newPassword }
+            data: { oldPassword, newPassword },
         });
     }
 
@@ -406,67 +417,93 @@ export class NxDialogsService {
 
     /* Channel partners */
     createChannelPartner = this.dialogV2Factory<Dt.AddChannelPartner>(
-        () => import('./channel-partners/add-partner/add-partner.component').then(m => m.AddPartnerModalContent),
+        () =>
+            import('./channel-partners/add-partner/add-partner.component').then(
+                m => m.AddPartnerModalContent,
+            ),
         { autoFocus: 'input' },
     );
 
-    updateChannelPartner = this.dialogV2Factory<Dt.EditChannelPartner>(
-        () => import('./channel-partners/edit-partner/edit-partner.component').then(m => m.NxEditPartnerModalContent)
+    updateChannelPartner = this.dialogV2Factory<Dt.EditChannelPartner>(() =>
+        import('./channel-partners/edit-partner/edit-partner.component').then(
+            m => m.NxEditPartnerModalContent,
+        ),
     );
 
-    addPartnerUser = this.dialogV2Factory<Dt.AddPartnerUser>(
-        () => import('./channel-partners/add-partner-user/add-partner-user.component').then(m => m.AddPartnerUserModalContent),
+    addPartnerUser = this.dialogV2Factory<Dt.AddPartnerUser>(() =>
+        import('./channel-partners/add-partner-user/add-partner-user.component').then(
+            m => m.AddPartnerUserModalContent,
+        ),
     );
 
-    updatePartnerUser = this.dialogV2Factory<Dt.EditPartnerUser>(
-        () => import('./channel-partners/edit-partner-user/edit-partner-user.component').then(m => m.NxEditPartnerUserModalContent),
+    updatePartnerUser = this.dialogV2Factory<Dt.EditPartnerUser>(() =>
+        import('./channel-partners/edit-partner-user/edit-partner-user.component').then(
+            m => m.NxEditPartnerUserModalContent,
+        ),
     );
 
     createOrganization = this.dialogV2Factory<Dt.AddOrganization>(
-        () => import('./channel-partners/add-organization/add-organization.component').then(m => m.AddOrganizationModalContent),
+        () =>
+            import('./channel-partners/add-organization/add-organization.component').then(
+                m => m.AddOrganizationModalContent,
+            ),
         { autoFocus: 'input' },
     );
 
-    updateOrganization = this.dialogV2Factory<Dt.EditOrganization>(
-        () => import('./channel-partners/edit-organization/edit-organization.component').then(m => m.NxEditOrganizationModalContent),
+    updateOrganization = this.dialogV2Factory<Dt.EditOrganization>(() =>
+        import('./channel-partners/edit-organization/edit-organization.component').then(
+            m => m.NxEditOrganizationModalContent,
+        ),
     );
 
-    addOrgUser = this.dialogV2Factory<Dt.AddOrgUser>(
-        () => import('./channel-partners/add-org-user/add-org-user.component').then(m => m.NxAddOrgUserModalContent),
+    addOrgUser = this.dialogV2Factory<Dt.AddOrgUser>(() =>
+        import('./channel-partners/add-org-user/add-org-user.component').then(
+            m => m.NxAddOrgUserModalContent,
+        ),
     );
 
-    editOrgUser = this.dialogV2Factory<Dt.EditOrgUser>(
-        () => import('./channel-partners/edit-org-user/edit-org-user.component').then(m => m.NxEditOrgUserModalContent),
+    editOrgUser = this.dialogV2Factory<Dt.EditOrgUser>(() =>
+        import('./channel-partners/edit-org-user/edit-org-user.component').then(
+            m => m.NxEditOrgUserModalContent,
+        ),
     );
 
     /* Groups */
     createSystemGroup = this.dialogV2Factory<Dt.CreateSystemGroup>(
-        () => import('./create-system-group/create-system-group.component').then(m => m.CreateSystemGroupModalContent),
+        () =>
+            import('./create-system-group/create-system-group.component').then(
+                m => m.CreateSystemGroupModalContent,
+            ),
         { autoFocus: 'input' },
     );
 
     /* Admin */
-    connectLocalToCloud = this.dialogV2Factory<Dt.ConnectLocalToCloud>(
-        () => import('./connect-cloud/connect-cloud.component').then(m => m.ConnectCloudModalContent)
+    connectLocalToCloud = this.dialogV2Factory<Dt.ConnectLocalToCloud>(() =>
+        import('./connect-cloud/connect-cloud.component').then(m => m.ConnectCloudModalContent),
     );
 
-    disconnect = this.dialogV2Factory<Dt.Disconnect>(
-        () => import('./disconnect/disconnect.component').then(m => m.DisconnectModalContent)
+    disconnect = this.dialogV2Factory<Dt.Disconnect>(() =>
+        import('./disconnect/disconnect.component').then(m => m.DisconnectModalContent),
     );
 
     removeSystem = this.dialogV2Factory<Dt.RemoveSystem>(
-        () => import('./remove-system/remove-system.component').then(m => m.RemoveSystemModalContent),
+        () =>
+            import('./remove-system/remove-system.component').then(m => m.RemoveSystemModalContent),
         { autoFocus: 'input' },
     );
 
     toggleSystem2fa = this.dialogV2Factory<Dt.Mandatory2fa>(
-        () => import('./mandatory-2fa/mandatory-2fa.component').then(m => m.Mandatory2faModalContent),
+        () =>
+            import('./mandatory-2fa/mandatory-2fa.component').then(m => m.Mandatory2faModalContent),
         { width: DIALOG_SIZE_V2.SMALL },
     );
 
     transferOwnership = this.dialogV2Factory<Dt.TransferOwnership>(
-        () => import('./transfer-ownership/transfer-ownership.component').then(m => m.TransferOwnershipModalContent),
-        { width: '420px' }
+        () =>
+            import('./transfer-ownership/transfer-ownership.component').then(
+                m => m.TransferOwnershipModalContent,
+            ),
+        { width: '420px' },
     );
 
     /* Cloud storage */
@@ -479,82 +516,104 @@ export class NxDialogsService {
             const configWithData: CdkDialogConfig<Dt.CloudStorage['data']> = {
                 width: DIALOG_SIZE_V2.ACTION,
                 ...customConfig,
-                data
+                data,
             };
             return this.openV2(component, configWithData);
         };
     }
 
-    cloudStorageActivate = this.cloudStorageFactory(
-        () => import('./cloud-storage/activate/cloud-storage-activate.component').then(m => m.CloudStorageActivateModalContent)
+    cloudStorageActivate = this.cloudStorageFactory(() =>
+        import('./cloud-storage/activate/cloud-storage-activate.component').then(
+            m => m.CloudStorageActivateModalContent,
+        ),
     );
 
-    cloudStorageUpdate = this.cloudStorageFactory(
-        () => import('./cloud-storage/modify/cloud-storage-modify.component').then(m => m.CloudStorageModifyModalContent)
+    cloudStorageUpdate = this.cloudStorageFactory(() =>
+        import('./cloud-storage/modify/cloud-storage-modify.component').then(
+            m => m.CloudStorageModifyModalContent,
+        ),
     );
 
-    cloudStorageDelete = this.cloudStorageFactory(
-        () => import('./cloud-storage/delete/cloud-storage-delete.component').then(m => m.CloudStorageDeleteModalContent)
+    cloudStorageDelete = this.cloudStorageFactory(() =>
+        import('./cloud-storage/delete/cloud-storage-delete.component').then(
+            m => m.CloudStorageDeleteModalContent,
+        ),
     );
 
-    cloudStorageMigrate = this.cloudStorageFactory(
-        () => import('./cloud-storage/move/cloud-storage-move.component').then(m => m.CloudStorageMoveModalContent)
+    cloudStorageMigrate = this.cloudStorageFactory(() =>
+        import('./cloud-storage/move/cloud-storage-move.component').then(
+            m => m.CloudStorageMoveModalContent,
+        ),
     );
 
     /* Cameras */
     updateCameraCredentials = this.dialogV2Factory<Dt.UpdateCameraCredentials>(
-        () => import('./update-camera-credentials/update-camera-credentials.component').then(m => m.UpdateCameraCredentialsModalContent),
+        () =>
+            import('./update-camera-credentials/update-camera-credentials.component').then(
+                m => m.UpdateCameraCredentialsModalContent,
+            ),
         { autoFocus: 'input' },
     );
 
     /* Users */
-    addUser = this.dialogV2Factory<Dt.AddUser>(
-        () => import('./add-user/add-user.component').then(m => m.AddUserModalContent)
+    addUser = this.dialogV2Factory<Dt.AddUser>(() =>
+        import('./add-user/add-user.component').then(m => m.AddUserModalContent),
     );
 
-    removeUser = this.dialogV2Factory<Dt.RemoveUser>(
-        () => import('./remove-user/remove-user.component').then(m => m.RemoveUserModalContent)
+    removeUser = this.dialogV2Factory<Dt.RemoveUser>(() =>
+        import('./remove-user/remove-user.component').then(m => m.RemoveUserModalContent),
     );
 
     deleteCloudUser = this.dialogV2Factory<Dt.DeleteCloudUser>(
-        () => import('./delete-cloud-user/delete-cloud-user.component').then(m => m.DeleteCloudUserModalContent),
-        { autoFocus: 'input' }
+        () =>
+            import('./delete-cloud-user/delete-cloud-user.component').then(
+                m => m.DeleteCloudUserModalContent,
+            ),
+        { autoFocus: 'input' },
     );
 
-    changePassword = this.dialogV2Factory<Dt.ChangePassword>(
-        () => import('./change-password/change-password.component').then(m => m.ChangePasswordModalContent)
+    changePassword = this.dialogV2Factory<Dt.ChangePassword>(() =>
+        import('./change-password/change-password.component').then(
+            m => m.ChangePasswordModalContent,
+        ),
     );
 
     /* Servers */
-    restartServer = this.dialogV2Factory<Dt.RestartServer>(
-        () => import('./restart-server/restart-server.component').then(m => m.RestartServerModalContent),
+    restartServer = this.dialogV2Factory<Dt.RestartServer>(() =>
+        import('./restart-server/restart-server.component').then(m => m.RestartServerModalContent),
     );
 
-    resetServer = this.dialogV2Factory<Dt.ResetServer>(
-        () => import('./reset-server/reset-server.component').then(m => m.ResetServerModalContent),
+    resetServer = this.dialogV2Factory<Dt.ResetServer>(() =>
+        import('./reset-server/reset-server.component').then(m => m.ResetServerModalContent),
     );
 
-    detachServer = this.dialogV2Factory<Dt.DetachServer>(
-        () => import('./detach-server/detach-server.component').then(m => m.DetachServerModalContent),
+    detachServer = this.dialogV2Factory<Dt.DetachServer>(() =>
+        import('./detach-server/detach-server.component').then(m => m.DetachServerModalContent),
     );
 
     /* Bookmarks */
     moreDevices = this.dialogV2Factory<Dt.MoreDevices>(
-        () => import('./bookmarks/more-devices/more-devices.component').then(m => m.NxMoreDevicesModalContent),
+        () =>
+            import('./bookmarks/more-devices/more-devices.component').then(
+                m => m.NxMoreDevicesModalContent,
+            ),
         { width: DIALOG_SIZE_V2.INFO, autoFocus: 'input' },
     );
 
     moreTags = this.dialogV2Factory<Dt.MoreTags>(
-        () => import('./bookmarks/more-tags/more-tags.component').then(m => m.NxMoreTagsModalContent),
-        { width: DIALOG_SIZE_V2.INFO, autoFocus: 'input' }
+        () =>
+            import('./bookmarks/more-tags/more-tags.component').then(m => m.NxMoreTagsModalContent),
+        { width: DIALOG_SIZE_V2.INFO, autoFocus: 'input' },
     );
 
-    bookmarkDetails = this.dialogV2Factory<Dt.BookmarkDetails>(
-        () => import('./bookmarks/card-modal/bookmarks-card-modal.component').then(m => m.NxBookmarksCardModalComponent),
+    bookmarkDetails = this.dialogV2Factory<Dt.BookmarkDetails>(() =>
+        import('./bookmarks/card-modal/bookmarks-card-modal.component').then(
+            m => m.NxBookmarksCardModalComponent,
+        ),
     );
 
-    mergeRefactored = this.dialogV2Factory<Dt.MergeRefactored>(
-        () => import('./merge/merge.refactor.component').then(m => m.NxMergeComponent),
+    mergeRefactored = this.dialogV2Factory<Dt.MergeRefactored>(() =>
+        import('./merge/merge.refactor.component').then(m => m.NxMergeComponent),
     );
 
     /* New feature */
@@ -568,7 +627,9 @@ export class NxDialogsService {
         customConfig: CdkDialogConfig<never> = {},
     ): (otherData: D['data']) => Promise<Dt.NewFeature['return']> {
         return async otherData => {
-            const component = await import('./new-feature/new-feature.component').then(m => m.NewFeatureInformationModalContent);
+            const component = await import('./new-feature/new-feature.component').then(
+                m => m.NewFeatureInformationModalContent,
+            );
             const data = { content, data: otherData } as D;
             const configWithData: CdkDialogConfig<D> = {
                 width: DIALOG_SIZE_V2.INFO,
@@ -579,17 +640,27 @@ export class NxDialogsService {
         };
     }
 
-    cloudStorageInfo = this.newFeatureFactory<Dt.CloudStorageInfoData>(NewFeatureTemplate.CloudStorage);
-    cloudLayoutsInfo = this.newFeatureFactory<Dt.CloudLayoutsInfoData>(NewFeatureTemplate.CloudLayouts);
+    cloudStorageInfo = this.newFeatureFactory<Dt.CloudStorageInfoData>(
+        NewFeatureTemplate.CloudStorage,
+    );
+    cloudLayoutsInfo = this.newFeatureFactory<Dt.CloudLayoutsInfoData>(
+        NewFeatureTemplate.CloudLayouts,
+    );
 
     /* View */
     selectTimeRange = this.dialogV2Factory<Dt.SelectTimeRange>(
-        () => import('./select-time-range-native-fallback/select-time-range.component').then(m => m.SelectTimeRangeModalContent),
+        () =>
+            import('./select-time-range-native-fallback/select-time-range.component').then(
+                m => m.SelectTimeRangeModalContent,
+            ),
         { width: DIALOG_SIZE_V2.SMALL, autoFocus: 'input' },
     );
 
     selectWebGlTimeRange = this.dialogV2Factory<Dt.WebGlSelectTimeRange>(
-        () => import('./webgl-select-time-range/select-time-range.component').then(m => m.WebGlSelectTimeRangeModalContent),
+        () =>
+            import('./webgl-select-time-range/select-time-range.component').then(
+                m => m.WebGlSelectTimeRangeModalContent,
+            ),
         { width: DIALOG_SIZE_V2.SMALL, autoFocus: 'input' },
     );
 }
