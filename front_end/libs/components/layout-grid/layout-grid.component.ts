@@ -52,6 +52,7 @@ import { v4 as uuid } from 'uuid';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { ConfigType } from '@components/console-table/console-table.component.types';
+import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { icons } from '@lib/variables/static-variables';
@@ -67,6 +68,7 @@ import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
+import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 import { ViewportBreakpoints } from '@styles/theme-variables-common';
 import { cleanId, pickFrom } from '@utils/general';
@@ -520,6 +522,7 @@ export class NxLayoutGridComponent {
         private router: Router,
         private activatedRoute: ActivatedRoute,
         private dialogsService: NxDialogsService,
+        private toastService: NxToastService,
         public tourService: TourService,
         private cloudApi: NxCloudApiService,
         private systemsService: NxSystemsService,
@@ -1343,12 +1346,12 @@ export class NxLayoutGridComponent {
                     );
 
                     if (selectedCamera.status === 'unauthorized' && !defaultPassword) {
-                        this.dialogsService.notify(
+                        this.toastService.notify(
                             {
                                 value: staticLang.layouts.errors.unableToAuthorizeCamera,
                                 params: pickFrom(camera, ['name']),
                             },
-                            'warning',
+                            ToastType.Warning,
                         );
                     } else {
                         delete this.errors[selectedCamera.id];

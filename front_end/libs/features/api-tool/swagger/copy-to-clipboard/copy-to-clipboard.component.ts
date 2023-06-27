@@ -3,8 +3,9 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { NxToastService } from '@dialogs/toast.service';
-import { icons, toast } from '@lib/variables/static-variables';
+import { ToastType } from '@components/toast-container/toast.types';
+import { icons } from '@lib/variables/static-variables';
+import { NxToastService } from '@services/toast.service';
 
 @UntilDestroy()
 @Component({
@@ -21,7 +22,7 @@ export class NxCopyToClipboardComponent {
             .pipe(untilDestroyed(this))
             .subscribe((res: IClipboardResponse) => {
                 if (res.isSuccess) {
-                    this.toastService.notify(this.LANG.common.copiedToClipboard, toast.success);
+                    this.toastService.notify(this.LANG.common.copiedToClipboard, ToastType.Success);
                 }
             });
     }

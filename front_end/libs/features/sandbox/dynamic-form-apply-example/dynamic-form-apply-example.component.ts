@@ -1,12 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, NgForm } from '@angular/forms';
 
-import { NxToastService } from '@dialogs/toast.service';
-import { toast } from '@lib/variables/static-variables';
+import { ToastType } from '@components/toast-container/toast.types';
 import { NxApplyService } from '@services/apply.service';
 import type { FormWatcher } from '@services/apply.service/watcher';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
+import { NxToastService } from '@services/toast.service';
 
 @Component({
     selector: 'dynamic-form-apply-example',
@@ -41,7 +41,7 @@ export class DynamicFormApplyExampleComponent {
             },
             {},
             result => {
-                this.toastService.notify('form3 saved', toast.success);
+                this.toastService.notify('form3 saved', ToastType.Success);
             },
             _ => {},
         );

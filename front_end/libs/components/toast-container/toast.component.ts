@@ -1,7 +1,7 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Component } from '@angular/core';
 
-import { NxToastService } from '@dialogs/toast.service';
+import { NxToastService } from '@services/toast.service';
 
 import type { Toast } from './toast.types';
 

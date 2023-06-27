@@ -4,14 +4,15 @@ import type { NgForm } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { ToastType } from '@components/toast-container/toast.types';
 import type { UpdateSession as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
-import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
-import { alertTimeout, toast } from '@lib/variables/static-variables';
+import { alertTimeout } from '@lib/variables/static-variables';
 import { NxLoginService } from '@services/login.service';
 import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
+import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 import { htmlStrConstructor } from '@utils/nx';
 
@@ -92,7 +93,7 @@ export class NxUpdateSessionModalContent extends ModalBase<DT['return']> {
                     }
                     toastService.notify(
                         msg,
-                        toast.danger,
+                        ToastType.Danger,
                         alertTimeout,
                         !!noConnectionMsg,
                     );

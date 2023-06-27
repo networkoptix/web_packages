@@ -7,17 +7,18 @@ import { timer } from 'rxjs';
 import { delayWhen, retryWhen, map } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { ResetServer as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
-import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
-import { servers, toast } from '@lib/variables/static-variables';
+import { servers } from '@lib/variables/static-variables';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { ModuleInformation } from '@services/system-api.types';
 import type { NxSystem } from '@services/system.service/system';
+import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 import { cleanId } from '@utils/general';
 
@@ -58,14 +59,14 @@ export class ResetServerModalContent extends ModalBase<DT['return']> implements 
             console.error(`Error in reset-server dialog from ${from}:`, error);
             this.toastService.notify(
                 this.LANG.servers.resetFailed,
-                toast.warning,
+                ToastType.Warning,
             );
         };
 
         const wrongPasswordHandler = (): false => {
             this.toastService.notify(
                 this.LANG.servers.resetFailed,
-                toast.warning,
+                ToastType.Warning,
             );
             return false;
         };
@@ -154,7 +155,7 @@ export class ResetServerModalContent extends ModalBase<DT['return']> implements 
                                             serverName: this.serverName
                                         }
                                     };
-                                    this.toastService.notify(successMessage, toast.success);
+                                    this.toastService.notify(successMessage, ToastType.Success);
                                     serverSubscription.unsubscribe();
                                 },
                                 err => {
@@ -169,7 +170,7 @@ export class ResetServerModalContent extends ModalBase<DT['return']> implements 
                 if (err.errorId === servers.errors.oldSessionErrorId) {
                     this.toastService.notify(
                         this.LANG.dialogs.updateSession.resetServer,
-                        toast.warning,
+                        ToastType.Warning,
                     );
                 } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
                     return this.dialogs.expiredSession().then(() => this.window.location.reload());

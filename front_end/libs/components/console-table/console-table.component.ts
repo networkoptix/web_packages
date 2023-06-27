@@ -18,9 +18,9 @@ import {
     OptionalFeatures,
 } from '@components/console-table/console-table.component.types';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { NxToastService } from '@dialogs/toast.service';
-import { icons, manifest, toast } from '@lib/variables/static-variables';
+import { icons, manifest } from '@lib/variables/static-variables';
 import { NxConsoleService } from '@pages/developer-console/console/console.service';
 import { ConsoleMode } from '@pages/developer-console/console/console.types';
 import { NxMenusService } from '@services/menus.service';
@@ -32,6 +32,7 @@ import {
     DocAsset,
 } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { NxHeaderService } from '@services/nx-header.service';
+import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -279,7 +280,7 @@ export class NxConsoleTableComponent {
         };
 
         const notifyDownload = (url: string): void => {
-            this.toastService.show(buildDownloadToast(url), toast.success, { showHTML: true });
+            this.toastService.show(buildDownloadToast(url), ToastType.Success, { showHTML: true });
         };
 
         const { generatePackage, checkPackage, getDownloadUrl } = this.cloudApi.getSubAPI(

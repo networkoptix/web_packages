@@ -503,13 +503,6 @@ export const servers: configTypes.Servers = {
     },
 };
 
-export const toast: configTypes.Toast = {
-    success: 'success',
-    warning: 'warning',
-    danger: 'danger',
-    info: 'info',
-};
-
 export const webclient: configTypes.Webclient = {
     chunksToCheckFatal: 30,
     disableVolume: true,

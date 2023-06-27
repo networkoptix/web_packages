@@ -20,18 +20,19 @@ import { v4 as uuid } from 'uuid';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxDynamicWidgetComponent } from '@components/dynamic-widget/dynamic-widget.component';
+import { ToastType } from '@components/toast-container/toast.types';
 import { FirstPartyWidget, WidgetCard, WidgetSize } from '@components/widgets/helper-classes';
 import { NxSystemsListWidgetComponent } from '@components/widgets/systems-list/systems-list-widget.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
-import { icons, toast } from '@lib/variables/static-variables';
+import { icons } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxPageService } from '@services/page.service';
+import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 
 import { DashboardConfiguration } from './dashboard-configuration';
@@ -256,7 +257,7 @@ export class NxDashboardComponent implements DashboardGroup {
             .catch(_ => {
                 this.toastService.show(
                     'Unable to download dashboard requested dashboard, please check link and try again. If you keep having issues try downloading the dashboard first and applying config directly.',
-                    toast.danger,
+                    ToastType.Danger,
                 );
                 return false as const;
             })) as Promise<Record<any, any>>;

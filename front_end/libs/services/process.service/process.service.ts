@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, defer } from 'rxjs';
 
-import { NxToastService } from '@dialogs/toast.service';
+import { NxToastService } from '@services/toast.service';
 
 import { NxSessionService } from '../session.service';
 

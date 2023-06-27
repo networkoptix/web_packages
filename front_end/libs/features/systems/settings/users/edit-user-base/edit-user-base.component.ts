@@ -8,16 +8,17 @@ import { filter } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';
+import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
-import { credentialsValidation, icons, toast, menus } from '@lib/variables/static-variables';
+import { credentialsValidation, icons, menus } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';
 import { NxLoginService } from '@services/login.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemUser } from '@services/system.service/user-manager/user-manager-types.bak';
+import { NxToastService } from '@services/toast.service';
 import { NxUriService } from '@services/uri.service';
 import { cleanId } from '@utils/general';
 
@@ -47,7 +48,6 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy {
     role: string;
     credentialsValidation = credentialsValidation;
     icons = icons;
-    toast = toast;
     menus = menus;
 
     protected passwordChanged: boolean = false;
@@ -243,6 +243,6 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy {
     }
 
     protected showUserChangeFailedToast(): void {
-        this.toastService.notify(this.LANG.toastMessage.userChangesFail, toast.warning);
+        this.toastService.notify(this.LANG.toastMessage.userChangesFail, ToastType.Warning);
     }
 }

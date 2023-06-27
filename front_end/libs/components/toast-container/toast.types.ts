@@ -10,3 +10,10 @@ export interface Toast extends ToastOptions {
     content: Translatable;
     type: string;
 }
+
+export enum ToastType {
+    Success = 'success',
+    Warning = 'warning',
+    Danger = 'danger',
+    Info = 'info',
+}

@@ -8,8 +8,8 @@ import { map, switchMap } from 'rxjs/operators';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { NxToastService } from '@dialogs/toast.service';
-import { toast } from '@lib/variables/static-variables';
+import { ToastType } from '@components/toast-container/toast.types';
+import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 import { isObject } from '@utils/general';
 
@@ -81,11 +81,11 @@ export class NxSystemGroupsService {
     private progressiveDelayReconnect(): void {
         if (this.attempt >= this.MAX_RECONNECT_ATTEMPTS) {
             this.toastService.remove();
-            this.toastService.show(this.LANG.systemGroups.couldNotReconnect, toast.danger);
+            this.toastService.show(this.LANG.systemGroups.couldNotReconnect, ToastType.Danger);
             return;
         }
         this.disconnect();
-        this.toastService.show(this.LANG.systemGroups.connectionLost, toast.danger);
+        this.toastService.show(this.LANG.systemGroups.connectionLost, ToastType.Danger);
         this.attempt += 1;
         setTimeout(() => {
             this.connect();
@@ -100,7 +100,7 @@ export class NxSystemGroupsService {
     private send(data: WebSocketOutgoing): void {
         if (!this.connection$) {
             console.error('No WebSocket connection');
-            this.toastService.notify(this.LANG.systemGroups.noConnection, toast.danger);
+            this.toastService.notify(this.LANG.systemGroups.noConnection, ToastType.Danger);
             return;
         }
         this.connection$.next(data);
@@ -111,14 +111,17 @@ export class NxSystemGroupsService {
             if (this.attempt > 0) {
                 this.attempt = 0;
                 this.toastService.remove();
-                this.toastService.notify(this.LANG.systemGroups.connectionRestored, toast.success);
+                this.toastService.notify(
+                    this.LANG.systemGroups.connectionRestored,
+                    ToastType.Success,
+                );
             }
             return;
         }
         if (isObject(data) && 'error' in data) {
             this.toastService.notify(
                 this.LANG.systemGroups.errorMsg[data.msg] ?? data.msg,
-                toast.danger,
+                ToastType.Danger,
             );
             return;
         }
@@ -140,7 +143,7 @@ export class NxSystemGroupsService {
 
     onDrop(src: GroupsItem, dest: GroupsItem | null): void {
         if (src.id === dest?.id) {
-            this.toastService.notify(this.LANG.systemGroups.addGroupToSelf, toast.danger);
+            this.toastService.notify(this.LANG.systemGroups.addGroupToSelf, ToastType.Danger);
         }
 
         const parent = src.type === 'group' ? src.parent_group_id : src.group_id;
@@ -156,7 +159,7 @@ export class NxSystemGroupsService {
                           value: this.LANG.systemGroups.systemAlreadyIn,
                           params: { srcName: src.name, destName },
                       };
-            this.toastService.notify(msg, toast.info);
+            this.toastService.notify(msg, ToastType.Info);
             return;
         }
 

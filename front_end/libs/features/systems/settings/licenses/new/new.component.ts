@@ -4,10 +4,11 @@ import { SubscriptionLike } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
-import { NxDialogsService } from '@dialogs/dialogs.service';
+import { ToastType } from '@components/toast-container/toast.types';
 import { NxProcessService } from '@services/process.service';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/system-types';
+import { NxToastService } from '@services/toast.service';
 import { NgChanges } from '@utils/ng-changes';
 
 interface ServerOption extends DropdownItem<string> {
@@ -75,9 +76,9 @@ export class NxLicenseNewComponent implements OnChanges {
                                     this.formattedKey = '';
                                     this.licenseForm.controls.licenseKey.markAsUntouched();
 
-                                    this.dialogsService.notify(
+                                    this.toastService.notify(
                                         this.LANG.license.messages.activated,
-                                        'success',
+                                        ToastType.Success,
                                     );
 
                                     return;
@@ -95,9 +96,9 @@ export class NxLicenseNewComponent implements OnChanges {
                                     this.processErrors(fail.error);
                                 } else {
                                     if (fail.name === 'TimeoutError') {
-                                        this.dialogsService.notify(
+                                        this.toastService.notify(
                                             this.LANG.errorCodes.licenseTimeout,
-                                            'danger',
+                                            ToastType.Danger,
                                         );
                                     }
                                     console.error(fail);
@@ -115,10 +116,7 @@ export class NxLicenseNewComponent implements OnChanges {
         );
     }
 
-    constructor(
-        private processService: NxProcessService,
-        private dialogsService: NxDialogsService,
-    ) {}
+    constructor(private processService: NxProcessService, private toastService: NxToastService) {}
 
     ngOnInit(): void {
         this.setupDefaults();
@@ -163,7 +161,7 @@ export class NxLicenseNewComponent implements OnChanges {
 
         switch (response.error) {
             case '1':
-                this.dialogsService.notify(response.errorString, 'danger'); // missing param?
+                this.toastService.notify(response.errorString, ToastType.Danger); // missing param?
                 break;
 
             case '2':
@@ -173,7 +171,10 @@ export class NxLicenseNewComponent implements OnChanges {
             case '3':
                 // Network/Http error has occurred during license activation. Error code: -1
                 if (matchError('error has occurred during license activation')) {
-                    this.dialogsService.notify(this.LANG.errorCodes.licenseServerError, 'danger');
+                    this.toastService.notify(
+                        this.LANG.errorCodes.licenseServerError,
+                        ToastType.Danger,
+                    );
                     break;
                 }
                 if (matchError('license is expired')) {
@@ -213,7 +214,7 @@ export class NxLicenseNewComponent implements OnChanges {
                 break;
 
             default:
-                this.dialogsService.notify(this.LANG.errorCodes.licenseFail, 'danger');
+                this.toastService.notify(this.LANG.errorCodes.licenseFail, ToastType.Danger);
         }
     }
 

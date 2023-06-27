@@ -2,10 +2,10 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { NxToastService } from '@dialogs/toast.service';
+import { ToastType } from '@components/toast-container/toast.types';
 import { SharedWidgetState } from '@lib/dashboard-widget-state';
-import { toast } from '@lib/variables/static-variables';
 import { NxSystemsService } from '@services/systems.service';
+import { NxToastService } from '@services/toast.service';
 
 import { FirstPartyWidget } from '../helper-classes';
 
@@ -110,7 +110,7 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget<
             if (file instanceof DataTransferItem) {
                 this.toastService.notify(
                     'Please upload a valid .wgt, .html, image, or text file.',
-                    toast.warning,
+                    ToastType.Warning,
                 );
                 return;
             }
@@ -118,7 +118,7 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget<
             if (!file.name.endsWith('.wgt') && file.size > NxThirdPartyWidgetComponent.MAX_SIZE) {
                 this.toastService.notify(
                     'File is not a valid widget format and is to large to render',
-                    toast.warning,
+                    ToastType.Warning,
                 );
                 return;
             }

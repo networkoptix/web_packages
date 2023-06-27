@@ -16,11 +16,11 @@ import type {
     DropdownItem,
 } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
+import { ToastType } from '@components/toast-container/toast.types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
-import { icons, servers, toast } from '@lib/variables/static-variables';
+import { icons, servers } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import type { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -32,6 +32,7 @@ import { DiscoveredPeers, ModuleInformation } from '@services/system-api.types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
+import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 import { cleanIp, strSplice, pickFrom, alphabeticalSort } from '@utils/general';
 
@@ -428,7 +429,7 @@ export class MergeModalContent {
         }
         this.toastService.notify(
             noConnectionMsg,
-            toast.warning,
+            ToastType.Warning,
         );
     }
 

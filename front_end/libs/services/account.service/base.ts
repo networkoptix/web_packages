@@ -9,6 +9,7 @@ import { filter } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { accountActions, accountSelectors } from '@common/store/account';
+import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { oauthStore, redirect } from '@lib/variables/static-variables';
 import { NxDbService } from '@services/db.service';
@@ -16,6 +17,7 @@ import { NxLoginService } from '@services/login.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { OauthService } from '@services/oauth.service';
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
+import { NxToastService } from '@services/toast.service';
 import { UnstructuredTable } from '@src/app/db/models/unstructured';
 import { memoizeAsyncPersistent } from '@utils/memoize';
 
@@ -85,6 +87,7 @@ export abstract class BaseAccount {
         protected cookieService: CookieService,
         protected store: Store,
         protected dialogs: NxDialogsService,
+        protected toasts: NxToastService,
         protected db: NxDbService,
     ) {
         // language provider will be ready at this point
@@ -111,9 +114,9 @@ export abstract class BaseAccount {
                 return;
             }
             if (this.tokens.access_token !== accessToken) {
-                return this.dialogs.notify(this.LANG.errorCodes.wrongAuthCode, 'danger', true);
+                return this.toasts.show(this.LANG.errorCodes.wrongAuthCode, ToastType.Danger);
             }
-            this.dialogs.notify(this.LANG.toastMessage.loggingIn, 'success', false);
+            this.toasts.notify(this.LANG.toastMessage.loggingIn, ToastType.Success);
             this.loginTokens(this.tokens).then(() => {});
         });
     }
@@ -313,11 +316,11 @@ export abstract class BaseAccount {
         const data = e.error;
         if (data?.error === 'second_factor_required') {
             this.tokens = data;
-            this.dialogs.notify(this.LANG.toastMessage.twoFaRequired, 'info', false);
+            this.toasts.notify(this.LANG.toastMessage.twoFaRequired, ToastType.Info);
             return this.oauthService.add2fa(data.access_token || '');
         } else {
             this.clearCodeFromUri();
-            this.dialogs.notify(this.LANG.errorCodes.wrongAuthCode, 'danger', true);
+            this.toasts.show(this.LANG.errorCodes.wrongAuthCode, ToastType.Danger);
             await this.sleep(3000);
             return Promise.resolve(true);
         }
@@ -427,7 +430,7 @@ export abstract class BaseAccount {
             }
             return this.clearAuthFromUri().then(() => this.document.location.reload());
         } catch (e) {
-            this.dialogs.notify(this.LANG.errorCodes.wrongAuthCode, 'danger', true);
+            this.toasts.show(this.LANG.errorCodes.wrongAuthCode, ToastType.Danger);
             return this.requireLogin();
         } finally {
             this.appStateService.ready = true;

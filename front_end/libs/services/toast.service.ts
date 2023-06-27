@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 
-import type { Toast, ToastOptions } from '@app/components/toast-container/toast.types';
+import { Toast, ToastOptions, ToastType } from '@components/toast-container/toast.types';
 import { Translatable } from '@pipes/nx-translate.types';
 
-import { alertTimeout, toast } from '../variables/static-variables';
+import { alertTimeout } from '../variables/static-variables';
 
 @Injectable({ providedIn: 'root' })
 export class NxToastService {
@@ -30,7 +30,7 @@ export class NxToastService {
      */
     show(
         content: Toast['content'],
-        type: string = toast.info,
+        type: ToastType = ToastType.Info,
         options: ToastOptions = this.defaultOpts,
     ): void {
         options = { ...this.defaultOpts, ...options };
@@ -51,7 +51,7 @@ export class NxToastService {
     /** Display a notification toast that hides itself. */
     notify(
         message: Translatable,
-        type: string = toast.info,
+        type: ToastType = ToastType.Info,
         delay: number = alertTimeout,
         showHTML: boolean = false,
     ): void {

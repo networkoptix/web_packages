@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { switchMap, take, takeUntil } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 
@@ -15,6 +16,7 @@ import { NxBootstrapProvider } from './nx-bootstrap-provider';
 import { nxConfig } from './nx-config/config';
 import type { IConfig } from './nx-config/config-types';
 import type { NxSystem } from './system.service/system';
+import { NxToastService } from './toast.service';
 import { windowFactory } from './window-provider';
 
 @Injectable({
@@ -33,6 +35,7 @@ export class NxLoginService {
         private http: HttpClient,
         private storage: LocalStorageService,
         private dialogs: NxDialogsService,
+        private toasts: NxToastService,
         private cdkDialog: Dialog,
     ) {}
 
@@ -86,7 +89,7 @@ export class NxLoginService {
             (this._currentSystem.useRest && this._currentSystem.mediaserver.isSessionOauth)
         ) {
             if (!(await this.pingCloud())) {
-                this.dialogs.notify(this.LANG.toastMessage.noInternet, 'warning', true);
+                this.toasts.show(this.LANG.toastMessage.noInternet, ToastType.Warning);
                 // Close dialog if any
                 this.dialogs.dismissDialog();
                 this.cdkDialog.closeAll();

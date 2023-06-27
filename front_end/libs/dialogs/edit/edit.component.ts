@@ -11,8 +11,8 @@ import {
 import {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';
+import { ToastType } from '@components/toast-container/toast.types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
-import { toast } from '@lib/variables/static-variables';
 import {
     ConsoleMode
 } from '@pages/developer-console/console/console.types';
@@ -20,9 +20,8 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ContentSettings, ContextManifest } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
+import { NxToastService } from '@services/toast.service';
 import { pickFrom } from '@utils/general';
-
-import { NxToastService } from '../toast.service';
 
 // export const manifestLookupByType = (config: IConfig, type: ModalType) => {
 //     const manifestKeyLookup = {
@@ -207,7 +206,7 @@ export class EditModalContent {
                 // Need spec for saving message
                 this.toastService.notify(
                     'Custom Client Saved',
-                    toast.success,
+                    ToastType.Success,
                 );
                 this.close({ id: this.values.id, action: 'save' });
             },
@@ -223,7 +222,7 @@ export class EditModalContent {
                 // Need spec for saving deleting message
                 this.toastService.notify(
                     'Custom Client Deleted',
-                    toast.success,
+                    ToastType.Success,
                 );
                 this.close({ id: this.values.id, action: 'delete' });
             }, err => {

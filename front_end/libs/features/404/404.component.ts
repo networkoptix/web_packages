@@ -4,12 +4,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { NxToastService } from '@dialogs/toast.service';
+import { ToastType } from '@components/toast-container/toast.types';
 import { environment } from '@environments/environment';
-import { longAlertTimeout, toast } from '@lib/variables/static-variables';
+import { longAlertTimeout } from '@lib/variables/static-variables';
 import type { RouteCheckTuple } from '@services/nx-config/base-config';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 
 @Component({
@@ -103,7 +104,7 @@ export class Nx404Component {
                     const additionalMessage = this.getAdditionalMessage(customMessage);
                     this.toastService.notify(
                         `${redirectMessage} ${additionalMessage}`,
-                        toast.info,
+                        ToastType.Info,
                         longAlertTimeout,
                     );
                 });

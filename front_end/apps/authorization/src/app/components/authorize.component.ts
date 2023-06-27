@@ -25,7 +25,7 @@ import {
 } from '@app/services/nx-cloud-api/nx-cloud-api.types';
 import { AuthService } from '@authorization/src/app/auth.service';
 import staticLang from '@common/language/language_i18n_static.json';
-import { NxToastService } from '@dialogs/toast.service';
+import { ToastType } from '@components/toast-container/toast.types';
 import { environment } from '@environments/environment';
 import { oauthStore } from '@lib/variables/static-variables';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -35,6 +35,7 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { ModuleInformationReply } from '@services/system-api.types';
 import { NxThemeService } from '@services/theme.service';
+import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 import { ViewportBreakpoints } from '@styles/theme-variables-common';
 
@@ -669,7 +670,10 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                     this.currentState = AuthorizeState.auth;
                 } else if (['unauthorized', 'badUsername'].includes(err.errorText)) {
                     // loginCode is either invalid or already used
-                    this.toastService.notify(this.LANG.authorize.newPassInvalidCode, 'danger');
+                    this.toastService.notify(
+                        this.LANG.authorize.newPassInvalidCode,
+                        ToastType.Danger,
+                    );
                 } else {
                     this.handleCloudConnectionError(err, this.resetPasswordProcess);
                 }
@@ -713,7 +717,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         this.blockResendingActivation = true;
         return lastValueFrom(this.authService.reactivate(this.loginEmail))
             .then(() => {
-                this.toastService.notify(this.LANG.authorize.emailSent, 'success');
+                this.toastService.notify(this.LANG.authorize.emailSent, ToastType.Success);
             })
             .finally(() => {
                 setTimeout(() => {

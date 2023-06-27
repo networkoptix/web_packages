@@ -4,13 +4,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { i18n } from 'dateformat';
 import { LocalStorageService } from 'ngx-webstorage';
 
-import { toast } from '@app/variables/static-variables';
 import staticLang from '@common/language/language_i18n_static.json';
-import { NxToastService } from '@dialogs/toast.service';
+import { ToastType } from '@components/toast-container/toast.types';
 import { environment } from '@environments/environment';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSwCacheService } from '@services/sw-cache.service';
+import { NxToastService } from '@services/toast.service';
 import { NxUriCacheService } from '@services/uri-cache.service';
 import { Language, processLanguageFactory } from '@utils/nx';
 
@@ -101,7 +101,7 @@ export class NxLanguageProviderService {
         } catch (e) {
             this.toastService.notify(
                 'Loaded default language due to an error while setting up desired language.',
-                toast.warning,
+                ToastType.Warning,
             );
             this.cloudApi.changeLanguage(this.translate.getDefaultLang()).then(() => {
                 this.currentLang = this.translate.getDefaultLang();

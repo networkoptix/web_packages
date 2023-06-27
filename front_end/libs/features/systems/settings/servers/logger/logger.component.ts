@@ -2,15 +2,15 @@ import { Component, Input, OnChanges, ViewEncapsulation } from '@angular/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { NxToastService } from '@dialogs/toast.service';
-import { toast } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';
 import { Watcher } from '@services/apply.service/watcher';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { LogLevel, LogLevelReply } from '@services/system-api.types';
 import type { NxSystem } from '@services/system.service/system';
+import { NxToastService } from '@services/toast.service';
 import { NgChanges } from '@utils/ng-changes';
 
 import type { Logger } from './logger.component.types';
@@ -72,7 +72,7 @@ export class NxServerLoggerComponent implements OnChanges {
             () => {
                 this.toastService.notify(
                     this.LANG.dialogs.message.logLevelsNotSaved,
-                    toast.warning,
+                    ToastType.Warning,
                 );
             },
         );

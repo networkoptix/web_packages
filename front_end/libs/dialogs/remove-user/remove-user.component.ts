@@ -2,11 +2,11 @@ import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { Component, Inject } from '@angular/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { ToastType } from '@components/toast-container/toast.types';
 import { ModalBase } from '@dialogs/modal-base';
-import { NxToastService } from '@dialogs/toast.service';
-import { toast } from '@lib/variables/static-variables';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
+import { NxToastService } from '@services/toast.service';
 
 import type { RemoveUser as DT } from '../dialogs.types';
 
@@ -49,7 +49,7 @@ export class RemoveUserModalContent extends ModalBase<DT['return']> {
         }, () => {
             this.toastService.notify(
                 this.LANG.dialogs.updateSession.removeUser,
-                toast.warning,
+                ToastType.Warning,
             );
             this.unlock();
         });

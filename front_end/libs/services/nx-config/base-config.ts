@@ -730,13 +730,6 @@ export interface Default {
     style: string;
 }
 
-export interface Toast {
-    success: string;
-    warning: string;
-    danger: string;
-    info: string;
-}
-
 export interface Webclient {
     chunksToCheckFatal: number;
     disableVolume: boolean;

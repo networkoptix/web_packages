@@ -1,15 +1,15 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { Injectable, Injector } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { throwError, timer, Observable } from 'rxjs';
 import { catchError, flatMap } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { NxDialogsService } from '@dialogs/dialogs.service';
+import { ToastType } from '@components/toast-container/toast.types';
+import { NxToastService } from '@services/toast.service';
 
 @Injectable()
 export class CloudUnavailableInterceptor implements HttpInterceptor {
     LANG = staticLang;
-    dialogService: NxDialogsService;
     error: string;
     retryTimeout: number;
     readonly interceptor = {
@@ -21,12 +21,9 @@ export class CloudUnavailableInterceptor implements HttpInterceptor {
 
     private readonly whiteList: string[] = ['/storage/usageStats'];
 
-    constructor(injector: Injector) {
+    constructor(private toastService: NxToastService) {
         this.error = this.interceptor.cloudUnavailable.error;
         this.retryTimeout = this.interceptor.cloudUnavailable.timeout;
-        setTimeout(() => {
-            this.dialogService = injector.get(NxDialogsService);
-        });
     }
 
     intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
@@ -41,9 +38,9 @@ export class CloudUnavailableInterceptor implements HttpInterceptor {
                         flatMap(() =>
                             next.handle(req).pipe(
                                 catchError(response => {
-                                    this.dialogService.notify(
+                                    this.toastService.notify(
                                         this.LANG.toastMessage.cloudUnavailable,
-                                        'danger',
+                                        ToastType.Danger,
                                     );
                                     return throwError(response);
                                 }),

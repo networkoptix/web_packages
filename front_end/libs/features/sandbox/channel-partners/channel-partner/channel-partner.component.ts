@@ -3,14 +3,15 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { catchError, map, merge, mergeMap, of, Subject } from 'rxjs';
 
+import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { NxToastService } from '@dialogs/toast.service';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
 import {
     ChannelPartner,
     ChannelPartnerUser,
     Id,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { NxToastService } from '@services/toast.service';
 
 @Component({
     selector: 'nx-channel-partner',
@@ -85,7 +86,7 @@ export class NxChannelPartnerComponent implements OnInit {
             },
             error: (err: HttpErrorResponse) => {
                 const msg = `${err.status} ${err.error.detail}`;
-                this.toastService.notify(msg, 'danger');
+                this.toastService.notify(msg, ToastType.Danger);
             },
         });
     }
@@ -116,7 +117,7 @@ export class NxChannelPartnerComponent implements OnInit {
             },
             error: (err: HttpErrorResponse) => {
                 const msg = `${err.status} ${err.error.detail}`;
-                this.toastService.notify(msg, 'danger');
+                this.toastService.notify(msg, ToastType.Danger);
             },
         });
     }
@@ -138,7 +139,7 @@ export class NxChannelPartnerComponent implements OnInit {
             },
             error: (err: HttpErrorResponse) => {
                 const msg = `${err.status} ${err.error.detail}`;
-                this.toastService.notify(msg, 'danger');
+                this.toastService.notify(msg, ToastType.Danger);
             },
         });
     }

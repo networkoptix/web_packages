@@ -2,7 +2,8 @@ import { Component, Input, OnChanges, ViewChild } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { NxDialogsService } from '@dialogs/dialogs.service';
+import { ToastType } from '@components/toast-container/toast.types';
+import { NxToastService } from '@lib/services/toast.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
@@ -38,7 +39,7 @@ export class NxLicenseTrialComponent implements OnChanges {
             }
             switch (response.error) {
                 case '1':
-                    this.dialogsService.notify(response.errorString, 'danger'); // missing param?
+                    this.toastService.notify(response.errorString, ToastType.Danger); // missing param?
                     break;
 
                 case '2':
@@ -48,7 +49,7 @@ export class NxLicenseTrialComponent implements OnChanges {
                 case '3':
                     // Can't activate license:  License Key you have entered is invalid.
                     // This should not happen as keys are predefined per customization
-                    this.dialogsService.notify(response.errorString, 'danger');
+                    this.toastService.notify(response.errorString, ToastType.Danger);
             }
         };
 
@@ -64,9 +65,9 @@ export class NxLicenseTrialComponent implements OnChanges {
                             this.system.licensesModified = this.trialLicense;
                             this.haveTrialLicense = true;
 
-                            this.dialogsService.notify(
+                            this.toastService.notify(
                                 this.LANG.license.messages.trialActivated,
-                                'success',
+                                ToastType.Success,
                             );
                         }
 
@@ -76,7 +77,10 @@ export class NxLicenseTrialComponent implements OnChanges {
                     },
                     fail => {
                         if (fail.error.type === 'error') {
-                            this.dialogsService.notify(this.LANG.errorCodes.licenseFail, 'danger');
+                            this.toastService.notify(
+                                this.LANG.errorCodes.licenseFail,
+                                ToastType.Danger,
+                            );
                         } else if (fail?.error) {
                             notifyError(fail.error);
                         }
@@ -88,7 +92,7 @@ export class NxLicenseTrialComponent implements OnChanges {
     constructor(
         configService: NxConfigService,
         private processService: NxProcessService,
-        private dialogsService: NxDialogsService,
+        private toastService: NxToastService,
     ) {
         this.CONFIG = configService.getConfig();
 

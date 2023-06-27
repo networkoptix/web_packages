@@ -1,3 +1,5 @@
+/* eslint-disable */
+// Soon to be deleted
 export interface DialogConfig<T = any> {
     hasBackdrop: boolean;
     backdropClass: string;

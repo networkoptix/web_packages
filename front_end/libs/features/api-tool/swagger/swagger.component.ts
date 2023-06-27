@@ -23,11 +23,12 @@ import { v4 as uuid } from 'uuid';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import type { MenuNodeWithParent } from '@components/developers-menu/developers-menu-types';
-import { NxToastService } from '@dialogs/toast.service';
+import { ToastType } from '@components/toast-container/toast.types';
 import { environment } from '@environments/environment';
-import { servers, toast } from '@lib/variables/static-variables';
+import { servers } from '@lib/variables/static-variables';
 import { NxLoginService } from '@services/login.service';
 import { MenuNode } from '@services/menus.service.types';
+import { NxToastService } from '@services/toast.service';
 import { highlightAll, isUUID } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -212,9 +213,9 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
 
         const handlePostUpdate = (updateSuccess: boolean) => {
             const { sessionRenewed, failedToUpdateSession } = this.LANG.toastMessage;
-            const { success, danger } = toast;
+            const { Success, Danger } = ToastType;
             const toastMessage = updateSuccess ? sessionRenewed : failedToUpdateSession;
-            const toastType = updateSuccess ? success : danger;
+            const toastType = updateSuccess ? Success : Danger;
             this.toastService.notify(toastMessage, toastType);
         };
 

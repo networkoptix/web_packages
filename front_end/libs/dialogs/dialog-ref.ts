@@ -1,3 +1,5 @@
+/* eslint-disable */
+// Soon to be deleted
 import { OverlayRef } from '@angular/cdk/overlay';
 import { InjectionToken } from '@angular/core';
 import { Subject } from 'rxjs';

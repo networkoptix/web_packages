@@ -12,6 +12,7 @@ import { redirect, responseOk, updateInterval } from '@lib/variables/static-vari
 import { NxDbService } from '@services/db.service';
 import { NxLoginService } from '@services/login.service';
 import { OauthService } from '@services/oauth.service';
+import { NxToastService } from '@services/toast.service';
 
 import { NxAppStateService } from '../nx-app-state.service';
 import { NxCloudApiService } from '../nx-cloud-api';
@@ -41,6 +42,7 @@ export class CloudAccount extends BaseAccount {
         protected cookieService: CookieService,
         protected store: Store,
         protected dialogs: NxDialogsService,
+        protected toasts: NxToastService,
         protected db: NxDbService,
     ) {
         super(
@@ -59,6 +61,7 @@ export class CloudAccount extends BaseAccount {
             cookieService,
             store,
             dialogs,
+            toasts,
             db,
         );
         this.account = this.CONFIG.preloadedAccount as Account;

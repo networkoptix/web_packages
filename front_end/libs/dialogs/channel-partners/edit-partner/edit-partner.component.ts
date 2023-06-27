@@ -4,13 +4,14 @@ import { firstValueFrom } from 'rxjs';
 
 import LANG from '@common/language/language_i18n_static.json';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { ToastType } from '@components/toast-container/toast.types';
 import type { EditChannelPartner as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
-import { NxToastService } from '@dialogs/toast.service';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
 import { State, Id } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
+import { NxToastService } from '@services/toast.service';
 
 @Component({
     selector: 'nx-edit-partner',
@@ -66,7 +67,7 @@ export class NxEditPartnerModalContent extends ModalBase<DT['return']> implement
                 this.unlock();
                 console.error(err);
                 const msg = err.error ? `${err.status} ${err.error.detail}` : err.detail || err;
-                toastService.notify(msg, 'danger');
+                toastService.notify(msg, ToastType.Danger);
             }
         );
     }

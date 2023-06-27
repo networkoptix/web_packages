@@ -9,11 +9,11 @@ import { distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
 import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
+import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { MergeInfo } from '@dialogs/merge/merge.refactor.component.types';
-import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
-import { icons, clientMode, menus, redirect, toast } from '@lib/variables/static-variables';
+import { icons, clientMode, menus, redirect } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import type { Account } from '@services/account.service/account';
 import { NxApplyService } from '@services/apply.service';
@@ -28,6 +28,7 @@ import * as t from '@services/system-api.types';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
+import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 
 import { NxSettingsService } from '../settings.service';
@@ -312,14 +313,14 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 }
                 this.toastService.notify(
                     this.LANG.toastMessage.system.cloudConnect.success,
-                    'success',
+                    ToastType.Success,
                 );
                 setTimeout(() => this.window.location.reload(), 2000);
             },
             () => {
                 this.toastService.notify(
                     this.LANG.toastMessage.system.cloudConnect.failed,
-                    'danger',
+                    ToastType.Danger,
                 );
             },
         );
@@ -344,7 +345,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         value: this.LANG.toastMessage.nameFail,
                         params: { type: this.LANG.common.system },
                     },
-                    toast.warning,
+                    ToastType.Warning,
                 );
             },
         );
@@ -446,7 +447,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         if (this.window.navigator.onLine) {
             return this.dialogs.connectLocalToCloud(this.system);
         } else {
-            this.dialogs.notify(this.LANG.toastMessage.noInternet, 'warning', true);
+            this.toastService.show(this.LANG.toastMessage.noInternet, ToastType.Warning);
             return Promise.resolve(true);
         }
     }
@@ -499,14 +500,14 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                                                 this.system.info.name,
                                         },
                                     },
-                                    toast.success,
+                                    ToastType.Success,
                                 );
                             },
                             err => {
                                 console.error(err);
                                 this.toastService.show(
                                     this.LANG.errorCodes.cantUnshareWithMeSystemPrefix,
-                                    toast.danger,
+                                    ToastType.Danger,
                                 );
                             },
                             this.updateAndGoToSystems,

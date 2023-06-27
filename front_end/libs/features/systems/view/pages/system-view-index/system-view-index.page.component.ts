@@ -17,9 +17,9 @@ import { distinctUntilChanged, filter, take, takeUntil } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
-import { NxToastService } from '@dialogs/toast.service';
+import { ToastType } from '@components/toast-container/toast.types';
 import { environment } from '@environments/environment';
-import { icons, toast } from '@lib/variables/static-variables';
+import { icons } from '@lib/variables/static-variables';
 import { NxSettingsService } from '@pages/systems/settings/settings.service';
 import { NxAccountService } from '@services/account.service';
 import { IConfig } from '@services/nx-config/config-types';
@@ -30,6 +30,7 @@ import type { NxMediaServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
+import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 import { cleanId } from '@utils/general';
 import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
@@ -488,7 +489,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                             if (timeDiff) {
                                 this.toastService.show(
                                     this.LANG.system.status.outOfTimeSync,
-                                    toast.danger,
+                                    ToastType.Danger,
                                     { autohide: true }
                                 );
                             }

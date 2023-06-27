@@ -3,17 +3,16 @@ import { Component, Inject, Renderer2, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { ToastType } from '@components/toast-container/toast.types';
 import type { Mandatory2fa as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
-import { toast } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
+import { NxToastService } from '@services/toast.service';
 import { pickFrom } from '@utils/general';
-
-import { NxToastService } from '../toast.service';
 
 @Component({
     selector: 'nx-mandatory-2fa',
@@ -81,7 +80,7 @@ export class Mandatory2faModalContent extends ModalBase<DT['return']> {
                     : this.LANG.dialogs.message.system2faDisabled;
                 this.toastService.notify(
                     successMessage,
-                    toast.success,
+                    ToastType.Success,
                 );
             }, err => {
                 this.unlock();

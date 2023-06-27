@@ -4,9 +4,8 @@ import type { NgForm } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { ToastType } from '@components/toast-container/toast.types';
 import { ModalBase } from '@dialogs/modal-base';
-import { NxToastService } from '@dialogs/toast.service';
-import { toast } from '@lib/variables/static-variables';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
@@ -16,6 +15,7 @@ import type {
     NewUserBase,
     NxAccessRole,
 } from '@services/system.service/user-manager/user-manager-types';
+import { NxToastService } from '@services/toast.service';
 
 import type { AddUser as DT } from '../dialogs.types';
 
@@ -130,7 +130,7 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
             () => {
                 this.toastService.notify(
                     this.LANG.dialogs.updateSession.addUser,
-                    toast.warning,
+                    ToastType.Warning,
                 );
                 this.unlock();
             },

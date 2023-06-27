@@ -1,65 +1,103 @@
 import { Dialog, DialogConfig as CdkDialogConfig } from '@angular/cdk/dialog';
 import { ComponentType, Overlay } from '@angular/cdk/overlay';
-import { DOCUMENT, Location } from '@angular/common';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { DOCUMENT } from '@angular/common';
 import { Injectable, Injector, Inject } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
-import { SubscriptionLike, firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subject, takeUntil } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { GenericEditModalContent, ModalContent } from '@components/console-table/console-table.component.types';
 import { DashboardConfiguration } from '@pages/dashboard/dashboard-configuration';
-import { Translatable } from '@pipes/nx-translate.types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { StorageManager } from '@services/system.service/storage-manager/storage-manager';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { pickFrom } from '@utils/general';
 
-import { toast } from '../variables/static-variables';
-
-import { DialogBase } from './dialog-base';
 import { DialogConfig } from './dialog-config';
 import { DIALOG_SIZE as DIALOG_SIZE_V2 } from './dialog-config-v2';
-import { DIALOG_SIZE, defaultConfig } from './dialog-ref';
+import { DIALOG_DATA, DIALOG_SIZE, DialogRef, defaultConfig } from './dialog-ref';
+import type { DialogsModule } from './dialogs.module';
 import * as Dt from './dialogs.types';
 import { NewFeatureTemplate } from './new-feature/new-feature.component.types';
-import { NxToastService } from './toast.service';
 import { TfaAction } from './two-fa/two-fa.component.types';
 
-@UntilDestroy({ checkProperties: true })
 @Injectable({ providedIn: 'root' })
-export class NxDialogsService extends DialogBase {
-    LANG = staticLang;
-    CONFIG: IConfig;
-    location: Location;
-
-    languageSubscription: SubscriptionLike;
-
+export class NxDialogsService {
     constructor(
-        configService: NxConfigService,
-        location: Location,
-        injector: Injector,
-        overlay: Overlay,
-        private toastService: NxToastService,
+        private injector: Injector,
+        private overlay: Overlay,
         private cdkDialog: Dialog,
-        @Inject(DOCUMENT) document: Document,
-    ) {
-        super(overlay, injector, document);
-        this.CONFIG = configService.getConfig();
-        this.location = location;
+        @Inject(DOCUMENT) private document: Document,
+    ) {}
+
+    /* eslint-disable */
+    private dialog: DialogRef;
+    private dialogsModule: DialogsModule;
+    private unsub$ = new Subject<boolean>();
+
+    public async preloadDialogsModule(): Promise<DialogsModule> {
+        this.dialogsModule ||= await import('./dialogs.module').then(m => m.DialogsModule);
+        return this.dialogsModule;
     }
 
-    public dismiss(): void {
-        this.toastService.remove();
+    open<T>(component: ComponentType<T>, config: DialogConfig = defaultConfig): DialogRef {
+        // Opening element is probably a button, but can't be sure
+        (this.document.activeElement as HTMLButtonElement)?.blur?.();
+
+        const positionStrategy = this.overlay
+            .position()
+            .global()
+            .centerHorizontally()
+            .centerVertically();
+
+        const overlayRef = this.overlay.create({
+            positionStrategy,
+            hasBackdrop: config.hasBackdrop,
+            backdropClass: config.backdropClass,
+            panelClass: config.panelClass,
+            width: '100vw',
+            maxWidth: config.width,
+        });
+
+        overlayRef.keydownEvents()
+            .pipe(takeUntil(this.unsub$))
+            .subscribe((key: KeyboardEvent) => {
+                if (key.code === 'Escape') {
+                    this.dialog.close();
+                    this.unsub$.next(true);
+                }
+            });
+
+        // Create dialogRef to return
+        const dialogRef = new DialogRef(overlayRef);
+        const injector = Injector.create({
+            parent: this.injector,
+            providers: [
+                { provide: DialogRef, useValue: dialogRef },
+                { provide: DIALOG_DATA, useValue: config.data },
+            ]
+        });
+
+        const portal = new ComponentPortal(component, null, injector);
+        overlayRef.attach(portal);
+        setTimeout(() => {
+            const input = this.document.querySelector('input');
+            // Assuming that input will be focused on open
+            if (!input) {
+                this.document.querySelector<HTMLButtonElement>('.modal-holder button.close')
+                    ?.focus();
+            }
+        });
+        this.dialog = dialogRef;
+
+        return dialogRef;
     }
 
-    public notify(
-        message: Translatable,
-        type: string = toast.info,
-        hold?: boolean
-    ): void {
-        this.toastService.show(message, type, { autohide: !hold });
+    // Allows current dialog to be closed programmatically
+    // Ex: Login service need to close whatever dialog is showing if 'updateSession' fails
+    dismissDialog(): void {
+        // All dialogs we use are modal ...so only one active instance at a time
+        this.dialog?.close('closed by another');
     }
 
     public async addWidget(gridSize, gridGap, widgets, dashboardMenu: DashboardConfiguration[], activeDashboard, updateSelectedDashboard: (id: string) => void) {
@@ -198,6 +236,7 @@ export class NxDialogsService extends DialogBase {
 
         return this.open(component, dialogConfig).afterClosed();
     }
+    /* eslint-enable */
 
     /* ANGULAR CDK DIALOGS */
     /* General steps for migrating a dialog to angular CDK
@@ -302,9 +341,9 @@ export class NxDialogsService extends DialogBase {
     async expiredSession(): Promise<Dt.Confirm['return']> {
         return this.confirm({
             disableClose: true,
-            title: this.LANG.dialogs.renewAuth.title,
-            message: this.LANG.dialogs.renewAuth.message,
-            footer: { actionLabel: this.LANG.dialogs.buttons.ok }
+            title: staticLang.dialogs.renewAuth.title,
+            message: staticLang.dialogs.renewAuth.message,
+            footer: { actionLabel: staticLang.dialogs.buttons.ok }
         });
     }
 

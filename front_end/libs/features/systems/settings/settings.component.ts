@@ -9,7 +9,7 @@ import { NxMenuService } from '@app/menu/menu.service';
 import type { ContentToggle, Content, Level3Item } from '@app/menu/menu.types';
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
-import { NxDialogsService } from '@dialogs/dialogs.service';
+import { ToastType } from '@components/toast-container/toast.types';
 import { environment } from '@environments/environment';
 import { alertTimeout, clientMode, menus, redirect } from '@lib/variables/static-variables';
 import { ribbonHeight } from '@pages/static-variables-features';
@@ -31,6 +31,7 @@ import type { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import type { NxUser } from '@services/system.service/user-manager/user-manager-types';
 import { NxSystemsService } from '@services/systems.service';
+import { NxToastService } from '@services/toast.service';
 import { NxUriService } from '@services/uri.service';
 import { GridBreakpoints } from '@styles/theme-variables-common';
 import { alphabeticalSort, cleanId } from '@utils/general';
@@ -179,7 +180,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private accountService: NxAccountService,
         private pageService: NxPageService,
-        private dialogs: NxDialogsService,
+
+        private toasts: NxToastService,
         private systemService: NxSystemService,
         private systemsService: NxSystemsService,
         public settingsService: NxSettingsService,
@@ -864,9 +866,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         const systemName = this.system.info.name
             ? escape(this.system.info.name)
             : this.LANG.errorCodes.thisSystem;
-        this.dialogs.notify(
+        this.toasts.notify(
             { value: this.LANG.errorCodes.lostConnection, params: { systemName } },
-            'warning',
+            ToastType.Warning,
         );
 
         const route = `${redirect.authorised}/${

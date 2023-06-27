@@ -17,25 +17,25 @@
         <div class="row p-3">
             <button
                 class="btn btn-primary ml-2"
-                (click)="notify('I\'m info asdas sadasd asd', 'info')"
+                (click)="notify('I\'m info asdas sadasd asd', ToastType.Info)"
             >
                 Info
             </button>
             <button
                 class="btn btn-danger ml-2"
-                (click)="notify('I\'m danger', 'danger')"
+                (click)="notify('I\'m danger', ToastType.Danger)"
             >
                 Danger
             </button>
             <button
                 class="btn btn-warning ml-2"
-                (click)="notify('I\'m warning', 'warning')"
+                (click)="notify('I\'m warning', ToastType.Warning)"
             >
                 Warning
             </button>
             <button
                 class="btn btn-default ml-2"
-                (click)="notify('I\'m success', 'success')"
+                (click)="notify('I\'m success', ToastType.Success)"
             >
                 Success
             </button>

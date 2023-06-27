@@ -2,16 +2,16 @@ import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angular/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { DetachServer as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
-import { servers, toast } from '@lib/variables/static-variables';
+import { servers } from '@lib/variables/static-variables';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
+import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
-
-import { NxToastService } from '../toast.service';
 
 @Component({
     selector: 'nx-modal-detach-server-content',
@@ -52,7 +52,7 @@ export class DetachServerModalContent extends ModalBase<DT['return']> implements
                     this.close(true);
                     this.toastService.notify(
                         this.LANG.servers.detachSystemSuccess,
-                        toast.success,
+                        ToastType.Success,
                     );
                     this.window.location.reload();
                     // may need to remove & update system eventually
@@ -65,7 +65,7 @@ export class DetachServerModalContent extends ModalBase<DT['return']> implements
                     if (err.errorId === servers.errors.oldSessionErrorId) {
                         this.toastService.notify(
                             this.LANG.dialogs.updateSession.detachServer,
-                            toast.warning,
+                            ToastType.Warning,
                         );
                     } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
                         return this.dialogs.expiredSession().then(() => this.window.location.reload());
@@ -73,7 +73,7 @@ export class DetachServerModalContent extends ModalBase<DT['return']> implements
                         this.close();
                         this.toastService.notify(
                             this.LANG.servers.detachSystemFailed,
-                            toast.warning,
+                            ToastType.Warning,
                         );
                     }
                 }

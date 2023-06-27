@@ -3,9 +3,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
-import { NxDialogsService } from '@dialogs/dialogs.service';
+import { ToastType } from '@components/toast-container/toast.types';
 import { icons } from '@lib/variables/static-variables';
 import { NxProcessService } from '@services/process.service';
+import { NxToastService } from '@services/toast.service';
 
 @Component({
     selector: 'toaster',
@@ -15,12 +16,13 @@ import { NxProcessService } from '@services/process.service';
 export class ToasterComponent implements OnInit, OnDestroy {
     LANG = staticLang;
 
+    ToastType = ToastType;
     autohide: boolean;
     ribbonType: string;
     icons = icons;
 
     constructor(
-        private dialogs: NxDialogsService,
+        private toasts: NxToastService,
         private menuService: NxMenuService,
         private ribbonService: NxRibbonService,
         private processService: NxProcessService,
@@ -64,8 +66,8 @@ export class ToasterComponent implements OnInit, OnDestroy {
 
     refreshHealth(): void {}
 
-    notify(msg: string, type: string): void {
-        this.dialogs.notify(msg, type, !this.autohide);
+    notify(msg: string, type: ToastType): void {
+        this.toasts.show(msg, type, { autohide: this.autohide });
     }
 
     click(): void {

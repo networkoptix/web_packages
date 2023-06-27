@@ -21,12 +21,11 @@ import staticLang from '@common/language/language_i18n_static.json';
 // import { NxToastService } from '@dialogs/toast.service';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
+import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { MergeRefactored as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
-import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
-import { toast } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import type { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -45,6 +44,7 @@ import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
+import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 import { servers } from '@src/app/variables/static-variables';
 import { pickFrom, alphabeticalSort, cleanIp, strSplice, cleanId } from '@utils/general';
@@ -752,7 +752,7 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
     private showSessionExpiredAlert(): void {
         this.toastService.notify(
             this.alertMessage,
-            toast.warning,
+            ToastType.Warning,
         );
     }
 

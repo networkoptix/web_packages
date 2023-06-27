@@ -3,12 +3,13 @@ import { Component, Inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { ToastType } from '@components/toast-container/toast.types';
 import type { AddChannelPartner as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
-import { NxToastService } from '@dialogs/toast.service';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
 import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
+import { NxToastService } from '@services/toast.service';
 
 @Component({
     selector: 'nx-modal-add-organization-content',
@@ -44,7 +45,7 @@ export class AddOrganizationModalContent extends ModalBase<DT['return']> {
                 this.unlock();
                 console.error(err);
                 const msg = err.error ? `${err.status} ${err.error.detail}` : err.detail || err;
-                toastService.notify(msg, 'danger');
+                toastService.notify(msg, ToastType.Danger);
             },
         );
     }

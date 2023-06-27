@@ -19,16 +19,17 @@ import { distinctUntilChanged, first, map, shareReplay, switchMap } from 'rxjs/o
 import staticLang from '@common/language/language_i18n_static.json';
 import { selectCurrentUser } from '@common/store/account/account.selectors';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
+import { ToastType } from '@components/toast-container/toast.types';
 import { MergeInfo } from '@dialogs/merge/merge.refactor.component.types';
-import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { nxConfig } from '@services/nx-config/config';
+import { NxToastService } from '@services/toast.service';
 import { alphabeticalSort, paramSortFunc } from '@utils/general';
 import { memoizeAsyncPersistent, memoizeAsyncShort } from '@utils/memoize';
 
 // import * as SystemsActions from '../store/systems/systems.actions';
 
-import { clientMode, toast, updateInterval } from '../variables/static-variables';
+import { clientMode, updateInterval } from '../variables/static-variables';
 
 import type { Account } from './account.service/account';
 import { NxDbService } from './db.service';
@@ -176,7 +177,7 @@ export class NxSystemsService {
                 primary: undefined,
                 secondary: undefined,
             };
-            this.toastService.notify(message, toast.success);
+            this.toastService.notify(message, ToastType.Success);
             this.finishedMerged = true;
         }
     }

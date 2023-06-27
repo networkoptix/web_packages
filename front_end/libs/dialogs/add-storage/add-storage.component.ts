@@ -11,17 +11,17 @@ import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { ToastType } from '@components/toast-container/toast.types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
-import { responseOk, toast } from '@lib/variables/static-variables';
+import { responseOk } from '@lib/variables/static-variables';
 import { Translatable } from '@pipes/nx-translate.types';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import {
     StorageManager
 } from '@services/system.service/storage-manager/storage-manager';
+import { NxToastService } from '@services/toast.service';
 import { cleanId, pickFrom } from '@utils/general';
-
-import { NxToastService } from '../toast.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -133,10 +133,10 @@ export class AddStorageModalContent {
                 return id;
             }, { ignoreError: true },
             (res: any) => {
-                let toastType = toast.danger;
+                let toastType = ToastType.Danger;
                 let message = this.LANG.storage.failed;
                 if (res.id) {
-                    toastType = toast.success;
+                    toastType = ToastType.Success;
                     message = this.LANG.storage.success;
                 }
                 this.storageForm.reset();
@@ -166,7 +166,7 @@ export class AddStorageModalContent {
                     if (message) {
                         this.toastService.notify(
                             message,
-                            toast.danger
+                            ToastType.Danger
                         );
                     }
                     this.addStorage.processing = false;

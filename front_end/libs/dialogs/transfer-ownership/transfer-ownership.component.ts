@@ -7,14 +7,15 @@ import staticLang from '@common/language/language_i18n_static.json';
 import type {
     SearchableDropdownItem
 } from '@components/dropdowns/searchable/searchable.component.types';
+import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { ModalBase } from '@dialogs/modal-base';
-import { NxToastService } from '@dialogs/toast.service';
-import { icons, servers, toast } from '@lib/variables/static-variables';
+import { icons, servers } from '@lib/variables/static-variables';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
+import { NxToastService } from '@services/toast.service';
 
 import type { TransferOwnership as DT } from '../dialogs.types';
 
@@ -95,7 +96,7 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> imple
                 ) {
                     this.toastService.notify(
                         this.LANG.dialogs.updateSession.transferOnwership,
-                        toast.warning,
+                        ToastType.Warning,
                     );
                 }
                 this.unlock();

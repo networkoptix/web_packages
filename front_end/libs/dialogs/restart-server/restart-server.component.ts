@@ -11,15 +11,16 @@ import {
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
+import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { RestartServer as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
-import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
-import { servers, toast } from '@lib/variables/static-variables';
+import { servers } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
+import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 
 @Component({
@@ -189,16 +190,16 @@ export class RestartServerModalContent extends ModalBase<DT['return']> {
                 if (err && (err.name === 'TimeoutError' || err.status === 503)) {
                     message = this.LANG.servers.serverOffline;
                     this.close(servers.status.offline);
-                    this.toastService.notify(message, toast.warning);
+                    this.toastService.notify(message, ToastType.Warning);
                 } else if (err.errorId === servers.errors.oldSessionErrorId) {
                     this.toastService.notify(
                         this.LANG.servers.restartFailed,
-                        toast.warning,
+                        ToastType.Warning,
                     );
                 } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
                     return this.dialogs.expiredSession().then(() => this.window.location.reload());
                 } else {
-                    this.toastService.notify(message, toast.warning);
+                    this.toastService.notify(message, ToastType.Warning);
                 }
             });
     }

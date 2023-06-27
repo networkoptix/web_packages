@@ -2,8 +2,9 @@ import { Observable, Subject, race, timer } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { NxToastService } from '@dialogs/toast.service';
-import { responseOk, toast } from '@lib/variables/static-variables';
+import { ToastType } from '@components/toast-container/toast.types';
+import { responseOk } from '@lib/variables/static-variables';
+import { NxToastService } from '@services/toast.service';
 
 import { NxSessionService } from '../session.service';
 
@@ -161,7 +162,7 @@ export class Process {
         } else {
             this.success = true;
             if (this.settings.successMessage && data !== false) {
-                this.toastService.show(this.settings.successMessage, toast.success, {
+                this.toastService.show(this.settings.successMessage, ToastType.Success, {
                     autohide: !this.settings.holdAlerts,
                 });
             }
@@ -233,7 +234,9 @@ export class Process {
                 this.settings.errorMessage
             }`;
 
-            this.toastService.show(message, toast.danger, { autohide: !this.settings.holdAlerts });
+            this.toastService.show(message, ToastType.Danger, {
+                autohide: !this.settings.holdAlerts,
+            });
         }
         this.error = true;
         this.errorData = data;

@@ -10,16 +10,16 @@ import {
 import type { NgForm } from '@angular/forms';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { ToastType } from '@components/toast-container/toast.types';
 import type { ChangePassword as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
-import { NxToastService } from '@dialogs/toast.service';
-import { toast } from '@lib/variables/static-variables';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
 import type {
     NxUser,
 } from '@services/system.service/user-manager/user-manager-types';
+import { NxToastService } from '@services/toast.service';
 import { pickFrom } from '@utils/general';
 
 @Component({
@@ -111,7 +111,7 @@ export class ChangePasswordModalContent extends ModalBase<DT['return']> implemen
             () => {
                 this.toastService.notify(
                     this.LANG.dialogs.updateSession.changePassword,
-                    toast.warning,
+                    ToastType.Warning,
                 );
                 this.unlock();
             });

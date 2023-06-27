@@ -4,12 +4,12 @@ import type { NgForm } from '@angular/forms';
 import { NxMenuService } from '@app/menu/menu.service';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import type { MultiSelectItem } from '@components/dropdowns/multi-select/multi-select.component.types';
-import { NxToastService } from '@dialogs/toast.service';
-import { toast } from '@lib/variables/static-variables';
+import { ToastType } from '@components/toast-container/toast.types';
 import { NxApplyService } from '@services/apply.service';
 import type { FormWatcher } from '@services/apply.service/watcher';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
+import { NxToastService } from '@services/toast.service';
 
 @Component({
     selector: 'form-apply-example',
@@ -115,7 +115,7 @@ export class FormApplyExampleComponent {
             },
             {},
             result => {
-                this.toastService.notify('form1 saved', toast.success);
+                this.toastService.notify('form1 saved', ToastType.Success);
             },
             _ => {},
         );
@@ -128,7 +128,7 @@ export class FormApplyExampleComponent {
             },
             {},
             result => {
-                this.toastService.notify('form2 saved', toast.success);
+                this.toastService.notify('form2 saved', ToastType.Success);
             },
             _ => {},
         );

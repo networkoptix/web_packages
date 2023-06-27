@@ -19,13 +19,13 @@ import {
     NxProcessCancelButtonComponent
 } from '@components/process-cancel-Button/process-cancel-button.component';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
-import { NxToastService } from '@dialogs/toast.service';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { NxSystemsService } from '@services/systems.service';
+import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 
 import { TwoFAModalContent } from './two-fa.component';

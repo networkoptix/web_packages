@@ -5,11 +5,11 @@ import {
     tick
 } from '@angular/core/testing';
 
-import { NxToastService } from '@dialogs/toast.service';
 import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSessionService } from '@services/session.service';
+import { NxToastService } from '@services/toast.service';
 
 import { NxProcessService } from './process.service';
 

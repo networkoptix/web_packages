@@ -29,9 +29,9 @@ import {
 
 import staticLang from '@common/language/language_i18n_static.json';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { NxToastService } from '@dialogs/toast.service';
-import { icons, toast } from '@lib/variables/static-variables';
+import { icons } from '@lib/variables/static-variables';
 import { pollingTimeout } from '@pages/static-variables-features';
 import { NxApplyService } from '@services/apply.service';
 import { Watcher } from '@services/apply.service/watcher';
@@ -47,6 +47,7 @@ import {
 } from '@services/system.service/storage-manager/storage';
 import { UpdateTriggers } from '@services/system.service/storage-manager/storage-state';
 import type { NxSystem } from '@services/system.service/system';
+import { NxToastService } from '@services/toast.service';
 import { NxUriService } from '@services/uri.service';
 import { ChildRoutes } from '@services/uri.service.types';
 import { cleanId, cleanSmbUrl } from '@utils/general';
@@ -783,7 +784,7 @@ export class NxSystemStorageComponent implements OnInit {
                                             url: cleanSmbUrl(storage.url),
                                         },
                                     },
-                                    'success',
+                                    ToastType.Success,
                                 );
                             } else {
                                 throw new Error('failed to remove storage');
@@ -797,7 +798,7 @@ export class NxSystemStorageComponent implements OnInit {
                                         url: cleanSmbUrl(storage.url),
                                     },
                                 },
-                                'danger',
+                                ToastType.Danger,
                             );
                         });
                 }
@@ -858,7 +859,7 @@ export class NxSystemStorageComponent implements OnInit {
         if (action) {
             this.updateStorageStatus(type, STORAGE_STATUS.REINDEXING);
         }
-        let toastType = toast.success;
+        let toastType = ToastType.Success;
         let message: string;
 
         defer(() =>
@@ -909,7 +910,7 @@ export class NxSystemStorageComponent implements OnInit {
                 err => {
                     console.error(err);
                     message = this.LANG.storage.reindexingDone[`${type ? 'main' : 'backup'}Failed`];
-                    toastType = toast.warning;
+                    toastType = ToastType.Warning;
                 },
             )
             .add(() => {

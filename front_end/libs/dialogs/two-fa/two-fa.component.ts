@@ -24,9 +24,9 @@ import {
     InfoBlockSection,
     InfoBlockSize
 } from '@components/info-block/info-block.component.types';
+import { ToastType } from '@components/toast-container/toast.types';
 import { ModalBase } from '@dialogs/modal-base';
-import { NxToastService } from '@dialogs/toast.service';
-import { icons, apiBase, credentialsValidation, toast } from '@lib/variables/static-variables';
+import { icons, apiBase, credentialsValidation } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -34,6 +34,7 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
+import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 
 import type { Account2faData, Account2faReturn } from '../dialogs.types';
@@ -137,7 +138,7 @@ export class TwoFAModalContent<A extends TfaAction>
                 if (res.isSuccess) {
                     this.toastService.notify(
                         this.LANG.common.copiedToClipboard,
-                        toast.success,
+                        ToastType.Success,
                     );
                 }
             });
@@ -325,7 +326,7 @@ export class TwoFAModalContent<A extends TfaAction>
                 noBackupCodes: () => {
                     this.toastService.notify(
                         this.LANG.common.generalError,
-                        toast.danger,
+                        ToastType.Danger,
                     );
                 },
                 forbidden: codeProcessUnauthorizedHandles,
@@ -372,7 +373,7 @@ export class TwoFAModalContent<A extends TfaAction>
                 noBackupCodes: () => {
                     this.toastService.notify(
                         this.LANG.common.generalError,
-                        toast.danger
+                        ToastType.Danger
                     );
                 },
                 forbidden: () => {
@@ -495,7 +496,7 @@ export class TwoFAModalContent<A extends TfaAction>
                     this.close();
                     this.toastService.notify(
                         this.LANG.common.generalError,
-                        toast.danger
+                        ToastType.Danger
                     );
                 });
         } else {

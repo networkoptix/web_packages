@@ -4,12 +4,12 @@ import { Observable, of, Subject, takeUntil, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { ModalBase } from '@dialogs/modal-base';
-import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import type { IEnvironment } from '@environments/environment-config';
-import { servers, toast } from '@lib/variables/static-variables';
+import { servers } from '@lib/variables/static-variables';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { System } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { NxProcessService } from '@services/process.service';
@@ -17,6 +17,7 @@ import { Process } from '@services/process.service/process';
 import { NxSystemAPIService } from '@services/system-api.service';
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystemsService } from '@services/systems.service';
+import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 import { memoizeAsyncPersistent } from '@utils/memoize';
 
@@ -82,7 +83,7 @@ export class DisconnectModalContent extends ModalBase<DT['return']> {
                 this.close(true);
                 this.toastService.notify(
                     this.LANG.toastMessage.system.disconnected.success,
-                    toast.success,
+                    ToastType.Success
                 );
             },
             err => {
@@ -92,7 +93,7 @@ export class DisconnectModalContent extends ModalBase<DT['return']> {
                 ) {
                     this.toastService.notify(
                         this.LANG.dialogs.updateSession.disconnect,
-                        toast.warning,
+                        ToastType.Warning
                     );
                 } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
                     this.unlock();

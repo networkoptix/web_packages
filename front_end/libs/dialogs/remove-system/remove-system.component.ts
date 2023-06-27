@@ -8,11 +8,11 @@ import {
 import type { NgForm } from '@angular/forms';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { ToastType } from '@components/toast-container/toast.types';
 import { ModalBase } from '@dialogs/modal-base';
-import { NxToastService } from '@dialogs/toast.service';
-import { toast } from '@lib/variables/static-variables';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
+import { NxToastService } from '@services/toast.service';
 
 import type { RemoveSystem as DT } from '../dialogs.types';
 
@@ -76,7 +76,7 @@ export class RemoveSystemModalContent extends ModalBase<DT['return']> {
                     systemName: this.system.info.systemName || this.system.info.name
                 }
             };
-            this.toastService.notify(msg, toast.success);
+            this.toastService.notify(msg, ToastType.Success);
         }, err => {
             console.error(err);
             this.unlock();
