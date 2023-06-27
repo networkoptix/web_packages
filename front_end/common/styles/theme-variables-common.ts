@@ -29,5 +29,5 @@ export const ViewportBreakpoints = {
     Screen: {
         width: 1440,
         height: 900,
-    }
+    },
 };

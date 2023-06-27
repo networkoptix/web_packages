@@ -9,7 +9,12 @@ import { nxConfig } from '@services/nx-config/config';
 
 import { syncState } from './sync.utils';
 
-type AnnotatedAction = Action & { requestor: string; fromSync?: boolean; data?: unknown; bc?: BroadcastChannel };
+type AnnotatedAction = Action & {
+    requestor: string;
+    fromSync?: boolean;
+    data?: unknown;
+    bc?: BroadcastChannel;
+};
 
 const crossTabSyncEnabled = filter(() => nxConfig.featureFlags.crossTabSyncEnabled);
 
@@ -39,13 +44,16 @@ export abstract class SyncEffects {
     /**
      * Share actions with other browser contexts.
      */
-    broadcastActions$ = createEffect(() => {
-        return this.actions$.pipe(
-            ofType(...this.actions, syncState),
-            filter(({ fromSync }: AnnotatedAction) => !fromSync),
-            tap(val => this.bc.postMessage(val)),
-        );
-    }, { dispatch: false });
+    broadcastActions$ = createEffect(
+        () => {
+            return this.actions$.pipe(
+                ofType(...this.actions, syncState),
+                filter(({ fromSync }: AnnotatedAction) => !fromSync),
+                tap(val => this.bc.postMessage(val)),
+            );
+        },
+        { dispatch: false },
+    );
 
     /**
      * Receive actions from other browser contexts.
@@ -62,9 +70,7 @@ export abstract class SyncEffects {
         this.bc.postMessage(syncAction);
     }
 
-    constructor(
-        private actions: Parameters<typeof ofType>
-    ) {
+    constructor(private actions: Parameters<typeof ofType>) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const actionHash = JSON.stringify(actions.map(({ type }: any) => type).sort());
         this.instanceId = uuid();
@@ -87,7 +93,7 @@ export abstract class SyncEffects {
                 }
                 return action;
             }),
-            debounceTime(250)
+            debounceTime(250),
         );
 
         this.requestSync();

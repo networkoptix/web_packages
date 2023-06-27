@@ -8,7 +8,7 @@ export const syncState = createAction(
     // TODO: need to figure out how to type this. createAction takes is a generic type.
     // Figure out how to correctly type the data property on props.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    props<{ requestor?: string; data?: any; bc?: BroadcastChannel }>()
+    props<{ requestor?: string; data?: any; bc?: BroadcastChannel }>(),
 );
 
 /**

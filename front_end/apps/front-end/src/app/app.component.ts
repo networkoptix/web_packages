@@ -5,7 +5,7 @@ import {
     ViewChild,
     ElementRef,
     ViewContainerRef,
-    OnInit
+    OnInit,
 } from '@angular/core';
 import {
     ActivationEnd,
@@ -14,7 +14,7 @@ import {
     GuardsCheckEnd,
     GuardsCheckStart,
     Router,
-    NavigationEnd
+    NavigationEnd,
 } from '@angular/router';
 import * as FullStory from '@fullstory/browser';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -44,42 +44,53 @@ require('what-input');
 @UntilDestroy()
 @Component({
     selector: 'nx-app',
-    template: `
-        <div *ngIf="themeSet" [style.height]="windowHeight + 'px'">
-            <div *ngIf="!reauthorizing" class="headerContainer" (resize)="headerResize($event)">
-                <ng-template #header></ng-template>
-                <ng-template #ribbon></ng-template>
-            </div>
+    template: ` <div
+        *ngIf="themeSet"
+        [style.height]="windowHeight + 'px'"
+    >
+        <div
+            *ngIf="!reauthorizing"
+            class="headerContainer"
+            (resize)="headerResize($event)"
+        >
+            <ng-template #header></ng-template>
+            <ng-template #ribbon></ng-template>
+        </div>
+        <div
+            class="outerContainer"
+            [ngStyle]="{
+                height: appStateService.appContainerHeight,
+                display: appStateService.ready || reauthorizing ? '' : 'none'
+            }"
+        >
             <div
-                class="outerContainer"
-                [ngStyle]="{ 'height': appStateService.appContainerHeight, 'display': (appStateService.ready || reauthorizing) ? '' : 'none' }"
+                class="mainContainer"
+                data-testid="mainContainer"
+                [ngClass]="{
+                    altMainBackground: appStateService.altBackground,
+                    withFooter: appStateService.footerVisibility
+                }"
+                nxScrollHelper
+                cdkScrollable
+                #mainContainer
             >
-                <div
-                    class="mainContainer"
-                    data-testid="mainContainer"
-                    [ngClass]="{ altMainBackground: appStateService.altBackground, withFooter: appStateService.footerVisibility }"
-                    nxScrollHelper
-                    cdkScrollable
-                    #mainContainer
-                >
-                    <nx-tour-step-component></nx-tour-step-component>
-                    <ng-template #cookieBanner></ng-template>
-                    <router-outlet></router-outlet>
-                </div>
-                <nx-nav-footer *ngIf="newHeader"></nx-nav-footer>
+                <nx-tour-step-component></nx-tour-step-component>
+                <ng-template #cookieBanner></ng-template>
+                <router-outlet></router-outlet>
             </div>
-            <ng-container *ngIf="!reauthorizing">
-                <nx-pre-loader
-                    type="page"
-                    *ngIf="(!appStateService.ready && !newSystem) || loading"
-                ></nx-pre-loader>
-                <ng-template #appToast></ng-template>
-            </ng-container>
-        </div>`,
+            <nx-nav-footer *ngIf="newHeader"></nx-nav-footer>
+        </div>
+        <ng-container *ngIf="!reauthorizing">
+            <nx-pre-loader
+                type="page"
+                *ngIf="(!appStateService.ready && !newSystem) || loading"
+            ></nx-pre-loader>
+            <ng-template #appToast></ng-template>
+        </ng-container>
+    </div>`,
     styleUrls: ['./app.component.scss'],
     encapsulation: ViewEncapsulation.None,
 })
-
 export class AppComponent implements OnInit {
     private window: Window = windowFactory();
     CONFIG: IConfig = nxConfig;
@@ -109,16 +120,25 @@ export class AppComponent implements OnInit {
 
     lazyLoadComponents = async (): Promise<void> => {
         // requestIdleCallback is not supported in Safari so the next best thing is setTimeout.
-        const idle = (): Promise<unknown> => new Promise(resolve => this.window?.requestIdleCallback ? requestIdleCallback(resolve) : setTimeout(resolve));
+        const idle = (): Promise<unknown> =>
+            new Promise(resolve =>
+                this.window?.requestIdleCallback
+                    ? requestIdleCallback(resolve)
+                    : setTimeout(resolve),
+            );
 
         await idle();
-        await import('@components/toast-container/toast-container.module').then(m => m.ToastContainerModule);
+        await import('@components/toast-container/toast-container.module').then(
+            m => m.ToastContainerModule,
+        );
         const { NxToastsContainer } = await import('@components/toast-container/toast.component');
         this.appToast.createComponent(NxToastsContainer);
 
         if (!this.CONFIG.featureFlags.cookieBanner) {
             await idle();
-            const { NxCookieBannerComponent } = await import('@components/cookie-banner/cookie-banner.component');
+            const { NxCookieBannerComponent } = await import(
+                '@components/cookie-banner/cookie-banner.component'
+            );
             this.cookieBanner.createComponent(NxCookieBannerComponent);
         }
 
@@ -171,9 +191,7 @@ export class AppComponent implements OnInit {
         }
         // Set Window height to accommodate mobile browser bars
         fromEvent(windowFactory(), 'resize')
-            .pipe(
-                untilDestroyed(this),
-            )
+            .pipe(untilDestroyed(this))
             .subscribe(() => {
                 this.windowHeight = windowFactory().innerHeight;
             });
@@ -197,12 +215,11 @@ export class AppComponent implements OnInit {
             safari: 12,
             chrome: 76,
             firefox: 72,
-            opera: 70
+            opera: 70,
         };
 
         this.deviceInfo = this.deviceService.getDeviceInfo();
-        let browserMatchVersion =
-            this.browserBlacklist[this.deviceInfo.browser.toLowerCase()] || 0;
+        let browserMatchVersion = this.browserBlacklist[this.deviceInfo.browser.toLowerCase()] || 0;
 
         // Special case for Kyle's robot tests
         // ... device detector doesn't detect it correctly
@@ -211,12 +228,11 @@ export class AppComponent implements OnInit {
         }
 
         if (browserMatchVersion !== undefined) {
-            const majorVersion = Number(
-                this.deviceInfo.browser_version.split('.')[0]
-            );
+            const majorVersion = Number(this.deviceInfo.browser_version.split('.')[0]);
 
             if (majorVersion < browserMatchVersion) {
-                this.router.navigate(['/browser'])
+                this.router
+                    .navigate(['/browser'])
                     .catch(error => console.error(error))
                     .finally(() => {
                         this.CONFIG.browserNotSupported = true;
@@ -228,7 +244,8 @@ export class AppComponent implements OnInit {
 
         if (!NxBootstrapProvider.isLoaded) {
             if (!this.environment.isLocal) {
-                this.router.navigate(['/503'])
+                this.router
+                    .navigate(['/503'])
                     .catch(error => console.error(error))
                     .finally(() => {
                         this.appStateService.ready = true;
@@ -253,7 +270,8 @@ export class AppComponent implements OnInit {
         } else if (this.CONFIG.featureFlags.newHeader) {
             router.events.subscribe(event => {
                 if (event instanceof NavigationEnd) {
-                    this.appStateService.footerVisibility = event.url.split('/').filter(segment => !!segment)?.[0] !== 'systems';
+                    this.appStateService.footerVisibility =
+                        event.url.split('/').filter(segment => !!segment)?.[0] !== 'systems';
                 }
             });
         }
@@ -265,10 +283,9 @@ export class AppComponent implements OnInit {
         // this.isInIframe = (window.location !== window.parent.location);
 
         // Route check if page is displayed inside an iframe
-        this.CONFIG.isInIframe = (
+        this.CONFIG.isInIframe =
             this.window.location.pathname.startsWith('/embed') ||
-            this.window.location.search.includes('adminPreview=true')
-        );
+            this.window.location.search.includes('adminPreview=true');
         if (this.CONFIG.isInIframe) {
             this.appStateService.headerVisibility = false;
             this.appStateService.footerVisibility = false;
@@ -282,7 +299,9 @@ export class AppComponent implements OnInit {
                     this.window['_fs_ready'] = () => {
                         this.CONFIG.cloudMonitoring.isFullStoryActive = true;
                         console.info('FS: Please attach session url below to tickets');
-                        console.info(`FS - Debug session url: ${FullStory.getCurrentSessionURL(true)}`);
+                        console.info(
+                            `FS - Debug session url: ${FullStory.getCurrentSessionURL(true)}`,
+                        );
                     };
                 } catch (e) {
                     console.error('FullStory failed to init');
@@ -294,46 +313,49 @@ export class AppComponent implements OnInit {
         // Updates query params for components without routes.
         this.router.events
             .pipe(
-                filter((event: RouterEvent) => event instanceof ActivationStart ||
-                    event instanceof ActivationEnd ||
-                    event instanceof GuardsCheckStart ||
-                    event instanceof GuardsCheckEnd
+                filter(
+                    (event: RouterEvent) =>
+                        event instanceof ActivationStart ||
+                        event instanceof ActivationEnd ||
+                        event instanceof GuardsCheckStart ||
+                        event instanceof GuardsCheckEnd,
                 ),
-                untilDestroyed(this)
-            ).subscribe((event: ActivationStart |
-                ActivationEnd |
-                GuardsCheckStart |
-                GuardsCheckEnd
-            ) => {
-                if (event instanceof GuardsCheckStart) {
-                    this.loading = true;
-                    return;
-                }
-                if (event instanceof GuardsCheckEnd) {
-                    this.loading = false;
-                    return;
-                }
+                untilDestroyed(this),
+            )
+            .subscribe(
+                (event: ActivationStart | ActivationEnd | GuardsCheckStart | GuardsCheckEnd) => {
+                    if (event instanceof GuardsCheckStart) {
+                        this.loading = true;
+                        return;
+                    }
+                    if (event instanceof GuardsCheckEnd) {
+                        this.loading = false;
+                        return;
+                    }
 
-                if ('debug' in event.snapshot.queryParams) {
-                    this.CONFIG.allowDebugMode = true;
-                }
+                    if ('debug' in event.snapshot.queryParams) {
+                        this.CONFIG.allowDebugMode = true;
+                    }
 
-                this.uriService.queryParams = event.snapshot.queryParams;
-                if (this.mainContainer?.nativeElement) {
-                    this.mainContainer.nativeElement.scrollTop = 0;
-                }
-            });
+                    this.uriService.queryParams = event.snapshot.queryParams;
+                    if (this.mainContainer?.nativeElement) {
+                        this.mainContainer.nativeElement.scrollTop = 0;
+                    }
+                },
+            );
     }
 
     ngOnInit(): void {
-        this.themeService.initTheme().then(() => {
-            this.themeSet = true;
-            setTimeout(() => {
-                this.initComponents();
-                this.initScroll();
-            });
-        },
-        () => { });
+        this.themeService.initTheme().then(
+            () => {
+                this.themeSet = true;
+                setTimeout(() => {
+                    this.initComponents();
+                    this.initScroll();
+                });
+            },
+            () => {},
+        );
     }
 
     headerResize(size: { width: number; height: number }): void {
@@ -347,22 +369,27 @@ export class AppComponent implements OnInit {
     windowListener(): void {
         if (this.applyService.locked) {
             this.window.history.go(1);
-            this.applyService.showDialog().catch(() => {
-            });
+            this.applyService.showDialog().catch(() => {});
         }
     }
 
     private initScroll(): void {
-        fromEvent<Event>(this.mainContainer.nativeElement, 'scroll').pipe(untilDestroyed(this)).subscribe(() => {
-            this.scrollMechanicsService.windowScroll = this.mainContainer.nativeElement.scrollTop;
-        });
+        fromEvent<Event>(this.mainContainer.nativeElement, 'scroll')
+            .pipe(untilDestroyed(this))
+            .subscribe(() => {
+                this.scrollMechanicsService.windowScroll =
+                    this.mainContainer.nativeElement.scrollTop;
+            });
 
-        this.scrollMechanicsService.windowScrollSubject.pipe(untilDestroyed(this)).subscribe(scroll => {
-            const prevScroll = this.mainContainer.nativeElement.scrollTop;
-            if (prevScroll !== scroll) { // Only triggers on programmatically set scroll
-                this.mainContainer.nativeElement.scrollTop = scroll;
-            }
-        });
+        this.scrollMechanicsService.windowScrollSubject
+            .pipe(untilDestroyed(this))
+            .subscribe(scroll => {
+                const prevScroll = this.mainContainer.nativeElement.scrollTop;
+                if (prevScroll !== scroll) {
+                    // Only triggers on programmatically set scroll
+                    this.mainContainer.nativeElement.scrollTop = scroll;
+                }
+            });
     }
 
     private initComponents(): void {
@@ -370,10 +397,12 @@ export class AppComponent implements OnInit {
             if (environment.isLocal || this.appStateService.ready) {
                 this.lazyLoadHeader();
             } else {
-                this.appStateService.readySubject.pipe(
-                    filter(ready => ready),
-                    take(1)
-                ).subscribe(() => this.lazyLoadHeader());
+                this.appStateService.readySubject
+                    .pipe(
+                        filter(ready => ready),
+                        take(1),
+                    )
+                    .subscribe(() => this.lazyLoadHeader());
             }
             this.lazyLoadComponents();
         }

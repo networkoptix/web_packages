@@ -13,14 +13,14 @@ export const accountReducer = createReducer(
     initialState,
     on(
         accountActions.setCurrentUser,
-        (state, { currentUser }): AccountState => ({ ...state, currentUser })
+        (state, { currentUser }): AccountState => ({ ...state, currentUser }),
     ),
     on(
         accountActions.updateCurrentUser,
         (state, { update }): AccountState => ({
             ...state,
-            currentUser: { ...state.currentUser, ...update }
-        })
+            currentUser: { ...state.currentUser, ...update },
+        }),
     ),
-    onSyncState
+    onSyncState,
 );

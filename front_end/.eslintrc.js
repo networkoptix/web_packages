@@ -542,8 +542,8 @@ module.exports = {
                 // '*.js', '*.ts'
                 '*.module.ts',
                 '*types.ts',
-                'apps/authorization/**/*.ts',
-                'apps/setup-wizard/**/*.ts',
+                'apps/**/*.ts',
+                'common/**/*.ts',
                 'libs/[0-c]*/**/*.ts',
                 'libs/db/**/*.ts',
                 'libs/decorators/**/*.ts',
@@ -558,8 +558,15 @@ module.exports = {
                 // 'libs/features/systems/view//**/*.ts',
                 'libs/features/[t-z]*/**/*.ts',
                 'libs/[g-z]*/**/*.ts',
+                'packages/**/*.ts',
+                'unconverted/**/*.ts',
             ],
-            excludedFiles: ['*.spec.ts'], // Lower priority
+            excludedFiles: [
+                // Lower priority
+                '*.spec.ts',
+                // Probably very out of date and of questionable worth at this point
+                'common/_mocks/**/*.ts',
+            ],
             extends: ['plugin:prettier/recommended'],
             plugins: ['prettier'],
             rules: {

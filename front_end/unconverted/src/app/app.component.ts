@@ -108,7 +108,9 @@ export class AppComponent implements AfterViewInit {
         const idle = (): Promise<unknown> => new Promise(resolve => requestIdleCallback(resolve));
 
         await idle();
-        await import('@components/toast-container/toast-container.module').then(m => m.ToastContainerModule);
+        await import('@components/toast-container/toast-container.module').then(
+            m => m.ToastContainerModule,
+        );
         const { NxToastsContainer } = await import('@components/toast-container/toast.component');
         this.appToast.createComponent(NxToastsContainer);
 
