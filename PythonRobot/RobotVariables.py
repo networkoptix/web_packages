@@ -1,13 +1,15 @@
 import json, re
-
+import os
 class RobotVariables():
     def __init__(self, language: str) -> None:
+                
         if language in ["en_US"]:
             self.language = language
     
     def lookup_translation_variables(self, variable_name):
-        # TODO: fix this path
-        file = "/Users/clandrum/cloud_portal/PythonRobot/variables_language_en_US.json"
+        current_dir = os.path.abspath(os.getcwd())
+        filename = "variables_language_en_US.json"
+        file = os.path.join(current_dir, filename)
         with open(file) as f:
             translation_variables = json.load(f)
             if variable_name in translation_variables:
@@ -15,8 +17,9 @@ class RobotVariables():
         return None
 
     def lookup_account_variables(self, variable_name):
-        # TODO: fix this path
-        file = '/Users/clandrum/cloud_portal/PythonRobot/account_variables.json'
+        current_dir = os.path.abspath(os.getcwd())
+        filename = 'account_variables.json'
+        file = os.path.join(current_dir, filename)        
         with open(file) as f:
             account_variables = json.load(f)
             if variable_name in account_variables:
