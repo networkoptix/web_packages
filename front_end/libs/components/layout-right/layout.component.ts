@@ -1,5 +1,7 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, ViewEncapsulation } from '@angular/core';
 
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { NgChanges } from '@utils/ng-changes';
 
 /* Usage
@@ -41,6 +43,8 @@ import { NgChanges } from '@utils/ng-changes';
     templateUrl: 'layout.component.html',
     encapsulation: ViewEncapsulation.None,
     styleUrls: ['layout.component.scss'],
+    standalone: true,
+    imports: [CommonModule, PreLoaderModule],
 })
 export class NxLayoutRightComponent {
     @Input('loading') loading;

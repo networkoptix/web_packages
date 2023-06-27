@@ -1,8 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
+import { DirectivesModule } from '@directives/directives.module';
 import { environment } from '@environments/environment';
+import { PipesModule } from '@pipes/pipes.module';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { NxAppStateService } from '@services/nx-app-state.service';
@@ -14,6 +19,15 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
     selector: 'nx-footer',
     templateUrl: 'footer.component.html',
     styleUrls: ['footer.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        RouterModule,
+        TranslateModule,
+        PipesModule,
+        DirectivesModule,
+    ],
 })
 export class NxFooterComponent implements OnInit {
     CONFIG: IConfig;

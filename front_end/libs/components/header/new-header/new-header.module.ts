@@ -1,13 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { HeaderLevelOneModule } from './header-level-one/header-level-one.module';
-import { HeaderLevelTwoModule } from './header-level-two/header-level-two.module';
-import { HeaderMobileModule } from './mobile/mobile.module';
+import { NxHeaderLevelOneComponent } from '@components/header/new-header/header-level-one/header-level-one.component';
+import { NxHeaderLevelTwoComponent } from '@components/header/new-header/header-level-two/header-level-two.component';
+import { NxHeaderMobileComponent } from '@components/header/new-header/mobile/mobile.component';
+
 import { NxNewHeaderComponent } from './new-header.component';
 
 @NgModule({
-    imports: [CommonModule, HeaderLevelOneModule, HeaderLevelTwoModule, HeaderMobileModule],
+    imports: [
+        CommonModule,
+        NxHeaderLevelOneComponent,
+        NxHeaderLevelTwoComponent,
+        NxHeaderMobileComponent,
+    ],
     declarations: [NxNewHeaderComponent],
     providers: [NxNewHeaderComponent],
     exports: [NxNewHeaderComponent],

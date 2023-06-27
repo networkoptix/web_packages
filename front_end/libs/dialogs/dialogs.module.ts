@@ -15,12 +15,13 @@ import { NxAlertBlockComponent } from '@components/content-block/alert/block.com
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxSearchableDropdown } from '@components/dropdowns/searchable/searchable.component';
 import { NxDynamicWidgetComponent } from '@components/dynamic-widget/dynamic-widget.component';
-import { InfoBlockModule } from '@components/info-block/info-block.module';
+import { NxInfoBlockComponent } from '@components/info-block/info-block.component';
 import { ProcessButtonModule } from '@components/process-button/process-button.module';
 import { ProcessCancelButtonModule } from '@components/process-cancel-Button/process-cancel-Button.module';
 import { RadioModule } from '@components/radio/radio.module';
 import { TagModule } from '@components/tag/tag.module';
 import { ThirdsPartyWidgetModule } from '@components/widgets/third-party/third-party-widget.module';
+import { LoginWebadminModalContent } from '@dialogs/login-webadmin/login-webadmin.component';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { AddStorageModalContent } from './add-storage/add-storage.component';
@@ -49,7 +50,6 @@ import { NxDetachServerModalModule } from './detach-server/detach-server.module'
 import { DisconnectModalModule } from './disconnect/disconnect.module';
 import { EditModalContent } from './edit/edit.component';
 import { GenericDialogModule } from './generic/generic.module';
-import { LoginWebadminModule } from './login-webadmin/login-webadmin.module';
 import { Mandatory2faModalModule } from './mandatory-2fa/mandatory-2fa.module';
 import { MergeModalContent } from './merge/merge.component';
 import { NxMergeModule } from './merge/merge.refactor.module';
@@ -86,7 +86,7 @@ import { NxWizardModalModule } from './wizard/wizard.module';
         DirectivesModule,
         NxDynamicWidgetComponent,
         GenericDialogModule,
-        InfoBlockModule,
+        NxInfoBlockComponent,
         NxGenericDropdownModule,
         PipesModule,
         ProcessButtonModule,
@@ -96,7 +96,7 @@ import { NxWizardModalModule } from './wizard/wizard.module';
         TagModule,
         ThirdsPartyWidgetModule,
 
-        LoginWebadminModule,
+        LoginWebadminModalContent,
         TransferOwnershipModule,
         NxMergeModule,
         NxMoreDevicesModule,

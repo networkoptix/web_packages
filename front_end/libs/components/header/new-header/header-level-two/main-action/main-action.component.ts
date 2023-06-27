@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
     AfterViewInit,
     Component,
@@ -7,6 +8,8 @@ import {
     ViewChild,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { BehaviorSubject } from 'rxjs';
 
 import { icons } from '@lib/variables/static-variables';
@@ -19,6 +22,8 @@ import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
     selector: 'nx-main-action',
     templateUrl: './main-action.component.html',
     styleUrls: ['./main-action.component.scss'],
+    standalone: true,
+    imports: [CommonModule, AngularSvgIconModule, TranslateModule],
 })
 export class NxMainActionComponent implements AfterViewInit {
     @Output() widthChange = new EventEmitter<number>();

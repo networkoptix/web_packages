@@ -1,11 +1,19 @@
+import { CommonModule } from '@angular/common';
 import { HttpParams } from '@angular/common/http';
 import { Component, Inject, Input, OnChanges } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
 import { Subject, firstValueFrom, timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
+import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { SectionPlaceholderModule } from '@components/placeholders/section/section-placeholder.module';
 import { environment } from '@environments/environment';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystem } from '@services/system.service/system';
@@ -21,6 +29,17 @@ type LoggerDropdownItem = DropdownItem<string>;
 @Component({
     selector: 'nx-logger',
     templateUrl: './logger.component.html',
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+        NxContentBlockComponent,
+        NxContentBlockSectionComponent,
+        NxGenericDropdownModule,
+        PreLoaderModule,
+        SectionPlaceholderModule,
+    ],
 })
 export class NxLoggerComponent implements OnChanges {
     private readonly relayUrl: string;

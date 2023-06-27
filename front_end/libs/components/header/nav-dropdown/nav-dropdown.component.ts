@@ -1,5 +1,9 @@
+import { CommonModule } from '@angular/common';
 import { Component, ElementRef, Inject, Input, ViewChild } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { DirectivesModule } from '@directives/directives.module';
 import { environment } from '@environments/environment';
 import { icons } from '@lib/variables/static-variables';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -16,6 +20,8 @@ import { BaseDropdown } from '../../dropdowns/injDropdown';
             ? 'nav-dropdown-webadmin.component.scss'
             : 'nav-dropdown.component.scss',
     ],
+    standalone: true,
+    imports: [CommonModule, RouterModule, AngularSvgIconModule, DirectivesModule],
 })
 export class NxNavDropdownComponent extends BaseDropdown {
     @ViewChild('dropDownButton') dropDownButton: ElementRef<HTMLButtonElement>;

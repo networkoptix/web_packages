@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { QrCodeModule } from 'ng-qrcode';
 
-import { InfoBlockModule } from '@components/info-block/info-block.module';
+import { NxInfoBlockComponent } from '@components/info-block/info-block.component';
 import { ProcessButtonModule } from '@components/process-button/process-button.module';
 import { ProcessCancelButtonModule } from '@components/process-cancel-Button/process-cancel-Button.module';
 
@@ -20,7 +20,7 @@ import { TwoFAModalContent } from './two-fa.component';
         QrCodeModule,
         TranslateModule,
 
-        InfoBlockModule,
+        NxInfoBlockComponent,
         ProcessButtonModule,
         ProcessCancelButtonModule,
     ],

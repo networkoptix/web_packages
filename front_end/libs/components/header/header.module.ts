@@ -9,12 +9,12 @@ import { NxDropMenu } from '@components/dropdowns/drop-menu/drop-menu.component'
 import { NxNavigationTileComponent } from '@components/dropdowns/drop-menu/navigation-tile/navigation-tile.component';
 import { NxSystemTileComponent } from '@components/dropdowns/drop-menu/system-tile/system-tile.component';
 import { LanguageModule } from '@components/dropdowns/language/language.module';
+import { NxHeaderMainButtonComponent } from '@components/header/main-button/main-button.component';
+import { NxNavDropdownComponent } from '@components/header/nav-dropdown/nav-dropdown.component';
+import { NxTabsComponent } from '@components/header/tabs/tabs.component';
 import { ResizeModule } from '@directives/resize/resize.module';
 
 import { NxHeaderComponent } from './header.component';
-import { MainButtonModule } from './main-button/main-button.module';
-import { NavDropdownModule } from './nav-dropdown/nav-dropdown.module';
-import { TabsModule } from './tabs/tabs.module';
 
 @NgModule({
     imports: [
@@ -24,9 +24,9 @@ import { TabsModule } from './tabs/tabs.module';
         NxAccountSettingsDropdown,
         ResizeModule,
         LanguageModule,
-        MainButtonModule,
-        NavDropdownModule,
-        TabsModule,
+        NxHeaderMainButtonComponent,
+        NxNavDropdownComponent,
+        NxTabsComponent,
         NxDropMenu,
         NxAdditionalSystemsTileComponent,
         NxNavigationTileComponent,

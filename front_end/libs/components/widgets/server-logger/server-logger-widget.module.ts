@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
-import { LoggerModule } from '@components/logger/logger.module';
+import { NxLoggerComponent } from '@components/logger/logger.component';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { StepperModule } from '@components/stepper/stepper.module';
 
@@ -15,7 +15,7 @@ import { NxServerLoggerWidgetComponent } from './server-logger-widget.component'
         CommonModule,
         FormsModule,
         CdkStepperModule,
-        LoggerModule,
+        NxLoggerComponent,
         NxGenericDropdownModule,
         PreLoaderModule,
         StepperModule,

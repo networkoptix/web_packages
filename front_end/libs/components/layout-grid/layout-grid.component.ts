@@ -1,6 +1,7 @@
 import { ArrayDataSource } from '@angular/cdk/collections';
-import { CdkDrag, CdkDragEnter, CdkDropList } from '@angular/cdk/drag-drop';
-import { NestedTreeControl } from '@angular/cdk/tree';
+import { CdkDrag, CdkDragEnter, CdkDropList, DragDropModule } from '@angular/cdk/drag-drop';
+import { CdkTreeModule, NestedTreeControl } from '@angular/cdk/tree';
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
     ChangeDetectorRef,
@@ -13,8 +14,10 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { cloneDeep, flatten, groupBy, isEqual, mapValues, omit, values } from 'lodash-es';
-import { TourService } from 'ngx-ui-tour-md-menu';
+import { TourMatMenuModule, TourService } from 'ngx-ui-tour-md-menu';
 import {
     BehaviorSubject,
     combineLatest,
@@ -52,12 +55,19 @@ import { v4 as uuid } from 'uuid';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { ConfigType } from '@components/console-table/console-table.component.types';
+import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { ToastType } from '@components/toast-container/toast.types';
+import { VideoPlayerModule } from '@components/video-player/video-player.module';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { DirectivesModule } from '@directives/directives.module';
+import { ResizeModule } from '@directives/resize/resize.module';
 import { environment } from '@environments/environment';
 import { icons } from '@lib/variables/static-variables';
 import { ConnectionError, WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';
+import { NxImageComponent } from '@pages/health/table-components/image/image.component';
 import { Translatable } from '@pipes/nx-translate.types';
+import { PipesModule } from '@pipes/pipes.module';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 import { IConfig } from '@services/nx-config/config-types';
@@ -171,6 +181,22 @@ interface LayoutSettings {
     selector: 'nx-layout-grid',
     templateUrl: 'layout-grid.component.html',
     styleUrls: ['layout-grid.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        TranslateModule,
+        AngularSvgIconModule,
+        CdkTreeModule,
+        DragDropModule,
+        DirectivesModule,
+        NxMonitoringGraphComponent,
+        NxImageComponent,
+        PipesModule,
+        PreLoaderModule,
+        ResizeModule,
+        TourMatMenuModule,
+        VideoPlayerModule,
+    ],
 })
 export class NxLayoutGridComponent {
     @Input() layout: Layout;

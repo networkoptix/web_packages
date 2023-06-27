@@ -1,7 +1,10 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxDropMenu } from '@components/dropdowns/drop-menu/drop-menu.component';
 import { environment } from '@environments/environment';
 import { icons } from '@lib/variables/static-variables';
 import { MenuNode } from '@services/menus.service.types';
@@ -22,6 +25,8 @@ enum mainButtonState {
     styleUrls: [
         environment.isLocal ? 'main-button-webadmin.component.scss' : 'main-button.component.scss',
     ],
+    standalone: true,
+    imports: [CommonModule, AngularSvgIconModule, NxDropMenu],
 })
 export class NxHeaderMainButtonComponent implements OnInit, OnChanges {
     @Input() endpoint: any;

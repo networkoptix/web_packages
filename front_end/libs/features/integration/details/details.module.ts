@@ -10,7 +10,7 @@ import { NxCarouselComponent } from '@components/carousel/carousel.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxExternalVideoComponent } from '@components/external-video/external-video.component';
-import { FooterModule } from '@components/footer/footer.module';
+import { NxFooterComponent } from '@components/footer/footer.component';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { TagModule } from '@components/tag/tag.module';
 import { DirectivesModule } from '@directives/directives.module';
@@ -43,7 +43,7 @@ const appRoutes: Routes = [
         NxContentBlockSectionComponent,
         DirectivesModule,
         NxExternalVideoComponent,
-        FooterModule,
+        NxFooterComponent,
         MenuModule,
         PipesModule,
         PreLoaderModule,

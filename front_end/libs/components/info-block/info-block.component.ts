@@ -1,6 +1,10 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { icons } from '@lib/variables/static-variables';
+import { PipesModule } from '@pipes/pipes.module';
 
 import {
     InfoBlockStyle,
@@ -14,6 +18,8 @@ import {
     selector: 'nx-info-block',
     templateUrl: 'info-block.component.html',
     styleUrls: ['info-block.component.scss'],
+    standalone: true,
+    imports: [CommonModule, TranslateModule, AngularSvgIconModule, PipesModule],
 })
 export class NxInfoBlockComponent implements OnInit {
     @Input() sectionsOrColumns: InfoBlockColumns | InfoBlockSections;

@@ -1,7 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { BehaviorSubject } from 'rxjs';
 
+import { NxHeaderLogoAreaComponent } from '@components/header/new-header/logo-area/logo-area.component';
+import { NxMobileHeaderMenuComponent } from '@components/header/new-header/mobile/mobile-menu/mobile-menu.component';
 import { icons } from '@lib/variables/static-variables';
 import { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
@@ -16,6 +20,13 @@ import { mobileIconState } from '../new-header-types';
     selector: 'nx-header-mobile',
     templateUrl: './mobile.component.html',
     styleUrls: ['./mobile.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        AngularSvgIconModule,
+        NxHeaderLogoAreaComponent,
+        NxMobileHeaderMenuComponent,
+    ],
 })
 export class NxHeaderMobileComponent {
     @Input() loggedIn: boolean;

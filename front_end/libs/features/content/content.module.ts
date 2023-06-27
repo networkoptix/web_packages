@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { FooterModule } from '@components/footer/footer.module';
+import { NxFooterComponent } from '@components/footer/footer.component';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { ProcessButtonModule } from '@components/process-button/process-button.module';
 import { DirectivesModule } from '@directives/directives.module';
@@ -22,7 +22,7 @@ const appRoutes: Routes = [
         RouterModule.forChild(appRoutes),
         TranslateModule,
         DirectivesModule,
-        FooterModule,
+        NxFooterComponent,
         PipesModule,
         PreLoaderModule,
         ProcessButtonModule,

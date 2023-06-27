@@ -5,7 +5,6 @@ import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 import { DEFAULT_EDITOR_CONFIG } from './editor-config';
-
 @Component({
     selector: 'nx-html',
     templateUrl: 'html-input.component.html',

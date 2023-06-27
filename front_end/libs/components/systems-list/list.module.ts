@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { FooterModule } from '@components/footer/footer.module';
+import { NxFooterComponent } from '@components/footer/footer.component';
 import { NoSystemsModule } from '@components/no-systems/no-systems.module';
 import { ClientButtonModule } from '@components/open-client-button/client-button.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
@@ -21,7 +21,7 @@ import { NxSystemsListComponent } from './list.component';
         TranslateModule,
         AngularSvgIconModule,
         ClientButtonModule,
-        FooterModule,
+        NxFooterComponent,
         NoSystemsModule,
         PreLoaderModule,
         SystemCardModule,

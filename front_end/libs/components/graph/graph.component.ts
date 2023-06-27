@@ -1,11 +1,16 @@
 import { Component, ElementRef, Inject, Input, OnChanges } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { LegendPosition } from '@swimlane/ngx-charts';
+import { TranslateModule } from '@ngx-translate/core';
+import { LegendPosition, NgxChartsModule } from '@swimlane/ngx-charts';
 import { curveBasis } from 'd3-shape';
 import { of, Subject } from 'rxjs';
 import { delay, mergeMap, repeat, retry, takeUntil, tap } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { SectionPlaceholderModule } from '@components/placeholders/section/section-placeholder.module';
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { NxAccountService } from '@services/account.service';
 import { NxSystem } from '@services/system.service/system';
@@ -23,6 +28,15 @@ import { NgChanges } from '@utils/ng-changes';
     selector: 'nx-monitoring-graph',
     templateUrl: 'graph.component.html',
     styleUrls: ['graph.component.scss'],
+    standalone: true,
+    imports: [
+        TranslateModule,
+        NxContentBlockComponent,
+        NxContentBlockSectionComponent,
+        PreLoaderModule,
+        SectionPlaceholderModule,
+        NgxChartsModule,
+    ],
 })
 export class NxMonitoringGraphComponent implements OnChanges {
     @Input() system: NxSystem;

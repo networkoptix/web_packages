@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
-import { MonitoringGraphModule } from '@components/graph/graph.module';
+import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { StepperModule } from '@components/stepper/stepper.module';
 
@@ -15,7 +15,7 @@ import { NxServerMonitorWidgetComponent } from './server-monitor-widget.componen
         CommonModule,
         FormsModule,
         CdkStepperModule,
-        MonitoringGraphModule,
+        NxMonitoringGraphComponent,
         NxGenericDropdownModule,
         PreLoaderModule,
         StepperModule,

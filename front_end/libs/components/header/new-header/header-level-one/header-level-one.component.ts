@@ -1,6 +1,10 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxAccountSettingsDropdown } from '@components/dropdowns/account-settings/account-settings.component';
+import { LanguageModule } from '@components/dropdowns/language/language.module';
 import { NxMenusService } from '@services/menus.service';
 import type { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
@@ -9,6 +13,8 @@ import { NxHeaderService } from '@services/nx-header.service';
     selector: 'nx-header-level-one',
     templateUrl: './header-level-one.component.html',
     styleUrls: ['./header-level-one.component.scss'],
+    standalone: true,
+    imports: [CommonModule, TranslateModule, NxAccountSettingsDropdown, LanguageModule],
 })
 export class NxHeaderLevelOneComponent {
     @Input() menuNodes: MenuNode[] = [];

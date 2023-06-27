@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
     Component,
     ElementRef,
@@ -8,7 +9,11 @@ import {
     ViewChild,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { NxMainActionComponent } from '@components/header/new-header/header-level-two/main-action/main-action.component';
+import { NxHeaderLogoAreaComponent } from '@components/header/new-header/logo-area/logo-area.component';
 import { icons, images } from '@lib/variables/static-variables';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
@@ -24,6 +29,14 @@ import { logoAreaState, logoClickType } from '../new-header-types';
     selector: 'nx-header-level-two',
     templateUrl: './header-level-two.component.html',
     styleUrls: ['./header-level-two.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        TranslateModule,
+        AngularSvgIconModule,
+        NxHeaderLogoAreaComponent,
+        NxMainActionComponent,
+    ],
 })
 export class NxHeaderLevelTwoComponent {
     @ViewChild('menuItems', { static: true }) menuItemsRef: ElementRef<HTMLElement>;

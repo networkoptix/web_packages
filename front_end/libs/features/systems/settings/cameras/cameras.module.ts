@@ -12,7 +12,7 @@ import { NxContentBlockSectionComponent } from '@components/content-block/sectio
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxThreeDotDropdown } from '@components/dropdowns/three-dot/three-dot.component';
 import { EditableModule } from '@components/editable/editable.module';
-import { InfoBlockModule } from '@components/info-block/info-block.module';
+import { NxInfoBlockComponent } from '@components/info-block/info-block.component';
 import { NumericModule } from '@components/numeric-input/numeric.module';
 import { OpenClientSectionPlaceholderModule } from '@components/placeholders/open-client-section/open-client-section.module';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
@@ -39,7 +39,7 @@ import { NxRecordingSettingsComponent } from './recording-settings/recording-set
         NxContentBlockSectionComponent,
         DirectivesModule,
         EditableModule,
-        InfoBlockModule,
+        NxInfoBlockComponent,
         NxGenericDropdownModule,
         NxImageComponent,
         NumericModule,

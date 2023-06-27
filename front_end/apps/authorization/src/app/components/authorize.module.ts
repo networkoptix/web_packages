@@ -8,7 +8,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { FooterModule } from '@components/footer/footer.module';
+import { NxFooterComponent } from '@components/footer/footer.component';
 import { NavFooterModule } from '@components/nav-footer/nav-footer.module';
 import { ProcessButtonModule } from '@components/process-button/process-button.module';
 import { ToastContainerModule } from '@components/toast-container/toast-container.module';
@@ -74,7 +74,7 @@ export const authorizedRoutes: Routes = [
         StoreModule.forRoot({}),
         DirectivesModule,
         PipesModule,
-        FooterModule,
+        NxFooterComponent,
         NavFooterModule,
         ProcessButtonModule,
         ToastContainerModule,

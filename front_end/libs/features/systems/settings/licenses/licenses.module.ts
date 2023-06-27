@@ -11,7 +11,7 @@ import { PipesModule } from '@app/pipes/pipes.module';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
-import { InfoBlockModule } from '@components/info-block/info-block.module';
+import { NxInfoBlockComponent } from '@components/info-block/info-block.component';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { ProcessButtonModule } from '@components/process-button/process-button.module';
@@ -35,7 +35,7 @@ import { NxLicenseTrialComponent } from './trial/trial.component';
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
         DirectivesModule,
-        InfoBlockModule,
+        NxInfoBlockComponent,
         LicenseSummaryModule,
         NxGenericDropdownModule,
         PagePlaceHolderModule,

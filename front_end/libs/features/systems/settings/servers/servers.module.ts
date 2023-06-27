@@ -11,7 +11,7 @@ import { NxContentBlockComponent } from '@components/content-block/content-block
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { EditableModule } from '@components/editable/editable.module';
-import { InfoBlockModule } from '@components/info-block/info-block.module';
+import { NxInfoBlockComponent } from '@components/info-block/info-block.component';
 import { NumericModule } from '@components/numeric-input/numeric.module';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
@@ -40,7 +40,7 @@ import { NxStorageSizeComponent } from './storage-advanced/size/size.component';
         NxContentBlockSectionComponent,
         DirectivesModule,
         EditableModule,
-        InfoBlockModule,
+        NxInfoBlockComponent,
         NxCloudStorageModule,
         NxGenericDropdownModule,
         NumericModule,

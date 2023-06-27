@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { MenuModule } from '@app/menu/menu.module';
 import { PipesModule } from '@app/pipes/pipes.module';
-import { FooterModule } from '@components/footer/footer.module';
+import { NxFooterComponent } from '@components/footer/footer.component';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { ApplyGuard } from '@guards/applyGuard';
@@ -111,7 +111,7 @@ export const cloudSettingsRoutes: Routes = [
         RouterModule,
         RouterModule.forChild(cloudSettingsRoutes),
         TranslateModule,
-        FooterModule,
+        NxFooterComponent,
         MenuModule,
         NxSystemAdminModule,
         NxSystemUsersModule,

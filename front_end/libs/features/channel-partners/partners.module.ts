@@ -6,7 +6,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { MenuModule } from '@app/menu/menu.module';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
-import { FooterModule } from '@components/footer/footer.module';
+import { NxFooterComponent } from '@components/footer/footer.component';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { FeatureGuard } from '@guards/feature.guard';
 import { TwofaGuard } from '@guards/twofaGuard';
@@ -60,7 +60,7 @@ export const cloudPartnersRoutes: Routes = [
         AngularSvgIconModule,
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
-        FooterModule,
+        NxFooterComponent,
         MenuModule,
         NxCustomizationModule,
         NxPartnerOrganizationsListModule,

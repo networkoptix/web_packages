@@ -7,6 +7,7 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
     selector: 'nx-landing-display-component',
     template: '<div data-testid="landingComponent" [innerHTML]="compTemplate"></div>',
     styleUrls: ['landing-display.component.scss'],
+    standalone: true,
 })
 export class NxLandingDisplayComponent implements OnInit {
     compTemplate: SafeHtml;

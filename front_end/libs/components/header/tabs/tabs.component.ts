@@ -1,5 +1,8 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
+import { NxNavDropdownComponent } from '@components/header/nav-dropdown/nav-dropdown.component';
 import { environment } from '@environments/environment';
 import { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
@@ -8,6 +11,8 @@ import { NxHeaderService } from '@services/nx-header.service';
     selector: 'nx-header-tabs',
     templateUrl: './tabs.component.html',
     styleUrls: [environment.isLocal ? './tabs-webadmin.component.scss' : './tabs.component.scss'],
+    standalone: true,
+    imports: [CommonModule, RouterModule, NxNavDropdownComponent],
 })
 export class NxTabsComponent {
     @Input() node: MenuNode;

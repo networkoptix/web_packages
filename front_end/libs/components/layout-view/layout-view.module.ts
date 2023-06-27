@@ -2,9 +2,9 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
 
-import { LayoutGridModule } from '@components/layout-grid/layout-grid.module';
-import { LayoutPtzModule } from '@components/layout-ptz/layout-ptz.module';
-import { LayoutTimelineModule } from '@components/layout-timeline/layout-timeline.module';
+import { NxLayoutGridComponent } from '@components/layout-grid/layout-grid.component';
+import { NxLayoutPtzComponent } from '@components/layout-ptz/layout-ptz.component';
+import { NxLayoutTimelineComponent } from '@components/layout-timeline/layout-timeline.component';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 
 import { NxLayoutViewComponent } from './layout-view.component';
@@ -12,9 +12,9 @@ import { NxLayoutViewComponent } from './layout-view.component';
 @NgModule({
     imports: [
         CommonModule,
-        LayoutGridModule,
-        LayoutTimelineModule,
-        LayoutPtzModule,
+        NxLayoutGridComponent,
+        NxLayoutTimelineComponent,
+        NxLayoutPtzComponent,
         TourMatMenuModule,
         PagePlaceHolderModule,
     ],

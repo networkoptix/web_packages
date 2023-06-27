@@ -1,9 +1,12 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
 import { clamp } from 'lodash-es';
 import { BehaviorSubject, map, NEVER, switchMap } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { DirectivesModule } from '@directives/directives.module';
 import { PtzCommands } from '@services/system-api.types';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
@@ -13,6 +16,8 @@ import { NxSystem } from '@services/system.service/system';
     selector: 'nx-layout-ptz',
     templateUrl: 'layout-ptz.component.html',
     styleUrls: ['layout-ptz.component.scss'],
+    standalone: true,
+    imports: [CommonModule, TranslateModule, DirectivesModule],
 })
 export class NxLayoutPtzComponent {
     @Input() camera: NxSystemCamera;

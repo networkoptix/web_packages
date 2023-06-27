@@ -1,11 +1,15 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CookieService } from 'ngx-cookie-service';
 import { combineLatest, map } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { accountSelectors } from '@common/store/account';
+import { DirectivesModule } from '@directives/directives.module';
 import { environment } from '@environments/environment';
 import { icons, images } from '@lib/variables/static-variables';
 import { IConfig } from '@services/nx-config/config-types';
@@ -22,6 +26,8 @@ import { logoAreaState, logoClickType } from '../new-header-types';
     selector: 'nx-header-logo-area',
     templateUrl: './logo-area.component.html',
     styleUrls: ['./logo-area.component.scss'],
+    standalone: true,
+    imports: [CommonModule, RouterModule, AngularSvgIconModule, DirectivesModule],
 })
 export class NxHeaderLogoAreaComponent implements OnInit {
     @Input() isMobile = false;

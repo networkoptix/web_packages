@@ -7,7 +7,7 @@ import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
 import { MenuModule } from '@app/menu/menu.module';
 import { PipesModule } from '@app/pipes/pipes.module';
-import { FooterModule } from '@components/footer/footer.module';
+import { NxFooterComponent } from '@components/footer/footer.component';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
@@ -58,7 +58,7 @@ const appRoutes: Routes = [
         TranslateModule,
         NgxTranslateCutModule,
         DirectivesModule,
-        FooterModule,
+        NxFooterComponent,
         MenuModule,
         NxAccountSettingsModule,
         NxAccountPasswordModule,

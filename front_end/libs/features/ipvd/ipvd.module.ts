@@ -10,7 +10,7 @@ import { NgxTranslateCutModule } from 'ngx-translate-cut';
 import { PipesModule } from '@app/pipes/pipes.module';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
-import { FooterModule } from '@components/footer/footer.module';
+import { NxFooterComponent } from '@components/footer/footer.component';
 import { PaginatorModule } from '@components/paginator/paginator.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { SearchModule } from '@components/search/search.module';
@@ -46,7 +46,7 @@ const appRoutes: Routes = [
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
         DirectivesModule,
-        FooterModule,
+        NxFooterComponent,
         LayoutModule,
         NxBaseTableModule,
         PaginatorModule,

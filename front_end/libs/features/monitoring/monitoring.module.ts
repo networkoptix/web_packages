@@ -6,8 +6,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MenuModule } from '@app/menu/menu.module';
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
-import { MonitoringGraphModule } from '@components/graph/graph.module';
-import { LoggerModule } from '@components/logger/logger.module';
+import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
+import { NxLoggerComponent } from '@components/logger/logger.component';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { AuthGuard } from '@guards/authGuard';
@@ -48,9 +48,9 @@ const appRoutes: Routes = [
         RouterModule.forChild(appRoutes),
         TranslateModule,
         NxAlertBlockComponent,
-        LoggerModule,
+        NxLoggerComponent,
         MenuModule,
-        MonitoringGraphModule,
+        NxMonitoringGraphComponent,
         NxGenericDropdownModule,
         PagePlaceHolderModule,
         PreLoaderModule,

@@ -1,5 +1,8 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { cloneDeep } from 'lodash-es';
 import { filter } from 'rxjs/operators';
 
@@ -20,6 +23,8 @@ import { NxSystemsService } from '@services/systems.service';
     selector: 'nx-mobile-menu',
     templateUrl: './mobile-menu.component.html',
     styleUrls: ['./mobile-menu.component.scss'],
+    standalone: true,
+    imports: [CommonModule, TranslateModule, AngularSvgIconModule],
 })
 export class NxMobileHeaderMenuComponent {
     @Input() menuNodes: MenuNode[] = [];

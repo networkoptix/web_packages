@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { FooterModule } from '@components/footer/footer.module';
+import { NxFooterComponent } from '@components/footer/footer.component';
 import { PipesModule } from '@pipes/pipes.module';
 
 import { NxPagePlaceholderComponent } from './page-placeholder.component';
@@ -15,7 +15,7 @@ import { NxPagePlaceholderComponent } from './page-placeholder.component';
         RouterModule,
         TranslateModule,
         AngularSvgIconModule,
-        FooterModule,
+        NxFooterComponent,
         PipesModule,
     ],
     declarations: [NxPagePlaceholderComponent],

@@ -1,15 +1,21 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { DOCUMENT, Location } from '@angular/common';
+import { CommonModule, DOCUMENT, Location } from '@angular/common';
 import { Component, Inject, OnInit, Renderer2, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CookieService } from 'ngx-cookie-service';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { ProcessButtonModule } from '@components/process-button/process-button.module';
 import { ToastType } from '@components/toast-container/toast.types';
 import type { LoginWebAdmin as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { icons, redirect } from '@lib/variables/static-variables';
+import { PipesModule } from '@pipes/pipes.module';
 import { NxAccountService } from '@services/account.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -55,6 +61,17 @@ function getRelativeLocation(href: string): string {
     selector: 'nx-login-webadmin-modal',
     templateUrl: 'login-webadmin.component.html',
     styleUrls: ['login-webadmin.component.scss'],
+    standalone: true,
+    imports: [
+        PreLoaderModule,
+        AngularSvgIconModule,
+        ProcessButtonModule,
+        PipesModule,
+        TranslateModule,
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+    ],
 })
 export class LoginWebadminModalContent extends ModalBase<DT['return']> implements OnInit {
     LANG = staticLang;
