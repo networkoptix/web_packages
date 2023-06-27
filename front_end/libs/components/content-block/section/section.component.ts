@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, ElementRef, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
@@ -20,6 +21,8 @@ import { IBool, CoercedBoolInput } from '@decorators/ibool';
     templateUrl: 'section.component.html',
     encapsulation: ViewEncapsulation.None,
     styleUrls: ['section.component.scss'],
+    imports: [CommonModule],
+    standalone: true,
 })
 export class NxContentBlockSectionComponent implements OnInit {
     @Input() type: string;

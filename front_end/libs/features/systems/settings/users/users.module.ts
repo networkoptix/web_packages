@@ -4,10 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { ContentBlockModule } from '@components/content-block/content-block.module';
-import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
-import { MultiSelectModule } from '@components/dropdowns/multi-select/multi-select.module';
-import { PermissionsModule } from '@components/dropdowns/permissions/permissions.module';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
+import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-select.component';
+import { NxPermissionsDropdown } from '@components/dropdowns/permissions/permissions.component';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { SwitchModule } from '@components/switch/switch.module';
 
@@ -21,11 +21,11 @@ import { NxSystemUsersComponent } from './users.component';
         FormsModule,
         TranslateModule,
         AngularSvgIconModule,
-        ContentBlockModule,
-        ContentBlockSectionModule,
-        MultiSelectModule,
+        NxContentBlockComponent,
+        NxContentBlockSectionComponent,
+        NxMultiSelectDropdown,
         PreLoaderModule,
-        PermissionsModule,
+        NxPermissionsDropdown,
         SwitchModule,
     ],
     providers: [],

@@ -6,8 +6,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ContentBlockModule } from '@components/content-block/content-block.module';
-import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { PasswordModule } from '@components/password-input/password.module';
 import { PasswordTagValidationModule } from '@components/password-input-tag-validation/password-tag-validation.module';
 import { PasswordValidationModule } from '@components/password-input-validation/password-validation.module';
@@ -22,8 +22,8 @@ import { NxAccountPasswordComponent } from '@pages/account/password/password.com
         RouterModule,
         TranslateModule,
         AngularSvgIconModule,
-        ContentBlockModule,
-        ContentBlockSectionModule,
+        NxContentBlockComponent,
+        NxContentBlockSectionComponent,
         DirectivesModule,
         PasswordModule,
         PasswordTagValidationModule,

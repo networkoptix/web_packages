@@ -118,7 +118,6 @@ export class AppComponent implements OnInit {
 
         if (!this.CONFIG.featureFlags.cookieBanner) {
             await idle();
-            await import('@components/cookie-banner/cookie-banner.module').then(m => m.CookieBannerModule);
             const { NxCookieBannerComponent } = await import('@components/cookie-banner/cookie-banner.component');
             this.cookieBanner.createComponent(NxCookieBannerComponent);
         }

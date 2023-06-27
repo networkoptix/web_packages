@@ -8,8 +8,8 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ContentBlockModule } from '@components/content-block/content-block.module';
-import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { FooterModule } from '@components/footer/footer.module';
 import { PaginatorModule } from '@components/paginator/paginator.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
@@ -43,8 +43,8 @@ const appRoutes: Routes = [
         TranslateModule,
         AngularSvgIconModule,
         NgxTranslateCutModule,
-        ContentBlockModule,
-        ContentBlockSectionModule,
+        NxContentBlockComponent,
+        NxContentBlockSectionComponent,
         DirectivesModule,
         FooterModule,
         LayoutModule,

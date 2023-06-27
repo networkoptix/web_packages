@@ -1,4 +1,8 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 
 /* Usage
  <nx-alert-block
@@ -16,6 +20,8 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } fro
     templateUrl: 'block.component.html',
     styleUrls: ['block.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    imports: [CommonModule, AngularSvgIconModule, NxContentBlockSectionComponent],
+    standalone: true,
 })
 export class NxAlertBlockComponent implements OnInit {
     @Input() iconSrc: string;

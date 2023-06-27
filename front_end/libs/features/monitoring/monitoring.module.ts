@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { MenuModule } from '@app/menu/menu.module';
-import { AlertBlockModule } from '@components/content-block/alert/block.module';
+import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { MonitoringGraphModule } from '@components/graph/graph.module';
 import { LoggerModule } from '@components/logger/logger.module';
@@ -47,7 +47,7 @@ const appRoutes: Routes = [
         CommonModule,
         RouterModule.forChild(appRoutes),
         TranslateModule,
-        AlertBlockModule,
+        NxAlertBlockComponent,
         LoggerModule,
         MenuModule,
         MonitoringGraphModule,

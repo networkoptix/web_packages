@@ -1,4 +1,5 @@
 import { trigger, style, animate, transition } from '@angular/animations';
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 
 import { Screenshot } from '@app/services/nx-cloud-api/nx-cloud-api.types';
@@ -8,6 +9,8 @@ import { mod } from '@utils/general';
     selector: 'nx-carousel',
     templateUrl: 'carousel.component.html',
     styleUrls: ['carousel.component.scss'],
+    imports: [CommonModule],
+    standalone: true,
     animations: [
         trigger('visibilityChange', [
             transition('enter => leave', [

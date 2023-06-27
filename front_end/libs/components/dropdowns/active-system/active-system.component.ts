@@ -1,6 +1,8 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
+import { DirectivesModule } from '@directives/directives.module';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -10,6 +12,8 @@ import { BaseDropdown } from '../injDropdown';
     selector: 'nx-active-system',
     templateUrl: 'active-system.component.html',
     styleUrls: ['active-system.component.scss'],
+    imports: [CommonModule, RouterModule, DirectivesModule],
+    standalone: true,
 })
 export class NxActiveSystemDropdown extends BaseDropdown {
     @Input() activeSystem;

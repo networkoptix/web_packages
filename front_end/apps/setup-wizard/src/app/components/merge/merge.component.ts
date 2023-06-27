@@ -4,8 +4,8 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { NxSearchableDropdown } from '@components/dropdowns/searchable/searchable.component';
 import type { SearchableDropdownItem as Item } from '@components/dropdowns/searchable/searchable.component.types';
-import { SearchableModule } from '@components/dropdowns/searchable/searchable.module';
 
 import { WizardStateService } from '../../services/wizard-state.service';
 
@@ -13,7 +13,7 @@ import { WizardStateService } from '../../services/wizard-state.service';
 @Component({
     selector: 'nx-merge-component',
     standalone: true,
-    imports: [CommonModule, FormsModule, TranslateModule, SearchableModule],
+    imports: [CommonModule, FormsModule, TranslateModule, NxSearchableDropdown],
     templateUrl: 'merge.component.html',
     styleUrls: ['merge.component.scss'],
 })

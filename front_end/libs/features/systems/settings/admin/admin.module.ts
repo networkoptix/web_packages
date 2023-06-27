@@ -6,10 +6,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { CheckboxModule } from '@components/checkbox/checkbox.module';
-import { AlertBlockModule } from '@components/content-block/alert/block.module';
-import { ContentBlockModule } from '@components/content-block/content-block.module';
-import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
+import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { EditableModule } from '@components/editable/editable.module';
 import { NumericModule } from '@components/numeric-input/numeric.module';
@@ -32,11 +32,11 @@ import { NxSystemStandardAdminComponent } from './standard/standard.component';
         RouterModule,
         TranslateModule,
         AngularSvgIconModule,
-        AlertBlockModule,
-        CheckboxModule,
+        NxAlertBlockComponent,
+        NxCheckboxComponent,
         ClientButtonModule,
-        ContentBlockModule,
-        ContentBlockSectionModule,
+        NxContentBlockComponent,
+        NxContentBlockSectionComponent,
         DirectivesModule,
         EditableModule,
         NumericModule,

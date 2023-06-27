@@ -1,7 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
+import { DirectivesModule } from '@directives/directives.module';
 import { icons } from '@lib/variables/static-variables';
 import { CustomPermission } from '@services/nx-config/base-config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -34,6 +38,8 @@ type AccessLevelItem =
             multi: true,
         },
     ],
+    imports: [CommonModule, TranslateModule, AngularSvgIconModule, DirectivesModule],
+    standalone: true,
 })
 export class NxPermissionsDropdown extends BaseDropdown {
     @Input() id: string;

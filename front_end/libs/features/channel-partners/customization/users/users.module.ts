@@ -3,8 +3,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { ContentBlockModule } from '@components/content-block/content-block.module';
-import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxCustomizationUsersComponent } from '@pages/channel-partners/customization/users/users.component';
 
 @NgModule({
@@ -12,8 +12,8 @@ import { NxCustomizationUsersComponent } from '@pages/channel-partners/customiza
         CommonModule,
         FormsModule,
         AngularSvgIconModule,
-        ContentBlockModule,
-        ContentBlockSectionModule,
+        NxContentBlockComponent,
+        NxContentBlockSectionComponent,
     ],
     providers: [],
     declarations: [NxCustomizationUsersComponent],

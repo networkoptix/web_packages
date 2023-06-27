@@ -1,10 +1,15 @@
+import { CdkTableModule } from '@angular/cdk/table';
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
+import { NxAdvancedFilterComponent } from '@components/advanced-filter/advanced-filter.component';
 import {
     FilterState,
     FilterUpdatePayload,
@@ -17,12 +22,21 @@ import {
     ModalType,
     OptionalFeatures,
 } from '@components/console-table/console-table.component.types';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
+import { PaginatorModule } from '@components/paginator/paginator.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { SearchModule } from '@components/search/search.module';
+import { NxSearchHighlightModule } from '@components/search-highlight/search-highlight.module';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { DirectivesModule } from '@directives/directives.module';
 import { icons, manifest } from '@lib/variables/static-variables';
 import { NxConsoleService } from '@pages/developer-console/console/console.service';
 import { ConsoleMode } from '@pages/developer-console/console/console.types';
+import { PipesModule } from '@pipes/pipes.module';
 import { NxMenusService } from '@services/menus.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { CustomClientAPI } from '@services/nx-cloud-api/custom-client-api';
@@ -44,6 +58,25 @@ import { TableDataSource } from './table-data-source';
     selector: 'nx-console-table',
     templateUrl: 'console-table.component.html',
     styleUrls: ['console-table.component.scss'],
+    imports: [
+        CommonModule,
+        FormsModule,
+        DirectivesModule,
+        PipesModule,
+        RouterModule,
+        TranslateModule,
+        CdkTableModule,
+        AngularSvgIconModule,
+        NxAdvancedFilterComponent,
+        NxContentBlockSectionComponent,
+        NxContentBlockComponent,
+        NxGenericDropdownModule,
+        PaginatorModule,
+        PreLoaderModule,
+        SearchModule,
+        NxSearchHighlightModule,
+    ],
+    standalone: true,
 })
 export class NxConsoleTableComponent {
     @Input() sectionParam: ConsoleSection;

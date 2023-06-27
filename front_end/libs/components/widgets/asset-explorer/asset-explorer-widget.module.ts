@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { CheckboxModule } from '@components/checkbox/checkbox.module';
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NumericModule } from '@components/numeric-input/numeric.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { StepperModule } from '@components/stepper/stepper.module';
@@ -23,7 +23,7 @@ import { NxAssetExplorerWidgetComponent } from './asset-explorer-widget.componen
         AngularSvgIconModule,
         CdkStepperModule,
         CdkTreeModule,
-        CheckboxModule,
+        NxCheckboxComponent,
         DirectivesModule,
         NumericModule,
         PipesModule,

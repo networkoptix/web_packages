@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { ContentBlockModule } from '@components/content-block/content-block.module';
-import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { StepperModule } from '@components/stepper/stepper.module';
 
 import { NxLicenseSummaryComponent } from './summary.component';
@@ -13,8 +13,8 @@ import { NxLicenseSummaryComponent } from './summary.component';
         CommonModule,
         TranslateModule,
         StepperModule,
-        ContentBlockModule,
-        ContentBlockSectionModule,
+        NxContentBlockComponent,
+        NxContentBlockSectionComponent,
     ],
     declarations: [NxLicenseSummaryComponent],
     providers: [NxLicenseSummaryComponent],

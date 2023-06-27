@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
     Component,
     Input,
@@ -15,6 +16,7 @@ import {
     FormControl,
     Validator,
     ValidationErrors,
+    FormsModule,
 } from '@angular/forms';
 
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
@@ -35,6 +37,8 @@ import { NgChanges } from '@utils/ng-changes';
     selector: 'nx-checkbox',
     templateUrl: 'checkbox.component.html',
     styleUrls: ['checkbox.component.scss'],
+    standalone: true,
+    imports: [CommonModule, FormsModule],
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,

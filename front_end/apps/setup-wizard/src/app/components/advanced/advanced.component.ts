@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import staticLang from '@app/language/language_i18n_static.json';
 import { SECURITY_LEVEL } from '@app/services/system-api.types';
-import { CheckboxModule } from '@components/checkbox/checkbox.module';
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { PipesModule } from '@pipes/pipes.module';
@@ -14,7 +14,7 @@ import { WizardStateService } from '../../services/wizard-state.service';
 @Component({
     selector: 'nx-advanced-component',
     standalone: true,
-    imports: [CommonModule, FormsModule, PipesModule, CheckboxModule, NxGenericDropdownModule],
+    imports: [CommonModule, FormsModule, PipesModule, NxCheckboxComponent, NxGenericDropdownModule],
     templateUrl: 'advanced.component.html',
     styleUrls: ['advanced.component.scss'],
 })

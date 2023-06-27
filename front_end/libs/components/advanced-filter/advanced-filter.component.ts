@@ -1,11 +1,15 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { AdditionalFilter } from '@components/console-table/console-table.component.types';
 import {
     DataStructureFilter,
     GroupingOptions,
     SortOptions,
 } from '@pages/developer-console/console/edit/console-edit.component.types';
+import { PipesModule } from '@pipes/pipes.module';
 import { NgChanges } from '@utils/ng-changes';
 
 import { FilterSort, FilterState, FilterUpdatePayload } from './advanced-filter.component.types';
@@ -14,6 +18,8 @@ import { FilterSort, FilterState, FilterUpdatePayload } from './advanced-filter.
     selector: 'nx-advanced-filter',
     templateUrl: 'advanced-filter.component.html',
     styleUrls: ['advanced-filter.component.scss'],
+    standalone: true,
+    imports: [CommonModule, FormsModule, PipesModule, NxCheckboxComponent],
 })
 export class NxAdvancedFilterComponent {
     @Output() onClose = new EventEmitter();

@@ -9,9 +9,9 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { CheckboxModule } from '@components/checkbox/checkbox.module';
-import { ContentBlockModule } from '@components/content-block/content-block.module';
-import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { TagModule } from '@components/tag/tag.module';
 import { DirectivesModule } from '@directives/directives.module';
@@ -28,9 +28,9 @@ import { NxAccountSecurityComponent } from './security.component';
         CdkScrollableModule,
         NgxTranslateCutModule,
         OverlayModule,
-        CheckboxModule,
-        ContentBlockModule,
-        ContentBlockSectionModule,
+        NxCheckboxComponent,
+        NxContentBlockComponent,
+        NxContentBlockSectionComponent,
         DirectivesModule,
         PipesModule,
         PreLoaderModule,

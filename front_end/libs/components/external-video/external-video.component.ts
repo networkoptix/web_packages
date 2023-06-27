@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -7,6 +8,8 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
     selector: 'nx-external-video',
     templateUrl: 'external-video.component.html',
     styleUrls: ['external-video.component.scss'],
+    standalone: true,
+    imports: [CommonModule],
 })
 export class NxExternalVideoComponent implements OnInit {
     @Input('src') videoSrc: string;

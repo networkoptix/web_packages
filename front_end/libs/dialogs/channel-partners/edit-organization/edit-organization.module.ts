@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { CheckboxModule } from '@components/checkbox/checkbox.module';
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { ProcessButtonModule } from '@components/process-button/process-button.module';
 import { ProcessCancelButtonModule } from '@components/process-cancel-Button/process-cancel-Button.module';
@@ -18,7 +18,7 @@ import { NxEditOrganizationModalContent } from './edit-organization.component';
         TranslateModule,
 
         NxGenericDropdownModule,
-        CheckboxModule,
+        NxCheckboxComponent,
         ProcessButtonModule,
         ProcessCancelButtonModule,
     ],

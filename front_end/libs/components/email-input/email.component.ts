@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, forwardRef, ViewEncapsulation } from '@angular/core';
 import {
     ControlValueAccessor,
@@ -6,9 +7,11 @@ import {
     Validator,
     FormControl,
     ValidationErrors,
+    FormsModule,
 } from '@angular/forms';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { DirectivesModule } from '@directives/directives.module';
 import { credentialsValidation } from '@lib/variables/static-variables';
 
 @Component({
@@ -30,6 +33,8 @@ import { credentialsValidation } from '@lib/variables/static-variables';
         },
     ],
     encapsulation: ViewEncapsulation.None,
+    imports: [CommonModule, FormsModule, DirectivesModule],
+    standalone: true,
 })
 export class NxEmailComponent implements ControlValueAccessor, Validator {
     @Input() form;

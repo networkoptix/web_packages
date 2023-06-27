@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 // import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { CheckboxModule } from '@components/checkbox/checkbox.module';
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxSimpleSearchModule } from '@components/simple-search/simple-search.module';
 
 import { NxDeviceFilterComponent } from './device-filter.component';
@@ -15,7 +15,7 @@ import { NxDeviceFilterComponent } from './device-filter.component';
         FormsModule,
         AngularSvgIconModule,
         // TranslateModule,
-        CheckboxModule,
+        NxCheckboxComponent,
         NxSimpleSearchModule,
     ],
     declarations: [NxDeviceFilterComponent],

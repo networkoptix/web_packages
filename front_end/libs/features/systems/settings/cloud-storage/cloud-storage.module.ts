@@ -8,9 +8,9 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxMaskModule } from 'ngx-mask';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { AlertBlockModule } from '@components/content-block/alert/block.module';
-import { ContentBlockModule } from '@components/content-block/content-block.module';
-import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
+import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { DirectivesModule } from '@directives/directives.module';
 
@@ -25,9 +25,9 @@ import { NxCloudStorageComponent } from './cloud-storage.component';
         AngularSvgIconModule,
         CdkTableModule,
         NgxMaskModule.forRoot(),
-        AlertBlockModule,
-        ContentBlockModule,
-        ContentBlockSectionModule,
+        NxAlertBlockComponent,
+        NxContentBlockComponent,
+        NxContentBlockSectionComponent,
         DirectivesModule,
         PipesModule,
         PreLoaderModule,

@@ -29,7 +29,7 @@ import { NgxWebstorageModule } from 'ngx-webstorage';
 
 import { accountReducer, AccountSync } from '@common/store/account';
 import { SystemsSync } from '@common/store/systems/systems.sync';
-import { ApplyModule } from '@components/apply/apply.module';
+import { NxApplyComponent } from '@components/apply/apply.component';
 import { NavFooterModule } from '@components/nav-footer/nav-footer.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { PopoverModule } from '@components/popover/popover.module';
@@ -115,7 +115,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         Title,
         CookieService,
         NxUriCacheService,
-        ApplyModule,
+        NxApplyComponent,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: NxSwCacheInterceptor,

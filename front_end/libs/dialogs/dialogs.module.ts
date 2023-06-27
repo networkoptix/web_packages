@@ -10,11 +10,11 @@ import { NgxMaskModule } from 'ngx-mask';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { CheckboxModule } from '@components/checkbox/checkbox.module';
-import { AlertBlockModule } from '@components/content-block/alert/block.module';
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
+import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
-import { SearchableModule } from '@components/dropdowns/searchable/searchable.module';
-import { DynamicWidgetModule } from '@components/dynamic-widget/dynamic-widget.module';
+import { NxSearchableDropdown } from '@components/dropdowns/searchable/searchable.component';
+import { NxDynamicWidgetComponent } from '@components/dynamic-widget/dynamic-widget.component';
 import { InfoBlockModule } from '@components/info-block/info-block.module';
 import { ProcessButtonModule } from '@components/process-button/process-button.module';
 import { ProcessCancelButtonModule } from '@components/process-cancel-Button/process-cancel-Button.module';
@@ -81,10 +81,10 @@ import { NxWizardModalModule } from './wizard/wizard.module';
         NgxTranslateCutModule,
         NgxMaskModule.forRoot(),
         QrCodeModule,
-        AlertBlockModule,
-        CheckboxModule,
+        NxAlertBlockComponent,
+        NxCheckboxComponent,
         DirectivesModule,
-        DynamicWidgetModule,
+        NxDynamicWidgetComponent,
         GenericDialogModule,
         InfoBlockModule,
         NxGenericDropdownModule,
@@ -92,7 +92,7 @@ import { NxWizardModalModule } from './wizard/wizard.module';
         ProcessButtonModule,
         ProcessCancelButtonModule,
         RadioModule,
-        SearchableModule,
+        NxSearchableDropdown,
         TagModule,
         ThirdsPartyWidgetModule,
 
@@ -145,6 +145,6 @@ import { NxWizardModalModule } from './wizard/wizard.module';
         ReserveSpaceWarningModalContent,
     ],
     providers: [],
-    exports: [GenericDialogModule, DynamicWidgetModule],
+    exports: [GenericDialogModule, NxDynamicWidgetComponent],
 })
 export class DialogsModule {}

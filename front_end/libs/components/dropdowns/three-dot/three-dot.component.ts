@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -25,6 +26,8 @@ import type { ActionItems } from './three-dot.component.types';
             multi: true,
         },
     ],
+    imports: [CommonModule],
+    standalone: true,
 })
 export class NxThreeDotDropdown extends BaseDropdown {
     @Input() items: ActionItems[];

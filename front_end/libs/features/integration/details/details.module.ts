@@ -6,10 +6,10 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { MenuModule } from '@app/menu/menu.module';
 import { PipesModule } from '@app/pipes/pipes.module';
-import { CarouselModule } from '@components/carousel/carousel.module';
-import { ContentBlockModule } from '@components/content-block/content-block.module';
-import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
-import { ExternalVideoModule } from '@components/external-video/external-video.module';
+import { NxCarouselComponent } from '@components/carousel/carousel.component';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
+import { NxExternalVideoComponent } from '@components/external-video/external-video.component';
 import { FooterModule } from '@components/footer/footer.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { TagModule } from '@components/tag/tag.module';
@@ -38,11 +38,11 @@ const appRoutes: Routes = [
         RouterModule.forChild(appRoutes),
         TranslateModule,
         AngularSvgIconModule,
-        CarouselModule,
-        ContentBlockModule,
-        ContentBlockSectionModule,
+        NxCarouselComponent,
+        NxContentBlockComponent,
+        NxContentBlockSectionComponent,
         DirectivesModule,
-        ExternalVideoModule,
+        NxExternalVideoComponent,
         FooterModule,
         MenuModule,
         PipesModule,

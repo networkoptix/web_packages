@@ -18,8 +18,8 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { CheckboxModule } from '@components/checkbox/checkbox.module';
-import { EmailModule } from '@components/email-input/email.module';
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
+import { NxEmailComponent } from '@components/email-input/email.component';
 import { PasswordModule } from '@components/password-input/password.module';
 import { PasswordValidationModule } from '@components/password-input-validation/password-validation.module';
 import { ProcessButtonModule } from '@components/process-button/process-button.module';
@@ -41,11 +41,11 @@ import type { AuthorizeStateType } from '../authorize.component.types';
         TranslateModule,
         AngularSvgIconModule,
         DirectivesModule,
-        CheckboxModule,
-        EmailModule,
         PasswordModule,
         PasswordValidationModule,
         ProcessButtonModule,
+        NxCheckboxComponent,
+        NxEmailComponent,
     ],
     templateUrl: 'create-account.component.html',
     styleUrls: ['create-account.component.scss'],

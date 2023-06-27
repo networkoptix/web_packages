@@ -8,7 +8,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { accountReducer } from '@common/store/account';
-import { CheckboxModule } from '@components/checkbox/checkbox.module';
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { NxSearchHighlightModule } from '@components/search-highlight/search-highlight.module';
@@ -94,7 +94,7 @@ const homeRoutes: Routes = [
         StoreModule.forFeature('groups', groupsReducer),
         StoreModule.forFeature('account', accountReducer),
         StoreModule.forFeature('channelPartners', channelPartnersReducer),
-        CheckboxModule,
+        NxCheckboxComponent,
         DirectivesModule,
         NxBaseTableModule,
         NxSearchHighlightModule,

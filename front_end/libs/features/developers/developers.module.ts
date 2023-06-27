@@ -6,9 +6,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ContentBlockModule } from '@components/content-block/content-block.module';
-import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
-import { DevelopersMenuModule } from '@components/developers-menu/developers-menu.module';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
+import { NxDevelopersMenuComponent } from '@components/developers-menu/developers-menu.component';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { SearchModule } from '@components/search/search.module';
 import { DirectivesModule } from '@directives/directives.module';
@@ -77,9 +77,9 @@ const appRoutes: Routes = [
         RouterModule.forChild(appRoutes),
         TranslateModule,
         AngularSvgIconModule,
-        ContentBlockModule,
-        ContentBlockSectionModule,
-        DevelopersMenuModule,
+        NxContentBlockComponent,
+        NxContentBlockSectionComponent,
+        NxDevelopersMenuComponent,
         DirectivesModule,
         NxAboutModule,
         PipesModule,

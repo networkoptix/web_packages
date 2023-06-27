@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
-import { MultiSelectModule } from '@components/dropdowns/multi-select/multi-select.module';
+import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-select.component';
 import { TagModule } from '@components/tag/tag.module';
 import { PipesModule } from '@pipes/pipes.module';
 
@@ -17,7 +17,7 @@ import { NxSearchComponent } from './search.component';
         FormsModule,
         TranslateModule,
         AngularSvgIconModule,
-        MultiSelectModule,
+        NxMultiSelectDropdown,
         NxGenericDropdownModule,
         PipesModule,
         TagModule,

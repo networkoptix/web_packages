@@ -6,8 +6,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ContentBlockModule } from '@components/content-block/content-block.module';
-import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { LanguageModule } from '@components/dropdowns/language/language.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { ThemeSwitcherModule } from '@components/theme-switcher/theme-switcher.module';
@@ -21,8 +21,8 @@ import { NxAccountSettingsComponent } from '@pages/account/settings/settings.com
         RouterModule,
         TranslateModule,
         AngularSvgIconModule,
-        ContentBlockModule,
-        ContentBlockSectionModule,
+        NxContentBlockComponent,
+        NxContentBlockSectionComponent,
         DirectivesModule,
         LanguageModule,
         PipesModule,

@@ -22,6 +22,7 @@ import { WIDGETS } from './register-widget';
     selector: 'nx-dynamic-widget',
     templateUrl: './dynamic-widget.component.html',
     styleUrls: ['./dynamic-widget.component.scss'],
+    standalone: true,
 })
 export class NxDynamicWidgetComponent {
     @Output() syncChanges = new EventEmitter();

@@ -1,6 +1,9 @@
 /* eslint-disable camelcase */
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { SubscriptionLike } from 'rxjs';
 
 import { icons } from '@lib/variables/static-variables';
@@ -12,6 +15,8 @@ import { NxHeaderService } from '@services/nx-header.service';
     selector: 'nx-navigation-tile',
     templateUrl: 'navigation-tile.component.html',
     styleUrls: ['navigation-tile.component.scss'],
+    imports: [CommonModule, RouterModule, AngularSvgIconModule],
+    standalone: true,
 })
 export class NxNavigationTileComponent {
     @Input() node: MenuNode;

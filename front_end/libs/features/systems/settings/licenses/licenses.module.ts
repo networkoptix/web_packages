@@ -8,8 +8,8 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxMaskModule } from 'ngx-mask';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ContentBlockModule } from '@components/content-block/content-block.module';
-import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { InfoBlockModule } from '@components/info-block/info-block.module';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
@@ -32,8 +32,8 @@ import { NxLicenseTrialComponent } from './trial/trial.component';
         AngularSvgIconModule,
         NgxMaskModule.forRoot(),
         OverlayModule,
-        ContentBlockModule,
-        ContentBlockSectionModule,
+        NxContentBlockComponent,
+        NxContentBlockSectionComponent,
         DirectivesModule,
         InfoBlockModule,
         LicenseSummaryModule,

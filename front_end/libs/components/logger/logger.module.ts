@@ -3,8 +3,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { ContentBlockModule } from '@components/content-block/content-block.module';
-import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { SectionPlaceholderModule } from '@components/placeholders/section/section-placeholder.module';
@@ -16,8 +16,8 @@ import { NxLoggerComponent } from './logger.component';
         CommonModule,
         FormsModule,
         TranslateModule,
-        ContentBlockModule,
-        ContentBlockSectionModule,
+        NxContentBlockComponent,
+        NxContentBlockSectionComponent,
         NxGenericDropdownModule,
         PreLoaderModule,
         SectionPlaceholderModule,

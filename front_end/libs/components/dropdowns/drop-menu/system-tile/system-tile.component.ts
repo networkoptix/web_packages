@@ -1,4 +1,6 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { icons } from '@lib/variables/static-variables';
 import { System } from '@services/nx-cloud-api/nx-cloud-api.types';
@@ -9,6 +11,8 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
     selector: 'nx-system-tile',
     templateUrl: 'system-tile.component.html',
     styleUrls: ['system-tile.component.scss'],
+    imports: [CommonModule, AngularSvgIconModule],
+    standalone: true,
 })
 export class NxSystemTileComponent {
     @Input() system: System;

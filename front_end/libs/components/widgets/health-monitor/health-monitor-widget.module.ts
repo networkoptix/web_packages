@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { CheckboxModule } from '@components/checkbox/checkbox.module';
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NumericModule } from '@components/numeric-input/numeric.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
@@ -23,7 +23,7 @@ import { NxHealthMonitorWidgetComponent } from './health-monitor-widget.componen
         AngularSvgIconModule,
         CdkStepperModule,
         CdkTableModule,
-        CheckboxModule,
+        NxCheckboxComponent,
         NumericModule,
         NxGenericDropdownModule,
         PipesModule,

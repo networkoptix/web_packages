@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { CheckboxModule } from '@components/checkbox/checkbox.module';
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { PaginatorModule } from '@components/paginator/paginator.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
@@ -17,7 +17,7 @@ import { NxBaseTableComponent } from './table.component';
         CommonModule,
         TranslateModule,
         DragDropModule,
-        CheckboxModule,
+        NxCheckboxComponent,
         NxGenericDropdownModule,
         PaginatorModule,
         PreLoaderModule,

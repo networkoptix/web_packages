@@ -5,7 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { AlertBlockModule } from '@components/content-block/alert/block.module';
+import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { NxSimpleSearchModule } from '@components/simple-search/simple-search.module';
@@ -39,7 +39,7 @@ const appRoutes: Routes = [
         NxTagFilterModule,
         NxBookmarksCardModule,
         NxSimpleSearchModule,
-        AlertBlockModule,
+        NxAlertBlockComponent,
         PreLoaderModule,
         PagePlaceHolderModule,
     ],

@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
-import { EmailModule } from '@components/email-input/email.module';
+import { NxEmailComponent } from '@components/email-input/email.component';
 import { ProcessButtonModule } from '@components/process-button/process-button.module';
 import { ProcessCancelButtonModule } from '@components/process-cancel-Button/process-cancel-Button.module';
 
@@ -17,7 +17,7 @@ import { AddPartnerUserModalContent } from './add-partner-user.component';
         // AngularSvgIconModule,
         TranslateModule,
 
-        EmailModule,
+        NxEmailComponent,
         NxGenericDropdownModule,
         ProcessButtonModule,
         ProcessCancelButtonModule,

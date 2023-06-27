@@ -6,9 +6,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { AlertBlockModule } from '@components/content-block/alert/block.module';
-import { ContentBlockModule } from '@components/content-block/content-block.module';
-import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
+import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { EditableModule } from '@components/editable/editable.module';
 import { InfoBlockModule } from '@components/info-block/info-block.module';
@@ -35,9 +35,9 @@ import { NxStorageSizeComponent } from './storage-advanced/size/size.component';
         RouterModule,
         TranslateModule,
         AngularSvgIconModule,
-        AlertBlockModule,
-        ContentBlockModule,
-        ContentBlockSectionModule,
+        NxAlertBlockComponent,
+        NxContentBlockComponent,
+        NxContentBlockSectionComponent,
         DirectivesModule,
         EditableModule,
         InfoBlockModule,

@@ -8,8 +8,8 @@ import { NgxFileDropModule } from 'ngx-file-drop';
 
 import { MenuModule } from '@app/menu/menu.module';
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ContentBlockModule } from '@components/content-block/content-block.module';
-import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { InfoBlockModule } from '@components/info-block/info-block.module';
 import { PaginatorModule } from '@components/paginator/paginator.module';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
@@ -91,8 +91,8 @@ const appRoutes: Routes = [
         TranslateModule,
         AngularSvgIconModule,
         NgxFileDropModule,
-        ContentBlockModule,
-        ContentBlockSectionModule,
+        NxContentBlockComponent,
+        NxContentBlockSectionComponent,
         DirectivesModule,
         InfoBlockModule,
         MenuModule,

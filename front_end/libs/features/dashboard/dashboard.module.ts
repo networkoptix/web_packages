@@ -8,7 +8,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
-import { DynamicWidgetModule } from '@components/dynamic-widget/dynamic-widget.module';
+import { NxDynamicWidgetComponent } from '@components/dynamic-widget/dynamic-widget.component';
 import { EditableModule } from '@components/editable/editable.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { SwitchModule } from '@components/switch/switch.module';
@@ -44,7 +44,7 @@ const appRoutes: Routes = [{ path: '', component: NxDashboardComponent }];
         SwitchModule,
         AssetExplorerWidgetModule,
         // BookmarksWidgetModule,
-        DynamicWidgetModule,
+        NxDynamicWidgetComponent,
         HealthMonitorWidgetModule,
         LiveViewWidgetModule,
         ServerLoggerWidgetModule,

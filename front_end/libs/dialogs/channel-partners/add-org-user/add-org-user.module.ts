@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 // import { MultiSelectModule } from '@components/dropdowns/multi-select/multi-select.module';
-import { EmailModule } from '@components/email-input/email.module';
+import { NxEmailComponent } from '@components/email-input/email.component';
 import { ProcessButtonModule } from '@components/process-button/process-button.module';
 import { ProcessCancelButtonModule } from '@components/process-cancel-Button/process-cancel-Button.module';
 
@@ -18,7 +18,7 @@ import { NxAddOrgUserModalContent } from './add-org-user.component';
         // AngularSvgIconModule,
         TranslateModule,
 
-        EmailModule,
+        NxEmailComponent,
         NxGenericDropdownModule,
         // MultiSelectModule,
         ProcessButtonModule,

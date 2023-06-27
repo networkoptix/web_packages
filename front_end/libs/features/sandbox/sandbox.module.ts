@@ -7,10 +7,10 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { MenuModule } from '@app/menu/menu.module';
 import { PipesModule } from '@app/pipes/pipes.module';
-import { CheckboxModule } from '@components/checkbox/checkbox.module';
-import { AlertBlockModule } from '@components/content-block/alert/block.module';
-import { ContentBlockModule } from '@components/content-block/content-block.module';
-import { SearchableModule } from '@components/dropdowns/searchable/searchable.module';
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
+import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxSearchableDropdown } from '@components/dropdowns/searchable/searchable.component';
 import { SearchModule } from '@components/search/search.module';
 import { NxSliderModule } from '@components/slider/slider.module';
 import { NxBaseTableModule } from '@components/table/table.module';
@@ -166,9 +166,9 @@ const appRoutes: Routes = [
         TranslateModule,
         AngularSvgIconModule,
         NgrxDemoModule,
-        AlertBlockModule,
-        CheckboxModule,
-        ContentBlockModule,
+        NxAlertBlockComponent,
+        NxCheckboxComponent,
+        NxContentBlockComponent,
         DirectivesModule,
         MenuModule,
         NxAccountSettingsModule,
@@ -177,7 +177,7 @@ const appRoutes: Routes = [
         NxSliderModule,
         PipesModule,
         SearchModule,
-        SearchableModule,
+        NxSearchableDropdown,
         SimpleWebGLTimelineModule,
         VmsClientModule,
         VmsClientTimelineModule,

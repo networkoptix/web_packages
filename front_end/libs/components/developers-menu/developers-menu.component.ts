@@ -1,13 +1,18 @@
-import { Location } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, Output, EventEmitter, Inject, OnInit, Input } from '@angular/core';
-import { QueryParamsHandling } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { QueryParamsHandling, RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { cloneDeep, last } from 'lodash-es';
 import { timer, Subject, BehaviorSubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
+import { SearchModule } from '@components/search/search.module';
 import { icons } from '@lib/variables/static-variables';
+import { PipesModule } from '@pipes/pipes.module';
 import { MenuNode } from '@services/menus.service.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -23,6 +28,16 @@ import type { MenuNodeWithParent, ClickEvent, RelatedLinks } from './developers-
     selector: 'nx-developers-menu',
     templateUrl: 'developers-menu.component.html',
     styleUrls: ['developers-menu.component.scss'],
+    imports: [
+        CommonModule,
+        FormsModule,
+        PipesModule,
+        RouterModule,
+        AngularSvgIconModule,
+        PreLoaderModule,
+        SearchModule,
+    ],
+    standalone: true,
 })
 export class NxDevelopersMenuComponent implements OnInit {
     @Output() onClick = new EventEmitter<ClickEvent>();

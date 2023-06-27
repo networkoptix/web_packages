@@ -6,7 +6,7 @@ import {
     ViewChild,
     ElementRef,
     ViewContainerRef,
-    AfterViewInit
+    AfterViewInit,
 } from '@angular/core';
 import {
     ActivationEnd,
@@ -44,15 +44,18 @@ require('what-input');
 @UntilDestroy()
 @Component({
     selector: 'nx-app',
-    template: `
-        <div *ngIf="!reauthorizing" class="headerContainer" (resize)="headerResize($event)">
+    template: ` <div
+            *ngIf="!reauthorizing"
+            class="headerContainer"
+            (resize)="headerResize($event)"
+        >
             <ng-template #header></ng-template>
             <ng-template #ribbon></ng-template>
         </div>
         <div
             class="outerContainer"
             *ngIf="appStateService.ready || reauthorizing"
-            [ngStyle]="{ 'height': appStateService.appContainerHeight }"
+            [ngStyle]="{ height: appStateService.appContainerHeight }"
         >
             <div
                 class="mainContainer"
@@ -76,7 +79,6 @@ require('what-input');
     styleUrls: ['./app.component.scss'],
     encapsulation: ViewEncapsulation.None,
 })
-
 export class AppComponent implements AfterViewInit {
     deviceInfo: DeviceInfo;
     browserBlacklist: Record<string, number>;
@@ -111,8 +113,9 @@ export class AppComponent implements AfterViewInit {
         this.appToast.createComponent(NxToastsContainer);
 
         await idle();
-        await import('@components/cookie-banner/cookie-banner.module').then(m => m.CookieBannerModule);
-        const { NxCookieBannerComponent } = await import('@components/cookie-banner/cookie-banner.component');
+        const { NxCookieBannerComponent } = await import(
+            '@components/cookie-banner/cookie-banner.component'
+        );
         this.cookieBanner.createComponent(NxCookieBannerComponent);
 
         await idle();
@@ -135,7 +138,7 @@ export class AppComponent implements AfterViewInit {
         private localStorageService: LocalStorageService,
         private accountService: NxAccountService,
         private themeService: NxThemeService,
-        @Inject(WINDOW) private window: Window
+        @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
         this.reauthorizing = this.window.location.href.includes('cloud-authorize');
@@ -145,10 +148,12 @@ export class AppComponent implements AfterViewInit {
             if (environment.isLocal || this.appStateService.ready) {
                 this.lazyLoadHeader();
             } else {
-                this.appStateService.readySubject.pipe(
-                    filter(ready => ready),
-                    take(1)
-                ).subscribe(() => this.lazyLoadHeader());
+                this.appStateService.readySubject
+                    .pipe(
+                        filter(ready => ready),
+                        take(1),
+                    )
+                    .subscribe(() => this.lazyLoadHeader());
             }
             this.lazyLoadComponents();
         }
@@ -193,12 +198,11 @@ export class AppComponent implements AfterViewInit {
             safari: 12,
             chrome: 76,
             firefox: 72,
-            opera: 70
+            opera: 70,
         };
 
         this.deviceInfo = this.deviceService.getDeviceInfo();
-        let browserMatchVersion =
-            this.browserBlacklist[this.deviceInfo.browser.toLowerCase()] || 0;
+        let browserMatchVersion = this.browserBlacklist[this.deviceInfo.browser.toLowerCase()] || 0;
 
         // Special case for Kyle's robot tests
         // ... device detector doesn't detect it correctly
@@ -207,12 +211,11 @@ export class AppComponent implements AfterViewInit {
         }
 
         if (browserMatchVersion !== undefined) {
-            const majorVersion = Number(
-                this.deviceInfo.browser_version.split('.')[0]
-            );
+            const majorVersion = Number(this.deviceInfo.browser_version.split('.')[0]);
 
             if (majorVersion < browserMatchVersion) {
-                this.router.navigate(['/browser'])
+                this.router
+                    .navigate(['/browser'])
                     .catch(error => console.error(error))
                     .finally(() => {
                         this.CONFIG.browserNotSupported = true;
@@ -224,7 +227,8 @@ export class AppComponent implements AfterViewInit {
 
         if (!NxBootstrapProvider.isLoaded) {
             if (!this.environment.isLocal) {
-                this.router.navigate(['/503'])
+                this.router
+                    .navigate(['/503'])
                     .catch(error => console.error(error))
                     .finally(() => {
                         this.appStateService.ready = true;
@@ -254,10 +258,9 @@ export class AppComponent implements AfterViewInit {
         // this.isInIframe = (window.location !== window.parent.location);
 
         // Route check if page is displayed inside an iframe
-        this.CONFIG.isInIframe = (
+        this.CONFIG.isInIframe =
             this.window.location.pathname.startsWith('/embed') ||
-            this.window.location.search.includes('adminPreview=true')
-        );
+            this.window.location.search.includes('adminPreview=true');
         if (this.CONFIG.isInIframe) {
             this.appStateService.headerVisibility = false;
             this.appStateService.footerVisibility = false;
@@ -285,7 +288,9 @@ export class AppComponent implements AfterViewInit {
                     this.window['_fs_ready'] = () => {
                         this.CONFIG.cloudMonitoring.isFullStoryActive = true;
                         console.info('FS: Please attach session url below to tickets');
-                        console.info(`FS - Debug session url: ${FullStory.getCurrentSessionURL(true)}`);
+                        console.info(
+                            `FS - Debug session url: ${FullStory.getCurrentSessionURL(true)}`,
+                        );
                     };
                 } catch (e) {
                     console.error('FullStory failed to init');
@@ -302,7 +307,9 @@ export class AppComponent implements AfterViewInit {
                     this.window['_fs_ready'] = () => {
                         this.CONFIG.cloudMonitoring.isFullStoryActive = true;
                         console.info('FS: Please attach session url below to tickets');
-                        console.info(`FS - Debug session url: ${FullStory.getCurrentSessionURL(true)}`);
+                        console.info(
+                            `FS - Debug session url: ${FullStory.getCurrentSessionURL(true)}`,
+                        );
                     };
                 } catch (e) {
                     console.error('FullStory failed to init');
@@ -314,35 +321,36 @@ export class AppComponent implements AfterViewInit {
         // Updates query params for components without routes.
         this.router.events
             .pipe(
-                filter((event: RouterEvent) => event instanceof ActivationStart ||
-                    event instanceof ActivationEnd ||
-                    event instanceof GuardsCheckStart ||
-                    event instanceof GuardsCheckEnd
+                filter(
+                    (event: RouterEvent) =>
+                        event instanceof ActivationStart ||
+                        event instanceof ActivationEnd ||
+                        event instanceof GuardsCheckStart ||
+                        event instanceof GuardsCheckEnd,
                 ),
-                untilDestroyed(this)
-            ).subscribe((event: ActivationStart |
-                ActivationEnd |
-                GuardsCheckStart |
-                GuardsCheckEnd
-            ) => {
-                if (event instanceof GuardsCheckStart) {
-                    this.loading = true;
-                    return;
-                }
-                if (event instanceof GuardsCheckEnd) {
-                    this.loading = false;
-                    return;
-                }
+                untilDestroyed(this),
+            )
+            .subscribe(
+                (event: ActivationStart | ActivationEnd | GuardsCheckStart | GuardsCheckEnd) => {
+                    if (event instanceof GuardsCheckStart) {
+                        this.loading = true;
+                        return;
+                    }
+                    if (event instanceof GuardsCheckEnd) {
+                        this.loading = false;
+                        return;
+                    }
 
-                if ('debug' in event.snapshot.queryParams) {
-                    this.CONFIG.allowDebugMode = true;
-                }
+                    if ('debug' in event.snapshot.queryParams) {
+                        this.CONFIG.allowDebugMode = true;
+                    }
 
-                this.uriService.queryParams = event.snapshot.queryParams;
-                if (this.mainContainer?.nativeElement) {
-                    this.mainContainer.nativeElement.scrollTop = 0;
-                }
-            });
+                    this.uriService.queryParams = event.snapshot.queryParams;
+                    if (this.mainContainer?.nativeElement) {
+                        this.mainContainer.nativeElement.scrollTop = 0;
+                    }
+                },
+            );
 
         if (this.CONFIG.featureFlags.themesEnabled) {
             this.themeService.initTheme().then();
@@ -360,21 +368,26 @@ export class AppComponent implements AfterViewInit {
     windowListener(): void {
         if (this.applyService.locked) {
             this.window.history.go(1);
-            this.applyService.showDialog().catch(() => {
-            });
+            this.applyService.showDialog().catch(() => {});
         }
     }
 
     ngAfterViewInit(): void {
-        fromEvent<Event>(this.mainContainer.nativeElement, 'scroll').pipe(untilDestroyed(this)).subscribe(() => {
-            this.scrollMechanicsService.windowScroll = this.mainContainer.nativeElement.scrollTop;
-        });
+        fromEvent<Event>(this.mainContainer.nativeElement, 'scroll')
+            .pipe(untilDestroyed(this))
+            .subscribe(() => {
+                this.scrollMechanicsService.windowScroll =
+                    this.mainContainer.nativeElement.scrollTop;
+            });
 
-        this.scrollMechanicsService.windowScrollSubject.pipe(untilDestroyed(this)).subscribe(scroll => {
-            const prevScroll = this.mainContainer.nativeElement.scrollTop;
-            if (prevScroll !== scroll) { // Only trigges on programatically set scroll
-                this.mainContainer.nativeElement.scrollTop = scroll;
-            }
-        });
+        this.scrollMechanicsService.windowScrollSubject
+            .pipe(untilDestroyed(this))
+            .subscribe(scroll => {
+                const prevScroll = this.mainContainer.nativeElement.scrollTop;
+                if (prevScroll !== scroll) {
+                    // Only trigges on programatically set scroll
+                    this.mainContainer.nativeElement.scrollTop = scroll;
+                }
+            });
     }
 }

@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { ActivationEnd, NavigationCancel, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -5,6 +6,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
+import { NxAdditionalSystemsTileComponent } from '@components/dropdowns/drop-menu/additional-systems-tile/additional-systems-tile.component';
+import { NxNavigationTileComponent } from '@components/dropdowns/drop-menu/navigation-tile/navigation-tile.component';
+import { NxSystemTileComponent } from '@components/dropdowns/drop-menu/system-tile/system-tile.component';
+import { DirectivesModule } from '@directives/directives.module';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import type { Account } from '@services/account.service/account';
@@ -23,6 +28,14 @@ import { BaseDropdown } from '../injDropdown';
     selector: 'nx-drop-menu',
     templateUrl: 'drop-menu.component.html',
     styleUrls: ['drop-menu.component.scss'],
+    imports: [
+        CommonModule,
+        NxAdditionalSystemsTileComponent,
+        DirectivesModule,
+        NxNavigationTileComponent,
+        NxSystemTileComponent,
+    ],
+    standalone: true,
 })
 export class NxDropMenu extends BaseDropdown {
     @Input() endpoint: any = {};

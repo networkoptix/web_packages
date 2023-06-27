@@ -1,11 +1,16 @@
+import { CommonModule } from '@angular/common';
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 
 import { accountSelectors } from '@common/store/account';
 import { accountDropdown } from '@components/static-variables-components';
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
+import { DirectivesModule } from '@directives/directives.module';
 import { environment } from '@environments/environment';
 import { icons } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
@@ -25,6 +30,8 @@ import { BaseDropdown } from '../injDropdown';
             ? 'account-settings-webadmin.component.scss'
             : 'account-settings.component.scss',
     ],
+    imports: [CommonModule, RouterModule, TranslateModule, AngularSvgIconModule, DirectivesModule],
+    standalone: true,
 })
 export class NxAccountSettingsDropdown extends BaseDropdown {
     @IBool() @Input() small: CoercedBoolInput;

@@ -4,8 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { MenuModule } from '@app/menu/menu.module';
-import { ContentBlockModule } from '@components/content-block/content-block.module';
-import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { FooterModule } from '@components/footer/footer.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { FeatureGuard } from '@guards/feature.guard';
@@ -58,8 +58,8 @@ export const cloudPartnersRoutes: Routes = [
         FormsModule,
         RouterModule.forChild(cloudPartnersRoutes),
         AngularSvgIconModule,
-        ContentBlockModule,
-        ContentBlockSectionModule,
+        NxContentBlockComponent,
+        NxContentBlockSectionComponent,
         FooterModule,
         MenuModule,
         NxCustomizationModule,

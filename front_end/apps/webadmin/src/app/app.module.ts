@@ -24,7 +24,7 @@ import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 
 import { accountReducer } from '@common/store/account';
-import { ApplyModule } from '@components/apply/apply.module';
+import { NxApplyComponent } from '@components/apply/apply.component';
 import { NavFooterModule } from '@components/nav-footer/nav-footer.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { PopoverModule } from '@components/popover/popover.module';
@@ -97,7 +97,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         NgxMaskModule.forRoot(),
     ],
     providers: [
-        ApplyModule,
+        NxApplyComponent,
         Location,
         Title,
         CookieService,

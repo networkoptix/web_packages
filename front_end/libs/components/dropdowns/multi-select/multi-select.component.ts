@@ -1,9 +1,15 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, forwardRef } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
+import { DirectivesModule } from '@directives/directives.module';
 import { icons } from '@lib/variables/static-variables';
 import { Translatable } from '@pipes/nx-translate.types';
+import { PipesModule } from '@pipes/pipes.module';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -37,6 +43,16 @@ import type { MultiSelectItem } from './multi-select.component.types';
             multi: true,
         },
     ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+        AngularSvgIconModule,
+        NxCheckboxComponent,
+        DirectivesModule,
+        PipesModule,
+    ],
+    standalone: true,
 })
 export class NxMultiSelectDropdown extends BaseDropdown {
     @Input() id: string = 'multiselect';

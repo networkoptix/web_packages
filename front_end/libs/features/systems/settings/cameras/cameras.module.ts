@@ -6,12 +6,11 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { CheckboxModule } from '@components/checkbox/checkbox.module';
-import { AlertBlockModule } from '@components/content-block/alert/block.module';
-import { ContentBlockModule } from '@components/content-block/content-block.module';
-import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
+import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
-import { ThreeDotsModule } from '@components/dropdowns/three-dot/three-dots.module';
+import { NxThreeDotDropdown } from '@components/dropdowns/three-dot/three-dot.component';
 import { EditableModule } from '@components/editable/editable.module';
 import { InfoBlockModule } from '@components/info-block/info-block.module';
 import { NumericModule } from '@components/numeric-input/numeric.module';
@@ -26,6 +25,7 @@ import { NxImageComponent } from '@pages/health/table-components/image/image.com
 import { NxCamerasComponent } from './cameras.component';
 import { NxMotionDetectionOverlay } from './motion-detection-overlay/motion-detection-overlay.component';
 import { NxRecordingSettingsComponent } from './recording-settings/recording-settings.component';
+
 @NgModule({
     imports: [
         CommonModule,
@@ -34,10 +34,9 @@ import { NxRecordingSettingsComponent } from './recording-settings/recording-set
         RouterModule,
         TranslateModule,
         AngularSvgIconModule,
-        AlertBlockModule,
-        CheckboxModule,
-        ContentBlockModule,
-        ContentBlockSectionModule,
+        NxAlertBlockComponent,
+        NxContentBlockComponent,
+        NxContentBlockSectionComponent,
         DirectivesModule,
         EditableModule,
         InfoBlockModule,
@@ -50,7 +49,7 @@ import { NxRecordingSettingsComponent } from './recording-settings/recording-set
         PreLoaderModule,
         RadioModule,
         SwitchModule,
-        ThreeDotsModule,
+        NxThreeDotDropdown,
     ],
     providers: [],
     declarations: [NxCamerasComponent, NxMotionDetectionOverlay, NxRecordingSettingsComponent],

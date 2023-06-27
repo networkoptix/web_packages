@@ -8,9 +8,9 @@ import { DBConfig, NgxIndexedDBModule } from 'ngx-indexed-db';
 import { MarkdownModule } from 'ngx-markdown';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { DevelopersMenuModule } from '@components/developers-menu/developers-menu.module';
+import { NxDevelopersMenuComponent } from '@components/developers-menu/developers-menu.component';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
-import { MultiSelectModule } from '@components/dropdowns/multi-select/multi-select.module';
+import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-select.component';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 
@@ -63,8 +63,8 @@ const dbConfig: DBConfig = {
         MarkdownModule.forRoot(),
         AngularSvgIconModule,
         NgxIndexedDBModule.forRoot(dbConfig),
-        DevelopersMenuModule,
-        MultiSelectModule,
+        NxDevelopersMenuComponent,
+        NxMultiSelectDropdown,
         NxGenericDropdownModule,
         PagePlaceHolderModule,
         PipesModule,

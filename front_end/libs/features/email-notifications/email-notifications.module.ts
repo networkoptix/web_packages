@@ -8,9 +8,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NgxFileDropModule } from 'ngx-file-drop';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { CheckboxModule } from '@components/checkbox/checkbox.module';
-import { ContentBlockModule } from '@components/content-block/content-block.module';
-import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { StepperModule } from '@components/stepper/stepper.module';
@@ -34,9 +34,9 @@ const appRoutes: Routes = [
         CdkStepperModule,
         NgxFileDropModule,
         TextFieldModule,
-        CheckboxModule,
-        ContentBlockModule,
-        ContentBlockSectionModule,
+        NxCheckboxComponent,
+        NxContentBlockComponent,
+        NxContentBlockSectionComponent,
         DirectivesModule,
         NxGenericDropdownModule,
         PipesModule,
