@@ -351,6 +351,18 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         return this.userManager.permissions.isAdmin;
     }
 
+    canViewLayouts() {
+        return (
+            this.version >= 5.1 &&
+            nxConfig.featureFlags.layouts &&
+            (nxConfig.featureFlags.restCookieLogin || !this.info.system2faEnabled) &&
+            (nxConfig.featureFlags.layoutsNonChrome ||
+                // @ts-expect-error chrome property only exist on chromium browsers
+                // eslint-disable-next-line nx/ban-global-variables
+                !!window.chrome)
+        );
+    }
+
     canUserViewCloudStorage() {
         if (!this.CONFIG.featureFlags.cloudStorage || environment.isLocal) {
             return false;

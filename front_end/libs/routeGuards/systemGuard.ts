@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
     ActivatedRouteSnapshot,
     CanActivate,
@@ -8,19 +8,19 @@ import {
     UrlTree,
 } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Observable, firstValueFrom } from 'rxjs';
+import { Observable, firstValueFrom, map } from 'rxjs';
 
+import { NxSystemRestAPI } from '@app/services/system-rest-api.service';
 import { environment } from '@environments/environment';
 import { NxSettingsService } from '@pages/systems/settings/settings.service';
 import { NxAccountService } from '@services/account.service';
 import { NxMenusService } from '@services/menus.service';
-import { NxCloudApiService } from '@services/nx-cloud-api';
 import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxSystemAPI } from '@services/system-legacy-api.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
-import { WINDOW } from '@services/window-provider';
 
 @Injectable()
 export class SystemGuard implements CanActivate {
@@ -30,13 +30,11 @@ export class SystemGuard implements CanActivate {
         private router: Router,
         private accountService: NxAccountService,
         private systemService: NxSystemService,
-        systemsService: NxSystemsService,
+        private systemsService: NxSystemsService,
         private settingsService: NxSettingsService,
-        private cloudApi: NxCloudApiService,
         private menusService: NxMenusService,
         private configService: NxConfigService,
         private deviceService: DeviceDetectorService,
-        @Inject(WINDOW) private window: Window,
     ) {}
 
     canActivate(
@@ -92,11 +90,7 @@ export class SystemGuard implements CanActivate {
                 advanced: isAdmin,
                 servers: isAdmin,
                 monitoring: isAdmin,
-                layouts:
-                    sysVersion >= 5.1 &&
-                    (nxConfig.featureFlags.layoutsNonChrome ||
-                        // @ts-expect-error chrome property only exist on chromium browsers
-                        !!this.window.chrome),
+                layouts: system.canViewLayouts(),
                 bookmarks: canViewBookmarks,
             };
 
@@ -124,8 +118,10 @@ export class SystemGuard implements CanActivate {
                         account.email,
                     );
                 } else {
-                    const [sysInfo] = await firstValueFrom(
-                        this.cloudApi.cloudDbApi.systems(systemId),
+                    const sysInfo = await firstValueFrom(
+                        this.systemsService.systemsSubject.pipe(
+                            map(systems => systems.find(system => system.id === systemId)),
+                        ),
                     );
                     // TODO: Clean up create system args
                     currSystem = this.systemService.createSystem(
@@ -134,12 +130,20 @@ export class SystemGuard implements CanActivate {
                         null,
                         false,
                         false,
-                        parseFloat(sysInfo.version),
+                        sysInfo.version,
                     );
                     /* Need to initialize with actual version here for bookmarks
                     since without it the mediaserver will default to legacy */
                 }
 
+                const cookieLoginEnabledSystem = (
+                    mediaserver: NxSystemRestAPI | NxSystemAPI,
+                ): mediaserver is NxSystemRestAPI =>
+                    mediaserver instanceof NxSystemRestAPI && nxConfig.featureFlags.restCookieLogin;
+
+                if (cookieLoginEnabledSystem(currSystem.mediaserver)) {
+                    await firstValueFrom(currSystem.mediaserver.setAccessTokenAsCookie());
+                }
                 await currSystem.update();
                 this.settingsService.system = currSystem;
             }
