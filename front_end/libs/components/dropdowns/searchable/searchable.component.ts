@@ -19,7 +19,7 @@ import {
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { escapeRegExp } from 'lodash-es';
 
-import { NxSearchHighlightModule } from '@components/search-highlight/search-highlight.module';
+import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { icons } from '@lib/variables/static-variables';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -61,7 +61,7 @@ import type { SearchableDropdownItem as Item } from './searchable.component.type
             multi: true,
         },
     ],
-    imports: [CommonModule, AngularSvgIconModule, DirectivesModule, NxSearchHighlightModule],
+    imports: [CommonModule, AngularSvgIconModule, DirectivesModule, NxSearchHighlightComponent],
     standalone: true,
 })
 export class NxSearchableDropdown extends BaseDropdown implements Validator {

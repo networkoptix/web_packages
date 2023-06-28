@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { NxSimpleSearchModule } from '@components/simple-search/simple-search.module';
+import { NxSimpleSearchComponent } from '@components/simple-search/simple-search.component';
 
 import { NxMoreFiltersBaseModule } from '../more-filters-base/more-filters-base.module';
 
@@ -17,7 +17,7 @@ import { NxMoreTagsModalContent } from './more-tags.component';
         TranslateModule,
 
         NxMoreFiltersBaseModule,
-        NxSimpleSearchModule,
+        NxSimpleSearchComponent,
     ],
     declarations: [NxMoreTagsModalContent],
     providers: [],

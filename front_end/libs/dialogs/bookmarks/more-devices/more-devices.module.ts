@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
-import { NxSimpleSearchModule } from '@components/simple-search/simple-search.module';
+import { NxSimpleSearchComponent } from '@components/simple-search/simple-search.component';
 
 import { NxMoreFiltersBaseModule } from '../more-filters-base/more-filters-base.module';
 
@@ -19,7 +19,7 @@ import { NxMoreDevicesModalContent } from './more-devices.component';
 
         NxMoreFiltersBaseModule,
         NxCheckboxComponent,
-        NxSimpleSearchModule,
+        NxSimpleSearchComponent,
     ],
     declarations: [NxMoreDevicesModalContent],
     providers: [],

@@ -1,10 +1,19 @@
+import { CdkStepperModule } from '@angular/cdk/stepper';
+import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { BehaviorSubject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxStepperComponent } from '@components/stepper/stepper.component';
+import { DirectivesModule } from '@directives/directives.module';
 import { icons } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -25,6 +34,19 @@ interface SystemDropdownItem extends DropdownItem<string> {
     selector: 'nx-event-generator-widget',
     templateUrl: './event-generator.component.html',
     styleUrls: ['./event-generator.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+        AngularSvgIconModule,
+        CdkStepperModule,
+        DirectivesModule,
+        NxGenericDropdownModule,
+        NxPreLoaderComponent,
+        NxProcessButtonComponent,
+        NxStepperComponent,
+    ],
 })
 export class NxEventGeneratorWidgetComponent
     extends FirstPartyWidget<typeof NxEventGeneratorWidgetComponent.BASE_CONFIG>

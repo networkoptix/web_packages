@@ -17,7 +17,7 @@ import { v4 as uuid } from 'uuid';
 import { PipesModule } from '@app/pipes/pipes.module';
 import { NxPaginatorComponent } from '@components/paginator/paginator.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { SearchModule } from '@components/search/search.module';
+import { NxSearchComponent } from '@components/search/search.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { DirectivesModule } from '@directives/directives.module';
 import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
@@ -101,7 +101,7 @@ describe('NxConsoleTableComponent', () => {
                 RouterTestingModule,
                 NxPaginatorComponent,
                 NxPreLoaderComponent,
-                SearchModule,
+                NxSearchComponent,
             ],
         }).compileComponents();
 

@@ -1,10 +1,15 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
 import { isEqual } from 'lodash-es';
 import { firstValueFrom } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
+import { NxStepperComponent } from '@components/stepper/stepper.component';
 import { NxSettingsService } from '@pages/systems/settings/settings.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -17,6 +22,14 @@ import { NgChanges } from '@utils/ng-changes';
     selector: 'nx-license-summary-component',
     templateUrl: 'summary.component.html',
     styleUrls: ['summary.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        TranslateModule,
+        NxStepperComponent,
+        NxContentBlockComponent,
+        NxContentBlockSectionComponent,
+    ],
 })
 export class NxLicenseSummaryComponent implements OnInit, OnChanges {
     @Input() selectedSystem: NxSystem;

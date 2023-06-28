@@ -9,11 +9,17 @@ import {
     ViewChild,
     ViewEncapsulation,
 } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
+import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
+import { NxThemeSwitcherComponent } from '@components/theme-switcher/theme-switcher.component';
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { NxSessionService } from '@services/session.service';
 import { NxThemeService } from '@services/theme.service';
@@ -24,6 +30,16 @@ import { NxThemeService } from '@services/theme.service';
     templateUrl: 'theme-colors.component.html',
     styleUrls: ['theme-colors.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [
+        FormsModule,
+        TranslateModule,
+        NxCheckboxComponent,
+        NxContentBlockComponent,
+        NxContentBlockSectionComponent,
+        NxGenericDropdownModule,
+        NxThemeSwitcherComponent,
+    ],
 })
 export class NxThemeGeneratorComponent implements OnInit, AfterViewInit {
     @IBool() @Input('advanced') advanced: CoercedBoolInput;

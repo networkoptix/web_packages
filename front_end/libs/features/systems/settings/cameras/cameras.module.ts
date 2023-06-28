@@ -17,8 +17,8 @@ import { NxNumericComponent } from '@components/numeric-input/numeric.component'
 import { OpenClientSectionPlaceholderModule } from '@components/placeholders/open-client-section/open-client-section.module';
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { RadioModule } from '@components/radio/radio.module';
-import { SwitchModule } from '@components/switch/switch.module';
+import { NxRadioComponent } from '@components/radio/radio.component';
+import { NxSwitchComponent } from '@components/switch/switch.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
 
@@ -47,8 +47,8 @@ import { NxRecordingSettingsComponent } from './recording-settings/recording-set
         NxPagePlaceholderComponent,
         PipesModule,
         NxPreLoaderComponent,
-        RadioModule,
-        SwitchModule,
+        NxRadioComponent,
+        NxSwitchComponent,
         NxThreeDotDropdown,
     ],
     providers: [],

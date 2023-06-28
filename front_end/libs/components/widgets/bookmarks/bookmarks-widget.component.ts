@@ -1,11 +1,16 @@
+import { OverlayModule } from '@angular/cdk/overlay';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { Observable, Subject } from 'rxjs';
 import { debounceTime, switchMap, shareReplay, map, tap, catchError } from 'rxjs/operators';
 
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxStepperComponent } from '@components/stepper/stepper.component';
+import { NxTagComponent } from '@components/tag/tag.component';
 import { icons } from '@lib/variables/static-variables';
-import type { Bookmark } from '@pages/systems/bookmarks/bookmark.types';
+import type { Bookmark } from '@pages/systems/bookmarks/bookmarks.types';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { NxSystem } from '@services/system.service/system';
@@ -39,6 +44,14 @@ interface SystemDropdownItem extends DropdownItem<string> {
     selector: 'nx-bookmarks-widget',
     templateUrl: './bookmarks-widget.component.html',
     styleUrls: ['./bookmarks-widget.component.scss'],
+    standalone: true,
+    imports: [
+        AngularSvgIconModule,
+        NxPreLoaderComponent,
+        NxStepperComponent,
+        NxTagComponent,
+        OverlayModule,
+    ],
 })
 export class NxBookmarksWidgetComponent extends FirstPartyWidget<
     typeof NxBookmarksWidgetComponent.BASE_CONFIG

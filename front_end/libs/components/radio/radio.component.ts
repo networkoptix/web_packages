@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
     Component,
     Input,
@@ -41,6 +42,8 @@ import { IBool, CoercedBoolInput } from '@decorators/ibool';
         },
     ],
     encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [CommonModule],
 })
 export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator {
     @Input() componentId: string;

@@ -1,8 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, forwardRef, Input, OnChanges, HostListener } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { escape, escapeRegExp } from 'lodash-es';
+import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { icons } from '@lib/variables/static-variables';
 import { spaceSplitSearch } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
@@ -13,6 +18,15 @@ import type { SuggestionList, Suggestions } from './simple-search.types';
     selector: 'nx-simple-search',
     templateUrl: 'simple-search.component.html',
     styleUrls: ['simple-search.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        AngularSvgIconModule,
+        NgxTranslateCutModule,
+        TranslateModule,
+        NxSearchHighlightComponent,
+    ],
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,

@@ -1,4 +1,4 @@
-import { CdkDragMove } from '@angular/cdk/drag-drop';
+import { CdkDragMove, DragDropModule } from '@angular/cdk/drag-drop';
 import {
     Component,
     ElementRef,
@@ -20,6 +20,8 @@ type SliderRange = { start: number; end: number; decimal?: boolean };
     selector: 'nx-slider',
     templateUrl: 'slider.component.html',
     styleUrls: ['slider.component.scss'],
+    standalone: true,
+    imports: [DragDropModule],
 })
 export class NxSliderComponent implements OnInit, OnChanges {
     @Input() id: string;

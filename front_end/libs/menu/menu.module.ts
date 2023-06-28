@@ -5,8 +5,8 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { SearchModule } from '@components/search/search.module';
-import { NxSearchHighlightModule } from '@components/search-highlight/search-highlight.module';
+import { NxSearchComponent } from '@components/search/search.component';
+import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@pipes/pipes.module';
 
@@ -28,8 +28,8 @@ import { NxMenuComponent } from './menu.component';
 
         DirectivesModule,
         PipesModule,
-        SearchModule,
-        NxSearchHighlightModule,
+        NxSearchComponent,
+        NxSearchHighlightComponent,
     ],
     declarations: [
         NxMenuComponent,

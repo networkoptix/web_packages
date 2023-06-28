@@ -10,8 +10,8 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { accountReducer } from '@common/store/account';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxSearchHighlightModule } from '@components/search-highlight/search-highlight.module';
-import { NxBaseTableModule } from '@components/table/table.module';
+import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
+import { NxBaseTableComponent } from '@components/table/table.component';
 import { NxTabsComponent } from '@components/tabs/tabs.component';
 import { NxTabsDirective } from '@components/tabs/tabs.directive';
 import { DirectivesModule } from '@directives/directives.module';
@@ -95,8 +95,8 @@ const homeRoutes: Routes = [
         StoreModule.forFeature('channelPartners', channelPartnersReducer),
         NxCheckboxComponent,
         DirectivesModule,
-        NxBaseTableModule,
-        NxSearchHighlightModule,
+        NxBaseTableComponent,
+        NxSearchHighlightComponent,
         NxPreLoaderComponent,
     ],
     declarations: [

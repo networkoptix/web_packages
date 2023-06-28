@@ -13,7 +13,7 @@ import { NxContentBlockComponent } from '@components/content-block/content-block
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { StepperModule } from '@components/stepper/stepper.module';
+import { NxStepperComponent } from '@components/stepper/stepper.component';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { EmailNotificationsComponent } from './email-notifications.component';
@@ -41,7 +41,7 @@ const appRoutes: Routes = [
         NxGenericDropdownModule,
         PipesModule,
         NxPreLoaderComponent,
-        StepperModule,
+        NxStepperComponent,
     ],
     providers: [],
     declarations: [EmailNotificationsComponent],

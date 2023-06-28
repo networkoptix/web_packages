@@ -14,7 +14,7 @@ import { NxInfoBlockComponent } from '@components/info-block/info-block.componen
 import { NxPaginatorComponent } from '@components/paginator/paginator.component';
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { SearchModule } from '@components/search/search.module';
+import { NxSearchComponent } from '@components/search/search.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { AuthGuard } from '@guards/authGuard';
 import { SystemGuard } from '@guards/systemGuard';
@@ -101,7 +101,7 @@ const appRoutes: Routes = [
         NxPaginatorComponent,
         PipesModule,
         NxPreLoaderComponent,
-        SearchModule,
+        NxSearchComponent,
     ],
     providers: [NxHealthLayoutService],
     declarations: [

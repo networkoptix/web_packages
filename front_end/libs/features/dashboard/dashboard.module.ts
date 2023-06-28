@@ -11,17 +11,16 @@ import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.
 import { NxDynamicWidgetComponent } from '@components/dynamic-widget/dynamic-widget.component';
 import { EditableModule } from '@components/editable/editable.module';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { SwitchModule } from '@components/switch/switch.module';
-import { AssetExplorerWidgetModule } from '@components/widgets/asset-explorer/asset-explorer-widget.module';
-// import { BookmarksWidgetModule } from '@components/widgets/bookmarks/bookmarks-widget.module';
-import { EventGeneratorModule } from '@components/widgets/event-generator/event-generator.module';
-import { HealthMonitorWidgetModule } from '@components/widgets/health-monitor/health-monitor-widget.module';
-import { LiveViewWidgetModule } from '@components/widgets/live-view/live-view-widget.module';
-import { ServerLoggerWidgetModule } from '@components/widgets/server-logger/server-logger-widget.module';
-import { ServerMonitorWidgetModule } from '@components/widgets/server-monitor/server-monitor-widget.module';
-import { SystemLicenseSummaryModule } from '@components/widgets/system-license-summary/system-license-summary-widget.module';
-import { SystemListWidgetModule } from '@components/widgets/systems-list/systems-list-widget.module';
-import { ThirdsPartyWidgetModule } from '@components/widgets/third-party/third-party-widget.module';
+import { NxSwitchComponent } from '@components/switch/switch.component';
+import { NxAssetExplorerWidgetComponent } from '@components/widgets/asset-explorer/asset-explorer-widget.component';
+import { NxEventGeneratorWidgetComponent } from '@components/widgets/event-generator/event-generator.component';
+import { NxHealthMonitorWidgetComponent } from '@components/widgets/health-monitor/health-monitor-widget.component';
+import { NxLiveViewWidgetComponent } from '@components/widgets/live-view/live-view-widget.component';
+import { NxServerLoggerWidgetComponent } from '@components/widgets/server-logger/server-logger-widget.component';
+import { NxServerMonitorWidgetComponent } from '@components/widgets/server-monitor/server-monitor-widget.component';
+import { NxSystemLicenseSummaryWidget } from '@components/widgets/system-license-summary/system-license-summary-widget.component';
+import { NxSystemsListWidgetComponent } from '@components/widgets/systems-list/systems-list-widget.component';
+import { NxThirdPartyWidgetComponent } from '@components/widgets/third-party/third-party-widget.component';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { NxDashboardComponent } from './dashboard.component';
@@ -41,18 +40,18 @@ const appRoutes: Routes = [{ path: '', component: NxDashboardComponent }];
         NxGenericDropdownModule,
         PipesModule,
         NxPreLoaderComponent,
-        SwitchModule,
-        AssetExplorerWidgetModule,
+        NxSwitchComponent,
+        NxAssetExplorerWidgetComponent,
         // BookmarksWidgetModule,
         NxDynamicWidgetComponent,
-        HealthMonitorWidgetModule,
-        LiveViewWidgetModule,
-        ServerLoggerWidgetModule,
-        ServerMonitorWidgetModule,
-        SystemLicenseSummaryModule,
-        SystemListWidgetModule,
-        ThirdsPartyWidgetModule,
-        EventGeneratorModule,
+        NxHealthMonitorWidgetComponent,
+        NxLiveViewWidgetComponent,
+        NxServerLoggerWidgetComponent,
+        NxServerMonitorWidgetComponent,
+        NxSystemLicenseSummaryWidget,
+        NxSystemsListWidgetComponent,
+        NxThirdPartyWidgetComponent,
+        NxEventGeneratorWidgetComponent,
     ],
     providers: [],
     declarations: [NxDashboardComponent],

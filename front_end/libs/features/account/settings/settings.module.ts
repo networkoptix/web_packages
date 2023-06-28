@@ -10,7 +10,7 @@ import { NxContentBlockComponent } from '@components/content-block/content-block
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { LanguageModule } from '@components/dropdowns/language/language.module';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { ThemeSwitcherModule } from '@components/theme-switcher/theme-switcher.module';
+import { NxThemeSwitcherComponent } from '@components/theme-switcher/theme-switcher.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { NxAccountSettingsComponent } from '@pages/account/settings/settings.component';
 
@@ -27,7 +27,7 @@ import { NxAccountSettingsComponent } from '@pages/account/settings/settings.com
         LanguageModule,
         PipesModule,
         NxPreLoaderComponent,
-        ThemeSwitcherModule,
+        NxThemeSwitcherComponent,
     ],
     providers: [],
     declarations: [NxAccountSettingsComponent],

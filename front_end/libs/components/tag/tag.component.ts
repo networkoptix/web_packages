@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import type { Params } from '@angular/router';
@@ -30,6 +31,8 @@ import { IBool, CoercedBoolInput } from '@decorators/ibool';
             multi: true,
         },
     ],
+    standalone: true,
+    imports: [CommonModule],
 })
 export class NxTagComponent implements OnInit, ControlValueAccessor {
     @Input() type: string;

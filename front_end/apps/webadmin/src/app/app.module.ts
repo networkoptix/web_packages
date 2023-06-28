@@ -28,8 +28,8 @@ import { NxApplyComponent } from '@components/apply/apply.component';
 import { NxNavFooterComponent } from '@components/nav-footer/nav-footer.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { PopoverModule } from '@components/popover/popover.module';
-import { TourStepModule } from '@components/tour-step/tour-step.module';
 // import { DirectivesModule } from '@directives/directives.module';
+import { NxTourStepComponent } from '@components/tour-step/tour-step.component';
 import { ResizeModule } from '@directives/resize/resize.module';
 import { environment } from '@environments/environment';
 import { AuthGuard } from '@guards/authGuard';
@@ -92,7 +92,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         NxPreLoaderComponent,
         NxNavFooterComponent,
         ResizeModule,
-        TourStepModule,
+        NxTourStepComponent,
         TourMatMenuModule.forRoot(),
         NgxMaskModule.forRoot(),
     ],

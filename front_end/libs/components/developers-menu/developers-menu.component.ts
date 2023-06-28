@@ -10,7 +10,7 @@ import { takeUntil } from 'rxjs/operators';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
-import { SearchModule } from '@components/search/search.module';
+import { NxSearchComponent } from '@components/search/search.component';
 import { icons } from '@lib/variables/static-variables';
 import { PipesModule } from '@pipes/pipes.module';
 import { MenuNode } from '@services/menus.service.types';
@@ -35,7 +35,7 @@ import type { MenuNodeWithParent, ClickEvent, RelatedLinks } from './developers-
         RouterModule,
         AngularSvgIconModule,
         NxPreLoaderComponent,
-        SearchModule,
+        NxSearchComponent,
     ],
     standalone: true,
 })

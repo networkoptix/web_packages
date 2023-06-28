@@ -17,7 +17,7 @@ import { NxClientButtonComponent } from '@components/open-client-button/client-b
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSectionPlaceholderComponent } from '@components/placeholders/section/section-placeholder.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
-import { TagModule } from '@components/tag/tag.module';
+import { NxTagComponent } from '@components/tag/tag.component';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { NxSystemAdminComponent } from './admin.component';
@@ -45,7 +45,7 @@ import { NxSystemStandardAdminComponent } from './standard/standard.component';
         NxPreLoaderComponent,
         NxProcessButtonComponent,
         NxSectionPlaceholderComponent,
-        TagModule,
+        NxTagComponent,
     ],
     providers: [],
     declarations: [

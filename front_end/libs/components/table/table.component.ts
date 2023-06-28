@@ -1,5 +1,5 @@
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { DOCUMENT } from '@angular/common';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
     Component,
@@ -19,12 +19,19 @@ import {
 } from '@angular/core';
 import { Params } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
 import { isEqual } from 'lodash-es';
 
 import staticLang from '@app/language/language_i18n_static.json';
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
+import { NxPaginatorComponent } from '@components/paginator/paginator.component';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxSectionPlaceholderComponent } from '@components/placeholders/section/section-placeholder.component';
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { Size } from '@directives/resize/nx-resize.directive.types';
+import { ResizeModule } from '@directives/resize/resize.module';
 import { IpvdParams } from '@pages/ipvd/ipvd.types';
 import { NxUriService } from '@services/uri.service';
 import { paramSortFunc } from '@utils/general';
@@ -59,6 +66,18 @@ const ROW_HEIGHT = 40; // if needed a change - do it in theme_variable_common to
     selector: 'nx-table',
     templateUrl: 'table.component.html',
     styleUrls: ['table.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        TranslateModule,
+        DragDropModule,
+        NxCheckboxComponent,
+        NxGenericDropdownModule,
+        NxPaginatorComponent,
+        NxPreLoaderComponent,
+        ResizeModule,
+        NxSectionPlaceholderComponent,
+    ],
 })
 export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
     @Input() data: T[];

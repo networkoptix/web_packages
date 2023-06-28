@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 // import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { TagModule } from '@components/tag/tag.module';
+import { NxTagComponent } from '@components/tag/tag.component';
 
 import { NxTagFilterComponent } from './tag-filter.component';
 
@@ -15,7 +15,7 @@ import { NxTagFilterComponent } from './tag-filter.component';
         AngularSvgIconModule,
         // TranslateModule,
 
-        TagModule,
+        NxTagComponent,
     ],
     declarations: [NxTagFilterComponent],
     providers: [],

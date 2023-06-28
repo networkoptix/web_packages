@@ -10,9 +10,8 @@ import { PipesModule } from '@app/pipes/pipes.module';
 import { NxNoSystemsComponent } from '@components/no-systems/no-systems.component';
 import { NxClientButtonComponent } from '@components/open-client-button/client-button.component';
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
-import { SearchModule } from '@components/search/search.module';
+import { NxSearchComponent } from '@components/search/search.component';
 import { NxSystemsListComponent } from '@components/systems-list/list.component';
-import { SystemListModule } from '@components/systems-list/list.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { AuthGuard } from '@guards/authGuard';
 
@@ -38,8 +37,8 @@ const appRoutes: Routes = [
         NxNoSystemsComponent,
         NxPagePlaceholderComponent,
         PipesModule,
-        SearchModule,
-        SystemListModule,
+        NxSearchComponent,
+        NxSystemsListComponent,
     ],
     providers: [],
     declarations: [],

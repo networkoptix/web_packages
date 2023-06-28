@@ -1,6 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxClientButtonComponent } from '@components/open-client-button/client-button.component';
+import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
+import { NxTagComponent } from '@components/tag/tag.component';
+import { DirectivesModule } from '@directives/directives.module';
 import { icons } from '@lib/variables/static-variables';
 import type { Account } from '@services/account.service/account';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -13,6 +20,16 @@ import { NgChanges } from '@utils/ng-changes';
     selector: 'nx-system-card',
     templateUrl: 'system-card.component.html',
     styleUrls: ['system-card.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        TranslateModule,
+        AngularSvgIconModule,
+        NxClientButtonComponent,
+        DirectivesModule,
+        NxSearchHighlightComponent,
+        NxTagComponent,
+    ],
 })
 export class SystemCardComponent implements OnChanges {
     @Input() system: NxSystemInfo;

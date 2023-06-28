@@ -1,9 +1,18 @@
+import { CdkStepperModule } from '@angular/cdk/stepper';
+import { CommonModule } from '@angular/common';
 import { Component, ChangeDetectorRef } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, defer, Subject, timer } from 'rxjs';
 import { debounceTime, switchMap, shareReplay, map, tap, scan } from 'rxjs/operators';
 
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
+import { NxLoggerComponent } from '@components/logger/logger.component';
+import { NxNumericComponent } from '@components/numeric-input/numeric.component';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxStepperComponent } from '@components/stepper/stepper.component';
+import { NxLicenseSummaryComponent } from '@components/summary/summary.component';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { NxSystem } from '@services/system.service/system';
@@ -20,6 +29,18 @@ interface SystemDropdownItem extends DropdownItem<string> {
     selector: 'nx-system-license-summary-widget',
     templateUrl: './system-license-summary-widget.component.html',
     styleUrls: ['./system-license-summary-widget.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        CdkStepperModule,
+        NxLicenseSummaryComponent,
+        NxNumericComponent,
+        NxPreLoaderComponent,
+        NxGenericDropdownModule,
+        NxLoggerComponent,
+        NxStepperComponent,
+    ],
 })
 export class NxSystemLicenseSummaryWidget extends FirstPartyWidget<
     typeof NxSystemLicenseSummaryWidget.BASE_CONFIG

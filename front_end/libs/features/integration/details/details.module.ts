@@ -12,7 +12,7 @@ import { NxContentBlockSectionComponent } from '@components/content-block/sectio
 import { NxExternalVideoComponent } from '@components/external-video/external-video.component';
 import { NxFooterComponent } from '@components/footer/footer.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { TagModule } from '@components/tag/tag.module';
+import { NxTagComponent } from '@components/tag/tag.component';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { NxIntegrationDetailsComponent } from './details.component';
@@ -47,7 +47,7 @@ const appRoutes: Routes = [
         MenuModule,
         PipesModule,
         NxPreLoaderComponent,
-        TagModule,
+        NxTagComponent,
     ],
     providers: [],
     declarations: [NxIntegrationDetailsComponent, NxSetupComponent, NxOverviewComponent],

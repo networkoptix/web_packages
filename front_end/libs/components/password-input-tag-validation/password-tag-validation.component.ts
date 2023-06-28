@@ -3,8 +3,8 @@ import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { TagModule } from '@components/tag/tag.module';
-import { TooltipModule } from '@components/tooltip/tooltip.module';
+import { NxTagComponent } from '@components/tag/tag.component';
+import { NxTooltipComponent } from '@components/tooltip/tooltip.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@pipes/pipes.module';
 
@@ -19,8 +19,8 @@ import { PipesModule } from '@pipes/pipes.module';
         DirectivesModule,
         TranslateModule,
         PipesModule,
-        TooltipModule,
-        TagModule,
+        NxTooltipComponent,
+        NxTagComponent,
     ],
 })
 export class NxPasswordTagValidationComponent {

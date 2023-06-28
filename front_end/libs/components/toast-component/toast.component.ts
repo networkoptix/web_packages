@@ -1,9 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output, TemplateRef } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subject, timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import type { Translatable } from '@pipes/nx-translate.types';
+import { PipesModule } from '@pipes/pipes.module';
 import { NgChanges } from '@utils/ng-changes';
 
 import type { Toast } from '../toast-container/toast.types';
@@ -13,6 +15,8 @@ import type { Toast } from '../toast-container/toast.types';
     selector: 'nx-toast',
     templateUrl: 'toast.component.html',
     styleUrls: ['toast.component.scss'],
+    standalone: true,
+    imports: [CommonModule, PipesModule],
 })
 export class NxToast implements OnChanges {
     @Input() toast: Toast;

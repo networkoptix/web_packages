@@ -3,14 +3,18 @@ import {
     CdkPortalOutlet,
     ComponentPortal,
     Portal,
+    PortalModule,
     TemplatePortal,
 } from '@angular/cdk/portal';
+import { CommonModule } from '@angular/common';
 import { Component, ComponentRef, EmbeddedViewRef, ViewChild } from '@angular/core';
 
 @Component({
     selector: 'nx-tooltip-component',
     styleUrls: ['./tooltip.component.scss'],
     templateUrl: './tooltip.component.html',
+    standalone: true,
+    imports: [CommonModule, PortalModule],
 })
 export class NxTooltipComponent extends BasePortalOutlet {
     _text = '';

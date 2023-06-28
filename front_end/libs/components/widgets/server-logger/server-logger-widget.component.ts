@@ -1,9 +1,16 @@
+import { CdkStepperModule } from '@angular/cdk/stepper';
+import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, defer, Subject } from 'rxjs';
 import { debounceTime, switchMap, shareReplay, map, filter } from 'rxjs/operators';
 
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
+import { NxLoggerComponent } from '@components/logger/logger.component';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxStepperComponent } from '@components/stepper/stepper.component';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxSystemService } from '@services/system.service/system.service';
@@ -20,6 +27,16 @@ interface SystemDropdownItem extends DropdownItem<string> {
     selector: 'nx-server-logger-widget',
     templateUrl: './server-logger-widget.component.html',
     styleUrls: ['./server-logger-widget.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        CdkStepperModule,
+        NxLoggerComponent,
+        NxGenericDropdownModule,
+        NxPreLoaderComponent,
+        NxStepperComponent,
+    ],
 })
 export class NxServerLoggerWidgetComponent extends FirstPartyWidget<
     typeof NxServerLoggerWidgetComponent.BASE_CONFIG

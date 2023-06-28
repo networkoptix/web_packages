@@ -1,4 +1,5 @@
 import { Direction } from '@angular/cdk/bidi';
+import { CommonModule } from '@angular/common';
 import {
     Component,
     OnInit,
@@ -9,17 +10,22 @@ import {
     Output,
     Inject,
 } from '@angular/core';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { isEqual, cloneDeep } from 'lodash-es';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
+import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-select.component';
+import { NxTagComponent } from '@components/tag/tag.component';
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { icons, search } from '@lib/variables/static-variables';
+import { PipesModule } from '@pipes/pipes.module';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSearchService } from '@services/search.service';
 import { ButtonArrowType } from '@services/search.service.types';
@@ -67,6 +73,17 @@ import type { SearchFilter } from './search.component.types';
         },
     ],
     styleUrls: ['./search.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+        AngularSvgIconModule,
+        NxMultiSelectDropdown,
+        NxGenericDropdownModule,
+        PipesModule,
+        NxTagComponent,
+    ],
 })
 export class NxSearchComponent implements OnInit, ControlValueAccessor {
     @Input() layout: 'search' | 'selectors' | 'compact' | 'full' = 'full';

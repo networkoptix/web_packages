@@ -1,6 +1,13 @@
+import { CdkStepperModule } from '@angular/cdk/stepper';
+import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
+import { NxStepperComponent } from '@components/stepper/stepper.component';
+import { NxSystemsListComponent } from '@components/systems-list/list.component';
+import { PipesModule } from '@pipes/pipes.module';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemInfo } from '@services/systems.service.types';
 
@@ -11,6 +18,16 @@ import { FirstPartyWidget } from '../helper-classes';
     selector: 'nx-systems-list-widget',
     templateUrl: './systems-list-widget.component.html',
     styleUrls: ['./systems-list-widget.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        CdkStepperModule,
+        NxCheckboxComponent,
+        PipesModule,
+        NxStepperComponent,
+        NxSystemsListComponent,
+    ],
 })
 export class NxSystemsListWidgetComponent extends FirstPartyWidget<
     typeof NxSystemsListWidgetComponent.BASE_CONFIG

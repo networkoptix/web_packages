@@ -1,9 +1,12 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { NgxFileDropModule } from 'ngx-file-drop';
 
 import { ToastType } from '@components/toast-container/toast.types';
 import { SharedWidgetState } from '@lib/dashboard-widget-state';
+import { PipesModule } from '@pipes/pipes.module';
 import { NxSystemsService } from '@services/systems.service';
 import { NxToastService } from '@services/toast.service';
 
@@ -14,6 +17,8 @@ import { FirstPartyWidget } from '../helper-classes';
     selector: 'nx-third-party-widget',
     templateUrl: './third-party-widget.component.html',
     styleUrls: ['./third-party-widget.component.scss'],
+    standalone: true,
+    imports: [FormsModule, NgxFileDropModule, PipesModule],
 })
 export class NxThirdPartyWidgetComponent extends FirstPartyWidget<
     typeof NxThirdPartyWidgetComponent.BASE_CONFIG

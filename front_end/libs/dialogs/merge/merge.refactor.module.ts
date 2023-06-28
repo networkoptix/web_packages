@@ -7,7 +7,7 @@ import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
-import { RadioModule } from '@components/radio/radio.module';
+import { NxRadioComponent } from '@components/radio/radio.component';
 import { PipesModule } from '@pipes/pipes.module';
 
 import { NxMergeAdminPasswordComponent } from './admin-password/admin-password.component';
@@ -29,7 +29,7 @@ import { NxMergeSelectSystemComponent } from './select-system/select-system.comp
         NxGenericDropdownModule,
         PipesModule,
         NxProcessButtonComponent,
-        RadioModule,
+        NxRadioComponent,
     ],
     providers: [],
     declarations: [

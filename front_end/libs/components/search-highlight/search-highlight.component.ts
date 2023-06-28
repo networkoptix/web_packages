@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges } from '@angular/core';
 import { escapeRegExp } from 'lodash-es';
 
@@ -21,6 +22,8 @@ import type { NgChanges } from '@utils/ng-changes';
     selector: 'nx-search-highlight',
     templateUrl: 'search-highlight.component.html',
     styleUrls: ['search-highlight.component.scss'],
+    standalone: true,
+    imports: [CommonModule],
 })
 export class NxSearchHighlightComponent implements OnChanges {
     @Input() text: string;

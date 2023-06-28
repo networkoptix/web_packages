@@ -8,7 +8,7 @@ import { NgxMaskModule } from 'ngx-mask';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
-import { TagModule } from '@components/tag/tag.module';
+import { NxTagComponent } from '@components/tag/tag.component';
 import { PipesModule } from '@pipes/pipes.module';
 
 import { CloudStorageActivateModalContent } from './activate/cloud-storage-activate.component';
@@ -24,7 +24,7 @@ import { CloudStorageMoveModalContent } from './move/cloud-storage-move.componen
         NgxMaskModule.forRoot(),
         TranslateModule,
 
-        TagModule,
+        NxTagComponent,
         NxGenericDropdownModule,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,

@@ -28,8 +28,8 @@ import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.t
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxPaginatorComponent } from '@components/paginator/paginator.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { SearchModule } from '@components/search/search.module';
-import { NxSearchHighlightModule } from '@components/search-highlight/search-highlight.module';
+import { NxSearchComponent } from '@components/search/search.component';
+import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { DirectivesModule } from '@directives/directives.module';
@@ -73,8 +73,8 @@ import { TableDataSource } from './table-data-source';
         NxGenericDropdownModule,
         NxPaginatorComponent,
         NxPreLoaderComponent,
-        SearchModule,
-        NxSearchHighlightModule,
+        NxSearchComponent,
+        NxSearchHighlightComponent,
     ],
     standalone: true,
 })

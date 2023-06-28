@@ -7,7 +7,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxSearchHighlightModule } from '@components/search-highlight/search-highlight.module';
+import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { components } from './components';
@@ -24,7 +24,7 @@ import { IpInfoPipe } from './pipes/ip_info.pipe';
         TranslateModule,
         AngularSvgIconModule,
         DirectivesModule,
-        NxSearchHighlightModule,
+        NxSearchHighlightComponent,
         PipesModule,
         NxPreLoaderComponent,
     ],

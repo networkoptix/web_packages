@@ -8,7 +8,7 @@ import { NxContentBlockComponent } from '@components/content-block/content-block
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxFooterComponent } from '@components/footer/footer.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { SearchModule } from '@components/search/search.module';
+import { NxSearchComponent } from '@components/search/search.component';
 import { AuthGuard } from '@guards/authGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
 import { NxCustomizationModule } from '@pages/channel-partners/customization/customization.module';
@@ -51,7 +51,7 @@ export const cloudPartnersRoutes: Routes = [
         NxPartnerOrganizationsListModule,
         NxPartnerOrganizationDetailModule,
         NxPreLoaderComponent,
-        SearchModule,
+        NxSearchComponent,
     ],
     providers: [],
     declarations: [NxPartnerOrganizationsListComponent, NxPartnerOrganizationDetailComponent],

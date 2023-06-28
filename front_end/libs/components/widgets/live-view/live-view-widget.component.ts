@@ -1,9 +1,16 @@
+import { CdkStepperModule } from '@angular/cdk/stepper';
+import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subject, BehaviorSubject, combineLatest, interval, Observable } from 'rxjs';
 import { debounceTime, switchMap, shareReplay, map, tap, startWith } from 'rxjs/operators';
 
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
+import { NxNumericComponent } from '@components/numeric-input/numeric.component';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxStepperComponent } from '@components/stepper/stepper.component';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { System } from '@services/nx-cloud-api/nx-cloud-api.types';
@@ -27,6 +34,16 @@ interface CameraDropdownItem extends DropdownItem<string> {
     selector: 'nx-live-view-widget',
     templateUrl: './live-view-widget.component.html',
     styleUrls: ['./live-view-widget.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        CdkStepperModule,
+        NxNumericComponent,
+        NxGenericDropdownModule,
+        NxPreLoaderComponent,
+        NxStepperComponent,
+    ],
 })
 export class NxLiveViewWidgetComponent extends FirstPartyWidget<
     typeof NxLiveViewWidgetComponent.BASE_CONFIG

@@ -8,7 +8,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxSimpleSearchModule } from '@components/simple-search/simple-search.module';
+import { NxSimpleSearchComponent } from '@components/simple-search/simple-search.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { SystemTitleResolver } from '@resolvers/system-title-resolver';
 
@@ -38,7 +38,7 @@ const appRoutes: Routes = [
         NxDeviceFilterModule,
         NxTagFilterModule,
         NxBookmarksCardModule,
-        NxSimpleSearchModule,
+        NxSimpleSearchComponent,
         NxAlertBlockComponent,
         NxPreLoaderComponent,
         NxPagePlaceholderComponent,

@@ -5,7 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { SearchModule } from '@components/search/search.module';
+import { NxSearchComponent } from '@components/search/search.component';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { NxIntegrationsComponent } from './integrations.component';
@@ -28,7 +28,7 @@ const appRoutes: Routes = [
         DirectivesModule,
         IntegrationsListModule,
         PipesModule,
-        SearchModule,
+        NxSearchComponent,
     ],
     providers: [],
     declarations: [NxIntegrationsComponent],

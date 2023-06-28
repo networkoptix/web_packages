@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
 import {
     ControlValueAccessor,
@@ -22,6 +23,8 @@ import { NgChanges } from '@utils/ng-changes';
             multi: true,
         },
     ],
+    standalone: true,
+    imports: [CommonModule],
 })
 export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validator {
     @Input() id: string;

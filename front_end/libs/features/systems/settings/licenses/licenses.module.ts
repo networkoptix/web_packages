@@ -15,7 +15,7 @@ import { NxInfoBlockComponent } from '@components/info-block/info-block.componen
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
-import { LicenseSummaryModule } from '@components/summary/summary.module';
+import { NxLicenseSummaryComponent } from '@components/summary/summary.component';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { NxLicenseDetailComponent } from './license-details/license.component';
@@ -36,7 +36,7 @@ import { NxLicenseTrialComponent } from './trial/trial.component';
         NxContentBlockSectionComponent,
         DirectivesModule,
         NxInfoBlockComponent,
-        LicenseSummaryModule,
+        NxLicenseSummaryComponent,
         NxGenericDropdownModule,
         NxPagePlaceholderComponent,
         PipesModule,

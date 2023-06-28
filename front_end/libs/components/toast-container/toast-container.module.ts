@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { ToastModule } from '../toast-component/toast.module';
+import { NxToast } from '@components/toast-component/toast.component';
 
 import { NxToastsContainer } from './toast.component';
 
 @NgModule({
-    imports: [CommonModule, ToastModule],
+    imports: [CommonModule, NxToast],
     declarations: [NxToastsContainer],
     providers: [NxToastsContainer],
     exports: [NxToastsContainer],

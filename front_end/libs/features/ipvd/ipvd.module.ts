@@ -13,9 +13,9 @@ import { NxContentBlockSectionComponent } from '@components/content-block/sectio
 import { NxFooterComponent } from '@components/footer/footer.component';
 import { NxPaginatorComponent } from '@components/paginator/paginator.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { SearchModule } from '@components/search/search.module';
-import { NxBaseTableModule } from '@components/table/table.module';
-import { TagModule } from '@components/tag/tag.module';
+import { NxSearchComponent } from '@components/search/search.component';
+import { NxBaseTableComponent } from '@components/table/table.component';
+import { NxTagComponent } from '@components/tag/tag.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { NxCamerasTableComponent } from '@pages/ipvd/cam-components/cameras-table/cameras-table.component';
 
@@ -48,12 +48,12 @@ const appRoutes: Routes = [
         DirectivesModule,
         NxFooterComponent,
         LayoutModule,
-        NxBaseTableModule,
+        NxBaseTableComponent,
         NxPaginatorComponent,
         PipesModule,
         NxPreLoaderComponent,
-        SearchModule,
-        TagModule,
+        NxSearchComponent,
+        NxTagComponent,
     ],
     providers: [IpvdSearchService],
     declarations: [

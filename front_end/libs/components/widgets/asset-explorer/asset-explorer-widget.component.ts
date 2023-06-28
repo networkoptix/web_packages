@@ -1,11 +1,22 @@
-import { NestedTreeControl } from '@angular/cdk/tree';
+import { CdkStepperModule } from '@angular/cdk/stepper';
+import { CdkTreeModule, NestedTreeControl } from '@angular/cdk/tree';
+import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
+import { NxNumericComponent } from '@components/numeric-input/numeric.component';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxStepperComponent } from '@components/stepper/stepper.component';
+import { DirectivesModule } from '@directives/directives.module';
 import { icons } from '@lib/variables/static-variables';
+import { PipesModule } from '@pipes/pipes.module';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ExplorerNode } from '@services/nx-cloud-api/nx-cloud-api.types';
 
@@ -22,6 +33,21 @@ interface AssetTypeInterface {
     selector: 'nx-asset-explorer-widget',
     templateUrl: './asset-explorer-widget.component.html',
     styleUrls: ['./asset-explorer-widget.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+        AngularSvgIconModule,
+        CdkStepperModule,
+        CdkTreeModule,
+        NxCheckboxComponent,
+        DirectivesModule,
+        NxNumericComponent,
+        PipesModule,
+        NxPreLoaderComponent,
+        NxStepperComponent,
+    ],
 })
 export class NxAssetExplorerWidgetComponent extends FirstPartyWidget<
     typeof NxAssetExplorerWidgetComponent.BASE_CONFIG

@@ -11,10 +11,10 @@ import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxSearchableDropdown } from '@components/dropdowns/searchable/searchable.component';
-import { SearchModule } from '@components/search/search.module';
-import { NxSliderModule } from '@components/slider/slider.module';
-import { NxBaseTableModule } from '@components/table/table.module';
-import { NxThemeGeneratorModule } from '@components/theme-generator/theme-colors.module';
+import { NxSearchComponent } from '@components/search/search.component';
+import { NxSliderComponent } from '@components/slider/slider.component';
+import { NxBaseTableComponent } from '@components/table/table.component';
+import { NxThemeGeneratorComponent } from '@components/theme-generator/theme-colors.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
@@ -172,17 +172,17 @@ const appRoutes: Routes = [
         DirectivesModule,
         MenuModule,
         NxAccountSettingsModule,
-        NxBaseTableModule,
+        NxBaseTableComponent,
         NxGridLayoutModule,
-        NxSliderModule,
+        NxSliderComponent,
         PipesModule,
-        SearchModule,
+        NxSearchComponent,
         NxSearchableDropdown,
         SimpleWebGLTimelineModule,
         VmsClientModule,
         VmsClientTimelineModule,
         WebGLTimelineModule,
-        NxThemeGeneratorModule,
+        NxThemeGeneratorComponent,
     ],
     providers: [],
     declarations: [

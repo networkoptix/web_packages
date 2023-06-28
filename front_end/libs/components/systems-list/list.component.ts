@@ -1,11 +1,21 @@
-import { Location } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxFooterComponent } from '@components/footer/footer.component';
+import { NxNoSystemsComponent } from '@components/no-systems/no-systems.component';
+import { NxClientButtonComponent } from '@components/open-client-button/client-button.component';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxSearchComponent } from '@components/search/search.component';
+import { SystemCardComponent } from '@components/system-card/system-card.component';
+import { NxTagComponent } from '@components/tag/tag.component';
 import { search } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
@@ -32,6 +42,20 @@ type Endpoint = Partial<{
     selector: 'nx-systems-list-component',
     templateUrl: 'list.component.html',
     styleUrls: ['list.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+        AngularSvgIconModule,
+        NxClientButtonComponent,
+        NxFooterComponent,
+        NxNoSystemsComponent,
+        NxPreLoaderComponent,
+        SystemCardComponent,
+        NxSearchComponent,
+        NxTagComponent,
+    ],
 })
 export class NxSystemsListComponent implements OnInit {
     LANG = staticLang;
