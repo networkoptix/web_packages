@@ -513,8 +513,10 @@ export class WizardStateService {
         return this.http.get<NormalNetworkConfig>('/web/api/iflist');
     }
 
-    private setServerNetworkSettings(config: NetworkingInterfaces): Observable<NormalResponse> {
-        return this.http.post<NormalResponse>('/web/api/ifconfig', config);
+    private setServerNetworkSettings(
+        config: NetworkingInterfaces,
+    ): Observable<NormalResponse<NetworkConfig>> {
+        return this.http.post<NormalResponse<NetworkConfig>>('/web/api/ifconfig', config);
     }
 
     private checkInternetOnServer(): Promise<void> {

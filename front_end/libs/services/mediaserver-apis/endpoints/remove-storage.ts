@@ -1,12 +1,13 @@
 import { Observable } from 'rxjs';
 
-import { IParams } from '@services/system.service/system-types';
-
 import { MediaserverLegacyConnection } from '../connections/adapters/adapter-target-types';
 
-export function removeStorageLegacyV1<T = { id: string }>(
+type StorageId = {
+    id: string;
+};
+export function removeStorageLegacyV1(
     this: MediaserverLegacyConnection,
-    updateParams: IParams,
-): Observable<T> {
-    return this.post<T>('/ec2/removeStorage', updateParams);
+    data: StorageId,
+): Observable<StorageId> {
+    return this.post('/ec2/removeStorage', data);
 }

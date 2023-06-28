@@ -21,7 +21,6 @@ import type { HealthReport } from './system-api.aggregated-types';
 import * as t from './system-api.types';
 import { ChangedIdReturned } from './system-api.types';
 import { NxSystemRestAPI } from './system-rest-api.service';
-import { IParams } from './system.service/system-types';
 import { NxUriCacheService } from './uri-cache.service';
 
 interface CustomFilter {
@@ -108,7 +107,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
         userEmail: string,
         systemId: string,
         serverId: string,
-        unauthorizedCallback: (params: IParams<any>) => Promise<any>,
+        unauthorizedCallback: (params: Record<string, unknown>) => Promise<unknown>,
         cacheService: NxUriCacheService,
         cookieService: CookieService,
         healthService: NxHealthService,

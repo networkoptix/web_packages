@@ -75,7 +75,7 @@ import type {
 import * as t from './system-api.types';
 import { SECURITY_LEVEL, SystemConfigSettings } from './system-api.types';
 import { NxSystemAPI } from './system-legacy-api.service';
-import type { IParams, ServerPreprocess } from './system.service/system-types';
+import type { ServerPreprocess } from './system.service/system-types';
 import { NxUriCacheService } from './uri-cache.service';
 
 /**
@@ -115,7 +115,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         userEmail: string,
         systemId: string,
         serverId: string,
-        unauthorizedCallback: (params: IParams<any>) => Promise<any>,
+        unauthorizedCallback: (params: Record<string, unknown>) => Promise<unknown>,
         cacheService: NxUriCacheService,
         cookieService: CookieService,
         healthService: NxHealthService,
@@ -404,7 +404,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return { params, _headers, customTimeout };
     }
 
-    private buildHeader(customHttpHeaders: IParams<string> = {}, useToken = false) {
+    private buildHeader(customHttpHeaders: Record<string, string> = {}, useToken = false) {
         const accessToken = this.accessToken;
         let headers = new HttpHeaders();
         if (useToken) {
@@ -1151,11 +1151,8 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         );
     }
 
-    protected generateGetUrl(url: string, data: IParams, absUrl?: boolean) {
-        let params = new HttpParams();
-        Object.keys(data).forEach((key: string) => {
-            params = params.set(key, data[key]);
-        });
+    protected generateGetUrl(url: string, params_: RequestParams, absUrl?: boolean) {
+        const params = new HttpParams({ fromObject: params_ });
         if (absUrl) {
             const proto = this.window.location.protocol;
             const hostName = this.window.location.hostname;

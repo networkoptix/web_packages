@@ -2,12 +2,6 @@ import type { ParsedNetworkAddresses } from '@utils/nx';
 
 import type { ec2CameraEx } from '../system-api.types';
 
-export interface AddResponseTypeHere extends IParams {}
-
-export interface IParams<Value = any> {
-    [key: string]: Value;
-}
-
 export interface ServerPreprocess {
     backupType?: string;
     id: string;

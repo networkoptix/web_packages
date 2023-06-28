@@ -1,22 +1,18 @@
 import type { RecursivePick } from '@utils/general';
 
-interface IParams<Value = any> {
-    [key: string]: Value;
-}
-
 /**
  * Base response type, accepts a generic type/interface that gets assigned to the reply property.
  * Usage example below.
  *
  * export interface GetUserRoles extends NormalResponse<UserPermissions> {}
  */
-export interface NormalResponse<Reply = {}> {
+export interface NormalResponse<Reply> {
     error: string;
     errorString: string;
     reply: Reply;
 }
 
-export interface RebuildResponse<Reply = {}> {
+export interface RebuildResponse<Reply> {
     reply?: Reply;
     main?: Reply;
     backup?: Reply;
@@ -160,7 +156,7 @@ export interface ModuleInformationReply {
     cloudSystemId: string;
     customization: string;
     ecDbReadOnly: boolean;
-    flags?: IParams<boolean>;
+    flags?: Record<string, boolean>;
     hardwareIds?: string[];
     hwPlatform: string;
     id: string;
@@ -684,7 +680,7 @@ export interface DiscoveredPeersReply {
     cloudSystemId: string;
     customization: string;
     ecDbReadOnly: boolean;
-    flags?: IParams<boolean>;
+    flags?: Record<string, boolean>;
     hwPlatform: string;
     id: string;
     localSystemId: string;
@@ -722,7 +718,7 @@ export class SystemConfigSettings {
     cloudHost: string;
     cloudSystemID: string;
     localSystemId: string;
-    specificFeatures: IParams;
+    specificFeatures: Record<string, unknown>;
     statisticsAllowed: boolean;
     statisticsReportLastNumber: number;
     statisticReportsLastTime: Date;
@@ -815,7 +811,7 @@ export enum ActionTypes {
 export interface ServerNetworkSettings {
     dhcp: boolean;
     dnsServers: string;
-    extraParams: IParams;
+    extraParams: Record<string, unknown>;
     ipAddr: string;
     mac: string;
     name: string;

@@ -13,7 +13,6 @@ import * as t from './system-api-groups.types.bak';
 import type { AggregatedUsers } from './system-api.aggregated-types';
 import { ChangedIdReturned } from './system-api.types';
 import { NxSystemRestAPI2 } from './system-rest-api-v2.service';
-import { IParams } from './system.service/system-types';
 import { NxSystemUser } from './system.service/user-manager/user-manager-types.bak';
 import { NxUriCacheService } from './uri-cache.service';
 
@@ -27,7 +26,7 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
         userEmail: string,
         systemId: string,
         serverId: string,
-        unauthorizedCallback: (params: IParams<any>) => Promise<any>, // eslint-disable-line
+        unauthorizedCallback: (params: Record<string, unknown>) => Promise<unknown>,
         cacheService: NxUriCacheService,
         cookieService: CookieService,
         healthService: NxHealthService,

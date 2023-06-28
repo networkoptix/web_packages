@@ -1,12 +1,20 @@
 import { Observable } from 'rxjs';
 
-import { IParams } from '@services/system.service/system-types';
-
 import { MediaserverLegacyConnection } from '../connections/adapters/adapter-target-types';
 
-export function saveStorageLegacyV1<T = { id: string }>(
+export type SaveStorageParams = {
+    typeId: string;
+    parentId: string;
+    url: string;
+    storageType: string;
+    spaceLimit?: number;
+    usedForWriting: boolean;
+    isWritable: boolean;
+    isBackup: boolean;
+};
+export function saveStorageLegacyV1(
     this: MediaserverLegacyConnection,
-    updateParams: IParams,
-): Observable<T> {
-    return this.post<T>('/ec2/saveStorage', { params: updateParams, timeout: 60000 });
+    data: SaveStorageParams,
+): Observable<{ id: string }> {
+    return this.post('/ec2/saveStorage', data);
 }

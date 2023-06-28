@@ -69,13 +69,10 @@ import type {
 import type { GetEndpoints } from './system-api.endpoint-types';
 import * as t from './system-api.types';
 import type { SaveCameraUserAttributes } from './system.service/camera-manager/camera-manager-types';
+import type { SaveStoragePayload } from './system.service/storage-manager/storage';
 import type { ServerPreprocess } from './system.service/system-types';
 import { NxUriCacheService } from './uri-cache.service';
 import { WINDOW } from './window-provider';
-
-interface IParams<Value = any> {
-    [key: string]: Value;
-}
 
 export class NxSystemAPI extends MediaserverLegacyConnection {
     // Exclude V5.2 since we should try to remove all legacy calls at that point.
@@ -125,7 +122,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     protected currentUser: t.ec2User | t.CurrentUser;
     protected userEmail: string;
     protected userRequest: Promise<t.ec2User | t.CurrentUser>;
-    unauthorizedCallback: (params: unknown) => Promise<any>;
+    unauthorizedCallback: (params: unknown) => Promise<unknown>;
     cacheService: NxUriCacheService;
     cookieService: CookieService;
     healthService: NxHealthService;
@@ -139,7 +136,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         userEmail: string,
         systemId: string,
         serverId: string,
-        unauthorizedCallback: (params: IParams) => Promise<any>,
+        unauthorizedCallback: (params: Record<string, unknown>) => Promise<unknown>,
         cacheService: NxUriCacheService,
         cookieService: CookieService,
         healthService: NxHealthService,
@@ -233,11 +230,8 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         return useCache ? { 'cache-request': 'true' } : { 'reset-cache': 'true' };
     }
 
-    protected generateGetUrl(url: string, data: IParams, absUrl?: boolean) {
-        let params = new HttpParams();
-        Object.keys(data).forEach((key: string) => {
-            params = params.set(key, data[key]);
-        });
+    protected generateGetUrl(url: string, params_: RequestParams, absUrl?: boolean) {
+        const params = new HttpParams({ fromObject: params_ });
         if (absUrl) {
             const proto = this.window.location.protocol;
             const hostName = this.window.location.hostname;
@@ -384,7 +378,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         userEmail: string,
         systemId: string,
         serverId: string,
-        unauthorizedCallback: (params: IParams) => Promise<any>,
+        unauthorizedCallback: (params: Record<string, unknown>) => Promise<any>,
     ): void {
         this.setAuthKeys('', '', '');
         this.userEmail = userEmail;
@@ -787,7 +781,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
 
     removeStorage = removeStorageLegacyV1;
 
-    updateStorages(updateParams: IParams, customTimeout = 8000) {
+    updateStorages(updateParams: SaveStoragePayload[], customTimeout = 8000) {
         return this.post<any>('/ec2/saveStorages', updateParams, { timeout: customTimeout });
     }
 
