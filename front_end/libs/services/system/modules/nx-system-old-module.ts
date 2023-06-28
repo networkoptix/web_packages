@@ -459,7 +459,9 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                 }
                 let directCapabilities = {};
                 try {
-                    directCapabilities = (await this.getSystemCapabilities()) || {};
+                    if (this.userManager.permissions.isAdmin) {
+                        directCapabilities = (await this.getSystemCapabilities()) || {};
+                    }
                     response.capabilities = { ...response.capabilities, ...directCapabilities };
                 } catch (e) {}
                 if (this.info) {

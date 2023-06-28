@@ -42,7 +42,10 @@ import {
     SaveCameraUserAttributes,
 } from './camera-manager-types';
 
-type PartialSystem = Pick<NxSystemOldModule, 'serverManager' | 'version' | 'useRest'>;
+type PartialSystem = Pick<
+    NxSystemOldModule,
+    'serverManager' | 'version' | 'useRest' | 'userManager'
+>;
 
 const updateDuration = (
     chunk: Pick<Partial<TimeDetail>, 'durationMs'> & Omit<TimeDetail, 'durationMs'>,
@@ -105,9 +108,11 @@ export class CameraManager {
     }): Promise<NxSystemCamera[]> {
         this.serverTimes = serverTimes;
         try {
-            this.camerasHealth = (
-                await firstValueFrom(this.serverManager.mediaserver.getHealthValues())
-            ).reply.cameras;
+            if (this.system?.userManager.permissions.isAdmin) {
+                this.camerasHealth = (
+                    await firstValueFrom(this.serverManager.mediaserver.getHealthValues())
+                ).reply.cameras;
+            }
         } catch (_) {
             this.camerasHealth = {};
         }
