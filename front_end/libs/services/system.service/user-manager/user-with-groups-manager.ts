@@ -299,6 +299,10 @@ export class UserWithGroupsManager extends UserManager {
             delete user.permissions;
         }
 
+        // v3 doesn't like user permissions and groupIds for modifyUser
+        delete user.permissions;
+        delete user.groupIds;
+
         return lastValueFrom(
             this.mediaserver.modifyUser(this.cleanupUserObject(user), cleanId(user.id)),
         ).then((savedUser: NxSystemUser) => {
