@@ -6,8 +6,8 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxMaskModule } from 'ngx-mask';
 
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
-import { ProcessButtonModule } from '@components/process-button/process-button.module';
-import { ProcessCancelButtonModule } from '@components/process-cancel-Button/process-cancel-Button.module';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { TagModule } from '@components/tag/tag.module';
 import { PipesModule } from '@pipes/pipes.module';
 
@@ -26,8 +26,8 @@ import { CloudStorageMoveModalContent } from './move/cloud-storage-move.componen
 
         TagModule,
         NxGenericDropdownModule,
-        ProcessButtonModule,
-        ProcessCancelButtonModule,
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
         PipesModule,
     ],
     declarations: [

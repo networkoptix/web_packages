@@ -5,7 +5,7 @@ import { clamp, isArray, uniq } from 'lodash-es';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { LayoutResourceTree } from '@components/layout-grid/layout-grid.types';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';
 import { TimeDetail } from '@services/system.service/camera-manager/camera-manager-types';
 import { NgChanges } from '@utils/ng-changes';
@@ -15,7 +15,7 @@ import { NgChanges } from '@utils/ng-changes';
     templateUrl: 'layout-timeline.component.html',
     styleUrls: ['layout-timeline.component.scss'],
     standalone: true,
-    imports: [CommonModule, PreLoaderModule],
+    imports: [CommonModule, NxPreLoaderComponent],
 })
 export class NxLayoutTimelineComponent {
     @Input() cameras: string[];

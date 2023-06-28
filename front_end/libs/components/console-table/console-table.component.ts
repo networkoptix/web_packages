@@ -26,8 +26,8 @@ import { NxContentBlockComponent } from '@components/content-block/content-block
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
-import { PaginatorModule } from '@components/paginator/paginator.module';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxPaginatorComponent } from '@components/paginator/paginator.component';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { SearchModule } from '@components/search/search.module';
 import { NxSearchHighlightModule } from '@components/search-highlight/search-highlight.module';
 import { ToastType } from '@components/toast-container/toast.types';
@@ -71,8 +71,8 @@ import { TableDataSource } from './table-data-source';
         NxContentBlockSectionComponent,
         NxContentBlockComponent,
         NxGenericDropdownModule,
-        PaginatorModule,
-        PreLoaderModule,
+        NxPaginatorComponent,
+        NxPreLoaderComponent,
         SearchModule,
         NxSearchHighlightModule,
     ],

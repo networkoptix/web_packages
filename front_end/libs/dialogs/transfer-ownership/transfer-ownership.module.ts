@@ -6,8 +6,8 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxSearchableDropdown } from '@components/dropdowns/searchable/searchable.component';
-import { ProcessButtonModule } from '@components/process-button/process-button.module';
-import { ProcessCancelButtonModule } from '@components/process-cancel-Button/process-cancel-Button.module';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 
 import { TransferOwnershipModalContent } from './transfer-ownership.component';
 
@@ -19,8 +19,8 @@ import { TransferOwnershipModalContent } from './transfer-ownership.component';
         TranslateModule,
         NxSearchableDropdown,
         NxAlertBlockComponent,
-        ProcessButtonModule,
-        ProcessCancelButtonModule,
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
     ],
     declarations: [TransferOwnershipModalContent],
     providers: [],

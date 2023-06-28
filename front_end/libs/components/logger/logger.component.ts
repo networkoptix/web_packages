@@ -12,8 +12,8 @@ import staticLang from '@common/language/language_i18n_static.json';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
-import { SectionPlaceholderModule } from '@components/placeholders/section/section-placeholder.module';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxSectionPlaceholderComponent } from '@components/placeholders/section/section-placeholder.component';
 import { environment } from '@environments/environment';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystem } from '@services/system.service/system';
@@ -37,8 +37,8 @@ type LoggerDropdownItem = DropdownItem<string>;
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
         NxGenericDropdownModule,
-        PreLoaderModule,
-        SectionPlaceholderModule,
+        NxPreLoaderComponent,
+        NxSectionPlaceholderComponent,
     ],
 })
 export class NxLoggerComponent implements OnChanges {

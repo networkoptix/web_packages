@@ -1,5 +1,7 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { NgModel } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NgChanges } from '@utils/ng-changes';
@@ -8,6 +10,8 @@ import { NgChanges } from '@utils/ng-changes';
     selector: 'nx-password-input-validation',
     templateUrl: 'password-validation.component.html',
     styleUrls: ['password-validation.component.scss'],
+    standalone: true,
+    imports: [CommonModule, TranslateModule],
 })
 export class NxPasswordValidationComponent implements OnChanges {
     @Input() forElement: NgModel;

@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
     Component,
     EventEmitter,
@@ -11,11 +12,13 @@ import {
 import {
     ControlValueAccessor,
     FormControl,
+    FormsModule,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
     ValidationErrors,
     Validator,
 } from '@angular/forms';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { icons } from '@lib/variables/static-variables';
@@ -38,6 +41,8 @@ import { icons } from '@lib/variables/static-variables';
     selector: 'nx-numeric',
     templateUrl: 'numeric.component.html',
     styleUrls: ['numeric.component.scss'],
+    standalone: true,
+    imports: [CommonModule, FormsModule, AngularSvgIconModule],
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,

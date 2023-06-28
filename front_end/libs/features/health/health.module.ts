@@ -11,9 +11,9 @@ import { PipesModule } from '@app/pipes/pipes.module';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxInfoBlockComponent } from '@components/info-block/info-block.component';
-import { PaginatorModule } from '@components/paginator/paginator.module';
-import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxPaginatorComponent } from '@components/paginator/paginator.component';
+import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { SearchModule } from '@components/search/search.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { AuthGuard } from '@guards/authGuard';
@@ -97,10 +97,10 @@ const appRoutes: Routes = [
         NxInfoBlockComponent,
         MenuModule,
         NxImageComponent,
-        PagePlaceHolderModule,
-        PaginatorModule,
+        NxPagePlaceholderComponent,
+        NxPaginatorComponent,
         PipesModule,
-        PreLoaderModule,
+        NxPreLoaderComponent,
         SearchModule,
     ],
     providers: [NxHealthLayoutService],

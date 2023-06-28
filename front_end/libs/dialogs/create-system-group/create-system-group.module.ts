@@ -3,8 +3,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { ProcessButtonModule } from '@components/process-button/process-button.module';
-import { ProcessCancelButtonModule } from '@components/process-cancel-Button/process-cancel-Button.module';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 
 import { CreateSystemGroupModalContent } from './create-system-group.component';
 
@@ -12,8 +12,8 @@ import { CreateSystemGroupModalContent } from './create-system-group.component';
     imports: [
         CommonModule,
         FormsModule,
-        ProcessButtonModule,
-        ProcessCancelButtonModule,
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
         // AngularSvgIconModule,
         TranslateModule,
     ],

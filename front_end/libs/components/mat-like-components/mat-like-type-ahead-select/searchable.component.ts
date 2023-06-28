@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
     Component,
     Input,
@@ -15,8 +16,11 @@ import {
     Validator,
     ValidationErrors,
 } from '@angular/forms';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { escapeRegExp } from 'lodash-es';
 
+import { NxSearchHighlightModule } from '@components/search-highlight/search-highlight.module';
+import { DirectivesModule } from '@directives/directives.module';
 import { icons } from '@lib/variables/static-variables';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { caseInsenstiveSearch } from '@utils/general';
@@ -43,6 +47,8 @@ import type { SearchableDropdownItem as Item } from './searchable.component.type
     selector: 'nx-mat-like-type-ahead-select',
     templateUrl: 'searchable.component.html',
     styleUrls: ['searchable.component.scss'],
+    standalone: true,
+    imports: [CommonModule, AngularSvgIconModule, DirectivesModule, NxSearchHighlightModule],
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,

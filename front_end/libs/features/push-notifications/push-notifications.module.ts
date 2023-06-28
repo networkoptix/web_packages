@@ -7,7 +7,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { PipesModule } from '@app/pipes/pipes.module';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 
@@ -34,7 +34,7 @@ export function initializeApp(CONFIG: NxConfigService) {
         NxContentBlockSectionComponent,
         DirectivesModule,
         PipesModule,
-        PreLoaderModule,
+        NxPreLoaderComponent,
     ],
     providers: [],
     declarations: [PushComponent],

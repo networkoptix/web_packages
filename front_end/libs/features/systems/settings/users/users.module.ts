@@ -8,7 +8,7 @@ import { NxContentBlockComponent } from '@components/content-block/content-block
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-select.component';
 import { NxPermissionsDropdown } from '@components/dropdowns/permissions/permissions.component';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { SwitchModule } from '@components/switch/switch.module';
 
 import { NxSystemUsersWithGroupsComponent } from './users-with-groups/users-with-groups.component';
@@ -24,7 +24,7 @@ import { NxSystemUsersComponent } from './users.component';
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
         NxMultiSelectDropdown,
-        PreLoaderModule,
+        NxPreLoaderComponent,
         NxPermissionsDropdown,
         SwitchModule,
     ],

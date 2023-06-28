@@ -8,7 +8,7 @@ import { cloneDeep, last } from 'lodash-es';
 import { timer, Subject, BehaviorSubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { SearchModule } from '@components/search/search.module';
 import { icons } from '@lib/variables/static-variables';
@@ -34,7 +34,7 @@ import type { MenuNodeWithParent, ClickEvent, RelatedLinks } from './developers-
         PipesModule,
         RouterModule,
         AngularSvgIconModule,
-        PreLoaderModule,
+        NxPreLoaderComponent,
         SearchModule,
     ],
     standalone: true,

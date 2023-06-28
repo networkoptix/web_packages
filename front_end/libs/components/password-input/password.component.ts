@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
     Component,
     OnInit,
@@ -15,10 +16,14 @@ import {
     NgModel,
     ValidationErrors,
     FormControl,
+    FormsModule,
 } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxPasswordTagValidationComponent } from '@components/password-input-tag-validation/password-tag-validation.component';
+import { DirectivesModule } from '@directives/directives.module';
 import { credentialsValidation, icons } from '@lib/variables/static-variables';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -29,6 +34,14 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
     selector: 'nx-password-input',
     templateUrl: 'password.component.html',
     styleUrls: ['password.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        DirectivesModule,
+        AngularSvgIconModule,
+        NxPasswordTagValidationComponent,
+    ],
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,

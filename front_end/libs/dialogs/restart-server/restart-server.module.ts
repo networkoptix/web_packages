@@ -3,8 +3,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { ProcessButtonModule } from '@components/process-button/process-button.module';
-import { ProcessCancelButtonModule } from '@components/process-cancel-Button/process-cancel-Button.module';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { PipesModule } from '@pipes/pipes.module';
 
 import { RestartServerModalContent } from './restart-server.component';
@@ -16,8 +16,8 @@ import { RestartServerModalContent } from './restart-server.component';
         TranslateModule,
 
         PipesModule,
-        ProcessButtonModule,
-        ProcessCancelButtonModule,
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
     ],
     declarations: [RestartServerModalContent],
     providers: [],

@@ -8,10 +8,10 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { PipesModule } from '@app/pipes/pipes.module';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
-import { PasswordModule } from '@components/password-input/password.module';
-import { PasswordTagValidationModule } from '@components/password-input-tag-validation/password-tag-validation.module';
-import { PasswordValidationModule } from '@components/password-input-validation/password-validation.module';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxPasswordComponent } from '@components/password-input/password.component';
+import { NxPasswordTagValidationComponent } from '@components/password-input-tag-validation/password-tag-validation.component';
+import { NxPasswordValidationComponent } from '@components/password-input-validation/password-validation.component';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { NxAccountPasswordComponent } from '@pages/account/password/password.component';
 
@@ -25,11 +25,11 @@ import { NxAccountPasswordComponent } from '@pages/account/password/password.com
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
         DirectivesModule,
-        PasswordModule,
-        PasswordTagValidationModule,
-        PasswordValidationModule,
+        NxPasswordComponent,
+        NxPasswordTagValidationComponent,
+        NxPasswordValidationComponent,
         PipesModule,
-        PreLoaderModule,
+        NxPreLoaderComponent,
     ],
     providers: [],
     declarations: [NxAccountPasswordComponent],

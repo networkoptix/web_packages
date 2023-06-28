@@ -15,8 +15,8 @@ import { takeUntil } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { PaginatorModule } from '@components/paginator/paginator.module';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxPaginatorComponent } from '@components/paginator/paginator.component';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { SearchModule } from '@components/search/search.module';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { DirectivesModule } from '@directives/directives.module';
@@ -31,10 +31,7 @@ import { NxUriCacheService } from '@services/uri-cache.service';
 import { WINDOW } from '@services/window-provider';
 
 import { NxConsoleTableComponent } from './console-table.component';
-import {
-    ListSerializer,
-    ConsoleSection
-} from './console-table.component.types';
+import { ListSerializer, ConsoleSection } from './console-table.component.types';
 import { TableDataSource } from './table-data-source';
 
 const section = 'custom-clients';
@@ -49,19 +46,27 @@ describe('NxConsoleTableComponent', () => {
 
     const addItemToComponent = async (items = 1) => {
         const manifest = nxConfig.manifest[section];
-        const mockItem = () => manifest.contexts.reduce((
-            values, { name, type: inputType }
-        ) => ({
-            ...values, [name]: inputType !== 'date' ? uuid() : 0
-        }), {});
+        const mockItem = () =>
+            manifest.contexts.reduce(
+                (values, { name, type: inputType }) => ({
+                    ...values,
+                    [name]: inputType !== 'date' ? uuid() : 0,
+                }),
+                {},
+            );
         const mockItems = [...new Array(items)].map(mockItem);
         const { data } = new ListSerializer(section, manifest, mockItems);
-        component.displayedColumns = (component.selectedManifest?.contexts || []).map(({ name }) => name);
+        component.displayedColumns = (component.selectedManifest?.contexts || []).map(
+            ({ name }) => name,
+        );
 
         // There seems to be some weird edge case that causes 'paginator should show correct number of pages' to fail intermittently
         // Seems to be really rare, it only seems to happen a couple times a week.
         // If the failure for this case still happens in the future then these changes should be reverted.
-        const updated = component.selectedData.connect().pipe(takeUntil(timer(10))).toPromise();
+        const updated = component.selectedData
+            .connect()
+            .pipe(takeUntil(timer(10)))
+            .toPromise();
 
         component.selectedData.updateBaseData(data);
         await updated;
@@ -71,39 +76,34 @@ describe('NxConsoleTableComponent', () => {
     };
 
     beforeEach(waitForAsync(() => {
-        TestBed
-            .configureTestingModule({
-                declarations: [
-                    NxConsoleTableComponent,
-                    MockDirective(NxTooltipDirective),
-                ],
-                providers: [
-                    MockProvider(NxConfigService),
-                    MockProvider(NxDialogsService),
-                    MockProvider(NxCloudApiService),
-                    MockProvider(NxLanguageProviderService),
-                    MockProvider(LocalStorageService),
-                    MockProvider(WINDOW),
-                    MockProvider(NxUriCacheService),
-                    MockProvider(NxMenusService),
-                    MockProvider(NxHeaderService),
-                    MockProvider(Overlay)
-                ],
-                imports: [
-                    MockModule(CommonModule),
-                    MockModule(FormsModule),
-                    AngularSvgIconModule,
-                    HttpClientTestingModule,
-                    TranslateModule.forRoot(),
-                    DirectivesModule,
-                    MockModule(PipesModule),
-                    RouterTestingModule,
-                    PaginatorModule,
-                    PreLoaderModule,
-                    SearchModule
-                ]
-            })
-            .compileComponents();
+        TestBed.configureTestingModule({
+            declarations: [NxConsoleTableComponent, MockDirective(NxTooltipDirective)],
+            providers: [
+                MockProvider(NxConfigService),
+                MockProvider(NxDialogsService),
+                MockProvider(NxCloudApiService),
+                MockProvider(NxLanguageProviderService),
+                MockProvider(LocalStorageService),
+                MockProvider(WINDOW),
+                MockProvider(NxUriCacheService),
+                MockProvider(NxMenusService),
+                MockProvider(NxHeaderService),
+                MockProvider(Overlay),
+            ],
+            imports: [
+                MockModule(CommonModule),
+                MockModule(FormsModule),
+                AngularSvgIconModule,
+                HttpClientTestingModule,
+                TranslateModule.forRoot(),
+                DirectivesModule,
+                MockModule(PipesModule),
+                RouterTestingModule,
+                NxPaginatorComponent,
+                NxPreLoaderComponent,
+                SearchModule,
+            ],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(NxConsoleTableComponent);
         component = fixture.componentInstance;
@@ -164,7 +164,6 @@ describe('NxConsoleTableComponent', () => {
         await fixture.whenStable();
         const paginator = el.nativeElement.querySelector('nx-paginator');
         const numOfPages = parseInt(last([...paginator.children]).innerText);
-        expect(numOfPages).toEqual(
-            expectedPages);
+        expect(numOfPages).toEqual(expectedPages);
     });
 });

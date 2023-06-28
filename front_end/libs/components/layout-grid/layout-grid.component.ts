@@ -56,7 +56,7 @@ import { v4 as uuid } from 'uuid';
 import staticLang from '@common/language/language_i18n_static.json';
 import { ConfigType } from '@components/console-table/console-table.component.types';
 import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import { VideoPlayerModule } from '@components/video-player/video-player.module';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -192,7 +192,7 @@ interface LayoutSettings {
         NxMonitoringGraphComponent,
         NxImageComponent,
         PipesModule,
-        PreLoaderModule,
+        NxPreLoaderComponent,
         ResizeModule,
         TourMatMenuModule,
         VideoPlayerModule,

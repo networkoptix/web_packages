@@ -5,9 +5,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxFooterComponent } from '@components/footer/footer.component';
-import { NoSystemsModule } from '@components/no-systems/no-systems.module';
-import { ClientButtonModule } from '@components/open-client-button/client-button.module';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxNoSystemsComponent } from '@components/no-systems/no-systems.component';
+import { NxClientButtonComponent } from '@components/open-client-button/client-button.component';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { SearchModule } from '@components/search/search.module';
 import { SystemCardModule } from '@components/system-card/system-card.module';
 import { TagModule } from '@components/tag/tag.module';
@@ -20,10 +20,10 @@ import { NxSystemsListComponent } from './list.component';
         FormsModule,
         TranslateModule,
         AngularSvgIconModule,
-        ClientButtonModule,
+        NxClientButtonComponent,
         NxFooterComponent,
-        NoSystemsModule,
-        PreLoaderModule,
+        NxNoSystemsComponent,
+        NxPreLoaderComponent,
         SystemCardModule,
         SearchModule,
         TagModule,

@@ -1,11 +1,15 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { SubscriptionLike } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxFooterComponent } from '@components/footer/footer.component';
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { icons } from '@lib/variables/static-variables';
+import { PipesModule } from '@pipes/pipes.module';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { COLLAPSE_SECOND_WIDTH } from '@styles/theme-variables-common';
 import { NgChanges } from '@utils/ng-changes';
@@ -28,6 +32,8 @@ import { NgChanges } from '@utils/ng-changes';
     templateUrl: 'page-placeholder.component.html',
     styleUrls: ['page-placeholder.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [CommonModule, TranslateModule, AngularSvgIconModule, NxFooterComponent, PipesModule],
 })
 export class NxPagePlaceholderComponent implements OnInit {
     @Input() type: string;

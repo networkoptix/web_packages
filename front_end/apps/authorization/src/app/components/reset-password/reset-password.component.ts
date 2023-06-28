@@ -14,9 +14,9 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { PasswordModule } from '@components/password-input/password.module';
-import { PasswordValidationModule } from '@components/password-input-validation/password-validation.module';
-import { ProcessButtonModule } from '@components/process-button/process-button.module';
+import { NxPasswordComponent } from '@components/password-input/password.component';
+import { NxPasswordValidationComponent } from '@components/password-input-validation/password-validation.component';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { icons } from '@lib/variables/static-variables';
 import { Process } from '@services/process.service/process';
 import { NgChanges } from '@utils/ng-changes';
@@ -32,9 +32,9 @@ import type { AuthorizeStateType } from '../authorize.component.types';
         FormsModule,
         TranslateModule,
         AngularSvgIconModule,
-        PasswordModule,
-        PasswordValidationModule,
-        ProcessButtonModule,
+        NxPasswordComponent,
+        NxPasswordValidationComponent,
+        NxProcessButtonComponent,
     ],
     templateUrl: 'reset-password.component.html',
     styleUrls: ['reset-password.component.scss'],

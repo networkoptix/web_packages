@@ -4,8 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
-import { ProcessButtonModule } from '@components/process-button/process-button.module';
-import { ProcessCancelButtonModule } from '@components/process-cancel-Button/process-cancel-Button.module';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 
 import { NxEditPartnerModalContent } from './edit-partner.component';
 
@@ -17,8 +17,8 @@ import { NxEditPartnerModalContent } from './edit-partner.component';
         TranslateModule,
 
         NxGenericDropdownModule,
-        ProcessButtonModule,
-        ProcessCancelButtonModule,
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
     ],
     declarations: [NxEditPartnerModalContent],
     providers: [],

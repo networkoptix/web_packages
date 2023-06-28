@@ -4,9 +4,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 
-import { MultiLineEllipsisModule } from '@components/multi-line-ellipsis/mle.module';
-import { PlayerPlaceholderModule } from '@components/placeholders/player/player-placeholder.module';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxMultiLineEllipsisComponent } from '@components/multi-line-ellipsis/mle.component';
+import { NxPlayerPlaceholderComponent } from '@components/placeholders/player/player-placeholder.component';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@pipes/pipes.module';
 
@@ -17,10 +17,10 @@ import { NxBookmarksCardComponent } from './bookmarks-card.component';
         AngularSvgIconModule,
         CommonModule,
         LazyLoadImageModule,
-        MultiLineEllipsisModule,
+        NxMultiLineEllipsisComponent,
         PipesModule,
-        PreLoaderModule,
-        PlayerPlaceholderModule,
+        NxPreLoaderComponent,
+        NxPlayerPlaceholderComponent,
         DirectivesModule,
         TranslateModule,
     ],

@@ -4,8 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { Nx404Component } from './404.component';
@@ -24,9 +24,9 @@ const appRoutes: Routes = [
         RouterModule.forChild(appRoutes),
         TranslateModule,
         DirectivesModule,
-        PagePlaceHolderModule,
+        NxPagePlaceholderComponent,
         PipesModule,
-        PreLoaderModule,
+        NxPreLoaderComponent,
     ],
     providers: [],
     declarations: [Nx404Component],

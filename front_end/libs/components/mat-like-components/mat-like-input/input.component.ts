@@ -1,14 +1,18 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
 import {
     ControlValueAccessor,
     FormControl,
+    FormsModule,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
     ValidationErrors,
     Validator,
 } from '@angular/forms';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
+import { DirectivesModule } from '@directives/directives.module';
 
 /* Usage
  <nx-mat-like-input
@@ -29,6 +33,8 @@ import { IBool, CoercedBoolInput } from '@decorators/ibool';
     selector: 'nx-mat-like-input',
     templateUrl: 'input.component.html',
     styleUrls: ['input.component.scss'],
+    standalone: true,
+    imports: [CommonModule, FormsModule, AngularSvgIconModule, DirectivesModule],
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,

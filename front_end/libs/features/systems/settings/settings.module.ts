@@ -6,8 +6,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MenuModule } from '@app/menu/menu.module';
 import { PipesModule } from '@app/pipes/pipes.module';
 import { NxFooterComponent } from '@components/footer/footer.component';
-import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
 import { SystemGuard } from '@guards/systemGuard';
@@ -119,9 +119,9 @@ export const cloudSettingsRoutes: Routes = [
         NxCloudStorageModule,
         NxSystemLicensesModule,
         NxCamerasModule,
-        PagePlaceHolderModule,
+        NxPagePlaceholderComponent,
         PipesModule,
-        PreLoaderModule,
+        NxPreLoaderComponent,
     ],
     providers: [NxSettingsService],
     declarations: [NxSystemSettingsComponent],

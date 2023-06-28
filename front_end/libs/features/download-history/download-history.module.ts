@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { PipesModule } from '@app/pipes/pipes.module';
 import { NxFooterComponent } from '@components/footer/footer.component';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { DownloadHistoryComponent } from './download-history.component';
@@ -49,7 +49,7 @@ const appRoutes: Routes = [
         DirectivesModule,
         NxFooterComponent,
         PipesModule,
-        PreLoaderModule,
+        NxPreLoaderComponent,
     ],
     providers: [TypeResolver],
     declarations: [DownloadHistoryComponent, ReleaseComponent],

@@ -9,7 +9,7 @@ import { PipesModule } from '@app/pipes/pipes.module';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { LanguageModule } from '@components/dropdowns/language/language.module';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { ThemeSwitcherModule } from '@components/theme-switcher/theme-switcher.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { NxAccountSettingsComponent } from '@pages/account/settings/settings.component';
@@ -26,7 +26,7 @@ import { NxAccountSettingsComponent } from '@pages/account/settings/settings.com
         DirectivesModule,
         LanguageModule,
         PipesModule,
-        PreLoaderModule,
+        NxPreLoaderComponent,
         ThemeSwitcherModule,
     ],
     providers: [],

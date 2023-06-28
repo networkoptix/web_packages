@@ -12,7 +12,7 @@ import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { StepperModule } from '@components/stepper/stepper.module';
 import { DirectivesModule } from '@directives/directives.module';
 
@@ -40,7 +40,7 @@ const appRoutes: Routes = [
         DirectivesModule,
         NxGenericDropdownModule,
         PipesModule,
-        PreLoaderModule,
+        NxPreLoaderComponent,
         StepperModule,
     ],
     providers: [],

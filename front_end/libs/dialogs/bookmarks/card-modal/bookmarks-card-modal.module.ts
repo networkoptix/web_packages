@@ -4,9 +4,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { ClipComponent } from '@components/clip/clip.component';
-import { PlayerPlaceholderModule } from '@components/placeholders/player/player-placeholder.module';
-
-import { ProcessButtonModule } from '../../../components/process-button/process-button.module';
+import { NxPlayerPlaceholderComponent } from '@components/placeholders/player/player-placeholder.component';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 
 import { NxBookmarksCardModalComponent } from './bookmarks-card-modal.component';
 
@@ -18,9 +17,9 @@ import { NxBookmarksCardModalComponent } from './bookmarks-card-modal.component'
         AngularSvgIconModule,
         CommonModule,
         ClipComponent,
-        ProcessButtonModule,
+        NxProcessButtonComponent,
         TranslateModule,
-        PlayerPlaceholderModule,
+        NxPlayerPlaceholderComponent,
     ],
 })
 export class NxBookmarksCardModalModule {}

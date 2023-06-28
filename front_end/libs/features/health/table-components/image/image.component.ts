@@ -4,7 +4,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { PipesModule } from '@pipes/pipes.module';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -12,7 +12,7 @@ import { NgChanges } from '@utils/ng-changes';
 @Component({
     selector: 'nx-health-image',
     standalone: true,
-    imports: [CommonModule, TranslateModule, PipesModule, PreLoaderModule],
+    imports: [CommonModule, TranslateModule, PipesModule, NxPreLoaderComponent],
     templateUrl: './image.component.html',
     styleUrls: ['./image.component.scss'],
 })

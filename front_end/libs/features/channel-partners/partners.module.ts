@@ -7,7 +7,7 @@ import { MenuModule } from '@app/menu/menu.module';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxFooterComponent } from '@components/footer/footer.component';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { FeatureGuard } from '@guards/feature.guard';
 import { TwofaGuard } from '@guards/twofaGuard';
 import { NxCustomizationComponent } from '@pages/channel-partners/customization/customization.component';
@@ -64,7 +64,7 @@ export const cloudPartnersRoutes: Routes = [
         MenuModule,
         NxCustomizationModule,
         NxPartnerOrganizationsListModule,
-        PreLoaderModule,
+        NxPreLoaderComponent,
     ],
     providers: [],
     declarations: [NxChannelPartnersComponent],

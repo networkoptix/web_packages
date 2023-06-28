@@ -6,10 +6,10 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CookieService } from 'ngx-cookie-service';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ClientButtonModule } from '@components/open-client-button/client-button.module';
-import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
-import { PlayerPlaceholderModule } from '@components/placeholders/player/player-placeholder.module';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxClientButtonComponent } from '@components/open-client-button/client-button.component';
+import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
+import { NxPlayerPlaceholderComponent } from '@components/placeholders/player/player-placeholder.component';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { NxCameraDetailsComponent } from './components/camera-details/camera-details.component';
@@ -30,12 +30,12 @@ import { VmsClientModule } from './vms-client/vms-client.module';
         RouterModule.forChild(routes),
         TranslateModule,
         AngularSvgIconModule,
-        ClientButtonModule,
+        NxClientButtonComponent,
         DirectivesModule,
-        PagePlaceHolderModule,
-        PlayerPlaceholderModule,
+        NxPagePlaceholderComponent,
+        NxPlayerPlaceholderComponent,
         PipesModule,
-        PreLoaderModule,
+        NxPreLoaderComponent,
         VmsClientPlaybackModule,
         VmsClientTimelineModule,
         VmsClientVmsModule,

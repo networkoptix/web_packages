@@ -4,8 +4,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
-import { NumericModule } from '@components/numeric-input/numeric.module';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxNumericComponent } from '@components/numeric-input/numeric.component';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { StepperModule } from '@components/stepper/stepper.module';
 
 import { NxLiveViewWidgetComponent } from './live-view-widget.component';
@@ -15,9 +15,9 @@ import { NxLiveViewWidgetComponent } from './live-view-widget.component';
         CommonModule,
         FormsModule,
         CdkStepperModule,
-        NumericModule,
+        NxNumericComponent,
         NxGenericDropdownModule,
-        PreLoaderModule,
+        NxPreLoaderComponent,
         StepperModule,
     ],
     declarations: [NxLiveViewWidgetComponent],

@@ -6,7 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { AdvancedComponent } from './advanced/advanced.component';
@@ -89,7 +89,7 @@ export const setupWizardRoutes: Routes = [
         AngularSvgIconModule,
         DirectivesModule,
         PipesModule,
-        PreLoaderModule,
+        NxPreLoaderComponent,
     ],
     providers: [],
     declarations: [

@@ -3,8 +3,7 @@ import { Component, forwardRef, Input, HostListener, ViewChild, Inject } from '@
 import { NG_VALUE_ACCESSOR, NgForm } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { ProcessButtonModule } from '@components/process-button/process-button.module';
-import { ProcessCancelButtonModule } from '@components/process-cancel-Button/process-cancel-Button.module';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { Process } from '@services/process.service/process';
 
 import { NxProcessButtonComponent } from '../process-button/process-button.component';
@@ -21,7 +20,12 @@ import { NxProcessButtonComponent } from '../process-button/process-button.compo
             multi: true,
         },
     ],
-    imports: [CommonModule, TranslateModule, ProcessButtonModule, ProcessCancelButtonModule],
+    imports: [
+        CommonModule,
+        TranslateModule,
+        NxProcessCancelButtonComponent,
+        NxProcessButtonComponent,
+    ],
     standalone: true,
 })
 export class NxApplyComponent {

@@ -13,10 +13,10 @@ import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.
 import { NxThreeDotDropdown } from '@components/dropdowns/three-dot/three-dot.component';
 import { EditableModule } from '@components/editable/editable.module';
 import { NxInfoBlockComponent } from '@components/info-block/info-block.component';
-import { NumericModule } from '@components/numeric-input/numeric.module';
+import { NxNumericComponent } from '@components/numeric-input/numeric.component';
 import { OpenClientSectionPlaceholderModule } from '@components/placeholders/open-client-section/open-client-section.module';
-import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { RadioModule } from '@components/radio/radio.module';
 import { SwitchModule } from '@components/switch/switch.module';
 import { DirectivesModule } from '@directives/directives.module';
@@ -42,11 +42,11 @@ import { NxRecordingSettingsComponent } from './recording-settings/recording-set
         NxInfoBlockComponent,
         NxGenericDropdownModule,
         NxImageComponent,
-        NumericModule,
+        NxNumericComponent,
         OpenClientSectionPlaceholderModule,
-        PagePlaceHolderModule,
+        NxPagePlaceholderComponent,
         PipesModule,
-        PreLoaderModule,
+        NxPreLoaderComponent,
         RadioModule,
         SwitchModule,
         NxThreeDotDropdown,

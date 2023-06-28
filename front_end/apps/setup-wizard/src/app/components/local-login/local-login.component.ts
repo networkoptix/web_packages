@@ -6,8 +6,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { icons } from '@app/variables/static-variables';
-import { PasswordModule } from '@components/password-input/password.module';
-import { PasswordValidationModule } from '@components/password-input-validation/password-validation.module';
+import { NxPasswordComponent } from '@components/password-input/password.component';
+import { NxPasswordValidationComponent } from '@components/password-input-validation/password-validation.component';
 
 import { WizardStateService } from '../../services/wizard-state.service';
 
@@ -20,8 +20,8 @@ import { WizardStateService } from '../../services/wizard-state.service';
         AngularSvgIconModule,
         FormsModule,
         TranslateModule,
-        PasswordModule,
-        PasswordValidationModule,
+        NxPasswordComponent,
+        NxPasswordValidationComponent,
     ],
     templateUrl: './local-login.component.html',
     styleUrls: ['./local-login.component.scss'],

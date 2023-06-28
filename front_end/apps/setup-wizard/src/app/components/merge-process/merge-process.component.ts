@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 
 import { WizardStateService } from '../../services/wizard-state.service';
 
 @Component({
     selector: 'nx-merge-process',
     standalone: true,
-    imports: [PreLoaderModule],
+    imports: [NxPreLoaderComponent],
     templateUrl: './merge-process.component.html',
     styleUrls: ['./merge-process.component.scss'],
 })

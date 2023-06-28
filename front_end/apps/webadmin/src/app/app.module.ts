@@ -25,8 +25,8 @@ import { NgxWebstorageModule } from 'ngx-webstorage';
 
 import { accountReducer } from '@common/store/account';
 import { NxApplyComponent } from '@components/apply/apply.component';
-import { NavFooterModule } from '@components/nav-footer/nav-footer.module';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxNavFooterComponent } from '@components/nav-footer/nav-footer.component';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { PopoverModule } from '@components/popover/popover.module';
 import { TourStepModule } from '@components/tour-step/tour-step.module';
 // import { DirectivesModule } from '@directives/directives.module';
@@ -89,8 +89,8 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         DialogModule,
         CdkScrollableModule,
         // HoverPreloadModule,
-        PreLoaderModule,
-        NavFooterModule,
+        NxPreLoaderComponent,
+        NxNavFooterComponent,
         ResizeModule,
         TourStepModule,
         TourMatMenuModule.forRoot(),

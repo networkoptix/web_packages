@@ -7,7 +7,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
 import { NxFooterComponent } from '@components/footer/footer.component';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { DevelopersGuard } from '@guards/developersGuard';
 
@@ -40,7 +40,7 @@ const appRoutes: Routes = [
         DirectivesModule,
         NxFooterComponent,
         PipesModule,
-        PreLoaderModule,
+        NxPreLoaderComponent,
     ],
     providers: [],
     declarations: [

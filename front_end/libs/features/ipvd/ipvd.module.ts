@@ -11,8 +11,8 @@ import { PipesModule } from '@app/pipes/pipes.module';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxFooterComponent } from '@components/footer/footer.component';
-import { PaginatorModule } from '@components/paginator/paginator.module';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxPaginatorComponent } from '@components/paginator/paginator.component';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { SearchModule } from '@components/search/search.module';
 import { NxBaseTableModule } from '@components/table/table.module';
 import { TagModule } from '@components/tag/tag.module';
@@ -49,9 +49,9 @@ const appRoutes: Routes = [
         NxFooterComponent,
         LayoutModule,
         NxBaseTableModule,
-        PaginatorModule,
+        NxPaginatorComponent,
         PipesModule,
-        PreLoaderModule,
+        NxPreLoaderComponent,
         SearchModule,
         TagModule,
     ],

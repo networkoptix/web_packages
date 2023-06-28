@@ -6,7 +6,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
-import { ProcessButtonModule } from '@components/process-button/process-button.module';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { RadioModule } from '@components/radio/radio.module';
 import { PipesModule } from '@pipes/pipes.module';
 
@@ -28,7 +28,7 @@ import { NxMergeSelectSystemComponent } from './select-system/select-system.comp
         // DirectivesModule,
         NxGenericDropdownModule,
         PipesModule,
-        ProcessButtonModule,
+        NxProcessButtonComponent,
         RadioModule,
     ],
     providers: [],

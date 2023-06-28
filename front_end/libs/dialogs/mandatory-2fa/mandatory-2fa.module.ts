@@ -4,8 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { ProcessButtonModule } from '@components/process-button/process-button.module';
-import { ProcessCancelButtonModule } from '@components/process-cancel-Button/process-cancel-Button.module';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { Mandatory2faModalContent } from './mandatory-2fa.component';
@@ -19,8 +19,8 @@ import { Mandatory2faModalContent } from './mandatory-2fa.component';
         RouterModule,
 
         DirectivesModule,
-        ProcessButtonModule,
-        ProcessCancelButtonModule,
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
     ],
     declarations: [Mandatory2faModalContent],
     providers: [],

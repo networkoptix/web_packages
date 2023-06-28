@@ -1,6 +1,8 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
+import { ResizeModule } from '@directives/resize/resize.module';
 import { NgChanges } from '@utils/ng-changes';
 
 /* Usage
@@ -16,6 +18,8 @@ import { NgChanges } from '@utils/ng-changes';
     selector: 'nx-ml-ellipsis',
     templateUrl: 'mle.component.html',
     styleUrls: ['mle.component.scss'],
+    standalone: true,
+    imports: [CommonModule, ResizeModule],
 })
 export class NxMultiLineEllipsisComponent implements OnChanges {
     @IBool() @Input() gradientOnly: CoercedBoolInput = false;

@@ -6,8 +6,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
-import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSimpleSearchModule } from '@components/simple-search/simple-search.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { SystemTitleResolver } from '@resolvers/system-title-resolver';
@@ -40,8 +40,8 @@ const appRoutes: Routes = [
         NxBookmarksCardModule,
         NxSimpleSearchModule,
         NxAlertBlockComponent,
-        PreLoaderModule,
-        PagePlaceHolderModule,
+        NxPreLoaderComponent,
+        NxPagePlaceholderComponent,
     ],
     providers: [],
     declarations: [NxBookmarksComponent],

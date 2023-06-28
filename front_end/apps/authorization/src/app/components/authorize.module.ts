@@ -9,8 +9,8 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
 import { NxFooterComponent } from '@components/footer/footer.component';
-import { NavFooterModule } from '@components/nav-footer/nav-footer.module';
-import { ProcessButtonModule } from '@components/process-button/process-button.module';
+import { NxNavFooterComponent } from '@components/nav-footer/nav-footer.component';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { ToastContainerModule } from '@components/toast-container/toast-container.module';
 import { DirectivesModule } from '@directives/directives.module';
 
@@ -75,8 +75,8 @@ export const authorizedRoutes: Routes = [
         DirectivesModule,
         PipesModule,
         NxFooterComponent,
-        NavFooterModule,
-        ProcessButtonModule,
+        NxNavFooterComponent,
+        NxProcessButtonComponent,
         ToastContainerModule,
         NxAuthorizeCreateAccountComponent,
         NxAuthorizeResetPasswordComponent,

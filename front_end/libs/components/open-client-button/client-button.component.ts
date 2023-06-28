@@ -1,10 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, Input, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { accountSelectors } from '@common/store/account';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { Account } from '@services/account.service/account';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -19,6 +22,8 @@ import { NxUrlProtocolService } from '@services/url-protocol.service';
     templateUrl: 'client-button.component.html',
     styleUrls: ['client-button.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [CommonModule, TranslateModule, NxProcessButtonComponent],
 })
 export class NxClientButtonComponent implements OnInit, OnDestroy {
     @Input() system;

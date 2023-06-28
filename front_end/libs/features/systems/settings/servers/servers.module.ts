@@ -12,11 +12,11 @@ import { NxContentBlockSectionComponent } from '@components/content-block/sectio
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { EditableModule } from '@components/editable/editable.module';
 import { NxInfoBlockComponent } from '@components/info-block/info-block.component';
-import { NumericModule } from '@components/numeric-input/numeric.module';
-import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
-import { SectionPlaceholderModule } from '@components/placeholders/section/section-placeholder.module';
-import { ProcessButtonModule } from '@components/process-button/process-button.module';
+import { NxNumericComponent } from '@components/numeric-input/numeric.component';
+import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxSectionPlaceholderComponent } from '@components/placeholders/section/section-placeholder.component';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { NxCloudStorageModule } from '../cloud-storage/cloud-storage.module';
@@ -43,12 +43,12 @@ import { NxStorageSizeComponent } from './storage-advanced/size/size.component';
         NxInfoBlockComponent,
         NxCloudStorageModule,
         NxGenericDropdownModule,
-        NumericModule,
-        PagePlaceHolderModule,
+        NxNumericComponent,
+        NxPagePlaceholderComponent,
         PipesModule,
-        PreLoaderModule,
-        ProcessButtonModule,
-        SectionPlaceholderModule,
+        NxPreLoaderComponent,
+        NxProcessButtonComponent,
+        NxSectionPlaceholderComponent,
     ],
     providers: [],
     declarations: [

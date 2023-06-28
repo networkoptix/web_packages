@@ -9,9 +9,9 @@ import { PipesModule } from '@app/pipes/pipes.module';
 import { NxConsoleTableComponent } from '@components/console-table/console-table.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
-import { ProcessButtonModule } from '@components/process-button/process-button.module';
-import { ProcessCancelButtonModule } from '@components/process-cancel-Button/process-cancel-Button.module';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
 
@@ -60,9 +60,9 @@ const appRoutes: Routes = [
         NxContentBlockSectionComponent,
         DirectivesModule,
         PipesModule,
-        PreLoaderModule,
-        ProcessButtonModule,
-        ProcessCancelButtonModule,
+        NxPreLoaderComponent,
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
     ],
     providers: [],
     declarations: [NxDevConsoleComponent, NxDevConsoleMenuComponent, NxDevConsoleEditComponent],

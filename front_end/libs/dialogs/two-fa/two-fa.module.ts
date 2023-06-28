@@ -6,8 +6,8 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { QrCodeModule } from 'ng-qrcode';
 
 import { NxInfoBlockComponent } from '@components/info-block/info-block.component';
-import { ProcessButtonModule } from '@components/process-button/process-button.module';
-import { ProcessCancelButtonModule } from '@components/process-cancel-Button/process-cancel-Button.module';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 
 import { TwoFAModalContent } from './two-fa.component';
 
@@ -21,8 +21,8 @@ import { TwoFAModalContent } from './two-fa.component';
         TranslateModule,
 
         NxInfoBlockComponent,
-        ProcessButtonModule,
-        ProcessCancelButtonModule,
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
     ],
     declarations: [TwoFAModalContent],
     providers: [],

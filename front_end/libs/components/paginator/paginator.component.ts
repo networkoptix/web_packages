@@ -1,5 +1,6 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
 
@@ -13,6 +14,8 @@ import { NgChanges } from '@utils/ng-changes';
     selector: 'nx-paginator',
     templateUrl: 'paginator.component.html',
     styleUrls: ['paginator.component.scss'],
+    standalone: true,
+    imports: [CommonModule, RouterModule],
 })
 export class NxPaginatorComponent {
     @Input() numPages: number;

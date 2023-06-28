@@ -5,7 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { PipesModule } from '@app/pipes/pipes.module';
-import { ClientButtonModule } from '@components/open-client-button/client-button.module';
+import { NxClientButtonComponent } from '@components/open-client-button/client-button.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { AuthGuard } from '@guards/authGuard';
 
@@ -26,7 +26,7 @@ const appRoutes: Routes = [
         FormsModule,
         RouterModule.forChild(appRoutes),
         TranslateModule,
-        ClientButtonModule,
+        NxClientButtonComponent,
         DirectivesModule,
         PipesModule,
     ],

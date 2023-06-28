@@ -6,8 +6,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 // import { MultiSelectModule } from '@components/dropdowns/multi-select/multi-select.module';
 import { NxEmailComponent } from '@components/email-input/email.component';
-import { ProcessButtonModule } from '@components/process-button/process-button.module';
-import { ProcessCancelButtonModule } from '@components/process-cancel-Button/process-cancel-Button.module';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 
 import { NxAddOrgUserModalContent } from './add-org-user.component';
 
@@ -21,8 +21,8 @@ import { NxAddOrgUserModalContent } from './add-org-user.component';
         NxEmailComponent,
         NxGenericDropdownModule,
         // MultiSelectModule,
-        ProcessButtonModule,
-        ProcessCancelButtonModule,
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
     ],
     declarations: [NxAddOrgUserModalContent],
     providers: [],

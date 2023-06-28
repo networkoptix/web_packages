@@ -20,9 +20,9 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxEmailComponent } from '@components/email-input/email.component';
-import { PasswordModule } from '@components/password-input/password.module';
-import { PasswordValidationModule } from '@components/password-input-validation/password-validation.module';
-import { ProcessButtonModule } from '@components/process-button/process-button.module';
+import { NxPasswordComponent } from '@components/password-input/password.component';
+import { NxPasswordValidationComponent } from '@components/password-input-validation/password-validation.component';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { icons } from '@lib/variables/static-variables';
 import { Process } from '@services/process.service/process';
@@ -41,9 +41,9 @@ import type { AuthorizeStateType } from '../authorize.component.types';
         TranslateModule,
         AngularSvgIconModule,
         DirectivesModule,
-        PasswordModule,
-        PasswordValidationModule,
-        ProcessButtonModule,
+        NxPasswordComponent,
+        NxPasswordValidationComponent,
+        NxProcessButtonComponent,
         NxCheckboxComponent,
         NxEmailComponent,
     ],

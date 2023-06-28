@@ -7,8 +7,8 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
 import { NxFooterComponent } from '@components/footer/footer.component';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
-import { SectionPlaceholderModule } from '@components/placeholders/section/section-placeholder.module';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxSectionPlaceholderComponent } from '@components/placeholders/section/section-placeholder.component';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { DownloadComponent } from './download.component';
@@ -56,8 +56,8 @@ const appRoutes: Routes = [
         DirectivesModule,
         NxFooterComponent,
         PipesModule,
-        PreLoaderModule,
-        SectionPlaceholderModule,
+        NxPreLoaderComponent,
+        NxSectionPlaceholderComponent,
     ],
     providers: [OsResolver],
     declarations: [DownloadComponent],

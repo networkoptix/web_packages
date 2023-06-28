@@ -16,8 +16,8 @@ import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.
 import { NxSearchableDropdown } from '@components/dropdowns/searchable/searchable.component';
 import { NxDynamicWidgetComponent } from '@components/dynamic-widget/dynamic-widget.component';
 import { NxInfoBlockComponent } from '@components/info-block/info-block.component';
-import { ProcessButtonModule } from '@components/process-button/process-button.module';
-import { ProcessCancelButtonModule } from '@components/process-cancel-Button/process-cancel-Button.module';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { RadioModule } from '@components/radio/radio.module';
 import { TagModule } from '@components/tag/tag.module';
 import { ThirdsPartyWidgetModule } from '@components/widgets/third-party/third-party-widget.module';
@@ -89,8 +89,8 @@ import { NxWizardModalModule } from './wizard/wizard.module';
         NxInfoBlockComponent,
         NxGenericDropdownModule,
         PipesModule,
-        ProcessButtonModule,
-        ProcessCancelButtonModule,
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
         RadioModule,
         NxSearchableDropdown,
         TagModule,

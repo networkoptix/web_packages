@@ -8,8 +8,8 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
-import { NumericModule } from '@components/numeric-input/numeric.module';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxNumericComponent } from '@components/numeric-input/numeric.component';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { StepperModule } from '@components/stepper/stepper.module';
 import { PipesModule } from '@pipes/pipes.module';
 
@@ -24,10 +24,10 @@ import { NxHealthMonitorWidgetComponent } from './health-monitor-widget.componen
         CdkStepperModule,
         CdkTableModule,
         NxCheckboxComponent,
-        NumericModule,
+        NxNumericComponent,
         NxGenericDropdownModule,
         PipesModule,
-        PreLoaderModule,
+        NxPreLoaderComponent,
         StepperModule,
     ],
     declarations: [NxHealthMonitorWidgetComponent],

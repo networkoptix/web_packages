@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { ClientButtonModule } from '@components/open-client-button/client-button.module';
+import { NxClientButtonComponent } from '@components/open-client-button/client-button.component';
 import { NxSearchHighlightModule } from '@components/search-highlight/search-highlight.module';
 import { TagModule } from '@components/tag/tag.module';
 import { DirectivesModule } from '@directives/directives.module';
@@ -15,7 +15,7 @@ import { SystemCardComponent } from './system-card.component';
         CommonModule,
         TranslateModule,
         AngularSvgIconModule,
-        ClientButtonModule,
+        NxClientButtonComponent,
         DirectivesModule,
         NxSearchHighlightModule,
         TagModule,

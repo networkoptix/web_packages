@@ -9,8 +9,8 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CookieService } from 'ngx-cookie-service';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
-import { ProcessButtonModule } from '@components/process-button/process-button.module';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import type { LoginWebAdmin as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
@@ -63,9 +63,9 @@ function getRelativeLocation(href: string): string {
     styleUrls: ['login-webadmin.component.scss'],
     standalone: true,
     imports: [
-        PreLoaderModule,
+        NxPreLoaderComponent,
         AngularSvgIconModule,
-        ProcessButtonModule,
+        NxProcessButtonComponent,
         PipesModule,
         TranslateModule,
         CommonModule,

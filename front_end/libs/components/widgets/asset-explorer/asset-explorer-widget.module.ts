@@ -7,8 +7,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
-import { NumericModule } from '@components/numeric-input/numeric.module';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxNumericComponent } from '@components/numeric-input/numeric.component';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { StepperModule } from '@components/stepper/stepper.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@pipes/pipes.module';
@@ -25,9 +25,9 @@ import { NxAssetExplorerWidgetComponent } from './asset-explorer-widget.componen
         CdkTreeModule,
         NxCheckboxComponent,
         DirectivesModule,
-        NumericModule,
+        NxNumericComponent,
         PipesModule,
-        PreLoaderModule,
+        NxPreLoaderComponent,
         StepperModule,
     ],
     declarations: [NxAssetExplorerWidgetComponent],

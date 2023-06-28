@@ -5,8 +5,8 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { NxPermissionsDropdown } from '@components/dropdowns/permissions/permissions.component';
 import { NxEmailComponent } from '@components/email-input/email.component';
-import { ProcessButtonModule } from '@components/process-button/process-button.module';
-import { ProcessCancelButtonModule } from '@components/process-cancel-Button/process-cancel-Button.module';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 
 import { AddUserModalContent } from './add-user.component';
 
@@ -19,8 +19,8 @@ import { AddUserModalContent } from './add-user.component';
 
         NxEmailComponent,
         NxPermissionsDropdown,
-        ProcessButtonModule,
-        ProcessCancelButtonModule,
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
     ],
     declarations: [AddUserModalContent],
     providers: [],

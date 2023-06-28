@@ -10,7 +10,7 @@ import { PipesModule } from '@app/pipes/pipes.module';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxDynamicWidgetComponent } from '@components/dynamic-widget/dynamic-widget.component';
 import { EditableModule } from '@components/editable/editable.module';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { SwitchModule } from '@components/switch/switch.module';
 import { AssetExplorerWidgetModule } from '@components/widgets/asset-explorer/asset-explorer-widget.module';
 // import { BookmarksWidgetModule } from '@components/widgets/bookmarks/bookmarks-widget.module';
@@ -40,7 +40,7 @@ const appRoutes: Routes = [{ path: '', component: NxDashboardComponent }];
         EditableModule,
         NxGenericDropdownModule,
         PipesModule,
-        PreLoaderModule,
+        NxPreLoaderComponent,
         SwitchModule,
         AssetExplorerWidgetModule,
         // BookmarksWidgetModule,

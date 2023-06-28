@@ -5,8 +5,8 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
-import { ProcessButtonModule } from '@components/process-button/process-button.module';
-import { ProcessCancelButtonModule } from '@components/process-cancel-Button/process-cancel-Button.module';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 
 import { NxEditOrganizationModalContent } from './edit-organization.component';
 
@@ -19,8 +19,8 @@ import { NxEditOrganizationModalContent } from './edit-organization.component';
 
         NxGenericDropdownModule,
         NxCheckboxComponent,
-        ProcessButtonModule,
-        ProcessCancelButtonModule,
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
     ],
     declarations: [NxEditOrganizationModalContent],
     providers: [],

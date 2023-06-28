@@ -3,13 +3,19 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { ProcessButtonModule } from '@components/process-button/process-button.module';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { PipesModule } from '@pipes/pipes.module';
 
 import { NxRibbonComponent } from './ribbon.component';
 
 @NgModule({
-    imports: [CommonModule, RouterModule, AngularSvgIconModule, PipesModule, ProcessButtonModule],
+    imports: [
+        CommonModule,
+        RouterModule,
+        AngularSvgIconModule,
+        PipesModule,
+        NxProcessButtonComponent,
+    ],
     declarations: [NxRibbonComponent],
     providers: [NxRibbonComponent],
     exports: [NxRibbonComponent],

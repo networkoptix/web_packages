@@ -9,7 +9,7 @@ import { PipesModule } from '@app/pipes/pipes.module';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxDevelopersMenuComponent } from '@components/developers-menu/developers-menu.component';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { SearchModule } from '@components/search/search.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { DevelopersGuard } from '@guards/developersGuard';
@@ -83,7 +83,7 @@ const appRoutes: Routes = [
         DirectivesModule,
         NxAboutModule,
         PipesModule,
-        PreLoaderModule,
+        NxPreLoaderComponent,
         SearchModule,
     ],
     providers: [],

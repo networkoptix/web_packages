@@ -9,8 +9,8 @@ import { delay, mergeMap, repeat, retry, takeUntil, tap } from 'rxjs/operators';
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
-import { SectionPlaceholderModule } from '@components/placeholders/section/section-placeholder.module';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxSectionPlaceholderComponent } from '@components/placeholders/section/section-placeholder.component';
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { NxAccountService } from '@services/account.service';
 import { NxSystem } from '@services/system.service/system';
@@ -33,8 +33,8 @@ import { NgChanges } from '@utils/ng-changes';
         TranslateModule,
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
-        PreLoaderModule,
-        SectionPlaceholderModule,
+        NxPreLoaderComponent,
+        NxSectionPlaceholderComponent,
         NgxChartsModule,
     ],
 })

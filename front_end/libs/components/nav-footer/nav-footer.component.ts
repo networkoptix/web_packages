@@ -1,13 +1,17 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { BehaviorSubject, filter, take } from 'rxjs';
 
 import { accountSelectors } from '@common/store/account';
+import { LanguageModule } from '@components/dropdowns/language/language.module';
 import { environment } from '@environments/environment';
 import { icons } from '@lib/variables/static-variables';
+import { PipesModule } from '@pipes/pipes.module';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { IConfig } from '@services/nx-config/config-types';
@@ -19,6 +23,15 @@ import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
     selector: 'nx-nav-footer',
     templateUrl: './nav-footer.component.html',
     styleUrls: ['./nav-footer.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        RouterModule,
+        TranslateModule,
+        AngularSvgIconModule,
+        LanguageModule,
+        PipesModule,
+    ],
 })
 export class NxNavFooterComponent implements OnInit {
     footerItems: MenuNode[];

@@ -12,11 +12,11 @@ import { NxContentBlockComponent } from '@components/content-block/content-block
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { EditableModule } from '@components/editable/editable.module';
-import { NumericModule } from '@components/numeric-input/numeric.module';
-import { ClientButtonModule } from '@components/open-client-button/client-button.module';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
-import { SectionPlaceholderModule } from '@components/placeholders/section/section-placeholder.module';
-import { ProcessButtonModule } from '@components/process-button/process-button.module';
+import { NxNumericComponent } from '@components/numeric-input/numeric.component';
+import { NxClientButtonComponent } from '@components/open-client-button/client-button.component';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxSectionPlaceholderComponent } from '@components/placeholders/section/section-placeholder.component';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { TagModule } from '@components/tag/tag.module';
 import { DirectivesModule } from '@directives/directives.module';
 
@@ -34,17 +34,17 @@ import { NxSystemStandardAdminComponent } from './standard/standard.component';
         AngularSvgIconModule,
         NxAlertBlockComponent,
         NxCheckboxComponent,
-        ClientButtonModule,
+        NxClientButtonComponent,
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
         DirectivesModule,
         EditableModule,
-        NumericModule,
+        NxNumericComponent,
         NxGenericDropdownModule,
         PipesModule,
-        PreLoaderModule,
-        ProcessButtonModule,
-        SectionPlaceholderModule,
+        NxPreLoaderComponent,
+        NxProcessButtonComponent,
+        NxSectionPlaceholderComponent,
         TagModule,
     ],
     providers: [],

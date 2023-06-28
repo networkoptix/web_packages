@@ -10,7 +10,6 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { accountReducer } from '@common/store/account';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { NxSearchHighlightModule } from '@components/search-highlight/search-highlight.module';
 import { NxBaseTableModule } from '@components/table/table.module';
 import { NxTabsComponent } from '@components/tabs/tabs.component';
@@ -98,7 +97,7 @@ const homeRoutes: Routes = [
         DirectivesModule,
         NxBaseTableModule,
         NxSearchHighlightModule,
-        PreLoaderModule,
+        NxPreLoaderComponent,
     ],
     declarations: [
         NxOrganizationsComponent,

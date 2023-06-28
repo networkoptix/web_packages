@@ -1,4 +1,7 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { environment } from '@environments/environment';
 import { icons } from '@lib/variables/static-variables';
@@ -18,6 +21,8 @@ import { ICamera } from '@vms-client/submodules/vms/datatypes/ICamera';
     selector: 'nx-player-placeholder',
     templateUrl: 'player-placeholder.component.html',
     styleUrls: ['player-placeholder.component.scss'],
+    standalone: true,
+    imports: [CommonModule, RouterModule, AngularSvgIconModule],
 })
 export class NxPlayerPlaceholderComponent implements OnInit {
     @Input() svgFileName: string;

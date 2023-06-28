@@ -5,9 +5,9 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
-import { PaginatorModule } from '@components/paginator/paginator.module';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
-import { SectionPlaceholderModule } from '@components/placeholders/section/section-placeholder.module';
+import { NxPaginatorComponent } from '@components/paginator/paginator.component';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxSectionPlaceholderComponent } from '@components/placeholders/section/section-placeholder.component';
 import { ResizeModule } from '@directives/resize/resize.module';
 
 import { NxBaseTableComponent } from './table.component';
@@ -19,10 +19,10 @@ import { NxBaseTableComponent } from './table.component';
         DragDropModule,
         NxCheckboxComponent,
         NxGenericDropdownModule,
-        PaginatorModule,
-        PreLoaderModule,
+        NxPaginatorComponent,
+        NxPreLoaderComponent,
         ResizeModule,
-        SectionPlaceholderModule,
+        NxSectionPlaceholderComponent,
     ],
     declarations: [NxBaseTableComponent],
     providers: [NxBaseTableComponent],

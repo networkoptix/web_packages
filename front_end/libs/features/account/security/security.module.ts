@@ -12,7 +12,7 @@ import { PipesModule } from '@app/pipes/pipes.module';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { TagModule } from '@components/tag/tag.module';
 import { DirectivesModule } from '@directives/directives.module';
 
@@ -33,7 +33,7 @@ import { NxAccountSecurityComponent } from './security.component';
         NxContentBlockSectionComponent,
         DirectivesModule,
         PipesModule,
-        PreLoaderModule,
+        NxPreLoaderComponent,
         TagModule,
     ],
     providers: [],

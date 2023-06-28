@@ -5,8 +5,8 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { PipesModule } from '@app/pipes/pipes.module';
 import { NxFooterComponent } from '@components/footer/footer.component';
-import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
-import { ProcessButtonModule } from '@components/process-button/process-button.module';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { DirectivesModule } from '@directives/directives.module';
 
 import { NxContentComponent } from './content.component';
@@ -24,8 +24,8 @@ const appRoutes: Routes = [
         DirectivesModule,
         NxFooterComponent,
         PipesModule,
-        PreLoaderModule,
-        ProcessButtonModule,
+        NxPreLoaderComponent,
+        NxProcessButtonComponent,
     ],
     providers: [],
     declarations: [NxContentComponent],
