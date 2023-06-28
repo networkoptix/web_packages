@@ -56,6 +56,17 @@ import { wizardGetSystemSettingsRestV2 } from './mediaserver-apis/endpoints/wiza
 import { NxAppStateService } from './nx-app-state.service';
 import type { APIDocType, MenuManifest } from './nx-config/base-config';
 import type { IConfig } from './nx-config/config-types';
+import type {
+    AggregatedUsers,
+    MediaServersAndCameras,
+    TimeAndCameras,
+    AggregatedResp,
+    StorageAnalytics,
+    CameraManagerUpdate,
+    GetLicenses,
+    HealthReport,
+} from './system-api.aggregated-types';
+import type { GetEndpoints } from './system-api.endpoint-types';
 import * as t from './system-api.types';
 import type { SaveCameraUserAttributes } from './system.service/camera-manager/camera-manager-types';
 import type { ServerPreprocess } from './system.service/system-types';
@@ -346,16 +357,24 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         );
     }
 
-    protected getRequestAggregator<AggregatedType>(requests: string[], timeout = 60 * 1000) {
-        const concatRequests = encodeURI(
-            requests
-                .map(request => {
-                    return `exec_cmd=${request}`;
-                })
-                .join('&'),
-        ).replace('/', '%2F');
-        const url = `/api/aggregator?${concatRequests}`;
-        return this.get<AggregatedType>(url, { timeout });
+    protected getRequestAggregator<U extends readonly (keyof GetEndpoints)[]>(
+        urls: U,
+        headers?: Record<string, string>,
+    ): Observable<AggregatedResp<U>>;
+    protected getRequestAggregator<T = never>(
+        urls: string[],
+        headers?: Record<string, string>,
+    ): Observable<T>;
+    protected getRequestAggregator(
+        urls: string[],
+        headers?: Record<string, string>,
+    ): Observable<unknown> {
+        let params = new HttpParams();
+        urls.forEach(url => {
+            params = params.append('exec_cmd', url);
+        });
+        const url = `/api/aggregator?${params.toString()}`;
+        return this.get(url, { headers });
     }
 
     protected proxy = proxyLegacyV1;
@@ -683,8 +702,8 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     /* End of Authentication  */
 
     /* Server settings */
-    public getServerTimes(): Observable<t.NormalResponse<t.ServerTime[]>> {
-        return this.get<t.NormalResponse<t.ServerTime[]>>('/ec2/getTimeOfServers');
+    public getServerTimes(): Observable<t.TimeOfServers> {
+        return this.get('/ec2/getTimeOfServers');
     }
 
     protected getSystemTime() {
@@ -723,33 +742,30 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     }
 
     @memoizeAsyncLong
-    public getStorageAnalytics() {
+    public getStorageAnalytics(): Observable<StorageAnalytics> {
         const analyticsEndpoint = '/ec2/analyticsLookupObjectTracks?limit=1';
         const getCamerasEndpoint = `/ec2/getCamerasEx?id=${this.serverId}`;
         const getServerEndpoint = '/ec2/getMediaServersEx';
-        return this.getRequestAggregator([
-            analyticsEndpoint,
-            getCamerasEndpoint,
-            getServerEndpoint,
-        ]).pipe(
-            map(({ reply }: any) => {
-                return {
-                    hasAnalyticsData: !!reply[analyticsEndpoint]?.length,
-                    hasPlugins: reply[getCamerasEndpoint]?.reduce(
-                        (hasPlugins, { addParams, parentId }) =>
-                            hasPlugins ||
-                            addParams.find(
-                                ({ name }) =>
-                                    name === 'compatibleAnalyticsEngines' &&
-                                    parentId === this.serverId,
-                            )?.value !== '[]',
-                        false,
-                    ),
-                    metadataStorageId: reply[getServerEndpoint]
-                        .find(({ id }) => id === this.serverId)
-                        ?.addParams?.find(({ name }) => name === 'metadataStorageId')?.value,
-                };
-            }),
+        return this.getRequestAggregator<
+            t.NormalResponse<{
+                [analyticsEndpoint]: unknown[];
+                // Can't use cameras endpoint in type because it's not a string literal
+                [getServerEndpoint]: t.ec2MediaServerEx[];
+            }>
+        >([analyticsEndpoint, getCamerasEndpoint, getServerEndpoint]).pipe(
+            map(({ reply }) => ({
+                hasAnalyticsData: !!reply[analyticsEndpoint].length,
+                hasPlugins: (reply[getCamerasEndpoint] as t.ec2CameraEx[]).some(
+                    ({ addParams, parentId }) =>
+                        addParams.find(
+                            ({ name }) =>
+                                name === 'compatibleAnalyticsEngines' && parentId === this.serverId,
+                        ),
+                ),
+                metadataStorageId: reply[getServerEndpoint]
+                    .find(({ id }) => id === this.serverId)
+                    ?.addParams?.find(({ name }) => name === 'metadataStorageId')?.value,
+            })),
         );
     }
 
@@ -870,25 +886,18 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     }
 
     @memoizeAsyncMedium
-    getHardwareIdsOfServers() {
+    getHardwareIdsOfServers(): Observable<t.ServerHardareIdsResp> {
         return this.get('/ec2/getHardwareIdsOfServers');
     }
 
     @memoizeAsyncMedium
-    getLicenses() {
-        return this.getRequestAggregator(['ec2/getLicenses', 'ec2/getHardwareIdsOfServers']).pipe(
-            map(({ reply }: any) => {
-                return {
-                    licenses: reply['ec2/getLicenses'],
-                    hwids: reply['ec2/getHardwareIdsOfServers'].reply.reduce(
-                        (ids: any[], { hardwareIds }) => {
-                            ids.push(...hardwareIds);
-                            return ids;
-                        },
-                        [],
-                    ),
-                };
-            }),
+    getLicenses(): Observable<GetLicenses> {
+        const routes = ['/ec2/getLicenses', '/ec2/getHardwareIdsOfServers'] as const;
+        return this.getRequestAggregator(routes).pipe(
+            map(({ reply }) => ({
+                licenses: reply[routes[0]],
+                hwids: reply[routes[1]].reply.flatMap(ids => ids.hardwareIds),
+            })),
         );
     }
 
@@ -910,14 +919,14 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     /* End of Server settings */
 
     /* Working with users */
-    getAggregatedUsersData() {
+    getAggregatedUsersData(): Observable<AggregatedUsers> {
         const routes = [
-            'ec2/getUsers',
-            'ec2/getPredefinedRoles',
-            'ec2/getUserRoles',
-            'ec2/getAccessRights',
-        ];
-        return this.getRequestAggregator<t.AggregatedEc2Users>(routes);
+            '/ec2/getUsers',
+            '/ec2/getPredefinedRoles',
+            '/ec2/getUserRoles',
+            '/ec2/getAccessRights',
+        ] as const;
+        return this.getRequestAggregator(routes);
     }
 
     saveUser<U extends t.ec2SaveUser>(user: U): Observable<t.ChangedIdReturned> {
@@ -960,12 +969,12 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     }
 
     @memoizeAsyncShort
-    getCamerasWithServerTime(): Observable<t.TimeAndCameras> {
-        const routes = ['ec2/getTimeOfServers', 'ec2/getCamerasEx'];
-        return this.getRequestAggregator<t.TimeAndCamerasResp>(routes).pipe(
+    getCamerasWithServerTime(): Observable<TimeAndCameras> {
+        const routes = ['/ec2/getTimeOfServers', '/ec2/getCamerasEx'] as const;
+        return this.getRequestAggregator(routes).pipe(
             map(({ reply }) => ({
-                serverTimes: reply['ec2/getTimeOfServers'].reply,
-                cameras: reply['ec2/getCamerasEx'],
+                serverTimes: reply[routes[0]].reply,
+                cameras: reply[routes[1]],
             })),
         );
     }
@@ -995,9 +1004,9 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     }
 
     @memoizeAsyncMedium
-    getMediaServersAndCameras(): Observable<t.ServersAndCameras> {
-        const routes = ['/ec2/getMediaServers', 'ec2/getCamerasEx'];
-        return this.getRequestAggregator<t.Ec2ServersAndCameras>(routes);
+    getMediaServersAndCameras(): Observable<MediaServersAndCameras> {
+        const routes = ['/ec2/getMediaServers', '/ec2/getCamerasEx'] as const;
+        return this.getRequestAggregator(routes);
     }
 
     @memoizeAsyncPersistent
@@ -1005,19 +1014,19 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         return this.get<t.GetResourceTypes>('/ec2/getResourceTypes');
     }
 
-    updateSystemServersCameras(): Observable<t.CameraManagerUpdate> {
+    updateSystemServersCameras(): Observable<CameraManagerUpdate> {
         const routes = [
             '/api/moduleInformation',
             '/ec2/getMediaServers',
-            'ec2/getTimeOfServers',
-            'ec2/getCamerasEx',
-        ];
-        return this.getRequestAggregator<t.CameraManagerUpdateResp>(routes).pipe(
+            '/ec2/getTimeOfServers',
+            '/ec2/getCamerasEx',
+        ] as const;
+        return this.getRequestAggregator(routes).pipe(
             map(({ reply }) => ({
-                moduleInfo: reply['/api/moduleInformation'].reply,
-                servers: reply['/ec2/getMediaServers'],
-                serverTimes: reply['ec2/getTimeOfServers'].reply,
-                cameras: reply['ec2/getCamerasEx'],
+                moduleInfo: reply[routes[0]].reply,
+                servers: reply[routes[1]],
+                serverTimes: reply[routes[2]].reply,
+                cameras: reply[routes[3]],
             })),
         );
     }
@@ -1219,19 +1228,26 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     }
 
     @NxSystemAPI.memoizeHM
-    getAggregateHealthReport(forceUpdate = false): Observable<t.AggregatedHealthReport> {
-        const endpoint =
-            '/api/aggregator?exec_cmd=ec2%2Fmetrics%2Fmanifest&exec_cmd=ec2%2Fmetrics%2Fvalues&exec_cmd=ec2%2Fmetrics%2Falarms';
-        const headers = {};
+    getAggregateHealthReport(forceUpdate = false): Observable<HealthReport> {
+        const endpoints = [
+            '/ec2/metrics/alarms',
+            '/ec2/metrics/manifest',
+            '/ec2/metrics/values',
+        ] as const;
+        let params = new HttpParams();
+        endpoints.forEach(endpoint => {
+            params = params.append('exec_cmd', endpoint);
+        });
+        let headers: Record<string, string>;
         const secondsSinceUpdate = ((Date.now() - this.healthService.lastUpdate) / 1000) | 0;
         const stale = secondsSinceUpdate > this.CONFIG.cloudCapabilities.healthMonitorCacheTimeout;
         this.healthService.lastUpdate = Date.now();
         if (forceUpdate || stale) {
-            this.cacheService.addToCache(`${this.urlBase}${endpoint}`);
-            headers['reset-cache'] = 'reset';
+            this.cacheService.addToCache(`${this.urlBase}/api/aggregator?${params.toString()}`);
+            headers = { 'reset-cache': 'reset' };
         }
 
-        return this.get<t.AggregatedHealthReport>(endpoint, { headers });
+        return this.getRequestAggregator(endpoints, headers);
     }
     // End of Health Monitor
 

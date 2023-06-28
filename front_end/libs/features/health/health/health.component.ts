@@ -22,8 +22,8 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxPageService } from '@services/page.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import type { HealthReport } from '@services/system-api.aggregated-types';
 import { NxSystemAPIService } from '@services/system-api.service';
-import type { AggregatedHealthReport } from '@services/system-api.types';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
@@ -227,7 +227,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         this.cleanUp();
     }
 
-    setupReport(_data: AggregatedHealthReport) {
+    setupReport(_data: HealthReport) {
         const data = cloneDeep(_data);
         // Handle server not responding for "ec2/metrics/manifest"
         if (!data.reply) {
@@ -237,9 +237,9 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         this.healthService.ready = false;
         this.menu.level1 = [this.menu.level1[0]];
 
-        this.healthService.manifest = data.reply['ec2/metrics/manifest'].reply;
-        this.healthService.values = data.reply['ec2/metrics/values'].reply;
-        this.healthService.alarms = data.reply['ec2/metrics/alarms'].reply;
+        this.healthService.manifest = data.reply['/ec2/metrics/manifest'].reply;
+        this.healthService.values = data.reply['/ec2/metrics/values'].reply;
+        this.healthService.alarms = data.reply['/ec2/metrics/alarms'].reply;
         this.createSnapshot(data);
         this.createResourceList();
         this.initializeManifest();

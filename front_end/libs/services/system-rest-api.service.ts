@@ -67,6 +67,11 @@ import { withSystemBusUpdates } from './mediaserver-apis/utils/with-system-bus-u
 import { NxAppStateService } from './nx-app-state.service';
 import type { APIDocType, MenuManifest } from './nx-config/base-config';
 import type { IConfig } from './nx-config/config-types';
+import type {
+    AggregatedUsers,
+    CameraManagerUpdate,
+    MediaServersAndCameras,
+} from './system-api.aggregated-types';
 import * as t from './system-api.types';
 import { SECURITY_LEVEL, SystemConfigSettings } from './system-api.types';
 import { NxSystemAPI } from './system-legacy-api.service';
@@ -825,34 +830,33 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             ),
         );
     }
-    getMediaServersAndCameras(): Observable<t.ServersAndCameras> {
+    getMediaServersAndCameras(): Observable<MediaServersAndCameras> {
         const servers = this.getMediaServers(false) as Observable<t.RestServerPartialCompat[]>;
         const cameras = this.get<t.ec2CameraEx[]>('/ec2/getCamerasEx');
-        return combineLatest<[t.RestServerPartialCompat[], t.ec2CameraEx[]]>([
-            servers,
-            cameras,
-        ]).pipe(
-            map<[t.RestServerPartialCompat[], t.ec2CameraEx[]], t.ServersAndCameras>(
-                ([mediaServers, cameras]) => ({
-                    error: '0',
-                    errorId: 'ok',
-                    errorString: '',
-                    reply: {
-                        '/ec2/getMediaServers': mediaServers,
-                        'ec2/getCamerasEx': cameras,
-                    },
-                }),
-            ),
+        return combineLatest([servers, cameras]).pipe(
+            map(([mediaServers, cameras]) => ({
+                error: '0',
+                errorId: 'ok',
+                errorString: '',
+                reply: {
+                    '/ec2/getMediaServers': mediaServers,
+                    '/ec2/getCamerasEx': cameras,
+                },
+            })),
         );
     }
 
-    updateSystemServersCameras(): Observable<t.CameraManagerRestUpdate> {
-        const routes = ['/api/moduleInformation', '/ec2/getMediaServers', 'ec2/getTimeOfServers'];
-        const aggregator = this.getRequestAggregator<t.CameraManagerUpdateRestResp>(routes).pipe(
+    updateSystemServersCameras(): Observable<CameraManagerUpdate> {
+        const routes = [
+            '/api/moduleInformation',
+            '/ec2/getMediaServers',
+            '/ec2/getTimeOfServers',
+        ] as const;
+        const aggregator = this.getRequestAggregator(routes).pipe(
             map(({ reply }) => ({
-                moduleInfo: reply['/api/moduleInformation'].reply,
-                servers: reply['/ec2/getMediaServers'],
-                serverTimes: reply['ec2/getTimeOfServers'].reply,
+                moduleInfo: reply[routes[0]].reply,
+                servers: reply[routes[1]],
+                serverTimes: reply[routes[2]].reply,
             })),
         );
 
@@ -1174,4 +1178,28 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     getUsers = getUsersRestV1;
     getUserRoles = getUserRolesRestV1;
     getPredefinedRoles = getPredefinedRolesLegacy;
+
+    getAggregatedUsersData(): Observable<AggregatedUsers> {
+        return combineLatest([
+            this.getUsers(),
+            this.getPredefinedRoles(),
+            this.getUserRoles(),
+        ]).pipe(
+            map(([users, predefinedRoles, roles]) => ({
+                reply: {
+                    '/ec2/getUsers': users.map(user => ({
+                        ...user,
+                        isCloud: user.type === 'cloud',
+                        isLdap: user.type === 'ldap',
+                    })),
+                    '/ec2/getPredefinedRoles': predefinedRoles,
+                    '/ec2/getUserRoles': roles.filter(({ name }) => name !== 'Owner'), // hide the owner role
+                    '/ec2/getAccessRights': users.map(({ id, accessibleResources }) => ({
+                        userId: id,
+                        resourceIds: accessibleResources ?? [],
+                    })),
+                },
+            })),
+        );
+    }
 }

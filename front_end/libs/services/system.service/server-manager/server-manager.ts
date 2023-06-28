@@ -8,6 +8,7 @@ import type { Logger } from '@pages/systems/settings/servers/logger/logger.compo
 import type { APIDocType, MenuManifest } from '@services/nx-config/base-config';
 import { NxSystemOldModule } from '@services/system/modules/nx-system-old-module';
 import { NxSystemBase } from '@services/system/system-base';
+import type { GetLicenses, StorageAnalytics } from '@services/system-api.aggregated-types';
 import type { LogLevel, RebuildArchiveResponse } from '@services/system-api.types';
 import * as t from '@services/system-api.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
@@ -25,6 +26,22 @@ type PartialSystem = Pick<
     NxSystemOldModule,
     'mediaserver' | 'currentUserEmail' | 'id' | 'useRest' | 'version'
 >;
+
+type LicenseBlockNames =
+    | 'NAME'
+    | 'SERIAL'
+    | 'HWID'
+    | 'COUNT'
+    | 'CLASS'
+    | 'VERSION'
+    | 'BRAND'
+    | 'EXPIRATION'
+    | 'SIGNATURE'
+    | 'COMPANY'
+    | 'SUPPORT'
+    | 'DEACTIVATIONS';
+
+type LicenseBlocks = Record<LicenseBlockNames, string>;
 
 export class ServerManager {
     readonly cutOff = 5.0;
@@ -192,7 +209,7 @@ export class ServerManager {
         return this.mediaserverConnections[serverId].backupControl(action);
     }
 
-    getLicenses() {
+    private getLicenses(): Observable<GetLicenses> {
         return this.mediaserver.getLicenses();
     }
 
@@ -200,21 +217,18 @@ export class ServerManager {
         cameras,
     ): Observable<{ total: number; used: number; available: number }> {
         return this.getLicenses().pipe(
-            map(({ licenses, hwids }: any) => {
+            map(({ licenses, hwids }) => {
                 const parsedLicenses = licenses.map(this.parseLicense);
-                const total: number = parsedLicenses.reduce(
-                    (qty, { COUNT, EXPIRATION, CLASS, HWID }) => {
-                        EXPIRATION = EXPIRATION && EXPIRATION.replace(' ', 'T') + 'Z'; // for Safari compatibility
-                        const activeLicense =
-                            hwids.includes(HWID) &&
-                            (!EXPIRATION || new Date(EXPIRATION).getTime() > Date.now());
-                        return activeLicense &&
-                            (CLASS === 'digital' || CLASS === 'starter' || CLASS === 'edge')
-                            ? qty + parseInt(COUNT)
-                            : qty;
-                    },
-                    0,
-                );
+                const total = parsedLicenses.reduce((qty, { COUNT, EXPIRATION, CLASS, HWID }) => {
+                    EXPIRATION = EXPIRATION && EXPIRATION.replace(' ', 'T') + 'Z'; // for Safari compatibility
+                    const activeLicense =
+                        hwids.includes(HWID) &&
+                        (!EXPIRATION || new Date(EXPIRATION).getTime() > Date.now());
+                    return activeLicense &&
+                        (CLASS === 'digital' || CLASS === 'starter' || CLASS === 'edge')
+                        ? qty + parseInt(COUNT)
+                        : qty;
+                }, 0);
                 const used = cameras.filter(
                     ({ scheduleEnabled, status }) => scheduleEnabled,
                 ).length; // count all cameras - not just ONLINE ones
@@ -367,7 +381,7 @@ export class ServerManager {
      * Storage endpoints
      */
 
-    getStorageAnalytics(serverId: string) {
+    getStorageAnalytics(serverId: string): Observable<StorageAnalytics> {
         return this.mediaserverConnections[serverId].getStorageAnalytics();
     }
 
@@ -426,11 +440,9 @@ export class ServerManager {
         return this.mediaserver.createEvent(params);
     }
 
-    parseLicense({ key, licenseBlock }: { key: string; licenseBlock: string }) {
-        const parsedBlock: any = licenseBlock.split('\n').reduce((parsed, current) => {
-            const [curKey, curVal] = current.split('=');
-            return { ...parsed, [curKey]: curVal };
-        }, {});
-        return { key, ...parsedBlock };
+    private parseLicense({ licenseBlock }: t.Licence): LicenseBlocks {
+        return Object.fromEntries(
+            licenseBlock.split('\n').map(block => block.split('=')),
+        ) as LicenseBlocks;
     }
 }

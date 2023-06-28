@@ -188,7 +188,7 @@ export interface ModuleInformationReply {
 }
 export type ModuleInformation = NormalResponse<ModuleInformationReply>;
 
-export interface HardwareIds {
+export interface ServerHardwareIds {
     hardwareIds: string[];
     serverId: string;
 }
@@ -208,6 +208,8 @@ export interface ServerTime {
     timeZoneOffset: string;
     vmsTime: string;
 }
+
+export type TimeOfServers = NormalResponse<ServerTime[]>;
 
 export interface ec2AccessRight {
     resourceIds: string[];
@@ -293,26 +295,6 @@ export interface UserSession {
     ageS: number;
     expiresInS: number;
 }
-
-interface AggregatedEc2UsersReply {
-    'ec2/getAccessRights': ec2AccessRight[];
-    'ec2/getPredefinedRoles': ec2PredefinedRole[];
-    'ec2/getUserRoles': ec2UserRole[];
-    'ec2/getUsers': ec2User[];
-}
-export interface AggregatedEc2Users extends NormalResponse<AggregatedEc2UsersReply> {}
-
-// Using old keys for compatibility for now
-interface AggregatedRestUsers {
-    reply: {
-        'ec2/getUsers': RestUserCompat[];
-        'ec2/getPredefinedRoles': ec2PredefinedRole[];
-        'ec2/getUserRoles': RestUserRole[];
-        'ec2/getAccessRights': ec2AccessRight[];
-    };
-}
-
-export type AggregatedUsers = AggregatedEc2Users | AggregatedRestUsers;
 
 export type ec2SaveUser = Partial<{
     id: string;
@@ -486,51 +468,6 @@ export type RestServerPartial = Pick<RestServer, (typeof getRestServerKeys)[numb
 export interface RestServerPartialCompat extends Omit<RestServerPartial, 'osInfo'> {
     networkAddresses: string; // Reconstruct network addresses from endpoints
     osInfo: string; // Revert osInfo to JSON string
-}
-
-export type Ec2ServersAndCameras = NormalResponse<{
-    '/ec2/getMediaServers': ec2MediaServer[];
-    'ec2/getCamerasEx': ec2CameraEx[];
-}>;
-
-export type RestServersAndCameras = NormalResponse<{
-    '/ec2/getMediaServers': RestServerPartialCompat[];
-    'ec2/getCamerasEx': ec2CameraEx[];
-}>;
-
-export type ServersAndCameras = Ec2ServersAndCameras | RestServersAndCameras;
-
-export type CameraManagerUpdateResp = NormalResponse<{
-    '/api/moduleInformation': NormalResponse<ModuleInformationReply>;
-    '/ec2/getMediaServers': ec2MediaServer[];
-    'ec2/getTimeOfServers': NormalResponse<ServerTime[]>;
-    'ec2/getCamerasEx': ec2CameraEx[];
-}>;
-
-export interface CameraManagerUpdate {
-    moduleInfo: ModuleInformationReply;
-    servers: ec2MediaServer[];
-    serverTimes: ServerTime[];
-    cameras: ec2CameraEx[];
-}
-
-export type CameraManagerUpdateRestResp = NormalResponse<{
-    '/api/moduleInformation': NormalResponse<ModuleInformationReply>;
-    '/ec2/getMediaServers': ec2MediaServer[];
-    'ec2/getTimeOfServers': NormalResponse<ServerTime[]>;
-}>;
-export interface CameraManagerRestUpdate extends Omit<CameraManagerUpdate, 'cameras'> {
-    cameras: RestCamera[];
-}
-
-export type TimeAndCamerasResp = NormalResponse<{
-    'ec2/getTimeOfServers': NormalResponse<ServerTime[]>;
-    'ec2/getCamerasEx': ec2CameraEx[];
-}>;
-
-export interface TimeAndCameras {
-    serverTimes: ServerTime[];
-    cameras: ec2CameraEx[];
 }
 
 interface ResourceTypes {
@@ -739,14 +676,6 @@ export interface ValuesReply {
 export interface Alarms extends NormalResponse<AlarmsReply> {}
 export interface Manifests extends NormalResponse<Array<ManifestReplyObjects>> {}
 export interface Values extends NormalResponse<ValuesReply> {}
-
-export interface AggregatedHealthReportReply {
-    'ec2/metrics/alarms': Alarms;
-    'ec2/metrics/manifest': Manifests;
-    'ec2/metrics/values': Values;
-}
-
-export interface AggregatedHealthReport extends NormalResponse<AggregatedHealthReportReply> {}
 
 export interface DiscoveredPeersReply {
     brand: string;
@@ -1190,3 +1119,10 @@ export const enum SECURITY_LEVEL {
     STANDARD = 'standard',
     HIGH = 'high',
 }
+
+export interface Licence {
+    key: string;
+    licenseBlock: string;
+}
+
+export type ServerHardareIdsResp = NormalResponse<ServerHardwareIds[]>;

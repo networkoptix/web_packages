@@ -1,6 +1,4 @@
 import { LOCALE_ID } from '@angular/core';
-import { combineLatest, Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 import { nxConfig } from '@services/nx-config/config';
@@ -10,7 +8,6 @@ import type {
     ec2PredefinedRole,
     ec2UserRole,
     RestUserRole,
-    AggregatedUsers,
 } from '@services/system-api.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
@@ -194,38 +191,9 @@ export class UserManager {
         return role;
     }
 
-    private getAggregatedUsersData(): Observable<AggregatedUsers> {
-        if (this.mediaserver.version === 0) {
-            return this.mediaserver.getAggregatedUsersData();
-        }
-        const mediaserver = <NxSystemRestAPI | NxSystemRestAPI2>this.mediaserver;
-        const predefinedRoles$ =
-            this.mediaserver.version < 5.2 ? mediaserver.getPredefinedRoles() : of([]);
-        return combineLatest([
-            mediaserver.getUsers(),
-            predefinedRoles$,
-            mediaserver.getUserRoles(),
-        ]).pipe(
-            map(([users, predefinedRoles, roles]) => ({
-                reply: {
-                    'ec2/getUsers': users.map(user => ({
-                        ...user,
-                        isCloud: user.type === 'cloud',
-                        isLdap: user.type === 'ldap',
-                    })),
-                    'ec2/getPredefinedRoles': predefinedRoles,
-                    'ec2/getUserRoles': roles.filter(({ name }) => name !== 'Owner'), // hide the owner role
-                    'ec2/getAccessRights': users.map(({ id, accessibleResources }) => ({
-                        userId: id,
-                        resourceIds: accessibleResources ?? [],
-                    })),
-                },
-            })),
-        );
-    }
-
     getUsersDataFromTheSystem(): Promise<void> {
-        return this.getAggregatedUsersData()
+        return this.mediaserver
+            .getAggregatedUsersData()
             .toPromise()
             .then(
                 result => {
@@ -233,10 +201,10 @@ export class UserManager {
                         return Promise.reject(`Aggregated request to server has failed ${result}`);
                     }
                     const data = result.reply;
-                    const users = data['ec2/getUsers'];
-                    const userRoles = data['ec2/getUserRoles'];
-                    const predefinedRoles = data['ec2/getPredefinedRoles'];
-                    // const accessRights = data['ec2/getAccessRights'];
+                    const users = data['/ec2/getUsers'];
+                    const userRoles = data['/ec2/getUserRoles'];
+                    const predefinedRoles = data['/ec2/getPredefinedRoles'];
+                    // const accessRights = data['/ec2/getAccessRights'];
                     return new Promise(resolve => {
                         this.updateAccessRoles(predefinedRoles, userRoles);
                         this.processUsers(users);

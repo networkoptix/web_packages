@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injector } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest, map } from 'rxjs';
 
 import { NxHealthService } from '@pages/health/health.service';
 import { getUsersRestV3 } from '@services/mediaserver-apis/endpoints/get-users';
@@ -10,6 +10,7 @@ import { getUsersRestV3 } from '@services/mediaserver-apis/endpoints/get-users';
 import { NxAppStateService } from './nx-app-state.service';
 import { IConfig } from './nx-config/config-types';
 import * as t from './system-api-groups.types.bak';
+import type { AggregatedUsers } from './system-api.aggregated-types';
 import { ChangedIdReturned } from './system-api.types';
 import { NxSystemRestAPI2 } from './system-rest-api-v2.service';
 import { IParams } from './system.service/system-types';
@@ -52,6 +53,26 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
 
     // getUsers
     getUsers = getUsersRestV3;
+
+    getAggregatedUsersData(): Observable<AggregatedUsers> {
+        return combineLatest([this.getUsers(), this.getUserRoles()]).pipe(
+            map(([users, roles]) => ({
+                reply: {
+                    '/ec2/getUsers': users.map(user => ({
+                        ...user,
+                        isCloud: user.type === 'cloud',
+                        isLdap: user.type === 'ldap',
+                    })),
+                    '/ec2/getPredefinedRoles': [],
+                    '/ec2/getUserRoles': roles.filter(({ name }) => name !== 'Owner'), // hide the owner role
+                    '/ec2/getAccessRights': users.map(({ id, accessibleResources }) => ({
+                        userId: id,
+                        resourceIds: accessibleResources ?? [],
+                    })),
+                },
+            })),
+        );
+    }
 
     // getUser
     // getUser(id: string) {

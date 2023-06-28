@@ -16,6 +16,7 @@ import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxPageService } from '@services/page.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import type { HealthReport } from '@services/system-api.aggregated-types';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
@@ -137,7 +138,7 @@ export class NxReportViewerComponent implements OnInit {
         this.headerHeight = this.document.getElementsByClassName('headerContainer')[0].scrollHeight;
     }
 
-    setupReport(_data) {
+    setupReport(_data: HealthReport) {
         const data = cloneDeep(_data);
         // Handle server not responding for "ec2/metrics/manifest"
         if (!data.reply) {
@@ -147,9 +148,18 @@ export class NxReportViewerComponent implements OnInit {
         this.healthService.ready = false;
         this.menu.level1 = [this.menu.level1[0]];
 
-        this.healthService.manifest = data.reply['ec2/metrics/manifest'].reply;
-        this.healthService.values = data.reply['ec2/metrics/values'].reply;
-        this.healthService.alarms = data.reply['ec2/metrics/alarms'].reply;
+        // Endpoint url has been updated in the API services, but users might still try viewing
+        // old reports using the old url without leading
+        const manifest = (data.reply['/ec2/metrics/manifest'] || data.reply['ec2/metrics/manifest'])
+            .reply;
+        const values = (data.reply['/ec2/metrics/values'] || data.reply['ec2/metrics/values'])
+            .reply;
+        const alarms = (data.reply['/ec2/metrics/alarms'] || data.reply['ec2/metrics/alarms'])
+            .reply;
+
+        this.healthService.manifest = manifest;
+        this.healthService.values = values;
+        this.healthService.alarms = alarms;
         this.createSnapshot(data);
         this.createResourceList();
         this.initializeManifest();

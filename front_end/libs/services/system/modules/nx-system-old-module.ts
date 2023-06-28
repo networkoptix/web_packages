@@ -29,8 +29,8 @@ import { cleanId, KeyFilter } from '@utils/general';
 import { memoizeAsyncPersistent, memoizeDecorator } from '@utils/memoize';
 import { setServerIpAndPort } from '@utils/nx';
 
+import type { MediaServersAndCameras } from '../../system-api.aggregated-types';
 import {
-    ServersAndCameras,
     EventRule,
     EventTypes,
     PtzCommand,
@@ -637,7 +637,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         });
     }
 
-    protected processMediaServersAndCameras(apiReply: ServersAndCameras): NxMediaServer[] {
+    protected processMediaServersAndCameras(apiReply: MediaServersAndCameras): NxMediaServer[] {
         const msIds: KeyFilter<ServerPreprocess, string>[] = [
             // 'authKey',
             'id',
@@ -658,7 +658,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
             });
             return ms;
         });
-        const cameras = apiReply.reply['ec2/getCamerasEx'].map(cam => {
+        const cameras = apiReply.reply['/ec2/getCamerasEx'].map(cam => {
             camIds.forEach(id => {
                 cam[id] = cleanId(cam[id]);
             });

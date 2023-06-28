@@ -17,6 +17,7 @@ import { addUserRestV2 } from './mediaserver-apis/endpoints/add-user';
 import { wizardGetSystemSettingsRestV2 } from './mediaserver-apis/endpoints/wizard-get-system-settings';
 import { NxAppStateService } from './nx-app-state.service';
 import { IConfig } from './nx-config/config-types';
+import type { HealthReport } from './system-api.aggregated-types';
 import * as t from './system-api.types';
 import { ChangedIdReturned } from './system-api.types';
 import { NxSystemRestAPI } from './system-rest-api.service';
@@ -131,7 +132,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
         this.version = NxSystemRestAPI2.VERSION;
     }
 
-    private responseWrapper = (data): t.NormalResponse<any> => ({
+    private responseWrapper = <D>(data: D): t.NormalResponse<D> => ({
         error: '0',
         errorString: 'ok',
         reply: data,
@@ -277,7 +278,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
         );
     }
 
-    getHardwareIdsOfServers(): Observable<t.NormalResponse<t.HardwareIds>> {
+    getHardwareIdsOfServers(): Observable<t.ServerHardareIdsResp> {
         return this.getRuntimeInfo('*').pipe(
             map(servers =>
                 this.responseWrapper(
@@ -352,7 +353,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
 
     // TODO: Create a health manager and move this there for legacy and rest.
     @NxSystemAPI.memoizeHM
-    getAggregateHealthReport(forceUpdate = false): Observable<t.AggregatedHealthReport> {
+    getAggregateHealthReport(forceUpdate = false): Observable<HealthReport> {
         return forkJoin([
             this.getHealthAlarms(),
             this.getHealthManifest(),
@@ -362,9 +363,9 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
                 error: '',
                 errorString: '',
                 reply: {
-                    'ec2/metrics/alarms': alarms,
-                    'ec2/metrics/manifest': manifest,
-                    'ec2/metrics/values': values,
+                    '/ec2/metrics/alarms': alarms,
+                    '/ec2/metrics/manifest': manifest,
+                    '/ec2/metrics/values': values,
                 },
             })),
         );
