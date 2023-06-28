@@ -652,8 +652,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 const overrideAr =
                     this.selectedAspectWatcher.value === this.selectedCamera.defaultRatio
                         ? ''
-                        : this.selectedAspectWatcher.value.toString();
-                const rotation = this.selectedRotationWatcher.value.toString();
+                        : this.selectedAspectWatcher.value?.toString();
+                const rotation = this.selectedRotationWatcher.value?.toString();
 
                 return Promise.all([
                     this.system.cameraManager.updateRecordingSettings(updatedTask, cameraSettings),
