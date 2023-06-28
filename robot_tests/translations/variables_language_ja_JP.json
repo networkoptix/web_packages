@@ -367,7 +367,7 @@
     "SERVER NAME SAVED": "サーバー名が保存されました。",
     "CHANGE PASSWORD BUTTON TEXT": "パスワードを変更",
     "DELETE USER TEXT": "ユーザーを削除",
-    "LOGIN IS REQUIRED TEXT": "ログイン情報を入力してください",
+    "LOGIN IS REQUIRED TEXT": "ログイン名を入力してください",
     "DELETE ACCOUNT HEADER TEXT": "アカウントを削除しますか？",
     "DELETE ACCOUNT INFO TEXT": "アカウントとそれに関連するすべてのデータは完全に削除され、復元することはできません。",
     "DELETE ACCOUNT PASSWORD LABEL TEXT": "続行するにはアカウントのパスワードを入力してください",
