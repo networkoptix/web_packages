@@ -83,7 +83,7 @@ export class DisconnectModalContent extends ModalBase<DT['return']> {
                 this.close(true);
                 this.toastService.notify(
                     this.LANG.toastMessage.system.disconnected.success,
-                    ToastType.Success
+                    ToastType.Success,
                 );
             },
             err => {
@@ -93,7 +93,7 @@ export class DisconnectModalContent extends ModalBase<DT['return']> {
                 ) {
                     this.toastService.notify(
                         this.LANG.dialogs.updateSession.disconnect,
-                        ToastType.Warning
+                        ToastType.Warning,
                     );
                 } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
                     this.unlock();

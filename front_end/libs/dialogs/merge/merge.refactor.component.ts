@@ -49,7 +49,12 @@ import { WINDOW } from '@services/window-provider';
 import { servers } from '@src/app/variables/static-variables';
 import { pickFrom, alphabeticalSort, cleanIp, strSplice, cleanId } from '@utils/general';
 
-import { MergeErrorData, MergeState, MergeStateType, MergeSystem } from './merge.refactor.component.types';
+import {
+    MergeErrorData,
+    MergeState,
+    MergeStateType,
+    MergeSystem,
+} from './merge.refactor.component.types';
 import { NxMergeSelectSystemComponent } from './select-system/select-system.component';
 
 require('what-input');
@@ -129,22 +134,25 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
     }
 
     get primaryName(): string {
-        return escape(this.currentSystemIsPrimary
-            ? this.system.info.name
-            : (this.targetSystem.name || this.defaultServerName));
+        return escape(
+            this.currentSystemIsPrimary
+                ? this.system.info.name
+                : this.targetSystem.name || this.defaultServerName,
+        );
     }
 
     get secondaryName(): string {
-        return escape(this.currentSystemIsPrimary
-            ? (this.targetSystem.name || this.defaultServerName)
-            : this.system.info.name);
+        return escape(
+            this.currentSystemIsPrimary
+                ? this.targetSystem.name || this.defaultServerName
+                : this.system.info.name,
+        );
     }
 
     get defaultServerName(): string {
-        return this.translateService.instant(
-            this.LANG.dialogs.merge.serverAtUrl,
-            { url: this.cleanUrl || this.serverUrl || this.targetSystem.url }
-        );
+        return this.translateService.instant(this.LANG.dialogs.merge.serverAtUrl, {
+            url: this.cleanUrl || this.serverUrl || this.targetSystem.url,
+        });
     }
 
     isNxSystem = (s: NxSystem | MergeSystem): s is NxSystem => {
@@ -229,7 +237,10 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
 
     // TODO: verify that this works and whether the implementation is performant enough
     async getSystemInfo(systemId: string): Promise<ModuleInformation> {
-        const url = `https://${this.CONFIG.trafficRelayHost.replace('{systemId}', systemId)}/api/moduleInformation`;
+        const url = `https://${this.CONFIG.trafficRelayHost.replace(
+            '{systemId}',
+            systemId,
+        )}/api/moduleInformation`;
         return this.httpService.get<ModuleInformation>(url).toPromise();
     }
 
@@ -259,12 +270,13 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
     setupUpdateWebadminSession(state: MergeStateType): void {
         this.currentProcess = this[`${stateProcesses[state]}Process`];
         const message = this.LANG.dialogs.merge.updateWebadminSession[state];
-        this.alertMessage = state === 'confirm'
-            ? this.translateService.instant(message, {
-                primarySystem: this.primaryName,
-                secondarySystem: this.secondaryName
-            })
-            : this.translateService.instant(message);
+        this.alertMessage =
+            state === 'confirm'
+                ? this.translateService.instant(message, {
+                      primarySystem: this.primaryName,
+                      secondarySystem: this.secondaryName,
+                  })
+                : this.translateService.instant(message);
     }
 
     async ngOnInit(): Promise<void> {
@@ -296,9 +308,20 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
     cleanUpWebadminSystem(
         systemInfo: DiscoveredPeersReply | ModuleInformationReply,
         systemUrls: { [ip: string]: string },
-        newSystemFlag: string
+        newSystemFlag: string,
     ): MergeSystem {
-        const { id, cloudSystemId, localSystemId, name, systemName, status = '', protoVersion, remoteAddresses, port, serverFlags } = systemInfo;
+        const {
+            id,
+            cloudSystemId,
+            localSystemId,
+            name,
+            systemName,
+            status = '',
+            protoVersion,
+            remoteAddresses,
+            port,
+            serverFlags,
+        } = systemInfo;
         const { cloudOwnerId } = systemInfo as DiscoveredPeersReply;
         let firstValidIp: string;
         if (remoteAddresses?.length) {
@@ -308,9 +331,11 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
             });
             // remoteAddress might give a weird address with systemId.serverId
             // finds first valid ipv4/ipv6 address
-            firstValidIp = remoteAddresses.find((addy: string) => (
-                addy.split('.')[0].length <= 4 || addy.split(':')[0].length <= 4
-            )) || remoteAddresses[0];
+            firstValidIp =
+                remoteAddresses.find(
+                    (addy: string) =>
+                        addy.split('.')[0].length <= 4 || addy.split(':')[0].length <= 4,
+                ) || remoteAddresses[0];
         }
         return {
             id: cleanId(id),
@@ -328,12 +353,17 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
     }
 
     async webadminSetup(): Promise<void> {
-        const peerSystems: DiscoveredPeersReply[] = (await this.system.mediaserver.getPeerSystems().toPromise()).reply
-            .filter((peer: DiscoveredPeersReply) => this.system.id !== peer.localSystemId);
+        const peerSystems: DiscoveredPeersReply[] = (
+            await this.system.mediaserver.getPeerSystems().toPromise()
+        ).reply.filter((peer: DiscoveredPeersReply) => this.system.id !== peer.localSystemId);
         this.mergeSystems = peerSystems
-            .map((peer: DiscoveredPeersReply) => (
-                this.cleanUpWebadminSystem(peer, this.systemUrls, this.CONFIG.system.flags.newSystem)
-            ))
+            .map((peer: DiscoveredPeersReply) =>
+                this.cleanUpWebadminSystem(
+                    peer,
+                    this.systemUrls,
+                    this.CONFIG.system.flags.newSystem,
+                ),
+            )
             .sort(alphabeticalSort(this.locale, (sys: MergeSystem) => sys.name));
 
         if (this.mergeSystems.length === 0) {
@@ -350,89 +380,93 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
             this.failedToFindAnySystem = true;
             state = 'generic';
         } else {
-            this.mergeSystems = this.systems.map(({ id, name, canMerge, stateOfHealth = '' }: NxSystemInfo) => ({
-                id,
-                name,
-                stateOfHealth,
-                canMerge,
-            }));
+            this.mergeSystems = this.systems.map(
+                ({ id, name, canMerge, stateOfHealth = '' }: NxSystemInfo) => ({
+                    id,
+                    name,
+                    stateOfHealth,
+                    canMerge,
+                }),
+            );
             state = 'select';
         }
         this.setCurrentState(state);
     }
 
     initProcesses(): void {
-        this.selectSystemProcess = this.processService
-            .createProcess(
-                () => {
-                    this.lock();
-                    this.checking = true;
-                    this.checkedMergeabilityOnce = true;
-                    return this.preCheckSystemMerge();
-                },
-                { ignoreError: true },
-                res => {
-                    this.unlock();
-                    this.checking = false;
-                    if (res !== 'skip') {
-                        this.checkedMergeabilityOnce = false;
-                        this.currentSystemIsPrimary = true;
-                        // covers case where system (cloud & non-cloud) is not set up yet
-                        if (res.isNew) {
-                            if (this.serverUrl) {
-                                this.serverUrl = strSplice(
-                                    this.serverUrl,
-                                    this.serverUrl.indexOf('//') + 2,
-                                    'admin:admin@'
-                                );
-                            }
-                            this.remotePassword = 'admin';
-                            this.setCurrentState('confirm');
-                        } else if (!Object.keys(res).length || res.error === '0' || !res.error) {
-                            if (this.serverUrl) { // this.isLocal? + some indication that it's not cloud merge?
-                                this.setCurrentState('admin');
-                            } else {
-                                this.setCurrentState('primary');
-                            }
+        this.selectSystemProcess = this.processService.createProcess(
+            () => {
+                this.lock();
+                this.checking = true;
+                this.checkedMergeabilityOnce = true;
+                return this.preCheckSystemMerge();
+            },
+            { ignoreError: true },
+            res => {
+                this.unlock();
+                this.checking = false;
+                if (res !== 'skip') {
+                    this.checkedMergeabilityOnce = false;
+                    this.currentSystemIsPrimary = true;
+                    // covers case where system (cloud & non-cloud) is not set up yet
+                    if (res.isNew) {
+                        if (this.serverUrl) {
+                            this.serverUrl = strSplice(
+                                this.serverUrl,
+                                this.serverUrl.indexOf('//') + 2,
+                                'admin:admin@',
+                            );
+                        }
+                        this.remotePassword = 'admin';
+                        this.setCurrentState('confirm');
+                    } else if (!Object.keys(res).length || res.error === '0' || !res.error) {
+                        if (this.serverUrl) {
+                            // this.isLocal? + some indication that it's not cloud merge?
+                            this.setCurrentState('admin');
+                        } else {
+                            this.setCurrentState('primary');
                         }
                     }
-                },
-                err => {
-                    this.unlock();
-                    this.checking = false;
-                    if (err.errorId === servers.errors.oldSessionErrorId) {
-                        return this.showSessionExpiredAlert();
-                    } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
-                        return this.dialogs.expiredSession().then(() => this.window.location.reload());
-                    }
-                    if (err !== 'canceled') {
-                        if (err.message === 'Timeout has occurred') {
-                            err.message = 'noServerFound';
-                        }
-                        // Handling for rest errors. NEED TO FIGURE THIS OUT A DIFFERENT WAY
-                        // asked Mikhail about documentation on these for rest /merge route
-                        // if (err.errorString) {
-                        //     if (err.errorString.includes(this.LANG.dialogs.merge.restError.duplicateServer)) {
-                        //         err.message = 'duplicateServers';
-                        //     } else if (err.errorString.includes(this.LANG.dialogs.merge.restError.useCloudMerge)) {
-                        //         err.message = 'targetSystemBoundToCloud';
-                        //     } else if (err.errorString.includes(this.LANG.dialogs.merge.restError.differentCloudOwners)) {
-                        //         err.message = 'differentOwners';
-                        //     }
-                        const errorCodes = this.system.useRest ? MergeRestServerErrorCodes : MergeServerErrorCodes;
-                        if (err.error) {
-                            err.message = errorCodes[err.error];
-                        }
-                        this.selectSystemErrorCode = err.message || 'unknownError';
-                    }
-                    // see if this is still an issue?
-                    // this.serverUrlInputFocus ? this.serverUrlInputFocus.nativeElement.focus()
-                    //     : this.mergeDropdown.dropdownToggleButton.nativeElement.focus();
                 }
-            );
+            },
+            err => {
+                this.unlock();
+                this.checking = false;
+                if (err.errorId === servers.errors.oldSessionErrorId) {
+                    return this.showSessionExpiredAlert();
+                } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
+                    return this.dialogs.expiredSession().then(() => this.window.location.reload());
+                }
+                if (err !== 'canceled') {
+                    if (err.message === 'Timeout has occurred') {
+                        err.message = 'noServerFound';
+                    }
+                    // Handling for rest errors. NEED TO FIGURE THIS OUT A DIFFERENT WAY
+                    // asked Mikhail about documentation on these for rest /merge route
+                    // if (err.errorString) {
+                    //     if (err.errorString.includes(this.LANG.dialogs.merge.restError.duplicateServer)) {
+                    //         err.message = 'duplicateServers';
+                    //     } else if (err.errorString.includes(this.LANG.dialogs.merge.restError.useCloudMerge)) {
+                    //         err.message = 'targetSystemBoundToCloud';
+                    //     } else if (err.errorString.includes(this.LANG.dialogs.merge.restError.differentCloudOwners)) {
+                    //         err.message = 'differentOwners';
+                    //     }
+                    const errorCodes = this.system.useRest
+                        ? MergeRestServerErrorCodes
+                        : MergeServerErrorCodes;
+                    if (err.error) {
+                        err.message = errorCodes[err.error];
+                    }
+                    this.selectSystemErrorCode = err.message || 'unknownError';
+                }
+                // see if this is still an issue?
+                // this.serverUrlInputFocus ? this.serverUrlInputFocus.nativeElement.focus()
+                //     : this.mergeDropdown.dropdownToggleButton.nativeElement.focus();
+            },
+        );
 
-        this.adminPasswordProcess = this.processService
-            .createProcess(() => {
+        this.adminPasswordProcess = this.processService.createProcess(
+            () => {
                 this.lock();
                 // when trying again, does not have access to previous state template
                 if (!this.dryRunAvailable) {
@@ -441,17 +475,19 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                     this.setCurrentState('confirm');
                     return Promise.resolve();
                 } else {
-                    return lastValueFrom(this.system.mediaserver.mergeSystems(
-                        this.serverUrl,
-                        this.targetSystem.id,
-                        true,
-                        this.adminPassword
-                    ));
+                    return lastValueFrom(
+                        this.system.mediaserver.mergeSystems(
+                            this.serverUrl,
+                            this.targetSystem.id,
+                            true,
+                            this.adminPassword,
+                        ),
+                    );
                 }
             },
             {
                 ignoreError: true,
-                errorCodes: { [this.wrongLogin]: 'potentialErrorString' }
+                errorCodes: { [this.wrongLogin]: 'potentialErrorString' },
             },
             res => {
                 this.unlock();
@@ -462,13 +498,15 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                     this.remotePassword = this.adminPassword;
                     this.checkForChoosePrimary();
                 } else if (res.error !== '0') {
-                    let errorCode: string = MergeServerErrorCodes[res.error] || 'serverNotAvailable';
+                    let errorCode: string =
+                        MergeServerErrorCodes[res.error] || 'serverNotAvailable';
                     if (res.error === '1') {
                         errorCode = 'systemOfflineUrl';
                     }
                     this.adminPasswordErrorCode = errorCode;
                 }
-            }, err => {
+            },
+            err => {
                 this.unlock();
                 if (err.error && err.error !== '0') {
                     this.adminPasswordErrorCode = this.system.useRest
@@ -482,12 +520,13 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                     return this.dialogs.expiredSession().then(() => this.window.location.reload());
                 }
 
-                this.adminPasswordErrorCode = err.message === 'Timeout has occurred'
-                    ? 'systemOfflineUrl' : 'unknownError';
-            });
+                this.adminPasswordErrorCode =
+                    err.message === 'Timeout has occurred' ? 'systemOfflineUrl' : 'unknownError';
+            },
+        );
 
-        this.confirmMergeProcess = this.processService
-            .createProcess(() => {
+        this.confirmMergeProcess = this.processService.createProcess(
+            () => {
                 this.lock();
                 let password = this.confirmPassword;
 
@@ -511,9 +550,14 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                         )
                         .toPromise();
                 } else {
-                    return this.cloudApi.merge(this.primarySystem.id, this.secondarySystem.id, password);
+                    return this.cloudApi.merge(
+                        this.primarySystem.id,
+                        this.secondarySystem.id,
+                        password,
+                    );
                 }
-            }, {
+            },
+            {
                 errorCodes: {
                     mergedSystemIsOffline: () => {
                         return this.LANG.toastMessage.system.merge.failed;
@@ -530,46 +574,54 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                         this.confirmPassword = '';
                         // this.confirmMergeInput.nativeElement.focus();
                     },
-                    [this.wrongLogin]: 'potentialErrorString'
+                    [this.wrongLogin]: 'potentialErrorString',
                 },
-                ignoreError: true
-            }
-            , res => {
+                ignoreError: true,
+            },
+            res => {
                 this.unlock();
-                if (res.mergeInProgress || res.error === '0' || res.resultCode === this.LANG.errorCodes.ok) {
+                if (
+                    res.mergeInProgress ||
+                    res.error === '0' ||
+                    res.resultCode === this.LANG.errorCodes.ok
+                ) {
                     // handles telling the app which systems are getting merged and the proper messaging
                     if (this.isLocal) {
-                        const template =
-                                `<div class="my-1">
-                            <div class="larger"><strong>${this.secondaryName}</strong> ${this.translateService.instant(this.LANG.ribbon.beingMerged.to)}</div>
-                            <div class="mt-2">${this.translateService.instant(this.LANG.ribbon.beingMerged.mayTake)}</div>
+                        const template = `<div class="my-1">
+                            <div class="larger"><strong>${
+                                this.secondaryName
+                            }</strong> ${this.translateService.instant(
+                            this.LANG.ribbon.beingMerged.to,
+                        )}</div>
+                            <div class="mt-2">${this.translateService.instant(
+                                this.LANG.ribbon.beingMerged.mayTake,
+                            )}</div>
                         </div>`;
                         this.ribbonService.hide();
                         this.ribbonService.show(template, [], 'alert');
                     } else {
                         this.systemsService.forceUpdateSystems();
                     }
-                    this.close(
-                        {
-                            secondary: {
-                                id: this.secondarySystem.id,
-                                name: this.secondaryName
-                            },
-                            primary: {
-                                id: this.primarySystem.id,
-                                name: this.primaryName
-                            },
-                            anotherSystemId: this.targetSystem.id,
-                            role: this.primarySystem.id === this.system.id
+                    this.close({
+                        secondary: {
+                            id: this.secondarySystem.id,
+                            name: this.secondaryName,
+                        },
+                        primary: {
+                            id: this.primarySystem.id,
+                            name: this.primaryName,
+                        },
+                        anotherSystemId: this.targetSystem.id,
+                        role:
+                            this.primarySystem.id === this.system.id
                                 ? this.CONFIG.system.status.master
-                                : this.CONFIG.system.status.slave
-                        }
-                    );
-                // wrong cloud password
+                                : this.CONFIG.system.status.slave,
+                    });
+                    // wrong cloud password
                 } else if (res.errorString === this.wrongLogin) {
                     this.confirmMergeErrorCode = 'wrongPassword';
                     // this.confirmMergeInput.nativeElement.focus();
-                // wrong local admin password when checking VMS <= 4.0 systems
+                    // wrong local admin password when checking VMS <= 4.0 systems
                 } else if (res.errorString === 'UNAUTHORIZED') {
                     this.confirmMergeErrorCode = 'wrongPasswordAdmin';
                     // this.confirmMergeInput.nativeElement.focus();
@@ -577,20 +629,24 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                     res.resultCode = res.errorString.toLowerCase();
                     this.handleMergeError(res);
                 }
-            }, error => {
+            },
+            error => {
                 this.unlock();
                 if (error.errorString === this.wrongLogin) {
                     this.confirmMergeErrorCode = 'wrongPassword';
                     // this.confirmMergeInput.nativeElement.focus();
                     return;
                 }
-                if (error.errorId === servers.errors.oldSessionErrorId || error.resultCode === 'vmsRequestFailure') {
+                if (
+                    error.errorId === servers.errors.oldSessionErrorId ||
+                    error.resultCode === 'vmsRequestFailure'
+                ) {
                     return this.showSessionExpiredAlert();
                 } else if (error.status === 403 || error.errorId === servers.errors.unauthorized) {
                     return this.dialogs.expiredSession().then(() => this.window.location.reload());
                 }
                 // for errors that pop up during the merge
-                let errorCode = error.resultCode || (error.data?.resultCode);
+                let errorCode = error.resultCode || error.data?.resultCode;
                 if (errorCode === 'missingPassword' || errorCode === 'wrongPassword') {
                     return;
                 }
@@ -605,24 +661,23 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                     */
                 error.resultCode = errorCode;
                 this.handleMergeError(error);
-            });
+            },
+        );
     }
 
     cleanUpUrl = (serverUrl: string): string => {
-        if (!(/^https?:\/\//).test(serverUrl)) {
+        if (!/^https?:\/\//.test(serverUrl)) {
             serverUrl = `${this.window.location.protocol}//${serverUrl}`;
         }
-        if (!(/:\d{1,5}$/).test(serverUrl)) {
+        if (!/:\d{1,5}$/.test(serverUrl)) {
             serverUrl += ':7001';
         }
         return serverUrl;
     };
 
     async preCheckSystemMerge(): Promise<
-        { error?: string; errorId?: string; errorString?: string; isNew?: boolean } |
-        Error |
-        'skip'
-        > {
+        { error?: string; errorId?: string; errorString?: string; isNew?: boolean } | Error | 'skip'
+    > {
         const isNew = { isNew: true };
         /**
          * targetSystem
@@ -640,16 +695,29 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                             .getRemoteServerInfo(this.serverUrl)
                             .toPromise();
                     } else {
-                        secondarySystem = (await this.system.serverManager.getModuleInfoUsingUrl(this.serverUrl).toPromise()).reply;
+                        secondarySystem = (
+                            await this.system.serverManager
+                                .getModuleInfoUsingUrl(this.serverUrl)
+                                .toPromise()
+                        ).reply;
                     }
                 } catch (err) {
                     this.selectSystem.checkMergeabilityFunction(err.name);
                     throw Error(err);
                 }
-                this.targetSystem = this.cleanUpWebadminSystem(secondarySystem, this.systemUrls, this.CONFIG.system.flags.newSystem);
+                this.targetSystem = this.cleanUpWebadminSystem(
+                    secondarySystem,
+                    this.systemUrls,
+                    this.CONFIG.system.flags.newSystem,
+                );
             }
-            if (this.targetSystem.cloudOwnerId && this.system.serverManager.moduleInfo.cloudOwnerId) {
-                throw Error(`${!this.targetSystem?.name ? 'un' : ''}knownBothSystemsConnectedToCloud`);
+            if (
+                this.targetSystem.cloudOwnerId &&
+                this.system.serverManager.moduleInfo.cloudOwnerId
+            ) {
+                throw Error(
+                    `${!this.targetSystem?.name ? 'un' : ''}knownBothSystemsConnectedToCloud`,
+                );
             }
 
             if (!this.dryRunAvailable) {
@@ -657,13 +725,21 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                 // using .init(), but little value received, so removed to reduce complexity
                 return this.targetSystem.isMergeable ? { error: '0' } : 'skip';
             }
-            const res = await lastValueFrom(this.system.mediaserver.mergeSystems(this.serverUrl, this.targetSystem.id, true));
+            const res = await lastValueFrom(
+                this.system.mediaserver.mergeSystems(this.serverUrl, this.targetSystem.id, true),
+            );
             if (res.error && res.error !== '0') {
                 throw Error(MergeServerErrorCodes[res.error] || 'unknownError');
             }
             return this.targetSystem.isNew ? isNew : res;
         } else {
-            const targetSystemService = this.systemService.createSystem(this.account.email, this.targetSystem.id, undefined, true, true);
+            const targetSystemService = this.systemService.createSystem(
+                this.account.email,
+                this.targetSystem.id,
+                undefined,
+                true,
+                true,
+            );
             let targetSystem: NxSystem;
             try {
                 targetSystem = await targetSystemService.getInfo(true, false);
@@ -679,7 +755,9 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
             const mainSystemProto = this.system.serverManager.moduleInfo.protoVersion;
             let targetSystemProto: number;
             try {
-                targetSystemProto = (await lastValueFrom(targetSystemService.serverManager.getModuleInfo())).reply.protoVersion;
+                targetSystemProto = (
+                    await lastValueFrom(targetSystemService.serverManager.getModuleInfo())
+                ).reply.protoVersion;
             } catch (err) {
                 if (err.status === 502) {
                     throw Error('secondaryOffline');
@@ -689,9 +767,12 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
             if (mainSystemProto === targetSystemProto) {
                 const [mainServers, targetServers] = await Promise.all([
                     this.system.mediaserver.getMediaServers(false).toPromise(),
-                    targetSystemService.mediaserver.getMediaServers(false).toPromise()
+                    targetSystemService.mediaserver.getMediaServers(false).toPromise(),
                 ]);
-                const primaryServerIds: Set<string> = mainServers.reduce((list, { id }) => list.add(id), new Set<string>());
+                const primaryServerIds: Set<string> = mainServers.reduce(
+                    (list, { id }) => list.add(id),
+                    new Set<string>(),
+                );
                 if (targetServers.some(server => primaryServerIds.has(server.id))) {
                     throw Error('duplicateServers');
                 }
@@ -726,7 +807,9 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
         err.secondarySystemName = this.secondaryName;
 
         let system: NxSystemInfo;
-        this.systemsService.forceUpdateSystems().toPromise()
+        this.systemsService
+            .forceUpdateSystems()
+            .toPromise()
             .then(systems => {
                 system = systems.find(system => system.id === this.primarySystem.id);
             })
@@ -736,13 +819,18 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                     stateOfHealth = this.primarySystem.stateOfHealth;
                 }
 
-                err.failedSystemName = stateOfHealth === 'online'
-                    ? err.secondarySystemName
-                    : err.primarySystemName;
+                err.failedSystemName =
+                    stateOfHealth === 'online' ? err.secondarySystemName : err.primarySystemName;
 
                 const { errorText } = err;
-                if (err.resultCode === 'vmsRequestFailure' && ['FAIL', 'CONFIGURATION_ERROR', 'Service Unavailable', 'Bad Gateway'].includes(errorText)) {
-                    err.errorText = errorText === 'Bad Gateway' ? 'systemUnavailable' : 'mergedSystemIsOffline';
+                if (
+                    err.resultCode === 'vmsRequestFailure' &&
+                    ['FAIL', 'CONFIGURATION_ERROR', 'Service Unavailable', 'Bad Gateway'].includes(
+                        errorText,
+                    )
+                ) {
+                    err.errorText =
+                        errorText === 'Bad Gateway' ? 'systemUnavailable' : 'mergedSystemIsOffline';
                 }
 
                 this.close(err);
@@ -750,10 +838,7 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
     }
 
     private showSessionExpiredAlert(): void {
-        this.toastService.notify(
-            this.alertMessage,
-            ToastType.Warning,
-        );
+        this.toastService.notify(this.alertMessage, ToastType.Warning);
     }
 
     // goBack(): void {
@@ -765,5 +850,5 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
     //     this.primaryRadio && this.primaryRadio.inputRadio.nativeElement.focus();
     // }
 
-    ngOnDestroy(): void { }
+    ngOnDestroy(): void {}
 }

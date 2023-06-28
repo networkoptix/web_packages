@@ -6,16 +6,12 @@ import { TranslateService } from '@ngx-translate/core';
 import {
     ConfigType,
     ModalManifest,
-    ModalType
+    ModalType,
 } from '@components/console-table/console-table.component.types';
-import {
-    DropdownItem
-} from '@components/dropdowns/generic/dropdown.component.types';
+import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { ToastType } from '@components/toast-container/toast.types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
-import {
-    ConsoleMode
-} from '@pages/developer-console/console/console.types';
+import { ConsoleMode } from '@pages/developer-console/console/console.types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ContentSettings, ContextManifest } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { NxProcessService } from '@services/process.service';
@@ -88,30 +84,28 @@ export class EditModalContent {
                 'saveContext',
                 'deleteContext',
             ],
-            this
+            this,
         );
 
         this.values = this.values
             ? { ...this.values }
-            : this.manifest.fields.reduce((
-                values, { name }
-            ) => ({ ...values, [name]: '' }), {});
+            : this.manifest.fields.reduce((values, { name }) => ({ ...values, [name]: '' }), {});
 
         const getMethod = (action: string) => {
-            const [subAPI, method] = ({
+            const [subAPI, method] = {
                 [ModalType.CLIENT_EDIT]: {
                     create: ['customClient', 'create'],
                     save: ['customClient', 'partialUpdate'],
                     delete: ['customClient', 'destroy'],
-                    getVMS: ['customClient', 'getVMS']
+                    getVMS: ['customClient', 'getVMS'],
                 },
                 [ModalType.CLIENT_CREATE]: {
                     create: ['customClient', 'create'],
                     save: ['customClient', 'partialUpdate'],
                     delete: ['customClient', 'destroy'],
-                    getVMS: ['customClient', 'getVMS']
-                }
-            })[this.modal][action];
+                    getVMS: ['customClient', 'getVMS'],
+                },
+            }[this.modal][action];
             return this.cloudApi[subAPI][method];
         };
 
@@ -119,15 +113,14 @@ export class EditModalContent {
             if (type === ConfigType.DROPDOWN) {
                 const { options = [], hidden = false } = this.settings?.[name] || {};
                 const currentValue = this.values[name];
-                const selected = options.find(({ value }) =>
-                    value === currentValue
-                ) || options[0];
+                const selected = options.find(({ value }) => value === currentValue) || options[0];
                 this.dropdownLookup[name] = {
                     selected,
-                    options
+                    options,
                 };
-                const field = this.manifest.fields
-                    .find(({ name: fieldName }) => fieldName === name);
+                const field = this.manifest.fields.find(
+                    ({ name: fieldName }) => fieldName === name,
+                );
                 if (field) {
                     field.hidden = hidden || !options.length;
                 }
@@ -142,7 +135,7 @@ export class EditModalContent {
                     const existingErrors = this.errors[name] || [];
                     this.errors[name] = [
                         ...existingErrors,
-                        this.translate.instant('This field is required')
+                        this.translate.instant('This field is required'),
                     ];
                 }
             }
@@ -161,36 +154,51 @@ export class EditModalContent {
             return this.deleteProcess(values as Record<string, string>);
         };
 
-        this.handlerProcessFactory = action => this.handlerProcess && this.processService.createProcess(() => ((action === 'delete' && this.deleteProcess) ? handleClose : this.handlerProcess)(this.values), { ignoreError: true },
-            _ => this.close({ id: this.values.id, action }),
-            ({ errors }) => {
-                this.errors = errors;
-                this.processDisabled = true;
-            });
+        this.handlerProcessFactory = action =>
+            this.handlerProcess &&
+            this.processService.createProcess(
+                () =>
+                    (action === 'delete' && this.deleteProcess ? handleClose : this.handlerProcess)(
+                        this.values,
+                    ),
+                { ignoreError: true },
+                _ => this.close({ id: this.values.id, action }),
+                ({ errors }) => {
+                    this.errors = errors;
+                    this.processDisabled = true;
+                },
+            );
 
-        this.createContext ||= this.handlerProcessFactory('create') || this.processService.createProcess(createHandler,
-            { ignoreError: true },
-            _ => {
-                // Need spec for saving message
-                // this.toastService.show('Custom Client Created', options);
-                // this.close({ id: this.values.id, action: 'create' });
-            }, id => {
-                switch (this.modal) {
-                    case ModalType.CLIENT_CREATE:
-                        if (id) {
-                            this.close();
-                            const [currentRoute, params = ''] = this.router.url.split('?');
-                            const baseEditUrl = `${currentRoute}/${ConsoleMode.EDIT}`;
-                            const assetEditUrl = `${baseEditUrl}/${id}`;
-                            this.router.navigateByUrl(`${assetEditUrl}${params ? '?' + params : ''}`);
-                        }
-                        break;
+        this.createContext ||=
+            this.handlerProcessFactory('create') ||
+            this.processService.createProcess(
+                createHandler,
+                { ignoreError: true },
+                _ => {
+                    // Need spec for saving message
+                    // this.toastService.show('Custom Client Created', options);
+                    // this.close({ id: this.values.id, action: 'create' });
+                },
+                id => {
+                    switch (this.modal) {
+                        case ModalType.CLIENT_CREATE:
+                            if (id) {
+                                this.close();
+                                const [currentRoute, params = ''] = this.router.url.split('?');
+                                const baseEditUrl = `${currentRoute}/${ConsoleMode.EDIT}`;
+                                const assetEditUrl = `${baseEditUrl}/${id}`;
+                                this.router.navigateByUrl(
+                                    `${assetEditUrl}${params ? '?' + params : ''}`,
+                                );
+                            }
+                            break;
 
-                    default:
-                        console.error(id);
-                        break;
-                }
-            });
+                        default:
+                            console.error(id);
+                            break;
+                    }
+                },
+            );
 
         const updateHandler = () => {
             updateErrors();
@@ -200,34 +208,36 @@ export class EditModalContent {
             return getMethod('save')(this.values.id, this.values.name, this.values);
         };
 
-        this.saveContext ||= this.handlerProcessFactory('save') || this.processService.createProcess(updateHandler,
-            { ignoreError: true },
-            _ => {
-                // Need spec for saving message
-                this.toastService.notify(
-                    'Custom Client Saved',
-                    ToastType.Success,
-                );
-                this.close({ id: this.values.id, action: 'save' });
-            },
-            ({ values: errors }) => {
-                this.errors = errors;
-                this.processDisabled = true;
-            });
+        this.saveContext ||=
+            this.handlerProcessFactory('save') ||
+            this.processService.createProcess(
+                updateHandler,
+                { ignoreError: true },
+                _ => {
+                    // Need spec for saving message
+                    this.toastService.notify('Custom Client Saved', ToastType.Success);
+                    this.close({ id: this.values.id, action: 'save' });
+                },
+                ({ values: errors }) => {
+                    this.errors = errors;
+                    this.processDisabled = true;
+                },
+            );
 
-        this.deleteContext ||= this.handlerProcessFactory('delete') || this.processService.createProcess(
-            () => getMethod('delete')(this.values.id),
-            {},
-            _ => {
-                // Need spec for saving deleting message
-                this.toastService.notify(
-                    'Custom Client Deleted',
-                    ToastType.Success,
-                );
-                this.close({ id: this.values.id, action: 'delete' });
-            }, err => {
-                console.error(err);
-            });
+        this.deleteContext ||=
+            this.handlerProcessFactory('delete') ||
+            this.processService.createProcess(
+                () => getMethod('delete')(this.values.id),
+                {},
+                _ => {
+                    // Need spec for saving deleting message
+                    this.toastService.notify('Custom Client Deleted', ToastType.Success);
+                    this.close({ id: this.values.id, action: 'delete' });
+                },
+                err => {
+                    console.error(err);
+                },
+            );
     }
 
     close = (result?: { id: string; action: string }): void => {

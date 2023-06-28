@@ -47,17 +47,20 @@ export class DeleteCloudUserModalContent extends ModalBase<DT['return']> {
                     wrongPassword: () => {
                         this.deleteForm.form.controls.password.setErrors({ passwordWrong: true });
                         this.passwordError = this.LANG.errorCodes.notAuthorized;
-                    }
+                    },
                 },
-                ignoreError: false
-            }, res => {
+                ignoreError: false,
+            },
+            res => {
                 if (res.resultCode === 'ok') {
                     this.close(res);
                 }
                 this.unlock();
-            }, () => {
+            },
+            () => {
                 this.unlock();
-            });
+            },
+        );
     }
 
     clearErrors(): void {
@@ -65,9 +68,10 @@ export class DeleteCloudUserModalContent extends ModalBase<DT['return']> {
     }
 
     setPassword(input: NgModel): void {
-        this.passwordError = input.touched && input.errors?.required
-            ? this.LANG.passwordRequirements.missingMessage
-            : '';
+        this.passwordError =
+            input.touched && input.errors?.required
+                ? this.LANG.passwordRequirements.missingMessage
+                : '';
         this.passwordForUser = input.value;
     }
 }

@@ -59,34 +59,35 @@ export class Mandatory2faModalContent extends ModalBase<DT['return']> {
             this.renderer.selectRootElement('#verificationCode').focus();
         };
 
-        this.mandatory2fa = this.processService
-            .createProcess(() => {
+        this.mandatory2fa = this.processService.createProcess(
+            () => {
                 this.lock();
                 return this.cloudApiService.toggle2faForSystem(
                     this.system.id,
-                    this.verificationCode
+                    this.verificationCode,
                 );
-            }, {
+            },
+            {
                 ignoreUnauthorized: true,
                 ignoreError: true,
                 errorCodes: {
                     notAuthorized: notAuthorizedHandler,
-                    badRequest: notAuthorizedHandler
-                }
-            }, () => {
+                    badRequest: notAuthorizedHandler,
+                },
+            },
+            () => {
                 this.close(true);
                 const successMessage = !this.system2faEnabled
                     ? this.LANG.dialogs.message.system2faEnabled
                     : this.LANG.dialogs.message.system2faDisabled;
-                this.toastService.notify(
-                    successMessage,
-                    ToastType.Success,
-                );
-            }, err => {
+                this.toastService.notify(successMessage, ToastType.Success);
+            },
+            err => {
                 this.unlock();
                 if (!err.resultCode) {
                     this.accountTotpExists = false;
                 }
-            });
+            },
+        );
     }
 }

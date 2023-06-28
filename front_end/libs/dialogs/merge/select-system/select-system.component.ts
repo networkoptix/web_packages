@@ -17,12 +17,16 @@ import { ModuleInformation } from '@services/system-api.types';
 import { NxSystem } from '@services/system.service/system';
 import { NgChanges } from '@utils/ng-changes';
 
-import type { MergeStateType, MergeSystem, MergeDropdownItem } from '../merge.refactor.component.types';
+import type {
+    MergeStateType,
+    MergeSystem,
+    MergeDropdownItem,
+} from '../merge.refactor.component.types';
 
 @Component({
     selector: 'nx-merge-select-system-component',
     templateUrl: 'select-system.component.html',
-    styleUrls: ['select-system.component.scss']
+    styleUrls: ['select-system.component.scss'],
 })
 export class NxMergeSelectSystemComponent implements OnInit, OnChanges {
     LANG = staticLang;
@@ -65,20 +69,15 @@ export class NxMergeSelectSystemComponent implements OnInit, OnChanges {
     serverUrlInputValidationErrorText: string;
     checkingErrorText: string;
 
-    constructor(
-        private translateService: TranslateService,
-    ) {}
+    constructor(private translateService: TranslateService) {}
 
     ti(stringToBeTranslated: string, systemName?: string): string {
-        return this.translateService.instant(
-            stringToBeTranslated,
-            {
-                primarySystem: this.currentSystemName,
-                secondarySystem: systemName,
-                targetSystem: systemName,
-                downloadHTML: this.downloadHTML,
-            }
-        );
+        return this.translateService.instant(stringToBeTranslated, {
+            primarySystem: this.currentSystemName,
+            secondarySystem: systemName,
+            targetSystem: systemName,
+            downloadHTML: this.downloadHTML,
+        });
     }
 
     ngOnInit(): void {
@@ -89,14 +88,16 @@ export class NxMergeSelectSystemComponent implements OnInit, OnChanges {
         const latestBuild = this.ti(this.LANG.dialogs.merge.latestBuild);
         this.downloadHTML = `<span>${latestBuild}</span>`;
         if (this.cloudHost) {
-            this.downloadHTML = `<a href=\"${this.isLocal ? this.cloudHost : ''}/download" target=\"_blank\">${latestBuild}</a>`;
+            this.downloadHTML = `<a href=\"${
+                this.isLocal ? this.cloudHost : ''
+            }/download" target=\"_blank\">${latestBuild}</a>`;
         }
 
         if (this.noOtherSystems) {
             this.selectedSystem = {
                 name: 'noOtherSystem',
                 value: 'noOtherSystem',
-                status: ''
+                status: '',
             };
         } else {
             this.processedSystems = this.processSystems(this.mergeSystems);
@@ -128,75 +129,92 @@ export class NxMergeSelectSystemComponent implements OnInit, OnChanges {
         const statusOffline = ` – ${this.ti(this.LANG.systemStatuses.offline)}`;
         const statusCloud = ` – ${this.ti(this.LANG.dialogs.merge.cloud)}`;
 
-        const processedSystems: MergeDropdownItem[] = systems.map(({
-            id, name, stateOfHealth, protoVersion, canMerge, cloudSystemId, url
-        }: MergeSystem) => {
-            let help: string = '';
-            let status: string = '';
-            if (protoVersion && protoVersion !== this.system.serverManager.moduleInfo.protoVersion) {
-                stateOfHealth = 'incompatible';
-            }
-
-            switch (stateOfHealth) {
-                case 'online':
-                case 'unauthorized':
-                    break;
-                case 'offline':
-                    help = statusOffline;
-                    status = this.ti(this.LANG.dialogs.merge.systemOffline, name);
-                    break;
-                case 'incompatible':
-                    help = statusIncompatible;
-                    status = this.ti(this.LANG.dialogs.merge.systemsIncompatible);
-                    break;
-                default:
-                    help = statusUnavailable;
-                    status = this.ti(this.LANG.dialogs.merge.secondarySystemUnavailable, name);
-            }
-
-            if (!status && typeof canMerge === 'boolean' && !canMerge) {
-                help = statusIncompatible;
-                status = this.ti(this.LANG.dialogs.merge.secondaryCannotMerge, name);
-            }
-
-            if (this.isLocal) {
-                if (cloudSystemId) {
-                    // doesn't catch when current system is a local system
-                    if (this.system.serverManager?.moduleInfo.cloudSystemId) {
-                        status = name ? this.ti(this.LANG.dialogs.merge.knownBothSystemsConnectedToCloud, name)
-                            : this.ti(this.LANG.dialogs.merge.unknownBothSystemsConnectedToCloud);
-                    }
-                    if (!help) {
-                        help = statusCloud;
-                    }
-                }
-                help = ` (${name}, ${url}) ${help}`;
-            }
-
-            if (!this.system.canMerge) {
-                status = this.ti(this.LANG.dialogs.merge.primaryCannotMerge, name);
-            }
-            if (!this.system.isOnline) {
-                status = this.ti(this.LANG.dialogs.merge.primarySystemOffline, name);
-            }
-            if (!this.system.isAvailable) {
-                status = this.ti(this.LANG.dialogs.merge.primarySystemUnavailable);
-            }
-
-            return {
-                value: id,
+        const processedSystems: MergeDropdownItem[] = systems.map(
+            ({
+                id,
                 name,
-                help,
-                status,
+                stateOfHealth,
+                protoVersion,
+                canMerge,
+                cloudSystemId,
                 url,
-                isMergeable: !status,
-            };
-        });
+            }: MergeSystem) => {
+                let help: string = '';
+                let status: string = '';
+                if (
+                    protoVersion &&
+                    protoVersion !== this.system.serverManager.moduleInfo.protoVersion
+                ) {
+                    stateOfHealth = 'incompatible';
+                }
+
+                switch (stateOfHealth) {
+                    case 'online':
+                    case 'unauthorized':
+                        break;
+                    case 'offline':
+                        help = statusOffline;
+                        status = this.ti(this.LANG.dialogs.merge.systemOffline, name);
+                        break;
+                    case 'incompatible':
+                        help = statusIncompatible;
+                        status = this.ti(this.LANG.dialogs.merge.systemsIncompatible);
+                        break;
+                    default:
+                        help = statusUnavailable;
+                        status = this.ti(this.LANG.dialogs.merge.secondarySystemUnavailable, name);
+                }
+
+                if (!status && typeof canMerge === 'boolean' && !canMerge) {
+                    help = statusIncompatible;
+                    status = this.ti(this.LANG.dialogs.merge.secondaryCannotMerge, name);
+                }
+
+                if (this.isLocal) {
+                    if (cloudSystemId) {
+                        // doesn't catch when current system is a local system
+                        if (this.system.serverManager?.moduleInfo.cloudSystemId) {
+                            status = name
+                                ? this.ti(
+                                      this.LANG.dialogs.merge.knownBothSystemsConnectedToCloud,
+                                      name,
+                                  )
+                                : this.ti(
+                                      this.LANG.dialogs.merge.unknownBothSystemsConnectedToCloud,
+                                  );
+                        }
+                        if (!help) {
+                            help = statusCloud;
+                        }
+                    }
+                    help = ` (${name}, ${url}) ${help}`;
+                }
+
+                if (!this.system.canMerge) {
+                    status = this.ti(this.LANG.dialogs.merge.primaryCannotMerge, name);
+                }
+                if (!this.system.isOnline) {
+                    status = this.ti(this.LANG.dialogs.merge.primarySystemOffline, name);
+                }
+                if (!this.system.isAvailable) {
+                    status = this.ti(this.LANG.dialogs.merge.primarySystemUnavailable);
+                }
+
+                return {
+                    value: id,
+                    name,
+                    help,
+                    status,
+                    url,
+                    isMergeable: !status,
+                };
+            },
+        );
 
         if (this.isLocal) {
             processedSystems.push(
                 { value: undefined, name: 'horizontal' },
-                { value: 'otherSystem', name: this.ti(this.LANG.dialogs.merge.otherSystem) }
+                { value: 'otherSystem', name: this.ti(this.LANG.dialogs.merge.otherSystem) },
             );
         }
 
@@ -210,7 +228,10 @@ export class NxMergeSelectSystemComponent implements OnInit, OnChanges {
         if (!errorKey) {
             errorKey = 'unknownError';
         }
-        this.selectedSystem.status = this.ti(this.LANG.dialogs.merge[errorKey], this.targetSystem?.name);
+        this.selectedSystem.status = this.ti(
+            this.LANG.dialogs.merge[errorKey],
+            this.targetSystem?.name,
+        );
     }
 
     selectInitialSystem(): MergeDropdownItem {
@@ -254,7 +275,9 @@ export class NxMergeSelectSystemComponent implements OnInit, OnChanges {
         } else {
             let targetSystem: MergeSystem;
             if (!this.isLocal) {
-                const systemModuleInfo: ModuleInformation = await this.getSystemInfo(selectedSystem.value);
+                const systemModuleInfo: ModuleInformation = await this.getSystemInfo(
+                    selectedSystem.value,
+                );
                 for (const system of this.mergeSystems) {
                     if (system.id === selectedSystem.value) {
                         system.protoVersion = systemModuleInfo.reply.protoVersion;
@@ -265,7 +288,9 @@ export class NxMergeSelectSystemComponent implements OnInit, OnChanges {
                 this.processSystems(this.mergeSystems);
             }
             if (!targetSystem) {
-                targetSystem = this.mergeSystems.find((s: MergeSystem) => selectedSystem.name === s.name);
+                targetSystem = this.mergeSystems.find(
+                    (s: MergeSystem) => selectedSystem.name === s.name,
+                );
             }
             this.targetSystemChange.emit(targetSystem);
         }
@@ -279,7 +304,7 @@ export class NxMergeSelectSystemComponent implements OnInit, OnChanges {
         if (!this.selectedSystem?.value.includes('otherSystem') && this.serverUrl !== input.value) {
             this.setTargetSystem({
                 value: 'otherSystemAutoChange',
-                name: this.ti(this.LANG.dialogs.merge.otherSystem)
+                name: this.ti(this.LANG.dialogs.merge.otherSystem),
             });
         }
         this.serverUrlChange.emit(input.value);
@@ -306,14 +331,14 @@ export class NxMergeSelectSystemComponent implements OnInit, OnChanges {
 
     checkIfExistingSystem(url: string): void {
         // if using otherSystem, checks if it matches an existing system in dropdown
-        if (url && (/^https?:\/\//).test(url)) {
+        if (url && /^https?:\/\//.test(url)) {
             url = url.slice(url.indexOf('://') + 3);
         }
         if (this.existingSystems[url]) {
             this.setTargetSystem(
                 this.processedSystems.find(
-                    (item: MergeDropdownItem) => item.value === this.existingSystems[url]
-                )
+                    (item: MergeDropdownItem) => item.value === this.existingSystems[url],
+                ),
             );
         }
     }

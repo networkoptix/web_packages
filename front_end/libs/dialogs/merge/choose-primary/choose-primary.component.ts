@@ -1,10 +1,4 @@
-import {
-    Component,
-    EventEmitter,
-    Input,
-    OnInit,
-    Output,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
@@ -16,7 +10,7 @@ import { MergeStateType, MergeSystem } from '../merge.refactor.component.types';
 @Component({
     selector: 'nx-merge-choose-primary-component',
     templateUrl: 'choose-primary.component.html',
-    styleUrls: ['choose-primary.component.scss']
+    styleUrls: ['choose-primary.component.scss'],
 })
 export class NxMergeChoosePrimaryComponent implements OnInit {
     LANG = staticLang;

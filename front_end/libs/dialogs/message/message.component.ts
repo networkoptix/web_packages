@@ -1,15 +1,9 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
-import {
-    Component,
-    Inject,
-    OnInit,
-} from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import type {
-    DropdownItem
-} from '@components/dropdowns/generic/dropdown.component.types';
+import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import type { Message as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { credentialsValidation, dialogs } from '@lib/variables/static-variables';
@@ -65,24 +59,32 @@ export class MessageModalContent extends ModalBase<DT['return']> implements OnIn
         pickFrom(this.dialogData, ['messageType', 'data'], this);
 
         this.initForm();
-        this.sendMessage = this.processService.createProcess(() => {
-            this.lock();
-            const asset = this.data.assetId || this.data.asset;
+        this.sendMessage = this.processService
+            .createProcess(
+                () => {
+                    this.lock();
+                    const asset = this.data.assetId || this.data.asset;
 
-            return this.cloudApiService.sendMessage(
-                this.subject,
-                asset,
-                this.message,
-                this.userName,
-                this.userEmail
+                    return this.cloudApiService.sendMessage(
+                        this.subject,
+                        asset,
+                        this.message,
+                        this.userName,
+                        this.userEmail,
+                    );
+                },
+                {
+                    successMessage: this.LANG.dialogs.message.sent,
+                },
+            )
+            .then(
+                () => {
+                    this.close(true);
+                },
+                () => {
+                    this.unlock();
+                },
             );
-        }, {
-            successMessage: this.LANG.dialogs.message.sent
-        }).then(() => {
-            this.close(true);
-        }, () => {
-            this.unlock();
-        });
     }
 
     private initForm(): void {
@@ -93,34 +95,30 @@ export class MessageModalContent extends ModalBase<DT['return']> implements OnIn
 
         this.title = {
             value: this.LANG.dialogs.message.title[this.messageType],
-            params: this.messageType !== dialogs.message.type.integration
-                ? { asset: this.data.asset }
-                : { companyName: this.data.to }
+            params:
+                this.messageType !== dialogs.message.type.integration
+                    ? { asset: this.data.asset }
+                    : { companyName: this.data.to },
         };
 
         const type = this.messageType as keyof typeof dialogs.message.subjects;
-        this.subjects = dialogs.message.subjects[type]
-            .map(subject => {
-                return {
-                    value: subject,
-                    name: this.translateService.instant(
-                        this.LANG.dialogs.message.subject[subject],
-                        {
-                            asset: this.data.asset
-                        })
-                };
-            });
+        this.subjects = dialogs.message.subjects[type].map(subject => {
+            return {
+                value: subject,
+                name: this.translateService.instant(this.LANG.dialogs.message.subject[subject], {
+                    asset: this.data.asset,
+                }),
+            };
+        });
 
         this.setSubject(this.subjects[0]);
 
-        this.account
-            .get()
-            .then(account => {
-                if (account.is_authenticated) {
-                    this.userName = `${account.first_name} ${account.last_name}`;
-                    this.userEmail = account.email;
-                }
-            });
+        this.account.get().then(account => {
+            if (account.is_authenticated) {
+                this.userName = `${account.first_name} ${account.last_name}`;
+                this.userEmail = account.email;
+            }
+        });
     }
 
     setSubject(subject: Subject): void {

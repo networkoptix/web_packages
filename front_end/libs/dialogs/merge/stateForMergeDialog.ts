@@ -16,42 +16,42 @@ export const State: {
             helpText: true,
             serverUrlInput: false,
             serverUrlInputValidationErrorText: false,
-            checkingErrorText: false
+            checkingErrorText: false,
         },
         showUpdates: {
             checkMergeDefault: {
                 systemDropdown: true,
-                helpText: true
+                helpText: true,
             },
             checkMergeError: {
                 systemDropdown: true,
-                checkingErrorText: true
+                checkingErrorText: true,
             },
             serverUrl: {
                 systemDropdown: true,
-                serverUrlInput: true
+                serverUrlInput: true,
             },
             serverUrlValidationError: {
                 systemDropdown: true,
                 serverUrlInput: true,
-                serverUrlInputValidationErrorText: true
+                serverUrlInputValidationErrorText: true,
             },
             serverUrlMergeError: {
                 systemDropdown: true,
                 serverUrlInput: true,
-                checkingErrorText: true
+                checkingErrorText: true,
             },
             noOtherSystemServerUrl: {
-                serverUrlInput: true
+                serverUrlInput: true,
             },
             noOtherSystemValidationError: {
                 serverUrlInput: true,
-                serverUrlInputValidationErrorText: true
+                serverUrlInputValidationErrorText: true,
             },
             noOtherSystemMergeError: {
                 serverUrlInput: true,
-                checkingErrorText: true
-            }
+                checkingErrorText: true,
+            },
         },
         template: {
             bodyTitle: '',
@@ -59,7 +59,7 @@ export const State: {
             helpText: '',
             selectedTarget: '',
             serverUrlInputValue: '',
-            serverUrlInputValidationErrorText: ''
+            serverUrlInputValidationErrorText: '',
         },
         errorText: {
             knownBothSystemsConnectedToCloud: '',
@@ -80,30 +80,30 @@ export const State: {
             targetSystemBoundToCloud: '',
             unknownError: '',
             urlEmpty: '',
-            urlNotValid: ''
-        }
+            urlNotValid: '',
+        },
     },
     adminPassword: {
         show: { passwordError: false },
         showUpdates: {
             default: { passwordError: false },
-            confirmPasswordError: { passwordError: true }
+            confirmPasswordError: { passwordError: true },
         },
         template: {
             passwordErrorText: '',
-            passwordValue: ''
+            passwordValue: '',
         },
         errorText: {
             passwordRequired: '',
             passwordWrong: '',
-            unknownError: ''
-        }
+            unknownError: '',
+        },
     },
     serverUrlErrors: {
         show: {},
         showUpdates: { serverUrlErrors: {} },
         template: {
-            urlErrorText: ''
+            urlErrorText: '',
         },
         errorText: {
             differentOwners: '',
@@ -111,25 +111,25 @@ export const State: {
             serverNotAvailable: '',
             systemOffline: '',
             systemOfflineUrl: '',
-            unknownError: ''
-        }
+            unknownError: '',
+        },
     },
     choosePrimary: { show: {}, showUpdates: {}, template: {}, errorText: {} },
     confirmMerge: {
         show: { passwordError: false },
         showUpdates: {
             default: { passwordError: false },
-            confirmPasswordError: { passwordError: true }
+            confirmPasswordError: { passwordError: true },
         },
         template: {
             passwordErrorText: '',
-            passwordValue: ''
+            passwordValue: '',
         },
         errorText: {
             adminPasswordWrong: '',
             passwordRequired: '',
             passwordWrong: '',
-            unknownError: ''
-        }
-    }
+            unknownError: '',
+        },
+    },
 });

@@ -1,9 +1,5 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
-import {
-    Component,
-    Inject,
-    TemplateRef
-} from '@angular/core';
+import { Component, Inject, TemplateRef } from '@angular/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxDialogsService } from '@dialogs/dialogs.service';

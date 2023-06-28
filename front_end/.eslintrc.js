@@ -548,7 +548,7 @@ module.exports = {
                 'libs/db/**/*.ts',
                 'libs/decorators/**/*.ts',
                 'libs/dialogs/*.ts',
-                'libs/dialogs/[a-c]*/**/*.ts',
+                'libs/dialogs/[a-o]*/**/*.ts',
                 'libs/directives/**/*.ts',
                 'libs/features/*.ts',
                 'libs/features/[0-r]*/**/*.ts',

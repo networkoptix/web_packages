@@ -1,9 +1,4 @@
-import {
-    Component,
-    EventEmitter,
-    Input,
-    Output,
-} from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
@@ -15,7 +10,7 @@ import type { MergeStateType } from '../merge.refactor.component.types';
 @Component({
     selector: 'nx-merge-generic-merge-component',
     templateUrl: 'generic-merge.component.html',
-    styleUrls: ['generic-merge.component.scss']
+    styleUrls: ['generic-merge.component.scss'],
 })
 export class NxMergeGenericMergeComponent {
     LANG = staticLang;

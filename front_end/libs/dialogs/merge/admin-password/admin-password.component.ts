@@ -1,11 +1,4 @@
-import {
-    Component,
-    EventEmitter,
-    Input,
-    OnChanges,
-    Output,
-    ViewChild,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -19,7 +12,7 @@ import type { MergeStateType, MergeSystem } from '../merge.refactor.component.ty
 @Component({
     selector: 'nx-merge-admin-password-component',
     templateUrl: 'admin-password.component.html',
-    styleUrls: ['admin-password.component.scss']
+    styleUrls: ['admin-password.component.scss'],
 })
 export class NxMergeAdminPasswordComponent implements OnChanges {
     LANG = staticLang;
@@ -39,7 +32,9 @@ export class NxMergeAdminPasswordComponent implements OnChanges {
     ngOnChanges(changes: NgChanges<NxMergeAdminPasswordComponent>): void {
         if (changes.errorCode?.currentValue) {
             if (changes.errorCode.currentValue === 'wrongPassword') {
-                this.adminPasswordForm.form.controls.adminPassword.setErrors({ wrongPassword: true });
+                this.adminPasswordForm.form.controls.adminPassword.setErrors({
+                    wrongPassword: true,
+                });
             }
         }
     }

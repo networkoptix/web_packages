@@ -41,43 +41,36 @@ export class DetachServerModalContent extends ModalBase<DT['return']> implements
         this.system = system;
         this.serverName = server.name;
 
-        this.detachServer = this.processService
-            .createProcess(
-                () => this.system.serverManager.detachFromSystem(
-                    server.id,
-                    this.password
-                ).toPromise(),
-                { ignoreError: true },
-                () => {
-                    this.close(true);
+        this.detachServer = this.processService.createProcess(
+            () => this.system.serverManager.detachFromSystem(server.id, this.password).toPromise(),
+            { ignoreError: true },
+            () => {
+                this.close(true);
+                this.toastService.notify(this.LANG.servers.detachSystemSuccess, ToastType.Success);
+                this.window.location.reload();
+                // may need to remove & update system eventually
+                // const anotherServerId = this.system.servers.find(server => server.id !== this.serverId).id;
+                // return this.system.serverManager.removeMediaserver(anotherServerId, this.serverId).toPromise();
+                // return this.system.update().subscribe()
+            },
+            err => {
+                this.unlock();
+                if (err.errorId === servers.errors.oldSessionErrorId) {
                     this.toastService.notify(
-                        this.LANG.servers.detachSystemSuccess,
-                        ToastType.Success,
+                        this.LANG.dialogs.updateSession.detachServer,
+                        ToastType.Warning,
                     );
-                    this.window.location.reload();
-                    // may need to remove & update system eventually
-                    // const anotherServerId = this.system.servers.find(server => server.id !== this.serverId).id;
-                    // return this.system.serverManager.removeMediaserver(anotherServerId, this.serverId).toPromise();
-                    // return this.system.update().subscribe()
-                },
-                err => {
-                    this.unlock();
-                    if (err.errorId === servers.errors.oldSessionErrorId) {
-                        this.toastService.notify(
-                            this.LANG.dialogs.updateSession.detachServer,
-                            ToastType.Warning,
-                        );
-                    } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
-                        return this.dialogs.expiredSession().then(() => this.window.location.reload());
-                    } else {
-                        this.close();
-                        this.toastService.notify(
-                            this.LANG.servers.detachSystemFailed,
-                            ToastType.Warning,
-                        );
-                    }
+                } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
+                    return this.dialogs.expiredSession().then(() => this.window.location.reload());
+                } else {
+                    this.close();
+                    this.toastService.notify(
+                        this.LANG.servers.detachSystemFailed,
+                        ToastType.Warning,
+                    );
                 }
-            );
+            },
+        );
     }
 
     ngAfterViewInit(): void {
