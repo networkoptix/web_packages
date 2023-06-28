@@ -689,23 +689,19 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     const id = cleanId(user.id);
                     let additionalLabel: Translatable;
                     if (this.system.version >= 5.2 && this.CONFIG.featureFlags.usersWithGroups) {
-                        switch (user.groupIds.length) {
-                            case 0:
-                                additionalLabel = this.LANG.accessRoles.Owner.label || 'Owner';
-                                break;
-                            case 1:
-                                // @ts-expect-error Above TODO
-                                const { name } = this.system.userManager.userGroups.find(
-                                    group => group.id === user.groupIds[0],
-                                );
-                                additionalLabel = this.LANG.accessRoles[name]?.label || name;
-                                break;
-                            default:
-                                additionalLabel = {
-                                    value: this.LANG.userGroups.multiple,
-                                    params: { number: user.groupIds.length },
-                                };
-                                break;
+                        if (user.groupIds.length === 0 && user.attributes === 'readonly') {
+                            additionalLabel = this.LANG.accessRoles.Owner.label || 'Owner';
+                        } else if (user.groupIds.length === 1) {
+                            // @ts-expect-error Above TODO
+                            const { name } = this.system.userManager.userGroups.find(
+                                group => group.id === user.groupIds[0],
+                            );
+                            additionalLabel = this.LANG.accessRoles[name]?.label || name;
+                        } else if (user.groupIds.length >= 2) {
+                            additionalLabel = {
+                                value: this.LANG.userGroups.multiple,
+                                params: { number: user.groupIds.length },
+                            };
                         }
                     } else {
                         additionalLabel =
