@@ -49,6 +49,7 @@
                     ></nx-search-highlight
                 ></span>
                 <svg-icon
+                    *ngIf="server.cameras.length"
                     nx-add-svg-src
                     class="expand"
                     [src]="icons.dirTextButtons + 'arrow_expand.svg'"
