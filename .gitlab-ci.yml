@@ -275,7 +275,6 @@ frontend-tests:
   extends: .frontend-node
   stage: test
   coverage: /^TOTAL.+?(\d+\%)$/
-  allow_failure: true
   artifacts:
     when: always
     reports:
@@ -289,7 +288,6 @@ frontend-tests:
       pushd "front_end"
         npm run test:ci
       popd
-  allow_failure: true
 
 .jenkins-builds:
   extends: .frontend-changes

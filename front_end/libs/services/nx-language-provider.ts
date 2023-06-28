@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { i18n } from 'dateformat';
 import { LocalStorageService } from 'ngx-webstorage';
@@ -8,15 +8,15 @@ import staticLang from '@common/language/language_i18n_static.json';
 import { ToastType } from '@components/toast-container/toast.types';
 import { environment } from '@environments/environment';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSwCacheService } from '@services/sw-cache.service';
 import { NxToastService } from '@services/toast.service';
 import { NxUriCacheService } from '@services/uri-cache.service';
 import { Language, processLanguageFactory } from '@utils/nx';
 
+import { nxConfig } from './nx-config/config';
 import { IConfig } from './nx-config/config-types';
 import { NxSessionService } from './session.service';
-import { WINDOW } from './window-provider';
+import { windowFactory } from './window-provider';
 
 const i18nOriginal = { ...i18n };
 
@@ -24,20 +24,18 @@ const i18nOriginal = { ...i18n };
     providedIn: 'root',
 })
 export class NxLanguageProviderService {
-    CONFIG: IConfig;
+    private window: Window = windowFactory();
+    CONFIG: IConfig = nxConfig;
     constructor(
-        configService: NxConfigService,
-        private translate: TranslateService,
+        public translate: TranslateService,
         private http: HttpClient,
         private cloudApi: NxCloudApiService,
         private toastService: NxToastService,
         private sessionService: NxSessionService,
         private storageService: LocalStorageService,
-        private cacheService: NxUriCacheService,
-        private swCacheService: NxSwCacheService,
-        @Inject(WINDOW) private window: Window,
+        public cacheService: NxUriCacheService,
+        public swCacheService: NxSwCacheService,
     ) {
-        this.CONFIG = configService.getConfig();
         this.defaultLanguage = this.CONFIG.defaultLanguage;
 
         if (environment.isWizard) {

@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { environment } from '@environments/environment';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -12,8 +12,8 @@ import {
 } from '../variables/static-variables';
 
 import { NxAccountService } from './account.service';
-import { nxConfig as CONFIG } from './nx-config/config';
-import { WINDOW } from './window-provider';
+import { nxConfig } from './nx-config/config';
+import { windowFactory } from './window-provider';
 
 /** Service to handle opening the VMS Client from the browser
  *
@@ -23,18 +23,22 @@ import { WINDOW } from './window-provider';
     providedIn: 'root',
 })
 export class NxUrlProtocolService {
+    public CONFIG: typeof nxConfig = nxConfig;
+    public window: Window = windowFactory();
+    public host = environment.production ? this.window.location.host : environment.cloudHost;
+
     constructor(
-        @Inject(WINDOW) private window: Window,
         private accountService: NxAccountService,
         private cloudApiService: NxCloudApiService,
     ) {}
 
-    private generateLink(systemId: string, auth: string, code: string): string {
-        const host = environment.production ? this.window.location.host : environment.cloudHost;
-
-        const base = slashJoin([`${CONFIG.clientProtocol}://${host}`, 'client', systemId], {
-            trailing: true,
-        });
+    public generateLink(systemId: string, auth: string, code: string): string {
+        const base = slashJoin(
+            [`${this.CONFIG.clientProtocol}://${this.host}`, 'client', systemId],
+            {
+                trailing: true,
+            },
+        );
         const url = new URL(base);
         if (auth) {
             url.searchParams.append('auth', auth);
@@ -46,10 +50,10 @@ export class NxUrlProtocolService {
         return url.toString();
     }
 
-    private getLink(systemId: string, useOauth: boolean): Promise<string> {
+    public getLink(systemId: string, useOauth: boolean): Promise<string> {
         return Promise.all([
             useOauth ? Promise.resolve('') : this.accountService.authKey(),
-            environment.isLocal
+            environment.isLocal || !useOauth
                 ? Promise.resolve({ code: '' })
                 : this.cloudApiService.getCode('*').toPromise(),
         ]).then(([auth, { code }]) => {

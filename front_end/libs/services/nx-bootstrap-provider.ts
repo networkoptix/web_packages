@@ -1,17 +1,18 @@
 import { HttpClient } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { environment } from '@environments/environment';
 
 import type { IConfig } from './nx-config/config-types';
 import { NxConfigService } from './nx-config/nx-config.service';
 import { NxLanguageProviderService } from './nx-language-provider';
-import { WINDOW } from './window-provider';
+import { windowFactory } from './window-provider';
 
 @Injectable({
     providedIn: 'root',
 })
 export class NxBootstrapProvider {
+    window = windowFactory();
     CONFIG: IConfig;
     readonly environment = environment;
 
@@ -22,7 +23,6 @@ export class NxBootstrapProvider {
         private configService: NxConfigService,
         private languageService: NxLanguageProviderService,
         private http: HttpClient,
-        @Inject(WINDOW) private window: Window,
     ) {
         this.#init();
     }

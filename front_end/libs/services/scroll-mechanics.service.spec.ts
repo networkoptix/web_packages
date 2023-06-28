@@ -1,36 +1,33 @@
-import { waitForAsync, TestBed } from '@angular/core/testing';
-
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
-import { WINDOW } from '@services/window-provider';
 import { GridBreakpoints } from '@styles/theme-variables-common';
 
+import { setupTestBed } from './src/setup';
+
+const setupScrollService = async (): Promise<{ scroll: NxScrollMechanicsService; patchMatchMedia }> => {
+    const { inject, patchWindow: { patchMatchMedia } } = await setupTestBed();
+    const scroll = inject(NxScrollMechanicsService);
+    return {
+        scroll, patchMatchMedia
+    };
+};
+
 describe('Scroll mechanics service', () => {
-    let scroll: NxScrollMechanicsService;
-
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            providers: [
-                { provide: WINDOW, useValue: window }
-            ]
-        });
-        scroll = TestBed.inject(NxScrollMechanicsService);
-    }));
-
-    it('should create the service', () => {
+    it('should create the service', async () => {
+        const { scroll } = await setupScrollService();
         expect(scroll).toBeTruthy();
         expect(NxScrollMechanicsService.HEADER_OFFSET).toBe(48);
         expect(NxScrollMechanicsService.SCROLL_OFFSET).toBe(48 + 16); // header + padding
     });
 
-    it('should have setter and getter (elementTableWidth)', () => {
+    it('should have setter and getter (elementTableWidth)', async () => {
+        const { scroll } = await setupScrollService();
         scroll.elementTableWidth = 42;
 
-        scroll.elementTableWidthSubject.subscribe(() => {
-            expect(scroll.elementTableWidth).toBe(42);
-        });
+        expect(scroll.elementTableWidth).toBe(42);
     });
 
-    it('should have setter and getter (elementViewWidth)', () => {
+    it('should have setter and getter (elementViewWidth)', async () => {
+        const { scroll } = await setupScrollService();
         scroll.elementViewWidth = 42;
 
         scroll.elementViewWidthSubject.subscribe(() => {
@@ -38,51 +35,54 @@ describe('Scroll mechanics service', () => {
         });
     });
 
-    it('should have setter and getter (searchViewHeight)', () => {
+    it('should have setter and getter (searchViewHeight)', async () => {
+        const { scroll } = await setupScrollService();
         scroll.searchViewHeight = 42;
 
-        scroll.searchViewHeightSubject.subscribe(() => {
-            expect(scroll.searchViewHeight).toBe(42);
-        });
+        expect(scroll.searchViewHeight).toBe(42);
     });
 
-    it('should have setter and getter (windowScroll)', () => {
+    it('should have setter and getter (windowScroll)', async () => {
+        const { scroll } = await setupScrollService();
         scroll.windowScroll = 42;
 
-        scroll.windowScrollSubject.subscribe(() => {
-            expect(scroll.windowScroll).toBe(42);
-        });
+        expect(scroll.windowScroll).toBe(42);
     });
 
-    it('should have setter and getter (panelVisible)', () => {
+    it('should have setter and getter (panelVisible)', async () => {
+        const { scroll } = await setupScrollService();
         scroll.panelVisible = true;
 
-        scroll['panelSubject'].subscribe(() => {
-            expect(scroll.panelVisible).toBe(true);
-        });
+        expect(scroll.panelVisible).toBe(true);
     });
 
-    it('should check window size (max)', () => {
-        let result: boolean;
-        // @ts-expect-error Need to update global for test
-        viewport.set('screen');
+    it('should check window size (max)', async () => {
+        const { scroll, patchMatchMedia } = await setupScrollService();
+        const { matchMediaSpy, setMatches } = patchMatchMedia();
 
-        result = scroll.mediaQueryMax(GridBreakpoints.XL);
-        expect(result).toBeFalse();
+        setMatches(false);
+        const xlResult = scroll.mediaQueryMax(GridBreakpoints.XL);
+        expect(xlResult).toBeFalsy();
+        expect(matchMediaSpy).toHaveBeenCalledWith(`(max-width: ${GridBreakpoints.XL}px)`);
 
-        result = scroll.mediaQueryMax(GridBreakpoints.XXL);
-        expect(result).toBeTrue();
+        setMatches(true);
+        const xxlResult = scroll.mediaQueryMax(GridBreakpoints.XXL);
+        expect(xxlResult).toBeTruthy();
+        expect(matchMediaSpy).toHaveBeenCalledWith(`(max-width: ${GridBreakpoints.XXL}px)`);
     });
 
-    it('should check window size (min)', () => {
-        let result: boolean;
-        // @ts-expect-error Need to update global for test
-        viewport.set('screen');
+    it('should check window size (min)', async () => {
+        const { scroll, patchMatchMedia } = await setupScrollService();
+        const { matchMediaSpy, setMatches } = patchMatchMedia();
 
-        result = scroll.mediaQueryMin(GridBreakpoints.SM);
-        expect(result).toBeTrue();
+        setMatches(true);
+        const smResult = scroll.mediaQueryMin(GridBreakpoints.SM);
+        expect(smResult).toBeTruthy();
+        expect(matchMediaSpy).toHaveBeenCalledWith(`(min-width: ${GridBreakpoints.SM}px)`);
 
-        result = scroll.mediaQueryMin(GridBreakpoints.XXXXL);
-        expect(result).toBeFalse();
+        setMatches(false);
+        const xxxlResult = scroll.mediaQueryMin(GridBreakpoints.XXXXL);
+        expect(xxxlResult).toBeFalsy();
+        expect(matchMediaSpy).toHaveBeenCalledWith(`(min-width: ${GridBreakpoints.XXXXL}px)`);
     });
 });

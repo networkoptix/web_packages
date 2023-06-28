@@ -1,46 +1,22 @@
-import { waitForAsync, TestBed } from '@angular/core/testing';
-import { Router, RouterEvent } from '@angular/router';
-import { MockProvider } from 'ng-mocks';
-import { BehaviorSubject, ReplaySubject } from 'rxjs';
-
 import { headerNodes } from '@app/_mocks/nodesMock';
 import { setupTest41System } from '@app/_mocks/system.test';
-import { NxMenusService } from '@services/menus.service';
-import { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
-import { WINDOW } from '@services/window-provider';
 
-const eventSubject = new ReplaySubject<RouterEvent>(1);
-const routerMock = {
-    navigate: jasmine.createSpy('navigate'),
-    events: eventSubject.asObservable(),
-    url: '/systems'
-};
+import { setupTestBed } from './src/setup';
 
-const menuMock = {
-    currentSystemNode$: new BehaviorSubject<MenuNode>(null)
+const setupHeader = async (): Promise<NxHeaderService> => {
+    const { inject } = await setupTestBed();
+    return inject(NxHeaderService);
 };
 
 describe('Nx Header Service', () => {
-    let headerService: NxHeaderService;
-
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            providers: [
-                NxHeaderService,
-                { provide: NxMenusService, useValue: menuMock },
-                { provide: Router, useValue: routerMock },
-                MockProvider(WINDOW),
-            ]
-        });
-        headerService = TestBed.inject(NxHeaderService);
-    }));
-
-    it('should create the service', () => {
+    it('should create the service', async () => {
+        const headerService = await setupHeader();
         expect(headerService).toBeTruthy();
     });
 
-    it('should have setter and getter (currentLocation)', () => {
+    it('should have setter and getter (currentLocation)', async () => {
+        const headerService = await setupHeader();
         const value = { isSystem: false };
         headerService.currentLocation = value;
 
@@ -49,62 +25,61 @@ describe('Nx Header Service', () => {
         });
     });
 
-    it('should have setter and getter (createAccountButtonType)', () => {
+    it('should have setter and getter (createAccountButtonType)', async () => {
+        const headerService = await setupHeader();
         expect(headerService.createAccountButtonType).toBe('primary');
         headerService.createAccountButtonType = 'default';
 
-        headerService.createAccountButtonType$.subscribe(() => {
-            expect(headerService.createAccountButtonType).toBe('default');
-        });
+        expect(headerService.createAccountButtonType).toBe('default');
     });
 
-    it('should have setter and getter (show$)', () => {
-        expect(headerService.show$).toBeFalse();
+    it('should have setter and getter (show$)', async () => {
+        const headerService = await setupHeader();
+        expect(headerService.show$).toBeFalsy();
         headerService.show$ = true;
 
-        headerService.showSubject.subscribe(() => {
-            expect(headerService.show$).toBeTrue();
-        });
+        expect(headerService.show$).toBeTruthy();
     });
 
-    it('should have setter and getter (activeSystem)', () => {
+    it('should have setter and getter (activeSystem)', async () => {
+        const headerService = await setupHeader();
         expect(headerService.activeSystem).toBeNull();
         headerService.activeSystem = undefined;
 
-        headerService.activeSystem$.subscribe(() => {
-            expect(headerService.activeSystem).toBeUndefined();
-            expect(headerService.lastActive).toBeNull();
-        });
+        expect(headerService.activeSystem).toBeUndefined();
+        expect(headerService.lastActive).toBeNull();
     });
 
-    it('should set active system)', () => {
+    it('should set active system)', async () => {
+        const headerService = await setupHeader();
         const systemMock = setupTest41System();
         expect(headerService.activeSystem).toBeNull();
-        headerService.activeSystem = systemMock;
+        headerService.activeSystem = systemMock as typeof headerService.activeSystem;
 
-        headerService.activeSystem$.subscribe(() => {
-            expect(headerService.activeSystem).toEqual(systemMock);
-            expect(headerService.lastActive).toEqual(systemMock);
-        });
+        expect(headerService.activeSystem).toEqual(systemMock);
+        expect(headerService.lastActive).toEqual(systemMock);
     });
 
-    it('should set location (/)', () => {
+    it('should set location (/)', async () => {
+        const headerService = await setupHeader();
         headerService.setLocation('/');
         expect(headerService.currentLocation).toEqual({ isSystem: false });
     });
 
-    it('should set location (/systems)', () => {
+    it('should set location (/systems)', async () => {
+        const headerService = await setupHeader();
         headerService.setLocation('/systems');
         expect(headerService.currentLocation)
             .toEqual({ isSystem: true, parentNode: undefined, path: '/systems' });
     });
 
-    it('should set location (/download)', () => {
+    it('should set location (/download)', async () => {
+        const headerService = await setupHeader();
         headerService.nodes = headerNodes;
         headerService.setLocation('/download');
         expect(headerService.currentLocation.assetId).toBeNull();
         expect(headerService.currentLocation.breadcrumbs.length).toBe(0);
-        expect(headerService.currentLocation.isSystem).toBeFalse();
+        expect(headerService.currentLocation.isSystem).toBeFalsy();
         expect(headerService.currentLocation.childNode).toBeDefined();
         expect(headerService.currentLocation.parentNode).toBeDefined();
         expect(headerService.currentLocation.path).toBe('/download');

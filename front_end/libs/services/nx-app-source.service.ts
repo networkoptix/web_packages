@@ -4,7 +4,6 @@ import { environment } from '@environments/environment';
 
 import { menus } from '../variables/static-variables';
 
-import { NxConfigService } from './nx-config/nx-config.service';
 import type { NxSystem } from './system.service/system';
 
 @Injectable({
@@ -12,8 +11,6 @@ import type { NxSystem } from './system.service/system';
 })
 export class NxAppSourceService {
     readonly environment = environment;
-
-    constructor(configService: NxConfigService) {}
 
     getMenuBase(system: Partial<NxSystem>): string {
         if (this.environment.isLocal) {

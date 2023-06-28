@@ -1,91 +1,68 @@
-import {
-    waitForAsync,
-    TestBed,
-    fakeAsync,
-    tick
-} from '@angular/core/testing';
+import { ToastOptions } from '@app/components/toast-container/toast.types';
+import { Translatable } from '@app/pipes/nx-translate.types';
+import staticLang from '@common/language/language_i18n_static.json';
 
-import { nxConfig } from '@services/nx-config/config';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxSessionService } from '@services/session.service';
-import { NxToastService } from '@services/toast.service';
+import { setupTestBed } from '../src/setup';
 
 import { NxProcessService } from './process.service';
 
-describe('Process service', () => {
-    let process: jasmine.SpyObj<NxProcessService>;
-    let toast: jasmine.SpyObj<NxToastService>;
-    let toastSpy: jasmine.Spy<NxToastService['show']>;
-    const toastOptions = { autohide: true };
+const toastOptions = { autohide: true };
 
-    const configMock = { getConfig: () => nxConfig };
+const setupProcess = async (): Promise<{
+    process: NxProcessService;
+    toastSpy: jest.SpyInstance<void, [content: Translatable, type?: string, options?: ToastOptions]>;
+}> => {
+    const { inject } = await setupTestBed();
+    const process = inject(NxProcessService);
+    const toastSpy = jest.spyOn(process.toastService, 'show').mockImplementation(() => {});
 
-    const translateMock = {
-        translations: {
-            dialogs: {
-                message: {
-                    twoFactor: {
-                        required: () => 'Required'
-                    }
-                }
-            },
-            errorCodes: {
-                fail: () => 'Fail',
-                unknownError: () => 'Unknown error'
-            }
-        }
+    return {
+        toastSpy,
+        process
     };
+};
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            providers: [
-                NxToastService,
-                NxToastService,
-                { provide: NxLanguageProviderService, useValue: translateMock },
-                { provide: NxConfigService, useValue: configMock },
-                { provide: NxSessionService, useValue: {} }
-            ]
-        });
-        process = TestBed.inject(NxProcessService) as jasmine.SpyObj<NxProcessService>;
-        toast = TestBed.inject(NxToastService) as jasmine.SpyObj<NxToastService>;
-        toastSpy = spyOn(toast, 'show').and.callThrough();
-    }));
+describe('Process service', () => {
+    it('should create the service', async () => {
+        const { process } = await setupProcess();
 
-    it('should create the service', () => {
         expect(process).toBeTruthy();
     });
 
-    it('should create process and run successful', () => {
-        process.createProcess(() => {
+    it('should create process and run successful', async () => {
+        const { process } = await setupProcess();
+        await process.createProcess(() => {
             return Promise.resolve('success');
         }, {}).then(response => {
             expect(response).toBe('success');
         }, error => {
             expect(error).toBe('fail');
-        }).run();
+        }).run().completePromise;
     });
 
     // Testing different error formats
-    it('should create process and fail w/ LANG defined error ', fakeAsync(() => {
-        process.createProcess(() => {
+    it('should create process and fail w/ LANG defined error ', async () => {
+        const { process, toastSpy } = await setupProcess();
+
+        await process.createProcess(() => {
             return Promise.reject('fail');
         }, {}).then(response => {
             expect(response).toBe('success');
         }, error => {
             expect(error).toBe('fail');
-        }).run();
+        }).run().completePromise;
 
-        tick();
-        expect(toastSpy).toHaveBeenCalledOnceWith(
-            'Fail',
+        expect(toastSpy).toHaveBeenCalledWith(
+            staticLang.errorCodes.fail,
             'danger',
             toastOptions
         );
-    }));
+    });
 
-    it('should create process and fail w/ settings defined error ', fakeAsync(() => {
-        process.createProcess(() => {
+    it('should create process and fail w/ settings defined error ', async () => {
+        const { process, toastSpy } = await setupProcess();
+
+        await process.createProcess(() => {
             return Promise.reject('forbidden');
         }, {
             errorCodes: {
@@ -96,15 +73,16 @@ describe('Process service', () => {
             expect(response).toBe('success');
         }, error => {
             expect(error).toBe('forbidden');
-        }).run();
+        }).run().completePromise;
 
-        tick();
         expect(toastSpy)
-            .toHaveBeenCalledOnceWith('failed forbidden', 'danger', toastOptions);
-    }));
+            .toHaveBeenCalledWith('failed forbidden', 'danger', toastOptions);
+    });
 
-    it('should create process and fail w/ unknown error No.1 ', fakeAsync(() => {
-        process.createProcess(() => {
+    it('should create process and fail w/ unknown error No.1 ', async () => {
+        const { process, toastSpy } = await setupProcess();
+
+        await process.createProcess(() => {
             return Promise.reject('blah-blah');
         }, {
             errorCodes: {
@@ -115,37 +93,39 @@ describe('Process service', () => {
             expect(response).toBe('success');
         }, error => {
             expect(error).toBe('blah-blah');
-        }).run();
+        }).run().completePromise;
 
-        tick();
-        expect(toastSpy).toHaveBeenCalledOnceWith(
-            translateMock.translations.errorCodes.unknownError(),
+        expect(toastSpy).toHaveBeenCalledWith(
+            staticLang.errorCodes.unknownError,
             'danger',
             toastOptions,
         );
-    }));
+    });
 
-    it('should create process and fail w/ unknown error No.2 ', fakeAsync(() => {
+    it('should create process and fail w/ unknown error No.2 ', async () => {
+        const { process, toastSpy } = await setupProcess();
+
         // unknown error pattern
-        process.createProcess(() => {
+        await process.createProcess(() => {
             return Promise.reject({ error: { resultMessage: 'boom' } });
         }, {
         }).then(response => {
             expect(response).toBe('success');
         }, error => {
             expect(error).toEqual({ resultMessage: 'boom' });
-        }).run();
+        }).run().completePromise;
 
-        tick();
-        expect(toastSpy).toHaveBeenCalledOnceWith(
-            translateMock.translations.errorCodes.unknownError(),
+        expect(toastSpy).toHaveBeenCalledWith(
+            staticLang.errorCodes.unknownError,
             'danger',
             toastOptions
         );
-    }));
+    });
 
-    it('should create process and fail w/ error.resultCode ', fakeAsync(() => {
-        process.createProcess(() => {
+    it('should create process and fail w/ error.resultCode ', async () => {
+        const { process, toastSpy } = await setupProcess();
+
+        await process.createProcess(() => {
             return Promise.reject({ error: { resultCode: 'boom' } });
         }, {
             errorCodes: {
@@ -156,14 +136,15 @@ describe('Process service', () => {
             expect(response).toBe('success');
         }, error => {
             expect(error).toEqual({ resultCode: 'boom' });
-        }).run();
+        }).run().completePromise;
 
-        tick();
-        expect(toastSpy).toHaveBeenCalledOnceWith('Boom!', 'danger', toastOptions);
-    }));
+        expect(toastSpy).toHaveBeenCalledWith('Boom!', 'danger', toastOptions);
+    });
 
-    it('should create process and fail w/ error.errorText ', fakeAsync(() => {
-        process.createProcess(() => {
+    it('should create process and fail w/ error.errorText ', async () => {
+        const { process, toastSpy } = await setupProcess();
+
+        await process.createProcess(() => {
             return Promise.reject({ error: { errorText: 'boom' } });
         }, {
             errorCodes: {
@@ -174,14 +155,15 @@ describe('Process service', () => {
             expect(response).toBe('success');
         }, error => {
             expect(error).toEqual({ errorText: 'boom' });
-        }).run();
+        }).run().completePromise;
 
-        tick();
-        expect(toastSpy).toHaveBeenCalledOnceWith('Boom!', 'danger', toastOptions);
-    }));
+        expect(toastSpy).toHaveBeenCalledWith('Boom!', 'danger', toastOptions);
+    });
 
-    it('should create process and fail w/ error.errorId ', fakeAsync(() => {
-        process.createProcess(() => {
+    it('should create process and fail w/ error.errorId ', async () => {
+        const { process, toastSpy } = await setupProcess();
+
+        await process.createProcess(() => {
             return Promise.reject({ error: { errorId: 'boom' } });
         }, {
             errorCodes: {
@@ -192,14 +174,15 @@ describe('Process service', () => {
             expect(response).toBe('success');
         }, error => {
             expect(error).toEqual({ errorId: 'boom' });
-        }).run();
+        }).run().completePromise;
 
-        tick();
-        expect(toastSpy).toHaveBeenCalledOnceWith('Boom!', 'danger', toastOptions);
-    }));
+        expect(toastSpy).toHaveBeenCalledWith('Boom!', 'danger', toastOptions);
+    });
 
-    it('should create process and fail w/ error.data.resultCode ', fakeAsync(() => {
-        process.createProcess(() => {
+    it('should create process and fail w/ error.data.resultCode ', async () => {
+        const { process, toastSpy } = await setupProcess();
+
+        await process.createProcess(() => {
             return Promise.reject({ error: { data: { resultCode: 'boom' } } });
         }, {
             errorCodes: {
@@ -210,14 +193,15 @@ describe('Process service', () => {
             expect(response).toBe('success');
         }, error => {
             expect(error).toEqual({ data: { resultCode: 'boom' } });
-        }).run();
+        }).run().completePromise;
 
-        tick();
-        expect(toastSpy).toHaveBeenCalledOnceWith('Boom!', 'danger', toastOptions);
-    }));
+        expect(toastSpy).toHaveBeenCalledWith('Boom!', 'danger', toastOptions);
+    });
 
-    it('should create process and fail w/ error.type ', fakeAsync(() => {
-        process.createProcess(() => {
+    it('should create process and fail w/ error.type ', async () => {
+        const { process, toastSpy } = await setupProcess();
+
+        await process.createProcess(() => {
             return Promise.reject({ error: { type: 'error' } });
         }, {
             errorCodes: {
@@ -228,27 +212,27 @@ describe('Process service', () => {
             expect(response).toBe('success');
         }, error => {
             expect(error).toEqual({ type: 'error' });
-        }).run();
+        }).run().completePromise;
 
-        tick();
-        expect(toastSpy).toHaveBeenCalledOnceWith(
+        expect(toastSpy).toHaveBeenCalledWith(
             'Network Connection Fail',
             'danger',
             toastOptions,
         );
-    }));
+    });
 
-    it('should create process and fail w/ 2fa error.errorText ', fakeAsync(() => {
-        process.createProcess(() => {
+    it('should create process and fail w/ 2fa error.errorText ', async () => {
+        const { process, toastSpy } = await setupProcess();
+
+        await process.createProcess(() => {
             return Promise.reject({ error: { errorText: 'second_factor_required' } });
         }, {
         }).then(response => {
             expect(response).toBe('success');
         }, error => {
             expect(error).toEqual({ errorText: 'second_factor_required' });
-        }).run();
+        }).run().completePromise;
 
-        tick();
-        expect(toastSpy).toHaveBeenCalledOnceWith('Required', 'danger', toastOptions);
-    }));
+        expect(toastSpy).toHaveBeenCalledWith(staticLang.dialogs.message.twoFactor.required, 'danger', toastOptions);
+    });
 });

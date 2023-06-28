@@ -1,10 +1,10 @@
 import { coerceArray } from '@angular/cdk/coercion';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject } from 'rxjs';
 
 import { FeatureFlagType } from '@services/nx-config/base-config';
-import { WINDOW } from '@services/window-provider';
+import { windowFactory } from '@services/window-provider';
 
 import { nxConfig } from './config';
 import { IConfig } from './config-types';
@@ -13,37 +13,38 @@ import { DynamicConfig } from './dynamic-config';
 const findNode = <T>(targetObject: T, nodes: (string | symbol)[]): unknown =>
     nodes.reduce((ref, nodeName) => ref[nodeName], targetObject);
 
+type WindowWithOverrides = Window & {
+    debugConfig: IConfig;
+    resetConfigOverrides: () => void;
+};
+
 @Injectable({
     providedIn: 'root',
 })
 export class NxConfigService {
+    private window: WindowWithOverrides = windowFactory() as unknown as WindowWithOverrides;
     config: IConfig;
     static OVERRIDE_KEY = 'configOverrides';
 
     static configChanged: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-    constructor(
-        @Inject(WINDOW)
-        private window?: Window & {
-            debugConfig: IConfig;
-            resetConfigOverrides: () => void;
-        },
-        private session?: LocalStorageService,
-        dynamicConfig?: DynamicConfig,
-    ) {
+    constructor(private session?: LocalStorageService) {
         // These properties will be injected on config *******************
         // viewsDir: 'static/views/', //'static/lang_' + lang + '/views/';
         // previewPath: '',
         // ***************************************************************
 
-        this.config = dynamicConfig?.config || nxConfig;
+        try {
+            const dynamicConfig = inject(DynamicConfig);
+            this.config = dynamicConfig?.config;
+        } catch (_) {}
+
+        this.config ||= nxConfig;
         this.updateConfigUsingOverrides();
         this.attachDebugConfigToWindow();
     }
 
     public generateDebugConfigProxy(): IConfig {
-        const window = this.window;
-
         this.window.resetConfigOverrides = () =>
             this.window.confirm('Do you want to reset overrides?') &&
             this.session.store(NxConfigService.OVERRIDE_KEY, {}) &&
@@ -59,8 +60,8 @@ export class NxConfigService {
                         ...session.retrieve(NxConfigService.OVERRIDE_KEY),
                         [currentNodeString]: value,
                     });
-                    if (window.confirm('Reload window to apply changes?')) {
-                        window.location.reload();
+                    if (this.window.confirm('Reload window to apply changes?')) {
+                        this.window.location.reload();
                     }
                     return true;
                 },
@@ -78,7 +79,7 @@ export class NxConfigService {
                             value,
                             settingType,
                             get showPromptNewValue() {
-                                const newValue = window.prompt(
+                                const newValue = this.window.prompt(
                                     `Updated Value for "${currentNodeString}"`,
                                     value as string,
                                 );
@@ -86,8 +87,8 @@ export class NxConfigService {
                                     ...session.retrieve(NxConfigService.OVERRIDE_KEY),
                                     [currentNodeString]: newValue,
                                 });
-                                if (window.confirm('Reload window to apply changes?')) {
-                                    window.location.reload();
+                                if (this.window.confirm('Reload window to apply changes?')) {
+                                    this.window.location.reload();
                                 }
                                 return newValue;
                             },

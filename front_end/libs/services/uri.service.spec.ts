@@ -2,10 +2,12 @@ import { waitForAsync, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 
+import { setupTest41System } from '@app/_mocks/system.test';
 import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { WINDOW } from '@services/window-provider';
 
+import { NxSystem } from './system.service/system';
 import { NxUriService } from './uri.service';
 import { ChildRoutes } from './uri.service.types';
 
@@ -64,7 +66,7 @@ describe('Uri Service', () => {
     });
 
     it('should call navigateSystem', async () => {
-        const success = await uriService.navigateSystem('newUrl', {});
+        const success = await uriService.navigateSystem('newUrl', setupTest41System() as NxSystem);
         expect(success).toBe(true);
     });
 

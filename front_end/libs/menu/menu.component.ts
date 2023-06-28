@@ -9,7 +9,6 @@ import {
     ViewEncapsulation,
     EventEmitter,
     Output,
-    Inject,
     Renderer2,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -24,7 +23,7 @@ import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxSearchService } from '@services/search.service';
 import { ButtonArrowType, SearchModel } from '@services/search.service.types';
 import type { NxSystem } from '@services/system.service/system';
-import { WINDOW } from '@services/window-provider';
+import { windowFactory } from '@services/window-provider';
 import type { NgChanges } from '@utils/ng-changes';
 
 import { menus } from '../variables/static-variables';
@@ -61,6 +60,8 @@ export class NxMenuComponent implements OnInit, OnChanges {
 
     @Output() menuSearchMode = new EventEmitter<boolean>();
     @Output() contentToggle = new EventEmitter<ContentToggle>();
+
+    private window: Window = windowFactory();
 
     selectedLevel1: string;
     selectedLevel2: string;
@@ -109,7 +110,6 @@ export class NxMenuComponent implements OnInit, OnChanges {
         private applyService: NxApplyService,
         private appStateService: NxAppStateService,
         public menuService: NxMenuService,
-        @Inject(WINDOW) private window: Window,
     ) {}
 
     ngOnInit(): void {

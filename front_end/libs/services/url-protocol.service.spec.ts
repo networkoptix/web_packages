@@ -1,94 +1,68 @@
-import { waitForAsync, TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { v4 as uuid } from 'uuid';
 
-import { nxConfig } from '@services/nx-config/config';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { environment } from '@app/environments/environment';
 
 import { NxAccountService } from './account.service';
 import { NxCloudApiService } from './nx-cloud-api';
+import { setupTestBed } from './src/setup';
 import { NxUrlProtocolService } from './url-protocol.service';
-import { WINDOW } from './window-provider';
+
+const setupUrlProtocolService = async (): Promise<{
+    urlService: NxUrlProtocolService;
+    clientProtocol: string;
+    systemId: string;
+    auth: string;
+    code: string;
+    getCodeSpy: jest.SpyInstance<Observable<{
+        code: string;
+    }>, [systemId: string]>;
+    authKeySpy: jest.SpyInstance<Promise<string>, []>;
+}> => {
+    const { inject } = await setupTestBed();
+    const clientProtocol = 'test';
+    const systemId = uuid();
+    const auth = uuid();
+    const code = uuid();
+    const urlService = inject(NxUrlProtocolService);
+    const cloudApiService = inject(NxCloudApiService);
+    const accountService = inject(NxAccountService);
+    const getCodeSpy = jest.spyOn(cloudApiService, 'getCode').mockReturnValue(of({ code }));
+    const authKeySpy = jest.spyOn(accountService, 'authKey').mockReturnValue(Promise.resolve(auth));
+    urlService.CONFIG.clientProtocol = clientProtocol;
+    return {
+        urlService,
+        clientProtocol,
+        systemId,
+        auth,
+        code,
+        getCodeSpy,
+        authKeySpy,
+    };
+};
 
 describe('Url Protocol Service', () => {
-    let urlService: NxUrlProtocolService;
-    const translateMock = {
-        translations: {
-            clientProtocol: undefined
-        }
-    };
-    const configMock = { getConfig: () => nxConfig };
-    const windowMock = {
-        location: {
-            host: 'localhost:7001',
-            protocol: 'http:'
-        }
-    };
-    const cloudMock = {
-        getCode: () => of({ code: 'someCode' })
-    };
-    const accountMock = {
-        authKey: () => Promise.resolve('someAuth')
-    };
-
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            imports: [],
-            providers: [
-                NxUrlProtocolService,
-                { provide: WINDOW, useValue: windowMock },
-                { provide: NxConfigService, useValue: configMock },
-                { provide: NxLanguageProviderService, useValue: translateMock },
-                { provide: NxAccountService, useValue: accountMock },
-                { provide: NxCloudApiService, useValue: cloudMock }
-            ]
-        });
-        urlService = TestBed.inject(NxUrlProtocolService);
-    }));
-
-    it('should create the component', () => {
+    it('should create the service', async () => {
+        const { urlService } = await setupUrlProtocolService();
         expect(urlService).toBeTruthy();
     });
 
-    it('should get default generateLink without client protocol', () => {
-        expect(urlService.generateLink()).toBe('http://localhost:7001/client/?from=portal');
-    });
-
-    it('should generatelink with client protocol', () => {
-        urlService.LANG.clientProtocol = () => 'https:';
-        expect(urlService.generateLink()).toBe('https://localhost:7001/client/?from=portal');
-    });
-
-    it('should attach params if they exist', () => {
-        const linkSettings = {
-            from: 'client',
-            auth: 'authString',
-            context: 'someContext',
-            code: 'someCode'
-        };
-        expect(urlService.generateLink(linkSettings))
-            .toBe('https://localhost:7001/client/?from=client&auth=authString&context=someContext&code=someCode');
-    });
-
-    it('should attach systemId and action if they exist', () => {
-        const linkSettings = {
-            systemId: 'systemId',
-            action: 'actionString'
-        };
-        expect(urlService.generateLink(linkSettings))
-            .toBe('https://localhost:7001/client/systemId/actionString?from=portal');
+    it('should generatelink with client protocol', async () => {
+        const { urlService, clientProtocol, systemId, auth, code } = await setupUrlProtocolService();
+        expect(urlService.generateLink(systemId, auth, code)).toBe(`${clientProtocol}://${environment.cloudHost}/client/${systemId}/?auth=${auth}&code=${code}`);
     });
 
     it('should use code if useOauth === true', async () => {
-        const linkData = await urlService.getLink({ useOauth: true });
-        expect(linkData.link).toBe('https://localhost:7001/client/?from=portal&code=someCode');
-        expect(linkData.code).toBe('someCode');
-        expect(linkData.authKey).toBeUndefined();
+        const { urlService, clientProtocol, systemId, code, getCodeSpy } = await setupUrlProtocolService();
+        const link = await urlService.getLink(systemId, true);
+        expect(getCodeSpy).toHaveBeenCalledWith('*');
+        expect(link).toBe(`${clientProtocol}://${environment.cloudHost}/client/${systemId}/?code=${code}`);
     });
 
     it('should use authKey if useOauth is falsy', async () => {
-        const linkData = await urlService.getLink({});
-        expect(linkData.link).toBe('https://localhost:7001/client/?from=portal&auth=someAuth&code=someCode');
-        expect(linkData.code).toBe('someCode');
-        expect(linkData.authKey).toEqual('someAuth');
+        const { urlService, clientProtocol, systemId, auth, authKeySpy } = await setupUrlProtocolService();
+        const link = await urlService.getLink(systemId, false);
+        expect(authKeySpy).toHaveBeenCalledWith();
+        expect(link).toBe(`${clientProtocol}://${environment.cloudHost}/client/${systemId}/?auth=${auth}`);
     });
 });

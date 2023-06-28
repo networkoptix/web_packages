@@ -2,7 +2,7 @@
 import { DialogModule } from '@angular/cdk/dialog';
 import { HttpClientModule, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { Type } from '@angular/core';
+import { DebugElement, reflectComponentType, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -13,6 +13,7 @@ import { TranslateModule, TranslateCompiler } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
 import { SessionStorageService, NgxWebstorageModule, InMemoryStorageStrategy, StrategyCacheService } from 'ngx-webstorage';
+import * as patchWindow from 'test_utils/patch_window';
 
 import { DirectivesModule } from '@app/directives/directives.module';
 import { PipesModule } from '@app/pipes/pipes.module';
@@ -31,9 +32,11 @@ export const testBedSetupFactory = (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     additionalImports: any[] = [], additionalProviders: any[] = []
 ) => async <T>(
-    TargetComponent: Type<T>,
-    standalone = false,
-): Promise<{ fixture: ComponentFixture<T>; component: T; getHttpController: () => HttpTestingController }> => {
+    TargetComponent?: Type<T>
+    /**
+     * TODO: Need to figure out how to better type this once the implementation is stable.
+     */
+): Promise<{ fixture?: ComponentFixture<T>; component?: T; debugElement?: DebugElement; getHttpController: () => HttpTestingController; inject: typeof TestBed.inject; patchWindow: typeof patchWindow }> => {
     NxBootstrapProvider.isLoaded = true;
 
     /**
@@ -73,9 +76,11 @@ export const testBedSetupFactory = (
         { provide: DynamicConfig, useValue: new DynamicConfig(nxConfig) },
         {
             provide: NxConfigService,
-            useFactory: () => new NxConfigService(window as unknown as Window & { debugConfig: typeof nxConfig; resetConfigOverrides: () => void }, new SessionStorageService(new InMemoryStorageStrategy(new StrategyCacheService())))
+            useFactory: () => new NxConfigService(new SessionStorageService(new InMemoryStorageStrategy(new StrategyCacheService())))
         }
     ];
+
+    const standalone = TargetComponent && reflectComponentType(TargetComponent).isStandalone;
 
     if (standalone) {
         await TestBed.configureTestingModule({
@@ -99,13 +104,24 @@ export const testBedSetupFactory = (
                 ...commonProviders,
                 ...additionalProviders,
             ],
-            declarations: [TargetComponent]
+            declarations: TargetComponent ? [TargetComponent] : []
         }).compileComponents();
+    }
+
+    const getHttpController = (): HttpTestingController => TestBed.inject(HttpTestingController);
+    const { inject } = TestBed;
+
+    if (!TargetComponent) {
+        return {
+            getHttpController,
+            inject,
+            patchWindow,
+        };
     }
 
     const fixture = TestBed.createComponent(TargetComponent);
     fixture.autoDetectChanges();
-    const component = fixture.componentInstance;
-    const getHttpController = (): HttpTestingController => TestBed.inject(HttpTestingController);
-    return { fixture, component, getHttpController };
+    await fixture.whenRenderingDone();
+    const { debugElement, componentInstance: component } = fixture;
+    return { fixture, component, debugElement, getHttpController, inject, patchWindow };
 };

@@ -1,43 +1,27 @@
-import { waitForAsync, TestBed } from '@angular/core/testing';
-import { LocalStorageService } from 'ngx-webstorage';
-import { Observable } from 'rxjs';
-
-import { WINDOW } from '@services/window-provider';
-
 import { NxSessionService } from './session.service';
+import { setupTestBed } from './src/setup';
+
+const setupSessionService = async (): Promise<{
+    sessionService: NxSessionService;
+    clearByName: jest.SpyInstance<Promise<boolean[][]>, [cache: string]>;
+}> => {
+    const { inject } = await setupTestBed();
+    const sessionService = inject(NxSessionService);
+    const clearByName = jest.spyOn(sessionService.nxCache, 'clearByName').mockImplementation(() => Promise.resolve([]));
+    return {
+        sessionService,
+        clearByName
+    };
+};
 
 describe('Session service', () => {
-    let session: NxSessionService;
-
-    let localStorageMockStore: Record<string, unknown> = {};
-    const localStorageMock = {
-        retrieve: (key: string) => localStorageMockStore[key],
-        store: (key: string, value: unknown) => {
-            localStorageMockStore[key] = value;
-        },
-        observe: () => ({
-            pipe: () => new Observable<unknown>(),
-            subscribe: () => {}
-        })
-    };
-
-    beforeEach(waitForAsync(() => {
-        localStorageMockStore = {};
-        TestBed.configureTestingModule({
-            providers: [
-                { provide: LocalStorageService, useValue: localStorageMock },
-                { provide: WINDOW, useValue: {} }
-            ]
-        });
-        session = TestBed.inject(NxSessionService);
-        session['session'] = TestBed.inject(LocalStorageService);
-    }));
-
-    it('should create the service', () => {
+    it('should create the service', async () => {
+        const { sessionService: session } = await setupSessionService();
         expect(session).toBeTruthy();
     });
 
-    it('should have setter and getter (language)', () => {
+    it('should have setter and getter (language)', async () => {
+        const { sessionService: session } = await setupSessionService();
         session.language = 'en_US';
         expect(session.language).toBe('en_US');
 
@@ -46,7 +30,8 @@ describe('Session service', () => {
         });
     });
 
-    it('should have setter and getter (loginState)', () => {
+    it('should have setter and getter (loginState)', async () => {
+        const { sessionService: session } = await setupSessionService();
         session.loginState = 'roadrunner@acme.com';
         expect(session.loginState).toBe('roadrunner@acme.com');
 
@@ -55,17 +40,19 @@ describe('Session service', () => {
         });
     });
 
-    it('should invalidate session', () => {
+    it('should invalidate session', async () => {
+        const { sessionService: session, clearByName } = await setupSessionService();
         session['session'].store('loginState', 'roadrunner@acme.com');
         session['session'].store('loginRegister', true);
 
         session.invalidateSession();
 
         expect(session['session'].retrieve('loginState')).toBeNull();
-        expect(session['session'].retrieve('loginRegister')).toBeFalse();
-
-        session.loginStateSubject.subscribe(value => {
-            expect(value).toBeNull();
+        expect(session['session'].retrieve('loginRegister')).toBeFalsy();
+        session.cloudUserCaches.forEach(cacheName => {
+            expect(clearByName).toBeCalledWith(cacheName);
         });
+        expect(clearByName).toBeCalledTimes(session.cloudUserCaches.length);
+        expect(session.loginStateSubject.value).toBeNull();
     });
 });

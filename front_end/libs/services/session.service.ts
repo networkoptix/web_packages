@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
+import { environment } from '@app/environments/environment';
 import { NxSystemInfo } from '@services/systems.service.types';
 
 import { NxDbService } from './db.service';
@@ -16,21 +17,14 @@ import { windowFactory } from './window-provider';
 })
 export class NxSessionService {
     readonly cloudUserCaches = ['apiFresh', 'cloudSystemAPI'];
-    loginStateSubject: BehaviorSubject<string>;
+    private session: LocalStorageService = inject(LocalStorageService);
+    loginStateSubject: BehaviorSubject<string> = new BehaviorSubject(this.loginState || '');
     loginParams$: BehaviorSubject<LoginParams>;
     language$: BehaviorSubject<string>;
     langChanged$: BehaviorSubject<boolean>;
-    private session: LocalStorageService;
-    private window: Window = windowFactory();
+    public window: Window = windowFactory();
 
-    constructor(
-        private localStorageService: LocalStorageService,
-        private nxCache: NxSwCacheService,
-        private db: NxDbService,
-    ) {
-        this.session = this.localStorageService;
-
-        this.loginStateSubject = new BehaviorSubject(this.loginState || '');
+    constructor(public nxCache: NxSwCacheService, private db: NxDbService) {
         this.loginParams$ = new BehaviorSubject(
             this.loginParams ?? {
                 code: null,
@@ -64,7 +58,7 @@ export class NxSessionService {
                 // Clear config overrides between sessions
                 this.session.store(NxConfigService.OVERRIDE_KEY, {});
 
-                if (!this.window.document.hasFocus()) {
+                if (!this.window.document.hasFocus() && !environment.testing) {
                     // Don't reload on null since that state should show a session expired dialog
                     this.window.location.reload();
                 }

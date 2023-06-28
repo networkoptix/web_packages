@@ -1,4 +1,4 @@
-import { Observable, Subject, race, timer } from 'rxjs';
+import { Observable, Subject, firstValueFrom, race, timer } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -96,6 +96,11 @@ export class Process {
     public canceled = false;
     private canceled$ = new Subject();
     public caller$: Observable<any>;
+    private completeNotifier$ = new Subject();
+
+    get completePromise(): Promise<unknown> {
+        return firstValueFrom(this.completeNotifier$);
+    }
 
     constructor(
         private sessionService: NxSessionService,
@@ -174,12 +179,14 @@ export class Process {
         if (error && error.error) {
             error = error.error;
         }
+        this.completeNotifier$.next(true);
         return this.errorHelper(error);
     };
 
     public onComplete = (): void => {
         this.processing = false;
         this.finished = true;
+        this.completeNotifier$.next(true);
     };
 
     /**

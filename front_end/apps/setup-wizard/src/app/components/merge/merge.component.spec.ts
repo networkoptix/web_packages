@@ -4,7 +4,7 @@ import { MergeComponent } from './merge.component';
 
 describe('MergeComponent', () => {
     it('should create', async () => {
-        const { component } = await setupComponent(MergeComponent, true);
+        const { component } = await setupComponent(MergeComponent);
         expect(component).toBeTruthy();
     });
 });
