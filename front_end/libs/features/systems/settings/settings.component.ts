@@ -1,5 +1,5 @@
 import { Component, Inject, Input, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, NavigationEnd, NavigationStart } from '@angular/router';
+import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { escape } from 'lodash-es';
 import { firstValueFrom, Subject, Subscription } from 'rxjs';
@@ -234,11 +234,16 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.systemInfoSubscription?.unsubscribe();
                 this.systemSubscription?.unsubscribe();
             }
-            if (route instanceof NavigationEnd) {
+
+            if (route instanceof NavigationStart) {
+                // NavigationEnd will not fire --TT
                 const isSystemRoute = route.url.includes('/systems');
                 const isCameraRoute = route.url.includes('/cameras');
                 if (isSystemRoute && !isCameraRoute && this.system) {
                     this.system.show404 = false;
+                }
+                if (route.url === '/systems') {
+                    this.db.personal.menuContent.delete(this.content.base);
                 }
             }
         });
