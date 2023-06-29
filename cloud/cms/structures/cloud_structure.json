@@ -1087,6 +1087,15 @@
             "optional": true,
             "advanced": true,
             "fieldset": "Zendesk"
+          },
+          {
+            "label": "New Header",
+            "name": "%NEW_HEADER_ENABLED%",
+            "description": "Enables the new header.",
+            "type": "check_box",
+            "value": false,
+            "optional": true,
+            "advanced": true
           }
         ]
       },
