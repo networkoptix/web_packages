@@ -118,9 +118,9 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
         this.processedGroups = [{ id: 'title', label: defaultUserGroupText }];
         let customTitleNeeded = false;
         (this.system.userManager as UserWithGroupsManager).userGroups.forEach(
-            ({ id, name, description, isPredefined }) => {
+            ({ id, name, description, attributes }) => {
                 if (name !== 'Owner') {
-                    if (!customTitleNeeded && !isPredefined) {
+                    if (!customTitleNeeded && !attributes.includes('readonly')) {
                         customTitleNeeded = true;
                         this.processedGroups.push(
                             { id: 'horizontal', label: 'horizontal' },
