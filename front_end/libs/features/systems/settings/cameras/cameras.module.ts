@@ -23,7 +23,8 @@ import { DirectivesModule } from '@directives/directives.module';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
 
 import { NxCamerasComponent } from './cameras.component';
-import { NxMotionDetectionOverlay } from './motion-detection-overlay/motion-detection-overlay.component';
+import { NxMotionDetectionOverlay } from './motion-detection-settings/motion-detection-overlay/motion-detection-overlay.component';
+import { NxMotionDetectionSettingsComponent } from './motion-detection-settings/motion-detection-settings.component';
 import { NxRecordingSettingsComponent } from './recording-settings/recording-settings.component';
 
 @NgModule({
@@ -52,7 +53,12 @@ import { NxRecordingSettingsComponent } from './recording-settings/recording-set
         NxThreeDotDropdown,
     ],
     providers: [],
-    declarations: [NxCamerasComponent, NxMotionDetectionOverlay, NxRecordingSettingsComponent],
+    declarations: [
+        NxCamerasComponent,
+        NxMotionDetectionOverlay,
+        NxRecordingSettingsComponent,
+        NxMotionDetectionSettingsComponent,
+    ],
     bootstrap: [],
     exports: [NxCamerasComponent],
 })

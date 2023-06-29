@@ -242,142 +242,29 @@
                     [selectedQualityWatcher]="selectedQualityWatcher"
                 >
                 </nx-recording-settings>
-                <div class="col-12 camera-settings-info mt-3">
-                    <nx-section *ngIf="!recordingSettings.motionEnabled">
-                        <span
-                            class="d-block"
-                            translate
-                            >Motion detection for this camera is turned off.</span
-                        >
-                        <span
-                            class="d-block"
-                            translate
-                            >Enabling it will allow you to set up "motion only" and "motion +
-                            low-res" recording types, but may increase the CPU usage.</span
-                        >
-                        <div class="mt-3">
-                            <button
-                                class="btn btn-default"
-                                (click)="recordingSettings.enableMotion()"
-                                translate
-                                id="enable-motion-detection"
-                            >
-                                Enable Motion Detection
-                            </button>
-                        </div>
-                    </nx-section>
-                    <nx-block
-                        *ngIf="recordingSettings.motionEnabled"
-                        header-style="extended"
-                    >
-                        <header>
-                            <div class="d-flex justify-content-between">
-                                <div class="d-flex flex-column">
-                                    <span translate>Motion Detection Sensitivity</span>
-                                </div>
-                                <nx-three-dot
-                                    [name]="'Disable Motion Detection' | translate"
-                                    [items]="[
-                                        {
-                                            name: 'Disable Motion Detection' | translate,
-                                            action: recordingSettings.disableMotion,
-                                            id: 'disable-motion'
-                                        }
-                                    ]"
-                                    id="motion-three-dot-menu"
-                                ></nx-three-dot>
-                            </div>
-                        </header>
-                        <nx-section>
-                            <div
-                                class="m-3 preview-wrapper"
-                                [style.height.px]="height"
-                                (resize)="handleResize($event)"
-                                (click)="lockGrid(true)"
-                            >
-                                <div
-                                    class="position-relative mx-auto"
-                                    [style.width.px]="width"
-                                    [style.height.px]="height"
-                                >
-                                    <nx-health-image
-                                        [isPrimary]="true"
-                                        [motionPreview]="true"
-                                        [preloader]="true"
-                                        [state]="selectedCamera.status"
-                                        [url]="preview$ | async"
-                                        (loaded)="toggleMotionGrid()"
-                                        [lightBackground]="true"
-                                    ></nx-health-image>
-                                    <nx-motion-detection-overlay
-                                        *ngIf="
-                                            !isMobile &&
-                                            showOverlay &&
-                                            selectedCamera &&
-                                            !noCameras &&
-                                            this.motionMaskWatcher.value
-                                        "
-                                        (updateMask)="updateMask($event)"
-                                        [height]="height"
-                                        [width]="width"
-                                        [rotation]="this.selectedRotation.value || 0"
-                                        [sensitivityButtons$]="sensitivityButtons$"
-                                        [initialMask]="motionMaskWatcher.value"
-                                    ></nx-motion-detection-overlay>
-                                </div>
-                            </div>
-
-                            <div
-                                *ngIf="isMobile"
-                                class="mt-3 sensitivity-hint d-flex align-items-center"
-                                translate
-                            >
-                                This feature is not available on mobile devices.
-                            </div>
-
-                            <div
-                                *ngIf="!isMobile"
-                                class="mt-3 d-flex justify-content-between button-wrapper"
-                                (contextmenu)="$event.preventDefault()"
-                            >
-                                <span
-                                    *ngIf="sensitivityButtons === false"
-                                    class="sensitivity-hint d-flex align-items-center"
-                                    translate
-                                    >Select some area on camera to change the sensitivity setting
-                                    for it. Hold Shift key to make complex shape selection.</span
-                                >
-                                <ng-container *ngIf="sensitivityButtons !== false">
-                                    <form
-                                        class="btn-toolbar btn-group-toggle"
-                                        [formGroup]="sensitivity"
-                                    >
-                                        <label
-                                            *ngFor="let _ of sensitivityColors; let i = index"
-                                            class="btn-secondary mr-2 sensitivity-buttons"
-                                            [id]="'sensitivity-' + i + '-button'"
-                                            [ngClass]="'button-' + i"
-                                        >
-                                            <input
-                                                type="radio"
-                                                formControlName="current"
-                                                [value]="i"
-                                            />
-                                            {{ i }}
-                                        </label>
-                                    </form>
-                                    <button
-                                        class="btn btn-default"
-                                        (click)="resetSensitivity()"
-                                        id="reset-selection"
-                                    >
-                                        <span translate>Clear Selection</span>
-                                    </button>
-                                </ng-container>
-                            </div>
-                        </nx-section>
-                    </nx-block>
-                </div>
+                <nx-motion-detection-settings
+                    class="col-12 camera-settings-info mt-3"
+                    [motionEnabled]="recordingSettings.motionEnabled"
+                    [enableMotion]="recordingSettings.enableMotion"
+                    [disableMotion]="recordingSettings.disableMotion"
+                    [resetSensitivity]="resetSensitivity"
+                    [toggleMotionGrid]="toggleMotionGrid"
+                    (updateMask)="updateMask($event)"
+                    [sensitivityButtons$]="sensitivityButtons$"
+                    [motionGridChangeWatcher]="motionGridChangeWatcher"
+                    [motionMaskWatcher]="motionMaskWatcher"
+                    [healthImageUrl]="preview$"
+                    [selectedRotation]="selectedRotation?.value || 0"
+                    [selectedAspectRatio]="selectedAspect.value || ASPECT_RATIOS['16:9']"
+                    [imageState]="selectedCamera.status"
+                    [overlayEnabled]="
+                        !isMobile &&
+                        showOverlay &&
+                        selectedCamera &&
+                        !noCameras &&
+                        !!this.motionMaskWatcher.value
+                    "
+                ></nx-motion-detection-settings>
             </ng-container>
         </ng-container>
     </ng-template>

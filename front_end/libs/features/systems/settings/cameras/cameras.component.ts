@@ -1,5 +1,4 @@
 import { Component, OnInit, Inject, ViewContainerRef, ViewChild } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual } from 'lodash-es';
@@ -34,7 +33,6 @@ import {
     InfoBlockSize,
 } from '@components/info-block/info-block.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import type { Size } from '@directives/resize/nx-resize.directive.types';
 import { environment } from '@environments/environment';
 import { icons, menus, settingsConfig } from '@lib/variables/static-variables';
 import { NxHealthService } from '@pages/health/health.service';
@@ -61,10 +59,12 @@ import { cleanId } from '@utils/general';
 
 import { NxSettingsService } from '../settings.service';
 
-import type { AspectRatioDropdownItem, RotationDropdownItem } from './cameras.component.types';
+import type {
+    AspectRatioDropdownItem,
+    RotationDropdownItem,
+    SensitivityButtonValue,
+} from './cameras.component.types';
 import { NxRecordingSettingsComponent } from './recording-settings/recording-settings.component';
-
-type SensitivityButtonValue = number | boolean | 'reset';
 
 class Alert {
     errors: string[] = [];
@@ -84,12 +84,6 @@ class Alert {
     }
 }
 
-const ASPECT_RATIOS = {
-    '4:3': 1.33333,
-    '16:9': 1.77778,
-    '1:1': 1,
-};
-
 @UntilDestroy()
 @Component({
     selector: 'nx-cameras-component',
@@ -98,14 +92,15 @@ const ASPECT_RATIOS = {
 })
 export class NxCamerasComponent implements OnInit {
     LANG = staticLang;
+    ASPECT_RATIOS = {
+        '4:3': 1.33333,
+        '16:9': 1.77778,
+        '1:1': 1,
+    };
     isMobile: boolean;
     infoBlockSizeEnum = InfoBlockSize;
     public reload$ = new BehaviorSubject(0);
-    width$ = new BehaviorSubject(0);
     preview$: Observable<string>;
-    sensitivity = new FormGroup({
-        current: new FormControl<SensitivityButtonValue>(false),
-    });
 
     sensitivityButtons$ = new BehaviorSubject<SensitivityButtonValue>(false);
     private settingsSubscription: Subscription;
@@ -132,7 +127,6 @@ export class NxCamerasComponent implements OnInit {
     showOverlay = false;
     showPreloader = true;
     noCameras = false;
-    sensitivityColors = new Array(10);
     cameraDetailColumns: InfoBlockColumns;
     canSeeInfo = false;
     editMode = false;
@@ -145,7 +139,7 @@ export class NxCamerasComponent implements OnInit {
     settingsDisabled = false;
     settingsRecordingDisabled = true;
 
-    private motionGridChangeWatcher = new Watcher<boolean>();
+    motionGridChangeWatcher = new Watcher<boolean>();
     cameraNameWatcher = new Watcher<string>();
     private selectedAspectWatcher = new Watcher<number | null>();
     private selectedRotationWatcher = new Watcher<number>();
@@ -167,7 +161,7 @@ export class NxCamerasComponent implements OnInit {
 
     get previewWidth(): number {
         const height = 120;
-        const aspect = this.selectedAspect?.value || ASPECT_RATIOS['16:9'];
+        const aspect = this.selectedAspect?.value || this.ASPECT_RATIOS['16:9'];
         const rotated = (this.selectedRotation?.value ?? 0) % 180;
         return rotated ? height / aspect : aspect * height;
     }
@@ -185,42 +179,14 @@ export class NxCamerasComponent implements OnInit {
     }
 
     private get maxHeight(): number {
-        const aspect = this.selectedAspect.value || ASPECT_RATIOS['4:3'];
+        const aspect = this.selectedAspect.value || this.ASPECT_RATIOS['4:3'];
         const normalHeight = 480;
         const narrowHeight = 384;
         return aspect > 1.5 ? narrowHeight : normalHeight;
     }
 
-    get height(): number {
-        return this.getCanvasSize().height;
-    }
-
-    get width(): number {
-        return this.getCanvasSize().width;
-    }
-
-    private get previewWrapperWidth(): number {
-        return (
-            Math.ceil(((this.selectedAspect.value || ASPECT_RATIOS['4:3']) * this.maxHeight) / 44) *
-            44
-        );
-    }
-
-    get canvasWidth(): number {
-        return Math.floor(this.previewWrapperWidth / 44) * 44;
-    }
-
-    get canvasHeight(): number {
-        const aspect = this.selectedAspect.value || ASPECT_RATIOS['4:3'];
-        return Math.min(Math.floor(this.canvasWidth / aspect / 32) * 32, this.maxHeight);
-    }
-
     get sensitivityButtons(): SensitivityButtonValue {
         return this.sensitivityButtons$.value;
-    }
-
-    set sensitivityButtons(value: SensitivityButtonValue) {
-        this.sensitivityButtons$.next(value);
     }
 
     get selectedRotation(): RotationDropdownItem {
@@ -285,11 +251,6 @@ export class NxCamerasComponent implements OnInit {
                 this.cameraSubscription?.unsubscribe();
                 this.settingsSubscription?.unsubscribe();
             }
-        });
-
-        this.sensitivity.controls.current.valueChanges.pipe(untilDestroyed(this)).subscribe(val => {
-            this.sensitivityButtons$.next(val);
-            this.sensitivity.setValue({ current: false });
         });
 
         this.route.params.pipe(untilDestroyed(this), distinctUntilChanged()).subscribe(params => {
@@ -416,7 +377,7 @@ export class NxCamerasComponent implements OnInit {
                 return this.system.serverManager.getPreviewUrl(
                     cameraId,
                     null,
-                    (this.selectedAspect?.value || this.aspectRatios[1].value) * this.maxHeight * 2,
+                    (this.selectedAspect?.value || this.ASPECT_RATIOS['4:3']) * this.maxHeight * 2,
                     this.maxHeight * 2,
                     this.selectedRotation?.value || 0,
                 );
@@ -479,7 +440,7 @@ export class NxCamerasComponent implements OnInit {
             audioEnabled: this.audioEnabledWatcher.value,
             scheduleEnabled: this.recordingWatcher.value,
             motionType: this.motionType,
-            motionMask: this.motionMaskWatcher.value || settingsConfig.defaultMotionMask,
+            motionMask: this.motionMask || settingsConfig.defaultMotionMask,
         };
         const overrideAr =
             this.selectedAspectWatcher.value === this.selectedCamera.defaultRatio
@@ -552,50 +513,16 @@ export class NxCamerasComponent implements OnInit {
         });
     }
 
-    handleResize({ width }: Size): void {
-        this.width$.next(width);
-        this.toggleMotionGrid();
-    }
-
-    private getCanvasSize(): Size {
-        const wrapperWidth = this.width$.value;
-        const maxCanvasHeightInPixels = 480;
-        const rotation = this.selectedRotation?.value || 0;
-        const rotated = rotation % 180;
-        const columnsToRoundPixelsByMultiple = rotated ? 32 : 44;
-        const RowsToRoundPixelsByMultiple = rotated ? 44 : 32;
-        const aspect = this.selectedAspect.value || ASPECT_RATIOS['16:9'];
-        const aspectWithRotation = rotated ? 1 / aspect : aspect;
-        const constrainedByHeight = wrapperWidth / aspectWithRotation > maxCanvasHeightInPixels;
-        let height: number;
-        let width: number;
-
-        if (constrainedByHeight) {
-            const size = Math.floor(maxCanvasHeightInPixels / RowsToRoundPixelsByMultiple);
-            height = RowsToRoundPixelsByMultiple * size;
-            width =
-                Math.floor((height * aspectWithRotation) / columnsToRoundPixelsByMultiple) *
-                columnsToRoundPixelsByMultiple;
-        } else {
-            const size = Math.floor(wrapperWidth / columnsToRoundPixelsByMultiple);
-            width = columnsToRoundPixelsByMultiple * size;
-            height =
-                Math.floor(width / aspectWithRotation / RowsToRoundPixelsByMultiple) *
-                RowsToRoundPixelsByMultiple;
-        }
-        return { width, height };
-    }
-
     toggleMotionGrid(): void {
         this.showOverlay = false;
-        this.sensitivityButtons = false;
+        this.sensitivityButtons$.next(false);
         setTimeout(() => {
             this.showOverlay = true;
         });
     }
 
     resetSensitivity(): void {
-        this.sensitivityButtons = 'reset';
+        this.sensitivityButtons$.next('reset');
     }
 
     updateMask(maskString: string): void {
@@ -783,12 +710,6 @@ export class NxCamerasComponent implements OnInit {
                 });
         } else {
             this.updateAlerts();
-        }
-    }
-
-    lockGrid(lock: boolean): void {
-        if (!this.isMobile) {
-            this.motionGridChangeWatcher.value = lock;
         }
     }
 }
