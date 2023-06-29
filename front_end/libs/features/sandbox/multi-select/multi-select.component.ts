@@ -4,6 +4,7 @@ import { Component, Inject } from '@angular/core';
 import { NxMenuService } from '@app/menu/menu.service';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import type { MultiSelectItem } from '@components/dropdowns/multi-select/multi-select.component.types';
+import { DropdownConfiguration } from '@pages/sandbox/multi-select/multy-select.component.types';
 
 @Component({
     selector: 'multi-select',
@@ -11,7 +12,7 @@ import type { MultiSelectItem } from '@components/dropdowns/multi-select/multi-s
     styleUrls: ['multi-select.component.scss'],
 })
 export class MultiSelectComponent {
-    items: MultiSelectItem[];
+    items: MultiSelectItem[] = [];
     itemsSelected: string[];
     mode: DropdownItem<string>[];
     modeSelected: DropdownItem<string>;
@@ -20,12 +21,33 @@ export class MultiSelectComponent {
     selectedDDItem: DropdownItem<string>;
     itemsSearchableDDSingle: DropdownItem<string>[];
     selectedSearchableDDItem: DropdownItem<string>;
+    dropdownConfiguration: DropdownConfiguration;
+    booleanConfigurationArray: string[];
+    stringConfigurationArray: string[];
 
     constructor(private menuService: NxMenuService, @Inject(DOCUMENT) private document: Document) {}
 
     ngOnInit(): void {
         this.menuService.section = 'components';
         this.menuService.detail = 'dropdowns';
+
+        this.dropdownConfiguration = {
+            type: '',
+            disabled: false,
+            canSearch: false,
+            ellipsisMargin: false,
+            hideSelectedItem: false,
+            hrMargin: false,
+            merge: false,
+            noMatchMsg: '',
+            stillLoading: false,
+        };
+        this.booleanConfigurationArray = Object.keys(this.dropdownConfiguration).filter(
+            (k: string) => typeof this.dropdownConfiguration[k] === 'boolean',
+        );
+        this.stringConfigurationArray = Object.keys(this.dropdownConfiguration).filter(
+            (k: string) => typeof this.dropdownConfiguration[k] === 'string',
+        );
 
         this.items = [
             { label: 'Administrator', id: 'qwerty1' },
@@ -46,6 +68,18 @@ export class MultiSelectComponent {
 
         this.itemsDDSingle = [
             { value: '0', name: 'All' },
+            {
+                value: '1',
+                name: 'superlonngselectitemtotestmarginifitisthereanditreallygoesoutofboundsofanylongdropdown',
+            },
+            {
+                value: '2',
+                name: 'horizontal',
+            },
+            {
+                value: '3',
+                name: 'seperator',
+            },
             { value: '84480', name: '1CIF' },
             { value: '168960', name: '2CIF' },
             { value: '337920', name: 'D1' },

@@ -65,6 +65,7 @@ export class NxGenericDropdown<
         width?: number;
         offsetTop?: number;
     };
+    @IBool() @Input() disabled: CoercedBoolInput;
 
     @Output() onSelected = new EventEmitter<Item>();
     icons = icons;

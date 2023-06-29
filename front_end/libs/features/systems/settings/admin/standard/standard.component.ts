@@ -82,7 +82,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
 
     selectedTimeUnit: LimitSessionTimeItem;
     sessionLimitToggle: boolean;
-    timeValue: number;
+    sessionLimitValue: number;
     currentMaxTimeUnit: number;
     previousInputValue: number;
     saveSettings: Process;
@@ -229,8 +229,8 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         this.sessionLimitToggle = Boolean(sw.sessionLimitMinutes);
         this.selectedTimeUnit = this.limitSessionTimeUnits.minutes;
         this.updateTimeUnitInput(this.selectedTimeUnit);
-        this.timeValue = sw.sessionLimitMinutes;
-        this.divideTimeValue(this.timeValue);
+        this.sessionLimitValue = sw.sessionLimitMinutes;
+        this.divideTimeValue(this.sessionLimitValue);
         this.settingsWatchersSet = true;
 
         setTimeout(() => {
@@ -243,8 +243,8 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
                         this.sessionLimitToggle = true;
                         this.selectedTimeUnit = this.limitSessionTimeUnits.minutes;
                         this.updateTimeUnitInput(this.selectedTimeUnit);
-                        this.timeValue = this.systemAndSecuritySettings.sessionLimitMinutes;
-                        this.divideTimeValue(this.timeValue);
+                        this.sessionLimitValue = this.systemAndSecuritySettings.sessionLimitMinutes;
+                        this.divideTimeValue(this.sessionLimitValue);
                     } else {
                         this.sessionLimitToggle = false;
                     }
@@ -256,7 +256,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
     private updateSettings() {
         const sw = this.systemAndSecuritySettings;
         // handle sessionLimitMinutes when saving an empty value
-        if (this.timeValue === null || this.timeValue === 0) {
+        if (this.sessionLimitValue === null || this.sessionLimitValue === 0) {
             this.sessionLimitToggle = false;
             sw.sessionLimitMinutes = 0;
         } else {
@@ -286,11 +286,11 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
     divideTimeValue(minutesValue: number): void {
         if (minutesValue % DAY_MINS === 0) {
             // Whole days
-            this.timeValue = minutesValue / DAY_MINS;
+            this.sessionLimitValue = minutesValue / DAY_MINS;
             this.selectedTimeUnit = this.limitSessionTimeUnits.days;
         } else if (minutesValue % HR_MINS === 0) {
             // Whole hours
-            this.timeValue = minutesValue / HR_MINS;
+            this.sessionLimitValue = minutesValue / HR_MINS;
             this.selectedTimeUnit = this.limitSessionTimeUnits.hours;
         }
     }
@@ -301,11 +301,11 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
 
         if (this.selectedTimeUnit.value !== timeUnit.value) {
             this.selectedTimeUnit = timeUnit;
-            this.updateLimitSessionValue(this.timeValue);
+            this.updateSessionLimitValue(this.sessionLimitValue);
         }
     }
 
-    updateLimitSessionValue(newTimeValue: number): void {
+    updateSessionLimitValue(newTimeValue: number): void {
         const sw = this.systemAndSecuritySettings;
         if (this.selectedTimeUnit.value === 'days') {
             sw.sessionLimitMinutes = newTimeValue * DAY_MINS;
@@ -314,22 +314,23 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         } else {
             sw.sessionLimitMinutes = newTimeValue;
         }
-        this.timeValue = newTimeValue;
+        this.sessionLimitValue = newTimeValue;
     }
 
     // handles showing default value on open and clearing to 0 on close
     handleSessionLimitToggle(): void {
         if (this.sessionLimitToggle) {
-            if (!this.timeValue) {
+            if (!this.sessionLimitValue) {
                 // prevent overwriting current value with default (in case of late init of the checkbox)
                 this.selectedTimeUnit = this.limitSessionTimeUnits.days;
-                this.timeValue = this.selectedTimeUnit.default;
+                this.sessionLimitValue = this.selectedTimeUnit.default;
                 this.systemAndSecuritySettings.sessionLimitMinutes =
                     this.selectedTimeUnit.default * DAY_MINS;
                 this.updateTimeUnitInput(this.selectedTimeUnit);
+            } else {
+                this.updateSessionLimitValue(this.sessionLimitValue);
             }
         } else {
-            this.timeValue = 0;
             this.systemAndSecuritySettings.sessionLimitMinutes = 0;
         }
     }

@@ -81,6 +81,14 @@ describe('NxGenericDropdown', () => {
         expect(items.length).toBe(2);
     });
 
+    it('should be disabled', async () => {
+        const { component, fixture, debugElement } = await setupDropdownComponent();
+        component.disabled = true;
+        fixture.detectChanges();
+        const items = debugElement.queryAll(By.css('[disabled]'));
+        expect(items.length).toBe(1);
+    });
+
     it('should NOT have ellipsis-mr class if NOT merge or ellipsisMargin', async () => {
         const { debugElement } = await setupDropdownComponent();
         const items = debugElement.queryAll(By.css('.ellipsis-mr'));

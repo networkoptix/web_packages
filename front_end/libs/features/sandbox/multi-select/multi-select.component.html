@@ -38,7 +38,7 @@
     class="mb-3 row m-0 p-3"
     style="border: 1px solid lightgray"
 >
-    <div class="col-3 p-5">
+    <div class="col-4 p-4">
         <h4>Mat like select</h4>
         <nx-mat-like-select
             name="ddSSingle"
@@ -49,8 +49,8 @@
         >
         </nx-mat-like-select>
     </div>
-    <div class="col-3 p-5">
-        <h4>Simple select</h4>
+    <div class="col-4 p-4">
+        <h4>Simple select: canSearch</h4>
         <nx-select
             name="ddSSingle"
             [items]="itemsDDSingle"
@@ -61,7 +61,19 @@
         >
         </nx-select>
     </div>
-    <div class="col-4 p-5">
+    <div class="col-4 p-4">
+        <h4>Simple select: disabled</h4>
+        <nx-select
+            name="ddSSingle"
+            [items]="itemsDDSingle"
+            [ngModel]="selectedDDItem"
+            (ngModelChange)="ddSingleModelChanged($event)"
+            [selected]="selectedDDItem ? selectedDDItem : null"
+            disabled
+        >
+        </nx-select>
+    </div>
+    <div class="col-4 p-4">
         <h4>Searchable select</h4>
         <nx-searchable-select
             name="ddSearchableSingle"
@@ -73,10 +85,55 @@
         >
         </nx-searchable-select>
     </div>
-    <div class="col-5 p-5">
+    <div class="col-4 p-4">
         <h4>Searchable selected</h4>
-        <hr />
         {{ selectedSearchableDDItem | json }}
+    </div>
+    <div class="col-4 p-4"><hr /></div>
+
+    <div class="col-4 p-4">
+        <h4>Configure Select:</h4>
+        <div
+            class="row"
+            *ngFor="let booleanProp of booleanConfigurationArray"
+        >
+            <nx-checkbox
+                name="{{ booleanProp }}-select"
+                componentId="{{ booleanProp }}-select"
+                [(ngModel)]="dropdownConfiguration[booleanProp]"
+                [labelText]="booleanProp"
+            >
+                {{ booleanProp }}
+            </nx-checkbox>
+        </div>
+    </div>
+    <div class="col-4 p-4">
+        <h4>Configurable Select:</h4>
+        <h3>Changing:</h3>
+        <nx-select
+            name="ddSearchableSingle"
+            [items]="itemsDDSingle"
+            [ngModel]="selectedDDItem"
+            (ngModelChange)="ddSingleModelChanged($event)"
+            [canSearch]="dropdownConfiguration.canSearch"
+            [disabled]="dropdownConfiguration.disabled"
+            [ellipsisMargin]="dropdownConfiguration.ellipsisMargin"
+            [hideSelectedItem]="dropdownConfiguration.hideSelectedItem"
+            [hrMargin]="dropdownConfiguration.hrMargin"
+            [merge]="dropdownConfiguration.merge"
+            [noMatchMsg]="dropdownConfiguration.noMatchMsg"
+            [stillLoading]="dropdownConfiguration.stillLoading"
+            [type]="dropdownConfiguration.type"
+        >
+        </nx-select>
+        <h3>Static, default:</h3>
+        <nx-select
+            name="ddSearchableSingle"
+            [items]="itemsDDSingle"
+            [ngModel]="selectedDDItem"
+            (ngModelChange)="ddSingleModelChanged($event)"
+        >
+        </nx-select>
     </div>
 </div>
 <div

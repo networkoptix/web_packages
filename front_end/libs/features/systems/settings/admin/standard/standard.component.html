@@ -393,10 +393,18 @@
                             [(ngModel)]="systemAndSecuritySettings.sessionLimitMinutes"
                         />
                     </div>
-                    <div
-                        *ngIf="sessionLimitToggle"
-                        class="row ml-4 my-2"
-                    >
+                    <div class="session-alert">
+                        <nx-alert-block
+                            *ngIf="!sessionLimitToggle"
+                            type="warning"
+                            [iconSrc]="icons.dirNonStandard + 'alert.svg'"
+                            [line1]="
+                                'Unlimited user session lifetime threatens overall system security'
+                                    | translate
+                            "
+                        ></nx-alert-block>
+                    </div>
+                    <div class="row ml-4 my-2">
                         <div
                             class="mr-2"
                             style="width: 70px"
@@ -405,14 +413,16 @@
                                 [class]="'pl-2'"
                                 [min]="1"
                                 [max]="currentMaxTimeUnit"
-                                [(ngModel)]="timeValue"
+                                [disabled]="!sessionLimitToggle"
+                                [(ngModel)]="sessionLimitValue"
                                 [ngModelOptions]="{ standalone: true }"
-                                (onChange)="updateLimitSessionValue($event)"
+                                (onChange)="updateSessionLimitValue($event)"
                             ></nx-numeric>
                         </div>
                         <nx-select
                             #selectorTracker
                             class="time-unit-select"
+                            [disabled]="!sessionLimitToggle"
                             [items]="limitSessionTimeItems"
                             [selected]="selectedTimeUnit"
                             (onSelected)="updateTimeUnitInput($event)"
@@ -420,20 +430,14 @@
                     </div>
                     <div class="session-alert">
                         <nx-alert-block
-                            *ngIf="systemAndSecuritySettings.sessionLimitMinutes > 30 * DAY_MINS"
-                            type="info"
-                            [iconSrc]="icons.dirNonStandard + 'info.svg'"
-                            [line1]="
-                                'The recommended maximum user session lifetime is 30 days.'
-                                    | translate
+                            *ngIf="
+                                sessionLimitToggle &&
+                                systemAndSecuritySettings.sessionLimitMinutes > 30 * DAY_MINS
                             "
-                        ></nx-alert-block>
-                        <nx-alert-block
-                            *ngIf="!sessionLimitToggle"
-                            type="error"
+                            type="warning"
                             [iconSrc]="icons.dirNonStandard + 'alert.svg'"
                             [line1]="
-                                'Unlimited user session lifetime threatens overall system security'
+                                'The recommended maximum user session lifetime is 30 days.'
                                     | translate
                             "
                         ></nx-alert-block>

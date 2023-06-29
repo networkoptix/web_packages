@@ -10,7 +10,10 @@ import { PipesModule } from '@app/pipes/pipes.module';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
+import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-select.component';
 import { NxSearchableDropdown } from '@components/dropdowns/searchable/searchable.component';
+import { NxMatLikeGenericDropdownModule } from '@components/mat-like-components/mat-like-generic-select/dropdown.module';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxSliderComponent } from '@components/slider/slider.component';
 import { NxBaseTableComponent } from '@components/table/table.component';
@@ -183,6 +186,9 @@ const appRoutes: Routes = [
         VmsClientTimelineModule,
         WebGLTimelineModule,
         NxThemeGeneratorComponent,
+        NxGenericDropdownModule,
+        NxMatLikeGenericDropdownModule,
+        NxMultiSelectDropdown,
     ],
     providers: [],
     declarations: [
