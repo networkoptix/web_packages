@@ -551,7 +551,7 @@ class AssetAdmin(CMSAdmin):
             if 'SendReview' in request.POST and context['preview_link']:
                 custom_preview = request.POST.get('customPreview', '') or generate_preview_link(target_context, asset, 'pending')
                 if custom_preview:
-                    custom_preview = "?customPreview=" + custom_preview.replace('draft', 'pending')
+                    custom_preview = "?customPreview=" + quote(custom_preview.replace('draft', 'pending'))
                 return redirect(f'{context["preview_link"].url}{custom_preview or ""}')
 
         context['title'] = f"Edit {target_context.get_nice_name()}"
