@@ -45,8 +45,11 @@ export class NxInfoBlockComponent implements OnInit {
         return this.heightCache[`${columnIndex}-${blockIndex}-${lineIndex}`];
     }
 
-    check(columnIndex, blockIndex, section): void {
-        setTimeout(() => this.getRowsHeight(columnIndex, blockIndex, section));
+    check(columnIndex, blockIndex, section): Promise<void> {
+        return new Promise(resolve => {
+            this.getRowsHeight(columnIndex, blockIndex, section);
+            setTimeout(resolve);
+        });
     }
 
     private getRowsHeight(columnIndex, blockIndex, section): void {

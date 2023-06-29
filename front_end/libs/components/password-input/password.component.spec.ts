@@ -1,78 +1,37 @@
-import { CommonModule } from '@angular/common';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import {
-    ComponentFixture,
-    fakeAsync,
-    TestBed,
-    waitForAsync
-} from '@angular/core/testing';
-import { FormsModule, NgModel } from '@angular/forms';
-import { AngularSvgIconModule } from 'angular-svg-icon';
-import { MockProvider } from 'ng-mocks';
+import { NgModel } from '@angular/forms';
+import { ngMocks } from 'ng-mocks';
 
+import { nxConfig } from '@app/services/nx-config/config';
 import { NxPasswordComponent } from '@components/password-input/password.component';
-import {
-    NxPasswordTagValidationComponent
-} from '@components/password-input-tag-validation/password-tag-validation.component';
-import { NxCloudApiService } from '@services/nx-cloud-api';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { credentialsValidation } from '@lib/variables/static-variables';
 
-function keyEvent(el: HTMLInputElement, key: string, eventType: string): void {
-    const event: KeyboardEvent = new KeyboardEvent(eventType, {
-        key
-    });
-    el.dispatchEvent(event);
-}
+import { setupComponent } from '../src/setup';
+
+const setupPasswordComponent = (): ReturnType<typeof setupComponent<NxPasswordComponent>> => {
+    nxConfig.commonPasswordsList = { 12345678: 1, test1234: 1 };
+    NxPasswordComponent.prototype.component = { valid: true } as NgModel;
+    return setupComponent(NxPasswordComponent);
+};
 
 describe('NxPasswordComponent', () => {
-    let component: NxPasswordComponent;
-    let fixture: ComponentFixture<NxPasswordComponent>;
-    let el: HTMLInputElement;
-
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            imports: [
-                CommonModule,
-                FormsModule,
-                AngularSvgIconModule.forRoot(),
-                HttpClientTestingModule
-            ],
-            declarations: [
-                NxPasswordComponent,
-                NxPasswordTagValidationComponent
-            ],
-            providers: [
-                MockProvider(NxLanguageProviderService),
-                MockProvider(NxConfigService),
-                MockProvider(NxCloudApiService)
-            ]
-        })
-            .compileComponents()
-            .then(() => {
-                fixture = TestBed.createComponent(NxPasswordComponent);
-                component = fixture.componentInstance;
-                component.component = { valid: true } as NgModel;
-                el = fixture.debugElement.nativeElement.querySelector('input');
-
-                fixture.detectChanges();
-            });
-    }));
-
-    it('should create component and initialize commonPasswordsList', fakeAsync(() => {
+    it('should create component and initialize commonPasswordsList', async () => {
+        const { component } = await setupPasswordComponent();
         expect(component.CONFIG.commonPasswordsList).toEqual({ 12345678: 1, test1234: 1 });
         expect(component).toBeTruthy();
-    }));
+    });
 
-    it('should have default properties', () => {
-        expect(el.autocomplete).toBe('new-password');
-        expect(el.className).toContain('form-control');
-        expect(el.pattern).toBe(
-            component.CONFIG.credentialsValidation.passwordRequirements.requiredRegex
+    it('should have default properties', async () => {
+        const { debugElement } = await setupPasswordComponent();
+        const input = debugElement.nativeElement.querySelector('input');
+        expect(input.autocomplete).toBe('new-password');
+        expect(input.className).toContain('form-control');
+        expect(input.pattern).toBe(
+            credentialsValidation.passwordRequirements.requiredRegex
         );
     });
 
-    it('should be in "password" mode', () => {
+    it('should be in "password" mode', async () => {
+        const { debugElement, component, fixture } = await setupPasswordComponent();
         component.passwordToggle = true;
         fixture.detectChanges();
 
@@ -80,10 +39,11 @@ describe('NxPasswordComponent', () => {
             'span.input-group-addon svg-icon'
         );
         expect(toggle.length).toBe(1);
-        expect(el.type).toBe('password');
+        expect(debugElement.nativeElement.querySelector('input').type).toBe('password');
     });
 
-    it('should be in "text" mode', () => {
+    it('should be in "text" mode', async () => {
+        const { debugElement, component, fixture } = await setupPasswordComponent();
         component.passwordToggle = false;
         fixture.detectChanges(); // apply changes
 
@@ -91,23 +51,27 @@ describe('NxPasswordComponent', () => {
             'span.input-group-addon svg-icon'
         );
         expect(toggle.length).toBe(1);
-        expect(el.type).toBe('text');
+        expect(debugElement.nativeElement.querySelector('input').type).toBe('text');
     });
 
-    it('should call setValue on keyup', () => {
-        const spy = spyOn(component, 'setValue');
+    it('should call setValue on keyup', async () => {
+        const { debugElement, component, fixture } = await setupPasswordComponent();
+        const spy = jest.spyOn(component, 'setValue');
 
-        keyEvent(el, '1', 'keyup');
+        ngMocks.trigger(debugElement.nativeElement.querySelector('input'), 'keyup.1');
         fixture.detectChanges();
-        expect(spy.calls.count()).toBe(1, 'setValue method should be called once');
+        await fixture.whenStable();
+        expect(spy).toBeCalledTimes(1);
     });
 
-    it('should check for common password (Fn test)', () => {
+    it('should check for common password (Fn test)', async () => {
+        const { component } = await setupPasswordComponent();
         expect(component['checkCommon']('test1234')).toBe(1);
         expect(component['checkCommon']('TEST1234')).toBe(1);
     });
 
-    it('should check for password complexity (Fn test)', () => {
+    it('should check for password complexity (Fn test)', async () => {
+        const { component } = await setupPasswordComponent();
         expect(component['checkComplexity']('test')).toBe(1);
         expect(component['checkComplexity']('test1234')).toBe(2);
         expect(component['checkComplexity']('Test1234')).toBe(3);

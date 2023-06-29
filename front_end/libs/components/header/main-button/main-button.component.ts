@@ -11,12 +11,7 @@ import { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NgChanges } from '@utils/ng-changes';
 
-enum mainButtonState {
-    ALL = 'all',
-    NODE = 'node',
-    SYSTEM = 'system',
-    SYSTEMS = 'systems',
-}
+import { mainButtonState } from './main-button.types';
 
 @UntilDestroy()
 @Component({

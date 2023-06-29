@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
+import { nxConfig } from '@app/services/nx-config/config';
 import { DirectivesModule } from '@directives/directives.module';
 import { environment } from '@environments/environment';
 import { PipesModule } from '@pipes/pipes.module';
@@ -12,7 +13,6 @@ import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 @UntilDestroy()
 @Component({
@@ -30,7 +30,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
     ],
 })
 export class NxFooterComponent implements OnInit {
-    CONFIG: IConfig;
+    CONFIG: IConfig = nxConfig;
     companyLink: string;
     companyName: string;
     copyrightYear: string;
@@ -44,13 +44,10 @@ export class NxFooterComponent implements OnInit {
     classes: string[] = [];
 
     constructor(
-        configService: NxConfigService,
         private appState: NxAppStateService,
-        private menusService: NxMenusService,
+        public menusService: NxMenusService,
         translateService: TranslateService,
     ) {
-        this.CONFIG = configService.getConfig();
-
         translateService.onTranslationChange.pipe(untilDestroyed(this)).subscribe(() => {
             setTimeout(() => {
                 this.getMenu();

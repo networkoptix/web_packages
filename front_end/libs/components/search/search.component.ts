@@ -116,7 +116,7 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
 
     constructor(
         private translateSerice: TranslateService,
-        private _route: ActivatedRoute,
+        public route: ActivatedRoute,
         private uri: NxUriService,
         private searchService: NxSearchService,
         private scrollMechanicsService: NxScrollMechanicsService,
@@ -136,7 +136,7 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
 
         // Example URI
         // /ipvd?search=Axis&tags=isAptzSupported&resolution=SVGA&vendors=Axis,30X,Sony
-        this._route.queryParams.subscribe(params => {
+        this.route.queryParams.subscribe(params => {
             this.params = params;
             this.updateFilter();
         });
@@ -233,7 +233,7 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
             this.localFilter = cloneDeep(value);
 
             // Update model with query params
-            this.params = this._route.snapshot.queryParams;
+            this.params = this.route.snapshot.queryParams;
             this.updateFilter();
         }
     }

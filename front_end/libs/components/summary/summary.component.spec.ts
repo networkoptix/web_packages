@@ -1,3 +1,22 @@
+import { setupComponent } from '../src/setup';
+
+import { NxLicenseSummaryComponent } from './summary.component';
+
+const setupRadioComponent = (): ReturnType<typeof setupComponent<NxLicenseSummaryComponent>> => {
+    jest.spyOn(NxLicenseSummaryComponent.prototype, 'getLicenses').mockReturnValue();
+    return setupComponent(NxLicenseSummaryComponent);
+};
+
+/**
+ * TODO: These tests need to be rewritten.
+ */
+describe('Licenses (Summary)', () => {
+    it('should create', async () => {
+        const { component } = await setupRadioComponent();
+        expect(component).toBeTruthy();
+    });
+});
+
 /*
 TODO: npm run fix: useRest is giving us issues in summary.component.ts
 

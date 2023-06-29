@@ -1,38 +1,22 @@
 import { SimpleChange } from '@angular/core';
-import {
-    ComponentFixture,
-    TestBed,
-    waitForAsync
-} from '@angular/core/testing';
+
+import { setupComponent } from '../src/setup';
 
 import { NxCheckboxComponent } from './checkbox.component';
 
 describe('NxCheckboxComponent', () => {
-    let component: NxCheckboxComponent;
-    let fixture: ComponentFixture<NxCheckboxComponent>;
-
-    beforeEach(waitForAsync(() => {
-        TestBed
-            .configureTestingModule({
-                declarations: [NxCheckboxComponent],
-                providers: []
-            })
-            .compileComponents();
-
-        fixture = TestBed.createComponent(NxCheckboxComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    }));
-
-    it('should create NxCheckboxComponent', () => {
+    it('should create NxCheckboxComponent', async () => {
+        const { component } = await setupComponent(NxCheckboxComponent);
         expect(component).toBeTruthy();
     });
 
-    it('should handle @Input(labelText)', () => {
+    it('should handle @Input(labelText)', async () => {
+        const { component } = await setupComponent(NxCheckboxComponent);
         expect(component.labelText).toBeUndefined();
     });
 
-    it('should have defined states', () => {
+    it('should have defined states', async () => {
+        const { component } = await setupComponent(NxCheckboxComponent);
         expect(component['cbxStates']).toEqual({
             false: 'unchecked',
             true: 'checked',
@@ -41,25 +25,28 @@ describe('NxCheckboxComponent', () => {
     });
 
     describe('should set state on @Input(change) change', () => {
-        it('to false', () => {
+        it('to false', async () => {
+            const { component } = await setupComponent(NxCheckboxComponent);
             component.ngOnChanges({
                 checked: new SimpleChange(undefined, false, true)
             });
-            fixture.detectChanges();
+
             component.value = false;
             expect(component.state).toBe(component['cbxStates'].false);
         });
 
-        it('to true', () => {
+        it('to true', async () => {
+            const { component } = await setupComponent(NxCheckboxComponent);
             component.ngOnChanges({
                 checked: new SimpleChange(undefined, true, false)
             });
-            fixture.detectChanges();
-            expect(component.value).toBeTrue();
+
+            expect(component.value).toBeTruthy();
             expect(component.state).toBe(component['cbxStates'].true);
         });
 
-        it('on toggle', () => {
+        it('on toggle', async () => {
+            const { component } = await setupComponent(NxCheckboxComponent);
             let emitValue: boolean;
 
             component.value = true;
@@ -68,9 +55,8 @@ describe('NxCheckboxComponent', () => {
             });
 
             component.changeState(null);
-            fixture.detectChanges();
-            expect(emitValue).toBeFalse();
-            expect(component.value).toBeFalse();
+            expect(emitValue).toBeFalsy();
+            expect(component.value).toBeFalsy();
             expect(component.state).toBe(component['cbxStates'].false);
         });
     });

@@ -25,7 +25,7 @@ import { windowFactory } from './window-provider';
 })
 export class NxMenusService {
     private menusStructure: MenusStructure;
-    private CONFIG: IConfig = nxConfig;
+    public CONFIG: IConfig = nxConfig;
     private window: Window = windowFactory();
     private LANG = staticLang;
     private languageChanged$ = new BehaviorSubject('');

@@ -14,6 +14,6 @@
         [queryParamsHandling]="node.queryParamsHandling"
         class="pl-3 pr-3 d-block w-100 h-100"
         (click)="headerService.handleNav(node, $event); $event.preventDefault()"
-        [innerText]="node.display_name"
+        [textContent]="node.display_name"
     ></a>
 </li>

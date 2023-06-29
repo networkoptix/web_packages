@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { nxConfig } from '@app/services/nx-config/config';
+
 @Component({
     selector: 'nx-external-video',
     templateUrl: 'external-video.component.html',
@@ -12,19 +12,16 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
     imports: [CommonModule],
 })
 export class NxExternalVideoComponent implements OnInit {
-    @Input('src') videoSrc: string;
-    CONFIG: IConfig;
+    @Input('src') videoSrc: string = '';
     src;
 
-    constructor(configService: NxConfigService, private sanitizer: DomSanitizer) {
-        this.CONFIG = configService.getConfig();
-    }
+    constructor(private sanitizer: DomSanitizer) {}
 
     private FormatSrc(link) {
-        for (const videoType in this.CONFIG.integration.embedInfo) {
-            const videoRegex = link.match(this.CONFIG.integration.embedInfo[videoType].regex);
+        for (const videoType in nxConfig.integration.embedInfo) {
+            const videoRegex = link.match(nxConfig.integration.embedInfo[videoType].regex);
             if (videoRegex?.[1]) {
-                return `${this.CONFIG.integration.embedInfo[videoType].link}${videoRegex[1]}`;
+                return `${nxConfig.integration.embedInfo[videoType].link}${videoRegex[1]}`;
             }
         }
         return undefined;

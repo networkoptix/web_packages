@@ -1,59 +1,41 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { DebugElement } from '@angular/core';
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { AngularSvgIconModule } from 'angular-svg-icon';
-import { MockProvider } from 'ng-mocks';
-
-import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { setupComponent } from '@app/components/src/setup';
 
 import { NxPlayerPlaceholderComponent } from './player-placeholder.component';
 
+const setupPlayerPlaceholderComponent = async (): ReturnType<typeof setupComponent<NxPlayerPlaceholderComponent>> => {
+    NxPlayerPlaceholderComponent.prototype.description = '';
+    const setup = await setupComponent(NxPlayerPlaceholderComponent);
+    setup.component.heading = 'ERROR';
+    setup.component.description = 'Some error';
+    setup.component.svgFileName = 'placeholder_camera_offline';
+    setup.fixture.detectChanges();
+    return setup;
+};
+
 describe('NxPlayerPlaceholderComponent', () => {
-    let component: NxPlayerPlaceholderComponent;
-    let fixture: ComponentFixture<NxPlayerPlaceholderComponent>;
-    let el: DebugElement;
-
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            imports: [AngularSvgIconModule.forRoot(), HttpClientTestingModule],
-            declarations: [NxPlayerPlaceholderComponent],
-            providers: [
-                MockProvider(NxLanguageProviderService),
-                MockProvider(NxConfigService)
-            ]
-        }).compileComponents();
-
-        fixture = TestBed.createComponent(NxPlayerPlaceholderComponent);
-        component = fixture.componentInstance;
-        el = fixture.debugElement;
-
-        component.heading = 'ERROR';
-        component.description = 'Some error';
-        component.svgFileName = 'placeholder_camera_offline';
-    }));
-
-    it('should create the component', () => {
+    it('should create the component', async () => {
+        const { component } = await setupPlayerPlaceholderComponent();
         expect(component).toBeTruthy();
     });
 
-    it('should init element', () => {
-        fixture.detectChanges();
-        const heading = el.nativeElement.querySelector('.heading');
-        const description = el.nativeElement.querySelector('.description');
-        expect(heading.innerText).toBe('ERROR');
-        expect(description.innerText).toBe('Some error');
+    it('should init element', async () => {
+        const { debugElement } = await setupPlayerPlaceholderComponent();
+        const heading = debugElement.nativeElement.querySelector('.heading');
+        const description = debugElement.nativeElement.querySelector('.description');
+        expect(heading.textContent.trim()).toBe('ERROR');
+        expect(description.textContent.trim()).toBe('Some error');
     });
 
-    it('should set height', () => {
+    it('should set height', async () => {
+        const { component, fixture } = await setupPlayerPlaceholderComponent();
         const height = '64';
         component.height = height;
         fixture.detectChanges();
         expect(component.height).toBe(height);
     });
 
-    it('should set height default', () => {
-        fixture.detectChanges();
+    it('should set height default', async () => {
+        const { component } = await setupPlayerPlaceholderComponent();
         expect(component.height).toBe('96');
     });
 });

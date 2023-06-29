@@ -1,152 +1,128 @@
-import { DebugElement } from '@angular/core';
-import {
-    ComponentFixture,
-    inject,
-    TestBed,
-    waitForAsync
-} from '@angular/core/testing';
-import { MockProvider } from 'ng-mocks';
+import { NgModel } from '@angular/forms';
+import { cloneDeep } from 'lodash-es';
 
-import { NxTagComponent } from '@components/tag/tag.component';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
+import staticLang from '@common/language/language_i18n_static.json';
+
+import { setupComponent } from '../src/setup';
 
 import { NxPasswordValidationComponent } from './password-validation.component';
 
+const updateModel = (component: NxPasswordValidationComponent, model: unknown, fixture?: Awaited<ReturnType<typeof setupComponent<NxPasswordValidationComponent>>>['fixture']): void => {
+    component.forElement = model as NgModel;
+    if (fixture) {
+        fixture.detectChanges();
+        fixture.whenStable();
+    }
+};
+
+const modelBase = {
+    valid: true,
+    touched: true,
+    errors: {
+        minlength: false,
+        common: false,
+        weak: false,
+        pattern: false,
+        required: false
+    }
+};
+
+const setupPasswordValidationComponent = async (): Promise<Awaited<ReturnType<typeof setupComponent<NxPasswordValidationComponent>>> & { model: typeof modelBase }> => {
+    updateModel(NxPasswordValidationComponent.prototype, { errors: {} });
+    return {
+        ...(await setupComponent(NxPasswordValidationComponent)),
+        model: cloneDeep(modelBase)
+    };
+};
+
 describe('NxPasswordValidationComponent', () => {
-    let component: NxPasswordValidationComponent;
-    let fixture: ComponentFixture<NxPasswordValidationComponent>;
-    let el: DebugElement;
-
-    // Mock NgModel, but NgModel properties are read-only so we're leaving
-    // forElement as any to avoid TS errors when configuring for tests
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let forElement: any;
-
-    beforeEach(waitForAsync(() => {
-        TestBed
-            .configureTestingModule({
-                declarations: [NxPasswordValidationComponent, NxTagComponent],
-                providers: [
-                    // default mocks are in test.ts
-                    MockProvider(NxLanguageProviderService),
-                    MockProvider(NxConfigService)
-                ]
-            })
-            .compileComponents()
-            .then(() => {
-                fixture = TestBed.createComponent(NxPasswordValidationComponent);
-                component = fixture.componentInstance;
-                el = fixture.debugElement;
-
-                forElement = {
-                    valid: true,
-                    touched: true,
-                    errors: {
-                        minlength: false,
-                        common: false,
-                        weak: false,
-                        pattern: false,
-                        required: false
-                    }
-                };
-
-                // Placeholder to make the template work until assigning
-                // the configuration we want to test
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                component.forElement = { errors: {} } as any;
-
-                fixture.detectChanges();
-            })
-            .catch(err => console.error(err));
-    }));
-
-    it('should create component', () => {
+    it('should create component', async () => {
+        const { component } = await setupPasswordValidationComponent();
         expect(component).toBeTruthy();
     });
 
-    it('should not display if valid', () => {
-        const error = el.nativeElement.querySelectorAll('div[name=error-labels]');
+    it('should not display if valid', async () => {
+        const { debugElement } = await setupPasswordValidationComponent();
+        const error = debugElement.nativeElement.querySelectorAll('div[name=error-labels]');
         expect(error.length).toBe(0);
     });
 
-    it('should not display if not touched', () => {
-        forElement.valid = false;
-        forElement.touched = false;
-        component.forElement = forElement;
-        fixture.detectChanges();
+    it('should not display if not touched', async () => {
+        const { component, fixture, debugElement, model } = await setupPasswordValidationComponent();
+        model.valid = false;
+        model.touched = false;
+        updateModel(component, model, fixture);
 
-        const error = el.nativeElement.querySelectorAll('div[name=error-labels]');
+        const error = debugElement.nativeElement.querySelectorAll('div[name=error-labels]');
         expect(error.length).toBe(0);
     });
 
-    it('should be "WEAK"',
-        inject([NxLanguageProviderService], (service: NxLanguageProviderService) => {
-            forElement.valid = false;
-            forElement.errors.weak = true;
-            component.forElement = forElement;
-            fixture.detectChanges();
+    it('should be "WEAK"', async () => {
+        const { component, fixture, debugElement, model } = await setupPasswordValidationComponent();
+        model.valid = false;
+        model.errors.weak = true;
+        updateModel(component, model, fixture);
 
-            const error = el.nativeElement.querySelectorAll('div[name=error-labels] > div');
-            expect(error.length).toBe(1);
-            expect(error[0].className).toContain('input-error');
-            expect(error[0].innerText).toBe(service.translations.passwordRequirements.weakMessage());
-        })
+        const error = debugElement.nativeElement.querySelectorAll('div[name=error-labels] > div');
+        expect(error.length).toBe(1);
+        expect(error[0].className).toContain('input-error');
+        expect(error[0].textContent.trim()).toBe(staticLang.passwordRequirements.weakMessage);
+    }
     );
 
     it('should be "COMMON"',
-        inject([NxLanguageProviderService], (service: NxLanguageProviderService) => {
-            forElement.valid = false;
-            forElement.errors.common = true;
-            component.forElement = forElement;
-            fixture.detectChanges();
+        async () => {
+            const { component, fixture, debugElement, model } = await setupPasswordValidationComponent();
+            model.valid = false;
+            model.errors.common = true;
+            updateModel(component, model, fixture);
 
-            const error = el.nativeElement.querySelectorAll('div[name=error-labels] > div');
+            const error = debugElement.nativeElement.querySelectorAll('div[name=error-labels] > div');
             expect(error.length).toBe(1);
             expect(error[0].className).toContain('input-error');
-            expect(error[0].innerText).toBe(service.translations.passwordRequirements.commonMessage());
-        })
+            expect(error[0].textContent.trim()).toBe(staticLang.passwordRequirements.commonMessage);
+        }
     );
 
     it('should be "MIN_LENGTH"',
-        inject([NxLanguageProviderService], (service: NxLanguageProviderService) => {
-            forElement.valid = false;
-            forElement.errors.minlength = true;
-            component.forElement = forElement;
-            fixture.detectChanges();
+        async () => {
+            const { component, fixture, debugElement, model } = await setupPasswordValidationComponent();
+            model.valid = false;
+            model.errors.minlength = true;
+            updateModel(component, model, fixture);
 
-            const error = el.nativeElement.querySelectorAll('div[name=error-labels] > div');
+            const error = debugElement.nativeElement.querySelectorAll('div[name=error-labels] > div');
             expect(error.length).toBe(1);
             expect(error[0].className).toContain('input-error');
-            expect(error[0].innerText).toBe(service.translations.passwordRequirements.minLengthMessage());
-        })
+            expect(error[0].textContent.trim()).toBe(staticLang.passwordRequirements.minLengthMessage);
+        }
     );
 
     it('should be "PATTERN"',
-        inject([NxLanguageProviderService], (service: NxLanguageProviderService) => {
-            forElement.valid = false;
-            forElement.errors.pattern = true;
-            component.forElement = forElement;
-            fixture.detectChanges();
+        async () => {
+            const { component, fixture, debugElement, model } = await setupPasswordValidationComponent();
+            model.valid = false;
+            model.errors.pattern = true;
+            updateModel(component, model, fixture);
 
-            const error = el.nativeElement.querySelectorAll('div[name=error-labels] > div');
+            const error = debugElement.nativeElement.querySelectorAll('div[name=error-labels] > div');
             expect(error.length).toBe(1);
             expect(error[0].className).toContain('input-error');
-            expect(error[0].innerText).toBe(service.translations.passwordRequirements.requiredMessage());
-        })
+            expect(error[0].textContent.trim()).toBe(staticLang.passwordRequirements.requiredMessage);
+        }
     );
 
     it('should be "REQUIRED"',
-        inject([NxLanguageProviderService], (service: NxLanguageProviderService) => {
-            forElement.valid = false;
-            forElement.errors.required = true;
-            component.forElement = forElement;
-            fixture.detectChanges();
+        async () => {
+            const { component, fixture, debugElement, model } = await setupPasswordValidationComponent();
+            model.valid = false;
+            model.errors.required = true;
+            updateModel(component, model, fixture);
 
-            const error = el.nativeElement.querySelectorAll('div[name=error-labels] > div');
+            const error = debugElement.nativeElement.querySelectorAll('div[name=error-labels] > div');
             expect(error.length).toBe(1);
             expect(error[0].className).toContain('input-error');
-            expect(error[0].innerText).toBe(service.translations.passwordRequirements.missingMessage());
-        })
+            expect(error[0].textContent.trim()).toBe(staticLang.passwordRequirements.missingMessage);
+        }
     );
 });

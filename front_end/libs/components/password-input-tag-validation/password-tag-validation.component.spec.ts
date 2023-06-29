@@ -1,125 +1,94 @@
-import { DebugElement } from '@angular/core';
-import {
-    ComponentFixture,
-    TestBed,
-    waitForAsync
-} from '@angular/core/testing';
-import { MockProvider, MockDirective } from 'ng-mocks';
-
-import { NxTagComponent } from '@components/tag/tag.component';
-import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { setupComponent } from '../src/setup';
 
 import { NxPasswordTagValidationComponent } from './password-tag-validation.component';
 
+const setupPasswordTagValidationComponent = (): ReturnType<typeof setupComponent<NxPasswordTagValidationComponent>> => {
+    NxPasswordTagValidationComponent.prototype.forElement = {
+        valid: true,
+        touched: true,
+        dirty: true,
+        control: {
+            fairPassword: false
+        },
+        errors: {
+            minlength: false,
+            common: false,
+            weak: false,
+            pattern: false
+        }
+    };
+    return setupComponent(NxPasswordTagValidationComponent);
+};
+
 describe('NxPasswordTagValidationComponent', () => {
-    let component: NxPasswordTagValidationComponent;
-    let fixture: ComponentFixture<NxPasswordTagValidationComponent>;
-    let el: DebugElement;
-
-    beforeEach(waitForAsync(() => {
-        TestBed
-            .configureTestingModule({
-                imports: [],
-                declarations: [
-                    NxPasswordTagValidationComponent,
-                    NxTagComponent,
-                    MockDirective(NxTooltipDirective),
-                ],
-                providers: [
-                    MockProvider(NxLanguageProviderService),
-                    MockProvider(NxConfigService)
-                ]
-            })
-            .compileComponents()
-            .then(() => {
-                fixture = TestBed.createComponent(NxPasswordTagValidationComponent);
-                component = fixture.componentInstance;
-                el = fixture.debugElement;
-
-                // component.value = 'test1234';
-                component.forElement = {
-                    valid: true,
-                    touched: true,
-                    dirty: true,
-                    control: {
-                        fairPassword: false
-                    },
-                    errors: {
-                        minlength: false,
-                        common: false,
-                        weak: false,
-                        pattern: false
-                    }
-                };
-
-                fixture.detectChanges();
-            })
-            .catch(err => console.error(err));
-    }));
-
-    it('should create component', () => {
+    it('should create component', async () => {
+        const { component } = await setupPasswordTagValidationComponent();
         expect(component).toBeTruthy();
     });
 
-    it('should be "GOOD"', () => {
-        const tag = el.nativeElement.querySelectorAll('span#successMessages nx-tag a');
+    it('should be "GOOD"', async () => {
+        const { debugElement } = await setupPasswordTagValidationComponent();
+        const tag = debugElement.nativeElement.querySelectorAll('span#successMessages nx-tag a');
         expect(tag.length).toBe(1);
         expect(tag[0].className).toContain('badge small badge-success-bright static');
-        expect(tag[0].innerText).toBe('GOOD');
+        expect(tag[0].textContent).toBe('GOOD');
     });
 
-    it('should be "FAIR"', () => {
+    it('should be "FAIR"', async () => {
+        const { component, fixture, debugElement } = await setupPasswordTagValidationComponent();
         component.forElement.control.fairPassword = true;
         fixture.detectChanges();
 
-        const tag = el.nativeElement.querySelectorAll('span#successMessages nx-tag a');
+        const tag = debugElement.nativeElement.querySelectorAll('span#successMessages nx-tag a');
         expect(tag.length).toBe(1);
         expect(tag[0].className).toContain('badge small badge-warning-bright static');
-        expect(tag[0].innerText).toBe('FAIR');
+        expect(tag[0].textContent).toBe('FAIR');
     });
 
-    it('should be "TOO SHORT"', () => {
+    it('should be "TOO SHORT"', async () => {
+        const { component, fixture, debugElement } = await setupPasswordTagValidationComponent();
         component.forElement.valid = false;
         component.forElement.dirty = true;
         component.forElement.errors.minlength = true;
 
         fixture.detectChanges();
 
-        const tag = el.nativeElement.querySelectorAll('span#failMessages nx-tag a');
+        const tag = debugElement.nativeElement.querySelectorAll('span#failMessages nx-tag a');
         expect(tag.length).toBe(1);
         expect(tag[0].className).toContain('badge small badge-danger-bright static');
-        expect(tag[0].innerText).toBe('TOO SHORT');
+        expect(tag[0].textContent).toBe('TOO SHORT');
     });
 
-    it('should be "TOO COMMON"', () => {
+    it('should be "TOO COMMON"', async () => {
+        const { component, fixture, debugElement } = await setupPasswordTagValidationComponent();
         component.forElement.valid = false;
         component.forElement.dirty = true;
         component.forElement.errors.common = true;
 
         fixture.detectChanges();
 
-        const tag = el.nativeElement.querySelectorAll('span#failMessages nx-tag a');
+        const tag = debugElement.nativeElement.querySelectorAll('span#failMessages nx-tag a');
         expect(tag.length).toBe(1);
         expect(tag[0].className).toContain('badge small badge-danger-bright static');
-        expect(tag[0].innerText).toBe('TOO COMMON');
+        expect(tag[0].textContent).toBe('TOO COMMON');
     });
 
-    it('should be "WEAK"', () => {
+    it('should be "WEAK"', async () => {
+        const { component, fixture, debugElement } = await setupPasswordTagValidationComponent();
         component.forElement.valid = false;
         component.forElement.dirty = true;
         component.forElement.errors.weak = true;
 
         fixture.detectChanges();
 
-        const tag = el.nativeElement.querySelectorAll('span#failMessages nx-tag a');
+        const tag = debugElement.nativeElement.querySelectorAll('span#failMessages nx-tag a');
         expect(tag.length).toBe(1);
         expect(tag[0].className).toContain('badge small badge-danger-bright static');
-        expect(tag[0].innerText).toBe('WEAK');
+        expect(tag[0].textContent).toBe('WEAK');
     });
 
-    it('should be "INCORRECT"', () => {
+    it('should be "INCORRECT"', async () => {
+        const { component, fixture, debugElement } = await setupPasswordTagValidationComponent();
         component.forElement.valid = false;
         component.forElement.dirty = true;
         component.forElement.errors.pattern = true;
@@ -127,9 +96,9 @@ describe('NxPasswordTagValidationComponent', () => {
 
         fixture.detectChanges();
 
-        const tag = el.nativeElement.querySelectorAll('span#failMessages nx-tag a');
+        const tag = debugElement.nativeElement.querySelectorAll('span#failMessages nx-tag a');
         expect(tag.length).toBe(1);
         expect(tag[0].className).toContain('badge small badge-danger-bright static');
-        expect(tag[0].innerText).toBe('INCORRECT');
+        expect(tag[0].textContent).toBe('INCORRECT');
     });
 });

@@ -1,20 +1,13 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
-import {
-    ComponentFixture,
-    TestBed,
-    waitForAsync
-} from '@angular/core/testing';
-import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { setupComponent } from '@app/components/src/setup';
 import {
     NxAlertBlockComponent
 } from '@components/content-block/alert/block.component';
-import {
-    NxContentBlockSectionComponent
-} from '@components/content-block/section/section.component';
 
 @Component({
+    standalone: true,
+    imports: [NxAlertBlockComponent],
     template: `
         <nx-alert-block
             class="d-block mt-3"
@@ -30,38 +23,17 @@ import {
 class TestHostComponent {
 }
 
+const setupAlertBlockComponent = (): ReturnType<typeof setupComponent<TestHostComponent>> => setupComponent(TestHostComponent);
+
 describe('NxAlertBlockComponent (error)', () => {
-    let wrapperComponent: TestHostComponent;
-    let fixture: ComponentFixture<TestHostComponent>;
-    let el: HTMLDivElement;
-
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            imports: [
-                AngularSvgIconModule.forRoot(),
-                HttpClientTestingModule
-            ],
-            declarations: [
-                NxAlertBlockComponent,
-                TestHostComponent,
-                NxContentBlockSectionComponent
-            ]
-        })
-            .compileComponents();
-
-        fixture = TestBed.createComponent(TestHostComponent);
-        wrapperComponent = fixture.componentInstance;
-        el = fixture.debugElement.nativeElement;
-
-        fixture.detectChanges();
-    }));
-
-    it('should create', () => {
-        expect(wrapperComponent).toBeDefined();
+    it('should create', async () => {
+        const { component } = await setupAlertBlockComponent();
+        expect(component).toBeTruthy();
     });
 
-    it('should have card wrapper', () => {
-        const card = el.querySelector<HTMLDivElement>('.card');
+    it('should have card wrapper', async () => {
+        const { debugElement } = await setupAlertBlockComponent();
+        const card = debugElement.nativeElement.querySelector('.card');
         expect(card.className).toContain('simple-error');
     });
 

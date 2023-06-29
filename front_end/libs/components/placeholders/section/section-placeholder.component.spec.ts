@@ -1,78 +1,54 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-// import { DebugElement } from '@angular/core';
-import {
-    waitForAsync,
-    ComponentFixture,
-    TestBed,
-    tick,
-    fakeAsync
-} from '@angular/core/testing';
-import { AngularSvgIconModule } from 'angular-svg-icon';
-import { MockProvider } from 'ng-mocks';
-
-import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { setupComponent } from '@app/components/src/setup';
 
 import { NxSectionPlaceholderComponent } from './section-placeholder.component';
 
+const setupSectionPlaceholderComponent = async (): ReturnType<typeof setupComponent<NxSectionPlaceholderComponent>> => {
+    const setup = await setupComponent(NxSectionPlaceholderComponent);
+    setup.component.translatedMessage = 'Placeholder Title';
+    setup.fixture.detectChanges();
+    return setup;
+};
+
 describe('NxSectionPlaceholderComponent', () => {
-    let component: NxSectionPlaceholderComponent;
-    let fixture: ComponentFixture<NxSectionPlaceholderComponent>;
-    // let el: DebugElement;
-
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            imports: [AngularSvgIconModule.forRoot(), HttpClientTestingModule],
-            declarations: [NxSectionPlaceholderComponent],
-            providers: [
-                MockProvider(NxLanguageProviderService),
-                MockProvider(NxConfigService)
-            ]
-        }).compileComponents();
-
-        fixture = TestBed.createComponent(NxSectionPlaceholderComponent);
-        component = fixture.componentInstance;
-        component.translatedMessage = 'Placeholder Title';
-        // el = fixture.debugElement;
-    }));
-
-    it('should create the component', () => {
+    it('should create the component', async () => {
+        const { component } = await setupSectionPlaceholderComponent();
         expect(component).toBeTruthy();
     });
 
-    it('should have translatedMessage', () => {
-        fixture.detectChanges();
-        const span = fixture.nativeElement.querySelector('span');
-        expect(span.innerHTML).toBe('Placeholder Title');
+    it('should have translatedMessage', async () => {
+        const { debugElement } = await setupSectionPlaceholderComponent();
+        const span = debugElement.nativeElement.querySelector('span');
+        expect(span.textContent).toBe('Placeholder Title');
     });
 
-    it('should have default svgFilename', () => {
-        fixture.detectChanges();
+    it('should have default svgFilename', async () => {
+        const { component } = await setupSectionPlaceholderComponent();
         expect(component.svgFileName).toBe('system_settings_placeholder');
     });
 
-    it('should set height', fakeAsync(() => {
+    it('should set height', async () => {
+        const { component, fixture } = await setupSectionPlaceholderComponent();
         const height = '24';
         component.height = height;
         fixture.detectChanges();
-        tick(5);
         expect(component.height).toBe(height);
-    }));
+    });
 
-    it('should set height default', () => {
-        fixture.detectChanges();
+    it('should set height default', async () => {
+        const { component } = await setupSectionPlaceholderComponent();
         expect(component.height).toBe('64');
     });
 
-    it('should set width', () => {
+    it('should set width', async () => {
+        const { component, fixture } = await setupSectionPlaceholderComponent();
         const width = '24';
         component.width = width;
         fixture.detectChanges();
         expect(component.width).toBe(width);
     });
 
-    it('should set width default', () => {
-        fixture.detectChanges();
+    it('should set width default', async () => {
+        const { component } = await setupSectionPlaceholderComponent();
         expect(component.width).toBe('64');
     });
 });
