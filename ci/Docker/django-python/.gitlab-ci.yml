@@ -46,3 +46,13 @@ docker:build-django-python:
     - cloud/**/poetry.lock
     - cloud/**/poetry.toml
     - cloud/**/allowed_licenses.txt
+
+docker:build-django-python-manual:
+  extends: docker:build-django-python
+  allow_failure: true
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" || ($CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true")
+      changes:
+        - ci/Docker/django-python/*
+        - cloud/**/*
+      when: manual
