@@ -48,6 +48,7 @@ import { SystemGuard } from '@guards/systemGuard';
 import { CloudUnavailableInterceptor } from '@interceptors/cloud-unavailable-interceptor';
 import { FeatureInterceptor } from '@interceptors/feature-interceptor';
 import { LocalSystemStatusInterceptor } from '@interceptors/local-system-status-interceptor.service';
+import { SessionExpiredInterceptor } from '@interceptors/session-expired-interceptor';
 import { NxUriCachingInterceptor } from '@interceptors/uri-cache-interceptor.service';
 import { initializeApp } from '@pages/push-notifications/push-notifications.module';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
@@ -129,6 +130,11 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         {
             provide: HTTP_INTERCEPTORS,
             useClass: FeatureInterceptor,
+            multi: true
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: SessionExpiredInterceptor,
             multi: true
         },
         NxConfigService,

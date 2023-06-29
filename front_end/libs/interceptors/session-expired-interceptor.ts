@@ -21,7 +21,8 @@ export class SessionExpiredInterceptor implements HttpInterceptor {
             catchError(error => {
                 if (
                     error?.error?.errorId === servers.errors.oldSessionErrorId ||
-                    error?.error?.resultCode === servers.errors.userPasswordRequired
+                    error?.error?.resultCode === servers.errors.userPasswordRequired ||
+                    error?.error?.resultCode === servers.errors.vmsRequestFailure 
                 ) {
                     return from(
                         this.dialogService.updateSession({

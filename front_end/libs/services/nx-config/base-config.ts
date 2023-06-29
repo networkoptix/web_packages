@@ -691,6 +691,7 @@ export interface ServerError {
     unauthorized: string;
     badRequest: string;
     userPasswordRequired: string;
+    vmsRequestFailure: string;
 }
 
 export interface ServersStatus {

@@ -494,6 +494,7 @@ export const servers: configTypes.Servers = {
         unauthorized: 'unauthorized',
         badRequest: 'badRequest',
         userPasswordRequired: 'userPasswordRequired',
+        vmsRequestFailure: 'vmsRequestFailure',
     }
 };
 
