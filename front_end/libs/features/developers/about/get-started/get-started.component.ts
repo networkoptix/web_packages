@@ -26,6 +26,7 @@ export class NxGetStartedComponent implements OnChanges {
     }
 
     ngOnInit(): void {
+        this.updateSteps(this.getStartedNode);
         const getStartedConfig = this.errorManager.buildConfig(
             ['title'],
             this.errorManager.buildConfig(
@@ -38,14 +39,19 @@ export class NxGetStartedComponent implements OnChanges {
     }
 
     ngOnChanges(changes: NgChanges<NxGetStartedComponent>): void {
-        const getStartedNode = cloneDeep(changes.getStartedNode.currentValue);
-        getStartedNode.nodes.forEach(step => {
+        this.updateSteps(changes.getStartedNode.currentValue);
+    }
+
+    updateSteps(getStartedNode: AboutNode): void {
+        const clonedNode = cloneDeep(getStartedNode);
+        clonedNode.nodes.map(step => {
             const images = step.icon.split(' ');
             step.icon = images[0];
             step.aniIcon = images[1];
             step.currentIcon = step.icon;
             step.url = step.url || (step.assetId ? `/docs/content/${step.assetId}` : '');
+            return step;
         });
-        this.steps = getStartedNode;
+        this.steps = clonedNode;
     }
 }

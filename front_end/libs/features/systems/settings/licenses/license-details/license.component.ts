@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, Input, OnChanges } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
+import { nxConfig } from '@app/services/nx-config/config';
 import staticLang from '@common/language/language_i18n_static.json';
 import {
     InfoBlockLine,
@@ -11,7 +12,6 @@ import {
     InfoLineStyle,
 } from '@components/info-block/info-block.component.types';
 import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -24,7 +24,7 @@ import { getDynamicLicense } from '../dynamic-license';
     styleUrls: ['license.component.scss'],
 })
 export class NxLicenseDetailComponent implements OnChanges {
-    CONFIG: IConfig;
+    CONFIG: IConfig = nxConfig;
     LANG = staticLang;
 
     orderedLicense: any = [];
@@ -40,10 +40,14 @@ export class NxLicenseDetailComponent implements OnChanges {
         this.orderedLicense = [];
     }
 
-    constructor(configService: NxConfigService, private datePipe: DatePipe) {
-        this.CONFIG = configService.getConfig();
-
+    constructor(private datePipe: DatePipe) {
         this.setupDefaults();
+    }
+
+    ngOnInit(): void {
+        this.licenses.forEach(lic => {
+            this.orderedDetails(lic.info);
+        });
     }
 
     ngOnChanges(changes: NgChanges<NxLicenseDetailComponent>): void {
@@ -66,7 +70,7 @@ export class NxLicenseDetailComponent implements OnChanges {
         }
     }
 
-    private formatLicenseKey = (key: string) => {
+    public formatLicenseKey = (key: string) => {
         if (!key) {
             return '';
         }

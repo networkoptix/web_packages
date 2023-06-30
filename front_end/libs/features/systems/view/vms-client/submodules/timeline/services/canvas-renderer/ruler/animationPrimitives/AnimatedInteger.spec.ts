@@ -9,7 +9,7 @@ describe('AnimatedInteger', () => {
     beforeEach(() => {
         animInt = new AnimatedInteger(TEST_INITIAL_VALUE);
         dateNow = 5000;
-        spyOn(Date, 'now').and.callFake(() => dateNow);
+        jest.spyOn(Date, 'now').mockImplementation(() => dateNow);
     });
 
     it('has initial value', () => {

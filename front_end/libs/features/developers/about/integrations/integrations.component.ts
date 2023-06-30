@@ -81,8 +81,8 @@ export class NxIntegrationsComponent implements OnInit {
     constructor(
         @Inject(WINDOW) private window: Window,
         private translateService: TranslateService,
-        private cloudApi: NxCloudApiService,
-        private sanitizer: DomSanitizer,
+        public cloudApi: NxCloudApiService,
+        public sanitizer: DomSanitizer,
     ) {
         this.errorManager = new ErrorStateManager(this.window);
     }

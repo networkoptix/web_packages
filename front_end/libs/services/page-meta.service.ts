@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
@@ -9,10 +9,10 @@ import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
 
 import type { BaseConfig } from './nx-config/base-config';
+import { nxConfig } from './nx-config/config';
 import type { IConfig } from './nx-config/config-types';
 import { NxConfigService } from './nx-config/nx-config.service';
-// import { NxHeaderService } from './nx-header.service';
-import { WINDOW } from './window-provider';
+import { windowFactory } from './window-provider';
 
 interface MetaLookup {
     [key: string]: Record<string, string>;
@@ -23,8 +23,9 @@ interface MetaLookup {
     providedIn: 'root',
 })
 export class NxPageMetaService {
-    CONFIG: IConfig;
+    CONFIG: IConfig = nxConfig;
     LANG = staticLang;
+    protected window: Window = windowFactory();
 
     routerUrl: string = '';
     updater$ = new Subject<void>();
@@ -37,8 +38,6 @@ export class NxPageMetaService {
         private translateService: TranslateService,
         protected readonly title: Title,
         protected readonly meta: Meta,
-        // headerService: NxHeaderService,
-        @Inject(WINDOW) protected window: Window,
     ) {
         this.CONFIG = configService.getConfig();
 

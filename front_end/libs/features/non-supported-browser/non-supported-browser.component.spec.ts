@@ -1,29 +1,12 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { setupComponent } from '../src/setup';
 
 import { NonSupportedBrowserComponent } from './non-supported-browser.component';
 
+const setupNonSupportedBrowserComponent = (): ReturnType<typeof setupComponent<NonSupportedBrowserComponent>> => setupComponent(NonSupportedBrowserComponent);
+
 describe('NonSupportedBrowserComponent', () => {
-    let component: NonSupportedBrowserComponent;
-    let fixture: ComponentFixture<NonSupportedBrowserComponent>;
-
-    beforeEach(waitForAsync(() => {
-        TestBed
-            .configureTestingModule({
-                declarations: [NonSupportedBrowserComponent],
-                providers: []
-            })
-            .compileComponents();
-    }));
-
-    beforeEach(() => {
-        fixture = TestBed.createComponent(NonSupportedBrowserComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
-
-    it('should create NonSupportedBrowserComponent', () => {
-        fixture = TestBed.createComponent(NonSupportedBrowserComponent);
-        component = fixture.componentInstance;
+    it('should create NonSupportedBrowserComponent', async () => {
+        const { component } = await setupNonSupportedBrowserComponent();
         expect(component).toBeTruthy();
     });
 });

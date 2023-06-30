@@ -1,17 +1,10 @@
-import { CommonModule } from '@angular/common';
-import { DebugElement, ElementRef } from '@angular/core';
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router, RouterLink } from '@angular/router';
-import { MockDirective } from 'ng-mocks';
+import { DebugElement } from '@angular/core';
 
-import { HelperMockProvider } from '@mocks/helpers.test';
+import { setupComponent } from '@app/features/src/setup';
+import { images } from '@app/variables/static-variables';
 import {
-    routeLandingMock,
     getStartedNode
 } from '@mocks/knowledge_base_landing.mock';
-import { nxConfig } from '@services/nx-config/config';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { WINDOW } from '@services/window-provider';
 
 import { NxGetStartedComponent } from './get-started.component';
 
@@ -20,99 +13,69 @@ interface StepContent {
     imageSrc: string;
 }
 
-describe('NxGetStartedComponent', () => {
-    const stepToTest = 1;
-    const step = getStartedNode.nodes[stepToTest - 1];
-    const [stepIcon, stepAnimatedIcon] = step.icon.split(' ');
-    let component: NxGetStartedComponent;
-    let fixture: ComponentFixture<NxGetStartedComponent>;
-    let el: DebugElement;
-    let stepContent: StepContent;
+const setupGetStartedComponent = (): ReturnType<typeof setupComponent<NxGetStartedComponent>> => setupComponent(NxGetStartedComponent, { getStartedNode });
 
-    const configMock = { config: nxConfig };
+const stepToTest = 1;
+const step = getStartedNode.nodes[stepToTest - 1];
+const [stepIcon, stepAnimatedIcon] = step.icon.split(' ');
 
-    const getFirstStepContent = (el: ElementRef<HTMLElement>): StepContent => {
-        const detailBlock = el.nativeElement.querySelector('.detail-block');
-        const stepText = detailBlock.querySelector('.step-text');
-        const title = stepText.querySelector('h3').innerText;
-        const imageSrc = '/static' +
-            detailBlock.querySelector<HTMLImageElement>('.step-image > img')
+const getFirstStepContent = (debugElement: DebugElement): StepContent => {
+    const detailBlock = debugElement.nativeElement.querySelector('.detail-block');
+    const stepText = detailBlock.querySelector('.step-text');
+    const title = stepText.querySelector('h3').textContent.trim();
+    const imageSrc = '/static' +
+            detailBlock.querySelector('.step-image > img')
                 .src
                 .split('static')[1];
 
-        return { title, imageSrc };
-    };
+    return { title, imageSrc };
+};
 
-    beforeEach(
-        waitForAsync(() => {
-            TestBed.configureTestingModule({
-                declarations: [
-                    NxGetStartedComponent,
-                    MockDirective(RouterLink),
-                ],
-                imports: [CommonModule],
-                providers: [
-                    new HelperMockProvider(Router, routeLandingMock),
-                    new HelperMockProvider(NxConfigService, configMock),
-                    new HelperMockProvider(WINDOW, {})
-                ]
-            });
-
-            fixture = TestBed.createComponent(NxGetStartedComponent);
-            component = fixture.componentInstance;
-            component.getStartedNode = getStartedNode;
-            component.ngOnChanges({
-                getStartedNode: {
-                    currentValue: getStartedNode,
-                    previousValue: null,
-                    firstChange: false,
-                    isFirstChange: () => true
-                }
-            });
-            el = fixture.debugElement;
-            fixture.detectChanges();
-            stepContent = getFirstStepContent(el);
-        })
-    );
-
-    it('should create the component', () => {
+describe('NxGetStartedComponent', () => {
+    it('should create the component', async () => {
+        const { component } = await setupGetStartedComponent();
         expect(component).toBeTruthy();
     });
 
-    it('should show the correct heading', () => {
-        const heading = el.nativeElement.querySelector('h2').innerText;
+    it('should show the correct heading', async () => {
+        const { debugElement } = await setupGetStartedComponent();
+        const heading = debugElement.nativeElement.querySelector('h2').textContent.trim();
 
         expect(heading).toBe(getStartedNode.title);
     });
 
-    it('should show the correct number of detail blocks', () => {
+    it('should show the correct number of detail blocks', async () => {
+        const { debugElement } = await setupGetStartedComponent();
         const numStepBlocks =
-            el.nativeElement.querySelectorAll('.detail-block').length;
+            debugElement.nativeElement.querySelectorAll('.detail-block').length;
         const numStepNodes = getStartedNode.nodes.length;
 
         expect(numStepBlocks).toBe(numStepNodes);
     });
 
-    it('should show the correct step title', () => {
-        expect(stepContent.title).toBe(step.title);
+    it('should show the correct step title', async () => {
+        const { debugElement } = await setupGetStartedComponent();
+        expect(getFirstStepContent(debugElement).title).toBe(step.title);
     });
 
-    it('should show the correct step image', () => {
-        const stepIconSrc = `${configMock.config.images.dirDevelopers}${stepIcon}`;
-        expect(stepContent.imageSrc).toBe(stepIconSrc);
+    it('should show the correct step image', async () => {
+        const { debugElement } = await setupGetStartedComponent();
+        const stepIconSrc = `${images.dirDevelopers}${stepIcon}`;
+        expect(getFirstStepContent(debugElement).imageSrc).toBe(stepIconSrc);
     });
 
     it('should show the correct animated step image state', async () => {
-        const stepIconSrc = `${configMock.config.images.dirDevelopers}${stepIcon}`;
-        const stepIconAnimatedSrc = `${configMock.config.images.dirDevelopers}${stepAnimatedIcon}`;
-        const detailBlock = el.nativeElement.querySelector('.detail-block');
+        const { debugElement, fixture } = await setupGetStartedComponent();
+        const stepIconSrc = `${images.dirDevelopers}${stepIcon}`;
+        const stepIconAnimatedSrc = `${images.dirDevelopers}${stepAnimatedIcon}`;
+        const detailBlock = debugElement.nativeElement.querySelector('.detail-block');
         detailBlock.dispatchEvent(new MouseEvent('mouseenter'));
         await fixture.whenStable();
         fixture.detectChanges();
-        expect(getFirstStepContent(el).imageSrc).toBe(stepIconAnimatedSrc);
+        expect(getFirstStepContent(debugElement).imageSrc).toBe(stepIconAnimatedSrc);
         detailBlock.dispatchEvent(new MouseEvent('mouseleave'));
         await fixture.whenStable();
         fixture.detectChanges();
-        expect(getFirstStepContent(el).imageSrc).toBe(stepIconSrc);
+        expect(getFirstStepContent(debugElement).imageSrc).toBe(stepIconSrc);
     });
 });

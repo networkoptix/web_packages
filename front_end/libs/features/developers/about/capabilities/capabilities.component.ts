@@ -1,7 +1,7 @@
-import { Component, Inject, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import { icons, images } from '@lib/variables/static-variables';
-import { WINDOW } from '@services/window-provider';
+import { windowFactory } from '@services/window-provider';
 
 import type { AboutNode } from '../about.component.types';
 import { ErrorStateManager } from '../error-state/error-state-manager';
@@ -18,8 +18,8 @@ export class NxCapabilitiesComponent {
     icons = icons;
     images = images;
 
-    constructor(@Inject(WINDOW) private window: Window) {
-        this.errorManager = new ErrorStateManager(this.window);
+    constructor() {
+        this.errorManager = new ErrorStateManager(windowFactory());
     }
 
     ngOnInit(): void {

@@ -1,11 +1,11 @@
-import { Component, Input, OnChanges, Inject } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { images } from '@lib/variables/static-variables';
-import { WINDOW } from '@services/window-provider';
+import { windowFactory } from '@services/window-provider';
 import { NgChanges } from '@utils/ng-changes';
 
 import type { AboutNode } from '../about.component.types';
@@ -25,11 +25,12 @@ export class NxSupportComponent implements OnChanges {
     errorManager: ErrorStateManager;
     images = images;
 
-    constructor(private sanitizer: DomSanitizer, @Inject(WINDOW) private window: Window) {
-        this.errorManager = new ErrorStateManager(this.window);
+    constructor(private sanitizer: DomSanitizer) {
+        this.errorManager = new ErrorStateManager(windowFactory());
     }
 
     ngOnInit(): void {
+        this.updateCleanedSupportNode(this.supportNode);
         const supportConfig = this.errorManager.buildConfig(
             ['displayName', 'icon', 'title'],
             null,
@@ -39,7 +40,11 @@ export class NxSupportComponent implements OnChanges {
     }
 
     ngOnChanges(changes: NgChanges<NxSupportComponent>): void {
-        this.cleanSupportNode = cloneDeep(changes.supportNode.currentValue);
+        this.updateCleanedSupportNode(changes.supportNode.currentValue);
+    }
+
+    private updateCleanedSupportNode(supportNode: AboutNode): void {
+        this.cleanSupportNode = cloneDeep(supportNode);
         this.cleanSupportNode.asset.shortDescription = this.sanitizer.bypassSecurityTrustHtml(
             this.cleanSupportNode.asset.shortDescription,
         );

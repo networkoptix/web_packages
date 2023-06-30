@@ -1,122 +1,98 @@
-import { CommonModule } from '@angular/common';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { DebugElement } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { TranslateModule } from '@ngx-translate/core';
-import { AngularSvgIconModule } from 'angular-svg-icon';
+import { testBedSetupFactory } from 'test_utils/test_bed_setup_factory';
 import { v4 as uuid } from 'uuid';
 
+import { setupComponent } from '@app/features/src/setup';
 import { ConsoleMode } from '@pages/developer-console/console/console.types';
 import { NxMenusService } from '@services/menus.service';
-import { nxConfig } from '@services/nx-config/config';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 import { NxDevConsoleMenuComponent } from './console-menu.component';
 
+const menusMock = {
+    getMenu: () => ({
+        subscribe: () => {}
+    })
+};
+
+const menuMock = [...Array(
+    Math.round(Math.random() * 20) + 1
+)].map(_ => ({
+    title: uuid(),
+    url: uuid(),
+    icon: uuid()
+}));
+
+const setupConsoleMenuComponent = (): ReturnType<typeof setupComponent<NxDevConsoleMenuComponent>> => testBedSetupFactory([], [
+    { provide: NxMenusService, useValue: menusMock },
+])(NxDevConsoleMenuComponent);
+
 describe('NxDevConsoleMenuComponent', () => {
-    let component: NxDevConsoleMenuComponent;
-    let fixture: ComponentFixture<NxDevConsoleMenuComponent>;
-    let el: DebugElement;
-    const configMock = { config: nxConfig };
-    const menuMock = [...Array(
-        Math.round(Math.random() * 20) + 1
-    )].map(_ => ({
-        title: uuid(),
-        url: uuid(),
-        icon: uuid()
-    }));
-    const menusMock = {
-        getMenu: () => ({
-            subscribe: () => {}
-        })
-    };
-
-    beforeEach(waitForAsync(() => {
-        TestBed
-            .configureTestingModule({
-                declarations: [
-                    NxDevConsoleMenuComponent
-                ],
-                imports: [
-                    CommonModule,
-                    TranslateModule.forRoot(),
-                    AngularSvgIconModule.forRoot(),
-                    HttpClientTestingModule,
-                    RouterTestingModule
-                ],
-                providers: [
-                    { provide: NxConfigService, useValue: configMock },
-                    { provide: NxMenusService, useValue: menusMock }
-                ]
-            })
-            .compileComponents();
-
-        fixture = TestBed.createComponent(NxDevConsoleMenuComponent);
-        component = fixture.componentInstance;
-        el = fixture.debugElement;
-        fixture.detectChanges();
-    }));
-
-    it('should create NxDevConsoleMenuComponent', () => {
+    it('should create NxDevConsoleMenuComponent', async () => {
+        const { component } = await setupConsoleMenuComponent();
         expect(component).toBeTruthy();
     });
 
-    it('should not show content heading when not in edit mode', () => {
+    it('should not show content heading when not in edit mode', async () => {
+        const { component, fixture, debugElement } = await setupConsoleMenuComponent();
         component.loading = false;
         fixture.detectChanges();
-        expect(el.nativeElement.querySelector('h3')).toBeFalsy();
+        expect(debugElement.nativeElement.querySelector('h3')).toBeFalsy();
     });
 
-    it('should show content heading when edit mode', () => {
+    it('should show content heading when edit mode', async () => {
+        const { component, fixture, debugElement } = await setupConsoleMenuComponent();
         component.loading = false;
         component.type = ConsoleMode.EDIT;
         fixture.detectChanges();
-        expect(el.nativeElement.querySelector('h3').innerText).toEqual(
+        expect(debugElement.nativeElement.querySelector('h3').textContent.trim()).toEqual(
             'Content');
     });
 
-    it('should not show additional links by default', () => {
+    it('should not show additional links by default', async () => {
+        const { component, fixture, debugElement } = await setupConsoleMenuComponent();
         component.loading = false;
         fixture.detectChanges();
-        expect(el.nativeElement.querySelector('.additional-links')).toBeFalsy();
+        expect(debugElement.nativeElement.querySelector('.additional-links')).toBeFalsy();
     });
 
-    it('should show additional links when edit mode and showAdditionalLinks is true', () => {
+    it('should show additional links when edit mode and showAdditionalLinks is true', async () => {
+        const { component, fixture, debugElement } = await setupConsoleMenuComponent();
         component.loading = false;
         component.type = ConsoleMode.EDIT;
         component.showAdditionalLinks = true;
         fixture.detectChanges();
-        const links = el.nativeElement.querySelector('.additional-links');
+        const links = debugElement.nativeElement.querySelector('.additional-links');
         expect(links).toBeTruthy();
-        expect(links.firstElementChild.innerText).toEqual('Show Preview');
-        expect(links.lastElementChild.innerText).toEqual('Version Control');
+        expect(links.firstElementChild.textContent.trim()).toEqual('Show Preview');
+        expect(links.lastElementChild.textContent.trim()).toEqual('Version Control');
     });
 
-    it('should not display context menu if not edit mode', () => {
+    it('should not display context menu if not edit mode', async () => {
+        const { component, fixture, debugElement } = await setupConsoleMenuComponent();
         component.loading = false;
         fixture.detectChanges();
-        expect(el.nativeElement.querySelector(`.${ConsoleMode.EDIT}`)).toBeFalsy();
+        expect(debugElement.nativeElement.querySelector(`.${ConsoleMode.EDIT}`)).toBeFalsy();
     });
 
-    it('should display context menu when loaded in edit mode', () => {
+    it('should display context menu when loaded in edit mode', async () => {
+        const { component, fixture, debugElement } = await setupConsoleMenuComponent();
         component.menu = menuMock;
         component.type = ConsoleMode.EDIT;
         component.loading = false;
         fixture.detectChanges();
-        expect(el.nativeElement.querySelector(`.${ConsoleMode.EDIT}`)).toBeTruthy();
+        expect(debugElement.nativeElement.querySelector(`.${ConsoleMode.EDIT}`)).toBeTruthy();
     });
 
-    it('should display the correct menu items', () => {
+    it('should display the correct menu items', async () => {
+        const { component, fixture, debugElement } = await setupConsoleMenuComponent();
         component.menu = menuMock;
         component.type = ConsoleMode.EDIT;
         component.loading = false;
         fixture.detectChanges();
-        const nodes = [...el.nativeElement.querySelector(
+        const nodes = [...debugElement.nativeElement.querySelector(
             `.${ConsoleMode.EDIT}`).children];
         nodes.forEach((
-            { innerText }, index
-        ) => expect(innerText).toEqual(
+            { textContent }, index
+        ) => expect(textContent).toEqual(
             menuMock[index].title));
     });
 });

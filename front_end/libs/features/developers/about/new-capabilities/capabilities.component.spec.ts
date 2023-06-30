@@ -1,25 +1,13 @@
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { capabilitiesNode } from '@app/_mocks/knowledge_base_landing.mock';
+import { setupComponent } from '@app/features/src/setup';
 
-// import { NewCapabilitiesComponent } from './new-capabilities.component';
+import { NxNewCapabilitiesComponent } from './capabilities.component';
 
-// describe('NewCapabilitiesComponent', () => {
-//   let component: NewCapabilitiesComponent;
-//   let fixture: ComponentFixture<NewCapabilitiesComponent>;
+const setupCapabilitiesComponent = (): ReturnType<typeof setupComponent<NxNewCapabilitiesComponent>> => setupComponent(NxNewCapabilitiesComponent, { devCapabilitiesNode: capabilitiesNode });
 
-//   beforeEach(async () => {
-//     await TestBed.configureTestingModule({
-//       declarations: [ NewCapabilitiesComponent ]
-//     })
-//     .compileComponents();
-//   });
-
-//   beforeEach(() => {
-//     fixture = TestBed.createComponent(NewCapabilitiesComponent);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
-
-//   it('should create', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });
+describe('NewCapabilitiesComponent', () => {
+    it('should create', async () => {
+        const { component } = await setupCapabilitiesComponent();
+        expect(component).toBeTruthy();
+    });
+});

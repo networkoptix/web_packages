@@ -11,8 +11,6 @@ import { v4 as uuid } from 'uuid';
 import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { NxConsoleService } from '@pages/developer-console/console/console.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { nxConfig } from '@services/nx-config/config';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxProcessService } from '@services/process.service';
 
@@ -69,15 +67,10 @@ class MockPreLoaderComponentComponent {}
 describe('NxDevConsoleEditComponent', () => {
     let component: NxDevConsoleEditComponent;
     let fixture: ComponentFixture<NxDevConsoleEditComponent>;
-    let el: DebugElement;
+    let debugElement: DebugElement;
     let expectedField;
     let expectedAssetValue;
     let input;
-    const configMock = { config: nxConfig, getConfig: () => nxConfig };
-    const translateMock = {
-        translations: {}
-    };
-
     const routeMock = {
         snapshot: {
             params: {
@@ -96,7 +89,7 @@ describe('NxDevConsoleEditComponent', () => {
     };
 
     const getSection =
-        field => el.nativeElement.querySelector(`.section-${field.name}`);
+        field => debugElement.nativeElement.querySelector(`.section-${field.name}`);
 
     beforeEach(waitForAsync(() => {
         TestBed
@@ -117,9 +110,7 @@ describe('NxDevConsoleEditComponent', () => {
                     FormsModule,
                 ],
                 providers: [
-                    { provide: NxConfigService, useValue: configMock },
                     { provide: NxHeaderService, useValue: headerMock },
-                    { provide: NxLanguageProviderService, useValue: translateMock },
                     { provide: ActivatedRoute, useValue: routeMock },
                     { provide: Router, useValue: {} },
                     { provide: NxConsoleService, useValue: { unsavedAssets: {} } },
@@ -144,7 +135,7 @@ describe('NxDevConsoleEditComponent', () => {
         expectedAssetValue = uuid();
         component.asset = { values: { [expectedField.name]: expectedAssetValue } };
 
-        el = fixture.debugElement;
+        debugElement = fixture.debugElement;
         fixture.detectChanges();
 
         input = getSection(expectedField)?.querySelector('input');
@@ -158,19 +149,19 @@ describe('NxDevConsoleEditComponent', () => {
         component.context = null;
         fixture.detectChanges();
 
-        expect(el.nativeElement.querySelector('nx-pre-loader')).toBeTruthy();
+        expect(debugElement.nativeElement.querySelector('nx-pre-loader')).toBeTruthy();
     });
 
     it('should show apply section', () => {
-        expect(el.nativeElement.querySelector('.apply-wrapper')).toBeTruthy();
+        expect(debugElement.nativeElement.querySelector('.apply-wrapper')).toBeTruthy();
     });
 
     it('should show error when missing required fields', () => {
         component.hasErrors = true;
         fixture.detectChanges();
 
-        const applyWrapper = el.nativeElement.querySelector('.apply-wrapper');
-        expect(applyWrapper.querySelector('.input-error')?.innerText).toEqual(
+        const applyWrapper = debugElement.nativeElement.querySelector('.apply-wrapper');
+        expect(applyWrapper.querySelector('.input-error')?.textContent.trim()).toEqual(
             'Fill in all required fields');
     });
 
@@ -183,7 +174,7 @@ describe('NxDevConsoleEditComponent', () => {
         fixture.detectChanges();
 
         const section = getSection(expectedField);
-        expect(section.querySelector('label').innerText).toEqual(
+        expect(section.querySelector('label').textContent.trim()).toEqual(
             expectedField.label);
     });
 
@@ -196,9 +187,9 @@ describe('NxDevConsoleEditComponent', () => {
         const label = section.querySelector('label');
         const requiredAsterisk = ' *';
 
-        expect(label.innerText).toEqual(
+        expect(label.textContent.trim()).toEqual(
             expectedField.label + requiredAsterisk);
-        expect(label.querySelector('.input-error').innerText).toEqual(
+        expect(label.querySelector('.input-error').textContent.trim()).toEqual(
             requiredAsterisk.trim());
     });
 
@@ -206,7 +197,7 @@ describe('NxDevConsoleEditComponent', () => {
         const section = getSection(expectedField);
         const contextFieldDescription = section.querySelector('.context-field-description');
         expect(contextFieldDescription).toBeTruthy();
-        expect(contextFieldDescription.innerText).toEqual(
+        expect(contextFieldDescription.textContent.trim()).toEqual(
             expectedField.description);
     });
 
@@ -220,7 +211,7 @@ describe('NxDevConsoleEditComponent', () => {
         const section = getSection(expectedField);
         const errorsDiv = section.querySelector('.d-flex.flex-column');
         expect(errorsDiv).toBeTruthy();
-        expect(errorsDiv.querySelector('.input-error').innerText).toEqual(
+        expect(errorsDiv.querySelector('.input-error').textContent.trim()).toEqual(
             expectedError);
     });
 

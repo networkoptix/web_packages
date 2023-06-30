@@ -133,7 +133,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         private accountService: NxAccountService,
         private applyService: NxApplyService,
         private processService: NxProcessService,
-        private route: ActivatedRoute,
+        public route: ActivatedRoute,
         private dialogs: NxDialogsService,
         private menuService: NxMenuService,
         private uriService: NxUriService,

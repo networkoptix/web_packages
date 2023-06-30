@@ -1,63 +1,29 @@
-import { CommonModule } from '@angular/common';
-import { DebugElement } from '@angular/core';
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router, RouterLink } from '@angular/router';
-import { MockDirective } from 'ng-mocks';
-
-import { HelperMockProvider } from '@mocks/helpers.test';
+import { setupComponent } from '@app/features/src/setup';
 import {
-    routeLandingMock,
     supportedTechNode
 } from '@mocks/knowledge_base_landing.mock';
-import { nxConfig } from '@services/nx-config/config';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { WINDOW } from '@services/window-provider';
 
 import { NxSupportedTechComponent } from './supported-tech.component';
 
+const setupSupportTechComponent = (): ReturnType<typeof setupComponent<NxSupportedTechComponent>> => setupComponent(NxSupportedTechComponent, { supportedTechNode });
+
 describe('For Developers Landing - Supported Tech Node', () => {
-    let component: NxSupportedTechComponent;
-    let fixture: ComponentFixture<NxSupportedTechComponent>;
-    let el: DebugElement;
-
-    const configMock = { config: nxConfig };
-
-    beforeEach(
-        waitForAsync(() => {
-            TestBed.configureTestingModule({
-                declarations: [
-                    NxSupportedTechComponent,
-                    MockDirective(RouterLink),
-                ],
-                imports: [CommonModule],
-                providers: [
-                    new HelperMockProvider(Router, routeLandingMock),
-                    new HelperMockProvider(NxConfigService, configMock),
-                    new HelperMockProvider(WINDOW, {})
-                ]
-            });
-
-            fixture = TestBed.createComponent(NxSupportedTechComponent);
-            component = fixture.componentInstance;
-            component.supportedTechNode = supportedTechNode;
-            el = fixture.debugElement;
-            fixture.detectChanges();
-        })
-    );
-
-    it('should create the component', () => {
+    it('should create the component', async () => {
+        const { component } = await setupSupportTechComponent();
         expect(component).toBeTruthy();
     });
 
-    it('should show the correct heading', () => {
-        const heading = el.nativeElement.querySelector('h2').innerText;
+    it('should show the correct heading', async () => {
+        const { debugElement } = await setupSupportTechComponent();
+        const heading = debugElement.nativeElement.querySelector('h2').textContent.trim();
 
         expect(heading).toBe(supportedTechNode.title);
     });
 
-    it('should show the correct number of tech blocks', () => {
+    it('should show the correct number of tech blocks', async () => {
+        const { debugElement } = await setupSupportTechComponent();
         const numTechBlocks =
-            el.nativeElement.querySelectorAll('.tech-block').length;
+            debugElement.nativeElement.querySelectorAll('.tech-block').length;
         const numIconLinks = supportedTechNode.nodes.find(
             ({ title }) => title === 'Icon Links'
         ).nodes.length;
@@ -65,9 +31,10 @@ describe('For Developers Landing - Supported Tech Node', () => {
         expect(numTechBlocks).toBe(numIconLinks);
     });
 
-    it('should show the correct number of language blocks', () => {
+    it('should show the correct number of language blocks', async () => {
+        const { debugElement } = await setupSupportTechComponent();
         const numLangBlocks =
-            el.nativeElement.querySelectorAll('.language-block').length;
+            debugElement.nativeElement.querySelectorAll('.language-block').length;
         const textLinks = supportedTechNode.nodes.find(
             ({ title }) => title === 'Text Links'
         ).nodes.length;
@@ -75,9 +42,10 @@ describe('For Developers Landing - Supported Tech Node', () => {
         expect(numLangBlocks).toBe(textLinks);
     });
 
-    it('should show the language and tech sections in the correct order', () => {
+    it('should show the language and tech sections in the correct order', async () => {
+        const { debugElement } = await setupSupportTechComponent();
         const sections = [
-            ...el.nativeElement.querySelectorAll('.supported-tech > div')
+            ...debugElement.nativeElement.querySelectorAll('.supported-tech > div')
         ].map(el => el.className);
         const expectedSections = supportedTechNode.nodes.map(({ title }) =>
             title === 'Icon Links'
@@ -90,8 +58,9 @@ describe('For Developers Landing - Supported Tech Node', () => {
         expect(sections).toEqual(expectedSections);
     });
 
-    it('should show the correct tech tooltip', () => {
-        const tooltip = el.nativeElement.querySelector('.tech-block').title;
+    it('should show the correct tech tooltip', async () => {
+        const { debugElement } = await setupSupportTechComponent();
+        const tooltip = debugElement.nativeElement.querySelector('.tech-block').title;
         const techNode = supportedTechNode.nodes.find(
             ({ title }) => title === 'Icon Links'
         ).nodes[0];
@@ -99,13 +68,14 @@ describe('For Developers Landing - Supported Tech Node', () => {
         expect(tooltip).toBe(techNode.title);
     });
 
-    it('should show the correct language text and tooltip', () => {
-        const block = el.nativeElement.querySelector('.language-block');
+    it('should show the correct language text and tooltip', async () => {
+        const { debugElement } = await setupSupportTechComponent();
+        const block = debugElement.nativeElement.querySelector('.language-block');
         const langNode = supportedTechNode.nodes.find(
             ({ title }) => title === 'Text Links'
         ).nodes[0];
 
-        expect(block.innerText).toBe(langNode.title);
+        expect(block.textContent.trim()).toBe(langNode.title);
         expect(block.title).toBe(langNode.title);
     });
 });

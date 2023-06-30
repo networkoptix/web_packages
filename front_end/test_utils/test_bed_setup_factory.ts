@@ -32,7 +32,8 @@ export const testBedSetupFactory = (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     additionalImports: any[] = [], additionalProviders: any[] = []
 ) => async <T>(
-    TargetComponent?: Type<T>
+    TargetComponent?: Type<T>,
+    initialValues?: Partial<T>,
     /**
      * TODO: Need to figure out how to better type this once the implementation is stable.
      */
@@ -120,6 +121,11 @@ export const testBedSetupFactory = (
     }
 
     const fixture = TestBed.createComponent(TargetComponent);
+
+    if (initialValues) {
+        Object.assign(fixture.componentInstance, initialValues);
+    }
+
     fixture.autoDetectChanges();
     await fixture.whenRenderingDone();
     const { debugElement, componentInstance: component } = fixture;

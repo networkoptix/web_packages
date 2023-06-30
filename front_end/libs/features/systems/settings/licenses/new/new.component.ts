@@ -239,14 +239,14 @@ export class NxLicenseNewComponent implements OnChanges {
         this.hideErrors = false;
     };
 
-    private formatLicenseKey = (key: string) => {
+    public formatLicenseKey = (key: string) => {
         if (key) {
             const chunks = key.match(/.{1,4}/g);
             return chunks.join('-').toUpperCase(); // returns AAAA-BBBB-CCCC-DDDD
         }
     };
 
-    private isActivated(license): boolean {
+    public isActivated(license): boolean {
         return this.licenses.find(lic => {
             return lic.key === this.formatLicenseKey(license);
         });

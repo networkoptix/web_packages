@@ -3,14 +3,14 @@ import { IrregularLengthInterval } from '../IrregularLengthInterval';
 import { alignTimeStamp } from './alignTimeStamp';
 import { isAlignedByIrregularInterval } from './isAlignedByIrregularInterval';
 
-xdescribe('isAlignedByIrregularInterval', () => {
+describe('isAlignedByIrregularInterval', () => {
     const t = 1594225376896; // "Wed Jul 08 2020 19:23:03 GMT+0300 (Moscow Standard Time"
 
     it('checks regular interval alignments correctly', () => {
-        expect(isAlignedByIrregularInterval(1234, 1)).toBeTrue();
-        expect(isAlignedByIrregularInterval(1234, 2)).toBeTrue();
-        expect(isAlignedByIrregularInterval(1234, 4)).toBeFalse();
-        expect(isAlignedByIrregularInterval(1234, 5)).toBeFalse();
+        expect(isAlignedByIrregularInterval(1234, 1)).toBeTruthy();
+        expect(isAlignedByIrregularInterval(1234, 2)).toBeTruthy();
+        expect(isAlignedByIrregularInterval(1234, 4)).toBeFalsy();
+        expect(isAlignedByIrregularInterval(1234, 5)).toBeFalsy();
 
         const regularIntervals = [
             500,
@@ -32,9 +32,9 @@ xdescribe('isAlignedByIrregularInterval', () => {
         regularIntervals.forEach(i => {
             const l = alignTimeStamp(t, i);
             const r = alignTimeStamp(t, i, 'right');
-            expect(isAlignedByIrregularInterval(t, i)).toBeFalse();
-            expect(isAlignedByIrregularInterval(l, i)).toBeTrue();
-            expect(isAlignedByIrregularInterval(r, i)).toBeTrue();
+            expect(isAlignedByIrregularInterval(t, i)).toBeFalsy();
+            expect(isAlignedByIrregularInterval(l, i)).toBeTruthy();
+            expect(isAlignedByIrregularInterval(r, i)).toBeTruthy();
         });
     });
 
@@ -45,9 +45,9 @@ xdescribe('isAlignedByIrregularInterval', () => {
         irregularIntervals.forEach(i => {
             const l = alignTimeStamp(t, i);
             const r = alignTimeStamp(t, i, 'right');
-            expect(isAlignedByIrregularInterval(t, i)).toBeFalse();
-            expect(isAlignedByIrregularInterval(l, i)).toBeTrue();
-            expect(isAlignedByIrregularInterval(r, i)).toBeTrue();
+            expect(isAlignedByIrregularInterval(t, i)).toBeFalsy();
+            expect(isAlignedByIrregularInterval(l, i)).toBeTruthy();
+            expect(isAlignedByIrregularInterval(r, i)).toBeTruthy();
         });
     });
 });
