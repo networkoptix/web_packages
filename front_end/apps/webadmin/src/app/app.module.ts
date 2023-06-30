@@ -126,7 +126,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         {
             provide: HTTP_INTERCEPTORS,
             useClass: SessionExpiredInterceptor,
-            multi: true
+            multi: true,
         },
         NxConfigService,
         WINDOWS_PROVIDERS,
