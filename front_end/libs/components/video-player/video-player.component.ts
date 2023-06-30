@@ -167,6 +167,8 @@ export class NxVideoPlayerComponent {
         this.zoomStreamCleanup?.();
 
         const video = this.originalStream.nativeElement;
+        video.autoplay = true;
+        video.muted = true;
         video.srcObject = stream;
         const canvas = this.document.createElement('canvas');
 

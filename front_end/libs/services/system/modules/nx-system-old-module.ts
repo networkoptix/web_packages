@@ -351,6 +351,18 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         return this.userManager.permissions.isAdmin;
     }
 
+    canViewLayouts() {
+        return (
+            this.version >= 5.1 &&
+            nxConfig.featureFlags.layouts &&
+            (nxConfig.featureFlags.restCookieLogin || !this.info.system2faEnabled) &&
+            (nxConfig.featureFlags.layoutsNonChrome ||
+                // @ts-expect-error chrome property only exist on chromium browsers
+                // eslint-disable-next-line nx/ban-global-variables
+                !!window.chrome)
+        );
+    }
+
     canUserViewCloudStorage() {
         if (!this.CONFIG.featureFlags.cloudStorage || environment.isLocal) {
             return false;
@@ -447,7 +459,9 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                 }
                 let directCapabilities = {};
                 try {
-                    directCapabilities = (await this.getSystemCapabilities()) || {};
+                    if (this.userManager.permissions.isAdmin) {
+                        directCapabilities = (await this.getSystemCapabilities()) || {};
+                    }
                     response.capabilities = { ...response.capabilities, ...directCapabilities };
                 } catch (e) {}
                 if (this.info) {
@@ -566,7 +580,11 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                     this.updatePromise = undefined;
                     // TODO: re-do ribbonService to handle multiple pages better
                     const { url } = this.router;
-                    if (this.isAvailable && url.includes('systems') && !url.includes('health')) {
+                    if (
+                        this.isAvailable &&
+                        url.includes('systems') &&
+                        ['health', 'layouts'].every(route => !url.includes(route))
+                    ) {
                         this.ribbonService.hide();
                     }
                 });

@@ -3,6 +3,16 @@
 @use "../native-theme/theme_palette.scss" as native;
 
 :root {
+	--brand-core-t10: rgba(var(--brand-core--rgb), 0.1);
+	--brand-core-t20: rgba(var(--brand-core--rgb), 0.2);
+	--brand-core-t30: rgba(var(--brand-core--rgb), 0.3);
+	--brand-core-t40: rgba(var(--brand-core--rgb), 0.4);
+	--brand-core-t50: rgba(var(--brand-core--rgb), 0.5);
+	--brand-core-t60: rgba(var(--brand-core--rgb), 0.6);
+	--brand-core-t70: rgba(var(--brand-core--rgb), 0.7);
+	--brand-core-t80: rgba(var(--brand-core--rgb), 0.8);
+	--brand-core-t90: rgba(var(--brand-core--rgb), 0.9);
+
 	@include generateVarAndRgb(--dark1, $dark1);
 	@include generateVarAndRgb(--dark2, $dark2);
 	@include generateVarAndRgb(--dark3, $dark3);

@@ -369,8 +369,11 @@ export class NxMenusService {
             nodes.splice(1, 0, bookmarksNode); // Right after view
         }
 
-        // Layouts only usable with webRTC
-        const layoutsEnabled = activeSystem.version >= 5.1 && this.CONFIG.featureFlags.layouts;
+        // Layouts only usable with webRTC and rest cookie login
+        const layoutsEnabled =
+            activeSystem.version >= 5.1 &&
+            this.CONFIG.featureFlags.layouts &&
+            (this.CONFIG.featureFlags.restCookieLogin || !activeSystem.system2faEnabled);
         const layoutsEnabledForBrowser =
             // @ts-expect-error window.chrome only in Chromium browsers
             this.CONFIG.featureFlags.layoutsNonChrome || !!this.window.chrome;

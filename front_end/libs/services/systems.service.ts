@@ -128,10 +128,11 @@ export class NxSystemsService {
                     try {
                         (async () => {
                             await system.update();
-
-                            // Prefetch initial data
-                            await firstValueFrom(system.updateOrGetSystemSettings());
-                            await firstValueFrom(system.getAggregateLicenseInfo());
+                            if (system.userManager.permissions.isAdmin) {
+                                // Prefetch initial data
+                                await firstValueFrom(system.updateOrGetSystemSettings());
+                                await firstValueFrom(system.getAggregateLicenseInfo());
+                            }
                         })();
                     } catch (error) {
                         console.error(error);
