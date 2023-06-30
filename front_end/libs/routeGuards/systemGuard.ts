@@ -4,7 +4,6 @@ import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@a
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Observable, firstValueFrom, map } from 'rxjs';
 
-import { NxSystemRestAPI } from '@app/services/system-rest-api.service';
 import { environment } from '@environments/environment';
 import { NxSettingsService } from '@pages/systems/settings/settings.service';
 import { NxAccountService } from '@services/account.service';
@@ -12,6 +11,7 @@ import { NxMenusService } from '@services/menus.service';
 import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
+import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import type { NxUser } from '@services/system.service/user-manager/user-manager-types';
