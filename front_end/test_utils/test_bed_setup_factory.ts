@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { DialogModule } from '@angular/cdk/dialog';
+import { DIALOG_DATA, DialogModule, DialogRef } from '@angular/cdk/dialog';
 import { HttpClientModule, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { DebugElement, reflectComponentType, Type } from '@angular/core';
@@ -33,12 +33,22 @@ export const testBedSetupFactory = (
     additionalImports: any[] = [], additionalProviders: any[] = []
 ) => async <T>(
     TargetComponent?: Type<T>,
-    initialValues?: Partial<T>,
+    initialValues: Partial<T> = {},
     /**
      * TODO: Need to figure out how to better type this once the implementation is stable.
      */
-): Promise<{ fixture?: ComponentFixture<T>; component?: T; debugElement?: DebugElement; getHttpController: () => HttpTestingController; inject: typeof TestBed.inject; patchWindow: typeof patchWindow }> => {
+): Promise<{
+    fixture?: ComponentFixture<T>;
+    component?: T;
+    debugElement?: DebugElement;
+    getHttpController: () => HttpTestingController;
+    inject: typeof TestBed.inject;
+    patchWindow: typeof patchWindow;
+    tick: (time?: number) => Promise<unknown>;
+}> => {
     NxBootstrapProvider.isLoaded = true;
+
+    const isDialog = 'dialogData' in initialValues;
 
     /**
      * The common imports and providers are kind of a hack to get unit tests running before we fix
@@ -78,7 +88,8 @@ export const testBedSetupFactory = (
         {
             provide: NxConfigService,
             useFactory: () => new NxConfigService(new SessionStorageService(new InMemoryStorageStrategy(new StrategyCacheService())))
-        }
+        },
+        ...(isDialog ? [{ provide: DialogRef, useValue: {} }, { provide: DIALOG_DATA, useValue: { action: initialValues.dialogData } }] : [])
     ];
 
     const standalone = TargetComponent && reflectComponentType(TargetComponent).isStandalone;
@@ -112,11 +123,14 @@ export const testBedSetupFactory = (
     const getHttpController = (): HttpTestingController => TestBed.inject(HttpTestingController);
     const { inject } = TestBed;
 
+    const tick = (time: number = 0): Promise<unknown> => new Promise(resolve => setTimeout(resolve, time));
+
     if (!TargetComponent) {
         return {
             getHttpController,
             inject,
             patchWindow,
+            tick,
         };
     }
 
@@ -129,5 +143,10 @@ export const testBedSetupFactory = (
     fixture.autoDetectChanges();
     await fixture.whenRenderingDone();
     const { debugElement, componentInstance: component } = fixture;
-    return { fixture, component, debugElement, getHttpController, inject, patchWindow };
+
+    if (isDialog) {
+        await tick();
+    }
+
+    return { fixture, component, debugElement, getHttpController, inject, patchWindow, tick };
 };

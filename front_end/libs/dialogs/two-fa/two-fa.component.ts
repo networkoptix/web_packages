@@ -164,7 +164,7 @@ export class TwoFAModalContent<A extends TfaAction>
         private store: Store,
         @Inject(WINDOW) private window: Window,
         @Inject(DOCUMENT) private document: Document,
-        @Inject(DIALOG_DATA) protected dialogData: Account2faData<A>,
+        @Inject(DIALOG_DATA) public dialogData: Account2faData<A>,
     ) {
         super(dialogRef);
         this.setupDefaults();
