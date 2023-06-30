@@ -1,13 +1,7 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { Component, Inject } from '@angular/core';
 import { timer } from 'rxjs';
-import {
-    delayWhen,
-    retryWhen,
-    map,
-    tap,
-    mergeMap
-} from 'rxjs/operators';
+import { delayWhen, retryWhen, map, tap, mergeMap } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
@@ -49,20 +43,19 @@ export class RestartServerModalContent extends ModalBase<DT['return']> {
 
         this.serverName = server.name;
 
-        this.restartServer = this.processService
-            .createProcess(() => {
+        this.restartServer = this.processService.createProcess(
+            () => {
                 this.unlock();
-                const haveOnlineServers = system.serverManager.servers
-                    .some(({ status, id }) =>
-                        status === 'Online' && id !== server.id
-                    );
+                const haveOnlineServers = system.serverManager.servers.some(
+                    ({ status, id }) => status === 'Online' && id !== server.id,
+                );
                 if (!haveOnlineServers) {
                     this.ribbonService.show(
                         this.LANG.ribbon.systemOffline,
                         [],
                         'alert',
                         undefined,
-                        true
+                        true,
                     );
                 }
                 this.applyService.isOnline$.next(haveOnlineServers);
@@ -72,38 +65,39 @@ export class RestartServerModalContent extends ModalBase<DT['return']> {
             { ignoreError: true },
             () => {
                 /**
-                         * Potential post restart scenarios
-                         * When 1 server:
-                         *  -- goes offline + returns val.status === 502 || 503 (triggered in mergeMap system.getInfo)
-                         *
-                         * When more than 1 server (at least one other server in system online):
-                         *     when there's more than one server, generally another online server will respond
-                         *       potentially, if the "main" server was restarted, system might just go offline and act like above (When 1 server)
-                         *  Normal potential scenarios:
-                         *  -- restarted server goes offline right away (triggers 'still restarting' Error)
-                         *     once the server comes back online, usually within 10-20 seconds
-                         *     then goes to mergeMap system.getinfo to wait for system to come back online
-                         *  -- restarted server stays online & then goes offline at least once
-                         *     triggers !serverHasGoneOfflineOnce while online
-                         *     then waits for server to go offline
-                         *     once server comes back online, goes to checking whether system is back online
-                         *  -- restarted server stays online & never goes offline
-                         *     if server stays online for more than ~24 seconds (serverOnline < 6)
-                         *       then skips to system online check
-                         *  -- there might be an instance where after server comes back online, system shows online, but then system goes offline again
-                         *     --> not sure how we can handle this
-                         */
+                 * Potential post restart scenarios
+                 * When 1 server:
+                 *  -- goes offline + returns val.status === 502 || 503 (triggered in mergeMap system.getInfo)
+                 *
+                 * When more than 1 server (at least one other server in system online):
+                 *     when there's more than one server, generally another online server will respond
+                 *       potentially, if the "main" server was restarted, system might just go offline and act like above (When 1 server)
+                 *  Normal potential scenarios:
+                 *  -- restarted server goes offline right away (triggers 'still restarting' Error)
+                 *     once the server comes back online, usually within 10-20 seconds
+                 *     then goes to mergeMap system.getinfo to wait for system to come back online
+                 *  -- restarted server stays online & then goes offline at least once
+                 *     triggers !serverHasGoneOfflineOnce while online
+                 *     then waits for server to go offline
+                 *     once server comes back online, goes to checking whether system is back online
+                 *  -- restarted server stays online & never goes offline
+                 *     if server stays online for more than ~24 seconds (serverOnline < 6)
+                 *       then skips to system online check
+                 *  -- there might be an instance where after server comes back online, system shows online, but then system goes offline again
+                 *     --> not sure how we can handle this
+                 */
                 system.currentBusyServerIds.add(server.id);
                 this.close(servers.status.restarting);
                 let systemOfflineShown = false;
                 let serverHasGoneOfflineOnce = false;
                 let serverOnlineChecked = 0;
-                const serverSubscription = system.serverManager.getForceServers(false)
+                const serverSubscription = system.serverManager
+                    .getForceServers(false)
                     .pipe(
                         map(res => {
                             if (res) {
                                 const serverStatuses = Object.fromEntries(
-                                    res.map(server => [server.id, server.status])
+                                    res.map(server => [server.id, server.status]),
                                 );
                                 if (!serverStatuses[server.id]) {
                                     throw Error('server not found');
@@ -114,7 +108,7 @@ export class RestartServerModalContent extends ModalBase<DT['return']> {
                                 }
                                 if (
                                     !serverHasGoneOfflineOnce ||
-                                        serverOnlineChecked < this.maxNumberServerChecked
+                                    serverOnlineChecked < this.maxNumberServerChecked
                                 ) {
                                     serverOnlineChecked++;
                                     throw Error('still in the process of restarting');
@@ -131,7 +125,8 @@ export class RestartServerModalContent extends ModalBase<DT['return']> {
                                 throw Error('re-login on restart');
                             }
                             // makes sure that system is online
-                            return system.getInfo(true, false)
+                            return system
+                                .getInfo(true, false)
                                 .then(() => {
                                     if (!system.isOnline) {
                                         this.ribbonService.show(
@@ -139,7 +134,7 @@ export class RestartServerModalContent extends ModalBase<DT['return']> {
                                             [],
                                             'alert',
                                             undefined,
-                                            true
+                                            true,
                                         );
                                         throw Error('system is offline still');
                                     }
@@ -150,14 +145,11 @@ export class RestartServerModalContent extends ModalBase<DT['return']> {
                         }),
                         retryWhen(errors => {
                             /** If single server system or only online server, system goes offline
-                                 * systemOfflineShown used to stop block from running constantly while offline
-                                 * Otherwise, catches all other errors and retries every 4 seconds */
+                             * systemOfflineShown used to stop block from running constantly while offline
+                             * Otherwise, catches all other errors and retries every 4 seconds */
                             return errors.pipe(
                                 tap(val => {
-                                    if (
-                                        !systemOfflineShown &&
-                                            [502, 503].includes(val.status)
-                                    ) {
+                                    if (!systemOfflineShown && [502, 503].includes(val.status)) {
                                         systemOfflineShown = true;
                                         serverHasGoneOfflineOnce = true;
                                         this.ribbonService.show(
@@ -165,13 +157,13 @@ export class RestartServerModalContent extends ModalBase<DT['return']> {
                                             [],
                                             'alert',
                                             undefined,
-                                            true
+                                            true,
                                         );
                                     }
                                 }),
-                                delayWhen(() => timer(4000))
+                                delayWhen(() => timer(4000)),
                             );
-                        })
+                        }),
                     )
                     .subscribe(() => {
                         system.isAvailable = true;
@@ -192,15 +184,13 @@ export class RestartServerModalContent extends ModalBase<DT['return']> {
                     this.close(servers.status.offline);
                     this.toastService.notify(message, ToastType.Warning);
                 } else if (err.errorId === servers.errors.oldSessionErrorId) {
-                    this.toastService.notify(
-                        this.LANG.servers.restartFailed,
-                        ToastType.Warning,
-                    );
+                    this.toastService.notify(this.LANG.servers.restartFailed, ToastType.Warning);
                 } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
                     return this.dialogs.expiredSession().then(() => this.window.location.reload());
                 } else {
                     this.toastService.notify(message, ToastType.Warning);
                 }
-            });
+            },
+        );
     }
 }

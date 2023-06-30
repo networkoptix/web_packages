@@ -59,9 +59,7 @@ export class SelectTimeRangeModalContent extends ModalBase<DT['return']> impleme
     public save = ($event: MouseEvent): void => {
         $event.preventDefault();
         const nowTime = this.vms.tweakT(new Date().getTime());
-        const startTime = new Date(
-            this.startDate + 'T' + this.startTime,
-        ).getTime();
+        const startTime = new Date(this.startDate + 'T' + this.startTime).getTime();
         const endTime = new Date(this.endDate + 'T' + this.endTime).getTime();
 
         const start = this.vms.untweakT(Math.min(nowTime, startTime));
@@ -75,9 +73,7 @@ export class SelectTimeRangeModalContent extends ModalBase<DT['return']> impleme
     };
 
     checkMaxMinDate(): void {
-        const newStartDate = new Date(
-            this.startDate + 'T' + this.startTime
-        ).getTime();
+        const newStartDate = new Date(this.startDate + 'T' + this.startTime).getTime();
 
         if (
             isNaN(newStartDate) ||
@@ -88,26 +84,17 @@ export class SelectTimeRangeModalContent extends ModalBase<DT['return']> impleme
             this.startTime = dateFormat(this.tweakedTimelineStartDate, TIME_FORMAT_STRING);
         }
 
-        const newEndDate = new Date(
-            this.endDate + 'T' + this.endTime
-        ).getTime();
+        const newEndDate = new Date(this.endDate + 'T' + this.endTime).getTime();
 
-        if (
-            isNaN(newEndDate) ||
-            newEndDate > this.tweakedTimelineEndDate.getTime()
-        ) {
+        if (isNaN(newEndDate) || newEndDate > this.tweakedTimelineEndDate.getTime()) {
             this.endDate = dateFormat(this.tweakedTimelineEndDate, DATE_FORMAT_STRING);
             this.endTime = dateFormat(this.tweakedTimelineEndDate, TIME_FORMAT_STRING);
         }
     }
 
     private initSelectionDates(): void {
-        this.tweakedTStart = new Date(
-            this.vms.tweakT(this.selection.range.start)
-        );
-        this.tweakedTEnd = new Date(
-            this.vms.tweakT(this.selection.range.end)
-        );
+        this.tweakedTStart = new Date(this.vms.tweakT(this.selection.range.start));
+        this.tweakedTEnd = new Date(this.vms.tweakT(this.selection.range.end));
 
         this.startDate = dateFormat(this.tweakedTStart, DATE_FORMAT_STRING);
         this.startTime = dateFormat(this.tweakedTStart, TIME_FORMAT_STRING);
@@ -116,12 +103,8 @@ export class SelectTimeRangeModalContent extends ModalBase<DT['return']> impleme
     }
 
     private initTimelineDates(): void {
-        this.tweakedTimelineStartDate = new Date(
-            this.vms.tweakT(this.timeline.fullRange.start)
-        );
-        this.tweakedTimelineEndDate = new Date(
-            this.vms.tweakT(this.timeline.fullRange.end)
-        );
+        this.tweakedTimelineStartDate = new Date(this.vms.tweakT(this.timeline.fullRange.start));
+        this.tweakedTimelineEndDate = new Date(this.vms.tweakT(this.timeline.fullRange.end));
 
         this.timelineStart = dateFormat(this.tweakedTimelineStartDate, DATE_FORMAT_STRING);
         this.timelineEnd = dateFormat(this.tweakedTimelineEndDate, DATE_FORMAT_STRING);

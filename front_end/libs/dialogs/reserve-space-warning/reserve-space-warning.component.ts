@@ -18,11 +18,7 @@ export class ReserveSpaceWarningModalContent implements OnInit {
     acceptOverwrite: Process;
     icons = icons;
 
-    constructor(
-        private processService: NxProcessService,
-        private dialogRef: DialogRef,
-        // @Inject(DIALOG_DATA) private dialogData: never,
-    ) {}
+    constructor(private processService: NxProcessService, private dialogRef: DialogRef) {}
 
     ngOnInit(): void {
         this.acceptOverwrite = this.processService.createProcess(() => {

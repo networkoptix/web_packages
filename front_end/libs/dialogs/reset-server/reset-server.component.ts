@@ -57,49 +57,48 @@ export class ResetServerModalContent extends ModalBase<DT['return']> implements 
         const handleResetFailError = (from: string, error: unknown): void => {
             this.unlock();
             console.error(`Error in reset-server dialog from ${from}:`, error);
-            this.toastService.notify(
-                this.LANG.servers.resetFailed,
-                ToastType.Warning,
-            );
+            this.toastService.notify(this.LANG.servers.resetFailed, ToastType.Warning);
         };
 
         const wrongPasswordHandler = (): false => {
-            this.toastService.notify(
-                this.LANG.servers.resetFailed,
-                ToastType.Warning,
-            );
+            this.toastService.notify(this.LANG.servers.resetFailed, ToastType.Warning);
             return false;
         };
         const isResettingCurrentServer = (): boolean => {
-            const currentServer = this.system.serverManager.servers
-                .find(s => s.id === server.id);
-            return currentServer.networkAddresses.includes(this.document.location.host) ||
-                this.system.info.name === currentServer.name;
+            const currentServer = this.system.serverManager.servers.find(s => s.id === server.id);
+            return (
+                currentServer.networkAddresses.includes(this.document.location.host) ||
+                this.system.info.name === currentServer.name
+            );
         };
         const routeToNextServer = (): void => {
             const { servers } = this.system.serverManager;
             const currentServerIndex = servers.findIndex(s => s.id === server.id);
-            const nextServerId = cleanId(currentServerIndex === servers.length - 1
-                ? servers[0].id : servers[currentServerIndex + 1].id);
+            const nextServerId = cleanId(
+                currentServerIndex === servers.length - 1
+                    ? servers[0].id
+                    : servers[currentServerIndex + 1].id,
+            );
             this.router.navigate(['/settings', 'servers', nextServerId]);
         };
 
-        this.resetServer = this.processService
-            .createProcess(() => {
+        this.resetServer = this.processService.createProcess(
+            () => {
                 this.lock();
-                return this.system.serverManager.restoreFactorySettings(
-                    server.id,
-                    this.password
-                ).toPromise();
-            }, {
+                return this.system.serverManager
+                    .restoreFactorySettings(server.id, this.password)
+                    .toPromise();
+            },
+            {
                 ignoreError: true,
                 ignoreUnauthorized: true,
                 successMessage: this.LANG.servers.beginReset,
                 errorCodes: {
                     invalidParameter: wrongPasswordHandler,
-                    wrongPassword: wrongPasswordHandler
-                }
-            }, async () => {
+                    wrongPassword: wrongPasswordHandler,
+                },
+            },
+            async () => {
                 const numberOfServers = this.system.serverManager.servers?.length || 0;
                 if (environment.isLocal && numberOfServers) {
                     this.close(true);
@@ -116,7 +115,9 @@ export class ResetServerModalContent extends ModalBase<DT['return']> implements 
 
                 let moduleInfo: ModuleInformation;
                 try {
-                    moduleInfo = await this.system.serverManager.getModuleInfo(server.id).toPromise();
+                    moduleInfo = await this.system.serverManager
+                        .getModuleInfo(server.id)
+                        .toPromise();
                 } catch (err) {
                     if (![503, 504].includes(err.status)) {
                         return handleResetFailError('getModuleInfo', err);
@@ -127,9 +128,11 @@ export class ResetServerModalContent extends ModalBase<DT['return']> implements 
                     }
                 }
                 const { runtimeId: initialRuntimeId } = moduleInfo.reply;
-                return this.system.serverManager.restartServer(server.id)
+                return this.system.serverManager
+                    .restartServer(server.id)
                     .then(() => {
-                        const serverSubscription = this.system.serverManager.getModuleInfo(server.id)
+                        const serverSubscription = this.system.serverManager
+                            .getModuleInfo(server.id)
                             .pipe(
                                 map(res => {
                                     if (res.reply.id !== server.id) {
@@ -139,11 +142,7 @@ export class ResetServerModalContent extends ModalBase<DT['return']> implements 
                                         throw Error('runtime id should be different after restart');
                                     }
                                 }),
-                                retryWhen(errors =>
-                                    errors.pipe(delayWhen(() =>
-                                        timer(4000)
-                                    ))
-                                )
+                                retryWhen(errors => errors.pipe(delayWhen(() => timer(4000)))),
                             )
                             .subscribe(
                                 () => {
@@ -152,8 +151,8 @@ export class ResetServerModalContent extends ModalBase<DT['return']> implements 
                                     const successMessage = {
                                         value: this.LANG.servers.resetSuccessful,
                                         params: {
-                                            serverName: this.serverName
-                                        }
+                                            serverName: this.serverName,
+                                        },
                                     };
                                     this.toastService.notify(successMessage, ToastType.Success);
                                     serverSubscription.unsubscribe();
@@ -161,11 +160,12 @@ export class ResetServerModalContent extends ModalBase<DT['return']> implements 
                                 err => {
                                     console.error('error in reset-server dialog', err);
                                     return handleResetFailError('getModule post restart', err);
-                                }
+                                },
                             );
                     })
                     .catch(err => handleResetFailError('restartServer', err));
-            }, err => {
+            },
+            err => {
                 this.unlock();
                 if (err.errorId === servers.errors.oldSessionErrorId) {
                     this.toastService.notify(
@@ -175,7 +175,8 @@ export class ResetServerModalContent extends ModalBase<DT['return']> implements 
                 } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
                     return this.dialogs.expiredSession().then(() => this.window.location.reload());
                 }
-            });
+            },
+        );
     }
 
     ngAfterViewInit(): void {

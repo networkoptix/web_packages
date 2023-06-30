@@ -37,21 +37,26 @@ export class RemoveUserModalContent extends ModalBase<DT['return']> {
         this.dialogTitle = this.LANG.dialogs.titles[`${msg}User`];
         this.dialogButtonText = this.LANG.dialogs.buttons[msg];
 
-        this.removeUserProcess = this.processService.createProcess(() => {
-            this.lock();
-            return system.userManager.deleteUser(user);
-        }, {
-            errorPrefix: this.LANG.errorCodes.cantSharePrefix,
-            ignoreError: true
-        }, () => {
-            system.getUsers(true).then(() => this.dialogRef.close(true));
-            this.close(true);
-        }, () => {
-            this.toastService.notify(
-                this.LANG.dialogs.updateSession.removeUser,
-                ToastType.Warning,
-            );
-            this.unlock();
-        });
+        this.removeUserProcess = this.processService.createProcess(
+            () => {
+                this.lock();
+                return system.userManager.deleteUser(user);
+            },
+            {
+                errorPrefix: this.LANG.errorCodes.cantSharePrefix,
+                ignoreError: true,
+            },
+            () => {
+                system.getUsers(true).then(() => this.dialogRef.close(true));
+                this.close(true);
+            },
+            () => {
+                this.toastService.notify(
+                    this.LANG.dialogs.updateSession.removeUser,
+                    ToastType.Warning,
+                );
+                this.unlock();
+            },
+        );
     }
 }

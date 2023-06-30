@@ -30,11 +30,16 @@ export class ResetBackupModalContent {
     ngOnInit(): void {
         pickFrom(this.dialogData, ['system', 'setDefaultBackupSettings'], this);
 
-        this.resetBackupProcess = this.processService.createProcess(() => {
-            return this.setDefaultBackupSettings();
-        }, { ignoreError: true }).then(() => {
-            this.close();
-        });
+        this.resetBackupProcess = this.processService
+            .createProcess(
+                () => {
+                    return this.setDefaultBackupSettings();
+                },
+                { ignoreError: true },
+            )
+            .then(() => {
+                this.close();
+            });
     }
 
     close = (): void => {

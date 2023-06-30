@@ -1,10 +1,5 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
-import {
-    Component,
-    Inject,
-    Renderer2,
-    ViewChild
-} from '@angular/core';
+import { Component, Inject, Renderer2, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -28,7 +23,7 @@ export class RemoveSystemModalContent extends ModalBase<DT['return']> {
     wrongPassword: boolean;
     auth = {
         username: '',
-        password: ''
+        password: '',
     };
 
     hideErrors = true;
@@ -56,30 +51,35 @@ export class RemoveSystemModalContent extends ModalBase<DT['return']> {
     ngOnInit(): void {
         this.auth.username = this.system.userManager.currentUserEmail;
 
-        this.disconnectFromAccount = this.processService.createProcess(() => {
-            this.lock();
-            this.disconnectAccountForm.controls.password.setErrors(undefined);
-            this.wrongPassword = false;
-            return this.system.deleteFromCurrentAccount(this.auth.password).toPromise();
-        }, {
-            ignoreUnauthorized: true,
-            errorCodes: {
-                accountBlocked: this.credentialErrorHandler,
-                notAuthorized: this.credentialErrorHandler
+        this.disconnectFromAccount = this.processService.createProcess(
+            () => {
+                this.lock();
+                this.disconnectAccountForm.controls.password.setErrors(undefined);
+                this.wrongPassword = false;
+                return this.system.deleteFromCurrentAccount(this.auth.password).toPromise();
             },
-            errorPrefix: this.LANG.errorCodes.cantUnshareWithMeSystemPrefix
-        }, () => {
-            this.close(true);
-            const msg = {
-                value: this.LANG.toastMessage.system.deleted.success,
-                params: {
-                    systemName: this.system.info.systemName || this.system.info.name
-                }
-            };
-            this.toastService.notify(msg, ToastType.Success);
-        }, err => {
-            console.error(err);
-            this.unlock();
-        });
+            {
+                ignoreUnauthorized: true,
+                errorCodes: {
+                    accountBlocked: this.credentialErrorHandler,
+                    notAuthorized: this.credentialErrorHandler,
+                },
+                errorPrefix: this.LANG.errorCodes.cantUnshareWithMeSystemPrefix,
+            },
+            () => {
+                this.close(true);
+                const msg = {
+                    value: this.LANG.toastMessage.system.deleted.success,
+                    params: {
+                        systemName: this.system.info.systemName || this.system.info.name,
+                    },
+                };
+                this.toastService.notify(msg, ToastType.Success);
+            },
+            err => {
+                console.error(err);
+                this.unlock();
+            },
+        );
     }
 }
