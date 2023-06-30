@@ -14,6 +14,7 @@ events {
 }
 
 http {
+    proxy_cache_path /var/cache/nginx keys_zone=static_cache:10m;
     include mime.types;
     default_type application/octet-stream;
     sendfile on;
@@ -175,6 +176,45 @@ http {
         location /static/media {
             rewrite ^/static/media(.*)$ $1 break;
             proxy_pass http://$PORTAL_BUCKET.s3.amazonaws.com;
+        }
+
+        location ~* ^/static/lang_(.*)$ {
+            proxy_cache_key ${DOLLAR}scheme://${DOLLAR}host${DOLLAR}uri${DOLLAR}is_args${DOLLAR}query_string;
+            proxy_cache static_cache;
+            proxy_cache_valid 200 302 10m;
+            proxy_cache_lock on;
+            proxy_cache_background_update on;
+            proxy_cache_bypass ${DOLLAR}cookie_nocache ${DOLLAR}arg_nocache;
+            proxy_ignore_headers Cache-Control;
+            add_header X-Proxy-Cache ${DOLLAR}upstream_cache_status;
+            add_header X-debug-message-1 "uri ${DOLLAR}uri" always;
+            include proxy.conf;
+            proxy_intercept_errors on;
+            proxy_pass http://app_server/static/lang_$1;
+            error_page 404 = @local_static;
+        }
+
+        # Data structure images and files
+        location ~* ^/static/images/(promo/.*|dark_logo\.png|logo\.png|favicon\.ico|placeholders/page/Maintenance\.svg)$ {
+            proxy_cache_key ${DOLLAR}scheme://${DOLLAR}host${DOLLAR}uri${DOLLAR}is_args${DOLLAR}query_string;
+            proxy_cache static_cache;
+            proxy_cache_valid 200 302 10m;
+            proxy_cache_lock on;
+            proxy_cache_background_update on;
+            proxy_cache_bypass ${DOLLAR}cookie_nocache ${DOLLAR}arg_nocache;
+            proxy_ignore_headers Cache-Control;
+            add_header X-Proxy-Cache ${DOLLAR}upstream_cache_status;
+            add_header X-debug-message-1 "uri ${DOLLAR}uri" always;
+            include proxy.conf;
+            proxy_intercept_errors on;
+            proxy_pass http://app_server/static/images/$1;
+            error_page 404 = @local_static;
+        }
+
+        location @local_static {
+            root /app/app/static;
+            try_files /$CUSTOMIZATION/${DOLLAR}uri /common/${DOLLAR}uri =404;
+            error_page 404 /common/static/index.html;
         }
 
         location ~* ^/static/([\d]+)/(.*)$ {

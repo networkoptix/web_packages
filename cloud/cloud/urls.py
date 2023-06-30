@@ -15,6 +15,7 @@ Including another URLconf
 """
 
 from django.conf.urls import include
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import re_path
 from django.contrib import admin
 from django.shortcuts import redirect, render
@@ -24,9 +25,12 @@ from django.conf.urls.static import static
 from django.db import DEFAULT_DB_ALIAS, connections
 from django.db.migrations.executor import MigrationExecutor
 from django.http import HttpResponse
+from django.views.static import serve
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+
+from cms.views import static_serve
 from notifications import urls as notifications_urls
 from cloud.views.meta import app_view, robots_txt
 from cloud.views.utils import serve_static
@@ -104,11 +108,18 @@ urlpatterns = [
     re_path(r'^authorize.*', TemplateView.as_view(template_name="static/authorization/index.html")),
     re_path(r'^robots.txt', robots_txt),
     re_path(r'^serve/(?P<static_path>.+?)/?$', serve_static, name="serve_static"),
+    # Serving DB static for local development
+    re_path(r'^static/images/(promo/.*|dark_logo\.png|logo\.png|favicon\.ico|placeholders/page/Maintenance\.svg)$',
+            static_serve.customizable_files, name="customizable_static"),
+    re_path(r'^static/lang_(?P<language_code>[a-z]{2,3}_[A-Z]{2,3})/(?P<filename>.*)',
+            static_serve.language_template),
     re_path(r'^(?!static|preview|admin).*', app_view)
 ]
+
+if settings.LOCAL_ENVIRONMENT:
+    urlpatterns += staticfiles_urlpatterns()
 
 if settings.LOCAL_ENVIRONMENT and not settings.TESTING:
     urlpatterns += static(settings.PREVIEW_URL, document_root=settings.PREVIEW_LOCATION)
     urlpatterns.insert(0, re_path(r'^profiler/', include('silk.urls')))
-
 handler404 = 'cloud.urls.view_404'

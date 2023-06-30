@@ -9,6 +9,8 @@ from cloud.helpers.exceptions import ErrorCodes, APIInternalException
 
 from cloud.helpers.exceptions import APIRequestException, ErrorCodes, APIInternalException
 
+from cloud.helpers.exceptions import APIRequestException, ErrorCodes, APIInternalException
+
 
 class BaseCache(object):
     """Wraps document caching logic
@@ -239,3 +241,27 @@ class AgreementCache(IntegrationCache):
 
 class ArticleCache(IntegrationCache):
     _cache_key = 'article'
+
+
+class HashCache:
+    _cache_name: str = None
+    _timeout = 86400 * 10
+
+    def __init__(self, hash_key: str, field_key: str, cache_name: str = None):
+        self.hash_key = hash_key
+        self.field_key = field_key
+        self.cache_name = cache_name or self._cache_name
+        self.cache = caches[self.get_cache_name()]
+
+    def get_cache_name(self):
+        return self.cache_name
+
+    def set_value(self, value):
+        self.cache.hset(self.hash_key, self.field_key, value)
+        self.set_timeout()
+
+    def set_timeout(self):
+        self.cache.touch(self.hash_key, timeout=self._timeout)
+
+    def get_value(self):
+        return self.cache.hget(self.hash_key, self.field_key)

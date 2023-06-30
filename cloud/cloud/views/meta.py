@@ -4,6 +4,8 @@ import re
 from itertools import chain
 import urllib
 import logging
+
+from asgiref.sync import async_to_sync
 from django.conf import settings
 from django import shortcuts
 from django.http import HttpResponse
@@ -12,6 +14,7 @@ from django.views.generic.base import TemplateView
 import waffle
 
 from cms.models import cloud_portal_customization_cache
+from cms.controllers.static_files import get_template
 from util.helpers import detect_language_by_request, get_customization
 from cms.models import Menu, Asset, Language
 from cms.controllers import documentation
@@ -127,30 +130,27 @@ def get_doc_meta(path, config, lang, config_meta, lang_meta):
 # def get_content_meta(path, config, lang, config_meta, lang_meta):
 #     return {}
 
+
 def sub_translated(target, sub_lookup):
     if isinstance(target, str):
         return sub_lookup.get(target, target)
     if isinstance(target, list):
         return [sub_translated(val, sub_lookup) for val in target]
-
-
     return {key: sub_translated(val, sub_lookup) for key,val in target.items()}
 
 
-def get_lang_meta(request, lang_path=None, static_lang_path=None):
+def get_lang_meta(request, lang=None):
     try:
-        lang = detect_language_by_request(request)
-        if not lang_path:
-            lang_path = os.path.join(settings.STATIC_LOCATION, request.CUSTOMIZATION,
-                                    'static', f'lang_{lang}', 'language_compiled.json')
-        if not static_lang_path:
-            static_lang_path = os.path.join(settings.STATIC_LOCATION, request.CUSTOMIZATION,
-                                    'static', 'language_i18n_static.json')
-        with open(static_lang_path) as static_lang_file:
-            meta_defaults = json.load(static_lang_file)['metaDefaults']
+        if not lang:
+            lang = detect_language_by_request(request)
+        lang_path = 'static/lang_{{language}}/language_compiled.json'
+        static_lang_path = 'static/language_i18n_static.json'
 
-        with open(lang_path) as compiled_lang_file:
-            compiled_lang = json.load(compiled_lang_file)
+        content = async_to_sync(get_template)(request, filename=static_lang_path)
+        meta_defaults = json.loads(content)['metaDefaults']
+
+        content = async_to_sync(get_template)(request, filename=lang_path, language_code=lang)
+        compiled_lang = json.loads(content)
 
         return sub_translated(meta_defaults, compiled_lang)
     except Exception as e:
@@ -179,8 +179,9 @@ def get_config_meta(request, config_path=None):
 
 def get_meta(request, config_path=None):
     config = cloud_portal_customization_cache(request.CUSTOMIZATION)['config']
-    lang = Language(code=detect_language_by_request(request))
-    lang_meta = get_lang_meta(request)
+    lang_code = detect_language_by_request(request)
+    lang = Language(code=lang_code)
+    lang_meta = get_lang_meta(request, lang=lang_code)
     config_meta = get_config_meta(request, config_path)
     base_meta = {
         **lang_meta['default'],

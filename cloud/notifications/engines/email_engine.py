@@ -8,42 +8,10 @@ from django.core.cache import cache
 from django.core.mail.backends.smtp import EmailBackend
 
 from cms.controllers import filldata
+from cms.controllers.static_files import read_cached_file, read_db_context_template, TemplatesCache
+from cms.models import Asset
 
 logger = logging.getLogger(__name__)
-
-
-def email_cache(customization_name, cache_type, value=None, force=None):
-    data = cache.get('email_cache')
-    global_id = 0
-    if not data:
-        data = {customization_name: {'version_id': global_id}}
-
-    if customization_name in data and 'version_id' in data[customization_name]:
-        from cms.models import check_update_cache
-        global_force, global_id = check_update_cache(customization_name, data[customization_name]['version_id'])
-        if not force:
-            force = global_force
-
-    if data and customization_name in data and 'version_id' in data[customization_name]\
-            and data[customization_name]['version_id'] != global_id:
-        force = True
-
-    if not data:
-        data = {}
-
-    if customization_name not in data or force:
-        data[customization_name] = {'version_id': global_id}
-
-    if cache_type not in data[customization_name]:
-        data[customization_name][cache_type] = {}
-
-    if not value:
-        return data[customization_name][cache_type]
-
-    data[customization_name][cache_type] = value
-    cache.set('email_cache', data)
-
-
 EMAIL_CONFIG = ["portal_url", "smtp_host", "smtp_port", "smtp_password", "smtp_user", "smtp_tls", "mail_from_name", "mail_from_email"]
 
 
@@ -68,13 +36,19 @@ def send(email, msg_type, message, language_code, customization_name, subject=''
     config = {
         'portal_url': customization_cache["portal_url"]
     }
+    from cms.models import get_cloud_portal_asset
+    asset = get_cloud_portal_asset(customization=customization_name)
+    version_id = asset.version_id(customization_name)
+    skin = asset.read_global_value("%SKIN%")
     if not subject:
-        subject = get_email_title(customization_name, language_code, msg_type)
+        subject = read_cached_email_title(asset, customization_name, language_code, msg_type, skin, version_id)
         subject = pystache.render(subject, {"message": message, "config": config})
         subject = subject.replace("\n", "")
 
-    message_html_template = read_template(customization_name, msg_type, language_code, True)
-    message_txt_template = read_template(customization_name, msg_type, language_code, False)
+    message_html_template = read_cached_template(asset, customization_name, msg_type,
+                                                 language_code, True, skin, version_id)
+    message_txt_template = read_cached_template(asset, customization_name, msg_type,
+                                                language_code, False, skin, version_id)
 
     email_html_body = pystache.render(message_html_template, {"message": message, "config": config})
     email_txt_body = pystache.render(message_txt_template, {"message": message, "config": config})
@@ -105,7 +79,10 @@ def send(email, msg_type, message, language_code, customization_name, subject=''
     # msg.attach_alternative(email_txt_body, "text/plain")
 
     msg.mixed_subtype = 'related'
-    msg_img = MIMEImage(read_file(customization_name, 'templates/email_logo.png'), _subtype="png")
+    msg_img = MIMEImage(read_cached_file(asset, customization_name,
+                                         'templates/email_logo.png',
+                                         language_code, skin, version_id),
+                        _subtype="png")
     msg_img.add_header('Content-ID', '<logo>')
     msg.attach(msg_img)
 
@@ -119,34 +96,57 @@ def send(email, msg_type, message, language_code, customization_name, subject=''
     mail_obj.close()
     return True
 
+
 NOTIFICATION_TEMPLATE_FILENAME = "templates/lang_{{language}}/notifications-language.json"
 EMAIL_TITLES = 'email_titles'
 EMAIL_SUBJECT = "emailSubject"
 
-def get_email_title(customization_name, language_code, event):
-    titles_cache = email_cache(customization_name, EMAIL_TITLES)
-    if language_code not in titles_cache:
-        data = read_file(customization_name, NOTIFICATION_TEMPLATE_FILENAME, language_code)
-        titles_cache[language_code] = json.loads(data)
-        email_cache(customization_name, EMAIL_TITLES, titles_cache)
-    return titles_cache[language_code][event][EMAIL_SUBJECT]
 
+def read_cached_template(asset: Asset, customization_name: str, filename: str,
+                         language_code: str, html: bool, skin: str, version_id: int):
+    """
+    Tries to get template content from cache, if it is missed then loads value from DB.
+    Args:
+        asset (Asset, required): cloud portal asset
+        customization_name (str, required): customization name
+        filename (str, required): file/template name
+        language_code (str, required): language code
+        html (bool, required): is template a html file
+        skin (str, required): skin name
+        version_id (int, required): asset review version id
 
-def read_template(customization_name, name, language_code, html):
+    Returns str: returns template string
+
+    """
     suffix = ''
     if not html:
         suffix = '.txt'
-    filename = os.path.join("templates/lang_{{language}}", name + suffix + '.mustache')
-    return read_file(customization_name, filename, language_code)
+    filename = os.path.join("templates/lang_{{language}}", filename + suffix + '.mustache')
+    return read_cached_file(asset, customization_name, filename, language_code, skin, version_id, is_email=True)
 
 
-def read_file(customization_name, filename, language_code=""):
-    files_cache = email_cache(customization_name, 'files')
-    translated_name = filename.replace("{{language}}", language_code)
-    if translated_name not in files_cache:
-        from cms.models import get_cloud_portal_asset
-        files_cache[translated_name] = filldata.read_customized_file(filename,
-                                                                     get_cloud_portal_asset(customization=customization_name),
-                                                                     language_code)
-        email_cache(customization_name, 'files', files_cache)
-    return files_cache[translated_name]
+def read_cached_email_title(asset: Asset, customization_name: str,
+                            language_code: str, event: str, skin: str, version_id: int):
+    """
+    Tries to get `notifications-language.json` file for `language_code` from cache,
+     if it is missed then loads value from DB.
+    Args:
+        asset (Asset, required): cloud portal asset
+        customization_name (str, required): customization name
+        language_code (str, required): language code
+        event (str, required): message type
+        skin (str, required): skin name
+        version_id (int, required): asset review version id
+
+    Returns str: returns title string
+
+    """
+    templates_cache = TemplatesCache(customization_name, NOTIFICATION_TEMPLATE_FILENAME,
+                                     language_code, skin, version_id)
+    if data := templates_cache.get_value():
+        return data[event][EMAIL_SUBJECT]
+    data = read_db_context_template(asset, customization_name, NOTIFICATION_TEMPLATE_FILENAME,
+                                    language_code, skin, version_id)
+    data = json.loads(data)
+    templates_cache.set_value(data)
+    return data[event][EMAIL_SUBJECT]

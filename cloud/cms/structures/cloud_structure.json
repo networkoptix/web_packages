@@ -41,6 +41,17 @@
               "background": "light",
               "format": "svg"
             }
+          },
+          {
+            "label": "Service maintenance image",
+            "name": "static/customizable/images/placeholders/page/Maintenance.svg",
+            "value": "/static/images/placeholders/page/Maintenance.svg",
+            "type": "external_file",
+            "description": "Image for page. Image goes above text on page",
+            "meta": {
+              "background": "light",
+              "format": "svg"
+            }
           }
         ]
       },
@@ -288,6 +299,66 @@
               "nxvms"
             ],
             "description": "Show warnings when these keywords is used within assets"
+          },
+                    {
+            "label": "Favicon",
+            "name": "static/customizable/images/favicon.ico",
+            "value": "",
+            "optional": true,
+            "description": "Favicon for browser tabs",
+            "type": "external_image",
+            "protected": true,
+            "meta": {
+              "background": "transparent",
+              "format": "ico"
+            }
+          },
+          {
+            "label": "Light Theme - Portal header logo",
+            "name": "static/customizable/images/logo.png",
+            "value": "",
+            "description": "Light Theme logo for branding. ",
+            "type": "external_image",
+            "protected": true,
+            "meta": {
+              "background": "white",
+              "format": "png",
+              "height_le": 72,
+              "height_ge": 64,
+              "size": 5242880
+            }
+          },
+          {
+            "label": "Dark Theme - Portal header logo",
+            "name": "static/customizable/images/dark_logo.png",
+            "value": "",
+            "description": "Dark Theme logo for branding. ",
+            "type": "external_image",
+            "protected": true,
+            "meta": {
+              "background": "white",
+              "format": "png",
+              "height_le": 72,
+              "height_ge": 64,
+              "size": 5242880
+            }
+          },
+          {
+            "label": "Email Logo",
+            "name": "static/customizable/templates/email_logo.png",
+            "value": "",
+            "description": "Logo for email. ",
+            "type": "external_image",
+            "protected": true,
+            "meta": {
+              "background": "white",
+              "format": "png",
+              "height_ge": 32,
+              "height_le": 64,
+              "width_ge": 32,
+              "width_le": 240,
+              "size": 5242880
+            }
           }
         ]
       },
@@ -335,6 +406,32 @@
             "description": "Header icon",
             "type": "file",
             "optional": true,
+            "meta": {
+              "background": "light",
+              "format": "svg"
+            }
+          },
+          {
+            "label": "Left block icon (light theme)",
+            "name": "static/customizable/images/promo/landing_promo_1.svg",
+            "value": "/static/images/promo/landing_promo_1.svg",
+            "description": "Header icon",
+            "type": "external_file",
+            "optional": true,
+            "protected": true,
+            "meta": {
+              "background": "light",
+              "format": "svg"
+            }
+          },
+          {
+            "label": "Left block icon (dark theme)",
+            "name": "static/customizable/images/promo/landing_promo_dark_1.svg",
+            "value": "/static/images/promo/landing_promo_dark_1.svg",
+            "description": "Header icon",
+            "type": "external_file",
+            "optional": true,
+            "protected": true,
             "meta": {
               "background": "light",
               "format": "svg"
@@ -405,6 +502,32 @@
             }
           },
           {
+            "label": "Middle block icon (light theme)",
+            "name": "static/customizable/images/promo/landing_promo_2.svg",
+            "value": "/static/images/promo/landing_promo_2.svg",
+            "description": "Header icon",
+            "type": "external_file",
+            "optional": true,
+            "protected": true,
+            "meta": {
+              "background": "light",
+              "format": "svg"
+            }
+          },
+          {
+            "label": "Middle block icon (dark theme)",
+            "name": "static/customizable/images/promo/landing_promo_dark_2.svg",
+            "value": "/static/images/promo/landing_promo_dark_2.svg",
+            "description": "Header icon",
+            "type": "external_file",
+            "optional": true,
+            "protected": true,
+            "meta": {
+              "background": "light",
+              "format": "svg"
+            }
+          },
+          {
             "label": "Middle block title",
             "name": "%BLOCK2_TITLE%",
             "value": "Share",
@@ -463,6 +586,32 @@
             "description": "Header icon",
             "type": "file",
             "optional": true,
+            "meta": {
+              "background": "light",
+              "format": "svg"
+            }
+          },
+          {
+            "label": "Right block icon (light theme)",
+            "name": "static/customizable/images/promo/landing_promo_3.svg",
+            "value": "/static/images/promo/landing_promo_3.svg",
+            "description": "Header icon",
+            "type": "external_file",
+            "optional": true,
+            "protected": true,
+            "meta": {
+              "background": "light",
+              "format": "svg"
+            }
+          },
+          {
+            "label": "Right block icon (dark theme)",
+            "name": "static/customizable/images/promo/landing_promo_dark_3.svg",
+            "value": "/static/images/promo/landing_promo_dark_3.svg",
+            "description": "Header icon",
+            "type": "external_file",
+            "optional": true,
+            "protected": true,
             "meta": {
               "background": "light",
               "format": "svg"

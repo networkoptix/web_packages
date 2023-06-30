@@ -1,10 +1,11 @@
 import re
+
 from django.conf import settings
 from django.core.cache import caches
 from django.core.exceptions import ObjectDoesNotExist
 
 from cloud.customization_context import customization_ctx
-from cms.models import AssetCustomizationReview, AssetType, cloud_portal_customization_cache, Language, Customization
+from cms.models import cloud_portal_customization_cache, Language, Customization
 from django.urls import reverse
 from meilisearch import Client
 
@@ -23,15 +24,27 @@ def get_customization(request=None, /):
     return request.META.get('CUSTOMIZATION') or settings.CUSTOMIZATION
 
 
-def get_customization_name_from_cloud_host(hostname):
+def get_cloud_host_map():
     local_cache = caches['local']
     cloud_host_map = local_cache.get('cloud_host_map')
     if not cloud_host_map:
         customizations = Customization.objects.all().values('host', 'name')
         cloud_host_map = {cust['host']: cust['name'] for cust in customizations}
         local_cache.set('cloud_host_map', cloud_host_map, timeout=3600)  # 1 hour timeout
+    return cloud_host_map
 
+
+def get_customization_name_from_cloud_host(hostname):
+    cloud_host_map = get_cloud_host_map()
     return cloud_host_map.get(hostname)
+
+
+def get_cloud_host_by_customization(customization: str):
+    # TODO. add tests
+    cloud_host_map = get_cloud_host_map()
+    for host, cust in cloud_host_map.items():
+        if cust == customization:
+            return host
 
 
 def get_meilisearch_client():

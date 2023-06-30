@@ -7,7 +7,6 @@ import re
 import sys
 import copy
 from logging import getLogger
-from time import sleep
 from typing import Any, List
 import uuid
 from contextlib import suppress
@@ -364,7 +363,6 @@ async def cloud_portal_customization_cache_async(customization_name, value=None,
                 if landing_description_ds:
                     landing_description = await sync_to_async(landing_description_ds.find_actual_value)(
                         asset)
-
                 data = {
                     'version_id': await sync_to_async(asset.version_id)(),
                     'languages': customization.languages_list,
@@ -429,7 +427,7 @@ async def cloud_portal_customization_cache_async(customization_name, value=None,
                             'default': ds_data.get("%DEFAULT_THEME%"),
                             'dark': ds_data.get("%DARK_THEME%"),
                             'light': ds_data.get("%LIGHT_THEME%")
-                        }
+                        },
                     },
                     'cloud_capabilities': {
                         'integration_store_enabled': integration_store_enabled,

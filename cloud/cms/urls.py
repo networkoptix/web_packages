@@ -1,6 +1,10 @@
 from django.urls import path, include, re_path
 
-from cms.views import integration, article, agreement, asset, documentation, menu, release_notes, utils, portal_notifications, readonly_api
+from cms.views import (
+    integration, article, agreement, asset, documentation,
+    menu, release_notes, utils, portal_notifications,
+    readonly_api, static_serve
+)
 
 from rest_framework.routers import DefaultRouter
 
@@ -43,8 +47,7 @@ urlpatterns = [
     path('sanitize_html', utils.sanitize_html, name='sanitize_html'),
     path('portal_notifications', portal_notifications.notifications, name='portal_notifications'),
     path('readonly_apis/<int:api_id>', readonly_api.get_readonly_api, name="get_readonly_api"),
-    path('readonly_apis', readonly_api.get_readonly_apis, name="get_readonly_apis")
-
+    path('readonly_apis', readonly_api.get_readonly_apis, name="get_readonly_apis"),
 ]
 
 

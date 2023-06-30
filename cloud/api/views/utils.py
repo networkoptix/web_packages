@@ -28,7 +28,7 @@ from cloud.helpers.exceptions import api_success, handle_exceptions, require_par
 from cloud.drf_async import async_api_view as api_view, async_api_view
 from api.serializers import CustomizationCacheSerializer, SettingsSerializer, IpvdSerializer
 from cms.models import Customization, cloud_portal_customization_cache, get_cached_menu, UserGroupsToAssetPermissions, \
-    cached_doc_menu_map, LicenseType, cloud_portal_customization_cache_async, global_version_key
+    cached_doc_menu_map, LicenseType, cloud_portal_customization_cache_async, global_version_key, get_cloud_portal_asset
 from cms.feature_flags.feature_flags import FLAGS, SWITCHES, SAMPLES
 from cms.permissions import IsSuperuser
 

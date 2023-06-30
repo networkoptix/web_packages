@@ -484,6 +484,41 @@ def clear_caches():
         cache.clear()
 
 
+def get_asset_context_by_name(asset, name, **defaults):
+    return Context.objects.get_or_create(asset_type=asset.asset_type, name=name, defaults=defaults)[0]
+
+
+def get_context_datastructure_by_name(context, name, **defaults) -> DataStructure:
+    return DataStructure.objects.get_or_create(context=context, name=name, defaults=defaults)[0]
+
+
+def create_content_version(asset, customization=None, **kwargs):
+    return baker.make(ContentVersion, asset=asset, customization=customization,  **kwargs)
+
+
+def create_review(version, customization,
+                  state=AssetCustomizationReview.REVIEW_STATES.accepted, **kwargs):
+    if state == AssetCustomizationReview.REVIEW_STATES.accepted:
+        version.accepted_date = datetime.now()
+        version.save()
+    return baker.make(AssetCustomizationReview, customization=customization, version=version,
+                      state=state, reviewed_date=datetime.now(), **kwargs)
+
+
+def create_record_with_review(asset: Asset, context: Context, ds_name: str, value,
+                              customization: Customization, ds_defaults: dict = {},
+                              review_state=AssetCustomizationReview.REVIEW_STATES.accepted):
+    ds = get_context_datastructure_by_name(context, ds_name, **ds_defaults)
+    version = create_content_version(asset, customization=customization)
+    # Language Must be set for data record with translatable data structure.
+    # Otherwise, find_actual_data can return default value.
+    record = baker.make(DataRecord, asset=asset, data_structure=ds, value=value,
+                        customization=customization, version=version,
+                        language=asset.default_language or customization.default_language)
+    review = create_review(version, customization, state=review_state)
+    return record, review
+
+
 @pytest.fixture()
 def default_customization_ctx():
     customization_ctx.set("default")

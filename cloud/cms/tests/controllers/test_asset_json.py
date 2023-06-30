@@ -8,7 +8,10 @@ from cms.controllers.integration import make_integrations_json
 from cms.controllers.release_notes import RELEASE_NOTES, make_release_notes_json
 
 from cms.models import AssetCustomizationReview, AssetType, Context, DataStructure
-from cms.controllers.asset_json import REPLACEMENT_LINK, S3_LINK, generate_asset_dictionary, get_contexts_and_datastructures_of_asset_type, get_current_version, generate_context_dicts_with_actual_values
+from cms.controllers.asset_json import (
+    S3_LINK, generate_asset_dictionary, get_contexts_and_datastructures_of_asset_type,
+    get_current_version, generate_context_dicts_with_actual_values
+)
 from conftest import generate_uuids
 from util.base_cache import BaseCache
 
@@ -178,10 +181,12 @@ class TestGenerateContextDictsWithActualValues:
                 id = int(key[:4])
                 assert self.mock_records[id] == context_dict[key]
 
-    def test_s3_links_are_replaced(self):
+    def test_s3_links_are_replaced(self, mocker):
         external_image, external_file = self.datastructures[0:2]
         external_image.type = DataStructure.DATA_TYPES.external_image
         external_image.save()
+        host_mock = mocker.patch('cms.controllers.asset_json.get_cloud_host_by_customization',
+                                 return_value='https://cloud-test.hdw.mx')
         self.mock_records[external_image.id] = f"Test {S3_LINK} Test"
 
         external_file.type = DataStructure.DATA_TYPES.external_file
@@ -194,7 +199,7 @@ class TestGenerateContextDictsWithActualValues:
             for key in context_dict:
                 assert S3_LINK not in context_dict[key]
                 if key in [external_image.name, external_file.name]:
-                    assert REPLACEMENT_LINK in context_dict[key]
+                    assert 'https://cloud-test.hdw.mx/static/media' in context_dict[key]
 
     def test_private_datastructures_are_skipped(self):
         private_ds = self.datastructures[0]

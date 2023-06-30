@@ -7,7 +7,7 @@ from model_bakery import baker
 from cloud.views.meta import *
 from rest_framework.request import Request
 
-from cms.models import AssetType, Customization, Menu, MenuNode
+from cms.models import AssetType, Customization, Menu, MenuNode, Context, ContextTemplate
 from cms.tests.management.commands.test_read_structure import FileTest
 
 
@@ -138,8 +138,8 @@ def test_get_doc_meta(mocker, db):
     }
 
 @pytest.mark.no_db
-def test_get_lang_meta(arf, mocker):
-    mocker.patch('cloud.views.meta.detect_language_by_request')
+def test_get_lang_meta(arf, mocker, default_portal):
+    mocker.patch('cloud.views.meta.detect_language_by_request', return_value='en_US')
     url = str(uuid4())
     request = arf.get(url)
     request.user = AnonymousUser()
@@ -147,10 +147,16 @@ def test_get_lang_meta(arf, mocker):
     compiled_lang = generate_expected_lang_meta()
     meta_defaults = {str(uuid4()): key for key in compiled_lang}
     static_lang = json.dumps({'metaDefaults': meta_defaults})
+    ctx = baker.make(Context, name='test', asset_type=default_portal.asset_type,
+                     file_path='static/lang_{{language}}/language_compiled.json')
+    baker.make(ContextTemplate,
+               language=Language.by_code('en_US'), template=json.dumps(compiled_lang), skin='blue', context=ctx)
+    ctx = baker.make(Context, name='test static meta', asset_type=default_portal.asset_type,
+                     file_path='static/language_i18n_static.json')
+    baker.make(ContextTemplate,
+               language=None, template=static_lang, skin='blue', context=ctx)
 
-    with FileTest(content=json.dumps(compiled_lang)) as lang_path, FileTest(content=static_lang) as static_lang_path:
-        lang_meta = get_lang_meta(request, lang_path=lang_path, static_lang_path=static_lang_path)
-
+    lang_meta = get_lang_meta(request, lang='en_US')
     assert lang_meta == {key: compiled_lang[val] for key, val in meta_defaults.items()}
 
 

@@ -96,7 +96,7 @@ cloud_db = conf['cloud_database']
 # Default Settings
 
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'dal',
     'dal_select2',
     'admin_tools',
@@ -133,7 +133,10 @@ INSTALLED_APPS = (
     'upload',
     # Needs to be last to insure file deletion isn't interrupted by other exceptions
     'django_cleanup.apps.CleanupConfig'
-)
+]
+
+if os.getenv('LOCAL_ENV', False):
+    INSTALLED_APPS.pop(INSTALLED_APPS.index('django.contrib.staticfiles'))
 
 
 MIDDLEWARE = (
@@ -376,8 +379,14 @@ CACHES = {
     "sessions": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": REDIS_CACHE['TIMEOUT'],
-        "LOCATION": REDIS_CACHE['LOCATION'] + '/6',
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/21',
         "KEY_PREFIX": 'sessions'
+    },
+    "templates": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "TIMEOUT": REDIS_CACHE['TIMEOUT'],
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/22',
+        "KEY_PREFIX": 'templates'
     },
     "local": {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
@@ -589,6 +598,9 @@ ADMIN_DASHBOARD = ('cms.models.Asset',
 
 # START s3 config
 AWS_STORAGE_BUCKET_NAME = conf['bucket']
+if LOCAL_ENVIRONMENT:
+    AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME', 'cloud-portal')
+
 AWS_DEFAULT_ACL = 'public-read'
 
 S3_DOMAIN = conf.get(
@@ -601,8 +613,8 @@ AWS_S3_OBJECT_PARAMETERS = {
 INTEGRATION_FILE_STORAGE = 'mysite.storage_backends.MediaStorage'
 # END s3
 
-if LOCAL_ENVIRONMENT:
-    AWS_STORAGE_BUCKET_NAME = 'cloud-portal'
+# if LOCAL_ENVIRONMENT:
+#     AWS_STORAGE_BUCKET_NAME = 'cloud-portal'
 
 # SNS Config
 SNS_CLIENT = {

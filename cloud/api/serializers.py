@@ -10,6 +10,7 @@ import json
 import re
 
 from cloud.helpers.exceptions import APIInternalException
+from cms.controllers.static_files import get_static_files_links
 from cms.models import LicenseType, Menu, MenuNode, UserGroupsToAssetPermissions, cached_doc_menu_map, get_cached_menu
 
 
@@ -218,6 +219,7 @@ class SettingsSerializer(CustomizationCacheSerializer):
     docMenuMap = serializers.DictField()
     licenseTypes = LicenseTypesSerializer(many=True)
     featureFlags = serializers.DictField(child=serializers.BooleanField())
+    staticFiles = serializers.DictField(child=serializers.URLField())
     integrationStoreEnabled = serializers.BooleanField()
     developersEnabled = serializers.BooleanField()
     customClientsEnabled = serializers.BooleanField()
@@ -226,12 +228,13 @@ class SettingsSerializer(CustomizationCacheSerializer):
 
     def extend_settings(self, request):
         from api.views.utils import get_feature_flags
-        customization=request.CUSTOMIZATION
+        customization = request.CUSTOMIZATION
         return {
             'menus': get_cached_menu(customization, user=request.user, request=request),
             'docMenuMap': cached_doc_menu_map(customization_name=customization),
             'licenseTypes': LicenseType.get_license_types(),
-            'featureFlags': get_feature_flags(request)
+            'featureFlags': get_feature_flags(request),
+            'staticFiles': get_static_files_links(request, customization)
         }
 
     def __init__(self, *args, **kwargs):

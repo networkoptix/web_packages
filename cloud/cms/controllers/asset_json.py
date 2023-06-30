@@ -5,13 +5,19 @@ from cloud.helpers.exceptions import ErrorCodes, APIRequestException, APIInterna
 from cms.controllers.filldata import ContextProcessor
 from cms.models import Asset, AssetCustomizationReview, AssetType, Context, DataStructure, get_cloud_portal_asset
 from util.base_cache import BaseCache
+from util.helpers import get_cloud_host_by_customization
 
 S3_STRUCTURE_TYPES = [
             DataStructure.DATA_TYPES.external_image, DataStructure.DATA_TYPES.external_file]
+# TODO. Needs to be replaced with funciton
 S3_LINK = f"https://{settings.AWS_S3_CUSTOM_DOMAIN}"
-REPLACEMENT_LINK = f"{settings.CLOUD_PORTAL_URL}/static/media"
 
 PENDING = AssetCustomizationReview.REVIEW_STATES.pending
+
+
+def replace_s3_link(url: str, customization_name: str) -> str:
+    host = get_cloud_host_by_customization(customization_name)
+    return url.replace(S3_LINK, f'{host}/static/media')
 
 def get_contexts_and_datastructures_of_asset_type(asset_type):
     contexts = Context.objects.filter(asset_type__type=asset_type)
@@ -121,7 +127,7 @@ def generate_context_dicts_with_actual_values(show_pending, show_drafts, context
             actual_value = actual_values[datastructure.id]
 
             if datastructure.type in S3_STRUCTURE_TYPES:
-                actual_value = actual_value.replace(S3_LINK, REPLACEMENT_LINK)
+                actual_value = replace_s3_link(actual_value, customization_name=customization)
 
             if not actual_value and datastructure.type != DataStructure.DATA_TYPES.multiselect:
                 continue

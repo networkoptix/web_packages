@@ -37,33 +37,40 @@ services:
             published: 7700
             protocol: tcp
 
-  # How to run nginx locally as proxy for django
-  # build docker image for nginx.
-  # cd nx_vms/cloud/deploy/cloud_portal-nginx
-  # comment out the following sections
-  # # # # # # # #
-  #  if (${DOLLAR}http_x_forwarded_proto != "https") {
-  #    set ${DOLLAR}r A;
-  #  }
-  # # # # # # # #
-  #  if (${DOLLAR}r = AB) {
-  #    return 301 https://${DOLLAR}host${DOLLAR}request_uri;
-  #  }
-  # # # # # # # #
-  # run './make.sh pack'
-  # cd nx_vms/cloud_portal/etc
-  # run 'docker-compose up -d'
-  # cd nx_vms/cloud_portal/cloud
-  # run 'python manage runserver 0.0.0.0:5000'
-  #  nginx:
-  #    image: cloud_portal_nginx:3.0.0.0
-  #    container_name: cloud_portal_nginx
-  #    ports:
-  #      - "80:80"
-  #    environment:
-  #      - DATA_HOSTS_STR=https://relay.cloud-test.hdw.mx https://relay-aws.cloud-test.hdw.mx https://*.relay.cloud-test.hdw.mx https://*.relay-aws.cloud-test.hdw.mx https://nxcloud-cloud-test-integrations-static.s3.amazonaws.com  https://*.google-analytics.com https://*.hotjar.com;
-  #      - CUSTOMIZATION=default
-  #      - PORTAL_HOST=host.docker.internal
-  #
-  #    volumes:
-  #      - ../cloud/static:/app/app/static
+# ===== How to run nginx locally as proxy for django ======
+# build docker image for nginx.
+# cd nx_vms/cloud/deploy/cloud_portal-nginx
+# comment out the following sections
+# # # # # # # #
+#  if (${DOLLAR}http_x_forwarded_proto != "https") {
+#    set ${DOLLAR}r A;
+#  }
+# # # # # # # #
+#  if (${DOLLAR}r = AB) {
+#    return 301 https://${DOLLAR}host${DOLLAR}request_uri;
+#  }
+# # # # # # # #
+# run './make.sh pack'
+# cd nx_vms/cloud_portal/etc
+# run 'docker-compose up -d'
+# cd nx_vms/cloud_portal/cloud
+#   run 'python manage runserver 0.0.0.0:5000'
+# =========================================================
+
+#  nginx:
+#    image: nginx:1.14.0-alpine
+#    container_name: cloud_portal_nginx
+#    ports:
+#      - "80:80"
+#    environment:
+#      - DATA_HOSTS_STR=https://relay.cloud-test.hdw.mx https://relay-aws.cloud-test.hdw.mx https://*.relay.cloud-test.hdw.mx https://*.relay-aws.cloud-test.hdw.mx https://nxcloud-cloud-test-integrations-static.s3.amazonaws.com  https://*.google-analytics.com https://*.hotjar.com;
+#      - CUSTOMIZATION=default
+#      - PORTAL_HOST=host.docker.internal
+#      - PORTAL_BUCKET=cloud-portal
+#
+#    volumes:
+#      - ../cloud/static:/app/app/static
+#      - ./nginx/proxy.conf:/etc/nginx/proxy.conf
+#      - ./nginx/nginx.conf.template:/etc/nginx/conf.d/nginx.conf.template
+#      - ./nginx/run_nginx.sh:/run_nginx.sh
+#    command: sh /run_nginx.sh
