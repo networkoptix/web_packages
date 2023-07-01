@@ -228,7 +228,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         this.lostConnection = false;
         this.initSystem(currentUserEmail, systemId, serverId, userId);
         // Todo: Figure out when to enable it for webadmin
-        !environment.isLocal && firstValueFrom(this.getLicenseManager());
+        // !environment.isLocal && firstValueFrom(this.getLicenseManager());
         this.getCloudStorageManager(this.cloudApi.cloudStorageApi);
     }
 
