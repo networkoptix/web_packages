@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Inject, Injectable, LOCALE_ID } from '@angular/core';
+import { Inject, Injectable, LOCALE_ID, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
@@ -217,6 +217,7 @@ export class WizardStateService {
         private http: HttpClient,
         private router: Router,
         private translate: TranslateService,
+        private injector: Injector,
         @Inject(WINDOW) public window: Window,
         @Inject(LOCALE_ID) private locale: string,
     ) {
@@ -668,8 +669,8 @@ export class WizardStateService {
             .subscribe(
                 () => {
                     const { remoteLogin, remotePassword } = this.setupConfig;
-                    return this.updateCredentials(remoteLogin, remotePassword, false);
                     this.appBusyState = false;
+                    return this.updateCredentials(remoteLogin, remotePassword, false);
                 },
                 () => {
                     this.appBusyState = false;
@@ -745,15 +746,18 @@ export class WizardStateService {
             }
         });
 
-        this.server
-            .setupLocalSystem(systemName, localPassword, settings, this.securityLevel)
-            .toPromise()
-            .then(_ => {
-                return this.updateCredentials(this.defaultUser, localPassword, false)
-                    .catch(this.offlineErrorHandler)
-                    .finally(() => {
-                        this.appBusyState = false;
+        this.updateCredentials(this.defaultUser, this.defaultUser, false)
+            .catch(this.offlineErrorHandler)
+            .then(() => {
+                this.server
+                    .setupLocalSystem(systemName, localPassword, settings, this.securityLevel)
+                    .toPromise()
+                    .then(() => {
+                        this.updateCredentials(this.defaultUser, localPassword, false);
                     });
+            })
+            .finally(() => {
+                this.appBusyState = false;
             });
     }
 
@@ -913,7 +917,7 @@ export class WizardStateService {
         // eslint-disable-next-line nx/no-untyped-init
         const serverApi = new NxSystemRestAPI2(
             this.http,
-            null,
+            nxConfig,
             null,
             null,
             null,
@@ -923,7 +927,7 @@ export class WizardStateService {
             null,
             null,
             null,
-            null,
+            this.injector,
         ) as S;
         NxCurrentRelayInterceptor.currentRelays[serverApi.currentRelayHost] = serverApi;
         return serverApi;
