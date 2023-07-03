@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -18,7 +19,7 @@ import { FirstPartyWidget } from '../helper-classes';
     templateUrl: './third-party-widget.component.html',
     styleUrls: ['./third-party-widget.component.scss'],
     standalone: true,
-    imports: [FormsModule, NgxFileDropModule, PipesModule],
+    imports: [CommonModule, FormsModule, NgxFileDropModule, PipesModule],
 })
 export class NxThirdPartyWidgetComponent extends FirstPartyWidget<
     typeof NxThirdPartyWidgetComponent.BASE_CONFIG

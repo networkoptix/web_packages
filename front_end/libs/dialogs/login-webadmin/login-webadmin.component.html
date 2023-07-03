@@ -44,7 +44,7 @@
             <label
                 for="login_email"
                 translate
-                >Login</label
+                >Username</label
             >
             <input
                 type="email"
@@ -58,6 +58,7 @@
                 [disabled]="loading"
                 required
                 nxFocusMe
+                [setFocus]="true"
             />
         </div>
         <div class="form-group">
@@ -77,6 +78,8 @@
                 maxlength="255"
                 required
                 [disabled]="loading"
+                nxFocusMe
+                [setFocus]="auth?.email.length !== 0"
             />
             <div
                 class="input-error"
