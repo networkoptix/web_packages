@@ -78,10 +78,6 @@
                         {
                             "replace": "common/environments/environment.ts",
                             "with": "common/environments/environment.wizard-prod.ts"
-                        },
-                        {
-                            "replace": "apps/setup-wizard/src/environments/environment.ts",
-                            "with": "common/environments/environment.wizard-prod.ts"
                         }
                     ],
                     "index": {
