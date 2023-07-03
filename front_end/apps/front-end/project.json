@@ -28,6 +28,7 @@
                     "mux.js/lib/tools/ts-inspector.js",
                     "swagger-ui"
                 ],
+                "outputPath": "dist/front-end",
                 "index": "apps/front-end/src/app/index.html",
                 "main": "apps/front-end/src/main.ts",
                 "polyfills": "apps/front-end/src/polyfills.ts",

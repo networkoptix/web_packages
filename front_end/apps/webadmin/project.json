@@ -28,6 +28,7 @@
                     "mux.js/lib/tools/ts-inspector.js",
                     "swagger-ui"
                 ],
+                "outputPath": "dist/webadmin",
                 "index": "apps/webadmin/src/app/index.html",
                 "main": "apps/webadmin/src/main.ts",
                 "polyfills": "apps/webadmin/src/polyfills.ts",
