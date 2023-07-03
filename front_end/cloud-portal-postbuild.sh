@@ -16,7 +16,7 @@ else
             sed -i 's@{{BUILD}}@'"$BUILD"'@g' "$main_bundle"
         fi
     done
-    mv ./dist/front_end/* ./dist/
+    mv ./dist/front-end/* ./dist/
 fi
 
 rm ./dist/styles/*.scss;

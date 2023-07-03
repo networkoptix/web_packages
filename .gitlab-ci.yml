@@ -279,7 +279,7 @@ frontend-tests:
     when: always
     reports:
       junit:
-        - front_end/*-junit.xml
+        - front_end/junit/**/junit.xml
       coverage_report:
         coverage_format: cobertura
         path: front_end/coverage/**/cobertura-coverage.xml

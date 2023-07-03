@@ -12,7 +12,8 @@ export const jestConfigFactory = (displayName: string, preset = '../../jest.pres
         [
             'jest-junit',
             {
-                outputName: `${displayName}-junit.xml`,
+                outputDirectory: `junit/${displayName}`,
+                outputName: 'junit.xml',
             }
         ]
     ]

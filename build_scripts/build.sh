@@ -12,8 +12,8 @@ function build_frontend () {
         npm run build
         mkdir -p dist/skins
         npm run buildSkins dist/skins
-        rm -rf dist/front_end/src
-        rm -rf dist/front_end/customization
+        rm -rf dist/front-end/src
+        rm -rf dist/front-end/customization
         # Save the repository info.
         echo -e "\nCreate version.txt"
         if [ -e "$PORTAL_REPOSITORY/.git" ]; then

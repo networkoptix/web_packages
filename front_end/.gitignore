@@ -25,6 +25,7 @@ language_hash
 src/**/*
 src/supported_languages.json
 coverage
+junit
 reports
 env_**
 common/scripts/services/{language,dialogs,systems,process,nx-config,cloud_api,account,angular-uuid2,authorizationCheckService}.js
@@ -38,5 +39,3 @@ inline-wizard/customization/custom/_custom_palette.scss
 .angular/cache
 
 .angular/cache
-
-*junit.xml

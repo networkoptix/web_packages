@@ -28,7 +28,6 @@
                     "mux.js/lib/tools/ts-inspector.js",
                     "swagger-ui"
                 ],
-                "outputPath": "dist/front_end",
                 "index": "apps/front-end/src/app/index.html",
                 "main": "apps/front-end/src/main.ts",
                 "polyfills": "apps/front-end/src/polyfills.ts",
@@ -162,13 +161,7 @@
             },
             "defaultConfiguration": ""
         },
-        "lint": {
-            "executor": "@nrwl/linter:eslint",
-            "options": {
-                "eslintConfig": "./.eslintrc.js",
-                "lintFilePatterns": ["apps/front-end/**/*.ts", "apps/front-end/**/*.component.html"]
-            }
-        },
+        "lint": {},
         "serve": {
             "executor": "@nx/angular:webpack-dev-server",
             "options": {
@@ -196,22 +189,6 @@
                 "browserTarget": "front-end:build"
             }
         },
-        "test": {
-            "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
-            "options": {
-                "jestConfig": "apps/front-end/jest.config.ts",
-                "passWithNoTests": true
-            },
-            "configurations": {
-                "watch": {
-                    "watch": true
-                },
-                "ci": {
-                    "ci": true,
-                    "codeCoverage": true
-                }
-            }
-        }
+        "test": {}
     }
 }

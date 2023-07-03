@@ -169,16 +169,7 @@
                 "browserTarget": "setup-wizard:build"
             }
         },
-        "lint": {
-            "executor": "@nrwl/linter:eslint",
-            "options": {
-                "eslintConfig": ".eslintrc.js",
-                "lintFilePatterns": [
-                    "apps/setup-wizard/**/*.ts",
-                    "apps/setup-wizard/**/*.component.html"
-                ]
-            }
-        },
+        "lint": {},
         "e2e": {
             "executor": "@angular-devkit/build-angular:protractor",
             "options": {
@@ -191,22 +182,6 @@
                 }
             }
         },
-        "test": {
-            "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
-            "options": {
-                "jestConfig": "apps/setup-wizard/jest.config.ts",
-                "passWithNoTests": true
-            },
-            "configurations": {
-                "watch": {
-                    "watch": true
-                },
-                "ci": {
-                    "ci": true,
-                    "codeCoverage": true
-                }
-            }
-        }
+        "test": {}
     }
 }

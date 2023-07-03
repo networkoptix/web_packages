@@ -22,23 +22,7 @@
             },
             "defaultConfiguration": "production"
         },
-        "test": {
-            "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
-            "options": {
-                "jestConfig": "libs/services/jest.config.ts",
-                "passWithNoTests": true
-            },
-            "configurations": {
-                "watch": {
-                    "watch": true
-                },
-                "ci": {
-                    "ci": true,
-                    "codeCoverage": true
-                }
-            }
-        },
+        "test": {},
         "lint": {
             "executor": "@nx/linter:eslint",
             "eslintConfig": "./.eslintrc.js",

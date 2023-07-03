@@ -14,7 +14,6 @@
             "executor": "@nx/angular:webpack-browser",
             "options": {
                 "allowedCommonJsDependencies": ["md5", "uuid"],
-                "outputPath": "dist/authorization",
                 "index": "apps/authorization/src/index.html",
                 "main": "apps/authorization/src/main.ts",
                 "polyfills": "apps/authorization/src/polyfills.ts",
@@ -208,16 +207,7 @@
             },
             "defaultConfiguration": ""
         },
-        "lint": {
-            "executor": "@nrwl/linter:eslint",
-            "options": {
-                "eslintConfig": "./.eslintrc.js",
-                "lintFilePatterns": [
-                    "apps/authorization/**/*.ts",
-                    "apps/authorization/**/*.component.html"
-                ]
-            }
-        },
+        "lint": {},
         "serve": {
             "executor": "@nx/angular:webpack-dev-server",
             "options": {
@@ -325,22 +315,6 @@
             },
             "defaultConfiguration": "production"
         },
-        "test": {
-            "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
-            "options": {
-                "jestConfig": "apps/authorization/jest.config.ts",
-                "passWithNoTests": true
-            },
-            "configurations": {
-                "watch": {
-                    "watch": true
-                },
-                "ci": {
-                    "ci": true,
-                    "codeCoverage": true
-                }
-            }
-        }
+        "test": {}
     }
 }
