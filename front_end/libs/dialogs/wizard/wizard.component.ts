@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 import { environment } from '@environments/environment';
 
@@ -12,11 +13,15 @@ export class WizardModalContent implements OnInit {
 
     @ViewChild('iframe', { static: false }) iframe: ElementRef<HTMLIFrameElement>;
 
+    constructor(
+      private translate: TranslateService,
+    ) {}
+
     ngOnInit(): void {
         if (environment.setupUrl) {
             // if running webadmin locally and want to use setup wizard
             // run setup wizard too and adjust port if needed
-            this.inlineUrl = environment.setupUrl + this.inlineUrl;
+            this.inlineUrl = environment.setupUrl + this.inlineUrl + '?lang=' + this.translate.currentLang;
         }
     }
 

@@ -88,7 +88,7 @@ describe('NxHeaderComponent', () => {
         const navbarLeft = debugElement.nativeElement.querySelectorAll('.app-header-left .navbar-nav');
         expect(navbarLeft.length).toBe(2);
         const navbarRight = debugElement.nativeElement.querySelectorAll('.app-header-right .navbar-nav');
-        expect(navbarRight.length).toBe(3);
+        expect(navbarRight.length).toBe(4);
         const icons = debugElement.nativeElement.querySelectorAll('img');
         expect(icons.length).toBe(2);
     });
@@ -105,12 +105,12 @@ describe('NxHeaderComponent', () => {
         const { component, debugElement, fixture } = await setupHeaderComponent();
         component.hideWebAdmin = true;
         fixture.detectChanges();
-        expect(debugElement.nativeElement.querySelectorAll('.invisible').length).toBe(2);
+        expect(debugElement.nativeElement.querySelectorAll('.invisible').length).toBe(1);
         expect(debugElement.nativeElement.querySelector('header')).toBeTruthy();
         const navbarLeft = debugElement.nativeElement.querySelectorAll('.app-header-left .navbar-nav');
         expect(navbarLeft.length).toBe(2);
         const navbarRight = debugElement.nativeElement.querySelectorAll('.app-header-right .navbar-nav');
-        expect(navbarRight.length).toBe(3);
+        expect(navbarRight.length).toBe(4);
         const icons = debugElement.nativeElement.querySelectorAll('img');
         expect(icons.length).toBe(2);
     });

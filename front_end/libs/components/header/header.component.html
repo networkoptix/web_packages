@@ -272,20 +272,15 @@
                 </div>
             </div>
 
-            <div
-                class="app-header-right"
-                [ngClass]="{ invisible: hideWebAdmin }"
-            >
+            <div class="app-header-right">
                 <ng-container
                     *ngTemplateOutlet="rightNav; context: { showSmall: showSmallRightNav$ | async }"
                 >
                 </ng-container>
-                <ul
-                    class="nav navbar-nav navbar-right auth-visible"
-                    *ngIf="dropdownsVisible"
-                >
+                <ul class="nav navbar-nav navbar-right">
                     <li>
                         <nx-account-settings-select
+                            *ngIf="dropdownsVisible"
                             [small]="showSmallRightNav$ | async"
                         ></nx-account-settings-select>
                         <nx-header-language-select

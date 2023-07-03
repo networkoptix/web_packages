@@ -66,8 +66,7 @@ export class NxLanguageProviderService {
     }
 
     loadLanguage(): Promise<Language> {
-        const lang = this.translate.currentLang ?? this.translate.getDefaultLang();
-
+        const lang = this.currentLang ?? this.translate.getDefaultLang();
         return (
             environment.isLocal
                 ? this.http.get<Language>(`/static/lang_${lang}/language_compiled.json`)
