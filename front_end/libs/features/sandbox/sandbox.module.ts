@@ -14,6 +14,7 @@ import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.
 import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-select.component';
 import { NxSearchableDropdown } from '@components/dropdowns/searchable/searchable.component';
 import { NxMatLikeGenericDropdownModule } from '@components/mat-like-components/mat-like-generic-select/dropdown.module';
+import { PrimaryButtonModule } from '@components/primary-button/primary-button.module';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxSliderComponent } from '@components/slider/slider.component';
 import { NxBaseTableComponent } from '@components/table/table.component';
@@ -189,8 +190,10 @@ const appRoutes: Routes = [
         NxGenericDropdownModule,
         NxMatLikeGenericDropdownModule,
         NxMultiSelectDropdown,
+        PrimaryButtonModule,
     ],
     providers: [],
+
     declarations: [
         NxSandboxComponent,
         SectionApplyExampleComponent,

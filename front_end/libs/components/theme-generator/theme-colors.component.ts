@@ -1,4 +1,4 @@
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, CommonModule } from '@angular/common';
 import {
     AfterViewInit,
     Component,
@@ -32,6 +32,7 @@ import { NxThemeService } from '@services/theme.service';
     encapsulation: ViewEncapsulation.None,
     standalone: true,
     imports: [
+        CommonModule,
         FormsModule,
         TranslateModule,
         NxCheckboxComponent,

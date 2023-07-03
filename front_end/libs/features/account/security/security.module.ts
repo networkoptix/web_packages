@@ -13,6 +13,7 @@ import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { PrimaryButtonModule } from '@components/primary-button/primary-button.module';
 import { NxTagComponent } from '@components/tag/tag.component';
 import { DirectivesModule } from '@directives/directives.module';
 
@@ -35,6 +36,7 @@ import { NxAccountSecurityComponent } from './security.component';
         PipesModule,
         NxPreLoaderComponent,
         NxTagComponent,
+        PrimaryButtonModule,
     ],
     providers: [],
     declarations: [NxAccountSecurityComponent],

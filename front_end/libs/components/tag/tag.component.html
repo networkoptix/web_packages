@@ -2,6 +2,8 @@
     name="tag-{{ name }}"
     id="tag-{{ name }}"
     [ngClass]="[element, size, badgeType, locked ? 'static' : '']"
+    class="theme-override"
+    data-theme="light"
     [attr.href]="tagHref"
     (click)="clickChange(true)"
 >
