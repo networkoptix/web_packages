@@ -78,6 +78,7 @@ export class OauthService {
             detach: 'passwordDetach',
             merge: 'passwordMerge',
             renew: 'renewWeb',
+            renew2FA: 'renewWeb2FA',
             reset: 'passwordReset',
             restart: 'passwordRestart',
             system2faAuth: 'system2faAuth',

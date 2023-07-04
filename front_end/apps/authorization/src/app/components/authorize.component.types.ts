@@ -61,6 +61,7 @@ export enum ClientType {
     setup = 'setupWizard',
     renewDesktop = 'renewSessionDesktop',
     renewWeb = 'renewSessionWeb',
+    renewWeb2FA = 'renewSessionWeb2FA',
     openClient = 'openClientFromCloud',
     system2faAuth = 'system2faAuth',
 }
