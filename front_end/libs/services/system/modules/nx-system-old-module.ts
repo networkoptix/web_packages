@@ -563,13 +563,20 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                     if (error?.offline) {
                         firstValueFrom(this.mediaserver.ping()).catch(() => {
                             this.isOnline = false;
-                            this.ribbonService.show(
-                                this.LANG.ribbon.systemOffline,
-                                [],
-                                'alert',
-                                undefined,
-                                true,
-                            );
+                            const { url } = this.router;
+                            if (
+                                ['view', 'layouts', 'bookmarks', 'health', 'monitoring'].every(
+                                    route => !url.includes(route),
+                                )
+                            ) {
+                                this.ribbonService.show(
+                                    this.LANG.ribbon.systemOffline,
+                                    [],
+                                    'alert',
+                                    undefined,
+                                    true,
+                                );
+                            }
                             this.isAvailable = false;
                             this.systemInfo = this;
                         });
@@ -580,11 +587,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                     this.updatePromise = undefined;
                     // TODO: re-do ribbonService to handle multiple pages better
                     const { url } = this.router;
-                    if (
-                        this.isAvailable &&
-                        url.includes('systems') &&
-                        ['health', 'layouts'].every(route => !url.includes(route))
-                    ) {
+                    if (this.isAvailable && url.includes('systems')) {
                         this.ribbonService.hide();
                     }
                 });
