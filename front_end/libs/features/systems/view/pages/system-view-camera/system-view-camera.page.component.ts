@@ -554,71 +554,71 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.previewUrl = this.system.serverManager.getPreviewUrl(this.id, null);
         const camera = this.system.cameraManager.cameras?.find(({ id }) => id?.includes(this.id));
         this.isNvr = camera?.deviceType?.toLowerCase() === 'nvr';
-        if (!this.vms.selectedCamera.hasArchive && !this.vms.selectedCamera.isScheduleEnabled) {
-            this.getRecordsInProgress = undefined;
-            this._initSelectedCamera();
-            this._restorePlayback();
-        } else {
-            this.system.getCameraRecords(this.id, 0, now, 1).then(async ar => {
-                const records = this._extractPeriodsFromServerResponse(ar);
-                if (!ar.error || ar.error !== '0' || !records.length) {
-                    this._restorePlayback();
-                    this.vms.setCameraRecords(this.id, 0, []);
-                } else {
-                    try {
-                        const firstRecordStartTimeMs = parseInt(
-                            records[0].startTimeMs
-                        );
-                        const lastRecordStartTimeMs = parseInt(
-                            records[records.length - 1].startTimeMs
-                        );
-                        const lastRecordDuration = parseInt(
-                            records[records.length - 1].durationMs
-                        );
-                        const showToLive = !this.camera.isVirtual && (
-                            this.camera.isLive ||
-                            this.camera.isScheduleEnabled ||
-                            this.camera.hasArchive
-                        );
-                        const now = Date.now();
-                        const range = new SimpleTimeRange(
-                            firstRecordStartTimeMs, showToLive
-                                ? now
-                                : (lastRecordStartTimeMs + lastRecordDuration)
-                        );
-                        const archive = records.map(r => new SimpleTimeRange(
-                            parseInt(r.startTimeMs),
-                            parseInt(r.startTimeMs) + parseInt(r.durationMs)
-                        ));
-                        if (lastRecordDuration === -1) {
-                            archive[archive.length - 1] = new SimpleTimeRange(
-                                lastRecordStartTimeMs,
-                                now
-                            );
-                        }
-
-                        this.vms.setCameraRecords(this.id, range, archive);
-                        this._restorePlayback(true);
-                    } catch (e) {
-                        console.warn(e, 'caught while requesting camera archive ranges');
-                    }
-                }
-            }).then(() => {
-                this._initSelectedCamera();
-                this.startPollingForNewlyRecordedChunks();
-                this.getRecordsInProgress = undefined;
-            }).catch(() => {
-                // Handles the case where the request for the archive times out.
-                this.playback.restore(false);
-                setTimeout(() => {
-                    this.getRecordsInProgress = undefined;
-                    this._getRecords();
-                }, pollingTimeout);
-            });
-        }
-
         this.system.userManager.getUsersDataFromTheSystem().then(_ => {
             this.canViewArchives = this.system.userManager.permissions.viewArchives;
+            if (!this.vms.selectedCamera.hasArchive && !this.vms.selectedCamera.isScheduleEnabled) {
+                this.getRecordsInProgress = undefined;
+                this._initSelectedCamera();
+                this._restorePlayback();
+            } else {
+                const archivePromise = this.canViewArchives ? this.system.getCameraRecords(this.id, 0, now, 1) : Promise.reject();
+                archivePromise.then(async ar => {
+                    const records = this._extractPeriodsFromServerResponse(ar);
+                    if (!ar.error || ar.error !== '0' || !records.length) {
+                        this._restorePlayback();
+                        this.vms.setCameraRecords(this.id, 0, []);
+                    } else {
+                        try {
+                            const firstRecordStartTimeMs = parseInt(
+                                records[0].startTimeMs
+                            );
+                            const lastRecordStartTimeMs = parseInt(
+                                records[records.length - 1].startTimeMs
+                            );
+                            const lastRecordDuration = parseInt(
+                                records[records.length - 1].durationMs
+                            );
+                            const showToLive = !this.camera.isVirtual && (
+                                this.camera.isLive ||
+                                this.camera.isScheduleEnabled ||
+                                this.camera.hasArchive
+                            );
+                            const now = Date.now();
+                            const range = new SimpleTimeRange(
+                                firstRecordStartTimeMs, showToLive
+                                    ? now
+                                    : (lastRecordStartTimeMs + lastRecordDuration)
+                            );
+                            const archive = records.map(r => new SimpleTimeRange(
+                                parseInt(r.startTimeMs),
+                                parseInt(r.startTimeMs) + parseInt(r.durationMs)
+                            ));
+                            if (lastRecordDuration === -1) {
+                                archive[archive.length - 1] = new SimpleTimeRange(
+                                    lastRecordStartTimeMs,
+                                    now
+                                );
+                            }
+
+                            this.vms.setCameraRecords(this.id, range, archive);
+                            this._restorePlayback(true);
+                        } catch (e) {
+                            console.warn(e, 'caught while requesting camera archive ranges');
+                        }
+                    }
+                }).then(() => {
+                    this._initSelectedCamera();
+                    this.startPollingForNewlyRecordedChunks();
+                    this.getRecordsInProgress = undefined;
+                }).catch(() => {
+                    // Handles the case where the request for the archive times out.
+                    this.playback.restore(false);
+                    setTimeout(() => {
+                        this.getRecordsInProgress = undefined;
+                        this._getRecords();
+                    }, pollingTimeout);
+                });
+            }
         });
     }
 
