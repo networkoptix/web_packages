@@ -63,76 +63,86 @@ class AuthMiddleware:
 
 app.asgi_app = AuthMiddleware(app.asgi_app)
 
-
 async def receiving(cloud_connector):
     await websocket.send(json.dumps({
         'action': 'connected',
         'data': {}
     }))
     user_email = cloud_connector.account.get('email')
-    license_api = LicenseConnector(user_email)
-    while True:
-        action, data = ParamsValidator.validate_group(await websocket.receive())
-        res = None
-        if action in ['create_group', 'delete_group', 'move_group', 'move_system', 'update_group']:
-            license_api.update_token(await cloud_connector.get_token())
-            if not await license_api.is_admin_in_org(data.get('org_id')):
-                data.update({'msg': 'Unauthorized', 'error': 400})
-        if 'error' in data:
-            res = data
-        elif action == 'create_group':
-            # TODO: support assigning parent on creation
-            res = GroupView.create_group(data['name'], data.get('org_id'), data.get('target_id'))
-        elif action == 'delete_group':
-            res = await GroupView.delete_group(cloud_connector.share_system, data['group_id'])
-        elif action == 'move_group':
-            res = await GroupView.move_group_to_group(
-                cloud_connector.share_system, data['target_id'], data['group_id'])
-        elif action == 'move_system':
-            system = await cloud_connector.get_systems(system_id=data['system_id'])
-            res = await GroupView.move_system_to_group(
-                cloud_connector.share_system, data['group_id'], system)
-        elif action == 'update_group':
-            res = await GroupView.update_group(data['group_id'], data['name'])
-        # User management
-        elif action == 'create_user':
-            res = await UserView.add_user_to_group(
-                cloud_connector.share_system, data['group_id'], data['email'], data['role'])
-        elif action == 'delete_user':
-            res = await UserView.remove_user_from_group(cloud_connector.share_system, data['group_id'], data['email'])
-        elif action == 'list_user':
-            res = UserView.list_users(data['group_id'])
-        elif action == 'update_user':
-            user = [{'email': data['email'], 'role': data['role'], 'enabled': data.get('enabled', True)}]
-            res = await UserView.update_users_in_group(data['group_id'], user)
-        # End of user management
-        elif action == 'systems':
-            res = await cloud_connector.get_systems()
-            # app.logger.debug(res)
-        elif action == 'aggregate_systems_request':
-            res = await cloud_connector.aggregate_request(
-                data['url'], method=data['method'], post_body=data.get('postBody')
-            )
-        elif action == 'aggregate_request_by_group':
-            res = await cloud_connector.aggregate_request_by_group(
-                data['group_id'], data['url'], method=data['method'], post_body=data.get('postBody')
-            )
-        elif action != 'list_groups':
-            res = {'msg': 'Please send data in a json format', 'error': 400}
+    try:
+        while True:
+            action, data = ParamsValidator.validate_group(await websocket.receive())
+            async with LicenseConnector(user_email) as license_api:
+                print('opened license api')
+                token = await cloud_connector.get_token()
+                await license_api.update_token(token)
+                try:
+                    res = None
+                    if action in ['create_group', 'delete_group', 'move_group', 'move_system', 'update_group']:
+                        if not await license_api.is_admin_in_org(data.get('org_id')):
+                            data.update({'msg': 'Unauthorized', 'error': 400})
+                    if 'error' in data:
+                        res = data
+                    elif action == 'create_group':
+                        # TODO: support assigning parent on creation
+                        res = GroupView.create_group(data['name'], data.get('org_id'), data.get('target_id'))
+                    elif action == 'delete_group':
+                        res = await GroupView.delete_group(cloud_connector.share_system, data['group_id'])
+                    elif action == 'move_group':
+                        res = await GroupView.move_group_to_group(
+                            cloud_connector.share_system, data['target_id'], data['group_id'])
+                    elif action == 'move_system':
+                        system = await cloud_connector.get_systems(system_id=data['system_id'])
+                        res = await GroupView.move_system_to_group(
+                            cloud_connector.share_system, data['group_id'], system)
+                    elif action == 'update_group':
+                        res = await GroupView.update_group(data['group_id'], data['name'])
+                    # User management
+                    elif action == 'create_user':
+                        res = await UserView.add_user_to_group(
+                            cloud_connector.share_system, data['group_id'], data['email'], data['role'])
+                    elif action == 'delete_user':
+                        res = await UserView.remove_user_from_group(cloud_connector.share_system, data['group_id'], data['email'])
+                    elif action == 'list_user':
+                        res = UserView.list_users(data['group_id'])
+                    elif action == 'update_user':
+                        user = [{'email': data['email'], 'role': data['role'], 'enabled': data.get('enabled', True)}]
+                        res = await UserView.update_users_in_group(data['group_id'], user)
+                    # End of user management
+                    elif action == 'systems':
+                        res = await cloud_connector.get_systems()
+                        # app.logger.debug(res)
+                    elif action == 'aggregate_systems_request':
+                        res = await cloud_connector.aggregate_request(
+                            data['url'], method=data['method'], post_body=data.get('postBody')
+                        )
+                    elif action == 'aggregate_request_by_group':
+                        res = await cloud_connector.aggregate_request_by_group(
+                            data['group_id'], data['url'], method=data['method'], post_body=data.get('postBody')
+                        )
+                    elif action != 'list_groups':
+                        res = {'msg': 'Please send data in a json format', 'error': 400}
 
-        if action != 'list_groups':
-            return_data = {
-                'action': action or 'error',
-                'data': res
-            }
-            app.logger.debug(return_data)
-            await websocket.send(json.dumps(return_data))
+                    if action != 'list_groups':
+                        return_data = {
+                            'action': action or 'error',
+                            'data': res
+                        }
+                        app.logger.debug(return_data)
+                        await websocket.send(json.dumps(return_data))
+                    elif (not res or 'error' not in res) and (org_id := data.get('org_id')) and await license_api.is_user_in_org(org_id):
+                        await websocket.send(json.dumps({
+                            'action': 'list_groups',
+                            'data': GroupView.list_groups(org_id)
+                        }))
 
-        if not res or 'error' not in res:
-            await websocket.send(json.dumps({
-                'action': 'list_groups',
-                'data': GroupView.list_groups(user_email)
-            }))
+                except httpx.HTTPError as e:
+                    print('closing kicenseapi')
+                    await license_api.session.aclose()
+                    raise(e)
+    except asyncio.CancelledError as e:
+        # Handles disconnections
+        await cloud_connector.session.aclose()
 
 
 # Actual views
@@ -152,6 +162,7 @@ async def ws():
                 p.log('starting handler')
             return await asyncio.create_task(receiving(cloud_connector))
         except httpx.HTTPError as e:
+            await cloud_connector.session.aclose()
             app.logger.error(e)
             return await websocket.close(500, 'Something went wrong')
     return await websocket.close(400, 'Missing code')

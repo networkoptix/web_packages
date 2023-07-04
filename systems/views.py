@@ -105,9 +105,8 @@ class GroupView:
         return {'msg': 'Group was deleted.'}
 
     @staticmethod
-    def list_groups(email, group_id=None):
-        group_ids = [user_group.group_id for user_group in User.query.filter(User.email == email, User.enabled == True)]
-        groups = Group.query.filter(Group.id.in_(group_ids))
+    def list_groups(org_id, group_id=None):
+        groups = Group.query.filter((Group.org_id == org_id) and (Group.id == group_id) if group_id else True)
         return [group.data() for group in groups]
 
     @staticmethod

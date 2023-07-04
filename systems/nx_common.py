@@ -79,9 +79,16 @@ class NxSystem:
 class LicenseConnector:
     def __init__(self, email, token=None):
         self.session = httpx.AsyncClient()
+        self.session.headers.update({'Cloud-host': CLOUD_HOST})
         self.email = email
         if token:
             self.update_token(token)
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, *args, **kwargs):
+        await self.session.aclose()
 
     async def _license_get(self, route, params=None):
         url = f"https://{LICENSE_PORTAL}{route}"
@@ -96,12 +103,18 @@ class LicenseConnector:
         return res.json()
 
     async def update_token(self, token):
-        self.session.headers.update({'Authorization': token})
+        self.session.headers.update({'Authorization': f'Bearer {token}'})
+
+    async def _get_user(self, org_id):
+        return await self._license_get(f'/nxlicensed/api/v2/partners/organizations/{org_id}/users/self/')
 
     async def is_admin_in_org(self, org_id):
-        route = f'/partners/organizations/{org_id}/users/self/'
-        user = self._license_get(route)
+        user = await self._get_user(org_id)
         return self.email == user.get('email') and 'Administrator' in user.get('roles', [])
+    
+    async def is_user_in_org(self, org_id):
+        user = await self._get_user(org_id)
+        return self.email == user.get('email')
 
 
 class CloudConnector:
@@ -109,6 +122,12 @@ class CloudConnector:
         self.session = httpx.AsyncClient()
         self.account = {}
         self.systems = {}
+
+    async def __aenter__(self):
+        return self
+    
+    async def __aexit__(self, *args, **kwargs):
+        await self.session.aclose()
 
     async def _get_wrapper(self, route, params=None, _websocket=None):
         res = None
