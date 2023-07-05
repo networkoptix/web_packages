@@ -17,7 +17,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import { pickFrom, delayInitial, alphabeticalSort } from '@utils/general';
+import { assignFrom, delayInitial, alphabeticalSort } from '@utils/general';
 
 type WidgetDropdownItem = DropdownItem<WidgetCard>;
 type DashboardDropdownItem = DropdownItem<string>;
@@ -108,7 +108,7 @@ export class AddWidgetModalContent {
     };
 
     ngOnInit(): void {
-        pickFrom(
+        assignFrom(
             this.dialogData,
             [
                 'widgets',

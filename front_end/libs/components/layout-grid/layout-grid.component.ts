@@ -16,7 +16,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { cloneDeep, flatten, groupBy, isEqual, mapValues, omit, values } from 'lodash-es';
+import { cloneDeep, flatten, groupBy, isEqual, mapValues, omit, pick, values } from 'lodash-es';
 import { TourMatMenuModule, TourService } from 'ngx-ui-tour-md-menu';
 import {
     BehaviorSubject,
@@ -81,7 +81,7 @@ import { NxSystemsService } from '@services/systems.service';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 import { ViewportBreakpoints } from '@styles/theme-variables-common';
-import { cleanId, pickFrom } from '@utils/general';
+import { cleanId } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
 import {
@@ -1175,7 +1175,7 @@ export class NxLayoutGridComponent {
                 {
                     heading: staticLang.layouts.actions.unsaved.label,
                     contextManifest: {
-                        ...pickFrom(staticLang.layouts.actions.unsaved, ['label']),
+                        ...pick(staticLang.layouts.actions.unsaved, ['label']),
                         fields: [
                             {
                                 ...staticLang.layouts.actions.unsaved.fields.info,
@@ -1375,7 +1375,7 @@ export class NxLayoutGridComponent {
                         this.toastService.notify(
                             {
                                 value: staticLang.layouts.errors.unableToAuthorizeCamera,
-                                params: pickFrom(camera, ['name']),
+                                params: pick(camera, 'name'),
                             },
                             ToastType.Warning,
                         );

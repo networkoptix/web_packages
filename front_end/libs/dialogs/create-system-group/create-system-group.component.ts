@@ -8,7 +8,7 @@ import { ModalBase } from '@dialogs/modal-base';
 import { NxSystemGroupsService } from '@pages/home/services/system-groups.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import { pickFrom } from '@utils/general';
+import { assignFrom } from '@utils/general';
 
 // type GroupNameOption = DropdownItem<string>;
 
@@ -44,7 +44,7 @@ export class CreateSystemGroupModalContent extends ModalBase<DT['return']> {
     }
 
     ngOnInit(): void {
-        pickFrom(this.dialogData, ['targetId', 'parentGroup', 'hasGroups'], this);
+        assignFrom(this.dialogData, ['targetId', 'parentGroup', 'hasGroups'], this);
         this.createSystemGroupProcess = this.processService.createProcess(
             () => {
                 this.groupsService.createGroup(this.newGroupName, this.targetId);

@@ -13,7 +13,7 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { WINDOW } from '@services/window-provider';
-import { pickFrom } from '@utils/general';
+import { assignFrom } from '@utils/general';
 
 type Subject = DropdownItem<string>;
 
@@ -56,7 +56,7 @@ export class MessageModalContent extends ModalBase<DT['return']> implements OnIn
     }
 
     ngOnInit(): void {
-        pickFrom(this.dialogData, ['messageType', 'data'], this);
+        assignFrom(this.dialogData, ['messageType', 'data'], this);
 
         this.initForm();
         this.sendMessage = this.processService

@@ -16,7 +16,7 @@ import type {
     NxSystemCamera
 } from '@services/system.service/camera-manager/camera-manager-types';
 import type { NxSystem } from '@services/system.service/system';
-import { pickFrom } from '@utils/general';
+import { assignFrom } from '@utils/general';
 
 @Component({
     selector: 'nx-modal-rename-content',
@@ -56,7 +56,10 @@ export class UpdateCameraCredentialsModalContent extends ModalBase<DT['return']>
     }
 
     ngOnInit(): void {
-        pickFrom(this.dialogData, ['system', 'camera', 'updateCallback', 'defaultPassword'], this);
+        assignFrom(this.dialogData, ['system', 'camera', 'updateCallback'], this);
+        if (this.dialogData.defaultPassword) {
+            this.defaultPassword = this.dialogData.defaultPassword;
+        }
 
         const [loginName, password] = this.camera.addParams.credentials
             ? this.camera.addParams.credentials.split(':')

@@ -32,7 +32,7 @@ import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
-import { cleanIp, strSplice, pickFrom, alphabeticalSort } from '@utils/general';
+import { cleanIp, strSplice, assignFrom, alphabeticalSort } from '@utils/general';
 
 import { State } from './stateForMergeDialog';
 import { StateMachine } from './stateMachine';
@@ -160,7 +160,7 @@ export class MergeModalContent {
     }
 
     ngOnInit(): void {
-        pickFrom(this.dialogData, ['system', 'systems'], this);
+        assignFrom(this.dialogData, ['system', 'systems'], this);
 
         this.machine = new StateMachine(this.checkMerge, State);
         this.getSystemInfo(this.system.id).then(({ reply: data }) => {

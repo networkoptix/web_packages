@@ -17,7 +17,7 @@ import { ContentSettings, ContextManifest } from '@services/nx-cloud-api/nx-clou
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxToastService } from '@services/toast.service';
-import { pickFrom } from '@utils/general';
+import { assignFrom } from '@utils/general';
 
 // export const manifestLookupByType = (config: IConfig, type: ModalType) => {
 //     const manifestKeyLookup = {
@@ -69,7 +69,7 @@ export class EditModalContent {
     ) {}
 
     ngOnInit(): void {
-        pickFrom(
+        assignFrom(
             this.dialogData,
             [
                 'heading',

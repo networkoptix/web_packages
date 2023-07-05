@@ -3,7 +3,7 @@ import { ChangeDetectorRef, Component, Inject, LOCALE_ID } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
-import { omit, uniq } from 'lodash-es';
+import { omit, pick, uniq } from 'lodash-es';
 import { TourService } from 'ngx-ui-tour-md-menu';
 import {
     BehaviorSubject,
@@ -53,7 +53,7 @@ import { NxSystem } from '@services/system.service/system';
 import { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
-import { alphabeticalSort, cleanId, pickFrom } from '@utils/general';
+import { alphabeticalSort, cleanId } from '@utils/general';
 import { generateTour, translateStep } from '@utils/nx';
 
 interface Resource {
@@ -92,7 +92,7 @@ interface ResourceLookup<T = { id: string }> {
  */
 const createManifests: Partial<Record<ResourceType, ContextManifest>> = {
     [ResourceType.LAYOUTS]: {
-        ...pickFrom(staticLang.layouts.actions.create, ['label']),
+        ...pick(staticLang.layouts.actions.create, ['label']),
         fields: [
             {
                 ...staticLang.layouts.actions.create.fields.name,
@@ -110,7 +110,7 @@ const createManifests: Partial<Record<ResourceType, ContextManifest>> = {
 
 const editManifests: Partial<Record<ResourceType, ContextManifest>> = {
     [ResourceType.LAYOUT]: {
-        ...pickFrom(staticLang.layouts.actions.edit, ['label']),
+        ...pick(staticLang.layouts.actions.edit, ['label']),
         fields: [
             ...createManifests[ResourceType.LAYOUTS].fields,
             {

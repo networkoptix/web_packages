@@ -12,7 +12,7 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
 import { NxToastService } from '@services/toast.service';
-import { pickFrom } from '@utils/general';
+import { assignFrom } from '@utils/general';
 
 @Component({
     selector: 'nx-mandatory-2fa',
@@ -48,7 +48,7 @@ export class Mandatory2faModalContent extends ModalBase<DT['return']> {
     }
 
     ngOnInit(): void {
-        pickFrom(this.dialogData, ['system2faEnabled', 'system'], this);
+        assignFrom(this.dialogData, ['system2faEnabled', 'system'], this);
 
         this.accountTotpExists = this.accountService.account.totpExistsForAccount;
 

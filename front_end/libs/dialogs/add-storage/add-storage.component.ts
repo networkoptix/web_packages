@@ -14,7 +14,7 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { StorageManager } from '@services/system.service/storage-manager/storage-manager';
 import { NxToastService } from '@services/toast.service';
-import { cleanId, pickFrom } from '@utils/general';
+import { cleanId, assignFrom } from '@utils/general';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -80,7 +80,7 @@ export class AddStorageModalContent {
     };
 
     ngOnInit(): void {
-        pickFrom(this.dialogData, ['serverId', 'storageManager', 'cancelPolls'], this);
+        assignFrom(this.dialogData, ['serverId', 'storageManager', 'cancelPolls'], this);
 
         this.storageForm = new FormGroup({
             url: new FormControl<string>(null, [Validators.required, this.validateUrl.bind(this)]),

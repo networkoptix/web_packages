@@ -7,7 +7,7 @@ import type { SelectTimeRange as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { pickFrom } from '@utils/general';
+import { assignFrom } from '@utils/general';
 import { TimelineSelectionService } from '@vms-client/submodules/timeline/services/timeline.selection.service';
 import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
@@ -50,7 +50,7 @@ export class SelectTimeRangeModalContent extends ModalBase<DT['return']> impleme
         @Inject(DIALOG_DATA) private dialogData: DT['data'],
     ) {
         super(dialogRef);
-        pickFrom(this.dialogData, ['selection', 'start', 'end'], this);
+        assignFrom(this.dialogData, ['selection', 'start', 'end'], this);
 
         this.CONFIG = configService.getConfig();
         this.themeClass = this.CONFIG.isDarkTheme ? 'dark' : 'light';

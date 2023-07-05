@@ -14,7 +14,6 @@ import { DashboardConfiguration } from '@pages/dashboard/dashboard-configuration
 import { StorageManager } from '@services/system.service/storage-manager/storage-manager';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemInfo } from '@services/systems.service.types';
-import { pickFrom } from '@utils/general';
 
 import { DialogConfig } from './dialog-config';
 import { DIALOG_SIZE as DIALOG_SIZE_V2 } from './dialog-config-v2';
@@ -155,22 +154,13 @@ export class NxDialogsService {
         };
 
         if (isGeneric) {
-            pickFrom(
-                modalContent,
-                Object.keys(new GenericEditModalContent(null, null)) as (keyof GenericEditModalContent)[],
-                config.data
-            );
-
+            Object.assign(config.data, modalContent);
             config.data.contextList = [modalContent.contextManifest];
             config.data.values ||= values;
             config.data.manifest = modalContent.contextManifest;
             config.data.heading = modalContent.contextManifest?.name || modalContent.contextManifest.label;
         } else {
-            pickFrom(
-                modalContent,
-                Object.keys(new ModalContent(null)) as (keyof ModalContent)[],
-                config.data
-            );
+            Object.assign(config.data, modalContent);
         }
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 

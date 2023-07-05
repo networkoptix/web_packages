@@ -2,7 +2,7 @@ import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { Component, Inject, OnInit } from '@angular/core';
 
 import { Process } from '@services/process.service/process';
-import { pickFrom } from '@utils/general';
+import { assignFrom } from '@utils/general';
 
 import type { Apply as DialogTypes } from '../dialogs.types';
 
@@ -22,7 +22,7 @@ export class ApplyModalContent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        pickFrom(this.dialogData, ['applyFunc', 'discardFunc', 'isApplyDisabled'], this);
+        assignFrom(this.dialogData, ['applyFunc', 'discardFunc', 'isApplyDisabled'], this);
     }
 
     apply = (): void => {

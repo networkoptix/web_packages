@@ -47,7 +47,7 @@ import { NxSystemInfo } from '@services/systems.service.types';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 import { servers } from '@src/app/variables/static-variables';
-import { pickFrom, alphabeticalSort, cleanIp, strSplice, cleanId } from '@utils/general';
+import { assignFrom, alphabeticalSort, cleanIp, strSplice, cleanId } from '@utils/general';
 
 import {
     MergeErrorData,
@@ -282,7 +282,7 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
     async ngOnInit(): Promise<void> {
         this.title.setTitle(`${this.LANG.pageTitles.auth} - ${this.CONFIG.cloudName}`);
 
-        pickFrom(this.dialogData, ['system', 'systems'], this);
+        assignFrom(this.dialogData, ['system', 'systems'], this);
 
         this.isSessionOauth = this.system.mediaserver.isSessionOauth;
 

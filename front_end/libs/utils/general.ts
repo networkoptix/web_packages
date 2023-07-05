@@ -223,47 +223,24 @@ export function mapValuesToStrings(obj: Record<string, unknown>): Record<string,
     return obj as Record<string, string>;
 }
 
-// Can't quite figure out how to not use any here, may revisit in the future
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Helper function to initialize local variables from object properties named in  `keys`.
  *
- * USAGE: `pickFrom(this.dialogData, ['serverId', 'storageManager', 'cancelPolls'] , this)`;
+ * USAGE: `assignFrom(this.dialogData, ['serverId', 'storageManager', 'cancelPolls'] , this)`;
  *
- * @param {Record<string, any>} source An object with targeted properties
- * @param {string[]} keys An array with key names to be targeted
- * @param {Record<string, any>} target Specifies the object to be updated with  extracted properties
- * @param {boolean} updateTarget
+ * @param source An object with targeted properties
+ * @param keys An array with key names to be targeted
+ * @param target Specifies the object to be updated with selected properties
  */
-export function pickFrom<S extends Record<string, any>, O extends Record<string, any>>(
+export function assignFrom<S extends Pick<T, K[number]>, K extends readonly (keyof T)[], T>(
     source: S,
-    keys: (keyof S)[],
-): O;
-export function pickFrom<
-    S extends Record<string, any>,
-    T extends Record<string, any>,
-    O extends T = T,
->(source: S, keys: (keyof S & keyof O)[], target: T, updateTarget?: boolean): O;
-export function pickFrom<
-    S extends Record<string, any>,
-    T extends Record<string, any>,
-    O extends Record<string, any>,
->(source: S, keys: (keyof S)[], target: T, updateTarget: false): Record<keyof T | keyof O, any>;
-export function pickFrom(
-    source: Record<string, any>,
-    keys: string[],
-    target: Record<string, any> = {},
-    updateTarget: boolean = true,
-): Record<string, any> {
-    return keys.reduce((acc, key) => {
-        if (updateTarget) {
-            acc[key] = source[key];
-            return acc;
-        }
-        return { ...acc, key: source[key] };
-    }, target);
+    keys: K,
+    target: T,
+): void {
+    keys.forEach(k => {
+        target[k] = source[k];
+    });
 }
-/* eslint-enable @typescript-eslint/no-explicit-any */
 
 /* DOM */
 

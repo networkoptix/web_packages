@@ -14,10 +14,10 @@ import {
 } from '@services/system.service/cloud-storage-manager/cloud-storage-manager';
 import { LicenseManager } from '@services/system.service/license-manager/licence-manager';
 import {
-    LicenseTagInfo,
     LicenseTranslationBaseKeys,
+    LicenseTagInfo,
 } from '@services/system.service/license-manager/license-manager.types';
-import { pickFrom } from '@utils/general';
+import { assignFrom } from '@utils/general';
 
 export enum CloudStorageActionType {
     ACTIVATE = 'activate',
@@ -170,7 +170,10 @@ export class BaseCloudStorageActionModalContent extends ModalBase<DT['return']> 
     };
 
     init = (): void => {
-        pickFrom(this.dialogData, ['licenseManager', 'cloudStorageManager'], this);
+        assignFrom(this.dialogData, ['licenseManager'], this);
+        if (this.dialogData.cloudStorageManager) {
+            this.cloudStorageManager = this.dialogData.cloudStorageManager;
+        }
         this.targetSystems$ = this.licenseManager.getTargetSystems();
         this.licenses$ = this.licenseManager.getLicenseTagInfo(LicenseState.INACTIVE);
         if (
