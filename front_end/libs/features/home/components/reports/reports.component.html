@@ -1,2 +1,12 @@
-<!-- eslint-disable-next-line nx/template/no-untranslated -->
-<div>Placeholder for reports</div>
+<div class="px-3 pt-3 cards-container">
+    <ng-container *ngFor="let service of services">
+        <div
+            class="system-button card-condensed system-card"
+            (click)="handleServiceClick(service)"
+        >
+            <div class="card-body">
+                {{ service.name }}
+            </div>
+        </div>
+    </ng-container>
+</div>

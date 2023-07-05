@@ -12,6 +12,8 @@ import { icons } from '@lib/variables/static-variables';
 import { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
+import { nxConfig } from '@services/nx-config/config';
+import { IConfig } from '@services/nx-config/config-types';
 
 import { GroupsItem, Crumb, OpenGroups, GroupPath } from '../home.types';
 import { NxSystemGroupsService } from '../services/system-groups.service';
@@ -42,6 +44,7 @@ interface SidebarSettings {
 })
 export class NxOrganizationsComponent implements OnInit {
     LANG = staticLang;
+    CONFIG: IConfig = nxConfig;
     icons = icons;
     tabs: Tab[] = [
         {
@@ -79,22 +82,25 @@ export class NxOrganizationsComponent implements OnInit {
             this.store.dispatch(CPActions.setCurrentPartnerId({ currentPartnerId: null }));
         }
         if (this.isAdmin) {
-            this.tabs.push(
-                ...[
-                    {
-                        displayName: this.LANG.channelPartners.tabNames.users,
-                        route: 'users',
-                    },
-                    {
-                        displayName: this.LANG.channelPartners.tabNames.reports,
-                        route: 'reports',
-                    },
-                    {
-                        displayName: this.LANG.channelPartners.tabNames.settings,
-                        route: 'settings',
-                    },
-                ],
-            );
+            const adminTabs = [
+                {
+                    displayName: this.LANG.channelPartners.tabNames.users,
+                    route: 'users',
+                },
+                ...(this.CONFIG.featureFlags.channelPartnersReports
+                    ? [
+                          {
+                              displayName: this.LANG.channelPartners.tabNames.reports,
+                              route: 'reports',
+                          },
+                      ]
+                    : []),
+                {
+                    displayName: this.LANG.channelPartners.tabNames.settings,
+                    route: 'settings',
+                },
+            ];
+            this.tabs.push(...adminTabs);
         }
         this.currentTab = this.tabs.find(tab => tab.route === this.route.snapshot.data.currentTab);
         this.route.params.pipe(untilDestroyed(this)).subscribe(({ id }) => {

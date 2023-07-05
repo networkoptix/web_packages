@@ -156,6 +156,7 @@ const FeatureFlagKeys = [
     'dashboard',
     'archiveSelection',
     'systemGroups',
+    'channelPartnersReports',
     'readonlyAPIs',
     'dashboardRedirect',
     'cloudOwnershipTransfer',

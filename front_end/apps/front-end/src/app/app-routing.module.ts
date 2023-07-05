@@ -12,6 +12,7 @@ import { RedirectAuthGuard } from '@guards/redirectAuthGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
 import { FeatureFlagStrings } from '@services/nx-config/base-config';
+import { nxConfig } from '@services/nx-config/config';
 
 const lazyRoutes: Routes = [
     {
@@ -88,6 +89,7 @@ const lazyRoutes: Routes = [
     {
         path: 'home',
         loadChildren: () => import('@pages/home/home.module').then(m => m.NxHomeModule),
+        canActivate: [() => nxConfig.featureFlags.channelPartners],
         canLoad: [FeatureGuard],
         data: {
             flags: FeatureFlagStrings.systemGroups,

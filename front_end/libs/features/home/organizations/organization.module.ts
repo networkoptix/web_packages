@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+import { nxConfig } from '@services/nx-config/config';
+
 import { CPResovler } from '../CP-resolver';
 import { NxGroupsCardsComponent } from '../components/groups-cards/groups-cards.component';
 import { NxOrganizationReportsComponent } from '../components/reports/reports.component';
@@ -31,7 +33,7 @@ const orgRoutes: Routes = [
             },
             {
                 path: 'reports',
-                canActivate: [TabGuard],
+                canActivate: [() => nxConfig.featureFlags.channelPartnersReports, TabGuard],
                 component: NxOrganizationReportsComponent,
             },
             {
