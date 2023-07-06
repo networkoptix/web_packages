@@ -120,6 +120,35 @@ class TestCustomRedisCache:
         assert isinstance(err, ValueError)
         assert err.args[0].startswith('Awaitable cannot be cached. Got object:')
 
+    def test_scan_unlink(self):
+        qty = 5
+        prefix = f'test-key-{uuid4()}'
+        for _ in range(qty):
+            self.cache.set(f'{prefix}-{uuid4()}', f'{uuid4()}')
+
+        keys = self.cache.keys(f'{prefix}-*')
+        assert len(keys) == qty
+        assert all([k.startswith(prefix) for k in keys])
+
+        self.cache.scan_unlink(f'{prefix}-*')
+        keys = self.cache.keys(f'{prefix}-*')
+        assert len(keys) == 0
+
+    def test_hscan_iter(self):
+        qty = 5
+        hash = f'{uuid4()}'
+        prefix = f'test-key-{uuid4()}'
+        for _ in range(qty):
+            self.cache.hset(hash, f'{prefix}-{uuid4()}', f'{uuid4()}')
+
+        keys = self.cache.hkeys(hash)
+        assert len(keys) == qty
+        assert all([k.startswith(prefix) for k in keys])
+
+        for key, data in self.cache.hscan_iter(hash, f'{prefix}-*'):
+            assert key in keys
+            assert data == self.cache.hget(hash, key)
+
 
 class TestCustomRedisCacheAsync:
     @pytest.fixture(autouse=True)
@@ -299,3 +328,5 @@ class TestCustomRedisCacheAsync:
 
         assert isinstance(err, ValueError)
         assert err.args[0].startswith('Awaitable cannot be cached. Got object:')
+
+

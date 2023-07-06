@@ -4,12 +4,14 @@ import json
 import os
 import typing
 import re
+from hashlib import md5
 from logging import getLogger
 from typing import Tuple, Optional
 
 import waffle
 from asgiref.sync import sync_to_async
 from django.conf import settings
+from django.core.cache import caches
 from django.core.files.base import ContentFile
 from django.db.models import QuerySet
 
@@ -34,8 +36,16 @@ class TemplatesCache(HashCache):
 
     def __init__(self, customization_name, template_name, language_code, skin, version_id):
         field_key = f'{template_name}-{language_code}-{skin}-{version_id}'
-        hash_key = f'email-templates-{customization_name}-{settings.VERSION}'
+        hash_key = f'templates-{customization_name}-{settings.VERSION}'
         super().__init__(hash_key=hash_key, field_key=field_key)
+
+    @classmethod
+    def invalidate_template_cache(cls, template_name, language_code, skin):
+        cache = caches[cls._cache_name]
+        keys = cache.keys(f'templates-*-{settings.VERSION}')
+        for key in keys:
+            for field, _ in cache.hscan_iter(key, f'{template_name}-{language_code}-{skin}-*'):
+                cache.hdel(key, field)
 
 
 def get_contexts(asset):
@@ -153,13 +163,16 @@ def read_cached_file(asset: Asset, customization_name: str, filename: str, langu
     """
     templates_cache = TemplatesCache(customization_name, filename, language_code, skin, version_id)
     if data := templates_cache.get_value():
+        logger.info(f"Got file {filename} from cache.")
         return data
     if is_email:
         # read email template
         data = read_db_email_file(asset, customization_name, filename, language_code, skin, version_id)
+        logger.info(f"Got email file {filename} from db.")
     else:
         # read view template
         data = read_db_file(asset, customization_name, filename, language_code, skin, version_id)
+        logger.info(f"Got file {filename} from db.")
     templates_cache.set_value(data)
     return data
 
@@ -358,7 +371,7 @@ def get_static_files_links(request, customization):
     if waffle.flag_is_active(request, FLAGS.s3_static):
         asset = get_cloud_portal_asset(customization=customization, no_create=True)
         return get_s3_static_links(asset, customization)
-    return {o: f'/custom_files/{o}' for o, n in names_translation}
+    return {o: o for o, n in names_translation}
 
 
 async def get_customizable_static(customization_name: str, static_path: str):

@@ -265,3 +265,6 @@ class HashCache:
 
     def get_value(self):
         return self.cache.hget(self.hash_key, self.field_key)
+
+    def delete_value(self):
+        return self.cache.hdel(self.hash_key, self.field_key)

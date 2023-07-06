@@ -103,17 +103,6 @@ class AssetCacheLoaderBase:
                 data[ds] = value
         return data
 
-    @staticmethod
-    def clean_keys(*keys):
-        """
-        clean keys from version and cache name
-        Args:
-            *keys:
-
-        Returns:
-
-        """
-        return [k.decode().split(':')[-1] for k in keys]
 
     @classmethod
     def invalidate_all_latest_values(cls):
@@ -121,7 +110,7 @@ class AssetCacheLoaderBase:
         Deletes all latest values for all assets
         """
         lookup_key = cls.generate_hash_key('*', None)
-        keys = AssetCacheLoaderBase.clean_keys(*cls.cache.keys(lookup_key))
+        keys = cls.cache.keys(lookup_key)
         if keys:
             cls.cache.delete(*keys)
 
@@ -154,7 +143,7 @@ class AssetCacheLoaderBase:
             asset: asset to delete values for
         """
         lookup_key = cls.generate_hash_key(asset.id, '*')
-        keys = AssetCacheLoaderBase.clean_keys(*cls.cache.keys(lookup_key))
+        keys = cls.cache.keys(lookup_key)
         if keys:
             cls.cache.delete_many(*keys)
 
@@ -181,7 +170,7 @@ class AssetCacheLoaderBase:
         lookup_hash_key = cls.generate_hash_key(asset_id, version_id)
         lookup_field_key = cls.generate_field_key(customization_name, language_code, datastructure_id,
                                                   request_customization=request_customization)
-        hashes_keys = AssetCacheLoaderBase.clean_keys(*cls.cache.keys(lookup_hash_key))
+        hashes_keys = cls.cache.keys(lookup_hash_key)
         for hk in hashes_keys:
             cursor = 0
             while True:

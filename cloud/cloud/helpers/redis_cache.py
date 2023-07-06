@@ -519,6 +519,12 @@ class CustomRedisClient(RedisCacheClient):
         client = self.get_client(match, write=True)
         return client.scan_iter(match=match, count=count)
 
+    def hscan_iter(self, key, match=None, count=None):
+        client = self.get_client(match, write=True)
+
+        for k, v in client.hscan_iter(key, match=match, count=count):
+            yield k.decode(), self._serializer.loads(v)
+
 
 class CustomRedisCache(RedisCache):
     def __init__(self, server, params):
@@ -530,9 +536,14 @@ class CustomRedisCache(RedisCache):
     def _async_cache(self):
         return self._async_class(self._servers, **self._options)
 
+    def clean_keys(self, *keys, version=None):
+        prefix = self.make_key('', version=version)
+        keys = [k.decode() for k in keys if isinstance(k, bytes) or isinstance(k, bytearray)]
+        return [k.replace(prefix, '') for k in keys]
+
     def keys(self, pattern, version=None):
         key = self.make_and_validate_key(pattern, version=version)
-        return self._cache.keys(key)
+        return self.clean_keys(*self._cache.keys(key))
 
     def hdel(self, key, *fields, version=None):
         key = self.make_and_validate_key(key, version=version)
@@ -733,3 +744,7 @@ class CustomRedisCache(RedisCache):
     def unlink(self, keys, version=None):
         keys = [self.make_and_validate_key(key, version=version) for key in keys]
         self._cache.unlink(*keys)
+
+    def hscan_iter(self, key, match='*', version=None):
+        key = self.make_and_validate_key(key, version=version)
+        return self._cache.hscan_iter(key, match)

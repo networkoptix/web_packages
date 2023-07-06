@@ -145,7 +145,7 @@ class TestAssetCacheLoader:
         ds_1.default = '1'
         ds_1.save()
         # data structure is saved, all values for this ds must be deleted
-        keys = AssetCacheLoaderBase.clean_keys(*caches["assets_values"].keys('*'))
+        keys = caches["assets_values"].keys('*')
         assert len(keys) == 3
         for key in keys:
             assert caches["assets_values"].hget(

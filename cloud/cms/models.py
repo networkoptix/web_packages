@@ -1197,6 +1197,18 @@ class ContextTemplate(models.Model):
             return skin + self.context.file_path.replace("{{language}}", self.language.code)
         return f"{self.context.name}-{skin}{self.language.name}"
 
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        from cms.controllers.static_files import TemplatesCache
+        lang = self.language.code if self.language else None
+        TemplatesCache.invalidate_template_cache(
+            template_name=self.context.file_path, language_code=lang, skin=self.skin
+        )
+        return super().save(force_insert=force_insert, force_update=force_update,
+                            using=using, update_fields=update_fields)
+
+
 
 class DataStructure(models.Model):
     """

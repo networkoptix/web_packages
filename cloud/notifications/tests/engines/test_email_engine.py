@@ -17,7 +17,7 @@ class TestEmailEngine:
         language_code = 'en_US'
         cache = TemplatesCache(customization_name, filename, language_code, skin, version_id)
         assert cache.cache_name == 'templates'
-        assert cache.hash_key == f'email-templates-{customization_name}-{settings.VERSION}'
+        assert cache.hash_key == f'templates-{customization_name}-{settings.VERSION}'
         assert cache.field_key == f'{filename}-{language_code}-{skin}-{version_id}'
 
     def test_send(self, mocker, default_portal):

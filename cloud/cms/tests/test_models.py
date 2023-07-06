@@ -1993,7 +1993,8 @@ class TestReadOnlyAPIFile:
     def test_vars_replacement(self):
         assert vms_vars_replacement(self.vms_content, self.vars_substitutions) == self.replaced_content
 
-    def test_vars_replacement_on_save(self):
+    def test_vars_replacement_on_save(self, default_customization, default_portal):
+        customization_ctx.set(default_customization.name)
         ctx = baker.make(Context, asset_type=get_asset_type(AssetType.ASSET_TYPES.vms), name="General information")
         template = baker.make(ContextTemplate, context=ctx, template=json.dumps(self.vars_substitutions))
         api_file = baker.make(ReadOnlyAPIFile, content=self.vms_content,
