@@ -700,6 +700,7 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
         rgba(var(--light1--rgb), 1)
     );
     --bookmarks-card-title-gradient-hover: var(--bookmarks-card-title-gradient);
+    --bookmarks-card-video-bg: inherit;
 
     --tour-background: rgba(var(--dark9--rgb), 0.4);
 

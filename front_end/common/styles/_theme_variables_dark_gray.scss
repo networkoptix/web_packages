@@ -676,16 +676,15 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
         rgba(var(--dark7--rgb), 0),
         rgba(var(--dark7--rgb), 1)
     );
+    --bookmarks-background-color: inherit;
+    --bookmarks-duration-bg: rgba(0, 0, 0, .5);
+    --bookmarks-card-video-bg: var(--dark6);
 
     --tour-background: rgba(var(--dark9--rgb), 0.4);
 
     /* System Admin */
     --system-admin-info-text: #E1E7EA; //$light4;
-
-	/* Bookmarks */
-    --bookmarks-background-color: inherit;
-    --bookmarks-duration-bg: rgba(0, 0, 0, .5);
-
+    
     /* Layouts */
     --svg-toggle-arrow-color: var(--light17);
     --svg-tab-arrow-color: var(--light5);

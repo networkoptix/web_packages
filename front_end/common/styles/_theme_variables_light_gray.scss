@@ -657,15 +657,14 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
         rgba(var(--light1--rgb), 1)
     );
     --bookmarks-card-title-gradient-hover: var(--bookmarks-card-title-gradient);
+    --bookmarks-background-color: inherit;
+    --bookmarks-duration-bg: rgba(0, 0, 0, .5);
+    --bookmarks-card-video-bg: inherit;
 
     --tour-background: rgba(var(--dark9--rgb), 0.4);
 
     /* System Admin */
     --system-admin-info-text: #2B383F; //$dark9;
-
-	/* Bookmarks */
-    --bookmarks-background-color: inherit;
-    --bookmarks-duration-bg: rgba(0, 0, 0, .5);
 
     /* Layouts */
     --svg-toggle-arrow-color: var(--dark17);

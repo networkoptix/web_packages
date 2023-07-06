@@ -19,6 +19,7 @@
         padding: 10px !important;
 
         .video {
+            background-color: var(--bookmarks-card-video-bg);
 
             // When uncommenting the CSS transitions, remove .error here
             .error {
