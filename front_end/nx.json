@@ -11,7 +11,8 @@
           "lint",
           "test"
         ],
-        "accessToken": "NzU4OWM0MGQtNmJkNi00YzI3LWJkZjUtMThiMmMwYTkyYWNifHJlYWQtd3JpdGU="
+        "accessToken": "MjA3Y2M4ZDgtZmY0Yi00NWExLWI1ODYtOGZkNWI2MDRmMzAzfHJlYWQtb25seQ==",
+        "encryptionKey": "6B51BDCDE73E5C1AB5DFE2DF8BFC4"
       }
     }
   },
@@ -32,35 +33,44 @@
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
-          "jestConfig": "{projectRoot}/jest.config.ts",
-          "passWithNoTests": true
+        "jestConfig": "{projectRoot}/jest.config.ts",
+        "passWithNoTests": true
       },
       "configurations": {
-          "watch": {
-              "watch": true
-          },
-          "ci": {
-              "ci": true,
-              "codeCoverage": true
-          }
+        "watch": {
+          "watch": true
+        },
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
       },
       "inputs": [
         "default",
         "^production",
-        "{workspaceRoot}/eslint-plugin-nx/**",
-        "{workspaceRoot}/.eslintrc.js",
-        "{workspaceRoot}/.eslintignore",
         "{workspaceRoot}/jest.preset.js",
         "{workspaceRoot}/test_utils/**"
       ],
-      "outputs": ["{workspaceRoot}/junit/{projectName}/**", "{workspaceRoot}/coverage/{projectName}/**"]
+      "outputs": [
+        "{workspaceRoot}/junit/{projectName}/**",
+        "{workspaceRoot}/coverage/{projectName}/**"
+      ]
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "options": {
-          "eslintConfig": "./.eslintrc.js",
-          "lintFilePatterns": ["{projectRoot}/**/*.ts", "{projectRoot}/**/*.component.html"]
-      }
+        "eslintConfig": "./.eslintrc.js",
+        "lintFilePatterns": [
+          "{projectRoot}/**/*.ts",
+          "{projectRoot}/**/*.component.html"
+        ]
+      },
+      "inputs": [
+        "default",
+        "{workspaceRoot}/eslint-plugin-nx/**",
+        "{workspaceRoot}/.eslintrc.js",
+        "{workspaceRoot}/.eslintignore"
+      ]
     }
   },
   "workspaceLayout": {
@@ -98,18 +108,19 @@
   },
   "namedInputs": {
     "default": [
-      "{projectRoot}/**/*",
-      "sharedGlobals"
+      "{projectRoot}/**/*"
     ],
     "sharedGlobals": [
       "{workspaceRoot}/common/**/*"
     ],
     "production": [
       "default",
+      "sharedGlobals",
       "!{projectRoot}/**/*.spec.[jt]s",
       "!{projectRoot}/tsconfig.spec.json",
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
-      "!{projectRoot}/jest.config.[jt]s"
+      "!{projectRoot}/jest.config.[jt]s",
+      "!{projectRoot}/src/test-setup.[jt]s"
     ]
   }
 }

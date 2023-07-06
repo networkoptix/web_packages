@@ -3,7 +3,7 @@
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
     "sourceRoot": "libs/dialogs/src",
     "prefix": "lib",
-    "tags": [],
+    "tags": ["libs:dialogs"],
     "projectType": "library",
     "targets": {
         "build-not-working": {

@@ -9,6 +9,7 @@
     },
     "sourceRoot": "apps/front-end/src",
     "prefix": "app",
+    "tags": ["apps:front-end"],
     "targets": {
         "build": {
             "executor": "@nx/angular:webpack-browser",

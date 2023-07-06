@@ -9,6 +9,7 @@
     },
     "sourceRoot": "apps/authorization/src",
     "prefix": "app",
+    "tags": ["apps:authorization"],
     "targets": {
         "build": {
             "executor": "@nx/angular:webpack-browser",

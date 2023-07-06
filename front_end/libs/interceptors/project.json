@@ -3,7 +3,7 @@
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
     "sourceRoot": "libs/interceptors/src",
     "prefix": "lib",
-    "tags": [],
+    "tags": ["libs:interceptors"],
     "projectType": "library",
     "targets": {
         "build-not-working": {

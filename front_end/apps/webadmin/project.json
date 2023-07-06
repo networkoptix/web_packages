@@ -9,6 +9,7 @@
     },
     "sourceRoot": "apps/webadmin/src",
     "prefix": "app",
+    "tags": ["apps:webadmin"],
     "targets": {
         "build": {
             "executor": "@nx/angular:webpack-browser",

@@ -16,7 +16,11 @@
             "@app/*": ["common/*", "libs/*"],
             "@authorization/*": ["apps/authorization/*"],
             "@common/*": ["common/*"],
-            "@components/*": ["libs/components/*", "libs/components-buildable/src/*", "libs/components-buildable/src/lib/*"],
+            "@components/*": [
+                "libs/components/*",
+                "libs/components-buildable/src/*",
+                "libs/components-buildable/src/lib/*"
+            ],
             "@decorators/*": ["libs/decorators/*"],
             "@dialogs/*": ["libs/dialogs/*"],
             "@directives/*": ["libs/directives/*"],
@@ -25,11 +29,11 @@
             "@interceptors/*": ["libs/interceptors/*"],
             "@lib/*": ["common/*", "libs/*", "packages/*"],
             "@mocks/*": ["common/_mocks/*"],
+            "@ngx-translate/core": ["libs/ngx-translate-patch/index.ts"],
             "@openLibs/*": [
                 "node_modules/nx-open-web/packages/*",
                 "node_modules/nx-open-web-candidate/packages/*"
             ],
-            "@ngx-translate/core": ["libs/ngx-translate-patch/index.ts"],
             "@pages/*": ["libs/features/*"],
             "@pipes/*": ["libs/pipes/*"],
             "@resolvers/*": ["libs/resolvers/*"],

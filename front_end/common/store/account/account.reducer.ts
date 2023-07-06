@@ -9,7 +9,7 @@ const initialState: AccountState = {
     currentUser: undefined,
 };
 
-export const accountReducer = createReducer(
+export const accountReducer = createReducer<AccountState>(
     initialState,
     on(
         accountActions.setCurrentUser,
@@ -22,5 +22,5 @@ export const accountReducer = createReducer(
             currentUser: { ...state.currentUser, ...update },
         }),
     ),
-    onSyncState,
+    onSyncState<AccountState>(),
 );

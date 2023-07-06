@@ -1,3 +1,5 @@
+const lintTaskRunner = process.env.NX_TASK_TARGET_TARGET === 'lint';
+
 /** Files that need to be typed */
 const typeLintBlacklist = [
     /* Common */
@@ -609,5 +611,34 @@ module.exports = {
                 }],
             },
         },
+        {
+            plugins: ['@nx'],
+            files: ['*.ts'],
+            rules: {
+                '@nx/enforce-module-boundaries': [
+                    // Only show warnings within editor for now
+                    // We have a lot of circular dependencies to fix
+                    // There are also issues where we import from non-lib modules
+                    lintTaskRunner ? 'off' : 'warn',
+                    {
+                        allow: [],
+                        depConstraints: [
+                            {
+                                sourceTag: 'apps:*',
+                                onlyDependOnLibsWithTags: ['libs:*', 'features:*']
+                            },
+                            {
+                                sourceTag: 'features:*',
+                                onlyDependOnLibsWithTags: ['libs:*']
+                            },
+                            {
+                                sourceTag: 'libs:*',
+                                onlyDependOnLibsWithTags: ['libs:*']
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
     ],
 };

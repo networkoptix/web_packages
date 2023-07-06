@@ -1713,6 +1713,14 @@
         }
     },
     "/front_end/": {
+        "@adobe/css-tools@4.2.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/adobe/css-tools",
+            "publisher": "TJ Holowaychuk",
+            "email": "tj@vision-media.ca",
+            "path": "cloud_portal/front_end/node_modules/@adobe/css-tools",
+            "licenseFile": "cloud_portal/front_end/node_modules/@adobe/css-tools/LICENSE"
+        },
         "@ampproject/remapping@2.2.1": {
             "licenses": "Apache-2.0",
             "repository": "https://github.com/ampproject/remapping",
@@ -1810,7 +1818,7 @@
             "path": "cloud_portal/front_end/node_modules/@angular/cdk",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular/cdk/LICENSE"
         },
-        "@angular/cli@16.0.6": {
+        "@angular/cli@16.1.3": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular-cli",
             "publisher": "Angular Authors",
@@ -1968,7 +1976,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/helper-compilation-targets",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/helper-compilation-targets/LICENSE"
         },
-        "@babel/helper-create-class-features-plugin@7.22.5": {
+        "@babel/helper-create-class-features-plugin@7.22.6": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2182,7 +2190,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/plugin-proposal-class-properties",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/plugin-proposal-class-properties/LICENSE"
         },
-        "@babel/plugin-proposal-decorators@7.22.5": {
+        "@babel/plugin-proposal-decorators@7.22.7": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -4058,6 +4066,12 @@
             "publisher": "Olivier Combe",
             "path": "cloud_portal/front_end/node_modules/@ngx-translate/core"
         },
+        "@nicolo-ribaudo/semver-v6@6.3.3": {
+            "licenses": "ISC",
+            "repository": "https://github.com/nicolo-ribaudo/semver-v6",
+            "path": "cloud_portal/front_end/node_modules/@nicolo-ribaudo/semver-v6",
+            "licenseFile": "cloud_portal/front_end/node_modules/@nicolo-ribaudo/semver-v6/LICENSE"
+        },
         "@nodelib/fs.scandir@2.1.5": {
             "licenses": "MIT",
             "repository": "https://github.com/nodelib/nodelib/tree/master/packages/fs/fs.scandir",
@@ -4118,41 +4132,48 @@
             "path": "cloud_portal/front_end/node_modules/@npmcli/run-script",
             "licenseFile": "cloud_portal/front_end/node_modules/@npmcli/run-script/LICENSE"
         },
-        "@nrwl/angular@16.3.2": {
+        "@nrwl/angular@16.5.0": {
             "licenses": "MIT",
             "repository": "https://github.com/nrwl/nx",
             "publisher": "Victor Savkin",
             "path": "cloud_portal/front_end/node_modules/@nrwl/angular",
             "licenseFile": "cloud_portal/front_end/node_modules/@nrwl/angular/LICENSE"
         },
-        "@nrwl/cypress@16.3.2": {
+        "@nrwl/cypress@16.5.0": {
             "licenses": "MIT",
             "repository": "https://github.com/nrwl/nx",
             "publisher": "Victor Savkin",
             "path": "cloud_portal/front_end/node_modules/@nrwl/cypress",
             "licenseFile": "cloud_portal/front_end/node_modules/@nrwl/cypress/LICENSE"
         },
-        "@nrwl/devkit@16.3.2": {
+        "@nrwl/devkit@16.5.0": {
             "licenses": "MIT",
             "repository": "https://github.com/nrwl/nx",
             "publisher": "Victor Savkin",
             "path": "cloud_portal/front_end/node_modules/@nrwl/devkit",
             "licenseFile": "cloud_portal/front_end/node_modules/@nrwl/devkit/LICENSE"
         },
-        "@nrwl/jest@16.3.2": {
+        "@nrwl/eslint-plugin-nx@16.5.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/nrwl/nx",
+            "publisher": "Victor Savkin",
+            "path": "cloud_portal/front_end/node_modules/@nrwl/eslint-plugin-nx",
+            "licenseFile": "cloud_portal/front_end/node_modules/@nrwl/eslint-plugin-nx/LICENSE"
+        },
+        "@nrwl/jest@16.5.0": {
             "licenses": "MIT",
             "repository": "https://github.com/nrwl/nx",
             "publisher": "Victor Savkin",
             "path": "cloud_portal/front_end/node_modules/@nrwl/jest",
             "licenseFile": "cloud_portal/front_end/node_modules/@nrwl/jest/LICENSE"
         },
-        "@nrwl/js@16.3.2": {
+        "@nrwl/js@16.5.0": {
             "licenses": "MIT",
             "repository": "https://github.com/nrwl/nx",
             "path": "cloud_portal/front_end/node_modules/@nrwl/js",
             "licenseFile": "cloud_portal/front_end/node_modules/@nrwl/js/LICENSE"
         },
-        "@nrwl/linter@16.3.2": {
+        "@nrwl/linter@16.5.0": {
             "licenses": "MIT",
             "repository": "https://github.com/nrwl/nx",
             "publisher": "Victor Savkin",
@@ -4165,35 +4186,35 @@
             "path": "cloud_portal/front_end/node_modules/@nrwl/nx-cloud",
             "licenseFile": "cloud_portal/front_end/node_modules/@nrwl/nx-cloud/LICENSE"
         },
-        "@nrwl/tao@16.3.2": {
+        "@nrwl/tao@16.5.0": {
             "licenses": "MIT",
             "repository": "https://github.com/nrwl/nx",
             "publisher": "Victor Savkin",
             "path": "cloud_portal/front_end/node_modules/@nrwl/tao",
             "licenseFile": "cloud_portal/front_end/node_modules/@nrwl/tao/LICENSE"
         },
-        "@nrwl/webpack@16.3.2": {
+        "@nrwl/webpack@16.5.0": {
             "licenses": "MIT",
             "repository": "https://github.com/nrwl/nx",
             "publisher": "Victor Savkin",
             "path": "cloud_portal/front_end/node_modules/@nrwl/webpack",
             "licenseFile": "cloud_portal/front_end/node_modules/@nrwl/webpack/LICENSE"
         },
-        "@nrwl/workspace@16.3.2": {
+        "@nrwl/workspace@16.5.0": {
             "licenses": "MIT",
             "repository": "https://github.com/nrwl/nx",
             "publisher": "Victor Savkin",
             "path": "cloud_portal/front_end/node_modules/@nrwl/workspace",
             "licenseFile": "cloud_portal/front_end/node_modules/@nrwl/workspace/LICENSE"
         },
-        "@nx/angular@16.3.2": {
+        "@nx/angular@16.5.0": {
             "licenses": "MIT",
             "repository": "https://github.com/nrwl/nx",
             "publisher": "Victor Savkin",
             "path": "cloud_portal/front_end/node_modules/@nx/angular",
             "licenseFile": "cloud_portal/front_end/node_modules/@nx/angular/LICENSE"
         },
-        "@nx/cypress@16.3.2": {
+        "@nx/cypress@16.5.0": {
             "licenses": "MIT",
             "repository": "https://github.com/nrwl/nx",
             "publisher": "Victor Savkin",
@@ -4207,20 +4228,27 @@
             "path": "cloud_portal/front_end/node_modules/@nx/devkit",
             "licenseFile": "cloud_portal/front_end/node_modules/@nx/devkit/LICENSE"
         },
-        "@nx/jest@16.3.2": {
+        "@nx/eslint-plugin@16.5.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/nrwl/nx",
+            "publisher": "Victor Savkin",
+            "path": "cloud_portal/front_end/node_modules/@nx/eslint-plugin",
+            "licenseFile": "cloud_portal/front_end/node_modules/@nx/eslint-plugin/LICENSE"
+        },
+        "@nx/jest@16.5.0": {
             "licenses": "MIT",
             "repository": "https://github.com/nrwl/nx",
             "publisher": "Victor Savkin",
             "path": "cloud_portal/front_end/node_modules/@nx/jest",
             "licenseFile": "cloud_portal/front_end/node_modules/@nx/jest/LICENSE"
         },
-        "@nx/js@16.3.2": {
+        "@nx/js@16.5.0": {
             "licenses": "MIT",
             "repository": "https://github.com/nrwl/nx",
             "path": "cloud_portal/front_end/node_modules/@nx/js",
             "licenseFile": "cloud_portal/front_end/node_modules/@nx/js/LICENSE"
         },
-        "@nx/linter@16.3.2": {
+        "@nx/linter@16.5.0": {
             "licenses": "MIT",
             "repository": "https://github.com/nrwl/nx",
             "publisher": "Victor Savkin",
@@ -4239,14 +4267,14 @@
             "path": "cloud_portal/front_end/node_modules/@nx/nx-linux-x64-musl",
             "licenseFile": "cloud_portal/front_end/node_modules/@nx/nx-linux-x64-musl/LICENSE"
         },
-        "@nx/webpack@16.3.2": {
+        "@nx/webpack@16.5.0": {
             "licenses": "MIT",
             "repository": "https://github.com/nrwl/nx",
             "publisher": "Victor Savkin",
             "path": "cloud_portal/front_end/node_modules/@nx/webpack",
             "licenseFile": "cloud_portal/front_end/node_modules/@nx/webpack/LICENSE"
         },
-        "@nx/workspace@16.3.2": {
+        "@nx/workspace@16.5.0": {
             "licenses": "MIT",
             "repository": "https://github.com/nrwl/nx",
             "publisher": "Victor Savkin",
@@ -4406,7 +4434,7 @@
             "path": "cloud_portal/front_end/node_modules/@sigstore/protobuf-specs",
             "licenseFile": "cloud_portal/front_end/node_modules/@sigstore/protobuf-specs/LICENSE"
         },
-        "@sigstore/tuf@1.0.0": {
+        "@sigstore/tuf@1.0.2": {
             "licenses": "Apache-2.0",
             "repository": "https://github.com/sigstore/sigstore-js",
             "publisher": "bdehamer@github.com",
@@ -5469,7 +5497,7 @@
             "path": "cloud_portal/front_end/node_modules/@yarnpkg/lockfile",
             "licenseFile": "cloud_portal/front_end/node_modules/@yarnpkg/lockfile/README.md"
         },
-        "@yarnpkg/parsers@3.0.0-rc.45": {
+        "@yarnpkg/parsers@3.0.0-rc.46": {
             "licenses": "BSD-2-Clause",
             "repository": "https://github.com/yarnpkg/berry",
             "path": "cloud_portal/front_end/node_modules/@yarnpkg/parsers"
@@ -5800,15 +5828,6 @@
             "email": "iam@alexindigo.com",
             "path": "cloud_portal/front_end/node_modules/asynckit",
             "licenseFile": "cloud_portal/front_end/node_modules/asynckit/LICENSE"
-        },
-        "atob@2.1.2": {
-            "licenses": "(MIT OR Apache-2.0)",
-            "repository": "git://git.coolaj86.com/coolaj86/atob.js",
-            "publisher": "AJ ONeal",
-            "email": "coolaj86@gmail.com",
-            "url": "https://coolaj86.com",
-            "path": "cloud_portal/front_end/node_modules/atob",
-            "licenseFile": "cloud_portal/front_end/node_modules/atob/LICENSE"
         },
         "autolinker@3.16.2": {
             "licenses": "MIT",
@@ -6594,6 +6613,12 @@
             "path": "cloud_portal/front_end/node_modules/concat-map",
             "licenseFile": "cloud_portal/front_end/node_modules/concat-map/LICENSE"
         },
+        "confusing-browser-globals@1.0.11": {
+            "licenses": "MIT",
+            "repository": "https://github.com/facebook/create-react-app",
+            "path": "cloud_portal/front_end/node_modules/confusing-browser-globals",
+            "licenseFile": "cloud_portal/front_end/node_modules/confusing-browser-globals/LICENSE"
+        },
         "connect-history-api-fallback@1.6.0": {
             "licenses": "MIT",
             "repository": "https://github.com/bripkens/connect-history-api-fallback",
@@ -6818,7 +6843,7 @@
             "path": "cloud_portal/front_end/node_modules/css-loader",
             "licenseFile": "cloud_portal/front_end/node_modules/css-loader/LICENSE"
         },
-        "css-minimizer-webpack-plugin@3.4.1": {
+        "css-minimizer-webpack-plugin@5.0.1": {
             "licenses": "MIT",
             "repository": "https://github.com/webpack-contrib/css-minimizer-webpack-plugin",
             "publisher": "Loann Neveu",
@@ -6841,7 +6866,7 @@
             "path": "cloud_portal/front_end/node_modules/css-select",
             "licenseFile": "cloud_portal/front_end/node_modules/css-select/LICENSE"
         },
-        "css-tree@1.1.3": {
+        "css-tree@2.3.1": {
             "licenses": "MIT",
             "repository": "https://github.com/csstree/csstree",
             "publisher": "Roman Dvornov",
@@ -6867,14 +6892,6 @@
             "path": "cloud_portal/front_end/node_modules/css.escape",
             "licenseFile": "cloud_portal/front_end/node_modules/css.escape/LICENSE-MIT.txt"
         },
-        "css@3.0.0": {
-            "licenses": "MIT",
-            "repository": "https://github.com/reworkcss/css",
-            "publisher": "TJ Holowaychuk",
-            "email": "tj@vision-media.ca",
-            "path": "cloud_portal/front_end/node_modules/css",
-            "licenseFile": "cloud_portal/front_end/node_modules/css/LICENSE"
-        },
         "cssdb@6.6.3": {
             "licenses": "CC0-1.0",
             "repository": "https://github.com/csstools/cssdb",
@@ -6891,7 +6908,7 @@
             "path": "cloud_portal/front_end/node_modules/cssesc",
             "licenseFile": "cloud_portal/front_end/node_modules/cssesc/LICENSE-MIT.txt"
         },
-        "cssnano-preset-default@5.2.14": {
+        "cssnano-preset-default@6.0.1": {
             "licenses": "MIT",
             "repository": "https://github.com/cssnano/cssnano",
             "publisher": "Ben Briggs",
@@ -6900,13 +6917,13 @@
             "path": "cloud_portal/front_end/node_modules/cssnano-preset-default",
             "licenseFile": "cloud_portal/front_end/node_modules/cssnano-preset-default/LICENSE-MIT"
         },
-        "cssnano-utils@3.1.0": {
+        "cssnano-utils@4.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/cssnano/cssnano",
             "path": "cloud_portal/front_end/node_modules/cssnano-utils",
             "licenseFile": "cloud_portal/front_end/node_modules/cssnano-utils/LICENSE"
         },
-        "cssnano@5.1.15": {
+        "cssnano@6.0.1": {
             "licenses": "MIT",
             "repository": "https://github.com/cssnano/cssnano",
             "publisher": "Ben Briggs",
@@ -6915,7 +6932,7 @@
             "path": "cloud_portal/front_end/node_modules/cssnano",
             "licenseFile": "cloud_portal/front_end/node_modules/cssnano/LICENSE-MIT"
         },
-        "csso@4.2.0": {
+        "csso@5.0.5": {
             "licenses": "MIT",
             "repository": "https://github.com/css/csso",
             "publisher": "Sergey Kryzhanovsky",
@@ -7280,15 +7297,6 @@
             "email": "M8ch88l@gmail.com",
             "path": "cloud_portal/front_end/node_modules/decimal.js",
             "licenseFile": "cloud_portal/front_end/node_modules/decimal.js/LICENCE.md"
-        },
-        "decode-uri-component@0.2.2": {
-            "licenses": "MIT",
-            "repository": "https://github.com/SamVerschueren/decode-uri-component",
-            "publisher": "Sam Verschueren",
-            "email": "sam.verschueren@gmail.com",
-            "url": "github.com/SamVerschueren",
-            "path": "cloud_portal/front_end/node_modules/decode-uri-component",
-            "licenseFile": "cloud_portal/front_end/node_modules/decode-uri-component/license"
         },
         "decompress-response@4.2.1": {
             "licenses": "MIT",
@@ -7765,6 +7773,13 @@
             "email": "guillermo@learnboost.com",
             "path": "cloud_portal/front_end/node_modules/engine.io",
             "licenseFile": "cloud_portal/front_end/node_modules/engine.io/LICENSE"
+        },
+        "enhanced-resolve@5.15.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/webpack/enhanced-resolve",
+            "publisher": "Tobias Koppers @sokra",
+            "path": "cloud_portal/front_end/node_modules/enhanced-resolve",
+            "licenseFile": "cloud_portal/front_end/node_modules/enhanced-resolve/LICENSE"
         },
         "enquirer@2.3.6": {
             "licenses": "MIT",
@@ -8324,13 +8339,6 @@
             "url": "http://royriojas.com",
             "path": "cloud_portal/front_end/node_modules/file-entry-cache",
             "licenseFile": "cloud_portal/front_end/node_modules/file-entry-cache/LICENSE"
-        },
-        "file-loader@6.2.0": {
-            "licenses": "MIT",
-            "repository": "https://github.com/webpack-contrib/file-loader",
-            "publisher": "Tobias Koppers @sokra",
-            "path": "cloud_portal/front_end/node_modules/file-loader",
-            "licenseFile": "cloud_portal/front_end/node_modules/file-loader/LICENSE"
         },
         "file-saver@2.0.5": {
             "licenses": "MIT",
@@ -9203,7 +9211,7 @@
             "path": "cloud_portal/front_end/node_modules/inherits",
             "licenseFile": "cloud_portal/front_end/node_modules/inherits/LICENSE"
         },
-        "ini@4.0.0": {
+        "ini@4.1.1": {
             "licenses": "ISC",
             "repository": "https://github.com/npm/ini",
             "publisher": "GitHub Inc.",
@@ -10046,6 +10054,13 @@
             "path": "cloud_portal/front_end/node_modules/json5",
             "licenseFile": "cloud_portal/front_end/node_modules/json5/LICENSE.md"
         },
+        "jsonc-eslint-parser@2.3.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/ota-meshi/jsonc-eslint-parser",
+            "publisher": "Yosuke Ota",
+            "path": "cloud_portal/front_end/node_modules/jsonc-eslint-parser",
+            "licenseFile": "cloud_portal/front_end/node_modules/jsonc-eslint-parser/LICENSE"
+        },
         "jsonc-parser@3.1.0": {
             "licenses": "MIT",
             "repository": "https://github.com/microsoft/node-jsonc-parser",
@@ -10466,7 +10481,7 @@
             "path": "cloud_portal/front_end/node_modules/md5",
             "licenseFile": "cloud_portal/front_end/node_modules/md5/LICENSE"
         },
-        "mdn-data@2.0.14": {
+        "mdn-data@2.0.30": {
             "licenses": "CC0-1.0",
             "repository": "https://github.com/mdn/data",
             "publisher": "Mozilla Developer Network",
@@ -11106,15 +11121,6 @@
             "path": "cloud_portal/front_end/node_modules/normalize-range",
             "licenseFile": "cloud_portal/front_end/node_modules/normalize-range/license"
         },
-        "normalize-url@6.1.0": {
-            "licenses": "MIT",
-            "repository": "https://github.com/sindresorhus/normalize-url",
-            "publisher": "Sindre Sorhus",
-            "email": "sindresorhus@gmail.com",
-            "url": "https://sindresorhus.com",
-            "path": "cloud_portal/front_end/node_modules/normalize-url",
-            "licenseFile": "cloud_portal/front_end/node_modules/normalize-url/license"
-        },
         "npm-bundled@3.0.0": {
             "licenses": "ISC",
             "repository": "https://github.com/npm/npm-bundled",
@@ -11224,7 +11230,7 @@
             "path": "cloud_portal/front_end/node_modules/nx-open-web",
             "licenseFile": "cloud_portal/front_end/node_modules/nx-open-web/README.md"
         },
-        "nx@16.3.2": {
+        "nx@16.5.0": {
             "licenses": "MIT",
             "repository": "https://github.com/nrwl/nx",
             "publisher": "Victor Savkin",
@@ -11471,7 +11477,7 @@
             "path": "cloud_portal/front_end/node_modules/p-try",
             "licenseFile": "cloud_portal/front_end/node_modules/p-try/license"
         },
-        "pacote@15.1.3": {
+        "pacote@15.2.0": {
             "licenses": "ISC",
             "repository": "https://github.com/npm/pacote",
             "publisher": "GitHub Inc.",
@@ -11694,7 +11700,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-attribute-case-insensitive",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-attribute-case-insensitive/LICENSE"
         },
-        "postcss-calc@8.2.4": {
+        "postcss-calc@9.0.1": {
             "licenses": "MIT",
             "repository": "https://github.com/postcss/postcss-calc",
             "publisher": "Andy Jansson",
@@ -11729,7 +11735,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-color-rebeccapurple",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-color-rebeccapurple/LICENSE.md"
         },
-        "postcss-colormin@5.3.1": {
+        "postcss-colormin@6.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/cssnano/cssnano",
             "publisher": "Ben Briggs",
@@ -11738,7 +11744,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-colormin",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-colormin/LICENSE-MIT"
         },
-        "postcss-convert-values@5.1.3": {
+        "postcss-convert-values@6.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/cssnano/cssnano",
             "publisher": "Ben Briggs",
@@ -11775,7 +11781,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-dir-pseudo-class",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-dir-pseudo-class/LICENSE.md"
         },
-        "postcss-discard-comments@5.1.2": {
+        "postcss-discard-comments@6.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/cssnano/cssnano",
             "publisher": "Ben Briggs",
@@ -11784,7 +11790,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-discard-comments",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-discard-comments/LICENSE-MIT"
         },
-        "postcss-discard-duplicates@5.1.0": {
+        "postcss-discard-duplicates@6.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/cssnano/cssnano",
             "publisher": "Ben Briggs",
@@ -11793,7 +11799,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-discard-duplicates",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-discard-duplicates/LICENSE-MIT"
         },
-        "postcss-discard-empty@5.1.1": {
+        "postcss-discard-empty@6.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/cssnano/cssnano",
             "publisher": "Ben Briggs",
@@ -11802,7 +11808,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-discard-empty",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-discard-empty/LICENSE-MIT"
         },
-        "postcss-discard-overridden@5.1.0": {
+        "postcss-discard-overridden@6.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/cssnano/cssnano",
             "publisher": "Justineo",
@@ -11911,7 +11917,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-media-minmax",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-media-minmax/LICENSE"
         },
-        "postcss-merge-longhand@5.1.7": {
+        "postcss-merge-longhand@6.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/cssnano/cssnano",
             "publisher": "Ben Briggs",
@@ -11920,7 +11926,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-merge-longhand",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-merge-longhand/LICENSE-MIT"
         },
-        "postcss-merge-rules@5.1.4": {
+        "postcss-merge-rules@6.0.1": {
             "licenses": "MIT",
             "repository": "https://github.com/cssnano/cssnano",
             "publisher": "Ben Briggs",
@@ -11929,7 +11935,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-merge-rules",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-merge-rules/LICENSE-MIT"
         },
-        "postcss-minify-font-values@5.1.0": {
+        "postcss-minify-font-values@6.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/cssnano/cssnano",
             "publisher": "Bogdan Chadkin",
@@ -11937,7 +11943,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-minify-font-values",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-minify-font-values/LICENSE"
         },
-        "postcss-minify-gradients@5.1.1": {
+        "postcss-minify-gradients@6.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/cssnano/cssnano",
             "publisher": "Ben Briggs",
@@ -11946,7 +11952,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-minify-gradients",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-minify-gradients/LICENSE-MIT"
         },
-        "postcss-minify-params@5.1.4": {
+        "postcss-minify-params@6.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/cssnano/cssnano",
             "publisher": "Bogdan Chadkin",
@@ -11954,7 +11960,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-minify-params",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-minify-params/LICENSE"
         },
-        "postcss-minify-selectors@5.2.1": {
+        "postcss-minify-selectors@6.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/cssnano/cssnano",
             "publisher": "Ben Briggs",
@@ -11999,7 +12005,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-nesting",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-nesting/LICENSE.md"
         },
-        "postcss-normalize-charset@5.1.0": {
+        "postcss-normalize-charset@6.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/cssnano/cssnano",
             "publisher": "Bogdan Chadkin",
@@ -12007,7 +12013,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-normalize-charset",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-normalize-charset/LICENSE"
         },
-        "postcss-normalize-display-values@5.1.0": {
+        "postcss-normalize-display-values@6.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/cssnano/cssnano",
             "publisher": "Ben Briggs",
@@ -12016,7 +12022,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-normalize-display-values",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-normalize-display-values/LICENSE-MIT"
         },
-        "postcss-normalize-positions@5.1.1": {
+        "postcss-normalize-positions@6.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/cssnano/cssnano",
             "publisher": "Ben Briggs",
@@ -12025,7 +12031,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-normalize-positions",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-normalize-positions/LICENSE-MIT"
         },
-        "postcss-normalize-repeat-style@5.1.1": {
+        "postcss-normalize-repeat-style@6.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/cssnano/cssnano",
             "publisher": "Ben Briggs",
@@ -12034,7 +12040,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-normalize-repeat-style",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-normalize-repeat-style/LICENSE-MIT"
         },
-        "postcss-normalize-string@5.1.0": {
+        "postcss-normalize-string@6.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/cssnano/cssnano",
             "publisher": "Ben Briggs",
@@ -12043,7 +12049,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-normalize-string",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-normalize-string/LICENSE-MIT"
         },
-        "postcss-normalize-timing-functions@5.1.0": {
+        "postcss-normalize-timing-functions@6.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/cssnano/cssnano",
             "publisher": "Ben Briggs",
@@ -12052,7 +12058,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-normalize-timing-functions",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-normalize-timing-functions/LICENSE-MIT"
         },
-        "postcss-normalize-unicode@5.1.1": {
+        "postcss-normalize-unicode@6.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/cssnano/cssnano",
             "publisher": "Ben Briggs",
@@ -12061,7 +12067,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-normalize-unicode",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-normalize-unicode/LICENSE-MIT"
         },
-        "postcss-normalize-url@5.1.0": {
+        "postcss-normalize-url@6.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/cssnano/cssnano",
             "publisher": "Ben Briggs",
@@ -12070,7 +12076,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-normalize-url",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-normalize-url/LICENSE-MIT"
         },
-        "postcss-normalize-whitespace@5.1.1": {
+        "postcss-normalize-whitespace@6.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/cssnano/cssnano",
             "publisher": "Ben Briggs",
@@ -12088,7 +12094,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-opacity-percentage",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-opacity-percentage/LICENSE.md"
         },
-        "postcss-ordered-values@5.1.3": {
+        "postcss-ordered-values@6.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/cssnano/cssnano",
             "publisher": "Ben Briggs",
@@ -12137,7 +12143,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-pseudo-class-any-link",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-pseudo-class-any-link/LICENSE.md"
         },
-        "postcss-reduce-initial@5.1.2": {
+        "postcss-reduce-initial@6.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/cssnano/cssnano",
             "publisher": "Ben Briggs",
@@ -12146,7 +12152,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-reduce-initial",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-reduce-initial/LICENSE-MIT"
         },
-        "postcss-reduce-transforms@5.1.0": {
+        "postcss-reduce-transforms@6.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/cssnano/cssnano",
             "publisher": "Ben Briggs",
@@ -12176,7 +12182,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-selector-parser",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-selector-parser/LICENSE-MIT"
         },
-        "postcss-svgo@5.1.0": {
+        "postcss-svgo@6.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/cssnano/cssnano",
             "publisher": "Ben Briggs",
@@ -12185,7 +12191,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-svgo",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-svgo/LICENSE-MIT"
         },
-        "postcss-unique-selectors@5.1.1": {
+        "postcss-unique-selectors@6.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/cssnano/cssnano",
             "publisher": "Ben Briggs",
@@ -13145,7 +13151,7 @@
             "path": "cloud_portal/front_end/node_modules/selfsigned",
             "licenseFile": "cloud_portal/front_end/node_modules/selfsigned/LICENSE"
         },
-        "semver@7.4.0": {
+        "semver@7.5.3": {
             "licenses": "ISC",
             "repository": "https://github.com/npm/node-semver",
             "publisher": "GitHub Inc.",
@@ -13290,7 +13296,7 @@
             "path": "cloud_portal/front_end/node_modules/signal-exit",
             "licenseFile": "cloud_portal/front_end/node_modules/signal-exit/LICENSE.txt"
         },
-        "sigstore@1.6.0": {
+        "sigstore@1.7.0": {
             "licenses": "Apache-2.0",
             "repository": "https://github.com/sigstore/sigstore-js",
             "publisher": "bdehamer@github.com",
@@ -13427,13 +13433,6 @@
             "path": "cloud_portal/front_end/node_modules/source-map-loader",
             "licenseFile": "cloud_portal/front_end/node_modules/source-map-loader/LICENSE"
         },
-        "source-map-resolve@0.6.0": {
-            "licenses": "MIT",
-            "repository": "https://github.com/lydell/source-map-resolve",
-            "publisher": "Simon Lydell",
-            "path": "cloud_portal/front_end/node_modules/source-map-resolve",
-            "licenseFile": "cloud_portal/front_end/node_modules/source-map-resolve/LICENSE"
-        },
         "source-map-support@0.5.21": {
             "licenses": "MIT",
             "repository": "https://github.com/evanw/node-source-map-support",
@@ -13525,14 +13524,6 @@
             "publisher": "GitHub Inc.",
             "path": "cloud_portal/front_end/node_modules/ssri",
             "licenseFile": "cloud_portal/front_end/node_modules/ssri/LICENSE.md"
-        },
-        "stable@0.1.8": {
-            "licenses": "MIT",
-            "repository": "https://github.com/Two-Screen/stable",
-            "publisher": "Angry Bytes",
-            "email": "info@angrybytes.com",
-            "path": "cloud_portal/front_end/node_modules/stable",
-            "licenseFile": "cloud_portal/front_end/node_modules/stable/README.md"
         },
         "stack-trace@0.0.10": {
             "licenses": "MIT",
@@ -13698,7 +13689,7 @@
             "path": "cloud_portal/front_end/node_modules/style-loader",
             "licenseFile": "cloud_portal/front_end/node_modules/style-loader/LICENSE"
         },
-        "stylehacks@5.1.1": {
+        "stylehacks@6.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/cssnano/cssnano",
             "publisher": "Ben Briggs",
@@ -13724,7 +13715,7 @@
             "path": "cloud_portal/front_end/node_modules/stylus-loader",
             "licenseFile": "cloud_portal/front_end/node_modules/stylus-loader/LICENSE"
         },
-        "stylus@0.55.0": {
+        "stylus@0.59.0": {
             "licenses": "MIT",
             "repository": "https://github.com/stylus/stylus",
             "publisher": "TJ Holowaychuk",
@@ -13758,7 +13749,7 @@
             "path": "cloud_portal/front_end/node_modules/supports-preserve-symlinks-flag",
             "licenseFile": "cloud_portal/front_end/node_modules/supports-preserve-symlinks-flag/LICENSE"
         },
-        "svgo@2.8.0": {
+        "svgo@3.0.2": {
             "licenses": "MIT",
             "repository": "https://github.com/svg/svgo",
             "publisher": "Kir Belevich",
@@ -14057,6 +14048,15 @@
             "path": "cloud_portal/front_end/node_modules/ts-jest",
             "licenseFile": "cloud_portal/front_end/node_modules/ts-jest/LICENSE.md"
         },
+        "ts-loader@9.4.4": {
+            "licenses": "MIT",
+            "repository": "https://github.com/TypeStrong/ts-loader",
+            "publisher": "John Reilly",
+            "email": "johnny_reilly@hotmail.com",
+            "url": "https://johnnyreilly.com",
+            "path": "cloud_portal/front_end/node_modules/ts-loader",
+            "licenseFile": "cloud_portal/front_end/node_modules/ts-loader/LICENSE"
+        },
         "ts-mocha@10.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/piotrwitek/ts-mocha",
@@ -14198,7 +14198,7 @@
             "path": "cloud_portal/front_end/node_modules/types-ramda",
             "licenseFile": "cloud_portal/front_end/node_modules/types-ramda/README.md"
         },
-        "typescript@5.0.4": {
+        "typescript@5.1.6": {
             "licenses": "Apache-2.0",
             "repository": "https://github.com/Microsoft/TypeScript",
             "publisher": "Microsoft Corp.",

@@ -186,6 +186,7 @@ django-unit-test-fast:
     CHROME_BIN: /usr/bin/google-chrome
     FRONTEND_NODE_MODULES: /node_modules_frontend
     ES_LINT_PLUGIN_NODE_MODULES: /node_modules_es_lint_plugin
+    NX_CLOUD_ACCESS_TOKEN: NzU4OWM0MGQtNmJkNi00YzI3LWJkZjUtMThiMmMwYTkyYWNifHJlYWQtd3JpdGU=
 
   image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
   before_script:

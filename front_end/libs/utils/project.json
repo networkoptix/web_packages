@@ -3,7 +3,7 @@
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
     "sourceRoot": "libs/utils/src",
     "prefix": "lib",
-    "tags": [],
+    "tags": ["libs:utils"],
     "projectType": "library",
     "targets": {
         "build-not-working": {

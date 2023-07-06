@@ -9,6 +9,7 @@
     },
     "sourceRoot": "apps/setup-wizard/src",
     "prefix": "app",
+    "tags": ["apps:setup-wizard"],
     "targets": {
         "build": {
             "executor": "@nx/angular:webpack-browser",
