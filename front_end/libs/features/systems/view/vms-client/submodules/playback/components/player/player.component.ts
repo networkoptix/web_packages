@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, AfterViewInit, Output, EventEmitter, ElementRef } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { SessionStorageService } from 'ngx-webstorage';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { PlaybackTransport } from '@view/view.types';
@@ -47,8 +48,10 @@ export class PlayerComponent implements OnInit, AfterViewInit {
         cannotDecrypt: 'Cannot decrypt media',
         setupPassword: 'Please set up camera password'
     };
+    private readonly xRuntimeGuid = 'x-runtime-guid';
 
     constructor(
+        private sessionStorage: SessionStorageService,
         public http: HttpClient,
         public playback: PlaybackService,
         protected vms: VideoManagementSystemService,
@@ -58,6 +61,10 @@ export class PlayerComponent implements OnInit, AfterViewInit {
             e => this.onClick(e),
             e => this.onDblClick(e)
         );
+    }
+
+    fetchRuntime() {
+        return this.sessionStorage.retrieve(`${this.vms.systemId}-${this.xRuntimeGuid}`);
     }
 
     public ngOnInit(): void {
@@ -135,7 +142,12 @@ export class PlayerComponent implements OnInit, AfterViewInit {
     public videoErrorEventHandler(event: any): void {
         const { player } = event.target;
         if (player && ['abort', 'error'].includes(event.type)) {
-            this.http.get(player.src(), { headers: { 'Accept-Language': 'en-US' } })
+            const headers = { 'Accept-Language': 'en-US' };
+            const auth = this.fetchRuntime();
+            if (auth) {
+                headers[this.xRuntimeGuid] = auth;
+            }
+            this.http.get(player.src(), { headers })
                 .pipe(untilDestroyed(this))
                 .subscribe((response: any) => {
                     switch (response?.error) {
