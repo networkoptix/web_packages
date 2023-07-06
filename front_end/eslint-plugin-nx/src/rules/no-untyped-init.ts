@@ -10,12 +10,7 @@
 
 import { TSESTree, AST_NODE_TYPES } from '@typescript-eslint/utils';
 
-import {
-    createRule,
-    isUntypedValue,
-    decoratorName,
-    decoratorHasCall,
-} from './utils';
+import { createRule, isUntypedValue, decoratorName, decoratorHasCall } from './utils';
 import type { Decorator } from './utils';
 
 // ----------------------------------------------------------------------------
@@ -47,7 +42,7 @@ export = createRule({
         function reportNode(
             node: TSESTree.Node,
             expression: TSESTree.Expression,
-            messageId: 'untypedProp' | 'untypedParamProp' | 'untypedDeclaration'
+            messageId: 'untypedProp' | 'untypedParamProp' | 'untypedDeclaration',
         ): void {
             if (expression === null || isUntypedValue(expression)) {
                 context.report({
@@ -66,11 +61,10 @@ export = createRule({
 
                 /* Inputs and outputs are handled
                 by explicit-angular-boundary-types rule */
-                const isInputOrOutput = decorators?.some((d: Decorator) =>
-                    decoratorHasCall(d) && (
-                        decoratorName(d) === 'Input' ||
-                        decoratorName(d) === 'Output'
-                    )
+                const isInputOrOutput = decorators?.some(
+                    (d: Decorator) =>
+                        decoratorHasCall(d) &&
+                        (decoratorName(d) === 'Input' || decoratorName(d) === 'Output'),
                 );
                 if (isInputOrOutput) {
                     return;
@@ -78,22 +72,17 @@ export = createRule({
 
                 reportNode(node, value, 'untypedProp');
             },
-            'ClassBody > MethodDefinition[kind="constructor"]'(
-                node: TSESTree.MethodDefinition
-            ) {
+            'ClassBody > MethodDefinition[kind="constructor"]'(node: TSESTree.MethodDefinition) {
                 node.value.params.forEach(param => {
                     if (param.type !== AST_NODE_TYPES.TSParameterProperty) {
                         return;
                     }
 
                     const { parameter } = param;
-                    if (
-                        parameter.type === AST_NODE_TYPES.Identifier &&
-                        !parameter.typeAnnotation
-                    ) {
+                    if (parameter.type === AST_NODE_TYPES.Identifier && !parameter.typeAnnotation) {
                         context.report({
                             node: param,
-                            messageId: 'untypedParamProp'
+                            messageId: 'untypedParamProp',
                         });
                     } else if (
                         parameter.type === AST_NODE_TYPES.AssignmentPattern &&
@@ -102,7 +91,7 @@ export = createRule({
                     ) {
                         context.report({
                             node: param,
-                            messageId: 'untypedParamProp'
+                            messageId: 'untypedParamProp',
                         });
                     }
                 });
@@ -116,7 +105,10 @@ export = createRule({
                 }
 
                 declarations.forEach(declarator => {
-                    const { id: { typeAnnotation }, init } = declarator;
+                    const {
+                        id: { typeAnnotation },
+                        init,
+                    } = declarator;
                     if (typeAnnotation) {
                         return;
                     }
@@ -124,5 +116,5 @@ export = createRule({
                 });
             },
         };
-    }
+    },
 });

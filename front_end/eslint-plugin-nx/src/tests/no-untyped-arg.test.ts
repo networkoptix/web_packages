@@ -22,31 +22,31 @@ ruleTester.run('no-untyped-arg', rule, {
     invalid: [
         {
             code: 'function foo(bar) {}',
-            errors: [{ messageId: 'untypedArg' }]
+            errors: [{ messageId: 'untypedArg' }],
         },
         {
             code: 'const foo = (bar) => {};',
-            errors: [{ messageId: 'untypedArg' }]
+            errors: [{ messageId: 'untypedArg' }],
         },
         {
             code: classWrapper('foo(bar) {}'),
-            errors: [{ messageId: 'untypedArg' }]
+            errors: [{ messageId: 'untypedArg' }],
         },
         {
             code: classWrapper('foo = (bar) => {};'),
-            errors: [{ messageId: 'untypedArg' }]
+            errors: [{ messageId: 'untypedArg' }],
         },
         {
             code: 'function foo(bar = []) {}',
-            errors: [{ messageId: 'untypedArg' }]
+            errors: [{ messageId: 'untypedArg' }],
         },
         {
             code: 'function foo({ bar }) {}',
-            errors: [{ messageId: 'untypedArg' }]
+            errors: [{ messageId: 'untypedArg' }],
         },
         {
             code: 'function foo(...bars) {}',
-            errors: [{ messageId: 'untypedArg' }]
+            errors: [{ messageId: 'untypedArg' }],
         },
     ],
 });

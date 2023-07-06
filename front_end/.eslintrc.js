@@ -543,6 +543,7 @@ module.exports = {
                 '*types.ts',
                 'apps/**/*.ts',
                 'common/**/*.ts',
+                'eslint-plugin-nx/**/*.ts',
                 'libs/[0-d]*/**/*.ts',
                 'libs/features/*.ts',
                 'libs/features/[0-r]*/**/*.ts',

@@ -7,7 +7,8 @@
         "watch": "tsc -w",
         "test": "npx ts-mocha src/tests/*.test.ts",
         "build": "tsc",
-        "build-check": "mv ./build ./build-copy; npm run build; build_diff=$(diff -r ./build ./build-copy); if [ ! -z \"$build_diff\" ]; then exit 1; fi"
+        "build-check": "mv ./build ./build-copy; npm run build; build_diff=$(diff -r ./build ./build-copy); if [ ! -z \"$build_diff\" ]; then exit 1; fi",
+        "lint": "cd ..; npx eslint --fix \"./eslint-plugin-nx/**/*.ts\""
     },
     "devDependencies": {
         "mocha": "^10.0.0",

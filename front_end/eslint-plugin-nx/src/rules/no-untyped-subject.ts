@@ -22,7 +22,7 @@ export = createRule({
         type: 'problem',
         schema: [],
         messages: {
-            untypedSubject: 'Untyped subject.'
+            untypedSubject: 'Untyped subject.',
         },
     },
     defaultOptions: [],
@@ -35,23 +35,19 @@ export = createRule({
                 }
                 if (
                     value.type === AST_NODE_TYPES.NewExpression &&
-                    (value.callee as TSESTree.Identifier)
-                        .name.endsWith('Subject') &&
+                    (value.callee as TSESTree.Identifier).name.endsWith('Subject') &&
                     !value.typeParameters &&
                     !typeAnnotation
                     // Subject type annotations require a generic argument
                 ) {
-                    if (
-                        !value.arguments.length ||
-                        isUntypedValue(value.arguments[0])
-                    ) {
+                    if (!value.arguments.length || isUntypedValue(value.arguments[0])) {
                         context.report({
                             node,
-                            messageId: 'untypedSubject'
+                            messageId: 'untypedSubject',
                         });
                     }
                 }
-            }
+            },
         };
-    }
+    },
 });

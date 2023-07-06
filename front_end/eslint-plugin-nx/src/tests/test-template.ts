@@ -9,7 +9,7 @@ const ruleTester = new ESLintUtils.RuleTester({
 ruleTester.run('rule-name', rule, {
     valid: [
         {
-            code: ''
+            code: '',
         },
     ],
     invalid: [

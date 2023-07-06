@@ -19,23 +19,23 @@ ruleTester.run('no-untyped-subject', rule, {
     invalid: [
         {
             code: classWrapper('foo = new Subject();'),
-            errors: [{ messageId: 'untypedSubject' }]
+            errors: [{ messageId: 'untypedSubject' }],
         },
         {
             code: classWrapper('foo = new Subject(null);'),
-            errors: [{ messageId: 'untypedSubject' }]
+            errors: [{ messageId: 'untypedSubject' }],
         },
         {
             code: classWrapper('foo = new Subject(undefined);'),
-            errors: [{ messageId: 'untypedSubject' }]
+            errors: [{ messageId: 'untypedSubject' }],
         },
         {
             code: classWrapper('foo = new Subject([]);'),
-            errors: [{ messageId: 'untypedSubject' }]
+            errors: [{ messageId: 'untypedSubject' }],
         },
         {
             code: classWrapper('foo = new Subject({});'),
-            errors: [{ messageId: 'untypedSubject' }]
+            errors: [{ messageId: 'untypedSubject' }],
         },
     ],
 });

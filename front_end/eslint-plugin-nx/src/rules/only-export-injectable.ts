@@ -18,12 +18,7 @@ import type { Decorator } from './utils';
 // Helpers
 // ----------------------------------------------------------------------------
 
-const injectableDecorators = [
-    'Injectable',
-    'Component',
-    'Pipe',
-    'Directive',
-];
+const injectableDecorators = ['Injectable', 'Component', 'Pipe', 'Directive'];
 
 // ----------------------------------------------------------------------------
 // Rule Definition
@@ -34,7 +29,7 @@ export = createRule({
         type: 'problem',
         schema: [], // no options
         messages: {
-            onlyExportInjectable: 'Files with injectables should only export the injectable.'
+            onlyExportInjectable: 'Files with injectables should only export the injectable.',
         },
     },
     defaultOptions: [],
@@ -65,11 +60,10 @@ export = createRule({
                     return;
                 }
 
-                const { decorators } =
-                    node.declaration as TSESTree.ClassDeclaration;
-                const isInjectable = decorators?.some((d: Decorator) =>
-                    decoratorHasCall(d) &&
-                    injectableDecorators.includes(decoratorName(d))
+                const { decorators } = node.declaration as TSESTree.ClassDeclaration;
+                const isInjectable = decorators?.some(
+                    (d: Decorator) =>
+                        decoratorHasCall(d) && injectableDecorators.includes(decoratorName(d)),
                 );
 
                 if (isInjectable) {
@@ -82,5 +76,5 @@ export = createRule({
                 }
             },
         };
-    }
+    },
 });

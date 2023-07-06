@@ -32,14 +32,17 @@ type MessageIds = 'noText' | 'notOnlyText';
 export = createRule<Options, MessageIds>({
     meta: {
         type: 'problem',
-        schema: [{
-            title: 'Allowed element names',
-            description: 'Elements that are allowed to be within translated elements (i.e. contain no text)',
-            type: 'array',
-            items: {
-                type: 'string',
+        schema: [
+            {
+                title: 'Allowed element names',
+                description:
+                    'Elements that are allowed to be within translated elements (i.e. contain no text)',
+                type: 'array',
+                items: {
+                    type: 'string',
+                },
             },
-        }],
+        ],
         messages: {
             noText: 'No text to translate',
             notOnlyText: 'Translated elements should only contain text',
@@ -51,13 +54,13 @@ export = createRule<Options, MessageIds>({
     create(context, [allowedElems]) {
         return {
             'TextAttribute[name="translate"][value=""]'(
-                node: WithParent<TmplAstTextAttribute, Element>
+                node: WithParent<TmplAstTextAttribute, Element>,
             ) {
                 const element = node.parent;
                 if (!element.children.length) {
                     context.report({
                         loc: sourceSpanToLoc(node.sourceSpan),
-                        messageId: 'noText'
+                        messageId: 'noText',
                     });
                 } else if (
                     element.children.length > 1 ||
@@ -70,12 +73,12 @@ export = createRule<Options, MessageIds>({
                         ) {
                             context.report({
                                 loc: sourceSpanToLoc(child.sourceSpan),
-                                messageId: 'notOnlyText'
+                                messageId: 'notOnlyText',
                             });
                         }
                     });
                 }
-            }
+            },
         };
-    }
+    },
 });

@@ -30,48 +30,48 @@ ruleTester.run('no-untyped-init', rule, {
     invalid: [
         {
             code: classWrapper('foo;'),
-            errors: [{ messageId: 'untypedProp' }]
+            errors: [{ messageId: 'untypedProp' }],
         },
         {
             code: classWrapper('foo = undefined;'),
-            errors: [{ messageId: 'untypedProp' }]
+            errors: [{ messageId: 'untypedProp' }],
         },
         {
             code: classWrapper('foo = null;'),
-            errors: [{ messageId: 'untypedProp' }]
+            errors: [{ messageId: 'untypedProp' }],
         },
         {
             code: classWrapper('foo = [];'),
-            errors: [{ messageId: 'untypedProp' }]
+            errors: [{ messageId: 'untypedProp' }],
         },
         {
             code: classWrapper('foo = {};'),
-            errors: [{ messageId: 'untypedProp' }]
+            errors: [{ messageId: 'untypedProp' }],
         },
         {
             code: classWrapper('constructor(public foo) {}'),
-            errors: [{ messageId: 'untypedParamProp' }]
+            errors: [{ messageId: 'untypedParamProp' }],
         },
         {
             code: classWrapper('constructor(public foo = []) {}'),
-            errors: [{ messageId: 'untypedParamProp' }]
+            errors: [{ messageId: 'untypedParamProp' }],
         },
         { code: 'let foo;', errors: [{ messageId: 'untypedDeclaration' }] },
         {
             code: 'let foo = undefined;',
-            errors: [{ messageId: 'untypedDeclaration' }]
+            errors: [{ messageId: 'untypedDeclaration' }],
         },
         {
             code: 'let foo = null;',
-            errors: [{ messageId: 'untypedDeclaration' }]
+            errors: [{ messageId: 'untypedDeclaration' }],
         },
         {
             code: 'let foo = [];',
-            errors: [{ messageId: 'untypedDeclaration' }]
+            errors: [{ messageId: 'untypedDeclaration' }],
         },
         {
             code: 'let foo = {};',
-            errors: [{ messageId: 'untypedDeclaration' }]
+            errors: [{ messageId: 'untypedDeclaration' }],
         },
     ],
 });

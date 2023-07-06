@@ -31,14 +31,10 @@ export = createRule({
     defaultOptions: [],
     create(context) {
         return {
-            'ClassBody > MethodDefinition[kind="constructor"]'(
-                node: TSESTree.MethodDefinition
-            ) {
+            'ClassBody > MethodDefinition[kind="constructor"]'(node: TSESTree.MethodDefinition) {
                 // Ignore if class extends another class
                 // MethodDefinition => ClassBody => ClassDeclaration
-                if (
-                    (node.parent.parent as TSESTree.ClassDeclaration).superClass
-                ) {
+                if ((node.parent.parent as TSESTree.ClassDeclaration).superClass) {
                     return;
                 }
 
@@ -52,15 +48,17 @@ export = createRule({
                     context.report({
                         node,
                         messageId: 'useless',
-                        suggest: [{
-                            messageId: 'removeUseless',
-                            fix(fixer) {
-                                return fixer.remove(node);
+                        suggest: [
+                            {
+                                messageId: 'removeUseless',
+                                fix(fixer) {
+                                    return fixer.remove(node);
+                                },
                             },
-                        }],
+                        ],
                     });
                 }
-            }
+            },
         };
-    }
+    },
 });

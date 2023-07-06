@@ -27,11 +27,10 @@ const nonAssignments = [
     AST_NODE_TYPES.ObjectPattern,
     AST_NODE_TYPES.RestElement,
 ];
-type NonAssignment = TSESTree.Identifier
-    | TSESTree.ObjectPattern
-    | TSESTree.RestElement;
+type NonAssignment = TSESTree.Identifier | TSESTree.ObjectPattern | TSESTree.RestElement;
 
-type FunctionLike = TSESTree.FunctionDeclaration
+type FunctionLike =
+    | TSESTree.FunctionDeclaration
     | TSESTree.FunctionExpression
     | TSESTree.ArrowFunctionExpression;
 
@@ -64,7 +63,7 @@ export = createRule({
                 ) {
                     context.report({
                         node: param,
-                        messageId: 'untypedArg'
+                        messageId: 'untypedArg',
                     });
                 } else if (
                     param.type === AST_NODE_TYPES.AssignmentPattern &&
@@ -73,7 +72,7 @@ export = createRule({
                 ) {
                     context.report({
                         node: param,
-                        messageId: 'untypedArg'
+                        messageId: 'untypedArg',
                     });
                 }
             });
@@ -90,5 +89,5 @@ export = createRule({
                 checkForUntypedArgs(node);
             },
         };
-    }
+    },
 });

@@ -7,12 +7,12 @@ export const createRule = ESLintUtils.RuleCreator.withoutDocs;
  */
 export function isUntypedValue(expression: TSESTree.CallExpressionArgument): boolean {
     const isNull = (expression as TSESTree.NullLiteral).value === null;
-    const isUndefined = expression.type === AST_NODE_TYPES.Identifier &&
-        expression.name === 'undefined';
-    const isEmptyArray = expression.type === AST_NODE_TYPES.ArrayExpression &&
-        !expression.elements.length;
-    const isEmptyObject = expression.type === AST_NODE_TYPES.ObjectExpression &&
-        !expression.properties.length;
+    const isUndefined =
+        expression.type === AST_NODE_TYPES.Identifier && expression.name === 'undefined';
+    const isEmptyArray =
+        expression.type === AST_NODE_TYPES.ArrayExpression && !expression.elements.length;
+    const isEmptyObject =
+        expression.type === AST_NODE_TYPES.ObjectExpression && !expression.properties.length;
 
     return isNull || isUndefined || isEmptyArray || isEmptyObject;
 }
@@ -36,8 +36,6 @@ export function decoratorName(decorator: Decorator): string {
 
 // Angular decorators (e.g. Input, Output, Component) should always have
 // calls afaik
-export function decoratorHasCall(
-    decorator: Decorator
-): decorator is DecoratorCall {
+export function decoratorHasCall(decorator: Decorator): decorator is DecoratorCall {
     return decorator.expression.type === AST_NODE_TYPES.CallExpression;
 }

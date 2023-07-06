@@ -1,7 +1,4 @@
-import type {
-    ParseSourceSpan,
-    TmplAstElement
-} from '@angular-eslint/bundled-angular-compiler';
+import type { ParseSourceSpan, TmplAstElement } from '@angular-eslint/bundled-angular-compiler';
 import { TSESTree } from '@typescript-eslint/utils';
 
 export enum TMPL_AST_NODES {
@@ -27,16 +24,18 @@ export type WithType<AstElem, Type = TMPL_AST_NODES> = AstElem & {
  */
 export function sourceSpanToLoc(
     sourceSpan: ParseSourceSpan,
-    fullStart: boolean = false
+    fullStart: boolean = false,
 ): TSESTree.SourceLocation {
     return {
-        start: fullStart ? {
-            line: sourceSpan.fullStart.line + 1,
-            column: sourceSpan.fullStart.col,
-        } : {
-            line: sourceSpan.start.line + 1,
-            column: sourceSpan.start.col,
-        },
+        start: fullStart
+            ? {
+                  line: sourceSpan.fullStart.line + 1,
+                  column: sourceSpan.fullStart.col,
+              }
+            : {
+                  line: sourceSpan.start.line + 1,
+                  column: sourceSpan.start.col,
+              },
         end: {
             line: sourceSpan.end.line + 1,
             column: sourceSpan.end.col,

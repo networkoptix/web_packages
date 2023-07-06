@@ -15,7 +15,7 @@ ruleTester.run('no-useless-constructor', rule, {
         {
             code: classWrapper(`constructor(myService: MyService) {
                 const foo = 2;
-            }`)
+            }`),
         },
         { code: classWrapper('constructor(myService: MyService) {}') },
         { code: classWrapper('constructor() { const foo = 2; }') },
@@ -23,13 +23,17 @@ ruleTester.run('no-useless-constructor', rule, {
     invalid: [
         {
             code: classWrapper('constructor() {}'),
-            errors: [{
-                messageId: 'useless',
-                suggestions: [{
-                    messageId: 'removeUseless',
-                    output: classWrapper('')
-                }]
-            }],
+            errors: [
+                {
+                    messageId: 'useless',
+                    suggestions: [
+                        {
+                            messageId: 'removeUseless',
+                            output: classWrapper(''),
+                        },
+                    ],
+                },
+            ],
         },
         {
             code: classWrapper('constructor();\nconstructor() { }'),

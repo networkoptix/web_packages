@@ -9,10 +9,7 @@ import type {
     TmplAstText,
     TmplAstBoundText,
 } from '@angular-eslint/bundled-angular-compiler';
-import type {
-    RuleFixer,
-    RuleFix,
-} from '@typescript-eslint/utils/dist/ts-eslint';
+import type { RuleFixer, RuleFix } from '@typescript-eslint/utils/dist/ts-eslint';
 
 import { TMPL_AST_NODES, sourceSpanToLoc } from './template-utils';
 import type { WithType } from './template-utils';
@@ -30,21 +27,22 @@ const dataUnits = [
     'bps',
     ...'kMGTPEZY'.split('').reduce((units, prefix) => {
         return [...units, `${prefix}B`, `${prefix}bit`, `${prefix}bps`];
-    }, [])
+    }, []),
 ];
 
 function shouldBeTranslated(text: string): boolean {
     return textRegex.test(text) && !dataUnits.includes(text.trim());
 }
 
-type Text = WithType<TmplAstText, TMPL_AST_NODES.Text$3>
-    | WithType<TmplAstBoundText, TMPL_AST_NODES.BoundText> & {
-        value: TmplAstBoundText['value'] & {
-            ast: {
-                strings: string[];
-            };
-        };
-    };
+type Text =
+    | WithType<TmplAstText, TMPL_AST_NODES.Text$3>
+    | (WithType<TmplAstBoundText, TMPL_AST_NODES.BoundText> & {
+          value: TmplAstBoundText['value'] & {
+              ast: {
+                  strings: string[];
+              };
+          };
+      });
 // Text around BoundText (e.g. <div>foo {{ bar }}</div>) is not separate
 // $Text3 elements, but instead .value.ast.strings on the BoundText element
 
@@ -66,7 +64,7 @@ export = createRule({
     defaultOptions: [],
     create(context) {
         return {
-            'Element$1'(node: TmplAstElement) {
+            Element$1(node: TmplAstElement) {
                 if (node.children.length === 0) {
                     return;
                 }
@@ -76,8 +74,8 @@ export = createRule({
                     return;
                 }
 
-                const hasTranslate = node.attributes.some(a =>
-                    a.name === 'translate' && a.value === ''
+                const hasTranslate = node.attributes.some(
+                    a => a.name === 'translate' && a.value === '',
                 );
                 if (hasTranslate) {
                     return;
@@ -86,10 +84,7 @@ export = createRule({
                 const loc = sourceSpanToLoc(node.sourceSpan);
 
                 function checkForUntranslatedText(text: Text): boolean {
-                    if (
-                        text.type === TMPL_AST_NODES.Text$3 &&
-                        shouldBeTranslated(text.value)
-                    ) {
+                    if (text.type === TMPL_AST_NODES.Text$3 && shouldBeTranslated(text.value)) {
                         context.report({ loc, messageId: 'untranslatedText' });
                         return true;
                     } else if (
@@ -110,7 +105,9 @@ export = createRule({
                         return;
                     }
 
-                    const { startSourceSpan: { start, end } } = node;
+                    const {
+                        startSourceSpan: { start, end },
+                    } = node;
                     function fix(fixer: RuleFixer): RuleFix {
                         let translateStr: string;
                         if (start.line === end.line) {
@@ -118,14 +115,15 @@ export = createRule({
                         } else {
                             const ltCol = start.col; // <
                             const gtCol = end.col - 1; // >
-                            translateStr = ltCol === gtCol
-                                ? `${' '.repeat(4)}translate\n${' '.repeat(ltCol)}`
-                                : `translate\n${' '.repeat(gtCol)}`;
+                            translateStr =
+                                ltCol === gtCol
+                                    ? `${' '.repeat(4)}translate\n${' '.repeat(ltCol)}`
+                                    : `translate\n${' '.repeat(gtCol)}`;
                             // Assuming 4 space indent
                         }
                         return fixer.insertTextBeforeRange(
                             [end.offset - 1, end.offset],
-                            translateStr
+                            translateStr,
                         );
                     }
                     context.report({
@@ -143,7 +141,7 @@ export = createRule({
                         // Don't report node multiple times
                     }
                 }
-            }
+            },
         };
-    }
+    },
 });

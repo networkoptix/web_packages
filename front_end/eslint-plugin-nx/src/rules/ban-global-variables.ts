@@ -12,15 +12,13 @@ import { createRule, decoratorHasCall, decoratorName, Decorator } from './utils'
 // Helpers
 // ----------------------------------------------------------------------------
 
-function hasInjectionToken(
-    param: TSESTree.TSParameterProperty,
-    propName: string
-): boolean {
-    return param.decorators?.some((d: Decorator) =>
-        decoratorHasCall(d) &&
-        decoratorName(d) === 'Inject' &&
-        d.expression.arguments[0]?.type === AST_NODE_TYPES.Identifier &&
-        d.expression.arguments[0].name === propName.toUpperCase()
+function hasInjectionToken(param: TSESTree.TSParameterProperty, propName: string): boolean {
+    return param.decorators?.some(
+        (d: Decorator) =>
+            decoratorHasCall(d) &&
+            decoratorName(d) === 'Inject' &&
+            d.expression.arguments[0]?.type === AST_NODE_TYPES.Identifier &&
+            d.expression.arguments[0].name === propName.toUpperCase(),
         // window => WINDOW, document => DOCUMENT
     );
 }
@@ -29,19 +27,19 @@ function hasInjectionToken(
  *
  * Does not check accessibility or type.
  */
-function hasInjectedProp(
-    classBody: TSESTree.ClassBody,
-    propName: string,
-): boolean {
-    return classBody.body.some(b =>
-        b.type === AST_NODE_TYPES.MethodDefinition &&
-        b.kind === 'constructor' &&
-        b.value.params.some(p => {
-            return p.type === AST_NODE_TYPES.TSParameterProperty &&
-            p.parameter.type === AST_NODE_TYPES.Identifier &&
-            p.parameter.name === propName &&
-            hasInjectionToken(p, propName);
-        })
+function hasInjectedProp(classBody: TSESTree.ClassBody, propName: string): boolean {
+    return classBody.body.some(
+        b =>
+            b.type === AST_NODE_TYPES.MethodDefinition &&
+            b.kind === 'constructor' &&
+            b.value.params.some(p => {
+                return (
+                    p.type === AST_NODE_TYPES.TSParameterProperty &&
+                    p.parameter.type === AST_NODE_TYPES.Identifier &&
+                    p.parameter.name === propName &&
+                    hasInjectionToken(p, propName)
+                );
+            }),
     );
 }
 
@@ -52,14 +50,16 @@ function hasInjectedProp(
 export = createRule<[string[]], 'forbiddenGlobal'>({
     meta: {
         type: 'problem',
-        schema: [{
-            title: 'Banned variables names',
-            description: 'Variables which should not be accessed globally',
-            type: 'array',
-            items: {
-                type: 'string',
+        schema: [
+            {
+                title: 'Banned variables names',
+                description: 'Variables which should not be accessed globally',
+                type: 'array',
+                items: {
+                    type: 'string',
+                },
             },
-        }],
+        ],
         messages: {
             forbiddenGlobal: 'Forbidden global variable',
         },
@@ -77,11 +77,9 @@ export = createRule<[string[]], 'forbiddenGlobal'>({
                 const { parent, name } = node;
 
                 const isBaseObject =
-                    parent.type === AST_NODE_TYPES.MemberExpression &&
-                    parent.object === node;
+                    parent.type === AST_NODE_TYPES.MemberExpression && parent.object === node;
 
-                const notMemberExp =
-                    parent.type !== AST_NODE_TYPES.MemberExpression;
+                const notMemberExp = parent.type !== AST_NODE_TYPES.MemberExpression;
 
                 /* Ignore the cases that aren't accessing the global
                 window (this might be incomplete still) */
@@ -113,16 +111,15 @@ export = createRule<[string[]], 'forbiddenGlobal'>({
                         }
                         break;
                     case AST_NODE_TYPES.Property:
-                        const { parent: { type } } = parent;
+                        const {
+                            parent: { type },
+                        } = parent;
                         // Destructuring
                         if (type === AST_NODE_TYPES.ObjectPattern) {
                             isNotGlobal = true;
                         }
                         // Key name
-                        if (
-                            type === AST_NODE_TYPES.ObjectExpression &&
-                            parent.key === node
-                        ) {
+                        if (type === AST_NODE_TYPES.ObjectExpression && parent.key === node) {
                             isNotGlobal = true;
                         }
                         break;
@@ -140,10 +137,7 @@ export = createRule<[string[]], 'forbiddenGlobal'>({
                         if (scope.set.has(name)) {
                             const variable = scope.set.get(name);
                             const identifier = variable.identifiers[0];
-                            if (
-                                identifier.name === name &&
-                                identifier.range[1] < node.range[0]
-                            ) {
+                            if (identifier.name === name && identifier.range[1] < node.range[0]) {
                                 return;
                             }
                         }
@@ -160,7 +154,7 @@ export = createRule<[string[]], 'forbiddenGlobal'>({
                             messageId: 'forbiddenGlobal',
                             fix(fixer) {
                                 return fixer.insertTextBefore(node, 'this.');
-                            }
+                            },
                         });
                     } else {
                         context.report({
@@ -171,5 +165,5 @@ export = createRule<[string[]], 'forbiddenGlobal'>({
                 }
             },
         };
-    }
+    },
 });

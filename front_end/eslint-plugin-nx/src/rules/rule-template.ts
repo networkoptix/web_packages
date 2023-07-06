@@ -24,7 +24,6 @@ export = createRule({
     },
     defaultOptions: [],
     create(context) {
-        return {
-        };
-    }
+        return {};
+    },
 });

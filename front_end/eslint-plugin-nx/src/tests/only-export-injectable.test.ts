@@ -15,29 +15,20 @@ ruleTester.run('only-export-injectable', rule, {
     ],
     invalid: [
         {
-            code: joinLines(
-                '@Injectable() export class Foo {}',
-                'export const bar = false;',
-            ),
+            code: joinLines('@Injectable() export class Foo {}', 'export const bar = false;'),
+            errors: [{ messageId: 'onlyExportInjectable' }],
+        },
+        {
+            code: joinLines("export { baz } from '@baz';", '@Injectable() export class Foo {}'),
             errors: [{ messageId: 'onlyExportInjectable' }],
         },
         {
             code: joinLines(
-                'export { baz } from \'@baz\';',
-                '@Injectable() export class Foo {}',
-            ),
-            errors: [{ messageId: 'onlyExportInjectable' }],
-        },
-        {
-            code: joinLines(
-                'export { baz } from \'@baz\';',
+                "export { baz } from '@baz';",
                 '@Injectable() export class Baz {}',
                 'export const bar = false;',
             ),
-            errors: [
-                { messageId: 'onlyExportInjectable' },
-                { messageId: 'onlyExportInjectable' }
-            ],
+            errors: [{ messageId: 'onlyExportInjectable' }, { messageId: 'onlyExportInjectable' }],
         },
     ],
 });
