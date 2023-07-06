@@ -105,6 +105,9 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 filter(data => data !== undefined),
                 switchMap(async system => {
                     this.isOffline = !system.isOnline;
+                    if (this.isOffline) {
+                        this.serverLoaded = false;
+                    }
                     if (system && (!this.system || !this.environment.isLocal)) {
                         this.system = system;
                     }
@@ -135,6 +138,9 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 }),
                 tap(() => {
                     this.isOffline = !this.system.isOnline;
+                    if (this.isOffline) {
+                        this.serverLoaded = false;
+                    }
                     if (this.system && !this.system.userManager.permissions.isAdmin) {
                         this.uriService
                             .navigateSystem(`${menus.systemSettings.baseUrl}SYSTEM_ID`, this.system)
