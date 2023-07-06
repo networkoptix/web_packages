@@ -23,7 +23,7 @@ COPY stage/cloud/poetry.lock /app/
 WORKDIR /app
 
 RUN set -ex \
-    && python -m pip install poetry \
+    && python -m pip install --prefer-binary --no-cache-dir poetry==1.4.1 jsonschema==4.17.3  \
     && poetry export --with prod,piplicenses --without-hashes --without-urls -o /app/requirements.txt
 
 

@@ -23,7 +23,7 @@ COPY cloud/poetry.lock /app/
 WORKDIR /app
 # will fail if poetry.lock is inconcistent
 RUN set -ex \
-    && python -m pip install poetry \
+    && python -m pip install --prefer-binary --no-cache-dir poetry==1.4.1 jsonschema==4.17.3 \
     && poetry lock --check \
     && poetry export --with prod,test,front-build --without-hashes --without-urls -o /app/requirements.txt
 
