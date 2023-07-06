@@ -23,6 +23,7 @@ import {
     tap,
     catchError,
     switchMap,
+    share,
 } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
@@ -583,6 +584,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     this.selectedRotation?.value || 0,
                 );
             }),
+            share({ resetOnRefCountZero: true }),
         );
     }
 
@@ -688,7 +690,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                                 const selectedCamera = cameras.find(
                                     ({ id }) => id === this.selectedCamera.id,
                                 );
-                                const unauthorized = selectedCamera.status === 'Unauthorized';
+                                const unauthorized = selectedCamera.status === 'unauthorized';
                                 if (unauthorized) {
                                     return throwError('Camera Unauthorized');
                                 }
@@ -712,7 +714,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                         ({ id }) => id === this.selectedCamera.id,
                     );
                     this.selectedCamera = selectedCamera;
-                    this.showUnauthorized = selectedCamera.status === 'Unauthorized';
+                    this.showUnauthorized = selectedCamera.status === 'unauthorized';
                     this.reload$.next(this.reload$.value + 1);
                 });
         };
@@ -981,7 +983,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             );
         }
         this.showUnauthorized =
-            this.selectedCamera && this.selectedCamera.status === 'Unauthorized';
+            this.selectedCamera && this.selectedCamera.status === 'unauthorized';
 
         // ActivatedRoute.fragment was something different before?
         // @ts-expect-error TODO .value does not exist on Observable<string>
@@ -991,7 +993,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             }
         }
 
-        this.showOffline = this.selectedCamera && this.selectedCamera.status === 'Offline';
+        this.showOffline = this.selectedCamera && this.selectedCamera.status === 'offline';
     }
 
     private updateValues(): void {

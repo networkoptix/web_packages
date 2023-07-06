@@ -28,23 +28,7 @@ export class NxImageComponent implements OnChanges, OnDestroy {
     @Input() unavailableMessage: string = staticLang.common.cameraStates.unavailable;
     @Output() loaded = new EventEmitter<boolean>();
     show: boolean;
-
-    // get imageClass(): Record<string, boolean> {
-    //     return this.motionPreview
-    //         ? {
-    //             'motion-preview': true,
-    //             'd-none': !this.show
-    //         } : {
-    //             mini: !this.isPrimary,
-    //             'd-none': !this.show,
-    //             'light-thumbnail-preview': this.lightBackground,
-    //             'thumbnail-preview': !this.lightBackground,
-    //             wide: this.aspect === '16:9' || this.aspect === 'Auto',
-    //             normal: this.aspect === '4:3',
-    //             square: this.aspect === '1:1',
-    //             fill: this.aspect === 'override'
-    //         };
-    // }
+    isLive: boolean;
 
     constructor() {
         this.show = false;
@@ -53,26 +37,25 @@ export class NxImageComponent implements OnChanges, OnDestroy {
         });
     }
 
+    private checkIfLive(state: string): boolean {
+        return ['online', 'recording', 'scheduled', 'archive'].includes(state);
+    }
+
     ngOnChanges(changes: NgChanges<NxImageComponent>): void {
+        this.isLive = this.checkIfLive(changes.state.currentValue);
         if (!(Object.keys(changes).length === 1 && changes.state)) {
             const firstChange = Object.values(changes).reduce(
                 (noChanges, { firstChange }) => noChanges && firstChange,
                 true,
             );
             if (!firstChange) {
-                this.show = false;
+                this.show = this.isLive;
             }
         }
         if (!this.url) {
             this.loaded.emit(true);
         }
-        if (
-            this.state.toLowerCase() === 'Unauthorized'.toLowerCase() ||
-            (changes.state &&
-                !['Online', 'Recording', 'Scheduled', 'Archive']
-                    .map(state => state.toLowerCase())
-                    .includes(changes.state.currentValue.toLowerCase()))
-        ) {
+        if (this.state === 'unauthorized' || !this.isLive) {
             this.url = '';
             this.loaded.emit(true);
         }
