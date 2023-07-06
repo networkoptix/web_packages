@@ -294,8 +294,8 @@ export class NxSystemAdvancedStorageComponent implements OnChanges {
         this.saveSettings = this.processService.createProcess(() => {
             const overwrite = this.storages.some(s => s.remainingSpace.bits < 0);
             if (overwrite) {
-                return this.dialogsService.reserveSpaceWarning().then((res: string | void) => {
-                    if (res === 'accept') {
+                return this.dialogsService.reserveSpaceWarning().then(res => {
+                    if (res) {
                         this.saveStorages();
                     }
                 });

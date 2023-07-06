@@ -19,6 +19,7 @@ import type { Process } from '@services/process.service/process';
 import type { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import type { CloudStorageManager } from '@services/system.service/cloud-storage-manager/cloud-storage-manager';
 import type { LicenseManager } from '@services/system.service/license-manager/licence-manager';
+import type { StorageManager } from '@services/system.service/storage-manager/storage-manager';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/system-types';
 import type { NxUser } from '@services/system.service/user-manager/user-manager-types';
@@ -212,6 +213,18 @@ interface ServerData {
 export type RestartServer = DialogType<ServerData, string>;
 export type ResetServer = DialogType<ServerData, true>;
 export type DetachServer = DialogType<ServerData, true>;
+
+/* Storage */
+export type AddStorage = DialogType<
+    { serverId: string; storageManager: StorageManager; cancelPolls: () => void },
+    void
+>;
+export type ChangeStorage = DialogType<NxSystem, 'changeOk' | 'error' | 'cancel'>;
+export type ResetBackup = DialogType<
+    { system: NxSystem; setDefaultBackupSettings: () => Promise<void> },
+    void
+>;
+export type ReserveSpaceWarning = DialogType<void, true>;
 
 /* Bookmarks */
 export type MoreDevices = DialogType<

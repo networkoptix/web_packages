@@ -11,7 +11,6 @@ import {
     ModalContent,
 } from '@components/console-table/console-table.component.types';
 import { DashboardConfiguration } from '@pages/dashboard/dashboard-configuration';
-import { StorageManager } from '@services/system.service/storage-manager/storage-manager';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemInfo } from '@services/systems.service.types';
 
@@ -123,27 +122,6 @@ export class NxDialogsService {
             .afterClosed();
     }
 
-    public async addStorage(
-        serverId: string,
-        storageManager: StorageManager,
-        cancelPolls: () => any
-    ) {
-        const config: Partial<DialogConfig> = {
-            data: {
-                serverId,
-                storageManager,
-                cancelPolls,
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-        const component = await import('./add-storage/add-storage.component').then(m => m.AddStorageModalContent);
-
-        return this.open(component, dialogConfig)
-            .afterClosed();
-    }
-
     public async edit(genericEditModalContent: GenericEditModalContent);
     public async edit(genericEditModalContent: GenericEditModalContent, values: Record<string, unknown>);
     public async edit(contextModalContent: ModalContent);
@@ -171,21 +149,6 @@ export class NxDialogsService {
             .afterClosed();
     }
 
-    public async changeStorage(system: NxSystem) {
-        const config: Partial<DialogConfig> = {
-            data: {
-                system,
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-        const component = await import('./change-storage/change-storage.component').then(m => m.ChangeStorageModalContent);
-
-        return this.open(component, dialogConfig)
-            .afterClosed();
-    }
-
     public async merge(system: NxSystem, systems: NxSystemInfo[]): Promise<Dt.MergeRefactored['return']> {
         const config: Partial<DialogConfig> = {
             data: {
@@ -199,35 +162,6 @@ export class NxDialogsService {
         const component = await import('./merge/merge.component').then(m => m.MergeModalContent);
         return this.open(component, dialogConfig)
             .afterClosed();
-    }
-
-    public async resetBackupToDefaultSettings(
-        system: NxSystem,
-        setDefaultBackupSettings: () => Promise<any>
-    ) {
-        const config: Partial<DialogConfig> = {
-            data: {
-                system,
-                setDefaultBackupSettings,
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-        const component = await import('./reset-backup/reset-backup.component').then(m => m.ResetBackupModalContent);
-
-        return this.open(component, dialogConfig)
-            .afterClosed();
-    }
-
-    public async reserveSpaceWarning(): Promise<string | void> {
-        const config: Partial<DialogConfig> = {};
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-        const component = await import('./reserve-space-warning/reserve-space-warning.component').then(m => m.ReserveSpaceWarningModalContent);
-
-        return this.open(component, dialogConfig).afterClosed();
     }
     /* eslint-enable */
 
@@ -579,6 +513,25 @@ export class NxDialogsService {
 
     detachServer = this.dialogV2Factory<Dt.DetachServer>(() =>
         import('./detach-server/detach-server.component').then(m => m.DetachServerModalContent),
+    );
+
+    /* Storage */
+    addStorage = this.dialogV2Factory<Dt.AddStorage>(() =>
+        import('./add-storage/add-storage.component').then(m => m.AddStorageModalContent),
+    );
+
+    changeStorage = this.dialogV2Factory<Dt.ChangeStorage>(() =>
+        import('./change-storage/change-storage.component').then(m => m.ChangeStorageModalContent),
+    );
+
+    reserveSpaceWarning = this.dialogV2Factory<Dt.ReserveSpaceWarning>(() =>
+        import('./reserve-space-warning/reserve-space-warning.component').then(
+            m => m.ReserveSpaceWarningModalContent,
+        ),
+    );
+
+    resetBackupSettings = this.dialogV2Factory<Dt.ResetBackup>(() =>
+        import('./reset-backup/reset-backup.component').then(m => m.ResetBackupModalContent),
     );
 
     /* Bookmarks */

@@ -1,37 +1,33 @@
-import { Component, Inject, Input } from '@angular/core';
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { Component, Inject } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { firstValueFrom } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
+import type { ChangeStorage as DT } from '@dialogs/dialogs.types';
+import { ModalBase } from '@dialogs/modal-base';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import type { NxSystem } from '@services/system.service/system';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
     selector: 'nx-modal-change-storage',
     templateUrl: 'change-storage.component.html',
 })
-export class ChangeStorageModalContent {
-    @Input() closable: boolean = true;
-
+export class ChangeStorageModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;
 
-    system: NxSystem;
     deleteAnalyticsData: Process;
     keepAnalyticsData: Process;
 
     constructor(
-        private processService: NxProcessService,
-        private dialogRef: DialogRef,
-        @Inject(DIALOG_DATA) dialogData: { system: NxSystem },
+        processService: NxProcessService,
+        dialogRef: DialogRef<DT['return']>,
+        @Inject(DIALOG_DATA) private system: DT['data'],
     ) {
-        this.system = dialogData.system;
-    }
+        super(dialogRef);
 
-    ngOnInit(): void {
-        this.deleteAnalyticsData = this.processService.createProcess(
+        this.deleteAnalyticsData = processService.createProcess(
             () => this.deleteAnalyticsDataProcess(),
             { ignoreError: true },
             () => {
@@ -43,7 +39,7 @@ export class ChangeStorageModalContent {
             },
         );
 
-        this.keepAnalyticsData = this.processService.createProcess(
+        this.keepAnalyticsData = processService.createProcess(
             () => this.keepAnalyticsDataProcess(),
             { ignoreError: true },
             () => {
@@ -56,7 +52,8 @@ export class ChangeStorageModalContent {
         );
     }
 
-    async deleteAnalyticsDataProcess() {
+    private async deleteAnalyticsDataProcess(): Promise<void> {
+        this.lock();
         try {
             const {
                 reply: {
@@ -76,7 +73,8 @@ export class ChangeStorageModalContent {
         }
     }
 
-    async keepAnalyticsDataProcess() {
+    private async keepAnalyticsDataProcess(): Promise<void> {
+        this.lock();
         try {
             const {
                 reply: {
@@ -98,9 +96,5 @@ export class ChangeStorageModalContent {
 
     dismiss = (): void => {
         this.close('cancel');
-    };
-
-    close = (msg?: string): void => {
-        this.dialogRef.close(msg);
     };
 }

@@ -35,11 +35,9 @@
         [actionType]="'danger'"
         [buttonText]="'Reset' | translate"
     ></nx-process-button>
-    <button
-        type="button"
-        class="btn btn-default"
-        (click)="close()"
-    >
-        {{ LANG.dialogs.buttons.cancel }}
-    </button>
+    <nx-cancel-button
+        [process]="resetBackupProcess"
+        [discardFn]="close"
+        [cancelFn]="unlock"
+    ></nx-cancel-button>
 </div>

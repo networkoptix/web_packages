@@ -1,5 +1,12 @@
-import { Component, Inject, Input } from '@angular/core';
-import { Validators, ValidationErrors, FormControl, FormGroup } from '@angular/forms';
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { AfterViewInit, Component, ElementRef, Inject } from '@angular/core';
+import {
+    Validators,
+    ValidationErrors,
+    FormControl,
+    FormGroup,
+    AbstractControl,
+} from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { last } from 'lodash-es';
 import { Subscription } from 'rxjs';
@@ -7,7 +14,8 @@ import { filter } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { ToastType } from '@components/toast-container/toast.types';
-import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
+import type { AddStorage as DT } from '@dialogs/dialogs.types';
+import { ModalBase } from '@dialogs/modal-base';
 import { responseOk } from '@lib/variables/static-variables';
 import { Translatable } from '@pipes/nx-translate.types';
 import { NxProcessService } from '@services/process.service';
@@ -22,9 +30,7 @@ import { cleanId, assignFrom } from '@utils/general';
     templateUrl: 'add-storage.component.html',
     styleUrls: ['add-storage.component.scss'],
 })
-export class AddStorageModalContent {
-    @Input() closable: boolean = true;
-
+export class AddStorageModalContent extends ModalBase<DT['return']> implements AfterViewInit {
     LANG = staticLang;
 
     serverId: string;
@@ -34,7 +40,7 @@ export class AddStorageModalContent {
         login: FormControl<string>;
         password: FormControl<string>;
     }>;
-    cancelPolls: () => any;
+    cancelPolls: () => void;
     storageFormValueSubscription: Subscription;
 
     addStorage: Process;
@@ -48,9 +54,12 @@ export class AddStorageModalContent {
     constructor(
         private processService: NxProcessService,
         private toastService: NxToastService,
-        private dialogRef: DialogRef,
-        @Inject(DIALOG_DATA) private dialogData: any,
-    ) {}
+        private self: ElementRef<HTMLElement>,
+        dialogRef: DialogRef<DT['return']>,
+        @Inject(DIALOG_DATA) private dialogData: DT['data'],
+    ) {
+        super(dialogRef);
+    }
 
     checkUrlValidity(): void {
         const urlC = this.getControls('url');
@@ -64,7 +73,7 @@ export class AddStorageModalContent {
         }
     }
 
-    validateUrl = (control: FormControl<string>): ValidationErrors | null => {
+    private validateUrl = (control: FormControl<string>): ValidationErrors | null => {
         const systemNetworkStorage = control.value?.substr(1);
         const smbStorage = `smb:${control.value}`;
         const alreadyExistingUrl = this.storageManager.storageState.locations.find(
@@ -98,6 +107,7 @@ export class AddStorageModalContent {
 
         this.addStorage = this.processService.createProcess(
             async () => {
+                this.lock();
                 const { url, login, password } = this.storageForm.value;
                 const systemStorages =
                     (await this.storageManager.getStoragesInfo().toPromise()) || [];
@@ -115,16 +125,14 @@ export class AddStorageModalContent {
                 return id;
             },
             { ignoreError: true },
-            (res: any) => {
-                let toastType = ToastType.Danger;
-                let message = this.LANG.storage.failed;
+            res => {
                 if (res.id) {
-                    toastType = ToastType.Success;
-                    message = this.LANG.storage.success;
+                    this.toastService.notify(this.LANG.storage.success, ToastType.Success);
+                } else {
+                    this.toastService.notify(this.LANG.storage.failed, ToastType.Danger);
                 }
                 this.storageForm.reset();
-                this.close(res.id && responseOk);
-                this.toastService.notify(message, toastType);
+                this.close();
             },
             err => {
                 if (err?.message === 'alreadyExists') {
@@ -151,11 +159,18 @@ export class AddStorageModalContent {
                     }
                     this.addStorage.processing = false;
                 }
+                this.unlock();
             },
         );
     }
 
-    async addStorageProcess(url: string, login: string, password: string) {
+    ngAfterViewInit(): void {
+        setTimeout(() => {
+            this.self.nativeElement.querySelector('input')?.focus();
+        });
+    }
+
+    async addStorageProcess(url: string, login: string, password: string): Promise<{ id: string }> {
         if (this.loginPasswordWrong) {
             return Promise.reject(Error('WrongAuth'));
         }
@@ -208,10 +223,11 @@ export class AddStorageModalContent {
                           const updateSubscription = this.storageManager
                               .update()
                               .pipe(
-                                  filter((state: any) =>
-                                      state.locations.find(
-                                          ({ storageId }) => storageId === cleanId(res.id),
-                                      ),
+                                  filter(
+                                      state =>
+                                          !!state.locations.find(
+                                              ({ storageId }) => storageId === cleanId(res.id),
+                                          ),
                                   ),
                               )
                               .subscribe(_ => {
@@ -229,7 +245,7 @@ export class AddStorageModalContent {
         }
     }
 
-    getControls(field: string) {
+    getControls(field: string): AbstractControl<unknown, unknown> {
         return this.storageForm.get(field);
     }
 
@@ -242,8 +258,8 @@ export class AddStorageModalContent {
         this.alreadyCheckedAndExists = false;
     }
 
-    close = (msg?: string): void => {
+    override close = (): void => {
         this.storageForm.reset();
-        this.dialogRef.close(msg);
+        this.dialogRef.close();
     };
 }

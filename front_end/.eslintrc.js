@@ -54,14 +54,11 @@ const typeLintBlacklist = [
     '**/systems-list/systems-list-widget.component.ts',
     '**/third-party/third-party-widget.component.ts',
     /* Dialogs */
-    '**/add-storage/add-storage.component.ts',
     '**/add-widget/add-widget.component.ts',
-    '**/change-storage/change-storage.component.ts',
     '**/edit/edit.component.ts',
     '**/merge/merge.component.ts',
     '**/merge/stateForMergeDialog.ts',
     '**/merge/stateMachine.ts',
-    '**/reset-backup/reset-backup.component.ts',
     /* Features */
     '**/api-tool/api-file-utils.ts',
     '**/api-tool/api-tool-types.ts',

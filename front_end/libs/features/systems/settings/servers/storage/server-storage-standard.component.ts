@@ -830,14 +830,18 @@ export class NxSystemStorageComponent implements OnInit {
     }
 
     resetBackupToDefault(): void {
-        this.dialogs.resetBackupToDefaultSettings(this.system, this.setDefaultBackupSettings);
+        this.dialogs.resetBackupSettings(this);
     }
 
     addExternalStorage = (): void => {
         this.dialogs
-            .addStorage(this.serverId, this.system.storageManager, () => {
-                this.updatingModes = [];
-                this.cancelPolling$.next('cancel existing');
+            .addStorage({
+                serverId: this.serverId,
+                storageManager: this.system.storageManager,
+                cancelPolls: () => {
+                    this.updatingModes = [];
+                    this.cancelPolling$.next('cancel existing');
+                },
             })
             .finally(this.pollStats);
     };
