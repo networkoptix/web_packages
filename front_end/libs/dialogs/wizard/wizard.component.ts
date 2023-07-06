@@ -13,15 +13,14 @@ export class WizardModalContent implements OnInit {
 
     @ViewChild('iframe', { static: false }) iframe: ElementRef<HTMLIFrameElement>;
 
-    constructor(
-      private translate: TranslateService,
-    ) {}
+    constructor(private translate: TranslateService) {}
 
     ngOnInit(): void {
         if (environment.setupUrl) {
             // if running webadmin locally and want to use setup wizard
             // run setup wizard too and adjust port if needed
-            this.inlineUrl = environment.setupUrl + this.inlineUrl + '?lang=' + this.translate.currentLang;
+            this.inlineUrl =
+                environment.setupUrl + this.inlineUrl + '?lang=' + this.translate.currentLang;
         }
     }
 

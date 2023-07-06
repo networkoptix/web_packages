@@ -4,9 +4,7 @@ import type { NgForm } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import type {
-    SearchableDropdownItem
-} from '@components/dropdowns/searchable/searchable.component.types';
+import type { SearchableDropdownItem } from '@components/dropdowns/searchable/searchable.component.types';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { ModalBase } from '@dialogs/modal-base';
@@ -54,23 +52,22 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> imple
     }
 
     ngOnInit(): void {
-        this.userItems = this.system.userManager.nonOwners({ cloud: true })
-            .map(user => ({
-                name: user.email,
-                value: user.email,
-                help: user.fullName,
-                userEnabled: user.isEnabled,
-            }));
+        this.userItems = this.system.userManager.nonOwners({ cloud: true }).map(user => ({
+            name: user.email,
+            value: user.email,
+            help: user.fullName,
+            userEnabled: user.isEnabled,
+        }));
 
         const errorCodes = {
             userDisabled: () => {
                 this.form.control.setErrors({
-                    userDisabled: true
+                    userDisabled: true,
                 });
             },
             userNotFound: () => {
                 this.form.control.setErrors({
-                    userNotFound: true
+                    userNotFound: true,
                 });
             },
         };
@@ -80,7 +77,7 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> imple
                 this.lock();
                 const newOwnerEmail = this.selectedUser.value;
                 return firstValueFrom(
-                    this.cloudService.startTransfer(this.system.id, newOwnerEmail)
+                    this.cloudService.startTransfer(this.system.id, newOwnerEmail),
                 );
             },
             { errorCodes, ignoreError: true },

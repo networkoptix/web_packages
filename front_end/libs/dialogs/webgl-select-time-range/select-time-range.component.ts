@@ -51,9 +51,7 @@ export class WebGlSelectTimeRangeModalContent extends ModalBase<DT['return']> im
     public save = ($event: Event): void => {
         $event.preventDefault();
 
-        const startTime = new Date(
-            this.startDate + 'T' + this.startTime,
-        );
+        const startTime = new Date(this.startDate + 'T' + this.startTime);
         const endTime = new Date(this.endDate + 'T' + this.endTime);
 
         if (startTime.getTime() > endTime.getTime()) {
@@ -64,26 +62,16 @@ export class WebGlSelectTimeRangeModalContent extends ModalBase<DT['return']> im
     };
 
     checkMaxMinDate(): void {
-        const newStartDate = new Date(
-            this.startDate + 'T' + this.startTime
-        ).getTime();
+        const newStartDate = new Date(this.startDate + 'T' + this.startTime).getTime();
 
-        if (
-            isNaN(newStartDate) ||
-            newStartDate < this.selection.timelineStart.getTime()
-        ) {
+        if (isNaN(newStartDate) || newStartDate < this.selection.timelineStart.getTime()) {
             this.startDate = dateFormat(this.selection.startDate, DATE_FORMAT_STRING);
             this.startTime = dateFormat(this.selection.startDate, TIME_FORMAT_STRING);
         }
 
-        const newEndDate = new Date(
-            this.endDate + 'T' + this.endTime
-        ).getTime();
+        const newEndDate = new Date(this.endDate + 'T' + this.endTime).getTime();
 
-        if (
-            isNaN(newEndDate) ||
-            newEndDate > this.selection.timelineEnd.getTime()
-        ) {
+        if (isNaN(newEndDate) || newEndDate > this.selection.timelineEnd.getTime()) {
             this.endDate = dateFormat(this.selection.endDate, DATE_FORMAT_STRING);
             this.endTime = dateFormat(this.selection.endDate, TIME_FORMAT_STRING);
         }

@@ -1,9 +1,5 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import {
-    Component,
-    Inject,
-    OnInit,
-} from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -12,9 +8,7 @@ import { ModalBase } from '@dialogs/modal-base';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
-import type {
-    NxSystemCamera
-} from '@services/system.service/camera-manager/camera-manager-types';
+import type { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import type { NxSystem } from '@services/system.service/system';
 import { assignFrom } from '@utils/general';
 
@@ -66,36 +60,49 @@ export class UpdateCameraCredentialsModalContent extends ModalBase<DT['return']>
             : ['', ''];
         this.currentCredentials = { loginName, password };
         this.cameraLoginCredentials = loginName;
-        this.cameraPasswordCredentials = (!this.defaultPassword && loginName) ? password : '';
-        this.update = this.processService.createProcess(() => {
-            this.lock();
-            if (this.defaultPassword && this.cameraPasswordCredentials !== this.confirmPassword) {
-                this.unlock();
-                return Promise.reject('mismatch');
-            }
-            if (
-                this.cameraLoginCredentials === this.currentCredentials.loginName &&
-                this.cameraPasswordCredentials === this.currentCredentials.password
-            ) {
-                return Promise.resolve();
-            }
-            const updateHandler = (defaultPassword?: boolean): Promise<unknown> => {
-                if (defaultPassword && this.system.mediaserver instanceof NxSystemRestAPI) {
-                    return firstValueFrom(this.system.mediaserver.changePassword(this.camera.id, this.cameraLoginCredentials, this.cameraPasswordCredentials));
+        this.cameraPasswordCredentials = !this.defaultPassword && loginName ? password : '';
+        this.update = this.processService.createProcess(
+            () => {
+                this.lock();
+                if (
+                    this.defaultPassword &&
+                    this.cameraPasswordCredentials !== this.confirmPassword
+                ) {
+                    this.unlock();
+                    return Promise.reject('mismatch');
                 }
-                return this.system.serverManager.updateResource(
-                    this.camera.id,
-                    { credentials: `${this.cameraLoginCredentials || 'admin'}:${this.cameraPasswordCredentials}` }
-                );
-            };
+                if (
+                    this.cameraLoginCredentials === this.currentCredentials.loginName &&
+                    this.cameraPasswordCredentials === this.currentCredentials.password
+                ) {
+                    return Promise.resolve();
+                }
+                const updateHandler = (defaultPassword?: boolean): Promise<unknown> => {
+                    if (defaultPassword && this.system.mediaserver instanceof NxSystemRestAPI) {
+                        return firstValueFrom(
+                            this.system.mediaserver.changePassword(
+                                this.camera.id,
+                                this.cameraLoginCredentials,
+                                this.cameraPasswordCredentials,
+                            ),
+                        );
+                    }
+                    return this.system.serverManager.updateResource(this.camera.id, {
+                        credentials: `${this.cameraLoginCredentials || 'admin'}:${
+                            this.cameraPasswordCredentials
+                        }`,
+                    });
+                };
 
-            return updateHandler(this.defaultPassword).then(this.updateCallback);
-        }, { ignoreError: true },
-        () => {
-            this.close();
-        },
-        err => {
-            this.error = staticLang.dialogs.updateCameraCredentials[err];
-        });
+                return updateHandler(this.defaultPassword).then(this.updateCallback);
+            },
+            { ignoreError: true },
+            () => {
+                this.close();
+            },
+            err => {
+                this.error = staticLang.dialogs.updateCameraCredentials[err];
+            },
+        );
     }
 }

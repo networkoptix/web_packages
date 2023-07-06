@@ -46,13 +46,8 @@ export class NxUpdateSessionModalContent extends ModalBase<DT['return']> {
 
     constructor(
         dialogRef: DialogRef<DT['return']>,
-        @Inject(DIALOG_DATA) {
-            sessionState,
-            system,
-            noConnectionMsg,
-            openingRef,
-            processAction,
-        }: DT['data'],
+        @Inject(DIALOG_DATA)
+        { sessionState, system, noConnectionMsg, openingRef, processAction }: DT['data'],
         @Inject(WINDOW) private window: Window,
         processService: NxProcessService,
         toastService: NxToastService,
@@ -83,20 +78,21 @@ export class NxUpdateSessionModalContent extends ModalBase<DT['return']> {
 
                     let msg: string;
                     if (noConnectionMsg) {
-                        msg = htmlStrConstructor([
-                            /* Using <div> to avoid global bottom margin on <p> */
-                            { name: 'div', children: [{ value: noConnectionMsg }] },
-                            { name: 'div', children: [{ value: staticLang.toastMessage.noConnection }] }
-                        ], translate);
+                        msg = htmlStrConstructor(
+                            [
+                                /* Using <div> to avoid global bottom margin on <p> */
+                                { name: 'div', children: [{ value: noConnectionMsg }] },
+                                {
+                                    name: 'div',
+                                    children: [{ value: staticLang.toastMessage.noConnection }],
+                                },
+                            ],
+                            translate,
+                        );
                     } else {
                         msg = staticLang.toastMessage.noConnection;
                     }
-                    toastService.notify(
-                        msg,
-                        ToastType.Danger,
-                        alertTimeout,
-                        !!noConnectionMsg,
-                    );
+                    toastService.notify(msg, ToastType.Danger, alertTimeout, !!noConnectionMsg);
                 }
             })
             .catch(() => {
@@ -129,7 +125,9 @@ export class NxUpdateSessionModalContent extends ModalBase<DT['return']> {
                         this.loginForm.controls.login_password.markAsUntouched();
 
                         this.flags.accountBlocked = true;
-                        this.loginForm.controls.login_password.setErrors({ nx_account_blocked: true });
+                        this.loginForm.controls.login_password.setErrors({
+                            nx_account_blocked: true,
+                        });
                     },
                 },
             },
@@ -142,10 +140,13 @@ export class NxUpdateSessionModalContent extends ModalBase<DT['return']> {
         );
 
         loginService.currentSystem = system;
-        loginService.updateSession(sessionState).then(ready => {
-            this.close(ready);
-        }).catch(() => {
-            this.close(false);
-        });
+        loginService
+            .updateSession(sessionState)
+            .then(ready => {
+                this.close(ready);
+            })
+            .catch(() => {
+                this.close(false);
+            });
     }
 }
