@@ -1,0 +1,34 @@
+import robot_keywords
+from button import Button
+from RobotVariables import RobotVariables
+
+
+class HeaderNav:
+
+    def __init__(self, driver, lang="en_US", ):
+        self.driver = driver
+        self.rb = RobotVariables(lang)
+        self._wait_until_header_is_visible()
+
+    def _wait_until_header_is_visible(self):
+        robot_keywords.wait_until_element_is_visible(self.driver, "//nx-header")
+
+    def account_dropdown(self):
+        return Button(self.driver, "//header//div[@data-testid='accountSettingsDropdown']/preceding-sibling::button")
+
+    def account_settings(self):
+        return Button(self.driver, "//header//li//a[@href = '/account']")
+
+    def change_password(self):
+        return Button(self.driver, "//header//li//a[@href = '/account/password']")
+
+    def security(self):
+        return Button(self.driver, "//header//li//a[@href = '/account/security']")
+
+    def log_out(self):
+        translated_xpath = self.rb.replace_nested_variables(
+            "//header//li//a/span[contains(text(),'${LOG OUT BUTTON TEXT}')]/..")
+        return Button(self.driver, translated_xpath)
+
+    def administration(self):
+        pass
