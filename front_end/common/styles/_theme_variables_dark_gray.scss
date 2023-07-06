@@ -663,8 +663,9 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --bookmarks-duration-bg: rgba(0, 0, 0, 0.5);
     --bookmarks-card-background-color: var(--dark6);
     --bookmarks-card-background-color-hover: none;
+    --bookmarks-card-video-background-color: var(--dark1);
     --bookmarks-card-no-permissions-description: var(--light12);
-    --bookmarks-card-video-background-color: var(--dark10);
+    --bookmarks-card-no-permissions-background: var(--dark10);
     --bookmarks-card-border-color: none;
     --bookmarks-card-title-gradient: linear-gradient(
         to right,
