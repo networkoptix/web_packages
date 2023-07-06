@@ -12,16 +12,14 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { CookieService } from 'ngx-cookie-service';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { of, Subject, Subscription, timer } from 'rxjs';
-import { distinctUntilChanged, filter, take, takeUntil } from 'rxjs/operators';
+import { of, Subject, timer } from 'rxjs';
+import { filter, take, takeUntil } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { icons, toast } from '@lib/variables/static-variables';
-import { NxSettingsService } from '@pages/systems/settings/settings.service';
-import { NxAccountService } from '@services/account.service';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { ec2CameraEx } from '@services/system-api.types';
@@ -60,7 +58,6 @@ const MAX_OUT_OF_SYNC_TIME = 60000; // ms
 })
 export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     @HostBinding('class.new-header') newHeader: boolean;
-    private systemsSubscription: Subscription;
 
     public systemId: string;
     public system: NxSystem;
@@ -124,7 +121,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         private router: Router,
         private route: ActivatedRoute,
         private cookieService: CookieService,
-        private accountService: NxAccountService,
         private systemService: NxSystemService,
         private systemsService: NxSystemsService,
         private vms: VideoManagementSystemService,
@@ -132,7 +128,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         private ux: WebClientUxService,
         private deviceService: DeviceDetectorService,
         private ribbonService: NxRibbonService,
-        private settingsService: NxSettingsService,
         @Inject(WINDOW) private window: Window,
         private toastService: NxToastService,
     ) {
@@ -141,24 +136,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         this.fullscreenMode = false;
         this.showElementsInFSM = true;
         this.newHeader = this.CONFIG.featureFlags.newHeader;
-    }
-
-    private setSystemSubscription(): void {
-        this.systemsSubscription?.unsubscribe();
-        this.systemsSubscription = this.systemsService.systemsSubject
-            .pipe(
-                distinctUntilChanged(),
-                untilDestroyed(this))
-            .subscribe(systems => {
-                if (systems.length) {
-                    this.systems = systems;
-                }
-                setTimeout(() => {
-                    if (!this.system) {
-                        this._initSystem();
-                    }
-                });
-            });
     }
 
     public ngOnInit(): void {
@@ -193,8 +170,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             .subscribe(() => {
                 this._tryToRedirectToCamera();
             });
-
-        this.setSystemSubscription();
     }
 
     public ngOnDestroy(): void {
@@ -291,46 +266,19 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         // cancel pool for the previous system
         this.cancelPoll$.next('cancel');
         this.systemId = params.systemId || null;
-        this.system = undefined;
+        this.system = this.systemService.getCurrentSystem();
         this.hasCameras = false;
-        this._setInitializationState(false, false);
+        if (!environment.isLocal) {
+            const systemInfoFromCDB: NxSystemInfo = this.systemsService.systems.find(s => s.id === this.systemId);
+            if (systemInfoFromCDB?.stateOfHealth === this.CONFIG.system.status.online) {
+                this._setInitializationState(false, false);
+                this.ribbonService.hide();
+            } else {
+                this._setInitializationState(true, true);
+            }
+        }
         this.vms.reset();
-
-        // reset subscription to get values immediately and not waiting for next update
-        this.setSystemSubscription();
-    }
-
-    private createSystem(): Promise<void> {
-        return this.accountService.get().then(account => {
-            if (!account) {
-                return Promise.reject();
-            }
-
-            if (environment.isLocal) {
-                this.system = this.systemService.createLocalSystem(
-                    this.accountService.mediaServerApi,
-                    account.id,
-                    account.email
-                );
-                this.settingsService.system = this.system;
-                return Promise.resolve();
-            }
-
-            // _initSystem is called on systems subscription
-            const systemInfoFromCDB: NxSystemInfo = this.systems.find(s => s.id === this.systemId);
-            if (systemInfoFromCDB) {
-                this.system = this.systemService.createSystem(account.email, this.systemId);
-                this.settingsService.system = this.system;
-                if (systemInfoFromCDB.stateOfHealth !== this.CONFIG.system.status.online) {
-                    this._setInitializationState(true, true);
-                } else {
-                    this.ribbonService.hide();
-                }
-                return Promise.resolve(); // this.system.update();
-            }
-
-            return Promise.reject();
-        });
+        this._initSystem();
     }
 
     private mediaServerChanged(
@@ -365,7 +313,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                         .replace(/&gt;/g, '>') ||
                     (
                         camera.status !== cachedCamera.status &&
-                        !(camera.status === 'Online' && cachedCamera.status === 'Live') // remapped param "status"
+                        !(camera.status === 'online' && cachedCamera.status === 'live') // remapped param "status"
                     ) || camera.scheduleEnabled !== cachedCamera.scheduleEnabled // remapped param "scheduleEnabled"
                 );
             });
@@ -385,18 +333,18 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             c.name,
             c.model,
             c.url,
-            ms.status === 'Offline'
-                ? 'Offline'
+            ms.status === 'offline'
+                ? 'offline'
                 : (
-                    c.status === 'Online'
-                        ? 'Live'
+                    c.status === 'online'
+                        ? 'live'
                         : c.status
                 ) as CAMERA_STATUS,
             c.scheduleEnabled,
             c.disableDualStreaming,
             archiveRanges[c.id] || new SimpleTimeRange(0, 0),
             [],
-            c.status !== 'Offline'
+            c.status !== 'offline'
                 ? this.system?.mediaserver.previewUrl(c.id, 0, 128, 128)
                 : of(''),
             (transport: string, quality: string, t?: ms) =>
@@ -407,7 +355,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     t
                 ),
             (t?: ms, width = 128, height = 128) =>
-                c.status !== 'Offline'
+                c.status !== 'offline'
                     ? this.system?.mediaserver.previewUrl(c.id, t, width, height)
                     : of(),
             this.system.info?.system2faEnabled
@@ -437,8 +385,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     }
 
     private _initSystem() {
-        this.vms.reset();
-
         let processingMediaServers = false;
         let cachedMediaServers: NxMediaServer[] = [];
         const firstLoad = new Subject();
@@ -451,75 +397,66 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
             setTimeout(() => this.timeline.requestCanvasGeometryUpdate(), 220);
         });
+        timer(0, VideoManagementSystemService.statusRefreshInterval)
+            .pipe(takeUntil(this.cancelPoll$))
+            .subscribe(async () => {
+                if (!this.system.isOnline || processingMediaServers) {
+                    return;
+                }
 
-        this.createSystem().then(() => {
-            timer(0, VideoManagementSystemService.statusRefreshInterval)
-                .pipe(takeUntil(this.cancelPoll$))
-                .subscribe(async () => {
-                    if (!this.system || !this.system.isOnline || processingMediaServers) {
-                        return;
-                    }
+                const mediaServers = await this.system.getMediaServersAndCameras(true);
+                // mediaServers length is 0 when getMediaServersAndCameras fails. No system can ever have 0 servers.
+                if (
+                    this.initialized && !this.mediaServerChanged(mediaServers, cachedMediaServers) ||
+                    mediaServers.length === 0
+                ) {
+                    return;
+                }
+                cachedMediaServers = mediaServers;
 
-                    let mediaServers = this.system.mediaservers;
-                    if (mediaServers === null) {
-                        mediaServers = await this.system.getMediaServersAndCameras(true);
-                    }
-                    // mediaServers length is 0 when getMediaServersAndCameras fails. No system can ever have 0 servers.
-                    if (
-                        this.initialized && !this.mediaServerChanged(mediaServers, cachedMediaServers) ||
-                        mediaServers.length === 0
-                    ) {
-                        return;
-                    }
-                    cachedMediaServers = mediaServers;
-
-                    processingMediaServers = true;
-                    const serverTimeInfos =
-                        await this.system.getServerTimes();
-                    this.vms.serverTimes = serverTimeInfos;
-                    serverTimeInfos.forEach(sti => {
-                        const mediaServer = mediaServers?.find(
-                            ms => ms.id === sti.serverId,
-                        );
-                        if (mediaServer) {
-                            const serverAndLocalTimeDiff = Math.abs(new Date().getTime() - sti.vmsTime);
-                            // fixes issue https://www.youtube.com/watch?v=sRqGfIbdJyI
-                            const timeDiff = serverAndLocalTimeDiff > MAX_OUT_OF_SYNC_TIME;
-                            if (timeDiff) {
-                                this.toastService.show(
-                                    this.LANG.system.status.outOfTimeSync,
-                                    toast.danger,
-                                    { autohide: true }
-                                );
-                            }
+                processingMediaServers = true;
+                const serverTimeInfos =
+                    await this.system.getServerTimes();
+                this.vms.serverTimes = serverTimeInfos;
+                serverTimeInfos.forEach(sti => {
+                    const mediaServer = mediaServers?.find(
+                        ms => ms.id === sti.serverId,
+                    );
+                    if (mediaServer) {
+                        const serverAndLocalTimeDiff = Math.abs(new Date().getTime() - sti.vmsTime);
+                        // fixes issue https://www.youtube.com/watch?v=sRqGfIbdJyI
+                        const timeDiff = serverAndLocalTimeDiff > MAX_OUT_OF_SYNC_TIME;
+                        if (timeDiff) {
+                            this.toastService.show(
+                                this.LANG.system.status.outOfTimeSync,
+                                toast.danger,
+                                { autohide: true }
+                            );
                         }
-                    });
-
-                    if (this.initializedWithError) {
-                        this._setInitializationState(true, false);
                     }
-
-                    const archiveRanges: Record<string, SimpleTimeRange> = {};
-
-                    await this.findCamerasWithArchive(mediaServers, archiveRanges);
-
-                    const processedMediaServers: IMediaServer[] = mediaServers.map(ms => ({
-                        ...ms,
-                        cameras: ms.cameras.map(c =>
-                            this.processCameras(c, ms, archiveRanges)
-                        ),
-                    }));
-
-                    this.vms.setMediaServers(this.systemId, processedMediaServers);
-                    this.mediaservers = processedMediaServers;
-                    processingMediaServers = false;
-
-                    firstLoad.next(true);
                 });
-        }).catch(e => {
-            processingMediaServers = false;
-            setTimeout(() => this._setInitializationState(true, true));
-        });
+
+                if (this.initializedWithError) {
+                    this._setInitializationState(true, false);
+                }
+
+                const archiveRanges: Record<string, SimpleTimeRange> = {};
+
+                await this.findCamerasWithArchive(mediaServers, archiveRanges);
+
+                const processedMediaServers: IMediaServer[] = mediaServers.map(ms => ({
+                    ...ms,
+                    cameras: ms.cameras.map(c =>
+                        this.processCameras(c, ms, archiveRanges)
+                    ),
+                }));
+
+                this.vms.setMediaServers(this.systemId, processedMediaServers);
+                this.mediaservers = processedMediaServers;
+                processingMediaServers = false;
+
+                firstLoad.next(true);
+            });
     }
 
     private getCameraFromCookies(): string {

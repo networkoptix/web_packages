@@ -272,10 +272,6 @@ export function setupCameras(): unknown[] {
                 {
                     name: 'mediaStreams',
                     value: '{"streams":[{"codec":28,"customStreamParams":{},"encoderIndex":1,"resolution":"640x480","transcodingRequired":false,"transports":["rtsp","hls"]},{"codec":28,"customStreamParams":{},"encoderIndex":0,"resolution":"1920x1080","transcodingRequired":false,"transports":["rtsp","hls"]},{"codec":0,"customStreamParams":{},"encoderIndex":-1,"resolution":"*","transcodingRequired":true,"transports":["rtsp","mjpeg","webm"]}]}'
-                },
-                {
-                    name: 'streamUrls',
-                    value: '{\n    "1": "rtsp://10.1.5.116:554/channel1",\n    "2": "rtsp://10.1.5.116:554/channel2"\n}\n'
                 }
             ],
             motionEnabled: true,
@@ -368,10 +364,6 @@ export function setupCameras(): unknown[] {
                 {
                     name: 'mediaStreams',
                     value: '{"streams":[{"codec":8,"customStreamParams":{},"encoderIndex":0,"resolution":"1920x1080","transcodingRequired":false,"transports":["mjpeg"]},{"codec":0,"customStreamParams":{},"encoderIndex":-1,"resolution":"*","transcodingRequired":true,"transports":["rtsp","mjpeg","webm"]}]}'
-                },
-                {
-                    name: 'streamUrls',
-                    value: '{\n    "1": ""\n}\n'
                 }
             ],
             motionEnabled: true,

@@ -1318,7 +1318,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
                 url = `${this.getUrlBase()}/web/media/${this.cleanId(cameraId)}.${transport}?resolution=${resolution || ''}&`;
         }
 
-        if (this.authGet && !this.CONFIG.featureFlags.restCookieLogin) {
+        if (this.authGet && (this.version < 5.0 || !this.CONFIG.featureFlags.restCookieLogin)) {
             url += `auth=${this.authGet}&`;
         }
         if (position) {

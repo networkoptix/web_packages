@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { PlaybackTransport } from '@view/view.types';
 import { ms, int } from '@vms-client/utils/type-aliases';
 
-export type CAMERA_STATUS = 'Live' | 'Archive' | 'Recording' | 'Online' | 'Offline' | 'Unauthorized';
+export type CAMERA_STATUS = 'live' | 'archive' | 'recording' | 'online' | 'offline' | 'unauthorized';
 
 export interface ISimpleTimeRange {
     start: ms;
@@ -103,7 +103,6 @@ export interface ICamera {
 
     mediaStreams: Array<MediaStreamInfo>;
     rotation: int;
-    streamUrls: string[];
 
     availableTransports: Array<PlaybackTransport>;
     availableTransportsAndResolutions: AvailableTransportsAndResolutions;

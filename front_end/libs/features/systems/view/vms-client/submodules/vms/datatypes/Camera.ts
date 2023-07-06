@@ -31,7 +31,6 @@ export class Camera implements ICamera {
     protected _mediaStreams: Array<MediaStreamInfo> = [];
 
     protected _rotation: int = 0;
-    protected _streamUrls: string[] = [];
 
     constructor(
         public readonly id: string,
@@ -81,22 +80,11 @@ export class Camera implements ICamera {
             this._rotation = parseInt(rotation.value) || 0;
             // console.log('got camera rotation', this._rotation)
         }
-        // console.log('CAMERA ROTATION RECEIVED', rotation, this._rotation)
-
-        const streamUrls = ps.find(p => p.name === 'streamUrls');
-        if (streamUrls) {
-            this._streamUrls = Object.values(JSON.parse(streamUrls.value))
-                .map((stream: string) => stream);
-        }
     }
 
     public get rotation() {
         // console.log('CAMERA ROTATION GET', this._rotation)
         return this._rotation;
-    }
-
-    public get streamUrls() {
-        return this._streamUrls;
     }
 
     public get availableTransportsAndResolutions() {
@@ -202,31 +190,31 @@ export class Camera implements ICamera {
         return (
             !this.isVirtual &&
             (
-                this.status === 'Online' ||
-                this.status === 'Live' ||
-                this.status === 'Recording'
+                this.status === 'online' ||
+                this.status === 'live' ||
+                this.status === 'recording'
             )
         );
     }
 
     public get isOnline() {
-        return this.status !== 'Offline';
+        return this.status !== 'offline';
     }
 
     public get isOffline() {
-        return this.status === 'Offline';
+        return this.status === 'offline';
     }
 
     public get isRecording() {
-        return !this.isVirtual && this.status === 'Recording';
+        return !this.isVirtual && this.status === 'recording';
     }
 
     public get isAuthorized() {
-        return this.status !== 'Unauthorized';
+        return this.status !== 'unauthorized';
     }
 
     public get isUnauthorized() {
-        return this.status === 'Unauthorized';
+        return this.status === 'unauthorized';
     }
 
     public get hasArchive() {

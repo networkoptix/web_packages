@@ -31,6 +31,7 @@ import { FpsMeterService } from '@services/fps-meter.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { NxSystem } from '@services/system.service/system';
+import { NxSystemService } from '@services/system.service/system.service';
 import { WINDOW } from '@services/window-provider';
 import { PlaybackQuality, PlaybackTransport } from '@view/view.types';
 import {
@@ -49,7 +50,6 @@ import {
 import { VMS_MODE, VmsState } from '@vms-client/submodules/vms/datatypes/VmsState';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 
-import { NxSettingsService } from '../../../settings/settings.service';
 import { CameraQualityStorageService } from '../../services/cameraQualityStorage.service';
 import { CameraTransportStorageService } from '../../services/cameraTransportStorage.service';
 import { WebClientUxService } from '../../services/webclient-ux.service';
@@ -120,7 +120,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         private fpsMeter: FpsMeterService,
         private cameraQualityStorage: CameraQualityStorageService,
         private cameraTransportStorage: CameraTransportStorageService,
-        private settingsService: NxSettingsService,
+        private systemService: NxSystemService,
         public ux: WebClientUxService,
         @Inject(DOCUMENT) private document: Document,
         @Inject(WINDOW) private window: Window & typeof globalThis,
@@ -149,7 +149,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
         this.$self.classList.add('animated');
 
-        this.system = this.settingsService.system;
+        this.system = this.systemService.getCurrentSystem();
         this._getRecords();
     }
 
