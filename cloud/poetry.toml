@@ -1,5 +1,3 @@
 [virtualenvs]
-# poetry used to install packages once. it installs pip-licenses
-# which is not included to requirements file.
-in-project = true
 prefer-active-python = true
+virtualenvs.create = false

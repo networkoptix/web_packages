@@ -1,34 +1,37 @@
-FROM python:3.8-alpine3.12 AS builder
+FROM python:3.8-slim-bullseye AS builder
 
-ARG PIP_INDEX_URL
 ARG PIP_TRUSTED_HOST
-ARG PIP_EXTRA_INDEX_URL
-ENV PIP_INDEX_URL $PIP_INDEX_URL
+ARG ARTIFACTORY_URL
+# do not use "$ARTIFACTORY_URL/api/pypi/pypi-python3.8-alpine3.12/simple" as pip index
+ENV PIP_INDEX_URL "https://artifactory.us.nxteam.dev/artifactory/api/pypi/pypi-remote/simple"
+ENV PIP_EXTRA_INDEX_URL "https://artifactory.us.nxteam.dev/artifactory/api/pypi/pypi-local/simple"
 ENV PIP_TRUSTED_HOST $PIP_TRUSTED_HOST
-ENV PIP_EXTRA_INDEX_URL $PIP_EXTRA_INDEX_URL
+
 WORKDIR /app
-
-
 RUN set -ex \
-    apk update \
-    && apk add --no-cache bash ca-certificates gettext libwebp mariadb-client openjpeg tini wget \
-        libcrypto1.1 libcurl libffi libgcc libjpeg-turbo libssl1.1 libstdc++ libwebp libxml2 libxslt  \
-        mariadb-connector-c mariadb-connector-c-dev musl openjpeg tiff yaml zlib curl jq netcat-openbsd \
-    && python -m pip install --upgrade pip
+    && apt-get update \
+    && apt-get install --no-install-suggests --no-install-recommends -y  \
+        libmariadb-dev libcurl4-openssl-dev tini gettext-base mariadb-client-core-10.5 pkg-config \
+    && apt autoremove -y --purge && apt clean -y && rm -rf /var/lib/apt/lists/*
+
 
 FROM builder as requirements
 
 COPY cloud/pyproject.toml /app/
 COPY cloud/poetry.lock /app/
 WORKDIR /app
-# will fail if poetry.lock is inconcistent
 RUN set -ex \
-    && python -m pip install poetry \
+    && pip install poetry==1.5.1 --no-cache-dir --prefer-binary \
+    && poetry config virtualenvs.create false --local \
     && poetry lock --check \
-    && poetry export --with prod,test,front-build --without-hashes --without-urls -o /app/requirements.txt
+    && poetry export --with prod,test,front-build --without-hashes --without-urls -o /app/requirements.txt \
+    && pip freeze | xargs pip uninstall -y \
+    && rm -rf /root/.cache/pip
 
 
 FROM builder AS runtime
-
 COPY --from=requirements /app/requirements.txt /app/requirements.txt
-RUN pip install -r /app/requirements.txt
+RUN set -ex \
+    && apt-get update && apt-get install --no-install-suggests --no-install-recommends -y gcc \
+    && pip install --no-cache-dir -r /app/requirements.txt \
+    && apt remove gcc -y && apt autoremove -y --purge && apt clean -y && rm -rf /root/.cache/pip && rm -rf /var/lib/apt/lists/*
