@@ -1,5 +1,5 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { forkJoin, take } from 'rxjs';
@@ -26,8 +26,8 @@ import {
     templateUrl: 'groups-cards.component.html',
     styleUrls: ['groups-cards.component.scss'],
 })
-export class NxGroupsCardsComponent {
-    @Input() inRoot: CoercedBoolInput = false;
+export class NxGroupsCardsComponent implements OnInit {
+    @Input() inRoot: CoercedBoolInput;
     hasGroups$ = this.store.select<boolean>(selectHasGroups);
     currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
     currentGroups$ = this.store.select<GroupItem[]>(selectCurrentGroupItems);
@@ -47,6 +47,10 @@ export class NxGroupsCardsComponent {
         this.route.params.subscribe(({ groupId }) => {
             this.store.dispatch(GroupActions.setCurrentGroupId({ currentGroupId: groupId }));
         });
+    }
+
+    ngOnInit(): void {
+        this.inRoot = this.inRoot ?? false;
     }
 
     trackItem(_index: number, item: GroupsItem): string {

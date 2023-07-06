@@ -72,9 +72,9 @@ export class NxSystemsListComponent implements OnInit {
 
     static SYSTEMS_BASE = '/systems';
 
-    @Input() base: string = NxSystemsListComponent.SYSTEMS_BASE;
-    @Input() size: 'full' | 'mid' | 'compact' = 'full';
-    @Input() disableSearch = false;
+    @Input() base: string;
+    @Input() size: 'full' | 'mid' | 'compact';
+    @Input() disableSearch: boolean;
     @Input() systemsToShow: string[];
     @Input() linkHandler: Function;
 
@@ -106,6 +106,9 @@ export class NxSystemsListComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.base = this.base ?? NxSystemsListComponent.SYSTEMS_BASE;
+        this.size = this.size ?? 'full';
+        this.disableSearch = this.disableSearch ?? false;
         this.showSearch = false;
         this.fetchComplete = false;
 

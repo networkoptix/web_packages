@@ -102,6 +102,7 @@ const lazyRoutes: Routes = [
             enableTracing: false,
             // preloadingStrategy: HoverPreloadStrategy,
             onSameUrlNavigation: 'reload',
+            bindToComponentInputs: true,
         }),
         LoginWebadminModalContent,
     ],

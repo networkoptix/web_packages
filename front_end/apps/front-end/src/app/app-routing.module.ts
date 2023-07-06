@@ -270,6 +270,7 @@ const lazyRoutes: Routes = [
             scrollPositionRestoration: 'enabled',
             anchorScrolling: 'enabled',
             enableTracing: false,
+            bindToComponentInputs: true,
         }),
     ],
     declarations: [],
