@@ -346,7 +346,8 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         }
 
         if (this.clientType === 'renewSessionWeb') {
-            this.localStorageService.store(oauthStore.verify2fa, code);
+            const key = this.initialData.client_type === ClientType.renewWeb2FA ? oauthStore.code : oauthStore.verify2fa;
+            this.localStorageService.store(key, code);
             this.window.close();
             return;
         }
