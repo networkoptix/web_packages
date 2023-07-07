@@ -147,11 +147,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             .find(({ id }) => id === menus.systemSettings.admin.id)
             ?.level3?.find(({ id }) => id === menus.systemSettings.general.id);
         this.content = { ...this.content };
-
-        if (environment.isLocal || !this.system || !this.menuVisible) {
-            return;
-        }
-        return this.db.personal.menuContent.put(this.content);
+        // Removing dexie caching until we fix the menu in develop
+        return '';
+        // if (environment.isLocal || !this.system || !this.menuVisible) {
+        //     return;
+        // }
+        // return this.db.personal.menuContent.put(this.content);
     }
 
     private canNavMenu(
@@ -603,12 +604,13 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     async updateMenu(): Promise<void> {
-        const previousContent = await this.db.personal.menuContent.get(this.content.base);
-
-        if (previousContent) {
-            this.content = previousContent;
-            this.menuVisible = true;
-        }
+        // Removing dexie caching until we fix the menu in develop
+        // const previousContent = await this.db.personal.menuContent.get(this.content.base);
+        //
+        // if (previousContent) {
+        //     this.content = previousContent;
+        //     this.menuVisible = true;
+        // }
 
         this.systemNoAccess = false;
 
