@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/ban-types */
-/* eslint-disable nx/only-export-injectable */
 import { Injectable } from '@angular/core';
 
 import { isDefined } from './util';

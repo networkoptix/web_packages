@@ -1,6 +1,3 @@
-/* eslint-disable no-dupe-else-if */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
     AfterViewChecked,
     ChangeDetectorRef,

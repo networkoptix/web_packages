@@ -1,10 +1,3 @@
-/* eslint-disable eqeqeq */
-/* eslint-disable rxjs/no-sharereplay */
-/* eslint-disable @typescript-eslint/ban-types */
-/* eslint-disable n/handle-callback-err */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable nx/only-export-injectable */
 import { EventEmitter, Inject, Injectable, InjectionToken } from '@angular/core';
 import { concat, forkJoin, isObservable, Observable, of, defer } from 'rxjs';
 import { concatMap, map, shareReplay, switchMap, take } from 'rxjs/operators';

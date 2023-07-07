@@ -1,7 +1,3 @@
-/* eslint-disable eqeqeq */
-/* eslint-disable no-self-compare */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* tslint:disable */
 /**
  * Determines if two objects or two values are equivalent.
  *

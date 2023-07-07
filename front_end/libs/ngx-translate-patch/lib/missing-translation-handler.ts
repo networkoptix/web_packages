@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/ban-types */
-/* eslint-disable nx/only-export-injectable */
 import { Injectable } from '@angular/core';
 
 import { TranslateService } from './translate.service';

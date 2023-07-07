@@ -1,5 +1,3 @@
-/* eslint-disable nx/only-export-injectable */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 

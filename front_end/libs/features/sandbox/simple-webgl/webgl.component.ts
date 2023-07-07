@@ -1,8 +1,7 @@
-/*eslint-disable */
 import { Component } from '@angular/core';
+import { UntilDestroy /*, untilDestroyed */ } from '@ngneat/until-destroy';
 
 import { NxMenuService } from '@app/menu/menu.service';
-import { UntilDestroy/*, untilDestroyed*/ } from "@ngneat/until-destroy";
 // import { /*animationFrameScheduler, */interval } from "rxjs";
 
 @UntilDestroy()
@@ -12,8 +11,8 @@ import { UntilDestroy/*, untilDestroyed*/ } from "@ngneat/until-destroy";
     styleUrls: ['webgl.component.scss'],
 })
 export class SimpleWebglComponent {
-    data: Array<{ durationMs: string; startTimeMs: string; }>;
-    newData: Array<{ durationMs: string; startTimeMs: string; }>;
+    data: Array<{ durationMs: string; startTimeMs: string }>;
+    newData: Array<{ durationMs: string; startTimeMs: string }>;
 
     constructor(private menuService: NxMenuService) {
         this.initData();
@@ -32,6 +31,6 @@ export class SimpleWebglComponent {
     }
 
     initData(): void {
-        this.data.push({ durationMs: '1000', startTimeMs: `${Date.now()}` })
+        this.data.push({ durationMs: '1000', startTimeMs: `${Date.now()}` });
     }
 }
