@@ -524,6 +524,7 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --card-active-shadow: 0 2px 5px 0 #{$light10};
     --card-header-bg : #{$additional_light1};
     --card-header-text : #{$dark9};
+    --card-header-disabled : #{$light8};
     --card-body-bg : #{$light1};
     --card-hover-bg : #{$light1};
 
