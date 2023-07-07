@@ -49,7 +49,7 @@
     <ng-template #noLivePreview>
         <div
             *ngIf="isPrimary; else noMiniPreview"
-            [ngSwitch]="motionPreview ? 'No Image' : state"
+            [ngSwitch]="lightBackground || motionPreview ? 'No Image' : state"
             [ngClass]="
                 lightBackground || motionPreview
                     ? 'light-camera-preview image-unavailable-border'
