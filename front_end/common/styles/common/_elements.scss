@@ -175,11 +175,6 @@ span.marked {
     cursor: pointer;
 }
 
-.cdk-overlay-container:has(nx-login-webadmin-modal),
-.cdk-overlay-container:has(nx-modal-wizard) {
-    z-index: 1 !important;
-}
-
 /* TODO: Remove with old dialog service */
 .overlay-backdrop {
     z-index: 1050 !important;

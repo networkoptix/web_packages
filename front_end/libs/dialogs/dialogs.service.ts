@@ -252,7 +252,7 @@ export class NxDialogsService {
     /* WebAdmin */
     wizard = this.dialogV2Factory<Dt.Wizard>(
         () => import('./wizard/wizard.component').then(m => m.WizardModalContent),
-        { width: DIALOG_SIZE_V2.SMALL, disableClose: true },
+        { width: DIALOG_SIZE_V2.SMALL, disableClose: true, hasBackdrop: false },
     );
 
     loginWebAdmin = this.dialogV2Factory<Dt.LoginWebAdmin>(
@@ -263,9 +263,7 @@ export class NxDialogsService {
         {
             width: DIALOG_SIZE_V2.SMALL,
             disableClose: true,
-            backdropClass: '__foobar',
-            /* We don't need an actual class name, we just need to replace
-            the default .cdk-overlay-dark-backdrop to make it transparent */
+            hasBackdrop: false,
         },
     );
 
