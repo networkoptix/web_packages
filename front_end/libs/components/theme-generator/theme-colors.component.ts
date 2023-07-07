@@ -421,8 +421,8 @@ export class NxThemeGeneratorComponent implements OnInit, AfterViewInit {
         const value = (event.target as HTMLInputElement).value;
         if (value.startsWith('#') && value.length === 7) {
             const { hue, sat } = NxThemeService.hexToHSL(value);
-            this.setColorHue(hue);
-            this.setColorSaturation(sat);
+            this.themeService.setColorHue(hue);
+            this.themeService.setColorSaturation(sat);
             // this.setBrandLuminosity(lum);
             this.color.hue = hue;
             this.color.saturation = sat;
