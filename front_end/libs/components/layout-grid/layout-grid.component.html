@@ -662,9 +662,18 @@
                                         </nx-video-player>
                                     </ng-container>
                                     <ng-container *ngSwitchCase="RESOURCE_TYPE.SERVER">
+                                        <ng-template #offlinePlaceholder>
+                                            <ng-container
+                                                *ngTemplateOutlet="
+                                                    showError;
+                                                    context: { status: 'offline' }
+                                                "
+                                            ></ng-container>
+                                        </ng-template>
                                         <nx-monitoring-graph
                                             [systemId]="layout.systemId"
                                             [selectedServerId]="itemDetail.details.id"
+                                            [lostConnectionPlaceholder]="offlinePlaceholder"
                                             noFrame
                                             class="theme-override"
                                             data-theme="dark"

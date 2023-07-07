@@ -2,9 +2,17 @@
     <nx-pre-loader type="page"></nx-pre-loader>
 </ng-template>
 
+<ng-template #placeholder>
+    <ng-container *ngIf="offline; else preloader">
+        <ng-container *ngIf="lostConnectionPlaceholder; else unavailable">
+            <ng-container *ngTemplateOutlet="lostConnectionPlaceholder"></ng-container>
+        </ng-container>
+    </ng-container>
+</ng-template>
+
 <ng-template #chart>
     <ngx-charts-line-chart
-        *ngIf="this.multi?.length; else preloader"
+        *ngIf="this.multi?.length && !offline; else placeholder"
         [view]="view"
         [curve]="curve"
         [animations]="animations"

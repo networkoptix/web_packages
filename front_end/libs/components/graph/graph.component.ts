@@ -1,9 +1,9 @@
-import { Component, ElementRef, Inject, Input, OnChanges } from '@angular/core';
+import { Component, ElementRef, Inject, Input, OnChanges, TemplateRef } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { LegendPosition } from '@swimlane/ngx-charts';
 import { curveBasis } from 'd3-shape';
 import { of, Subject } from 'rxjs';
-import { delay, mergeMap, repeat, retry, takeUntil, tap } from 'rxjs/operators';
+import { catchError, delay, mergeMap, repeat, retry, takeUntil, tap } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
@@ -31,6 +31,7 @@ export class NxMonitoringGraphComponent implements OnChanges {
     @IBool() @Input() noFrame: CoercedBoolInput;
     @Input() refreshInterval: number = 1000;
     @IBool() @Input() showFullscreen: CoercedBoolInput;
+    @Input() lostConnectionPlaceholder: TemplateRef<unknown>;
 
     LANG = staticLang;
 
@@ -143,15 +144,15 @@ export class NxMonitoringGraphComponent implements OnChanges {
                     this.offline = false;
                     this.multi = [...this.multi];
                 }),
+                catchError(() => {
+                    this.offline = true;
+                    return Promise.resolve();
+                }),
                 delay(this.refreshInterval),
                 repeat(),
                 untilDestroyed(this),
                 takeUntil(this.destroy$),
             )
-            .subscribe({
-                error: () => {
-                    this.offline = true;
-                },
-            });
+            .subscribe();
     }
 }
