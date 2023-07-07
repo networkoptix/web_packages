@@ -9,6 +9,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from asgiref.sync import sync_to_async
 from api.account_backend import get_ip
+from api.views.account import AccountCache
 from cloud.controllers import cloud_api, cloud_gateway
 from cloud.controllers.cloud_api import Auth
 from cloud.drf_async import async_api_view
@@ -412,13 +413,17 @@ async def connect(request):
 async def toggle2fa(request):
     require_params(request, ('systemId', 'mfaCode'))
     system_id = request.data.get('systemId')
+    mfa_code = request.data.get('mfaCode')
     systems = await sync_to_async(cloud_api.System.get, thread_sensitive=False)(request, system_id)
     target_system = next(filter(lambda s: s['id'] == system_id, systems.get('systems')), {})
     twofa_enabled = target_system.get('system2faEnabled', False)
     data = await sync_to_async(cloud_api.System.update, thread_sensitive=False)(
-        request, system_id, request.data.get('mfaCode'), not twofa_enabled
+        request, system_id, mfa_code, not twofa_enabled
     )
-    request.session['has2fa'] = True
+    await sync_to_async(Auth.verify_2fa_code, thread_sensitive=False)(
+        mfa_code, request.session.get("access_token"))
+    AccountCache.delete(request)
+    request.session["has2fa"] = True
     return api_success(data)
 
 

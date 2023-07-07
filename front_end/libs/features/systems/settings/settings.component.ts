@@ -366,7 +366,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         }
         this.systemSubscription = this.systemsService.systemsSubject
             .pipe(untilDestroyed(this))
-            .subscribe(systems => {
+            .subscribe(async systems => {
                 if (this.systemsService.userDisconnectSystem) {
                     // don't trigger this.systemNoAccess
                     this.systemsService.userDisconnectSystem = false;
@@ -378,8 +378,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     return;
                 }
                 if (system.system2faEnabled && !this.account.sessionVerified) {
-                    this.show2faRequired = true;
-                    return;
+                    this.account = await this.accountService.get(true);
+                    if (!this.account.sessionVerified) {
+                        this.show2faRequired = true;
+                        return;
+                    }
                 }
                 if (this.systemId === this.system?.id) {
                     return;
