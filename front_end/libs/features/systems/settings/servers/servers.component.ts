@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit, ViewContainerRef, Inject } from '@angular
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, Observable, Subject, Subscription, timer } from 'rxjs';
-import { delay, filter, map, retryWhen, switchMap, tap } from 'rxjs/operators';
+import { delay, map, retryWhen, switchMap, tap } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';
@@ -12,11 +12,10 @@ import { icons, menus } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/system-types';
+import { NxSystemService } from '@services/system.service/system.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
 import { cleanId } from '@utils/general';
-
-import { NxSettingsService } from '../settings.service';
 
 @UntilDestroy()
 @Component({
@@ -45,7 +44,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private router: Router,
         private applyService: NxApplyService,
-        private settingsService: NxSettingsService,
+        private systemService: NxSystemService,
         private menuService: NxMenuService,
         private uriService: NxUriService,
         private location: Location,
@@ -100,32 +99,20 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
 
         this.applyService.initPageWatcher(this.applyContainerRef);
 
-        this.settingsService.systemSubject$
+        this.system = this.systemService.getCurrentSystem();
+        this.isOffline = !this.system.isOnline;
+        this.system.infoSubject
             .pipe(
-                filter(data => data !== undefined),
-                switchMap(async system => {
-                    this.isOffline = !system.isOnline;
-                    if (this.isOffline) {
-                        this.serverLoaded = false;
+                map(system => {
+                    if (
+                        !system.serverManager.servers ||
+                        system.serverManager.servers.length === 0
+                    ) {
+                        throw new Error();
                     }
-                    if (system && (!this.system || !this.environment.isLocal)) {
-                        this.system = system;
-                    }
+                    return system;
                 }),
-                switchMap(() =>
-                    this.system.infoSubject.pipe(
-                        map(system => {
-                            if (
-                                !system.serverManager.servers ||
-                                system.serverManager.servers.length === 0
-                            ) {
-                                throw new Error();
-                            }
-                            return system;
-                        }),
-                        retryWhen(err => err.pipe(delay(1000))),
-                    ),
-                ),
+                retryWhen(err => err.pipe(delay(1000))),
                 switchMap(async () => {
                     this.system.serverManager
                         .initSystemMediaServers()
@@ -133,14 +120,14 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                             this.setServer(false);
                         })
                         .catch(error => {
+                            this.isOffline = !this.system.isOnline;
+                            if (this.isOffline) {
+                                this.serverLoaded = false;
+                            }
                             console.error(error);
                         });
                 }),
                 tap(() => {
-                    this.isOffline = !this.system.isOnline;
-                    if (this.isOffline) {
-                        this.serverLoaded = false;
-                    }
                     if (this.system && !this.system.userManager.permissions.isAdmin) {
                         this.uriService
                             .navigateSystem(`${menus.systemSettings.baseUrl}SYSTEM_ID`, this.system)

@@ -20,7 +20,7 @@
         <nx-pre-loader></nx-pre-loader>
     </ng-template>
     <nx-standard-server-component
-        *ngIf="system && selectedServer$ | async as selectedServer; else preload"
+        *ngIf="selectedServer$ | async as selectedServer; else preload"
         (loaded)="serverLoaded = $event"
         [isOffline]="isOffline"
         [system]="system"
@@ -29,14 +29,14 @@
     </nx-standard-server-component>
 
     <nx-server-storage-component
-        *ngIf="serverLoaded && system && (serverId$ | async) as serverId"
+        *ngIf="serverLoaded && (serverId$ | async) as serverId"
         [system]="system"
         [serverId]="serverId"
     >
     </nx-server-storage-component>
 </ng-template>
 
-<ng-container *ngIf="serverLoaded && system && (serverId$ | async) as serverId">
+<ng-container *ngIf="serverLoaded && (serverId$ | async) as serverId">
     <nx-cloud-storage
         *ngIf="!environment.isLocal && system?.canUserViewCloudStorage()"
         layout="simple"
