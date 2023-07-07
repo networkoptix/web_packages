@@ -436,7 +436,7 @@ Force Tags        system    Threaded    users
     END
 
 15. Delete user works
-    [Tags]    email    C41903    webadmin    cloud    smoke    ci
+    [Tags]    email    C41903    webadmin    cloud    smoke    ci    C30726
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${servers}[0][cloudOwner]    ${servers}[0][cloudUsers][cloudAdmin]
     ...    ELSE    Create List    ${servers}[0][cloudOwner]    admin    ${servers}[0][cloudUsers][cloudAdmin]    ${servers}[0][localUsers][cloudAdmin][login]
     FOR    ${user}    IN    @{list}
@@ -464,8 +464,8 @@ Force Tags        system    Threaded    users
         Run Keyword If    '''${mode}'''=='''cloud'''    Log Out
     END
 
-16. Share with registered user works and sends him notification
-    [Tags]    email    C41888    cloud    smoke    ci
+16. Share with registered user works and sends them notification
+    [Tags]    email    C41888    cloud    smoke    ci    C30446
     ${random email}=    Register and activate account with random email    mark     hamil    ${password}
     ${user}=   Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
     Register And Activate Account    users    notification    ${user}    ${BASE PASSWORD}
@@ -517,7 +517,7 @@ Force Tags        system    Threaded    users
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
 
 17. Share with registered user gives user access to system
-    [Tags]    email    C41888    cloud    smoke    ci
+    [Tags]    email    C41888    cloud    smoke    ci    C30446
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}  
     Share    ${servers}[0][cloudAuth]    ${servers}[0][id]    viewer    ${random email}      ${permissions}[viewer]
     Log in to user and system    ${random email}    ${servers}[0][id]
@@ -530,7 +530,7 @@ Force Tags        system    Threaded    users
     Element Should Not Be Visible    ${ADD USER BUTTON SYSTEMS}
 
 18. Share with unregistered user - Verify email recieved
-    [Tags]    email    C41889    cloud    CLOUD-8643    smoke    ci
+    [Tags]    email    C41889    cloud    CLOUD-8643    smoke    ci    	C30445
     Log    Step 1
     Log in to user and system    ${servers}[0][cloudOwner]    ${servers}[0][id]
     ${random email}=   Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}

@@ -40,7 +40,7 @@ Force Tags        Threaded
     Wait Until Element is Visible    ${CHANGE PASS NO CHANGES}
     
 3. password is actually changed, so login works with new password
-    [tags]    C41576    smoke    ci
+    [tags]    C41576    smoke    ci    C94721
     Log In To Change Password Page
     Input Text    ${CURRENT PASSWORD INPUT}    ${password}
     Input Text    ${NEW PASSWORD INPUT}    ${ALT PASSWORD}

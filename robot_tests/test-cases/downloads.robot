@@ -58,32 +58,32 @@ Force Tags        Threaded
     Wait Until Elements Are Visible    ${DOWNLOAD MAC OS VMS LINK}    ${MAC OS TAB}
 
 7. Validate the windows download links
-    [tags]    C41552
+    [tags]    C41552    C30821
     Go to download page
     Check for file by OS    WINDOWS
     Check other packages
 
 8. Validate the ubuntu download links
-    [tags]    C41552
+    [tags]    C41552    C30821
     Go to download page
     Check for file by OS    LINUX
     Check other packages
 
 9. Validate the mac download links
-    [tags]    C41552
+    [tags]    C41552    C30821
     Go to download page
     Check for file by OS    MAC OS
     Check other packages
 
 10. Check Play Store Link
-    [tags]    C41554
+    [tags]    C41554    C30821
     Go to download page
     ${url}    Get Element Attribute    ${PLAY STORE DOWNLOAD BUTTON}    href
     Should Be Equal    ${url}    ${PLAY STORE LINK}
     Check File Exists    ${url}
 
 11. Check iTunes Store Link
-    [tags]    C41554
+    [tags]    C41554    C30821
     Go to download page
     ${url}    Get Element Attribute    ${ITUNES STORE DOWNLOAD BUTTON}    href
     Should Be Equal    ${url}    ${ITUNES STORE LINK}

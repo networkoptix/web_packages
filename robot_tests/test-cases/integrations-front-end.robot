@@ -18,7 +18,7 @@ Force Tags        integrations    Threaded
     Validate Integrations Landing Page
 
 2. Integration Store catalog
-    [Tags]    C54622    smoke
+    [Tags]    C54622    smoke    C57508
     ${user}=   Register and activate account with random email    mark    hamill    ${BASE PASSWORD}
     Go To Integrations Page
     #Log In    ${user}    ${BASE PASSWORD}    button=${None}

@@ -15,7 +15,7 @@ Force Tags        Threaded
     Go To IPVD Page
 
 3. IPVD landing page actions
-    [Tags]    C48791    CLOUD-7598    ci    smoke
+    [Tags]    C48791    CLOUD-7598    ci    smoke    C57509
     Log    Step 1 - Validate Landing Page Contents
     Go To IPVD Page
     Validate on IPVD Page
