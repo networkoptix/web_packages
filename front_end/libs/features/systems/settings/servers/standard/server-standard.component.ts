@@ -2,7 +2,7 @@ import { Component, OnChanges, OnDestroy, Input, Output, EventEmitter } from '@a
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual } from 'lodash-es';
-import { of, SubscriptionLike, Subject, timer } from 'rxjs';
+import { of, SubscriptionLike, Subject, timer, firstValueFrom } from 'rxjs';
 import {
     catchError,
     delay,
@@ -340,7 +340,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                         }
                         await this.system.update();
 
-                        this.system.storageManager.update();
+                        await firstValueFrom(this.system.storageManager.update());
                         this.saveStorageWatcher.value = false;
                         this.currentAnalyticsDbId = this.selectedStorage.id;
                     } catch (err) {
