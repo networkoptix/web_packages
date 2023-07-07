@@ -1,4 +1,13 @@
-import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    forwardRef,
+    Input,
+    OnInit,
+    Output,
+    ViewChild,
+    ElementRef,
+} from '@angular/core';
 import {
     ControlValueAccessor,
     FormControl,
@@ -57,9 +66,10 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor, Validat
 
     @Output() onChange = new EventEmitter<number>();
 
+    @ViewChild('input') input: ElementRef<HTMLInputElement>;
+
     componentId: string;
     _value: number;
-    _previousValue: number;
     _invalid: boolean;
     _touched: boolean;
     icons = icons;
@@ -80,6 +90,7 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor, Validat
 
         this._touched = c.touched;
 
+        // does this work with 0 correctly?
         if (this.required && !c.value) {
             this._invalid = true;
             return err;
@@ -98,7 +109,6 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor, Validat
      */
     writeValue(value: any): void {
         this._value = value;
-        this._previousValue = value;
     }
 
     /**
@@ -117,55 +127,73 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor, Validat
         this.onTouchedCallback = fn;
     }
 
-    valueChanged(event): void {
-        const value = +event.target.value;
-        if (value >= this.min && value <= this.max) {
-            this._value = value;
-            this.setValue();
-        } else {
-            this._value = this._previousValue;
+    setValue(value: number | null): void {
+        if (value !== null && Number.isNaN(value)) {
+            return;
         }
+        if (typeof value === 'number') {
+            this._value = Math.max(this.min, Math.min(this.max, value));
+        } else {
+            this._value = null;
+        }
+
+        this.onTouchedCallback();
+        this.onChangeCallback(this._value);
+        this.onChange.emit(this._value);
     }
 
-    checkValue(event) {
+    getNativeValue(): number | null {
+        if (this.input.nativeElement.value === '') {
+            return null;
+        }
+        return parseInt(this.input.nativeElement.value);
+    }
+
+    onKeyDown(event: KeyboardEvent) {
+        // improve? to bypass ⌘+V, ✲+V, ⌘+C, ✲+C
+        // improve? to bypass ',' and '.' of step is decimal
         if (event.key.length === 1 && event.key.match(/[^0-9]/)) {
             event.preventDefault();
         }
         return true;
     }
 
-    setValue(event?): void {
-        if (
-            this._value === null ||
-            (typeof this._value === 'number' && !Number.isNaN(this._value))
-        ) {
-            if (typeof this._value === 'number') {
-                if (this._value < this.min) {
-                    this._value = this.min;
-                } else if (this._value > this.max) {
-                    this._value = this.max;
-                }
-            }
-            if (event) {
-                event.target.value = this._value;
-            }
-            this._previousValue = this._value;
-            this.onTouchedCallback();
-            this.onChangeCallback(this._value);
-            this.onChange.emit(this._value);
-        } else {
-            // parseInt('') => NaN
-            this._value = this._previousValue;
+    valueChanged(event?: Event | undefined) {
+        this.setValue(this.getNativeValue());
+
+        if (event) {
+            this.checkUpdateNativeValue(this._value, event.target as HTMLInputElement);
         }
+    }
+
+    checkUpdateNativeValue(value: number | null, input: HTMLInputElement) {
+        if (this.getNativeValue() === value) {
+            return;
+        }
+        // Edge case when value is not autocorrected by the input
+        // (select value in the input and press 0. UI value will be 0 even if the min === 1)
+        input.value = `${value === null ? '' : value}`;
+    }
+
+    increment(event: MouseEvent) {
+        this.input.nativeElement.stepUp();
+        event.preventDefault();
+        this.setValue(this.getNativeValue());
+    }
+
+    decrement(event: MouseEvent) {
+        this.input.nativeElement.stepDown();
+        event.preventDefault();
+        this.setValue(this.getNativeValue());
     }
 
     onPaste(event: ClipboardEvent): void {
         event.preventDefault();
+
         let data = event.clipboardData.getData('text');
         data = data.replace(/[^0-9]+/g, '');
 
-        this._value = parseInt(data);
-        this.setValue();
+        this.setValue(parseInt(data));
     }
 
     // Non input elements doesn't have onBlur ... keeping this just for reference
