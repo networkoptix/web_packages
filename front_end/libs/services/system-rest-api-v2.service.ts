@@ -11,7 +11,7 @@ import { getSystemMetricsManifestV2 } from '@services/mediaserver-apis/endpoints
 import { getSystemMetricsValuesV2 } from '@services/mediaserver-apis/endpoints/system-metrics-values';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
 import { NxSystemUser } from '@services/system.service/user-manager/user-manager-types.bak';
-import { withKeyMap } from '@utils/nx';
+import { buildTopLevelKeyMap } from '@utils/general';
 
 import { addUserRestV2 } from './mediaserver-apis/endpoints/add-user';
 import { wizardGetSystemSettingsRestV2 } from './mediaserver-apis/endpoints/wizard-get-system-settings';
@@ -393,23 +393,21 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
         return this.delete<t.ChangedIdReturned>(`/rest/v1/users/${this.cleanId(userId)}`);
     }
 
-    // Todo: When merged into develop use withKeyMap, but alter the keys
-    getCameras(): Observable<t.RestCamera[]> {
+    getCameras(): Observable<any[]> {
         const endpoint = '/rest/v2/devices';
-        const params = {
-            _keepDefault: true,
-            _with: withKeyMap(t.getRestCameraKeysWithDevice),
-        };
-        return this.get<t.GetRestCamera[]>(endpoint, { params }).pipe(
+        const keyMap = {
+            ...buildTopLevelKeyMap(['id', 'name', 'serverId', 'status', 'url', 'deviceType']),
+            schedule: {
+                isEnabled: true,
+            },
+        } as const;
+        return this.getWith(endpoint, keyMap).pipe(
             map(cameras =>
-                cameras.map(
-                    ({ schedule, serverId, ...rest }) =>
-                        ({
-                            ...rest,
-                            scheduleEnabled: schedule.isEnabled,
-                            parentId: serverId,
-                        } as t.RestCamera),
-                ),
+                cameras.map(({ schedule, serverId, ...rest }) => ({
+                    ...rest,
+                    scheduleEnabled: schedule.isEnabled,
+                    parentId: serverId,
+                })),
             ),
         );
     }

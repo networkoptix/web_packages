@@ -244,12 +244,30 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         return `${url}${url.includes('?') ? '&' : '?'}${params}`;
     }
 
+    /** Overload for get requests without params whose return type can be looked up
+     * in `GetEndpoints`. Params are excluded because they might change the return type.
+     */
+    protected override get<U extends keyof GetEndpoints>(
+        url: U,
+        opts?: Omit<WithOptionalJson, 'params'>,
+    ): Observable<GetEndpoints[U]>;
+    /** Overload for catching attempts to incorrectly use a generic on a request
+     * whose return type has already been added to `GetEndpoints` for lookups.
+     */
+    protected override get<_T>(
+        url: keyof GetEndpoints,
+        opts?: Omit<WithOptionalJson, 'params'>,
+    ): void;
+    /** Overload for ArrayBuffer response. */
     protected override get(
         url: string,
         opts: WithResponseType<'arraybuffer'>,
     ): Observable<ArrayBuffer>;
+    /** Overload for Blob response. */
     protected override get(url: string, opts: WithResponseType<'blob'>): Observable<Blob>;
+    /** Overload for text response. */
     protected override get(url: string, opts: WithResponseType<'text'>): Observable<string>;
+    /** Base overload for unknown JSON response. */
     protected override get<T>(url: string, opts?: WithOptionalJson): Observable<T>;
     @memoizeAsync(1000)
     protected override get(url: string, opts?: RequestOpts): Observable<unknown> {
@@ -435,7 +453,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         if (this.userEmail) {
             const endpoint = '/ec2/getUsers';
             this.cacheService.addToCache(endpoint);
-            this.userRequest = this.get<t.ec2User[]>(endpoint, { headers })
+            this.userRequest = this.get(endpoint, { headers })
                 .toPromise()
                 .then(result => {
                     this.currentUser = result.find(user => {
@@ -446,7 +464,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         } else {
             const endpoint = '/api/getCurrentUser';
             this.cacheService.addToCache(endpoint);
-            this.userRequest = this.get<t.CurrentUser>(endpoint, { headers })
+            this.userRequest = this.get(endpoint, { headers })
                 .toPromise()
                 .then(result => {
                     this.currentUser = result;
@@ -477,7 +495,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     @memoizeAsyncPersistent
     getApiDoc(type: APIDocType) {
         if (type === 'main') {
-            return this.get<APIDoc>('/static/openapi_legacy.json').toPromise();
+            return this.get('/static/openapi_legacy.json').toPromise();
         }
     }
 
@@ -678,10 +696,10 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         }).toPromise();
     }
 
-    @memoizeAsyncLong
-    getServerNetworkSettings() {
-        return this.get<t.NormalResponse<t.ServerNetworkSettings>>('/api/iflist').toPromise();
-    }
+    // @memoizeAsyncLong
+    // getServerNetworkSettings(): Promise<t.NormalResponse<t.ServerNetworkSettings>> {
+    //     return this.get('/api/iflist').toPromise();
+    // }
 
     setServerNetworkSettings(networkSettings: t.ServerNetworkSettings) {
         return this.post('/api/ifconfig', networkSettings).toPromise();
@@ -700,17 +718,15 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         return this.get('/ec2/getTimeOfServers');
     }
 
-    protected getSystemTime() {
-        return this.get<t.SystemTime>('/api/synchronizedTime');
-    }
+    // protected getSystemTime(): Observable<t.SystemTime> {
+    //     return this.get('/api/synchronizedTime');
+    // }
 
     public settingsUpdater$ = new BehaviorSubject('');
 
     @memoizeAsyncPersistent
-    public getSettings() {
-        return this.settingsUpdater$.pipe(
-            switchMap(() => this.get<t.SystemSettingsResp>('/api/systemSettings')),
-        );
+    public getSettings(): Observable<t.SystemSettingsResp> {
+        return this.settingsUpdater$.pipe(switchMap(() => this.get('/api/systemSettings')));
     }
 
     // TODO: Split this into two
@@ -725,7 +741,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
 
     @memoizeAsyncPersistent
     getSettingsDocumentation(): Promise<t.ServerDocumentation> {
-        return this.get<t.ServerDocumentation>('/api/settingsDocumentation').toPromise();
+        return this.get('/api/settingsDocumentation').toPromise();
     }
 
     /**
@@ -992,7 +1008,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     @memoizeAsync(defaultHashFunction, useCache => !useCache, 60 * 1000)
     getMediaServers(useCache: boolean): Observable<ServerPreprocess[]> {
         const endpoint = '/ec2/getMediaServersEx';
-        return this.get<t.ec2MediaServerEx[]>(endpoint, {
+        return this.get(endpoint, {
             headers: this.cacheHeader(useCache),
         });
     }
@@ -1003,10 +1019,10 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         return this.getRequestAggregator(routes);
     }
 
-    @memoizeAsyncPersistent
-    getResourceTypes() {
-        return this.get<t.GetResourceTypes>('/ec2/getResourceTypes');
-    }
+    // @memoizeAsyncPersistent
+    // getResourceTypes(): Observable<t.GetResourceTypes> {
+    //     return this.get('/ec2/getResourceTypes');
+    // }
 
     updateSystemServersCameras(): Observable<CameraManagerUpdate> {
         const routes = [
@@ -1207,18 +1223,18 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     );
 
     @NxSystemAPI.memoizeHM
-    getHealthManifest() {
-        return this.get<t.Manifests>('/ec2/metrics/manifest');
+    getHealthManifest(): Observable<t.Manifests> {
+        return this.get('/ec2/metrics/manifest');
     }
 
     @NxSystemAPI.memoizeHM
-    getHealthValues() {
-        return this.get<t.Values>('/ec2/metrics/values');
+    getHealthValues(): Observable<t.Values> {
+        return this.get('/ec2/metrics/values');
     }
 
     @NxSystemAPI.memoizeHM
-    getHealthAlarms() {
-        return this.get<t.Alarms>('/ec2/metrics/alarms');
+    getHealthAlarms(): Observable<t.Alarms> {
+        return this.get('/ec2/metrics/alarms');
     }
 
     @NxSystemAPI.memoizeHM
@@ -1332,14 +1348,14 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         return this.post<t.MergeSystems>('/api/mergeSystems', data);
     }
 
-    checkMergeStatus(forceReload = true) {
-        return this.get<t.MergeStatus>('/ec2/mergeStatus', {
+    checkMergeStatus(forceReload = true): Observable<t.MergeStatus> {
+        return this.get('/ec2/mergeStatus', {
             headers: this.cacheHeader(!forceReload),
         });
     }
 
-    getDigestKeys(adminPassword: string) {
-        return this.get<{ nonce: string; realm: string }>('/api/getNonce')
+    private getDigestKeys(adminPassword: string): Promise<{ getKey: string; postKey: string }> {
+        return this.get('/api/getNonce')
             .toPromise()
             .then(({ nonce, realm }) => {
                 const digest = md5(`admin:${realm}:${adminPassword}`);
@@ -1397,8 +1413,8 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         throw new Error('should only be using rest version');
     }
 
-    getEventRules() {
-        return this.get<t.EventRule[]>('/ec2/getEventRules');
+    getEventRules(): Observable<t.EventRule[]> {
+        return this.get('/ec2/getEventRules');
     }
 
     saveEventRule(eventRule: t.EventRule) {

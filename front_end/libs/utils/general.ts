@@ -289,6 +289,9 @@ export type KeyFilter<T, F> = {
     [K in keyof T]: T[K] extends F ? K : never;
 }[keyof T];
 
+/** Get element type of array. */
+export type ArrayType<T> = T extends (infer Item)[] ? Item : never;
+
 /*
 for key of keyof targetType
     if key extends keyof keys
@@ -336,5 +339,14 @@ export type RecursivePick<T, Keys extends RecursiveKeyMap<T>> = Pick<
 >;
 
 export type RecursiveKeyMap<T> = {
-    [K in keyof T]?: T[K] extends object ? RecursiveKeyMap<T[K]> : true;
+    [K in keyof T]?: T[K] extends object ? RecursiveKeyMap<T[K]> | true : true;
 };
+
+export function buildTopLevelKeyMap<T>(
+    topKeys: readonly (keyof T)[],
+): Record<(typeof topKeys)[number], true> {
+    return Object.fromEntries(topKeys.map(k => [k, true])) as Record<
+        (typeof topKeys)[number],
+        true
+    >;
+}

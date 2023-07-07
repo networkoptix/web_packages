@@ -3,6 +3,7 @@
         order: 'alphabetically'
     }
 }]  */
+import type { ArrayType, KeyFilter } from '@app/utils/general';
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
 
 import type { MenuManifest } from './nx-config/base-config';
@@ -11,10 +12,12 @@ import type * as t from './system-api.types';
 export interface GetEndpoints {
     /* api */
     '/api/getCurrentUser': t.CurrentUser;
+    '/api/getNonce': { nonce: string; realm: string };
+    // '/api/iflist': t.NormalResponse<t.ServerNetworkSettings>;
     '/api/moduleInformation': t.ModuleInformation;
     '/api/settingsDocumentation': t.ServerDocumentation;
-    '/api/synchronizedTime': t.SystemTime;
-    '/api/systemSettings': t.SystemSettings;
+    // '/api/synchronizedTime': t.SystemTime;
+    '/api/systemSettings': t.SystemSettingsResp;
 
     /* ec2 */
     '/ec2/getAccessRights': t.ec2AccessRight[];
@@ -25,7 +28,8 @@ export interface GetEndpoints {
     '/ec2/getMediaServers': t.ec2MediaServer[];
     '/ec2/getMediaServersEx': t.ec2MediaServerEx[];
     '/ec2/getPredefinedRoles': t.ec2PredefinedRole[];
-    '/ec2/getResourceTypes': t.GetResourceTypes;
+    // '/ec2/getResourceTypes': t.GetResourceTypes;
+    '/ec2/getSettings': t.Param[];
     '/ec2/getStorages': t.ec2Storage[];
     '/ec2/getTimeOfServers': t.TimeOfServers;
     '/ec2/getUserRoles': t.ec2UserRole[];
@@ -38,9 +42,14 @@ export interface GetEndpoints {
     /* rest/v1 */
     '/rest/v1/devices': t.Device[];
     '/rest/v1/servers': t.RestServer[];
+    '/rest/v1/system/merge': t.MergeStatus;
     '/rest/v1/users': t.RestUser[];
 
     /* rest/v2 */
+    '/rest/v2/devices': t.Device[]; // TODO: Separate v2 and v1 device types
+    '/rest/v2/system/metrics/alarms': t.AlarmsReply;
+    '/rest/v2/system/metrics/manifest': t.Manifests['reply'];
+    '/rest/v2/system/metrics/values': t.ValuesReply;
 
     /* rest/v3 */
 
@@ -48,3 +57,7 @@ export interface GetEndpoints {
     '/static/openapi_legacy.json': APIDoc;
     '/static/openapi_manifest.json': MenuManifest;
 }
+
+export type GetArrayTypes = {
+    [E in KeyFilter<GetEndpoints, unknown[]>]: ArrayType<GetEndpoints[E]>;
+};

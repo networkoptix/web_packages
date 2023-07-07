@@ -1,5 +1,3 @@
-import type { RecursivePick } from '@utils/general';
-
 /**
  * Base response type, accepts a generic type/interface that gets assigned to the reply property.
  * Usage example below.
@@ -373,32 +371,6 @@ export interface ec2CameraEx extends ec2Camera {
     userDefinedGroupName: string;
 }
 
-// Top level keys, more convenient as array for now
-const _getRestCameraKeys = ['id', 'name', 'serverId', 'status', 'url'] as const;
-export const getRestCameraKeys = {
-    ...(Object.fromEntries(_getRestCameraKeys.map(k => [k, true])) as Record<
-        (typeof _getRestCameraKeys)[number],
-        true
-    >),
-    schedule: {
-        isEnabled: true,
-    },
-} as const;
-
-export const getRestCameraKeysWithDevice = {
-    ...getRestCameraKeys,
-    deviceType: true,
-};
-export type GetRestCamera = RecursivePick<Device, typeof getRestCameraKeys>;
-
-export type RestCamera = {
-    [key in keyof Omit<
-        ec2CameraEx,
-        keyof Omit<GetRestCamera, 'schedule' | 'serverId'> | 'scheduleEnabled' | 'parentId'
-    >]: never;
-} & Omit<GetRestCamera, 'schedule' | 'serverId'> &
-    Pick<ec2CameraEx, 'scheduleEnabled' | 'parentId'>;
-
 export type EmptyObjectReturned = Record<string, never>;
 
 export interface ec2MediaServer {
@@ -448,22 +420,6 @@ export interface RestServer {
     url: string;
     version: string;
     parameters: Record<string, unknown>;
-}
-
-// Only get specific properties for lighter requests
-export const getRestServerKeys = [
-    'id',
-    'endpoints',
-    'name',
-    'osInfo',
-    'status',
-    'version',
-] as const;
-export type RestServerPartial = Pick<RestServer, (typeof getRestServerKeys)[number]>;
-
-export interface RestServerPartialCompat extends Omit<RestServerPartial, 'osInfo'> {
-    networkAddresses: string; // Reconstruct network addresses from endpoints
-    osInfo: string; // Revert osInfo to JSON string
 }
 
 interface ResourceTypes {

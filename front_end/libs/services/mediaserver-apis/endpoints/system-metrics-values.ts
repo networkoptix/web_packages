@@ -5,7 +5,7 @@ import { MediaserverRestConnection } from '@services/mediaserver-apis/connection
 import * as t from '@services/system-api.types';
 
 export function getSystemMetricsValuesV2(this: MediaserverRestConnection): Observable<t.Values> {
-    return this.get<t.ValuesReply>('/rest/v2/system/metrics/values').pipe(
+    return this.get('/rest/v2/system/metrics/values').pipe(
         map(reply => ({ error: '', errorString: '', reply })),
     );
 }
