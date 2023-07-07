@@ -1,9 +1,10 @@
 import logging
 import os
+import sys
 
-from django.conf import settings
 from django.core.management.base import BaseCommand
 
+from cloud.customization_context import customization_ctx
 from cms.controllers import filldata
 from cms import models
 
@@ -23,7 +24,12 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         local_version = self.read_id()
-        customization = options['customization']
+        customization = options.get('customization') or os.getenv('CUSTOMIZATION', None)
+        if not customization:
+            self.stderr.write(self.style.ERROR("Customization must be given."))
+            sys.exit(1)
+        customization_ctx.set(customization)
+        logger.info(f"Running in {customization}")
         update, current_version = models.check_update_cache(customization, local_version)
         logger.info(f"Local version: {local_version}\tUpdate: {update}\tCurrent Version: {current_version}")
 
