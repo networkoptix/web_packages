@@ -1054,7 +1054,11 @@
             "storages": "Storage Locations",
             "networkInterfaces": "Network Interfaces",
             "graphs": "Graphs",
-            "logs": "Logs"
+            "logs": "Logs",
+            "releases": "Releases",
+            "betas": "Betas",
+            "patches": "Patches",
+            "other": "Other"
         }
     },
     "tableHeaders": {

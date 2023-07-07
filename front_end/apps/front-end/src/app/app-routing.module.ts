@@ -125,6 +125,13 @@ const lazyRoutes: Routes = [
             import('@pages/integration/integrations.module').then(m => m.IntegrationsModule),
     },
     {
+        path: 'downloads-releases',
+        loadChildren: () =>
+            import('@pages/downloads-releases/downloads-releases.module').then(
+                m => m.NxDownloadsReleasesModule,
+            ),
+    },
+    {
         path: 'download',
         loadChildren: () => import('@pages/download/download.module').then(m => m.DownloadModule),
     },

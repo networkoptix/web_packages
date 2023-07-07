@@ -386,6 +386,26 @@ export const menus: configTypes.Menus = {
             path: '/security',
         },
     },
+    download: {
+        baseUrl: '/downloads-releases',
+        icon: '',
+        releases: {
+            id: 'releases',
+            path: '',
+        },
+        betas: {
+            id: 'betas',
+            path: '/betas',
+        },
+        patches: {
+            id: 'patches',
+            path: '/patches',
+        },
+        other: {
+            id: 'other',
+            path: '/other',
+        },
+    },
     systemHealth: {
         baseUrl: '/health/',
         alerts: {

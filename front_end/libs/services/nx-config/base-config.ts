@@ -562,6 +562,7 @@ export interface Table {
 export interface Menus {
     customization: Customization;
     account: Account;
+    download: Download;
     systemHealth: SystemHealth;
     systemSettings: SystemSettings;
     systemMonitoring: SystemMonitoring;
@@ -573,6 +574,15 @@ export interface Customization {
     icon: string;
     partners: Partners;
     buttons: Buttons;
+}
+
+export interface Download {
+    baseUrl: string;
+    icon?: string;
+    releases: Path;
+    betas: Path;
+    patches: Path;
+    other: Path;
 }
 
 export interface Partners {
