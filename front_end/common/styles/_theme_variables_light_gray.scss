@@ -495,6 +495,7 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --card-active-shadow: 0 2px 5px 0 #{$light_gray_10};
     --card-header-bg : #{$additional_gray_light1};
     --card-header-text : #{$dark_gray_9};
+    --card-header-disabled : #{$light_gray_8};
     --card-body-bg : #{$light_gray_1};
     --card-hover-bg : #{$light_gray_1};
 
@@ -654,8 +655,9 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --bookmarks-duration-bg: rgba(0, 0, 0, 0.5);
     --bookmarks-card-background-color: var(--light1);
     --bookmarks-card-background-color-hover: rgba(var(--dark4--rgb), 0.2);
+    --bookmarks-card-video-background-color: var(--dark1);
     --bookmarks-card-no-permissions-description: var(--light12);
-    --bookmarks-card-video-background-color: var(--light4);
+    --bookmarks-card-no-permissions-background: var(--light4);
     --bookmarks-card-border-color: var(--light4);
     --bookmarks-card-title-gradient: linear-gradient(
         to right,
@@ -663,15 +665,14 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
         rgba(var(--light1--rgb), 1)
     );
     --bookmarks-card-title-gradient-hover: var(--bookmarks-card-title-gradient);
+    --bookmarks-background-color: inherit;
+    --bookmarks-duration-bg: rgba(0, 0, 0, .5);
+    --bookmarks-card-video-bg: inherit;
 
     --tour-background: rgba(var(--dark9--rgb), 0.4);
 
     /* System Admin */
     --system-admin-info-text: #2B383F; //$dark9;
-
-	/* Bookmarks */
-    --bookmarks-background-color: inherit;
-    --bookmarks-duration-bg: rgba(0, 0, 0, .5);
 
     /* Layouts */
     --svg-toggle-arrow-color: var(--dark17);

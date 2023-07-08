@@ -26,7 +26,7 @@ Force Tags    threaded
     Wait Until Location Contains   ${ENV}${SDK URL}
 
 3. Support leads to the proper support site
-    [Tags]    C41544    Threaded    C30823    webadmin    cloud    smoke
+    [Tags]    C41544    Threaded    C30823    webadmin    cloud    smoke    C30823
     Wait Until Element is Visible    ${FOOTER SUPPORT LINK}
     Sleep    1
     Click Link    ${FOOTER SUPPORT LINK}
@@ -44,7 +44,7 @@ Force Tags    threaded
     Wait Until Location Is    ${COPYRIGHT URL}
 
 5. Terms leads to the proper EULA site    
-    [Tags]    C41545    Threaded    C30824     cloud    smoke
+    [Tags]    C41545    Threaded    C30824     cloud    smoke    	C30824
     Wait Until Element is Visible    ${FOOTER TERMS LINK}
     Sleep    1
     Click Link    ${FOOTER TERMS LINK}
@@ -53,7 +53,7 @@ Force Tags    threaded
     Wait Until Location Is    ${ENV}${TERMS URL}
 
 6. Privacy leads to the proper page
-    [Tags]    C41546    Threaded    C34452    cloud    smoke
+    [Tags]    C41546    Threaded    C34452    cloud    smoke    C34452
     Wait Until Element is Visible    ${FOOTER PRIVACY LINK}
     Sleep    1
     Click Link    ${FOOTER PRIVACY LINK}

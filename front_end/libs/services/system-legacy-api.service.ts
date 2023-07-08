@@ -1306,7 +1306,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
                 )}.${transport}?resolution=${resolution || ''}&`;
         }
 
-        if (this.authGet && !this.CONFIG.featureFlags.restCookieLogin) {
+        if (this.authGet && (this.version < 5.0 || !this.CONFIG.featureFlags.restCookieLogin)) {
             url += `auth=${this.authGet}&`;
         }
         if (position) {

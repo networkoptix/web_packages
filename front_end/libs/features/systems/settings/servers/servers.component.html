@@ -1,5 +1,5 @@
 <nx-alert-block
-    *ngIf="storagesOutdated && !isOffline && !isServerOffline"
+    *ngIf="serverLoaded && storagesOutdated && !isOffline && !isServerOffline"
     type="warning"
     id="storages-outdated"
     [line1]="'Storages outdated. Reload page to update.' | translate"
@@ -16,24 +16,27 @@
 ></nx-page-placeholder>
 
 <ng-template #showServer>
+    <ng-template #preload>
+        <nx-pre-loader></nx-pre-loader>
+    </ng-template>
     <nx-standard-server-component
-        *ngIf="system && selectedServer$ | async as selectedServer"
+        *ngIf="selectedServer$ | async as selectedServer; else preload"
         (loaded)="serverLoaded = $event"
         [isOffline]="isOffline"
         [system]="system"
         [selectedServer]="selectedServer"
     >
     </nx-standard-server-component>
+
+    <nx-server-storage-component
+        *ngIf="serverLoaded && (serverId$ | async) as serverId"
+        [system]="system"
+        [serverId]="serverId"
+    >
+    </nx-server-storage-component>
 </ng-template>
 
-<nx-server-storage-component
-    *ngIf="!isOffline && serverLoaded && system && (serverId$ | async)"
-    [system]="system"
-    [serverId]="serverId$ | async"
->
-</nx-server-storage-component>
-
-<ng-container *ngIf="serverLoaded && system && (serverId$ | async) as serverId">
+<ng-container *ngIf="serverLoaded && (serverId$ | async) as serverId">
     <nx-cloud-storage
         *ngIf="!environment.isLocal && system?.canUserViewCloudStorage()"
         layout="simple"

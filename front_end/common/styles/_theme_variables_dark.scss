@@ -526,6 +526,7 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --card-active-shadow : 0 2px 5px 0 #1C2327; //$dark6;
     --card-header-bg : #1C2327; //$dark6;
     --card-header-text : #E1E7EA; //$light4;
+    --card-header-disabled : #{$dark12};
     --card-body-bg   : #121517; //$dark4;
     --card-hover-bg : #263137; //$dark8;
 
@@ -695,10 +696,11 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --bookmarks-filter-filled-text: var(--light2);
     --bookmarks-text-highlight-bg: var(--dark12);
     --bookmarks-duration-bg: rgba(0, 0, 0, 0.5);
-    --bookmarks-card-background-color: var(--dark5);
-    --bookmarks-card-background-color-hover: var(--dark7);
+    --bookmarks-card-background-color: var(--dark7);
+    --bookmarks-card-background-color-hover: none;
+    --bookmarks-card-video-background-color: var(--dark1);
     --bookmarks-card-no-permissions-description: var(--light12);
-    --bookmarks-card-video-background-color: var(--dark10);
+    --bookmarks-card-no-permissions-background: var(--dark10);
     --bookmarks-card-border-color: none;
     --bookmarks-card-title-gradient: linear-gradient(
         to right,
@@ -710,6 +712,7 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
         rgba(var(--dark7--rgb), 0),
         rgba(var(--dark7--rgb), 1)
     );
+    --bookmarks-card-video-bg: var(--dark6);
 
     --tour-background: rgba(var(--dark9--rgb), 0.4);
 

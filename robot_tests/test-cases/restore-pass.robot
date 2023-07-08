@@ -42,7 +42,7 @@ Force Tags
     Get Restore Code and Open the Link    ${email}    restore=${True}    new password=${password}
 
 5. Should set new password, login with new password
-    [Tags]    email    C26260    smoke    ci
+    [Tags]    email    C26260    smoke    ci    C94722
     ${email}=   Register Random User
     Send "Restore Password" Email    ${email}
     Get Restore Code and Open the Link    ${email}    restore=${True}    new password=${ALT PASSWORD}

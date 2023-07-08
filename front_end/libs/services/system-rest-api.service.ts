@@ -886,6 +886,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             ),
         );
     }
+    @memoizeAsyncMedium
     getMediaServersAndCameras(): Observable<MediaServersAndCameras> {
         const servers = this.getMediaServers(false);
         const cameras = this.get('/ec2/getCamerasEx');

@@ -29,31 +29,29 @@ nx-bookmarks-card {
         }
 
         &-image {
-            background-color: var(--bookmarks-card-background-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--bookmarks-card-video-background-color);
 
             &-wrapper {
                 position: relative;
             }
 
             &-loaded {
-                display: block;
-                width: 100%;
-                height: 0;
-                position: relative;
-                padding-bottom: 56.25%; // 16:9 video ratio
 
                 img {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
                     width: 100%;
                     height: 100%;
+                    object-fit: contain;
+                    max-width: 272px;
+                    max-height: 153px;
                 }
 
                 .noPermissions {
                     position: absolute;
                     font-size: 13px;
-                    background-color: var(--bookmarks-card-video-background-color);
+                    background-color: var(--bookmarks-card-no-permissions-background);
 
                     .player-placeholder {
                         width: 100%;

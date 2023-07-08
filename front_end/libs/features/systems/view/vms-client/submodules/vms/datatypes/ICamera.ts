@@ -103,7 +103,6 @@ export interface ICamera {
 
     mediaStreams: Array<MediaStreamInfo>;
     rotation: int;
-    streamUrls: string[];
 
     availableTransports: Array<PlaybackTransport>;
     availableTransportsAndResolutions: AvailableTransportsAndResolutions;

@@ -173,14 +173,15 @@ export class NxCamerasTableComponent implements OnChanges {
 
                 return element;
             });
-
-            this.csvFilename = Date.now();
-            this.csvCameraData = this.getCsvData();
         }
 
         if (changes.allowedParameters?.currentValue) {
+            let showAnalytics = false;
+
             if (this.allowedParameters.find(elm => elm === 'isAnalyticsSupported')) {
+                showAnalytics = true;
                 this.tableClasses.push('analytics');
+                this.csvOptions.headers.push(this.LANG.ipvd.isAnalyticsSupported);
                 this.showHeaders = [...this.cameraHeaders, ...this.cmsHeaders];
                 this.headerFlow = [...this.headerFlow, ...this.headerFlowCSM];
             }
@@ -198,10 +199,13 @@ export class NxCamerasTableComponent implements OnChanges {
                     ...this.headerFlowService,
                 ];
             }
+
+            this.csvFilename = Date.now();
+            this.csvCameraData = this.getCsvData(showAnalytics);
         }
     }
 
-    getCsvData(): CsvData {
+    getCsvData(showAnalytics: boolean): CsvData {
         return this.elements.map(camera => {
             const csv: Partial<csvData> = {
                 Vendor: camera.vendor,
@@ -218,6 +222,10 @@ export class NxCamerasTableComponent implements OnChanges {
                 Motion: this.yesNo(camera.isMdSupported),
                 'I/O': this.yesNo(camera.isIoSupported),
             };
+
+            if (showAnalytics) {
+                csv.Analytics = this.yesNo(camera.isAnalyticsSupported);
+            }
 
             return csv;
         });

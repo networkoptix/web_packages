@@ -145,11 +145,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             .find(({ id }) => id === menus.systemSettings.admin.id)
             ?.level3?.find(({ id }) => id === menus.systemSettings.general.id);
         this.content = { ...this.content };
-
-        if (environment.isLocal || !this.system || !this.menuVisible) {
-            return;
-        }
-        return this.db.personal.menuContent.put(this.content);
+        // Removing dexie caching until we fix the menu in develop
+        return '';
+        // if (environment.isLocal || !this.system || !this.menuVisible) {
+        //     return;
+        // }
+        // return this.db.personal.menuContent.put(this.content);
     }
 
     private canNavMenu(
@@ -364,7 +365,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         }
         this.systemSubscription = this.systemsService.systemsSubject
             .pipe(untilDestroyed(this))
-            .subscribe(systems => {
+            .subscribe(async systems => {
                 if (this.systemsService.userDisconnectSystem) {
                     // don't trigger this.systemNoAccess
                     this.systemsService.userDisconnectSystem = false;
@@ -376,8 +377,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     return;
                 }
                 if (system.system2faEnabled && !this.account.sessionVerified) {
-                    this.show2faRequired = true;
-                    return;
+                    this.account = await this.accountService.get(true);
+                    if (!this.account.sessionVerified) {
+                        this.show2faRequired = true;
+                        return;
+                    }
                 }
                 if (this.systemId === this.system?.id) {
                     return;
@@ -600,12 +604,13 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     async updateMenu(): Promise<void> {
-        const previousContent = await this.db.personal.menuContent.get(this.content.base);
-
-        if (previousContent) {
-            this.content = previousContent;
-            this.menuVisible = true;
-        }
+        // Removing dexie caching until we fix the menu in develop
+        // const previousContent = await this.db.personal.menuContent.get(this.content.base);
+        //
+        // if (previousContent) {
+        //     this.content = previousContent;
+        //     this.menuVisible = true;
+        // }
 
         this.systemNoAccess = false;
 
@@ -837,16 +842,17 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     getCameraStatusIcon({ id, status, scheduleEnabled, parentId }: NxSystemCamera): string {
         const parentServer = this.system.serverManager.servers.find(s => s.id === parentId);
-        if (parentServer?.status === 'Offline') {
+        status = status.toLowerCase();
+        if (parentServer?.status === 'offline') {
             return menus.systemSettings.cameras.statusIcons.offline;
         }
-        if (scheduleEnabled && !(status === 'Recording')) {
+        if (scheduleEnabled && !(status === 'recording')) {
             return menus.systemSettings.cameras.statusIcons.scheduled;
         }
-        if (this.archivesPresent.has(id) && !(status === 'Recording')) {
+        if (this.archivesPresent.has(id) && !(status === 'recording')) {
             return menus.systemSettings.cameras.statusIcons.archive;
         }
-        return menus.systemSettings.cameras.statusIcons[status.toLowerCase()];
+        return menus.systemSettings.cameras.statusIcons[status];
     }
 
     getServerStatusIcon({ status }: NxSystemServer): string {

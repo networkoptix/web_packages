@@ -118,6 +118,10 @@ export class SystemGuard {
                             map(systems => systems.find(system => system.id === systemId)),
                         ),
                     );
+
+                    if (!sysInfo) {
+                        return true;
+                    }
                     // TODO: Clean up create system args
                     currSystem = this.systemService.createSystem(
                         account.email,

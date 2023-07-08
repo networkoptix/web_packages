@@ -38,14 +38,7 @@
     <img
         class="fs-exclude"
         alt="{{ state }}"
-        *ngIf="
-            (state.toLowerCase() === 'online' ||
-                state.toLowerCase() === 'recording' ||
-                state.toLowerCase() === 'scheduled' ||
-                state.toLowerCase() === 'archive') &&
-                url;
-            else noLivePreview
-        "
+        *ngIf="isLive && url; else noLivePreview"
         [src]="url | safe : 'resourceUrl'"
         [style.height]="motionPreview || lightBackground ? '100%' : 'auto'"
         [style.width]="motionPreview || lightBackground ? '100%' : 'auto'"
@@ -76,13 +69,13 @@
                 Cannot load preview
             </div>
             <div
-                *ngSwitchCase="'Offline'"
+                *ngSwitchCase="'offline'"
                 translate
             >
                 OFFLINE
             </div>
             <div
-                *ngSwitchCase="'Unauthorized'"
+                *ngSwitchCase="'unauthorized'"
                 translate
             >
                 AUTHENTICATION REQUIRED

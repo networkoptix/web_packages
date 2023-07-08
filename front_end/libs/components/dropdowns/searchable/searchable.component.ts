@@ -227,6 +227,7 @@ export class NxSearchableDropdown extends BaseDropdown implements Validator {
         if (this._selectedItem?.help) {
             this.helpText = this._selectedItem.help;
         }
+        this.searchInput.nativeElement.innerText = this.searchInput.nativeElement.innerText.trim();
         this.show = false;
         this.form?.form.markAsTouched();
         this.form?.form.get(this.componentId)?.markAsTouched();

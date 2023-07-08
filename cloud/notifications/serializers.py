@@ -119,7 +119,7 @@ class SubscriptionSerializer(serializers.Serializer):
 
             if 'all' in value:
                 return ['all']
-            cloud_db_url = CloudDbConfig.url(get_customization(self.context['request']))
+            cloud_db_url = CloudDbConfig.url(self.context['request'].CUSTOMIZATION)
             try:
                 systems = System.list(
                     self.context['request'], email=request_data.get('username'), password=request_data.get('password'), cloud_db_url=cloud_db_url)

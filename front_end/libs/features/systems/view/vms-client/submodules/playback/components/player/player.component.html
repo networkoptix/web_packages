@@ -36,6 +36,7 @@
         [posterUrl]="playbackState.posterUrl | async"
         [rotation]="rotateDeg"
         [sourceUrl]="playbackState.sourceUrl"
+        [authorization]="fetchRuntime()"
     >
     </nx-player-js>
 </ng-template>

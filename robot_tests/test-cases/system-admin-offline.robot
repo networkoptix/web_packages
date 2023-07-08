@@ -159,7 +159,7 @@ Force Tags        system    system_offline
     Wait Until Elements Are Visible    ${current owner name}    //span[contains(text(), "${system}[owner]")]
 
 14. System changes state to offline if all its Servers goes offline
-    [Tags]    C41894    
+    [Tags]    C41894    C30826
     Log Out
 
     Log    Step 1

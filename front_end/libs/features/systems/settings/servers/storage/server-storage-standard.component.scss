@@ -64,6 +64,17 @@ form.form-horizontal {
         display: flex;
         align-items: center;
 
+        svg-icon {
+            svg {
+                height: 20px;
+                width: 20px;
+
+                path {
+                    fill: var(--card-header-text) !important;
+                }
+            }
+        }
+
         &:last-of-type {
             padding-right: 16px;
         }
@@ -75,7 +86,7 @@ form.form-horizontal {
 
         &.disabled-label,
         div.disabled-label {
-            color: var(--light8) !important;
+            color: var(--card-header-disabled) !important;
 
             svg-icon {
                 svg {
@@ -83,7 +94,7 @@ form.form-horizontal {
                     width: 20px;
 
                     path {
-                        fill: var(--light8) !important;
+                        fill: var(--card-header-disabled) !important;
                     }
                 }
             }

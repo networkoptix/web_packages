@@ -191,8 +191,8 @@ export class CameraManager {
                   }
                 : null;
         const status = this.parseCameraStatus(camera, this.system.useRest).toLowerCase();
-        const unauthorized = camera.status === 'Unauthorized';
-        const online = ['Online', 'Recording'].includes(camera.status);
+        const unauthorized = status === 'unauthorized';
+        const online = ['online', 'recording'].includes(status);
         const isStream = [
             'GENERIC_RTSP',
             'GENERIC_MULTICAST',

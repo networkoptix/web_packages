@@ -8,18 +8,13 @@ import {
     EventEmitter,
     ViewEncapsulation,
     OnChanges,
-    inject,
 } from '@angular/core';
-import { LocalStorageService, SessionStorageService } from 'ngx-webstorage';
 import type videojs from 'video.js';
 
 import { NgChanges } from '@utils/ng-changes';
 import { BASE64_SINGLE_TRANSPARENT_PIXEL } from '@vms-client/utils';
 
 import { PLAYBACK_MODE } from '../../../datatypes/PlaybackState';
-
-const getSessionStorage = () => inject(SessionStorageService);
-const getLocalStorage = () => inject(LocalStorageService);
 
 @Component({
     selector: 'nx-player-js',
@@ -37,6 +32,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
     @Input() rotation: number;
     @Input() sourceUrl: string;
     @Input() transportError: boolean;
+    @Input() authorization: string;
 
     @Output() bufferingChange = new EventEmitter<number>();
     @Output() videoEnded = new EventEmitter<boolean>();
@@ -45,8 +41,6 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
     @ViewChild('video', { static: true }) videoView: ElementRef<HTMLVideoElement>;
 
     actualRotation = 0;
-    private sessionStorage = getSessionStorage();
-    private localStorage = getLocalStorage();
     private player: videojs.Player;
     private hasPlayed = false;
     protected transport = '';
@@ -54,11 +48,6 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
 
     // For lazy loading player
     #videojs: videojs;
-
-    private fetchRuntime() {
-        const systemId = this.localStorage.retrieve('systemId');
-        return this.sessionStorage.retrieve(`${systemId ? systemId + '-' : ''}${this.xRuntimeGuid}`);
-    }
 
     async initPlayer(): Promise<void> {
         if (this.player) {
@@ -83,7 +72,9 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
             if (!options.headers) {
                 options.headers = {};
             }
-            options.headers[this.xRuntimeGuid] = this.fetchRuntime();
+            if (this.authorization) {
+                options.headers[this.xRuntimeGuid] = this.authorization;
+            }
         };
 
         this.player = this.#videojs(this.videoView.nativeElement, options);

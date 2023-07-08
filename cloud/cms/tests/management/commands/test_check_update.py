@@ -4,11 +4,15 @@ from random import randint
 from uuid import uuid4
 import os
 
+from django.conf import settings
+
 from cms.management.commands.check_update import *
 
 class TestCheckUpdate:
     def test_handle(self, mocker):
         options = {'customization': settings.TEST_CUSTOMIZATION}
+        # options = {}
+        # os.putenv('CUSTOMIZATION', settings.TEST_CUSTOMIZATION)
         current_version = randint(10, 1000)
         local_version = current_version - randint(1, 10)
         mock_check_update_cache = mocker.patch.object(

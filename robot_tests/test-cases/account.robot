@@ -43,7 +43,7 @@ Force Tags        account
     Verify in account page
 
 5. Changing first name and saving maintains that setting
-    [Tags]    C41573    smoke    ci
+    [Tags]    C41573    smoke    ci    C94720
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    button=None   api=${False}
     Verify in Account Page
@@ -65,7 +65,7 @@ Force Tags        account
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
 
 6. Changing last name and saving maintains that setting
-    [Tags]    C41573    smoke    ci
+    [Tags]    C41573    smoke    ci    C94720
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    button=None   api=${False}
     Verify in Account Page
@@ -84,7 +84,7 @@ Force Tags        account
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
 
 7. First name is required
-    [Tags]    C41573
+    [Tags]    C41573    C94720
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    button=None   api=${False}
     Verify in Account Page
@@ -105,7 +105,7 @@ Force Tags        account
     Click Button    ${ACCOUNT CANCEL}
 
 8. Last name is required
-    [Tags]    C41573
+    [Tags]    C41573    C94720
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    button=None   api=${False}
     Verify in Account Page
@@ -127,7 +127,7 @@ Force Tags        account
 
 
 9. SPACE for first name is not valid
-    [Tags]    C41573
+    [Tags]    C41573    C94720
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    button=None   api=${False}
     Verify in Account Page
@@ -141,7 +141,7 @@ Force Tags        account
     Click Button    ${ACCOUNT CANCEL}
 
 10. SPACE for last name is not valid
-    [Tags]    C41573
+    [Tags]    C41573    C94720
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    button=None   api=${False}
     Verify in Account Page
@@ -156,7 +156,7 @@ Force Tags        account
     Click Button    ${ACCOUNT CANCEL}
 
 11. Email field is un-editable
-    [Tags]    C41573
+    [Tags]    C41573    C94720
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    button=None   api=${False}
     Verify in Account Page
@@ -186,7 +186,7 @@ Force Tags        account
     Press Keys   None    ENTER
 
 13. Language is changeable on the account page
-    [Tags]    C41574
+    [Tags]    C41574    C94720
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    button=None    api=${False}
     Reload Page
@@ -326,8 +326,6 @@ Force Tags        account
     Run keyword and continue on failure    Open page anonymously    ${url}/account    ${REGISTER TITLE TEXT}
     Wait Until Element Is Visible    ${LOG IN MODAL}
     Check Log In    ${no perm}    button=None
-
-
 
 17. Account Deletion is cancelled
     [Tags]    C69858    C69857        delete_account

@@ -268,7 +268,7 @@ Force Tags        merge
 
 # Positive scenarios
 8. Positive scenario with selected cloud system (selected system is secondary)
-    [Tags]    C70930    pos    must    smoke    ci
+    [Tags]    C70930    pos    must    smoke    ci    C78231
     Log    Test set up
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String

@@ -367,12 +367,20 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         }
 
         if (this.clientType === 'renewSessionWeb') {
-            this.localStorageService.store(oauthStore.verify2fa, code);
+            const key = ClientType[this.initialData.client_type] === ClientType.renewWeb2FA ? oauthStore.code : oauthStore.verify2fa;
+            this.localStorageService.store(key, code);
             this.window.close();
             return;
         }
         if (this.clientType === 'system2faAuth') {
             this.localStorageService.store(oauthStore.verify2fa, code);
+        }
+
+        if (this.clientType === 'renewSessionWeb2FA') {
+            this.loginCode = code;
+            this.currentState = AuthorizeState.auth;
+            this.clientType = ClientType.renewWeb;
+            return;
         }
         const params = link?.includes('?') && new URLSearchParams(link.match(/.*(\?.*)/i)[1]);
 

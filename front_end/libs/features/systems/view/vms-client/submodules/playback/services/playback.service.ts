@@ -119,9 +119,6 @@ export class PlaybackService {
 
     public playLive(): void {
         this.livePaused = false;
-        if (!this.canPlayLive) {
-            return;
-        }
         const [width, height] = this.extractDimensions();
         this._state = createInitialLiveState(
             this.vms.selectedCamera.getVideoUrl(
