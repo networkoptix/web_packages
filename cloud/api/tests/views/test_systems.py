@@ -418,6 +418,11 @@ class TestSystemViews:
         system_update_mock = mocker.patch.object(cloud_api.System, 'update')
         system_update_mock.return_value = response_data
 
+        mock_verify_2fa = mocker.patch.object(cloud_api.Auth, 'verify_2fa_code')
+        mock_verify_2fa.return_value = {}
+
+        mocker.patch.object(AccountCache, 'delete')
+
         request = arf.post('/api/systems/toggle2fa', data=req_data)
         request.session = self.session
         request.user = self.user
@@ -426,6 +431,7 @@ class TestSystemViews:
 
         system_get_mock.assert_called()
         system_update_mock.assert_called()
+        mock_verify_2fa.assert_called()
         assert response.status_code == status.HTTP_200_OK
         assert response.data['system2faEnabled'] is (not cur_fa)
         assert response.data['mfaCode'] == req_data['mfaCode']
