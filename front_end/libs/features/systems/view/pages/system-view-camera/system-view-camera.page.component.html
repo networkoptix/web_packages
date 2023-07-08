@@ -159,10 +159,7 @@
                 class="fs-exclude"
             ></nx-player>
             <ng-template #noPlayer>
-                <div
-                    class="offline-message"
-                    [style.background-image]="'url(' + (previewUrl | async) + ')'"
-                >
+                <div class="offline-message">
                     <nx-player-placeholder
                         *ngIf="cameraError; else unreachable"
                         svgFileName="placeholder_camera_alert"

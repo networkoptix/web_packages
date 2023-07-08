@@ -8,7 +8,7 @@ export interface INxViewMediaServer {
     status: MEDIA_SERVER_STATUS;
 }
 
-export type CAMERA_STATUS = 'online' | 'offline' | 'recording' | 'unauthorized';
+export type CAMERA_STATUS = 'Online' | 'Offline' | 'Recording' | 'Unauthorized';
 
 export interface INxViewCamera {
     id: string;

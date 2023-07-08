@@ -16,8 +16,6 @@ import {
     animationFrameScheduler,
     BehaviorSubject,
     interval,
-    Observable,
-    of,
     Subject,
     timer,
 } from 'rxjs';
@@ -74,7 +72,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     public id: string;
     public camera: ICamera;
     public system: NxSystem;
-    public previewUrl: Observable<string> = of('');
 
     CONFIG: IConfig;
     LANG = staticLang;
@@ -551,7 +548,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         }
         this.unsub$.next('done');
         this.getRecordsInProgress = this.id;
-        this.previewUrl = this.system.serverManager.getPreviewUrl(this.id, null);
         const camera = this.system.cameraManager.cameras?.find(({ id }) => id?.includes(this.id));
         this.isNvr = camera?.deviceType?.toLowerCase() === 'nvr';
         this.system.userManager.getUsersDataFromTheSystem().then(_ => {

@@ -190,31 +190,31 @@ export class Camera implements ICamera {
         return (
             !this.isVirtual &&
             (
-                this.status === 'online' ||
-                this.status === 'live' ||
-                this.status === 'recording'
+                this.status === 'Online' ||
+                this.status === 'Live' ||
+                this.status === 'Recording'
             )
         );
     }
 
     public get isOnline() {
-        return this.status !== 'offline';
+        return this.status !== 'Offline';
     }
 
     public get isOffline() {
-        return this.status === 'offline';
+        return this.status === 'Offline';
     }
 
     public get isRecording() {
-        return !this.isVirtual && this.status === 'recording';
+        return !this.isVirtual && this.status === 'Recording';
     }
 
     public get isAuthorized() {
-        return this.status !== 'unauthorized';
+        return this.status !== 'Unauthorized';
     }
 
     public get isUnauthorized() {
-        return this.status === 'unauthorized';
+        return this.status === 'Unauthorized';
     }
 
     public get hasArchive() {

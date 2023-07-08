@@ -313,7 +313,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                         .replace(/&gt;/g, '>') ||
                     (
                         camera.status !== cachedCamera.status &&
-                        !(camera.status === 'online' && cachedCamera.status === 'live') // remapped param "status"
+                        !(camera.status === 'Online' && cachedCamera.status === 'Live') // remapped param "status"
                     ) || camera.scheduleEnabled !== cachedCamera.scheduleEnabled // remapped param "scheduleEnabled"
                 );
             });
@@ -333,18 +333,18 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             c.name,
             c.model,
             c.url,
-            ms.status === 'offline'
-                ? 'offline'
+            ms.status === 'Offline'
+                ? 'Offline'
                 : (
-                    c.status === 'online'
-                        ? 'live'
+                    c.status === 'Online'
+                        ? 'Live'
                         : c.status
                 ) as CAMERA_STATUS,
             c.scheduleEnabled,
             c.disableDualStreaming,
             archiveRanges[c.id] || new SimpleTimeRange(0, 0),
             [],
-            c.status !== 'offline'
+            c.status !== 'Offline'
                 ? this.system?.mediaserver.previewUrl(c.id, 0, 128, 128)
                 : of(''),
             (transport: string, quality: string, t?: ms) =>
@@ -355,7 +355,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     t
                 ),
             (t?: ms, width = 128, height = 128) =>
-                c.status !== 'offline'
+                c.status !== 'Offline'
                     ? this.system?.mediaserver.previewUrl(c.id, t, width, height)
                     : of(),
             this.system.info?.system2faEnabled
