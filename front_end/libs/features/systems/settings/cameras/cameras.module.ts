@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { PipesModule } from '@app/pipes/pipes.module';
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
@@ -36,6 +37,7 @@ import { NxRecordingSettingsComponent } from './recording-settings/recording-set
         TranslateModule,
         AngularSvgIconModule,
         NxAlertBlockComponent,
+        NxCheckboxComponent,
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
         DirectivesModule,

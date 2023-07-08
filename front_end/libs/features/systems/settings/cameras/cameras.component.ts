@@ -637,14 +637,16 @@ export class NxCamerasComponent implements OnInit {
             this.audioEnabled = audioEnabled;
             this.recordingModesWatcher.value = recordingSettings.modes;
             setTimeout(() => {
-                this.recordingSettingsComponent.selectedQuality =
-                    recordingSettings.quality === 'various'
-                        ? this.recordingSettingsComponent.various
-                        : this.recordingSettingsComponent.streamQualities.find(
-                              ({ value }) => recordingSettings.quality === value,
-                          );
-                this.recordingSettingsComponent.selectedFps = recordingSettings.fps;
-            }, 0);
+                if (this.recordingSettingsComponent) {
+                    this.recordingSettingsComponent.selectedQuality =
+                        recordingSettings.quality === 'various'
+                            ? this.recordingSettingsComponent.various
+                            : this.recordingSettingsComponent?.streamQualities?.find(
+                                  ({ value }) => recordingSettings.quality === value,
+                              );
+                    this.recordingSettingsComponent.selectedFps = recordingSettings.fps;
+                }
+            });
             this.recordingWatcher.value = recordingSettings.recording;
             this.motionType = motionType;
             this.motionMaskWatcher.originalValue = motionMask || settingsConfig.defaultMotionMask;
