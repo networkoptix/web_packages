@@ -42,7 +42,9 @@ export class NxImageComponent implements OnChanges, OnDestroy {
     }
 
     ngOnChanges(changes: NgChanges<NxImageComponent>): void {
-        this.isLive = this.checkIfLive(changes.state.currentValue);
+        if (changes.state) {
+            this.isLive = this.checkIfLive(changes.state.currentValue);
+        }
         if (!(Object.keys(changes).length === 1 && changes.state)) {
             const firstChange = Object.values(changes).reduce(
                 (noChanges, { firstChange }) => noChanges && firstChange,
