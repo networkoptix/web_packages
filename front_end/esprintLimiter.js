@@ -2,7 +2,7 @@
 CPU thread, each of which consumes a little over 1GB of RAM. */
 const os = require('os');
 
-const availableMemGb = os.freemem() / (1024 ** 3);
+const availableMemGb = os.freemem() / 1024 ** 3;
 if (availableMemGb <= 2.4) {
     console.error('At least 2.4GB of free RAM required. Running single threaded.');
 }

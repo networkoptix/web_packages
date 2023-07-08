@@ -10,7 +10,7 @@ const include = [
     '**/*.component.html',
     './common/language/language_*.json',
     './common/customization/menus.json',
-    '../cloud/cms/menus.json'
+    '../cloud/cms/menus.json',
 ];
 
 console.log('Comparing hash for the following globs: \n');
@@ -24,9 +24,9 @@ if (fs.existsSync(hashFile)) {
 console.log(`Current Language Hash: ${currentHash} \n`);
 
 globHash({
-    include
-})
-    .then(hash => {
+    include,
+}).then(
+    hash => {
         if (hash === currentHash) {
             console.log('Hash is unchanged. Skipping language scripts.');
             process.exitCode = 1;
@@ -34,7 +34,9 @@ globHash({
             console.log('Hash has changed. Updating hash');
             fs.writeFileSync(hashFile, hash);
         }
-    }, function (error) {
+    },
+    function (error) {
         console.log('Some Error Has Occured \n');
         console.error(error);
-    });
+    },
+);

@@ -3,6 +3,7 @@ node_modules
 
 # don't lint build output (make sure it's set to your correct build folder name)
 dist
+build
 
 # don't lint nyc coverage output
 coverage
@@ -23,3 +24,6 @@ environments
 
 # Code copied from original package and patched
 libs/ngx-translate-patch/**
+
+# Automatically generated
+type-lint-error-count.js

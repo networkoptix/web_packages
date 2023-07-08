@@ -31,15 +31,18 @@ for (const f of files) {
 
 console.log('Run PurgeCSS...');
 
-childProcess.exec('purgecss -css dist/*.css --content dist/index.html dist/*.js -o dist/', function (_error, stdout, stderr) {
-    console.log('PurgeCSS done');
-    console.log();
+childProcess.exec(
+    'purgecss -css dist/*.css --content dist/index.html dist/*.js -o dist/',
+    function (_error, stdout, stderr) {
+        console.log('PurgeCSS done');
+        console.log();
 
-    for (const d of data) {
-    // get new file size
-        const newSize = getFilesizeInKiloBytes('./dist/' + d.file) + 'kb';
-        d.newSize = newSize;
-    }
+        for (const d of data) {
+            // get new file size
+            const newSize = getFilesizeInKiloBytes('./dist/' + d.file) + 'kb';
+            d.newSize = newSize;
+        }
 
-    console.table(data);
-});
+        console.table(data);
+    },
+);

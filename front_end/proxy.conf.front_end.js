@@ -2,11 +2,11 @@ const { rewriteLegacy, target, targetInstanceUrl } = require('./proxy-helper');
 
 const rewritePaths = {
     // '/api/cms': '/api',
-    '/api/notifications': '/api'
+    '/api/notifications': '/api',
 };
 
 const websocketRewrite = {
-    '^/system_groups': ''
+    '^/system_groups': '',
 };
 
 const PROXY_CONFIG = [
@@ -41,7 +41,7 @@ const PROXY_CONFIG = [
             '/static/lang_ru_RU',
             '/static/lang_ja_JP',
             '/static/lang_ge_DE',
-            '/swagger-ui'
+            '/swagger-ui',
         ],
         target: targetInstanceUrl,
         changeOrigin: true,
@@ -49,13 +49,10 @@ const PROXY_CONFIG = [
         pathRewrite: rewriteLegacy ? rewritePaths : {},
         bypass: function (req, res, proxyOptions) {
             req.headers.origin = targetInstanceUrl;
-        }
+        },
     },
     {
-        context: [
-            '/static/lang_en_US',
-            '/static'
-        ],
+        context: ['/static/lang_en_US', '/static'],
         target: 'https://localhost:9000',
         changeOrigin: true,
         secure: false,
@@ -64,18 +61,16 @@ const PROXY_CONFIG = [
                 return req.url.replace('/static/lang_en_US', '');
             }
             return req.url.replace('/static', '');
-        }
+        },
     },
     {
-        context: [
-            '/system_groups',
-        ],
+        context: ['/system_groups'],
         target: targetInstanceUrl,
         changeOrigin: true,
         secure: false,
         ws: true,
-        pathRewrite: target === 'local' ? websocketRewrite : {}
-    }
+        pathRewrite: target === 'local' ? websocketRewrite : {},
+    },
 ];
 
 module.exports = PROXY_CONFIG;

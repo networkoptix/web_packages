@@ -15,7 +15,7 @@ module.exports = {
     },
     transformIgnorePatterns: ['node_modules/(?!.*\\.mjs$)'],
     moduleNameMapper: {
-        'lodash-es': 'lodash'
+        'lodash-es': 'lodash',
     },
     testEnvironment: 'jest-environment-jsdom',
     moduleFileExtensions: ['ts', 'html', 'js', 'json', 'mjs'],

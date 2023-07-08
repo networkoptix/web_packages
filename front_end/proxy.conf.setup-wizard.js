@@ -3,8 +3,8 @@ const proxyTargetConfig = {
     local: {
         source: 'https://localhost:9003',
         host: 'https://localhost:7001',
-        cloud: defaultCloud
-    }
+        cloud: defaultCloud,
+    },
 };
 const useProxy = process.env.WEBADMIN_TARGET || 'local';
 const targets = proxyTargetConfig[useProxy];
@@ -31,12 +31,10 @@ const PROXY_CONFIG = [
         ],
         target: targets.host,
         changeOrigin: true,
-        secure: false
-    }, {
-        context: [
-            '/static/lang_en_US',
-            '/static'
-        ],
+        secure: false,
+    },
+    {
+        context: ['/static/lang_en_US', '/static'],
         target: 'https://localhost:9003',
         changeOrigin: true,
         secure: false,
@@ -45,15 +43,14 @@ const PROXY_CONFIG = [
                 return req.url.replace('/static/lang_en_US', '');
             }
             return req.url.replace('/static', '');
-        }
-    }, {
-        context: [
-            '/api/systems'
-        ],
+        },
+    },
+    {
+        context: ['/api/systems'],
         target: targets.cloud,
         changeOrigin: true,
-        secure: false
-    }
+        secure: false,
+    },
 ];
 
 module.exports = PROXY_CONFIG;

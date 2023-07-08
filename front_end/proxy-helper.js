@@ -12,9 +12,8 @@ const checkUrl = s => {
     } catch (err) {}
 };
 
-const dynamicInstanceProxy = target => new Proxy(
-    target,
-    {
+const dynamicInstanceProxy = target =>
+    new Proxy(target, {
         get(target, prop, receiver) {
             console.log(`Target from environment: ${prop}`);
             const foundInLookup = target[prop];
@@ -31,12 +30,11 @@ const dynamicInstanceProxy = target => new Proxy(
 
             throw new Error(`Not a valid target or url: ${prop}`);
         },
-    }
-);
+    });
 
 const legacyTargetConfigs = {
     prod: 'https://nxvms.com',
-    stage: 'https://stage.nxvms.com'
+    stage: 'https://stage.nxvms.com',
 };
 
 const proxyTargetConfig = dynamicInstanceProxy({
@@ -46,22 +44,35 @@ const proxyTargetConfig = dynamicInstanceProxy({
     dev3: 'https://dev3.cloud.hdw.mx',
     local: 'http://localhost:8000',
     'cloud-test': 'https://cloud-test.hdw.mx',
-    ...legacyTargetConfigs
+    ...legacyTargetConfigs,
 });
 
 const target = process.env.CLOUD_TARGET || 'cloud-test';
 const targetInstanceUrl = proxyTargetConfig[target];
 const rewriteLegacy = Object.values(legacyTargetConfigs).includes(targetInstanceUrl);
 
-const replaceCloudHost = (templatePath, targetPath) => writeFileSync(targetPath, readFileSync(templatePath, 'utf8').replace('$TARGET_INSTANCE_URL', targetInstanceUrl.split('//').pop().replace('/', '')));
+const replaceCloudHost = (templatePath, targetPath) =>
+    writeFileSync(
+        targetPath,
+        readFileSync(templatePath, 'utf8').replace(
+            '$TARGET_INSTANCE_URL',
+            targetInstanceUrl.split('//').pop().replace('/', ''),
+        ),
+    );
 
-replaceCloudHost('./common/environments/environment.template.ts', './common/environments/environment.dev.ts');
-replaceCloudHost('./common/environments/environment.local.template.ts', './common/environments/environment.local.ts');
+replaceCloudHost(
+    './common/environments/environment.template.ts',
+    './common/environments/environment.dev.ts',
+);
+replaceCloudHost(
+    './common/environments/environment.local.template.ts',
+    './common/environments/environment.local.ts',
+);
 
 module.exports = {
     dynamicInstanceProxy,
     proxyTargetConfig,
     rewriteLegacy,
     targetInstanceUrl,
-    replaceCloudHost
+    replaceCloudHost,
 };

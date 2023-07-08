@@ -45,11 +45,12 @@ const PROXY_CONFIG = [
         secure: false,
         bypass: function (req, res, proxyOptions) {
             req.headers.origin = proxyTargetConfig[target];
-        }
-    }, {
+        },
+    },
+    {
         context: [
             // '/static/lang_en_US',
-            '/static'
+            '/static',
         ],
         target: 'https://localhost:9002',
         changeOrigin: true,
@@ -59,8 +60,8 @@ const PROXY_CONFIG = [
                 return req.url.replace('/static/lang_en_US', '');
             }
             return req.url.replace('/static', '');
-        }
-    }
+        },
+    },
 ];
 
 module.exports = PROXY_CONFIG;

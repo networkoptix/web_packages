@@ -2,36 +2,36 @@ const defaultCloud = 'https://cloud-test.hdw.mx';
 const proxyTargetConfig = {
     brova: {
         host: 'http://brova.mykeenetic.ru:7001',
-        cloud: defaultCloud
+        cloud: defaultCloud,
     },
     demo: {
         host: 'http://demo.networkoptix.com:7001',
-        cloud: defaultCloud
+        cloud: defaultCloud,
     },
     local: {
         host: 'https://localhost:7001',
-        cloud: defaultCloud
+        cloud: defaultCloud,
     },
     nuke: {
         host: 'https://10.1.5.210:7001',
-        cloud: defaultCloud
+        cloud: defaultCloud,
     },
     sofia: {
         host: 'https://192.168.99.113:7001',
-        cloud: defaultCloud
+        cloud: defaultCloud,
     },
     amir1: {
         host: 'https://10.0.0.120:7001',
-        cloud: defaultCloud
+        cloud: defaultCloud,
     },
     amir2: {
         host: 'https://10.0.0.153:7001',
-        cloud: defaultCloud
+        cloud: defaultCloud,
     },
     webpi: {
         host: 'https://10.1.5.111:7001',
-        cloud: 'https://dev3.cloud.hdw.mx'
-    }
+        cloud: 'https://dev3.cloud.hdw.mx',
+    },
 };
 const useProxy = process.env.WEBADMIN_TARGET || 'local';
 const targets = proxyTargetConfig[useProxy];
@@ -61,17 +61,18 @@ const PROXY_CONFIG = [
             '/static/openapi_legacy.json',
             '/static/openapi_deprecated.json',
             '/static/openapi.json',
-            '/static/version.txt'
+            '/static/version.txt',
         ],
         target: targets.host,
         changeOrigin: true,
         secure: false,
-        ws: true
-    }, {
+        ws: true,
+    },
+    {
         context: [
             // '/static/supported_languages.json', // Uncomment for using your own local supported_languages.json. It goes in front_end/app/supported_languages.
             '/static/lang_en_US',
-            '/static'
+            '/static',
         ],
         target: 'https://localhost:9001',
         changeOrigin: true,
@@ -81,15 +82,14 @@ const PROXY_CONFIG = [
                 return req.url.replace('/static/lang_en_US', '');
             }
             return req.url.replace('/static', '');
-        }
-    }, {
-        context: [
-            '/api/systems'
-        ],
+        },
+    },
+    {
+        context: ['/api/systems'],
         target: targets.cloud,
         changeOrigin: true,
-        secure: false
-    }
+        secure: false,
+    },
 ];
 
 module.exports = PROXY_CONFIG;

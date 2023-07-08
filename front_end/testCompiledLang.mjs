@@ -23,11 +23,11 @@ const sourceDir = sourceArg || __dirname;
 const compiler = new TranslateMessageFormatCompiler({ disablePluralKeyChecks: true });
 const failedLangs = [];
 
-function * walkSync(dir) {
+function* walkSync(dir) {
     const files = fs.readdirSync(dir, { withFileTypes: true });
     for (const file of files) {
         if (file.isDirectory()) {
-            yield * walkSync(path.join(dir, file.name));
+            yield* walkSync(path.join(dir, file.name));
         } else if (file.name === LANG_FILE) {
             yield path.join(dir, file.name);
         }
@@ -51,7 +51,9 @@ if (!failedLangs.length) {
 } else {
     console.error(`Error loading translation(s) for "${JSON.stringify(failedLangs)}"`);
     if (!sourceArg) {
-        console.error('Issue is most likely double braces within the language_i18n_static.json file or invalid unicode within an Angular template');
+        console.error(
+            'Issue is most likely double braces within the language_i18n_static.json file or invalid unicode within an Angular template',
+        );
     }
     process.exitCode = !sourceArg || failOnBuild ? 1 : 0;
 }

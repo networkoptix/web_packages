@@ -54,27 +54,38 @@ module.exports = {
                 'array-bracket-newline': ['error', 'consistent'],
                 'array-element-newline': ['error', 'consistent'],
                 'arrow-parens': ['error', 'as-needed'],
-                'brace-style': ['error', '1tbs', {
-                    allowSingleLine: false,
-                }],
-                camelcase: ['error', {
-                    properties: 'never',
-                    ignoreDestructuring: true,
-                }],
+                'brace-style': [
+                    'error',
+                    '1tbs',
+                    {
+                        allowSingleLine: false,
+                    },
+                ],
+                camelcase: [
+                    'error',
+                    {
+                        properties: 'never',
+                        ignoreDestructuring: true,
+                    },
+                ],
                 'comma-dangle': ['error', 'only-multiline'],
                 // 'comma-dangle': ['error', 'always-multiline'],
                 curly: ['error', 'all'],
                 eqeqeq: ['error', 'always'],
-                indent: ['error', 4, {
-                    SwitchCase: 1,
-                    ignoredNodes: [
-                        'TemplateLiteral *',
-                        /* Don't enforce indent inside template literals */
-                        'PropertyDefinition[decorators] Identifier',
-                        /* Incorrectly indents class property with decorator on
+                indent: [
+                    'error',
+                    4,
+                    {
+                        SwitchCase: 1,
+                        ignoredNodes: [
+                            'TemplateLiteral *',
+                            /* Don't enforce indent inside template literals */
+                            'PropertyDefinition[decorators] Identifier',
+                            /* Incorrectly indents class property with decorator on
                         preceding line */
-                    ],
-                }],
+                        ],
+                    },
+                ],
                 'multiline-ternary': 'off',
                 'no-case-declarations': 'off',
                 'no-console': ['error', { allow: ['error', 'warn', 'info'] }],
@@ -83,51 +94,64 @@ module.exports = {
                 'no-mixed-operators': 'off',
                 'no-multi-assign': 'error',
                 'no-return-await': 'error',
-                'no-unused-vars': ['error', {
-                    varsIgnorePattern: '^_',
-                    args: 'none',
-                    // argsIgnorePattern: '^_',
-                    // TODO: Restore args
-                }],
-                'no-use-before-define': ['error', {
-                    functions: true,
-                    classes: true,
-                    variables: true,
-                }],
+                'no-unused-vars': [
+                    'error',
+                    {
+                        varsIgnorePattern: '^_',
+                        args: 'none',
+                        // argsIgnorePattern: '^_',
+                        // TODO: Restore args
+                    },
+                ],
+                'no-use-before-define': [
+                    'error',
+                    {
+                        functions: true,
+                        classes: true,
+                        variables: true,
+                    },
+                ],
                 'no-useless-escape': 'off',
                 'object-shorthand': 'error',
                 'prefer-promise-reject-errors': 'off',
                 'prefer-regex-literals': 'off',
                 semi: ['error', 'always'],
-                'space-before-function-paren': ['error', {
-                    anonymous: 'always',
-                    named: 'never',
-                    asyncArrow: 'always',
-                }],
+                'space-before-function-paren': [
+                    'error',
+                    {
+                        anonymous: 'always',
+                        named: 'never',
+                        asyncArrow: 'always',
+                    },
+                ],
 
                 'import/no-default-export': 'error',
-                'import/order': ['error', {
-                    groups: [
-                        'builtin',
-                        'external',
-                        'internal',
-                        'parent',
-                        'sibling',
-                        'index',
-                    ],
-                    pathGroups: Object.keys(
-                        require('./tsconfig.base.json').compilerOptions.paths,
-                        // We're patching ngx-translate core
-                    ).filter(path => path !== '@ngx-translate/core').map(path => ({
-                        pattern: `${path}*`,
-                        /* Assuming that tsconfig paths end with single asterisk so
-                that the pattern here will end with double asterisk */
-                        group: 'internal',
-                    })),
-                    pathGroupsExcludedImportTypes: ['internal'],
-                    'newlines-between': 'always',
-                    alphabetize: { order: 'asc' },
-                }],
+                'import/order': [
+                    'error',
+                    {
+                        groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+                        pathGroups: Object.keys(
+                            require('./tsconfig.base.json').compilerOptions.paths,
+                        )
+                            // We're patching ngx-translate core
+                            .filter(path => path !== '@ngx-translate/core')
+                            .map(path => ({
+                                /* Assuming that tsconfig paths end with single asterisk so
+                                that the pattern here will end with double asterisk */
+                                pattern: `${path}*`,
+                                group: 'internal',
+                            })),
+                        pathGroupsExcludedImportTypes: ['internal'],
+                        'newlines-between': 'always',
+                        alphabetize: { order: 'asc' },
+                    },
+                ],
+            },
+        },
+        {
+            files: ['*.?(m)js'],
+            rules: {
+                'no-console': 'off', // Assuming that all JS is scripts or config
             },
         },
         {
@@ -142,71 +166,79 @@ module.exports = {
             rules: {
                 'no-undef': 'off', // TS incompatible
 
-                'nx/ban-global-variables': ['error', [
-                    'window',
-                    'document',
-                ]],
+                'nx/ban-global-variables': ['error', ['window', 'document']],
                 'no-useless-constructor': 'off',
                 'nx/no-useless-constructor': 'error',
                 'nx/only-export-injectable': 'error',
 
-                '@typescript-eslint/ban-types': ['error', {
-                    extendDefaults: false, // TODO: Restore
-                    types: {
-                        SimpleChanges: {
-                            message: [
-                                'Angular\'s `SimpleChanges` is not type-safe.',
-                                'Use the `NgChanges` utility type instead.',
-                            ].join('\n'),
+                '@typescript-eslint/ban-types': [
+                    'error',
+                    {
+                        extendDefaults: false, // TODO: Restore
+                        types: {
+                            SimpleChanges: {
+                                message: [
+                                    "Angular's `SimpleChanges` is not type-safe.",
+                                    'Use the `NgChanges` utility type instead.',
+                                ].join('\n'),
+                            },
                         },
                     },
-                }],
-                ...tsExtension('brace-style', [
-                    'error',
-                    '1tbs',
-                    { allowSingleLine: false },
-                ]),
+                ],
+                ...tsExtension('brace-style', ['error', '1tbs', { allowSingleLine: false }]),
                 ...tsExtension('comma-dangle', ['error', 'only-multiline']),
                 ...tsExtension('comma-spacing'),
-                ...tsExtension('dot-notation', [
-                    'error',
-                    { allowKeywords: true },
-                ]),
+                ...tsExtension('dot-notation', ['error', { allowKeywords: true }]),
                 ...tsExtension('func-call-spacing'),
                 ...tsExtension('keyword-spacing'),
-                ...tsExtension('lines-between-class-members', ['error', {
-                    exceptAfterSingleLine: true,
-                }]),
+                ...tsExtension('lines-between-class-members', [
+                    'error',
+                    {
+                        exceptAfterSingleLine: true,
+                    },
+                ]),
                 '@typescript-eslint/member-delimiter-style': 'error',
                 ...tsExtension('no-array-constructor'),
                 ...tsExtension('no-dupe-class-members'),
                 ...tsExtension('no-extra-parens', ['error', 'functions']),
                 ...tsExtension('no-extra-semi'),
                 ...tsExtension('no-implied-eval'),
-                ...tsExtension('no-redeclare', ['error', {
-                    builtinGlobals: false,
-                }]),
+                ...tsExtension('no-redeclare', [
+                    'error',
+                    {
+                        builtinGlobals: false,
+                    },
+                ]),
                 ...tsExtension('no-throw-literal'),
                 '@typescript-eslint/no-unnecessary-type-assertion': 'error',
-                ...tsExtension('no-use-before-define', ['error', {
-                    functions: true,
-                    classes: true,
-                    // Will false positive on useExisting: forwardRef
-                    variables: true,
-                    enums: true,
-                    typedefs: true,
-                    ignoreTypeReferences: false,
-                }]),
-                ...tsExtension('no-unused-expressions', ['error', {
-                    allowShortCircuit: true,
-                    allowTernary: true,
-                    allowTaggedTemplates: true,
-                }]),
-                ...tsExtension('no-unused-vars', ['error', {
-                    varsIgnorePattern: '^_',
-                    args: 'none',
-                    // argsIgnorePattern: '^_',
-                }]),
+                ...tsExtension('no-use-before-define', [
+                    'error',
+                    {
+                        functions: true,
+                        classes: true,
+                        // Will false positive on useExisting: forwardRef
+                        variables: true,
+                        enums: true,
+                        typedefs: true,
+                        ignoreTypeReferences: false,
+                    },
+                ]),
+                ...tsExtension('no-unused-expressions', [
+                    'error',
+                    {
+                        allowShortCircuit: true,
+                        allowTernary: true,
+                        allowTaggedTemplates: true,
+                    },
+                ]),
+                ...tsExtension('no-unused-vars', [
+                    'error',
+                    {
+                        varsIgnorePattern: '^_',
+                        args: 'none',
+                        // argsIgnorePattern: '^_',
+                    },
+                ]),
                 ...tsExtension('object-curly-spacing', ['error', 'always']),
                 '@typescript-eslint/prefer-includes': 'error',
                 // Note: @ts-ignore should still be used for false
@@ -214,11 +246,14 @@ module.exports = {
                 '@typescript-eslint/prefer-ts-expect-error': 'error',
                 ...tsExtension('semi'),
                 ...tsExtension('space-before-blocks', ['error', 'always']),
-                ...tsExtension('space-before-function-paren', ['error', {
-                    anonymous: 'always',
-                    named: 'never',
-                    asyncArrow: 'always',
-                }]),
+                ...tsExtension('space-before-function-paren', [
+                    'error',
+                    {
+                        anonymous: 'always',
+                        named: 'never',
+                        asyncArrow: 'always',
+                    },
+                ]),
                 ...tsExtension('space-infix-ops'),
             },
         },
@@ -238,17 +273,20 @@ module.exports = {
                 'nx/no-untyped-init': 'error',
                 'nx/no-untyped-subject': 'error',
 
-                '@typescript-eslint/ban-types': ['error', {
-                    extendDefaults: true,
-                    types: {
-                        SimpleChanges: {
-                            message: [
-                                'Angular\'s `SimpleChanges` is not type-safe.',
-                                'Use the `NgChanges` utility type instead.',
-                            ].join('\n'),
+                '@typescript-eslint/ban-types': [
+                    'error',
+                    {
+                        extendDefaults: true,
+                        types: {
+                            SimpleChanges: {
+                                message: [
+                                    "Angular's `SimpleChanges` is not type-safe.",
+                                    'Use the `NgChanges` utility type instead.',
+                                ].join('\n'),
+                            },
                         },
                     },
-                }],
+                ],
                 '@typescript-eslint/explicit-function-return-type': [
                     'error',
                     { allowExpressions: true },
@@ -260,11 +298,14 @@ module.exports = {
                 '@typescript-eslint/no-non-null-assertion': 'error',
 
                 // Re-override recommendeded rule config
-                '@typescript-eslint/no-unused-vars': ['error', {
-                    varsIgnorePattern: '^_',
-                    args: 'none',
-                    // argsIgnorePattern: '^_',
-                }],
+                '@typescript-eslint/no-unused-vars': [
+                    'error',
+                    {
+                        varsIgnorePattern: '^_',
+                        args: 'none',
+                        // argsIgnorePattern: '^_',
+                    },
+                ],
             },
         },
         {
@@ -291,14 +332,16 @@ module.exports = {
         {
             // Temporary override for applying @angular-eslint rules
             files: ['*.ts'],
-            excludedFiles: [
-            ],
+            excludedFiles: [],
             rules: {
-                '@angular-eslint/component-selector': ['error', {
-                    type: 'element',
-                    prefix: 'nx',
-                    style: 'kebab-case',
-                }],
+                '@angular-eslint/component-selector': [
+                    'error',
+                    {
+                        type: 'element',
+                        prefix: 'nx',
+                        style: 'kebab-case',
+                    },
+                ],
             },
         },
         {
@@ -339,15 +382,19 @@ module.exports = {
             /* Allow top-down organization in types files */
             files: ['*types.ts', '*.d.ts', '**/nx-config/base-config.ts'],
             rules: {
-                '@typescript-eslint/no-use-before-define': ['error', {
-                    enums: true,
-                    typedefs: true,
-                    ignoreTypeReferences: true,
-                }],
+                '@typescript-eslint/no-use-before-define': [
+                    'error',
+                    {
+                        enums: true,
+                        typedefs: true,
+                        ignoreTypeReferences: true,
+                    },
+                ],
             },
         },
         {
             files: [
+                '*.?(m)js',
                 // '*.js', '*.ts'
                 '*.module.ts',
                 '*types.ts',
@@ -392,9 +439,7 @@ module.exports = {
             files: ['*.component.html'],
             plugins: ['nx'],
             rules: {
-                'nx/template/translate-contents': ['error', [
-                    'svg-icon',
-                ]],
+                'nx/template/translate-contents': ['error', ['svg-icon']],
             },
         },
         {
@@ -417,9 +462,12 @@ module.exports = {
             extends: ['plugin:prettier/recommended'],
             plugins: ['prettier'],
             rules: {
-                'prettier/prettier': ['error', {
-                    parser: 'angular',
-                }],
+                'prettier/prettier': [
+                    'error',
+                    {
+                        parser: 'angular',
+                    },
+                ],
             },
         },
         {
@@ -436,20 +484,20 @@ module.exports = {
                         depConstraints: [
                             {
                                 sourceTag: 'apps:*',
-                                onlyDependOnLibsWithTags: ['libs:*', 'features:*']
+                                onlyDependOnLibsWithTags: ['libs:*', 'features:*'],
                             },
                             {
                                 sourceTag: 'features:*',
-                                onlyDependOnLibsWithTags: ['libs:*']
+                                onlyDependOnLibsWithTags: ['libs:*'],
                             },
                             {
                                 sourceTag: 'libs:*',
-                                onlyDependOnLibsWithTags: ['libs:*']
-                            }
-                        ]
-                    }
-                ]
-            }
-        }
+                                onlyDependOnLibsWithTags: ['libs:*'],
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
     ],
 };

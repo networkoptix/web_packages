@@ -20,7 +20,8 @@ Object.entries(relativeReplacements).forEach(([abs, rel]) => {
     stdOut = stdOut.replace(abs, rel);
 });
 
-const errorTxt = '/** Error counts for files with type linting errors.\n\n * Update this file with `npm run update-type-blacklist`.\n */\nmodule.exports = ' +
+const errorTxt =
+    '/** Error counts for files with type linting errors.\n\n * Update this file with `npm run update-type-blacklist`.\n */\nmodule.exports = ' +
     JSON.stringify(errorCount, null, 4).replace(/"/g, "'") +
     ';\n/*' +
     stdOut +
