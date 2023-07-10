@@ -54,6 +54,10 @@ def element_should_be_visible(driver: webdriver, locator: str, timeout: int = 10
 def element_should_not_be_visible(driver: webdriver, locator: str, timeout: int = 10) -> None:
     WebDriverWait(driver, timeout).until_not(EC.visibility_of_element_located((By.XPATH, locator)))
 
+def elements_should_not_be_visible(driver: webdriver, locators: list[str]) -> None:
+    for locator in locators:
+        element_should_not_be_visible(driver, locator)
+
 def element_should_be_disabled(driver: webdriver, locator: str, timeout: int = 10) -> None:
     WebDriverWait(driver, timeout).until_not(EC.element_to_be_clickable((By.XPATH, locator)))
 
@@ -145,6 +149,24 @@ def reload_page(driver: webdriver):
     driver.refresh()
 
 def mouse_over(driver, locator):
-    element = driver.find_element(locator)
+    element = driver.find_element(By.XPATH, locator)
     action = ActionChains(driver)
     action.move_to_element(element).perform()
+
+def element_style_should_be(driver, locator, styleAttribute, expectedValue):
+    observedValue = get_element_style(driver, locator, styleAttribute)
+    if observedValue == expectedValue:
+        pass
+    else:
+        # driver.capture_page_screenshot()
+        raise AssertionError(f"Expected: {expectedValue}\nObserved: {observedValue}")
+
+def get_element_style(driver, locator, styleAttribute):
+        not_found = None
+        try:
+            element = driver.find_element(By.XPATH, locator)
+            value = element.value_of_css_property(styleAttribute)
+            return value
+        except:
+            not_found = f"No element found with style attribute {styleAttribute}"
+        raise AssertionError(not_found)
