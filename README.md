@@ -6,9 +6,9 @@
 
 ## Introduction
 
-This repository `nx_open_web` contains **Network Optix Meta Platform open source web packages** - the
-source code and published packages are used in building Nx Meta Cloud Portal, Webadmin, and various
-web projects within Network Optix.
+This repository `nx_open_cloud_portal` contains **Network Optix Meta Platform open source web
+packages** - the source code and published packages are used in building Nx Meta Cloud Portal,
+Webadmin, and various web projects within Network Optix.
 
 ### Contribution policy
 
@@ -30,8 +30,8 @@ appropriate package manager.
 
 ## Project Structure
 
-The repository is setup as a monorepo with root folder contains shared files for maintaining
-the project. Source code relevant to external developers will be in `/packages` and `/examples`.
+The repository is set up as a monorepo with the root folder containing shared files for maintaining
+the project. The source code relevant to external developers is in `/packages` and `/examples`.
 
 ### Packages / Libraries
 
@@ -41,15 +41,15 @@ these are added to your project through NPM.
 
 ### Demos and Examples
 
-The `/examples` directory constains usage examples for some of the packages in `/packages` and also
-some general examples for interacting with the Nx Witness Video Management System (VMS) server.
+The `/examples` directory contains usage examples for some of the packages in `/packages` and also
+some general examples for interacting with the Nx Witness Video Management System (VMS) Server.
 
 All Javascript/Node examples contain an `npm start` script for running the demo/example.
 
 Examples for a specific package in `/packages` ends with `-example` so the
-`/webrtc-stream-manager-example` will be for the `/webrtc-stream-manager` package.
+`/webrtc-stream-manager-example` is for the `/webrtc-stream-manager` package.
 
-General demos for interacting with the VMS server ends with `-demo`. These demos will probably use
+General demos for interacting with the VMS Server end with `-demo`. These demos will probably use
 one or more packages from `/packages` but are purposed with demonstrating interactions instead of
 being instructional on a specific package.
 
