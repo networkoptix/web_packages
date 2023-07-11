@@ -24,6 +24,7 @@ export class NxBookmarksCardComponent implements OnInit {
     startDate: string;
     duration: string;
     enableTooltip: boolean;
+    thumbnailError: boolean;
 
     constructor(private dialogs: NxDialogsService, @Inject(WINDOW) window: Window) {
         this.locale = getSysLang(window);

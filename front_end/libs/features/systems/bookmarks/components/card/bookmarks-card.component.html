@@ -24,26 +24,35 @@
                             <nx-pre-loader></nx-pre-loader>
                         </ng-template>
                         <div *ngIf="bookmark.thumbnail | async; else thumbnailPreLoader">
-                            <svg-icon
-                                nx-add-svg-src
-                                [src]="icons.dir + 'play.svg'"
-                                [svgStyle]="{ 'width.px': '40', 'height.px': '40' }"
-                                class="bookmarks-image-playIcon"
-                            ></svg-icon>
-                            <img
-                                [src]="
-                                    (bookmark.thumbnail | async)
-                                        ? (bookmark.thumbnail | async | safe: 'resourceUrl')
-                                        : icons.dirNonStandardView +
-                                          'cameras_list_placeholder_offline.svg'
-                                "
-                                [alt]="'thumbnail of ' + bookmark.name"
-                            />
+                            <ng-container *ngIf="!thumbnailError; else noThumbnail">
+                                <svg-icon
+                                    nx-add-svg-src
+                                    [src]="icons.dir + 'play.svg'"
+                                    [svgStyle]="{ 'width.px': '40', 'height.px': '40' }"
+                                    class="bookmarks-image-playIcon"
+                                ></svg-icon>
+                                <img
+                                    [src]="
+                                        (bookmark.thumbnail | async)
+                                            ? (bookmark.thumbnail | async | safe: 'resourceUrl')
+                                            : icons.dirNonStandardView +
+                                              'cameras_list_placeholder_offline.svg'
+                                    "
+                                    [alt]="'thumbnail of ' + bookmark.name"
+                                    (error)="thumbnailError = true"
+                                />
+                            </ng-container>
+                            <ng-template #noThumbnail>
+                                <nx-player-placeholder
+                                    class="thumbnailError noImage"
+                                    [description]="'No image available' | translate"
+                                ></nx-player-placeholder>
+                            </ng-template>
                         </div>
                     </ng-container>
                     <ng-template #cantViewBookmark>
                         <nx-player-placeholder
-                            class="noPermissions"
+                            class="thumbnailError"
                             [description]="'Device permission required.' | translate"
                         ></nx-player-placeholder>
                     </ng-template>

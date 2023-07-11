@@ -32,6 +32,8 @@ nx-bookmarks-card {
             display: flex;
             justify-content: center;
             align-items: center;
+            width: 272px;
+            height: 153px;
             background-color: var(--bookmarks-card-video-background-color);
 
             &-wrapper {
@@ -48,17 +50,21 @@ nx-bookmarks-card {
                     max-height: 153px;
                 }
 
-                .noPermissions {
+                .thumbnailError {
                     position: absolute;
                     font-size: 13px;
-                    background-color: var(--bookmarks-card-no-permissions-background);
+                    background-color: var(--bookmarks-card-thumbnail-error-background);
+
+                    &.noImage {
+                        position: relative;
+                    }
 
                     .player-placeholder {
                         width: 100%;
 
                         .description {
                             width: 100% !important;
-                            color: var(--bookmarks-card-no-permissions-description) !important;
+                            color: var(--bookmarks-card-thumbnail-error-description) !important;
                             margin-top: 0 !important;
                         }
                     }
