@@ -632,7 +632,12 @@ export class WizardStateService {
         });
     };
 
-    private updateCredentials(login: string, password: string, isCloud: boolean): Promise<unknown> {
+    private updateCredentials(
+        login: string,
+        password: string,
+        isCloud: boolean,
+        skipCheck: boolean = false,
+    ): Promise<unknown> {
         this.credentials.login = login;
         this.credentials.password = password;
         this.credentials.isCloud = isCloud;
@@ -643,7 +648,7 @@ export class WizardStateService {
                 this.server.setVmsToken(userData.token);
                 return userData;
             })
-            .then(this.checkSystem);
+            .then(userData => (skipCheck ? Promise.resolve(true) : this.checkSystem(userData)));
     }
 
     // Error Handlers
@@ -746,7 +751,7 @@ export class WizardStateService {
             }
         });
 
-        this.updateCredentials(this.defaultUser, this.defaultUser, false)
+        this.updateCredentials(this.defaultUser, this.defaultUser, false, true)
             .catch(this.offlineErrorHandler)
             .then(() => {
                 this.server
@@ -915,7 +920,7 @@ export class WizardStateService {
     >(): S {
         const unauthorizedCallback = (): Promise<string> => Promise.resolve('');
         // eslint-disable-next-line nx/no-untyped-init
-        const serverApi = new NxSystemRestAPI2(
+        const serverApi = new NxSystemRestAPI3(
             this.http,
             nxConfig,
             null,
