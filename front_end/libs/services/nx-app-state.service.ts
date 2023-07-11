@@ -14,7 +14,6 @@ export class NxAppStateService {
     headerVisibleSubject = new BehaviorSubject(true);
     systemAvailable$ = new BehaviorSubject(true);
     lastErrorStatus$ = new BehaviorSubject<number>(undefined);
-    manualAccessSubject$ = new BehaviorSubject(false);
     appContainerHeight = 'calc(100% - 48px)';
     altBackground = false;
 
@@ -54,14 +53,6 @@ export class NxAppStateService {
 
     get ready(): boolean {
         return this.readySubject.getValue();
-    }
-
-    get canManuallyAccess(): boolean {
-        return this.manualAccessSubject$.getValue();
-    }
-
-    set canManuallyAccess(canAccess: boolean) {
-        this.manualAccessSubject$.next(canAccess);
     }
 
     // TODO: Remove as not used

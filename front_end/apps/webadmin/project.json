@@ -120,10 +120,6 @@
                         {
                             "replace": "libs/services/account.service/index.ts",
                             "with": "libs/services/account.service/index.webadmin.ts"
-                        },
-                        {
-                            "replace": "libs/routeGuards/authGuard.ts",
-                            "with": "libs/routeGuards/authGuard.webadmin.ts"
                         }
                     ],
                     "optimization": {

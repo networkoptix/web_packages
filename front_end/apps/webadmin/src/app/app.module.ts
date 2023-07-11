@@ -1,10 +1,8 @@
 import { DialogModule } from '@angular/cdk/dialog';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import { Location, HashLocationStrategy, DatePipe, LocationStrategy } from '@angular/common';
-import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
-import { AngularFireModule, FIREBASE_OPTIONS } from '@angular/fire/compat';
-import { AngularFireMessagingModule } from '@angular/fire/compat/messaging';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
@@ -13,7 +11,6 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CookieService } from 'ngx-cookie-service';
-// import { HoverPreloadModule } from 'ngx-hover-preload';
 import { NgxMaskModule } from 'ngx-mask';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 import {
@@ -28,20 +25,17 @@ import { NxApplyComponent } from '@components/apply/apply.component';
 import { NxNavFooterComponent } from '@components/nav-footer/nav-footer.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { PopoverModule } from '@components/popover/popover.module';
-// import { DirectivesModule } from '@directives/directives.module';
 import { NxTourStepComponent } from '@components/tour-step/tour-step.component';
 import { ResizeModule } from '@directives/resize/resize.module';
 import { environment } from '@environments/environment';
 import { AuthGuard } from '@guards/authGuard';
 import { DevelopersGuard } from '@guards/developersGuard';
-import { ManualAccessGuard } from '@guards/manualAccessGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { CloudUnavailableInterceptor } from '@interceptors/cloud-unavailable-interceptor';
 import { FeatureInterceptor } from '@interceptors/feature-interceptor';
 import { LocalSystemStatusInterceptor } from '@interceptors/local-system-status-interceptor.service';
 import { SessionExpiredInterceptor } from '@interceptors/session-expired-interceptor';
 import { NxUriCachingInterceptor } from '@interceptors/uri-cache-interceptor.service';
-import { initializeApp } from '@pages/push-notifications/push-notifications.module';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { ServiceModule } from '@services/services.module';
@@ -68,15 +62,9 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         StoreModule.forRoot({ account: accountReducer }),
         ...(!environment.production ? [StoreDevtoolsModule.instrument()] : []),
         HttpClientModule,
-        HttpClientXsrfModule.withOptions({
-            cookieName: 'csrftoken',
-            headerName: 'X-CSRFToken',
-        }),
         PopoverModule,
         RouterModule,
         ServiceModule,
-        AngularFireModule,
-        AngularFireMessagingModule,
         AngularSvgIconModule.forRoot(),
         TranslateModule.forRoot({
             compiler: {
@@ -131,15 +119,9 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         NxConfigService,
         WINDOWS_PROVIDERS,
         { provide: LocationStrategy, useClass: HashLocationStrategy },
-        {
-            provide: FIREBASE_OPTIONS,
-            deps: [NxConfigService],
-            useFactory: initializeApp,
-        },
         AuthGuard,
         DevelopersGuard,
         SystemGuard,
-        ManualAccessGuard,
         DatePipe,
         {
             provide: APP_INITIALIZER,

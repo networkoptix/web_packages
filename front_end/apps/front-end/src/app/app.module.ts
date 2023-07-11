@@ -38,7 +38,6 @@ import { ResizeModule } from '@directives/resize/resize.module';
 import { environment } from '@environments/environment';
 import { AuthGuard } from '@guards/authGuard';
 import { DevelopersGuard } from '@guards/developersGuard';
-import { ManualAccessGuard } from '@guards/manualAccessGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { CloudUnavailableInterceptor } from '@interceptors/cloud-unavailable-interceptor';
 import { NxCurrentRelayInterceptor } from '@interceptors/current-relay-interceptor';
@@ -162,7 +161,6 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         AuthGuard,
         DevelopersGuard,
         SystemGuard,
-        ManualAccessGuard,
         DatePipe,
         NxSwPromptUpdateService,
         {

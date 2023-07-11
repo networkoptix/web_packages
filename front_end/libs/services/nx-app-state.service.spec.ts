@@ -48,13 +48,4 @@ describe('AppState Service', () => {
 
         appStateService.ready = true;
     });
-
-    it('should have setter and getter (canManuallyAccess)', async () => {
-        const appStateService = await setupAppState();
-        appStateService.manualAccessSubject$.subscribe(canAccess => {
-            expect(appStateService.canManuallyAccess).toBe(canAccess);
-        });
-
-        appStateService.canManuallyAccess = true;
-    });
 });

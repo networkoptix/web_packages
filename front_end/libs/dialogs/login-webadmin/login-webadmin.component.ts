@@ -18,7 +18,6 @@ import { DirectivesModule } from '@directives/directives.module';
 import { icons, redirect } from '@lib/variables/static-variables';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxAccountService } from '@services/account.service';
-import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { OauthService } from '@services/oauth.service';
@@ -113,7 +112,6 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
         private renderer: Renderer2,
         private processService: NxProcessService,
         private storageService: NxStorageService,
-        private appStateService: NxAppStateService,
         private toastService: NxToastService,
         private router: Router,
         private cookieService: CookieService,
@@ -255,9 +253,6 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
             _ => {
                 this.close();
                 const isRootPath = ['/', ''].includes(this.location.path());
-
-                // prevent manual input of url for activate routes
-                this.appStateService.canManuallyAccess = this.next.includes('activate');
 
                 if (this.keepPage) {
                     if (isRootPath) {
