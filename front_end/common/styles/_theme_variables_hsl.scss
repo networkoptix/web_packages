@@ -866,7 +866,8 @@ html[data-theme="hsl"] {
     --bookmarks-text-highlight-bg: var(--new-dark12);
     --bookmarks-duration-bg: var(--new-dark1-t50);
     --bookmarks-card-background-color: #181c20;
-    --bookmarks-card-background-color-hover: var(--new-dark7);
+    --bookmarks-card-background-color-hover: var(--dark7);
+    --bookmarks-card-shadow-color-hover: var(--new-dark7);
     --bookmarks-card-border-color: inherit;
 
     --tour-background: var(--new-dark9-t40);

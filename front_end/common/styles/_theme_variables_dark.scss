@@ -690,8 +690,9 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --bookmarks-filter-filled-text: var(--light2);
     --bookmarks-text-highlight-bg: var(--dark12);
     --bookmarks-duration-bg: rgba(0, 0, 0, 0.5);
-    --bookmarks-card-background-color: var(--dark7);
-    --bookmarks-card-background-color-hover: none;
+    --bookmarks-card-background-color: var(--dark5);
+    --bookmarks-card-background-color-hover: var(--dark7);
+    --bookmarks-card-shadow-color-hover: none;
     --bookmarks-card-video-background-color: var(--dark1);
     --bookmarks-card-thumbnail-error-description: var(--light12);
     --bookmarks-card-thumbnail-error-background: var(--dark10);
