@@ -286,7 +286,7 @@
     "FAILED TO MERGE TRY AGAIN TEXT": "しばらくしてからもう一度お試しいただくか、サポートにお問い合わせください。",
     "FAILED TO MERGE SERVER NOT FOUND TEXT": "サーバーが見つかりません",
     "CHECKING TEXT": "確認中…",
-    "NEXT TEXT": "次",
+    "NEXT TEXT": "次へ",
     "TAKE SYSTEM NAME AND SETTINGS TEXT": "次のシステム名および設定を使用",
     "YOU ARE ABOUT TO MERGE TEXT": "システム %SYSTEM1% と %SYSTEM2% を統合しようとしています。",
     "SETTINGS WILL BE TAKEN TEXT": "設定と名前は %SYSTEM% から取得されます。",
