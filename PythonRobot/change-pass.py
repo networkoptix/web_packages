@@ -66,7 +66,7 @@ def password_is_actually_changed_and_login_works_with_new_password():
     robot_keywords.elements_should_not_be_visible(driver,
                                                   [rb.CHANGE_PASSWORD_BUTTON, rb.CANCEL_PASSWORD_CHANGES_BUTTON])
     robot_keywords.wait_until_element_is_visible(driver, rb.CHANGE_PASS_NO_CHANGES)
-    resource.log_out_cloud(driver)
+    HeaderNav(driver).log_out()
     robot_keywords.go_to_url(driver, f"{ENV}/account/password")
     cloud_login(driver, "noptixautoqa+viewer@gmail.com", "qweasd 123", button=None, validate=False)
     robot_keywords.wait_until_element_is_visible(driver, rb.WRONG_PASSWORD_MESSAGE)

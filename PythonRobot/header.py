@@ -16,19 +16,23 @@ class HeaderNav:
     def account_dropdown(self):
         return Button(self.driver, "//header//div[@data-testid='accountSettingsDropdown']/preceding-sibling::button")
 
-    def account_settings(self):
+    def account_settings_option(self):
         return Button(self.driver, "//header//li//a[@href = '/account']")
 
-    def change_password(self):
+    def change_password_option(self):
         return Button(self.driver, "//header//li//a[@href = '/account/password']")
 
-    def security(self):
+    def security_option(self):
         return Button(self.driver, "//header//li//a[@href = '/account/security']")
 
-    def log_out(self):
+    def log_out_option(self):
         translated_xpath = self.rb.replace_nested_variables(
             "//header//li//a/span[contains(text(),'${LOG OUT BUTTON TEXT}')]/..")
         return Button(self.driver, translated_xpath)
 
-    def administration(self):
+    def administration_selection(self):
         pass
+
+    def log_out(self):
+        self.account_dropdown().click()
+        self.log_out_option().click()
