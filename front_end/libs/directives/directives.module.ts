@@ -9,6 +9,7 @@ import { FeatureFlagDirective } from './feature.directive';
 import { NxArrowNavDirective } from './nx-arrow-nav';
 import { NxClickElsewhereDirective } from './nx-click-elsewhere';
 import { NxFocusMeDirective } from './nx-focus-me';
+import { NxForceVisibility } from './nx-force-visibility.directive';
 import { NxIntersectionObserver } from './nx-intersection.directive';
 import { NxMatchHeightDirective } from './nx-match-height.directive';
 import { NxProjectedCodeBlock } from './nx-projected-code-block.directive';
@@ -21,7 +22,13 @@ import { ResizeModule } from './resize/resize.module';
 import { RotateModule } from './rotate/rotate.module';
 
 @NgModule({
-    imports: [AngularSvgIconModule, OverlayModule, ResizeModule],
+    imports: [
+        AngularSvgIconModule,
+        OverlayModule,
+        ResizeModule,
+        NxIntersectionObserver,
+        NxForceVisibility,
+    ],
     declarations: [
         NxArrowNavDirective,
         NxClickElsewhereDirective,
@@ -30,7 +37,6 @@ import { RotateModule } from './rotate/rotate.module';
         NxScrollMechanicsDirective,
         NxUrlValidatorDirective,
         NxAddSvgSrc,
-        NxIntersectionObserver,
         NxProjectedLinkHandler,
         NxProjectedCodeBlock,
         NxTooltipDirective,
@@ -46,6 +52,7 @@ import { RotateModule } from './rotate/rotate.module';
         NxScrollMechanicsDirective,
         NxUrlValidatorDirective,
         NxAddSvgSrc,
+        NxForceVisibility,
         NxIntersectionObserver,
         NxProjectedLinkHandler,
         NxProjectedCodeBlock,

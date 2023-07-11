@@ -46,13 +46,17 @@
 		line-height: 10px;
 		right: 3px;
 
-		svg-icon svg {
-			width: 15px;
-			height: 15px;
+		svg-icon {
+			display: inline-block;
 
-			.st0 {
-				stroke: var(--input-numeric-arrow-color);
-				fill: none;
+			svg {
+				width: 15px;
+				height: 15px;
+
+				.st0 {
+					stroke: var(--input-numeric-arrow-color);
+					fill: none;
+				}
 			}
 		}
 

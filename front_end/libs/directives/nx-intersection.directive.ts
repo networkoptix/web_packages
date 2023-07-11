@@ -8,7 +8,9 @@ import {
     Input,
 } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
-import { takeUntil, debounceTime, startWith } from 'rxjs/operators';
+import { takeUntil, debounceTime } from 'rxjs/operators';
+
+import { CoercedBoolInput, IBool } from '@decorators/ibool';
 
 import { IntersectionStatus } from './nx-intersection.directive.types';
 
@@ -23,15 +25,23 @@ async function isVisible(element: HTMLElement): Promise<boolean> {
     });
 }
 
-function isIntersecting(entry: IntersectionObserverEntry): boolean {
-    return entry.isIntersecting || entry.intersectionRatio > 0;
+function isIntersecting(
+    entry: IntersectionObserverEntry,
+    config: IntersectionObserverInit,
+): boolean {
+    // was not tested for multiple thresholds. Just handling the case that it might be an array
+    const thresholds = Array.isArray(config.threshold) ? config.threshold : [config.threshold];
+
+    return thresholds.some(
+        threshold => entry.isIntersecting || entry.intersectionRatio > threshold,
+    );
 }
 
 const fromIntersectionObserver = (
     element: HTMLElement,
     config: IntersectionObserverInit,
     debounce = 0,
-    emitVisibleOnlyOnce = false,
+    emitVisibleOnlyOnce: CoercedBoolInput = false,
 ): Observable<IntersectionStatus> =>
     new Observable<IntersectionStatus>(subscriber => {
         const subject$ = new Subject<{
@@ -41,7 +51,7 @@ const fromIntersectionObserver = (
 
         const intersectionObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
-                if (isIntersecting(entry)) {
+                if (isIntersecting(entry, config)) {
                     subject$.next({ entry, observer });
                 } else {
                     subject$.next(null);
@@ -76,13 +86,14 @@ const fromIntersectionObserver = (
 // Use this to detect when an element is visible on the screen
 @Directive({
     selector: '[nxOnIntersect]',
+    standalone: true,
 })
 export class NxIntersectionObserver implements OnInit, OnDestroy {
     @Input() intersectionDebounce: number = 0;
     @Input() intersectionRootMargin: string = '0px';
     @Input() intersectionRoot: HTMLElement;
     @Input() intersectionThreshold: number | number[];
-    @Input() emitVisibleOnlyOnce: boolean = false;
+    @IBool() @Input() emitVisibleOnlyOnce: CoercedBoolInput = false;
 
     @Output() nxOnIntersect = new EventEmitter<IntersectionStatus>();
 
@@ -104,7 +115,7 @@ export class NxIntersectionObserver implements OnInit, OnDestroy {
             this.intersectionDebounce,
             this.emitVisibleOnlyOnce,
         )
-            .pipe(startWith(IntersectionStatus.NotVisible), takeUntil(this.destroy$))
+            .pipe(takeUntil(this.destroy$))
             .subscribe(status => {
                 this.nxOnIntersect.emit(status);
             });

@@ -417,6 +417,7 @@
                                 [(ngModel)]="sessionLimitValue"
                                 [ngModelOptions]="{ standalone: true }"
                                 (onChange)="updateSessionLimitValue($event)"
+                                #sessionLimitValueInput="ngModel"
                             ></nx-numeric>
                         </div>
                         <nx-select
@@ -440,6 +441,10 @@
                                 'The recommended maximum user session lifetime is 30 days.'
                                     | translate
                             "
+                            [nxForceVisibility]="sessionLimitValueInput.touched"
+                            [visibilityMargin]="'-65px'"
+                            [visibilityThreshold]="1"
+                            forceVisibilityOnce
                         ></nx-alert-block>
                     </div>
                 </div>

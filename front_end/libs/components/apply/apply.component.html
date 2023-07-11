@@ -1,6 +1,6 @@
 <div
     *ngIf="ready && isOnline"
-    class="pt-3 placeholder-text"
+    class="placeholder-text"
     [ngClass]="{ 'unsaved-changes': show }"
 >
     <div
@@ -24,7 +24,7 @@
         <ng-template #applyButtons>
             <nx-process-button
                 [process]="save"
-                [actionType]="'primary min-w-120'"
+                [actionType]="'primary'"
                 [buttonDisabled]="!isOnline || isSaveDisabled"
                 [clickFn]="submitFn"
                 buttonText="{{ 'Save' | translate }}"
