@@ -1,7 +1,12 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import type { ResetBackup as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { NxProcessService } from '@services/process.service';
@@ -12,6 +17,15 @@ import type { NxSystem } from '@services/system.service/system';
     selector: 'nx-modal-reset-backup',
     templateUrl: 'reset-backup.component.html',
     styleUrls: [],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
+    ],
 })
 export class ResetBackupModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;

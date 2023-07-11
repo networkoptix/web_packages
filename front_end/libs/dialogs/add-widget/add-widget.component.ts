@@ -1,15 +1,22 @@
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, Inject, Input, LOCALE_ID } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { cloneDeep, last } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxDynamicWidgetComponent } from '@components/dynamic-widget/dynamic-widget.component';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { WidgetCard } from '@components/widgets/helper-classes';
 import { NxThirdPartyWidgetComponent } from '@components/widgets/third-party/third-party-widget.component';
-import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { environment } from '@environments/environment';
 import { icons } from '@lib/variables/static-variables';
 import { DashboardConfiguration } from '@pages/dashboard/dashboard-configuration';
@@ -26,6 +33,18 @@ type DashboardDropdownItem = DropdownItem<string>;
     selector: 'nx-modal-add-widget-content',
     templateUrl: 'add-widget.component.html',
     styleUrls: ['add-widget.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+        AngularSvgIconModule,
+
+        NxGenericDropdownModule,
+        NxDynamicWidgetComponent,
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
+    ],
 })
 export class AddWidgetModalContent {
     @Input() closable: boolean = true;

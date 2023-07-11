@@ -1,9 +1,7 @@
-import { Dialog, DialogConfig as CdkDialogConfig } from '@angular/cdk/dialog';
-import { ComponentType, Overlay } from '@angular/cdk/overlay';
-import { ComponentPortal } from '@angular/cdk/portal';
-import { DOCUMENT } from '@angular/common';
-import { Injectable, Injector, Inject } from '@angular/core';
-import { firstValueFrom, Subject, takeUntil } from 'rxjs';
+import { Dialog, DialogConfig } from '@angular/cdk/dialog';
+import { ComponentType } from '@angular/cdk/overlay';
+import { Injectable } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import {
@@ -11,98 +9,32 @@ import {
     ModalContent,
 } from '@components/console-table/console-table.component.types';
 import { DashboardConfiguration } from '@pages/dashboard/dashboard-configuration';
-import type { NxSystem } from '@services/system.service/system';
-import { NxSystemInfo } from '@services/systems.service.types';
 
-import { DialogConfig } from './dialog-config';
-import { DIALOG_SIZE as DIALOG_SIZE_V2 } from './dialog-config-v2';
-import { DIALOG_DATA, DIALOG_SIZE, DialogRef, defaultConfig } from './dialog-ref';
-import type { DialogsModule } from './dialogs.module';
+import { DIALOG_SIZE } from './dialog-config-v2';
+import type { NxDialogsModule } from './dialogs.module';
 import * as Dt from './dialogs.types';
 import { NewFeatureTemplate } from './new-feature/new-feature.component.types';
 import { TfaAction } from './two-fa/two-fa.component.types';
 
 @Injectable({ providedIn: 'root' })
 export class NxDialogsService {
-    constructor(
-        private injector: Injector,
-        private overlay: Overlay,
-        private cdkDialog: Dialog,
-        @Inject(DOCUMENT) private document: Document,
-    ) {}
+    constructor(private cdkDialog: Dialog) {}
 
-    /* eslint-disable */
-    private dialog: DialogRef;
-    private dialogsModule: DialogsModule;
-    private unsub$ = new Subject<boolean>();
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    dialogsModule: NxDialogsModule;
 
-    public async preloadDialogsModule(): Promise<DialogsModule> {
-        this.dialogsModule ||= await import('./dialogs.module').then(m => m.DialogsModule);
-        return this.dialogsModule;
-    }
-
-    open<T>(component: ComponentType<T>, config: DialogConfig = defaultConfig): DialogRef {
-        // Opening element is probably a button, but can't be sure
-        (this.document.activeElement as HTMLButtonElement)?.blur?.();
-
-        const positionStrategy = this.overlay
-            .position()
-            .global()
-            .centerHorizontally()
-            .centerVertically();
-
-        const overlayRef = this.overlay.create({
-            positionStrategy,
-            hasBackdrop: config.hasBackdrop,
-            backdropClass: config.backdropClass,
-            panelClass: config.panelClass,
-            width: '100vw',
-            maxWidth: config.width,
-        });
-
-        overlayRef.keydownEvents()
-            .pipe(takeUntil(this.unsub$))
-            .subscribe((key: KeyboardEvent) => {
-                if (key.code === 'Escape') {
-                    this.dialog.close();
-                    this.unsub$.next(true);
-                }
-            });
-
-        // Create dialogRef to return
-        const dialogRef = new DialogRef(overlayRef);
-        const injector = Injector.create({
-            parent: this.injector,
-            providers: [
-                { provide: DialogRef, useValue: dialogRef },
-                { provide: DIALOG_DATA, useValue: config.data },
-            ]
-        });
-
-        const portal = new ComponentPortal(component, null, injector);
-        overlayRef.attach(portal);
-        setTimeout(() => {
-            const input = this.document.querySelector('input');
-            // Assuming that input will be focused on open
-            if (!input) {
-                this.document.querySelector<HTMLButtonElement>('.modal-holder button.close')
-                    ?.focus();
-            }
-        });
-        this.dialog = dialogRef;
-
-        return dialogRef;
-    }
-
-    // Allows current dialog to be closed programmatically
-    // Ex: Login service need to close whatever dialog is showing if 'updateSession' fails
-    dismissDialog(): void {
-        // All dialogs we use are modal ...so only one active instance at a time
-        this.dialog?.close('closed by another');
-    }
-
-    public async addWidget(gridSize, gridGap, widgets, dashboardMenu: DashboardConfiguration[], activeDashboard, updateSelectedDashboard: (id: string) => void) {
-        const config: Partial<DialogConfig> = {
+    public async addWidget(
+        gridSize: any,
+        gridGap: any,
+        widgets: any,
+        dashboardMenu: DashboardConfiguration[],
+        activeDashboard: any,
+        updateSelectedDashboard: (id: string) => void,
+    ): Promise<any> {
+        const component = await import('./add-widget/add-widget.component').then(
+            m => m.AddWidgetModalContent,
+        );
+        const config: DialogConfig<any> = {
             width: DIALOG_SIZE.LARGE,
             data: {
                 widgets,
@@ -111,59 +43,48 @@ export class NxDialogsService {
                 dashboardMenu,
                 activeDashboard,
                 updateSelectedDashboard,
-            }
+            },
+            disableClose: true,
+            // Disable click outside and Esc to close for now until dialog
+            // is properly migrated
         };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        await this.preloadDialogsModule();
-        const component = await import('./add-widget/add-widget.component').then(m => m.AddWidgetModalContent);
-
-        return this.open(component, dialogConfig)
-            .afterClosed();
+        return this.openV2<any, any>(component, config);
     }
 
     public async edit(genericEditModalContent: GenericEditModalContent);
-    public async edit(genericEditModalContent: GenericEditModalContent, values: Record<string, unknown>);
+    public async edit(
+        genericEditModalContent: GenericEditModalContent,
+        values: Record<string, unknown>,
+    );
     public async edit(contextModalContent: ModalContent);
-    public async edit(modalContent: ModalContent | GenericEditModalContent, values = {}): Promise<unknown> {
+    public async edit(
+        modalContent: ModalContent | GenericEditModalContent,
+        values: any = {},
+    ): Promise<unknown> {
         const isGeneric = 'contextManifest' in modalContent;
-        const config: Partial<DialogConfig> = {
-            data: {}
-        };
+
+        let data: any;
 
         if (isGeneric) {
-            Object.assign(config.data, modalContent);
-            config.data.contextList = [modalContent.contextManifest];
-            config.data.values ||= values;
-            config.data.manifest = modalContent.contextManifest;
-            config.data.heading = modalContent.contextManifest?.name || modalContent.contextManifest.label;
+            const { contextManifest } = modalContent;
+            data = {
+                ...modalContent,
+                contextList: [contextManifest],
+                value: modalContent.values || values,
+                manifest: contextManifest,
+                heading: contextManifest?.name || contextManifest.label,
+            };
         } else {
-            Object.assign(config.data, modalContent);
+            data = { ...modalContent };
         }
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        await this.preloadDialogsModule();
         const component = await import('./edit/edit.component').then(m => m.EditModalContent);
 
-        return this.open(component, dialogConfig)
-            .afterClosed();
+        return this.openV2<any, any>(component, { data, disableClose: true });
+        // Also disabling close here
     }
-
-    public async merge(system: NxSystem, systems: NxSystemInfo[]): Promise<Dt.MergeRefactored['return']> {
-        const config: Partial<DialogConfig> = {
-            data: {
-                system,
-                systems,
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        await this.preloadDialogsModule();
-        const component = await import('./merge/merge.component').then(m => m.MergeModalContent);
-        return this.open(component, dialogConfig)
-            .afterClosed();
-    }
-    /* eslint-enable */
+    /* eslint-enable @typescript-eslint/no-explicit-any */
 
     /* ANGULAR CDK DIALOGS */
     /* General steps for migrating a dialog to angular CDK
@@ -181,17 +102,14 @@ export class NxDialogsService {
     5. Replace the dialog method in dialogs.service.ts
        a. If you don't require any special behavior, use the dialogV2Factory
        b. If you do require special behavior, use openV2 directly
-    6. Convert the dialog component to SCAM
-       a. Remove the component from declarations in dialogs.module.ts and add
-          the module to imports
      */
 
     private openV2<R, D = never, T = unknown>(
         component: ComponentType<T>,
-        customconfig: CdkDialogConfig<D> = {},
+        customconfig: DialogConfig<D> = {},
     ): Promise<R> {
-        const dialogConfig: CdkDialogConfig<D> = {
-            width: DIALOG_SIZE_V2.NORMAL, // Default width
+        const dialogConfig: DialogConfig<D> = {
+            width: DIALOG_SIZE.NORMAL, // Default width
             ...customconfig,
         };
         return firstValueFrom(this.cdkDialog.open<R, D>(component, dialogConfig).closed);
@@ -205,11 +123,11 @@ export class NxDialogsService {
      */
     private dialogV2Factory<DT extends Dt.DialogType, CT = unknown>(
         componentPromise: () => Promise<ComponentType<CT>>,
-        customConfig: CdkDialogConfig<never> = {},
+        customConfig: DialogConfig<never> = {},
     ): (data: DT['data']) => Promise<DT['return']> {
         return async data => {
             const component = await componentPromise();
-            const configWithData: CdkDialogConfig<DT['data']> = {
+            const configWithData: DialogConfig<DT['data']> = {
                 ...customConfig,
                 data,
             };
@@ -226,7 +144,7 @@ export class NxDialogsService {
         const component = await import('./generic/generic.component').then(
             m => m.GenericModalContent,
         );
-        const dialogConfig: CdkDialogConfig<Dt.Generic['data']> = {
+        const dialogConfig: DialogConfig<Dt.Generic['data']> = {
             data: { ...data, footer: { actionable: false, ...(data.footer ?? {}) } },
             // Only close button
         };
@@ -237,7 +155,7 @@ export class NxDialogsService {
         const component = await import('./generic/generic.component').then(
             m => m.GenericModalContent,
         );
-        const dialogConfig: CdkDialogConfig<Dt.Generic['data']> = {
+        const dialogConfig: DialogConfig<Dt.Generic['data']> = {
             data: { ...data, footer: { actionable: true, ...data.footer } },
             // With action/cancel buttons
         };
@@ -252,7 +170,7 @@ export class NxDialogsService {
     /* WebAdmin */
     wizard = this.dialogV2Factory<Dt.Wizard>(
         () => import('./wizard/wizard.component').then(m => m.WizardModalContent),
-        { width: DIALOG_SIZE_V2.SMALL, disableClose: true, hasBackdrop: false },
+        { width: DIALOG_SIZE.SMALL, disableClose: true, hasBackdrop: false },
     );
 
     loginWebAdmin = this.dialogV2Factory<Dt.LoginWebAdmin>(
@@ -261,7 +179,7 @@ export class NxDialogsService {
                 m => m.LoginWebadminModalContent,
             ),
         {
-            width: DIALOG_SIZE_V2.SMALL,
+            width: DIALOG_SIZE.SMALL,
             disableClose: true,
             hasBackdrop: false,
         },
@@ -294,11 +212,11 @@ export class NxDialogsService {
     /* Account */
     private async account2fa<A extends TfaAction>(
         data: Dt.Account2faData<A>,
-        config: CdkDialogConfig<never> = {},
+        config: DialogConfig<never> = {},
     ): Promise<Dt.Account2faReturn> {
         const component = await import('./two-fa/two-fa.component').then(m => m.TwoFAModalContent);
-        const configWithData: CdkDialogConfig<Dt.Account2faData<A>> = {
-            width: DIALOG_SIZE_V2.SMALL,
+        const configWithData: DialogConfig<Dt.Account2faData<A>> = {
+            width: DIALOG_SIZE.SMALL,
             ...config,
             data,
         };
@@ -414,10 +332,19 @@ export class NxDialogsService {
         { autoFocus: 'input' },
     );
 
+    merge = this.dialogV2Factory<Dt.MergeRefactored>(
+        () => import('./merge/merge.component').then(m => m.MergeModalContent),
+        { disableClose: true },
+    );
+
+    mergeRefactored = this.dialogV2Factory<Dt.MergeRefactored>(() =>
+        import('./merge/merge.refactor.component').then(m => m.NxMergeComponent),
+    );
+
     toggleSystem2fa = this.dialogV2Factory<Dt.Mandatory2fa>(
         () =>
             import('./mandatory-2fa/mandatory-2fa.component').then(m => m.Mandatory2faModalContent),
-        { width: DIALOG_SIZE_V2.SMALL },
+        { width: DIALOG_SIZE.SMALL },
     );
 
     transferOwnership = this.dialogV2Factory<Dt.TransferOwnership>(
@@ -431,12 +358,12 @@ export class NxDialogsService {
     /* Cloud storage */
     private cloudStorageFactory<CT>(
         componentPromise: () => Promise<ComponentType<CT>>,
-        customConfig: CdkDialogConfig<never> = {},
+        customConfig: DialogConfig<never> = {},
     ): (data: Dt.CloudStorage['data']) => Promise<Dt.CloudStorage['return']> {
         return async data => {
             const component = await componentPromise();
-            const configWithData: CdkDialogConfig<Dt.CloudStorage['data']> = {
-                width: DIALOG_SIZE_V2.ACTION,
+            const configWithData: DialogConfig<Dt.CloudStorage['data']> = {
+                width: DIALOG_SIZE.ACTION,
                 ...customConfig,
                 data,
             };
@@ -538,23 +465,19 @@ export class NxDialogsService {
             import('./bookmarks/more-devices/more-devices.component').then(
                 m => m.NxMoreDevicesModalContent,
             ),
-        { width: DIALOG_SIZE_V2.INFO, autoFocus: 'input' },
+        { width: DIALOG_SIZE.INFO, autoFocus: 'input' },
     );
 
     moreTags = this.dialogV2Factory<Dt.MoreTags>(
         () =>
             import('./bookmarks/more-tags/more-tags.component').then(m => m.NxMoreTagsModalContent),
-        { width: DIALOG_SIZE_V2.INFO, autoFocus: 'input' },
+        { width: DIALOG_SIZE.INFO, autoFocus: 'input' },
     );
 
     bookmarkDetails = this.dialogV2Factory<Dt.BookmarkDetails>(() =>
         import('./bookmarks/card-modal/bookmarks-card-modal.component').then(
             m => m.NxBookmarksCardModalComponent,
         ),
-    );
-
-    mergeRefactored = this.dialogV2Factory<Dt.MergeRefactored>(() =>
-        import('./merge/merge.refactor.component').then(m => m.NxMergeComponent),
     );
 
     /* New feature */
@@ -565,15 +488,15 @@ export class NxDialogsService {
      */
     private newFeatureFactory<D extends Dt.NewFeatureData>(
         content: D['content'],
-        customConfig: CdkDialogConfig<never> = {},
+        customConfig: DialogConfig<never> = {},
     ): (otherData: D['data']) => Promise<Dt.NewFeature['return']> {
         return async otherData => {
             const component = await import('./new-feature/new-feature.component').then(
                 m => m.NewFeatureInformationModalContent,
             );
             const data = { content, data: otherData } as D;
-            const configWithData: CdkDialogConfig<D> = {
-                width: DIALOG_SIZE_V2.INFO,
+            const configWithData: DialogConfig<D> = {
+                width: DIALOG_SIZE.INFO,
                 ...customConfig,
                 data,
             };
@@ -594,7 +517,7 @@ export class NxDialogsService {
             import('./select-time-range-native-fallback/select-time-range.component').then(
                 m => m.SelectTimeRangeModalContent,
             ),
-        { width: DIALOG_SIZE_V2.SMALL, autoFocus: 'input' },
+        { width: DIALOG_SIZE.SMALL, autoFocus: 'input' },
     );
 
     selectWebGlTimeRange = this.dialogV2Factory<Dt.WebGlSelectTimeRange>(
@@ -602,6 +525,6 @@ export class NxDialogsService {
             import('./webgl-select-time-range/select-time-range.component').then(
                 m => m.WebGlSelectTimeRangeModalContent,
             ),
-        { width: DIALOG_SIZE_V2.SMALL, autoFocus: 'input' },
+        { width: DIALOG_SIZE.SMALL, autoFocus: 'input' },
     );
 }

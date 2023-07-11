@@ -90,8 +90,6 @@ export class NxLoginService {
         ) {
             if (!(await this.pingCloud())) {
                 this.toasts.show(this.LANG.toastMessage.noInternet, ToastType.Warning);
-                // Close dialog if any
-                this.dialogs.dismissDialog();
                 this.cdkDialog.closeAll();
 
                 return Promise.resolve(false);

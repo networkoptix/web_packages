@@ -1,5 +1,5 @@
 import type { SelectionModel } from '@angular/cdk/collections';
-import type { DialogRef as CdkDialogRef } from '@angular/cdk/dialog';
+import type { DialogRef } from '@angular/cdk/dialog';
 import type { EventEmitter, TemplateRef } from '@angular/core';
 
 import type { Bookmark } from '@pages/systems/bookmarks/bookmarks.types';
@@ -25,7 +25,6 @@ import type { NxSystemServer } from '@services/system.service/system-types';
 import type { NxUser } from '@services/system.service/user-manager/user-manager-types';
 import type { NxSystemInfo } from '@services/systems.service.types';
 
-import type { DialogRef } from './dialog-ref';
 import { MergeError, MergeInfo } from './merge/merge.refactor.component.types';
 import { NewFeatureTemplate } from './new-feature/new-feature.component.types';
 import { TfaAction } from './two-fa/two-fa.component.types';
@@ -103,7 +102,7 @@ interface UpdateSessionData {
     system: NxSystem;
     noConnectionMsg?: string;
     processAction?: string;
-    openingRef?: DialogRef | CdkDialogRef;
+    openingRef?: DialogRef;
 }
 export type UpdateSession = DialogType<UpdateSessionData, boolean>;
 export type Client2faWarning = DialogType<void, void>;

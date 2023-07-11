@@ -524,12 +524,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.updateSettings(this.currentlyMerging);
         this.settingsService.system = this.system;
         const mergeDialog = this.CONFIG.featureFlags.mergeRefactorEnabled
-            ? this.dialogs.mergeRefactored({
-                  system: this.system,
-                  systems: this.mergeTargetSystems,
-              })
-            : this.dialogs.merge(this.system, this.mergeTargetSystems);
-        return mergeDialog
+            ? this.dialogs.mergeRefactored
+            : this.dialogs.merge;
+        return mergeDialog({
+            system: this.system,
+            systems: this.mergeTargetSystems,
+        })
             .then(mergeInfo => {
                 if (!mergeInfo) {
                     return;

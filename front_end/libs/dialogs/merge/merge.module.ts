@@ -14,6 +14,7 @@ import { NxMergeAdminPasswordComponent } from './admin-password/admin-password.c
 import { NxMergeChoosePrimaryComponent } from './choose-primary/choose-primary.component';
 import { NxMergeConfirmMergeComponent } from './confirm-merge/confirm-merge.component';
 import { NxMergeGenericMergeComponent } from './generic-merge/generic-merge.component';
+import { MergeModalContent } from './merge.component';
 import { NxMergeComponent } from './merge.refactor.component';
 import { NxMergeSelectSystemComponent } from './select-system/select-system.component';
 
@@ -33,6 +34,7 @@ import { NxMergeSelectSystemComponent } from './select-system/select-system.comp
     ],
     providers: [],
     declarations: [
+        MergeModalContent,
         NxMergeComponent,
         NxMergeAdminPasswordComponent,
         NxMergeChoosePrimaryComponent,

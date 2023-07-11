@@ -1,16 +1,24 @@
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import {
     ConfigType,
     ModalManifest,
     ModalType,
 } from '@components/console-table/console-table.component.types';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
+import { HtmlInputModule } from '@components/html-input/html-input.module';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { ToastType } from '@components/toast-container/toast.types';
-import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
+import { DirectivesModule } from '@directives/directives.module';
 import { ConsoleMode } from '@pages/developer-console/console/console.types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ContentSettings, ContextManifest } from '@services/nx-cloud-api/nx-cloud-api.types';
@@ -32,6 +40,19 @@ import { assignFrom } from '@utils/general';
     selector: 'nx-modal-edit',
     templateUrl: 'edit.component.html',
     styleUrls: ['edit.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+
+        DirectivesModule,
+        NxGenericDropdownModule,
+        HtmlInputModule,
+        NxCheckboxComponent,
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
+    ],
 })
 export class EditModalContent {
     heading: string;

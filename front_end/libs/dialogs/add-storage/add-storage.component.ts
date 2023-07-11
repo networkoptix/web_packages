@@ -1,4 +1,5 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Inject } from '@angular/core';
 import {
     Validators,
@@ -6,18 +7,24 @@ import {
     FormControl,
     FormGroup,
     AbstractControl,
+    FormsModule,
+    ReactiveFormsModule,
 } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
 import { last } from 'lodash-es';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import type { AddStorage as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { responseOk } from '@lib/variables/static-variables';
 import { Translatable } from '@pipes/nx-translate.types';
+import { PipesModule } from '@pipes/pipes.module';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { StorageManager } from '@services/system.service/storage-manager/storage-manager';
@@ -29,6 +36,17 @@ import { cleanId, assignFrom } from '@utils/general';
     selector: 'nx-modal-add-storage',
     templateUrl: 'add-storage.component.html',
     styleUrls: ['add-storage.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        TranslateModule,
+        PipesModule,
+
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
+    ],
 })
 export class AddStorageModalContent extends ModalBase<DT['return']> implements AfterViewInit {
     LANG = staticLang;
