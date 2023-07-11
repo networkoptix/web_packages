@@ -35,6 +35,7 @@ variables = {
     'VALID_EMAIL': 'noptixqa+valid@gmail.com',
     'BASE_PASSWORD': 'qweasd 123',
     'password': '{BASE_PASSWORD}',
+    'ANONYMOUS_BODY': '//body[contains(@class,"anonymous")]//h1[@data-testid="welcomeCaption" or @id="welcomeCaption"]',
     'REGISTER_FORM': '//nx-authorize-create-account-component',
     'REGISTER_FIRST_NAME_INPUT': '{REGISTER_FORM}//form//input[@id="firstName"]',
     'REGISTER_LAST_NAME_INPUT': '{REGISTER_FORM}//form//input[@id="lastName"]',

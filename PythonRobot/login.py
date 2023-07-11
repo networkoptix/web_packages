@@ -5,7 +5,7 @@ from RobotVariables import RobotVariables
 
 
 class LoginDialog:
-    def __init__(self, driver, lang="en_US", ):
+    def __init__(self, driver, lang="en_US"):
         self.driver = driver
         self.rb = RobotVariables(lang)
         self._wait_until_modal_is_visible()

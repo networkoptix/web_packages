@@ -72,7 +72,7 @@ def verify_in_account_page(driver: webdriver):
     #robot_keywords.wait_until_page_contains_element(driver, rb.ANONYMOUS_BODY)
 
 def validate_log_out(driver: webdriver):
-    robot_keywords.wait_until_element_is_visible(driver, rb.BACKDROP)
+    robot_keywords.wait_until_element_is_not_visible(driver, rb.BACKDROP)
     robot_keywords.wait_until_page_contains_element(driver, rb.ANONYMOUS_BODY)
 
 def get_lang_list():
