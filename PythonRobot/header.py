@@ -27,11 +27,16 @@ class HeaderNav:
 
     def log_out_option(self):
         translated_xpath = self.rb.replace_nested_variables(
-            "//header//li//a/span[contains(text(),'${LOG OUT BUTTON TEXT}')]/..")
+            "//header//li//a/span[contains(text(),'{LOG_OUT_BUTTON_TEXT}')]/..")
         return Button(self.driver, translated_xpath)
 
     def administration_selection(self):
         pass
+
+    def log_in_button(self):
+        translated_xpath = self.rb.replace_nested_variables(
+            "//header//span[contains(text(),'{LOG_IN_BUTTON_TEXT}')]/..")
+        return Button(self.driver, translated_xpath)
 
     def log_out(self):
         self.account_dropdown().click()
