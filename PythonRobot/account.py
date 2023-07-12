@@ -1,25 +1,26 @@
 import json
 from time import sleep
-import json
-from time import sleep
 from selenium import webdriver
 from resource import get_headless_chrome
 from resource import get_lang_list
 from variables import ERROR_COLOR
 from selenium.webdriver.common.by import By
-from resource import verify_in_account_page, validate_log_out, get_random_email, register_and_activate_account
+from resource import verify_in_account_page, validate_log_out, get_random_email, register_and_activate_account, send_restore_password_email
 from selenium.webdriver.chrome.options import Options
 
 from RobotVariables import RobotVariables
-
+from requests import HTTPError
+from urllib3.exceptions import MaxRetryError
+# from NoptixLibrary.CloudPortalAPI import CloudPortalAPI
 import robot_keywords
+import resource
+# from NoptixLibrary import open_mailbox, wait_for_email
+#from NoptixLibrary.GenericKeywords import check_language_logged_in
+
 
 password = "qweasd1234"
-login = ""
-import json
-
+login = "noptixautoqa+owner@gmail.com"
 rb = RobotVariables("en_US")
-
 
 def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR, exists=True,  api=False, reset=False, two_FA=False, twoFA_backup_code="" ):
     if button:
@@ -49,6 +50,8 @@ def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR
         robot_keywords.wait_until_element_is_visible(driver,rb.ACCOUNT_DOES_NOT_EXIST,rb.YOU_CAN_CREATE_AN_ACCOUNT)
     # TODO: Check if 2fa is true and there is no backup code
     if validate:
+        # todo: remove this
+        sleep(5)
         robot_keywords.wait_until_element_is_visible(driver, rb.ACCOUNT_DROPDOWN)
     robot_keywords.sleep(0.5)
 
@@ -124,7 +127,6 @@ def test_changing_last_name_and_saving_maintains_that_setting():
     cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
     verify_in_account_page(driver)
     robot_keywords.input_text(driver, rb.ACCOUNT_LAST_NAME, "nameChanged")
-    print (rb.ACCOUNT_SAVE)
     robot_keywords.wait_until_element_is_visible(driver, rb.ACCOUNT_SAVE)
     robot_keywords.click_button(driver, rb.ACCOUNT_SAVE)
     robot_keywords.check_for_alert(driver, rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED)
@@ -140,39 +142,11 @@ def test_changing_last_name_and_saving_maintains_that_setting():
     robot_keywords.click_button(driver, rb.ACCOUNT_SAVE)
     robot_keywords.check_for_alert(driver, rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED)
     robot_keywords.close_browser(driver)
-    robot_keywords.close_browser(driver)
 
 def test_first_name_is_required():
     """7 First name is required"""
     driver = get_headless_chrome()
     robot_keywords.go_to_url(driver, rb.ENV + "/account")
-    cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
-    verify_in_account_page(driver)
-
-    robot_keywords.delete_all_text(driver, rb.ACCOUNT_FIRST_NAME)
-    robot_keywords.click_element(driver, rb.ACCOUNT_LAST_NAME)
-
-    robot_keywords.wait_until_element_has_style(driver, rb.ACCOUNT_FIRST_NAME, f"border-color: {rb.ERROR_COLOR};")
-    robot_keywords.wait_until_element_has_style(driver, rb.ACCOUNT_FIRST_NAME, f"color: {rb.ERROR_COLOR_WITH_OPACITY};")
-    for element in [rb.ACCOUNT_SAVE, rb.ACCOUNT_CANCEL]:
-        robot_keywords.wait_until_element_is_visible(driver, element)
-    robot_keywords.element_should_be_disabled(driver, rb.ACCOUNT_SAVE)
-    robot_keywords.element_should_be_enabled(driver, rb.ACCOUNT_CANCEL)
-
-    #robot_keywords.click_button(driver, rb.ACCOUNT_CANCEL)
-    for element in [rb.ACCOUNT_SAVE, rb.ACCOUNT_CANCEL]:
-        robot_keywords.wait_until_element_is_visible(driver, element)
-    robot_keywords.element_should_be_disabled(driver, rb.ACCOUNT_SAVE)
-    robot_keywords.element_should_be_enabled(driver, rb.ACCOUNT_CANCEL)
-    robot_keywords.wait_until_element_has_style(driver, rb.ACCOUNT_FIRST_NAME, f"border-color: {rb.ERROR_COLOR};")
-    robot_keywords.wait_until_element_has_style(driver, rb.ACCOUNT_FIRST_NAME, f"color: {rb.ERROR_COLOR_WITH_OPACITY};")
-    robot_keywords.click_button(driver, rb.ACCOUNT_CANCEL)
-    robot_keywords.close_browser(driver)
-
-def test_last_name_is_required():
-    """8 Last name is required"""
-    driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, rb.rb.ENV + "/account")
     cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
     verify_in_account_page(driver)
 
@@ -228,7 +202,7 @@ def test_SPACE_for_first_name_is_not_valid():
     verify_in_account_page(driver)
     robot_keywords.input_text(driver, rb.ACCOUNT_FIRST_NAME, " ")   
     robot_keywords.click_element(driver,   f"//header/h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]")
-    robot_keywords.wait_until_element_has_style(driver, rb.ACCOUNT_FIRST_NAME, f"border-color: {ERROR_COLOR};")
+    robot_keywords.wait_until_element_has_style(driver, ACCOUNT_FIRST_NAME, f"border-color: {ERROR_COLOR};")
     robot_keywords.wait_until_element_has_style(driver, rb.ACCOUNT_FIRST_NAME, f"color: {rb.ERROR_COLOR_WITH_OPACITY};")
     robot_keywords.element_should_be_disabled(driver, rb.ACCOUNT_SAVE)
     robot_keywords.element_should_be_enabled(driver, rb.ACCOUNT_CANCEL)
@@ -293,67 +267,57 @@ def test_language_is_changeable_on_the_account_page():
     robot_keywords.wait_until_element_is_visible(driver, f"//header//h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]")
     robot_keywords.close_browser(driver)
 
-# Coming soon
-# def test_language_change_affects_emails():
-#     """14 Language change affects emails"""
-#     driver = get_headless_chrome()
-#     password = "theF0rc3"
-#     random_email = get_random_email(rb.BASE_EMAIL, sendemail=True)
-#     register_and_activate_account(driver, "Darth", "Vader", random_email, password)
-#     robot_keywords.go_to_url(driver, rb.ENV + "/account")
-#     subject = "Reset your password"
-#     if rb.LANGUAGE != "ru_Ru":
-#         subject = "Восстановление пароля"
-#         cloud_login(driver, random_email, password, button=None, api=False)
-#         verify_in_account_page(driver)
-#         robot_keywords.click_button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN)
-#         robot_keywords.wait_until_element_is_visible(driver, "//nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']/..")
-#         robot_keywords.click_element(driver, "//nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']")
-#         sleep(5)
-#         robot_keywords.close_browser(driver)
+def test_language_change_affects_emails():
+    """14 Language change affects emails"""
+    driver = get_headless_chrome()
+    password = "theF0rc3"
 
+    print("base email", rb.BASE_EMAIL)
+    random_email = get_random_email(rb.BASE_EMAIL_SENDEMAIL, sendemail=True)
+    print("random email", random_email)
+    register_and_activate_account(driver, "Darth", "Vader", random_email, password)
+    robot_keywords.go_to_url(driver, rb.ENV + "/account")
+    subject = "Reset your password"
+    if rb.LANGUAGE != "ru_Ru":
+        subject = "Восстановление пароля"
+        cloud_login(driver, random_email, password, button=None, api=False)
+        verify_in_account_page(driver)
+        robot_keywords.click_button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN)
+        robot_keywords.wait_until_element_is_visible(driver, "//nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']/..")
+        robot_keywords.click_element(driver, "//nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']")
+        sleep(5)
+        robot_keywords.close_browser(driver)
+
+    # if we just closed the browser, we'll get a MaxRetryError
+    try:
+        robot_keywords.go_to_url(driver,rb.ENV + "/login") 
+    except MaxRetryError:
+        driver = None
+        driver = get_headless_chrome()
+        #robot_keywords.go_to_url(driver, rb.ENV + "/login")
+
+    send_restore_password_email(driver, random_email)
+    sleep(10)
+    print(rb.BASE_HOST, rb.BASE_PASSWORD, rb.TEST_EMAIL, random_email)
+    mbox = resource.open_mailbox(host=rb.BASE_HOST,password=rb.BASE_EMAIL_PASSWORD, email=random_email, is_secure=True)
+    email, email_uid = resource.wait_for_email(mbox, recipient=random_email, timeout=120, status="UNREAD")
+    resource.delete_email(mbox, email_uid)
+    resource.check_language_logged_in(random_email, password)
 
 if __name__ == "__main__":
 
-
-
-    # print("Running tests in account.py")
-    # print("test_can_access_account_page_from_dropdown")
     # test_can_access_account_page_from_dropdown()
-
-    # print("test_can_access_account_page_from_direct_link")
     # test_can_access_account_page_from_direct_link()
-
-    # # # #test_cannot_access_account_page_from_direct_link_closing_log()
-    
-    # print("test_cannot_access_account_page_from_direct_link_on_valid_login")
+    # # #test_cannot_access_account_page_from_direct_link_closing_log()
     # test_cannot_access_account_page_from_direct_link_on_valid_login()
-
-    # print("test_changing_first_name_and_saving_maintains_that_setting")
     # test_changing_first_name_and_saving_maintains_that_setting()
-
-    print("test_changing_last_name_and_saving_maintains_that_setting")
-    test_changing_last_name_and_saving_maintains_that_setting()
-
-    print("test_first_name_is_required")
-    test_first_name_is_required()
-
-    print("test_last_name_is_required")
-    test_last_name_is_required()
-
-    print("test_SPACE_for_first_name_is_not_valid")
-    test_SPACE_for_first_name_is_not_valid()
-
-    print("test_SPACE_for_last_name_is_not_valid")    
-    test_SPACE_for_last_name_is_not_valid()
-
-    print("test_email_is_uneditable")
-    test_should_respond_tab_and_go()
-
-    print("test_language_is_changeable_on_the_account_page")
+    # test_changing_last_name_and_saving_maintains_that_setting()
+    # test_first_name_is_required()
+    # test_last_name_is_required()
+    # test_SPACE_for_first_name_is_not_valid()
+    # test_SPACE_for_last_name_is_not_valid()
+    # test_should_respond_tab_and_go()
     test_language_is_changeable_on_the_account_page()
 
-        # Coming soon
-    # test_language_change_affects_emails()
-
+  
 

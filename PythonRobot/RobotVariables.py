@@ -1,8 +1,7 @@
-import json, re
-import os
+import json, re, os
+
 class RobotVariables():
     def __init__(self, language: str) -> None:
-                
         if language in ["en_US"]:
             self.language = language
     
@@ -10,7 +9,7 @@ class RobotVariables():
         current_dir = os.path.abspath(os.getcwd())
         filename = "variables_language_en_US.json"
         file = os.path.join(current_dir, filename)
-        with open(file, encoding="utf-8") as f:
+        with open(file) as f:
             translation_variables = json.load(f)
             if variable_name in translation_variables:
                 return translation_variables[variable_name]
@@ -20,7 +19,7 @@ class RobotVariables():
         current_dir = os.path.abspath(os.getcwd())
         filename = 'account_variables.json'
         file = os.path.join(current_dir, filename)        
-        with open(file, encoding="utf-8") as f:
+        with open(file) as f:
             account_variables = json.load(f)
             if variable_name in account_variables:
                 return account_variables[variable_name]

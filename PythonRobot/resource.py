@@ -1,15 +1,8 @@
-import json
-import os
-from pathlib import Path
-import re
-import tempfile
-import certifi
-from requests.auth import HTTPDigestAuth, HTTPBasicAuth
-import urllib3
-import selenium
-from account_variables import BACKDROP, ANONYMOUS_BODY
-from account_variables import ACCOUNT_CANCEL, ACCOUNT_DROPDOWN, ACCOUNT_EMAIL, ACCOUNT_FIRST_NAME, ACCOUNT_LANGUAGE_DROPDOWN, ACCOUNT_LAST_NAME, ACCOUNT_SETTINGS_BUTTON, DELETE_ACCOUNT_BUTTON
-from variables import LOG_OUT_BUTTON
+
+import time
+import email
+from email.header import decode_header
+import imaplib
 import json
 import os
 from pathlib import Path
@@ -29,32 +22,36 @@ from RobotVariables import RobotVariables
 import requests
 import time
 from random import randint
-import robot_lists as rl
+from NoptixLibrary.CloudSession import CloudSession
+from NoptixLibrary.CloudPortalAPI import CloudPortalAPI 
+from NoptixLibrary import *
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 rb = RobotVariables("en_US")
 
-_letsencrypt_stage_cert_path = str(Path(__file__).parent / 'letsencrypt-stg.crt')
-if os.getenv('LETSENCRYPT_STAGE_CERT_REQUIRED'):
-    with tempfile.NamedTemporaryFile(mode='a+b', suffix='.pem', delete=False) as certs_file:
-        with open(_letsencrypt_stage_cert_path, 'rb') as letsencrypt_stage_cert:
-            certs_file.write(letsencrypt_stage_cert.read())
-        with open(certifi.where(), 'rb') as trusted_certs:
-            certs_file.write(trusted_certs.read())
-        _ssl_certs_path = Path(certs_file.name)
-else:
-    _ssl_certs_path = Path(certifi.where())
+# _letsencrypt_stage_cert_path = str(Path(__file__).parent / 'letsencrypt-stg.crt')
+# if os.getenv('LETSENCRYPT_STAGE_CERT_REQUIRED'):
+#     with tempfile.NamedTemporaryFile(mode='a+b', suffix='.pem', delete=False) as certs_file:
+#         with open(_letsencrypt_stage_cert_path, 'rb') as letsencrypt_stage_cert:
+#             certs_file.write(letsencrypt_stage_cert.read())
+#         with open(certifi.where(), 'rb') as trusted_certs:
+#             certs_file.write(trusted_certs.read())
+#         _ssl_certs_path = Path(certs_file.name)
+# else:
+#     _ssl_certs_path = Path(certifi.where())
 
 def get_headless_chrome():
     # TODO: remove logging stuff and restore headless option
     chrome_options = Options()
     chrome_options.add_argument("--enable-logging")
     #chrome_options.add_argument("--headless")
+   
     capabilities = DesiredCapabilities.CHROME
     capabilities['goog:loggingPrefs'] = {'browser': 'ALL'}
 
     driver = webdriver.Chrome(options=chrome_options, desired_capabilities=capabilities)
+    # driver.execute_script("localStorage.setItem('theme', 'light');")
     return driver
 
 def verify_in_account_page(driver: webdriver):
@@ -68,11 +65,9 @@ def verify_in_account_page(driver: webdriver):
     for element in [rb.ACCOUNT_SETTINGS_BUTTON, rb.ACCOUNT_CANCEL]:
         robot_keywords.element_should_not_be_visible(driver, element)
     robot_keywords.sleep(0.5)
-    #robot_keywords.wait_until_element_is_visible(driver, rb.BACKDROP)
-    #robot_keywords.wait_until_page_contains_element(driver, rb.ANONYMOUS_BODY)
 
 def validate_log_out(driver: webdriver):
-    robot_keywords.wait_until_element_is_not_visible(driver, rb.BACKDROP)
+    robot_keywords.wait_until_element_is_visible(driver, rb.BACKDROP)
     robot_keywords.wait_until_page_contains_element(driver, rb.ANONYMOUS_BODY)
 
 def get_lang_list():
@@ -102,26 +97,29 @@ def get_lang_list():
 #     activate_response.raise_for_status()
 #     return f"{rb.ENV}/authorize/activate/{activate_response.json()}"
 
-# def activate(driver, email, password=rb.BASE_PASSWORD, from_email=rb.FROM_EMAIL_DEFAULT):
-#     if from_email:
-#         link = get_email_link(email, password, "activate", via_email=from_email)
-#         robot_keywords.go_to_url(link)
-#         for element in [rb.ACTIVATION_SUCCESS, rb.ACTIVATION_SUCCESS_ICON, rb.ACTIVATION_SUCCESS_LOG_IN_BUTTON]:
-#             robot_keywords.wait_until_element_is_visible(driver, element)
-#     else:
-#         activate_account_via_api
+def activate(driver, email, password=rb.BASE_PASSWORD, from_email=rb.FROM_EMAIL_DEFAULT):
+    if from_email:
+        link = get_email_link(email, password, "activate", via_email=from_email)
+        robot_keywords.go_to_url(link)
+        for element in [rb.ACTIVATION_SUCCESS, rb.ACTIVATION_SUCCESS_ICON, rb.ACTIVATION_SUCCESS_LOG_IN_BUTTON]:
+            robot_keywords.wait_until_element_is_visible(driver, element)
+    else:
+        api = CloudPortalAPI.CloudPortalAPI()
 
-# def get_email_link(email, password, link_type, from_email=rb.FROM_EMAIL_DEFAULT):
-#     pass
 
-# def register(first_name, last_name, email, password, checked=False, view_type=""):
-#     if view_type:
-#         robot_keywords.go_to_url(rb.ENV + "/authorize?client_type=create&view_type=" + view_type)
-#     else:
-#         robot_keywords.go_to_url(rb.ENV + "/authorize?client_type=create")
-#     validate_on_register_page()
-#     robot_keywords.input_text(rb.REGISTER_FIRST_NAME_INPUT, first_name)
-#     robot_keywords.input_text(rb.REGISTER_LAST_NAME_INPUT, last_name)
+        api.activate_account_via_api(email, password)
+
+def get_email_link(email, password, link_type, from_email=rb.FROM_EMAIL_DEFAULT):
+    pass
+
+def register(first_name, last_name, email, password, checked=False, view_type=""):
+    if view_type:
+        robot_keywords.go_to_url(rb.ENV + "/authorize?client_type=create&view_type=" + view_type)
+    else:
+        robot_keywords.go_to_url(rb.ENV + "/authorize?client_type=create")
+    validate_on_register_page()
+    robot_keywords.input_text(rb.REGISTER_FIRST_NAME_INPUT, first_name)
+    robot_keywords.input_text(rb.REGISTER_LAST_NAME_INPUT, last_name)
 
     try:
         robot_keywords.wait_until_element_is_visible(rb.REGISTER_EMAIL_INPUT_LOCKED, 5)
@@ -134,56 +132,96 @@ def get_lang_list():
     robot_keywords.click_button(rb.CREATE_ACCOUNT_BUTTON)
 
 def register_and_activate_account(driver, first_name, last_name, email, password, reg="api", from_email=rb.FROM_EMAIL_DEFAULT):
+    api = CloudPortalAPI.CloudPortalAPI()
+
     if reg == "api":
-        register_account(first_name, last_name, email, password)
+        api.register_account(first_name, last_name, email, password)
     elif reg == "ui":
-        register(first_name, last_name, email, password)
+        api.register(first_name, last_name, email, password)
     robot_keywords.sleep(1)
     activate(driver, email, password, from_email=from_email)
 
+def get_random_email(email, sendemail=False, extra="", symbols=False):
+    if not sendemail:
+        email = email.replace('sendemail', '')
+    if symbols:
+        index = email.find('@')
+        email = email[:index] + \
+                "!#$%'*-/=?^_`{|}~" + str(time.time()) + email[index:]
+        return email
+    else:
+        index = email.find('@')
+        email = email[:index] + str(time.time()) + str(randint(1, 100)) + extra + email[index:]
+        return email
+    
+# from robot_tests/Resources/front-end-resources/restore-pass-resource.robot    
+def send_restore_password_email(driver: webdriver, email: str)->  None:
+
+    robot_keywords.go_to_url(driver, rb.ENV + "/authorize")
+    robot_keywords.wait_until_elements_are_visible(driver, [rb.LOG_IN_MODAL, rb.LOG_IN_NEXT_BUTTON, rb.EMAIL_INPUT])
+    time.sleep(1)
+    robot_keywords.wait_until_input_succeeds(driver, rb.EMAIL_INPUT, email)
+    time.sleep(1)
+    robot_keywords.click_element(driver, rb.LOG_IN_NEXT_BUTTON)
+    robot_keywords.wait_until_element_is_visible(driver, rb.FORGOT_PASSWORD_BUTTON)
+    robot_keywords.click_element(driver, rb.FORGOT_PASSWORD_BUTTON)
+    robot_keywords.input_text(driver, rb.RESTORE_PASSWORD_EMAIL_INPUT, email)
+    robot_keywords.click_element(driver, rb.RESET_PASSWORD_BUTTON)
+
+
 def check_password_badge(driver: webdriver, password, new_focus):
     if password != "":
-        robot_keywords.wait_until_element_is_visible(driver, rb.PASSWORD_BADGE)
-    if password == rb.COMMON_PASSWORD:
-        robot_keywords.wait_until_element_is_visible(driver, rb.PASSWORD_IS_TOO_COMMON_BADGE)
-    elif password in  rl.WEAK_PASSWORDS:
-        robot_keywords.wait_until_element_is_visible(driver, rb.PASSWORD_IS_WEAK_BADGE)
-    elif password in rl.INCORRECT_PASSWORDS:
-        robot_keywords.wait_until_element_is_visible(driver, rb.PASSWORD_INCORRECT_BADGE)
-    elif password in rl.FAIR_PASSWORDS:
-        robot_keywords.wait_until_element_is_visible(driver, rb.PASSWORD_IS_FAIR_BADGE)
-    elif password in rl.GOOD_PASSWORDS:
-        robot_keywords.wait_until_element_is_visible(driver, rb.PASSWORD_IS_GOOD_BADGE)
-    elif password == rb.SEVEN_CHAR_PASSWORD:
-        robot_keywords.wait_until_element_is_visible(driver, rb.PASSWORD_IS_TOO_SHORT_BADGE)
+        robot_keywords.wait_until_element_is_visible(driver, PASSWORD_BADGE)
+    if password == COMMON_PASSWORD:
+        robot_keywords.wait_until_element_is_visible(driver, PASSWORD_IS_TOO_COMMON_BADGE)
+    elif password in  WEAK_PASSWORDS:
+        robot_keywords.wait_until_element_is_visible(driver, PASSWORD_IS_WEAK_BADGE)
+    elif password in INCORRECT_PASSWORDS:
+        robot_keywords.wait_until_element_is_visible(driver, PASSWORD_INCORRECT_BADGE)
+    elif password in FAIR_PASSWORDS:
+        robot_keywords.wait_until_element_is_visible(driver, PASSWORD_IS_FAIR_BADGE)
+    elif password in GOOD_PASSWORDS:
+        robot_keywords.wait_until_element_is_visible(driver, PASSWORD_IS_GOOD_BADGE)
+    elif password == SEVEN_CHAR_PASSWORD:
+        robot_keywords.wait_until_element_is_visible(driver, PASSWORD_IS_TOO_COMMON_BADGE)
     
     if password != "":
-        robot_keywords.mouse_over(driver, rb.PASSWORD_BADGE)
+        robot_keywords.mouse_over(driver, PASSWORD_BADGE)
     
-    if password == rb.COMMON_PASSWORD:
-        robot_keywords.wait_until_element_is_visible(driver, f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") and text()="{rb.PASSWORD_TOO_COMMON_TEXT}"]')
-    elif password in  rl.WEAK_PASSWORDS:
-        robot_keywords.wait_until_element_is_visible(driver, f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") and text()="{rb.PASSWORD_IS_WEAK_TEXT}"]')
-    elif password in rl.INCORRECT_PASSWORDS:
-        robot_keywords.wait_until_element_is_visible(driver, f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") and text()="{rb.PASSWORD_SPECIAL_CHARS_TEXT}"]')
-    elif password in rl.FAIR_PASSWORDS:
-        robot_keywords.wait_until_element_is_visible(driver, f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") and text()="{rb.PASSWORD_IS_WEAK_TEXT}"]')
-    elif password == rb.SEVEN_CHAR_PASSWORD:
-        robot_keywords.wait_until_element_is_visible(driver, f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") and contains(text(), "{rb.PASSWORD_TOO_SHORT_TEXT}")]')
+    if password == COMMON_PASSWORD:
+        robot_keywords.wait_until_element_is_visible(driver, f'{PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") and text()="{PASSWORD_TOO_COMMON_TEXT}"])')
+    elif password in  WEAK_PASSWORDS:
+        robot_keywords.wait_until_element_is_visible(driver, f'{PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") and text()="{PASSWORD_IS_WEAK_TEXT}"])')
+    elif password in INCORRECT_PASSWORDS:
+        robot_keywords.wait_until_element_is_visible(driver, f'{PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") and text()="{PASSWORD_SPECIAL_CHARS_TEXT}"])')
+    elif password in FAIR_PASSWORDS:
+        robot_keywords.wait_until_element_is_visible(driver, f'{PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") and text()="{PASSWORD_IS_WEAK_TEXT}"])')
+    elif password == SEVEN_CHAR_PASSWORD:
+        robot_keywords.wait_until_element_is_visible(driver, f'{PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") and text()="{PASSWORD_IS_TOO_SHORT}"])')
 
+    robot_keywords.go_to_url(driver, rb.ENV + "/authorize")
+    robot_keywords.wait_until_elements_are_visible(driver, [rb.LOG_IN_MODAL, rb.LOG_IN_NEXT_BUTTON, rb.EMAIL_INPUT])
+    time.sleep(1)
+    robot_keywords.wait_until_input_succeeds(driver, rb.EMAIL_INPUT, email)
+    robot_keywords.click_element(driver, rb.LOG_IN_NEXT_BUTTON)
 
-    if password == rb.COMMON_PASSWORD:
-        move_focus_and_check_badge_stays(driver,rb.PASSWORD_IS_TOO_COMMON_BADGE, new_focus)
-    elif password in  rl.WEAK_PASSWORDS:
-        move_focus_and_check_badge_stays(driver, rb.PASSWORD_IS_WEAK_BADGE, new_focus)
-    elif password in rl.INCORRECT_PASSWORDS:
-        move_focus_and_check_badge_stays(driver, rb.PASSWORD_INCORRECT_BADGE, new_focus)
-    elif password in rl.FAIR_PASSWORDS:
-        robot_keywords.wait_until_element_is_visible(driver, rb.PASSWORD_IS_FAIR_BADGE)
-    elif password in rl.GOOD_PASSWORDS:
-        robot_keywords.wait_until_element_is_visible(driver, rb.PASSWORD_IS_GOOD_BADGE)
-    elif password == rb.SEVEN_CHAR_PASSWORD:
-        move_focus_and_check_badge_stays(driver, rb.PASSWORD_IS_TOO_SHORT_BADGE, new_focus)
+    robot_keywords.wait_until_element_is_visible(driver, rb.FORGOT_PASSWORD_BUTTON)
+    robot_keywords.click_element(driver, rb.FORGOT_PASSWORD_BUTTON)
+
+    robot_keywords.input_text(driver, rb.RESTORE_PASSWORD_EMAIL_INPUT, email)
+    robot_keywords.click_element(driver, rb.RESET_PASSWORD_BUTTON)
+    if password == COMMON_PASSWORD:
+        move_focus_and_check_badge_stays(driver, PASSWORD_IS_TOO_COMMON_BADGE, new_focus)
+    elif password in  WEAK_PASSWORDS:
+        move_focus_and_check_badge_stays(driver, PASSWORD_IS_WEAK_BADGE, new_focus)
+    elif password in INCORRECT_PASSWORDS:
+        move_focus_and_check_badge_stays(driver, PASSWORD_INCORRECT_BADGE, new_focus)
+    elif password in FAIR_PASSWORDS:
+        robot_keywords.wait_until_element_is_visible(driver, PASSWORD_IS_FAIR_BADGE)
+    elif password in GOOD_PASSWORDS:
+        robot_keywords.wait_until_element_is_visible(driver, PASSWORD_IS_GOOD_BADGE)
+    elif password == SEVEN_CHAR_PASSWORD:
+        move_focus_and_check_badge_stays(driver, PASSWORD_IS_TOO_COMMON_BADGE, new_focus)
     
 def register_account(firstName, lastName, email, password):
     body = {
@@ -199,66 +237,58 @@ def register_account(firstName, lastName, email, password):
     register_response.raise_for_status()
     return register_response.json()
 
-def get_random_email(email, sendemail=False, extra="", symbols=False):
-    if not sendemail:
-        email = email.replace('sendemail', '')
-    if symbols:
-        index = email.find('@')
-        email = email[:index] + \
-                "!#$%'*-/=?^_`{|}~" + str(time.time()) + email[index:]
-        return email
-    else:
-        index = email.find('@')
-        email = email[:index] + str(time.time()) + str(randint(1, 100)) + extra + email[index:]
-        return email
 
-def move_focus_and_check_badge_stays(driver, badge, new_focus):
-    robot_keywords.element_should_be_visible(driver, badge)
-    robot_keywords.click_element(driver, new_focus)
-    robot_keywords.element_should_be_visible(driver, badge)
+def open_mailbox(host=rb.BASE_HOST, password=rb.BASE_PASSWORD, email=rb.BASE_EMAIL, is_secure=True):
+    try:
+        if is_secure:
+            mail = imaplib.IMAP4_SSL(host)
+        else:
+            mail = imaplib.IMAP4(host)
 
-def move_focus_and_check_element(driver, element, new_focus):
-    robot_keywords.click_element(driver, new_focus)
-    robot_keywords.wait_until_element_is_visible(driver, element)
+        mail.login(email, password)
+        mail.select('inbox')  
+        
+        return mail
 
-def get_random_email(email, sendemail=False, extra="", symbols=False):
-    if not sendemail:
-        email = email.replace('sendemail', '')
-    if symbols:
-        index = email.find('@')
-        email = email[:index] + \
-                "!#$%'*-/=?^_`{|}~" + str(time.time()) + email[index:]
-        return email
-    else:
-        index = email.find('@')
-        email = email[:index] + str(time.time()) + str(randint(1, 100)) + extra + email[index:]
-        return email
-def log_out_cloud(driver: webdriver):
-    robot_keywords.wait_until_page_does_not_contain_element(driver, BACKDROP)
-    robot_keywords.wait_until_page_contains_element(driver, LOG_OUT_BUTTON)
-    robot_keywords.wait_until_element_is_visible(driver, ACCOUNT_DROPDOWN)
-    robot_keywords.click_button(driver, ACCOUNT_DROPDOWN)
-    robot_keywords.wait_until_element_is_visible(driver, LOG_OUT_BUTTON)
-    robot_keywords.click_on_link(driver, LOG_OUT_BUTTON)
-    validate_log_out(driver)
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None
 
-def check_new_password_outline_and_error_message(driver, new_password, new_focus, input, input_name):
-    robot_keywords.click_element(driver, new_focus)
-    if new_password not in rl.FAIR_PASSWORDS and new_password not in rl.GOOD_PASSWORDS:
-        robot_keywords.element_style_should_be(driver, input, "border-bottom-color",rb.ERROR_COLOR_WITH_OPACITY)
-        robot_keywords.element_style_should_be(driver, input, "border-top-color", rb.ERROR_COLOR_WITH_OPACITY)
-        robot_keywords.element_style_should_be(driver, input, "border-right-color", rb.ERROR_COLOR_WITH_OPACITY)
-        robot_keywords.element_style_should_be(driver, input, "border-left-color", rb.ERROR_COLOR_WITH_OPACITY)
-        robot_keywords.element_style_should_be(driver, input, "color", rb.ERROR_COLOR_WITH_OPACITY)
-        robot_keywords.wait_until_element_is_visible(driver, f"//nx-password-input[@name='{input_name}' and contains(@class, 'ng-invalid')]//input[@id='{input_name}']")
-    if new_password == "" or new_password == " ":
-        robot_keywords.input_text(driver, input, "")
-        move_focus_and_check_element(driver, rb.PASSWORD_IS_REQUIRED, new_focus)
-    elif new_password == rb.SEVEN_CHAR_PASSWORD:
-        move_focus_and_check_element(driver, rb.PASSWORD_TOO_SHORT, new_focus)
-    elif new_password in rl.INCORRECT_PASSWORDS:
-        move_focus_and_check_element(driver, rb.PASSWORD_SPECIAL_CHARS, new_focus)
-    elif new_password == rb.COMMON_PASSWORD:
-        move_focus_and_check_element(driver, rb.PASSWORD_TOO_COMMON, new_focus)
-    elif new_password in rl.WEAK_PASSWORDS:
-        move_focus_and_check_element(driver, rb.PASSWORD_IS_WEAK, new_focus)
+def wait_for_email(mail, recipient, timeout, status='UNSEEN'):
+    start_time = time.time()
+
+    while True:
+        # Check if the timeout has been reached
+        if time.time() - start_time > timeout:
+            return None
+
+        # Search the inbox for emails with specific "To" header
+        result, data = mail.uid('search', None, f'(HEADER "To" "{recipient}")')
+        email_ids = data[0].split()
+        
+        for email_id in email_ids:
+            result, email_data = mail.uid('fetch', email_id, '(FLAGS)')
+            email_flags = email_data[0].decode()  # decode the entire byte string
+            if result == 'OK' and '\\Seen' not in email_flags:
+                result, email_data = mail.uid('fetch', email_id, '(BODY.PEEK[HEADER])')
+                raw_email = email_data[0][1].decode('utf-8')
+                email_message = email.message_from_string(raw_email)
+                return email_id
+        time.sleep(1)
+
+def check_language_logged_in(email, password, language="en_US"): 
+    api = CloudPortalAPI.CloudPortalAPI()
+    current_lang = api.get_account_language(email, password)
+    if current_lang == language:
+        api.set_account_language(email, password, language)
+    time.sleep(2)
+
+
+
+def delete_email(mail, email_uid):
+    # Mark the email for deletion
+    mail.uid('STORE', email_uid, '+FLAGS', '(\Deleted)')
+
+    # Permanently remove mails that are marked for deletion
+    mail.expunge()
+    
