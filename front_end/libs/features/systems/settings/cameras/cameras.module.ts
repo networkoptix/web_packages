@@ -26,6 +26,7 @@ import { NxImageComponent } from '@pages/health/table-components/image/image.com
 import { NxCamerasComponent } from './cameras.component';
 import { NxMotionDetectionOverlay } from './motion-detection-settings/motion-detection-overlay/motion-detection-overlay.component';
 import { NxMotionDetectionSettingsComponent } from './motion-detection-settings/motion-detection-settings.component';
+import { NxNoCamerasComponent } from './no-cameras-settings/no-cameras.component';
 import { NxRecordingSettingsComponent } from './recording-settings/recording-settings.component';
 
 @NgModule({
@@ -53,6 +54,7 @@ import { NxRecordingSettingsComponent } from './recording-settings/recording-set
         NxRadioComponent,
         NxSwitchComponent,
         NxThreeDotDropdown,
+        NxCheckboxComponent,
     ],
     providers: [],
     declarations: [
@@ -60,6 +62,7 @@ import { NxRecordingSettingsComponent } from './recording-settings/recording-set
         NxMotionDetectionOverlay,
         NxRecordingSettingsComponent,
         NxMotionDetectionSettingsComponent,
+        NxNoCamerasComponent,
     ],
     bootstrap: [],
     exports: [NxCamerasComponent],

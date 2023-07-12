@@ -1,9 +1,6 @@
 <nx-pre-loader
     *ngIf="
-        (!system?.show404 &&
-            showPreloader &&
-            !system?.userManager?.permissions?.editCameras &&
-            !noCameras) ||
+        (!system?.show404 && showPreloader && !system?.userManager?.permissions?.editCameras) ||
         (system.isOnline && !system.isAvailable)
     "
 >
@@ -12,260 +9,248 @@
     *ngIf="system && !system.show404 && system.userManager.permissions.editCameras"
     class="row auth-visible"
 >
-    <nx-page-placeholder
-        class="placeholder-section"
-        *ngIf="(!system.isOnline && !system.isAvailable) || noCameras; else cameraContent"
-        [type]="!system.isOnline || !system.isAvailable ? 'NO_SETTINGS' : 'NO_CAMS'"
-    >
-    </nx-page-placeholder>
-    <ng-template #cameraContent>
-        <ng-container *ngIf="selectedCamera">
-            <div
-                *ngIf="showUnauthorized || errors || warnings"
-                class="col-12 camera-settings-info"
+    <ng-container *ngIf="selectedCamera">
+        <div
+            *ngIf="showUnauthorized || errors || warnings"
+            class="col-12 camera-settings-info"
+        >
+            <nx-alert-block
+                *ngIf="showUnauthorized"
+                type="error"
+                id="unauthorized-warning"
+                [iconSrc]="icons.dirNonStandard + 'error.svg'"
+                [line1]="'Camera is unauthorized' | translate"
+                [btnIconSrc]="icons.dir + 'settings.svg'"
+                [btnCaption]="'Edit Credentials' | translate"
+                (onAction)="updateCredentials()"
             >
-                <nx-alert-block
-                    *ngIf="showUnauthorized"
-                    type="error"
-                    id="unauthorized-warning"
-                    [iconSrc]="icons.dirNonStandard + 'error.svg'"
-                    [line1]="'Camera is unauthorized' | translate"
-                    [btnIconSrc]="icons.dir + 'settings.svg'"
-                    [btnCaption]="'Edit Credentials' | translate"
-                    (onAction)="updateCredentials()"
-                >
-                </nx-alert-block>
-                <nx-alert-block
-                    *ngIf="showOffline"
-                    type="error"
-                    [iconSrc]="icons.dirNonStandard + 'error.svg'"
-                    [line1]="'Camera is offline' | translate"
-                >
-                </nx-alert-block>
-                <nx-alert-block
-                    *ngFor="let error of errors"
-                    type="error"
-                    [iconSrc]="icons.dirNonStandard + 'error.svg'"
-                    [line1]="error"
-                >
-                </nx-alert-block>
-                <nx-alert-block
-                    *ngFor="let warning of warnings"
-                    type="warning"
-                    [iconSrc]="icons.dirNonStandard + 'warning.svg'"
-                    [line1]="warning"
-                >
-                </nx-alert-block>
-            </div>
-            <div class="col-12 camera-settings-info">
-                <nx-block header-style="extended">
-                    <header>
-                        <div class="header-editable mb-3">
-                            <nx-editable-heading
-                                name="cameraName"
-                                [(editMode)]="editMode"
-                                [(nameWatcherValue)]="cameraNameWatcher.value"
-                                [editEnabled]="enableEdit"
-                            >
-                            </nx-editable-heading>
-                            <div
-                                *ngIf="!editMode"
-                                class="camera-button-div"
-                            >
-                                <button
-                                    class="camera-buttons"
-                                    [routerLink]="cameraViewPath"
-                                    id="view-camera"
-                                >
-                                    <span>
-                                        <svg-icon
-                                            nx-add-svg-src
-                                            [src]="icons.dirTextButtons + 'play.svg'"
-                                            [applyClass]="true"
-                                        ></svg-icon>
-                                    </span>
-                                    <span
-                                        class="ml-1"
-                                        translate
-                                        >View</span
-                                    >
-                                </button>
-                                <button
-                                    *ngIf="canSeeInfo"
-                                    class="camera-buttons"
-                                    id="detailed-info"
-                                    [routerLink]="fullInfoPath"
-                                    [queryParams]="{ id: parsedCameraId }"
-                                >
-                                    <span>
-                                        <svg-icon
-                                            nx-add-svg-src
-                                            [src]="icons.dirTextButtons + 'info.svg'"
-                                            [applyClass]="true"
-                                        ></svg-icon>
-                                    </span>
-                                    <span
-                                        class="ml-1"
-                                        translate
-                                        >Detailed Info</span
-                                    >
-                                </button>
-                            </div>
-                        </div>
+            </nx-alert-block>
+            <nx-alert-block
+                *ngIf="showOffline"
+                type="error"
+                [iconSrc]="icons.dirNonStandard + 'error.svg'"
+                [line1]="'Camera is offline' | translate"
+            >
+            </nx-alert-block>
+            <nx-alert-block
+                *ngFor="let error of errors"
+                type="error"
+                [iconSrc]="icons.dirNonStandard + 'error.svg'"
+                [line1]="error"
+            >
+            </nx-alert-block>
+            <nx-alert-block
+                *ngFor="let warning of warnings"
+                type="warning"
+                [iconSrc]="icons.dirNonStandard + 'warning.svg'"
+                [line1]="warning"
+            >
+            </nx-alert-block>
+        </div>
+        <div class="col-12 camera-settings-info">
+            <nx-block header-style="extended">
+                <header>
+                    <div class="header-editable mb-3">
+                        <nx-editable-heading
+                            name="cameraName"
+                            [(editMode)]="editMode"
+                            [(nameWatcherValue)]="cameraNameWatcher.value"
+                            [editEnabled]="enableEdit"
+                        >
+                        </nx-editable-heading>
                         <div
-                            class="camera-feed-img"
-                            [style.width.px]="previewWidth"
-                            [style.height.px]="120"
+                            *ngIf="!editMode"
+                            class="camera-button-div"
                         >
-                            <nx-health-image
-                                [isPrimary]="true"
-                                aspect="override"
-                                [preloader]="true"
-                                [state]="selectedCamera.status"
-                                [url]="preview$ | async"
-                                [lightBackground]="true"
-                            ></nx-health-image>
-                        </div>
-                        <nx-info-block
-                            [sectionsOrColumns]="cameraDetailColumns"
-                            [infoBlockSize]="infoBlockSizeEnum.COMPACT"
-                        ></nx-info-block>
-                    </header>
-                    <ng-template #deviceNotSupported>
-                        <nx-open-client-section-placeholder
-                            [system]="system"
-                            [translatedMessage]="
-                                'Settings for this device are not available.' | translate
-                            "
-                        >
-                        </nx-open-client-section-placeholder>
-                    </ng-template>
-                    <ng-container *ngIf="!settingsDisabled; else deviceNotSupported">
-                        <nx-section>
-                            <h4
-                                class="mb-3"
-                                translate
-                            >
-                                Image
-                            </h4>
-
-                            <div class="grid-container">
-                                <div class="grid-item">
-                                    <span
-                                        class="text-right"
-                                        translate
-                                        >Aspect Ratio</span
-                                    >
-                                </div>
-                                <div class="grid-item mb-2 mb-md-0">
-                                    <nx-select
-                                        [selected]="false"
-                                        [(ngModel)]="selectedAspect"
-                                        [items]="aspectRatios"
-                                        id="aspect-ratios"
-                                    ></nx-select>
-                                </div>
-                                <div class="grid-item">
-                                    <span
-                                        class="text-right"
-                                        translate
-                                        >Rotation</span
-                                    >
-                                </div>
-                                <div class="grid-item">
-                                    <nx-select
-                                        [selected]="false"
-                                        [(ngModel)]="selectedRotation"
-                                        [items]="rotations"
-                                        id="rotations"
-                                    ></nx-select>
-                                </div>
-                            </div>
-                        </nx-section>
-                        <nx-section>
-                            <h4
-                                class="mb-3"
-                                translate
-                            >
-                                Audio
-                            </h4>
-                            <div class="d-flex checkbox-block align-items-center mt-1">
-                                <nx-checkbox
-                                    name="audioEnabled"
-                                    componentId="audioEnabled"
-                                    [(ngModel)]="audioEnabled"
-                                    [disabled]="!selectedCamera.parsedAddParams.isAudioSupported"
-                                >
-                                </nx-checkbox>
-                                <label
-                                    class="control-label mb-0"
-                                    [ngClass]="
-                                        !selectedCamera.parsedAddParams.isAudioSupported
-                                            ? 'disabled-audio-label'
-                                            : ''
-                                    "
-                                    for="audioEnabled"
-                                >
-                                    <span translate>Enable Audio</span>
-                                </label>
-                            </div>
-                        </nx-section>
-                        <nx-section>
-                            <h4
-                                class="mb-3"
-                                translate
-                            >
-                                Authentication
-                            </h4>
                             <button
-                                class="btn btn-default"
-                                (click)="updateCredentials()"
-                                id="update-credentials"
+                                class="camera-buttons"
+                                [routerLink]="cameraViewPath"
+                                id="view-camera"
                             >
-                                <span translate>Edit Credentials</span>
+                                <span>
+                                    <svg-icon
+                                        nx-add-svg-src
+                                        [src]="icons.dirTextButtons + 'play.svg'"
+                                        [applyClass]="true"
+                                    ></svg-icon>
+                                </span>
+                                <span
+                                    class="ml-1"
+                                    translate
+                                    >View</span
+                                >
                             </button>
-                        </nx-section>
-                    </ng-container>
-                </nx-block>
-            </div>
-            <ng-container *ngIf="!settingsDisabled">
-                <nx-recording-settings
-                    class="col-12 camera-settings-info mt-3"
-                    #recordingSettings
-                    [hidden]="settingsRecordingDisabled"
-                    [system]="system"
-                    [recordingWatcher]="recordingWatcher"
-                    [motionEnabledWatcher]="motionEnabledWatcher"
-                    [recordingModesWatcher]="recordingModesWatcher"
-                    [selectedFpsWatcher]="selectedFpsWatcher"
-                    [selectedCamera]="selectedCamera"
-                    [selectedQualityWatcher]="selectedQualityWatcher"
-                >
-                </nx-recording-settings>
-                <nx-motion-detection-settings
-                    class="col-12 camera-settings-info mt-3"
-                    [motionEnabled]="recordingSettings.motionEnabled"
-                    [enableMotion]="recordingSettings.enableMotion"
-                    [disableMotion]="recordingSettings.disableMotion"
-                    [resetSensitivity]="resetSensitivity"
-                    [toggleMotionGrid]="toggleMotionGrid"
-                    (updateMask)="updateMask($event)"
-                    [sensitivityButtons$]="sensitivityButtons$"
-                    [motionGridChangeWatcher]="motionGridChangeWatcher"
-                    [motionMaskWatcher]="motionMaskWatcher"
-                    [healthImageUrl]="preview$"
-                    [selectedRotation]="selectedRotation?.value || 0"
-                    [selectedAspectRatio]="selectedAspect.value || ASPECT_RATIOS['16:9']"
-                    [imageState]="selectedCamera.status"
-                    [overlayEnabled]="
-                        !isMobile &&
-                        showOverlay &&
-                        selectedCamera &&
-                        !noCameras &&
-                        !!this.motionMaskWatcher.value
-                    "
-                ></nx-motion-detection-settings>
-            </ng-container>
+                            <button
+                                *ngIf="canSeeInfo"
+                                class="camera-buttons"
+                                id="detailed-info"
+                                [routerLink]="fullInfoPath"
+                                [queryParams]="{ id: parsedCameraId }"
+                            >
+                                <span>
+                                    <svg-icon
+                                        nx-add-svg-src
+                                        [src]="icons.dirTextButtons + 'info.svg'"
+                                        [applyClass]="true"
+                                    ></svg-icon>
+                                </span>
+                                <span
+                                    class="ml-1"
+                                    translate
+                                    >Detailed Info</span
+                                >
+                            </button>
+                        </div>
+                    </div>
+                    <div
+                        class="camera-feed-img"
+                        [style.width.px]="previewWidth"
+                        [style.height.px]="120"
+                    >
+                        <nx-health-image
+                            [isPrimary]="true"
+                            aspect="override"
+                            [preloader]="true"
+                            [state]="selectedCamera.status"
+                            [url]="preview$ | async"
+                            [lightBackground]="true"
+                        ></nx-health-image>
+                    </div>
+                    <nx-info-block
+                        [sectionsOrColumns]="cameraDetailColumns"
+                        [infoBlockSize]="infoBlockSizeEnum.COMPACT"
+                    ></nx-info-block>
+                </header>
+                <ng-template #deviceNotSupported>
+                    <nx-open-client-section-placeholder
+                        [system]="system"
+                        [translatedMessage]="
+                            'Settings for this device are not available.' | translate
+                        "
+                    >
+                    </nx-open-client-section-placeholder>
+                </ng-template>
+                <ng-container *ngIf="!settingsDisabled; else deviceNotSupported">
+                    <nx-section>
+                        <h4
+                            class="mb-3"
+                            translate
+                        >
+                            Image
+                        </h4>
+
+                        <div class="grid-container">
+                            <div class="grid-item">
+                                <span
+                                    class="text-right"
+                                    translate
+                                    >Aspect Ratio</span
+                                >
+                            </div>
+                            <div class="grid-item mb-2 mb-md-0">
+                                <nx-select
+                                    [selected]="false"
+                                    [(ngModel)]="selectedAspect"
+                                    [items]="aspectRatios"
+                                    id="aspect-ratios"
+                                ></nx-select>
+                            </div>
+                            <div class="grid-item">
+                                <span
+                                    class="text-right"
+                                    translate
+                                    >Rotation</span
+                                >
+                            </div>
+                            <div class="grid-item">
+                                <nx-select
+                                    [selected]="false"
+                                    [(ngModel)]="selectedRotation"
+                                    [items]="rotations"
+                                    id="rotations"
+                                ></nx-select>
+                            </div>
+                        </div>
+                    </nx-section>
+                    <nx-section>
+                        <h4
+                            class="mb-3"
+                            translate
+                        >
+                            Audio
+                        </h4>
+                        <div class="d-flex checkbox-block align-items-center mt-1">
+                            <nx-checkbox
+                                name="audioEnabled"
+                                componentId="audioEnabled"
+                                [(ngModel)]="audioEnabled"
+                                [disabled]="!selectedCamera.parsedAddParams.isAudioSupported"
+                            >
+                            </nx-checkbox>
+                            <label
+                                class="control-label mb-0"
+                                [ngClass]="
+                                    !selectedCamera.parsedAddParams.isAudioSupported
+                                        ? 'disabled-audio-label'
+                                        : ''
+                                "
+                                for="audioEnabled"
+                            >
+                                <span translate>Enable Audio</span>
+                            </label>
+                        </div>
+                    </nx-section>
+                    <nx-section>
+                        <h4
+                            class="mb-3"
+                            translate
+                        >
+                            Authentication
+                        </h4>
+                        <button
+                            class="btn btn-default"
+                            (click)="updateCredentials()"
+                            id="update-credentials"
+                        >
+                            <span translate>Edit Credentials</span>
+                        </button>
+                    </nx-section>
+                </ng-container>
+            </nx-block>
+        </div>
+        <ng-container *ngIf="!settingsDisabled">
+            <nx-recording-settings
+                class="col-12 camera-settings-info mt-3"
+                #recordingSettings
+                [hidden]="settingsRecordingDisabled"
+                [system]="system"
+                [recordingWatcher]="recordingWatcher"
+                [motionEnabledWatcher]="motionEnabledWatcher"
+                [recordingModesWatcher]="recordingModesWatcher"
+                [selectedFpsWatcher]="selectedFpsWatcher"
+                [selectedCamera]="selectedCamera"
+                [selectedQualityWatcher]="selectedQualityWatcher"
+            >
+            </nx-recording-settings>
+            <nx-motion-detection-settings
+                class="col-12 camera-settings-info mt-3"
+                [motionEnabled]="recordingSettings.motionEnabled"
+                [enableMotion]="recordingSettings.enableMotion"
+                [disableMotion]="recordingSettings.disableMotion"
+                [resetSensitivity]="resetSensitivity"
+                [toggleMotionGrid]="toggleMotionGrid"
+                (updateMask)="updateMask($event)"
+                [sensitivityButtons$]="sensitivityButtons$"
+                [motionGridChangeWatcher]="motionGridChangeWatcher"
+                [motionMaskWatcher]="motionMaskWatcher"
+                [healthImageUrl]="preview$"
+                [selectedRotation]="selectedRotation?.value || 0"
+                [selectedAspectRatio]="selectedAspect.value || ASPECT_RATIOS['16:9']"
+                [imageState]="selectedCamera.status"
+                [overlayEnabled]="
+                    !isMobile && showOverlay && selectedCamera && !!this.motionMaskWatcher.value
+                "
+            ></nx-motion-detection-settings>
         </ng-container>
-    </ng-template>
+    </ng-container>
 </div>

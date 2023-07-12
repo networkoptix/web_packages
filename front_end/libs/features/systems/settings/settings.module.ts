@@ -1,10 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { NgModule, inject } from '@angular/core';
+import {
+    ActivatedRouteSnapshot,
+    CanActivateFn,
+    ResolveFn,
+    Router,
+    RouterModule,
+    RouterStateSnapshot,
+    Routes,
+} from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { MenuModule } from '@app/menu/menu.module';
 import { PipesModule } from '@app/pipes/pipes.module';
+import { NxSystem } from '@app/services/system.service/system';
+import { NxSystemService } from '@app/services/system.service/system.service';
 import { NxFooterComponent } from '@components/footer/footer.component';
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
@@ -13,11 +23,13 @@ import { AuthGuard } from '@guards/authGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
 import { SystemTitleResolver } from '@resolvers/system-title-resolver';
+import { cleanId } from '@utils/general';
 
 import { NxSystemAdminComponent } from './admin/admin.component';
 import { NxSystemAdminModule } from './admin/admin.module';
 import { NxCamerasComponent } from './cameras/cameras.component';
 import { NxCamerasModule } from './cameras/cameras.module';
+import { NxNoCamerasComponent } from './cameras/no-cameras-settings/no-cameras.component';
 import { NxCloudStorageComponent } from './cloud-storage/cloud-storage.component';
 import { NxCloudStorageModule } from './cloud-storage/cloud-storage.module';
 import { NxSystemLicensesComponent } from './licenses/licenses.component';
@@ -28,6 +40,27 @@ import { NxSystemSettingsComponent } from './settings.component';
 import { NxSettingsService } from './settings.service';
 import { NxSystemUsersComponent } from './users/users.component';
 import { NxSystemUsersModule } from './users/users.module';
+
+const camerasExistActivator: CanActivateFn = async (
+    _: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+) => {
+    const router: Router = inject(Router);
+    const systemsService: NxSystemService = inject(NxSystemService);
+    const currentSystem = systemsService.getCurrentSystem();
+    if (currentSystem.cameraManager.cameras?.length) {
+        const cameraId = cleanId(currentSystem.cameraManager.cameras[0].id);
+        router.navigate([state.url, cameraId]);
+        return false;
+    }
+    return true;
+};
+
+const systemResolver: ResolveFn<NxSystem> = () => {
+    const systemsService: NxSystemService = inject(NxSystemService);
+    const system = systemsService.getCurrentSystem();
+    return system;
+};
 
 export const cloudSettingsRoutes: Routes = [
     {
@@ -80,8 +113,12 @@ export const cloudSettingsRoutes: Routes = [
             {
                 path: 'cameras',
                 title: SystemTitleResolver,
-                component: NxCamerasComponent,
+                component: NxNoCamerasComponent,
                 canDeactivate: [ApplyGuard],
+                canActivate: [camerasExistActivator],
+                resolve: {
+                    system: systemResolver,
+                },
             },
             {
                 path: 'cameras/:cameraId',

@@ -15,7 +15,6 @@ import {
 import {
     filter,
     map,
-    retryWhen,
     delay,
     distinctUntilChanged,
     retry,
@@ -128,7 +127,6 @@ export class NxCamerasComponent implements OnInit {
     showOffline = false;
     showOverlay = false;
     showPreloader = true;
-    noCameras = false;
     cameraDetailColumns: InfoBlockColumns;
     canSeeInfo = false;
     editMode = false;
@@ -237,6 +235,7 @@ export class NxCamerasComponent implements OnInit {
         private deviceService: DeviceDetectorService,
         @Inject(WINDOW) private window: Window,
         @Inject(ViewContainerRef) viewContainerRef: ViewContainerRef,
+        private activeRoute: ActivatedRoute,
     ) {
         this.updateSelects();
         this.viewContainerRef = viewContainerRef;
@@ -291,48 +290,38 @@ export class NxCamerasComponent implements OnInit {
                     }
                 } else {
                     this.showPreloader = false;
-                    this.noCameras = false;
                 }
                 this.cameraSubscription?.unsubscribe();
                 let prevCameras: NxSystemCamera[] = [];
                 this.cameraSubscription = this.system.infoSubject
                     .pipe(
                         untilDestroyed(this),
-                        filter(res => {
-                            this.noCameras = res.cameraManager.cameras?.length === 0;
-                            if (this.noCameras) {
-                                this.showPreloader = false;
-                                if (!this.system.userManager.permissions.editCameras) {
-                                    this.system.show404 = true;
-                                }
-                            } else {
-                                this.cameraViewPath =
-                                    menus.systemSettings.baseUrl +
-                                    this.system.id +
-                                    '/view/' +
-                                    this.parsedCameraId;
-                            }
-
-                            const camerasEqual = isEqual(prevCameras, res.cameraManager.cameras);
-                            prevCameras = [...res.cameraManager.cameras];
-                            return !camerasEqual;
-                        }),
-                        map(system => {
-                            if (!system.cameraManager.cameras) {
-                                throw new Error();
+                        filter(res => !!res?.cameraManager),
+                        map(res => res.cameraManager.cameras),
+                        tap(cameras => {
+                            if (cameras.length === 0) {
+                                this.router.navigate([this.activeRoute.snapshot.url[0].path], {
+                                    relativeTo: this.activeRoute.parent,
+                                });
                             }
                         }),
-                        retryWhen(err => err.pipe(delay(1000))),
+                        tap(() => {
+                            this.cameraViewPath =
+                                menus.systemSettings.baseUrl +
+                                this.system.id +
+                                '/view/' +
+                                this.parsedCameraId;
+                        }),
+                        filter(cameras => !isEqual(prevCameras, cameras)),
+                        tap(cameras => {
+                            prevCameras = [...cameras];
+                        }),
                     )
                     .subscribe(() => {
                         if (!this.applyService.locked) {
                             this.setCamera();
                         }
-                        this.noCameras =
-                            this.system &&
-                            this.system.cameraManager.cameras &&
-                            this.system.cameraManager.cameras.length === 0;
-                        if (this.noCameras || !this.system.isAvailable) {
+                        if (!this.system.isAvailable) {
                             this.showPreloader = false;
                         }
                     });
@@ -412,13 +401,13 @@ export class NxCamerasComponent implements OnInit {
 
     private saveSettings(): Promise<NxSystemCamera[]> {
         const newApi = this.system.serverManager.mediaserver instanceof NxSystemRestAPI;
-        if (!this.recordingSettingsComponent.safeToUpdateRecordingSettings) {
+        if (!this.recordingSettingsComponent?.safeToUpdateRecordingSettings ?? false) {
             this.applyService.setWarn(this.LANG.common.recordingSettingsWarning);
             return Promise.reject();
         }
 
         let updatedTask: TaskUpdate;
-        if (this.recordingSettingsComponent.recordingSettingsChanged) {
+        if (this.recordingSettingsComponent?.recordingSettingsChanged) {
             const fps = !this.selectedFpsWatcher.value
                 ? this.selectedFpsWatcher.originalValue
                 : this.selectedFpsWatcher.value;
@@ -532,6 +521,10 @@ export class NxCamerasComponent implements OnInit {
     }
 
     private setCamera = async (forceUpdate = false): Promise<void> => {
+        if (!this.system) {
+            return;
+        }
+
         this.applyService.reset(true);
         this.applyService.setVisible(false);
         if (
@@ -548,94 +541,96 @@ export class NxCamerasComponent implements OnInit {
             this.alerts = [];
         }
 
-        let cameraIndex: number;
-        if (this.system && this.system.cameraManager.cameras) {
-            this.enableEdit =
-                this.system.userManager.permissions.isAdmin ||
-                this.system.userManager.permissions.editCameras;
-            const { cameras } = this.system.cameraManager;
-            cameraIndex = cameras.findIndex(camera => camera.id === `{${this.parsedCameraId}}`);
-            this.system.show404 =
-                (!!this.parsedCameraId && cameraIndex === -1) ||
-                !this.system.userManager.permissions.editCameras;
-            if (this.system.show404) {
-                return;
-            }
-            if (!cameras.length) {
-                this.showPreloader = false;
-                return;
-            }
+        const { cameras } = this.system?.cameraManager;
 
-            if (cameraIndex === -1) {
-                cameraIndex = 0;
-                this.parsedCameraId = cleanId(cameras[0].id);
-                this.uriService
-                    .updateURI(
-                        this.uriService.getSystemSettingsRoute({
-                            systemId: this.system.id,
-                            cameraId: this.parsedCameraId,
-                        }),
-                    )
-                    .catch(error => {
-                        console.error(error);
-                    });
-            }
-            this.cameraViewPath =
-                this.uriService.getSystemSettingsRoute({
-                    systemId: this.system.id,
-                    childRoute: ChildRoutes.VIEW,
-                }) + this.parsedCameraId;
-            this.menuService.detail = this.parsedCameraId;
+        this.enableEdit =
+            this.system.userManager.permissions.isAdmin ||
+            this.system.userManager.permissions.editCameras;
 
-            this.selectedCamera = this.system.cameraManager.parseCamera(
-                await this.system.mediaserver.getCamera(this.parsedCameraId).toPromise(),
-            );
-            const {
-                vendor,
-                model,
-                url,
-                parentName,
-                deviceType,
-                isStream,
-                defaultRatio,
-                parsedAddParams,
-                audioEnabled,
-                recordingSettings,
-                motionType,
-                motionMask,
-            } = this.selectedCamera;
-            this.settingsDisabled = deviceType !== 'Camera' || !vendor;
-            this.settingsRecordingDisabled =
-                environment.isLocal || deviceType !== 'Camera' || !vendor;
-            const deviceColumn = [
-                new InfoBlockSection([
-                    new InfoBlockLine(this.LANG.common.vendor, vendor),
-                    new InfoBlockLine(this.LANG.common.model, model),
-                ]),
-            ];
-            const otherInfoColumn = [
-                new InfoBlockSection([
-                    new InfoBlockLine(this.LANG.common.ip, url),
-                    new InfoBlockLine(this.LANG.common.server, parentName),
-                ]),
-            ];
-            this.cameraDetailColumns = isStream
-                ? [otherInfoColumn]
-                : [deviceColumn, otherInfoColumn];
-            this.cameraName = this.selectedCamera.name;
-            this.motionGridChangeWatcher.originalValue = false;
-            // Setup the automatic value based on the camera's dimensions
-            if (defaultRatio) {
-                this.aspectRatios[0].value = defaultRatio;
-            }
-            this.selectedAspect =
-                this.aspectRatios.find(({ value }) => value === parsedAddParams.overrideAr) ||
-                this.aspectRatios[0];
-            this.selectedRotation =
-                this.rotations.find(({ value }) => value === parsedAddParams.rotation) ||
-                this.rotations[0];
-            this.audioEnabled = audioEnabled;
-            this.recordingModesWatcher.value = recordingSettings.modes;
+        const parsedCameraExistInCameras = cameras.some(
+            camera => camera.id === `{${this.parsedCameraId}}`,
+        );
+
+        this.system.show404 =
+            (!!this.parsedCameraId && !parsedCameraExistInCameras) ||
+            !this.system.userManager.permissions.editCameras;
+        if (this.system.show404) {
+            return;
+        }
+
+        if (!cameras.length) {
+            this.showPreloader = false;
+            return;
+        }
+
+        if (!parsedCameraExistInCameras) {
+            this.parsedCameraId = cleanId(cameras[0].id);
+            this.uriService
+                .updateURI(
+                    this.uriService.getSystemSettingsRoute({
+                        systemId: this.system.id,
+                        cameraId: this.parsedCameraId,
+                    }),
+                )
+                .catch(error => {
+                    console.error(error);
+                });
+        }
+
+        this.cameraViewPath =
+            this.uriService.getSystemSettingsRoute({
+                systemId: this.system.id,
+                childRoute: ChildRoutes.VIEW,
+            }) + this.parsedCameraId;
+        this.menuService.detail = this.parsedCameraId;
+
+        this.selectedCamera = this.system.cameraManager.parseCamera(
+            await this.system.mediaserver.getCamera(this.parsedCameraId).toPromise(),
+        );
+        const {
+            vendor,
+            model,
+            url,
+            parentName,
+            deviceType,
+            isStream,
+            defaultRatio,
+            parsedAddParams,
+            audioEnabled,
+            recordingSettings,
+            motionType,
+            motionMask,
+        } = this.selectedCamera;
+        this.settingsDisabled = deviceType !== 'Camera' || !vendor;
+        this.settingsRecordingDisabled = environment.isLocal || deviceType !== 'Camera' || !vendor;
+        const deviceColumn = [
+            new InfoBlockSection([
+                new InfoBlockLine(this.LANG.common.vendor, vendor),
+                new InfoBlockLine(this.LANG.common.model, model),
+            ]),
+        ];
+        const otherInfoColumn = [
+            new InfoBlockSection([
+                new InfoBlockLine(this.LANG.common.ip, url),
+                new InfoBlockLine(this.LANG.common.server, parentName),
+            ]),
+        ];
+        this.cameraDetailColumns = isStream ? [otherInfoColumn] : [deviceColumn, otherInfoColumn];
+        this.cameraName = this.selectedCamera.name;
+        this.motionGridChangeWatcher.originalValue = false;
+        // Setup the automatic value based on the camera's dimensions
+        if (defaultRatio) {
+            this.aspectRatios[0].value = defaultRatio;
+        }
+        this.selectedAspect =
+            this.aspectRatios.find(({ value }) => value === parsedAddParams.overrideAr) ||
+            this.aspectRatios[0];
+        this.selectedRotation =
+            this.rotations.find(({ value }) => value === parsedAddParams.rotation) ||
+            this.rotations[0];
+        this.audioEnabled = audioEnabled;
+        this.recordingModesWatcher.value = recordingSettings.modes;
+        if (this.recordingSettingsComponent) {
             setTimeout(() => {
                 if (this.recordingSettingsComponent) {
                     this.recordingSettingsComponent.selectedQuality =
@@ -647,19 +642,15 @@ export class NxCamerasComponent implements OnInit {
                     this.recordingSettingsComponent.selectedFps = recordingSettings.fps;
                 }
             });
-            this.recordingWatcher.value = recordingSettings.recording;
-            this.motionType = motionType;
-            this.motionMaskWatcher.originalValue = motionMask || settingsConfig.defaultMotionMask;
-            this.updateValues();
-
-            this.applyService.reset();
-            this.applyService.setVisible();
-            this.showPreloader = false;
-        } else if (this.parsedCameraId) {
-            this.noCameras = false;
-        } else {
-            this.noCameras = true;
         }
+        this.recordingWatcher.value = recordingSettings.recording;
+        this.motionType = motionType;
+        this.motionMaskWatcher.originalValue = motionMask || settingsConfig.defaultMotionMask;
+        this.updateValues();
+
+        this.applyService.reset();
+        this.applyService.setVisible();
+        this.showPreloader = false;
     };
 
     private updateAlerts(): void {
