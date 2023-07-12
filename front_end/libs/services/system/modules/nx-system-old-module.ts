@@ -659,18 +659,16 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     }
 
     protected processMediaServersAndCameras(apiReply: MediaServersAndCameras): NxMediaServer[] {
-        const msIds: KeyFilter<ServerPreprocess, string>[] = [
+        const msIds = [
             // 'authKey',
             'id',
             // 'metadataStorageId',
             // 'typeId',
-        ];
-        const camIds: KeyFilter<ec2CameraEx, string>[] = [
-            'id',
-            'parentId',
-            'preferredServerId',
-            'typeId',
-        ];
+        ] satisfies KeyFilter<ServerPreprocess, string>[];
+        const camIds = ['id', 'parentId', 'preferredServerId', 'typeId'] satisfies KeyFilter<
+            ec2CameraEx,
+            string
+        >[];
         // ID properties with enclosing brackets {} that we want to trim
         // while ignoring JSON strings
         const mediaServers = apiReply.reply['/ec2/getMediaServers'].map(ms => {

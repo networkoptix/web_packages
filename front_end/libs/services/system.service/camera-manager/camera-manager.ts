@@ -40,6 +40,8 @@ import {
     TaskUpdate,
     CameraUpdate,
     SaveCameraUserAttributes,
+    RecordingStatus,
+    CameraStatus,
 } from './camera-manager-types';
 
 type PartialSystem = Pick<
@@ -190,9 +192,17 @@ export class CameraManager {
                       ].getPlaybackUrl(camera.id, 'webRtc', 'low', position);
                   }
                 : null;
-        const status = this.parseCameraStatus(camera, this.system.useRest).toLowerCase();
-        const unauthorized = status === 'unauthorized';
-        const online = ['online', 'recording'].includes(status);
+
+        let status: CameraStatus;
+        let recordingStatus: RecordingStatus;
+        if (camera.status === RecordingStatus.Recording) {
+            recordingStatus = RecordingStatus.Recording;
+            status = CameraStatus.Online;
+        } else if (camera.scheduleEnabled) {
+            recordingStatus = this.getRecordingStatus(camera);
+            status = camera.status;
+        }
+
         const isStream = [
             'GENERIC_RTSP',
             'GENERIC_MULTICAST',
@@ -305,9 +315,8 @@ export class CameraManager {
             parsedAddParams,
             previewUrl,
             recordingSettings,
+            recordingStatus,
             webRtcUrl,
-            online,
-            unauthorized,
         };
     };
 
@@ -392,18 +401,7 @@ export class CameraManager {
         }
     }
 
-    private parseCameraStatus(
-        { status, scheduleEnabled, scheduleTasks, parentId }: ec2CameraEx,
-        restSystem = true,
-    ): string {
-        if (!scheduleEnabled) {
-            return status;
-        }
-
-        if (restSystem) {
-            return status === 'Recording' ? status : 'Scheduled';
-        }
-
+    private getRecordingStatus({ status, scheduleTasks, parentId }: ec2CameraEx): RecordingStatus {
         const serverTime = this.serverTimes.find(({ serverId }) => serverId === parentId);
         let recording = false;
         if (serverTime) {
@@ -426,7 +424,9 @@ export class CameraManager {
                     secondsToday < task.endTime,
             );
         }
-        return recording && status !== 'Offline' ? 'Recording' : 'Scheduled';
+        return recording && status !== CameraStatus.Offline
+            ? RecordingStatus.Recording
+            : RecordingStatus.Scheduled;
     }
 
     public hasArchives(): Observable<string[]> {

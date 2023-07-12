@@ -14,6 +14,7 @@ import { NxStepperComponent } from '@components/stepper/stepper.component';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { System } from '@services/nx-cloud-api/nx-cloud-api.types';
+import { CameraStatus } from '@services/system.service/camera-manager/camera-manager-types';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { cleanId } from '@utils/general';
@@ -148,7 +149,7 @@ export class NxLiveViewWidgetComponent extends FirstPartyWidget<
             return cameras.map<CameraDropdownItem>(({ name, id, status: state }) => ({
                 name,
                 state,
-                disabled: state !== 'online' && false,
+                disabled: state !== CameraStatus.Online && false,
                 value: cleanId(id),
             }));
         }),

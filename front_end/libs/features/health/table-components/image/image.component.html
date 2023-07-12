@@ -69,13 +69,13 @@
                 Cannot load preview
             </div>
             <div
-                *ngSwitchCase="'offline'"
+                *ngSwitchCase="CameraStatus.Offline"
                 translate
             >
                 OFFLINE
             </div>
             <div
-                *ngSwitchCase="'unauthorized'"
+                *ngSwitchCase="CameraStatus.Unauthorized"
                 translate
             >
                 AUTHENTICATION REQUIRED

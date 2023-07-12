@@ -6,6 +6,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { PipesModule } from '@pipes/pipes.module';
+import {
+    CameraStatus,
+    RecordingStatus,
+} from '@services/system.service/camera-manager/camera-manager-types';
 import { NgChanges } from '@utils/ng-changes';
 
 @UntilDestroy({ checkProperties: true })
@@ -30,6 +34,8 @@ export class NxImageComponent implements OnChanges {
     show: boolean;
     isLive: boolean;
 
+    CameraStatus = CameraStatus;
+
     constructor() {
         this.show = false;
         this.loaded.asObservable().subscribe(value => {
@@ -38,7 +44,7 @@ export class NxImageComponent implements OnChanges {
     }
 
     private checkIfLive(state: string): boolean {
-        return ['online', 'recording', 'scheduled', 'archive'].includes(state);
+        return state === CameraStatus.Online || Object.keys(RecordingStatus).includes(state);
     }
 
     ngOnChanges(changes: NgChanges<NxImageComponent>): void {
@@ -57,7 +63,7 @@ export class NxImageComponent implements OnChanges {
         if (!this.url) {
             this.loaded.emit(true);
         }
-        if (this.state === 'unauthorized' || !this.isLive) {
+        if (this.state === CameraStatus.Unauthorized || !this.isLive) {
             this.url = '';
             this.loaded.emit(true);
         }

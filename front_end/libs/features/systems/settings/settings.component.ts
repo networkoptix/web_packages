@@ -25,7 +25,11 @@ import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
-import type { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
+import {
+    RecordingStatus,
+    type NxSystemCamera,
+    CameraStatus,
+} from '@services/system.service/camera-manager/camera-manager-types';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
@@ -642,7 +646,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 camerasNode.level3 = this.system.cameraManager.cameras.map<Level3Item>(camera => ({
                     id: camera.id.replace(/\s|\{|\}/g, ''),
                     svgIcon: this.getCameraStatusIcon(camera),
-                    disabled: camera.status === 'Offline' || camera.status === 'Unauthorized',
+                    disabled:
+                        camera.status === CameraStatus.Offline ||
+                        camera.status === CameraStatus.Unauthorized,
                     label: camera.name,
                     indent: true,
                     path: `cameras/${camera.id.replace(/\s|\{|\}/g, '')}`,
@@ -840,16 +846,21 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.updateContent();
     }
 
-    getCameraStatusIcon({ id, status, scheduleEnabled, parentId }: NxSystemCamera): string {
+    getCameraStatusIcon({
+        id,
+        status,
+        recordingStatus,
+        scheduleEnabled,
+        parentId,
+    }: NxSystemCamera): string {
         const parentServer = this.system.serverManager.servers.find(s => s.id === parentId);
-        status = status.toLowerCase();
         if (parentServer?.status === 'offline') {
             return menus.systemSettings.cameras.statusIcons.offline;
         }
-        if (scheduleEnabled && !(status === 'recording')) {
+        if (scheduleEnabled && recordingStatus !== RecordingStatus.Recording) {
             return menus.systemSettings.cameras.statusIcons.scheduled;
         }
-        if (this.archivesPresent.has(id) && !(status === 'recording')) {
+        if (this.archivesPresent.has(id) && recordingStatus !== RecordingStatus.Recording) {
             return menus.systemSettings.cameras.statusIcons.archive;
         }
         return menus.systemSettings.cameras.statusIcons[status];

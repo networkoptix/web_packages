@@ -26,9 +26,8 @@ export interface NxSystemCamera {
 
     // Modified
     addParams: Record<string, string>; // Unpacked array of name/value objects
-    backupType: string; // || backupContentType
-    // This might be deprecated, not seen on any v5 systems
-    status: string; // Added recording/scheduled statuses
+    backupType: string; // backupType (v4 systems) || backupContentType (v5)
+    status: CameraStatus; // Replace "Recording" with "Online"
 
     // Calculated
     defaultRatio: number;
@@ -41,9 +40,8 @@ export interface NxSystemCamera {
     parsedAddParams: ParsedAddParams;
     previewUrl: Observable<string>;
     recordingSettings: RecordingSettings;
+    recordingStatus: RecordingStatus;
     webRtcUrl: ((param: { position: string | null }) => string) | null;
-    online: boolean;
-    unauthorized: boolean;
 }
 
 export type TaskUpdate = Pick<Task, 'fps' | 'recordingType' | 'streamQuality'>;
@@ -56,26 +54,16 @@ export interface SaveCameraUserAttributes extends CameraUpdate {
     scheduleTasks?: Omit<Task, 'metadataTypes'>[];
 }
 
-export interface IPartialCamera {
-    deviceType: string;
-    id: string;
-    name: string;
-    parentId: string;
-    scheduleEnabled: boolean;
-    status: string;
-    url: string;
+export enum CameraStatus {
+    Online = 'Online',
+    Offline = 'Offline',
+    Unauthorized = 'Unauthorized',
 }
 
-export interface PartialCameraRest {
-    deviceType: string;
-    id: string;
-    name: string;
-    schedule: {
-        isEnabled: boolean;
-    };
-    serverId: string;
-    status: string;
-    url: string;
+export enum RecordingStatus {
+    Recording = 'Recording',
+    Scheduled = 'Scheduled',
+    Archive = 'Archive',
 }
 
 export enum MotionType {

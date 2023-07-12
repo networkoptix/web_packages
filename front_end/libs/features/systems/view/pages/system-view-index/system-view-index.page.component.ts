@@ -313,9 +313,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                         .replace(/&lt;/g, '<')
                         .replace(/&gt;/g, '>') ||
                     (
-                        camera.status !== cachedCamera.status &&
-                        !(camera.status === 'Online' && cachedCamera.status === 'Live') // remapped param "status"
-                    ) || camera.scheduleEnabled !== cachedCamera.scheduleEnabled // remapped param "scheduleEnabled"
+                        camera.status !== cachedCamera.status
+                    ) || camera.scheduleEnabled !== cachedCamera.scheduleEnabled
                 );
             });
         });

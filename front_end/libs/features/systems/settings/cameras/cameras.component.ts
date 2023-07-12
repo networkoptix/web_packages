@@ -51,6 +51,7 @@ import {
     RecordingType,
     TaskUpdate,
     StreamQuality,
+    CameraStatus,
 } from '@services/system.service/camera-manager/camera-manager-types';
 import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
@@ -480,8 +481,7 @@ export class NxCamerasComponent implements OnInit {
                                 const selectedCamera = cameras.find(
                                     ({ id }) => id === this.selectedCamera.id,
                                 );
-                                const unauthorized = selectedCamera.status === 'unauthorized';
-                                if (unauthorized) {
+                                if (selectedCamera.status !== CameraStatus.Unauthorized) {
                                     return throwError('Camera Unauthorized');
                                 }
                                 return of(selectedCamera);
@@ -504,7 +504,7 @@ export class NxCamerasComponent implements OnInit {
                         ({ id }) => id === this.selectedCamera.id,
                     );
                     this.selectedCamera = selectedCamera;
-                    this.showUnauthorized = selectedCamera.status === 'unauthorized';
+                    this.showUnauthorized = selectedCamera.status === CameraStatus.Unauthorized;
                     this.reload$.next(this.reload$.value + 1);
                 });
         };
@@ -675,7 +675,7 @@ export class NxCamerasComponent implements OnInit {
             );
         }
         this.showUnauthorized =
-            this.selectedCamera && this.selectedCamera.status === 'unauthorized';
+            this.selectedCamera && this.selectedCamera.status === CameraStatus.Unauthorized;
 
         // ActivatedRoute.fragment was something different before?
         // @ts-expect-error TODO .value does not exist on Observable<string>
@@ -685,7 +685,8 @@ export class NxCamerasComponent implements OnInit {
             }
         }
 
-        this.showOffline = this.selectedCamera && this.selectedCamera.status === 'offline';
+        this.showOffline =
+            this.selectedCamera && this.selectedCamera.status === CameraStatus.Offline;
     }
 
     private updateValues(): void {

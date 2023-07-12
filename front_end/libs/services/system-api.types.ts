@@ -1,3 +1,8 @@
+import type {
+    CameraStatus,
+    RecordingStatus,
+} from '@services/system.service/camera-manager/camera-manager-types';
+
 /**
  * Base response type, accepts a generic type/interface that gets assigned to the reply property.
  * Usage example below.
@@ -367,7 +372,7 @@ export interface ec2CameraEx extends ec2Camera {
     recordBeforeMotionSec: number;
     scheduleEnabled: boolean;
     scheduleTasks: Task[];
-    status: string;
+    status: CameraStatus | RecordingStatus.Recording; // v5 systems have "Recording" on status
     userDefinedGroupName: string;
 }
 

@@ -75,7 +75,10 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxPageService } from '@services/page.service';
 import { Layout, LayoutItem, LayoutItems } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
-import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
+import {
+    CameraStatus,
+    NxSystemCamera,
+} from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
 import { NxToastService } from '@services/toast.service';
@@ -619,7 +622,7 @@ export class NxLayoutGridComponent {
                 .map(({ resourceId }) => this.layoutItemLookup[resourceId])
                 .filter(isCamera)
                 .map(({ details }) => details)
-                .filter(({ online, unauthorized }) => !online && !unauthorized);
+                .filter(({ status }) => status === CameraStatus.Offline);
             return groupBy(offlineCameras, 'parentId');
         };
 
@@ -661,7 +664,7 @@ export class NxLayoutGridComponent {
                 const camera = this.layoutItemLookup[cameraId];
 
                 if (isCamera(camera)) {
-                    camera.details.online = true;
+                    camera.details.status = CameraStatus.Online;
                     delete this.errors[cameraId];
                     delete this.errorIcons[cameraId];
                     delete this.additionalErrorMessages[cameraId];
@@ -1322,7 +1325,7 @@ export class NxLayoutGridComponent {
     }
 
     updateCameraCredentials(system: NxSystem, camera: NxSystemCamera): void {
-        const defaultPassword = !camera.unauthorized;
+        const defaultPassword = camera.status !== CameraStatus.Unauthorized;
         const retriesTimeout = 30 * 1000;
         const firstCheckTimeout = 10 * 1000;
         const cameraCredentialUpdateTimeout = 5 * 1000;
@@ -1344,12 +1347,10 @@ export class NxLayoutGridComponent {
                         from(system.cameraManager.getCameras()).pipe(
                             switchMap(cameras => {
                                 const selectedCamera = cameras.find(({ id }) => id === camera.id);
-                                const keepChecking =
-                                    selectedCamera.status === 'unauthorized' ||
-                                    !selectedCamera.online;
+                                const keepChecking = selectedCamera.status !== CameraStatus.Online;
                                 if (keepChecking) {
                                     return throwError(
-                                        selectedCamera.online
+                                        selectedCamera.status === CameraStatus.Unauthorized
                                             ? 'Camera Unauthorized'
                                             : 'Camera Offline',
                                     );
@@ -1371,7 +1372,7 @@ export class NxLayoutGridComponent {
                         ({ id }) => id === camera.id,
                     );
 
-                    if (selectedCamera.status === 'unauthorized' && !defaultPassword) {
+                    if (selectedCamera.status === CameraStatus.Unauthorized && !defaultPassword) {
                         this.toastService.notify(
                             {
                                 value: staticLang.layouts.errors.unableToAuthorizeCamera,

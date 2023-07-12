@@ -6,6 +6,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 import type { Size } from '@directives/resize/nx-resize.directive.types';
 import { Watcher } from '@services/apply.service/watcher';
+import type { CameraStatus } from '@services/system.service/camera-manager/camera-manager-types';
 
 import { SensitivityButtonValue } from '../cameras.component.types';
 
@@ -27,7 +28,7 @@ export class NxMotionDetectionSettingsComponent implements OnInit {
     @Input() healthImageUrl: Observable<string>;
     @Input() selectedRotation: number;
     @Input() selectedAspectRatio: number;
-    @Input() imageState: string;
+    @Input() imageState: CameraStatus;
     @Input() overlayEnabled: boolean;
 
     @Output() updateMask: EventEmitter<string> = new EventEmitter();

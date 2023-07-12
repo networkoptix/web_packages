@@ -48,7 +48,11 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxPageService } from '@services/page.service';
 import { Layouts, Layout, WebPages, LayoutItem } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
-import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
+import {
+    CameraStatus,
+    NxSystemCamera,
+    RecordingStatus,
+} from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
@@ -187,13 +191,11 @@ export class NxLayoutViewComponent {
                         cameraManager.hasArchives().pipe(
                             catchError(async () => [] as string[]),
                             map(camerasWithArchives =>
-                                cameras.map(({ status, ...camera }) => ({
+                                cameras.map(({ recordingStatus, ...camera }) => ({
                                     ...camera,
-                                    status:
-                                        ['recording', 'scheduled'].includes(status) ||
-                                        !camerasWithArchives.includes(camera.id)
-                                            ? status
-                                            : 'archive',
+                                    recordingStatus: !camerasWithArchives.includes(camera.id)
+                                        ? recordingStatus
+                                        : RecordingStatus.Archive,
                                 })),
                             ),
                         ),
@@ -234,13 +236,19 @@ export class NxLayoutViewComponent {
                 const parsedCameras = cameras.reduce((cameras, camera) => {
                     const parentServerOnline =
                         servers.find(({ id }) => id === camera.parentId).status === 'Online';
-                    const online = isIoOnly(camera) || (camera.online && parentServerOnline);
-                    const unauthorized = camera.unauthorized && parentServerOnline;
-                    const status = parentServerOnline
-                        ? camera.status
-                        : camera.status
-                              .replace('unauthorized', 'offline')
-                              .replace('recording', 'scheduled');
+                    const online =
+                        isIoOnly(camera) ||
+                        (camera.status === CameraStatus.Online && parentServerOnline);
+                    const unauthorized =
+                        camera.status === CameraStatus.Unauthorized && parentServerOnline;
+                    if (!parentServerOnline) {
+                        if (camera.status === CameraStatus.Unauthorized) {
+                            camera.status = CameraStatus.Offline;
+                        }
+                        if (camera.recordingStatus === RecordingStatus.Recording) {
+                            camera.recordingStatus = RecordingStatus.Scheduled;
+                        }
+                    }
                     return {
                         ...cameras,
                         [camera.id]: {
@@ -258,7 +266,8 @@ export class NxLayoutViewComponent {
                                 ),
                                 resourceType:
                                     this.LANG.layouts.titles.resourceTypes[ResourceType.CAMERA],
-                                status,
+                                status: (camera.recordingStatus || camera.status).toLowerCase(),
+                                // Compatibility patch for status
                             },
                             aspectRatio:
                                 camera.parsedAddParams.overrideAr ||

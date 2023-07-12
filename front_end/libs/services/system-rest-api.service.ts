@@ -70,7 +70,7 @@ import type { APIDocType, MenuManifest } from './nx-config/base-config';
 import type { IConfig } from './nx-config/config-types';
 import type {
     AggregatedUsers,
-    CameraManagerUpdate,
+    // CameraManagerUpdate,
     MediaServersAndCameras,
 } from './system-api.aggregated-types';
 import type { GetArrayTypes, GetEndpoints } from './system-api.endpoint-types';
@@ -868,24 +868,25 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         );
     }
 
-    getCameras(): Observable<any[]> {
-        const endpoint = '/rest/v1/devices';
-        const keyMap = {
-            ...buildTopLevelKeyMap(['id', 'name', 'serverId', 'status', 'url']),
-            schedule: {
-                isEnabled: true,
-            },
-        } as const;
-        return this.getWith(endpoint, keyMap).pipe(
-            map(cameras =>
-                cameras.map(({ schedule, serverId, ...rest }) => ({
-                    ...rest,
-                    scheduleEnabled: schedule.isEnabled,
-                    parentId: serverId,
-                })),
-            ),
-        );
-    }
+    // getCameras(): Observable<any[]> {
+    //     const endpoint = '/rest/v1/devices';
+    //     const keyMap = {
+    //         ...buildTopLevelKeyMap(['id', 'name', 'serverId', 'status', 'url']),
+    //         schedule: {
+    //             isEnabled: true,
+    //         },
+    //     } as const;
+    //     return this.getWith(endpoint, keyMap).pipe(
+    //         map(cameras =>
+    //             cameras.map(({ schedule, serverId, ...rest }) => ({
+    //                 ...rest,
+    //                 scheduleEnabled: schedule.isEnabled,
+    //                 parentId: serverId,
+    //             })),
+    //         ),
+    //     );
+    // }
+
     @memoizeAsyncMedium
     getMediaServersAndCameras(): Observable<MediaServersAndCameras> {
         const servers = this.getMediaServers(false);
@@ -903,29 +904,29 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         );
     }
 
-    updateSystemServersCameras(): Observable<CameraManagerUpdate> {
-        const routes = [
-            '/api/moduleInformation',
-            '/ec2/getMediaServers',
-            '/ec2/getTimeOfServers',
-        ] as const;
-        const aggregator = this.getRequestAggregator(routes).pipe(
-            map(({ reply }) => ({
-                moduleInfo: reply[routes[0]].reply,
-                servers: reply[routes[1]],
-                serverTimes: reply[routes[2]].reply,
-            })),
-        );
+    // updateSystemServersCameras(): Observable<CameraManagerUpdate> {
+    //     const routes = [
+    //         '/api/moduleInformation',
+    //         '/ec2/getMediaServers',
+    //         '/ec2/getTimeOfServers',
+    //     ] as const;
+    //     const aggregator = this.getRequestAggregator(routes).pipe(
+    //         map(({ reply }) => ({
+    //             moduleInfo: reply[routes[0]].reply,
+    //             servers: reply[routes[1]],
+    //             serverTimes: reply[routes[2]].reply,
+    //         })),
+    //     );
 
-        return combineLatest([aggregator, this.getCameras()]).pipe(
-            map(([{ moduleInfo, servers, serverTimes }, cameras]) => ({
-                moduleInfo,
-                servers,
-                serverTimes,
-                cameras,
-            })),
-        );
-    }
+    //     return combineLatest([aggregator, this.getCameras()]).pipe(
+    //         map(([{ moduleInfo, servers, serverTimes }, cameras]) => ({
+    //             moduleInfo,
+    //             servers,
+    //             serverTimes,
+    //             cameras,
+    //         })),
+    //     );
+    // }
 
     backupControl(action?: 'start' | 'stop') {
         const backupEndpoint = `/rest/v1/servers/${this.serverId}/backupSettings`;
