@@ -36,6 +36,10 @@ nx-bookmarks-card {
             height: 153px;
             background-color: var(--bookmarks-card-video-background-color);
 
+            &:has(.thumbnailError) {
+                background-color: var(--bookmarks-card-thumbnail-error-background);
+            }
+
             &-wrapper {
                 position: relative;
             }
@@ -53,7 +57,6 @@ nx-bookmarks-card {
                 .thumbnailError {
                     position: absolute;
                     font-size: 13px;
-                    background-color: var(--bookmarks-card-thumbnail-error-background);
 
                     &.noImage {
                         position: relative;
