@@ -3,6 +3,7 @@ import zlib
 
 from django.conf import settings
 from django.contrib.auth.backends import ModelBackend
+from django.core.cache import caches
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
 from django.dispatch import receiver
@@ -12,6 +13,7 @@ from api.models import AccountLoginHistory, AccountManager, Account
 from cloud.controllers.cloud_api import Auth
 from cloud.controllers.cloud_api import Account as Clouddb_Account
 from cloud.helpers.exceptions import APILogicException, ErrorCodes, APINotAuthorisedException
+from cms.helpers.cached_asset import AccountObjectCache
 
 logger = logging.getLogger(__name__)
 
@@ -84,10 +86,15 @@ class AccountBackend(ModelBackend):
         return Account.objects.get(email=user['email'])
 
     def get_user(self, user_id):
+        account_cache = AccountObjectCache(user_id)
+        if acc := account_cache.get_value():
+            return acc
         try:
-            return Account.objects.get(pk=user_id)
+            acc = Account.objects.get(pk=user_id)
         except ObjectDoesNotExist:
             return None
+        account_cache.save_value(acc)
+        return acc
 
 
 class BearerAuthentication(TokenAuthentication):

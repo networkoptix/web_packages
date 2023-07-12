@@ -511,9 +511,9 @@ class CustomRedisClient(RedisCacheClient):
         client = self.get_client(key)
         return client.expire(key, timeout)
 
-    def scan(self, key, cursor=0, match='*', count=None):
-        client = self.get_client(key, write=True)
-        return client.scan(key, cursor=cursor, match=match, count=count)
+    def scan(self, cursor=0, match='*', count=None):
+        client = self.get_client(None, write=True)
+        return client.scan(cursor=cursor, match=match, count=count)
 
     def scan_iter(self, match=None, count=None):
         client = self.get_client(match, write=True)
@@ -741,7 +741,7 @@ class CustomRedisCache(RedisCache):
         for key in self._cache.scan_iter(match=match, count=count):
             self._cache.unlink(key)
 
-    def unlink(self, keys, version=None):
+    def unlink(self, *keys, version=None):
         keys = [self.make_and_validate_key(key, version=version) for key in keys]
         self._cache.unlink(*keys)
 

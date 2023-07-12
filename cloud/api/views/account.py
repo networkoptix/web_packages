@@ -292,7 +292,7 @@ async def logout(request):
 @permission_classes((IsAuthenticated, ))
 async def time_since_password(request):
     return api_success({
-        "timeSincePassword": await sync_to_async(Auth.validate_token)(request.session.get("access_token")).get("time_since_password")
+        "timeSincePassword": (await sync_to_async(Auth.validate_token)(request.session.get("access_token"))).get("time_since_password")
     })
 
 

@@ -388,6 +388,12 @@ CACHES = {
         "LOCATION": REDIS_CACHE['LOCATION'] + '/22',
         "KEY_PREFIX": 'templates'
     },
+    "permissions": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "TIMEOUT": REDIS_CACHE['TIMEOUT'],
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/23',
+        "KEY_PREFIX": 'permissions'
+    },
     "local": {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         'LOCATION': 'local'
@@ -599,7 +605,7 @@ ADMIN_DASHBOARD = ('cms.models.Asset',
 # START s3 config
 AWS_STORAGE_BUCKET_NAME = conf['bucket']
 if LOCAL_ENVIRONMENT:
-    AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME', 'cloud-portal')
+    AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME') or 'cloud-portal'
 
 AWS_DEFAULT_ACL = 'public-read'
 

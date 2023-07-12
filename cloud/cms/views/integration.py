@@ -10,6 +10,7 @@ from rest_framework.permissions import AllowAny
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
+from util.base_cache import IntegrationCache
 from util.helpers import get_language_object_from_request
 from cloud.helpers.exceptions import api_success
 from cms.models import Asset, AssetCustomizationReview, AssetType,\
@@ -48,6 +49,11 @@ INTEGRATION_FORBIDDEN = "You do not have permission to view this integration"
 def get_integration(request, asset_id=None):
     draft = "draft" in request.GET
     review = "pending" in request.GET
+    state = 'accepted'
+    if draft:
+        state = 'draft'
+    if review:
+        state = 'review'
     is_enabled = check_integration_store_enabled(request)
     customization = request.CUSTOMIZATION
     has_beta_access = UserGroupsToAssetPermissions.user_has_beta_access(
@@ -55,7 +61,9 @@ def get_integration(request, asset_id=None):
     has_draft_permission = UserGroupsToAssetPermissions.check_customization_permission(
                 request.user, customization, 'cms.view_integration_drafts')
 
-    if not (asset_id := int(asset_id)) or not (integration := Asset.objects.filter(asset_type__type=INTEGRATION, customizations__name__in=[customization], id=asset_id).last()):
+    if not (asset_id := int(asset_id)) \
+            or not (integration := Asset.objects.filter(
+                asset_type__type=INTEGRATION, customizations__name__in=[customization], id=asset_id).last()):
         return api_success(INTEGRATION_NOT_FOUND, status_code=status.HTTP_404_NOT_FOUND)
 
     if draft or review:
@@ -80,11 +88,19 @@ def get_integration(request, asset_id=None):
     elif not (is_enabled or has_beta_access):
         return api_success(INTEGRATION_FORBIDDEN,
                            status_code=status.HTTP_403_FORBIDDEN)
+    cache = IntegrationCache(
+        language=get_language_object_from_request(request),
+        state=state, identifier=integration.id,
+        version=integration.version_id(customization=customization),
+        customization_name=customization
+    )
+    if not (data := cache.get_cached_item()):
+        serializer = IntegrationSerializer.generate([integration], request)
+        serializer.is_valid()
+        data = serializer.data
+        cache.set_cached_item(data, timeout=84600)
 
-    serializer = IntegrationSerializer.generate([integration], request)
-    serializer.is_valid()
-
-    return api_success(serializer.data)
+    return api_success(data)
 
 @swagger_auto_schema(method='GET',
                      operation_description="Returns a list of integrations",

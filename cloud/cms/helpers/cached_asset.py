@@ -1,14 +1,6 @@
-import asyncio
 from logging import getLogger
-from time import sleep
-from uuid import uuid4
-
-from asgiref.sync import sync_to_async, async_to_sync
-from celery import shared_task
 from django.conf import settings
 from django.core.cache import caches
-
-from cms.serializers import AssetSerializer
 from cloud.customization_context import customization_ctx
 
 logger = getLogger(__name__)
@@ -207,5 +199,43 @@ class AssetCacheLoaderBase:
                                  request_customization='*')
 
 
+class PortalAssetCache:
+    cache = caches["assets_values"]
+    timeout = 3600
+
+    def __init__(self, customization_name: str):
+        self.customization_name = customization_name
+
+    @property
+    def key(self):
+        return f'portal-{settings.VERSION}-{self.customization_name}'
+
+    def save_value(self, value):
+        return self.cache.set(self.key, value, timeout=self.timeout)
+
+    def get_value(self):
+        return self.cache.get(self.key)
+
+    def clear_value(self):
+        return self.cache.delete(self.key)
 
 
+class AccountObjectCache:
+    cache = caches["permissions"]
+    timeout = 3600
+
+    def __init__(self, user_id: int):
+        self.user_id = user_id
+
+    @property
+    def key(self):
+        return f'account-id-{settings.VERSION}-{self.user_id}'
+
+    def save_value(self, value):
+        return self.cache.set(self.key, value, timeout=self.timeout)
+
+    def get_value(self):
+        return self.cache.get(self.key)
+
+    def clear_value(self):
+        return self.cache.delete(self.key)

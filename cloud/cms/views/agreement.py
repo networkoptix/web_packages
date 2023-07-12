@@ -46,15 +46,13 @@ def get_agreement(request):
     customization = request.CUSTOMIZATION
     agreement = None
     agreement_review = None
-    version = None
-    cached_agreement = None
-    agreement_cache = None
     if agreement_id:
         # If id is provided, then only search with id
         # Used primarily for showing previews correctly.
         # Added filter by asset_type to avoid returning non agreement asset
         agreement = Asset.objects.filter(
             id=agreement_id, asset_type__type=AssetType.ASSET_TYPES.agreement).first()
+        version = agreement.version_id(customization=customization) if agreement else 0
     else:
         tos_reviews = get_tos_reviews(customization)
         if agreement_type == AgreementTypes.tos:
@@ -69,12 +67,14 @@ def get_agreement(request):
             return api_success("Agreement not available", status_code=status.HTTP_404_NOT_FOUND)
 
         agreement_id = agreement_review.version.asset.id
-        agreement_cache = AgreementCache(language=language, state=state, identifier=agreement_id,
-                                         version=agreement_review.version, request=request)
-        cached_agreement = agreement_cache.get_cached_item()
+        version = agreement_review.version
 
-        if agreement_review and not cached_agreement:
-            agreement = agreement_review.version.asset
+    agreement_cache = AgreementCache(language=language, state=state, identifier=agreement_id,
+                                     version=version, request=request)
+    cached_agreement = agreement_cache.get_cached_item()
+
+    if agreement_review and not cached_agreement:
+        agreement = agreement_review.version.asset
 
     # If agreement is not found, then return a 404
     if agreement or cached_agreement:

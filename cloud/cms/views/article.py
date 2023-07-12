@@ -52,9 +52,12 @@ def get_article(request, url_param, **kwargs):
         # If id is provided, then only search with id, url_parm is ignored to make sure correct article is found
         # Used primarily for showing previews correctly
         article = Asset.objects.filter(id=article_id).first()
-        article_cache = ArticleCache(language=language, state=state,
-                                     identifier=url_param, version=version,
-                                     request=request)
+        if article:
+            article_cache = ArticleCache(language=language, state=state,
+                                         identifier=url_param,
+                                         version=article.version_id(customization),
+                                         request=request)
+            cached_article = article_cache.get_cached_item()
     else:
         article_review = AssetCustomizationReview.objects.filter(
             version__asset__datarecord__value=url_param, version__asset__datarecord__data_structure__name='url',

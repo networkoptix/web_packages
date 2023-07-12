@@ -47,6 +47,7 @@ from cms.feature_flags.feature_flags import FLAGS, SWITCHES
 from django.contrib.auth.models import Group, Permission
 from django.template.defaultfilters import truncatechars
 from cloud.storage_backend import MediaStorage
+from .helpers.cached_asset import PortalAssetCache
 
 logger = getLogger(__name__)
 
@@ -242,19 +243,24 @@ def rename_permission_group(group, asset):
 
 def get_cloud_portal_asset(*, customization=None, request=None, no_create=False):
     customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
-    if asset := Asset.objects.filter(customizations__name__in=[customization], asset_type__name="",
-                                     asset_type__type=AssetType.ASSET_TYPES.cloud_portal).first():
-        return asset
+    portal_cache = PortalAssetCache(customization_name=customization)
+    if cloud_portal := portal_cache.get_value():
+        return cloud_portal
 
-    if no_create:
+    cloud_portal = Asset.objects.filter(customizations__name__in=[customization], asset_type__name="",
+                                        asset_type__type=AssetType.ASSET_TYPES.cloud_portal).first()
+    if no_create and not cloud_portal:
         return None
 
-    if customization_obj := Customization.objects.filter(name=customization).first():
+    if customization_obj := Customization.objects.filter(name=customization).first() and not cloud_portal:
         asset_type = AssetType.objects.get(type=AssetType.ASSET_TYPES.cloud_portal, name='')
 
         cloud_portal = Asset.objects.create(name=f"Cloud portal - {customization}", asset_type=asset_type)
 
         cloud_portal.customizations.set([customization_obj])
+
+    if cloud_portal:
+        portal_cache.save_value(cloud_portal)
         return cloud_portal
 
     raise Asset.DoesNotExist(f"""No cloud portal asset found for {customization}. Most likely a customization with the name \"{customization}\" doesn't exist.""")
@@ -604,9 +610,17 @@ class Language(models.Model):
 
     @staticmethod
     def by_code(language_code, default_language=None):
-        if language_code:
-            language = Language.objects.filter(code=language_code).first()
-            return language or default_language
+        if not language_code:
+            return default_language
+        languages = caches['local'].get('languages')
+        if not languages:
+            languages = Language.objects.all()
+            # queryset is evaluated here while pickling
+            caches['local'].set('languages', languages, timeout=86400)
+        # queryset is already retrieved from db, adding filter() can cause unnecessary DB query
+        for language in languages:
+            if language.code == language_code:
+                return language
         return default_language
 
 
@@ -1026,8 +1040,10 @@ class Asset(models.Model):
 
         super(Asset, self).save(*args, **kwargs)
         if need_update and self.is_cloud_portal and len(self.customizations.all()) == 1 and self.can_preview_on_portal:
+            # invalidate caches
             cloud_portal_customization_cache(
-                self.customizations.first().name, force=True)  # invalidate cache
+                self.customizations.first().name, force=True)
+            PortalAssetCache(customization_name=self.customizations.first().name).clear_value()
             # TODO: need to update all static right here
         if create_group or update_group:
             if create_group:
@@ -1047,6 +1063,7 @@ class Asset(models.Model):
         if self.protected:
             raise FieldError('Cannot delete a protected asset')
         else:
+            PortalAssetCache(customization_name=self.customizations.first().name).cleare_value()
             return super().delete(*args, **kwargs)
 
 

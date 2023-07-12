@@ -7,7 +7,7 @@ from django.db.models.signals import m2m_changed
 from django.utils import timezone
 from django.utils.html import format_html
 from django.conf import settings
-from django.core.cache import cache
+from django.core.cache import cache, caches
 from django.contrib.contenttypes.models import ContentType
 
 from jsonfield import JSONField
@@ -17,6 +17,7 @@ from cloud.customization_context import customization_ctx
 from cloud.helpers.exceptions import (
     APIRequestException, APIException, APILogicException, APINotAuthorisedException, ErrorCodes, APIInternalException
 )
+from cms.helpers.cached_asset import AccountObjectCache
 from cms.models import Customization, Asset, AssetType, UserGroupsToAssetPermissions, get_cloud_portal_asset
 from cloud.settings import CUSTOMIZATION
 
@@ -162,8 +163,14 @@ class Account(AbstractBaseUser, PermissionsMixin):
         if not self.pk:
             self.is_staff |= self.email.endswith(settings.SUPERUSER_DOMAIN)
         cache.delete(self.email)
+        if self.id:
+            AccountObjectCache(self.id).clear_value()
         super().save(*args, **kwargs)
         self.add_to_all_releases_group()
+
+    def delete(self, using=None, keep_parents=False):
+        AccountObjectCache(self.id).clear_value()
+        super().delete(using=using, keep_parents=keep_parents)
 
     def add_to_all_releases_group(self):
         user_at_superuser_domain = self.email.endswith(
@@ -200,6 +207,15 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     @property
     def permissions(self):
+        perm_cache = caches['permissions']
+        key = f'account-permissions-{settings.VERSION}-{self.id}'
+        if (permissions := perm_cache.get(key)) is not None:
+            return permissions
+        permissions = self.get_permissions()
+        perm_cache.set(key, permissions, timeout=300)
+        return permissions
+
+    def get_permissions(self):
         if not UserGroupsToAssetPermissions.check_customization_permission(self, customization_ctx.get()):
             return []
 
@@ -211,6 +227,15 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     @property
     def global_permissions(self):
+        perm_cache = caches['permissions']
+        key = f'account-global-permissions-{settings.VERSION}-{self.id}'
+        if (permissions := perm_cache.get(key)) is not None:
+            return permissions
+        permissions = self.get_global_permissions()
+        perm_cache.set(key, permissions, timeout=300)
+        return permissions
+
+    def get_global_permissions(self):
         permissions = []
         for group in self.groups.all():
             permissions.extend(

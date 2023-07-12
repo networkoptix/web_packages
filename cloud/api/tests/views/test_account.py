@@ -556,3 +556,14 @@ class TestAccountViews:
         assert resp.status_code == status.HTTP_401_UNAUTHORIZED
         assert resp.data == {
             'errorData': None, 'errorText': 'Auth code has expired.', 'resultCode': 'notAuthorized'}
+
+
+    @pytest.mark.asyncio
+    async def test_time_since_password(self, arf, mocker, superuser):
+        # Test correct sync_to_async call
+        mocker.patch('cloud.controllers.cloud_api.get_wrapper', return_value={})
+        req = arf.get('/')
+        req.user = superuser
+        req.session = {}
+        # must passes without exceptions
+        await time_since_password(req)

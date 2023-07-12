@@ -147,6 +147,7 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
         urls = super(AccountAdmin, self).get_urls()
         my_urls = [
             re_path(r'^invite/$', self.admin_site.admin_view(self.invite), name='invite'),
+            re_path(r'^clear_perms/$', self.admin_site.admin_view(self.clear_perm_cache), name='clear_perms'),
             path('force_logout/<slug:user_id>/', self.force_logout, name='force_logout')
         ]
         return my_urls + urls
@@ -186,6 +187,11 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
         context['adminform'] = helpers.AdminForm(form, list([(None, {'fields': form.base_fields})]),
                                                  self.get_prepopulated_fields(request))
         return render(request, 'api/invite_form.html', context)
+
+    def clear_perm_cache(self, request):
+        perm_cache = caches['permissions']
+        perm_cache.scan_unlink()
+        return redirect('admin:api_account_changelist')
 
     @staticmethod
     def user_groups(obj):

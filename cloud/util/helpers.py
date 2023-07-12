@@ -92,7 +92,8 @@ def detect_language_by_request(request):
 
 
 def get_language_object_from_request(request):
-    return Language.objects.get(code=detect_language_by_request(request))
+    code = detect_language_by_request(request)
+    return Language.by_code(code)
 
 
 def get_language_for_email(email, customization):

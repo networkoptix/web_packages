@@ -121,5 +121,6 @@ if settings.LOCAL_ENVIRONMENT:
 
 if settings.LOCAL_ENVIRONMENT and not settings.TESTING:
     urlpatterns += static(settings.PREVIEW_URL, document_root=settings.PREVIEW_LOCATION)
-    urlpatterns.insert(0, re_path(r'^profiler/', include('silk.urls')))
+    # urlpatterns.insert(0, re_path(r'^profiler/', include('silk.urls')))
+
 handler404 = 'cloud.urls.view_404'
