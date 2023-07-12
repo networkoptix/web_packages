@@ -120,7 +120,7 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
         (this.system.userManager as UserWithGroupsManager).userGroups.forEach(
             ({ id, name, description, attributes }) => {
                 if (name !== 'Owner') {
-                    if (!customTitleNeeded && !attributes.includes('readonly')) {
+                    if (!customTitleNeeded && !attributes?.includes('readonly')) {
                         customTitleNeeded = true;
                         this.processedGroups.push(
                             { id: 'horizontal', label: 'horizontal' },
