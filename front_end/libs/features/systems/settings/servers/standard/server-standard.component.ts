@@ -17,6 +17,7 @@ import {
 import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';
 import { InfoBlockSection, InfoBlockLine } from '@components/info-block/info-block.component.types';
+import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
@@ -137,6 +138,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         private menuService: NxMenuService,
         private uriService: NxUriService,
         private toastService: NxToastService,
+        private ribbonService: NxRibbonService,
     ) {
         this.servers = servers;
 
@@ -189,6 +191,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                     .forEach(server => {
                         this.system.currentBusyServerIds.delete(server.id);
                         if (server.id === this.selectedServer.id) {
+                            this.ribbonService.hide();
                             this.setStatus('');
                             this.toastService.notify(
                                 this.LANG.servers.restartSuccessful,
