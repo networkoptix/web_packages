@@ -232,17 +232,35 @@ open-source:open-source-checker:
     - open_candidate/**/*
     - open-source-checker-config.json
 
-
-other-frontend-checks:
+node-license-check:
   extends: .frontend-node
   stage: check
   artifacts:
     paths:
-      - ci-package-license.json
+      - package-license.json
     when: on_failure
   script:
     - |
-      npx recursive-check-licenses -a licenses_whitelist.json -e licenses_excluded_packages.json -ci true
+      npx recursive-check-licenses -a licenses_whitelist.json -e licenses_excluded_packages.json
+      if [[ $(git diff --stat) != '' ]]; then
+        echo 'package-license.json updated, attempting commiting changes'
+        git config user.email "$GITLAB_USER_EMAIL"
+        git config user.name "$GITLAB_USER_NAME"
+        git remote add mr_origin "https://PRIVATE-TOKEN:$CANCEL_PIPELINE_ACCESS_TOKEN@gitlab.nxvms.dev/$CI_MERGE_REQUEST_SOURCE_PROJECT_PATH.git"
+        echo "Attempting to fetch origin"
+        git remote show mr_origin
+        git pull mr_origin $CI_COMMIT_REF_NAME
+        git add .
+        git commit -m "Node Licenses autofixed by pipeline [ci skip]"
+        git push -u mr_origin HEAD:$CI_COMMIT_REF_NAME
+        echo 'pushed node licenses fixe to branch'
+      fi
+
+other-frontend-checks:
+  extends: .frontend-node
+  stage: check
+  script:
+    - |
       pushd "ci"
         start_task "./nx_mentions.sh" "nx_mentions" &
       popd
@@ -260,8 +278,31 @@ frontend-lint:
   script:
     - |
       pushd "front_end"
-        npm run lint:ci
+        LINT_STATUS=$(npm run lint:ci; echo $?)
+        echo $LINT_STATUS
+        EXIT_FROM_LINT=$(echo "$LINT_STATUS" | tail -n1)
+
+        if [ $EXIT_FROM_LINT == 0 ]; then
+          echo "Lint passed"
+        else
+          echo "Lint failed with exit code $EXIT_FROM_LINT, attempting to fix automatically"
+          npm run lint:ci -- --fix
+        fi
       popd
+
+      if [[ $(git diff --stat) != '' ]]; then
+        echo 'Lint errors automatically fixed, attempting commiting changes'
+        git config user.email "$GITLAB_USER_EMAIL"
+        git config user.name "$GITLAB_USER_NAME"
+        git remote add mr_origin "https://PRIVATE-TOKEN:$CANCEL_PIPELINE_ACCESS_TOKEN@gitlab.nxvms.dev/$CI_MERGE_REQUEST_SOURCE_PROJECT_PATH.git"
+        echo "Attempting to fetch origin"
+        git remote show mr_origin
+        git pull mr_origin $CI_COMMIT_REF_NAME
+        git add .
+        git commit -m "Lint autofixed by pipeline [ci skip]"
+        git push -u mr_origin HEAD:$CI_COMMIT_REF_NAME
+        echo 'pushed lint fixes to branch'
+      fi
 
 frontend-builds:
   extends: .frontend-node

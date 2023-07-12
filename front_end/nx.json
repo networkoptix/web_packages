@@ -70,7 +70,8 @@
         "{workspaceRoot}/eslint-plugin-nx/**",
         "{workspaceRoot}/.eslintrc.js",
         "{workspaceRoot}/.eslintignore"
-      ]
+      ],
+      "outputs": ["{projectRoot}"]
     }
   },
   "workspaceLayout": {
