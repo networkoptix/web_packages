@@ -7,11 +7,12 @@ import {
     Output,
     EventEmitter,
     ViewEncapsulation,
-    OnChanges, inject
+    OnChanges, inject, Inject
 } from '@angular/core';
 import { LocalStorageService, SessionStorageService } from 'ngx-webstorage';
 import type videojs from 'video.js';
 
+import { WINDOW } from '@services/window-provider';
 import { NgChanges } from '@utils/ng-changes';
 import {
     BASE64_SINGLE_TRANSPARENT_PIXEL
@@ -53,6 +54,9 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
     protected transport = '';
     private readonly xRuntimeGuid = 'x-runtime-guid';
 
+    constructor(@Inject(WINDOW) public window: Window) {
+    }
+
     // For lazy loading player
     #videojs: videojs;
 
@@ -61,15 +65,31 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         return this.sessionStorage.retrieve(`${systemId ? systemId + '-' : ''}${this.xRuntimeGuid}`);
     }
 
+    private supportsNativeHls():boolean {
+        const video = this.window.document.createElement('video');
+        const supportsHls = !!(video.canPlayType('application/vnd.apple.megURL') || video.canPlayType('audio/mpegurl'));
+        video.remove();
+        return supportsHls;
+    }
+
     async initPlayer(): Promise<void> {
         if (this.player) return;
 
         let videoJsAutoRetry = 0;
         let stallTimer;
         const waitingTime = 8 * 1000;
+        const nativeSupport = this.supportsNativeHls();
         const options = {
             autoplay: true,
-            inactivityTimeout: 0
+            inactivityTimeout: 0,
+            html5: {
+                vhs: {
+                    overrideNative: nativeSupport
+                },
+                nativeVideoTracks: !nativeSupport,
+                nativeAudioTracks: !nativeSupport,
+                nativeTextTracks: !nativeSupport
+            }
         };
 
         const resetTimer = () => {
