@@ -623,7 +623,7 @@ do
             echo 'export_poetry_requirements - export poetry requirements to cloud/requirements.tx which is used in deployment'
             echo 'update_package_licenses - Update package-license.json with latest licensing information for cloud_portal project'
             echo 'install_cli - Installs cloud-helper CLI command globally'
-            echo 'setup_git_aliases'
+            echo 'setup_git_aliases - Sets up git aliases for cloud_portal project'
             echo ''
             if ! command -v cloud-helper &> /dev/null
             then
