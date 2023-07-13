@@ -366,6 +366,11 @@ function update_requirements_licenses_poetry() {
     exit 1
 }
 
+function setup_git_aliases() {
+    OPEN_MR="!f() { (HL='\\033[0;32m' && NC='\\033[0m' && MR_TARGET_DEFAULT=$(cat "$(git rev-parse --show-toplevel)/TARGET_BRANCH" 2>/dev/null || echo 'develop') && MR_USER=$(git config user.email) && read -p \"Select target branch or leave empty to accept default [$MR_TARGET_DEFAULT]: \" MR_TARGET && MR_TARGET=${MR_TARGET:-$MR_TARGET_DEFAULT}&& MR_BRANCH=$(git rev-parse --abbrev-ref HEAD) && MR_TITLE_DEFAULT=$(git log $MR_TARGET..HEAD --oneline --pretty=short | tail -1 | sed 's/^[ \t]*//;s/[ \t]*$//') && MR_TITLE_DEFAULT=${MR_TITLE_DEFAULT:-$(git log -1 --pretty=%B)} && read -p \"Select merge request title or leave empty to accept default [$MR_TITLE_DEFAULT]: \" MR_TITLE && MR_TITLE=${MR_TITLE:-$MR_TITLE_DEFAULT} && echo \"Opening MR to merge $HL$MR_BRANCH$NC into $HL$MR_TARGET$NC with title $HL$MR_TITLE$NC assigned to $HL$MR_USER$NC\" && git push -o merge_request.create -o merge_request.target=${MR_TARGET} -o merge_request.merge_when_pipeline_succeeds -o merge_request.assign=${MR_USER} -o merge_request.draft -o merge_request.title=${MR_TITLE} --set-upstream origin ${MR_BRANCH} ) }; f"
+    echo "$OPEN_MR"
+}
+
 for command in $@
 do
     case "$command" in
@@ -573,6 +578,9 @@ do
         install_cli)
             install_cli
             ;;
+        setup_git_aliases)
+            setup_git_aliases
+            ;;
         *)
             echo Usage: cloud_shortcuts '[init_backend|init_frontend|add_env|build_frontend|login_db|rebuild_frontend|set_cloud_instance|setup_cms|setup_db|setup_env|start_celery|start_docker|stop_docker|build_mediaserver|run_mediaserver|stop_mediaserver|start_https_tunnel]'
             echo 'init_backend - Initializes the backend. Only run this once'
@@ -605,6 +613,7 @@ do
             echo 'export_poetry_requirements - export poetry requirements to cloud/requirements.tx which is used in deployment'
             echo 'update_package_licenses - Update package-license.json with latest licensing information for cloud_portal project'
             echo 'install_cli - Installs cloud-helper CLI command globally'
+            echo 'setup_git_aliases'
             echo ''
             if ! command -v cloud-helper &> /dev/null
             then
