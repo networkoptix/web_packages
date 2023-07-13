@@ -3,7 +3,7 @@ import time
 from selenium import webdriver
 
 import resource
-from resource import get_headless_chrome
+from resource import get_headless_chrome, register_and_activate_account
 
 from variables import ENV
 from account import cloud_login
@@ -46,8 +46,10 @@ def can_be_accessed_via_direct_url():
 
 def password_is_actually_changed_and_login_works_with_new_password():
     driver = get_headless_chrome()
+    email = resource.get_random_email()
+    register_and_activate_account(driver, "Mark", "Hamill", email, "qweasd 123")
     robot_keywords.go_to_url(driver, f"{ENV}/account/password")
-    LoginDialog(driver).basic_cloud_login("noptixautoqa+viewer@gmail.com", "qweasd 123")
+    LoginDialog(driver).basic_cloud_login(email, "qweasd 123")
 
     change_pass_form = ChangePassForm(driver)
     change_pass_form.current_password_input().input_text("qweasd 123")
@@ -57,10 +59,16 @@ def password_is_actually_changed_and_login_works_with_new_password():
     time.sleep(1)
     HeaderNav(driver).log_out()
     LandingPage(driver)
-    HeaderNav(driver).log_in_button().click()
 
-    LoginDialog(driver).basic_cloud_login("noptixautoqa+viewer@gmail.com", "qweasd 123")
-    robot_keywords.wait_until_element_is_visible(driver, rb.WRONG_PASSWORD_MESSAGE)
+    header = HeaderNav(driver)
+    header.log_in_button().click()
+    login_dialog = LoginDialog(driver)
+    login_dialog.email_input().input_text(email)
+    login_dialog.next_button().click()
+    login_dialog.password_input().input_text("qweasd 123")
+    login_dialog.login_button().click()
+    login_dialog.password_input_error_message()
+
     robot_keywords.close_browser(driver)
     print("pass")
 

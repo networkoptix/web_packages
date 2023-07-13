@@ -18,7 +18,7 @@ from requests.auth import HTTPDigestAuth, HTTPBasicAuth
 from robot.api import logger
 from robot.api.deco import keyword, library
 
-import Encode
+from NoptixLibrary import *
 from Cloud2fa import Cloud2fa
 from CloudSession import CloudSession
 

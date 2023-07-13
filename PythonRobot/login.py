@@ -14,10 +14,12 @@ class LoginDialog:
         return Input(self.driver, "//nx-authorize-component//input[@id='authorizeEmail']")
 
     def password_input(self) -> Input:
-        return Input(self.driver, "//nx-authorize-component//input[@id='authorizePassword' and @name='password' and @type='password']")
+        return Input(self.driver, "//nx-authorize-component//input[@id='authorizePassword']")
     
     def password_input_error_message(self) -> Input:
-        translated_xpath = self.rb.replace_nested_variables("//nx-authorize-component//p[contains(text(),'{ACCOUNT_DOES_NOT_EXIST_TEXT}')]")
+        translated_xpath = self.rb.replace_nested_variables(
+            "//nx-authorize-component//p[contains(text(),'{WRONG_PASSWORD}')]")
+        print(translated_xpath)
         return Input(self.driver, translated_xpath)
 
     def next_button(self):

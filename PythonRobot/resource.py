@@ -141,7 +141,7 @@ def register_and_activate_account(driver, first_name, last_name, email, password
     robot_keywords.sleep(1)
     activate(driver, email, password, from_email=from_email)
 
-def get_random_email(email, sendemail=False, extra="", symbols=False):
+def get_random_email(email=rb.BASE_EMAIL_SENDEMAIL, sendemail=False, extra="", symbols=False):
     if not sendemail:
         email = email.replace('sendemail', '')
     if symbols:

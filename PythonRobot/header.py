@@ -35,7 +35,7 @@ class HeaderNav:
 
     def log_in_button(self):
         translated_xpath = self.rb.replace_nested_variables(
-            "//header//span[contains(text(),'{LOG_IN_BUTTON_TEXT}')]/..")
+            "//header//a[contains(text(),'{LOG_IN_BUTTON_TEXT}')]/..")
         return Button(self.driver, translated_xpath)
 
     def log_out(self):
