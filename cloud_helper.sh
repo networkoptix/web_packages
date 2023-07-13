@@ -367,8 +367,11 @@ function update_requirements_licenses_poetry() {
 }
 
 function setup_git_aliases() {
-    OPEN_MR="!f() { (HL='\\033[0;32m' && NC='\\033[0m' && MR_TARGET_DEFAULT=$(cat "$(git rev-parse --show-toplevel)/TARGET_BRANCH" 2>/dev/null || echo 'develop') && MR_USER=$(git config user.email) && read -p \"Select target branch or leave empty to accept default [$MR_TARGET_DEFAULT]: \" MR_TARGET && MR_TARGET=${MR_TARGET:-$MR_TARGET_DEFAULT}&& MR_BRANCH=$(git rev-parse --abbrev-ref HEAD) && MR_TITLE_DEFAULT=$(git log $MR_TARGET..HEAD --oneline --pretty=short | tail -1 | sed 's/^[ \t]*//;s/[ \t]*$//') && MR_TITLE_DEFAULT=${MR_TITLE_DEFAULT:-$(git log -1 --pretty=%B)} && read -p \"Select merge request title or leave empty to accept default [$MR_TITLE_DEFAULT]: \" MR_TITLE && MR_TITLE=${MR_TITLE:-$MR_TITLE_DEFAULT} && echo \"Opening MR to merge $HL$MR_BRANCH$NC into $HL$MR_TARGET$NC with title $HL$MR_TITLE$NC assigned to $HL$MR_USER$NC\" && git push -o merge_request.create -o merge_request.target=${MR_TARGET} -o merge_request.merge_when_pipeline_succeeds -o merge_request.assign=${MR_USER} -o merge_request.draft -o merge_request.title=${MR_TITLE} --set-upstream origin ${MR_BRANCH} ) }; f"
-    echo "$OPEN_MR"
+    for alias in git-aliases/*
+    do
+        alias_name=$(basename "$alias")
+        git config alias."$alias_name" "$(head -1 "$alias")"
+    done
 }
 
 for command in $@
