@@ -201,6 +201,8 @@ export class CameraManager {
         } else if (camera.scheduleEnabled) {
             recordingStatus = this.getRecordingStatus(camera);
             status = camera.status;
+        } else {
+            status = camera.status;
         }
 
         const isStream = [
