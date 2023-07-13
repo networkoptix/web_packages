@@ -17,6 +17,7 @@
         [set-sorting-default]="{ name: 'vendor', type: 'string' }"
         [set-arrange]="headerFlow"
         [data]="showRecords"
+        [set-selected-item-id]="activeCamera?.id"
         (onRowClick)="onRowAction($event)"
     >
         <ng-template #header>

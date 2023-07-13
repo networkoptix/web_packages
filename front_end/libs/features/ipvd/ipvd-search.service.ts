@@ -73,6 +73,8 @@ export class IpvdSearchService {
 
         return camerasData
             .filter(camera => {
+                camera.id = camera.sortKey;
+
                 if (filter.tags.some(key => key.value && !camera[key.id])) {
                     return false;
                 }
@@ -121,6 +123,6 @@ export class IpvdSearchService {
                     ? queryTerms.every(term => filterCamera(camera, term))
                     : true;
             })
-            .sort(alphabeticalSort(this.locale, cam => cam.sortKey));
+            .sort(alphabeticalSort(this.locale, cam => cam.id));
     }
 }

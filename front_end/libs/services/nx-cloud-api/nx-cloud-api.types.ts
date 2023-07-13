@@ -130,6 +130,7 @@ export interface Cameras {
     isH265: boolean;
     hardwareTypeId: string;
     resolutionArea: number;
+    id: string;
     sortKey: string;
 }
 

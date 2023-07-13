@@ -89,6 +89,7 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
     isMobile: boolean;
 
     tableHeight: number;
+    detailHeight: number;
     searchDiff: number = 0;
     templateRows: string = '';
     templateTableRows: string = '';
@@ -240,6 +241,7 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
     onResize(event: Size): void {
         if (event.height > 0 && this.tableContainer?.nativeElement) {
             this.tableHeight = this.tableContainer.nativeElement.clientHeight;
+            this.detailHeight += this.isMobile ? 100 : 60; // mobile view doesn't have disclaimer
         }
     }
 
@@ -249,7 +251,7 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
             ? `auto 0 calc(100vh - ${otherElements + this.searchDiff}px)`
             : `auto calc(100vh - ${otherElements + this.searchDiff}px) 0`;
 
-        const isCamera = this.activeCamera || isCameraActive;
+        const isCamera = this.params.camera || isCameraActive;
         this.templateTableRows = this.isMobile
             ? '1fr'
             : isCamera
@@ -475,7 +477,11 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
                     }
                     return obj;
                 },
-                { sortKey: camera.sortKey },
+                {
+                    // id: camera.vendor + '' + camera.model,
+                    id: camera.id,
+                    sortKey: camera.sortKey,
+                },
             );
             filteredCameras.push(filteredCamera);
         });
@@ -489,12 +495,12 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
             select => select.selected.length > 0,
         );
 
-        const singleselect = this.filterModel.selects?.some(
+        const singleSelect = this.filterModel.selects?.some(
             select => select.selected && select.selected.value !== '0',
             // 0 is default choice
         );
 
-        return tags || multiselect || singleselect || this.filterModel.query !== '';
+        return tags || multiselect || singleSelect || this.filterModel.query !== '';
     }
 
     searchVendor(): void {
@@ -541,16 +547,13 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
             return;
         }
 
-        elementSelected.sortKey = (elementSelected.vendor + elementSelected.model).replace(
-            /\s/g,
-            '',
-        );
+        elementSelected.id = (elementSelected.vendor + elementSelected.model).replace(/\s/g, '');
 
         const selectedCamera = this.cameras.find(camera => {
-            return camera.sortKey === elementSelected.sortKey;
+            return camera.id === elementSelected.id;
         });
 
-        if (this.activeCamera && this.activeCamera.sortKey === selectedCamera.sortKey) {
+        if (this.activeCamera && this.activeCamera.id === selectedCamera.id) {
             return;
         }
         this.showAll = false;

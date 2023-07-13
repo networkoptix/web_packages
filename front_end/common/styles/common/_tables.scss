@@ -178,6 +178,14 @@
         background-color: var(--card-body-bg);
         border-bottom: 1px solid var(--border-color);
 
+        &:hover {
+            background: var(--brand-core-t10);
+        }
+
+        &.selected {
+            background-color: var(--table-row-hover-bg);
+        }
+
         //&:last-child {
         //    border-bottom: none;
         //}
@@ -197,6 +205,16 @@
         & > div {
             border-right: 1px solid var(--border-color);
             padding-left: 8px;
+
+            *[id^='sortKey-']{
+                height: 0;
+                width: 0;
+                padding: 0;
+            }
+
+            #sortKey-DWC-BVI2IR {
+                background-color: darkred;
+            }
 
             &:last-child {
                 border-right: none;
@@ -220,9 +238,11 @@
             }
         }
 
-        .div-container-wrapper svg-icon svg .st0 {
-            fill: var(--svg-std-icon-fill);
-            stroke: none;
+        .div-container-wrapper {
+            svg-icon svg .st0 {
+                fill: var(--svg-std-icon-fill);
+                stroke: none;
+            }
         }
     }
 }

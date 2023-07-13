@@ -41,9 +41,9 @@ export class NxCamerasTableComponent implements OnChanges {
     showHeaders: Header[];
     showRecords: FilteredCamera[];
     headerFlow: string[];
+    headerFlowBase: string[];
     headerFlowCSM: string[];
     headerFlowService: string[];
-    selectedCamera: string;
     pages: number;
     debug: boolean;
 
@@ -134,7 +134,7 @@ export class NxCamerasTableComponent implements OnChanges {
             },
         ];
 
-        this.headerFlow = [
+        this.headerFlowBase = [
             'vendor',
             'model',
             'hardwareType',
@@ -150,6 +150,7 @@ export class NxCamerasTableComponent implements OnChanges {
 
         this.headerFlowCSM = ['isAnalyticsSupported'];
         this.headerFlowService = ['count', 'resolutionArea'];
+        this.headerFlow = [];
 
         this.disclaimerParams = {
             companyName: this.CONFIG.company.name,
@@ -169,7 +170,7 @@ export class NxCamerasTableComponent implements OnChanges {
                     ? delete element.isAudioSupported
                     : delete element.isTwAudioSupported;
 
-                delete element.sortKey;
+                // delete element.sortKey;
 
                 return element;
             });
@@ -183,7 +184,7 @@ export class NxCamerasTableComponent implements OnChanges {
                 this.tableClasses.push('analytics');
                 this.csvOptions.headers.push(this.LANG.ipvd.isAnalyticsSupported);
                 this.showHeaders = [...this.cameraHeaders, ...this.cmsHeaders];
-                this.headerFlow = [...this.headerFlow, ...this.headerFlowCSM];
+                this.headerFlow = [...this.headerFlowBase, ...this.headerFlowCSM];
             }
 
             if (this.allowedParameters.find(elm => elm === 'resolutionArea')) {
@@ -194,7 +195,7 @@ export class NxCamerasTableComponent implements OnChanges {
                     ...this.serviceHeaders,
                 ];
                 this.headerFlow = [
-                    ...this.headerFlow,
+                    ...this.headerFlowBase,
                     ...this.headerFlowCSM,
                     ...this.headerFlowService,
                 ];
