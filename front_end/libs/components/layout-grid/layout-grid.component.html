@@ -525,7 +525,7 @@
                                         (resize)="updatePlaceholderConfig($event, item, status)"
                                         (click)="
                                             itemDetail.type === RESOURCE_TYPE.CAMERA &&
-                                                system.userManager.permissions.editCameras &&
+                                                editCameras() &&
                                                 (status === 'defaultPassword' ||
                                                     itemDetail.details.unauthorized) &&
                                                 updateCameraCredentials(system, itemDetail.details)
@@ -533,7 +533,7 @@
                                         [ngClass]="{
                                             'has-action':
                                                 itemDetail.type === RESOURCE_TYPE.CAMERA &&
-                                                system.userManager.permissions.editCameras &&
+                                                editCameras() &&
                                                 (status === 'defaultPassword' ||
                                                     itemDetail.details.unauthorized),
                                             'has-secondary-panel':

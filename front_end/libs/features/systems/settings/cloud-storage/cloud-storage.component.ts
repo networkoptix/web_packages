@@ -1,16 +1,14 @@
 import { Component, Input, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { startCase, isEqual } from 'lodash-es';
 import {
     BehaviorSubject,
     combineLatest,
     distinctUntilChanged,
-    filter,
     map,
     shareReplay,
     switchMap,
-    take,
-    tap,
 } from 'rxjs';
 
 import { NxMenuService } from '@app/menu/menu.service';
@@ -33,8 +31,6 @@ import {
 } from '@services/system.service/license-manager/license-manager.types';
 import { NxSystem } from '@services/system.service/system';
 
-import { NxSettingsService } from '../settings.service';
-
 @UntilDestroy()
 @Component({
     selector: 'nx-cloud-storage',
@@ -42,6 +38,7 @@ import { NxSettingsService } from '../settings.service';
     styleUrls: ['./cloud-storage.component.scss'],
 })
 export class NxCloudStorageComponent implements OnInit {
+    @Input() system: NxSystem;
     @Input() type: string;
 
     LANG = staticLang;
@@ -114,37 +111,12 @@ export class NxCloudStorageComponent implements OnInit {
     closePopover = () => this.popoverService.close();
 
     constructor(
-        settingsService: NxSettingsService,
         private cloudApi: NxCloudApiService,
         private viewContainerRef: ViewContainerRef,
         private popoverService: NxPopoverService,
         public dialogService: NxDialogsService,
         private menuService: NxMenuService,
-    ) {
-        if (environment.isLocal) {
-            this.serverSettings = '/settings/servers';
-        } else {
-            settingsService.systemSubject$
-                .pipe(
-                    filter(system => !!system?.id),
-                    take(1),
-                )
-                .toPromise()
-                .then(system => {
-                    this.serverSettings = `/systems/${system.id}/servers`;
-                });
-        }
-
-        settingsService.systemSubject$
-            .pipe(
-                filter(system => !!system),
-                tap(this.initCloudStorageManager),
-                switchMap(system => system.getLicenseManager()),
-                tap(this.initLicenseManager),
-                untilDestroyed(this),
-            )
-            .subscribe();
-    }
+    ) {}
 
     initCloudStorageManager = (system: NxSystem) => {
         this.cloudStorageManager = system.getCloudStorageManager(this.cloudApi.cloudStorageApi);
@@ -181,6 +153,21 @@ export class NxCloudStorageComponent implements OnInit {
     };
 
     ngOnInit(): void {
+        if (environment.isLocal) {
+            this.serverSettings = '/settings/servers';
+        } else {
+            this.serverSettings = `/systems/${this.system.id}/servers`;
+        }
+
+        if (this.system) {
+            this.initCloudStorageManager(this.system);
+            this.system
+                .getLicenseManager()
+                .pipe(takeUntilDestroyed())
+                .subscribe(manager => {
+                    this.initLicenseManager(manager);
+                });
+        }
         if (this.type !== 'servers') {
             this.cloudApi
                 .checkFeatureNotice('cloudStorage', () =>

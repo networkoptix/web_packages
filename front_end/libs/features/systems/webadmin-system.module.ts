@@ -7,6 +7,7 @@ import { MenuModule } from '@app/menu/menu.module';
 import { PipesModule } from '@app/pipes/pipes.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
+import { currentSystemResolver } from '@resolvers/current-system-resolver';
 
 import { NxSystemAdminComponent } from './settings/admin/admin.component';
 import { NxSystemAdminModule } from './settings/admin/admin.module';
@@ -26,64 +27,75 @@ export const localSettingsRoutes: Routes = [
         path: '',
         component: NxSystemSettingsComponent,
         canActivate: [AuthGuard],
+        resolve: { system: currentSystemResolver },
         runGuardsAndResolvers: 'always',
         children: [
             {
                 path: '',
                 component: NxSystemAdminComponent,
                 canDeactivate: [ApplyGuard],
+                resolve: { system: currentSystemResolver },
             },
             {
                 path: 'advanced',
                 component: NxSystemAdminComponent,
                 canDeactivate: [ApplyGuard],
                 runGuardsAndResolvers: 'always',
+                resolve: { system: currentSystemResolver },
             },
             {
                 path: 'users',
                 component: NxSystemUsersComponent,
                 canDeactivate: [ApplyGuard],
                 runGuardsAndResolvers: 'always',
+                resolve: { system: currentSystemResolver },
             },
             {
                 path: 'users/:userId',
                 component: NxSystemUsersComponent,
                 canDeactivate: [ApplyGuard],
                 runGuardsAndResolvers: 'always',
+                resolve: { system: currentSystemResolver },
             },
             {
                 path: 'servers',
                 component: NxSystemServersComponent,
                 canDeactivate: [ApplyGuard],
                 runGuardsAndResolvers: 'always',
+                resolve: { system: currentSystemResolver },
             },
             {
                 path: 'servers/:serverId',
                 component: NxSystemServersComponent,
                 canDeactivate: [ApplyGuard],
                 runGuardsAndResolvers: 'always',
+                resolve: { system: currentSystemResolver },
             },
             {
                 path: 'servers/:serverId/advanced',
                 component: NxSystemServersComponent,
                 canDeactivate: [ApplyGuard],
+                resolve: { system: currentSystemResolver },
             },
             {
                 path: 'cameras',
                 component: NxCamerasComponent,
                 canDeactivate: [ApplyGuard],
                 runGuardsAndResolvers: 'always',
+                resolve: { system: currentSystemResolver },
             },
             {
                 path: 'cameras/:cameraId',
                 component: NxCamerasComponent,
                 canDeactivate: [ApplyGuard],
                 runGuardsAndResolvers: 'always',
+                resolve: { system: currentSystemResolver },
             },
             {
                 path: 'licenses',
                 component: NxSystemLicensesComponent,
                 runGuardsAndResolvers: 'always',
+                resolve: { system: currentSystemResolver },
             },
         ],
     },

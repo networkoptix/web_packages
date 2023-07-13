@@ -1,4 +1,14 @@
-import { Component, Inject, Input, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
+import {
+    Component,
+    computed,
+    effect,
+    Inject,
+    Input,
+    LOCALE_ID,
+    OnDestroy,
+    OnInit,
+    Signal,
+} from '@angular/core';
 import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { escape } from 'lodash-es';
@@ -32,15 +42,12 @@ import {
 } from '@services/system.service/camera-manager/camera-manager-types';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/system-types';
-import { NxSystemService } from '@services/system.service/system.service';
 import type { NxUser } from '@services/system.service/user-manager/user-manager-types';
 import { NxSystemsService } from '@services/systems.service';
 import { NxToastService } from '@services/toast.service';
 import { NxUriService } from '@services/uri.service';
 import { GridBreakpoints } from '@styles/theme-variables-common';
 import { alphabeticalSort, cleanId } from '@utils/general';
-
-import { NxSettingsService } from './settings.service';
 
 /**
  * TODO: A lot of the observable usage in this component should be cleaned up.
@@ -60,6 +67,14 @@ import { NxSettingsService } from './settings.service';
 export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     @Input() uriParamSystemId;
     @Input() callShare;
+    @Input() system: NxSystem;
+
+    editCameras: Signal<boolean> = computed(
+        () => this.system.permissionManager.permissions().editCameras,
+    );
+    editUsers: Signal<boolean> = computed(
+        () => this.system.permissionManager.permissions().editUsers,
+    );
 
     CONFIG: IConfig;
     LANG = staticLang;
@@ -95,10 +110,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             this.secondaryMerge ||
             (this.system && this.system.show404)
         );
-    }
-
-    get system(): NxSystem {
-        return this.settingsService.system;
     }
 
     // TODO: We really need a standard way to get the system name
@@ -187,9 +198,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         private pageService: NxPageService,
 
         private toasts: NxToastService,
-        private systemService: NxSystemService,
         private systemsService: NxSystemsService,
-        public settingsService: NxSettingsService,
         private processService: NxProcessService,
         private uriService: NxUriService,
         private menuService: NxMenuService,
@@ -204,6 +213,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.CONFIG = configService.getConfig();
 
         this.setupDefaults();
+        effect(() => {
+            this.system.permissionManager.permissions();
+            this.updateMenu();
+        });
     }
 
     ngOnInit(): void {
@@ -329,7 +342,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 },
             )
             .then(() => {
-                if (this.system.userManager.permissions.editUsers) {
+                if (this.editUsers()) {
                     this.gettingSystemUsers.run();
                 } else {
                     this.updateArchivesPresent();
@@ -390,10 +403,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 if (this.systemId === this.system?.id) {
                     return;
                 }
-                this.settingsService.system = this.systemService.createSystem(
-                    this.account.email,
-                    this.route.snapshot.params.systemId,
-                );
                 this.system.show404 = false;
                 this.gettingSystem.run();
 
@@ -441,7 +450,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         if (this.system.isAvailable) {
                             this.updateAlert();
                         }
-                        if (this.system.userManager.canViewInfo()) {
+                        if (this.system.permissionManager.isAdmin()) {
                             // Makes request to get health, this is used to cache request.
                             this.system.mediaserver
                                 .getAggregateHealthReport()
@@ -466,20 +475,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     getSystemInfo(): void {
-        if (this.settingsService.system?.id !== this.systemId) {
-            this.settingsService.system = undefined;
-        }
         this.accountService.get().then(account => {
             if (account) {
                 this.account = account;
                 if (!environment.isLocal) {
                     this.getCloudSystemInfo();
                 } else {
-                    this.settingsService.system = this.systemService.createLocalSystem(
-                        this.accountService.mediaServerApi,
-                        account.id,
-                        account.email,
-                    );
                     this.system.update().then(() => {
                         this.systems = [this.system];
                         this.system.isAvailable = true;
@@ -623,7 +624,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             this.system.cameraManager.getCameras(),
         ]);
 
-        if (this.system.userManager.permissions.editCameras) {
+        if (this.editCameras()) {
             let camerasNode = this.content.level1.find(
                 node => node.id === menus.systemSettings.cameras.id,
             );
@@ -663,7 +664,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             );
         }
 
-        if (this.system.userManager.permissions.editUsers) {
+        if (this.editUsers()) {
             let usersNode = this.content.level1.find(
                 node => node.id === menus.systemSettings.users.id,
             );
@@ -764,7 +765,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             );
         }
 
-        if (this.system.userManager.permissions.isAdmin) {
+        if (this.system.permissionManager.isAdmin()) {
             let serversNode = this.content.level1.find(
                 node => node.id === menus.systemSettings.servers.id,
             );
@@ -820,7 +821,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             },
         ];
 
-        if (this.system.userManager.permissions.isAdmin || this.system.userManager.isMySystem) {
+        if (this.system.permissionManager.isAdmin() || this.system.permissionManager.isOwner()) {
             adminNode.level3.push({
                 id: menus.systemSettings.licenses.id,
                 svg: menus.systemSettings.licenses.icon,
@@ -840,9 +841,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
         // hide search if no permissions for potentially long list ... cameras, servers and users
         this.menuSearchable =
-            this.system.userManager.permissions.editCameras &&
-            this.system.userManager.permissions.isAdmin &&
-            this.system.userManager.permissions.editUsers;
+            this.editCameras() && this.system.permissionManager.isAdmin() && this.editUsers();
         this.updateContent();
     }
 

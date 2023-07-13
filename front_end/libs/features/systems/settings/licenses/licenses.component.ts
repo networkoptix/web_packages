@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subject } from 'rxjs';
-import { delay, filter, map, retryWhen, takeUntil } from 'rxjs/operators';
+import { delay, map, retryWhen, takeUntil } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';
@@ -12,8 +12,6 @@ import type { NxSystem } from '@services/system.service/system';
 import type { License, NxSystemServer } from '@services/system.service/system-types';
 import { cleanId } from '@utils/general';
 
-import { NxSettingsService } from '../settings.service';
-
 import { getDynamicLicense } from './dynamic-license';
 
 @UntilDestroy()
@@ -23,30 +21,16 @@ import { getDynamicLicense } from './dynamic-license';
     styleUrls: ['licenses.component.scss'],
 })
 export class NxSystemLicensesComponent implements OnInit {
+    @Input() system: NxSystem;
     CONFIG: IConfig;
     LANG = staticLang;
 
-    system: NxSystem;
     resetSystemInfo$ = new Subject();
     resetSystem$ = new Subject();
     resetLicense$ = new Subject();
 
     licenses: any = [];
     licenseSummaries: License[];
-
-    // Constructor and class initialization methods
-    private setupDefaults(): void {
-        this.settingsService.systemSubject$
-            .pipe(
-                untilDestroyed(this),
-                filter(data => data !== undefined && data.id !== this.system?.id),
-            )
-            .subscribe((system: NxSystem) => {
-                this.system = system;
-                this.updateLicenses();
-                // this.updateMediaServers();
-            });
-    }
 
     private updateLicenses(): void {
         this.resetLicense$.next(true);
@@ -78,17 +62,12 @@ export class NxSystemLicensesComponent implements OnInit {
     //         });
     // }
 
-    constructor(
-        configService: NxConfigService,
-        private settingsService: NxSettingsService,
-        private menuService: NxMenuService,
-    ) {
+    constructor(configService: NxConfigService, private menuService: NxMenuService) {
         this.CONFIG = configService.getConfig();
-
-        this.setupDefaults();
     }
 
     ngOnInit(): void {
+        this.updateLicenses();
         this.menuService.section = menus.systemSettings.admin.id;
         this.menuService.detail = menus.systemSettings.licenses.id;
     }

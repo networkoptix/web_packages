@@ -46,7 +46,7 @@ import {
 
 type PartialSystem = Pick<
     NxSystemOldModule,
-    'serverManager' | 'version' | 'useRest' | 'userManager'
+    'serverManager' | 'version' | 'useRest' | 'userManager' | 'permissionManager'
 >;
 
 const updateDuration = (
@@ -110,7 +110,7 @@ export class CameraManager {
     }): Promise<NxSystemCamera[]> {
         this.serverTimes = serverTimes;
         try {
-            if (this.system?.userManager.permissions.isAdmin) {
+            if (this.system?.permissionManager.isAdmin()) {
                 this.camerasHealth = (
                     await firstValueFrom(this.serverManager.mediaserver.getHealthValues())
                 ).reply.cameras;

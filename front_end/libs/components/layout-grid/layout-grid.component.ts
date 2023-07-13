@@ -6,11 +6,13 @@ import { HttpErrorResponse } from '@angular/common/http';
 import {
     ChangeDetectorRef,
     Component,
+    computed,
     EventEmitter,
     HostListener,
     Inject,
     Input,
     Output,
+    Signal,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -218,6 +220,10 @@ export class NxLayoutGridComponent {
         details: Record<string, unknown>;
     }>();
     @Output() updateLayoutItems = new EventEmitter<null>();
+
+    editCameras: Signal<boolean> = computed(
+        () => this.system.permissionManager.permissions().editCameras,
+    );
 
     #lastWidth: number = Infinity;
 

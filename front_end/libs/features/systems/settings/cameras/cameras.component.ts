@@ -1,4 +1,13 @@
-import { Component, OnInit, Inject, ViewContainerRef, ViewChild } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    Inject,
+    ViewContainerRef,
+    ViewChild,
+    computed,
+    Signal,
+    Input,
+} from '@angular/core';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual } from 'lodash-es';
@@ -18,10 +27,10 @@ import {
     delay,
     distinctUntilChanged,
     retry,
-    tap,
     catchError,
     switchMap,
     share,
+    tap,
 } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
@@ -58,8 +67,6 @@ import { ChildRoutes } from '@services/uri.service.types';
 import { WINDOW } from '@services/window-provider';
 import { cleanId } from '@utils/general';
 
-import { NxSettingsService } from '../settings.service';
-
 import type {
     AspectRatioDropdownItem,
     RotationDropdownItem,
@@ -92,6 +99,7 @@ class Alert {
     styleUrls: ['cameras.component.scss'],
 })
 export class NxCamerasComponent implements OnInit {
+    @Input() system: NxSystem;
     LANG = staticLang;
     ASPECT_RATIOS = {
         '4:3': 1.33333,
@@ -104,7 +112,6 @@ export class NxCamerasComponent implements OnInit {
     preview$: Observable<string>;
 
     sensitivityButtons$ = new BehaviorSubject<SensitivityButtonValue>(false);
-    private settingsSubscription: Subscription;
     private cameraSubscription: Subscription;
 
     // TODO: Remove after Forms refactor
@@ -112,7 +119,6 @@ export class NxCamerasComponent implements OnInit {
     private recordingSettingsComponent!: NxRecordingSettingsComponent;
 
     private viewContainerRef: ViewContainerRef;
-    system: NxSystem;
     parsedCameraId: string;
     selectedCamera: NxSystemCamera;
     enableEdit: boolean;
@@ -150,6 +156,10 @@ export class NxCamerasComponent implements OnInit {
     selectedQualityWatcher = new Watcher<StreamQuality>();
     motionEnabledWatcher = new Watcher<MotionType>();
     motionMaskWatcher = new Watcher<string>();
+
+    editCameras: Signal<boolean> = computed(
+        () => this.system.permissionManager.permissions().editCameras,
+    );
 
     private get cameraName(): string {
         return this.cameraNameWatcher.value;
@@ -225,7 +235,6 @@ export class NxCamerasComponent implements OnInit {
     constructor(
         private router: Router,
         private menuService: NxMenuService,
-        private settingsService: NxSettingsService,
         private route: ActivatedRoute,
         private uriService: NxUriService,
         private healthService: NxHealthService,
@@ -250,7 +259,6 @@ export class NxCamerasComponent implements OnInit {
                 // remove unnecessary system update (ex. health monitor will trigger system update)
                 // and orphan metrics request in cameraSubscription
                 this.cameraSubscription?.unsubscribe();
-                this.settingsSubscription?.unsubscribe();
             }
         });
 
@@ -267,65 +275,57 @@ export class NxCamerasComponent implements OnInit {
                 }
             }
         });
-
-        this.settingsSubscription = this.settingsService.systemSubject$
+        if (!this.system || !environment.isLocal) {
+            if (!this.system.isOnline || !this.system.isAvailable) {
+                this.canSeeInfo = false;
+            } else {
+                this.canSeeInfo = this.system.permissionManager.isAdmin();
+                if (this.canSeeInfo) {
+                    this.fullInfoPath =
+                        this.uriService.getSystemSettingsRoute({
+                            systemId: this.system.id,
+                            childRoute: ChildRoutes.HEALTH,
+                        }) + menus.systemSettings.cameras.path;
+                }
+            }
+        } else {
+            this.showPreloader = false;
+        }
+        this.cameraSubscription?.unsubscribe();
+        let prevCameras: NxSystemCamera[] = [];
+        this.cameraSubscription = this.system.infoSubject
             .pipe(
                 untilDestroyed(this),
-                filter(data => data !== undefined && data.id !== this.system?.id),
-            )
-            .subscribe(system => {
-                if (system && (!this.system || !environment.isLocal)) {
-                    this.system = system;
-                    if (!this.system.isOnline || !this.system.isAvailable) {
-                        this.canSeeInfo = false;
-                    } else {
-                        this.canSeeInfo = this.system.userManager.permissions.isAdmin;
-                        if (this.canSeeInfo) {
-                            this.fullInfoPath =
-                                this.uriService.getSystemSettingsRoute({
-                                    systemId: this.system.id,
-                                    childRoute: ChildRoutes.HEALTH,
-                                }) + menus.systemSettings.cameras.path;
-                        }
+                filter(res => !!res?.cameraManager),
+                map(res => res.cameraManager.cameras),
+                tap(cameras => {
+                    if (cameras.length === 0) {
+                        this.router.navigate([this.activeRoute.snapshot.url[0].path], {
+                            relativeTo: this.activeRoute.parent,
+                        });
                     }
-                } else {
+                }),
+                tap(() => {
+                    this.cameraViewPath =
+                        menus.systemSettings.baseUrl +
+                        this.system.id +
+                        '/view/' +
+                        this.parsedCameraId;
+                }),
+                filter(cameras => !isEqual(prevCameras, cameras)),
+                tap(cameras => {
+                    prevCameras = [...cameras];
+                }),
+            )
+            .subscribe(() => {
+                if (!this.applyService.locked) {
+                    this.setCamera();
+                }
+                if (!this.system.isAvailable) {
                     this.showPreloader = false;
                 }
-                this.cameraSubscription?.unsubscribe();
-                let prevCameras: NxSystemCamera[] = [];
-                this.cameraSubscription = this.system.infoSubject
-                    .pipe(
-                        untilDestroyed(this),
-                        filter(res => !!res?.cameraManager),
-                        map(res => res.cameraManager.cameras),
-                        tap(cameras => {
-                            if (cameras.length === 0) {
-                                this.router.navigate([this.activeRoute.snapshot.url[0].path], {
-                                    relativeTo: this.activeRoute.parent,
-                                });
-                            }
-                        }),
-                        tap(() => {
-                            this.cameraViewPath =
-                                menus.systemSettings.baseUrl +
-                                this.system.id +
-                                '/view/' +
-                                this.parsedCameraId;
-                        }),
-                        filter(cameras => !isEqual(prevCameras, cameras)),
-                        tap(cameras => {
-                            prevCameras = [...cameras];
-                        }),
-                    )
-                    .subscribe(() => {
-                        if (!this.applyService.locked) {
-                            this.setCamera();
-                        }
-                        if (!this.system.isAvailable) {
-                            this.showPreloader = false;
-                        }
-                    });
             });
+
         this.applyService.initPageWatcher(
             this.viewContainerRef,
             this.saveSettingsProcess,
@@ -450,7 +450,6 @@ export class NxCamerasComponent implements OnInit {
             return this.system.cameraManager.getCameras().then(res => {
                 this.setCamera();
                 this.toggleMotionGrid();
-                this.settingsService.system = this.system;
                 this.system.systemInfo = this.system;
                 return res;
             });
@@ -480,7 +479,6 @@ export class NxCamerasComponent implements OnInit {
                     ),
                     retry(5),
                     delay(this.cameraCredentialUpdateTimeout),
-                    tap(_ => this.settingsService.systemSubject$.next(this.system)),
                     catchError(err => {
                         console.error(err);
                         return of(err);
@@ -543,17 +541,14 @@ export class NxCamerasComponent implements OnInit {
 
         const { cameras } = this.system?.cameraManager;
 
-        this.enableEdit =
-            this.system.userManager.permissions.isAdmin ||
-            this.system.userManager.permissions.editCameras;
+        this.enableEdit = this.system.permissionManager.isAdmin() || this.editCameras();
 
         const parsedCameraExistInCameras = cameras.some(
             camera => camera.id === `{${this.parsedCameraId}}`,
         );
 
         this.system.show404 =
-            (!!this.parsedCameraId && !parsedCameraExistInCameras) ||
-            !this.system.userManager.permissions.editCameras;
+            (!!this.parsedCameraId && !parsedCameraExistInCameras) || !this.editCameras();
         if (this.system.show404) {
             return;
         }
@@ -682,7 +677,7 @@ export class NxCamerasComponent implements OnInit {
 
     private updateValues(): void {
         this.healthService.ready = false;
-        if (this.system.userManager.permissions.isAdmin) {
+        if (this.system.permissionManager.isAdmin()) {
             this.system.mediaserver
                 .getHealthAlarms()
                 .pipe(untilDestroyed(this))

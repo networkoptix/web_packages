@@ -84,7 +84,7 @@
                         class="d-flex pb-2"
                     >
                         <button
-                            *ngIf="system.canViewInfo()"
+                            *ngIf="system.permissionManager.isAdmin()"
                             class="server-buttons"
                             [routerLink]="fullInfoPath"
                             [queryParams]="{ id: parsedServerId }"
@@ -109,7 +109,7 @@
                 </div>
             </header>
             <nx-section
-                *ngIf="system.userManager.isMySystem || system.userManager.permissions.isAdmin"
+                *ngIf="system.permissionManager.isOwner() || system.permissionManager.isAdmin()"
             >
                 <div class="server-setting-buttons">
                     <div class="left setting-buttons">
@@ -127,7 +127,7 @@
                     </div>
                     <div
                         class="right setting-buttons"
-                        *ngIf="environment.isLocal && system.userManager.isMySystem"
+                        *ngIf="environment.isLocal && system.permissionManager.isOwner()"
                     >
                         <button
                             class="btn btn-default"

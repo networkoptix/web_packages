@@ -1,10 +1,9 @@
-import { Component, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual } from 'lodash-es';
 import { Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';
@@ -13,7 +12,6 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { credentialsValidation, icons, menus } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';
-import { NxLoginService } from '@services/login.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
@@ -21,8 +19,6 @@ import { NxSystemUser } from '@services/system.service/user-manager/user-manager
 import { NxToastService } from '@services/toast.service';
 import { NxUriService } from '@services/uri.service';
 import { cleanId } from '@utils/general';
-
-import { NxSettingsService } from '../../settings.service';
 
 @Component({
     template: '',
@@ -33,6 +29,8 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy {
     readonly environment = environment;
     LANG = staticLang;
 
+    @Input() system: NxSystem;
+
     protected paramUser: string;
     protected editUser: Process;
     protected locked = new Set<string>();
@@ -40,7 +38,6 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy {
 
     selectedUser: NxSystemUser;
     systemAvailable: boolean;
-    system: NxSystem;
     deleteMessage: string;
     fullName: string;
     email: string;
@@ -66,8 +63,6 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy {
         protected route: ActivatedRoute,
         protected applyService: NxApplyService,
         protected dialogs: NxDialogsService,
-        protected loginService: NxLoginService,
-        protected settingsService: NxSettingsService,
         protected menuService: NxMenuService,
         protected processService: NxProcessService,
         protected uriService: NxUriService,
@@ -90,46 +85,34 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy {
                 this.setUser();
             }
         });
+        // Route guard did not work :( ... so doing it the old way
+        if (!this.system.permissionManager.permissions().editUsers) {
+            this.uriService
+                .navigateSystem(`${menus.systemSettings.baseUrl}SYSTEM_ID`, this.system)
+                .catch(error => {
+                    console.error(error);
+                });
 
-        this.settingsService.systemSubject$
-            .pipe(
-                untilDestroyed(this),
-                filter(data => data !== undefined),
-            )
-            .subscribe(system => {
-                this.system = system;
-                // Route guard did not work :( ... so doing it the old way
-                if (!this.system.userManager.permissions?.editUsers) {
-                    this.uriService
-                        .navigateSystem(`${menus.systemSettings.baseUrl}SYSTEM_ID`, this.system)
-                        .catch(error => {
-                            console.error(error);
-                        });
+            return;
+        }
+        this.userSubscription?.unsubscribe();
+        this.userSubscription = this.system.infoSubject.pipe(untilDestroyed(this)).subscribe(() => {
+            this.systemAvailable = this.system.isAvailable && this.system.mergeInfo === undefined;
 
-                    return;
-                }
-                this.userSubscription?.unsubscribe();
-                this.userSubscription = this.system.infoSubject
-                    .pipe(untilDestroyed(this))
-                    .subscribe(() => {
-                        this.systemAvailable =
-                            this.system.isAvailable && this.system.mergeInfo === undefined;
+            const updatedUser = this.findUser();
 
-                        const updatedUser = this.findUser();
+            const cleanUser = { ...this.selectedUser };
+            delete cleanUser.role?.optionLabel;
 
-                        const cleanUser = { ...this.selectedUser };
-                        delete cleanUser.role?.optionLabel;
-
-                        if (
-                            !this.applyService.locked &&
-                            (this.paramUser === undefined ||
-                                this.paramUser !== cleanId(this.selectedUser?.id) ||
-                                !isEqual(updatedUser, cleanUser))
-                        ) {
-                            this.setUser();
-                        }
-                    });
-            });
+            if (
+                !this.applyService.locked &&
+                (this.paramUser === undefined ||
+                    this.paramUser !== cleanId(this.selectedUser?.id) ||
+                    !isEqual(updatedUser, cleanUser))
+            ) {
+                this.setUser();
+            }
+        });
 
         this.initProcesses();
     }

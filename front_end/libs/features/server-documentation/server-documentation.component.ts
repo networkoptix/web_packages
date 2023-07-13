@@ -4,7 +4,6 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 
 import type { Content } from '@app/menu/menu.types';
 import staticLang from '@common/language/language_i18n_static.json';
-import { NxSettingsService } from '@pages/systems/settings/settings.service';
 import { Translatable } from '@pipes/nx-translate.types';
 import { NxAccountService } from '@services/account.service';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -27,7 +26,6 @@ export class NxServerDocumentationComponent {
 
     constructor(
         configService: NxConfigService,
-        settingsService: NxSettingsService,
         accountService: NxAccountService,
         systemService: NxSystemService,
         router: Router,
@@ -40,7 +38,8 @@ export class NxServerDocumentationComponent {
                 defaultPath: this.CONFIG.serverDocumentation.defaultPath,
             },
         };
-        if (!settingsService.system?.mediaserver) {
+        const system = systemService.getCurrentSystem();
+        if (!system?.mediaserver) {
             accountService.get().then(async account => {
                 if (!account) {
                     router.navigate(['/']);
@@ -56,12 +55,9 @@ export class NxServerDocumentationComponent {
                 });
             });
         } else {
-            systemService
-                .getCurrentSystem()
-                .mediaserver.getSettingsDocumentation()
-                .then(settings => {
-                    this.serverDocumentation = settings.reply.settings;
-                });
+            system.mediaserver.getSettingsDocumentation().then(settings => {
+                this.serverDocumentation = settings.reply.settings;
+            });
         }
     }
 }

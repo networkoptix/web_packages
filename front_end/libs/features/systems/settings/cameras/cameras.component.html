@@ -1,12 +1,12 @@
 <nx-pre-loader
     *ngIf="
-        (!system?.show404 && showPreloader && !system?.userManager?.permissions?.editCameras) ||
+        (!system?.show404 && showPreloader && !editCameras()) ||
         (system.isOnline && !system.isAvailable)
     "
 >
 </nx-pre-loader>
 <div
-    *ngIf="system && !system.show404 && system.userManager.permissions.editCameras"
+    *ngIf="system && !system.show404 && editCameras()"
     class="row auth-visible"
 >
     <ng-container *ngIf="selectedCamera">

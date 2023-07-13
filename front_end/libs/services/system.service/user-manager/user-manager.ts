@@ -18,7 +18,6 @@ import { NxSystemRestAPI } from '../../system-rest-api.service';
 
 import type {
     NxAccessRole,
-    SystemPermissions,
     PredefinedRole,
     NxUser,
     NewUserBase,
@@ -33,15 +32,6 @@ export class UserManager {
     private _accessRole: string = '';
     accessRoles: NxAccessRole[];
     currentUser: NxUser;
-    permissionsUpdated = false;
-    permissions: SystemPermissions = {
-        editAdmins: false,
-        editUsers: false,
-        isAdmin: false,
-        editCameras: false,
-        exportArchives: false,
-        viewArchives: false,
-    };
     users: NxUser[];
 
     protected CONFIG = nxConfig;
@@ -70,7 +60,6 @@ export class UserManager {
 
     set accessRole(accessRole: string) {
         this._accessRole = accessRole || '';
-        this.checkPermissions();
     }
 
     set ownerEmail(email: string) {
@@ -80,10 +69,6 @@ export class UserManager {
 
     get currentOwner(): NxUser {
         return this.users.find(user => user.isCloudOwner);
-    }
-
-    canViewInfo(): boolean {
-        return this.permissions.isAdmin;
     }
 
     nonOwners({ cloud, local }: { cloud?: boolean; local?: boolean }): NxUser[] {
@@ -114,39 +99,6 @@ export class UserManager {
             this.isLocalOwner(user) ||
             this.isCloudOwner(user)
         );
-    }
-
-    checkPermissions(): void {
-        const adminPermissions =
-            this.isMySystem ||
-            (this.currentUser && isAdmin(this.currentUser)) ||
-            this.CONFIG.accessRoles.adminAccess.includes(this._accessRole.toLowerCase());
-        const permissions: SystemPermissions = {
-            editAdmins: this.isMySystem,
-            editUsers: adminPermissions,
-            exportArchives: adminPermissions,
-            isAdmin: adminPermissions,
-            editCameras: adminPermissions,
-            viewArchives: adminPermissions,
-        };
-
-        if (!adminPermissions && this.currentUser) {
-            permissions.editUsers = this.currentUser.permissions.includes(
-                this.CONFIG.accessRoles.editUserPermissionFlag,
-            );
-            permissions.editCameras = this.currentUser.permissions.includes(
-                this.CONFIG.accessRoles.editCameraPermissionFlag,
-            );
-            permissions.exportArchives = this.currentUser.permissions.includes(
-                this.CONFIG.accessRoles.exportPermissionFlag,
-            );
-            permissions.viewArchives = this.currentUser.permissions.includes(
-                this.CONFIG.accessRoles.viewArchivesPermissionFlag,
-            );
-        }
-
-        this.permissionsUpdated = true;
-        this.permissions = permissions;
     }
 
     deleteUser(removedUser: Pick<NxUser, 'id'>): Promise<void> {

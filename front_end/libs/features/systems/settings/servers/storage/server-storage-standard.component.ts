@@ -169,7 +169,7 @@ export class NxSystemStorageComponent implements OnInit {
         this.loading = true;
         this.waitingForStorages = true;
         this.previouslyReserved.clear();
-        this.canSeeDetailInfo = this.system.canViewInfo();
+        this.canSeeDetailInfo = this.system.permissionManager.isAdmin();
         this.system.storageManager.serverId$.pipe(untilDestroyed(this)).subscribe(() => {
             this.saveSettings = null;
         });

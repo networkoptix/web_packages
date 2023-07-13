@@ -71,4 +71,5 @@ export interface SystemPermissions {
     editCameras: boolean;
     exportArchives: boolean;
     viewArchives: boolean;
+    viewBookmarks: boolean;
 }

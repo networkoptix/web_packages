@@ -331,7 +331,9 @@
                     </ng-container>
                     <ng-container
                         *ngIf="
-                            !environment.isLocal && system.useRest && system.userManager.isMySystem
+                            !environment.isLocal &&
+                            system.useRest &&
+                            system.permissionManager.isOwner()
                         "
                     >
                         <div class="d-flex checkbox-block align-items-center mt-1">

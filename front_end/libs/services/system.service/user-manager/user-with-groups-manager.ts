@@ -9,7 +9,7 @@ import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { cleanId } from '@utils/general';
 
 import { UserManager } from './user-manager';
-import { SystemPermissions, NxUserGroup, NxSystemUser } from './user-manager-types.bak';
+import { NxUserGroup, NxSystemUser } from './user-manager-types.bak';
 
 export class UserWithGroupsManager extends UserManager {
     LANG = staticLang;
@@ -25,7 +25,6 @@ export class UserWithGroupsManager extends UserManager {
     // isMySystem: boolean;
     currentUser: NxSystemUser;
     currentUserEmail: string;
-    permissions: SystemPermissions;
     users: NxSystemUser[];
 
     protected CONFIG = nxConfig;
@@ -38,8 +37,6 @@ export class UserWithGroupsManager extends UserManager {
         this._userId = userId;
 
         this._ownerEmail = '';
-        // this.isMySystem = false;
-        this.permissions = new SystemPermissions();
     }
 
     get isMySystem(): boolean {
@@ -97,41 +94,6 @@ export class UserWithGroupsManager extends UserManager {
     // TODO: Replace this with util
     protected isAdmin(userOrRole: { permissions: string }): boolean {
         return userOrRole.permissions?.includes(this.CONFIG.accessRoles.globalAdminPermissionFlag);
-    }
-
-    override checkPermissions(): void {
-        const isMine = this.isMySystem || this.currentUser?.isLocalOwner || false;
-        let isAdmin = isMine;
-        // is there a backup admin check within new permission scheme?
-        // || this.CONFIG.accessRoles.adminAccess.includes(this._accessRole.toLowerCase());
-        if (!isAdmin && this.currentUser) {
-            isAdmin = this.isAdmin(this.currentUser);
-        }
-        const permissions: SystemPermissions = {
-            editAdmins: isMine,
-            editUsers: isAdmin,
-            exportArchives: isAdmin,
-            isAdmin,
-            editCameras: isAdmin,
-            viewArchives: isAdmin,
-        };
-
-        if (!isAdmin && this.currentUser) {
-            permissions.editUsers = this.currentUser.permissions.includes(
-                this.CONFIG.accessRoles.editUserPermissionFlag,
-            );
-            permissions.editCameras = this.currentUser.permissions.includes(
-                this.CONFIG.accessRoles.editCameraPermissionFlag,
-            );
-            permissions.exportArchives = this.currentUser.permissions.includes(
-                this.CONFIG.accessRoles.exportPermissionFlag,
-            );
-            permissions.viewArchives = this.currentUser.permissions.includes(
-                this.CONFIG.accessRoles.viewArchivesPermissionFlag,
-            );
-        }
-
-        this.permissions = permissions;
     }
 
     override async deleteUser(removedUser: NxSystemUser): Promise<void> {

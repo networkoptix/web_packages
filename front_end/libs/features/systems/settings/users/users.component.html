@@ -1,4 +1,10 @@
 <nx-pre-loader *ngIf="!before5dot2 && !fiveDot2Plus"></nx-pre-loader>
 
-<nx-system-user-with-roles-component *ngIf="before5dot2"></nx-system-user-with-roles-component>
-<nx-system-user-with-groups-component *ngIf="fiveDot2Plus"></nx-system-user-with-groups-component>
+<nx-system-user-with-roles-component
+    *ngIf="before5dot2"
+    [system]="system"
+></nx-system-user-with-roles-component>
+<nx-system-user-with-groups-component
+    *ngIf="fiveDot2Plus"
+    [system]="system"
+></nx-system-user-with-groups-component>

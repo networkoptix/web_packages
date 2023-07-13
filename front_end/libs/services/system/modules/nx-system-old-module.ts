@@ -20,11 +20,13 @@ import { CloudStorageAPI } from '@services/nx-cloud-api/cloud-services/cloud-sto
 import { nxConfig } from '@services/nx-config/config';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxPollService } from '@services/poll.service';
+import { PermissionManagerModule } from '@services/system/modules/resource-managers/permission-manager';
 import { NxSystemModuleBase } from '@services/system/system-module';
 import { NxSystemAPIService } from '@services/system-api.service';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
+import { PermissionManager } from '@services/system.service/permission-manager/permission-manager';
 import { cleanId, KeyFilter } from '@utils/general';
 import { memoizeAsyncPersistent, memoizeDecorator } from '@utils/memoize';
 import { setServerIpAndPort } from '@utils/nx';
@@ -127,6 +129,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
      */
     cameraManager: CameraManager;
     serverManager: ServerManager;
+    permissionManager: PermissionManager;
     version = 0;
 
     private _subscribersCount = new BehaviorSubject<number>(0);
@@ -288,6 +291,10 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         );
         this.userManager = userManagerModule.userManager;
 
+        const permissionManagerModule = new PermissionManagerModule(
+            this.mediaserver as NxSystemRestAPI3,
+        );
+        this.permissionManager = permissionManagerModule.permissionManager;
         this.systemPoll = this.pollService.createPoll<any>(() => this.update(), updateInterval);
     };
 
@@ -343,14 +350,6 @@ export class NxSystemOldModule extends NxSystemModuleBase {
             });
     };
 
-    /**
-     * @deprecated Should be replaced with direct reference to userManager
-     */
-    canViewInfo() {
-        // system's capability check was removed as health info page handles it by showing "outdated version" placeholder
-        return this.userManager.permissions.isAdmin;
-    }
-
     canViewLayouts() {
         return (
             this.version >= 5.1 &&
@@ -367,10 +366,11 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         if (!this.CONFIG.featureFlags.cloudStorage || environment.isLocal) {
             return false;
         }
+        const isOwner = this.permissionManager.isOwner();
         return (
-            (this.CONFIG.featureFlags.cloudStorage && this.userManager.isMySystem) ||
-            (this.userManager.permissions.isAdmin && this.systemInfo?.cloudStorageSystemEnabled) ||
-            (this.systemInfo?.cloudStorageCapable && this.userManager.isMySystem)
+            (this.CONFIG.featureFlags.cloudStorage && isOwner) ||
+            (this.permissionManager.isAdmin() && this.systemInfo?.cloudStorageSystemEnabled) ||
+            (this.systemInfo?.cloudStorageCapable && isOwner)
         );
     }
 
@@ -431,7 +431,8 @@ export class NxSystemOldModule extends NxSystemModuleBase {
 
                         this.getUsers(true, suppressUpdate).then(() => {
                             this.userManager.ownerEmail = this.info.ownerAccountEmail;
-                            this.userManager.checkPermissions();
+                            this.permissionManager.ownerEmail.set(this.info.ownerAccountEmail);
+                            this.permissionManager.checkCurrentUser();
                         });
                         return systemPromise;
                     },
@@ -459,7 +460,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                 }
                 let directCapabilities = {};
                 try {
-                    if (this.userManager.permissions.isAdmin) {
+                    if (this.permissionManager.isAdmin()) {
                         directCapabilities = (await this.getSystemCapabilities()) || {};
                     }
                     response.capabilities = { ...response.capabilities, ...directCapabilities };
@@ -470,9 +471,10 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                     this.info = response;
                 }
                 this.userManager.ownerEmail = this.info.ownerAccountEmail;
+                this.permissionManager.ownerEmail.set(this.info.ownerAccountEmail);
                 this.isOnline = this.info.stateOfHealth === this.CONFIG.system.status.online;
                 const capabilities = this.info?.capabilities || {}; // Make capabilities defined so that its easier to check feature flags.
-                this.canMerge = this.userManager.isMySystem && 'cloudMerge' in capabilities;
+                this.canMerge = this.permissionManager.isOwner() && 'cloudMerge' in capabilities;
                 this.cloudStorageCapable = '5_1_cloud_storage' in capabilities;
                 if (this.cloudStorageCapable) {
                     // Cloud storage backend is currently not ready. Removed for CB-1657
@@ -1025,7 +1027,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                         this.isAvailable = true;
                     })
                     .catch(() => {
-                        if (!environment.isLocal && this.userManager.permissions.isAdmin) {
+                        if (!environment.isLocal && this.permissionManager.isAdmin()) {
                             return this.getUsersCachedInCloud().then(users => {
                                 this.userManager.processUsers(users);
                                 return Promise.resolve();
@@ -1034,7 +1036,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                             return Promise.resolve();
                         }
                     });
-            } else if (!environment.isLocal && this.userManager.permissions.isAdmin) {
+            } else if (!environment.isLocal && this.permissionManager.isAdmin()) {
                 // or we get old cached data from the cloud
                 usersPromise = this.getUsersCachedInCloud().then(users => {
                     return this.userManager.processUsers(users);
@@ -1045,7 +1047,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
             }
 
             this.usersPromise = usersPromise.then(() => {
-                this.userManager.checkPermissions();
+                this.permissionManager.checkCurrentUser();
                 // If system is reported to be online - try to get actual users list
                 if (!suppressUpdate) {
                     this.systemInfo = this;

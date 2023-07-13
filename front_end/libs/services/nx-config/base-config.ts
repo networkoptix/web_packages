@@ -244,6 +244,7 @@ export interface AccessRoles {
     exportPermissionFlag: string;
     globalAdminPermissionFlag: string;
     globalCustomUserPermission: string;
+    globalViewBookmarksPermission: string;
     allMediaPermissionFlag: string;
     viewArchivesPermissionFlag: string;
     customPermission: CustomPermission;

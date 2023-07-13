@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
@@ -13,7 +13,6 @@ import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxAppSourceService } from '@services/nx-app-source.service';
 import { NxSystem } from '@services/system.service/system';
-import { NxSystemService } from '@services/system.service/system.service';
 
 type MonitoringDropdownItem = DropdownItem<string> & {
     serverOffline: boolean;
@@ -26,10 +25,10 @@ type MonitoringDropdownItem = DropdownItem<string> & {
     templateUrl: 'monitoring.component.html',
 })
 export class NxMonitoringComponent implements OnInit {
+    @Input() system: NxSystem;
     LANG = staticLang;
 
     content: Content;
-    system: NxSystem;
     account: Account;
     selectableServers: MonitoringDropdownItem[] = [];
     selectedServer: MonitoringDropdownItem;
@@ -44,7 +43,6 @@ export class NxMonitoringComponent implements OnInit {
         private menuService: NxMenuService,
         private sourceService: NxAppSourceService,
         private accountService: NxAccountService,
-        private systemService: NxSystemService,
         private translateService: TranslateService,
     ) {
         this.content = {
@@ -129,7 +127,6 @@ export class NxMonitoringComponent implements OnInit {
 
             this.destroy$.next(true);
 
-            this.system = this.systemService.getCurrentSystem();
             this.systemOnline = this.system.isOnline;
             if (this.systemOnline) {
                 this.createSelectableServers();

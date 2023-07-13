@@ -627,18 +627,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             return this.userRequest;
         }
 
-        if (this.userEmail) {
-            const endpoint = '/ec2/getUsers';
-            this.cacheService.addToCache(endpoint);
-            this.userRequest = this.get(endpoint, { headers })
-                .toPromise()
-                .then(result => {
-                    this.currentUser = result.find(user => {
-                        return user.name.toLowerCase() === this.userEmail.toLowerCase();
-                    });
-                    return this.currentUser;
-                });
-        } else if (environment.isLocal && !this.CONFIG.newSystem) {
+        if (!this.CONFIG.newSystem) {
             const endpoint = `/rest/v1/login/sessions/${this.accessToken || 'current'}`;
             this.userRequest = this.get<t.UserSession>(endpoint, { headers })
                 .toPromise()

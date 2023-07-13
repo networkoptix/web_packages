@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, OnDestroy, OnInit, ViewContainerRef, Inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewContainerRef, Inject, Input } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, Observable, Subject, Subscription, timer } from 'rxjs';
@@ -12,7 +12,6 @@ import { icons, menus } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/system-types';
-import { NxSystemService } from '@services/system.service/system.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
 import { cleanId } from '@utils/general';
@@ -24,9 +23,9 @@ import { cleanId } from '@utils/general';
     styleUrls: ['servers.component.scss'],
 })
 export class NxSystemServersComponent implements OnInit, OnDestroy {
+    @Input() system: NxSystem;
     readonly environment = environment;
     LANG = staticLang;
-    system: NxSystem;
     serverIdFromParams: string;
     _selectedServer$: Subject<NxSystemServer> = new Subject<NxSystemServer>();
     selectedServer$: Observable<NxSystemServer> = this._selectedServer$.pipe(delay(100)); // debouncing the server input
@@ -44,7 +43,6 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private router: Router,
         private applyService: NxApplyService,
-        private systemService: NxSystemService,
         private menuService: NxMenuService,
         private uriService: NxUriService,
         private location: Location,
@@ -98,8 +96,6 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         }
 
         this.applyService.initPageWatcher(this.applyContainerRef);
-
-        this.system = this.systemService.getCurrentSystem();
         this.isOffline = !this.system.isOnline;
         this.system.infoSubject
             .pipe(
@@ -128,7 +124,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                         });
                 }),
                 tap(() => {
-                    if (this.system && !this.system.userManager.permissions.isAdmin) {
+                    if (this.system && !this.system.permissionManager.isAdmin()) {
                         this.uriService
                             .navigateSystem(`${menus.systemSettings.baseUrl}SYSTEM_ID`, this.system)
                             .catch(error => {

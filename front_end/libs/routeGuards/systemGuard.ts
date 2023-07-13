@@ -5,7 +5,6 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Observable, firstValueFrom, map } from 'rxjs';
 
 import { environment } from '@environments/environment';
-import { NxSettingsService } from '@pages/systems/settings/settings.service';
 import { NxAccountService } from '@services/account.service';
 import { NxMenusService } from '@services/menus.service';
 import { nxConfig } from '@services/nx-config/config';
@@ -26,7 +25,6 @@ export class SystemGuard {
         private accountService: NxAccountService,
         private systemService: NxSystemService,
         private systemsService: NxSystemsService,
-        private settingsService: NxSettingsService,
         private menusService: NxMenusService,
         private configService: NxConfigService,
         private deviceService: DeviceDetectorService,
@@ -61,8 +59,8 @@ export class SystemGuard {
             route.pathFromRoot.find(snapshot => snapshot.params.systemId).params.systemId;
 
         const checkPermissionsFor = (system: NxSystem): boolean | Promise<boolean> => {
-            const permissions = system.userManager.permissions;
-            const isOwner = system.userManager.isMySystem;
+            const permissions = system.permissionManager.permissions();
+            const isOwner = system.permissionManager.isOwner();
             const isAdmin = permissions.isAdmin || isOwner;
             const sysVersion = system.version || parseFloat(system.info.version);
 
@@ -72,15 +70,13 @@ export class SystemGuard {
             const canViewBookmarks =
                 this.configService.flagsEnabled('bookmarks') &&
                 sysVersion >= 5 &&
-                system.userManager.currentUser.permissions.includes(
-                    'GlobalViewBookmarksPermission',
-                ) &&
+                permissions.viewBookmarks &&
                 !(this.deviceService.isMobile() || this.deviceService.isTablet());
 
             const canViewChecks = {
                 users: permissions.editUsers,
                 'cloud-storage': system.canUserViewCloudStorage(),
-                health: system.userManager.canViewInfo(),
+                health: isAdmin,
                 licenses: isAdmin,
                 advanced: isAdmin,
                 servers: isAdmin,
@@ -144,7 +140,6 @@ export class SystemGuard {
                     await firstValueFrom(currSystem.mediaserver.setAccessTokenAsCookie());
                 }
                 await currSystem.update();
-                this.settingsService.system = currSystem;
             }
             if (currSystem.userManager.users === undefined) {
                 try {
@@ -175,12 +170,8 @@ export class SystemGuard {
             this.menusService.currentUser = currSystem.userManager.currentUser;
             this.menusService.updateActiveSystemMenu(
                 currSystem,
-                currSystem.userManager.permissions.isAdmin,
+                currSystem.permissionManager.isAdmin(),
             );
-
-            if (!this.settingsService.system) {
-                this.settingsService.system = currSystem;
-            }
 
             if (currentRoute) {
                 return checkPermissionsFor(currSystem);

@@ -18,7 +18,6 @@ import type { SearchFilter } from '@components/search/search.component.types';
 import { icons } from '@lib/variables/static-variables';
 import { NxPageService } from '@services/page.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
-import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
 import { GridBreakpoints } from '@styles/theme-variables-common';
 
@@ -41,7 +40,6 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     account;
 
     filterModel: SearchFilter = { query: '' };
-    system: NxSystem;
     metricId;
     initialId;
 

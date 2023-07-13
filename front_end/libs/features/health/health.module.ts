@@ -20,6 +20,7 @@ import { AuthGuard } from '@guards/authGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
+import { currentSystemResolver } from '@resolvers/current-system-resolver';
 import { SystemTitleResolver } from '@resolvers/system-title-resolver';
 
 import { NxSystemAlertsComponent } from './alerts/alerts.component';
@@ -61,6 +62,7 @@ const appRoutes: Routes = [
         path: '',
         component: NxHealthComponent,
         canActivate: [AuthGuard, SystemGuard, TwofaGuard],
+        resolve: { system: currentSystemResolver },
         children: [
             {
                 path: '',

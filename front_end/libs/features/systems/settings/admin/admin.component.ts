@@ -1,10 +1,19 @@
-import { Component, Inject, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    Inject,
+    Input,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+    ViewContainerRef,
+} from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router, ActivatedRoute, NavigationStart } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
-import { distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';
@@ -31,7 +40,6 @@ import { NxSystemInfo } from '@services/systems.service.types';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 
-import { NxSettingsService } from '../settings.service';
 interface Settings {
     disconnectDisabled: boolean;
     renameDisabled: boolean;
@@ -43,7 +51,8 @@ interface Settings {
     templateUrl: 'admin.component.html',
     styleUrls: ['admin.component.scss'],
 })
-export class NxSystemAdminComponent implements OnInit, OnDestroy {
+export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit {
+    @Input() system: NxSystem;
     CONFIG: IConfig;
     readonly environment = environment;
     LANG = staticLang;
@@ -51,7 +60,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     ownershipTransferEnabled: boolean = false;
 
     user: Account;
-    system: NxSystem;
     mergeTargetSystems: NxSystemInfo[];
 
     emptyName = false;
@@ -88,7 +96,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     get canSendTransferRequest(): boolean {
         return (
             this.ownershipTransferEnabled &&
-            this.system.userManager.isMySystem &&
+            this.system.permissionManager.isOwner() &&
             this.system.useRest &&
             !this.transferInfo
         );
@@ -174,7 +182,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         private processService: NxProcessService,
         private dialogs: NxDialogsService,
         private systemsService: NxSystemsService,
-        public settingsService: NxSettingsService,
         private menuService: NxMenuService,
         private router: Router,
         private route: ActivatedRoute,
@@ -200,17 +207,15 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         });
 
         this.setupDefaults();
-        this.settingsForSystem$ = this.settingsService.systemSubject$.pipe(
-            filter(system => {
-                return environment.isLocal || system?.id === this.route.snapshot.params.systemId;
-            }),
-            switchMap(system => system.updateOrGetSystemSettings()),
-            map(res => res?.reply?.settings),
-            untilDestroyed(this),
-        );
     }
 
     ngOnInit(): void {
+        this.settingsForSystem$ = this.system
+            .updateOrGetSystemSettings()
+            .pipe(map(res => res?.reply?.settings));
+    }
+
+    ngAfterViewInit(): void {
         this.systemName = this.systemsService.systems?.find(
             s => s.id === this.route.snapshot.params.systemId,
         )?.name;
@@ -223,75 +228,44 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             renameDisabled: false,
         };
 
-        this.settingsService.systemSubject$
-            .pipe(
-                filter(system => {
-                    return (
-                        environment.isLocal || system?.id === this.route.snapshot.params.systemId
-                    );
-                }),
-                distinctUntilChanged(),
-                untilDestroyed(this),
-            )
+        this.system.userManager.currentUserEmail = this.accountService.email;
+
+        if (this.systemSubscription) {
+            this.systemSubscription.unsubscribe();
+        }
+        this.systemSubscription = this.system.infoSubject
+            // .pipe(auditTime(this.CONFIG.system.auditTime))
             .subscribe(system => {
                 if (!system) {
-                    this.system = undefined;
                     return;
                 }
-                this.system = system;
-                this.system.userManager.currentUserEmail = this.accountService.email;
-
-                if (this.systemSubscription) {
-                    this.systemSubscription.unsubscribe();
+                if (this.system && !this.system.isAvailable && system && system.isAvailable) {
+                    this.system = system as NxSystem;
                 }
-                this.systemSubscription = system.infoSubject
-                    // .pipe(auditTime(this.CONFIG.system.auditTime))
-                    .subscribe(system => {
-                        if (!system) {
-                            return;
-                        }
-                        if (
-                            this.system &&
-                            !this.system.isAvailable &&
-                            system &&
-                            system.isAvailable
-                        ) {
-                            this.system = system as NxSystem;
-                        }
-                        this.updateSettings(this.currentlyMerging);
-                        this.syncMergeAlerts();
+                this.updateSettings(this.currentlyMerging);
+                this.syncMergeAlerts();
 
-                        this.enableEdit =
-                            this.system.isOnline &&
-                            (this.environment.isLocal
-                                ? this.system.userManager.permissions.isAdmin
-                                : this.system.userManager.isMySystem) &&
-                            !this.settings.renameDisabled;
-                        // TODO: Restore cloud admin rename permissions
-                        // See CB-1596
+                this.enableEdit =
+                    this.system.isOnline &&
+                    (this.environment.isLocal
+                        ? this.system.permissionManager.isAdmin()
+                        : this.system.permissionManager.isOwner()) &&
+                    !this.settings.renameDisabled;
+                // TODO: Restore cloud admin rename permissions
+                // See CB-1596
 
-                        if (!this.applyService.locked) {
-                            this.setNameAndTitle();
-                        }
+                if (!this.applyService.locked) {
+                    this.setNameAndTitle();
+                }
 
-                        // TODO: In develop add a store for transfers.
-                        if (this.ownershipTransferEnabled && !environment.isLocal) {
-                            this.cloudApiService
-                                .getTransfers()
-                                .subscribe((res: SystemTransferInfo[]) => {
-                                    this.transferInfo = res.find(
-                                        transfer => transfer.systemId === this.system.id,
-                                    );
-                                });
-                        }
-                        if (
-                            !this.environment.isLocal ||
-                            (this.environment.isLocal &&
-                                this.system.userManager.permissions.isAdmin)
-                        ) {
-                            this.settingsService.getUpdatedSettings();
-                        }
+                // TODO: In develop add a store for transfers.
+                if (this.ownershipTransferEnabled && !environment.isLocal) {
+                    this.cloudApiService.getTransfers().subscribe((res: SystemTransferInfo[]) => {
+                        this.transferInfo = res.find(
+                            transfer => transfer.systemId === this.system.id,
+                        );
                     });
+                }
             });
 
         this.initProcesses();
@@ -464,7 +438,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     };
 
     delete() {
-        if (!this.system.userManager.isMySystem) {
+        if (!this.system.permissionManager.isOwner()) {
             // User is not owner. Deleting means he'll lose access to it
             if (this.environment.isLocal) {
                 return this.dialogs.removeSystem(this.system).then(response => {
@@ -522,7 +496,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         );
         this.currentlyMerging = true;
         this.updateSettings(this.currentlyMerging);
-        this.settingsService.system = this.system;
         const mergeDialog = this.CONFIG.featureFlags.mergeRefactorEnabled
             ? this.dialogs.mergeRefactored
             : this.dialogs.merge;
@@ -585,7 +558,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 this.currentlyMerging = false;
                 this.updateSettings(this.currentlyMerging);
                 this.syncMergeAlerts();
-                this.settingsService.system = this.system;
             });
     }
 

@@ -128,7 +128,7 @@ export class NxSystemsService {
                     try {
                         (async () => {
                             await system.update();
-                            if (system.userManager.permissions.isAdmin) {
+                            if (system.permissionManager.isAdmin()) {
                                 // Prefetch initial data
                                 await firstValueFrom(system.updateOrGetSystemSettings());
                                 await firstValueFrom(system.getAggregateLicenseInfo());

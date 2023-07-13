@@ -13,6 +13,7 @@ import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-lo
 import { AuthGuard } from '@guards/authGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
+import { currentSystemResolver } from '@resolvers/current-system-resolver';
 
 import { GraphsComponent } from './graphs/graphs.component';
 import { LogsComponent } from './logs/logs.component';
@@ -24,6 +25,7 @@ const appRoutes: Routes = [
         title: 'monitoring',
         component: NxMonitoringComponent,
         canActivate: [AuthGuard, SystemGuard, TwofaGuard],
+        resolve: { system: currentSystemResolver },
         children: [
             {
                 path: '',
@@ -33,10 +35,12 @@ const appRoutes: Routes = [
             {
                 path: 'logs',
                 component: LogsComponent,
+                resolve: { system: currentSystemResolver },
             },
             {
                 path: 'graphs',
                 component: GraphsComponent,
+                resolve: { system: currentSystemResolver },
             },
         ],
     },

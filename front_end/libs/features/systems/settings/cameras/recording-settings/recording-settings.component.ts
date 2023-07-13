@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { Watcher } from '@services/apply.service/watcher';
@@ -12,10 +11,8 @@ import {
 } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
 
-import { NxSettingsService } from '../../settings.service';
 import { QualityDropdownItem } from '../cameras.component.types';
 
-@UntilDestroy()
 @Component({
     selector: 'nx-recording-settings',
     templateUrl: 'recording-settings.component.html',
@@ -37,8 +34,6 @@ export class NxRecordingSettingsComponent implements OnInit {
     availableLicenses = 0;
     shakeHint = false;
 
-    constructor(private settingsService: NxSettingsService) {}
-
     ngOnInit(): void {
         this.streamQualities = [
             { name: this.LANG.common.resolution.best, value: 'highest' },
@@ -48,17 +43,14 @@ export class NxRecordingSettingsComponent implements OnInit {
         ];
         this.various = { name: this.LANG.common.resolution.various, value: 'various' };
 
-        this.settingsService.system.serverManager
-            .getLicenseChannels(this.settingsService.system.cameraManager.cameras)
-            .pipe(untilDestroyed(this))
-            .subscribe(
-                ({ available }) => {
-                    this.availableLicenses = available;
-                },
-                _ => {
-                    this.availableLicenses = 0;
-                },
-            );
+        this.system.serverManager.getLicenseChannels(this.system.cameraManager.cameras).subscribe(
+            ({ available }) => {
+                this.availableLicenses = available;
+            },
+            _ => {
+                this.availableLicenses = 0;
+            },
+        );
     }
 
     get recording(): boolean {

@@ -35,12 +35,12 @@
                     <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
                     <span>
                         <span
-                            *ngIf="system.userManager.isMySystem"
+                            *ngIf="system.permissionManager.isOwner()"
                             class="system-header-bold"
                             translate
                             >you</span
                         >
-                        <ng-container *ngIf="!system.userManager.isMySystem">
+                        <ng-container *ngIf="!system.permissionManager.isOwner()">
                             <span class="fs-mask system-header-bold">{{
                                 system.info.ownerFullName
                             }}</span>
@@ -99,13 +99,13 @@
                             *ngIf="
                                 !transferInfo ||
                                 (transferInfo &&
-                                    !system.userManager.isMySystem &&
+                                    !system.permissionManager.isOwner() &&
                                     transferInfo.toAccount !== system.userManager.currentUserEmail)
                             "
                             [ngTemplateOutlet]="ownerText"
                         ></ng-template>
                         <ng-template
-                            *ngIf="transferInfo && system.userManager.isMySystem"
+                            *ngIf="transferInfo && system.permissionManager.isOwner()"
                             [ngTemplateOutlet]="cancelTransferText"
                         ></ng-template>
                         <ng-template
@@ -155,7 +155,7 @@
                         *ngIf="!environment.isLocal || user?.isCloud"
                     >
                         <button
-                            [disabled]="settings.disconnectDisabled"
+                            [disabled]="settings?.disconnectDisabled"
                             class="btn btn-default"
                             data-testid="disconnectAccountBtn"
                             (click)="delete()"
@@ -166,7 +166,7 @@
                     </div>
                 </nx-section>
             </ng-template>
-            <nx-section *ngIf="system.userManager.isMySystem; else notMine">
+            <nx-section *ngIf="system.permissionManager.isOwner(); else notMine">
                 <div class="row m-0">
                     <div class="col-xl-7 pl-0">
                         <div class="float-left mr-2">
@@ -194,7 +194,7 @@
                             <nx-process-button
                                 data-testid="disconnectFromCloud"
                                 actionType="default"
-                                [buttonDisabled]="settings.disconnectDisabled"
+                                [buttonDisabled]="settings?.disconnectDisabled"
                                 [buttonText]="'Disconnect from %CLOUD_NAME%' | translate"
                                 [process]="checkCloudProcess"
                             >
@@ -244,14 +244,14 @@
 
             <nx-section
                 *ngIf="
-                    system.userManager.permissions.isAdmin &&
-                    ((system.userManager.isMySystem && !CONFIG.cloudSystemId) ||
+                    system.permissionManager.isAdmin() &&
+                    ((system.permissionManager.isOwner() && !CONFIG.cloudSystemId) ||
                         CONFIG.cloudSystemId)
                 "
             >
                 <div class="row m-0">
                     <div class="col-12 pl-0">
-                        <div *ngIf="system.userManager.isMySystem && !CONFIG.cloudSystemId">
+                        <div *ngIf="system.permissionManager.isOwner() && !CONFIG.cloudSystemId">
                             <nx-process-button
                                 actionType="default"
                                 [buttonText]="'Connect to %CLOUD_NAME%' | translate"
@@ -262,12 +262,12 @@
                             <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
                             <span>
                                 <span
-                                    *ngIf="system.userManager.isMySystem"
+                                    *ngIf="system.permissionManager.isOwner()"
                                     class="system-header-bold"
                                     translate
                                     >you</span
                                 >
-                                <span *ngIf="!system.userManager.isMySystem">
+                                <span *ngIf="!system.permissionManager.isOwner()">
                                     <span class="system-header-bold">{{
                                         system.info.ownerFullName
                                     }}</span>
@@ -276,7 +276,7 @@
                             </span>
                             <div class="mt-3">
                                 <nx-process-button
-                                    *ngIf="system.userManager.isMySystem"
+                                    *ngIf="system.permissionManager.isOwner()"
                                     class="mt-3"
                                     actionType="default"
                                     [buttonText]="'Disconnect from %CLOUD_NAME%' | translate"
@@ -289,7 +289,7 @@
                 </div>
             </nx-section>
         </nx-block>
-        <ng-container *ngIf="system.userManager.permissions.isAdmin">
+        <ng-container *ngIf="system.permissionManager.isAdmin()">
             <nx-system-standard-admin-component
                 [system]="system"
                 [settings]="settingsForSystem$ | async"

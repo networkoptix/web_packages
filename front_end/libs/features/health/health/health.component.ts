@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, Inject, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, Inject, OnInit, OnDestroy, ViewEncapsulation, Input } from '@angular/core';
+import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import FileSaver from 'file-saver';
 import { cloneDeep } from 'lodash-es';
@@ -26,7 +26,6 @@ import type { HealthReport } from '@services/system-api.aggregated-types';
 import { NxSystemAPIService } from '@services/system-api.service';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
 import type { NxSystem } from '@services/system.service/system';
-import { NxSystemService } from '@services/system.service/system.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
 import { GridBreakpoints } from '@styles/theme-variables-common';
@@ -41,10 +40,10 @@ import { NxHealthService } from '../health.service';
     encapsulation: ViewEncapsulation.None,
 })
 export class NxHealthComponent implements OnInit, OnDestroy {
+    @Input() system: NxSystem;
     LANG = staticLang;
     CONFIG: IConfig;
     account: Account;
-    system: NxSystem;
     server: NxSystemAPI;
 
     menu: Content;
@@ -67,9 +66,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         pageService: NxPageService,
         private accountService: NxAccountService,
         private appStateService: NxAppStateService,
-        private systemService: NxSystemService,
         private serverApi: NxSystemAPIService,
-        private route: ActivatedRoute,
         private router: Router,
         private uriService: NxUriService,
         private menuService: NxMenuService,
@@ -83,11 +80,6 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         this.CONFIG = configService.getConfig();
 
         pageService.pageTitle(this.LANG.pageTitles.information);
-    }
-
-    private cleanUp(): void {
-        this.stopSystemPoll();
-        this.ribbonService.hide();
     }
 
     private stopSystemPoll(): void {
@@ -139,62 +131,47 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                     console.error(error);
                 });
         }
-
-        this.route.params.subscribe((params: any) => {
-            this.cleanUp();
-            this.importedData = {};
-            const systemId = params.systemId;
-            // Promise holder so that if hm is in standalone mode its skips a systems getInfo call.
-            let infoPromise: Promise<void | NxSystem> = Promise.resolve();
-            this.accountService.get().then(account => {
-                this.healthService.ready = false;
-                this.hasServerError = false;
-                this.outdatedVersion = false;
-                if (account && typeof account !== 'undefined') {
-                    this.account = account;
-                    if (environment.isLocal) {
-                        this.system = this.systemService.createLocalSystem(
-                            this.accountService.mediaServerApi,
-                            account.id,
-                            account.email,
-                        );
-                    } else {
-                        this.system = this.systemService.createSystem(account.email, systemId);
-                    }
-                    this.menu.base = this.sourceService.getMenuBase(this.system);
-                    infoPromise = this.system.getInfo();
-                } else {
-                    // @ts-expect-error Create a mock system. All we need is the mediaserver.
-                    this.system = {
-                        id: '',
-                        info: {
-                            capabilities: {
-                                vms_metrics: true,
-                            },
+        // Promise holder so that if hm is in standalone mode its skips a systems getInfo call.
+        let infoPromise: Promise<void | NxSystem> = Promise.resolve();
+        this.accountService.get().then(account => {
+            this.healthService.ready = false;
+            this.hasServerError = false;
+            this.outdatedVersion = false;
+            if (account && typeof account !== 'undefined') {
+                this.account = account;
+                this.menu.base = this.sourceService.getMenuBase(this.system);
+                infoPromise = this.system.getInfo();
+            } else {
+                // @ts-expect-error Create a mock system. All we need is the mediaserver.
+                this.system = {
+                    id: '',
+                    info: {
+                        capabilities: {
+                            vms_metrics: true,
                         },
-                        isOnline: true,
-                        mediaserver: undefined,
-                    };
-                    this.system.mediaserver = this.serverApi.createConnection(
-                        undefined,
-                        undefined,
-                        undefined,
-                        () => {},
-                    );
-                    this.menu.base = '/health';
+                    },
+                    isOnline: true,
+                    mediaserver: undefined,
+                };
+                this.system.mediaserver = this.serverApi.createConnection(
+                    undefined,
+                    undefined,
+                    undefined,
+                    () => {},
+                );
+                this.menu.base = '/health';
+            }
+            this.healthService.system = this.system;
+            infoPromise.then(() => {
+                if (environment.isLocal && !account) {
+                    return;
                 }
-                this.healthService.system = this.system;
-                infoPromise.then(() => {
-                    if (environment.isLocal && !account) {
-                        return;
-                    }
-                    if (this.system.isOnline) {
-                        this.outdatedVersion = !this.system.info.capabilities.vms_metrics;
-                    }
-                    if (!this.outdatedVersion) {
-                        this.updateValues();
-                    }
-                });
+                if (this.system.isOnline) {
+                    this.outdatedVersion = !this.system.info.capabilities.vms_metrics;
+                }
+                if (!this.outdatedVersion) {
+                    this.updateValues();
+                }
             });
         });
 
@@ -224,7 +201,8 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.cleanUp();
+        this.stopSystemPoll();
+        this.ribbonService.hide();
     }
 
     setupReport(_data: HealthReport) {

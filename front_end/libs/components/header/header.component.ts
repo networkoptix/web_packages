@@ -516,7 +516,7 @@ export class NxHeaderComponent implements OnInit {
                     this.system
                         .getInfoAndPermissions(false)
                         .then(system => {
-                            this.canSeeInfo = system?.canViewInfo() || false;
+                            this.canSeeInfo = system?.permissionManager.isAdmin() || false;
                         })
                         .catch(_ => {});
                 }
