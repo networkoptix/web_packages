@@ -367,9 +367,16 @@ function update_requirements_licenses_poetry() {
 }
 
 function setup_git_aliases() {
+    HL='\033[0;32m'
+    NC='\033[0m'
     for alias in git-aliases/*
     do
         alias_name=$(basename "$alias")
+        echo -e "\n"
+        echo -e "Setting up git alias $HL$alias_name$NC"
+        echo -e "To use command run$HL git $alias_name $NC"
+        tail --lines=+2 "$alias"
+        echo -e "\n"
         git config alias."$alias_name" "$(head -1 "$alias")"
     done
 }
