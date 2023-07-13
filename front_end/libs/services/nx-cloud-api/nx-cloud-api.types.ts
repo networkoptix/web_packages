@@ -393,6 +393,7 @@ export enum DOC_TYPES {
 export interface LicenseServerInfo {
     systemId: string;
     licenseServer: string;
+    cloudHost: string;
     cacheUpdated: boolean;
 }
 

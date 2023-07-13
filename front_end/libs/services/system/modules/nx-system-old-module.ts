@@ -753,22 +753,20 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     }
 
     public getLicenseServerApi() {
-        let _cloudHost = '';
         return this.updateOrGetSystemSettings().pipe(
             map(
                 ({
                     reply: {
                         settings: { licenseServer, cloudHost },
                     },
-                }) => {
-                    _cloudHost = cloudHost;
-                    return licenseServer;
-                },
+                }) => ({ licenseServer, cloudHost }),
             ),
-            catchError(() => Promise.resolve('')),
-            switchMap(licenseServer => this.cloudApi.checkLicenseServer(this.id, licenseServer)),
-            map(({ licenseServer }) =>
-                this.cloudApi.licenseServerApiFactory(licenseServer, () => _cloudHost),
+            catchError(() => Promise.resolve({ licenseServer: '', cloudHost: '' })),
+            switchMap(({ licenseServer, cloudHost }) =>
+                this.cloudApi.checkLicenseServer(this.id, licenseServer, cloudHost),
+            ),
+            map(({ licenseServer, cloudHost }) =>
+                this.cloudApi.licenseServerApiFactory(licenseServer, () => cloudHost),
             ),
         );
     }

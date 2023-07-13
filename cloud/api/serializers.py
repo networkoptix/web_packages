@@ -454,20 +454,29 @@ class IpvdSerializer(serializers.Serializer):
 def check_license_cache(data):
     system_id = data.get('systemId')
     license_servers_cache = caches['license_servers']
-    cached_license_server = license_servers_cache.get(system_id)
+    license_server_key, cloud_host_key = f'{system_id}_license_server', f'{system_id}_cloud_host'
+    cached_license_server = license_servers_cache.get(license_server_key, settings.LICENSE_SERVER)
+    cached_cloud_host = license_servers_cache.get(cloud_host_key, data.pop('host', None))
     license_server = data.get('licenseServer', None)
+    cloud_host = data.get('cloudHost', None)
+
+    data['cacheUpdated'] = False
 
     if not license_server:
-        data['licenseServer'] = cached_license_server or settings.LICENSE_SERVER
+        data['licenseServer'] = cached_license_server
 
     elif license_server == settings.LICENSE_SERVER:
-        data['cacheUpdated'] = bool(license_servers_cache.delete(system_id))
+        data['cacheUpdated'] = bool(license_servers_cache.delete(license_server_key))
 
-    elif license_server == cached_license_server:
-        data['cacheUpdated'] = False
+    elif license_server != cached_license_server:
+        license_servers_cache.set(license_server_key, data['licenseServer'])
+        data['cacheUpdated'] = True
 
-    else:
-        license_servers_cache.set(system_id, data['licenseServer'])
+    if not cloud_host:
+        data['cloudHost'] = cached_cloud_host
+
+    elif cloud_host != cached_cloud_host:
+        license_servers_cache.set(cloud_host_key, data['cloudHost'])
         data['cacheUpdated'] = True
 
     return data
@@ -479,6 +488,7 @@ class SystemIdSerializer(serializers.Serializer):
 
 class LicenseServerSerializer(SystemIdSerializer):
     licenseServer = serializers.URLField(default=settings.LICENSE_SERVER)
+    cloudHost = serializers.URLField()
     cacheUpdated = serializers.BooleanField(default=False)
 
     def __init__(self, *args, **kwargs):

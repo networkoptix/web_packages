@@ -78,7 +78,7 @@ async def license_server(request, system_id):
     #  Actually, there is no asynchronous stuff.
     #  I'm not sure about necessity of these changes.
     serializer = LicenseServerSerializer(
-        data={**request.data, 'systemId': system_id})
+        data={**request.data, 'systemId': system_id, 'host': request.get_host()})
     serializer.is_valid()
 
     return api_success(serializer.data)
