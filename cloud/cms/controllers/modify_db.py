@@ -16,6 +16,7 @@ from django.utils.http import urlencode
 from PIL import Image
 
 from api.models import Account
+from cms.controllers.static_files import TemplatesCache
 from cms.models import *
 from util.base_cache import BaseCache
 from util.config import UnableToFetchConfigException
@@ -649,8 +650,10 @@ def publish_latest_version(asset, review_id, user, state=None):
 
     if not publish_errors and asset.can_preview_on_portal:
         from cms.controllers.filldata import fill_content
+        # Run fill data only after changes are committed
         transaction.on_commit(lambda: fill_content(asset, preview=False, incremental=True))
-
+        # Invalidate all templates and static files cached for a cloud portal
+        TemplatesCache.invalidate_customization_cache(asset.customizations.first())
     if asset.is_cloud_portal:
         BaseCache.clear_global_cache()
         Flag.flush_global_vals()

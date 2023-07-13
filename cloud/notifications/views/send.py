@@ -23,7 +23,6 @@ from cms.permissions import IsSuperuser
 from notifications import notifications_api
 from notifications.models import *
 from notifications.tasks import send_to_all_users
-from util.helpers import get_customization
 from util.throttling import NotificationRateThrottle
 
 logger = logging.getLogger(__name__)

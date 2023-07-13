@@ -15,7 +15,7 @@ import waffle
 
 from cms.models import cloud_portal_customization_cache
 from cms.controllers.static_files import get_template
-from util.helpers import detect_language_by_request, get_customization
+from util.helpers import detect_language_by_request
 from cms.models import Menu, Asset, Language
 from cms.controllers import documentation
 from cms.controllers import integration
@@ -162,7 +162,7 @@ def get_lang_meta(request, lang=None):
 def get_config_meta(request, config_path=None):
     if not config_path:
         config_path = os.path.join(
-            settings.STATIC_LOCATION, request.CUSTOMIZATION, 'static', 'metaDefaults.json')
+            settings.STATIC_LOCATION, '_source/blue/static', 'metaDefaults.json')
     is_secure = request.is_secure()
     host = request.get_host()
     base = f'http{"s" if is_secure else ""}://{host}'

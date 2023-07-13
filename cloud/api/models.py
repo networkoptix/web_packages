@@ -19,7 +19,6 @@ from cloud.helpers.exceptions import (
 )
 from cms.helpers.cached_asset import AccountObjectCache
 from cms.models import Customization, Asset, AssetType, UserGroupsToAssetPermissions, get_cloud_portal_asset
-from cloud.settings import CUSTOMIZATION
 
 
 class AccountManager(models.Manager):

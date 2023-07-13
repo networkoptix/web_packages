@@ -38,7 +38,6 @@ class TestStaticServe:
 
     def test_default_values(self, arf, mocker):
         preloaded = self.create_structures()
-        mocker.patch('cms.views.static_serve.is_db_static_enabled', return_value=True)
         for structure in preloaded:
             request = arf.get(f'/{structure["name"]}')
             data = async_to_sync(get_customizable_static)(self.customization.name, f'{structure["name"]}')
@@ -51,7 +50,6 @@ class TestStaticServe:
         test_val = b'test value'
         with transaction.atomic():
             preloaded = self.create_structures(set_value=base64.b64encode(test_val).decode())
-        mocker.patch('cms.views.static_serve.is_db_static_enabled', return_value=True)
         for structure in preloaded:
             request = arf.get(f'/{structure["name"]}')
             data = async_to_sync(get_customizable_static)(self.customization.name, f'{structure["name"]}')

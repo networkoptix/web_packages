@@ -185,18 +185,6 @@ class TestContextProcessor(ContextSetup):
         content = self.context_processor.process_context(non_global_context, self.language)
         assert content == 'Template with val_1 val_2'
 
-    def test_save_context(self, fs, non_global_context):
-        self.context_processor.save_context(non_global_context, self.language)
-        with open('static/default/template.html') as file:
-            content = file.read()
-            assert content == 'Template with val_1 val_2'
-
-    def test_save_contexts(self, fs, non_global_context):
-        self.context_processor.save_contexts(non_global_context, [self.language])
-        with open('static/default/template.html') as file:
-            content = file.read()
-            assert content == 'Template with val_1 val_2'
-
 
 class TestPackageExporter(ContextSetup):
     @pytest.fixture(autouse=True)

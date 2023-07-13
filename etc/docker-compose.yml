@@ -57,20 +57,20 @@ services:
 #   run 'python manage runserver 0.0.0.0:5000'
 # =========================================================
 
-#  nginx:
-#    image: nginx:1.14.0-alpine
-#    container_name: cloud_portal_nginx
-#    ports:
-#      - "80:80"
-#    environment:
-#      - DATA_HOSTS_STR=https://relay.cloud-test.hdw.mx https://relay-aws.cloud-test.hdw.mx https://*.relay.cloud-test.hdw.mx https://*.relay-aws.cloud-test.hdw.mx https://nxcloud-cloud-test-integrations-static.s3.amazonaws.com  https://*.google-analytics.com https://*.hotjar.com;
-#      - CUSTOMIZATION=default
-#      - PORTAL_HOST=host.docker.internal
-#      - PORTAL_BUCKET=cloud-portal
-#
-#    volumes:
-#      - ../cloud/static:/app/app/static
-#      - ./nginx/proxy.conf:/etc/nginx/proxy.conf
-#      - ./nginx/nginx.conf.template:/etc/nginx/conf.d/nginx.conf.template
-#      - ./nginx/run_nginx.sh:/run_nginx.sh
-#    command: sh /run_nginx.sh
+  nginx:
+    image: nginx:1.14.0-alpine
+    container_name: cloud_portal_nginx
+    ports:
+      - "80:80"
+    environment:
+      - DATA_HOSTS_STR=https://relay.cloud-test.hdw.mx https://relay-aws.cloud-test.hdw.mx https://*.relay.cloud-test.hdw.mx https://*.relay-aws.cloud-test.hdw.mx https://nxcloud-cloud-test-integrations-static.s3.amazonaws.com  https://*.google-analytics.com https://*.hotjar.com;
+      - CUSTOMIZATION=default
+      - PORTAL_HOST=host.docker.internal
+      - PORTAL_BUCKET=cloud-portal
+
+    volumes:
+      - ../cloud/static:/app/app/static
+      - ./nginx/proxy.conf:/etc/nginx/proxy.conf
+      - ./nginx/nginx.conf.template:/etc/nginx/conf.d/nginx.conf.template
+      - ./nginx/run_nginx.sh:/run_nginx.sh
+    command: sh /run_nginx.sh

@@ -9,18 +9,14 @@ import waffle
 from asgiref.sync import sync_to_async
 from django.conf import settings
 from django.http import HttpResponse, Http404
+from django.shortcuts import redirect
 from django.views.static import serve
+
+from cloud.helpers.exceptions import APINotFoundException
 from cms.controllers.static_files import get_template, get_customizable_static
-from cms.feature_flags.feature_flags import FLAGS
+from cms.models import get_cloud_portal_asset, Asset, AssetType
 
 logger = getLogger(__name__)
-
-
-async def is_db_static_enabled(request) -> bool:
-    if await sync_to_async(waffle.flag_is_active)(request, FLAGS.s3_static) \
-            or not await sync_to_async(waffle.flag_is_active)(request, FLAGS.db_static):
-        return False
-    return True
 
 
 def server_dev_static(view):
@@ -38,32 +34,27 @@ def server_dev_static(view):
         response = await view(request, *args, **kwargs)
         if response.status_code != 404:
             return response
+        latest = None
         for dir in settings.STATICFILES_DIRS:
             try:
                 response = serve(request, path, document_root=dir)
             except Http404 as ex:
+                latest = ex
                 continue
             return response
-        raise ex
-
+        if latest:
+            raise latest
     return wrapped
-
 
 
 @server_dev_static
 async def customizable_files(request, *args):
     """
     Return file content from DB or 404 if it does not exist. Flag must be enabled.
-    When s3 static feature is enabled static files must be requested by `/media` path
-    and routed to s3 in nginx. If file is not uploaded to s3 then it can be accessed
-    by nginx locally on this handler failure with 404
     Args:
         request:
 
     """
-    if not await is_db_static_enabled(request):
-        logger.info(f'Feature is not enabled')
-        return HttpResponse(status=404)
     static_path = re.sub(r'^/', '', request.path)
     content = await get_customizable_static(request.CUSTOMIZATION, static_path)
     if content is None:
@@ -85,10 +76,7 @@ async def get_template_response(request, filename, language_code=None):
 async def language_template(request, filename, language_code=None):
     """
     Handler returns response with a compiled template file. If feature enabled
-    file MUST exist in a DB, otherwise error raised. If feature is not enabled
-    it returns 404 which signals nginx to loop up for file in local files.
-    Same behavior is followed in local development excepting errors are handled
-    by server_dev_static decorator.
+    file MUST exist in a DB, otherwise error raised.
     Args:
         request: request object
         filename: filename without path
@@ -97,9 +85,6 @@ async def language_template(request, filename, language_code=None):
     Returns:
 
     """
-    if not await sync_to_async(waffle.flag_is_active)(request, FLAGS.db_static):
-        logger.info(f'Feature is not enabled')
-        return HttpResponse(status=404)
     filename = f'static/lang_{{{{language}}}}/{filename}'
     return await get_template_response(request, filename, language_code=language_code)
 
@@ -108,8 +93,7 @@ async def language_template(request, filename, language_code=None):
 async def static_template(request):
     """
     Handler returns response with a compiled template file. If feature enabled
-    file MUST exist in a DB, otherwise error raised. If feature is not enabled
-    it returns 404 which signals nginx to loop up for file in local files.
+    file MUST exist in a DB, otherwise error raised.
     Args:
         request: request object
         filename: filename without path
@@ -117,8 +101,23 @@ async def static_template(request):
     Returns:
 
     """
-    if not await sync_to_async(waffle.flag_is_active)(request, FLAGS.db_static):
-        logger.info(f'Feature is not enabled')
-        return HttpResponse(status=404)
-    filename = re.sub(rf'^/', '', request.path)
+    filename = re.sub(r'^/', '', request.path)
     return await get_template_response(request, filename)
+
+
+async def skin_styles(request):
+    cloud_portal = await Asset.objects.filter(customizations__name__in=[request.CUSTOMIZATION], asset_type__name="",
+                                              asset_type__type=AssetType.ASSET_TYPES.cloud_portal).afirst()
+    if not cloud_portal:
+        raise APINotFoundException(f"Customization {request.CUSTOMIZATION} not found.")
+    skin = await sync_to_async(cloud_portal.read_global_value)('%SKIN%')
+    redirect_url = f'/static/skin/{skin}/skin.css'
+    return redirect(redirect_url)
+
+
+async def skin_style(request, skin):
+    """
+    For local usage only. Returns style for current skin
+    """
+    styles_dir = os.path.join(settings.STATIC_LOCATION, f'_source/{skin}/static/styles')
+    return serve(request, 'skin.css', document_root=styles_dir)

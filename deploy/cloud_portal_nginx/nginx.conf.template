@@ -73,7 +73,7 @@ http {
         keepalive_timeout 5;
 
         # path for static files
-        root /app/app/static/$CUSTOMIZATION;
+        root /app/app/static/_source/blue;
         error_page 503 /static/index.html;
         error_page 502 /static/index.html;
 
@@ -111,7 +111,7 @@ http {
         }
 
         location ~* /(?=ngsw\.json|apple-app-site-association|\.well-known) {
-            root /app/app/static/$CUSTOMIZATION/static;
+            root /app/app/static/_source/blue/static;
             try_files ${DOLLAR}uri ${DOLLAR}uri/ =404;
         }
 
@@ -120,10 +120,30 @@ http {
             try_files /static/ngsw-worker.js =404;
         }
 
+        location = /static/styles/skin.css {
+            proxy_cache_key ${DOLLAR}scheme://${DOLLAR}host${DOLLAR}uri${DOLLAR}is_args${DOLLAR}query_string;
+            proxy_cache static_cache;
+            proxy_cache_valid 200 302 5m;
+            proxy_cache_lock on;
+            proxy_cache_background_update on;
+            proxy_cache_bypass ${DOLLAR}cookie_nocache ${DOLLAR}arg_nocache;
+            proxy_ignore_headers Cache-Control;
+            add_header X-Proxy-Cache ${DOLLAR}upstream_cache_status;
+            add_header X-debug-message-1 "uri ${DOLLAR}uri" always;
+            include proxy.conf;
+            proxy_pass http://app_server/static/styles/skin.css;
+        }
+
+        location ~ /static/skin/(blue|orange|green)/skin\.css$ {
+            root /app/app/static/_source;
+            add_header Cache-Control 'max-age=31449600'; # one year
+            try_files /$1/static/styles/skin.css =404;
+        }
+
         location ~* /static/(?=scripts|styles|admin_tools).*\.css$|.*\.js$|.*\.otf$|.*\.ttf$|.*\.woff$|.*\.woff2$|.*\.eot$ {
             root /app/app/static;
             add_header Cache-Control 'max-age=31449600'; # one year
-            try_files /$CUSTOMIZATION/${DOLLAR}uri /$CUSTOMIZATION/static/${DOLLAR}uri /common/${DOLLAR}uri /$CUSTOMIZATION/static/scripts/vendor/${DOLLAR}uri /$CUSTOMIZATION/static/vendor/${DOLLAR}uri =404;
+            try_files /_source/blue/${DOLLAR}uri /_source/blue/static/${DOLLAR}uri /common/${DOLLAR}uri /_source/blue/static/scripts/vendor/${DOLLAR}uri /_source/blue/static/vendor/${DOLLAR}uri =404;
             error_page 404 /common/static/index.html;
         }
 
@@ -178,10 +198,15 @@ http {
             proxy_pass http://$PORTAL_BUCKET.s3.amazonaws.com;
         }
 
+        location ~* ^/static/lang_(.*)/language_compiled.json$ {
+            root /app/app/static/_source/blue;
+            try_files /${DOLLAR}uri =404;
+        }
+
         location ~* ^/static/lang_(.*)$ {
             proxy_cache_key ${DOLLAR}scheme://${DOLLAR}host${DOLLAR}uri${DOLLAR}is_args${DOLLAR}query_string;
             proxy_cache static_cache;
-            proxy_cache_valid 200 302 10m;
+            proxy_cache_valid 200 302 5m;
             proxy_cache_lock on;
             proxy_cache_background_update on;
             proxy_cache_bypass ${DOLLAR}cookie_nocache ${DOLLAR}arg_nocache;
@@ -198,7 +223,7 @@ http {
         location ~* ^/static/images/(promo/.*|dark_logo\.png|logo\.png|favicon\.ico|placeholders/page/Maintenance\.svg)$ {
             proxy_cache_key ${DOLLAR}scheme://${DOLLAR}host${DOLLAR}uri${DOLLAR}is_args${DOLLAR}query_string;
             proxy_cache static_cache;
-            proxy_cache_valid 200 302 10m;
+            proxy_cache_valid 200 302 5m;
             proxy_cache_lock on;
             proxy_cache_background_update on;
             proxy_cache_bypass ${DOLLAR}cookie_nocache ${DOLLAR}arg_nocache;
@@ -213,20 +238,21 @@ http {
 
         location @local_static {
             root /app/app/static;
-            try_files /$CUSTOMIZATION/${DOLLAR}uri /common/${DOLLAR}uri =404;
+            add_header X-debug-static-uri "uri ${DOLLAR}uri" always;
+            try_files /_source/blue/${DOLLAR}uri /common/${DOLLAR}uri =404;
             error_page 404 /common/static/index.html;
         }
 
         location ~* ^/static/([\d]+)/(.*)$ {
             root /app/app/static;
             rewrite ^/static/([\d]+)/(.*)$ /static/$2 break;
-            try_files /$CUSTOMIZATION/${DOLLAR}uri /common/${DOLLAR}uri =404;
+            try_files /_source/blue/${DOLLAR}uri /common/${DOLLAR}uri =404;
             error_page 404 /common/static/index.html;
         }
 
         location /static/ {
             root /app/app/static;
-            try_files /$CUSTOMIZATION/${DOLLAR}uri /common/${DOLLAR}uri =404;
+            try_files /_source/blue/${DOLLAR}uri /common/${DOLLAR}uri =404;
             error_page 404 /common/static/index.html;
         }
 
@@ -236,13 +262,13 @@ http {
         }
 
         location /preview/ {
-            root /app/app/static/$CUSTOMIZATION/;
+            root /app/app/static/_source/blue/;
             error_page 404 /static/index.html;
             expires -1;
         }
 
         location /robots.txt {
-            root /app/app/static/$CUSTOMIZATION/static/;
+            root /app/app/static/_source/blue/static/;
             try_files ${DOLLAR}uri @proxy_to_app;
         }
 

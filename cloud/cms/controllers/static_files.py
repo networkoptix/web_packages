@@ -47,6 +47,11 @@ class TemplatesCache(HashCache):
             for field, _ in cache.hscan_iter(key, f'{template_name}-{language_code}-{skin}-*'):
                 cache.hdel(key, field)
 
+    @classmethod
+    def invalidate_customization_cache(cls, customization_name: str):
+        cache = caches[cls._cache_name]
+        cache.delete(f'templates-{customization_name}-{settings.VERSION}')
+
 
 def get_contexts(asset):
     global_contexts = Context.objects.filter(
@@ -384,14 +389,9 @@ async def get_customizable_static(customization_name: str, static_path: str):
     Returns:
 
     """
+
     asset = await sync_to_async(get_cloud_portal_asset)(customization=customization_name)
-    structure = await DataStructure.objects.filter(
-        context__asset_type__type=AssetType.ASSET_TYPES.cloud_portal,
-        type__in=[DataStructure.DATA_TYPES.file, DataStructure.DATA_TYPES.image],
-        name=static_path).alast()
-    if not asset or not structure:
-        logger.warning(f'No asset or structure found for {static_path}')
-        return None
-    encoded_content = await sync_to_async(structure.find_actual_value)(asset=asset, customization_name=customization_name)
-    logger.warning(f"Got content for {static_path}: {encoded_content[:20]}")
-    return base64.b64decode(encoded_content)
+    data = await sync_to_async(read_cached_file)(asset=asset, customization_name=customization_name,
+                                                 filename=static_path, language_code=None, skin=None,
+                                                 version_id=None)
+    return data

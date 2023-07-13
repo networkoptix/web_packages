@@ -111,7 +111,7 @@ do
 
             fi
             python manage.py update_host --customization $CUSTOMIZATION
-            python manage.py filldata --customization $CUSTOMIZATION
+#            python manage.py filldata --customization $CUSTOMIZATION
 #            python manage.py filldata --customization $CUSTOMIZATION --preview=True &  # Removing for now
 
             find /app/app/static | xargs touch

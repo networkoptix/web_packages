@@ -78,8 +78,7 @@ if LOCAL_ENVIRONMENT:
     STATIC_ROOT = os.path.join(BASE_DIR, "static/common")
     STATICFILES_DIRS = (
         os.path.join(STATIC_LOCATION, 'common/static'),
-        os.path.join(STATIC_LOCATION, CUSTOMIZATION, "static"),
-        os.path.join(STATIC_LOCATION, CUSTOMIZATION, "static/lang_en_US"),
+        os.path.join(STATIC_LOCATION, "_source/blue/static"),
     )
     PREVIEW_URL = '/preview/'
     PREVIEW_LOCATION = os.path.join(STATIC_LOCATION, CUSTOMIZATION, "preview")
@@ -174,8 +173,7 @@ TEMPLATES = [
         'DIRS': (
             STATIC_ROOT,
             # get rid of app/app hardcode
-            os.path.join(STATIC_LOCATION, CUSTOMIZATION),
-            os.path.join(STATIC_LOCATION, CUSTOMIZATION, 'templates'),
+            os.path.join(STATIC_LOCATION, '_source/blue'),
             os.path.join(BASE_DIR, 'django_templates'),
         ),
         'OPTIONS': {

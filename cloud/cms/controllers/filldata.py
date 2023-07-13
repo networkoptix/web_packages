@@ -274,23 +274,13 @@ class ContextProcessor:
 
         return content
 
-    def save_context(self, context: Context, language: Language):
-        content = self.process_context(context, language)
-
-        # if we have template - save context to file
-        if context.template_for_language(language, self.asset.default_language, self.skin):
-            target_file_name = target_file(
-                context.file_path, self.asset.asset_root, language.code, self.preview)
-            # print "save file: " + target_file_name
-            save_content(target_file_name, content)
-
     def save_contexts(self, context, languages):
         # update affected languages
         if context.translatable:
             for language in languages:
-                self.save_context(context=context, language=language)
+                self.process_context(context=context, language=language)
         else:
-            self.save_context(
+            self.process_context(
                 context=context, language=self.asset.default_language)
 
 
@@ -368,18 +358,12 @@ def init_skin(asset, preview=False, workers=2, management=False):
     skin = asset.read_global_value('%SKIN%')
     logger.info("Init " + skin + " skin for " + asset.__str__())
 
-    # 2. copy directory
-    from_dir = SOURCE_DIR.replace("{{skin}}", skin)
-    target_dir = TARGET_DIR.replace("{{customization}}", customization_name)
 
-    # 3. run fill_content
+    # 2. run fill_content
     if not preview:
-        distutils.dir_util.copy_tree(from_dir, target_dir)
         logger.info("Fill content for " + asset.__str__())
         return fill_content(asset, preview=False, incremental=False, workers=workers, management=management)
     else:
-        distutils.dir_util.copy_tree(
-            from_dir, os.path.join(target_dir, 'preview'))
         logger.info("Fill preview for " + asset.__str__())
         return fill_content(asset, preview=True, incremental=False, workers=workers, management=management)
 
@@ -439,162 +423,12 @@ def fill_content(asset,
                 cloud_portal_customization_cache(asset.asset_root, force=True)
         return True
 
-    def get_changed_if_no_version():
-        nonlocal changed_records
-        if not version_id:  # if version_id is None - check if records are actually latest
-            changed_records_ids = [DataRecord.objects.
-                                   filter(language_id=record.language_id,
-                                          data_structure_id=record.data_structure_id,
-                                          asset=asset).
-                                   latest('created_date').id for record in changed_records]
-            changed_records = changed_records.filter(
-                id__in=changed_records_ids)
-
-    def set_changed():
-        nonlocal incremental, changed_records, changed_contexts, changed_languages, default_language_code, \
-            languages_list
-        if incremental:
-            if not changed_context:
-                # filter records changed in this version
-                # get their datastructures
-                # detect their contexts
-
-                changed_records = DataRecord.objects.filter(
-                    version_id=version_id, asset=asset)
-                # in case version_id is none - we need to filter by asset as well
-                get_changed_if_no_version()
-
-                changed_context_ids = list(
-                    changed_records.values_list('data_structure__context_id', flat=True).distinct())
-                changed_contexts = Context.objects.filter(
-                    id__in=changed_context_ids)
-
-                changed_global_contexts = changed_contexts.filter(
-                    is_global=True)
-                if changed_global_contexts.exists():  # global context was changed - force full rebuild
-                    incremental = False
-                changed_contexts = changed_contexts.all()
-
-            elif changed_context.is_global:
-                incremental = False
-
-            else:  # if we want to update only fixed context
-                changed_contexts = [changed_context]
-                changed_records = DataRecord.objects.filter(data_structure__context=changed_context,
-                                                            version_id=version_id,
-                                                            asset=asset)
-                get_changed_if_no_version()
-
-        if not incremental:  # If not incremental - iterate all contexts and all languages
-            changed_contexts = Context.objects.filter(
-                asset_type=asset.asset_type)
-            changed_languages = asset.languages_list
-
-        default_language_code = asset.default_language.code
-        languages_list = asset.languages_list
-
-        # Email templates are skipped here because when a email is sent, the celery worker retrieves
-        # the template from the database and fills the template with the correct values before sending the email.
-        # If we pass in a changed context its not a queryset object so we cannot use filter or exclude it.
-        if type(changed_contexts) is not list:
-            changed_contexts = changed_contexts.exclude(
-                name__startswith=EMAIL_TEMPLATES)
-
-    def run_workers():
-        nonlocal changed_languages
-        global_contexts = Context.objects.filter(
-            is_global=True, hidden=False, asset_type=asset.asset_type)
-        global_contexts_dict = global_contexts_to_dict(global_contexts, asset)
-        error = False
-        skin = asset.read_global_value('%SKIN%')
-        context_processor = ContextProcessor(
-            asset=asset, version_id=version_id, global_contexts=global_contexts,
-            global_contexts_dict=global_contexts_dict, preview=preview, skin=skin
-        )
-        with ContextExecutor(max_workers=workers) as executor:
-            # Stores the tasks that the thread pool runs. This is needed for checking for exceptions
-            futures = []
-            for context in changed_contexts:
-                # logger.info("Process context: " + context.name + " file:" + context.file_path)
-                if incremental:
-                    changed_languages = list(changed_records.filter(data_structure__context_id=context.id).
-                                             values_list('language__code', flat=True).distinct())
-
-                    if default_language_code in changed_languages:
-                        # If default language changes - it can affect all languages in the context
-                        changed_languages = languages_list
-                languages = Language.objects.filter(code__in=changed_languages)
-                # Add the context to the list of tasks for the thread pool.
-                futures.append(executor.submit(
-                    context_processor.save_contexts, context, languages))
-
-            # Catch any errors raise by thread workers.
-            for future in futures:
-                try:
-                    future.result()
-                except Exception as e:
-                    logger.warning(e)
-                    error = True
-        return error
-
-    def run_single():
-        nonlocal changed_languages
-        global_contexts = Context.objects.filter(
-            is_global=True, hidden=False, asset_type=asset.asset_type)
-        global_contexts_dict = global_contexts_to_dict(global_contexts, asset)
-        error = False
-        skin = asset.read_global_value('%SKIN%')
-        context_processor = ContextProcessor(
-            asset=asset, version_id=version_id, global_contexts=global_contexts,
-            global_contexts_dict=global_contexts_dict, preview=preview, skin=skin
-        )
-
-        for context in changed_contexts:
-            # logger.info("Process context: " + context.name + " file:" + context.file_path)
-            if incremental:
-                changed_languages = list(changed_records.filter(data_structure__context_id=context.id).
-                                         values_list('language__code', flat=True).distinct())
-
-                if default_language_code in changed_languages:
-                    # If default language changes - it can affect all languages in the context
-                    changed_languages = languages_list
-            languages = Language.objects.filter(code__in=changed_languages)
-            # Add the context to the list of tasks for the thread pool.
-            try:
-                context_processor.save_contexts(context, languages)
-            except Exception as e:
-                logger.warning(e)
-                error = True
-
-        return error
-
     # Start fill_content
     # Check if asset should be filled
     can_update_static(asset)
 
     # Set preview state
-    if not calculate_preview_state():
-        return
-
-    # Get changed
-    changed_contexts = None
-    changed_records = None
-    changed_languages = None
-    default_language_code = None
-    languages_list = None
-    set_changed()
-
-    # Run workers
-    if workers > 1:
-        thread_error = run_workers()
-    else:
-        thread_error = run_single()
-
-    generate_languages_json(asset.asset_root, languages_list,  preview)
-    if thread_error:
-        logger.warning(
-            "Filldata has ran into an exception. If run by the management command it will retry soon.")
-    return not thread_error
+    calculate_preview_state()
 
 
 @dataclass
