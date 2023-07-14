@@ -76,6 +76,7 @@
         "presetVarSkin": "npm run build-open-libs",
         "setVarSkin": "node buildSkins.mjs ./common/styles",
         "update-lang-files": "node checkIfLangNeedsUpdate.mjs && npm run handle:lang || echo 'Lang already up to date'",
+        "lang-ci-check": "cp ./common/language/language_i18n.json ./common/language/i18n_copy.json; cp ./common/language/language_compiled.json ./common/language/compiled_copy.json; npm run update-lang-files; cmp_i18n=$(cmp ./common/language/language_i18n.json ./common/language/i18n_copy.json); cmp_compiled=$(cmp ./common/language/language_compiled.json ./common/language/compiled_copy.json); if [ ! -z \"$cmp_i18n\" ] || [ ! -z \"$cmp_static_types\" ] || [ ! -z \"$cmp_compiled\" ]; then exit 1; fi",
         "compile-lang": "python compile-lang.py",
         "fill-lang": "python fill-lang.py",
         "test-lang": "node --experimental-specifier-resolution=node testCompiledLang.mjs",
