@@ -558,16 +558,17 @@ export class NxDialogsService extends DialogBase {
     /* Bookmarks */
     moreDevices = this.dialogV2Factory<Dt.MoreDevices>(
         () => import('./bookmarks/more-devices/more-devices.component').then(m => m.NxMoreDevicesModalContent),
-        { width: DIALOG_SIZE_V2.INFO, autoFocus: 'input' },
+        { width: DIALOG_SIZE_V2.INFO, autoFocus: 'input', panelClass: 'no-container-shadow' }
     );
 
     moreTags = this.dialogV2Factory<Dt.MoreTags>(
         () => import('./bookmarks/more-tags/more-tags.component').then(m => m.NxMoreTagsModalContent),
-        { width: DIALOG_SIZE_V2.INFO, autoFocus: 'input' }
+        { width: DIALOG_SIZE_V2.INFO, autoFocus: 'input', panelClass: 'no-container-shadow' }
     );
 
     bookmarkDetails = this.dialogV2Factory<Dt.BookmarkDetails>(
         () => import('./bookmarks/card-modal/bookmarks-card-modal.component').then(m => m.NxBookmarksCardModalComponent),
+        { panelClass: 'no-container-shadow' }
     );
 
     /* New feature */
