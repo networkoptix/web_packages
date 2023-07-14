@@ -152,11 +152,11 @@ export class MergeModalContent {
     }
 
     private getSystemInfo(systemId: string): Promise<ModuleInformation> {
-        const url = `https://${this.CONFIG.trafficRelayHost.replace(
-            '{systemId}',
-            systemId,
-        )}/api/moduleInformation`;
-        return this.httpService.get<ModuleInformation>(url).toPromise();
+        let url = '';
+        if (!environment.isLocal && systemId) {
+            url = `https://${this.CONFIG.trafficRelayHost.replace('{systemId}', systemId)}`;
+        }
+        return this.httpService.get<ModuleInformation>(`${url}/api/moduleInformation`).toPromise();
     }
 
     ngOnInit(): void {
@@ -1006,10 +1006,10 @@ export class MergeModalContent {
                     this.setSystems();
                 }
             }
-            return this.system
+            return this.system.mediaserver
                 .mergeSystems(this.serverUrl, this.targetSystem.id, true)
                 .toPromise()
-                .then(res => {
+                .catch(res => {
                     if (res.error && res.error !== '0') {
                         switch (res.errorString) {
                             case 'FAIL':
