@@ -49,17 +49,17 @@
         .close {
             color: var(--card-header-text) !important;
             opacity: 1 !important;
-            width: 40px !important;
-            height: 40px !important;
+            width: 32px !important;
+            height: 32px !important;
             position: absolute !important;
-            right: 4px !important;
-            top: 4px !important;
+            right: 6px !important;
+            top: 6px !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
             margin: 0 !important;
             padding: 0 !important;
-            border-radius: 25px !important;
+            border-radius: 2px !important;
             outline: none !important; // Fix for mobile ios to remove blue circle.
 
             &:before,
@@ -72,7 +72,7 @@
             }
 
             .close-content {
-                border-radius: 25px !important;
+                border-radius: 2px !important;
             }
 
             &:hover,
