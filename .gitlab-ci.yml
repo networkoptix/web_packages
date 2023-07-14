@@ -249,7 +249,7 @@ node-license-check:
         git remote add mr_origin "https://PRIVATE-TOKEN:$CANCEL_PIPELINE_ACCESS_TOKEN@gitlab.nxvms.dev/$CI_MERGE_REQUEST_SOURCE_PROJECT_PATH.git"
         echo "Attempting to fetch origin"
         git remote show mr_origin
-        git pull mr_origin $CI_COMMIT_REF_NAME
+        git pull --ff-only mr_origin $CI_COMMIT_REF_NAME
         git add .
         git commit -m "Node Licenses autofixed by pipeline [ci skip]"
         git push -u mr_origin HEAD:$CI_COMMIT_REF_NAME
@@ -285,7 +285,7 @@ frontend-lang:
         git remote add mr_origin "https://PRIVATE-TOKEN:$CANCEL_PIPELINE_ACCESS_TOKEN@gitlab.nxvms.dev/$CI_MERGE_REQUEST_SOURCE_PROJECT_PATH.git"
         echo "Attempting to fetch origin"
         git remote show mr_origin
-        git pull mr_origin $CI_COMMIT_REF_NAME
+        git pull --ff-only mr_origin $CI_COMMIT_REF_NAME
         git add .
         git commit -m "Language autofixed by pipeline [ci skip]"
         git push -u mr_origin HEAD:$CI_COMMIT_REF_NAME
@@ -318,7 +318,7 @@ frontend-lint:
         git remote add mr_origin "https://PRIVATE-TOKEN:$CANCEL_PIPELINE_ACCESS_TOKEN@gitlab.nxvms.dev/$CI_MERGE_REQUEST_SOURCE_PROJECT_PATH.git"
         echo "Attempting to fetch origin"
         git remote show mr_origin
-        git pull mr_origin $CI_COMMIT_REF_NAME
+        git pull --ff-only mr_origin $CI_COMMIT_REF_NAME
         git add .
         git commit -m "Lint autofixed by pipeline [ci skip]"
         git push -u mr_origin HEAD:$CI_COMMIT_REF_NAME
