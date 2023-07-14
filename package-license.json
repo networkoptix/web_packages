@@ -1,8 +1,746 @@
 {
     "/cloud/": {
+        "@socket.io/base64-arraybuffer@1.0.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/socketio/base64-arraybuffer",
+            "publisher": "Niklas von Hertzen",
+            "email": "niklasvh@gmail.com",
+            "url": "https://hertzen.com",
+            "path": "cloud_portal/cloud/node_modules/@socket.io/base64-arraybuffer",
+            "licenseFile": "cloud_portal/cloud/node_modules/@socket.io/base64-arraybuffer/LICENSE"
+        },
+        "@socket.io/component-emitter@3.0.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/socketio/emitter",
+            "path": "cloud_portal/cloud/node_modules/@socket.io/component-emitter",
+            "licenseFile": "cloud_portal/cloud/node_modules/@socket.io/component-emitter/LICENSE"
+        },
+        "@transloadit/prettier-bytes@0.0.9": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/monolib",
+            "path": "cloud_portal/cloud/node_modules/@transloadit/prettier-bytes",
+            "licenseFile": "cloud_portal/cloud/node_modules/@transloadit/prettier-bytes/LICENSE.md"
+        },
+        "@uppy/audio@0.2.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/audio",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/audio/LICENSE"
+        },
+        "@uppy/aws-s3-multipart@2.2.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/aws-s3-multipart",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/aws-s3-multipart/LICENSE"
+        },
+        "@uppy/aws-s3@2.0.7": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/aws-s3",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/aws-s3/LICENSE"
+        },
+        "@uppy/box@1.0.5": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/box",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/box/LICENSE"
+        },
+        "@uppy/companion-client@2.0.5": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/companion-client",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/companion-client/LICENSE"
+        },
+        "@uppy/compressor@0.2.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/compressor",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/compressor/LICENSE"
+        },
+        "@uppy/core@2.1.5": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/core",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/core/LICENSE"
+        },
+        "@uppy/dashboard@2.1.4": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/dashboard",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/dashboard/LICENSE"
+        },
+        "@uppy/drag-drop@2.0.6": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/drag-drop",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/drag-drop/LICENSE"
+        },
+        "@uppy/drop-target@1.1.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/drop-target",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/drop-target/LICENSE"
+        },
+        "@uppy/dropbox@2.0.5": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/dropbox",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/dropbox/LICENSE"
+        },
+        "@uppy/facebook@2.0.5": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/facebook",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/facebook/LICENSE"
+        },
+        "@uppy/file-input@2.0.5": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/file-input",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/file-input/LICENSE"
+        },
+        "@uppy/form@2.0.4": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/form",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/form/LICENSE"
+        },
+        "@uppy/golden-retriever@2.0.6": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/golden-retriever",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/golden-retriever/LICENSE"
+        },
+        "@uppy/google-drive@2.0.5": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/google-drive",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/google-drive/LICENSE"
+        },
+        "@uppy/image-editor@1.1.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/image-editor",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/image-editor/LICENSE"
+        },
+        "@uppy/informer@2.0.5": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/informer",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/informer/LICENSE"
+        },
+        "@uppy/instagram@2.0.5": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/instagram",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/instagram/LICENSE"
+        },
+        "@uppy/onedrive@2.0.6": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/onedrive",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/onedrive/LICENSE"
+        },
+        "@uppy/progress-bar@2.0.4": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/progress-bar",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/progress-bar/LICENSE"
+        },
+        "@uppy/provider-views@2.0.7": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/provider-views",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/provider-views/LICENSE"
+        },
+        "@uppy/redux-dev-tools@2.0.3": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/redux-dev-tools",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/redux-dev-tools/LICENSE"
+        },
+        "@uppy/screen-capture@2.0.6": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/screen-capture",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/screen-capture/LICENSE"
+        },
+        "@uppy/status-bar@2.1.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/status-bar",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/status-bar/LICENSE"
+        },
+        "@uppy/store-default@2.0.3": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/store-default",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/store-default/LICENSE"
+        },
+        "@uppy/store-redux@2.0.3": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/store-redux",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/store-redux/LICENSE"
+        },
+        "@uppy/thumbnail-generator@2.1.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/thumbnail-generator",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/thumbnail-generator/LICENSE"
+        },
+        "@uppy/transloadit@2.1.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/transloadit",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/transloadit/LICENSE"
+        },
+        "@uppy/tus@2.2.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/tus",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/tus/LICENSE"
+        },
+        "@uppy/unsplash@2.0.3": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/unsplash",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/unsplash/LICENSE"
+        },
+        "@uppy/url@2.0.5": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/url",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/url/LICENSE"
+        },
+        "@uppy/utils@4.0.5": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/utils",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/utils/LICENSE"
+        },
+        "@uppy/webcam@2.0.5": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/webcam",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/webcam/LICENSE"
+        },
+        "@uppy/xhr-upload@2.0.7": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/@uppy/xhr-upload",
+            "licenseFile": "cloud_portal/cloud/node_modules/@uppy/xhr-upload/LICENSE"
+        },
+        "ansi-regex@2.1.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/chalk/ansi-regex",
+            "publisher": "Sindre Sorhus",
+            "email": "sindresorhus@gmail.com",
+            "url": "sindresorhus.com",
+            "path": "cloud_portal/cloud/node_modules/ansi-regex",
+            "licenseFile": "cloud_portal/cloud/node_modules/ansi-regex/license"
+        },
+        "ansi-styles@2.2.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/chalk/ansi-styles",
+            "publisher": "Sindre Sorhus",
+            "email": "sindresorhus@gmail.com",
+            "url": "sindresorhus.com",
+            "path": "cloud_portal/cloud/node_modules/ansi-styles",
+            "licenseFile": "cloud_portal/cloud/node_modules/ansi-styles/license"
+        },
+        "backo2@1.0.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/mokesmokes/backo",
+            "path": "cloud_portal/cloud/node_modules/backo2",
+            "licenseFile": "cloud_portal/cloud/node_modules/backo2/Readme.md"
+        },
+        "blueimp-canvas-to-blob@3.29.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/blueimp/JavaScript-Canvas-to-Blob",
+            "publisher": "Sebastian Tschan",
+            "url": "https://blueimp.net",
+            "path": "cloud_portal/cloud/node_modules/blueimp-canvas-to-blob",
+            "licenseFile": "cloud_portal/cloud/node_modules/blueimp-canvas-to-blob/LICENSE.txt"
+        },
+        "bootstrap@3.4.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/twbs/bootstrap",
+            "publisher": "Twitter, Inc.",
+            "path": "cloud_portal/cloud/node_modules/bootstrap",
+            "licenseFile": "cloud_portal/cloud/node_modules/bootstrap/LICENSE"
+        },
+        "buffer-from@0.1.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/LinusU/buffer-from",
+            "path": "cloud_portal/cloud/node_modules/buffer-from",
+            "licenseFile": "cloud_portal/cloud/node_modules/buffer-from/readme.md"
+        },
+        "chalk@1.1.3": {
+            "licenses": "MIT",
+            "repository": "https://github.com/chalk/chalk",
+            "path": "cloud_portal/cloud/node_modules/chalk",
+            "licenseFile": "cloud_portal/cloud/node_modules/chalk/license"
+        },
+        "clap@1.2.3": {
+            "licenses": "MIT",
+            "repository": "https://github.com/lahmatiy/clap",
+            "publisher": "Roman Dvornov",
+            "email": "rdvornov@gmail.com",
+            "path": "cloud_portal/cloud/node_modules/clap",
+            "licenseFile": "cloud_portal/cloud/node_modules/clap/LICENSE"
+        },
+        "classnames@2.3.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/JedWatson/classnames",
+            "publisher": "Jed Watson",
+            "path": "cloud_portal/cloud/node_modules/classnames",
+            "licenseFile": "cloud_portal/cloud/node_modules/classnames/LICENSE"
+        },
         "cloud-portal-backend@20.2.0": {
             "licenses": "UNKNOWN",
             "path": "cloud_portal/cloud"
+        },
+        "combine-errors@3.0.3": {
+            "licenses": "MIT*",
+            "repository": "https://github.com/MatthewMueller/combine-errors",
+            "publisher": "Matthew Mueller",
+            "email": "mattmuelle@gmail.com",
+            "path": "cloud_portal/cloud/node_modules/combine-errors",
+            "licenseFile": "cloud_portal/cloud/node_modules/combine-errors/Readme.md"
+        },
+        "component-emitter@1.3.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/component/emitter",
+            "path": "cloud_portal/cloud/node_modules/component-emitter",
+            "licenseFile": "cloud_portal/cloud/node_modules/component-emitter/LICENSE"
+        },
+        "compressorjs@1.1.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/fengyuanchen/compressorjs",
+            "publisher": "Chen Fengyuan",
+            "url": "https://chenfengyuan.com/",
+            "path": "cloud_portal/cloud/node_modules/compressorjs",
+            "licenseFile": "cloud_portal/cloud/node_modules/compressorjs/LICENSE"
+        },
+        "cropperjs@1.5.7": {
+            "licenses": "MIT",
+            "repository": "https://github.com/fengyuanchen/cropperjs",
+            "publisher": "Chen Fengyuan",
+            "url": "https://chenfengyuan.com/",
+            "path": "cloud_portal/cloud/node_modules/cropperjs",
+            "licenseFile": "cloud_portal/cloud/node_modules/cropperjs/LICENSE"
+        },
+        "css-tree@1.1.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/csstree/csstree",
+            "publisher": "Roman Dvornov",
+            "email": "rdvornov@gmail.com",
+            "url": "https://github.com/lahmatiy",
+            "path": "cloud_portal/cloud/node_modules/css-tree",
+            "licenseFile": "cloud_portal/cloud/node_modules/css-tree/LICENSE"
+        },
+        "csstree-validator@2.0.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/csstree/validator",
+            "publisher": "Roman Dvornov",
+            "email": "rdvornov@gmail.com",
+            "path": "cloud_portal/cloud/node_modules/csstree-validator",
+            "licenseFile": "cloud_portal/cloud/node_modules/csstree-validator/LICENSE"
+        },
+        "custom-error-instance@2.1.1": {
+            "licenses": "ISC",
+            "repository": "https://github.com/Gi60s/custom-error-instance",
+            "publisher": "James Speirs",
+            "path": "cloud_portal/cloud/node_modules/custom-error-instance",
+            "licenseFile": "cloud_portal/cloud/node_modules/custom-error-instance/README.md"
+        },
+        "debug@4.3.3": {
+            "licenses": "MIT",
+            "repository": "https://github.com/debug-js/debug",
+            "publisher": "Josh Junon",
+            "email": "josh.junon@protonmail.com",
+            "path": "cloud_portal/cloud/node_modules/debug",
+            "licenseFile": "cloud_portal/cloud/node_modules/debug/LICENSE"
+        },
+        "engine.io-client@6.1.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/socketio/engine.io-client",
+            "path": "cloud_portal/cloud/node_modules/engine.io-client",
+            "licenseFile": "cloud_portal/cloud/node_modules/engine.io-client/LICENSE"
+        },
+        "engine.io-parser@5.0.3": {
+            "licenses": "MIT",
+            "repository": "https://github.com/socketio/engine.io-parser",
+            "path": "cloud_portal/cloud/node_modules/engine.io-parser",
+            "licenseFile": "cloud_portal/cloud/node_modules/engine.io-parser/LICENSE"
+        },
+        "escape-string-regexp@1.0.5": {
+            "licenses": "MIT",
+            "repository": "https://github.com/sindresorhus/escape-string-regexp",
+            "publisher": "Sindre Sorhus",
+            "email": "sindresorhus@gmail.com",
+            "url": "sindresorhus.com",
+            "path": "cloud_portal/cloud/node_modules/escape-string-regexp",
+            "licenseFile": "cloud_portal/cloud/node_modules/escape-string-regexp/license"
+        },
+        "exifr@7.1.3": {
+            "licenses": "MIT",
+            "repository": "https://github.com/MikeKovarik/exifr",
+            "publisher": "Mike Kovarik",
+            "path": "cloud_portal/cloud/node_modules/exifr",
+            "licenseFile": "cloud_portal/cloud/node_modules/exifr/LICENSE"
+        },
+        "get-form-data@2.0.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/insin/get-form-data",
+            "publisher": "Jonny Buchanan",
+            "email": "jonathan.buchanan@gmail.com",
+            "path": "cloud_portal/cloud/node_modules/get-form-data",
+            "licenseFile": "cloud_portal/cloud/node_modules/get-form-data/LICENSE"
+        },
+        "graceful-fs@4.2.9": {
+            "licenses": "ISC",
+            "repository": "https://github.com/isaacs/node-graceful-fs",
+            "path": "cloud_portal/cloud/node_modules/graceful-fs",
+            "licenseFile": "cloud_portal/cloud/node_modules/graceful-fs/LICENSE"
+        },
+        "has-ansi@2.0.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/sindresorhus/has-ansi",
+            "publisher": "Sindre Sorhus",
+            "email": "sindresorhus@gmail.com",
+            "url": "sindresorhus.com",
+            "path": "cloud_portal/cloud/node_modules/has-ansi",
+            "licenseFile": "cloud_portal/cloud/node_modules/has-ansi/license"
+        },
+        "has-cors@1.1.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/component/has-cors",
+            "publisher": "Nathan Rajlich",
+            "email": "nathan@tootallnate.net",
+            "url": "http://n8.io/",
+            "path": "cloud_portal/cloud/node_modules/has-cors",
+            "licenseFile": "cloud_portal/cloud/node_modules/has-cors/Readme.md"
+        },
+        "is-blob@2.1.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/sindresorhus/is-blob",
+            "publisher": "Sindre Sorhus",
+            "email": "sindresorhus@gmail.com",
+            "url": "sindresorhus.com",
+            "path": "cloud_portal/cloud/node_modules/is-blob",
+            "licenseFile": "cloud_portal/cloud/node_modules/is-blob/license"
+        },
+        "is-shallow-equal@1.0.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/vesparny/is-shallow-equal",
+            "path": "cloud_portal/cloud/node_modules/is-shallow-equal",
+            "licenseFile": "cloud_portal/cloud/node_modules/is-shallow-equal/LICENSE"
+        },
+        "is-stream@2.0.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/sindresorhus/is-stream",
+            "publisher": "Sindre Sorhus",
+            "email": "sindresorhus@gmail.com",
+            "url": "https://sindresorhus.com",
+            "path": "cloud_portal/cloud/node_modules/is-stream",
+            "licenseFile": "cloud_portal/cloud/node_modules/is-stream/license"
+        },
+        "js-base64@2.6.4": {
+            "licenses": "BSD-3-Clause",
+            "repository": "https://github.com/dankogai/js-base64",
+            "publisher": "Dan Kogai",
+            "path": "cloud_portal/cloud/node_modules/js-base64",
+            "licenseFile": "cloud_portal/cloud/node_modules/js-base64/LICENSE.md"
+        },
+        "lodash._baseiteratee@4.7.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/lodash/lodash",
+            "publisher": "John-David Dalton",
+            "email": "john.david.dalton@gmail.com",
+            "url": "http://allyoucanleet.com/",
+            "path": "cloud_portal/cloud/node_modules/lodash._baseiteratee",
+            "licenseFile": "cloud_portal/cloud/node_modules/lodash._baseiteratee/LICENSE"
+        },
+        "lodash._basetostring@4.12.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/lodash/lodash",
+            "publisher": "John-David Dalton",
+            "email": "john.david.dalton@gmail.com",
+            "url": "http://allyoucanleet.com/",
+            "path": "cloud_portal/cloud/node_modules/lodash._basetostring",
+            "licenseFile": "cloud_portal/cloud/node_modules/lodash._basetostring/LICENSE"
+        },
+        "lodash._baseuniq@4.6.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/lodash/lodash",
+            "publisher": "John-David Dalton",
+            "email": "john.david.dalton@gmail.com",
+            "url": "http://allyoucanleet.com/",
+            "path": "cloud_portal/cloud/node_modules/lodash._baseuniq",
+            "licenseFile": "cloud_portal/cloud/node_modules/lodash._baseuniq/LICENSE"
+        },
+        "lodash._createset@4.0.3": {
+            "licenses": "MIT",
+            "repository": "https://github.com/lodash/lodash",
+            "publisher": "John-David Dalton",
+            "email": "john.david.dalton@gmail.com",
+            "url": "http://allyoucanleet.com/",
+            "path": "cloud_portal/cloud/node_modules/lodash._createset",
+            "licenseFile": "cloud_portal/cloud/node_modules/lodash._createset/LICENSE"
+        },
+        "lodash._root@3.0.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/lodash/lodash",
+            "publisher": "John-David Dalton",
+            "email": "john.david.dalton@gmail.com",
+            "url": "http://allyoucanleet.com/",
+            "path": "cloud_portal/cloud/node_modules/lodash._root",
+            "licenseFile": "cloud_portal/cloud/node_modules/lodash._root/LICENSE"
+        },
+        "lodash._stringtopath@4.8.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/lodash/lodash",
+            "publisher": "John-David Dalton",
+            "email": "john.david.dalton@gmail.com",
+            "url": "http://allyoucanleet.com/",
+            "path": "cloud_portal/cloud/node_modules/lodash._stringtopath",
+            "licenseFile": "cloud_portal/cloud/node_modules/lodash._stringtopath/LICENSE"
+        },
+        "lodash.debounce@4.0.8": {
+            "licenses": "MIT",
+            "repository": "https://github.com/lodash/lodash",
+            "publisher": "John-David Dalton",
+            "email": "john.david.dalton@gmail.com",
+            "url": "http://allyoucanleet.com/",
+            "path": "cloud_portal/cloud/node_modules/lodash.debounce",
+            "licenseFile": "cloud_portal/cloud/node_modules/lodash.debounce/LICENSE"
+        },
+        "lodash.throttle@4.1.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/lodash/lodash",
+            "publisher": "John-David Dalton",
+            "email": "john.david.dalton@gmail.com",
+            "url": "http://allyoucanleet.com/",
+            "path": "cloud_portal/cloud/node_modules/lodash.throttle",
+            "licenseFile": "cloud_portal/cloud/node_modules/lodash.throttle/LICENSE"
+        },
+        "lodash.uniqby@4.5.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/lodash/lodash",
+            "publisher": "John-David Dalton",
+            "email": "john.david.dalton@gmail.com",
+            "url": "http://allyoucanleet.com/",
+            "path": "cloud_portal/cloud/node_modules/lodash.uniqby",
+            "licenseFile": "cloud_portal/cloud/node_modules/lodash.uniqby/LICENSE"
+        },
+        "mdn-data@2.0.14": {
+            "licenses": "CC0-1.0",
+            "repository": "https://github.com/mdn/data",
+            "publisher": "Mozilla Developer Network",
+            "path": "cloud_portal/cloud/node_modules/mdn-data",
+            "licenseFile": "cloud_portal/cloud/node_modules/mdn-data/LICENSE"
+        },
+        "memoize-one@5.2.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/alexreardon/memoize-one",
+            "publisher": "Alex Reardon",
+            "email": "alexreardon@gmail.com",
+            "path": "cloud_portal/cloud/node_modules/memoize-one",
+            "licenseFile": "cloud_portal/cloud/node_modules/memoize-one/LICENSE"
+        },
+        "mime-match@1.0.2": {
+            "licenses": "ISC",
+            "repository": "https://github.com/DamonOehlman/mime-match",
+            "publisher": "Damon Oehlman",
+            "email": "damon.oehlman@gmail.com",
+            "path": "cloud_portal/cloud/node_modules/mime-match",
+            "licenseFile": "cloud_portal/cloud/node_modules/mime-match/README.md"
+        },
+        "ms@2.1.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/zeit/ms",
+            "path": "cloud_portal/cloud/node_modules/ms",
+            "licenseFile": "cloud_portal/cloud/node_modules/ms/license.md"
+        },
+        "namespace-emitter@2.0.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/sethvincent/namespace-emitter",
+            "publisher": "sethvincent",
+            "email": "sethvincent@gmail.com",
+            "path": "cloud_portal/cloud/node_modules/namespace-emitter",
+            "licenseFile": "cloud_portal/cloud/node_modules/namespace-emitter/LICENSE.md"
+        },
+        "nanoid@3.3.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/ai/nanoid",
+            "publisher": "Andrey Sitnik",
+            "email": "andrey@sitnik.ru",
+            "path": "cloud_portal/cloud/node_modules/nanoid",
+            "licenseFile": "cloud_portal/cloud/node_modules/nanoid/LICENSE"
+        },
+        "parseqs@0.0.6": {
+            "licenses": "MIT",
+            "repository": "https://github.com/get/querystring",
+            "publisher": "Gal Koren",
+            "path": "cloud_portal/cloud/node_modules/parseqs",
+            "licenseFile": "cloud_portal/cloud/node_modules/parseqs/LICENSE"
+        },
+        "parseuri@0.0.6": {
+            "licenses": "MIT",
+            "repository": "https://github.com/get/parseuri",
+            "publisher": "Gal Koren",
+            "path": "cloud_portal/cloud/node_modules/parseuri",
+            "licenseFile": "cloud_portal/cloud/node_modules/parseuri/LICENSE"
+        },
+        "preact@10.6.6": {
+            "licenses": "MIT",
+            "repository": "https://github.com/preactjs/preact",
+            "path": "cloud_portal/cloud/node_modules/preact",
+            "licenseFile": "cloud_portal/cloud/node_modules/preact/LICENSE"
+        },
+        "promise-queue@2.2.5": {
+            "licenses": "MIT",
+            "repository": "https://github.com/azproduction/promise-queue",
+            "publisher": "Mikhail Davydov",
+            "email": "i@azproduction.ru",
+            "path": "cloud_portal/cloud/node_modules/promise-queue",
+            "licenseFile": "cloud_portal/cloud/node_modules/promise-queue/LICENSE"
+        },
+        "proper-lockfile@2.0.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/IndigoUnited/node-proper-lockfile",
+            "publisher": "IndigoUnited",
+            "email": "hello@indigounited.com",
+            "url": "http://indigounited.com",
+            "path": "cloud_portal/cloud/node_modules/proper-lockfile",
+            "licenseFile": "cloud_portal/cloud/node_modules/proper-lockfile/LICENSE"
+        },
+        "querystringify@2.2.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/unshiftio/querystringify",
+            "publisher": "Arnout Kazemier",
+            "path": "cloud_portal/cloud/node_modules/querystringify",
+            "licenseFile": "cloud_portal/cloud/node_modules/querystringify/LICENSE"
+        },
+        "requires-port@1.0.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/unshiftio/requires-port",
+            "publisher": "Arnout Kazemier",
+            "path": "cloud_portal/cloud/node_modules/requires-port",
+            "licenseFile": "cloud_portal/cloud/node_modules/requires-port/LICENSE"
+        },
+        "retry@0.10.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/tim-kos/node-retry",
+            "publisher": "Tim Koschützki",
+            "email": "tim@debuggable.com",
+            "url": "http://debuggable.com/",
+            "path": "cloud_portal/cloud/node_modules/retry",
+            "licenseFile": "cloud_portal/cloud/node_modules/retry/License"
+        },
+        "socket.io-client@4.4.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/socketio/socket.io-client",
+            "path": "cloud_portal/cloud/node_modules/socket.io-client",
+            "licenseFile": "cloud_portal/cloud/node_modules/socket.io-client/LICENSE"
+        },
+        "socket.io-parser@4.1.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/socketio/socket.io-parser",
+            "path": "cloud_portal/cloud/node_modules/socket.io-parser",
+            "licenseFile": "cloud_portal/cloud/node_modules/socket.io-parser/LICENSE"
+        },
+        "source-map@0.6.1": {
+            "licenses": "BSD-3-Clause",
+            "repository": "https://github.com/mozilla/source-map",
+            "publisher": "Nick Fitzgerald",
+            "email": "nfitzgerald@mozilla.com",
+            "path": "cloud_portal/cloud/node_modules/source-map",
+            "licenseFile": "cloud_portal/cloud/node_modules/source-map/LICENSE"
+        },
+        "split.js@1.6.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/nathancahill/split",
+            "publisher": "Nathan Cahill",
+            "email": "nathan@nathancahill.com",
+            "path": "cloud_portal/cloud/node_modules/split.js",
+            "licenseFile": "cloud_portal/cloud/node_modules/split.js/LICENSE.txt"
+        },
+        "strip-ansi@3.0.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/chalk/strip-ansi",
+            "publisher": "Sindre Sorhus",
+            "email": "sindresorhus@gmail.com",
+            "url": "sindresorhus.com",
+            "path": "cloud_portal/cloud/node_modules/strip-ansi",
+            "licenseFile": "cloud_portal/cloud/node_modules/strip-ansi/license"
+        },
+        "supports-color@2.0.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/chalk/supports-color",
+            "publisher": "Sindre Sorhus",
+            "email": "sindresorhus@gmail.com",
+            "url": "sindresorhus.com",
+            "path": "cloud_portal/cloud/node_modules/supports-color",
+            "licenseFile": "cloud_portal/cloud/node_modules/supports-color/license"
+        },
+        "tus-js-client@2.3.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/tus/tus-js-client",
+            "path": "cloud_portal/cloud/node_modules/tus-js-client",
+            "licenseFile": "cloud_portal/cloud/node_modules/tus-js-client/LICENSE"
+        },
+        "uppy@2.7.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/transloadit/uppy",
+            "path": "cloud_portal/cloud/node_modules/uppy",
+            "licenseFile": "cloud_portal/cloud/node_modules/uppy/LICENSE"
+        },
+        "url-parse@1.5.10": {
+            "licenses": "MIT",
+            "repository": "https://github.com/unshiftio/url-parse",
+            "publisher": "Arnout Kazemier",
+            "path": "cloud_portal/cloud/node_modules/url-parse",
+            "licenseFile": "cloud_portal/cloud/node_modules/url-parse/LICENSE"
+        },
+        "uuid@8.3.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/uuidjs/uuid",
+            "path": "cloud_portal/cloud/node_modules/uuid",
+            "licenseFile": "cloud_portal/cloud/node_modules/uuid/LICENSE.md"
+        },
+        "wildcard@1.1.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DamonOehlman/wildcard",
+            "publisher": "Damon Oehlman",
+            "email": "damon.oehlman@gmail.com",
+            "path": "cloud_portal/cloud/node_modules/wildcard",
+            "licenseFile": "cloud_portal/cloud/node_modules/wildcard/README.md"
+        },
+        "ws@8.2.3": {
+            "licenses": "MIT",
+            "repository": "https://github.com/websockets/ws",
+            "publisher": "Einar Otto Stangvik",
+            "email": "einaros@gmail.com",
+            "url": "http://2x.io",
+            "path": "cloud_portal/cloud/node_modules/ws",
+            "licenseFile": "cloud_portal/cloud/node_modules/ws/LICENSE"
+        },
+        "xmlhttprequest-ssl@2.0.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/mjwwit/node-XMLHttpRequest",
+            "publisher": "Michael de Wit",
+            "path": "cloud_portal/cloud/node_modules/xmlhttprequest-ssl",
+            "licenseFile": "cloud_portal/cloud/node_modules/xmlhttprequest-ssl/LICENSE"
+        },
+        "yeast@0.1.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/unshiftio/yeast",
+            "publisher": "Arnout Kazemier",
+            "path": "cloud_portal/cloud/node_modules/yeast",
+            "licenseFile": "cloud_portal/cloud/node_modules/yeast/LICENSE"
         }
     },
     "/cloud_helper/": {

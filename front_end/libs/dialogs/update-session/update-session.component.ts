@@ -139,16 +139,14 @@ export class NxUpdateSessionModalContent extends ModalBase<DT['return']> {
             },
         );
 
-        if (!environment.isLocal || system.mediaserver.isSessionOauth) {
-            loginService.currentSystem = system;
-            loginService
-                .updateSession(sessionState)
-                .then(ready => {
-                    this.close(ready);
-                })
-                .catch(() => {
-                    this.close(false);
-                });
-        }
+        loginService.currentSystem = system;
+        loginService
+            .updateSession(sessionState)
+            .then(ready => {
+                this.close(ready);
+            })
+            .catch(() => {
+                this.close(false);
+            });
     }
 }
