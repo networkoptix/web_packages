@@ -2,7 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { combineLatest, map } from 'rxjs';
+import { isEqual } from 'lodash';
+import { combineLatest, distinctUntilChanged, map } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { MenuNode } from '@services/menus.service.types';
@@ -41,7 +42,9 @@ export class NxHomeComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         const redirect = !this.route.snapshot.children[0].routeConfig.path;
-        const systems$ = this.systemsService.systemsSubject;
+        const systems$ = this.systemsService.systemsSubject.pipe(
+            distinctUntilChanged((prev, curr) => isEqual(prev, curr)),
+        );
         const homeNode = this.headerService.nodes$.pipe(
             map(nodes => nodes.find(node => node.url === '/home')),
         );
@@ -98,10 +101,10 @@ export class NxHomeComponent implements OnInit, OnDestroy {
                     redirectPath = `channelPartners/${CPid}`;
                 }
                 homeNode.nodes = nodes;
-                this.isLoading = false;
-                if (redirect) {
+                if (redirect && this.isLoading) {
                     this.router.navigateByUrl(`home/${redirectPath}`);
                 }
+                this.isLoading = false;
             });
     }
 
