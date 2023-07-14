@@ -220,6 +220,15 @@ export type BookmarkDetails = DialogType<
     void
 >;
 
+export type BookmarkDownload = DialogType<
+    {
+        bookmarkName: string;
+        exportName: string;
+        downloadSrc: string;
+    },
+    void
+>;
+
 /* New feature */
 export interface NewFeatureDynamicData {
     content: TemplateRef<unknown>;

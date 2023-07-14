@@ -29,6 +29,7 @@ import { AddUserModalModule } from './add-user/add-user.module';
 import { AddWidgetModalContent } from './add-widget/add-widget.component';
 import { ApplyModalModule } from './apply/apply.module';
 import { NxBookmarksCardModalModule } from './bookmarks/card-modal/bookmarks-card-modal.module';
+import { NxBookmarkDownloadModule } from './bookmarks/download-modal/bookmark-download.module';
 import { NxMoreDevicesModule } from './bookmarks/more-devices/more-devices.module';
 import { NxMoreTagsModule } from './bookmarks/more-tags/more-tags.module';
 import { ChangePasswordModalModule } from './change-password/change-password.module';
@@ -102,6 +103,7 @@ import { WizardModalContent } from './wizard/wizard.component';
         NxMoreDevicesModule,
         NxMoreTagsModule,
         NxBookmarksCardModalModule,
+        NxBookmarkDownloadModule,
         TwoFAModalModule,
         ApplyModalModule,
         AddUserModalModule,

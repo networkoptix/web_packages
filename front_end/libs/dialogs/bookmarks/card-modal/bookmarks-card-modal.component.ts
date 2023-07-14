@@ -1,6 +1,7 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { Component, Inject } from '@angular/core';
 
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { Bookmark } from '@pages/systems/bookmarks/bookmarks.types';
 import { icons } from '@src/app/variables/static-variables';
 
@@ -21,12 +22,22 @@ export class NxBookmarksCardModalComponent {
 
     constructor(
         public dialogRef: DialogRef<DT['return']>,
+        private dialogs: NxDialogsService,
         @Inject(DIALOG_DATA) { bookmark, startTime, startDate }: DT['data'],
     ) {
         this.bookmark = bookmark;
         this.exportName = `${bookmark.deviceId}.mkv`; // Will switch to mp4 in the future
         this.time = startTime;
         this.date = startDate;
+    }
+
+    openDownloadDialog(): void {
+        const dialogData = {
+            bookmarkName: this.bookmark.name,
+            exportName: this.exportName,
+            downloadSrc: this.bookmark.downloadSrc
+        };
+        this.dialogs.bookmarkDownload(dialogData);
     }
 
     close(): void {

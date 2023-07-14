@@ -1,0 +1,33 @@
+import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
+import { Component, Inject } from '@angular/core';
+
+import staticLang from '@common/language/language_i18n_static.json';
+import { icons } from '@src/app/variables/static-variables';
+
+import { BookmarkDownload as DT } from '../../dialogs.types';
+
+@Component({
+    selector: 'nx-bookmark-download',
+    templateUrl: 'bookmark-download.component.html',
+    styleUrls: ['bookmark-download.component.scss'],
+})
+export class NxBookmarkDownloadComponent {
+    LANG = staticLang;
+    icons = icons;
+    bookmarkName: string;
+    exportName: string;
+    downloadSrc: string;
+
+    constructor(
+        public dialogRef: DialogRef<DT['return']>,
+        @Inject(DIALOG_DATA) { bookmarkName, exportName, downloadSrc }: DT['data'],
+    ) {
+        this.bookmarkName = bookmarkName;
+        this.exportName = exportName;
+        this.downloadSrc = downloadSrc;
+    }
+
+    close(): void {
+        this.dialogRef.close();
+    }
+}

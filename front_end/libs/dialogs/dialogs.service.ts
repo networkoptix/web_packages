@@ -571,6 +571,11 @@ export class NxDialogsService extends DialogBase {
         { panelClass: 'no-container-shadow' }
     );
 
+    bookmarkDownload = this.dialogV2Factory<Dt.BookmarkDownload>(
+        () => import('./bookmarks/download-modal/bookmark-download.component').then(m => m.NxBookmarkDownloadComponent),
+        { width: '367px', height: '176px' }
+    );
+
     /* New feature */
     /**
      * Factory to create method for the new feature information modal.

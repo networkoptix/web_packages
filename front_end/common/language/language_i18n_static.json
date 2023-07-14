@@ -15,6 +15,7 @@
     "Developers Console": "Developers Console",
     "productName": "",
     "NofM": "{n} of {m}",
+    "downloadBookmark": "Download {title}",
     "exclude": {
         "nested": "{start}{end}"
     },

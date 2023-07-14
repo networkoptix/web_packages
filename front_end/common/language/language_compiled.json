@@ -1377,6 +1377,7 @@
     "The System cannot be configured.": "The System cannot be configured.",
     "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it.": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it.",
     "The help box will display the current state of your layout. Additionally, hovering over the help box will display some useful information and actions related to your current layout and layout state.": "The help box will display the current state of your layout. Additionally, hovering over the help box will display some useful information and actions related to your current layout and layout state.",
+    "The length of this bookmark will be slightly increased to maintain video quality": "The length of this bookmark will be slightly increased to maintain video quality",
     "The older versions of %VMS_NAME% client and Web Admin do not support two-factor authentication.": "The older versions of %VMS_NAME% client and Web Admin do not support two-factor authentication.",
     "The page you are looking for does not exist or another error has occured": "The page you are looking for does not exist or another error has occured",
     "The recommended maximum user session lifetime is 30 days.": "The recommended maximum user session lifetime is 30 days.",

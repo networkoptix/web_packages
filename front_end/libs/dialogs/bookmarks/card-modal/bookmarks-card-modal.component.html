@@ -81,11 +81,10 @@
             ></svg-icon>
             View Full Recording
         </a>
-        <a
-            [href]="bookmark.downloadSrc"
-            [download]="exportName"
+        <button
+            (click)="openDownloadDialog()"
             class="download-button btn-default btn"
-            target="_blank"
+            type="button"
             translate
         >
             <svg-icon
@@ -95,6 +94,6 @@
                 [applyClass]="true"
             ></svg-icon>
             Download
-        </a>
+        </button>
     </div>
 </div>
