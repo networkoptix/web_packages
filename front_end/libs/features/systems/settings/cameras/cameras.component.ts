@@ -33,7 +33,6 @@ import {
     tap,
 } from 'rxjs/operators';
 
-import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';
 import {
     InfoBlockColumns,
@@ -44,6 +43,7 @@ import {
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { icons, menus, settingsConfig } from '@lib/variables/static-variables';
+import { NxMenuService } from '@menu/menu.service';
 import { NxHealthService } from '@pages/health/health.service';
 import { NxApplyService } from '@services/apply.service';
 import { Watcher } from '@services/apply.service/watcher';

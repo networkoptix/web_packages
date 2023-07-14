@@ -3,9 +3,9 @@ import { Params } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import cloneDeep from 'lodash-es/cloneDeep';
 
-import staticLang from '@app/language/language_i18n_static.json';
 import { SearchFilter } from '@components/search/search.component.types';
 import { environment } from '@environments/environment';
+import staticLang from '@language/language_i18n_static.json';
 import { NxPartnersService } from '@pages/channel-partners/partners.service';
 import {
     OrganizationInfo,

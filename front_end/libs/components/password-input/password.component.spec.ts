@@ -1,9 +1,9 @@
 import { NgModel } from '@angular/forms';
 import { ngMocks } from 'ng-mocks';
 
-import { nxConfig } from '@app/services/nx-config/config';
 import { NxPasswordComponent } from '@components/password-input/password.component';
 import { credentialsValidation } from '@lib/variables/static-variables';
+import { nxConfig } from '@services/nx-config/config';
 
 import { setupComponent } from '../src/setup';
 

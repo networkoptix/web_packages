@@ -2,7 +2,7 @@ import { trigger, style, animate, transition } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 
-import { Screenshot } from '@app/services/nx-cloud-api/nx-cloud-api.types';
+import { Screenshot } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { mod } from '@utils/general';
 
 @Component({

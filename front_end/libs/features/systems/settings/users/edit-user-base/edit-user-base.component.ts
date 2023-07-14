@@ -5,12 +5,12 @@ import { untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual } from 'lodash-es';
 import { Subscription } from 'rxjs';
 
-import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { credentialsValidation, icons, menus } from '@lib/variables/static-variables';
+import { NxMenuService } from '@menu/menu.service';
 import { NxApplyService } from '@services/apply.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';

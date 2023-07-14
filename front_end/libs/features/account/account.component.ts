@@ -3,10 +3,10 @@ import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 
-import { NxMenuService } from '@app/menu/menu.service';
-import type { Content } from '@app/menu/menu.types';
 import staticLang from '@common/language/language_i18n_static.json';
 import { menus } from '@lib/variables/static-variables';
+import { NxMenuService } from '@menu/menu.service';
+import type { Content } from '@menu/menu.types';
 import { NxPageTitleStrategy } from '@resolvers/title-resolver';
 import { NxSessionService } from '@services/session.service';
 

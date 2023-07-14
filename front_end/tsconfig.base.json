@@ -13,9 +13,7 @@
         "noUnusedLocals": true,
         "baseUrl": "",
         "paths": {
-            "@app/*": ["common/*", "libs/*"],
             "@authorization/*": ["apps/authorization/*"],
-            "@common/*": ["common/*"],
             "@components/*": [
                 "libs/components/*",
                 "libs/components-buildable/src/*",
@@ -27,7 +25,8 @@
             "@environments/*": ["common/environments/*"],
             "@guards/*": ["libs/routeGuards/*"],
             "@interceptors/*": ["libs/interceptors/*"],
-            "@lib/*": ["common/*", "libs/*", "packages/*"],
+            "@language/*": ["common/language/*"],
+            "@menu/*": ["libs/menu/*"],
             "@mocks/*": ["common/_mocks/*"],
             "@ngx-translate/core": ["libs/ngx-translate-patch/index.ts"],
             "@openLibs/*": [
@@ -37,14 +36,20 @@
             "@pages/*": ["libs/features/*"],
             "@pipes/*": ["libs/pipes/*"],
             "@resolvers/*": ["libs/resolvers/*"],
+            "@routeGuards/*": ["libs/routeGuards/*"],
             "@services/*": ["libs/services/*"],
-            "@src/*": ["common/*", "libs/*"],
-            "@src/app/*": ["common/*", "libs/*"],
+            "@store/*": ["common/store/*"],
             "@styles/*": ["common/styles/*"],
             "@utils/*": ["libs/utils/*"],
+            "@variables/*": ["libs/variables/*"],
             "@view/*": ["libs/features/systems/view/*"],
             "@vms-client/*": ["libs/features/systems/view/vms-client/*"],
-            "components-buildable-build": ["libs/components-buildable-build/src/index.ts"]
+            "components-buildable-build": ["libs/components-buildable-build/src/index.ts"],
+            "@common/*": ["common/*"],
+            "@packages/*": ["packages/*"],
+            "@lib/*": ["common/*", "libs/*", "packages/*"],
+            "@src/*": ["common/*", "libs/*"],
+            "@src/app/*": ["common/*", "libs/*"]
         },
         "typeRoots": ["node_modules/@types"]
     },

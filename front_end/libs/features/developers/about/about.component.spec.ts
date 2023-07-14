@@ -2,7 +2,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { testBedSetupFactory } from 'test_utils/test_bed_setup_factory';
 
-import { setupComponent } from '@app/features/src/setup';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { HelperMockProvider } from '@mocks/helpers.test';
 import {
@@ -13,6 +12,7 @@ import {
     introNode,
     routeLandingMock
 } from '@mocks/knowledge_base_landing.mock';
+import { setupComponent } from '@pages/src/setup';
 import { NxAccountService } from '@services/account.service';
 import { NxMenusService } from '@services/menus.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';

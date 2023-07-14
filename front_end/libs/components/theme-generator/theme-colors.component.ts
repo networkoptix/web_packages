@@ -13,7 +13,6 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
@@ -21,6 +20,7 @@ import { NxContentBlockSectionComponent } from '@components/content-block/sectio
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxThemeSwitcherComponent } from '@components/theme-switcher/theme-switcher.component';
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
+import { NxMenuService } from '@menu/menu.service';
 import { NxSessionService } from '@services/session.service';
 import { NxThemeService } from '@services/theme.service';
 

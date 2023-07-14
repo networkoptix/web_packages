@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
-import { NxMenuService } from '@app/menu/menu.service';
+import { NxMenuService } from '@menu/menu.service';
 
 @Component({
     selector: 'tags',

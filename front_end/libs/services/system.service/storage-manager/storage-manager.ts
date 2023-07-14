@@ -1,6 +1,6 @@
 import { firstValueFrom, Observable } from 'rxjs';
 
-import type { SaveStorageParams } from '@app/services/mediaserver-apis/endpoints/save-storage';
+import type { SaveStorageParams } from '@services/mediaserver-apis/endpoints/save-storage';
 import { NxSystemOldModule } from '@services/system/modules/nx-system-old-module';
 import { ServerManagerModule } from '@services/system/modules/resource-managers/server-manager';
 import type { RebuildArchiveResponse } from '@services/system-api.types';

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
-import { nxConfig } from '@app/services/nx-config/config';
+import { nxConfig } from '@services/nx-config/config';
 
 @Component({
     selector: 'nx-external-video',

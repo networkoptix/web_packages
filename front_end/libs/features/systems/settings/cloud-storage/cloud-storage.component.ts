@@ -11,13 +11,13 @@ import {
     switchMap,
 } from 'rxjs';
 
-import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';
 import { POS_STRATEGY } from '@components/popover/popover-config';
 import { NxPopoverService } from '@components/popover/popover.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { icons, menus } from '@lib/variables/static-variables';
+import { NxMenuService } from '@menu/menu.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import {
     CloudStorageManager,

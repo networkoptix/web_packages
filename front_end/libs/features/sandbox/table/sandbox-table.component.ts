@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
-import { NxMenuService } from '@app/menu/menu.service';
 import { icons } from '@lib/variables/static-variables';
+import { NxMenuService } from '@menu/menu.service';
 
 @Component({
     selector: 'sandbox-table',

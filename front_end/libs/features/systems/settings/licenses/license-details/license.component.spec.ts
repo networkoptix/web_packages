@@ -3,8 +3,6 @@ import { DatePipe } from '@angular/common';
 import { DebugElement } from '@angular/core';
 import { testBedSetupFactory } from 'test_utils/test_bed_setup_factory';
 
-import { setupComponent } from '@app/features/src/setup';
-import { nxConfig } from '@app/services/nx-config/config';
 import staticLang from '@common/language/language_i18n_static.json';
 import {
     NxContentBlockComponent
@@ -15,6 +13,8 @@ import {
 import {
     NxInfoBlockComponent
 } from '@components/info-block/info-block.component';
+import { setupComponent } from '@pages/src/setup';
+import { nxConfig } from '@services/nx-config/config';
 
 import { NxLicenseDetailComponent } from './license.component';
 

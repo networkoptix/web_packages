@@ -5,13 +5,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
-import { MenuModule } from '@app/menu/menu.module';
-import { PipesModule } from '@app/pipes/pipes.module';
 import { NxFooterComponent } from '@components/footer/footer.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
+import { MenuModule } from '@menu/menu.module';
 import { NxAccountComponent } from '@pages/account/account.component';
 import { NxAccountPasswordComponent } from '@pages/account/password/password.component';
 import { NxAccountPasswordModule } from '@pages/account/password/password.module';
@@ -19,6 +18,7 @@ import { NxAccountSecurityComponent } from '@pages/account/security/security.com
 import { NxAccountSecurityModule } from '@pages/account/security/security.module';
 import { NxAccountSettingsComponent } from '@pages/account/settings/settings.component';
 import { NxAccountSettingsModule } from '@pages/account/settings/settings.module';
+import { PipesModule } from '@pipes/pipes.module';
 
 import { TypeResolver } from './type-resolver';
 

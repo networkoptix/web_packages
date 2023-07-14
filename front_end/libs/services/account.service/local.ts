@@ -8,11 +8,11 @@ import { CookieService } from 'ngx-cookie-service';
 import { of } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 
-import { redirect } from '@app/variables/static-variables';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxDbService } from '@services/db.service';
 import type { UserSession } from '@services/system-api.types';
 import { NxToastService } from '@services/toast.service';
+import { redirect } from '@variables/static-variables';
 
 import { NxLoginService } from '../login.service';
 import { NxAppStateService } from '../nx-app-state.service';

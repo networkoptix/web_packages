@@ -7,12 +7,12 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { DBConfig, NgxIndexedDBModule } from 'ngx-indexed-db';
 import { MarkdownModule } from 'ngx-markdown';
 
-import { PipesModule } from '@app/pipes/pipes.module';
 import { NxDevelopersMenuComponent } from '@components/developers-menu/developers-menu.component';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-select.component';
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { PipesModule } from '@pipes/pipes.module';
 
 import { NxAPIToolComponent } from './api-tool.component';
 import { NxAPIToolDropdownsComponent } from './dropdowns/api-tool-dropdowns.component';

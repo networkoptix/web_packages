@@ -8,12 +8,12 @@ import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 import { of, Subscription, throwError } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 
-import { NxMenuService } from '@app/menu/menu.service';
-import type { Content } from '@app/menu/menu.types';
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { environment } from '@environments/environment';
 import { healthMonitoring, icons, menus } from '@lib/variables/static-variables';
+import { NxMenuService } from '@menu/menu.service';
+import type { Content } from '@menu/menu.types';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxAppSourceService } from '@services/nx-app-source.service';

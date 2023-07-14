@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';
 import { icons } from '@lib/variables/static-variables';
+import { NxMenuService } from '@menu/menu.service';
 import type { NgChanges } from '@utils/ng-changes';
 
 import type { Level1Item } from '../menu.types';

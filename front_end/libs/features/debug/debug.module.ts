@@ -4,10 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { PipesModule } from '@app/pipes/pipes.module';
 import { NxClientButtonComponent } from '@components/open-client-button/client-button.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { AuthGuard } from '@guards/authGuard';
+import { PipesModule } from '@pipes/pipes.module';
 
 import { NxDebugComponent } from './debug.component';
 

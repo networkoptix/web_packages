@@ -5,13 +5,13 @@ import { RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { nxConfig } from '@app/services/nx-config/config';
 import { DirectivesModule } from '@directives/directives.module';
 import { environment } from '@environments/environment';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { NxAppStateService } from '@services/nx-app-state.service';
+import { nxConfig } from '@services/nx-config/config';
 import type { IConfig } from '@services/nx-config/config-types';
 
 @UntilDestroy()

@@ -2,7 +2,6 @@ import { DatePipe } from '@angular/common';
 import { Component, Input, OnChanges } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { nxConfig } from '@app/services/nx-config/config';
 import staticLang from '@common/language/language_i18n_static.json';
 import {
     InfoBlockLine,
@@ -11,6 +10,7 @@ import {
     InfoDetailClass,
     InfoLineStyle,
 } from '@components/info-block/info-block.component.types';
+import { nxConfig } from '@services/nx-config/config';
 import type { IConfig } from '@services/nx-config/config-types';
 import type { NxSystem } from '@services/system.service/system';
 import { NgChanges } from '@utils/ng-changes';

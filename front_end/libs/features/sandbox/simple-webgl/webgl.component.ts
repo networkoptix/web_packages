@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { UntilDestroy /*, untilDestroyed */ } from '@ngneat/until-destroy';
 
-import { NxMenuService } from '@app/menu/menu.service';
+import { NxMenuService } from '@menu/menu.service';
 // import { /*animationFrameScheduler, */interval } from "rxjs";
 
 @UntilDestroy()

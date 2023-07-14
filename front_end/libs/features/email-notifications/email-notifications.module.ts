@@ -7,7 +7,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxFileDropModule } from 'ngx-file-drop';
 
-import { PipesModule } from '@app/pipes/pipes.module';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
@@ -15,6 +14,7 @@ import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxStepperComponent } from '@components/stepper/stepper.component';
 import { DirectivesModule } from '@directives/directives.module';
+import { PipesModule } from '@pipes/pipes.module';
 
 import { EmailNotificationsComponent } from './email-notifications.component';
 

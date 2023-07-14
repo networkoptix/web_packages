@@ -5,7 +5,6 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { PipesModule } from '@app/pipes/pipes.module';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxPasswordComponent } from '@components/password-input/password.component';
@@ -14,6 +13,7 @@ import { NxPasswordValidationComponent } from '@components/password-input-valida
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { NxAccountPasswordComponent } from '@pages/account/password/password.component';
+import { PipesModule } from '@pipes/pipes.module';
 
 @NgModule({
     imports: [

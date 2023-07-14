@@ -1,4 +1,4 @@
-import { NxMenusService } from '@app/services/menus.service';
+import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 
 import { setupComponent } from '../src/setup';

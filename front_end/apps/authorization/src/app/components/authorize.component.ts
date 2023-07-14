@@ -18,17 +18,17 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, fromEvent, lastValueFrom, Observable, of } from 'rxjs';
 import { catchError, debounceTime, map } from 'rxjs/operators';
 
-import {
-    ClientType,
-    AuthorizeParams,
-    AuthenticateResp,
-} from '@app/services/nx-cloud-api/nx-cloud-api.types';
 import { AuthService } from '@authorization/src/app/auth.service';
 import staticLang from '@common/language/language_i18n_static.json';
 import { ToastType } from '@components/toast-container/toast.types';
 import { environment } from '@environments/environment';
 import { oauthStore } from '@lib/variables/static-variables';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import {
+    ClientType,
+    AuthorizeParams,
+    AuthenticateResp,
+} from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';

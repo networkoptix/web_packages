@@ -22,7 +22,6 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { isEqual } from 'lodash-es';
 
-import staticLang from '@app/language/language_i18n_static.json';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
@@ -32,6 +31,7 @@ import { NxSectionPlaceholderComponent } from '@components/placeholders/section/
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { Size } from '@directives/resize/nx-resize.directive.types';
 import { ResizeModule } from '@directives/resize/resize.module';
+import staticLang from '@language/language_i18n_static.json';
 import { IpvdParams } from '@pages/ipvd/ipvd.types';
 import { NxUriService } from '@services/uri.service';
 import { paramSortFunc } from '@utils/general';

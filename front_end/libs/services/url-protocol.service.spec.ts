@@ -1,7 +1,7 @@
 import { Observable, of } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
-import { environment } from '@app/environments/environment';
+import { environment } from '@environments/environment';
 
 import { NxAccountService } from './account.service';
 import { NxCloudApiService } from './nx-cloud-api';

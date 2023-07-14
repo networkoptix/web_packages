@@ -5,7 +5,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { PipesModule } from '@app/pipes/pipes.module';
 import { NxConsoleTableComponent } from '@components/console-table/console-table.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
@@ -14,6 +13,7 @@ import { NxProcessButtonComponent } from '@components/process-button/process-but
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
+import { PipesModule } from '@pipes/pipes.module';
 
 import { NxDevConsoleComponent } from './console/console.component';
 import { NxDevConsoleEditComponent } from './console/edit/console-edit.component';

@@ -1,6 +1,6 @@
-import { supportNode } from '@app/_mocks/knowledge_base_landing.mock';
-import { setupComponent } from '@app/features/src/setup';
-import { images } from '@app/variables/static-variables';
+import { supportNode } from '@mocks/knowledge_base_landing.mock';
+import { setupComponent } from '@pages/src/setup';
+import { images } from '@variables/static-variables';
 
 import { NxSupportComponent } from './support.component';
 

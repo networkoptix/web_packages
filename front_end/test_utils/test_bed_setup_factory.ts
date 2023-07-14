@@ -15,18 +15,18 @@ import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-comp
 import { SessionStorageService, NgxWebstorageModule, InMemoryStorageStrategy, StrategyCacheService } from 'ngx-webstorage';
 import * as patchWindow from 'test_utils/patch_window';
 
-import { DirectivesModule } from '@app/directives/directives.module';
-import { PipesModule } from '@app/pipes/pipes.module';
-import { SystemGuard } from '@app/routeGuards/systemGuard';
-import { NxAccountService } from '@app/services/account.service';
-import { NxBootstrapProvider } from '@app/services/nx-bootstrap-provider';
-import { nxConfig } from '@app/services/nx-config/config';
-import { DynamicConfig } from '@app/services/nx-config/dynamic-config';
-import { NxConfigService } from '@app/services/nx-config/nx-config.service';
-import { ServiceModule } from '@app/services/services.module';
-import { WINDOWS_PROVIDERS } from '@app/services/window-provider';
-import { accountReducer, AccountSync } from '@app/store/account';
-import { SystemsSync } from '@app/store/systems/systems.sync';
+import { DirectivesModule } from '@directives/directives.module';
+import { PipesModule } from '@pipes/pipes.module';
+import { SystemGuard } from '@routeGuards/systemGuard';
+import { NxAccountService } from '@services/account.service';
+import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
+import { nxConfig } from '@services/nx-config/config';
+import { DynamicConfig } from '@services/nx-config/dynamic-config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { ServiceModule } from '@services/services.module';
+import { WINDOWS_PROVIDERS } from '@services/window-provider';
+import { accountReducer, AccountSync } from '@store/account';
+import { SystemsSync } from '@store/systems/systems.sync';
 
 export const testBedSetupFactory = (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

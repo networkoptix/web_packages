@@ -3,7 +3,7 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import { environment } from '@app/environments/environment';
+import { environment } from '@environments/environment';
 import { NxSystemInfo } from '@services/systems.service.types';
 
 import { NxDbService } from './db.service';

@@ -1,8 +1,8 @@
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-import { NxMenuService } from '@app/menu/menu.service';
 import { icons } from '@lib/variables/static-variables';
+import { NxMenuService } from '@menu/menu.service';
 import type { NgChanges } from '@utils/ng-changes';
 
 import type { Level3Item } from '../menu.types';

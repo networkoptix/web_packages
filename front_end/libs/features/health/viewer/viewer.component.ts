@@ -7,10 +7,10 @@ import { cloneDeep } from 'lodash-es';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 import { of, throwError } from 'rxjs';
 
-import { NxMenuService } from '@app/menu/menu.service';
-import type { Content } from '@app/menu/menu.types';
 import staticLang from '@common/language/language_i18n_static.json';
 import { icons, healthMonitoring } from '@lib/variables/static-variables';
+import { NxMenuService } from '@menu/menu.service';
+import type { Content } from '@menu/menu.types';
 import { Account } from '@services/account.service/account';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxHeaderService } from '@services/nx-header.service';

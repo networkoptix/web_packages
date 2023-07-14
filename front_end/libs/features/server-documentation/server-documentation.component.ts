@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import type { Content } from '@app/menu/menu.types';
 import staticLang from '@common/language/language_i18n_static.json';
+import type { Content } from '@menu/menu.types';
 import { Translatable } from '@pipes/nx-translate.types';
 import { NxAccountService } from '@services/account.service';
 import type { IConfig } from '@services/nx-config/config-types';

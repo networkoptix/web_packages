@@ -4,10 +4,10 @@ import { ActivationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { filter } from 'rxjs/operators';
 
-import { NxMenuService } from '@app/menu/menu.service';
-import { Content } from '@app/menu/menu.types';
 import staticLang from '@common/language/language_i18n_static.json';
 import { images, menus } from '@lib/variables/static-variables';
+import { NxMenuService } from '@menu/menu.service';
+import { Content } from '@menu/menu.types';
 import { permissions } from '@pages/static-variables-features';
 import { NxAccountService } from '@services/account.service';
 import { isAccount } from '@services/account.service/account';

@@ -2,8 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes, TitleStrategy } from '@angular/router';
 // import { HoverPreloadStrategy } from 'ngx-hover-preload';
 
-import { PipesModule } from '@app/pipes/pipes.module';
-import { NxPageTitleStrategy } from '@app/resolvers/title-resolver';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
@@ -11,6 +9,8 @@ import { FeatureGuard } from '@guards/feature.guard';
 import { RedirectAuthGuard } from '@guards/redirectAuthGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
+import { PipesModule } from '@pipes/pipes.module';
+import { NxPageTitleStrategy } from '@resolvers/title-resolver';
 import { FeatureFlagStrings } from '@services/nx-config/base-config';
 import { nxConfig } from '@services/nx-config/config';
 

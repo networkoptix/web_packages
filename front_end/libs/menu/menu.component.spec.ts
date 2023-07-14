@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { NxSearchService } from '@app/services/search.service';
+import { NxSearchService } from '@services/search.service';
 
 import { NxMenuComponent } from './menu.component';
 import type { Content } from './menu.types';

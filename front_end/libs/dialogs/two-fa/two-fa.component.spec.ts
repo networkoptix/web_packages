@@ -1,5 +1,5 @@
-import { credentialsValidation } from '@app/variables/static-variables';
 import staticLang from '@common/language/language_i18n_static.json';
+import { credentialsValidation } from '@variables/static-variables';
 
 import { setupComponent } from '../src/setup';
 

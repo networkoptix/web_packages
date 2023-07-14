@@ -16,11 +16,11 @@ import { isEqual, cloneDeep } from 'lodash-es';
 import { of, SubscriptionLike } from 'rxjs';
 import { delay, throttleTime } from 'rxjs/operators';
 
-import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';
 import type { SearchFilter } from '@components/search/search.component.types';
 import { environment } from '@environments/environment';
 import { icons } from '@lib/variables/static-variables';
+import { NxMenuService } from '@menu/menu.service';
 import { NxPageService } from '@services/page.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';

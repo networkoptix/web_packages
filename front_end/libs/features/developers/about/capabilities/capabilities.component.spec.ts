@@ -1,9 +1,9 @@
 import { DebugElement } from '@angular/core';
 import { last } from 'lodash-es';
 
-import { setupComponent } from '@app/features/src/setup';
-import { icons } from '@app/variables/static-variables';
 import { capabilitiesNode } from '@mocks/knowledge_base_landing.mock';
+import { setupComponent } from '@pages/src/setup';
+import { icons } from '@variables/static-variables';
 
 import { NxCapabilitiesComponent } from './capabilities.component';
 

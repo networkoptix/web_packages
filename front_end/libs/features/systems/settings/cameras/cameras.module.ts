@@ -5,7 +5,6 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { PipesModule } from '@app/pipes/pipes.module';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
@@ -22,6 +21,7 @@ import { NxRadioComponent } from '@components/radio/radio.component';
 import { NxSwitchComponent } from '@components/switch/switch.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
+import { PipesModule } from '@pipes/pipes.module';
 
 import { NxCamerasComponent } from './cameras.component';
 import { NxMotionDetectionOverlay } from './motion-detection-settings/motion-detection-overlay/motion-detection-overlay.component';

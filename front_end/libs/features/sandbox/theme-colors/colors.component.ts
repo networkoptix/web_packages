@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { NxMenuService } from '@app/menu/menu.service';
+import { NxMenuService } from '@menu/menu.service';
 
 const vars = `    --body-bg    : #0D0E0F; //$dark3;
             --alt-body-bg : #000000; //$dark1;

@@ -1,10 +1,10 @@
 import { Component, Inject, ViewChild, ViewContainerRef } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
-import { NxMenuService } from '@app/menu/menu.service';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import type { MultiSelectItem } from '@components/dropdowns/multi-select/multi-select.component.types';
 import { ToastType } from '@components/toast-container/toast.types';
+import { NxMenuService } from '@menu/menu.service';
 import { NxApplyService } from '@services/apply.service';
 import type { FormWatcher } from '@services/apply.service/watcher';
 import { NxProcessService } from '@services/process.service';

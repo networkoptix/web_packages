@@ -5,7 +5,6 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { PipesModule } from '@app/pipes/pipes.module';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { LanguageModule } from '@components/dropdowns/language/language.module';
@@ -13,6 +12,7 @@ import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-lo
 import { NxThemeSwitcherComponent } from '@components/theme-switcher/theme-switcher.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { NxAccountSettingsComponent } from '@pages/account/settings/settings.component';
+import { PipesModule } from '@pipes/pipes.module';
 
 @NgModule({
     imports: [

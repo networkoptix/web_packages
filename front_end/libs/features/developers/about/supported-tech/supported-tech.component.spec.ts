@@ -1,7 +1,7 @@
-import { setupComponent } from '@app/features/src/setup';
 import {
     supportedTechNode
 } from '@mocks/knowledge_base_landing.mock';
+import { setupComponent } from '@pages/src/setup';
 
 import { NxSupportedTechComponent } from './supported-tech.component';
 

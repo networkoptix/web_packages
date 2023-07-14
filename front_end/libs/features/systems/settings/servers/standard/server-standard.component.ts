@@ -14,13 +14,13 @@ import {
     timeout,
 } from 'rxjs/operators';
 
-import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';
 import { InfoBlockSection, InfoBlockLine } from '@components/info-block/info-block.component.types';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { icons, clientMode, menus, servers } from '@lib/variables/static-variables';
+import { NxMenuService } from '@menu/menu.service';
 import { NxAccountService } from '@services/account.service';
 import { NxApplyService } from '@services/apply.service';
 import { Watcher } from '@services/apply.service/watcher';

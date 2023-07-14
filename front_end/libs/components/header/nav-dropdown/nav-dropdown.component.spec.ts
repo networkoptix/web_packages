@@ -1,4 +1,4 @@
-import { setupComponent } from '@app/components/src/setup';
+import { setupComponent } from '@components/src/setup';
 
 import { NxNavDropdownComponent } from './nav-dropdown.component';
 

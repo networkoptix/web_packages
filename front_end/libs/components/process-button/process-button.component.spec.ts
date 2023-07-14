@@ -1,6 +1,6 @@
 import { DebugElement } from '@angular/core';
 
-import { NxProcessService } from '@app/services/process.service';
+import { NxProcessService } from '@services/process.service';
 
 import { setupComponent } from '../src/setup';
 

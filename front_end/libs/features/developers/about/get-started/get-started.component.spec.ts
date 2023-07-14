@@ -1,10 +1,10 @@
 import { DebugElement } from '@angular/core';
 
-import { setupComponent } from '@app/features/src/setup';
-import { images } from '@app/variables/static-variables';
 import {
     getStartedNode
 } from '@mocks/knowledge_base_landing.mock';
+import { setupComponent } from '@pages/src/setup';
+import { images } from '@variables/static-variables';
 
 import { NxGetStartedComponent } from './get-started.component';
 

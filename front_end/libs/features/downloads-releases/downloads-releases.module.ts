@@ -5,13 +5,13 @@ import { ActivatedRouteSnapshot, RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { MenuModule } from '@app/menu/menu.module';
-import { PipesModule } from '@app/pipes/pipes.module';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxFooterComponent } from '@components/footer/footer.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSectionPlaceholderComponent } from '@components/placeholders/section/section-placeholder.component';
 import { DirectivesModule } from '@directives/directives.module';
+import { MenuModule } from '@menu/menu.module';
+import { PipesModule } from '@pipes/pipes.module';
 
 import { NxDownloadsReleasesComponent } from './downloads-releases.component';
 import { OsResolver } from './os-resolver';

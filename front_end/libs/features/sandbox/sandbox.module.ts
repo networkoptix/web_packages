@@ -5,8 +5,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { MenuModule } from '@app/menu/menu.module';
-import { PipesModule } from '@app/pipes/pipes.module';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
@@ -22,12 +20,14 @@ import { NxThemeGeneratorComponent } from '@components/theme-generator/theme-col
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
+import { MenuModule } from '@menu/menu.module';
 import { NxHSLThemeColorsComponent } from '@pages/sandbox/hsl-theme-colors/theme-colors.component';
 import { SimpleWebglComponent } from '@pages/sandbox/simple-webgl/webgl.component';
 import { SandboxTableComponent } from '@pages/sandbox/table/sandbox-table.component';
 import { _NxTestBoxComponent } from '@pages/sandbox/test-box.component';
 import { WebglComponent } from '@pages/sandbox/webgl/webgl.component';
 import { VmsClientModule } from '@pages/systems/view/vms-client/vms-client.module';
+import { PipesModule } from '@pipes/pipes.module';
 import { WebGLTimelineModule } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-timeline.module';
 import { SimpleWebGLTimelineModule } from '@vms-client/submodules/timeline/components/simple-chart/webgl-timeline.module';
 import { VmsClientTimelineModule } from '@vms-client/submodules/timeline/timeline.module';

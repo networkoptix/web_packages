@@ -1,11 +1,11 @@
 import { Component, Inject, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
-import { NxMenuService } from '@app/menu/menu.service';
 import * as staticLang from '@common/language/language_i18n_static.json';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { SearchableDropdownItem as Item } from '@components/dropdowns/searchable/searchable.component.types';
 import { simpleURLRegex } from '@lib/variables/static-variables';
+import { NxMenuService } from '@menu/menu.service';
 import { WINDOW } from '@services/window-provider';
 
 import type {

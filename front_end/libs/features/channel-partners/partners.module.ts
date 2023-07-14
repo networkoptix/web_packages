@@ -3,13 +3,13 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { MenuModule } from '@app/menu/menu.module';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxFooterComponent } from '@components/footer/footer.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { FeatureGuard } from '@guards/feature.guard';
 import { TwofaGuard } from '@guards/twofaGuard';
+import { MenuModule } from '@menu/menu.module';
 import { NxCustomizationComponent } from '@pages/channel-partners/customization/customization.component';
 import { NxCustomizationModule } from '@pages/channel-partners/customization/customization.module';
 import { NxCustomizationPartnerComponent } from '@pages/channel-partners/customization/partner/partner.component';

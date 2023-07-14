@@ -5,9 +5,9 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { icons } from '@app/variables/static-variables';
 import { NxPasswordComponent } from '@components/password-input/password.component';
 import { NxPasswordValidationComponent } from '@components/password-input-validation/password-validation.component';
+import { icons } from '@variables/static-variables';
 
 import { WizardStateService } from '../../services/wizard-state.service';
 import { FORM_STATE } from '../../types/wizard-state.types';

@@ -2,8 +2,8 @@ import { Component, Input, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { NxSystem } from '@app/services/system.service/system';
-import { cleanId } from '@app/utils/general';
+import { NxSystem } from '@services/system.service/system';
+import { cleanId } from '@utils/general';
 
 @Component({
     selector: 'nx-no-cameras-component',

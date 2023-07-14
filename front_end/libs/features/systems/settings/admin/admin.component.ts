@@ -15,7 +15,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { ToastType } from '@components/toast-container/toast.types';
@@ -23,6 +22,7 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { MergeInfo } from '@dialogs/merge/merge.refactor.component.types';
 import { environment } from '@environments/environment';
 import { icons, clientMode, menus, redirect } from '@lib/variables/static-variables';
+import { NxMenuService } from '@menu/menu.service';
 import { NxAccountService } from '@services/account.service';
 import type { Account } from '@services/account.service/account';
 import { NxApplyService } from '@services/apply.service';

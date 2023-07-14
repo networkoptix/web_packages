@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { SubscriptionLike } from 'rxjs';
 
-import { NxMenuService } from '@app/menu/menu.service';
+import { NxMenuService } from '@menu/menu.service';
 import { Integration } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { NxPageService } from '@services/page.service';
 

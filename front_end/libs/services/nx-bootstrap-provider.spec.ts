@@ -2,7 +2,7 @@
 //     getCloudSettings,
 //     getLocalSettings,
 //     getModuleInformation
-// } from '@app/_mocks/getSettings.mock';
+// } from '@mocks/getSettings.mock';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 
 import { NxConfigService } from './nx-config/nx-config.service';

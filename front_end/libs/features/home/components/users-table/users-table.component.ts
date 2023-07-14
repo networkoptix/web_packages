@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import staticLang from '@app/language/language_i18n_static.json';
+import staticLang from '@language/language_i18n_static.json';
 import { icons } from '@lib/variables/static-variables';
 import { ChannelPartnerUser } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 

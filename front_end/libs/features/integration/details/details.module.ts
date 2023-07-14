@@ -4,8 +4,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { MenuModule } from '@app/menu/menu.module';
-import { PipesModule } from '@app/pipes/pipes.module';
 import { NxCarouselComponent } from '@components/carousel/carousel.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
@@ -14,6 +12,8 @@ import { NxFooterComponent } from '@components/footer/footer.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxTagComponent } from '@components/tag/tag.component';
 import { DirectivesModule } from '@directives/directives.module';
+import { MenuModule } from '@menu/menu.module';
+import { PipesModule } from '@pipes/pipes.module';
 
 import { NxIntegrationDetailsComponent } from './details.component';
 import { NxOverviewComponent } from './overview/overview.component';

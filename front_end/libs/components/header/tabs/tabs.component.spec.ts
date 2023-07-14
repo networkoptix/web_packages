@@ -1,4 +1,4 @@
-import { setupComponent } from '@app/components/src/setup';
+import { setupComponent } from '@components/src/setup';
 
 import { NxTabsComponent } from './tabs.component';
 const currentLocation = {

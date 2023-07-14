@@ -2,9 +2,9 @@ import { Component, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angu
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import staticLang from '@app/language/language_i18n_static.json';
-import { NxMenuService } from '@app/menu/menu.service';
 import { environment } from '@environments/environment';
+import staticLang from '@language/language_i18n_static.json';
+import { NxMenuService } from '@menu/menu.service';
 import { NxPartnersService } from '@pages/channel-partners/partners.service';
 import { NxApplyService } from '@services/apply.service';
 import { BrandInfo } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';

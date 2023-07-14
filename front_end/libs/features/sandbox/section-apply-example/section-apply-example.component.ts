@@ -1,6 +1,6 @@
 import { Component, ViewChild, ViewContainerRef } from '@angular/core';
 
-import { NxMenuService } from '@app/menu/menu.service';
+import { NxMenuService } from '@menu/menu.service';
 import { NxApplyService } from '@services/apply.service';
 import { Watcher, SectionWatcher } from '@services/apply.service/watcher';
 import { NxProcessService } from '@services/process.service';

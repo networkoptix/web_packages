@@ -2,12 +2,12 @@ import { CommonModule, KeyValue } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import staticLang from '@app/language/language_i18n_static.json';
-import { SECURITY_LEVEL } from '@app/services/system-api.types';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
+import staticLang from '@language/language_i18n_static.json';
 import { PipesModule } from '@pipes/pipes.module';
+import { SECURITY_LEVEL } from '@services/system-api.types';
 
 import { WizardStateService } from '../../services/wizard-state.service';
 

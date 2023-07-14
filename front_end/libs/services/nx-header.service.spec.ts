@@ -1,5 +1,5 @@
-import { headerNodes } from '@app/_mocks/nodesMock';
-import { setupTest41System } from '@app/_mocks/system.test';
+import { headerNodes } from '@mocks/nodesMock';
+import { setupTest41System } from '@mocks/system.test';
 import { NxHeaderService } from '@services/nx-header.service';
 
 import { setupTestBed } from './src/setup';

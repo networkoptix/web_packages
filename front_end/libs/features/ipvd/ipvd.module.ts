@@ -7,7 +7,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
-import { PipesModule } from '@app/pipes/pipes.module';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxFooterComponent } from '@components/footer/footer.component';
@@ -18,6 +17,7 @@ import { NxBaseTableComponent } from '@components/table/table.component';
 import { NxTagComponent } from '@components/tag/tag.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { NxCamerasTableComponent } from '@pages/ipvd/cam-components/cameras-table/cameras-table.component';
+import { PipesModule } from '@pipes/pipes.module';
 
 import { BoolIconComponent } from './cam-components/bool-icon/bool-icon.component';
 import { CamViewComponent } from './cam-components/cam-view/cam-view.component';

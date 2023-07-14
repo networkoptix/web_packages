@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { PipesModule } from '@app/pipes/pipes.module';
+import { PipesModule } from '@pipes/pipes.module';
 
 import { WizardModalContent } from './wizard.component';
 

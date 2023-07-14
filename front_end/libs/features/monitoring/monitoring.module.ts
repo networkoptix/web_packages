@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { MenuModule } from '@app/menu/menu.module';
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
@@ -13,6 +12,7 @@ import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-lo
 import { AuthGuard } from '@guards/authGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
+import { MenuModule } from '@menu/menu.module';
 import { currentSystemResolver } from '@resolvers/current-system-resolver';
 
 import { GraphsComponent } from './graphs/graphs.component';

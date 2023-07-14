@@ -3,8 +3,8 @@
         order: 'alphabetically'
     }
 }]  */
-import type { ArrayType, KeyFilter } from '@app/utils/general';
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
+import type { ArrayType, KeyFilter } from '@utils/general';
 
 import type { MenuManifest } from './nx-config/base-config';
 import type * as t from './system-api.types';

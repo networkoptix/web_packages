@@ -1,6 +1,6 @@
 import { Component, DebugElement } from '@angular/core';
 
-import { setupComponent } from '@app/components/src/setup';
+import { setupComponent } from '@components/src/setup';
 
 import { NxAlertBlockComponent } from './block.component';
 

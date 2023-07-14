@@ -6,7 +6,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { PipesModule } from '@app/pipes/pipes.module';
 import { NxNoSystemsComponent } from '@components/no-systems/no-systems.component';
 import { NxClientButtonComponent } from '@components/open-client-button/client-button.component';
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
@@ -14,6 +13,7 @@ import { NxSearchComponent } from '@components/search/search.component';
 import { NxSystemsListComponent } from '@components/systems-list/list.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { AuthGuard } from '@guards/authGuard';
+import { PipesModule } from '@pipes/pipes.module';
 
 const appRoutes: Routes = [
     {

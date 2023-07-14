@@ -2,12 +2,12 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { testBedSetupFactory } from 'test_utils/test_bed_setup_factory';
 
-import { setupComponent } from '@app/features/src/setup';
-import { nxConfig } from '@app/services/nx-config/config';
 import { HelperMockProvider } from '@mocks/helpers.test';
 import { devToolsNode } from '@mocks/knowledge_base_landing.mock';
+import { setupComponent } from '@pages/src/setup';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import { nxConfig } from '@services/nx-config/config';
 import { NxHeaderService } from '@services/nx-header.service';
 
 import { NxDevToolsComponent } from './dev-tools.component';

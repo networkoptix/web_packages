@@ -5,7 +5,6 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { PipesModule } from '@app/pipes/pipes.module';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
@@ -19,6 +18,7 @@ import { NxSectionPlaceholderComponent } from '@components/placeholders/section/
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxTagComponent } from '@components/tag/tag.component';
 import { DirectivesModule } from '@directives/directives.module';
+import { PipesModule } from '@pipes/pipes.module';
 
 import { NxSystemAdminComponent } from './admin.component';
 import { NxSystemAdvancedAdminComponent } from './advanced/advanced.component';

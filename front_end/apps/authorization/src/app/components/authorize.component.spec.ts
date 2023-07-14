@@ -1,5 +1,5 @@
-import { AuthorizeParams } from '@app/services/nx-cloud-api/nx-cloud-api.types';
 import { setupComponent } from '@authorization/src/setup';
+import { AuthorizeParams } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { nxConfig } from '@services/nx-config/config';
 
 import { NxAuthorizeComponent } from './authorize.component';

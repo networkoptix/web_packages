@@ -6,7 +6,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { PipesModule } from '@app/pipes/pipes.module';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxDynamicWidgetComponent } from '@components/dynamic-widget/dynamic-widget.component';
 import { EditableModule } from '@components/editable/editable.module';
@@ -22,6 +21,7 @@ import { NxSystemLicenseSummaryWidget } from '@components/widgets/system-license
 import { NxSystemsListWidgetComponent } from '@components/widgets/systems-list/systems-list-widget.component';
 import { NxThirdPartyWidgetComponent } from '@components/widgets/third-party/third-party-widget.component';
 import { DirectivesModule } from '@directives/directives.module';
+import { PipesModule } from '@pipes/pipes.module';
 
 import { NxDashboardComponent } from './dashboard.component';
 

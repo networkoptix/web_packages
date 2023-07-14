@@ -21,12 +21,12 @@ import {
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { nxConfig } from '@app/services/nx-config/config';
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxPasswordTagValidationComponent } from '@components/password-input-tag-validation/password-tag-validation.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { credentialsValidation, icons } from '@lib/variables/static-variables';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import { nxConfig } from '@services/nx-config/config';
 import type { IConfig } from '@services/nx-config/config-types';
 
 @UntilDestroy()

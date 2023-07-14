@@ -5,12 +5,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CookieService } from 'ngx-cookie-service';
 
-import { PipesModule } from '@app/pipes/pipes.module';
 import { NxClientButtonComponent } from '@components/open-client-button/client-button.component';
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPlayerPlaceholderComponent } from '@components/placeholders/player/player-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { DirectivesModule } from '@directives/directives.module';
+import { PipesModule } from '@pipes/pipes.module';
 
 import { NxCameraDetailsComponent } from './components/camera-details/camera-details.component';
 import { NxSystemViewCameraPageComponent } from './pages/system-view-camera/system-view-camera.page.component';

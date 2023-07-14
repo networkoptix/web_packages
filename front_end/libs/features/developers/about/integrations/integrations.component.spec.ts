@@ -1,10 +1,10 @@
 import { DebugElement } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-import { setupComponent } from '@app/features/src/setup';
 import {
     integrationsNode
 } from '@mocks/knowledge_base_landing.mock';
+import { setupComponent } from '@pages/src/setup';
 
 import { NxIntegrationsComponent } from './integrations.component';
 

@@ -1,8 +1,8 @@
 import { testBedSetupFactory } from 'test_utils/test_bed_setup_factory';
 import { v4 as uuid } from 'uuid';
 
-import { setupComponent } from '@app/features/src/setup';
 import { ConsoleMode } from '@pages/developer-console/console/console.types';
+import { setupComponent } from '@pages/src/setup';
 import { NxMenusService } from '@services/menus.service';
 
 import { NxDevConsoleMenuComponent } from './console-menu.component';

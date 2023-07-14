@@ -10,9 +10,6 @@ import {
 } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { MenuModule } from '@app/menu/menu.module';
-import { PipesModule } from '@app/pipes/pipes.module';
-import { NxSystemService } from '@app/services/system.service/system.service';
 import { NxFooterComponent } from '@components/footer/footer.component';
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
@@ -20,8 +17,11 @@ import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
+import { MenuModule } from '@menu/menu.module';
+import { PipesModule } from '@pipes/pipes.module';
 import { currentSystemResolver } from '@resolvers/current-system-resolver';
 import { SystemTitleResolver } from '@resolvers/system-title-resolver';
+import { NxSystemService } from '@services/system.service/system.service';
 import { cleanId } from '@utils/general';
 
 import { NxSystemAdminComponent } from './admin/admin.component';

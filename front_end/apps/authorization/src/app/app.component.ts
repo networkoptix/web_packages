@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
-import { nxConfig } from '@app/services/nx-config/config';
+import { nxConfig } from '@services/nx-config/config';
 import { NxThemeService } from '@services/theme.service';
 
 @Component({

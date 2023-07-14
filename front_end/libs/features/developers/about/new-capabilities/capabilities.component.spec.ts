@@ -1,5 +1,5 @@
-import { capabilitiesNode } from '@app/_mocks/knowledge_base_landing.mock';
-import { setupComponent } from '@app/features/src/setup';
+import { capabilitiesNode } from '@mocks/knowledge_base_landing.mock';
+import { setupComponent } from '@pages/src/setup';
 
 import { NxNewCapabilitiesComponent } from './capabilities.component';
 

@@ -2,11 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 
-import staticLang from '@app/language/language_i18n_static.json';
-import { NxMenuService } from '@app/menu/menu.service';
-import { Content, ContentToggle, Level1Item } from '@app/menu/menu.types';
-import { menus } from '@app/variables/static-variables';
 import { environment } from '@environments/environment';
+import staticLang from '@language/language_i18n_static.json';
+import { NxMenuService } from '@menu/menu.service';
+import { Content, ContentToggle, Level1Item } from '@menu/menu.types';
 import { NxPartnersService } from '@pages/channel-partners/partners.service';
 import { ribbonHeight } from '@pages/static-variables-features';
 import { NxApplyService } from '@services/apply.service';
@@ -20,6 +19,7 @@ import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { GridBreakpoints } from '@styles/theme-variables-common';
+import { menus } from '@variables/static-variables';
 
 @UntilDestroy()
 @Component({

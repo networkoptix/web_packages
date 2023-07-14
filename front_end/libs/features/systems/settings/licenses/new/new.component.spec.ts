@@ -2,7 +2,6 @@ import { DebugElement } from '@angular/core';
 import { MockProvider } from 'ng-mocks';
 import { testBedSetupFactory } from 'test_utils/test_bed_setup_factory';
 
-import { setupComponent } from '@app/features/src/setup';
 import {
     NxContentBlockComponent
 } from '@components/content-block/content-block.component';
@@ -12,6 +11,7 @@ import {
 import {
     NxProcessButtonComponent
 } from '@components/process-button/process-button.component';
+import { setupComponent } from '@pages/src/setup';
 import { NxProcessService } from '@services/process.service';
 
 import { NxLicenseNewComponent } from './new.component';

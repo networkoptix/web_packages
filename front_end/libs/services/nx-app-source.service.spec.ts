@@ -1,6 +1,6 @@
-import { setupTest41System } from '@app/_mocks/system.test';
-import { menus } from '@app/variables/static-variables';
+import { setupTest41System } from '@mocks/system.test';
 import { NxAppSourceService } from '@services/nx-app-source.service';
+import { menus } from '@variables/static-variables';
 
 import { setupTestBed } from './src/setup';
 

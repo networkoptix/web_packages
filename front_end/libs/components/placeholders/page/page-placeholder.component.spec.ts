@@ -1,6 +1,6 @@
-import { setupComponent } from '@app/components/src/setup';
-import { windowFactory } from '@app/services/window-provider';
 import staticLang from '@common/language/language_i18n_static.json';
+import { setupComponent } from '@components/src/setup';
+import { windowFactory } from '@services/window-provider';
 
 import { NxPagePlaceholderComponent } from './page-placeholder.component';
 

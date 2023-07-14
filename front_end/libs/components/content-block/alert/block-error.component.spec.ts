@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 
-import { setupComponent } from '@app/components/src/setup';
 import {
     NxAlertBlockComponent
 } from '@components/content-block/alert/block.component';
+import { setupComponent } from '@components/src/setup';
 
 @Component({
     standalone: true,

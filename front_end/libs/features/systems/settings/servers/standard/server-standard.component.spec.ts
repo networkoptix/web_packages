@@ -1,6 +1,6 @@
 import { BehaviorSubject } from 'rxjs';
 
-import { setupComponent } from '@app/features/src/setup';
+import { setupComponent } from '@pages/src/setup';
 
 import { NxSystemStandardServerComponent } from './server-standard.component';
 import type { DropdownStorage } from './server-standard.component.types';

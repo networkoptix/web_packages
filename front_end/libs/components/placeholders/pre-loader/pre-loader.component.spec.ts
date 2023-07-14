@@ -1,6 +1,6 @@
 import { ComponentFixture } from '@angular/core/testing';
 
-import { setupComponent } from '@app/components/src/setup';
+import { setupComponent } from '@components/src/setup';
 
 import { NxPreLoaderComponent } from './pre-loader.component';
 

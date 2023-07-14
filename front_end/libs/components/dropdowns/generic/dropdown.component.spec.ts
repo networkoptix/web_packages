@@ -1,7 +1,7 @@
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 
-import { setupComponent } from '@app/components/src/setup';
+import { setupComponent } from '@components/src/setup';
 
 import { NxGenericDropdown } from './dropdown.component';
 import type { DropdownItem } from './dropdown.component.types';

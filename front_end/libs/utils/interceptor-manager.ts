@@ -5,7 +5,7 @@ import {
     WithVmsSessionMiddleware,
 } from 'nx-open-web-candidate/packages/request-interceptor';
 
-import { windowFactory } from '@app/services/window-provider';
+import { windowFactory } from '@services/window-provider';
 
 import { ScopedTokenState } from './scoped-token-state';
 

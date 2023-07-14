@@ -15,13 +15,13 @@ import { escape } from 'lodash-es';
 import { firstValueFrom, Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, takeUntil, tap } from 'rxjs/operators';
 
-import { NxMenuService } from '@app/menu/menu.service';
-import type { ContentToggle, Content, Level3Item } from '@app/menu/menu.types';
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { ToastType } from '@components/toast-container/toast.types';
 import { environment } from '@environments/environment';
 import { alertTimeout, clientMode, menus, redirect } from '@lib/variables/static-variables';
+import { NxMenuService } from '@menu/menu.service';
+import type { ContentToggle, Content, Level3Item } from '@menu/menu.types';
 import { ribbonHeight } from '@pages/static-variables-features';
 import { Translatable } from '@pipes/nx-translate.types';
 import { NxAccountService } from '@services/account.service';

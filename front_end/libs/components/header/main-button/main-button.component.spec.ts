@@ -1,7 +1,7 @@
 import { BehaviorSubject, Observable } from 'rxjs';
 import { testBedSetupFactory } from 'test_utils/test_bed_setup_factory';
 
-import { setupComponent } from '@app/components/src/setup';
+import { setupComponent } from '@components/src/setup';
 import { NxMenusService } from '@services/menus.service';
 import { NxHeaderService } from '@services/nx-header.service';
 

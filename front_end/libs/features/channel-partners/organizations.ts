@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { MenuModule } from '@app/menu/menu.module';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxFooterComponent } from '@components/footer/footer.component';
@@ -11,6 +10,7 @@ import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-lo
 import { NxSearchComponent } from '@components/search/search.component';
 import { AuthGuard } from '@guards/authGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
+import { MenuModule } from '@menu/menu.module';
 import { NxCustomizationModule } from '@pages/channel-partners/customization/customization.module';
 import { NxPartnerOrganizationDetailComponent } from '@pages/channel-partners/organization/detail/org-detail.component';
 import { NxPartnerOrganizationDetailModule } from '@pages/channel-partners/organization/detail/org-detail.module';

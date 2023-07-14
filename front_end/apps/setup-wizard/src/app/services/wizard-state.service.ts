@@ -6,12 +6,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, from, Observable, Subject, timer } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 
-import { NxCurrentRelayInterceptor } from '@app/interceptors/current-relay-interceptor';
-import { nxConfig } from '@app/services/nx-config/config';
-import { NxSystemAPI } from '@app/services/system-legacy-api.service';
-import { NxSystemRestAPI3 } from '@app/services/system-rest-api-v3.service';
 import staticLang from '@common/language/language_i18n_static.json';
 import type { SearchableDropdownItem as Item } from '@components/dropdowns/searchable/searchable.component.types';
+import { NxCurrentRelayInterceptor } from '@interceptors/current-relay-interceptor';
 import {
     alertTimeout,
     apiBase,
@@ -20,6 +17,7 @@ import {
     simpleURLRegex,
 } from '@lib/variables/static-variables';
 import { Setting } from '@services/nx-config/base-config';
+import { nxConfig } from '@services/nx-config/config';
 import { IConfig } from '@services/nx-config/config-types';
 import {
     ModuleInformationReply,
@@ -28,7 +26,9 @@ import {
     SystemConfigSettings,
     UserSession,
 } from '@services/system-api.types';
+import { NxSystemAPI } from '@services/system-legacy-api.service';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
+import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { WINDOW } from '@services/window-provider';
 import { alphabeticalSort } from '@utils/general';

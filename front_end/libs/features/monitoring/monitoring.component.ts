@@ -4,11 +4,11 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject, filter, takeUntil } from 'rxjs';
 
-import { NxMenuService } from '@app/menu/menu.service';
-import { Content } from '@app/menu/menu.types';
 import staticLang from '@common/language/language_i18n_static.json';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { icons, menus } from '@lib/variables/static-variables';
+import { NxMenuService } from '@menu/menu.service';
+import { Content } from '@menu/menu.types';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxAppSourceService } from '@services/nx-app-source.service';

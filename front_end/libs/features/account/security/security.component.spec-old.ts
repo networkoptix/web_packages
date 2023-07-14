@@ -17,8 +17,8 @@
 //     MockProvider
 // } from 'ng-mocks';
 
-// import { NxMenuService } from '@app/menu/menu.service';
-// import { NxSafePipe } from '@app/pipes/nx-safe';
+// import { NxMenuService } from '@menu/menu.service';
+// import { NxSafePipe } from '@pipes/nx-safe';
 // import {
 //     NxCheckboxComponent
 // } from '@components/checkbox/checkbox.component';
