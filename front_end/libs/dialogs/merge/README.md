@@ -34,12 +34,12 @@ version testing:
 4. We need to investigate local primary, cloud secondary
     One particular area of the code to look is the comment in `processSystems()` from `select-system.component.ts` in the `if (this.isLocal)` section.
 
-5. Verify that `otherSystem` (boolean) works properly
-    We haven't fully tested how that should get handled within the whole merge process
+~~5. Verify that `otherSystem` (boolean) works properly~~
+~~    We haven't fully tested how that should get handled within the whole merge process~~
 
-6. Merge dialog should be keyboard navigable
-    - Should be able to get to inputs and buttons on each dialog
-    - Initial focus will be on the input when moving forward/back within the dialog. This is why `.focus()` and `.markAsUntouched()` are being commented throughout the code
+~~6. Merge dialog should be keyboard navigable~~
+~~    - Should be able to get to inputs and buttons on each dialog~~
+~~    - Initial focus will be on the input when moving forward/back within the dialog. This is why `.focus()` and `.markAsUntouched()` are being commented throughout the code~~
 
 7. `serverUrl` validation
     - Higher priority: not checking before touched
@@ -49,9 +49,9 @@ version testing:
 8. Investigate generic component's Process/History is done properly
     Supposed to be used for Section 4.7 of the spec, but wasn't tested
 
-9. ~~Finish typing everything~~
+~~9. Finish typing everything~~
 
-10. Mixins for repetitive CSS
+~~10. Mixins for repetitive CSS~~
 
 ***
 

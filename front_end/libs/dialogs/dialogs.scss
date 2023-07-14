@@ -161,8 +161,6 @@ nx-modal-wizard {
             justify-content: center !important;
             margin: 0 !important;
             padding: 0 !important;
-            border-radius: 25px !important;
-            outline: none !important; // Fix for mobile ios to remove blue circle.
 
             &:before,
             &:after {

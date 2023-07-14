@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import {
     Component,
     ElementRef,
-    HostListener,
     Inject,
     OnDestroy,
     OnInit,
@@ -92,7 +91,6 @@ const stateProcesses = {
 })
 export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit, OnDestroy {
     @ViewChild('nxMergeSelectSystem', { static: false }) selectSystem: NxMergeSelectSystemComponent;
-
     CONFIG: IConfig;
     LANG = staticLang;
     MergeState = MergeState;
@@ -197,15 +195,6 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
     // update webadmin session
     alertMessage: string;
 
-    @HostListener('document:keypress', ['$event'])
-    handleKeyboardEvent(event: KeyboardEvent): void {
-        if (['Enter', 'NumpadEnter'].includes(event.code || event.key)) {
-            this.elem.nativeElement
-                .querySelector<HTMLButtonElement>('button.on-keypress-enter')
-                .click();
-        }
-    }
-
     constructor(
         configService: NxConfigService,
         private translateService: TranslateService,
@@ -261,6 +250,20 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
         this.checkedMergeabilityOnce = false;
         this.currentState = state;
 
+        setTimeout(() => {
+            if (state === 'admin') {
+                this.elem.nativeElement.querySelector<HTMLInputElement>('#adminPassword').focus();
+            } else if (state === 'primary') {
+                this.elem.nativeElement.querySelector<HTMLInputElement>('#firstSystem').focus();
+            } else if (state === 'confirm') {
+                this.elem.nativeElement.querySelector<HTMLButtonElement>('#confirmBackBtn').focus();
+            } else {
+                // Focus on the Close button on default
+                this.elem.nativeElement
+                    .querySelector<HTMLButtonElement>('.modal-header .close')
+                    .focus();
+            }
+        });
         // if going back to 'select', used to reinitialize components to update system/systems
         // removed init() due to limited value and to reduce complexity
         // may revisit with subscriptions later
@@ -459,9 +462,6 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                     }
                     this.selectSystemErrorCode = err.message || 'unknownError';
                 }
-                // see if this is still an issue?
-                // this.serverUrlInputFocus ? this.serverUrlInputFocus.nativeElement.focus()
-                //     : this.mergeDropdown.dropdownToggleButton.nativeElement.focus();
             },
         );
 
@@ -567,12 +567,10 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                     },
                     missingPassword: () => {
                         this.confirmMergeErrorCode = 'required';
-                        // this.confirmMergeInput.nativeElement.focus();
                     },
                     wrongPassword: () => {
                         this.confirmMergeErrorCode = 'wrongPassword';
                         this.confirmPassword = '';
-                        // this.confirmMergeInput.nativeElement.focus();
                     },
                     [this.wrongLogin]: 'potentialErrorString',
                 },
@@ -620,11 +618,9 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                     // wrong cloud password
                 } else if (res.errorString === this.wrongLogin) {
                     this.confirmMergeErrorCode = 'wrongPassword';
-                    // this.confirmMergeInput.nativeElement.focus();
                     // wrong local admin password when checking VMS <= 4.0 systems
                 } else if (res.errorString === 'UNAUTHORIZED') {
                     this.confirmMergeErrorCode = 'wrongPasswordAdmin';
-                    // this.confirmMergeInput.nativeElement.focus();
                 } else if (res.error) {
                     res.resultCode = res.errorString.toLowerCase();
                     this.handleMergeError(res);
@@ -634,7 +630,6 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                 this.unlock();
                 if (error.errorString === this.wrongLogin) {
                     this.confirmMergeErrorCode = 'wrongPassword';
-                    // this.confirmMergeInput.nativeElement.focus();
                     return;
                 }
                 if (
@@ -840,15 +835,6 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
     private showSessionExpiredAlert(): void {
         this.toastService.notify(this.alertMessage, ToastType.Warning);
     }
-
-    // goBack(): void {
-    //     this.confirmMergeForm && this.confirmMergeForm.form.markAsUntouched();
-    //     this.adminPassword && this.adminPassword.form.markAsUntouched();
-    //     this.machine.goBack();
-    //     this.cdRef.detectChanges();
-    //     this.mergeDropdown && this.mergeDropdown.dropdownToggleButton.nativeElement.focus();
-    //     this.primaryRadio && this.primaryRadio.inputRadio.nativeElement.focus();
-    // }
 
     ngOnDestroy(): void {}
 }

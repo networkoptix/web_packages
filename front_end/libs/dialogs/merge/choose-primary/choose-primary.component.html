@@ -10,9 +10,6 @@
                 <nx-radio
                     name="choosePrimary"
                     [value]="system.id"
-                    tabindex="0"
-                    autofocus
-                    #primaryRadio
                     [label]="system.info.name"
                     componentId="firstSystem"
                     [(ngModel)]="primarySystemId"
@@ -23,7 +20,6 @@
                 <nx-radio
                     name="choosePrimary"
                     [value]="targetSystem.id"
-                    tabindex="0"
                     [label]="targetSystem.name"
                     componentId="secondSystem"
                     [(ngModel)]="primarySystemId"
