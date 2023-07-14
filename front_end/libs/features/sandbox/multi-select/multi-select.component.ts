@@ -28,8 +28,8 @@ export class MultiSelectComponent {
     constructor(private menuService: NxMenuService, @Inject(DOCUMENT) private document: Document) {}
 
     ngOnInit(): void {
-        this.menuService.section = 'components';
-        this.menuService.detail = 'dropdowns';
+        this.menuService.selectedSection.set('components');
+        this.menuService.selectedDetailsSection.set('dropdowns');
 
         this.dropdownConfiguration = {
             type: '',

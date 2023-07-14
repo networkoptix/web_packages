@@ -14,8 +14,8 @@ export class SearchComponent {
     constructor(private menuService: NxMenuService) {}
 
     ngOnInit(): void {
-        this.menuService.section = 'components';
-        this.menuService.detail = 'search';
+        this.menuService.selectedSection.set('components');
+        this.menuService.selectedDetailsSection.set('search');
 
         this.filter = {
             query: '',

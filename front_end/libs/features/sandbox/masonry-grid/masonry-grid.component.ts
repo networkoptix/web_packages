@@ -11,7 +11,7 @@ export class MasonryGridComponent {
     constructor(private menuService: NxMenuService) {}
 
     ngOnInit(): void {
-        this.menuService.section = 'components';
-        this.menuService.detail = 'masonryGrid';
+        this.menuService.selectedSection.set('components');
+        this.menuService.selectedDetailsSection.set('masonryGrid');
     }
 }

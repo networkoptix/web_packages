@@ -43,7 +43,7 @@ export class NxCustomColorsComponent implements OnInit {
     constructor(private menuService: NxMenuService) {}
 
     ngOnInit(): void {
-        this.menuService.section = 'colors';
-        this.menuService.detail = 'customColors';
+        this.menuService.selectedSection.set('colors');
+        this.menuService.selectedDetailsSection.set('customColors');
     }
 }

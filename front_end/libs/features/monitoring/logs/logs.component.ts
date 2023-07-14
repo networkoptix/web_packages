@@ -19,7 +19,7 @@ export class LogsComponent implements OnInit {
     constructor(private menuService: NxMenuService, private route: ActivatedRoute) {}
 
     ngOnInit(): void {
-        this.menuService.section = 'logs';
-        this.menuService.detail = '';
+        this.menuService.selectedSection.set('logs');
+        this.menuService.selectedDetailsSection.set('');
     }
 }

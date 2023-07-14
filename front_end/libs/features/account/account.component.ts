@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, effect, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
@@ -40,6 +40,14 @@ export class NxAccountComponent implements OnInit {
                 });
             });
         });
+
+        effect(() => {
+            if (this.content) {
+                this.content.selectedDetailsSection = this.menuService.selectedDetailsSection();
+            }
+            this.content = { ...this.content }; // trigger onChange
+            this.menuReady = true;
+        });
     }
 
     ngOnInit(): void {
@@ -63,12 +71,6 @@ export class NxAccountComponent implements OnInit {
         }
 
         this.initMenu();
-
-        this.menuService.selectedDetailsSection.pipe(untilDestroyed(this)).subscribe(selection => {
-            this.content.selectedDetailsSection = selection;
-            this.content = { ...this.content }; // trigger onChange
-            this.menuReady = true;
-        });
     }
 
     private initMenu(): void {

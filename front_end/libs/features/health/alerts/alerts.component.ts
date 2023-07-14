@@ -2,6 +2,7 @@ import { Location } from '@angular/common';
 import {
     AfterViewInit,
     Component,
+    effect,
     ElementRef,
     Inject,
     LOCALE_ID,
@@ -14,7 +15,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { isEqual, cloneDeep } from 'lodash-es';
 import { of, SubscriptionLike } from 'rxjs';
-import { delay, throttleTime } from 'rxjs/operators';
+import { delay } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import type { SearchFilter } from '@components/search/search.component.types';
@@ -95,6 +96,20 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         @Inject(LOCALE_ID) private locale: string,
     ) {
         pageService.pageTitle(this.LANG.pageTitles.information);
+
+        effect(() => {
+            if (this.metricId === this.menuService.selectedSection()) {
+                this.resetActiveEntity();
+                this.resetFilterModel();
+                this.alerts = this.healthService.alertsSearch(
+                    this.healthService.alertsValues,
+                    this.filterModel,
+                );
+            } else {
+                // short circuit first subscription
+                this.metricId = 'alerts';
+            }
+        });
     }
 
     private sortAlertsFunc() {
@@ -123,7 +138,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         this.numFilters = 4;
 
         this.params = this.route.snapshot.queryParams;
-        this.menuService.section = 'alerts';
+        this.menuService.selectedSection.set('alerts');
 
         const { url } = this.router;
         this.reportView = url.includes('/health-report/viewer');
@@ -194,23 +209,6 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                 }
             });
         });
-
-        this.selectedSubscription = this.menuService.selectedSectionSubject
-            .pipe(throttleTime(1000))
-            .subscribe(selection => {
-                // when user click same section in the menu - we need to reset table and entity
-                if (this.metricId === selection) {
-                    this.resetActiveEntity();
-                    this.resetFilterModel();
-                    this.alerts = this.healthService.alertsSearch(
-                        this.healthService.alertsValues,
-                        this.filterModel,
-                    );
-                } else {
-                    // short circuit first subscription
-                    this.metricId = 'alerts';
-                }
-            });
     }
 
     ngAfterViewInit(): void {

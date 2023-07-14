@@ -37,7 +37,7 @@ export class NxCustomizationPartnerComponent implements OnInit, OnDestroy {
         // private dialogService: NxDialogsService,
         private menuService: NxMenuService,
     ) {
-        // this.menuService.detail = 'channels';
+        // this.menuService.selectedDetailsSection.set('channels');
     }
 
     ngOnInit(): void {
@@ -50,7 +50,7 @@ export class NxCustomizationPartnerComponent implements OnInit, OnDestroy {
         this.route.paramMap.pipe(untilDestroyed(this)).subscribe(paramMap => {
             const partnerId = paramMap.get('partnerId');
             this.partner = this.partnersService.getPartner(parseInt(partnerId));
-            this.menuService.detail = partnerId;
+            this.menuService.selectedDetailsSection.set(partnerId);
 
             this.partnersService.getOrganizations(this.partner);
         });

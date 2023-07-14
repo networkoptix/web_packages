@@ -41,7 +41,7 @@ export class NxAccountPasswordComponent implements OnInit, OnDestroy {
         private applyService: NxApplyService,
         private toastService: NxToastService,
     ) {
-        this.menuService.detail = 'password';
+        this.menuService.navItemId.set('password');
     }
 
     ngOnInit(): void {

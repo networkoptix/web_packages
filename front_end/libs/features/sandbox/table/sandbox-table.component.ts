@@ -21,8 +21,8 @@ export class SandboxTableComponent {
     constructor(private menuService: NxMenuService) {}
 
     ngOnInit(): void {
-        this.menuService.section = 'components';
-        this.menuService.detail = 'table';
+        this.menuService.selectedSection.set('components');
+        this.menuService.selectedDetailsSection.set('table');
 
         this.rowsPerPage = [5, 10, 20, 50];
 

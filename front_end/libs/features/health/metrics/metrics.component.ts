@@ -2,6 +2,7 @@ import { Location } from '@angular/common';
 import {
     AfterViewInit,
     Component,
+    effect,
     ElementRef,
     OnInit,
     ViewChild,
@@ -10,7 +11,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { of, SubscriptionLike } from 'rxjs';
-import { delay, throttleTime } from 'rxjs/operators';
+import { delay } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import type { SearchFilter } from '@components/search/search.component.types';
@@ -89,6 +90,18 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         private scrollMechanicsService: NxScrollMechanicsService,
     ) {
         this.pageService.pageTitle(this.LANG.pageTitles.information);
+
+        effect(() => {
+            setTimeout(() => {
+                this.pageService.pageTitle(this.LANG.pageTitles.information);
+            });
+            // when user click same section in the menu - we need to reset table and entity
+            if (this.metricId === this.menuService.selectedSection()) {
+                this.filterModel.query = '';
+                this.resetActiveEntity();
+                this.search();
+            }
+        });
     }
 
     ngOnInit(): void {
@@ -124,24 +137,10 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                 });
         });
 
-        this.selectedSubscription = this.menuService.selectedSectionSubject
-            .pipe(throttleTime(1000))
-            .subscribe(selection => {
-                setTimeout(() => {
-                    this.pageService.pageTitle(this.LANG.pageTitles.information);
-                });
-                // when user click same section in the menu - we need to reset table and entity
-                if (this.metricId === selection) {
-                    this.filterModel.query = '';
-                    this.resetActiveEntity();
-                    this.search();
-                }
-            });
-
         this.routeSubscription = this.route.params.pipe(delay(0)).subscribe((params: any) => {
             this.metricId = params.metric;
             this.metricName = this.healthService.manifest[this.metricId].name;
-            this.menuService.section = this.metricId;
+            this.menuService.selectedSection.set(this.metricId);
             this.selectedData = this.healthService.tableHeaders[this.metricId];
             this.selectedPanelData = this.healthService.panelParams[this.metricId];
             this.healthLayoutService.metricsValuesCount =

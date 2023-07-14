@@ -248,7 +248,7 @@ export class NxCamerasComponent implements OnInit {
     ) {
         this.updateSelects();
         this.viewContainerRef = viewContainerRef;
-        this.menuService.section = 'cameras';
+        this.menuService.selectedSection.set('cameras');
     }
 
     ngOnInit(): void {
@@ -268,7 +268,7 @@ export class NxCamerasComponent implements OnInit {
                 this.errors = [];
                 this.showUnauthorized = false;
                 this.showOverlay = false;
-                this.menuService.detail = params.cameraId;
+                this.menuService.selectedDetailsSection.set(params.cameraId);
                 this.parsedCameraId = params.cameraId;
                 if (!this.applyService.locked) {
                     this.setCamera();
@@ -577,7 +577,7 @@ export class NxCamerasComponent implements OnInit {
                 systemId: this.system.id,
                 childRoute: ChildRoutes.VIEW,
             }) + this.parsedCameraId;
-        this.menuService.detail = this.parsedCameraId;
+        this.menuService.selectedDetailsSection.set(this.parsedCameraId);
 
         this.selectedCamera = this.system.cameraManager.parseCamera(
             await this.system.mediaserver.getCamera(this.parsedCameraId).toPromise(),

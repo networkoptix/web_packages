@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, effect, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
@@ -64,6 +64,15 @@ export class NxMonitoringComponent implements OnInit {
                 },
             ],
         };
+
+        effect(() => {
+            const selection = this.menuService.selectedSection();
+            if (this.content.selectedSection === selection) {
+                return;
+            }
+            this.content.selectedSection = selection;
+            this.content = { ...this.content }; // trigger onChange
+        });
     }
 
     private createSelectableServers(): void {
@@ -91,13 +100,6 @@ export class NxMonitoringComponent implements OnInit {
     ngOnInit(): void {
         this.route.params.pipe(untilDestroyed(this)).subscribe(() => {
             this.setSystemValues();
-        });
-        this.menuService.selectedSectionSubject.pipe(untilDestroyed(this)).subscribe(selection => {
-            if (this.content.selectedSection === selection) {
-                return;
-            }
-            this.content.selectedSection = selection;
-            this.content = { ...this.content }; // trigger onChange
         });
         // TODO: Menu navigation removes query params. remove this after Menu refactor
         this.router.events

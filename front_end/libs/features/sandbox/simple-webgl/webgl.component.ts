@@ -19,8 +19,8 @@ export class SimpleWebglComponent {
     }
 
     ngOnInit(): void {
-        this.menuService.section = 'colors';
-        this.menuService.detail = 'simple-webgl';
+        this.menuService.selectedSection.set('colors');
+        this.menuService.selectedDetailsSection.set('simple-webgl');
 
         // interval(1000)
         //     .pipe(untilDestroyed(this))

@@ -1,5 +1,13 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, Inject, OnInit, OnDestroy, ViewEncapsulation, Input } from '@angular/core';
+import {
+    Component,
+    Inject,
+    Input,
+    OnInit,
+    OnDestroy,
+    ViewEncapsulation,
+    effect,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import FileSaver from 'file-saver';
@@ -80,6 +88,14 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         this.CONFIG = configService.getConfig();
 
         pageService.pageTitle(this.LANG.pageTitles.information);
+
+        effect(() => {
+            const selection = this.menuService.selectedSection();
+            if (this.menu && this.menu.selectedSection !== selection) {
+                this.menu.selectedSection = selection;
+                this.menu = { ...this.menu }; // trigger onChang
+            }
+        });
     }
 
     private stopSystemPoll(): void {
@@ -115,13 +131,6 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 },
             ],
         };
-
-        this.selectedSubscription = this.menuService.selectedSectionSubject.subscribe(selection => {
-            if (this.menu.selectedSection !== selection) {
-                this.menu.selectedSection = selection;
-                this.menu = { ...this.menu }; // trigger onChang
-            }
-        });
 
         const [currentRoute] = this.router.url.split('?');
         if (currentRoute.endsWith('health')) {

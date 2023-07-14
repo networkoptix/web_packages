@@ -1,6 +1,5 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, signal, WritableSignal } from '@angular/core';
 import { cloneDeep } from 'lodash-es';
-import { BehaviorSubject } from 'rxjs';
 
 import { NxSearchService } from '@services/search.service';
 import type { SearchModel } from '@services/search.service.types';
@@ -10,75 +9,21 @@ import type { Level1Item, Level2Item, Level3Item } from './menu.types';
 @Injectable({
     providedIn: 'root',
 })
-export class NxMenuService implements OnDestroy {
-    selectedSectionSubject = new BehaviorSubject<string>('');
-    selectedSubSectionSubject = new BehaviorSubject<string>('');
-    selectedDetailsSection = new BehaviorSubject<string>('');
-    contentSubject = new BehaviorSubject<Level1Item[]>([]);
-    navItemSubject = new BehaviorSubject<string>('');
-    searchRegexSubject = new BehaviorSubject<RegExp>(null);
+export class NxMenuService {
+    content: WritableSignal<Level1Item[]> = signal([]);
+    hoverItemId: WritableSignal<string> = signal('');
+    navItemId: WritableSignal<string> = signal('');
 
-    private _hoverItemId: string;
+    searchRegex: WritableSignal<RegExp> = signal(null);
+
+    selectedSection: WritableSignal<string> = signal('');
+    selectedSubSection: WritableSignal<string> = signal('');
+    selectedDetailsSection: WritableSignal<string> = signal('');
 
     constructor(private searchService: NxSearchService) {}
 
-    set content(content: Level1Item[]) {
-        this.contentSubject.next(content);
-    }
-
-    get content(): Level1Item[] {
-        return this.contentSubject.getValue();
-    }
-
-    set navItemId(id: string) {
-        this.navItemSubject.next(id);
-    }
-
-    get navItemId(): string {
-        return this.navItemSubject.getValue();
-    }
-
-    set hoverItemId(id: string) {
-        this._hoverItemId = id;
-    }
-
-    get hoverItemId(): string {
-        return this._hoverItemId;
-    }
-
-    get section(): string {
-        return this.selectedSectionSubject.getValue();
-    }
-
-    set section(section: string) {
-        this.selectedSectionSubject.next(section);
-    }
-
-    get detail(): string {
-        return this.selectedDetailsSection.getValue();
-    }
-
-    set detail(section: string) {
-        this.selectedDetailsSection.next(section);
-    }
-
-    set subSection(section: string) {
-        this.selectedSubSectionSubject.next(section);
-    }
-
-    get subSection(): string {
-        return this.selectedSubSectionSubject.getValue();
-    }
-
-    ngOnDestroy(): void {
-        this.selectedSectionSubject.complete();
-        this.selectedSubSectionSubject.complete();
-        this.selectedDetailsSection.complete();
-        this.contentSubject.complete();
-    }
-
     getItemBy(id: string): Level3Item | undefined {
-        for (const node of this.content) {
+        for (const node of this.content()) {
             if (node.level3?.length) {
                 const match = node.level3.find(item => item.id === id);
                 if (match) {
@@ -93,7 +38,7 @@ export class NxMenuService implements OnDestroy {
         if (model.query) {
             this.setHighlightPattern(model);
 
-            this.content.forEach(node => {
+            this.content().forEach(node => {
                 if (searchSubMenus && node.level2?.length) {
                     node.level2.forEach(subNode => {
                         if (subNode.level3?.length) {
@@ -117,8 +62,8 @@ export class NxMenuService implements OnDestroy {
                 }
             });
         } else {
-            this.searchRegexSubject.next(null);
-            filteredContent = [...this.content];
+            this.searchRegex.set(null);
+            filteredContent = [...this.content()];
         }
 
         return filteredContent;
@@ -196,6 +141,6 @@ export class NxMenuService implements OnDestroy {
             model.queryAndMatch,
         ].find(m => Array.isArray(m)) as string[];
 
-        this.searchRegexSubject.next(new RegExp(`(${match.join('|')})`, 'i'));
+        this.searchRegex.set(new RegExp(`(${match.join('|')})`, 'i'));
     }
 }

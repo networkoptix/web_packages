@@ -1,10 +1,8 @@
-import { Component } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Component, effect } from '@angular/core';
 
 import { NxMenuService } from '@menu/menu.service';
 import type { Content } from '@menu/menu.types';
 
-@UntilDestroy()
 @Component({
     selector: 'sandbox-component',
     templateUrl: 'sandbox.component.html',
@@ -14,7 +12,23 @@ export class NxSandboxComponent {
     content: Content;
     menuReady = false;
 
-    constructor(private menuService: NxMenuService) {}
+    constructor(private menuService: NxMenuService) {
+        effect(() => {
+            const selection = this.menuService.selectedSection();
+            if (this.content.selectedSection === selection) {
+                return;
+            }
+            this.content.selectedSection = selection;
+            this.content = { ...this.content }; // trigger onChange
+        });
+
+        effect(() => {
+            if (this.content) {
+                this.content.selectedDetailsSection = this.menuService.selectedDetailsSection();
+                this.content = { ...this.content }; // trigger onChange
+            }
+        });
+    }
 
     ngOnInit(): void {
         this.content = {
@@ -131,18 +145,5 @@ export class NxSandboxComponent {
             ],
         };
         this.menuReady = true;
-
-        this.menuService.selectedSectionSubject.pipe(untilDestroyed(this)).subscribe(selection => {
-            if (this.content.selectedSection === selection) {
-                return;
-            }
-            this.content.selectedSection = selection;
-            this.content = { ...this.content }; // trigger onChange
-        });
-
-        this.menuService.selectedDetailsSection.pipe(untilDestroyed(this)).subscribe(selection => {
-            this.content.selectedDetailsSection = selection;
-            this.content = { ...this.content }; // trigger onChange
-        });
     }
 }

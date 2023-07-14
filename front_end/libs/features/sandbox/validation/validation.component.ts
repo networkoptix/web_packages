@@ -20,8 +20,8 @@ export class ValidationComponent {
     constructor(private processService: NxProcessService, private menuService: NxMenuService) {}
 
     ngOnInit(): void {
-        this.menuService.section = 'components';
-        this.menuService.detail = 'validation';
+        this.menuService.selectedSection.set('components');
+        this.menuService.selectedDetailsSection.set('validation');
 
         this.change = this.processService.createProcess(() => {
             return Promise.resolve(true);

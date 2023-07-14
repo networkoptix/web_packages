@@ -51,7 +51,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        this.menuService.section = 'servers';
+        this.menuService.selectedSection.set('servers');
 
         this.route.params
             .pipe(untilDestroyed(this))
@@ -75,7 +75,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                     this.storageTimer = undefined;
                 }
 
-                this.menuService.detail = this.serverIdFromParams;
+                this.menuService.selectedDetailsSection.set(this.serverIdFromParams);
                 if (this.storageTimer) {
                     this.storageTimer.unsubscribe();
                     this.storageTimer = undefined;
@@ -192,7 +192,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                     });
             }
 
-            this.menuService.detail = server.id;
+            this.menuService.selectedDetailsSection.set(server.id);
             if (server.id !== this.serverId$.value) {
                 this.serverId$.next(server.id);
                 this.system.storageManager.serverId = server.id;

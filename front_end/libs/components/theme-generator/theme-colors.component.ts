@@ -107,8 +107,8 @@ export class NxThemeGeneratorComponent implements OnInit, AfterViewInit {
     ) {}
 
     ngOnInit(): void {
-        this.menuService.section = 'colors';
-        this.menuService.detail = 'themeHSL';
+        this.menuService.selectedSection.set('colors');
+        this.menuService.selectedDetailsSection.set('themeHSL');
 
         this.scope = this.document.documentElement;
 

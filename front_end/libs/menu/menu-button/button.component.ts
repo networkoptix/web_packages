@@ -49,7 +49,7 @@ export class NxMenuButtonComponent {
                         if (userId) {
                             const systemId = this.system.id;
                             userId = this.system.mediaserver.cleanId(userId);
-                            this.menuService.detail = userId;
+                            this.menuService.selectedDetailsSection.set(userId);
                             this.uriService
                                 .updateURI(
                                     this.uriService.getSystemSettingsRoute({
@@ -65,7 +65,7 @@ export class NxMenuButtonComponent {
             // case 'addPartner':
             //     this.dialogs.addChannelPartner().then(partnerId => {
             //         if (partnerId) {
-            //             this.menuService.detail = partnerId.toString();
+            //             this.menuService.selectedDetailsSection.set(partnerId.toString());
             //             // this.uriService
             //             //     .updateURI('/partners/' + customizationId, {})
             //             //     .catch(error => console.error(error));

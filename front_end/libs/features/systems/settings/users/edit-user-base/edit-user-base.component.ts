@@ -68,7 +68,7 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy {
         protected uriService: NxUriService,
         protected toastService: NxToastService,
     ) {
-        this.menuService.section = 'users';
+        this.menuService.selectedSection.set('users');
     }
 
     public ngOnInit(): void {
@@ -81,7 +81,7 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy {
                 if (qmIndex > -1) {
                     this.paramUser = this.paramUser.substring(0, qmIndex);
                 }
-                this.menuService.detail = this.paramUser;
+                this.menuService.selectedDetailsSection.set(this.paramUser);
                 this.setUser();
             }
         });
@@ -143,7 +143,7 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy {
                         console.error(error);
                     });
 
-                this.menuService.detail = nextUserId;
+                this.menuService.selectedDetailsSection.set(nextUserId);
             }
         });
     }
@@ -218,7 +218,7 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy {
             ? this.LANG.system.users.cloudDelete
             : this.LANG.system.users.localDelete;
 
-        this.menuService.detail = cleanId(this.selectedUser.id);
+        this.menuService.selectedDetailsSection.set(cleanId(this.selectedUser.id));
 
         this.fullName = this.selectedUser.fullName;
         this.email = this.selectedUser.email;

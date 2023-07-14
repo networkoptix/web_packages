@@ -1,5 +1,13 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, Inject, OnInit, ViewEncapsulation, ViewChild, ElementRef } from '@angular/core';
+import {
+    Component,
+    Inject,
+    OnInit,
+    ViewEncapsulation,
+    ViewChild,
+    ElementRef,
+    effect,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
@@ -70,6 +78,14 @@ export class NxReportViewerComponent implements OnInit {
         @Inject(DOCUMENT) private document: Document,
     ) {
         pageService.pageTitle(this.LANG.pageTitles.information);
+
+        effect(() => {
+            const selection = this.menuService.selectedSection();
+            if (this.menu && this.menu.selectedSection !== selection) {
+                this.menu.selectedSection = selection;
+                this.menu = { ...this.menu }; // trigger onChang
+            }
+        });
     }
 
     ngOnInit(): void {
@@ -98,13 +114,6 @@ export class NxReportViewerComponent implements OnInit {
                 },
             ],
         };
-
-        this.menuService.selectedSectionSubject.pipe(untilDestroyed(this)).subscribe(selection => {
-            if (this.menu.selectedSection !== selection) {
-                this.menu.selectedSection = selection;
-                this.menu = { ...this.menu }; // trigger onChang
-            }
-        });
 
         const currentRoute = this.router.url;
         if (currentRoute.endsWith('health')) {

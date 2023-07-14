@@ -78,7 +78,7 @@ export class NxBasicColorsComponent implements OnInit {
     constructor(private menuService: NxMenuService) {}
 
     ngOnInit(): void {
-        this.menuService.section = 'colors';
-        this.menuService.detail = 'basicColors';
+        this.menuService.selectedSection.set('colors');
+        this.menuService.selectedDetailsSection.set('basicColors');
     }
 }

@@ -74,8 +74,8 @@ export class SectionApplyExampleComponent {
     ) {}
 
     ngOnInit(): void {
-        this.menuService.section = 'components';
-        this.menuService.detail = 'applyServiceSection';
+        this.menuService.selectedSection.set('components');
+        this.menuService.selectedDetailsSection.set('applyServiceSection');
 
         // setup section 1
         this.section1Input = 'section1';

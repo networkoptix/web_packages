@@ -164,8 +164,8 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
     DAY_MINS = DAY_MINS; // For template access
 
     ngOnInit(): void {
-        this.menuService.section = menus.systemSettings.admin.id;
-        this.menuService.detail = menus.systemSettings.general.id;
+        this.menuService.selectedSection.set(menus.systemSettings.admin.id);
+        this.menuService.selectedDetailsSection.set(menus.systemSettings.general.id);
         this.initProcess();
 
         if (this.CONFIG.cloudCapabilities.alexaIntegrationEnabled) {

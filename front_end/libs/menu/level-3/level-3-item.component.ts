@@ -1,5 +1,4 @@
-import { Component, Input, OnInit, OnChanges } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Component, Input, OnChanges, computed, Signal } from '@angular/core';
 
 import { icons } from '@lib/variables/static-variables';
 import { NxMenuService } from '@menu/menu.service';
@@ -10,13 +9,12 @@ import type { Level3Item } from '../menu.types';
 /* Usage
  */
 
-@UntilDestroy()
 @Component({
     selector: 'nx-level-3-item',
     templateUrl: 'level-3-item.component.html',
     styleUrls: ['level-3-item.component.scss'],
 })
-export class NxLevel3ItemComponent implements OnInit, OnChanges {
+export class NxLevel3ItemComponent implements OnChanges {
     @Input() base: string = '';
     @Input() item: Level3Item;
     @Input() selected: boolean;
@@ -24,21 +22,11 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges {
     @Input() idx: number;
 
     itemPath: string;
-    menuNavItemId: string;
-    search: RegExp;
+    menuNavItemId: Signal<string> = computed(() => this.menuService.navItemId());
+    search: Signal<RegExp> = computed(() => this.menuService.searchRegex());
     icons = icons;
 
     constructor(private menuService: NxMenuService) {}
-
-    ngOnInit(): void {
-        this.menuService.navItemSubject.pipe(untilDestroyed(this)).subscribe(() => {
-            this.menuNavItemId = this.menuService.navItemId;
-        });
-
-        this.menuService.searchRegexSubject.pipe(untilDestroyed(this)).subscribe(search => {
-            this.search = search;
-        });
-    }
 
     ngOnChanges(changes: NgChanges<NxLevel3ItemComponent>): void {
         if (changes.base?.currentValue) {
@@ -52,6 +40,6 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges {
     }
 
     setNavIdx(item: Level3Item): void {
-        this.menuService.hoverItemId = item.id;
+        this.menuService.hoverItemId.set(item.id);
     }
 }

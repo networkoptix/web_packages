@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, Inject, Injector, OnDestroy, OnInit } from '@angular/core';
+import { Component, effect, Inject, Injector, OnDestroy, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -66,6 +66,13 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
         this.CONFIG = configService.getConfig();
 
         this.injector = injector;
+
+        effect(() => {
+            if (this.content) {
+                this.content.selectedDetailsSection = this.menuService.selectedDetailsSection();
+                this.content = { ...this.content }; // trigger onChange
+            }
+        });
     }
 
     setUpRouteSubscription(): void {
@@ -217,12 +224,6 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.pageService.setDesktopLayout();
-        this.menuService.selectedDetailsSection.pipe(untilDestroyed(this)).subscribe(selection => {
-            if (this.content) {
-                this.content.selectedDetailsSection = selection;
-                this.content = { ...this.content }; // trigger onChange
-            }
-        });
 
         this.accountService.get().then(account => {
             if (account) {

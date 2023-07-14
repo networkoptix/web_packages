@@ -122,7 +122,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.resetDisabled = true;
         this.portChangeDisabled = true;
         this.serverUnavailable = true;
-        this.menuService.section = 'servers';
+        this.menuService.selectedSection.set('servers');
         this.fullInfoPath = '';
 
         this.portBusy = false;
@@ -489,7 +489,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                         console.error(error);
                     });
 
-                this.menuService.detail = nextServerId;
+                this.menuService.selectedDetailsSection.set(nextServerId);
             }
         });
     }

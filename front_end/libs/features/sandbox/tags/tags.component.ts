@@ -14,8 +14,8 @@ export class TagsComponent {
     constructor(private menuService: NxMenuService) {}
 
     ngOnInit(): void {
-        this.menuService.section = 'components';
-        this.menuService.detail = 'tags';
+        this.menuService.selectedSection.set('components');
+        this.menuService.selectedDetailsSection.set('tags');
 
         this.options = [
             { name: 'brand', selected: false, type: 'brand' },

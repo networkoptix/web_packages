@@ -19,7 +19,7 @@ export class GraphsComponent implements OnInit {
     constructor(private menuService: NxMenuService, private route: ActivatedRoute) {}
 
     ngOnInit(): void {
-        this.menuService.section = 'graphs';
-        this.menuService.detail = '';
+        this.menuService.selectedSection.set('graphs');
+        this.menuService.selectedDetailsSection.set('');
     }
 }

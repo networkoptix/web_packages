@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, effect, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 import { environment } from '@environments/environment';
 import staticLang from '@language/language_i18n_static.json';
@@ -57,7 +57,31 @@ export class NxChannelPartnersComponent implements OnInit {
         private partnersService: NxPartnersService,
     ) {
         this.CONFIG = this.configService.getConfig();
-        this.menuService.section = 'users';
+        this.menuService.selectedSection.set('users');
+
+        effect(() => {
+            this.canNavMenu(
+                this.origSelectedSection,
+                'selectedSection',
+                this.menuService.selectedSection(),
+            );
+        });
+
+        effect(() => {
+            this.canNavMenu(
+                this.origSelectedSubSection,
+                'selectedSubSection',
+                this.menuService.selectedSubSection(),
+            );
+        });
+
+        effect(() => {
+            this.canNavMenu(
+                this.origSelectedDetailSection,
+                'selectedDetailsSection',
+                this.menuService.selectedDetailsSection(),
+            );
+        });
     }
 
     public ngOnInit(): void {
@@ -72,28 +96,6 @@ export class NxChannelPartnersComponent implements OnInit {
         };
 
         this.updateMenu();
-
-        this.menuService.selectedSectionSubject
-            .pipe(untilDestroyed(this), distinctUntilChanged())
-            .subscribe(selection => {
-                this.canNavMenu(this.origSelectedSection, 'selectedSection', selection);
-            });
-
-        this.menuService.selectedSubSectionSubject
-            .pipe(untilDestroyed(this), distinctUntilChanged())
-            .subscribe(selection => {
-                this.canNavMenu(this.origSelectedSubSection, 'selectedSubSection', selection);
-            });
-
-        this.menuService.selectedDetailsSection
-            .pipe(untilDestroyed(this), distinctUntilChanged())
-            .subscribe(selection => {
-                this.canNavMenu(
-                    this.origSelectedDetailSection,
-                    'selectedDetailsSection',
-                    selection,
-                );
-            });
 
         this.scrollMechanicsService.windowSizeSubject
             .pipe(untilDestroyed(this))

@@ -31,7 +31,7 @@ export class NxCustomizationComponent implements OnInit, OnDestroy {
         private menuService: NxMenuService,
         private partnersService: NxPartnersService,
     ) {
-        this.menuService.section = 'partners';
+        this.menuService.selectedSection.set('partners');
     }
 
     ngOnInit(): void {

@@ -68,8 +68,8 @@ export class NxSystemLicensesComponent implements OnInit {
 
     ngOnInit(): void {
         this.updateLicenses();
-        this.menuService.section = menus.systemSettings.admin.id;
-        this.menuService.detail = menus.systemSettings.licenses.id;
+        this.menuService.selectedSection.set(menus.systemSettings.admin.id);
+        this.menuService.selectedDetailsSection.set(menus.systemSettings.licenses.id);
     }
 
     private createLicenseInfo(item): void {

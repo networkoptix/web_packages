@@ -19,8 +19,8 @@ export class WebglComponent {
     }
 
     ngOnInit(): void {
-        this.menuService.section = 'colors';
-        this.menuService.detail = 'webgl';
+        this.menuService.selectedSection.set('colors');
+        this.menuService.selectedDetailsSection.set('webgl');
 
         interval(0, animationFrameScheduler)
             .pipe(untilDestroyed(this))

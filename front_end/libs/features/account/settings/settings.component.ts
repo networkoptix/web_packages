@@ -67,7 +67,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
         private db: NxDbService,
     ) {
         this.CONFIG = configService.getConfig();
-        this.menuService.detail = 'settings';
+        this.menuService.navItemId.set('settings');
         this.icons = icons;
 
         translateService.onTranslationChange.pipe(untilDestroyed(this)).subscribe(() => {

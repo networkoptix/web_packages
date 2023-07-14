@@ -121,8 +121,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     private setupDefaults(): void {
         this.debugMode = clientMode.debug;
         this.betaMode = clientMode.beta;
-        this.menuService.section = menus.systemSettings.admin.id;
-        this.menuService.detail = menus.systemSettings.general.id;
+        this.menuService.selectedSection.set(menus.systemSettings.admin.id);
+        this.menuService.selectedDetailsSection.set(menus.systemSettings.general.id);
 
         this.advanced$ = this.route.queryParams.pipe(
             map(({ advanced }) => {

@@ -1,5 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
-import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID, effect } from '@angular/core';
 import { ActivationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { filter } from 'rxjs/operators';
@@ -75,9 +75,9 @@ export class NxDownloadsReleasesComponent implements OnInit {
                 });
         }
 
-        this.menuService.selectedSectionSubject.pipe(untilDestroyed(this)).subscribe(selection => {
-            this.content.selectedSection = selection;
-            this.content = { ...this.content }; // trigger onChange
+        effect(() => {
+            this.content.selectedSection = this.menuService.selectedSection();
+            this.content = { ...this.content };
         });
     }
 

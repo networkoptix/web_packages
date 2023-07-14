@@ -13,7 +13,7 @@ import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { escape } from 'lodash-es';
 import { firstValueFrom, Subject, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, takeUntil, tap } from 'rxjs/operators';
+import { debounceTime, filter, takeUntil, tap } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
@@ -213,9 +213,34 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.CONFIG = configService.getConfig();
 
         this.setupDefaults();
+
         effect(() => {
             this.system.permissionManager.permissions();
             this.updateMenu();
+        });
+
+        effect(() => {
+            this.canNavMenu(
+                this.origSelectedSection,
+                'selectedSection',
+                this.menuService.selectedSection(),
+            );
+        });
+
+        effect(() => {
+            this.canNavMenu(
+                this.origSelectedSubSection,
+                'selectedSubSection',
+                this.menuService.selectedSubSection(),
+            );
+        });
+
+        effect(() => {
+            this.canNavMenu(
+                this.origSelectedDetailSection,
+                'selectedDetailsSection',
+                this.menuService.selectedDetailsSection(),
+            );
         });
     }
 
@@ -280,28 +305,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 },
             ],
         };
-
-        this.menuService.selectedSectionSubject
-            .pipe(untilDestroyed(this), distinctUntilChanged())
-            .subscribe(selection => {
-                this.canNavMenu(this.origSelectedSection, 'selectedSection', selection);
-            });
-
-        this.menuService.selectedSubSectionSubject
-            .pipe(untilDestroyed(this), distinctUntilChanged())
-            .subscribe(selection => {
-                this.canNavMenu(this.origSelectedSubSection, 'selectedSubSection', selection);
-            });
-
-        this.menuService.selectedDetailsSection
-            .pipe(untilDestroyed(this), distinctUntilChanged())
-            .subscribe(selection => {
-                this.canNavMenu(
-                    this.origSelectedDetailSection,
-                    'selectedDetailsSection',
-                    selection,
-                );
-            });
 
         // TODO: add processes back
         // Retrieve users list
