@@ -277,7 +277,10 @@ frontend-lang:
   script:
     - |
       pushd "front_end"
-        npm run update-lang-files
+        npm run update-lang
+        python3 fill-lang.py
+        python3 compile-lang.py
+        npm run test-lang
       if [[ $(git diff --stat) != '' ]]; then
         echo 'Language files changed, attempting commiting changes'
         git config user.email "$GITLAB_USER_EMAIL"
