@@ -396,7 +396,8 @@ export class WizardStateService {
                 next: () => {
                     this.initSystem();
                 },
-                validate: () => this.setupConfig.localLoginDataState === FORM_STATE.VALID,
+                validate: () =>
+                    this.setupConfig.localPassword === this.setupConfig.localPasswordConfirmation,
             },
             localSuccess: {
                 title: this.LANG.setupWizard.title.localSuccess,

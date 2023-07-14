@@ -10,6 +10,7 @@ import { NxPasswordComponent } from '@components/password-input/password.compone
 import { NxPasswordValidationComponent } from '@components/password-input-validation/password-validation.component';
 
 import { WizardStateService } from '../../services/wizard-state.service';
+import { FORM_STATE } from '../../types/wizard-state.types';
 
 @UntilDestroy()
 @Component({
@@ -50,11 +51,13 @@ export class LocalLoginComponent implements AfterViewInit {
     constructor(public wizardService: WizardStateService) {}
 
     ngAfterViewInit(): void {
-        this.setAdminPasswordForm.statusChanges
-            .pipe(untilDestroyed(this))
-            .subscribe((result: string) => {
-                this.wizardService.setupConfig.localLoginDataState = result;
-            });
+        this.setAdminPasswordForm.statusChanges.pipe(untilDestroyed(this)).subscribe(() => {
+            this.wizardService.setupConfig.localLoginDataState =
+                this.setAdminPasswordForm.form.controls.localPassword.value ===
+                this.setAdminPasswordForm.form.controls.confirmPassword.value
+                    ? FORM_STATE.VALID
+                    : FORM_STATE.INVALID;
+        });
 
         this.wizardService.formValidateSubject.pipe(untilDestroyed(this)).subscribe(() => {
             for (const ctrl in this.setAdminPasswordForm.controls) {
@@ -76,9 +79,7 @@ export class LocalLoginComponent implements AfterViewInit {
     @HostListener('document:keypress', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent): void {
         if (event.key === 'Enter') {
-            if (this.setAdminPasswordForm.form.valid) {
-                this.wizardService.next();
-            }
+            this.checkPasswords();
         }
     }
 }
