@@ -6,7 +6,7 @@ import type { SingleTranslateObject, Translatable, TranslateObject } from './nx-
 function isSingleTranslate(
     obj: TranslateObject | SingleTranslateObject,
 ): obj is SingleTranslateObject {
-    return Object.values(obj.params).any(p => !!p & (typeof p === 'object'));
+    return Object.values(obj.params).some(p => !!p && typeof p === 'object');
 }
 
 /** TranslatePipe with added ways to pass arguments.
