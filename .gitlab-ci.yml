@@ -269,7 +269,28 @@ other-frontend-checks:
           start_task "npm run build-check" "eslint_plugin_build_check" &
           start_task "npm run test" "eslint_plugin_test" &
         popd
-        npm run lang-ci-check
+      popd
+
+frontend-lang:
+  extends: .frontend-node
+  stage: check
+  script:
+    - |
+      pushd "front_end"
+        npm run update-lang-files
+      if [[ $(git diff --stat) != '' ]]; then
+        echo 'Language files changed, attempting commiting changes'
+        git config user.email "$GITLAB_USER_EMAIL"
+        git config user.name "$GITLAB_USER_NAME"
+        git remote add mr_origin "https://PRIVATE-TOKEN:$CANCEL_PIPELINE_ACCESS_TOKEN@gitlab.nxvms.dev/$CI_MERGE_REQUEST_SOURCE_PROJECT_PATH.git"
+        echo "Attempting to fetch origin"
+        git remote show mr_origin
+        git pull mr_origin $CI_COMMIT_REF_NAME
+        git add .
+        git commit -m "Language autofixed by pipeline [ci skip]"
+        git push -u mr_origin HEAD:$CI_COMMIT_REF_NAME
+        echo 'pushed lang fixes to branch'
+      fi
       popd
 
 frontend-lint:
