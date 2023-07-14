@@ -1,6 +1,9 @@
 import { Config } from 'jest';
 
-export const jestConfigFactory = (displayName: string, preset = '../../jest.preset.js'): Config => ({
+export const jestConfigFactory = (
+    displayName: string,
+    preset = '../../jest.preset.js',
+): Config => ({
     displayName,
     preset,
     coverageDirectory: `../../coverage/${displayName}`,
@@ -14,7 +17,7 @@ export const jestConfigFactory = (displayName: string, preset = '../../jest.pres
             {
                 outputDirectory: `junit/${displayName}`,
                 outputName: 'junit.xml',
-            }
-        ]
-    ]
+            },
+        ],
+    ],
 });

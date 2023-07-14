@@ -4,7 +4,7 @@
         "./common/**/*.ts",
         "./libs/**/*.ts",
         "./packages/**/*.ts",
-        "./unconverted/**/*.ts",
+        "./test_utils/**/*.ts",
         "./**/*.component.html"
     ]
 }

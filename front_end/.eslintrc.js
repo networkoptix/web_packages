@@ -398,9 +398,7 @@ module.exports = {
                 // '*.js', '*.ts'
                 '*.module.ts',
                 '*types.ts',
-                'apps/**/*.ts',
-                'common/**/*.ts',
-                'eslint-plugin-nx/**/*.ts',
+                '[0-k]*/**/*.ts',
                 'libs/[0-d]*/**/*.ts',
                 'libs/features/*.ts',
                 'libs/features/[0-r]*/**/*.ts',
@@ -411,8 +409,7 @@ module.exports = {
                 // 'libs/features/systems/view//**/*.ts',
                 'libs/features/[t-z]*/**/*.ts',
                 'libs/[g-z]*/**/*.ts',
-                'packages/**/*.ts',
-                'unconverted/**/*.ts',
+                '[m-z]*/**/*.ts',
             ],
             excludedFiles: [
                 // Lower priority

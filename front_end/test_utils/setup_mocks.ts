@@ -1,4 +1,7 @@
-import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+import {
+    BrowserAnimationsModule,
+    NoopAnimationsModule,
+} from '@angular/platform-browser/animations';
 import { ngMocks } from 'ng-mocks';
 
 const mockThirdPartyModules = (): void => {

@@ -27,4 +27,11 @@ class ClipboardEvent {
     }
 }
 
-export const patchGlobals = (): unknown => Object.assign(global, { TextDecoder, TextEncoder, ResizeObserver, DataTransfer, ClipboardEvent });
+export const patchGlobals = (): unknown =>
+    Object.assign(global, {
+        TextDecoder,
+        TextEncoder,
+        ResizeObserver,
+        DataTransfer,
+        ClipboardEvent,
+    });
