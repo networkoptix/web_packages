@@ -97,3 +97,18 @@ export interface CreateOrganizationUser {
 }
 
 export type UpdateOrganizationUser = CreateOrganizationUser;
+
+/* Systems */
+export interface OrganizationSystem {
+    id: number;
+    state: string;
+    effectiveState?: string;
+    systemId: Id;
+    name: string;
+    organization: string;
+}
+
+export interface BindSystemToOrganization {
+    cloudSystemId: string;
+    organization: string;
+}

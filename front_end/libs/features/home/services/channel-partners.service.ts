@@ -54,4 +54,9 @@ export class NxChannelPartnersService {
     updateOrganizationUser = this.cpApi.updateOrganizationUser;
     getOrganizationUser = this.cpApi.getOrganizationUser;
     deleteOrganizationUser = this.cpApi.deleteOrganizationUser;
+
+    /* Systems */
+    getUserSystems = this.cpApi.getUserSystems;
+    getOrgSystems = this.cpApi.getOrgSystems;
+    bindSystemToOrg = this.cpApi.bindSystemToOrg;
 }

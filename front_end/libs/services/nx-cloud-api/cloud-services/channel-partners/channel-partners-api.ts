@@ -26,6 +26,8 @@ import type {
     UpdateChannelPartnerUser,
     UpdateOrganization,
     UpdateOrganizationUser,
+    OrganizationSystem,
+    BindSystemToOrganization,
 } from './channel-partners-api.types';
 
 // function updateCachedLicenseServer(targetProperty: string) {
@@ -200,7 +202,18 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         return this.delete(this.orgUrl([orgId, 'users', userId]));
     };
 
+    getOrgSystems = (orgId: string): Observable<OrganizationSystem[]> => {
+        return this.get(this.orgUrl([orgId, 'cloud_systems']));
+    };
+
     /* Systems */
+    getUserSystems = (): Observable<OrganizationSystem[]> => {
+        return this.get('/cloud_systems/');
+    };
+
+    bindSystemToOrg = (body: BindSystemToOrganization): Observable<OrganizationSystem> => {
+        return this.post('/cloud_systems/', { body });
+    };
 
     /* Internal */
 }

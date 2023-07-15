@@ -110,7 +110,7 @@ class LicenseConnector:
 
     async def is_admin_in_org(self, org_id):
         user = await self._get_user(org_id)
-        return self.email == user.get('email') and 'Administrator' in user.get('roles', [])
+        return self.email == user.get('email') and any(role in ['Administrator', 'Organization Administrator'] for role in user.get('roles', []))
     
     async def is_user_in_org(self, org_id):
         user = await self._get_user(org_id)

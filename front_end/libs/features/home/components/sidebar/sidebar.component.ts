@@ -10,7 +10,7 @@ import { icons } from '@src/app/variables/static-variables';
 import { GroupsItem, OpenGroups, GroupPath, GroupItem } from '../../home.types';
 import { NxSystemGroupsService } from '../../services/system-groups.service';
 import * as GroupActions from '../../store/groups/groups.actions';
-import { selectRootGroupItems } from '../../store/groups/groups.selectors';
+import { selectCurrentOrganizationRootGroupItems } from '../../store/groups/groups.selectors';
 
 @Component({
     selector: 'nx-groups-sidebar',
@@ -24,7 +24,7 @@ export class NxSystemGroupsSidebarComponent implements OnInit {
     @Input() userEmail: string;
     @Input() currentPath: GroupPath[];
     @Output() dismiss = new EventEmitter<void>();
-    rootGroupItems$ = this.store.select<GroupItem[]>(selectRootGroupItems);
+    rootGroupItems$ = this.store.select<GroupItem[]>(selectCurrentOrganizationRootGroupItems);
 
     icons = icons;
     LANG = staticLang;

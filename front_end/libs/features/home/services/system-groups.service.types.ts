@@ -68,13 +68,17 @@ export interface OutgoingData {
     create_group: {
         action: WebSocketAction.CREATE_GROUP;
         name: string;
+        org_id: string | undefined;
         target_id: string | undefined;
     };
     delete_group: {
         action: WebSocketAction.DELETE_GROUP;
         group_id: string;
     };
-    list_groups: { action: WebSocketAction.LIST_GROUPS };
+    list_groups: {
+        action: WebSocketAction.LIST_GROUPS;
+        org_id: string;
+    };
     update_group: {
         action: WebSocketAction.UPDATE_GROUP;
         group_id: string;

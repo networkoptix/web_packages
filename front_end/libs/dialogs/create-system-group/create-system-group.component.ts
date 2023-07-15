@@ -1,6 +1,9 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { Component, Inject, ViewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { NgForm } from '@angular/forms';
+import { selectCurrentOrgId } from '@app/features/home/store/channel-partners/channel-partners.selectors';
+import { Store } from '@ngrx/store';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import type { CreateSystemGroup as DT } from '@dialogs/dialogs.types';
@@ -36,22 +39,27 @@ export class CreateSystemGroupModalContent extends ModalBase<DT['return']> {
     constructor(
         private processService: NxProcessService,
         protected dialogRef: DialogRef<DT['return']>,
-        // private store: Store,
+        private store: Store,
         @Inject(DIALOG_DATA) private dialogData: DT['data'],
         private groupsService: NxSystemGroupsService,
     ) {
         super(dialogRef);
+        this.store
+            .select(selectCurrentOrgId)
+            .pipe(takeUntilDestroyed())
+            .subscribe(orgId => {
+                this.createSystemGroupProcess = this.processService.createProcess(
+                    () => {
+                        this.groupsService.createGroup(this.newGroupName, orgId, this.targetId);
+                        return Promise.resolve();
+                    },
+                    {},
+                    () => this.close(),
+                );
+            });
     }
 
     ngOnInit(): void {
         assignFrom(this.dialogData, ['targetId', 'parentGroup', 'hasGroups'], this);
-        this.createSystemGroupProcess = this.processService.createProcess(
-            () => {
-                this.groupsService.createGroup(this.newGroupName, this.targetId);
-                return Promise.resolve();
-            },
-            {},
-            () => this.close(),
-        );
     }
 }

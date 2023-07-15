@@ -9,6 +9,7 @@ import type {
     Crumb,
 } from '../../home.types';
 import { LoadingState } from '../../home.types';
+import { selectCurrentOrgId } from '../channel-partners/channel-partners.selectors';
 
 import { GroupsState } from './groups.state';
 
@@ -16,11 +17,11 @@ const selectGroupState = createFeatureSelector<GroupsState>('groups');
 
 const selectBaseGroupsItems = createSelector(selectGroupState, state => state.items);
 
-const selectSystemInfo = createSelector(selectGroupState, state => state.systemInfo);
+const selectOrgSystems = createSelector(selectGroupState, state => state.orgSystems);
 
 export const selectOpenGroups = createSelector(selectGroupState, state => state.openGroups);
 
-const selectSystemInfoMap = createSelector(selectSystemInfo, systems => {
+const selectOrgSystemsMap = createSelector(selectOrgSystems, systems => {
     return systems ? new Map<string, SystemInfo>(systems.map(s => [s.id, s])) : (systems as null);
 });
 
@@ -31,12 +32,8 @@ const hasAccessToSystem = (system: SystemItem): boolean => {
 
 export const selectGroupsItems = createSelector(
     selectBaseGroupsItems,
-    selectSystemInfoMap,
-    (items, sysInfo) => {
-        if (!items || !sysInfo) {
-            return;
-        }
-
+    selectOrgSystemsMap,
+    (items, orgSystems) => {
         const placedSystem = new Set<string>();
         function extendSystemInfo(groupItem: BaseGroupItem): GroupItem {
             groupItem.groups = groupItem.groups.map(g => extendSystemInfo({ ...g }));
@@ -45,25 +42,26 @@ export const selectGroupsItems = createSelector(
                     placedSystem.add(s.id);
                     return {
                         ...s,
-                        ...sysInfo.get(s.id),
+                        ...orgSystems.get(s.id),
                     };
                 })
                 .filter(system => hasAccessToSystem(system));
             return groupItem as GroupItem;
         }
-        const data = items.map(item => {
+        const data: GroupsItem[] = [];
+        items?.forEach(item => {
             if (item.type === 'group') {
                 item = extendSystemInfo({ ...item });
             } else {
                 item = {
                     ...item,
-                    ...sysInfo.get(item.id),
+                    ...orgSystems.get(item.id),
                 };
             }
-            return item as GroupsItem;
+            data.push(item as GroupsItem);
         });
 
-        sysInfo.forEach(system => {
+        orgSystems?.forEach(system => {
             if (!placedSystem.has(system.id)) {
                 data.push({ ...system, type: 'system', group_id: null });
                 placedSystem.add(system.id);
@@ -76,6 +74,13 @@ export const selectGroupsItems = createSelector(
 export const selectRootGroupItems = createSelector(
     selectGroupsItems,
     items => items?.filter(item => item.type === 'group' && !item.parent_group_id) as GroupItem[],
+);
+
+export const selectCurrentOrganizationRootGroupItems = createSelector(
+    selectCurrentOrgId,
+    selectGroupsItems,
+    (orgId, items) =>
+        items.filter(item => item.type === 'group' && item.org_id === orgId) as GroupItem[],
 );
 
 export const selectHasGroups = createSelector(selectRootGroupItems, groups => !!groups?.length);
@@ -151,6 +156,7 @@ export const selectCurrentGroupItems = createSelector(
         if (!indexes) {
             return null;
         }
+
         return indexes.length
             ? indexes.reduce((groups, index) => groups[index].groups, rootGroups)
             : rootGroups;

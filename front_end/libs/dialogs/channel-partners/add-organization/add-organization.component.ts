@@ -1,5 +1,6 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, Inject } from '@angular/core';
+import { NxAccountService } from '@app/services/account.service';
 import { firstValueFrom } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -27,6 +28,7 @@ export class AddOrganizationModalContent extends ModalBase<DT['return']> {
         dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) channelPartner: DT['data'],
         private cpService: NxChannelPartnersService,
+        private accountService: NxAccountService,
         processService: NxProcessService,
         toastService: NxToastService,
     ) {
@@ -42,7 +44,15 @@ export class AddOrganizationModalContent extends ModalBase<DT['return']> {
                 );
             },
             {},
-            res => this.close(res),
+            res => {
+                this.cpService
+                    .createOrganizationUser(res.id, {
+                        email: this.accountService.email,
+                        role: 'Organization Administrator',
+                    })
+                    .subscribe();
+                this.close(res);
+            },
             err => {
                 this.unlock();
                 console.error(err);

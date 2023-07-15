@@ -5,7 +5,7 @@ import type { GroupsState } from './groups.state';
 
 const initialState: GroupsState = {
     items: null,
-    systemInfo: null,
+    orgSystems: null,
     currentGroupId: undefined,
     openGroups: {},
 };
@@ -26,9 +26,9 @@ export const groupsReducer = createReducer(
     ),
     on(
         GroupActions.setSystemInfo,
-        (state, { systemInfo }): GroupsState => ({
+        (state, { orgSystems }): GroupsState => ({
             ...state,
-            systemInfo,
+            orgSystems,
         }),
     ),
     on(
