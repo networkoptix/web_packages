@@ -3,7 +3,7 @@
     class="bookmarks-tooltip"
 ></div>
 <div
-    (click)="openBookmarkModal()"
+    (click)="!thumbnailError && openBookmarkModal()"
     role="button"
     (nxOnIntersect)="bookmark.isVisible = $event === 'Visible'"
     [intersectionThreshold]="0.01"
@@ -32,12 +32,7 @@
                                     class="bookmarks-image-playIcon"
                                 ></svg-icon>
                                 <img
-                                    [src]="
-                                        (bookmark.thumbnail | async)
-                                            ? (bookmark.thumbnail | async | safe: 'resourceUrl')
-                                            : icons.dirNonStandardView +
-                                              'cameras_list_placeholder_offline.svg'
-                                    "
+                                    [src]="bookmark.thumbnail | async | safe: 'resourceUrl'"
                                     [alt]="'thumbnail of ' + bookmark.name"
                                     (error)="thumbnailError = true"
                                 />
