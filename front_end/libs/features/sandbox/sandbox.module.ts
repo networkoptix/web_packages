@@ -8,14 +8,17 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { DangerButtonModule } from '@components/danger-button/danger-button.module';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-select.component';
 import { NxSearchableDropdown } from '@components/dropdowns/searchable/searchable.component';
 import { NxMatLikeGenericDropdownModule } from '@components/mat-like-components/mat-like-generic-select/dropdown.module';
 import { PrimaryButtonModule } from '@components/primary-button/primary-button.module';
+import { NxRadioComponent } from '@components/radio/radio.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxSliderComponent } from '@components/slider/slider.component';
 import { NxBaseTableComponent } from '@components/table/table.component';
+import { NxTagComponent } from '@components/tag/tag.component';
 import { NxThemeGeneratorComponent } from '@components/theme-generator/theme-colors.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
@@ -191,6 +194,9 @@ const appRoutes: Routes = [
         NxMatLikeGenericDropdownModule,
         NxMultiSelectDropdown,
         PrimaryButtonModule,
+        DangerButtonModule,
+        NxRadioComponent,
+        NxTagComponent,
     ],
     providers: [],
 

@@ -1,4 +1,4 @@
-<div class="mb-3 container m-0 p-3">
+<div class="mb-3 container col-8 m-0 p-3">
     <div class="col-12 row mb-4">
         <div class="col-3 p-0">
             <label class="input-label col-12"
@@ -34,7 +34,7 @@
             </div>
         </div>
         <div
-            class="col-6 p-0"
+            class="col-4 p-0"
             *ngIf="isHSLTheme"
         >
             <div
@@ -54,6 +54,24 @@
                 mistake so adjust saturation and/or luminosity between 30 and 70 or just press "Adj"
                 button.
             </div>
+        </div>
+        <div
+            class="col-2 p-0"
+            *ngIf="isHSLTheme"
+        >
+            <button
+                class="btn btn-primary m-auto"
+                translate
+            >
+                Primary
+            </button>
+            <br />
+            <button
+                class="btn btn-danger m-auto"
+                translate
+            >
+                Danger
+            </button>
         </div>
     </div>
 

@@ -19,6 +19,7 @@ enum AvailableThemes {
     auto = 'auto',
     light = 'light',
     dark = 'dark',
+    hsl = 'hsl',
 }
 
 @UntilDestroy()
@@ -213,6 +214,10 @@ export class NxThemeService {
 
         if (!themesEnabled) {
             return;
+        }
+
+        if (this.themeSelected === 'hsl') {
+            this.setHSLTheme(true);
         }
 
         username &&

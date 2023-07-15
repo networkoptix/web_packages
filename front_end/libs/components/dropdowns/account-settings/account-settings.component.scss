@@ -73,6 +73,14 @@
             width         : 90px;
         }
 
+        .dropdown-arrow-wrapper {
+                .dropdown-arrow {
+                    .profile-dropdown-arrow {
+                        fill : var(--header-profile-color) !important;
+                    }
+                }
+            }
+
         &.show {
             .dropdown-arrow-wrapper {
                 background-color : var(--header-profile-active-bg) !important;

@@ -18,6 +18,7 @@ import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
+import { PrimaryButtonModule } from '@components/primary-button/primary-button.module';
 import { NxThemeSwitcherComponent } from '@components/theme-switcher/theme-switcher.component';
 import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { NxMenuService } from '@menu/menu.service';
@@ -40,6 +41,7 @@ import { NxThemeService } from '@services/theme.service';
         NxContentBlockSectionComponent,
         NxGenericDropdownModule,
         NxThemeSwitcherComponent,
+        PrimaryButtonModule,
     ],
 })
 export class NxThemeGeneratorComponent implements OnInit, AfterViewInit {
@@ -113,6 +115,7 @@ export class NxThemeGeneratorComponent implements OnInit, AfterViewInit {
         this.scope = this.document.documentElement;
 
         this.isHSLTheme = this.themeService.isHSLTheme();
+        this.isLiteTheme = this.scope.getAttribute('data-theme-mode') === 'light';
     }
 
     ngAfterViewInit(): void {

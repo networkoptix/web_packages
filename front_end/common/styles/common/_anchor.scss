@@ -1,11 +1,11 @@
 //@use "theme_variables_common";
 
 a {
-    color: var(--brand-core);
+    color: var(--anchor-color);
     text-decoration: underline;
 
     &:hover {
-        color: var(--brand-l1);
+        color: var(--anchor-hover-color);
         text-decoration: underline;
     }
 

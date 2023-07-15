@@ -12,6 +12,9 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --alt-body-bg : #000000; //$dark_gray_1;
     --body-text-color : #B8B8B8; //$light_gray_10;
 
+    --anchor-color : var(--brand-core);
+    --anchor-hover-color : var(--brand-l1);
+
     --header-bg                  : #303030; //$dark_gray_7;
     --header-border-color        : transparent;
     --header-webadm-bg           : #303030; //$dark_gray_7;
@@ -224,6 +227,7 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
    --header-arrow-hover                  : #{$dark_gray_8};
    --header-nav-arrow-bg                 : #{$dark_gray_7};
    --header-logout-action-color          : #{$light_gray_16};
+   --header-active-border-bg             : var(--brand-core);
 
     // Logo;
     --header-logo-text-color              : #{$light_gray_4};

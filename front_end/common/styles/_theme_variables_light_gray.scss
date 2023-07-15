@@ -13,6 +13,9 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --alt-body-bg : #{$light_gray_1};
     --body-text-color : #{$dark_gray_9};
 
+    --anchor-color : var(--brand-core);
+    --anchor-hover-color : var(--brand-l1);
+
     --header-bg                  : #{$light_gray_1};
     --header-border-color        : #{$light_gray_4};
     --header-webadm-bg           : #{$dark_gray_14};
@@ -217,6 +220,7 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --header-arrow-hover                  : #{$dark_gray_8};
     --header-nav-arrow-bg                 : #{$dark_gray_7};
     --header-logout-action-color          : #{$light_gray_16};
+    --header-active-border-bg             : var(--brand-core);
 
     // Mobile header
     --mobile-header-bg                    : #{$dark_gray_4};

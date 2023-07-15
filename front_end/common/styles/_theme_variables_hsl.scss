@@ -221,6 +221,9 @@ html[data-theme="hsl"] {
     --alt-body-bg : var(--new-dark1);
     --body-text-color : var(--new-light10);
 
+    --anchor-color : hsl(var(--brand-h), var(--brand-s), var(--brand-l));
+    --anchor-hover-color : hsl(var(--brand-h), var(--brand-s), calc(var(--brand-l) * var(--color-level-l1)));
+
     --header-bg                  : var(--new-dark7);
     --header-border-color        : transparent;
     --header-webadm-bg           : var(--new-dark7);
@@ -428,17 +431,18 @@ html[data-theme="hsl"] {
     --left-menu-disabled-item-addtitional-color : var(--new-dark14);
 
     // New header ******************************
-    --header-level-one-color              : var(--new-light13);
-    --header-level-one-bg                 : var(--new-dark4);
-    --header-level-one-active-bg          : var(--new-dark5);
-    --header-level-one-active-color       : var(--new-light4);
-    --header-level-one-hover-color        : var(--new-light10);
-    --header-level-two-bg                 : var(--new-dark6);
-    --header-item-disabled                : var(--new-dark13);
-    --header-level-two-hover-border-color : var(--new-dark11);
-    --header-arrow-hover                  : var(--new-dark8);
-    --header-nav-arrow-bg                 : var(--new-dark7);
-    --header-logout-action-color          : var(--new-light16);
+    --header-level-one-color              : hsl(var(--color-h), var(--color-s), calc(100% - 13 * var(--color-l-step)));
+    --header-level-one-bg                 : hsl(var(--color-h), var(--color-s), calc(0% + 4 * var(--color-l-step)));
+    --header-level-one-active-bg          : hsl(var(--color-h), var(--color-s), calc(0% + 5 * var(--color-l-step)));
+    --header-level-one-active-color       : hsl(var(--color-h), var(--color-s), calc(100% - 4 * var(--color-l-step)));
+    --header-level-one-hover-color        : hsl(var(--color-h), var(--color-s), calc(100% - 10 * var(--color-l-step)));
+    --header-level-two-bg                 : hsl(var(--color-h), var(--color-s), calc(0% + 6 * var(--color-l-step)));
+    --header-item-disabled                : hsl(var(--color-h), var(--color-s), calc(0% + 13 * var(--color-l-step)));
+    --header-level-two-hover-border-color : hsl(var(--color-h), var(--color-s), calc(0% + 11 * var(--color-l-step)));
+    --header-arrow-hover                  : hsl(var(--color-h), var(--color-s), calc(0% + 8 * var(--color-l-step)));
+    --header-nav-arrow-bg                 : hsl(var(--color-h), var(--color-s), calc(0% + 7 * var(--color-l-step)));
+    --header-logout-action-color          : hsl(var(--color-h), var(--color-s), calc(100% - 16 * var(--color-l-step)));
+    --header-active-border-bg             : hsl(var(--brand-h), var(--brand-s), var(--brand-l));
 
     // Logo;
     --header-logo-text-color              : var(--new-light4);
@@ -457,12 +461,12 @@ html[data-theme="hsl"] {
     --mobile-header-logout-btn-color      : var(--new-light2);
 
     // Header profile dropdown
-    --header-profile-bg                   : var(--new-dark7);
-    --header-profile-color                : var(--new-light13);
-    --header-profile-hover-bg             : var(--new-dark9);
-    --header-profile-hover-color          : var(--new-light10);
-    --header-profile-active-color         : var(--new-light4);
-    --header-profile-active-bg            : var(--new-dark9);
+    --header-profile-bg : hsl(var(--color-h), var(--color-s), calc(0% + 7 * var(--color-l-step)));
+    --header-profile-color : hsl(var(--color-h), var(--color-s), calc(100% - 13 * var(--color-l-step)));
+    --header-profile-hover-bg : hsl(var(--color-h), var(--color-s), calc(0% + 9 * var(--color-l-step)));
+    --header-profile-hover-color : hsl(var(--color-h), var(--color-s), calc(100% - 10 * var(--color-l-step)));
+    --header-profile-active-color : hsl(var(--color-h), var(--color-s), calc(100% - 4 * var(--color-l-step)));
+    --header-profile-active-bg : hsl(var(--color-h), var(--color-s), calc(0% + 9 * var(--color-l-step)));
 
     // Header lang
     --header-lang-bg   : var(--new-dark4);
@@ -575,34 +579,34 @@ html[data-theme="hsl"] {
     --btn-default-focus-shadow      : var(--new-brand-d1);
     --btn-default-focus-outline-rgb : var(--new-brand-d1-t30);
 
-    --btn-primary-bg                : var(--new-brand-core);
-    --btn-primary-color             : var(--new-light2);
-    --btn-primary-shadow            : none;
-    --btn-primary-hover-bg          : var(--new-brand-d2);
-    --btn-primary-hover-color       : var(--new-light2);
-    --btn-primary-hover-shadow      : inset 0 -1px 0 0 var(--new-brand-d3);
-    --btn-primary-active-bg         : var(--new-brand-d4);
-    --btn-primary-active-color      : var(--new-light2);
-    --btn-primary-active-shadow     : inset 0 1px 0 0 var(--new-brand-d4);
-    --btn-primary-focus-shadow      : var(--new-brand-l1);
-    --btn-primary-focus-outline-rgb : var(--new-brand-l1-t30);
+    --btn-primary-bg : hsl(var(--brand-h), var(--brand-s), var(--brand-l));
+    --btn-primary-color : hsl(var(--color-h), var(--color-s), calc(100% - 2 * var(--color-l-step)));
+    --btn-primary-shadow : inset 0 -1px 0 0 hsl(var(--brand-h), var(--brand-s), calc(var(--brand-l) * var(--color-level-d2)));
+    --btn-primary-hover-bg : hsl(var(--brand-h), var(--brand-s), calc(var(--brand-l) * var(--color-level-d1)));
+    --btn-primary-hover-color : hsl(var(--color-h), var(--color-s), calc(100% - 1 * var(--color-l-step)));
+    --btn-primary-hover-shadow : inset 0 -1px 0 0 hsl(var(--brand-h), var(--brand-s), calc(var(--brand-l) * var(--color-level-d2)));
+    --btn-primary-active-bg : hsl(var(--brand-h), var(--brand-s), calc(var(--brand-l) * var(--color-level-d2)));
+    --btn-primary-active-color : hsl(var(--color-h), var(--color-s), calc(100% - 1 * var(--color-l-step)));;
+    --btn-primary-active-shadow : inset 0 1px 0 0 hsl(var(--brand-h), var(--brand-s), calc(var(--brand-l) * var(--color-level-d4)));
+    --btn-primary-focus-shadow : hsl(var(--brand-h), var(--brand-s), calc(var(--brand-l) * var(--color-level-d1)));
+    --btn-primary-focus-outline-rgb : hsla(var(--brand-h), var(--brand-s), calc(var(--brand-l) * var(--color-level-d1)), 0.3);
 
-    --btn-danger-bg                : var(--new-error-d3);
-    --btn-danger-color             : var(--new-light2);
-    --btn-danger-shadow            : var(--new-error-d4);
-    --btn-danger-hover-bg          : var(--new-error-d4);
-    --btn-danger-hover-color       : var(--new-light2);
-    --btn-danger-hover-shadow      : var(--new-error-d6);
-    --btn-danger-active-bg         : var(--new-error-d5);
-    --btn-danger-active-color      : var(--new-light2);
-    --btn-danger-active-shadow     : var(--new-error-d6);
-    --btn-danger-focus-shadow      : var(--new-brand-l1);
-    --btn-danger-focus-outline-rgb : var(--new-brand-l1-t30);
+    --btn-danger-bg                : hsl(var(--error-h), var(--error-s), var(--error-l));
+    --btn-danger-color             : hsl(var(--color-h), var(--color-s), calc(100% - 1 * var(--color-l-step)));
+    --btn-danger-shadow            : hsl(var(--error-h), var(--error-s), calc(var(--error-l) * var(--color-level-d2)));
+    --btn-danger-hover-bg          : hsl(var(--error-h), var(--error-s), calc(var(--error-l) * var(--color-level-d1)));
+    --btn-danger-hover-color       : hsl(var(--color-h), var(--color-s), calc(100% - 1 * var(--color-l-step)));
+    --btn-danger-hover-shadow      : hsl(var(--error-h), var(--error-s), calc(var(--error-l) * var(--color-level-d3)));
+    --btn-danger-active-bg         : hsl(var(--error-h), var(--error-s), calc(var(--error-l) * var(--color-level-d2)));
+    --btn-danger-active-color      : hsl(var(--color-h), var(--color-s), calc(100% - 1 * var(--color-l-step)));
+    --btn-danger-active-shadow     : hsl(var(--error-h), var(--error-s), calc(var(--error-l) * var(--color-level-d4)));
+    --btn-danger-focus-shadow      : hsl(var(--brand-h), var(--brand-s), calc(var(--brand-l) * var(--color-level-d1)));
+    --btn-danger-focus-outline-rgb : hsla(var(--brand-h), var(--brand-s), calc(var(--brand-l) * var(--color-level-d1)), 0.3);
 
-    --btn-header-saparator-color : var(--new-light10);
-    --btn-header-main-bg         : transparent;
-    --btn-header-main-color      : var(--new-light4);
-    --btn-header-main-hover-bg   : var(--new-dark11);
+    --btn-header-saparator-color : hsl(var(--color-h), var(--color-s), calc(100% - 4 * var(--color-l-step)));
+    --btn-header-main-bg : hsl(var(--color-h), var(--color-s), calc(100% - 4 * var(--color-l-step)));
+    --btn-header-main-color : hsl(var(--color-h), var(--color-s), calc(0% + 9 * var(--color-l-step)));
+    --btn-header-main-hover-bg : hsl(var(--color-h), var(--color-s), calc(100% - 2 * var(--color-l-step)));
 
     --btn-header-webadm-main-bg         : transparent;
     --btn-header-webadm-main-color      : var(--new-light4);
