@@ -1,6 +1,5 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, Inject } from '@angular/core';
-import { NxAccountService } from '@app/services/account.service';
 import { firstValueFrom } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -8,6 +7,7 @@ import { ToastType } from '@components/toast-container/toast.types';
 import type { AddChannelPartner as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
+import { NxAccountService } from '@services/account.service';
 import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
 import { NxToastService } from '@services/toast.service';

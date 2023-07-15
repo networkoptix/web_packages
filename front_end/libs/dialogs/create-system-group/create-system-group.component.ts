@@ -2,13 +2,13 @@ import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { Component, Inject, ViewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { NgForm } from '@angular/forms';
-import { selectCurrentOrgId } from '@app/features/home/store/channel-partners/channel-partners.selectors';
 import { Store } from '@ngrx/store';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import type { CreateSystemGroup as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { NxSystemGroupsService } from '@pages/home/services/system-groups.service';
+import { selectCurrentOrgId } from '@pages/home/store/channel-partners/channel-partners.selectors';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { assignFrom } from '@utils/general';

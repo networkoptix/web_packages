@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, Inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { System } from '@app/services/nx-cloud-api/nx-cloud-api.types';
 import { Store } from '@ngrx/store';
 import { combineLatest } from 'rxjs';
 import { distinctUntilChanged, filter, map, mergeMap, switchMap } from 'rxjs/operators';
@@ -11,6 +10,7 @@ import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { ToastType } from '@components/toast-container/toast.types';
+import { System } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { NxSystemsService } from '@services/systems.service';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
