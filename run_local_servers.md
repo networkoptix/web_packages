@@ -148,7 +148,7 @@ Then, it will set up the system locally.
 Finally, it will connect the system to cloud.
 
 ```bash
-./cloud_helper.sh -e test@networkoptix.com -p password 5.1.0.37133
+./cloud_helper.sh -e test@networkoptix.com -p password run_local_servers 5.1.0.37133
 ```
 
 ## Running a local container and changing its cloud-host
