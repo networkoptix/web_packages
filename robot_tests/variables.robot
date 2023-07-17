@@ -326,3 +326,5 @@ ${PLACEHOLDER ICON}                //*[name()="svg-icon" and contains(@data-src,
 ${PLACEHOLDER NO SETTINGS}         //*[name()="svg-icon" and contains(@data-src,"/images/placeholders/page/NoSettings.svg")]
 
 ${FROM EMAIL DEFAULT}                   ${False}
+
+${SYSTYEM MANDATORY 2FA CHECKBOX}    //nx-checkbox[@name="mandatory2fa"]

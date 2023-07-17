@@ -803,7 +803,7 @@ class GenericKeywords(object):
                     ownerRequired = True
                     break
             if ownerRequired:
-                owners_ids = set([server["cloudOwnerId"] for server in serversJson])
+                owners_ids = set([server.get("cloudOwnerId") for server in serversJson])
                 if "owner-transfer" in BuiltIn().get_variable_value('${SUITE NAME}').lower():
                     logger.info("owner-transfer detected")
                     owners = [self.get_random_email(self.base_email, sendemail=True) for _ in

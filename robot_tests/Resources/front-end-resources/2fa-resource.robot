@@ -33,8 +33,8 @@ Restart
     Toggle 2fa Off Api    ${login user}    ${password}    verification_code=${totp}
 
 Turn on 2fa Functionality
-    [Arguments]    ${2fa link method}=without qr scan
-    Verify In System    ${system}[name]
+    [Arguments]    ${2fa link method}=without qr scan    ${system_name}=${system}[name]
+    Verify In System    ${system_name}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    
     Click Element    ${ACCOUNT DROPDOWN}
     Wait Until Element is Visible    ${SECURITY DROPDOWN}
@@ -55,6 +55,7 @@ Turn on 2fa Functionality
     ELSE
         ${key}=    Scan QR and decode to key
     END
+    sleep    5
     ${totp}=    Get 2fa Verification Code    ${key}
     Wait Until Element Is Visible    ${2FA TOTP FIELD}
     Input Text    ${2FA TOTP FIELD}    ${totp}
@@ -161,3 +162,8 @@ Check or uncheck 2fa ask for verification checkbox
     ${totp}=    Get 2fa Verification Code    ${2fa key value}
     Input Text    ${2FA TOTP FIELD}    ${totp}
     Click Element    ${2FA SETTINGS MODAL APPLY BTN}
+
+Check or uncheck mandatory 2fa for system
+    Wait Until Element Is Visible    ${SYSTYEM MANDATORY 2FA CHECKBOX}    90
+    Set Checkbox Value    ${SYSTYEM MANDATORY 2FA CHECKBOX}//input    ${True}
+    #Click Element    ${SYSTYEM MANDATORY 2FA CHECKBOX}/..
