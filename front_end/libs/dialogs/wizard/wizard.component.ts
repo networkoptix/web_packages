@@ -16,11 +16,11 @@ export class WizardModalContent implements OnInit {
     constructor(private translate: TranslateService) {}
 
     ngOnInit(): void {
+        this.inlineUrl = '?lang=' + this.translate.currentLang;
         if (environment.setupUrl) {
             // if running webadmin locally and want to use setup wizard
             // run setup wizard too and adjust port if needed
-            this.inlineUrl =
-                environment.setupUrl + this.inlineUrl + '?lang=' + this.translate.currentLang;
+            this.inlineUrl = environment.setupUrl + this.inlineUrl;
         }
     }
 
