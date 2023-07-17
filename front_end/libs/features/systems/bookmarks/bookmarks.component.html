@@ -30,7 +30,7 @@
             <nx-alert-block
                 *ngIf="(newCreationCutOffTimeMS$ | async) !== (creationCutOffTimeMS$ | async)"
                 type="info"
-                [iconSrc]="icons.dirNonStandard + 'info-alerts.svg'"
+                [iconSrc]="icons.dirNonStandard + 'info' + '.svg'"
                 [line1]="'New Bookmarks available' | translate"
                 [btnIconSrc]="icons.dirTextButtons + 'reload.svg'"
                 [btnCaption]="'Refresh'"
