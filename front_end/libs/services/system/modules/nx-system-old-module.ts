@@ -794,7 +794,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
             .getEventRules()
             .pipe(
                 switchMap(existingRules =>
-                    (enabled ? this.#addAlexaRules : this.#removeAlexaRules)(
+                    (enabled ? this.addAlexaRules : this.removeAlexaRules)(
                         existingRules,
                         this.userManager.currentUser,
                         `"Alexa layout command for ${this.userManager.currentUser.email}"`,
@@ -804,7 +804,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
             );
     }
 
-    #addAlexaRules = async (
+    addAlexaRules = async (
         existingRules: EventRule[],
         user: NxUser,
         alarmResourceName: string,
@@ -839,7 +839,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         });
     };
 
-    #removeAlexaRules = async (
+    removeAlexaRules = async (
         existingRules: EventRule[],
         user: NxUser,
         alarmResourceName: string,
