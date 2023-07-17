@@ -271,10 +271,7 @@ def test_language_change_affects_emails():
     """14 Language change affects emails"""
     driver = get_headless_chrome()
     password = "theF0rc3"
-
-    print("base email", rb.BASE_EMAIL)
     random_email = get_random_email(rb.BASE_EMAIL_SENDEMAIL, sendemail=True)
-    print("random email", random_email)
     register_and_activate_account(driver, "Darth", "Vader", random_email, password)
     robot_keywords.go_to_url(driver, rb.ENV + "/account")
     subject = "Reset your password"
@@ -294,13 +291,11 @@ def test_language_change_affects_emails():
     except MaxRetryError:
         driver = None
         driver = get_headless_chrome()
-        #robot_keywords.go_to_url(driver, rb.ENV + "/login")
 
     send_restore_password_email(driver, random_email)
     sleep(10)
-    print(rb.BASE_HOST, rb.BASE_PASSWORD, rb.TEST_EMAIL, random_email)
     mbox = resource.open_mailbox(host=rb.BASE_HOST,password=rb.BASE_EMAIL_PASSWORD, email=random_email, is_secure=True)
-    email, email_uid = resource.wait_for_email(mbox, recipient=random_email, timeout=120, status="UNREAD")
+    email_uid = resource.wait_for_email(mbox, recipient=random_email, timeout=120, status="UNREAD")
     resource.delete_email(mbox, email_uid)
     resource.check_language_logged_in(random_email, password)
 
@@ -317,7 +312,9 @@ if __name__ == "__main__":
     # test_SPACE_for_first_name_is_not_valid()
     # test_SPACE_for_last_name_is_not_valid()
     # test_should_respond_tab_and_go()
+
     test_language_is_changeable_on_the_account_page()
+    test_language_change_affects_emails()
 
   
 
