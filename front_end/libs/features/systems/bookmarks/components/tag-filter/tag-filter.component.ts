@@ -2,7 +2,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { icons } from '@src/app/variables/static-variables';
+import { icons } from '@variables/static-variables';
 
 @Component({
     selector: 'nx-tag-filter',

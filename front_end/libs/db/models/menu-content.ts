@@ -1,6 +1,6 @@
 import { Table } from 'dexie';
 
-import { Content } from '@src/app/menu/menu.types';
+import { Content } from '@menu/menu.types';
 
 // This is the type signature for the table itself. Accepts the interface and the primary key type.
 type TableDef = Table<Content, string>;

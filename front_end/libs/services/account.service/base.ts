@@ -10,6 +10,7 @@ import { filter } from 'rxjs/operators';
 import staticLang from '@common/language/language_i18n_static.json';
 import { accountActions, accountSelectors } from '@common/store/account';
 import { ToastType } from '@components/toast-container/toast.types';
+import { UnstructuredTable } from '@db/models/unstructured';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { oauthStore, redirect } from '@lib/variables/static-variables';
 import { NxDbService } from '@services/db.service';
@@ -18,7 +19,6 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { OauthService } from '@services/oauth.service';
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxToastService } from '@services/toast.service';
-import { UnstructuredTable } from '@src/app/db/models/unstructured';
 import { memoizeAsyncPersistent } from '@utils/memoize';
 
 import { NxApplyService } from '../apply.service';

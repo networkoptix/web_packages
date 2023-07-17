@@ -20,6 +20,7 @@
                 "libs/components-buildable/src/lib/*"
             ],
             "@decorators/*": ["libs/decorators/*"],
+            "@db/*": ["libs/db/*"],
             "@dialogs/*": ["libs/dialogs/*"],
             "@directives/*": ["libs/directives/*"],
             "@environments/*": ["common/environments/*"],
@@ -46,10 +47,9 @@
             "@vms-client/*": ["libs/features/systems/view/vms-client/*"],
             "components-buildable-build": ["libs/components-buildable-build/src/index.ts"],
             "@common/*": ["common/*"],
+            "@libs/*": ["libs/*"],
             "@packages/*": ["packages/*"],
-            "@lib/*": ["common/*", "libs/*", "packages/*"],
-            "@src/*": ["common/*", "libs/*"],
-            "@src/app/*": ["common/*", "libs/*"]
+            "@lib/*": ["common/*", "libs/*", "packages/*"]
         },
         "typeRoots": ["node_modules/@types"]
     },

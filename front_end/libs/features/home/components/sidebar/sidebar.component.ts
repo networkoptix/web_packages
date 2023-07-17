@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import staticLang from '@common/language/language_i18n_static.json';
 import { CoercedBoolInput } from '@decorators/ibool';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { icons } from '@src/app/variables/static-variables';
+import { icons } from '@variables/static-variables';
 
 import { GroupsItem, OpenGroups, GroupPath, GroupItem } from '../../home.types';
 import { NxSystemGroupsService } from '../../services/system-groups.service';

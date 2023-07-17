@@ -6,13 +6,13 @@ import { environment } from '@environments/environment';
 import staticLang from '@language/language_i18n_static.json';
 // import { NxMenuService } from '@menu/menu.service';
 // import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxMenuService } from '@menu/menu.service';
 import { NxPartnersService } from '@pages/channel-partners/partners.service';
 import { NxApplyService } from '@services/apply.service';
 import {
     OrganizationInfo,
     PartnerInfo,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import { NxMenuService } from '@src/app/menu/menu.service';
 
 @UntilDestroy()
 @Component({

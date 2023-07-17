@@ -45,8 +45,8 @@ import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
-import { servers } from '@src/app/variables/static-variables';
 import { assignFrom, alphabeticalSort, cleanIp, strSplice, cleanId } from '@utils/general';
+import { servers } from '@variables/static-variables';
 
 import {
     MergeErrorData,

@@ -13,10 +13,10 @@ import { escapeRegExp } from 'lodash-es';
 import type { BehaviorSubject } from 'rxjs';
 
 import { WINDOW } from '@services/window-provider';
-import { icons } from '@src/app/variables/static-variables';
 import { MS } from '@utils/general';
 import type { NgChanges } from '@utils/ng-changes';
 import { getSysLang } from '@utils/nx';
+import { icons } from '@variables/static-variables';
 
 const oneToTwelve = '((0?[1-9])|(1[0-2]))';
 const zeroToTwentythree = '((0?\\d)|(1\\d)|(2[0-3]))';

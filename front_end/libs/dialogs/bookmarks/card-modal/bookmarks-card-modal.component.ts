@@ -2,7 +2,7 @@ import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { Component, Inject } from '@angular/core';
 
 import type { Bookmark } from '@pages/systems/bookmarks/bookmarks.types';
-import { icons } from '@src/app/variables/static-variables';
+import { icons } from '@variables/static-variables';
 
 import { BookmarkDetails as DT } from '../../dialogs.types';
 
