@@ -53,7 +53,7 @@
                 name="login_email"
                 #login_email="ngModel"
                 [ngModel]="auth.email"
-                (ngModelChange)="setEmail($event); resetForm()"
+                (ngModelChange)="resetForm()"
                 maxlength="255"
                 [disabled]="loading"
                 required
@@ -79,7 +79,7 @@
                 required
                 [disabled]="loading"
                 nxFocusMe
-                [setFocus]="auth?.email.length !== 0"
+                [setFocus]="!!auth?.email"
             />
             <div
                 class="input-error"

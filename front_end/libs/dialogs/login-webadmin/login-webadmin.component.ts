@@ -239,6 +239,7 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
         errorCodes[cloudLogin] = () => this.LANG.toastMessage.webAdminCloudCredentialError;
         this.login = this.processService.createProcess(
             () => {
+                this.setEmail(this.loginForm.controls.login_email.value);
                 this.loginForm.controls.login_email.setErrors(undefined);
                 this.loginForm.controls.login_password.setErrors(undefined);
                 this.wrongCredentials = false;
