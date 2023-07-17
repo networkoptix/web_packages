@@ -1,5 +1,5 @@
 import robot_keywords
-from input import Input
+from text_field import TextField
 from button import Button
 from RobotVariables import RobotVariables
 
@@ -10,17 +10,17 @@ class LoginDialog:
         self.rb = RobotVariables(lang)
         self._wait_until_modal_is_visible()
 
-    def email_input(self) -> Input:
-        return Input(self.driver, "//nx-authorize-component//input[@id='authorizeEmail']")
+    def email_input(self) -> TextField:
+        return TextField(self.driver, "//nx-authorize-component//input[@id='authorizeEmail']")
 
-    def password_input(self) -> Input:
-        return Input(self.driver, "//nx-authorize-component//input[@id='authorizePassword']")
+    def password_input(self) -> TextField:
+        return TextField(self.driver, "//nx-authorize-component//input[@id='authorizePassword']")
     
-    def password_input_error_message(self) -> Input:
+    def password_input_error_message(self) -> TextField:
         translated_xpath = self.rb.replace_nested_variables(
             "//nx-authorize-component//p[contains(text(),'{WRONG_PASSWORD}')]")
         print(translated_xpath)
-        return Input(self.driver, translated_xpath)
+        return TextField(self.driver, translated_xpath)
 
     def next_button(self):
         return Button(self.driver, "//nx-authorize-component//nx-process-button[@data-testid='btnLogin']")

@@ -1,5 +1,5 @@
 import robot_keywords
-from input import Input
+from text_field import TextField
 from button import Button
 from RobotVariables import RobotVariables
 from variables import ENV
@@ -12,11 +12,11 @@ class ChangePassForm:
         self._wait_until_form_is_visible()
         self._location_is_correct()
 
-    def current_password_input(self) -> Input:
-        return Input(self.driver, "//input[@id='password']")
+    def current_password_input(self) -> TextField:
+        return TextField(self.driver, "//input[@id='password']")
 
-    def new_password_input(self) -> Input:
-        return Input(self.driver, "//nx-password-input[@componentid='newPassword']//input")
+    def new_password_input(self) -> TextField:
+        return TextField(self.driver, "//nx-password-input[@componentid='newPassword']//input")
 
     def save_button(self) -> Button:
         translated_xpath = self.rb.replace_nested_variables("//button[contains(text(), '{SAVE_BUTTON_TEXT}')]")

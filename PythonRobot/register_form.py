@@ -1,5 +1,5 @@
 import robot_keywords
-from input import Input
+from text_field import TextField
 from button import Button
 from RobotVariables import RobotVariables
 
@@ -12,13 +12,13 @@ class RegisterForm:
         self._location_is_correct()
     
     def first_name_input(self):
-        return Input(self.driver, "//form//input[@id='firstName']")
+        return TextField(self.driver, "//form//input[@id='firstName']")
 
     def last_name_input(self):
-        return Input(self.driver, "//form//input[@id='lastName']")
+        return TextField(self.driver, "//form//input[@id='lastName']")
 
     def password_input(self):
-        return Input(self.driver, "//form//nx-password-input//input[@id='createAccountPassword']")
+        return TextField(self.driver, "//form//nx-password-input//input[@id='createAccountPassword']")
 
     def create_account_button(self):
         return Button(self.driver, f"//button[contains(text(),'{self.rb.CREATE_ACCOUNT_BUTTON_TEXT}')]")

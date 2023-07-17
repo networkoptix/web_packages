@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 import robot_keywords
 
 
-class Input:
+class TextField:
     def __init__(self, driver: webdriver, locator):
         self.driver = driver
         robot_keywords.wait_until_element_is_visible(self.driver, locator)
