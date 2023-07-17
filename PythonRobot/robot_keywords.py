@@ -187,3 +187,22 @@ def get_element_style(driver, locator, styleAttribute):
         except:
             not_found = f"No element found with style attribute {styleAttribute}"
         raise AssertionError(not_found)
+
+def title_should_be(driver, title: str, message: str = None):
+        """Verifies that the current page title equals ``title``.
+
+        The ``message`` argument can be used to override the default error
+        message.
+
+        ``message`` argument is new in SeleniumLibrary 3.1.
+        """
+        actual = get_title(driver)
+        if actual != title:
+            if message is None:
+                message = f"Title should have been '{title}' but was '{actual}'."
+            raise AssertionError(message)
+        driver.info(f"Page title is '{title}'.")
+
+def get_title(driver) -> str:
+        """Returns the title of the current page."""
+        return driver.title
