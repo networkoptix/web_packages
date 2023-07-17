@@ -1,18 +1,11 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { computed, Injectable, Signal, signal } from '@angular/core';
 
 import type { ServerTimeInfo } from '@services/system.service/system-types';
 import { GUID, ms } from '@vms-client/utils/type-aliases';
 
-import { ICamera, CameraArchive } from '../datatypes/ICamera';
+import { CameraArchive, ICamera } from '../datatypes/ICamera';
 import { IMediaServer } from '../datatypes/IMediaServer';
-import {
-    VmsState,
-    VMS_MODE,
-    createNotInitializedState,
-    createCameraNotSelectedState,
-    createCameraSelectedState,
-} from '../datatypes/VmsState';
+import { initializeVmsState, VMS_MODE, VmsState } from '../datatypes/VmsState';
 // import testMediaServers from '../testMediaServers'
 
 // these two types allow separation of
@@ -26,6 +19,10 @@ type tweakedMs = ms;
 })
 export class VideoManagementSystemService {
     static readonly statusRefreshInterval = 15000;
+    private _selectedCamera: Signal<ICamera> = computed(() => this.state().selectedCamera);
+    state = signal<VmsState>(initializeVmsState());
+    serverTimes = signal<Array<ServerTimeInfo>>([]);
+    systemId: Signal<string> = computed(() => this.state().systemId);
 
     constructor(
     ) {
@@ -34,52 +31,12 @@ export class VideoManagementSystemService {
 
     public reset(): void {
         // console.log('reset');
-        this._state = createNotInitializedState();
-        this._serverTimes = undefined;
-        this._emit();
-    }
-
-    protected _subject = new BehaviorSubject<VmsState>(createNotInitializedState());
-    protected _selectedCamera = new BehaviorSubject<ICamera>(undefined);
-
-    protected _emit(): void {
-        // console.log('_emit', { ...this.state });
-        this._subject.next(this.state);
-    }
-
-    public get subject(): BehaviorSubject<VmsState> {
-        return this._subject;
-    }
-
-    protected _systemId: string = undefined;
-
-    public get systemId(): string {
-        return this._systemId;
-    }
-
-    protected _state: VmsState = createNotInitializedState();
-
-    public get state(): VmsState {
-        return this._state;
+        this.state.set(initializeVmsState());
+        this.serverTimes.set([]);
     }
 
     public get selectedCamera() {
-        return this._selectedCamera.getValue();
-    }
-
-    public set selectedCamera(camera) {
-        this._selectedCamera.next(camera);
-    }
-
-    protected _serverTimes: Array<ServerTimeInfo>;
-
-    public set serverTimes(st: Array<ServerTimeInfo>) {
-        // console.log('serverTimes set', st.map(i => i.timeZoneOffset), st);
-        this._serverTimes = [...st];
-    }
-
-    public get serverTimes() {
-        return this._serverTimes;
+        return this._selectedCamera();
     }
 
     /*
@@ -118,18 +75,18 @@ export class VideoManagementSystemService {
     */
 
     public get timeZoneOffset(): ms {
+        const serverTimes = this.serverTimes();
         let result = 0;
-        if (!this.serverTimes?.length) {
+        if (serverTimes?.length) {
             // console.warn('TZO no server times data');
-        } else if (this.state.mode !== VMS_MODE.CAMERA_SELECTED) {
+        } else if (this.state().mode !== VMS_MODE.CAMERA_SELECTED) {
             // console.warn('TZO no camera selected');
         } else {
+            const { parentServerId, preferredServerId } = this._selectedCamera();
+            const targetServerIds = [parentServerId, preferredServerId];
             const preferredServerTime =
-                this.serverTimes.find(st =>
-                    st.serverId === this.selectedCamera.preferredServerId
-                ) || this.serverTimes.find(
-                    st => st.serverId === this.selectedCamera.parentServerId
-                ) || this.serverTimes[0];
+                serverTimes.find(st =>
+                    targetServerIds.includes(st.serverId)) || serverTimes[0];
             const clientTZO = -(new Date()).getTimezoneOffset() * 60000;
             const serverTZO = preferredServerTime?.timeZoneOffset;
             if (serverTZO === undefined) {
@@ -151,29 +108,34 @@ export class VideoManagementSystemService {
 
     public setMediaServers(
         systemId: string,
-        mediaServers: Array<IMediaServer>,
-        updateCamerasOnly = false
+        mediaServers: Array<IMediaServer>
     ): void {
         // console.log('setMediaServers', systemId, mediaServers, updateCamerasOnly);
-        this._systemId = systemId;
-        // @ts-expect-error
-        const prevSelectedCameraId: GUID | undefined = this._state?.selectedCameraId;
-        this._state = createCameraNotSelectedState(systemId, mediaServers);
-        if (prevSelectedCameraId) {
-            this._state = createCameraSelectedState(this._state, prevSelectedCameraId);
-        }
-        if (!updateCamerasOnly) {
-            this._emit();
-        }
+        this.state.mutate(state => {
+            state.systemId = systemId;
+            state.mediaServers = mediaServers;
+            state.mode = VMS_MODE.CAMERA_NOT_SELECTED;
+            state.cameras = (mediaServers || []).reduce((acc, ms) => {
+                ms.cameras.forEach(c => {
+                    acc[c.id] = c;
+                });
+                return acc;
+            }, {});
+            const prevSelectedCameraId = state.selectedCameraId;
+            if (prevSelectedCameraId && prevSelectedCameraId in state.cameras) {
+                state.mode = VMS_MODE.CAMERA_SELECTED;
+                state.selectedCamera = state.cameras[prevSelectedCameraId];
+            }
+        });
     }
 
     public setCameraRecords(cameraId: string, range, records): void {
-        this.selectedCamera?.setRecords(range, records);
+        this._selectedCamera()?.setRecords(range, records);
     }
 
     public addRecordsToSelectedCamera(cameraId: string, records: CameraArchive): void {
-        if (this._state.mode !== VMS_MODE.NOT_INITIALIZED) {
-            this.selectedCamera.pushRecordedChunks(records);
+        if (this.state().mode !== VMS_MODE.NOT_INITIALIZED) {
+            this._selectedCamera().pushRecordedChunks(records);
         } else {
             // console.warn(
             //     'attempt to set camera newly recorded records while in NOT_INITIALIZED state',
@@ -189,28 +151,29 @@ export class VideoManagementSystemService {
     // }
 
     public selectCamera(cameraId: GUID): void {
-        if (this._state.mode === VMS_MODE.NOT_INITIALIZED) {
+        const state = this.state();
+        if (!state || state.mode === VMS_MODE.NOT_INITIALIZED || !state.mediaServers.length || !Object.keys(state.cameras).length) {
             // console.warn('attempt to select camera while VMS is not initialized yet');
             return;
         }
-        if (this._state.mediaServers.length === 0) {
-            // console.warn('Attempt to select camera with no mediaservers');
-            return;
-        }
-        this._state = createCameraSelectedState(this._state, cameraId);
-        if (this._state.mode === VMS_MODE.CAMERA_SELECTED) {
-            this.selectedCamera = this._state.selectedCamera;
-        }
-        // console.log('camera selected', this.selectedCamera);
-        this._emit();
+        this.state.mutate(state => {
+            if (cameraId in state.cameras) {
+                state.mode = VMS_MODE.CAMERA_SELECTED;
+                state.selectedCamera = state.cameras[cameraId];
+                state.selectedCameraId = cameraId;
+            }
+        });
     }
 
     public clearCameraSelection(): void {
-        if (this._state.mode === VMS_MODE.NOT_INITIALIZED) {
+        if (this.state().mode === VMS_MODE.NOT_INITIALIZED) {
             // console.warn('attempt to clear camera selection while VMS is not initialized yet');
             return;
         }
-        this._state = createCameraNotSelectedState(this.systemId, this._state.mediaServers);
-        this._emit();
+        this.state.mutate(state => {
+            state.mode = VMS_MODE.CAMERA_NOT_SELECTED;
+            state.selectedCamera = undefined;
+            state.selectedCameraId = '';
+        });
     }
 }

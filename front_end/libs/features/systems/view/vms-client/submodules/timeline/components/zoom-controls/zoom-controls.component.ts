@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, effect } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { animationFrameScheduler, interval } from 'rxjs';
 
@@ -28,7 +28,11 @@ export class ZoomControlsComponent implements OnInit {
         public timeline: TimelineService,
         public vms: VideoManagementSystemService,
         public playback: PlaybackService,
-    ) {}
+    ) {
+        effect(() => {
+            this._updateEnabledDisabled(this.vms.state());
+        });
+    }
 
     private _onAnimationFrame(): void {
         this.performZoomingStep();
@@ -41,12 +45,6 @@ export class ZoomControlsComponent implements OnInit {
                 this.onTimelineSubjectChange(s);
             });
 
-        this.vms.subject
-            .pipe(untilDestroyed(this))
-            .subscribe((s: VmsState) => {
-                this.onVmsSubjectChange(s);
-            });
-
         interval(0, animationFrameScheduler)
             .pipe(untilDestroyed(this))
             .subscribe(() => {
@@ -56,16 +54,11 @@ export class ZoomControlsComponent implements OnInit {
 
     public onTimelineSubjectChange(state: TimelineServiceStatus): void {
         this.state = state;
-        this._updateEnabledDisabled();
+        this._updateEnabledDisabled(this.vms.state());
     }
 
-    public onVmsSubjectChange(state: VmsState): void {
-        this._updateEnabledDisabled();
-    }
-
-    protected _updateEnabledDisabled(): void {
-        const vmsState = this.vms.subject.getValue();
-        this.disabled = vmsState.mode !== VMS_MODE.CAMERA_SELECTED;
+    protected _updateEnabledDisabled(state: VmsState): void {
+        this.disabled = state.mode !== VMS_MODE.CAMERA_SELECTED;
         this.canZoomIn = (!this.disabled && this.state?.zoom?.canZoomIn) || false;
         this.canZoomOut = (!this.disabled && this.state?.zoom?.canZoomOut) || false;
     }

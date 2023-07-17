@@ -113,7 +113,7 @@ export class TimelineService {
 
     public extendToNow(): void {
         const serverId = this.vms.selectedCamera.parentServerId;
-        const serverTimes = this.vms.serverTimes.find(server => (server.serverId = serverId));
+        const serverTimes = this.vms.serverTimes()?.find(server => (server.serverId = serverId));
 
         const now = Date.now() - serverTimes.vmsTimeOffset;
 

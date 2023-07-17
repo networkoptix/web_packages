@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit, AfterViewInit, Output, EventEmitter, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Output, EventEmitter, ElementRef, effect } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { SessionStorageService } from 'ngx-webstorage';
 
@@ -61,15 +61,18 @@ export class PlayerComponent implements OnInit, AfterViewInit {
             e => this.onClick(e),
             e => this.onDblClick(e)
         );
+
+        effect(() => {
+            this.onVmsSubjectChange(this.vms.state());
+        });
     }
 
     fetchRuntime() {
-        return this.sessionStorage.retrieve(`${this.vms.systemId}-${this.xRuntimeGuid}`);
+        return this.sessionStorage.retrieve(`${this.vms.systemId()}-${this.xRuntimeGuid}`);
     }
 
     public ngOnInit(): void {
         this.onPlaybackSubjectChange(this.playback.state);
-        this.onVmsSubjectChange(this.vms.state);
     }
 
     public ngAfterViewInit(): void {
@@ -77,12 +80,6 @@ export class PlayerComponent implements OnInit, AfterViewInit {
             .pipe(untilDestroyed(this))
             .subscribe((s: PlaybackState) => {
                 this.onPlaybackSubjectChange(s);
-            });
-
-        this.vms.subject
-            .pipe(untilDestroyed(this))
-            .subscribe((s: VmsState) => {
-                this.onVmsSubjectChange(s);
             });
     }
 

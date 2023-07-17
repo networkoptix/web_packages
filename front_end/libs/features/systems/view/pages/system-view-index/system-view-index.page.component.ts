@@ -7,6 +7,7 @@ import {
     Renderer2,
     HostBinding,
     Inject,
+    effect
 } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -137,16 +138,13 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         this.fullscreenMode = false;
         this.showElementsInFSM = true;
         this.newHeader = this.CONFIG.featureFlags.newHeader;
+        effect(() => {
+            this._onVmsSubjectChange(this.vms.state());
+        });
     }
 
     public ngOnInit(): void {
         this.vms.reset();
-
-        this.vms.subject
-            .pipe(untilDestroyed(this))
-            .subscribe((s: VmsState) => {
-                this._onVmsSubjectChange(s);
-            });
 
         this.route.params
             .pipe(untilDestroyed(this))
@@ -417,7 +415,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                 processingMediaServers = true;
                 const serverTimeInfos =
                     await this.system.getServerTimes();
-                this.vms.serverTimes = serverTimeInfos;
+                this.vms.serverTimes.set(serverTimeInfos);
                 serverTimeInfos.forEach(sti => {
                     const mediaServer = mediaServers?.find(
                         ms => ms.id === sti.serverId,

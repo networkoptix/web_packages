@@ -2,6 +2,7 @@ import { DOCUMENT, Location } from '@angular/common';
 import {
     AfterViewInit,
     Component,
+    effect,
     ElementRef,
     HostListener,
     Inject,
@@ -136,6 +137,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         );
 
         this.isLocal = environment.isLocal;
+        effect(() => {
+            this._onVmsStateChange(this.vms.state());
+        });
     }
 
     public ngOnInit(): void {
@@ -191,12 +195,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             .pipe(untilDestroyed(this))
             .subscribe(params => {
                 this._onRouteChange(params);
-            });
-
-        this.vms.subject
-            .pipe(untilDestroyed(this))
-            .subscribe(vmsState => {
-                this._onVmsStateChange(vmsState);
             });
 
         this.ux.subject
@@ -703,10 +701,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     private _onVmsStateChange(s: VmsState): void {
         switch (s.mode) {
             case VMS_MODE.NOT_INITIALIZED:
-                this.camera = undefined;
-                break;
             case VMS_MODE.CAMERA_NOT_SELECTED:
-                this.vms.selectCamera(this.id);
+                this.camera = undefined;
                 break;
             case VMS_MODE.CAMERA_SELECTED:
                 if (this.camera?.id !== s.selectedCamera.id) {
