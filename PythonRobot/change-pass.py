@@ -13,6 +13,7 @@ from login import LoginDialog
 from header import HeaderNav
 from change_pass_form import ChangePassForm
 from landing_page import LandingPage
+from selenium.webdriver.common.keys import Keys
 
 password = "qweasd 123"
 #login = ""
@@ -132,9 +133,27 @@ def password_with_space_in_the_middle_is_valid():
     robot_keywords.close_browser(driver)
     print("pass")
 
+def pressing_enter_key_saves_data():
+    driver = get_headless_chrome()
+    email = resource.get_random_email()
+    register_and_activate_account(driver, "Mark", "Hamill", email, "qweasd 123")
+    robot_keywords.go_to_url(driver, f"{ENV}/account/password")
+    LoginDialog(driver).basic_cloud_login(email, "qweasd 123")
+
+    change_pass_form = ChangePassForm(driver)
+    change_pass_form.current_password_input().input_text("qweasd 123")
+    change_pass_form.new_password_input().input_text('qweasd 123')
+    change_pass_form.new_password_input().input_text(Keys.ENTER)
+
+    change_pass_form.no_unsaved_changes_message()
+    robot_keywords.close_browser(driver)
+    print("pass")
+
+
 if __name__ == "__main__":
     can_be_accessed_via_dropdown()
     can_be_accessed_via_direct_url()
     password_is_actually_changed_and_login_works_with_new_password()
     password_with_symbols_is_valid()
     password_with_space_in_the_middle_is_valid()
+    pressing_enter_key_saves_data()
