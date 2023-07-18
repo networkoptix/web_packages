@@ -11,17 +11,22 @@ WORKDIR /app
 RUN set -ex \
     && apt-get update \
     && apt-get install --no-install-suggests --no-install-recommends -y  \
-        libmariadb-dev libcurl4-openssl-dev tini gettext-base mariadb-client-core-10.5 pkg-config \
+        bash netcat jq curl libmariadb-dev libcurl4-openssl-dev tini  \
+        gettext-base mariadb-client-core-10.5 pkg-config \
     && apt autoremove -y --purge && apt clean -y && rm -rf /var/lib/apt/lists/*
 
 
 FROM builder as requirements
 
+ENV POETRY_VERSION="1.5.1" \
+    POETRY_HOME="/opt/poetry"
+ENV PATH="$POETRY_HOME/bin:$PATH"
+
 COPY cloud/pyproject.toml /app/
 COPY cloud/poetry.lock /app/
 WORKDIR /app
 RUN set -ex \
-    && pip install poetry==1.5.1 --no-cache-dir --prefer-binary \
+    && python -m pip install --prefer-binary --no-cache-dir poetry==1.5.1 jsonschema==4.17.3  \
     && poetry config virtualenvs.create false --local \
     && poetry lock --check \
     && poetry export --with prod,test,front-build --without-hashes --without-urls -o /app/requirements.txt \

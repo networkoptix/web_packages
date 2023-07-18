@@ -108,13 +108,13 @@ optional=true
 pip-licenses = "4.2.0"
 
 [[tool.poetry.source]]
-name = "pypi-python3.8-alpine3.12"
-url = "http://artifactory.us.nxteam.dev/artifactory/api/pypi/pypi-python3.8-alpine3.12/simple"
+name = "pypi-remote"
+url = "http://artifactory.us.nxteam.dev/artifactory/api/pypi/pypi-remote/simple"
 priority = "default"
 
 [[tool.poetry.source]]
-name = "pypi-remote"
-url = "http://artifactory.us.nxteam.dev/artifactory/api/pypi/pypi-remote/simple"
+name = "pypi-local"
+url = "http://artifactory.us.nxteam.dev/artifactory/api/pypi/pypi-local/simple"
 priority = "primary"
 
 [build-system]

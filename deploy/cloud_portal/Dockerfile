@@ -12,7 +12,8 @@ WORKDIR /app
 RUN set -ex \
     && apt-get update \
     && apt-get install --no-install-suggests --no-install-recommends -y  \
-                libmariadb-dev libcurl4-openssl-dev tini gettext-base mariadb-client-core-10.5 pkg-config \
+        bash netcat jq curl libmariadb-dev libcurl4-openssl-dev tini  \
+        gettext-base mariadb-client-core-10.5 pkg-config \
     && apt autoremove -y --purge && apt clean -y && rm -rf /var/lib/apt/lists/*
 
 
@@ -22,7 +23,7 @@ COPY stage/cloud/pyproject.toml /app/
 COPY stage/cloud/poetry.lock /app/
 WORKDIR /app
 RUN set -ex \
-    && pip install poetry==1.5.1 --no-cache-dir --prefer-binary \
+    && python -m pip install --prefer-binary --no-cache-dir poetry==1.5.1 jsonschema==4.17.3  \
     && poetry config virtualenvs.create false --local \
     && poetry lock --check \
     && poetry export --with prod,piplicenses --without-hashes --without-urls -o /app/requirements.txt \

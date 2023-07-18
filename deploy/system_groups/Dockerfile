@@ -9,6 +9,8 @@ ENV PIP_TRUSTED_HOST $ARTIFACTORY_HOST
 COPY stage/requirements.txt /app/requirements.txt
 
 RUN set -ex \
+    && apt-get update \
+    && apt-get install --no-install-suggests --no-install-recommends -y  bash netcat jq curl \
     && pip install --prefer-binary -r /app/requirements.txt
 
 
