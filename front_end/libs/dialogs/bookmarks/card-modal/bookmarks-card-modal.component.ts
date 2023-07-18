@@ -35,7 +35,7 @@ export class NxBookmarksCardModalComponent {
         const dialogData = {
             bookmarkName: this.bookmark.name,
             exportName: this.exportName,
-            downloadSrc: this.bookmark.downloadSrc
+            downloadSrc: this.bookmark.downloadSrc,
         };
         this.dialogs.bookmarkDownload(dialogData);
     }

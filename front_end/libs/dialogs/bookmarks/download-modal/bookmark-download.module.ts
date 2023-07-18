@@ -6,17 +6,9 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NxBookmarkDownloadComponent } from './bookmark-download.component';
 
 @NgModule({
-    declarations: [
-        NxBookmarkDownloadComponent,
-    ],
+    declarations: [NxBookmarkDownloadComponent],
     providers: [],
-    exports: [
-        NxBookmarkDownloadComponent,
-    ],
-    imports: [
-        AngularSvgIconModule,
-        CommonModule,
-        TranslateModule,
-    ]
+    exports: [NxBookmarkDownloadComponent],
+    imports: [AngularSvgIconModule, CommonModule, TranslateModule],
 })
 export class NxBookmarkDownloadModule {}
