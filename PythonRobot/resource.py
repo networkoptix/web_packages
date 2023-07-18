@@ -45,6 +45,7 @@ def get_headless_chrome():
     # TODO: remove logging stuff and restore headless option
     chrome_options = Options()
     chrome_options.add_argument("--enable-logging")
+    chrome_options.add_argument("--log-level=3")
     #chrome_options.add_argument("--headless")
    
     capabilities = DesiredCapabilities.CHROME
@@ -99,7 +100,7 @@ def get_lang_list():
 
 def activate(driver, email, password=rb.BASE_PASSWORD, from_email=rb.FROM_EMAIL_DEFAULT):
     if from_email:
-        link = get_email_link(email, password, "activate", via_email=from_email)
+        link = get_email_link(email, password, "activate")
         robot_keywords.go_to_url(link)
         for element in [rb.ACTIVATION_SUCCESS, rb.ACTIVATION_SUCCESS_ICON, rb.ACTIVATION_SUCCESS_LOG_IN_BUTTON]:
             robot_keywords.wait_until_element_is_visible(driver, element)

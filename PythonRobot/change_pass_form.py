@@ -1,4 +1,5 @@
 import robot_keywords
+from page_text import PageText
 from text_field import TextField
 from button import Button
 from RobotVariables import RobotVariables
@@ -25,6 +26,11 @@ class ChangePassForm:
     def cancel_button(self) -> Button:
         translated_xpath = self.rb.replace_nested_variables("//button[contains(text(), '{CANCEL_BUTTON_TEXT}')]")
         return Button(self.driver, translated_xpath)
+
+    def no_unsaved_changes_message(self):
+        translated_xpath = self.rb.replace_nested_variables(
+            "//nx-apply//div[contains(text(), '{NO_UNSAVED_CHANGES_TEXT}')]")
+        return PageText(self.driver, translated_xpath)
 
     def verify_form_is_visible(self):
         self.new_password_input()

@@ -19,7 +19,6 @@ class LoginDialog:
     def password_input_error_message(self) -> TextField:
         translated_xpath = self.rb.replace_nested_variables(
             "//nx-authorize-component//p[contains(text(),'{WRONG_PASSWORD}')]")
-        print(translated_xpath)
         return TextField(self.driver, translated_xpath)
 
     def next_button(self):

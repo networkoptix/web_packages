@@ -8,7 +8,7 @@ class RobotVariables():
     def lookup_translation_variables(self, variable_name):
         current_dir = os.path.abspath(os.getcwd())
         filename = "variables_language_en_US.json"
-        file = os.path.join(current_dir, "PythonRobot", filename)
+        file = os.path.join(current_dir, filename)
         with open(file, encoding="utf-8") as f:
             translation_variables = json.load(f)
             if variable_name in translation_variables:
@@ -18,7 +18,7 @@ class RobotVariables():
     def lookup_account_variables(self, variable_name):
         current_dir = os.path.abspath(os.getcwd())
         filename = 'account_variables.json'
-        file = os.path.join(current_dir, "PythonRobot", filename)        
+        file = os.path.join(current_dir, filename)
         with open(file, encoding="utf-8") as f:
             account_variables = json.load(f)
             if variable_name in account_variables:

@@ -104,8 +104,37 @@ def password_with_symbols_is_valid():
     robot_keywords.close_browser(driver)
     print("pass")
 
+def password_with_space_in_the_middle_is_valid():
+    driver = get_headless_chrome()
+    email = resource.get_random_email()
+    register_and_activate_account(driver, "Mark", "Hamill", email, "qweasd 123")
+    robot_keywords.go_to_url(driver, f"{ENV}/account/password")
+    LoginDialog(driver).basic_cloud_login(email, "qweasd 123")
+
+    change_pass_form = ChangePassForm(driver)
+    change_pass_form.current_password_input().input_text("qweasd 123")
+    change_pass_form.new_password_input().input_text('qwea sd 123')
+    change_pass_form.save_button().click()
+    change_pass_form.no_unsaved_changes_message()
+
+    HeaderNav(driver).log_out()
+    LandingPage(driver)
+
+    header = HeaderNav(driver)
+    header.log_in_button().click()
+    login_dialog = LoginDialog(driver)
+    login_dialog.email_input().input_text(email)
+    login_dialog.next_button().click()
+    login_dialog.password_input().input_text("qweasd 123")
+    login_dialog.login_button().click()
+    login_dialog.password_input_error_message()
+
+    robot_keywords.close_browser(driver)
+    print("pass")
+
 if __name__ == "__main__":
     can_be_accessed_via_dropdown()
     can_be_accessed_via_direct_url()
     password_is_actually_changed_and_login_works_with_new_password()
     password_with_symbols_is_valid()
+    password_with_space_in_the_middle_is_valid()
