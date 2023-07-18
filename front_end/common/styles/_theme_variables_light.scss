@@ -498,6 +498,8 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
 
     --table-alt-row-bg : #{$additional_light1};
     --table-row-hover-bg : rgba(var(--brand-core--rgb), .1);
+    --table-row-selected-bg : #{$light16};
+    --table-row-selected-color : #{$light1};
 
     --dynamic-table-row-hover-bg : var(--light16) !important;
 

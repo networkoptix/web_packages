@@ -478,7 +478,9 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --tabset-color : #B8B8B8; //$light_gray_10;
 
     --table-alt-row-bg: #202020; //$dark_gray_5;
-    --table-row-hover-bg : #505050; //$dark_gray_11;
+    --table-row-hover-bg : rgba(var(--brand-core--rgb), .1);
+    --table-row-selected-bg : #{$light_gray_16};
+    --table-row-selected-color : #{$light_gray_1};
 
     --dynamic-table-row-hover-bg : var(--light_gray_16) !important;
 
