@@ -14,7 +14,9 @@
             </nx-checkbox>
             <label for="autohide">Auto hide</label>
         </div>
+
         <div class="row p-3">
+            Override buttons<br />
             <nx-primary-button
                 customClass="ml-2"
                 [buttonText]="'Info'"
@@ -48,6 +50,15 @@
                 (click)="notify('I\'m success', ToastType.Success)"
             >
                 Success
+            </button>
+        </div>
+        <div class="row p-3">
+            Regular (HSL) buttons<br />
+            <button
+                class="btn btn-primary ml-2"
+                (click)="notify('I\'m info asdas sadasd asd', ToastType.Info)"
+            >
+                Info
             </button>
         </div>
     </div>

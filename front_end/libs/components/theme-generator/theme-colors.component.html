@@ -1,4 +1,7 @@
-<div class="mb-3 container col-8 m-0 p-3">
+<div
+    *ngIf="generatorLayout !== 'test'"
+    class="mb-3 container col-8 m-0 p-3"
+>
     <div class="col-12 row mb-4">
         <div class="col-3 p-0">
             <label class="input-label col-12"
@@ -59,19 +62,16 @@
             class="col-2 p-0"
             *ngIf="isHSLTheme"
         >
-            <button
-                class="btn btn-primary m-auto"
-                translate
-            >
-                Primary
-            </button>
-            <br />
-            <button
-                class="btn btn-danger m-auto"
-                translate
-            >
-                Danger
-            </button>
+            <div class="col-12">
+                <label class="d-flex align-items-center">
+                    <nx-checkbox
+                        [(ngModel)]="isWidgetShown"
+                        [checked]="isWidgetShown"
+                        (onClick)="setWidgetMode($event)"
+                    ></nx-checkbox>
+                    <span translate>Show widget</span>
+                </label>
+            </div>
         </div>
     </div>
 
@@ -410,4 +410,113 @@
     <!--    <div class="row col-6">-->
     <!--        <nx-account-settings-component></nx-account-settings-component>-->
     <!--    </div>-->
+</div>
+
+<div
+    class="test-theme-generator"
+    *ngIf="generatorLayout === 'test' && themeService.isWidgetShown$ | async"
+>
+    <div class="">
+        <label class="d-flex align-items-center float-left">
+            <nx-checkbox
+                [(ngModel)]="isHSLTheme"
+                [checked]="isHSLTheme"
+                (onClick)="setHSLThemeMode($event)"
+            ></nx-checkbox>
+            <span translate>HSL</span>
+        </label>
+        <label class="ml-3 d-flex align-items-center">
+            <nx-checkbox
+                [(ngModel)]="isLiteTheme"
+                [checked]="isLiteTheme"
+                (onClick)="setThemeMode($event)"
+            ></nx-checkbox>
+            <span translate>Mode</span>
+        </label>
+    </div>
+
+    <div
+        class="p-1"
+        *ngIf="isHSLTheme"
+    >
+        <div
+            class="colorSelector blue"
+            (click)="setBColor('#007aff')"
+        ></div>
+        <div
+            class="colorSelector magenta"
+            (click)="setBColor('#953d96')"
+        ></div>
+        <div
+            class="colorSelector pink"
+            (click)="setBColor('#f74f9e')"
+        ></div>
+        <div
+            class="colorSelector red"
+            (click)="setBColor('#e0383e')"
+        ></div>
+        <div
+            class="colorSelector orange"
+            (click)="setBColor('#f7811c')"
+        ></div>
+        <div
+            class="colorSelector yellow"
+            (click)="setBColor('#ffc726')"
+        ></div>
+        <div
+            class="colorSelector green"
+            (click)="setBColor('#62ba46')"
+        ></div>
+        <div
+            class="colorSelector gray"
+            (click)="setBColor('#989898')"
+        ></div>
+        <input
+            class="form-control colorFreeSelector"
+            placeholder="Brand color"
+            (keyup)="changeBrandColor($event)"
+        />
+    </div>
+    <div
+        class="p-1"
+        *ngIf="isHSLTheme"
+    >
+        <div
+            class="colorSelector blue"
+            (click)="setBaseColor('#007aff')"
+        ></div>
+        <div
+            class="colorSelector magenta"
+            (click)="setBaseColor('#953d96')"
+        ></div>
+        <div
+            class="colorSelector pink"
+            (click)="setBaseColor('#f74f9e')"
+        ></div>
+        <div
+            class="colorSelector red"
+            (click)="setBaseColor('#e0383e')"
+        ></div>
+        <div
+            class="colorSelector orange"
+            (click)="setBaseColor('#f7811c')"
+        ></div>
+        <div
+            class="colorSelector yellow"
+            (click)="setBaseColor('#ffc726')"
+        ></div>
+        <div
+            class="colorSelector green"
+            (click)="setBaseColor('#62ba46')"
+        ></div>
+        <div
+            class="colorSelector gray"
+            (click)="setBaseColor('#989898')"
+        ></div>
+        <input
+            class="form-control colorFreeSelector"
+            placeholder="Base color"
+            (keyup)="changeBaseColor($event)"
+        />
+    </div>
 </div>

@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { NxHeaderLevelOneComponent } from '@components/header/new-header/header-level-one/header-level-one.component';
 import { NxHeaderLevelTwoComponent } from '@components/header/new-header/header-level-two/header-level-two.component';
 import { NxHeaderMobileComponent } from '@components/header/new-header/mobile/mobile.component';
+import { NxThemeGeneratorComponent } from '@components/theme-generator/theme-colors.component';
 
 import { NxNewHeaderComponent } from './new-header.component';
 
@@ -13,6 +14,7 @@ import { NxNewHeaderComponent } from './new-header.component';
         NxHeaderLevelOneComponent,
         NxHeaderLevelTwoComponent,
         NxHeaderMobileComponent,
+        NxThemeGeneratorComponent,
     ],
     declarations: [NxNewHeaderComponent],
     providers: [NxNewHeaderComponent],

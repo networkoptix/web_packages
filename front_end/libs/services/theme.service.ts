@@ -317,6 +317,9 @@ export class NxThemeService {
     }
 
     static toHSLObject = (hslStr: string): { s: number; h: number; l: number } => {
+        if (!hslStr.length) {
+            return;
+        }
         const hs = hslStr.substring(0, hslStr.indexOf('calc'));
         const match = hslStr.replace(/\s/g, '').match(/[\d%\s-+*.]+/g);
         // match = [hue, sat, lum /* w/o calc */, alpha /* optional */]
@@ -355,6 +358,7 @@ export class NxThemeService {
     };
     luminosityStep: Record<string, string>[] | number;
     themeMode$ = new BehaviorSubject<Record<string, string>[] | number>(0); // 0 - dark, 1-light
+    isWidgetShown$ = new BehaviorSubject<boolean>(false);
     scope: HTMLElement;
     rs: CSSStyleDeclaration;
 

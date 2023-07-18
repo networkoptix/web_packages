@@ -46,6 +46,7 @@ import { NxThemeService } from '@services/theme.service';
 })
 export class NxThemeGeneratorComponent implements OnInit, AfterViewInit {
     @IBool() @Input('advanced') advanced: CoercedBoolInput;
+    @Input('generatorLayout') generatorLayout: string = 'general';
 
     LANG = staticLang;
 
@@ -79,6 +80,7 @@ export class NxThemeGeneratorComponent implements OnInit, AfterViewInit {
     backgroundHEXValue: string;
     isHSLTheme: boolean = false;
     isLiteTheme: boolean = false;
+    isWidgetShown: boolean = false;
     luminosityStep: number;
     rs: CSSStyleDeclaration;
     scope: HTMLElement;
@@ -104,7 +106,7 @@ export class NxThemeGeneratorComponent implements OnInit, AfterViewInit {
     constructor(
         private sessionService: NxSessionService,
         private menuService: NxMenuService,
-        private themeService: NxThemeService,
+        public themeService: NxThemeService,
         @Inject(DOCUMENT) protected document: Document,
     ) {}
 
@@ -183,25 +185,28 @@ export class NxThemeGeneratorComponent implements OnInit, AfterViewInit {
 
     setColorInput(): void {
         this.setError();
-        this.colorInput.nativeElement.value = NxThemeService.hslToHex({
-            h: this.color.hue,
-            s: this.color.saturation,
-            l: this.color.luminosity,
-        }).toUpperCase();
+        if (this.colorInput) {
+            this.colorInput.nativeElement.value = NxThemeService.hslToHex({
+                h: this.color.hue,
+                s: this.color.saturation,
+                l: this.color.luminosity,
+            }).toUpperCase();
+        }
     }
 
     setBrandInput(): void {
         this.setError();
-        this.brandInput.nativeElement.value = NxThemeService.hslToHex({
-            h: this.brand.hue,
-            s: this.brand.saturation,
-            l: this.brand.luminosity,
-        }).toUpperCase();
+        if (this.brandInput) {
+            this.brandInput.nativeElement.value = NxThemeService.hslToHex({
+                h: this.brand.hue,
+                s: this.brand.saturation,
+                l: this.brand.luminosity,
+            }).toUpperCase();
+            // this.setColorHue(this.brand.hue);
+            // this.setColorSaturation(this.brand.saturation);
 
-        // this.setColorHue(this.brand.hue);
-        // this.setColorSaturation(this.brand.saturation);
-
-        this.calcHexBaseColors();
+            this.calcHexBaseColors();
+        }
     }
 
     setBrandHue(value: number): void {
@@ -399,8 +404,12 @@ export class NxThemeGeneratorComponent implements OnInit, AfterViewInit {
 
     changeBrandColor(event: KeyboardEvent): void {
         const value = (event.target as HTMLInputElement).value;
-        if (value.startsWith('#') && value.length === 7) {
-            const { hue, sat, lum } = NxThemeService.hexToHSL(value);
+        this.changeBColor(value);
+    }
+
+    changeBColor(color: string): void {
+        if (color.startsWith('#') && color.length === 7) {
+            const { hue, sat, lum } = NxThemeService.hexToHSL(color);
             this.themeService.setBrandHue(hue);
             this.themeService.setBrandSaturation(sat);
             this.themeService.setBrandLuminosity(lum);
@@ -422,8 +431,12 @@ export class NxThemeGeneratorComponent implements OnInit, AfterViewInit {
 
     changeBaseColor(event: KeyboardEvent): void {
         const value = (event.target as HTMLInputElement).value;
-        if (value.startsWith('#') && value.length === 7) {
-            const { hue, sat } = NxThemeService.hexToHSL(value);
+        this.setBaseColor(value);
+    }
+
+    setBaseColor(color: string): void {
+        if (color.startsWith('#') && color.length === 7) {
+            const { hue, sat } = NxThemeService.hexToHSL(color);
             this.themeService.setColorHue(hue);
             this.themeService.setColorSaturation(sat);
             // this.setBrandLuminosity(lum);
@@ -452,6 +465,14 @@ export class NxThemeGeneratorComponent implements OnInit, AfterViewInit {
         }
     }
 
+    setWidgetMode(value: boolean): void {
+        if (value === undefined) {
+            return;
+        }
+
+        this.themeService.isWidgetShown$.next(value);
+    }
+
     setThemeMode(value: boolean): void {
         if (value === undefined) {
             return;
@@ -476,5 +497,9 @@ export class NxThemeGeneratorComponent implements OnInit, AfterViewInit {
         setTimeout(() => {
             this.isHSLTheme && this.initColors();
         });
+    }
+
+    setBColor(value: string): void {
+        this.changeBColor(value);
     }
 }
