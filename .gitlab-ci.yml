@@ -46,9 +46,6 @@ stages:
 #
 .frontend-changes:
   extends: .retries
-  needs:
-    - job: docker:build-node-chrome
-      optional: true
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
@@ -182,6 +179,9 @@ django-unit-test-fast:
 
 .frontend-node:
   extends: .frontend-changes
+  needs:
+    - job: docker:build-node-chrome
+      optional: true
   variables:
     CHROME_BIN: /usr/bin/google-chrome
     FRONTEND_NODE_MODULES: /node_modules_frontend
