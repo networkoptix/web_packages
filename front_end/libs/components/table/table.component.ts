@@ -350,7 +350,6 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
             this.sortOrderASC = !this.sortOrderASC;
             this.clearCss(target);
         } else {
-            // @ts-expect-error type error
             this.sortableItems.forEach((item: ElementRef) => {
                 if (item.nativeElement.children[this.selectedHeader]) {
                     this.clearCss(item.nativeElement.children[this.selectedHeader]);
