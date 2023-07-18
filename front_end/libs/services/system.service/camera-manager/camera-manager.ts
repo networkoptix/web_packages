@@ -263,12 +263,12 @@ export class CameraManager {
                 },
             ],
         };
-        const deviceType = this.camerasHealth[cleanId(camera.id)]
-            ? this.camerasHealth[cleanId(camera.id)].info.type
-            : 'Camera';
+
+        const id = cleanId(camera.id);
+
+        const deviceType = this.camerasHealth[id] ? this.camerasHealth[id].info.type : 'Camera';
 
         const {
-            id,
             name,
             vendor,
             model,
@@ -286,7 +286,6 @@ export class CameraManager {
             backupContentType,
         } = camera;
         return {
-            id,
             name,
             vendor,
             model,
@@ -303,6 +302,7 @@ export class CameraManager {
             backupQuality,
             backupContentType,
 
+            id,
             addParams,
             backupType,
             status,

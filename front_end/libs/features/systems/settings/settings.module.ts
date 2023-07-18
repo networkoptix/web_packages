@@ -22,7 +22,6 @@ import { PipesModule } from '@pipes/pipes.module';
 import { currentSystemResolver } from '@resolvers/current-system-resolver';
 import { SystemTitleResolver } from '@resolvers/system-title-resolver';
 import { NxSystemService } from '@services/system.service/system.service';
-import { cleanId } from '@utils/general';
 
 import { NxSystemAdminComponent } from './admin/admin.component';
 import { NxSystemAdminModule } from './admin/admin.module';
@@ -47,7 +46,7 @@ const camerasExistActivator: CanActivateFn = async (
     const systemsService: NxSystemService = inject(NxSystemService);
     const currentSystem = systemsService.getCurrentSystem();
     if (currentSystem.cameraManager.cameras?.length) {
-        const cameraId = cleanId(currentSystem.cameraManager.cameras[0].id);
+        const cameraId = currentSystem.cameraManager.cameras[0].id;
         router.navigate([state.url, cameraId]);
         return false;
     }

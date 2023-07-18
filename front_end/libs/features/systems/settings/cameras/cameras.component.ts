@@ -65,7 +65,6 @@ import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
 import { ChildRoutes } from '@services/uri.service.types';
 import { WINDOW } from '@services/window-provider';
-import { cleanId } from '@utils/general';
 
 import type {
     AspectRatioDropdownItem,
@@ -559,7 +558,7 @@ export class NxCamerasComponent implements OnInit {
         }
 
         if (!parsedCameraExistInCameras) {
-            this.parsedCameraId = cleanId(cameras[0].id);
+            this.parsedCameraId = cameras[0].id;
             this.uriService
                 .updateURI(
                     this.uriService.getSystemSettingsRoute({

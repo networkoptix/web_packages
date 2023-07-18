@@ -8,9 +8,28 @@ import * as generalUtils from './general';
 import * as nxUtils from './nx';
 
 describe('General purpose utils', () => {
-    it('should clean up id', () => {
-        expect(generalUtils.cleanId('{1ba9a833-0885-9649-8f1f-8400edf48868}'))
-            .toBe('1ba9a833-0885-9649-8f1f-8400edf48868');
+    describe('cleanId', () => {
+        it('should clean up id', () => {
+            expect(generalUtils.cleanId('{1ba9a833-0885-9649-8f1f-8400edf48868}'))
+                .toBe('1ba9a833-0885-9649-8f1f-8400edf48868');
+        });
+
+        it('should return the same id', () => {
+            expect(generalUtils.cleanId('1ba9a833-0885-9649-8f1f-8400edf48868'))
+                .toBe('1ba9a833-0885-9649-8f1f-8400edf48868');
+        });
+    });
+
+    describe('dirtyId', () => {
+        it('should clean up id', () => {
+            expect(generalUtils.dirtyId('1ba9a833-0885-9649-8f1f-8400edf48868'))
+                .toBe('{1ba9a833-0885-9649-8f1f-8400edf48868}');
+        });
+
+        it('should return the same id', () => {
+            expect(generalUtils.dirtyId('{1ba9a833-0885-9649-8f1f-8400edf48868}'))
+                .toBe('{1ba9a833-0885-9649-8f1f-8400edf48868}');
+        });
     });
 
     it('should show ipv6 address as truthy', () => {

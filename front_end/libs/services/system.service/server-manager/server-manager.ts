@@ -13,7 +13,7 @@ import type { LogLevel, RebuildArchiveResponse } from '@services/system-api.type
 import * as t from '@services/system-api.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
-import { alphabeticalSort } from '@utils/general';
+import { alphabeticalSort, dirtyId } from '@utils/general';
 import { memoizeAsyncPersistent } from '@utils/memoize';
 import { setServerIpAndPort } from '@utils/nx';
 
@@ -197,6 +197,9 @@ export class ServerManager {
         resourceId: string,
         params: Record<string, string>,
     ): Promise<t.EmptyObjectReturned> {
+        if (params.id) {
+            params.id = dirtyId(params.id);
+        }
         const mappedParams = Object.entries(params).map<t.ResourceParam>(([name, value]) => ({
             name,
             value,

@@ -3,7 +3,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { NxSystem } from '@services/system.service/system';
-import { cleanId } from '@utils/general';
 
 @Component({
     selector: 'nx-no-cameras-component',
@@ -18,7 +17,7 @@ export class NxNoCamerasComponent implements OnInit {
     ngOnInit(): void {
         this.system.infoSubject.pipe(takeUntilDestroyed()).subscribe(system => {
             if (system?.cameraManager.cameras?.length > 0) {
-                const cameraId = cleanId(system.cameraManager.cameras[0].id);
+                const cameraId = system.cameraManager.cameras[0].id;
                 this.router.navigate([cameraId], { relativeTo: this.activatedRoute });
             }
         });
