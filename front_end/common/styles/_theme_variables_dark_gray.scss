@@ -672,11 +672,12 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --bookmarks-filter-filled-text: var(--light2);
     --bookmarks-text-highlight-bg: var(--dark12);
     --bookmarks-duration-bg: rgba(0, 0, 0, 0.5);
-    --bookmarks-card-background-color: var(--dark7);
-    --bookmarks-card-background-color-hover: none;
+    --bookmarks-card-background-color: var(--dark5);
+    --bookmarks-card-background-color-hover: var(--dark7);
+    --bookmarks-card-shadow-color-hover: none;
     --bookmarks-card-video-background-color: var(--dark1);
-    --bookmarks-card-no-permissions-description: var(--light12);
-    --bookmarks-card-no-permissions-background: var(--dark10);
+    --bookmarks-card-thumbnail-error-description: var(--light12);
+    --bookmarks-card-thumbnail-error-background: var(--dark6);
     --bookmarks-card-border-color: none;
     --bookmarks-card-title-gradient: linear-gradient(
         to right,

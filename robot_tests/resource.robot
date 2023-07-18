@@ -497,8 +497,8 @@ Check Error Content and Reset Button Disabled
 Verify In System
     [arguments]    ${system name}    ${editable}=${True}
     Go To System Administration
-    Run Keyword If    '''${editable}'''=='''${True}'''    Wait Until Element Is Visible    //nx-editable-heading//nx-text-editable[@id="systemName-editable" and contains(text(), '${system name}')]
-    ...    ELSE    Wait Until Element Is Visible    //nx-editable-heading//nx-text-editable[contains(text(), '${system name}')]
+    Run Keyword If    '''${editable}'''=='''${True}'''    Wait Until Element Is Visible    //nx-editable-heading//nx-text-editable[@id="systemName-editable" and contains(text(), '${system name}')]    90
+    ...    ELSE    Wait Until Element Is Visible    //nx-editable-heading//nx-text-editable[contains(text(), '${system name}')]    90
 
 Disconnect from cloud
     Go to System Administration

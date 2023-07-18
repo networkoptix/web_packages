@@ -138,6 +138,7 @@ export interface Cameras {
     isH265: boolean;
     hardwareTypeId: string;
     resolutionArea: number;
+    id: string;
     sortKey: string;
 }
 
@@ -401,6 +402,7 @@ export enum DOC_TYPES {
 export interface LicenseServerInfo {
     systemId: string;
     licenseServer: string;
+    cloudHost: string;
     cacheUpdated: boolean;
 }
 

@@ -24,7 +24,6 @@ import {
     switchMap,
     take,
     startWith,
-    skip,
 } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -773,10 +772,9 @@ export class NxSystemStorageComponent implements OnInit {
                                     this.currentStorageState.locations.filter(
                                         ({ storageId }) => storageId !== cleanId(response.id),
                                     );
-                                await this.system.storageManager
-                                    .update()
-                                    .pipe(skip(1), take(1))
-                                    .toPromise();
+                                await firstValueFrom(
+                                    this.system.storageManager.update().pipe(take(1)),
+                                );
                                 this.toastService.notify(
                                     {
                                         value: this.LANG.storage.storageDeleted,

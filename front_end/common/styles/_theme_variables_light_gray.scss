@@ -658,10 +658,11 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --bookmarks-text-highlight-bg: var(--light3);
     --bookmarks-duration-bg: rgba(0, 0, 0, 0.5);
     --bookmarks-card-background-color: var(--light1);
-    --bookmarks-card-background-color-hover: rgba(var(--dark4--rgb), 0.2);
+    --bookmarks-card-background-color-hover: none;
+    --bookmarks-card-shadow-color-hover: rgba(var(--dark4--rgb), 0.2);
     --bookmarks-card-video-background-color: var(--dark1);
-    --bookmarks-card-no-permissions-description: var(--light12);
-    --bookmarks-card-no-permissions-background: var(--light4);
+    --bookmarks-card-thumbnail-error-description: var(--light12);
+    --bookmarks-card-thumbnail-error-background: var(--light4);
     --bookmarks-card-border-color: var(--light4);
     --bookmarks-card-title-gradient: linear-gradient(
         to right,

@@ -3,6 +3,9 @@
 DOCKER_COMPOSE='etc/docker-compose.yml'
 SQL='./etc/*.sql'
 
+WEBADMIN_HOST="https://localhost"
+LOCAL_PASSWORD="qweasd1234"
+
 function pyenv_checker() {
     if ! which pyenv &> /dev/null ; then
         echo "There is no pyenv accessible."
@@ -211,10 +214,10 @@ function stop_docker_containers() {
 }
 
 function build_mediaserver_image() {
-    DEB_NAME=$1
-    VERSION=$2
-    COPY=$3
-    docker image build tools --tag "mediaserver:$VERSION" --build-arg mediaserver_deb=$DEB_NAME --build-arg copy=$COPY
+    VERSION=$1
+    COPY=$2
+    echo "Building the mediaserver image for $VERSION (Local $COPY)"
+    docker image build tools --tag "mediaserver:$VERSION" --build-arg mediaserver_deb=$VERSION.deb --build-arg copy=$COPY
 }
 
 function list_mediaserver() {
@@ -228,24 +231,20 @@ function remove_mediaserver() {
 function run_mediaserver() {
     VERSION=$1
     PORTS="$2"
-    CLOUD_HOST="$3"
-    EMAIL=$4
-    PASSWORD=$5
+    CLOUD_HOST=$3
     for PORT in $PORTS
     do
-        echo "Starting mediaserver $PORT"
+        echo "Starting mediaserver on $PORT"
         # See here for multi port support, but you can only spin up one at a time.
-        docker run --restart=always -d -p $PORT:$PORT --env PORT=$PORT --env CLOUD_HOST=$CLOUD_HOST --name "auto-nx-server-$PORT" --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro "mediaserver:$VERSION"
-        if [[ -e $EMAIL ]]; then
-            pushd cloud
-                python manage.py bindsystem $EMAIL $PASSWORD "auto-nx-server-$PORT" http://localhost:$PORT
-            popd
-        fi
+        docker run --restart=always -d -p $PORT:$PORT --env PORT=$PORT --env CLOUD_HOST="$CLOUD_HOST" --name "auto-nx-server-$PORT" --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro "mediaserver:$VERSION"
+        sleep 5
+        open $WEBADMIN_HOST:$PORT
         echo
     done
 }
 
 function stop_mediaserver() {
+    echo "Stopping all auto-nx-servers"
     docker ps -a | grep auto-nx-server- | awk '{print $1}' | xargs docker rm -f
 }
 
@@ -266,54 +265,24 @@ function build_webadmin_locally() {
     [[ -z $LC_CTYPE ]] && export LC_CTYPE=en_US.UTF-8
 
     [[ ! -d $BUILD_DIR ]] && mkdir $BUILD_DIR
+    echo "Copying apply_customization.py to $BUILD_DIR"
     cp webadmin/apply_customization.py $BUILD_DIR
     pushd $BUILD_DIR
+        echo "Building webadmin bundle"
         . "$REPO/webadmin/build.sh"
+        echo "Customizing webadmin bundle"
         ./apply_customization.py
     popd
 }
 
-# Temporary for build testing
-function build_webadmin_locally_improved() {
-    BUILD_DIR=~/Desktop/build
-    REPO=$PWD
-
-    export IS_LOCAL=true
-    [[ -z $LC_CTYPE ]] && export LC_CTYPE=en_US.UTF-8
-
-    [[ ! -d $BUILD_DIR ]] && mkdir $BUILD_DIR
-    cp webadmin/apply_customization_new.py $BUILD_DIR
-    pushd $BUILD_DIR
-        . "$REPO/webadmin/build_new.sh"
-        ./apply_customization_new.py
-    popd
-}
-
-function local_build() {
-    VERSION=$1
-    PORTS="$2"
-    COPY=$3
-    CLOUD_HOST=$4
+function move_local_build() {
     BUILD_DIR=~/Desktop/build
     REPO=$PWD
 
     pushd $BUILD_DIR
+        echo "Copying external.dat to tools"
         cp external.dat $REPO/tools/docker
     popd
-
-    echo "Stop mediaserver"
-    stop_mediaserver
-    echo "Build mediaserver"
-    build_mediaserver_image $VERSION.deb $VERSION $COPY
-    echo "Run mediaserver"
-
-    for PORT in $PORTS
-    do
-        echo "Starting mediaserver $PORT"
-        run_mediaserver $VERSION $PORT $CLOUD_HOST
-        sleep 10
-        open https://localhost:$PORT
-    done
 }
 
 function start_https_tunnel() {
@@ -381,6 +350,61 @@ function setup_git_aliases() {
     done
 }
 
+# Default values
+CONNECT_TO_CLOUD="false"
+CLOUD_HOST="cloud-test.hdw.mx"
+CLOUD_EMAIL=""
+CLOUD_PASSWORD=""
+DOWNLOAD_BUILD="false"
+LOCAL_WEBADMIN="false"
+SKIP_BUILD="false"
+SKIP_SETUP="false"
+
+# Parse command-line options
+while getopts "h:e:p:lsmd" opt; do
+    case $opt in
+        h)
+            CLOUD_HOST=$OPTARG
+            ;;
+        e)
+            CLOUD_EMAIL=$OPTARG
+            ;;
+        p)
+            CLOUD_PASSWORD=$OPTARG
+            ;;
+        l)
+            LOCAL_WEBADMIN="true"
+            ;;
+        s)
+            SKIP_BUILD="true"
+            ;;
+        m)
+            SKIP_SETUP="true"
+            ;;
+        d)
+            DOWNLOAD_BUILD="true"
+            ;;
+        \?)
+            echo "Invalid option: -$OPTARG" >&2
+            echo "-h {cloud host} (leave off https://)"
+            echo "-e {cloud email}"
+            echo "-p {cloud password}"
+            echo "-l : builds webadmin locally"
+            echo "-s : skips the local build"
+            echo "-m : skips the setup for docker"
+            echo "-d : downloads the version passed in"
+            exit 1
+            ;;
+    esac
+done
+
+shift $((OPTIND - 1))
+
+if [ -n "$CLOUD_EMAIL" ] && [ -n "$CLOUD_PASSWORD" ]; then
+    CONNECT_TO_CLOUD="true"
+    SKIP_SETUP="false"
+fi
+
 for command in $@
 do
     case "$command" in
@@ -388,49 +412,40 @@ do
             init_backend
             init_frontend
             ;;
-
         init_backend)
             init_backend
             ;;
-
         init_backend_special)
             # Comment out exit for use. Be careful with this one.
             exit 0
             brew_install
             init_backend
             ;;
-
         init_frontend)
             init_frontend
             ;;
-
         init_frontend_special)
             # Comment out exit for use. Be careful with this one.
             exit 0
             brew_install
             init_frontend
             ;;
-
         add_env)
             modify_bashprofile
             ;;
-
         build_frontend)
             build_frontend
             ;;
-
         generate_cms_docs)
             setup_env
             pushd cloud
-            python manage.py json_to_table
+                python manage.py json_to_table
             popd
             echo 'Generated files are created in ./cloud/cms'
             ;;
-
         login_db)
             login_db
             ;;
-
         rebuild_frontend)
             build_frontend
             setup_cms
@@ -479,28 +494,10 @@ do
         build_local_webadmin)
             build_webadmin_locally
             ;;
-        build_local_webadmin_improved)
-            build_webadmin_locally_improved
-            ;;
-        build_local_vms)
-            VERSION=$2
-            PORT=$3
-            COPY=$4
-            CLOUD_HOST=$5
-            build_webadmin_locally
-            local_build $VERSION $PORT $COPY $CLOUD_HOST
-            break
-            ;;
         update_remote_vms)
             TARGET=$2
             build_webadmin_locally
             update_webadmin $TARGET
-            break
-            ;;
-        build_mediaserver)
-            DEB_NAME=$2
-            VERSION=$3
-            build_mediaserver_image $DEB_NAME $VERSION
             break
             ;;
         list_mediaserver)
@@ -508,15 +505,6 @@ do
             ;;
         remove_mediaserver)
             remove_mediaserver
-            ;;
-        run_mediaserver)
-            VERSION=$2
-            PORTS="$3"
-            CLOUD_HOST="$4"
-            EMAIL=$5
-            PASSWORD=$6
-            run_mediaserver $VERSION "$PORTS" "$CLOUD_HOST" $EMAIL $PASSWORD
-            break
             ;;
         stop_mediaserver)
             stop_mediaserver
@@ -529,48 +517,42 @@ do
             ;;
         run_local_servers)
             VERSION=$2
-            PORTS="$3"
-            LOCAL=$4
-            SKIP_BUILD=$5
-            CLOUD_HOST="cloud-test.hdw.mx"
+            PORTS=${3:-"7001"}
+            USE_LOCAL="false"
 
-            if [ "$LOCAL" == "true" ]; then
-                build_webadmin_locally
-                local_build $VERSION "$PORTS" copy $CLOUD_HOST
-            else
-                stop_mediaserver
-                if [ "$SKIP_BUILD" != "true" ]; then
-                    build_mediaserver_image $VERSION.deb $VERSION
-                fi
-                run_mediaserver $VERSION "$PORTS" $CLOUD_HOST
+            if [ "$DOWNLOAD_BUILD" == "true" ]; then
+                echo "fetching $VERSION"
+                python tools/scripts/download_deb.py $VERSION
+
+                echo "$VERSION has been saved to tools/$VERSION.deb"
+                SKIP_BUILD="false"
             fi
 
-#            python tools/scripts/setup_system.py https://localhost "$PORTS" qweasd1234
-            break
-            ;;
-        download_and_run)
-            VERSION=$2
-            PORTS=${3:-"7001"}
-            CLOUD_HOST="cloud-test.hdw.mx"
-            WEBADMIN_HOST="https://localhost"
-            LOCAL_PASSWORD="qweasd1234"
-
-            echo "fetching $VERSION"
-            python tools/scripts/download_deb.py $VERSION
-
-            echo "$VERSION has been saved to tools/$VERSION.deb"
             stop_mediaserver
-            build_mediaserver_image $VERSION.deb $VERSION
 
-            echo "Running the mediaserver on $WEBADMIN_HOST:$PORTS connected to https://$CLOUD_HOST"
+            if [ "$LOCAL_WEBADMIN" == "true" ]; then
+                build_webadmin_locally
+                move_local_build
+                SKIP_BUILD="false"
+                USE_LOCAL="copy"
+            fi
+
+            if [ "$SKIP_BUILD" != "true" ]; then
+                build_mediaserver_image $VERSION $USE_LOCAL
+            fi
+
             run_mediaserver $VERSION "$PORTS" $CLOUD_HOST
-            for PORT in $PORTS
-            do
-                open "$WEBADMIN_HOST:$PORT"
-            done
 
-            sleep 30s
-            python tools/scripts/setup_system.py $WEBADMIN_HOST "$PORTS" $LOCAL_PASSWORD
+            if [ "$SKIP_SETUP" == "false" ]; then
+                echo "Running setup for servers"
+                sleep 30
+                CLOUD_STRING=""
+                if [ "$CONNECT_TO_CLOUD" == "true" ]; then
+                    echo "And connecting them to $CLOUD_HOST for $CLOUD_EMAIL"
+                    CLOUD_STRING="-c --instance=https://$CLOUD_HOST --email=$CLOUD_EMAIL --password=$CLOUD_PASSWORD "
+                fi
+                python tools/scripts/setup_system.py $CLOUD_STRING$WEBADMIN_HOST "$PORTS" $LOCAL_PASSWORD
+            fi
             break
             ;;
         check_licenses)
@@ -592,7 +574,7 @@ do
             setup_git_aliases
             ;;
         *)
-            echo Usage: cloud_shortcuts '[init_backend|init_frontend|add_env|build_frontend|login_db|rebuild_frontend|set_cloud_instance|setup_cms|setup_db|setup_env|start_celery|start_docker|stop_docker|build_mediaserver|run_mediaserver|stop_mediaserver|start_https_tunnel]'
+            echo Usage: cloud_shortcuts '[init_backend|init_frontend|add_env|build_frontend|login_db|rebuild_frontend|set_cloud_instance|setup_cms|setup_db|setup_env|start_celery|start_docker|stop_docker|remove_mediaserver|run_local_servers|stop_mediaserver|start_https_tunnel]'
             echo 'init_backend - Initializes the backend. Only run this once'
             echo 'init_frontend - Initializes the frontend.'
             echo 'add_env - Adds LOCAL_ENV to your bash profile'
@@ -608,14 +590,11 @@ do
             echo 'start_celery - Starts celery worker (This uses sqs queue based on local settings)'
             echo 'start_docker - Starts docker containers used by cloud'
             echo 'stop_docker - Stops docker containers used by cloud'
-            echo 'build_mediaserver - Creates a mediaserver image. Please add the deb file to cloud_portal/tools. Usage "./cloud_helper.sh build_mediaserver {deb file} {version}"'
             echo 'list_mediaserver - List docker images build by this script'
             echo 'remove_mediaserver - Removes docker mediaserver images created by this script'
-            echo 'run_mediaserver - Creates containers for mediaservers and connects them to cloud. Usage "./cloud_helper.sh run_mediaservers {version} {ports} {email} {password}"'
             echo 'run_local_servers -Stops all running mediaservers, builds a new docker image, and runs the images. Usage "./cloud_helper.sh {version} {ports}"'
             echo 'stop_mediaserver - Stops all containers made by this script'
             echo 'build_local_webadmin - Builds webadmin locally to test the build'
-            echo 'build_local_vms - Builds webadmin locally, stops any running mediaservers, builds a new medisserver, runs a mediaserver, and places external.dat the new docker image. Usage "./cloud_helper.sh build_local_vms {version} {port} {copy}"'
             echo 'update_remote_vms - Copy locally built webadmin (external.dat) to a target machine. Usage "./cloud_helper.sh update_remote_vms {target-ip}"'
             echo 'start_https_tunnel - Start a secure tunnel on port 8001 to the local django server on port 8000'
             echo 'poetry_lock - Updates poetry lock file which is used for checking consistency of dependencies version'

@@ -227,6 +227,10 @@ span.marked {
 .cdk-dialog-container {
     // <p> has bottom margin which can create a gap between the body and footer
     background-color: var(--dialog-bg);
-
     box-shadow: var(--dialog-box-shadow);
+
+    // Add "panelClass: 'no-container-shadow'" in the Dialog's config to apply this class
+    .no-container-shadow & {
+        box-shadow: none;
+    }
 }

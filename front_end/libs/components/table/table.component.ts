@@ -92,6 +92,7 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
     @Input('rows-per-page') rowsPerPage: Array<number> = [10, 25, 50, 100];
     @Input('set-sorting-default') defaultSort: Record<string, string>;
     @Input('set-additional-classes') additionalClasses: string[];
+    @Input('set-selected-item-id') selectedItemId: string;
 
     @Output() onRowExpand = new EventEmitter<string>();
     @Output() onRowClick = new EventEmitter<T>();
@@ -349,7 +350,7 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
             this.sortOrderASC = !this.sortOrderASC;
             this.clearCss(target);
         } else {
-            this.sortOrderASC = true;
+            // @ts-expect-error type error
             this.sortableItems.forEach((item: ElementRef) => {
                 if (item.nativeElement.children[this.selectedHeader]) {
                     this.clearCss(item.nativeElement.children[this.selectedHeader]);

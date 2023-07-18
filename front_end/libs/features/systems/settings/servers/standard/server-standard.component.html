@@ -33,7 +33,7 @@
                 *ngIf="internalStatus === servers.status.restarting"
                 type="info"
                 id="restarting"
-                [iconSrc]="icons.dirNonStandard + 'info-alerts.svg'"
+                [iconSrc]="icons.dirNonStandard + 'info.svg'"
                 [line1]="'Restarting' | translate"
                 [btnIconSrc]="icons.dirTextButtons + 'reload.svg'"
                 [btnCaption]="'Check Status' | translate"
@@ -45,7 +45,7 @@
             *ngIf="checking"
             type="info"
             id="checking-active"
-            [iconSrc]="icons.dirNonStandard + 'info-alerts.svg'"
+            [iconSrc]="icons.dirNonStandard + 'info.svg'"
             [line1]="'Checking' | translate"
             (onAction)="checkStatus()"
         >

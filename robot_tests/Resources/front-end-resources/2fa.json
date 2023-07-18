@@ -10,5 +10,16 @@
         "port": "",
         "ports":1,
         "serverId":""
+    },
+    {
+        "addUsers":false,
+        "cloudOwner":"",
+        "cloudUsers":{},
+        "localUsers":{},
+        "mac" : "",
+        "name": "",
+        "port": "",
+        "ports":1,
+        "serverId":""
     }
 ]

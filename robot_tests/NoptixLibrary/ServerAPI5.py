@@ -10,6 +10,7 @@ from robot.libraries.BuiltIn import BuiltIn
 import time
 from ServerAPI import ServerAPI
 import urllib3
+from Cloud2fa import Cloud2fa
 
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -86,12 +87,13 @@ class ServerAPI5(ServerAPI):
             return servers_response.json()[0]['id']
 
     @keyword
-    def API_connect_to_cloud(self, auth, serverUrl, cloudHost, name="API Made System"):
+    def API_connect_to_cloud(self, auth, serverUrl, cloudHost, name="API Made System", totp= None):
         with requests.Session() as s:
             logger.trace(auth[1])
             credentials = {"username": "admin", "password": "qweasd 123", "setCookie": True}
             login_response = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
-            cloud_credentials = { "name": name, "email": auth[0], "password": auth[1]}
+
+            cloud_credentials = {"name": name, "email": auth[0], "password": auth[1], "key": totp}
             logger.trace(f'cloud credentials {cloud_credentials}')
             connect_response = s.post(f"{cloudHost}/api/systems/connect", json=cloud_credentials, verify=False)
             data = connect_response.json()

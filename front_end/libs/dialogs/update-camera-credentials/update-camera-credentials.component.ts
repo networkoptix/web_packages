@@ -77,15 +77,16 @@ export class UpdateCameraCredentialsModalContent extends ModalBase<DT['return']>
                 ) {
                     return Promise.resolve();
                 }
-                const updateHandler = (defaultPassword?: boolean): Promise<unknown> => {
+                const updateHandler = async (defaultPassword?: boolean): Promise<unknown> => {
                     if (defaultPassword && this.system.mediaserver instanceof NxSystemRestAPI) {
-                        return firstValueFrom(
+                        await firstValueFrom(
                             this.system.mediaserver.changePassword(
                                 this.camera.id,
                                 this.cameraLoginCredentials,
                                 this.cameraPasswordCredentials,
                             ),
                         );
+                        return updateHandler();
                     }
                     return this.system.serverManager.updateResource(this.camera.id, {
                         credentials: `${this.cameraLoginCredentials || 'admin'}:${

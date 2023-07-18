@@ -66,8 +66,9 @@
                 <div class="content">
                     <div
                         *ngFor="let row of pagedItems"
-                        class="big-row"
-                        [ngClass]="tableClasses"
+                        class="big-row {{ tableClasses }}"
+                        id="{{ row['id'] }}"
+                        [ngClass]="selectedItemId === row['id'] ? 'selected' : ''"
                         [style.display]="'grid'"
                         [style.gridTemplateAreas]="template"
                         (click)="rowClick(row)"

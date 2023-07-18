@@ -7,7 +7,7 @@ nx-bookmarks-card {
     &:focus-within {
         .bookmarks {
             &-image-wrapper {
-                background-color: var(--bookmarks-card-background-color-hover);
+                background-color: var(--bookmarks-card-shadow-color-hover);
 
                 nx-ml-ellipsis .after {
                     background: var(--bookmarks-card-title-gradient-hover);
@@ -15,7 +15,7 @@ nx-bookmarks-card {
             }
 
             &-info {
-                box-shadow: 0px 4px 8px var(--bookmarks-card-background-color-hover);
+                box-shadow: 0px 4px 8px var(--bookmarks-card-shadow-color-hover);
             }
         }
     }
@@ -32,7 +32,13 @@ nx-bookmarks-card {
             display: flex;
             justify-content: center;
             align-items: center;
+            width: 272px;
+            height: 153px;
             background-color: var(--bookmarks-card-video-background-color);
+
+            &:has(.thumbnailError) {
+                background-color: var(--bookmarks-card-thumbnail-error-background);
+            }
 
             &-wrapper {
                 position: relative;
@@ -48,17 +54,20 @@ nx-bookmarks-card {
                     max-height: 153px;
                 }
 
-                .noPermissions {
+                .thumbnailError {
                     position: absolute;
                     font-size: 13px;
-                    background-color: var(--bookmarks-card-no-permissions-background);
+
+                    &.noImage {
+                        position: relative;
+                    }
 
                     .player-placeholder {
                         width: 100%;
 
                         .description {
                             width: 100% !important;
-                            color: var(--bookmarks-card-no-permissions-description) !important;
+                            color: var(--bookmarks-card-thumbnail-error-description) !important;
                             margin-top: 0 !important;
                         }
                     }
@@ -93,6 +102,10 @@ nx-bookmarks-card {
             border: 1px solid var(--border-color);
             border-top: none;
             background-color: var(--bookmarks-card-background-color);
+
+            &:hover {
+                background-color: var(--bookmarks-card-background-color-hover);
+            }
 
             &-timestamp {
                 font-size: 14px;

@@ -8,9 +8,11 @@ import {
     EventEmitter,
     ViewEncapsulation,
     OnChanges,
+    Inject
 } from '@angular/core';
 import type videojs from 'video.js';
 
+import { WINDOW } from '@services/window-provider';
 import { NgChanges } from '@utils/ng-changes';
 import { BASE64_SINGLE_TRANSPARENT_PIXEL } from '@vms-client/utils';
 
@@ -46,8 +48,18 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
     protected transport = '';
     private readonly xRuntimeGuid = 'x-runtime-guid';
 
+    constructor(@Inject(WINDOW) public window: Window) {
+    }
+
     // For lazy loading player
     #videojs: videojs;
+
+    private supportsNativeHls():boolean {
+        const video = this.window.document.createElement('video');
+        const supportsHls = !!(video.canPlayType('application/vnd.apple.megURL') || video.canPlayType('audio/mpegurl'));
+        video.remove();
+        return supportsHls;
+    }
 
     async initPlayer(): Promise<void> {
         if (this.player) {
@@ -57,9 +69,18 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         let videoJsAutoRetry = 0;
         let stallTimer;
         const waitingTime = 8 * 1000;
+        const nativeSupport = this.supportsNativeHls();
         const options = {
             autoplay: true,
-            inactivityTimeout: 0
+            inactivityTimeout: 0,
+            html5: {
+                vhs: {
+                    overrideNative: nativeSupport
+                },
+                nativeVideoTracks: !nativeSupport,
+                nativeAudioTracks: !nativeSupport,
+                nativeTextTracks: !nativeSupport
+            }
         };
 
         const resetTimer = () => {

@@ -36,17 +36,7 @@ Force Tags
     Log Out
     Log In    ${login user}    ${password}    2fa=${True}    api=${False}
 
-5. Successful disabling 2FA for user with enabled 2FA for specific systems
-    [Tags]    smoke    ci    C110067
-    Log In    ${login user}    ${password}
-    Turn on 2fa Functionality
-    Check or uncheck 2fa ask for verification checkbox
-    Turn off 2fa Functionality
-    Wait Until Element Is Visible    ${2FA ENABLE BUTTON}
-    Element Should Be Visible    ${2FA DISABLED BADGE}
-    Api Log In    email=${login user}    password=${password}    verification_code=3r3wr
-
-6. Successful disabling 2FA for user with enabled 2FA for the whole account
+5. Successful disabling 2FA for user with enabled 2FA for the whole account
     [Tags]    smoke    ci    C107771
     Log In    ${login user}    ${password}
     Turn on 2fa Functionality
@@ -54,6 +44,39 @@ Force Tags
     Checkbox Should Be Selected    ${2FA VERIFICATION CHECKBOX ID}
     Turn off 2fa Functionality
     Element Should Be Visible    ${2FA DISABLED BADGE}
+
+6.1 2fa is required when accessing only system with 2fa required
+    [Tags]    smoke    ci    C110067
+    Log In    ${login user}    ${password}
+    Turn on 2fa Functionality
+    sleep    5
+    Go to    ${ENV}/systems/${servers}[0][id]
+    Verify In System    ${servers}[0][name]
+    Check or uncheck mandatory 2fa for system
+    #Wait Until Element Is Visible    ${SAVE BUTTON}
+    #Click Element    ${SAVE BUTTON}
+    Wait Until Element Is Visible    //input[@id="verificationCode"]
+    ${totp}=    Get 2fa Verification Code    ${2fa key value}
+    Input Text    //input[@id="verificationCode"]    ${totp}
+    Click Element    //button[text()='Enable']
+    Log Out
+    Log In    ${login user}    ${password}    2fa=${True}
+
+6.2 2fa is not required when accessing systems page with more than one system
+    [Tags]    smoke    ci    C110067
+    @{auth}    Set Variable    ${login user}    ${password}
+    ${id}=     API Connect To Cloud    ${auth}    https://${QA BURBANK IP}:${servers}[1][port][0]    ${ENV}    name=${servers}[1][name]
+    Log In    ${login user}    ${password}
+    sleep    2
+    Go to    ${ENV}/systems/${id}
+    Verify In System    ${servers}[1][name]
+    Turn on 2fa Functionality    system_name=${servers}[1][name]
+    Check or uncheck 2fa ask for verification checkbox
+    Log Out
+    Log In    ${login user}    ${password}
+    sleep    2
+    Go to    ${ENV}/systems/${id}
+    Verify In System    ${servers}[1][name]
 
 7. Successfully changing 2FA mode for user to specific systems
     [Tags]    C93780

@@ -1,0 +1,26 @@
+@use '_theme_variables_common' as *;
+
+:host {
+
+    .close {
+        position: relative;
+        font-family: $font-family-regular;
+    }
+
+    .title {
+        font-size: 15px !important;
+    }
+
+    .modal-header {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+
+    .download-text {
+        font-size: 14px;
+    }
+
+    .download-button-text {
+        margin-left: 5px;
+    }
+}

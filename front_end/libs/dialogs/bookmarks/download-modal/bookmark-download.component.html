@@ -1,0 +1,51 @@
+<div class="download-modal">
+    <div class="modal-header">
+        <h1 class="title">
+            <span
+                [translate]="LANG.downloadBookmark"
+                [translateParams]="{ title: bookmarkName }"
+            ></span>
+        </h1>
+    </div>
+
+    <div class="modal-body">
+        <p
+            class="download-text"
+            translate
+        >
+            The length of this bookmark will be slightly increased to maintain video quality
+        </p>
+    </div>
+
+    <div class="modal-footer">
+        <a
+            [href]="downloadSrc"
+            [download]="exportName"
+            (click)="close()"
+            class="btn-primary btn"
+            target="_blank"
+        >
+            <svg-icon
+                nx-add-svg-src
+                [src]="icons.dirTextButtons + 'download-2.svg'"
+                [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                [applyClass]="true"
+            ></svg-icon>
+            <span
+                class="download-button-text"
+                translate
+                >Download</span
+            >
+        </a>
+        <button
+            type="button"
+            class="close btn-default btn"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="close()"
+            translate
+        >
+            Cancel
+        </button>
+    </div>
+</div>

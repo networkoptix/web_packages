@@ -10,17 +10,19 @@ import {
 } from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
 import { DateRange as DR, MatCalendar } from '@angular/material/datepicker';
-import { BehaviorSubject } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { BehaviorSubject, timer } from 'rxjs';
 
 import { icons } from '@lib/variables/static-variables';
 import { WINDOW } from '@services/window-provider';
-import { offsetDate } from '@utils/general';
+import { MS, offsetDate } from '@utils/general';
 import { getSysLang } from '@utils/nx';
 
 import type { TimeRange } from '../../bookmarks.types';
 
 type DateRange = DR<Date>;
 
+@UntilDestroy()
 @Component({
     selector: 'nx-date-and-time-filter',
     templateUrl: 'date-and-time-filter.component.html',
@@ -40,6 +42,10 @@ export class NxDateAndTimeFilterComponent {
     timeRangeError$ = new BehaviorSubject<boolean>(false);
 
     icons = icons;
+
+    lastDay: DateRange;
+    last7Days: DateRange;
+    last30Days: DateRange;
 
     private hoveredDate: Date | null = null;
     private hoverTimeout: number;
@@ -68,32 +74,35 @@ export class NxDateAndTimeFilterComponent {
             : this.dateRange.start;
     }
 
-    get todayStart(): Date {
+    private get todayStart(): Date {
         const now = new Date();
         return new Date(now.getFullYear(), now.getMonth(), now.getDate());
     }
 
-    get lastDay(): DateRange {
-        const today = this.todayStart;
-        return new DR(today, today);
+    constructor(dateAdapter: DateAdapter<Date>, @Inject(WINDOW) private window: Window) {
+        dateAdapter.setLocale(getSysLang(window));
+        this.updateFixedDates();
+        timer(MS.min, MS.min)
+            .pipe(untilDestroyed(this))
+            .subscribe(_ => {
+                if (this.todayStart.getTime() !== this.lastDay.start.getTime()) {
+                    this.updateFixedDates();
+                }
+            });
     }
 
-    get last7Days(): DateRange {
+    private updateFixedDates(): void {
         const today = this.todayStart;
+
+        this.lastDay = new DR(today, today);
+
         /* MM/DD - MM/DD is already one day on the calendar,
         so for two day range MM/(DD-1) - MM/DD we subtract only one */
         const sevenDaysAgo = offsetDate(today.getTime(), { day: -6 });
-        return new DR(sevenDaysAgo, today);
-    }
+        this.last7Days = new DR(sevenDaysAgo, today);
 
-    get last30Days(): DateRange {
-        const today = this.todayStart;
         const thirtyDaysAgo = offsetDate(today.getTime(), { day: -29 });
-        return new DR(thirtyDaysAgo, today);
-    }
-
-    constructor(dateAdapter: DateAdapter<Date>, @Inject(WINDOW) private window: Window) {
-        dateAdapter.setLocale(getSysLang(window));
+        this.last30Days = new DR(thirtyDaysAgo, today);
     }
 
     /* <mat-calendar> doesn't include a way to detect when a cell is

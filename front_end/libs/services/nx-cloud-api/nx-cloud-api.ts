@@ -1123,16 +1123,17 @@ export class NxCloudApiService {
     }
 
     @memoizeAsyncShort
-    checkLicenseServer(systemId: string, licenseServer?: string) {
+    checkLicenseServer(systemId: string, licenseServer: string, cloudHost: string) {
         const endpoint = `${apiBase}/systems/${systemId}/licenseServer`;
         const response = licenseServer
-            ? this.http.post<t.LicenseServerInfo>(endpoint, { licenseServer })
+            ? this.http.post<t.LicenseServerInfo>(endpoint, { licenseServer, cloudHost })
             : this.http.get<t.LicenseServerInfo>(endpoint);
         return response.pipe(
             catchError(() =>
                 Promise.resolve({
                     systemId,
                     licenseServer: this.CONFIG.licenseServer,
+                    cloudHost: this.CONFIG.cloudHost,
                     cacheUpdated: false,
                 }),
             ),
