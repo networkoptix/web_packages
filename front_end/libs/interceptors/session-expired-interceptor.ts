@@ -36,7 +36,7 @@ export class SessionExpiredInterceptor implements HttpInterceptor {
 
                     return from(
                         this.dialogService.updateSession({
-                            sessionState: cdbSystem.system2faEnabled
+                            sessionState: cdbSystem?.system2faEnabled
                                 ? SessionState.Renew2FA
                                 : SessionState.RenewWeb,
                             system,
