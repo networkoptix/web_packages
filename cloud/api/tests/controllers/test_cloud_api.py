@@ -13,6 +13,7 @@ from api.tests.utils import MockResponse, unwrap
 
 PatchedResponse = Callable[[Optional[dict]], MagicMock]
 
+CLOUD_DB_URL = 'https://cloud-test.hdw.mx/cdb'
 
 def generate_args(num_args=4):
     for _ in range(num_args):
@@ -105,7 +106,7 @@ class TestAPIWrappers:
 
 class TestSystemAPI:
     @pytest.fixture(autouse=True)
-    def setup(self, mocker):
+    def setup(self, mocker, default_portal, default_customization):
         user, password, d1_key, d1_val, d2_key, d2_val, system_id, slave_system_id, system_name, headers = generate_args(
             10)
         self.request = mocker.MagicMock(spec=Request, POST={}, META={}, data={},
@@ -304,7 +305,7 @@ class TestStorageApi:
     # Helper methods
 
     @pytest.fixture(autouse=True)
-    def setup(self, mocker):
+    def setup(self, mocker, default_portal, default_customization_ctx):
         self.mock_data = generate_args(10)
 
         def patch(method) -> PatchedResponse:
@@ -463,7 +464,7 @@ class TestStorageApi:
 
 class TestOwnershipTransfer:
     @pytest.fixture(autouse=True)
-    def setup(self):
+    def setup(self, default_portal, default_customization_ctx):
         account, headers, request, system_id, key_1, val_1 = generate_args(6)
         self.account = account
         self.headers = headers

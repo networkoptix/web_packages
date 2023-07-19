@@ -1446,7 +1446,7 @@ class TestCustomClientViewSet:
         mock_get_vms_asset.assert_called_once_with(customization=settings.TEST_CUSTOMIZATION)
 
         # Test meta
-        mocker.patch.object(settings, 'META', True)
+        mocker.patch('cms.views.asset.is_metavms', return_value=True)
         instance.perform_create(mock_serializer)
         mock_serializer.save.assert_called_with(**expected_meta_kwargs)
 

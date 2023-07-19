@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 from django.contrib.messages import get_messages
 from django.core import mail
 from django.test import TestCase
@@ -16,7 +18,7 @@ class TestLoginHistory:
     test_user_email = 'test@test.com'
 
     @pytest.fixture(autouse=True)
-    def setup(self, client, db) -> None:
+    def setup(self, client, db, default_customization, default_customization_ctx) -> None:
         self.user = Account.objects.get_or_create(email='test@test.com')[0]
         self.client = client
 

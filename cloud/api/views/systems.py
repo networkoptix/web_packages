@@ -200,7 +200,7 @@ async def get_auth(request, system_id):
         sync_to_async(cloud_api.Account.create_temporary_credentials, thread_sensitive=False)(
             request, credential_type='short')
     )
-    realm = settings.CLOUD_CONNECT['password_realm']
+    realm = settings.PASSWORD_REALM
     nonce = data["nonce"]
     login = cred['login']
     password = cred['password']

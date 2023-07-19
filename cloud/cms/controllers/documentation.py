@@ -24,6 +24,7 @@ from meilisearch.errors import MeiliSearchCommunicationError, MeiliSearchApiErro
 from util.base_cache import BaseCache, BaseCacheV2
 from cms.controllers.filldata import global_contexts_to_dict, ContextProcessor
 from cms.models import DataStructure, AssetType, AssetCustomizationReview, Context, get_cloud_portal_asset, Asset, ExternalFile
+from util.config import get_cloud_portal_url
 from util.helpers import get_meilisearch_client
 
 logger = logging.getLogger(__name__)
@@ -303,11 +304,11 @@ def sub_files(value, datastructures, record_values):
     return value
 
 
-def filter_internal_url(link, base=settings.CLOUD_PORTAL_URL):
+def filter_internal_url(link):
     url = link.get('href', '').replace('%CLOUD_LINK%', '') or '/'
     if url.startswith('../'):
         url = f"/{url.split('../')[-1]}"
-    return url if url.startswith('/') or url.startswith(base) else None
+    return url if url.startswith('/') or url.startswith(get_cloud_portal_url()) else None
 
 
 def apply_replacements(html, replacements):
@@ -320,7 +321,7 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
     customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
     document_cache = DocumentCache(customization_name=customization)
     S3_LINK = f"https://{settings.AWS_S3_CUSTOM_DOMAIN}"
-    REPLACEMENT_LINK = '' if external_link else f"{settings.CLOUD_PORTAL_URL}/static/media"
+    REPLACEMENT_LINK = '' if external_link else f"{get_cloud_portal_url(customization)}/static/media"
     doc_structures = DataStructure.objects.filter(
         context__asset_type__type=AssetType.ASSET_TYPES.documentation
     )

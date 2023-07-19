@@ -19,8 +19,7 @@ from api.models import Account
 from cms.controllers.static_files import TemplatesCache
 from cms.models import *
 from util.base_cache import BaseCache
-from util.config import UnableToFetchConfigException
-
+from util.instance_config import UnableToFetchConfigException
 
 BYTES_TO_MEGABYTES = 1048576.0
 PENDING = AssetCustomizationReview.REVIEW_STATES[

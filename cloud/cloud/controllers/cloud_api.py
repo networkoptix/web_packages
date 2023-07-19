@@ -19,7 +19,7 @@ from cloud.customization_context import customization_ctx
 from cloud.helpers.exceptions import (validate_response, ErrorCodes, APIRequestException,
                                       APINotAuthorisedException, APINotFoundException, get_client_ip,
                                       kill_session, kill_tokens, APIInternalException)
-from util.config import get_cached_config
+from util.config import get_cached_config, get_cloud_portal_url
 
 logger = logging.getLogger(__name__)
 
@@ -29,11 +29,18 @@ class CloudDbConfig:
     def url(customization_name: str):
         return get_cached_config(customization=customization_name)['cloud_db']['url']
 
+    @staticmethod
+    def cloud_storage_url(customization_name: str):
+        return get_cached_config(customization=customization_name)['cloud_storage']['url']
 
-CLOUD_DB_URL = settings.CLOUD_CONNECT['url']
-CLOUD_STORAGE_URL = settings.CLOUD_STORAGE_URL
-CLOUD_STORAGES_URL = settings.CLOUD_STORAGES_URL
-CLOUD_2FA_URL = f"{CLOUD_DB_URL}/account/self/2fa"
+    @staticmethod
+    def cloud_storages_url(customization_name: str):
+        return get_cached_config(customization=customization_name)['cloud_storages']['url']
+
+    @staticmethod
+    def cloud_2fa_url(customization_name: str):
+        return f"{CloudDbConfig.url(customization_name)}/account/self/2fa"
+
 
 MOBILE_CLIENT_TOKEN_LIFETIME_S = "15778800"  # 6 Months
 
@@ -337,25 +344,29 @@ def put_wrapper(url, params=None, auth=None, json=None, headers=None):
 
 @validate_response
 def ping():
-    url = CLOUD_DB_URL + "/ping"
+    url = CloudDbConfig.url(customization_ctx.get()) + "/ping"
     return get_wrapper(url)
 
 
 class System(object):
     @staticmethod
-    def get_request_url(endpoint=None, system_id=None, cloud_db_url=CLOUD_DB_URL):
+    def get_request_url(endpoint=None, system_id=None, cloud_db_url=None):
+        if cloud_db_url is None:
+            cloud_db_url = CloudDbConfig.url(customization_ctx.get())
         system_id_segment = f'{system_id}/' if system_id else ''
         if endpoint is None:
-            return f'{CLOUD_DB_URL}/system/get'
+            return f'{CloudDbConfig.url(customization_ctx.get())}/system/get'
         if endpoint == 'getNonce':
-            return f'{CLOUD_DB_URL}/auth/getNonce'
+            return f'{CloudDbConfig.url(customization_ctx.get())}/auth/getNonce'
         return f'{cloud_db_url}/system/{system_id_segment}{endpoint}'
 
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def list(request, email=None, password=None, one_customization=True, headers=None, cloud_db_url=CLOUD_DB_URL):
+    def list(request, email=None, password=None, one_customization=True, headers=None, cloud_db_url=None):
         """Backwards support for digest. Used by push notifications and zapier"""
+        if cloud_db_url is None:
+            cloud_db_url = CloudDbConfig.url(customization_ctx.get())
         auth = None
         params = {}
         if one_customization:
@@ -450,7 +461,7 @@ class System(object):
     @validate_response
     @auto_refresh_token
     def unbind(request, system_id, headers=None):
-        return delete_wrapper(f'{CLOUD_DB_URL}/system/{system_id}', headers=headers)
+        return delete_wrapper(f'{CloudDbConfig.url(customization_ctx.get())}/system/{system_id}', headers=headers)
 
     @staticmethod
     @validate_response
@@ -503,7 +514,7 @@ class System(object):
             "signature": signature,
             "message": redirect_uri
         }
-        return post_wrapper(f"{CLOUD_DB_URL}/system/{system_id}/signature/validate", json=data)
+        return post_wrapper(f"{CloudDbConfig.url(customization_ctx.get())}/system/{system_id}/signature/validate", json=data)
 
     @staticmethod
     @validate_response
@@ -513,7 +524,7 @@ class System(object):
             'system2faEnabled': require2fa,
             'mfaCode': mfa_code
         }
-        return put_wrapper(f"{CLOUD_DB_URL}/system/{system_id}", json=data, headers=headers)
+        return put_wrapper(f"{CloudDbConfig.url(customization_ctx.get())}/system/{system_id}", json=data, headers=headers)
 
 
 class Account(object):
@@ -538,7 +549,7 @@ class Account(object):
     @staticmethod
     @lower_case_email
     def encode_password(email, password):
-        realm = settings.CLOUD_CONNECT['password_realm']
+        realm = settings.PASSWORD_REALM
         password_string = ':'.join((email, realm, password)).encode('utf-8')
         password_ha1 = md5(password_string).hexdigest()
         password_ha1_sha256 = sha256(password_string).hexdigest()
@@ -548,7 +559,7 @@ class Account(object):
     @validate_response
     @lower_case_email
     def check_account(email):
-        return get_wrapper(f"{CLOUD_DB_URL}/account/{email}/status")
+        return get_wrapper(f"{CloudDbConfig.url(customization_ctx.get())}/account/{email}/status")
 
     @staticmethod
     @lower_case_email
@@ -566,14 +577,14 @@ class Account(object):
 
         @validate_response
         def _update(login, password, params):
-            request = CLOUD_DB_URL + '/account/update'
+            request = CloudDbConfig.url(customization_ctx.get()) + '/account/update'
             logger.debug(
                 'cloud_api.Account.register - making request: ' + request)
             return post_wrapper(request, json=params, auth={"email": login, "password": password}, headers=headers)
 
         @validate_response
         def _register(params):
-            request = CLOUD_DB_URL + '/account/register'
+            request = CloudDbConfig.url(customization_ctx.get()) + '/account/register'
             logger.debug(
                 'cloud_api.Account.register - making request: ' + request)
             return post_wrapper(request, json=params, headers=headers)
@@ -631,7 +642,7 @@ class Account(object):
         if not headers:
             auth = {"email": email, "password": old_password}
 
-        return put_wrapper(f'{CLOUD_DB_URL}/account/self', json=params, headers=headers, auth=auth)
+        return put_wrapper(f'{CloudDbConfig.url(customization_ctx.get())}/account/self', json=params, headers=headers, auth=auth)
 
     @staticmethod
     @validate_response
@@ -653,7 +664,7 @@ class Account(object):
                 params['timeouts']['prolongationPeriod'] = str(
                     prolongation_period)
 
-        return post_wrapper(f'{CLOUD_DB_URL}/account/createTemporaryCredentials', json=params, headers=headers)
+        return post_wrapper(f'{CloudDbConfig.url(customization_ctx.get())}/account/createTemporaryCredentials', json=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -666,7 +677,7 @@ class Account(object):
         headers = {
             'X-Forwarded-For': ip
         }
-        return post_wrapper(f'{CLOUD_DB_URL}/account/resetPassword', json=params, headers=headers)
+        return post_wrapper(f'{CloudDbConfig.url(customization_ctx.get())}/account/resetPassword', json=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -674,7 +685,7 @@ class Account(object):
         params = {
             'code': code
         }
-        return post_wrapper(f'{CLOUD_DB_URL}/account/activate', json=params)
+        return post_wrapper(f'{CloudDbConfig.url(customization_ctx.get())}/account/activate', json=params)
 
     @staticmethod
     @validate_response
@@ -683,13 +694,13 @@ class Account(object):
         params = {
             'email': email
         }
-        return post_wrapper(f'{CLOUD_DB_URL}/account/reactivate', json=params)
+        return post_wrapper(f'{CloudDbConfig.url(customization_ctx.get())}/account/reactivate', json=params)
 
     @staticmethod
     @validate_response
     @lower_case_email
     def delete(email, password):
-        return delete_wrapper(f'{CLOUD_DB_URL}/account/self', auth={"email": email, "password": password})
+        return delete_wrapper(f'{CloudDbConfig.url(customization_ctx.get())}/account/self', auth={"email": email, "password": password})
 
     @staticmethod
     @validate_response
@@ -698,12 +709,14 @@ class Account(object):
         params = {
             'fullName': ' '.join((first_name, last_name))
         }
-        return post_wrapper(f'{CLOUD_DB_URL}/account/update', json=params, headers=headers)
+        return post_wrapper(f'{CloudDbConfig.url(customization_ctx.get())}/account/update', json=params, headers=headers)
 
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def get(request, email=None, password=None, headers=None, cloud_db_url=CLOUD_DB_URL):
+    def get(request, email=None, password=None, headers=None, cloud_db_url=None):
+        if cloud_db_url is None:
+            cloud_db_url = CloudDbConfig.url(customization_ctx.get())
         auth = None
         if email and password:
             auth = {"email": email, "password": password}
@@ -713,7 +726,7 @@ class Account(object):
     @validate_response
     @auto_refresh_token
     def get_2fa_settings(request, headers=None):
-        return get_wrapper(f"{CLOUD_DB_URL}/account/self/settings/security", headers=headers)
+        return get_wrapper(f"{CloudDbConfig.url(customization_ctx.get())}/account/self/settings/security", headers=headers)
 
     @staticmethod
     @validate_response
@@ -726,7 +739,7 @@ class Account(object):
         if password:
             data["password"] = password
 
-        return put_wrapper(f"{CLOUD_DB_URL}/account/self/settings/security", json=data, headers=headers)
+        return put_wrapper(f"{CloudDbConfig.url(customization_ctx.get())}/account/self/settings/security", json=data, headers=headers)
 
 
 class Storage(object):
@@ -761,7 +774,7 @@ class Storage(object):
     # Helpers
     @staticmethod
     def get_request_url(storage_id=None, endpoint=None, system_id=None, use_storages_endpoint=False):
-        main_segment = f"{CLOUD_STORAGES_URL if use_storages_endpoint else CLOUD_STORAGE_URL}/"
+        main_segment = f"{CloudDbConfig.cloud_storages_url(customization_ctx.get()) if use_storages_endpoint else CloudDbConfig.cloud_storage_url(customization_ctx.get())}/"
 
         storage_segment = storage_id or ''
 
@@ -907,7 +920,7 @@ class Auth(object):
         if scope:
             params["scope"] = scope
         else:
-            params["scope"] = f"{settings.CLOUD_PORTAL_URL} cloudSystemId=*"
+            params["scope"] = f"{get_cloud_portal_url(customization_ctx.get())} cloudSystemId=*"
 
         if grant_type == Auth.GRANT_TYPE.password:
             params.update({
@@ -917,7 +930,7 @@ class Auth(object):
         elif grant_type == Auth.GRANT_TYPE.refresh_token:
             params["refresh_token"] = refresh_token
 
-        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers)
+        return post_wrapper(f"{CloudDbConfig.url(customization_ctx.get())}/oauth2/token", json=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -933,7 +946,7 @@ class Auth(object):
             "username": email,
             "password": password
         }
-        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers)
+        return post_wrapper(f"{CloudDbConfig.url(customization_ctx.get())}/oauth2/token", json=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -950,7 +963,7 @@ class Auth(object):
         if is_mobile:
             params['refresh_token_lifetime'] = MOBILE_CLIENT_TOKEN_LIFETIME_S
 
-        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers)
+        return post_wrapper(f"{CloudDbConfig.url(customization_ctx.get())}/oauth2/token", json=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -966,11 +979,13 @@ class Auth(object):
         if scope:
             params["scope"] = scope
 
-        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers)
+        return post_wrapper(f"{CloudDbConfig.url(customization_ctx.get())}/oauth2/token", json=params, headers=headers)
 
     @staticmethod
     @validate_response
-    def validate_token(access_token, session_access_token=None, cloud_db_url=CLOUD_DB_URL):
+    def validate_token(access_token, session_access_token=None, cloud_db_url=None):
+        if cloud_db_url is None:
+            cloud_db_url = CloudDbConfig.url(customization_ctx.get())
         headers = {"Authorization": f"Bearer {session_access_token or access_token}"}
         return get_wrapper(f"{cloud_db_url}/oauth2/token/{access_token}", headers=headers)
 
@@ -978,25 +993,25 @@ class Auth(object):
     @validate_response
     @auto_refresh_token
     def delete_token(request, token, headers=None):
-        return delete_wrapper(f"{CLOUD_DB_URL}/oauth2/token/{token}", headers=headers)
+        return delete_wrapper(f"{CloudDbConfig.url(customization_ctx.get())}/oauth2/token/{token}", headers=headers)
 
     @staticmethod
     @validate_response
     def delete_token_no_refresh(request, token, headers=None):
-        return delete_wrapper(f"{CLOUD_DB_URL}/oauth2/token/{token}", headers=headers)
+        return delete_wrapper(f"{CloudDbConfig.url(customization_ctx.get())}/oauth2/token/{token}", headers=headers)
 
     @staticmethod
     @validate_response
     @auto_refresh_token
     def delete_users_tokens(request, headers=None):
-        request = f"{CLOUD_DB_URL}/oauth2/user/self"
+        request = f"{CloudDbConfig.url(customization_ctx.get())}/oauth2/user/self"
         return delete_wrapper(request, headers=headers)
 
     @staticmethod
     @validate_response
     @auto_refresh_token
     def delete_users_tokens_by_client(request, client_id, headers=None):
-        request = f"{CLOUD_DB_URL}/oauth2/user/self/client/{client_id}"
+        request = f"{CloudDbConfig.url(customization_ctx.get())}/oauth2/user/self/client/{client_id}"
         return delete_wrapper(request, headers=headers)
 
     @staticmethod
@@ -1008,41 +1023,41 @@ class Auth(object):
             "name": name,
             "redirect_uri": redirect_uri
         }
-        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/client/", json=params, headers=headers)
+        return post_wrapper(f"{CloudDbConfig.url(customization_ctx.get())}/oauth2/client/", json=params, headers=headers)
 
     @staticmethod
     @validate_response
     @auto_refresh_token
     def delete_backup_codes(request, headers=None):
-        return delete_wrapper(f"{CLOUD_2FA_URL}/backup-code/", headers=headers)
+        return delete_wrapper(f"{CloudDbConfig.cloud_2fa_url(customization_ctx.get())}/backup-code/", headers=headers)
 
     @staticmethod
     @validate_response
     @auto_refresh_token
     def delete_2fa_key(request, headers=None):
-        return delete_wrapper(f"{CLOUD_2FA_URL}/totp/key", headers=headers)
+        return delete_wrapper(f"{CloudDbConfig.cloud_2fa_url(customization_ctx.get())}/totp/key", headers=headers)
 
     @staticmethod
     @validate_response
     @auto_refresh_token
     def generate_2fa_key(request, headers=None):
-        return post_wrapper(f"{CLOUD_2FA_URL}/totp/key", headers=headers)
+        return post_wrapper(f"{CloudDbConfig.cloud_2fa_url(customization_ctx.get())}/totp/key", headers=headers)
 
     @staticmethod
     @validate_response
     @auto_refresh_token
     def generate_backup_code(request, count, headers=None):
-        return post_wrapper(f"{CLOUD_2FA_URL}/backup-code/", json={"count": count}, headers=headers)
+        return post_wrapper(f"{CloudDbConfig.cloud_2fa_url(customization_ctx.get())}/backup-code/", json={"count": count}, headers=headers)
 
     @staticmethod
     @validate_response
     def verify_2fa_code(temp_2fa_code, code):
-        return get_wrapper(f"{CLOUD_2FA_URL}/totp/key/{temp_2fa_code}", params={'token': code})
+        return get_wrapper(f"{CloudDbConfig.cloud_2fa_url(customization_ctx.get())}/totp/key/{temp_2fa_code}", params={'token': code})
 
     @staticmethod
     @validate_response
     def verify_backup_code(backup_code, code):
-        return get_wrapper(f"{CLOUD_2FA_URL}/backup-code/{backup_code}", params={'token': code})
+        return get_wrapper(f"{CloudDbConfig.cloud_2fa_url(customization_ctx.get())}/backup-code/{backup_code}", params={'token': code})
 
 
 class OwnershipTransfer(object):
@@ -1058,21 +1073,21 @@ class OwnershipTransfer(object):
         if comment:
             data['comment'] = comment
 
-        return put_wrapper(f'{CLOUD_DB_URL}/offered-systems/{system_id}', json=data, headers=headers)
+        return put_wrapper(f'{CloudDbConfig.url(customization_ctx.get())}/offered-systems/{system_id}', json=data, headers=headers)
 
     @staticmethod
     @sync_to_async
     @validate_response
     @auto_refresh_token
     def cancel(request, system_id, headers=None):
-        return delete_wrapper(f'{CLOUD_DB_URL}/offered-systems/{system_id}', headers=headers)
+        return delete_wrapper(f'{CloudDbConfig.url(customization_ctx.get())}/offered-systems/{system_id}', headers=headers)
 
     @staticmethod
     @sync_to_async
     @validate_response
     @auto_refresh_token
     def list(request, headers=None):
-        return get_wrapper(f'{CLOUD_DB_URL}/offered-systems', headers=headers)
+        return get_wrapper(f'{CloudDbConfig.url(customization_ctx.get())}/offered-systems', headers=headers)
 
     @staticmethod
     @sync_to_async
@@ -1083,4 +1098,4 @@ class OwnershipTransfer(object):
             "toAccount": new_owner,
             "systemId": system_id
         }
-        return post_wrapper(f'{CLOUD_DB_URL}/offered-systems', json=data, headers=headers)
+        return post_wrapper(f'{CloudDbConfig.url(customization_ctx.get())}/offered-systems', json=data, headers=headers)

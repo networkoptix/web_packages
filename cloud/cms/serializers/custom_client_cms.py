@@ -7,6 +7,7 @@ from django.conf import settings
 from django.core import validators, exceptions
 from rest_framework import serializers, fields
 
+from cloud.customization_context import is_metavms
 from cms.models import AssetType, CustomClient, Customization, get_vms_asset
 
 
@@ -59,7 +60,7 @@ class CustomClientSerializer(serializers.ModelSerializer):
             self.custom_fields = {
                 key: value for key, value in custom_fields.items()
                 if custom_fields[key].get('source', '') == 'custom' and not (
-                    custom_fields[key].get('metaOnly', False) and not settings.META)
+                    custom_fields[key].get('metaOnly', False) and not is_metavms(self.context.get('request', None)))
             }
             for field_name, field_props in self.custom_fields.items():
                 optional = field_props.get('optional', False)
@@ -122,7 +123,7 @@ class CustomClientSerializer(serializers.ModelSerializer):
         if getattr(self.context.get('view', None), 'swagger_fake_view', False):
             # initialize serializer for swagger inspection
             return
-        if not settings.META or not self.context.get('request', None)\
+        if not is_metavms(self.context.get('request', None)) or not self.context.get('request', None)\
                 or not self.context['request'].user.is_authenticated:
             self.fields['base_vms'].read_only = True
         else:

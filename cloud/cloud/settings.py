@@ -35,14 +35,14 @@ import sys
 from botocore.config import Config
 from django.core.exceptions import ImproperlyConfigured
 
-from util.config import get_config, get_structures_hash
+from util.instance_config import get_init_config, get_structures_hash
 from cloud.logger import downgrade_requests
 
 
 # Base Settings
 
 
-conf = get_config()
+conf = get_init_config()
 LOCAL_ENVIRONMENT = 'runserver' in sys.argv or os.getenv('LOCAL_ENV', False)
 CI = os.getenv('CI', False)
 TESTING = sys.argv[1:2] == ['test'] or os.getenv('TESTING', False)
@@ -66,24 +66,22 @@ STATICFILES_FINDERS = [
     'npm.finders.NpmFinder'
 ]
 
-CUSTOMIZATION = os.getenv('CUSTOMIZATION')
+# In the name of legacy and to pass through django startup check.
+# Removing CUSTOMIZATION at all causes migrations failure.
+CUSTOMIZATION = None
 LOCAL_CUSTOMIZATION = None
-if not CUSTOMIZATION:
-    CUSTOMIZATION = conf['customization']
-
 META_CUSTOMIZATION = 'metavms'
-META = CUSTOMIZATION == META_CUSTOMIZATION
 DEF_CUSTOMIZATION = 'default'
+
 if LOCAL_ENVIRONMENT:
     STATIC_ROOT = os.path.join(BASE_DIR, "static/common")
     STATICFILES_DIRS = (
         os.path.join(STATIC_LOCATION, 'common/static'),
         os.path.join(STATIC_LOCATION, "_source/blue/static"),
     )
-    PREVIEW_URL = '/preview/'
-    PREVIEW_LOCATION = os.path.join(STATIC_LOCATION, CUSTOMIZATION, "preview")
+    # PREVIEW_URL = '/preview/'
 
-    LOCAL_CUSTOMIZATION = os.getenv('CUSTOMIZATION') or DEF_CUSTOMIZATION
+    LOCAL_CUSTOMIZATION = DEF_CUSTOMIZATION
     TEST_CUSTOMIZATION = os.getenv('TEST_CUSTOMIZATION') or DEF_CUSTOMIZATION
 elif TESTING:
     TEST_CUSTOMIZATION = os.getenv('TEST_CUSTOMIZATION')
@@ -748,7 +746,6 @@ assert ('bucket' in conf), 'Ivan, please add s3 bucket to config for this instan
 TRAFFIC_RELAY_HOST = '{systemId}.' + conf['trafficRelay']['host']
 TRAFFIC_RELAY_PROTOCOL = 'https://'
 
-CLOUD_PORTAL_URL = conf['cloud_portal']['url'].replace('http:', 'https:')
 LICENSE_SERVER = conf.get('licenseServer', 'https://nxlicensed.test.hdw.mx' if LOCAL_ENVIRONMENT else 'https://licensing.vmsproxy.com')
 # USE_CORS_BYPASS = LOCAL_ENVIRONMENT and not TESTING and not os.getenv('DISABLE_CORS_BYPASS', '')
 # LOCAL_CORS_BYPASS = os.getenv('CORS_BYPASS', 'http://localhost:42069/') if USE_CORS_BYPASS else ''
@@ -766,30 +763,14 @@ LICENSE_SERVER = conf.get('licenseServer', 'https://nxlicensed.test.hdw.mx' if L
 SKINS = ['blue', 'green', 'orange']
 DEFAULT_SKIN = 'blue'
 
-if LOCAL_ENVIRONMENT:
-    _HOST = 'https://cloud-test.hdw.mx'
-    CLOUD_PORTAL_URL = _HOST
-    conf["cloud_db"]["url"] = f"{_HOST}/cdb"
-    conf["cloud_storage"]["url"] = f"{_HOST}/cdb/storage"
-    conf["cloud_storages"]["url"] = f"{_HOST}/cdb/storages"
-
     # CELERY_BROKER_URL = 'sqs://...'
     # This setting is removed because every developer needs personal AWS credentials
     # Ask Ivan V to provide you with config and credentials files for AWS and save them to ~/.aws/ directory
     # Or go through file history in source control to find the last time it was here
     # (changeset 49115a0427b3 or 4923e6b2575d)
 
-CLOUD_CONNECT = {
-    'url': conf['cloud_db']['url'],
-    # 'url': 'http://localhost:3346',
-    # 'url': 'http://10.0.3.41:3346',
-    'customization': CUSTOMIZATION,
-    'password_realm': 'VMS'
-}
 
-# Cloud storage settings
-CLOUD_STORAGE_URL = conf['cloud_storage']['url']
-CLOUD_STORAGES_URL = conf['cloud_storages']['url']
+PASSWORD_REALM = 'VMS'
 
 USE_ASYNC_QUEUE = not LOCAL_ENVIRONMENT and not TESTING
 

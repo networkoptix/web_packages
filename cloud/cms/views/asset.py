@@ -4,8 +4,9 @@ from contextlib import suppress
 from django.core.files import base
 from django.db.models.expressions import OuterRef, Subquery
 
+from cloud.customization_context import is_metavms
 from util.base_cache import IntegrationCache
-from util.config import UnableToFetchConfigException
+from util.instance_config import UnableToFetchConfigException
 from waffle import flag_is_active
 from cms.controllers.asset_json import get_contexts_and_datastructures_of_asset_type
 from cms.views.celery import download_result
@@ -1291,7 +1292,7 @@ class CustomClientViewSet(WaffleFlagMixin, ModelViewSet):
         from cms.models import get_vms_asset
         kwargs = {}
         customization = self.request.CUSTOMIZATION
-        if not settings.META:
+        if not is_metavms(self.request):
             kwargs['base_vms'] = get_vms_asset(customization=customization)
         serializer.save(
             created_by=self.request.user,
@@ -1311,7 +1312,7 @@ class CustomClientViewSet(WaffleFlagMixin, ModelViewSet):
 
     @staticmethod
     def generate_settings_for_manifest(request):
-        show_vms_list = settings.META
+        show_vms_list = is_metavms(request)
         vms_list = [{'name': vms.name, 'value': vms.id} for vms in
                     request.user.custom_client_vms_assets(request=request)] if show_vms_list else []
 
@@ -1323,8 +1324,7 @@ class CustomClientViewSet(WaffleFlagMixin, ModelViewSet):
             }
         }
 
-    @staticmethod
-    def generate_contexts_for_manifest():
+    def generate_contexts_for_manifest(self):
         fields = [{
             'name': field_props.get('name', field_name),
             'label': field_props.get('label', field_name),
@@ -1334,7 +1334,7 @@ class CustomClientViewSet(WaffleFlagMixin, ModelViewSet):
             'optional': field_props.get('optional', False)
         } for field_name, field_props in list(filter(
             lambda item: item[1].get('source', '') == 'custom' and not (
-                item[1].get('metaOnly', False) and not settings.META),
+                item[1].get('metaOnly', False) and not is_metavms(self.request)),
             AssetType.get_custom_fields_by_type(
                 AssetType.ASSET_TYPES.vms).items()
         ))]

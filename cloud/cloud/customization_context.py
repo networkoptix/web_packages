@@ -2,6 +2,7 @@ from concurrent.futures import ThreadPoolExecutor
 from contextvars import ContextVar, copy_context
 from functools import wraps
 
+from django.conf import settings
 from django.db import close_old_connections
 from django.utils.deprecation import MiddlewareMixin
 
@@ -60,3 +61,6 @@ def needs_customization_ctx(key='customization', set_context: bool = True):
     return decorator
 
 
+def is_metavms(request=None) -> bool:
+    customization = getattr(request, 'CUSTOMIZATION', None) or customization_ctx.get()
+    return customization == settings.META_CUSTOMIZATION

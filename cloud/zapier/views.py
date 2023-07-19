@@ -11,6 +11,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from bs4 import BeautifulSoup
 from drf_yasg.utils import swagger_auto_schema
+
+from cloud.customization_context import customization_ctx
+from util.config import get_cloud_portal_url
 from zapier.models import ZapHook, GeneratedRule
 
 from cloud.helpers.exceptions import api_success, APINotAuthorisedException, APIException, log_error
@@ -18,7 +21,6 @@ from cloud.controllers import cloud_api, cloud_gateway
 
 from cloud import settings
 
-CLOUD_INSTANCE_URL = settings.conf['cloud_portal']['url']
 logger = logging.getLogger(__name__)
 
 
@@ -340,7 +342,7 @@ def ping(request):
 
 
 def generate_subscribe_url_link(query_params):
-    return f'{CLOUD_INSTANCE_URL}/zapier/?{urlencode(query_params)}'
+    return f'{get_cloud_portal_url(customization_ctx.get())}/zapier/?{urlencode(query_params)}'
 
 
 @swagger_auto_schema(method="POST", auto_schema=None)

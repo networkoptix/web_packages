@@ -3,8 +3,6 @@ include /etc/nginx/modules-enabled/*.conf;
 error_log /dev/stdout info;
 worker_processes 1;
 
-env CUSTOMIZATION;
-
 # user nobody nogroup;
 pid /tmp/nginx.pid;
 

@@ -1,25 +1,9 @@
-customization: '$CUSTOMIZATION'
-
-host: '$CLOUD_PORTAL_HOST'
-
 cloud_database:
     host: '$DB_HOST'
     port: '$DB_PORT'
     username: '$DB_USER'
     password: '$DB_PASSWORD'
     database: '$DB_NAME'
-
-cloud_db:
-    url: 'https://$CLOUD_PORTAL_HOST/cdb'
-
-cloud_portal:
-    url: 'https://$CLOUD_PORTAL_HOST'
-
-cloud_storage:
-    url: 'https://$CLOUD_PORTAL_HOST/cdb/storage'
-
-cloud_storages:
-    url: 'https://$CLOUD_PORTAL_HOST/cdb/storages'
 
 trafficRelay:
     host: 'relay.relay.cloud.hdw.mx'

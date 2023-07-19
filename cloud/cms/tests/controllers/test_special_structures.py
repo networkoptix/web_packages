@@ -14,7 +14,7 @@ class TestSpecialStructures:
     DS_TEST_CONFIG = {'ds': 'Test Config'}
 
     @pytest.fixture(autouse=True)
-    def setup(self, account_factory, asset_factory, mocker, db):
+    def setup(self, account_factory, asset_factory, mocker, db, default_customization):
         self.superuser = account_factory()
         self.cloud_portal_asset = next(asset_factory(
             asset_type=AssetType.ASSET_TYPES.cloud_portal, account=self.superuser))
@@ -22,7 +22,8 @@ class TestSpecialStructures:
             asset_type=AssetType.ASSET_TYPES.vms, account=self.superuser))
         self.special_structure = SpecialStructures()
         existing_ds = SpecialStructure.objects.filter(name=self.DS_TEST_NAME).first()
-
+        default_customization.host = self.CLOUD_HOST
+        default_customization.save()
         if existing_ds:
             existing_ds.config = self.DS_TEST_CONFIG
             existing_ds.save()

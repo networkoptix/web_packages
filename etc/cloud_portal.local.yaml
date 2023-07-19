@@ -1,7 +1,4 @@
-customization: 'default'
 debug: true
-
-host: '$CLOUD_PORTAL_HOST'
 
 cloud_database:
     host: '0.0.0.0'
@@ -9,18 +6,6 @@ cloud_database:
     username: 'root'
     password: ''
     database: 'cloudportal'
-
-cloud_db:
-    url: 'https://cloud-test.hdw.mx/cdb'
-
-cloud_portal:
-    url: 'https://$CLOUD_PORTAL_HOST'
-
-cloud_storage:
-    url: 'https://$CLOUD_DB_HOST/storage'
-
-cloud_storages:
-    url: 'https://$CLOUD_DB_HOST/storages'
 
 trafficRelay:
     host: 'relay.relay.cloud.hdw.mx'

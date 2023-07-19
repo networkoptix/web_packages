@@ -121,8 +121,8 @@ if settings.LOCAL_ENVIRONMENT:
     urlpatterns += [re_path(r'^static/skin/(?P<skin>blue|orange|green)/skin.css', static_serve.skin_style)]
     urlpatterns += staticfiles_urlpatterns()
 
-if settings.LOCAL_ENVIRONMENT and not settings.TESTING:
-    urlpatterns += static(settings.PREVIEW_URL, document_root=settings.PREVIEW_LOCATION)
+# if settings.LOCAL_ENVIRONMENT and not settings.TESTING:
+#     urlpatterns += static(settings.PREVIEW_URL, document_root=settings.PREVIEW_LOCATION)
     # urlpatterns.insert(0, re_path(r'^profiler/', include('silk.urls')))
 
 handler404 = 'cloud.urls.view_404'

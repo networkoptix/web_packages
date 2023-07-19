@@ -1,18 +1,12 @@
-import hashlib
 import logging
-import os
-import sys
-import yaml
+
+from django.conf import settings
+
+from cloud.customization_context import customization_ctx
+from util.helpers import get_cloud_host_by_customization
+from util.instance_config import get_init_config
 
 logger = logging.getLogger(__name__)
-
-
-class UnableToFetchConfigException(Exception):
-    def __init__(self, msg):
-        """
-        Exception for when config file is missing.
-        """
-        self.msg = f"Unable to fetch config file. {msg}"
 
 
 def get_cached_config(customization):
@@ -27,40 +21,28 @@ def get_cached_config(customization):
 
 
 def get_config(customization=None):
-    # Allows cloud_portal to run migratedb, readstructure, and filldata.
-    # In an actual instance gunicorn is used to run cloud_portal
-    PYTHON_RUNNING = any(['manage.py' in arg for arg in sys.argv])
     if not customization:
-        customization = os.getenv('CUSTOMIZATION')
+        customization = customization_ctx.get()
+    conf = get_init_config()
+    host = get_cloud_host_by_customization(customization)
+    conf = {
+        'customization': customization,
+        'host': host,
+        'cloud_db': {'url': f'https://{host}/cdb'},
+        'cloud_portal': {'url': f'https://{host}'},
+        'cloud_storage': {'url': f'https://{host}/cdb/storage'},
+        'cloud_storages': {'url': f'https://{host}/cdb/storages'},
+        **conf
+    }
+    if settings.LOCAL_ENVIRONMENT:
+        _HOST = 'https://cloud-test.hdw.mx'
+        conf["cloud_db"]["url"] = f"{_HOST}/cdb"
+        conf["cloud_storage"]["url"] = f"{_HOST}/cdb/storage"
+        conf["cloud_storages"]["url"] = f"{_HOST}/cdb/storages"
+    return conf
+
+
+def get_cloud_portal_url(customization=None):
     if not customization:
-        customization = 'default'
-
-    conf_dir = os.getenv('CLOUD_PORTAL_BASE_CONF_DIR')
-    if not conf_dir:
-        conf_dir = os.path.dirname(__file__)
-    file_path = os.path.join(conf_dir, customization, 'cloud_portal.yaml')  # normal case - working instance
-    if not os.path.exists(file_path) and not PYTHON_RUNNING and os.getenv('INSTANCE_NAME') in ['prod', 'stage']:
-        msg = f"To fix this problem run force update on the latest accepted review " \
-              f"for {customization}'s cloud portal asset to fix the problem."
-        logger.critical(msg)
-        raise UnableToFetchConfigException(msg)
-    if not os.path.isfile(file_path):  # this is for local environment
-        file_path = os.path.join(conf_dir, '../../etc', 'cloud_portal.local.yaml')
-    if not os.path.isfile(file_path):  # this is for Jenkins to collect static
-        file_path = os.path.join(conf_dir, '..', 'cloud_portal.jenkins.yaml')
-
-    return yaml.safe_load(open(file_path))
-
-
-def get_structures_hash():
-    conf_dir = os.path.dirname(__file__)
-    struct_dir = os.path.join(conf_dir, os.path.pardir, 'cms/structures')
-    dirpath, _, filenames = next(os.walk(struct_dir))
-    md5hash = hashlib.md5()
-    for fn in filenames:
-        if not fn.endswith('.json'):
-            continue
-        with open(os.path.join(dirpath, fn), 'rb') as f:
-            for chunk in iter(lambda: f.read(4096), b''):
-                md5hash.update(chunk)
-    return md5hash.hexdigest()
+        customization = customization_ctx.get()
+    return get_cached_config(customization)["cloud_db"]["url"]

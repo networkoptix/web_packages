@@ -18,16 +18,12 @@ function update_with_module_configuration()
 
 function instantiate_config()
 {
-    export CUSTOMIZATION=$1
-    export CLOUD_PORTAL_CONF_DIR=$CLOUD_PORTAL_BASE_CONF_DIR/$customization
+    export CLOUD_PORTAL_CONF_DIR=$CLOUD_PORTAL_BASE_CONF_DIR
     mkdir -p $CLOUD_PORTAL_CONF_DIR
 
     local CLOUD_PORTAL_CONF_TEMPLATE=$CLOUD_PORTAL_BASE_CONF_DIR/_source/cloud_portal.yaml
     local CLOUD_PORTAL_CONF=$CLOUD_PORTAL_CONF_DIR/cloud_portal.yaml
     local CLOUD_PORTAL_LOCK=${CLOUD_PORTAL_CONF}.lock
-
-    local CLOUD_PORTAL_HOST_var=CLOUD_PORTAL_HOST_$customization
-    export CLOUD_PORTAL_HOST=${!CLOUD_PORTAL_HOST_var:-$CLOUD_PORTAL_HOST}
 
     (
         flock -n 9 || exit 1
@@ -83,7 +79,7 @@ do
             sleep 10 # Wait a bit to make sure cache is set
             ;;
         config)
-            instantiate_configs
+            instantiate_config
             ;;
         copystatic)
             cp -R /app/app/static /static_volume
@@ -110,7 +106,7 @@ do
                 done
 
             fi
-            python manage.py update_host --customization $CUSTOMIZATION
+#            python manage.py update_host --customization $CUSTOMIZATION
 #            python manage.py filldata --customization $CUSTOMIZATION
 #            python manage.py filldata --customization $CUSTOMIZATION --preview=True &  # Removing for now
 
