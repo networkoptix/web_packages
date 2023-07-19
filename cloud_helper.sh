@@ -225,7 +225,7 @@ function list_mediaserver() {
 }
 
 function remove_mediaserver() {
-    docker images | grep mediaserver | awk '{print $3}' | xargs docker image rm -f
+     docker images --format '{{.ID}}' | grep mediaserver | xargs docker image rm -f
 }
 
 function run_mediaserver() {
@@ -245,7 +245,7 @@ function run_mediaserver() {
 
 function stop_mediaserver() {
     echo "Stopping all auto-nx-servers"
-    docker ps -a | grep auto-nx-server- | awk '{print $1}' | xargs docker rm -f
+    docker ps --format '{{.Names}}' | grep auto-nx-server- | xargs docker rm -f
 }
 
 function update_webadmin() {
@@ -283,6 +283,36 @@ function move_local_build() {
         echo "Copying external.dat to tools"
         cp external.dat $REPO/tools/docker
     popd
+}
+
+function run_virtual_cameras() {
+    VIDEO_DIR="./tools/videos"
+    #Replace networkoptix with other customization. You can get it by using ssh to access the docker container and running ls
+    RUN_TIME="/opt/networkoptix/mediaserver/bin"
+    if [[ -z "$VIDEO_DIR" ]]; then
+        mkdir -p $VIDEO_DIR
+        echo "Created $VIDEO_DIR"
+        echo "Please add video files to $VIDEO_DIR"
+        exit 1
+    fi
+
+    echo "Getting a list of running containers"
+    containers=`docker ps --format '{{.Names}}' | grep auto-nx-server-`
+
+    echo "Building cameras list"
+    files=$(ls $VIDEO_DIR | xargs -I {} echo "videos/{}")
+    cameras=$(echo $files | sed s/\ /,/)
+
+    echo "Using video as $cameras"
+    for container in $containers
+    do
+        echo "Copying video file(s) to $container container"
+        docker cp $VIDEO_DIR $container:$RUN_TIME
+
+        echo "Running test cameras for for $container"
+        docker exec -itd -w $RUN_TIME $container /bin/bash -c "./testcamera -S -I 127.0.0.1 \"files=${cameras}\""
+    done
+
 }
 
 function start_https_tunnel() {
@@ -554,6 +584,10 @@ do
                 python tools/scripts/setup_system.py $CLOUD_STRING$WEBADMIN_HOST "$PORTS" $LOCAL_PASSWORD
             fi
             break
+            ;;
+        run_virtual_cameras)
+            echo "Adding cameras to running servers"
+            run_virtual_cameras
             ;;
         check_licenses)
             check_licenses

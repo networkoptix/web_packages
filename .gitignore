@@ -26,6 +26,7 @@ cloud/report.xml
 cloud/notifications/static/templates/*.mustache
 cloud/notifications/static/templates/email_logo.png
 tools/docker/external.dat
+tools/videos
 .DS_Store
 .vscode
 etc/rabbitmq
