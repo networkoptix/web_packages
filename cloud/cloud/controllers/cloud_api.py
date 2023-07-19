@@ -346,9 +346,9 @@ class System(object):
     def get_request_url(endpoint=None, system_id=None, cloud_db_url=CLOUD_DB_URL):
         system_id_segment = f'{system_id}/' if system_id else ''
         if endpoint is None:
-            return f'{CLOUD_DB_URL}/system/get'
+            return f'{cloud_db_url}/system/get'
         if endpoint == 'getNonce':
-            return f'{CLOUD_DB_URL}/auth/getNonce'
+            return f'{cloud_db_url}/auth/getNonce'
         return f'{cloud_db_url}/system/{system_id_segment}{endpoint}'
 
     @staticmethod
