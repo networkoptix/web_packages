@@ -16,19 +16,19 @@ from landing_page import LandingPage
 from selenium.webdriver.common.keys import Keys
 
 password = "qweasd 123"
-#login = ""
+# login = ""
 rb = RobotVariables("en_US")
 
 
 def can_be_accessed_via_dropdown():
     driver = get_headless_chrome()
     email = resource.get_random_email()
-    register_and_activate_account(driver, "Mark", "Hamill", email, "qweasd 123")
+    register_and_activate_account(driver, "Mark", "Hamill", email, password)
     robot_keywords.go_to_url(driver, ENV)
     robot_keywords.wait_until_element_is_visible(driver, rb.LOG_IN_NAV_BAR)
     robot_keywords.click_element(driver, rb.LOG_IN_NAV_BAR)
 
-    LoginDialog(driver).basic_cloud_login(email, "qweasd 123")
+    LoginDialog(driver).basic_cloud_login(email, password)
     header = HeaderNav(driver)
     header.account_dropdown().click()
     header.change_password_option().click()
@@ -41,9 +41,9 @@ def can_be_accessed_via_dropdown():
 def can_be_accessed_via_direct_url():
     driver = get_headless_chrome()
     email = resource.get_random_email()
-    register_and_activate_account(driver, "Mark", "Hamill", email, "qweasd 123")
+    register_and_activate_account(driver, "Mark", "Hamill", email, password)
     robot_keywords.go_to_url(driver, f"{ENV}/account/password")
-    LoginDialog(driver).basic_cloud_login(email, "qweasd 123")
+    LoginDialog(driver).basic_cloud_login(email, password)
     ChangePassForm(driver).verify_form_is_visible()
     robot_keywords.close_browser(driver)
     print("pass")
@@ -52,12 +52,12 @@ def can_be_accessed_via_direct_url():
 def password_is_actually_changed_and_login_works_with_new_password():
     driver = get_headless_chrome()
     email = resource.get_random_email()
-    register_and_activate_account(driver, "Mark", "Hamill", email, "qweasd 123")
+    register_and_activate_account(driver, "Mark", "Hamill", email, password)
     robot_keywords.go_to_url(driver, f"{ENV}/account/password")
-    LoginDialog(driver).basic_cloud_login(email, "qweasd 123")
+    LoginDialog(driver).basic_cloud_login(email, password)
 
     change_pass_form = ChangePassForm(driver)
-    change_pass_form.current_password_input().input_text("qweasd 123")
+    change_pass_form.current_password_input().input_text(password)
     change_pass_form.new_password_input().input_text("qweasd1234")
     change_pass_form.save_button().click()
 
@@ -70,22 +70,23 @@ def password_is_actually_changed_and_login_works_with_new_password():
     login_dialog = LoginDialog(driver)
     login_dialog.email_input().input_text(email)
     login_dialog.next_button().click()
-    login_dialog.password_input().input_text("qweasd 123")
+    login_dialog.password_input().input_text(password)
     login_dialog.login_button().click()
     login_dialog.password_input_error_message()
 
     robot_keywords.close_browser(driver)
     print("pass")
 
+
 def password_with_symbols_is_valid():
     driver = get_headless_chrome()
     email = resource.get_random_email()
-    register_and_activate_account(driver, "Mark", "Hamill", email, "qweasd 123")
+    register_and_activate_account(driver, "Mark", "Hamill", email, password)
     robot_keywords.go_to_url(driver, f"{ENV}/account/password")
-    LoginDialog(driver).basic_cloud_login(email, "qweasd 123")
+    LoginDialog(driver).basic_cloud_login(email, password)
 
     change_pass_form = ChangePassForm(driver)
-    change_pass_form.current_password_input().input_text("qweasd 123")
+    change_pass_form.current_password_input().input_text(password)
     change_pass_form.new_password_input().input_text('''pass!@#$%^&*()_-+=;:'"`~,./\|?[]{}''')
     change_pass_form.save_button().click()
 
@@ -98,22 +99,23 @@ def password_with_symbols_is_valid():
     login_dialog = LoginDialog(driver)
     login_dialog.email_input().input_text(email)
     login_dialog.next_button().click()
-    login_dialog.password_input().input_text("qweasd 123")
+    login_dialog.password_input().input_text(password)
     login_dialog.login_button().click()
     login_dialog.password_input_error_message()
 
     robot_keywords.close_browser(driver)
     print("pass")
 
+
 def password_with_space_in_the_middle_is_valid():
     driver = get_headless_chrome()
     email = resource.get_random_email()
-    register_and_activate_account(driver, "Mark", "Hamill", email, "qweasd 123")
+    register_and_activate_account(driver, "Mark", "Hamill", email, password)
     robot_keywords.go_to_url(driver, f"{ENV}/account/password")
-    LoginDialog(driver).basic_cloud_login(email, "qweasd 123")
+    LoginDialog(driver).basic_cloud_login(email, password)
 
     change_pass_form = ChangePassForm(driver)
-    change_pass_form.current_password_input().input_text("qweasd 123")
+    change_pass_form.current_password_input().input_text(password)
     change_pass_form.new_password_input().input_text('qwea sd 123')
     change_pass_form.save_button().click()
     change_pass_form.no_unsaved_changes_message()
@@ -126,26 +128,50 @@ def password_with_space_in_the_middle_is_valid():
     login_dialog = LoginDialog(driver)
     login_dialog.email_input().input_text(email)
     login_dialog.next_button().click()
-    login_dialog.password_input().input_text("qweasd 123")
+    login_dialog.password_input().input_text(password)
     login_dialog.login_button().click()
     login_dialog.password_input_error_message()
 
     robot_keywords.close_browser(driver)
     print("pass")
 
+
 def pressing_enter_key_saves_data():
     driver = get_headless_chrome()
     email = resource.get_random_email()
-    register_and_activate_account(driver, "Mark", "Hamill", email, "qweasd 123")
+    register_and_activate_account(driver, "Mark", "Hamill", email, password)
     robot_keywords.go_to_url(driver, f"{ENV}/account/password")
-    LoginDialog(driver).basic_cloud_login(email, "qweasd 123")
+    LoginDialog(driver).basic_cloud_login(email, password)
 
     change_pass_form = ChangePassForm(driver)
-    change_pass_form.current_password_input().input_text("qweasd 123")
-    change_pass_form.new_password_input().input_text('qweasd 123')
+    change_pass_form.current_password_input().input_text(password)
+    change_pass_form.new_password_input().input_text(password)
     change_pass_form.new_password_input().input_text(Keys.ENTER)
 
     change_pass_form.no_unsaved_changes_message()
+    robot_keywords.close_browser(driver)
+    print("pass")
+
+
+def pressing_tab_key_moves_focus_to_the_next_element():
+    driver = get_headless_chrome()
+    email = resource.get_random_email()
+    register_and_activate_account(driver, "Mark", "Hamill", email, password)
+    robot_keywords.go_to_url(driver, f"{ENV}/account/password")
+    LoginDialog(driver).basic_cloud_login(email, password)
+
+    change_pass_form = ChangePassForm(driver)
+    change_pass_form.current_password_input().input_text(password)
+    change_pass_form.current_password_input().input_text(Keys.TAB)
+
+    if not change_pass_form.new_password_input().is_focused:
+        raise RuntimeError("Element was not focused")
+    change_pass_form.new_password_input().input_text(password)
+    change_pass_form.new_password_input().input_text(Keys.TAB)
+
+    if not change_pass_form.save_button().is_focused:
+        raise RuntimeError("Element was not focused")
+
     robot_keywords.close_browser(driver)
     print("pass")
 
@@ -157,3 +183,4 @@ if __name__ == "__main__":
     password_with_symbols_is_valid()
     password_with_space_in_the_middle_is_valid()
     pressing_enter_key_saves_data()
+    pressing_tab_key_moves_focus_to_the_next_element()
