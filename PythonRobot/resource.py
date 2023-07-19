@@ -26,6 +26,7 @@ from random import randint
 from NoptixLibrary.CloudSession import CloudSession
 from NoptixLibrary.CloudPortalAPI import CloudPortalAPI 
 from NoptixLibrary import *
+from googletrans import Translator
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -69,7 +70,7 @@ def verify_in_account_page(driver: webdriver):
     robot_keywords.sleep(0.5)
 
 def validate_log_out(driver: webdriver):
-    robot_keywords.wait_until_element_is_visible(driver, rb.BACKDROP)
+    robot_keywords.wait_until_element_is_not_visible(driver, rb.BACKDROP)
     robot_keywords.wait_until_page_contains_element(driver, rb.ANONYMOUS_BODY)
 
 def get_lang_list():
@@ -335,3 +336,23 @@ def check_email_subject(self, email_id, sub_text, email_address, password, host,
                 if sub_text != header_str.strip():
                     raise Exception(header_str + ' was not ' + sub_text)
         conn.logout()
+        
+def detect_language(text):
+    detected_langs = str(Translator().detect(text))
+    return detected_langs
+
+def logout_japanese(driver:webdriver):
+
+    robot_keywords.wait_until_page_does_not_contain_element(driver, rb.BACKDROP)
+    element = """//header//li[contains(@class, 'dropdown-item-container')]//a/span[contains(text(),"ログアウト")]"""
+    robot_keywords.wait_until_page_contains_element(driver, element)
+
+    time.sleep(0.5)
+    robot_keywords.click_element(driver, rb.ACCOUNT_DROPDOWN)
+    robot_keywords.wait_until_element_is_visible(driver, element)
+    robot_keywords.click_element(driver, element)
+    validate_log_out(driver)
+
+def set_language_anonymous():
+    # currently disabled
+    pass

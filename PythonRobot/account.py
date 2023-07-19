@@ -11,7 +11,7 @@ from selenium.webdriver.chrome.options import Options
 from RobotVariables import RobotVariables
 from requests import HTTPError
 from urllib3.exceptions import MaxRetryError
-# from NoptixLibrary.CloudPortalAPI import CloudPortalAPI
+from NoptixLibrary.CloudPortalAPI import CloudPortalAPI
 import robot_keywords
 import resource
 # from NoptixLibrary import open_mailbox, wait_for_email
@@ -299,6 +299,64 @@ def test_language_change_affects_emails():
     resource.delete_email(mbox, email_uid)
     resource.check_language_logged_in(random_email, password)
 
+def test_language_change_is_new_default():
+    """15 Language change is new default"""
+    lang_dict = resource.get_lang_list()
+    ja_JP_account_info = lang_dict['ja_JP']['ACCOUNT INFORMATION']
+    de_DE_account_info = lang_dict['de_DE']['ACCOUNT INFORMATION']
+
+    driver = resource.get_headless_chrome()
+    email = resource.get_random_email()
+    password = "qweasd 123"
+    register_and_activate_account(driver, "Mark", "Hamill", email, password)
+    robot_keywords.go_to_url(driver, rb.ENV + "/account")
+    cloud_login(driver, email, password, button=None, api=False)
+
+    verify_in_account_page(driver)
+    robot_keywords.click_button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN)
+    lang = 'de_DE' if rb.LANGUAGE == 'ja_JP' else 'ja_JP'
+    droplang1 = rb.ACCOUNT_LANGUAGE_DROPDOWN + f"/following-sibling::ul//span[@lang='{lang}']"
+    robot_keywords.wait_until_element_is_visible(driver, droplang1)
+    robot_keywords.click_element(driver, droplang1)
+
+    sleep(5)
+    driver.refresh()
+
+    dropLang2 = rb.ACCOUNT_LANGUAGE_DROPDOWN + "/span[@id='activeLang']"
+    robot_keywords.wait_until_element_is_visible(driver, dropLang2)   
+    activeLang = robot_keywords.get_text(driver, dropLang2)
+    assert activeLang.lower() in lang.lower(), f"{activeLang.lower()} not found in {lang.lower}"
+
+    if lang == 'ja_JP':
+        robot_keywords.wait_until_element_is_visible(driver, f"//header//h4[contains(text(),'{ja_JP_account_info}')]")
+    elif lang == 'de_DE':
+        robot_keywords.wait_until_element_is_visible(driver, f"//header//h4[contains(text(),'{de_DE_account_info}')]")
+
+    resource.logout_japanese(driver)
+    robot_keywords.go_to_url(driver, rb.ENV + "/account")
+    cloud_login(driver, email, password, button=None, api=False)
+
+    api = CloudPortalAPI()
+    api.set_account_language(email, password, new_language=lang)
+
+    sleep(5)
+    driver.refresh()
+
+    robot_keywords.wait_until_element_is_visible(driver, dropLang2)
+    activeLang = robot_keywords.get_text(driver, dropLang2)
+
+    if activeLang.lower() not in lang.lower():
+        assert False, f"{activeLang.lower()} not found in {lang.lower()}"  
+    if rb.LANGUAGE == 'ja_JP':
+        robot_keywords.wait_until_element_is_visible(driver, f"//header//h4[contains(text(),'{ja_JP_account_info}')]")
+    elif rb.LANGUAGE == 'de_DE':
+        robot_keywords.wait_until_element_is_visible(driver, f"//header//h4[contains(text(),'{de_DE_account_info}')]")
+
+    resource.check_language_logged_in(email, password)
+    sleep(3)
+    driver.refresh()
+
+
 if __name__ == "__main__":
 
     # test_can_access_account_page_from_dropdown()
@@ -312,9 +370,13 @@ if __name__ == "__main__":
     # test_SPACE_for_first_name_is_not_valid()
     # test_SPACE_for_last_name_is_not_valid()
     # test_should_respond_tab_and_go()
+    # test_language_is_changeable_on_the_account_page()
+    # test_language_change_affects_emails()
 
-    test_language_is_changeable_on_the_account_page()
-    test_language_change_affects_emails()
+
+
+    test_language_change_is_new_default()
+
 
   
 

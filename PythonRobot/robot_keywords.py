@@ -6,7 +6,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import TimeoutException
 import platform
 from selenium.webdriver.common.action_chains import ActionChains
 
@@ -55,7 +54,7 @@ def element_should_be_visible(driver: webdriver, locator: str, timeout: int = 10
 def element_should_not_be_visible(driver: webdriver, locator: str, timeout: int = 10) -> None:
     WebDriverWait(driver, timeout).until_not(EC.visibility_of_element_located((By.XPATH, locator)))
 
-def elements_should_not_be_visible(driver: webdriver, locators: list[str]) -> None:
+def elements_should_not_be_visible(driver: webdriver, locators: List[str]) -> None:
     for locator in locators:
         element_should_not_be_visible(driver, locator)
 
@@ -85,6 +84,8 @@ def get_element_attribute(driver: webdriver, locator: str, attribute: str) -> st
 #     for locator in locators:
 #         element_should_not_be_visible(driver, locator)
 
+def get_text(driver: webdriver, locator: str) -> str:
+    return driver.find_element(By.XPATH, locator).text
 
 def go_to_url(driver: webdriver, url: str) -> None:
     driver.get(url)
@@ -110,9 +111,6 @@ def regular_open_browser() -> webdriver:
 def sleep(duration: int) -> None:
     time.sleep(duration)
 
-def wait_for_input_text(driver: webdriver, locator: Tuple, expected_text: str, timeout: int = 10) -> None:
-    WebDriverWait(driver, timeout).until(input_text)
-
 def wait_until_element_has_style(driver, css_selector, style_name, expected_value, timeout=30):
     def check_style(driver):
         try:
@@ -136,23 +134,6 @@ def wait_until_element_is_visible(driver: webdriver, locator: str, timeout: int 
 def wait_until_elements_are_visible(driver: webdriver, locators: List[str] , timeout: int = 10) -> None:
     for locator in locators:
         wait_until_element_is_visible(driver, locator, timeout=timeout)
-
-
-def wait_until_input_succeeds(driver: webdriver, locator: Tuple, text: str, timeout: int = 10):
-    end_time = time.time() + timeout
-    while True:
-        try:
-            input_text(driver, locator, text)
-            break  # if the function call was successful, break out of the loop
-        except Exception as e:
-            if time.time() > end_time:
-                raise TimeoutException(f'Timeout after {timeout} seconds waiting for input_text to execute successfully') from e
-            time.sleep(0.1)  # pause before retrying
-
-
-
-
-
 
 def wait_until_page_contains(driver: webdriver, text: str, timeout: int = 10) -> None:
     WebDriverWait(driver, timeout).until(EC.text_to_be_present_in_element((By.XPATH, "//*"), text))

@@ -37,6 +37,7 @@ variables_dict = {
     'BASE_EMAIL' : 'noptixautoqa@gmail.com',
     'BASE_EMAIL_SENDEMAIL' : 'noptixautoqa+sendemail@gmail.com',
     'BASE_PORT' : '993',
+    'ANONYMOUS_BODY' : """//body[contains(@class,'anonymous')]//h1[@data-testid="welcomeCaption" or @id="welcomeCaption"]""",
     'BASE_EMAIL_DEFAULT' : False  
 }
 variables = {
