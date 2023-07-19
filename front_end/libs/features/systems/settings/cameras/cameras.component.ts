@@ -543,7 +543,7 @@ export class NxCamerasComponent implements OnInit {
         this.enableEdit = this.system.permissionManager.isAdmin() || this.editCameras();
 
         const parsedCameraExistInCameras = cameras.some(
-            camera => camera.id === `{${this.parsedCameraId}}`,
+            camera => camera.id === this.parsedCameraId,
         );
 
         this.system.show404 =
