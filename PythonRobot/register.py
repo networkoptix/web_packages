@@ -1,5 +1,5 @@
 from selenium import webdriver
-from resource import get_headless_chrome, check_password_badge, check_new_password_outline_and_error_message
+from resource import get_headless_chrome, get_random_email, activate
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from account import cloud_login
@@ -11,20 +11,33 @@ from header import HeaderNav
 from register_form import RegisterForm
 
 rb = RobotVariables("en_US")
-driver = get_headless_chrome()
-robot_keywords.go_to_url(driver, rb.ENV)
+# driver = get_headless_chrome()
+# robot_keywords.go_to_url(driver, rb.ENV)
 
 def page_in_anonymous_state():
     """1. Should open register page in anonymous state by clicking Register button on top right corner"""
+    driver = get_headless_chrome()
+    robot_keywords.go_to_url(driver, rb.ENV)
     HeaderNav(driver).create_account().click()
     RegisterForm(driver)
+    driver.close()
 
 def open_from_success_page():
     """2. Should open register page from register success page by clicking Register button on top right corner"""
-
+    email = get_random_email(sendemail=True)
+    driver = get_headless_chrome()
+    robot_keywords.go_to_url(driver, rb.ENV)
+    HeaderNav(driver).create_account().click()
+    register_form = RegisterForm(driver)
+    register_form.register_new_user("mark", "hamill", email, rb.BASE_PASSWORD)
+    activate(driver, email, from_email=True)
+    robot_keywords.go_to_url(driver, rb.ENV)
+    HeaderNav(driver).create_account().click()
+    RegisterForm(driver)
 
 if __name__ == "__main__":
-    page_in_anonymous_state()
-    print(f'{Fore.WHITE}{page_in_anonymous_state.__doc__}\t\t\t\t{Fore.GREEN}| PASS |')
-    
-    driver.close()
+    # page_in_anonymous_state()
+    # print(f'{Fore.WHITE}{page_in_anonymous_state.__doc__}\t\t\t\t{Fore.GREEN}| PASS |')
+
+    open_from_success_page()
+    print(f'{Fore.WHITE}{open_from_success_page.__doc__}\t\t\t\t{Fore.GREEN}| PASS |')

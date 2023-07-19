@@ -1,6 +1,7 @@
 import robot_keywords
 from text_field import TextField
 from button import Button
+from checkbox import Checkbox
 from RobotVariables import RobotVariables
 
 
@@ -10,6 +11,12 @@ class RegisterForm:
         self.rb = RobotVariables(lang)
         self._wait_until_form_is_visible()
         self._location_is_correct()
+
+    def email_input(self):
+        return TextField(self.driver, "//form//nx-email-input/input[@id='email']")
+    
+    def locked_email_input(self):
+        return TextField(self.driver, "/form//input[@name='registerEmailLocked']")
     
     def first_name_input(self):
         return TextField(self.driver, "//form//input[@id='firstName']")
@@ -22,6 +29,9 @@ class RegisterForm:
 
     def create_account_button(self):
         return Button(self.driver, f"//button[contains(text(),'{self.rb.CREATE_ACCOUNT_BUTTON_TEXT}')]")
+    
+    def terms_and_conditions_checkbox(self):
+        return Checkbox(self.driver, "//nx-checkbox[@name='termsAndConditions']", "//input[@id='termsAndConditions']")
 
     def _wait_until_form_is_visible(self):
         robot_keywords.wait_until_element_is_visible(self.driver, "//nx-authorize-create-account-component")
@@ -34,3 +44,20 @@ class RegisterForm:
 
     def _location_is_correct(self):
         robot_keywords.location_should_be(self.driver, f"{self.rb.ENV}authorize?client_type=create")
+
+    def register_new_user(self, first_name, last_name, email, password, checked=False):
+        self.first_name_input().input_text(first_name)
+        self.last_name_input().input_text(last_name)
+        self.email_input().input_text(email)
+        self.password_input().input_text(password)
+        if not checked:
+            self.terms_and_conditions_checkbox().select()
+        self.create_account_button().click()
+        # try:
+        #     robot_keywords.wait_until_element_is_visible(rb.REGISTER_EMAIL_INPUT_LOCKED, 5)
+        # except selenium.common.exceptions.TimeoutException:
+        #     robot_keywords.input_text(rb.REGISTER_EMAIL_INPUT, email)
+
+        # robot_keywords.input_text(rb.REGISTER_PASSWORD_INPUT, password)
+        # if not checked:
+        #     robot_keywords.click_element(rb.TERMS_AND_CONDITIONS_CHECKBOX_VISIBLE)

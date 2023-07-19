@@ -19,6 +19,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.chrome.service import Service
 import warnings
 from RobotVariables import RobotVariables
+import robot_lists as rl
 import requests
 import time
 from random import randint
@@ -110,8 +111,11 @@ def activate(driver, email, password=rb.BASE_PASSWORD, from_email=rb.FROM_EMAIL_
 
         api.activate_account_via_api(email, password)
 
-def get_email_link(email, password, link_type, from_email=rb.FROM_EMAIL_DEFAULT):
-    pass
+def get_email_link(recipient, link_type, from_email=rb.FROM_EMAIL_DEFAULT, timeout=300):
+    if from_email:
+        mbox = open_mailbox(host=rb.BASE_HOST,password=rb.BASE_EMAIL_PASSWORD, email=recipient, is_secure=True)
+        email_uid = wait_for_email(mbox, recipient=recipient, timeout=120, status="UNREAD")
+    
 
 def register(first_name, last_name, email, password, checked=False, view_type=""):
     if view_type:
@@ -172,58 +176,79 @@ def send_restore_password_email(driver: webdriver, email: str)->  None:
 
 def check_password_badge(driver: webdriver, password, new_focus):
     if password != "":
-        robot_keywords.wait_until_element_is_visible(driver, PASSWORD_BADGE)
-    if password == COMMON_PASSWORD:
-        robot_keywords.wait_until_element_is_visible(driver, PASSWORD_IS_TOO_COMMON_BADGE)
-    elif password in  WEAK_PASSWORDS:
-        robot_keywords.wait_until_element_is_visible(driver, PASSWORD_IS_WEAK_BADGE)
-    elif password in INCORRECT_PASSWORDS:
-        robot_keywords.wait_until_element_is_visible(driver, PASSWORD_INCORRECT_BADGE)
-    elif password in FAIR_PASSWORDS:
-        robot_keywords.wait_until_element_is_visible(driver, PASSWORD_IS_FAIR_BADGE)
-    elif password in GOOD_PASSWORDS:
-        robot_keywords.wait_until_element_is_visible(driver, PASSWORD_IS_GOOD_BADGE)
-    elif password == SEVEN_CHAR_PASSWORD:
-        robot_keywords.wait_until_element_is_visible(driver, PASSWORD_IS_TOO_COMMON_BADGE)
+        robot_keywords.wait_until_element_is_visible(driver, rb.PASSWORD_BADGE)
+    if password == rb.COMMON_PASSWORD:
+        robot_keywords.wait_until_element_is_visible(driver, rb.PASSWORD_IS_TOO_COMMON_BADGE)
+    elif password in  rl.WEAK_PASSWORDS:
+        robot_keywords.wait_until_element_is_visible(driver, rb.PASSWORD_IS_WEAK_BADGE)
+    elif password in rl.INCORRECT_PASSWORDS:
+        robot_keywords.wait_until_element_is_visible(driver, rb.PASSWORD_INCORRECT_BADGE)
+    elif password in rl.FAIR_PASSWORDS:
+        robot_keywords.wait_until_element_is_visible(driver, rb.PASSWORD_IS_FAIR_BADGE)
+    elif password in rl.GOOD_PASSWORDS:
+        robot_keywords.wait_until_element_is_visible(driver, rb.PASSWORD_IS_GOOD_BADGE)
+    elif password == rb.SEVEN_CHAR_PASSWORD:
+        robot_keywords.wait_until_element_is_visible(driver, rb.PASSWORD_IS_TOO_SHORT_BADGE)
     
     if password != "":
-        robot_keywords.mouse_over(driver, PASSWORD_BADGE)
+        robot_keywords.mouse_over(driver, rb.PASSWORD_BADGE)
     
-    if password == COMMON_PASSWORD:
-        robot_keywords.wait_until_element_is_visible(driver, f'{PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") and text()="{PASSWORD_TOO_COMMON_TEXT}"])')
-    elif password in  WEAK_PASSWORDS:
-        robot_keywords.wait_until_element_is_visible(driver, f'{PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") and text()="{PASSWORD_IS_WEAK_TEXT}"])')
-    elif password in INCORRECT_PASSWORDS:
-        robot_keywords.wait_until_element_is_visible(driver, f'{PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") and text()="{PASSWORD_SPECIAL_CHARS_TEXT}"])')
-    elif password in FAIR_PASSWORDS:
-        robot_keywords.wait_until_element_is_visible(driver, f'{PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") and text()="{PASSWORD_IS_WEAK_TEXT}"])')
-    elif password == SEVEN_CHAR_PASSWORD:
-        robot_keywords.wait_until_element_is_visible(driver, f'{PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") and text()="{PASSWORD_IS_TOO_SHORT}"])')
+    if password == rb.COMMON_PASSWORD:
+        robot_keywords.wait_until_element_is_visible(driver, f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") and text()="{rb.PASSWORD_TOO_COMMON_TEXT}"]')
+    elif password in  rl.WEAK_PASSWORDS:
+        robot_keywords.wait_until_element_is_visible(driver, f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") and text()="{rb.PASSWORD_IS_WEAK_TEXT}"]')
+    elif password in rl.INCORRECT_PASSWORDS:
+        robot_keywords.wait_until_element_is_visible(driver, f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") and text()="{rb.PASSWORD_SPECIAL_CHARS_TEXT}"]')
+    elif password in rl.FAIR_PASSWORDS:
+        robot_keywords.wait_until_element_is_visible(driver, f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") and text()="{rb.PASSWORD_IS_WEAK_TEXT}"]')
+    elif password == rb.SEVEN_CHAR_PASSWORD:
+        robot_keywords.wait_until_element_is_visible(driver, f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") and contains(text(), "{rb.PASSWORD_TOO_SHORT_TEXT}")]')
 
-    robot_keywords.go_to_url(driver, rb.ENV + "/authorize")
-    robot_keywords.wait_until_elements_are_visible(driver, [rb.LOG_IN_MODAL, rb.LOG_IN_NEXT_BUTTON, rb.EMAIL_INPUT])
-    time.sleep(1)
-    robot_keywords.wait_until_input_succeeds(driver, rb.EMAIL_INPUT, email)
-    robot_keywords.click_element(driver, rb.LOG_IN_NEXT_BUTTON)
 
-    robot_keywords.wait_until_element_is_visible(driver, rb.FORGOT_PASSWORD_BUTTON)
-    robot_keywords.click_element(driver, rb.FORGOT_PASSWORD_BUTTON)
-
-    robot_keywords.input_text(driver, rb.RESTORE_PASSWORD_EMAIL_INPUT, email)
-    robot_keywords.click_element(driver, rb.RESET_PASSWORD_BUTTON)
-    if password == COMMON_PASSWORD:
-        move_focus_and_check_badge_stays(driver, PASSWORD_IS_TOO_COMMON_BADGE, new_focus)
-    elif password in  WEAK_PASSWORDS:
-        move_focus_and_check_badge_stays(driver, PASSWORD_IS_WEAK_BADGE, new_focus)
-    elif password in INCORRECT_PASSWORDS:
-        move_focus_and_check_badge_stays(driver, PASSWORD_INCORRECT_BADGE, new_focus)
-    elif password in FAIR_PASSWORDS:
-        robot_keywords.wait_until_element_is_visible(driver, PASSWORD_IS_FAIR_BADGE)
-    elif password in GOOD_PASSWORDS:
-        robot_keywords.wait_until_element_is_visible(driver, PASSWORD_IS_GOOD_BADGE)
-    elif password == SEVEN_CHAR_PASSWORD:
-        move_focus_and_check_badge_stays(driver, PASSWORD_IS_TOO_COMMON_BADGE, new_focus)
+    if password == rb.COMMON_PASSWORD:
+        move_focus_and_check_badge_stays(driver,rb.PASSWORD_IS_TOO_COMMON_BADGE, new_focus)
+    elif password in  rl.WEAK_PASSWORDS:
+        move_focus_and_check_badge_stays(driver, rb.PASSWORD_IS_WEAK_BADGE, new_focus)
+    elif password in rl.INCORRECT_PASSWORDS:
+        move_focus_and_check_badge_stays(driver, rb.PASSWORD_INCORRECT_BADGE, new_focus)
+    elif password in rl.FAIR_PASSWORDS:
+        robot_keywords.wait_until_element_is_visible(driver, rb.PASSWORD_IS_FAIR_BADGE)
+    elif password in rl.GOOD_PASSWORDS:
+        robot_keywords.wait_until_element_is_visible(driver, rb.PASSWORD_IS_GOOD_BADGE)
+    elif password == rb.SEVEN_CHAR_PASSWORD:
+        move_focus_and_check_badge_stays(driver, rb.PASSWORD_IS_TOO_SHORT_BADGE, new_focus)
     
+def move_focus_and_check_badge_stays(driver, badge, new_focus):
+    robot_keywords.element_should_be_visible(driver, badge)
+    robot_keywords.click_element(driver, new_focus)
+    robot_keywords.element_should_be_visible(driver, badge)
+
+def move_focus_and_check_element(driver, element, new_focus):
+    robot_keywords.click_element(driver, new_focus)
+    robot_keywords.wait_until_element_is_visible(driver, element)
+
+def check_new_password_outline_and_error_message(driver, new_password, new_focus, input, input_name):
+    robot_keywords.click_element(driver, new_focus)
+    if new_password not in rl.FAIR_PASSWORDS and new_password not in rl.GOOD_PASSWORDS:
+        robot_keywords.element_style_should_be(driver, input, "border-bottom-color",rb.ERROR_COLOR_WITH_OPACITY)
+        robot_keywords.element_style_should_be(driver, input, "border-top-color", rb.ERROR_COLOR_WITH_OPACITY)
+        robot_keywords.element_style_should_be(driver, input, "border-right-color", rb.ERROR_COLOR_WITH_OPACITY)
+        robot_keywords.element_style_should_be(driver, input, "border-left-color", rb.ERROR_COLOR_WITH_OPACITY)
+        robot_keywords.element_style_should_be(driver, input, "color", rb.ERROR_COLOR_WITH_OPACITY)
+        robot_keywords.wait_until_element_is_visible(driver, f"//nx-password-input[@name='{input_name}' and contains(@class, 'ng-invalid')]//input[@id='{input_name}']")
+    if new_password == "" or new_password == " ":
+        robot_keywords.input_text(driver, input, "")
+        move_focus_and_check_element(driver, rb.PASSWORD_IS_REQUIRED, new_focus)
+    elif new_password == rb.SEVEN_CHAR_PASSWORD:
+        move_focus_and_check_element(driver, rb.PASSWORD_TOO_SHORT, new_focus)
+    elif new_password in rl.INCORRECT_PASSWORDS:
+        move_focus_and_check_element(driver, rb.PASSWORD_SPECIAL_CHARS, new_focus)
+    elif new_password == rb.COMMON_PASSWORD:
+        move_focus_and_check_element(driver, rb.PASSWORD_TOO_COMMON, new_focus)
+    elif new_password in rl.WEAK_PASSWORDS:
+        move_focus_and_check_element(driver, rb.PASSWORD_IS_WEAK, new_focus)
+
+
 def register_account(firstName, lastName, email, password):
     body = {
         "email": email,
@@ -284,8 +309,6 @@ def check_language_logged_in(email, password, language="en_US"):
         api.set_account_language(email, password, language)
     time.sleep(2)
 
-
-
 def delete_email(mail, email_uid):
     # Mark the email for deletion
     mail.uid('STORE', email_uid, '+FLAGS', '(\Deleted)')
@@ -293,3 +316,22 @@ def delete_email(mail, email_uid):
     # Permanently remove mails that are marked for deletion
     mail.expunge()
     
+def check_email_subject(self, email_id, sub_text, email_address, password, host, port):
+        conn = imaplib.IMAP4_SSL(host, int(port))
+        conn.login(email_address, password)
+        conn.select()
+        typ, data = conn.uid(
+            'fetch', email_id, '(BODY.PEEK[HEADER.FIELDS (SUBJECT)])')
+        for res in data:
+            if isinstance(res, tuple):
+                # Decoding ascii and header
+                header = email.header.decode_header(
+                    res[1].decode('ascii').strip())
+                # Decoding utf-8
+                header_str = "".join([x[0].decode(
+                    'utf-8').strip() if x[1] else re.sub("(^b\'|\')", "", str(x[0])) for x in header])
+                # Removing the word "Subject:" from the string
+                header_str = re.sub("Subject:", "", header_str)
+                if sub_text != header_str.strip():
+                    raise Exception(header_str + ' was not ' + sub_text)
+        conn.logout()

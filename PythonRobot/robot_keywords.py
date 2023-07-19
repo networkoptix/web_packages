@@ -55,6 +55,10 @@ def element_should_be_visible(driver: webdriver, locator: str, timeout: int = 10
 def element_should_not_be_visible(driver: webdriver, locator: str, timeout: int = 10) -> None:
     WebDriverWait(driver, timeout).until_not(EC.visibility_of_element_located((By.XPATH, locator)))
 
+def elements_should_not_be_visible(driver: webdriver, locators: list[str]) -> None:
+    for locator in locators:
+        element_should_not_be_visible(driver, locator)
+
 def element_should_be_disabled(driver: webdriver, locator: str, timeout: int = 10) -> None:
     WebDriverWait(driver, timeout).until_not(EC.element_to_be_clickable((By.XPATH, locator)))
 
