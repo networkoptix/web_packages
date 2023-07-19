@@ -17,7 +17,6 @@
                 contentEditable="true"
                 [ngStyle]="{ display: _selectedItem.value ? 'initial' : 'block' }"
                 (input)="onSearchInput($event)"
-                (keyup)="handleSearchEnter($event)"
                 (blur)="onBlur()"
             ></span>
             <span
