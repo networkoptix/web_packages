@@ -2,7 +2,7 @@ from selenium import webdriver
 from resource import get_headless_chrome, check_password_badge, check_new_password_outline_and_error_message
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-from account import cloud_login
+from test_account import cloud_login
 import robot_keywords
 from RobotVariables import RobotVariables
 import robot_lists as rl

@@ -6,7 +6,7 @@ import resource
 from resource import get_headless_chrome, register_and_activate_account
 
 from variables import ENV
-from account import cloud_login
+from test_account import cloud_login
 import robot_keywords
 from RobotVariables import RobotVariables
 from login import LoginDialog
