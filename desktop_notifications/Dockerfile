@@ -13,15 +13,11 @@ RUN set -ex \
     && apt-get update \
     && apt-get install --no-install-suggests --no-install-recommends -y  bash netcat jq curl tini \
     && python -m pip install --upgrade pip \
+    && pip install --prefer-binary --no-cache-dir poetry==1.5.1 jsonschema==4.17.3  \
     && apt autoremove -y --purge && apt clean -y && rm -rf /var/lib/apt/lists/* && rm -rf /root/.cache/pip
 
-ENV VERSION=$VERSION \
-    POETRY_VERSION="1.4.2" \
-    POETRY_HOME="/opt/poetry"
-
-ENV PATH="$POETRY_HOME/bin:$PATH"
+ENV VERSION=$VERSION
 ENV PYTHONPATH="$PYTHON_PATH:/app/app"
-RUN curl -sSL https://install.python-poetry.org | python3 -
 
 
 FROM builder as pypackages
