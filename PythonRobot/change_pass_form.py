@@ -27,10 +27,17 @@ class ChangePassForm:
         translated_xpath = self.rb.replace_nested_variables("//button[contains(text(), '{CANCEL_BUTTON_TEXT}')]")
         return Button(self.driver, translated_xpath)
 
-    def no_unsaved_changes_message(self):
+    def no_unsaved_changes_message(self) -> PageText:
         translated_xpath = self.rb.replace_nested_variables(
             "//nx-apply//div[contains(text(), '{NO_UNSAVED_CHANGES_TEXT}')]")
         return PageText(self.driver, translated_xpath)
+
+    def current_password_eye_icon_open(self) -> Button:
+        return Button(self.driver, "//svg-icon[contains(@data-src,'/images/icons/text_buttons/eye.svg')]")
+
+    def current_password_eye_icon_closed(self) -> Button:
+        return Button(self.driver, "//svg-icon[contains(@data-src,'/images/icons/text_buttons/eye_closed.svg')]")
+
 
     def verify_form_is_visible(self):
         self.new_password_input()

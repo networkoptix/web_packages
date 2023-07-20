@@ -23,9 +23,11 @@ class TextField:
     def clear(self):
         self.selenium_element.clear()
 
-    def get_outline_color(self):
+    def get_outline_color(self) -> str:
         return self.selenium_element.value_of_css_property("border-color")
 
-    def get_text_color(self):
+    def get_text_color(self) -> str:
         return self.selenium_element.value_of_css_property("color")
 
+    def field_type(self) -> str:
+        return self.selenium_element.get_attribute("type")

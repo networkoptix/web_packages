@@ -19,15 +19,13 @@ password = "qweasd 123"
 # login = ""
 rb = RobotVariables("en_US")
 
-
 def can_be_accessed_via_dropdown():
     driver = get_headless_chrome()
     email = resource.get_random_email()
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
     robot_keywords.go_to_url(driver, ENV)
-    robot_keywords.wait_until_element_is_visible(driver, rb.LOG_IN_NAV_BAR)
-    robot_keywords.click_element(driver, rb.LOG_IN_NAV_BAR)
-
+    header = HeaderNav(driver)
+    header.log_in_button().click()
     LoginDialog(driver).basic_cloud_login(email, password)
     header = HeaderNav(driver)
     header.account_dropdown().click()
@@ -175,6 +173,29 @@ def pressing_tab_key_moves_focus_to_the_next_element():
     robot_keywords.close_browser(driver)
     print("pass")
 
+def displays_password_masked_shows_password_and_changes_eye_icon_when_clicked():
+    driver = get_headless_chrome()
+    email = resource.get_random_email()
+    register_and_activate_account(driver, "Mark", "Hamill", email, password)
+    robot_keywords.go_to_url(driver, f"{ENV}/account/password")
+    LoginDialog(driver).basic_cloud_login(email, password)
+
+    change_pass_form = ChangePassForm(driver)
+    if change_pass_form.current_password_input().field_type() != 'password':
+        raise RuntimeError("Current password field was not of password type")
+    if change_pass_form.new_password_input().field_type() != 'password':
+        raise RuntimeError("New password field was not of password type")
+    change_pass_form.current_password_eye_icon_closed().click()
+    change_pass_form.current_password_eye_icon_open()
+    if change_pass_form.new_password_input().field_type() != 'text':
+        raise RuntimeError("New password field was not of text type")
+    change_pass_form.current_password_eye_icon_open().click()
+    change_pass_form.current_password_eye_icon_closed()
+    if change_pass_form.new_password_input().field_type() != 'password':
+        raise RuntimeError("New password field was not of password type")
+
+    robot_keywords.close_browser(driver)
+    print("pass")
 
 if __name__ == "__main__":
     can_be_accessed_via_dropdown()
@@ -184,3 +205,4 @@ if __name__ == "__main__":
     password_with_space_in_the_middle_is_valid()
     pressing_enter_key_saves_data()
     pressing_tab_key_moves_focus_to_the_next_element()
+    displays_password_masked_shows_password_and_changes_eye_icon_when_clicked()
