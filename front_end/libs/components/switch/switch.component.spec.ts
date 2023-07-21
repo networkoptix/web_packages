@@ -8,8 +8,12 @@ import { NxSwitchComponent } from './switch.component';
 const getElementRefs = (el: DebugElement) => {
     const body = el.nativeElement.querySelector('div') as HTMLDivElement;
     const label = el.nativeElement.querySelector('h4.switch-label') as HTMLHeadingElement;
-    const input = el.nativeElement.querySelector('div.switch .switch-element input') as HTMLInputElement;
-    const span = el.nativeElement.querySelector('div.switch .switch-element span') as HTMLSpanElement;
+    const input = el.nativeElement.querySelector(
+        'div.switch .switch-element input',
+    ) as HTMLInputElement;
+    const span = el.nativeElement.querySelector(
+        'div.switch .switch-element span',
+    ) as HTMLSpanElement;
     const elemBar = el.nativeElement.querySelector('div.switch .bar') as HTMLDivElement;
     const elemCircle = el.nativeElement.querySelector('div.switch .circle') as HTMLDivElement;
     return {

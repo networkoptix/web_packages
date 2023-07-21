@@ -23,32 +23,37 @@ const node = {
     urlified: 'testUrlified',
     subtitle: 'subtitleText',
     name_raw: 'nameRaw',
-    invisible: false
+    invisible: false,
 };
 
 const headerMock = {
     currentLocation: {
         path: 'testUrl',
-        isSystem: false
+        isSystem: false,
     },
     showSubject: new BehaviorSubject(true),
     activeSystem: {
-        name: 'activeSystemName'
+        name: 'activeSystemName',
     },
-    lastActive$: new BehaviorSubject(true)
+    lastActive$: new BehaviorSubject(true),
 };
 
 const menusMock = {
     currentSystemNode$: new BehaviorSubject(null),
     getMenu: () => new Observable(null),
-    updateActiveSystemMenu: () => {}
+    updateActiveSystemMenu: () => {},
 };
 
-const setupMainbuttonComponent = async (): ReturnType<typeof setupComponent<NxHeaderMainButtonComponent>> => {
-    const setup = await testBedSetupFactory([], [
-        { provide: NxHeaderService, useValue: headerMock },
-        { provide: NxMenusService, useValue: menusMock }
-    ])(NxHeaderMainButtonComponent);
+const setupMainbuttonComponent = async (): ReturnType<
+    typeof setupComponent<NxHeaderMainButtonComponent>
+> => {
+    const setup = await testBedSetupFactory(
+        [],
+        [
+            { provide: NxHeaderService, useValue: headerMock },
+            { provide: NxMenusService, useValue: menusMock },
+        ],
+    )(NxHeaderMainButtonComponent);
     setup.component.node = node;
     setup.component.headerService = headerMock as typeof setup.component.headerService;
     setup.fixture.detectChanges();
@@ -79,7 +84,9 @@ describe('NxHeaderMainButtonComponent', () => {
         jest.spyOn(component, 'getState').mockReturnValue(mainButtonState.NODE);
         component.ngOnInit();
         fixture.detectChanges();
-        expect(debugElement.nativeElement.querySelector('span').textContent).toBe(node.display_name);
+        expect(debugElement.nativeElement.querySelector('span').textContent).toBe(
+            node.display_name,
+        );
     });
 
     it('should show system state for active system', async () => {
@@ -87,19 +94,19 @@ describe('NxHeaderMainButtonComponent', () => {
         jest.spyOn(component, 'getState').mockReturnValue(mainButtonState.SYSTEM);
         component.ngOnInit();
         fixture.detectChanges();
-        expect(debugElement.nativeElement.querySelector('span').textContent).toBe('activeSystemName');
+        expect(debugElement.nativeElement.querySelector('span').textContent).toBe(
+            'activeSystemName',
+        );
     });
 
     it('should show system state for webadmin', async () => {
         const { component, fixture, debugElement } = await setupMainbuttonComponent();
-        Object.defineProperty(
-            component,
-            'environment',
-            { value: { ...component.environment, isLocal: true } }
-        );
+        Object.defineProperty(component, 'environment', {
+            value: { ...component.environment, isLocal: true },
+        });
         headerMock.currentLocation.isSystem = false;
         headerMock.activeSystem = {
-            name: undefined
+            name: undefined,
         };
         fixture.detectChanges();
         const span: HTMLSpanElement = debugElement.nativeElement.querySelector('span');
@@ -109,11 +116,9 @@ describe('NxHeaderMainButtonComponent', () => {
 
     it('should show systems state', async () => {
         const { component, fixture, debugElement } = await setupMainbuttonComponent();
-        Object.defineProperty(
-            component,
-            'environment',
-            { value: { ...component.environment, isLocal: false } }
-        );
+        Object.defineProperty(component, 'environment', {
+            value: { ...component.environment, isLocal: false },
+        });
         component.systems = [{}, {}, {}];
         jest.spyOn(component, 'getState').mockReturnValue(mainButtonState.SYSTEMS);
         component.ngOnInit();
@@ -126,6 +131,8 @@ describe('NxHeaderMainButtonComponent', () => {
         const { fixture, debugElement } = await setupMainbuttonComponent();
         headerMock.showSubject.next(false);
         fixture.detectChanges();
-        expect(debugElement.nativeElement.querySelector('div.dropdown').className).not.toContain('show');
+        expect(debugElement.nativeElement.querySelector('div.dropdown').className).not.toContain(
+            'show',
+        );
     });
 });

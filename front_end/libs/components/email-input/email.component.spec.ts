@@ -2,7 +2,8 @@ import { setupComponent } from '../src/setup';
 
 import { NxEmailComponent } from './email.component';
 
-const setupEmailComponent = (): ReturnType<typeof setupComponent<NxEmailComponent>> => setupComponent(NxEmailComponent);
+const setupEmailComponent = (): ReturnType<typeof setupComponent<NxEmailComponent>> =>
+    setupComponent(NxEmailComponent);
 
 describe('NxEmailComponent email input Unit Test', () => {
     it('should create the component', async () => {
@@ -51,8 +52,7 @@ describe('NxEmailComponent email input Unit Test', () => {
         component.authorize = false;
         fixture.detectChanges();
         const input = debugElement.nativeElement.querySelector('input');
-        expect(input.attributes.getNamedItem('ng-reflect-name')?.value)
-            .toBe('registerEmailLocked');
+        expect(input.attributes.getNamedItem('ng-reflect-name')?.value).toBe('registerEmailLocked');
         expect(input.type).toBe('text');
         expect(input.className).toContain('form-control');
     });

@@ -2,7 +2,9 @@ import { setupComponent } from '@components/src/setup';
 
 import { NxPlayerPlaceholderComponent } from './player-placeholder.component';
 
-const setupPlayerPlaceholderComponent = async (): ReturnType<typeof setupComponent<NxPlayerPlaceholderComponent>> => {
+const setupPlayerPlaceholderComponent = async (): ReturnType<
+    typeof setupComponent<NxPlayerPlaceholderComponent>
+> => {
     NxPlayerPlaceholderComponent.prototype.description = '';
     const setup = await setupComponent(NxPlayerPlaceholderComponent);
     setup.component.heading = 'ERROR';

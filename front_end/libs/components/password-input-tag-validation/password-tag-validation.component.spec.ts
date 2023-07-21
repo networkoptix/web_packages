@@ -2,20 +2,22 @@ import { setupComponent } from '../src/setup';
 
 import { NxPasswordTagValidationComponent } from './password-tag-validation.component';
 
-const setupPasswordTagValidationComponent = (): ReturnType<typeof setupComponent<NxPasswordTagValidationComponent>> => {
+const setupPasswordTagValidationComponent = (): ReturnType<
+    typeof setupComponent<NxPasswordTagValidationComponent>
+> => {
     NxPasswordTagValidationComponent.prototype.forElement = {
         valid: true,
         touched: true,
         dirty: true,
         control: {
-            fairPassword: false
+            fairPassword: false,
         },
         errors: {
             minlength: false,
             common: false,
             weak: false,
-            pattern: false
-        }
+            pattern: false,
+        },
     };
     return setupComponent(NxPasswordTagValidationComponent);
 };

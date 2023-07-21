@@ -51,7 +51,7 @@ describe('NxTextEditableComponent', () => {
 
         const spy = jest.spyOn(component, 'callOnEnter');
         const event = new KeyboardEvent('keyup', {
-            key: 'Enter'
+            key: 'Enter',
         });
         el.dispatchEvent(event);
 

@@ -1,16 +1,12 @@
-import {
-    ComponentFixture,
-} from '@angular/core/testing';
+import { ComponentFixture } from '@angular/core/testing';
 
 import { setupComponent } from '../../setup';
 
-import {
-    NxNumericComponent
-} from './numeric.component';
+import { NxNumericComponent } from './numeric.component';
 
 function dispatchKeyEvent(el: HTMLInputElement, eventType: string, key: string): KeyboardEvent {
     const event = new KeyboardEvent(eventType, {
-        key
+        key,
     });
     el.dispatchEvent(event);
 
@@ -39,7 +35,7 @@ function createPasteEvent(data: string): ClipboardEvent {
 
 function dispatchPasteEvent(el: HTMLInputElement): Event {
     // JSDOM does not support `ClipboardEvent` in version <= 22
-    const event:Event = new Event('paste');
+    const event: Event = new Event('paste');
 
     el.dispatchEvent(event);
 
@@ -60,8 +56,12 @@ describe('NumericComponent', () => {
         ({ component, fixture } = await setupComponent(NxNumericComponent));
 
         el = fixture.debugElement.nativeElement.querySelector('input');
-        up = fixture.debugElement.nativeElement.querySelector('.spinner-button.spinner-button--increment');
-        down = fixture.debugElement.nativeElement.querySelector('.spinner-button.spinner-button--decrement');
+        up = fixture.debugElement.nativeElement.querySelector(
+            '.spinner-button.spinner-button--increment',
+        );
+        down = fixture.debugElement.nativeElement.querySelector(
+            '.spinner-button.spinner-button--decrement',
+        );
         el.value = `${baseValue}`;
         component._value = baseValue;
         component.min = minValue;
@@ -153,22 +153,23 @@ describe('NumericComponent', () => {
 
     describe('onKeyDown', () => {
         const preventDefault = jest.fn();
-        const getEvent = (char: string): KeyboardEvent => ({
-            key: char,
-            preventDefault
-        } as unknown as KeyboardEvent);
+        const getEvent = (char: string): KeyboardEvent =>
+            ({
+                key: char,
+                preventDefault,
+            } as unknown as KeyboardEvent);
 
         Array.from('0123456789').map(char =>
             it(`should prevent event if a digit ${char} is received`, () => {
                 component.onKeyDown(getEvent(char));
                 expect(preventDefault).not.toHaveBeenCalled();
-            })
+            }),
         );
         Array.from('abe-+/]."').map(char =>
             it(`should prevent event if a digit ${char} is received`, () => {
                 component.onKeyDown(getEvent(char));
                 expect(preventDefault).toHaveBeenCalled();
-            })
+            }),
         );
     });
 
@@ -178,7 +179,9 @@ describe('NumericComponent', () => {
         let checkUpdateNativeValue: jest.SpyInstance;
 
         beforeEach(async () => {
-            checkUpdateNativeValue = jest.spyOn(component, 'checkUpdateNativeValue').mockImplementation();
+            checkUpdateNativeValue = jest
+                .spyOn(component, 'checkUpdateNativeValue')
+                .mockImplementation();
             setValue = jest.spyOn(component, 'setValue').mockImplementation();
             getNativeValue = jest.spyOn(component, 'getNativeValue');
             getNativeValue.mockReturnValue(baseValue);
@@ -208,12 +211,12 @@ describe('NumericComponent', () => {
     });
 
     describe('checkUpdateNativeValue', () => {
-        let input : { value: string };
+        let input: { value: string };
         let getNativeValue: jest.SpyInstance;
 
         beforeEach(() => {
             input = {
-                value: `${baseValue}`
+                value: `${baseValue}`,
             };
             getNativeValue = jest.spyOn(component, 'getNativeValue');
             getNativeValue.mockReturnValue(baseValue);

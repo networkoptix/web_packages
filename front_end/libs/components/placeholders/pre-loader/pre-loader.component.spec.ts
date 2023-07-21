@@ -4,7 +4,8 @@ import { setupComponent } from '@components/src/setup';
 
 import { NxPreLoaderComponent } from './pre-loader.component';
 
-const setupRadioComponent = (): ReturnType<typeof setupComponent<NxPreLoaderComponent>> => setupComponent(NxPreLoaderComponent);
+const setupRadioComponent = (): ReturnType<typeof setupComponent<NxPreLoaderComponent>> =>
+    setupComponent(NxPreLoaderComponent);
 
 describe('NxPreLoaderComponent', () => {
     it('should create', async () => {
@@ -21,27 +22,35 @@ describe('NxPreLoaderComponent', () => {
 
         it('should have has-preloader', async () => {
             const { debugElement } = await setupRadioComponent();
-            const preloader = debugElement.nativeElement.querySelectorAll('.placeholder-wrapper .has-preloader');
+            const preloader = debugElement.nativeElement.querySelectorAll(
+                '.placeholder-wrapper .has-preloader',
+            );
             expect(preloader.length).toBe(1);
             expect(preloader[0].className).toBe('placeholder has-preloader');
         });
 
         it('should have placeholder-content', async () => {
             const { debugElement } = await setupRadioComponent();
-            const content = debugElement.nativeElement.querySelectorAll('.placeholder-wrapper .has-preloader .placeholder-content');
+            const content = debugElement.nativeElement.querySelectorAll(
+                '.placeholder-wrapper .has-preloader .placeholder-content',
+            );
             expect(content.length).toBe(1);
             expect(content[0].className).toBe('placeholder-content');
         });
 
         it('should have placeholder-preloader', async () => {
             const { debugElement } = await setupRadioComponent();
-            const content = debugElement.nativeElement.querySelectorAll('.placeholder-wrapper .has-preloader .placeholder-content .placeholder-preloader');
+            const content = debugElement.nativeElement.querySelectorAll(
+                '.placeholder-wrapper .has-preloader .placeholder-content .placeholder-preloader',
+            );
             expect(content.length).toBe(1);
         });
 
         it('should have 3 divs (dots)', async () => {
             const { debugElement } = await setupRadioComponent();
-            const dots = debugElement.nativeElement.querySelectorAll('.placeholder-preloader .circleG');
+            const dots = debugElement.nativeElement.querySelectorAll(
+                '.placeholder-preloader .circleG',
+            );
             expect(dots.length).toBe(3);
 
             expect(dots[0].className).toBe('circleG circleG_1');
@@ -75,7 +84,7 @@ describe('NxPreLoaderComponent', () => {
             const { debugElement, fixture } = await setupRadioComponent();
             setAsPagePlaceholder(fixture);
             const content = debugElement.nativeElement.querySelectorAll(
-                'div .has-preloader .placeholder-content'
+                'div .has-preloader .placeholder-content',
             );
             expect(content.length).toBe(1);
             expect(content[0].className).toBe('placeholder-content page');

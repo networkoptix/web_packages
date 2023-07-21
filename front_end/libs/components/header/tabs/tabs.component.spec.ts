@@ -2,7 +2,7 @@ import { setupComponent } from '@components/src/setup';
 
 import { NxTabsComponent } from './tabs.component';
 const currentLocation = {
-    path: 'testUrl'
+    path: 'testUrl',
 };
 
 const node = {
@@ -20,7 +20,7 @@ const node = {
     urlified: 'testUrlified',
     subtitle: 'subtitleText',
     name_raw: 'nameRaw',
-    invisible: false
+    invisible: false,
 };
 
 const setupTabsComponent = async (): ReturnType<typeof setupComponent<NxTabsComponent>> => {

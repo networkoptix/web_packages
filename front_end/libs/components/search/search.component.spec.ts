@@ -7,9 +7,11 @@ import { NxSearchComponent } from './search.component';
 
 const params = { search: 'initial search' };
 
-const setupSearchComponent = (): ReturnType<typeof setupComponent<NxSearchComponent>> => setupComponent(NxSearchComponent);
+const setupSearchComponent = (): ReturnType<typeof setupComponent<NxSearchComponent>> =>
+    setupComponent(NxSearchComponent);
 
-const getInputElement = (debugElement: DebugElement): HTMLInputElement => debugElement.nativeElement.querySelector('input');
+const getInputElement = (debugElement: DebugElement): HTMLInputElement =>
+    debugElement.nativeElement.querySelector('input');
 
 describe('NxSearchComponent', () => {
     it('should create the component', async () => {

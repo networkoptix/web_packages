@@ -3,8 +3,9 @@ import { setupComponent } from '../src/setup';
 import { NxExternalVideoComponent } from './external-video.component';
 
 const setupExternalVideoComponent = async (): Promise<
-    Awaited<ReturnType<typeof setupComponent<NxExternalVideoComponent>>>
-    & { updateVideoSrc: (videoSrc: string) => void }
+    Awaited<ReturnType<typeof setupComponent<NxExternalVideoComponent>>> & {
+        updateVideoSrc: (videoSrc: string) => void;
+    }
 > => {
     const setup = await setupComponent(NxExternalVideoComponent);
 

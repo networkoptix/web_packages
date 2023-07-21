@@ -24,7 +24,7 @@ const nodes = [
         pending: false,
         related_asset_ids: [],
         subtitle: '',
-        url: '/content/about'
+        url: '/content/about',
     },
     {
         accepted: true,
@@ -44,8 +44,8 @@ const nodes = [
         pending: false,
         related_asset_ids: [],
         subtitle: '',
-        url: '/download'
-    }
+        url: '/download',
+    },
 ] as MenuNode[];
 
 const cloudHost = 'test';
@@ -57,8 +57,8 @@ const setupFooterComponent = async (): ReturnType<typeof setupComponent<NxFooter
         footer: {
             title: '',
             description: '',
-            nodes
-        }
+            nodes,
+        },
     };
     setup.component.CONFIG.company.name = cloudHost;
     menusService.updateMenu();

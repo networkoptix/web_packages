@@ -12,7 +12,7 @@ const mockService = {
     menuSubject: new BehaviorSubject(kbMenu),
     activeAssetIdSubject: new BehaviorSubject(initialNode.asset_id),
     activeNode: initialNode,
-    activeAssetState: ''
+    activeAssetState: '',
 };
 
 const setupMenuComponent = (): ReturnType<typeof setupComponent<NxDevelopersMenuComponent>> => {
@@ -48,7 +48,9 @@ describe('Test NxDevelopersMenuComponent', () => {
     it('should correctly open node', async () => {
         const { component, debugElement } = await setupMenuComponent();
         const { openNodes } = component;
-        const nodeToOpen = debugElement.nativeElement.querySelector('.menu-link:not(.activated-highlight)');
+        const nodeToOpen = debugElement.nativeElement.querySelector(
+            '.menu-link:not(.activated-highlight)',
+        );
         const nodeToOpenName = nodeToOpen.textContent;
         nodeToOpen.dispatchEvent(new MouseEvent('click'));
         expect(openNodes.length).toBe(2);
@@ -58,7 +60,9 @@ describe('Test NxDevelopersMenuComponent', () => {
 
     it('should correctly close node', async () => {
         const { component, debugElement } = await setupMenuComponent();
-        const nodeToClose = debugElement.nativeElement.querySelector('.menu-link:not(.activated-highlight)');
+        const nodeToClose = debugElement.nativeElement.querySelector(
+            '.menu-link:not(.activated-highlight)',
+        );
         const nodeToCloseName = nodeToClose.textContent;
         const stayOpen = kbMenu.nodes[2].name;
         component.openNodes = [initialNode.name, stayOpen, nodeToCloseName];
@@ -69,7 +73,9 @@ describe('Test NxDevelopersMenuComponent', () => {
 
     it('should correctly open multiple nodes', async () => {
         const { component, debugElement } = await setupMenuComponent();
-        const [firstNode, secondNode] = debugElement.nativeElement.querySelectorAll('.menu-link:not(.activated-highlight)');
+        const [firstNode, secondNode] = debugElement.nativeElement.querySelectorAll(
+            '.menu-link:not(.activated-highlight)',
+        );
         const firstNodeName = firstNode.textContent;
         const secondNodeName = secondNode.textContent;
         firstNode.dispatchEvent(new MouseEvent('click'));

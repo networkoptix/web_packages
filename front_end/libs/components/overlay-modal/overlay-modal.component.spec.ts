@@ -5,19 +5,21 @@ import { NxOverlayModalComponent } from './overlay-modal.component';
 const servers = [
     {
         name: 'serverONEname',
-        ip: 'serverONEip'
+        ip: 'serverONEip',
     },
     {
         name: 'serverTWOname',
-        ip: 'serverTWOip'
+        ip: 'serverTWOip',
     },
     {
         name: 'serverTHREEname',
-        ip: 'serverTHREEip'
-    }
+        ip: 'serverTHREEip',
+    },
 ] as typeof NxOverlayModalComponent.prototype.servers;
 
-const setupOverlayComponent = async (): ReturnType<typeof setupComponent<NxOverlayModalComponent>> => {
+const setupOverlayComponent = async (): ReturnType<
+    typeof setupComponent<NxOverlayModalComponent>
+> => {
     NxOverlayModalComponent.prototype.servers = servers;
     const setup = await setupComponent(NxOverlayModalComponent);
     setup.component.servers = servers;
@@ -43,8 +45,9 @@ describe('NxOverlayModalComponent', () => {
         const { debugElement } = await setupOverlayComponent();
         const otherServerTitle = debugElement.nativeElement.querySelectorAll('p');
         expect(otherServerTitle.length).toBe(2);
-        expect(otherServerTitle[1].textContent.trim())
-            .toBe('You can try to connect to other servers in this system:');
+        expect(otherServerTitle[1].textContent.trim()).toBe(
+            'You can try to connect to other servers in this system:',
+        );
         const serverNames = debugElement.nativeElement.querySelectorAll('span.server-name');
         expect(serverNames.length).toBe(servers.length);
         expect(serverNames[0].textContent.trim()).toBe(servers[0].name);

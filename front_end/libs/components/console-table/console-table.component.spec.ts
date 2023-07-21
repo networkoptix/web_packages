@@ -94,7 +94,8 @@ describe('NxConsoleTableComponent', () => {
     });
 
     it('should show advanced mode when many items', async () => {
-        const { addItemToComponent, fixture, debugElement, minItemsAdvanced } = await setupConsoleTable();
+        const { addItemToComponent, fixture, debugElement, minItemsAdvanced } =
+            await setupConsoleTable();
         const numItems = Math.round(Math.random() * 30) + minItemsAdvanced;
         await addItemToComponent(numItems);
 
@@ -104,7 +105,8 @@ describe('NxConsoleTableComponent', () => {
     });
 
     it('paginator should show correct number of pages', async () => {
-        const { addItemToComponent, fixture, debugElement, perPage, minItemsAdvanced } = await setupConsoleTable();
+        const { addItemToComponent, fixture, debugElement, perPage, minItemsAdvanced } =
+            await setupConsoleTable();
         const numItems = Math.round(Math.random() * 30) + minItemsAdvanced;
         const expectedPages = Math.ceil(numItems / perPage);
         await addItemToComponent(numItems);

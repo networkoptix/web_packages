@@ -2,7 +2,9 @@ import { setupComponent } from '@components/src/setup';
 
 import { NxSectionPlaceholderComponent } from './section-placeholder.component';
 
-const setupSectionPlaceholderComponent = async (): ReturnType<typeof setupComponent<NxSectionPlaceholderComponent>> => {
+const setupSectionPlaceholderComponent = async (): ReturnType<
+    typeof setupComponent<NxSectionPlaceholderComponent>
+> => {
     const setup = await setupComponent(NxSectionPlaceholderComponent);
     setup.component.translatedMessage = 'Placeholder Title';
     setup.fixture.detectChanges();

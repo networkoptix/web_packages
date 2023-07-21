@@ -14,14 +14,15 @@ import { NxAlertBlockComponent } from './block.component';
             [line1]="'Settings displayed below are advanced.'"
             [line2]="'Changing them may cause server to work incorrectly.'"
             [btnIconSrc]="'eye_closed.svg'"
-            [btnCaption]="'Hide Advanced Settings'">
+            [btnCaption]="'Hide Advanced Settings'"
+        >
         </nx-alert-block>
-    `
+    `,
 })
-class TestHostComponent {
-}
+class TestHostComponent {}
 
-const setupAlertBlockComponent = (): ReturnType<typeof setupComponent<TestHostComponent>> => setupComponent(TestHostComponent);
+const setupAlertBlockComponent = (): ReturnType<typeof setupComponent<TestHostComponent>> =>
+    setupComponent(TestHostComponent);
 
 const getElementRefs = (debugElement: DebugElement) => {
     const body = debugElement.nativeElement.querySelector('nx-section > div');
@@ -78,7 +79,9 @@ describe('NxAlertBlockComponent (default)', () => {
 
     it('should have card body subheader hidden', async () => {
         const { debugElement } = await setupAlertBlockComponent();
-        const body = debugElement.nativeElement.querySelector('.card nx-section .card--body .card--body-subheader');
+        const body = debugElement.nativeElement.querySelector(
+            '.card nx-section .card--body .card--body-subheader',
+        );
         expect(body.hidden).toBeTruthy();
     });
 
@@ -113,7 +116,9 @@ describe('NxAlertBlockComponent (default)', () => {
 
             const rightSectionButton = rightSection.querySelector('button');
             expect(rightSectionButton.querySelector('span').className).toBe('ml-1');
-            expect(rightSectionButton.querySelector('span').innerHTML).toBe('Hide Advanced Settings');
+            expect(rightSectionButton.querySelector('span').innerHTML).toBe(
+                'Hide Advanced Settings',
+            );
         });
     });
 });

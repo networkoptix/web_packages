@@ -6,7 +6,7 @@ import {
     TestBed,
     tick,
     fakeAsync,
-    inject
+    inject,
 } from '@angular/core/testing';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -30,7 +30,7 @@ xdescribe('NxCookieBannerComponent', () => {
         retrieve: (key: string) => !!localStorageMockStore[key],
         store: (key: string) => {
             localStorageMockStore[key] = true;
-        }
+        },
     };
     // const accountMock = {
     //     currentUser$: of('')
@@ -40,20 +40,15 @@ xdescribe('NxCookieBannerComponent', () => {
     beforeEach(waitForAsync(() => {
         localStorageMockStore = {};
         TestBed.configureTestingModule({
-            declarations: [
-                NxCookieBannerComponent,
-                MockDirective(RouterLink),
-            ],
-            imports: [
-                CommonModule,
-                TranslateModule.forRoot()
-            ],
+            declarations: [NxCookieBannerComponent, MockDirective(RouterLink)],
+            imports: [CommonModule, TranslateModule.forRoot()],
             providers: [
                 { provide: NxConfigService, useValue: configMock },
                 { provide: LocalStorageService, useValue: localStorageMock },
                 // { provide: NxAccountService, useValue: accountMock }
-            ]
-        }).compileComponents()
+            ],
+        })
+            .compileComponents()
             .then(() => {
                 fixture = TestBed.createComponent(NxCookieBannerComponent);
                 component = fixture.componentInstance;
@@ -88,7 +83,9 @@ xdescribe('NxCookieBannerComponent', () => {
 
     it('should contain the cookie disclaimer in a p tag', () => {
         const mainText = fixture.debugElement.nativeElement.querySelector('p').textContent;
-        expect(mainText).toContain('We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences here. By continuing to use our site you consent to use our cookies.');
+        expect(mainText).toContain(
+            'We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences here. By continuing to use our site you consent to use our cookies.',
+        );
     });
 
     it('should not show the banner if cookiereviewed is true in localStorage', inject(
@@ -102,12 +99,11 @@ xdescribe('NxCookieBannerComponent', () => {
             component.ngOnInit();
             fixture.detectChanges();
             expect(fixture.debugElement.nativeElement.querySelector('.banner')).toBeFalsy();
-        }
+        },
     ));
 
-    it('should set cookiereivewed in localStorage to true on button click', fakeAsync(inject(
-        [LocalStorageService],
-        (service: LocalStorageService) => {
+    it('should set cookiereivewed in localStorage to true on button click', fakeAsync(
+        inject([LocalStorageService], (service: LocalStorageService) => {
             service.retrieve = (key: string) => !!localStorageMockStore[key];
             service.store = (key: string, value: boolean) => {
                 localStorageMockStore[key] = value;
@@ -118,7 +114,6 @@ xdescribe('NxCookieBannerComponent', () => {
             tick();
 
             expect(service.retrieve('cookiereviewed')).toEqual(true);
-        }
-    )));
-}
-);
+        }),
+    ));
+});

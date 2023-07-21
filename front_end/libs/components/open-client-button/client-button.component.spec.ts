@@ -2,9 +2,11 @@ import { setupComponent } from '../src/setup';
 
 import { NxClientButtonComponent } from './client-button.component';
 
-const setupClientButtonComponent = (): ReturnType<typeof setupComponent<NxClientButtonComponent>> => {
+const setupClientButtonComponent = (): ReturnType<
+    typeof setupComponent<NxClientButtonComponent>
+> => {
     NxClientButtonComponent.prototype.system = {
-        capabilities: []
+        capabilities: [],
     };
 
     return setupComponent(NxClientButtonComponent);

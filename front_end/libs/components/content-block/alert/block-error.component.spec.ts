@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 
-import {
-    NxAlertBlockComponent
-} from '@components/content-block/alert/block.component';
+import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { setupComponent } from '@components/src/setup';
 
 @Component({
@@ -16,14 +14,15 @@ import { setupComponent } from '@components/src/setup';
             [line1]="'Settings displayed below are advanced.'"
             [line2]="'Changing them may cause server to work incorrectly.'"
             [btnIconSrc]="'eye_closed.svg'"
-            [btnCaption]="'Hide Advanced Settings'">
+            [btnCaption]="'Hide Advanced Settings'"
+        >
         </nx-alert-block>
-    `
+    `,
 })
-class TestHostComponent {
-}
+class TestHostComponent {}
 
-const setupAlertBlockComponent = (): ReturnType<typeof setupComponent<TestHostComponent>> => setupComponent(TestHostComponent);
+const setupAlertBlockComponent = (): ReturnType<typeof setupComponent<TestHostComponent>> =>
+    setupComponent(TestHostComponent);
 
 describe('NxAlertBlockComponent (error)', () => {
     it('should create', async () => {

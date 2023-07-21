@@ -2,7 +2,8 @@ import { setupComponent } from '../src/setup';
 
 import { NxRadioComponent } from './radio.component';
 
-const setupRadioComponent = (): ReturnType<typeof setupComponent<NxRadioComponent>> => setupComponent(NxRadioComponent);
+const setupRadioComponent = (): ReturnType<typeof setupComponent<NxRadioComponent>> =>
+    setupComponent(NxRadioComponent);
 
 describe('NxRadioComponent', () => {
     it('should create', async () => {
@@ -16,7 +17,7 @@ describe('NxRadioComponent', () => {
             rbFalse: 'unchecked',
             rbTrue: 'checked',
             rbDisabled: 'disabled',
-            rbOrElse: 'tristate'
+            rbOrElse: 'tristate',
         });
     });
 

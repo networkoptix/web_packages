@@ -28,7 +28,7 @@ describe('NxCheckboxComponent', () => {
         it('to false', async () => {
             const { component } = await setupComponent(NxCheckboxComponent);
             component.ngOnChanges({
-                checked: new SimpleChange(undefined, false, true)
+                checked: new SimpleChange(undefined, false, true),
             });
 
             component.value = false;
@@ -38,7 +38,7 @@ describe('NxCheckboxComponent', () => {
         it('to true', async () => {
             const { component } = await setupComponent(NxCheckboxComponent);
             component.ngOnChanges({
-                checked: new SimpleChange(undefined, true, false)
+                checked: new SimpleChange(undefined, true, false),
             });
 
             expect(component.value).toBeTruthy();

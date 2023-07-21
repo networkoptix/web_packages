@@ -4,7 +4,8 @@ import { NxRibbonComponent } from './ribbon.component';
 import { NxRibbonService } from './ribbon.service';
 import type { RibbonAction, RibbonContext } from './ribbon.types';
 
-const setupRibbonComponent = (): ReturnType<typeof setupComponent<NxRibbonComponent>> => setupComponent(NxRibbonComponent);
+const setupRibbonComponent = (): ReturnType<typeof setupComponent<NxRibbonComponent>> =>
+    setupComponent(NxRibbonComponent);
 
 describe('NxRibbonComponent', () => {
     it('should create NxRibbonComponent', async () => {
@@ -26,25 +27,22 @@ describe('NxRibbonComponent', () => {
     it('should use NxRibbonService to get data', async () => {
         const { component, fixture, inject } = await setupRibbonComponent();
         const service = inject(NxRibbonService);
-        const actions: RibbonAction[] = [{
-            type: 'link',
-            text: 'Go back',
-            value: '/admin/cms/asset'
-        }];
+        const actions: RibbonAction[] = [
+            {
+                type: 'link',
+                text: 'Go back',
+                value: '/admin/cms/asset',
+            },
+        ];
         const context: RibbonContext = {
             visibility: true,
             message: 'Alcohol! Because no great story started with someone eating a salad.',
             actions,
             type: undefined,
-            updateFunction: undefined
+            updateFunction: undefined,
         };
 
-        service.show(
-            context.message,
-            context.actions,
-            context.type,
-            context.updateFunction
-        );
+        service.show(context.message, context.actions, context.type, context.updateFunction);
         fixture.detectChanges();
 
         expect(service.contextSubject.value).toEqual(context);
@@ -52,8 +50,7 @@ describe('NxRibbonComponent', () => {
         expect(component.visibility).toBeTruthy();
         expect(component.message).toBe(context.message);
         expect(component.actions).toEqual(context.actions);
-    }
-    );
+    });
 
     it('should use NxRibbonService to hide and reset data', async () => {
         const { component, fixture, inject } = await setupRibbonComponent();
@@ -63,7 +60,7 @@ describe('NxRibbonComponent', () => {
             message: '',
             actions: [],
             type: undefined,
-            updateFunction: undefined
+            updateFunction: undefined,
         };
 
         service.hide();
@@ -74,6 +71,5 @@ describe('NxRibbonComponent', () => {
         expect(component.visibility).toBeFalsy();
         expect(component.message).toBe('');
         expect(component.actions).toEqual([]);
-    }
-    );
+    });
 });

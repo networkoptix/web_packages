@@ -36,7 +36,7 @@ const dropdownItems: DropdownItem<string>[] = [
         value: '5',
         disabled: false,
         help: undefined,
-    }
+    },
 ];
 
 const setupDropdownComponent = async (): ReturnType<typeof setupComponent<NxGenericDropdown>> => {
@@ -49,13 +49,10 @@ const setupDropdownComponent = async (): ReturnType<typeof setupComponent<NxGene
 
 const ButtonClickEvents = {
     left: { button: 0 },
-    right: { button: 2 }
+    right: { button: 2 },
 };
 
-function click(
-    el: DebugElement | HTMLElement,
-    eventObj = ButtonClickEvents.left,
-): void {
+function click(el: DebugElement | HTMLElement, eventObj = ButtonClickEvents.left): void {
     if (el instanceof HTMLElement) {
         el.click();
     } else {
@@ -136,7 +133,9 @@ describe('NxGenericDropdown', () => {
         const items = debugElement.queryAll(By.css('.dropdown-item'));
         click(items[2]);
         fixture.detectChanges();
-        const selectedPostClick = debugElement.nativeElement.querySelector('button.dropdown-toggle span');
+        const selectedPostClick = debugElement.nativeElement.querySelector(
+            'button.dropdown-toggle span',
+        );
         expect(selectedPostClick.textContent).toContain('helpText4');
     });
 

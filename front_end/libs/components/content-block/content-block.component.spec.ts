@@ -9,17 +9,20 @@ import { NxContentBlockSectionComponent } from './section/section.component';
     standalone: true,
     imports: [NxContentBlockComponent, NxContentBlockSectionComponent],
     template: `
-        <nx-block type="mb-3" header-style="extended">
+        <nx-block
+            type="mb-3"
+            header-style="extended"
+        >
             <header>HEADER</header>
             <nx-section>BODY</nx-section>
             <footer>FOOTER</footer>
         </nx-block>
-    `
+    `,
 })
-class TestHostComponent {
-}
+class TestHostComponent {}
 
-const setupBlockComponent = (): ReturnType<typeof setupComponent<TestHostComponent>> => setupComponent(TestHostComponent);
+const setupBlockComponent = (): ReturnType<typeof setupComponent<TestHostComponent>> =>
+    setupComponent(TestHostComponent);
 
 describe('NxContentBlockComponent', () => {
     it('should create', async () => {
@@ -48,16 +51,14 @@ describe('NxContentBlockComponent', () => {
 
     it('should have card body', async () => {
         const { debugElement } = await setupBlockComponent();
-        const body = debugElement.nativeElement.querySelector(
-            '.card nx-section .card--body'
-        );
+        const body = debugElement.nativeElement.querySelector('.card nx-section .card--body');
         expect(body.className).toContain('section clearfix');
     });
 
     it('should have card body subheader hidden', async () => {
         const { debugElement } = await setupBlockComponent();
         const body = debugElement.nativeElement.querySelector(
-            '.card nx-section .card--body .card--body-subheader'
+            '.card nx-section .card--body .card--body-subheader',
         );
         expect(body.hidden).toBeTruthy();
     });
@@ -65,7 +66,7 @@ describe('NxContentBlockComponent', () => {
     it('should have card body content', async () => {
         const { debugElement } = await setupBlockComponent();
         const body = debugElement.nativeElement.querySelector(
-            '.card nx-section .card--body .card--body-content'
+            '.card nx-section .card--body .card--body-content',
         );
         expect(body.innerHTML).toBe('BODY');
     });

@@ -2,16 +2,19 @@ import { setupComponent } from '../src/setup';
 
 import { NxCarouselComponent } from './carousel.component';
 
-const screenshots = [{
-    id: 'Screenshot1',
-    value: 'https://cloud-test.hdw.mx/static/media/test-asset-011119-amironenko/overviewscreenshot1-257/Screenshot_23.png',
-    sortKey: 1,
-    caption: 'screenshot 23'
-}, {
-    id: 'Screenshot2',
-    value: 'https://cloud-test.hdw.mx/static/media/test-asset-011119-amironenko/overviewscreenshot2-259/Screenshot_25.png',
-    sortKey: 2
-}];
+const screenshots = [
+    {
+        id: 'Screenshot1',
+        value: 'https://cloud-test.hdw.mx/static/media/test-asset-011119-amironenko/overviewscreenshot1-257/Screenshot_23.png',
+        sortKey: 1,
+        caption: 'screenshot 23',
+    },
+    {
+        id: 'Screenshot2',
+        value: 'https://cloud-test.hdw.mx/static/media/test-asset-011119-amironenko/overviewscreenshot2-259/Screenshot_25.png',
+        sortKey: 2,
+    },
+];
 
 const handleSetup = async (): ReturnType<typeof setupComponent<NxCarouselComponent>> => {
     const setup = await setupComponent(NxCarouselComponent);
@@ -69,9 +72,7 @@ describe('NxCarouselComponent', () => {
     it('should have img(s)', async () => {
         const { fixture } = await handleSetup();
         const el = fixture.elementRef.nativeElement;
-        const images = el.querySelectorAll(
-            '.carousel .carousel-item .carousel-img img'
-        );
+        const images = el.querySelectorAll('.carousel .carousel-item .carousel-img img');
         expect(images.length).toBe(2);
         expect(images[0].src).toBe(screenshots[0].value);
         expect(images[0].alt).toBe(screenshots[0].caption);
@@ -84,9 +85,7 @@ describe('NxCarouselComponent', () => {
         const { component, fixture } = await handleSetup();
         const el = fixture.elementRef.nativeElement;
         const spy = jest.spyOn(component, 'previousElement');
-        const button = el.querySelector(
-            '.carousel .carousel-control-prev'
-        );
+        const button = el.querySelector('.carousel .carousel-control-prev');
         button.dispatchEvent(new MouseEvent('click'));
         expect(spy).toBeCalledTimes(1);
     });
@@ -95,9 +94,7 @@ describe('NxCarouselComponent', () => {
         const { component, fixture } = await handleSetup();
         const el = fixture.elementRef.nativeElement;
         const spy = jest.spyOn(component, 'nextElement');
-        const button = el.querySelector(
-            '.carousel .carousel-control-next'
-        );
+        const button = el.querySelector('.carousel .carousel-control-next');
         button.dispatchEvent(new MouseEvent('click'));
         expect(spy).toBeCalledTimes(1);
     });

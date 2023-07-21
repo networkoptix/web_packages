@@ -2,7 +2,8 @@ import { setupComponent } from '../src/setup';
 
 import { NxNoSystemsComponent } from './no-systems.component';
 
-const setupNoSystemsComponent = (): ReturnType<typeof setupComponent<NxNoSystemsComponent>> => setupComponent(NxNoSystemsComponent);
+const setupNoSystemsComponent = (): ReturnType<typeof setupComponent<NxNoSystemsComponent>> =>
+    setupComponent(NxNoSystemsComponent);
 
 describe('NxNoSystemsComponent', () => {
     it('should create the component', async () => {

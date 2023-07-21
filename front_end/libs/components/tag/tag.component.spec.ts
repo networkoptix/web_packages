@@ -1,7 +1,8 @@
 import { setupComponent } from '../src/setup';
 
 import { NxTagComponent } from './tag.component';
-const setupRadioComponent = (): ReturnType<typeof setupComponent<NxTagComponent>> => setupComponent(NxTagComponent);
+const setupRadioComponent = (): ReturnType<typeof setupComponent<NxTagComponent>> =>
+    setupComponent(NxTagComponent);
 
 describe('NxTagComponent', () => {
     it('should create component', async () => {

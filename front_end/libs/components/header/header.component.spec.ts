@@ -7,63 +7,64 @@ import { setupComponent } from '../src/setup';
 import { NxHeaderComponent } from './header.component';
 
 const menuMock = {
-    getMenu: () => of({
-        description: '',
-        title: '',
-        nodes: [
-            {
-                accepted: true,
-                asset_id: null,
-                asset_type: null,
-                authentication: 'Both',
-                breadcrumbs: [],
-                display_name: 'For Developers',
-                draft: null,
-                icon: '',
-                name: 'For Developers',
-                name_raw: 'For Developers',
-                new_window: false,
-                next_item: false,
-                nodes: [],
-                order: 0,
-                pending: false,
-                related_asset_ids: [],
-                subtitle: '',
-                url: '',
-                invisible: false
-            },
-            {
-                accepted: true,
-                asset_id: null,
-                asset_type: null,
-                authentication: 'Both',
-                breadcrumbs: [],
-                display_name: 'Services',
-                draft: null,
-                icon: 'services.svg',
-                name: 'Services',
-                name_raw: 'Services',
-                new_window: false,
-                next_item: false,
-                nodes: [],
-                order: 1,
-                pending: false,
-                related_asset_ids: [],
-                subtitle: '',
-                url: '',
-                invisible: false
-            }
-        ]
-    }),
-    cleanEmptyNodes: (header: MenuNode) => header.nodes
+    getMenu: () =>
+        of({
+            description: '',
+            title: '',
+            nodes: [
+                {
+                    accepted: true,
+                    asset_id: null,
+                    asset_type: null,
+                    authentication: 'Both',
+                    breadcrumbs: [],
+                    display_name: 'For Developers',
+                    draft: null,
+                    icon: '',
+                    name: 'For Developers',
+                    name_raw: 'For Developers',
+                    new_window: false,
+                    next_item: false,
+                    nodes: [],
+                    order: 0,
+                    pending: false,
+                    related_asset_ids: [],
+                    subtitle: '',
+                    url: '',
+                    invisible: false,
+                },
+                {
+                    accepted: true,
+                    asset_id: null,
+                    asset_type: null,
+                    authentication: 'Both',
+                    breadcrumbs: [],
+                    display_name: 'Services',
+                    draft: null,
+                    icon: 'services.svg',
+                    name: 'Services',
+                    name_raw: 'Services',
+                    new_window: false,
+                    next_item: false,
+                    nodes: [],
+                    order: 1,
+                    pending: false,
+                    related_asset_ids: [],
+                    subtitle: '',
+                    url: '',
+                    invisible: false,
+                },
+            ],
+        }),
+    cleanEmptyNodes: (header: MenuNode) => header.nodes,
 };
 const headerMock = {
     systemIdSubject: of(''),
     currentLocation: {},
-    setLocation: () => {}
+    setLocation: () => {},
 };
 const appStateMock = {
-    headerVisibleSubject: of(true)
+    headerVisibleSubject: of(true),
 };
 
 const setupHeaderComponent = async (): ReturnType<typeof setupComponent<NxHeaderComponent>> => {
@@ -85,9 +86,13 @@ describe('NxHeaderComponent', () => {
         const { debugElement } = await setupHeaderComponent();
         expect(debugElement.nativeElement.querySelectorAll('.invisible').length).toBe(0);
         expect(debugElement.nativeElement.querySelector('header')).toBeTruthy();
-        const navbarLeft = debugElement.nativeElement.querySelectorAll('.app-header-left .navbar-nav');
+        const navbarLeft = debugElement.nativeElement.querySelectorAll(
+            '.app-header-left .navbar-nav',
+        );
         expect(navbarLeft.length).toBe(2);
-        const navbarRight = debugElement.nativeElement.querySelectorAll('.app-header-right .navbar-nav');
+        const navbarRight = debugElement.nativeElement.querySelectorAll(
+            '.app-header-right .navbar-nav',
+        );
         expect(navbarRight.length).toBe(4);
         const icons = debugElement.nativeElement.querySelectorAll('img');
         expect(icons.length).toBe(2);
@@ -107,9 +112,13 @@ describe('NxHeaderComponent', () => {
         fixture.detectChanges();
         expect(debugElement.nativeElement.querySelectorAll('.invisible').length).toBe(1);
         expect(debugElement.nativeElement.querySelector('header')).toBeTruthy();
-        const navbarLeft = debugElement.nativeElement.querySelectorAll('.app-header-left .navbar-nav');
+        const navbarLeft = debugElement.nativeElement.querySelectorAll(
+            '.app-header-left .navbar-nav',
+        );
         expect(navbarLeft.length).toBe(2);
-        const navbarRight = debugElement.nativeElement.querySelectorAll('.app-header-right .navbar-nav');
+        const navbarRight = debugElement.nativeElement.querySelectorAll(
+            '.app-header-right .navbar-nav',
+        );
         expect(navbarRight.length).toBe(4);
         const icons = debugElement.nativeElement.querySelectorAll('img');
         expect(icons.length).toBe(2);

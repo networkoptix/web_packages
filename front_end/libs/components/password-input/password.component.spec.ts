@@ -25,9 +25,7 @@ describe('NxPasswordComponent', () => {
         const input = debugElement.nativeElement.querySelector('input');
         expect(input.autocomplete).toBe('new-password');
         expect(input.className).toContain('form-control');
-        expect(input.pattern).toBe(
-            credentialsValidation.passwordRequirements.requiredRegex
-        );
+        expect(input.pattern).toBe(credentialsValidation.passwordRequirements.requiredRegex);
     });
 
     it('should be in "password" mode', async () => {
@@ -36,7 +34,7 @@ describe('NxPasswordComponent', () => {
         fixture.detectChanges();
 
         const toggle = fixture.debugElement.nativeElement.querySelectorAll(
-            'span.input-group-addon svg-icon'
+            'span.input-group-addon svg-icon',
         );
         expect(toggle.length).toBe(1);
         expect(debugElement.nativeElement.querySelector('input').type).toBe('password');
@@ -48,7 +46,7 @@ describe('NxPasswordComponent', () => {
         fixture.detectChanges(); // apply changes
 
         const toggle = fixture.debugElement.nativeElement.querySelectorAll(
-            'span.input-group-addon svg-icon'
+            'span.input-group-addon svg-icon',
         );
         expect(toggle.length).toBe(1);
         expect(debugElement.nativeElement.querySelector('input').type).toBe('text');

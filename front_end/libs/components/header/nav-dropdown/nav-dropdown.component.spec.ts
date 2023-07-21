@@ -23,7 +23,7 @@ const dropdownNode = {
             next_item: false,
             urlified: 'testUrlified',
             subtitle: 'subtitleText',
-            name_raw: 'innerNameRaw'
+            name_raw: 'innerNameRaw',
         },
         {
             display_name: 'innerNodeName2',
@@ -39,8 +39,8 @@ const dropdownNode = {
             next_item: false,
             urlified: 'testUrlified',
             subtitle: 'subtitleText',
-            name_raw: 'innerNameRaw2'
-        }
+            name_raw: 'innerNameRaw2',
+        },
     ],
     authentication: undefined,
     new_window: false,
@@ -49,10 +49,12 @@ const dropdownNode = {
     next_item: false,
     urlified: 'testUrlified',
     subtitle: 'subtitleText',
-    name_raw: 'nameRaw'
+    name_raw: 'nameRaw',
 };
 
-const setupNavDropdownComponent = async (): ReturnType<typeof setupComponent<NxNavDropdownComponent>> => {
+const setupNavDropdownComponent = async (): ReturnType<
+    typeof setupComponent<NxNavDropdownComponent>
+> => {
     const setup = await setupComponent(NxNavDropdownComponent);
     setup.component.dropdownNode = dropdownNode;
     setup.fixture.detectChanges();
@@ -74,7 +76,9 @@ describe('NxNavDropdownComponent', () => {
         expect(icons.length).toBe(1);
         const dropdown = debugElement.nativeElement.querySelector('ul.dropdown-menu');
         expect(dropdown.style.display).toBe('none');
-        const dropdownItems = debugElement.nativeElement.querySelectorAll('li.dropdown-item-container');
+        const dropdownItems = debugElement.nativeElement.querySelectorAll(
+            'li.dropdown-item-container',
+        );
         expect(dropdownItems.length).toBe(2);
         const nodeNames = debugElement.nativeElement.querySelectorAll('span');
         expect(nodeNames.length).toBe(2);
@@ -95,7 +99,9 @@ describe('NxNavDropdownComponent', () => {
         expect(icons.length).toBe(1);
         const dropdown = debugElement.nativeElement.querySelector('ul.dropdown-menu');
         expect(dropdown.style.display).toBe('inline-block');
-        const dropdownItems = debugElement.nativeElement.querySelectorAll('li.dropdown-item-container');
+        const dropdownItems = debugElement.nativeElement.querySelectorAll(
+            'li.dropdown-item-container',
+        );
         expect(dropdownItems.length).toBe(2);
         const arrowUp = debugElement.nativeElement.querySelectorAll('div.popup');
         expect(arrowUp.length).toBe(1);

@@ -6,7 +6,9 @@ import { setupComponent } from '../src/setup';
 
 import { NxProcessButtonComponent } from './process-button.component';
 
-const setupProcessButtonComponent = async (): ReturnType<typeof setupComponent<NxProcessButtonComponent>> => {
+const setupProcessButtonComponent = async (): ReturnType<
+    typeof setupComponent<NxProcessButtonComponent>
+> => {
     const setup = await setupComponent(NxProcessButtonComponent);
     setup.component.buttonText = 'Test';
     setup.component.clickFn = jest.fn();
@@ -69,9 +71,7 @@ describe('NxProcessButtonComponent', () => {
         const svgButton = debugElement.nativeElement.querySelector('.text-button svg-icon');
         expect(svgButton).toBeDefined();
 
-        const textButton = debugElement.nativeElement.querySelector(
-            '.text-button a'
-        );
+        const textButton = debugElement.nativeElement.querySelector('.text-button a');
         expect(textButton.textContent).toBe('Open in %VMS_NAME%');
         textButton.click();
         expect(spy).toBeCalledTimes(1);
@@ -82,9 +82,7 @@ describe('NxProcessButtonComponent', () => {
         component.textOnly = true;
         component.process.processing = true;
         fixture.detectChanges();
-        const processText = debugElement.nativeElement.querySelector(
-            '.text-button span'
-        );
+        const processText = debugElement.nativeElement.querySelector('.text-button span');
         expect(processText.textContent).toBe('Opening %VMS_NAME%...');
     });
 });
