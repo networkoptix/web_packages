@@ -9,7 +9,7 @@
     *ngIf="system && !system.show404 && editCameras()"
     class="row auth-visible"
 >
-    <ng-container *ngIf="selectedCamera">
+    <ng-container>
         <div
             *ngIf="showUnauthorized || errors || warnings"
             class="col-12 camera-settings-info"
@@ -64,7 +64,7 @@
                         >
                             <button
                                 class="camera-buttons"
-                                [routerLink]="cameraViewPath"
+                                [routerLink]="cameraViewPath()"
                                 id="view-camera"
                             >
                                 <span>
@@ -84,8 +84,8 @@
                                 *ngIf="canSeeInfo"
                                 class="camera-buttons"
                                 id="detailed-info"
-                                [routerLink]="fullInfoPath"
-                                [queryParams]="{ id: parsedCameraId }"
+                                [routerLink]="fullInfoPath()"
+                                [queryParams]="{ id: camera.id }"
                             >
                                 <span>
                                     <svg-icon
@@ -111,7 +111,7 @@
                             [isPrimary]="true"
                             aspect="override"
                             [preloader]="true"
-                            [state]="selectedCamera.status"
+                            [state]="camera.status"
                             [url]="preview$ | async"
                             [lightBackground]="true"
                         ></nx-health-image>
@@ -184,13 +184,13 @@
                                 name="audioEnabled"
                                 componentId="audioEnabled"
                                 [(ngModel)]="audioEnabled"
-                                [disabled]="!selectedCamera.parameters.isAudioSupported"
+                                [disabled]="!camera.parameters.isAudioSupported"
                             >
                             </nx-checkbox>
                             <label
                                 class="control-label mb-0"
                                 [ngClass]="
-                                    !selectedCamera.parameters.isAudioSupported
+                                    !camera.parameters.isAudioSupported
                                         ? 'disabled-audio-label'
                                         : ''
                                 "
@@ -228,15 +228,15 @@
                 [motionEnabledWatcher]="motionEnabledWatcher"
                 [recordingModesWatcher]="recordingModesWatcher"
                 [selectedFpsWatcher]="selectedFpsWatcher"
-                [selectedCamera]="selectedCamera"
+                [selectedCamera]="camera"
                 [selectedQualityWatcher]="selectedQualityWatcher"
             >
             </nx-recording-settings>
             <nx-motion-detection-settings
                 class="col-12 camera-settings-info mt-3"
-                [motionEnabled]="recordingSettings.motionEnabled"
-                [enableMotion]="recordingSettings.enableMotion"
-                [disableMotion]="recordingSettings.disableMotion"
+                [motionEnabled]="recordingSettings?.motionEnabled"
+                [enableMotion]="recordingSettings?.enableMotion"
+                [disableMotion]="recordingSettings?.disableMotion"
                 [resetSensitivity]="resetSensitivity"
                 [toggleMotionGrid]="toggleMotionGrid"
                 (updateMask)="updateMask($event)"
@@ -246,9 +246,9 @@
                 [healthImageUrl]="preview$"
                 [selectedRotation]="selectedRotation?.value || 0"
                 [selectedAspectRatio]="selectedAspect.value || ASPECT_RATIOS['16:9']"
-                [imageState]="selectedCamera.status"
+                [imageState]="camera.status"
                 [overlayEnabled]="
-                    !isMobile && showOverlay && selectedCamera && !!this.motionMaskWatcher.value
+                    !isMobile && showOverlay && camera && !!this.motionMaskWatcher.value
                 "
             ></nx-motion-detection-settings>
         </ng-container>

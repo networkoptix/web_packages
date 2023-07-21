@@ -3,10 +3,12 @@ import { NgModule, inject } from '@angular/core';
 import {
     ActivatedRouteSnapshot,
     CanActivateFn,
+    ResolveFn,
     Router,
     RouterModule,
     RouterStateSnapshot,
     Routes,
+    createUrlTreeFromSnapshot,
 } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -21,6 +23,7 @@ import { MenuModule } from '@menu/menu.module';
 import { PipesModule } from '@pipes/pipes.module';
 import { currentSystemResolver } from '@resolvers/current-system-resolver';
 import { SystemTitleResolver } from '@resolvers/system-title-resolver';
+import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystemService } from '@services/system.service/system.service';
 
 import { NxSystemAdminComponent } from './admin/admin.component';
@@ -53,6 +56,21 @@ const camerasExistActivator: CanActivateFn = async (
     return true;
 };
 
+const cameraResolver: ResolveFn<NxSystemCamera> = async (
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+) => {
+    const systemsService: NxSystemService = inject(NxSystemService);
+    const router: Router = inject(Router);
+    const currentSystem = systemsService.getCurrentSystem();
+    const cameraId = route.params.cameraId;
+    const ec2Camera = await currentSystem.mediaserver.getCamera(cameraId).toPromise();
+    if (ec2Camera) {
+        return currentSystem.cameraManager.parseCamera(ec2Camera);
+    }
+    router.navigateByUrl(createUrlTreeFromSnapshot(route, ['../']));
+    return undefined;
+};
 export const cloudSettingsRoutes: Routes = [
     {
         path: '',
@@ -124,7 +142,11 @@ export const cloudSettingsRoutes: Routes = [
                 title: SystemTitleResolver,
                 component: NxCamerasComponent,
                 canDeactivate: [ApplyGuard],
-                resolve: { system: currentSystemResolver },
+                resolve: {
+                    system: currentSystemResolver,
+                    camera: cameraResolver,
+                },
+                runGuardsAndResolvers: 'pathParamsChange',
             },
             {
                 path: 'cloud-storage',
