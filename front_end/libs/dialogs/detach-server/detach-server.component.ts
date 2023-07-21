@@ -1,12 +1,18 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
+import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { DetachServer as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { servers } from '@lib/variables/static-variables';
+import { PipesModule } from '@pipes/pipes.module';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
@@ -17,6 +23,16 @@ import { WINDOW } from '@services/window-provider';
     selector: 'nx-modal-detach-server-content',
     templateUrl: 'detach-server.component.html',
     styleUrls: [],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+
+        PipesModule,
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
+    ],
 })
 export class DetachServerModalContent extends ModalBase<DT['return']> implements AfterViewInit {
     @ViewChild('passwordInput') private passwordInput: ElementRef<HTMLInputElement>;

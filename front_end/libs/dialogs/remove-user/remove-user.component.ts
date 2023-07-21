@@ -1,7 +1,11 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
+import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { NxProcessService } from '@services/process.service';
@@ -14,6 +18,14 @@ import type { RemoveUser as DT } from '../dialogs.types';
     selector: 'nx-modal-remove-user-content',
     templateUrl: 'remove-user.component.html',
     styleUrls: [],
+    standalone: true,
+    imports: [
+        CommonModule,
+        TranslateModule,
+
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
+    ],
 })
 export class RemoveUserModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;

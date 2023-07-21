@@ -1,5 +1,8 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
+import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import dateFormat from 'dateformat';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -19,6 +22,8 @@ const TIME_FORMAT_STRING = 'HH:MM:ss';
     selector: 'nx-modal-select-time-range',
     templateUrl: 'select-time-range.component.html',
     styleUrls: ['select-time-range.component.scss'],
+    standalone: true,
+    imports: [CommonModule, FormsModule, TranslateModule],
 })
 export class SelectTimeRangeModalContent extends ModalBase<DT['return']> implements OnInit {
     CONFIG: IConfig;

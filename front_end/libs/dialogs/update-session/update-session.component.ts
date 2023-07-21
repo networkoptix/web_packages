@@ -1,9 +1,13 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { CommonModule } from '@angular/common';
 import { Component, Inject, ViewChild, ElementRef } from '@angular/core';
 import type { NgForm } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
+import { FormsModule } from '@angular/forms';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import type { UpdateSession as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
@@ -20,6 +24,15 @@ import { htmlStrConstructor } from '@utils/nx';
     selector: 'nx-update-session',
     templateUrl: 'update-session.component.html',
     styleUrls: ['update-session.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
+    ],
 })
 export class NxUpdateSessionModalContent extends ModalBase<DT['return']> {
     processAction: string;

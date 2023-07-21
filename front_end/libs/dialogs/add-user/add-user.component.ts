@@ -1,9 +1,16 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
+import { CommonModule } from '@angular/common';
 import { Component, Inject, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxPermissionsDropdown } from '@components/dropdowns/permissions/permissions.component';
+import { NxEmailComponent } from '@components/email-input/email.component';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import { ModalBase } from '@dialogs/modal-base';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -23,6 +30,17 @@ import type { AddUser as DT } from '../dialogs.types';
     selector: 'nx-modal-add-user-content',
     templateUrl: 'add-user.component.html',
     styleUrls: [],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+
+        NxEmailComponent,
+        NxPermissionsDropdown,
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
+    ],
 })
 export class AddUserModalContent extends ModalBase<DT['return']> {
     @ViewChild('addUserForm') private form: NgForm;

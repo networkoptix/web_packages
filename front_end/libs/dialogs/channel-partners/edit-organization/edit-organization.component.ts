@@ -1,9 +1,16 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, Inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
 import LANG from '@common/language/language_i18n_static.json';
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import type { EditOrganization as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
@@ -18,6 +25,17 @@ import { NxToastService } from '@services/toast.service';
     selector: 'nx-edit-organization',
     templateUrl: 'edit-organization.component.html',
     styleUrls: ['edit-organization.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+
+        NxGenericDropdownModule,
+        NxCheckboxComponent,
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
+    ],
 })
 export class NxEditOrganizationModalContent extends ModalBase<DT['return']> implements OnInit {
     states: DropdownItem<State>[];

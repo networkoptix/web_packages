@@ -1,10 +1,18 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import type { NgForm } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { firstValueFrom } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
+import { NxSearchableDropdown } from '@components/dropdowns/searchable/searchable.component';
 import type { SearchableDropdownItem } from '@components/dropdowns/searchable/searchable.component.types';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { ModalBase } from '@dialogs/modal-base';
@@ -25,6 +33,17 @@ interface UserItem extends SearchableDropdownItem {
     selector: 'nx-modal-transfer-ownership-content',
     templateUrl: './transfer-ownership.component.html',
     styleUrls: ['./transfer-ownership.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        AngularSvgIconModule,
+        TranslateModule,
+        NxSearchableDropdown,
+        NxAlertBlockComponent,
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
+    ],
 })
 export class TransferOwnershipModalContent extends ModalBase<DT['return']> implements OnInit {
     @ViewChild('transferOwnershipForm') form: NgForm;

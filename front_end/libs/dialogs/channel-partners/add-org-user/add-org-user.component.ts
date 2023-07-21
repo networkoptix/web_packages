@@ -1,9 +1,17 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, Inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 // import { MultiSelectItem } from '@components/dropdowns/multi-select/multi-select.component.types';
+// import { MultiSelectModule } from '@components/dropdowns/multi-select/multi-select.module';
+import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
+import { NxEmailComponent } from '@components/email-input/email.component';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import type { AddOrgUser as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
@@ -17,6 +25,18 @@ import { NxToastService } from '@services/toast.service';
     selector: 'nx-add-org-user',
     templateUrl: 'add-org-user.component.html',
     styleUrls: ['add-org-user.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+
+        NxEmailComponent,
+        NxGenericDropdownModule,
+        // MultiSelectModule,
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
+    ],
 })
 export class NxAddOrgUserModalContent extends ModalBase<DT['return']> implements OnInit {
     email: string;

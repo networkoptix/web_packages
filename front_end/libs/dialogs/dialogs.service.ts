@@ -11,7 +11,6 @@ import {
 import { DashboardConfiguration } from '@pages/dashboard/dashboard-configuration';
 
 import { DIALOG_SIZE } from './dialog-config-v2';
-import type { NxDialogsModule } from './dialogs.module';
 import * as Dt from './dialogs.types';
 import { NewFeatureTemplate } from './new-feature/new-feature.component.types';
 import { TfaAction } from './two-fa/two-fa.component.types';
@@ -21,8 +20,6 @@ export class NxDialogsService {
     constructor(private cdkDialog: Dialog) {}
 
     /* eslint-disable @typescript-eslint/no-explicit-any */
-    dialogsModule: NxDialogsModule;
-
     public async addWidget(
         gridSize: any,
         gridGap: any,

@@ -1,12 +1,16 @@
+import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { environment } from '@environments/environment';
+import { PipesModule } from '@pipes/pipes.module';
 
 @Component({
     selector: 'nx-modal-wizard',
     templateUrl: 'wizard.component.html',
     styleUrls: [],
+    standalone: true,
+    imports: [CommonModule, PipesModule],
 })
 export class WizardModalContent implements OnInit {
     public inlineUrl: string = '/static/inline.html';

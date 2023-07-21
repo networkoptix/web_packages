@@ -1,8 +1,12 @@
 import { DialogRef } from '@angular/cdk/dialog';
+import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import type { NgForm, NgModel } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { ModalBase } from '@dialogs/modal-base';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxProcessService } from '@services/process.service';
@@ -13,6 +17,8 @@ import type { DeleteCloudUser as DT } from '../dialogs.types';
 @Component({
     selector: 'nx-modal-delete-cloud-user-content',
     templateUrl: 'delete-cloud-user.component.html',
+    standalone: true,
+    imports: [CommonModule, FormsModule, NxProcessButtonComponent, NxProcessCancelButtonComponent],
 })
 export class DeleteCloudUserModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;

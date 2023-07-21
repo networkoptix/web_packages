@@ -1,18 +1,23 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { LocalStorageService } from 'ngx-webstorage';
 import { timer } from 'rxjs';
 import { delayWhen, retryWhen, map } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { ResetServer as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { environment } from '@environments/environment';
 import { servers } from '@lib/variables/static-variables';
+import { PipesModule } from '@pipes/pipes.module';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -26,6 +31,16 @@ import { cleanId } from '@utils/general';
     selector: 'nx-modal-reset-server-content',
     templateUrl: 'reset-server.component.html',
     styleUrls: [],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+
+        PipesModule,
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
+    ],
 })
 export class ResetServerModalContent extends ModalBase<DT['return']> implements AfterViewInit {
     @ViewChild('passwordInput') private passwordInput: ElementRef<HTMLInputElement>;

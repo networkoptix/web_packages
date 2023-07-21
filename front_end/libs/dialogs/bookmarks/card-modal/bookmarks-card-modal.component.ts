@@ -1,6 +1,12 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
+import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { ClipComponent } from '@components/clip/clip.component';
+import { NxPlayerPlaceholderComponent } from '@components/placeholders/player/player-placeholder.component';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { Bookmark } from '@pages/systems/bookmarks/bookmarks.types';
 import { icons } from '@variables/static-variables';
@@ -11,6 +17,15 @@ import { BookmarkDetails as DT } from '../../dialogs.types';
     selector: 'nx-bookmarks-card-modal',
     templateUrl: 'bookmarks-card-modal.component.html',
     styleUrls: ['bookmarks-card-modal.component.scss'],
+    standalone: true,
+    imports: [
+        AngularSvgIconModule,
+        CommonModule,
+        ClipComponent,
+        NxProcessButtonComponent,
+        TranslateModule,
+        NxPlayerPlaceholderComponent,
+    ],
 })
 export class NxBookmarksCardModalComponent {
     icons = icons;

@@ -1,5 +1,8 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
+import { CommonModule } from '@angular/common';
 import { Component, Inject, TemplateRef } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -14,6 +17,8 @@ import { NewFeatureTemplate } from './new-feature.component.types';
     selector: 'nx-modal-new-feature-content',
     templateUrl: 'new-feature.component.html',
     styleUrls: ['new-feature.component.scss'],
+    standalone: true,
+    imports: [CommonModule, AngularSvgIconModule, TranslateModule],
 })
 export class NewFeatureInformationModalContent extends ModalBase<DT['return']> {
     NewFeatureTemplate = NewFeatureTemplate;

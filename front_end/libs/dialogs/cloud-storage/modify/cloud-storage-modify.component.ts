@@ -11,11 +11,14 @@ import {
     BaseCloudStorageActionModalContent,
     CloudStorageActionType,
 } from '../action-common/BaseCloudStorageActionModalContent';
+import { CloudStorageModule } from '../cloud-storage.module';
 
 @Component({
     selector: 'nx-cloud-storage-modify-content',
     templateUrl: '../action-common/license-input-template.component.html',
     styleUrls: ['../action-common/styles.scss'],
+    standalone: true,
+    imports: [CloudStorageModule],
 })
 export class CloudStorageModifyModalContent extends BaseCloudStorageActionModalContent {
     actionType = CloudStorageActionType.MODIFY;

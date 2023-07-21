@@ -1,4 +1,5 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import {
     Component,
@@ -12,7 +13,7 @@ import {
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { cloneDeep, escape } from 'lodash-es';
 import { lastValueFrom } from 'rxjs';
 
@@ -48,6 +49,10 @@ import { WINDOW } from '@services/window-provider';
 import { assignFrom, alphabeticalSort, cleanIp, strSplice, cleanId } from '@utils/general';
 import { servers } from '@variables/static-variables';
 
+import { NxMergeAdminPasswordComponent } from './admin-password/admin-password.component';
+import { NxMergeChoosePrimaryComponent } from './choose-primary/choose-primary.component';
+import { NxMergeConfirmMergeComponent } from './confirm-merge/confirm-merge.component';
+import { NxMergeGenericMergeComponent } from './generic-merge/generic-merge.component';
 import {
     MergeErrorData,
     MergeState,
@@ -87,7 +92,17 @@ const stateProcesses = {
     selector: 'nx-merge-refactor-component',
     templateUrl: 'merge.refactor.component.html',
     styleUrls: ['merge.refactor.component.scss'],
-    // encapsulation: ViewEncapsulation.None
+    // encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [
+        CommonModule,
+        TranslateModule,
+        NxMergeSelectSystemComponent,
+        NxMergeAdminPasswordComponent,
+        NxMergeChoosePrimaryComponent,
+        NxMergeConfirmMergeComponent,
+        NxMergeGenericMergeComponent,
+    ],
 })
 export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit, OnDestroy {
     @ViewChild('nxMergeSelectSystem', { static: false }) selectSystem: NxMergeSelectSystemComponent;

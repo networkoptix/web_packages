@@ -1,4 +1,5 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import {
     Component,
@@ -9,16 +10,24 @@ import {
     Inject,
     LOCALE_ID,
 } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { cloneDeep, escape } from 'lodash-es';
+import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxRadioComponent } from '@components/radio/radio.component';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { DirectivesModule } from '@directives/directives.module';
 import { environment } from '@environments/environment';
 import { icons, servers } from '@lib/variables/static-variables';
+import { PipesModule } from '@pipes/pipes.module';
 import { NxAccountService } from '@services/account.service';
 import type { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -50,6 +59,19 @@ interface NxSystemModuleInfo extends NxSystemInfo {
     selector: 'nx-modal-merge-content',
     templateUrl: 'merge.component.html',
     styleUrls: ['merge.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+        NgxTranslateCutModule,
+        AngularSvgIconModule,
+        DirectivesModule,
+        PipesModule,
+        NxGenericDropdownModule,
+        NxRadioComponent,
+        NxProcessButtonComponent,
+    ],
 })
 export class MergeModalContent {
     @Input() closable = true;

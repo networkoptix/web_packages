@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
     Component,
     EventEmitter,
@@ -7,11 +8,14 @@ import {
     OnChanges,
     ViewChild,
 } from '@angular/core';
-import { NgModel } from '@angular/forms';
+import { FormsModule, NgModel } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
+import { DirectivesModule } from '@directives/directives.module';
 import { Process } from '@services/process.service/process';
 import { ModuleInformation } from '@services/system-api.types';
 import { NxSystem } from '@services/system.service/system';
@@ -27,6 +31,14 @@ import type {
     selector: 'nx-merge-select-system-component',
     templateUrl: 'select-system.component.html',
     styleUrls: ['select-system.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        DirectivesModule,
+        NxGenericDropdownModule,
+        NxProcessButtonComponent,
+    ],
 })
 export class NxMergeSelectSystemComponent implements OnInit, OnChanges {
     LANG = staticLang;

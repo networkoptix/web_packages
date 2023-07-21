@@ -1,13 +1,18 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
+import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, Inject, OnInit, Renderer2, ViewChild, ElementRef } from '@angular/core';
 import type { NgForm } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
 import { LocalStorageService } from 'ngx-webstorage';
 import { Observable, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { ModalBase } from '@dialogs/modal-base';
 import { environment } from '@environments/environment';
 import { apiBase, oauthStore } from '@lib/variables/static-variables';
@@ -54,6 +59,15 @@ interface Introspect extends Omit<Token, 'refresh_token'> {
     selector: 'nx-modal-connect-cloud-content',
     templateUrl: 'connect-cloud.component.html',
     styleUrls: [],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
+    ],
 })
 export class ConnectCloudModalContent extends ModalBase<DT['return']> implements OnInit {
     @ViewChild('connectForm', { static: true }) private connectForm: NgForm;

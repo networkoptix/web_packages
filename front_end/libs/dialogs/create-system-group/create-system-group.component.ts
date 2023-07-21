@@ -1,10 +1,15 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
+import { CommonModule } from '@angular/common';
 import { Component, Inject, ViewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { NgForm } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import type { CreateSystemGroup as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { NxSystemGroupsService } from '@pages/home/services/system-groups.service';
@@ -19,6 +24,14 @@ import { assignFrom } from '@utils/general';
     selector: 'nx-modal-create-system-group-content',
     templateUrl: 'create-system-group.component.html',
     styleUrls: ['create-system-group.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
+        TranslateModule,
+    ],
 })
 export class CreateSystemGroupModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;

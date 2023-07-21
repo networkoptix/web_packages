@@ -11,17 +11,15 @@ import { NxProcessCancelButtonComponent } from '@components/process-cancel-Butto
 import { NxTagComponent } from '@components/tag/tag.component';
 import { PipesModule } from '@pipes/pipes.module';
 
-import { CloudStorageActivateModalContent } from './activate/cloud-storage-activate.component';
-import { CloudStorageDeleteModalContent } from './delete/cloud-storage-delete.component';
-import { CloudStorageModifyModalContent } from './modify/cloud-storage-modify.component';
-import { CloudStorageMoveModalContent } from './move/cloud-storage-move.component';
-
 @NgModule({
-    imports: [
+    imports: [NxTagComponent, NxProcessButtonComponent, NxProcessCancelButtonComponent],
+    declarations: [],
+    providers: [],
+    exports: [
         CommonModule,
         FormsModule,
         AngularSvgIconModule,
-        NgxMaskModule.forRoot(),
+        NgxMaskModule,
         TranslateModule,
 
         NxTagComponent,
@@ -30,13 +28,5 @@ import { CloudStorageMoveModalContent } from './move/cloud-storage-move.componen
         NxProcessCancelButtonComponent,
         PipesModule,
     ],
-    declarations: [
-        CloudStorageActivateModalContent,
-        CloudStorageDeleteModalContent,
-        CloudStorageModifyModalContent,
-        CloudStorageMoveModalContent,
-    ],
-    providers: [],
-    exports: [],
 })
 export class CloudStorageModule {}

@@ -1,5 +1,5 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, CommonModule } from '@angular/common';
 import {
     Component,
     OnInit,
@@ -12,18 +12,25 @@ import {
     ElementRef,
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { QrCodeModule } from 'ng-qrcode';
 import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
 import { CookieService } from 'ngx-cookie-service';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { accountActions } from '@common/store/account';
+import { NxInfoBlockComponent } from '@components/info-block/info-block.component';
 import {
     InfoBlockLine,
     InfoBlockSection,
     InfoBlockSize,
 } from '@components/info-block/info-block.component.types';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { icons, apiBase, credentialsValidation } from '@lib/variables/static-variables';
@@ -46,6 +53,19 @@ import { TfaAction, T_FA_STEPS } from './two-fa.component.types';
     selector: 'nx-two-fa-modal-content',
     templateUrl: 'two-fa.component.html',
     styleUrls: ['two-fa.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+
+        AngularSvgIconModule,
+        QrCodeModule,
+        TranslateModule,
+
+        NxInfoBlockComponent,
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
+    ],
 })
 export class TwoFAModalContent<A extends TfaAction>
     extends ModalBase<Account2faReturn>
