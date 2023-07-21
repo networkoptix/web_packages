@@ -4,7 +4,8 @@ import { images } from '@variables/static-variables';
 
 import { NxSupportComponent } from './support.component';
 
-const setupSupportComponent = (): ReturnType<typeof setupComponent<NxSupportComponent>> => setupComponent(NxSupportComponent, { supportNode });
+const setupSupportComponent = (): ReturnType<typeof setupComponent<NxSupportComponent>> =>
+    setupComponent(NxSupportComponent, { supportNode });
 
 const [_, expectedLeftBackground, expectedRightBackground] = supportNode.icon.split(' ');
 
@@ -16,7 +17,9 @@ describe('NxSupportComponent', () => {
 
     it('should show the correct heading', async () => {
         const { debugElement } = await setupSupportComponent();
-        const heading = debugElement.nativeElement.querySelector('.support-link').textContent.trim();
+        const heading = debugElement.nativeElement
+            .querySelector('.support-link')
+            .textContent.trim();
         expect(heading).toBe(supportNode.title);
     });
 
@@ -28,13 +31,15 @@ describe('NxSupportComponent', () => {
 
     it('should show the correct background on left side', async () => {
         const { debugElement } = await setupSupportComponent();
-        const leftBackground = debugElement.nativeElement.querySelector('.left-image > svg-icon').dataset.src;
+        const leftBackground =
+            debugElement.nativeElement.querySelector('.left-image > svg-icon').dataset.src;
         expect(leftBackground).toBe(images.dirDevelopers + expectedLeftBackground);
     });
 
     it('should show the correct background on right side', async () => {
         const { debugElement } = await setupSupportComponent();
-        const rightBackground = debugElement.nativeElement.querySelector('.right-image > svg-icon').dataset.src;
+        const rightBackground =
+            debugElement.nativeElement.querySelector('.right-image > svg-icon').dataset.src;
         expect(rightBackground).toBe(images.dirDevelopers + expectedRightBackground);
     });
 });

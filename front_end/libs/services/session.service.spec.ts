@@ -7,10 +7,12 @@ const setupSessionService = async (): Promise<{
 }> => {
     const { inject } = await setupTestBed();
     const sessionService = inject(NxSessionService);
-    const clearByName = jest.spyOn(sessionService.nxCache, 'clearByName').mockImplementation(() => Promise.resolve([]));
+    const clearByName = jest
+        .spyOn(sessionService.nxCache, 'clearByName')
+        .mockImplementation(() => Promise.resolve([]));
     return {
         sessionService,
-        clearByName
+        clearByName,
     };
 };
 

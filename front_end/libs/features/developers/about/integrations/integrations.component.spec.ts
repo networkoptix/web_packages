@@ -1,9 +1,7 @@
 import { DebugElement } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-import {
-    integrationsNode
-} from '@mocks/knowledge_base_landing.mock';
+import { integrationsNode } from '@mocks/knowledge_base_landing.mock';
 import { setupComponent } from '@pages/src/setup';
 
 import { NxIntegrationsComponent } from './integrations.component';
@@ -15,10 +13,11 @@ const firstPluginNode = pluginsNode.nodes[0];
 const integrations = { count: 32 };
 
 const cloudApi = {
-    getIntegrationsCount: () => new BehaviorSubject(integrations)
+    getIntegrationsCount: () => new BehaviorSubject(integrations),
 } as unknown as NxIntegrationsComponent['cloudApi'];
 
-const setupIntegrationsComponent = (): ReturnType<typeof setupComponent<NxIntegrationsComponent>> => setupComponent(NxIntegrationsComponent, { integrationsNode, cloudApi });
+const setupIntegrationsComponent = (): ReturnType<typeof setupComponent<NxIntegrationsComponent>> =>
+    setupComponent(NxIntegrationsComponent, { integrationsNode, cloudApi });
 
 const getInfoBlock = (debugElement: DebugElement) => {
     const block = debugElement.nativeElement.querySelector('.info-block');
@@ -37,7 +36,7 @@ const getPluginsBlock = (debugElement: DebugElement) => {
     const firstPluginBlock = block.querySelector('.integration-block');
     const firstPlugin = {
         altText: firstPluginBlock.querySelector('img').alt,
-        iconSrc: firstPluginBlock.querySelector('img').src
+        iconSrc: firstPluginBlock.querySelector('img').src,
     };
     return { title, button, shownPlugins, firstPlugin };
 };
@@ -99,6 +98,8 @@ describe('NxIntegrationsComponent', () => {
 
     it('should show the correct plugin icon', async () => {
         const { debugElement } = await setupIntegrationsComponent();
-        expect(getPluginsBlock(debugElement).firstPlugin.iconSrc).toBe(firstPluginNode.asset.information.logo);
+        expect(getPluginsBlock(debugElement).firstPlugin.iconSrc).toBe(
+            firstPluginNode.asset.information.logo,
+        );
     });
 });

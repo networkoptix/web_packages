@@ -15,7 +15,7 @@ const setupBootstrapProvider = async (): Promise<{
     const { inject } = await setupTestBed();
     return {
         bootstrapService: inject(NxBootstrapProvider),
-        configService: inject(NxConfigService)
+        configService: inject(NxConfigService),
     };
 };
 

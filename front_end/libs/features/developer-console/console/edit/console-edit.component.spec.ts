@@ -22,7 +22,7 @@ import { NxDevConsoleEditComponent } from './console-edit.component';
         <div>
             <ng-content></ng-content>
         </div>
-    `
+    `,
 })
 class MockContentBlockComponent {}
 
@@ -32,13 +32,13 @@ class MockContentBlockComponent {}
         <div>
             <ng-content></ng-content>
         </div>
-    `
+    `,
 })
 class MockContentBlockSectionComponent {}
 
 @Component({
     selector: 'nx-process-button',
-    template: '<div></div>'
+    template: '<div></div>',
 })
 class MockProcessButtonComponent {
     @Input() process;
@@ -51,7 +51,7 @@ class MockProcessButtonComponent {
 
 @Component({
     selector: 'nx-cancel-button',
-    template: '<div></div>'
+    template: '<div></div>',
 })
 class MockProcessCancelButtonComponent {
     @Input() discardFn;
@@ -60,7 +60,7 @@ class MockProcessCancelButtonComponent {
 
 @Component({
     selector: 'nx-pre-loader',
-    template: '<div></div>'
+    template: '<div></div>',
 })
 class MockPreLoaderComponentComponent {}
 
@@ -75,50 +75,47 @@ describe('NxDevConsoleEditComponent', () => {
         snapshot: {
             params: {
                 section: 'custom-clients',
-                id: uuid()
-            }
-        }
+                id: uuid(),
+            },
+        },
     };
     const processMock = {
-        createProcess: () => Promise.resolve()
+        createProcess: () => Promise.resolve(),
     };
     const cloudMock = {};
     const headerMock = {
         currentLocation: { parentNode: { nodes: [] } },
-        setLocation: () => {}
+        setLocation: () => {},
     };
 
-    const getSection =
-        field => debugElement.nativeElement.querySelector(`.section-${field.name}`);
+    const getSection = field => debugElement.nativeElement.querySelector(`.section-${field.name}`);
 
     beforeEach(waitForAsync(() => {
-        TestBed
-            .configureTestingModule({
-                declarations: [
-                    NxDevConsoleEditComponent,
-                    MockContentBlockComponent,
-                    MockContentBlockSectionComponent,
-                    MockProcessButtonComponent,
-                    MockProcessCancelButtonComponent,
-                    MockPreLoaderComponentComponent,
-                    MockDirective(NxTooltipDirective),
-                ],
-                imports: [
-                    CommonModule,
-                    TranslateModule.forRoot(),
-                    HttpClientTestingModule,
-                    FormsModule,
-                ],
-                providers: [
-                    { provide: NxHeaderService, useValue: headerMock },
-                    { provide: ActivatedRoute, useValue: routeMock },
-                    { provide: Router, useValue: {} },
-                    { provide: NxConsoleService, useValue: { unsavedAssets: {} } },
-                    { provide: NxProcessService, useValue: processMock },
-                    { provide: NxCloudApiService, useValue: cloudMock }
-                ]
-            })
-            .compileComponents();
+        TestBed.configureTestingModule({
+            declarations: [
+                NxDevConsoleEditComponent,
+                MockContentBlockComponent,
+                MockContentBlockSectionComponent,
+                MockProcessButtonComponent,
+                MockProcessCancelButtonComponent,
+                MockPreLoaderComponentComponent,
+                MockDirective(NxTooltipDirective),
+            ],
+            imports: [
+                CommonModule,
+                TranslateModule.forRoot(),
+                HttpClientTestingModule,
+                FormsModule,
+            ],
+            providers: [
+                { provide: NxHeaderService, useValue: headerMock },
+                { provide: ActivatedRoute, useValue: routeMock },
+                { provide: Router, useValue: {} },
+                { provide: NxConsoleService, useValue: { unsavedAssets: {} } },
+                { provide: NxProcessService, useValue: processMock },
+                { provide: NxCloudApiService, useValue: cloudMock },
+            ],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(NxDevConsoleEditComponent);
         component = fixture.componentInstance;
@@ -128,7 +125,7 @@ describe('NxDevConsoleEditComponent', () => {
             placeholder: uuid(),
             description: uuid(),
             label: uuid(),
-            optional: false
+            optional: false,
         };
         const context = { name: '', label: '', global: false, fields: [expectedField] };
         component.context = context;
@@ -162,7 +159,8 @@ describe('NxDevConsoleEditComponent', () => {
 
         const applyWrapper = debugElement.nativeElement.querySelector('.apply-wrapper');
         expect(applyWrapper.querySelector('.input-error')?.textContent.trim()).toEqual(
-            'Fill in all required fields');
+            'Fill in all required fields',
+        );
     });
 
     it('should display field', () => {
@@ -174,8 +172,7 @@ describe('NxDevConsoleEditComponent', () => {
         fixture.detectChanges();
 
         const section = getSection(expectedField);
-        expect(section.querySelector('label').textContent.trim()).toEqual(
-            expectedField.label);
+        expect(section.querySelector('label').textContent.trim()).toEqual(expectedField.label);
     });
 
     it('should display correct label when not optional', () => {
@@ -187,32 +184,30 @@ describe('NxDevConsoleEditComponent', () => {
         const label = section.querySelector('label');
         const requiredAsterisk = ' *';
 
-        expect(label.textContent.trim()).toEqual(
-            expectedField.label + requiredAsterisk);
+        expect(label.textContent.trim()).toEqual(expectedField.label + requiredAsterisk);
         expect(label.querySelector('.input-error').textContent.trim()).toEqual(
-            requiredAsterisk.trim());
+            requiredAsterisk.trim(),
+        );
     });
 
     it('should display description', () => {
         const section = getSection(expectedField);
         const contextFieldDescription = section.querySelector('.context-field-description');
         expect(contextFieldDescription).toBeTruthy();
-        expect(contextFieldDescription.textContent.trim()).toEqual(
-            expectedField.description);
+        expect(contextFieldDescription.textContent.trim()).toEqual(expectedField.description);
     });
 
     it('should display field errors', () => {
         const expectedError = uuid();
         component.errors = {
-            [expectedField.name]: [expectedError]
+            [expectedField.name]: [expectedError],
         };
         fixture.detectChanges();
 
         const section = getSection(expectedField);
         const errorsDiv = section.querySelector('.d-flex.flex-column');
         expect(errorsDiv).toBeTruthy();
-        expect(errorsDiv.querySelector('.input-error').textContent.trim()).toEqual(
-            expectedError);
+        expect(errorsDiv.querySelector('.input-error').textContent.trim()).toEqual(expectedError);
     });
 
     it('should render input for field', () => {
@@ -220,24 +215,20 @@ describe('NxDevConsoleEditComponent', () => {
     });
 
     it('should have label with correct type', () => {
-        expect(input.type).toEqual(
-            expectedField.type);
+        expect(input.type).toEqual(expectedField.type);
     });
 
     it('should have correct placeholder', () => {
-        expect(input.placeholder).toEqual(
-            expectedField.placeholder);
+        expect(input.placeholder).toEqual(expectedField.placeholder);
     });
 
     it('should be for correct label for field', () => {
         const section = getSection(expectedField);
-        expect(section.querySelector('label').htmlFor).toEqual(
-            expectedField.name);
+        expect(section.querySelector('label').htmlFor).toEqual(expectedField.name);
     });
 
     it('should match asset model value and input value', () => {
-        expect(input.value).toEqual(
-            expectedAssetValue);
+        expect(input.value).toEqual(expectedAssetValue);
     });
 
     it('should update model when input updates', () => {
@@ -248,8 +239,7 @@ describe('NxDevConsoleEditComponent', () => {
         fixture.detectChanges();
         fixture.whenStable().then(() => {
             const assetFieldValue = component.asset.values[expectedField.name];
-            expect(assetFieldValue).toEqual(
-                updatedValue);
+            expect(assetFieldValue).toEqual(updatedValue);
         });
     });
 });

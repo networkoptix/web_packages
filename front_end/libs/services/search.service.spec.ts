@@ -1,8 +1,5 @@
 import { NxSearchService } from './search.service';
-import {
-    ButtonArrowType,
-    SearchModel
-} from './search.service.types';
+import { ButtonArrowType, SearchModel } from './search.service.types';
 import { setupTestBed } from './src/setup';
 
 const setupSearchService = async (): Promise<{
@@ -17,7 +14,7 @@ const setupSearchService = async (): Promise<{
         queryAndMatch: '',
         queryOrMatch: '',
         queryEndsWith: '',
-        queryStartsWith: ''
+        queryStartsWith: '',
     };
 
     return {

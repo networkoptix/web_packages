@@ -65,15 +65,19 @@ const dropdownsMock: DropdownStorage[] = [
 
         selected: false,
         value: '',
-    }
+    },
 ];
 
-const setupSystemServerComponent = async (): ReturnType<typeof setupComponent<NxSystemStandardServerComponent>> => {
-    NxSystemStandardServerComponent.prototype.system = {} as typeof NxSystemStandardServerComponent.prototype.system;
+const setupSystemServerComponent = async (): ReturnType<
+    typeof setupComponent<NxSystemStandardServerComponent>
+> => {
+    NxSystemStandardServerComponent.prototype.system =
+        {} as typeof NxSystemStandardServerComponent.prototype.system;
     const setup = await setupComponent(NxSystemStandardServerComponent);
     (setup.component.route.queryParams as BehaviorSubject<unknown>).next({ state: undefined });
     setup.component.dropdownStorages = JSON.parse(
-        JSON.stringify(dropdownsMock)) as typeof setup.component.dropdownStorages;
+        JSON.stringify(dropdownsMock),
+    ) as typeof setup.component.dropdownStorages;
     setup.fixture.detectChanges();
     return setup;
 };

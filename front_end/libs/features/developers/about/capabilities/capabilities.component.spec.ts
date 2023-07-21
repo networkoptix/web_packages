@@ -21,17 +21,16 @@ capabilitiesNode.url = 'testUrl';
 const getFirstBlockContent = (debugElement: DebugElement): BlockContent => {
     const detailBlock = debugElement.nativeElement.querySelector('.capability-card');
     const header = detailBlock.querySelector('header');
-    const introLine = header
-        .querySelector('.intro-line').textContent.trim();
+    const introLine = header.querySelector('.intro-line').textContent.trim();
     const heading = header.querySelector('h3').textContent.trim();
-    const details = detailBlock
-        .querySelector('.capability-detail').textContent.trim();
+    const details = detailBlock.querySelector('.capability-detail').textContent.trim();
     const headerBackground = header.style.backgroundImage;
 
     return { details, introLine, headerBackground, heading };
 };
 
-const setupCapabilitiesComponent = (): ReturnType<typeof setupComponent<NxCapabilitiesComponent>> => setupComponent(NxCapabilitiesComponent, { capabilitiesNode });
+const setupCapabilitiesComponent = (): ReturnType<typeof setupComponent<NxCapabilitiesComponent>> =>
+    setupComponent(NxCapabilitiesComponent, { capabilitiesNode });
 
 describe('NxCapabilitiesComponent', () => {
     it('should create the component', async () => {
@@ -41,13 +40,16 @@ describe('NxCapabilitiesComponent', () => {
 
     it('should display the correct heading', async () => {
         const { debugElement } = await setupCapabilitiesComponent();
-        const headingText = debugElement.nativeElement.querySelector('.heading-link').textContent.trim();
+        const headingText = debugElement.nativeElement
+            .querySelector('.heading-link')
+            .textContent.trim();
         expect(headingText).toBe(capabilitiesNode.title);
     });
 
     it('should display the correct number of blocks', async () => {
         const { debugElement } = await setupCapabilitiesComponent();
-        const detailBlockCount = debugElement.nativeElement.querySelectorAll('.capability-card').length;
+        const detailBlockCount =
+            debugElement.nativeElement.querySelectorAll('.capability-card').length;
         expect(detailBlockCount).toBe(capabilitiesNode.nodes.length);
     });
 

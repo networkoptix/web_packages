@@ -9,21 +9,23 @@ import { NxDevConsoleMenuComponent } from './console-menu.component';
 
 const menusMock = {
     getMenu: () => ({
-        subscribe: () => {}
-    })
+        subscribe: () => {},
+    }),
 };
 
-const menuMock = [...Array(
-    Math.round(Math.random() * 20) + 1
-)].map(_ => ({
+const menuMock = [...Array(Math.round(Math.random() * 20) + 1)].map(_ => ({
     title: uuid(),
     url: uuid(),
-    icon: uuid()
+    icon: uuid(),
 }));
 
-const setupConsoleMenuComponent = (): ReturnType<typeof setupComponent<NxDevConsoleMenuComponent>> => testBedSetupFactory([], [
-    { provide: NxMenusService, useValue: menusMock },
-])(NxDevConsoleMenuComponent);
+const setupConsoleMenuComponent = (): ReturnType<
+    typeof setupComponent<NxDevConsoleMenuComponent>
+> =>
+    testBedSetupFactory(
+        [],
+        [{ provide: NxMenusService, useValue: menusMock }],
+    )(NxDevConsoleMenuComponent);
 
 describe('NxDevConsoleMenuComponent', () => {
     it('should create NxDevConsoleMenuComponent', async () => {
@@ -44,7 +46,8 @@ describe('NxDevConsoleMenuComponent', () => {
         component.type = ConsoleMode.EDIT;
         fixture.detectChanges();
         expect(debugElement.nativeElement.querySelector('h3').textContent.trim()).toEqual(
-            'Content');
+            'Content',
+        );
     });
 
     it('should not show additional links by default', async () => {
@@ -88,11 +91,11 @@ describe('NxDevConsoleMenuComponent', () => {
         component.type = ConsoleMode.EDIT;
         component.loading = false;
         fixture.detectChanges();
-        const nodes = [...debugElement.nativeElement.querySelector(
-            `.${ConsoleMode.EDIT}`).children];
-        nodes.forEach((
-            { textContent }, index
-        ) => expect(textContent).toEqual(
-            menuMock[index].title));
+        const nodes = [
+            ...debugElement.nativeElement.querySelector(`.${ConsoleMode.EDIT}`).children,
+        ];
+        nodes.forEach(({ textContent }, index) =>
+            expect(textContent).toEqual(menuMock[index].title),
+        );
     });
 });

@@ -15,12 +15,12 @@ import { NxDevToolsComponent } from './dev-tools.component';
 const mockRoute = {
     snapshot: {
         paramMap: {
-            get: () => 'developers'
-        }
-    }
+            get: () => 'developers',
+        },
+    },
 };
 const cloudApiMock = {
-    getDocumentation: () => of(devToolsNode)
+    getDocumentation: () => of(devToolsNode),
 };
 
 const providers = [
@@ -34,7 +34,7 @@ const setupDevToolsComponent = (): ReturnType<typeof setupComponent<NxDevToolsCo
     nxConfig.docMenuMap.developers = {
         '': 'Platform overview (For developers landing)',
         'dev-tools': 'test - Developer Tools',
-        knowledgebase: 'For Developers Knowledge Base'
+        knowledgebase: 'For Developers Knowledge Base',
     };
     return testBedSetupFactory([], providers)(NxDevToolsComponent);
 };
@@ -51,7 +51,9 @@ describe('NxDevToolsComponent', () => {
         component.devToolsNode = devToolsNode;
         component.title = devToolsNode.title;
         fixture.detectChanges();
-        const heading = debugElement.nativeElement.querySelector('.heading-link').textContent.trim();
+        const heading = debugElement.nativeElement
+            .querySelector('.heading-link')
+            .textContent.trim();
         expect(heading).toBe(devToolsNode.title);
     });
 
@@ -64,14 +66,18 @@ describe('NxDevToolsComponent', () => {
     it('should show the correct tool block heading', async () => {
         const { component, debugElement } = await setupDevToolsComponent();
         component.devToolsNode = devToolsNode;
-        const toolBlockHeading = debugElement.nativeElement.querySelector('.tool-detail > h3').textContent.trim();
+        const toolBlockHeading = debugElement.nativeElement
+            .querySelector('.tool-detail > h3')
+            .textContent.trim();
 
         expect(toolBlockHeading).toBe(devToolsNode.nodes[0].asset.title);
     });
 
     it('should show the correct tool block content', async () => {
         const { debugElement } = await setupDevToolsComponent();
-        const toolBlockContent = debugElement.nativeElement.querySelector('.tool-detail > p').textContent.trim();
+        const toolBlockContent = debugElement.nativeElement
+            .querySelector('.tool-detail > p')
+            .textContent.trim();
         expect(toolBlockContent).toBe(devToolsNode.nodes[0].asset.shortDescription);
     });
 });

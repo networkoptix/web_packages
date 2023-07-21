@@ -3,11 +3,18 @@ import { GridBreakpoints } from '@styles/theme-variables-common';
 
 import { setupTestBed } from './src/setup';
 
-const setupScrollService = async (): Promise<{ scroll: NxScrollMechanicsService; patchMatchMedia }> => {
-    const { inject, patchWindow: { patchMatchMedia } } = await setupTestBed();
+const setupScrollService = async (): Promise<{
+    scroll: NxScrollMechanicsService;
+    patchMatchMedia;
+}> => {
+    const {
+        inject,
+        patchWindow: { patchMatchMedia },
+    } = await setupTestBed();
     const scroll = inject(NxScrollMechanicsService);
     return {
-        scroll, patchMatchMedia
+        scroll,
+        patchMatchMedia,
     };
 };
 

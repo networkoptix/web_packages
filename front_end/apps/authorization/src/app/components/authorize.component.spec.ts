@@ -25,7 +25,7 @@ describe('NxAuthorizeComponent', () => {
                 name_raw: '',
                 queryParamsHandling: '',
                 nodes: [],
-                invisible: false
+                invisible: false,
             },
             {
                 name: 'Terms',
@@ -43,7 +43,7 @@ describe('NxAuthorizeComponent', () => {
                 name_raw: '',
                 queryParamsHandling: '',
                 nodes: [],
-                invisible: false
+                invisible: false,
             },
             {
                 name: 'Privacy Policy',
@@ -61,9 +61,9 @@ describe('NxAuthorizeComponent', () => {
                 name_raw: '',
                 queryParamsHandling: '',
                 nodes: [],
-                invisible: false
-            }
-        ]
+                invisible: false,
+            },
+        ],
     };
 
     it('should create the component', async () => {

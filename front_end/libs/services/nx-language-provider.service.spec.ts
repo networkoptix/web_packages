@@ -31,11 +31,19 @@ describe('Language provider service', () => {
 
     it('should have setter and getter (currentLang)', async () => {
         const langProvider = await setupLangProvider();
-        jest.spyOn(langProvider, 'loadLanguage').mockImplementation(() => of({ Cancel: 'Cancel' }).toPromise());
-        const clearUriCache = jest.spyOn(langProvider.cacheService, 'clearData').mockImplementation(() => {});
-        const clearAllCache = jest.spyOn(langProvider.swCacheService, 'clearAllCache').mockImplementation(() => Promise.resolve([]));
+        jest.spyOn(langProvider, 'loadLanguage').mockImplementation(() =>
+            of({ Cancel: 'Cancel' }).toPromise(),
+        );
+        const clearUriCache = jest
+            .spyOn(langProvider.cacheService, 'clearData')
+            .mockImplementation(() => {});
+        const clearAllCache = jest
+            .spyOn(langProvider.swCacheService, 'clearAllCache')
+            .mockImplementation(() => Promise.resolve([]));
         const translation = { [uuid()]: uuid() };
-        const loadLanguage = jest.spyOn(langProvider, 'loadLanguage').mockImplementation(() => Promise.resolve(translation));
+        const loadLanguage = jest
+            .spyOn(langProvider, 'loadLanguage')
+            .mockImplementation(() => Promise.resolve(translation));
         const lang = uuid();
         langProvider.currentLang = lang;
         expect(langProvider.translate.currentLang).toBe(lang);

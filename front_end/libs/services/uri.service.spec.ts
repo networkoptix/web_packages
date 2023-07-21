@@ -17,19 +17,19 @@ describe('Uri Service', () => {
     const configMock = { getConfig: () => nxConfig };
     const queryParams = {
         param1: 'value1',
-        param2: 'value2'
+        param2: 'value2',
     };
     const routeMock = {
         queryParams: of(queryParams),
         snapshot: {
             queryParams: {
-                page: 'test'
-            }
-        }
+                page: 'test',
+            },
+        },
     };
     const routerMock = {
         url: 'https://cloud-test.hdw.mx/authorize?view_type=desktop&client_type=renewDesktop',
-        navigate: () => Promise.resolve(true)
+        navigate: () => Promise.resolve(true),
     };
 
     beforeEach(waitForAsync(() => {
@@ -39,8 +39,8 @@ describe('Uri Service', () => {
                 { provide: NxConfigService, useValue: configMock },
                 { provide: Router, useValue: routerMock },
                 { provide: ActivatedRoute, useValue: routeMock },
-                { provide: WINDOW, useValue: window }
-            ]
+                { provide: WINDOW, useValue: window },
+            ],
         });
         uriService = TestBed.inject(NxUriService);
         uriService['CONFIG'] = configMock.getConfig();
@@ -82,23 +82,28 @@ describe('Uri Service', () => {
     });
 
     it('should return base system settings with systemId', () => {
-        expect(uriService.getSystemSettingsRoute({ systemId: 'systemId' }))
-            .toBe('/systems/systemId');
+        expect(uriService.getSystemSettingsRoute({ systemId: 'systemId' })).toBe(
+            '/systems/systemId',
+        );
     });
 
     it('should return system settings with childRoutes', () => {
-        expect(uriService.getSystemSettingsRoute({
-            systemId: 'systemId',
-            childRoute: ChildRoutes.VIEW,
-            cameraId: 'cameraId'
-        })).toBe('/systems/systemId/view/');
+        expect(
+            uriService.getSystemSettingsRoute({
+                systemId: 'systemId',
+                childRoute: ChildRoutes.VIEW,
+                cameraId: 'cameraId',
+            }),
+        ).toBe('/systems/systemId/view/');
     });
 
     it('should return system settings with serverId', () => {
-        expect(uriService.getSystemSettingsRoute({
-            systemId: 'systemId',
-            serverId: 'serverId'
-        })).toBe('/systems/systemId/servers/serverId');
+        expect(
+            uriService.getSystemSettingsRoute({
+                systemId: 'systemId',
+                serverId: 'serverId',
+            }),
+        ).toBe('/systems/systemId/servers/serverId');
     });
 
     // This seems to mess with the test runner itself, hah, so commenting out this function

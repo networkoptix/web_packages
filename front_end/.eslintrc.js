@@ -395,7 +395,7 @@ module.exports = {
         {
             files: [
                 '*.?(m)js',
-                // '*.js', '*.ts'
+                // '*.ts'
                 '*.module.ts',
                 '*types.ts',
                 '[0-k]*/**/*.ts',
@@ -412,8 +412,6 @@ module.exports = {
                 '[m-z]*/**/*.ts',
             ],
             excludedFiles: [
-                // Lower priority
-                '*.spec.ts',
                 // Probably very out of date and of questionable worth at this point
                 'common/_mocks/**/*.ts',
             ],

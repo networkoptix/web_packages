@@ -13,7 +13,7 @@ const setupAppSource = async (): Promise<{
     const appSourceService = inject(NxAppSourceService);
     return {
         appSourceService,
-        systemMock
+        systemMock,
     };
 };
 
@@ -32,11 +32,9 @@ describe('AppSource Service', () => {
 
     it('should return baseUrl if local', async () => {
         const { appSourceService, systemMock } = await setupAppSource();
-        Object.defineProperty(
-            appSourceService,
-            'environment',
-            { value: { ...appSourceService.environment, isLocal: true } }
-        );
+        Object.defineProperty(appSourceService, 'environment', {
+            value: { ...appSourceService.environment, isLocal: true },
+        });
         const base = `${menus.systemHealth.baseUrl}`;
         const url = appSourceService.getMenuBase(systemMock);
         expect(url).toBe(base);

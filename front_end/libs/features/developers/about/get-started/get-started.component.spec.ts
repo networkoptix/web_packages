@@ -1,8 +1,6 @@
 import { DebugElement } from '@angular/core';
 
-import {
-    getStartedNode
-} from '@mocks/knowledge_base_landing.mock';
+import { getStartedNode } from '@mocks/knowledge_base_landing.mock';
 import { setupComponent } from '@pages/src/setup';
 import { images } from '@variables/static-variables';
 
@@ -13,7 +11,8 @@ interface StepContent {
     imageSrc: string;
 }
 
-const setupGetStartedComponent = (): ReturnType<typeof setupComponent<NxGetStartedComponent>> => setupComponent(NxGetStartedComponent, { getStartedNode });
+const setupGetStartedComponent = (): ReturnType<typeof setupComponent<NxGetStartedComponent>> =>
+    setupComponent(NxGetStartedComponent, { getStartedNode });
 
 const stepToTest = 1;
 const step = getStartedNode.nodes[stepToTest - 1];
@@ -23,10 +22,8 @@ const getFirstStepContent = (debugElement: DebugElement): StepContent => {
     const detailBlock = debugElement.nativeElement.querySelector('.detail-block');
     const stepText = detailBlock.querySelector('.step-text');
     const title = stepText.querySelector('h3').textContent.trim();
-    const imageSrc = '/static' +
-            detailBlock.querySelector('.step-image > img')
-                .src
-                .split('static')[1];
+    const imageSrc =
+        '/static' + detailBlock.querySelector('.step-image > img').src.split('static')[1];
 
     return { title, imageSrc };
 };
@@ -46,8 +43,7 @@ describe('NxGetStartedComponent', () => {
 
     it('should show the correct number of detail blocks', async () => {
         const { debugElement } = await setupGetStartedComponent();
-        const numStepBlocks =
-            debugElement.nativeElement.querySelectorAll('.detail-block').length;
+        const numStepBlocks = debugElement.nativeElement.querySelectorAll('.detail-block').length;
         const numStepNodes = getStartedNode.nodes.length;
 
         expect(numStepBlocks).toBe(numStepNodes);

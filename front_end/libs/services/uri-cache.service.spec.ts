@@ -28,7 +28,7 @@ const setupUriCacheService = async (): Promise<{
         cachedUri,
         cachedUData,
         uriCacheService,
-        cacheKeys
+        cacheKeys,
     };
 };
 
@@ -47,7 +47,12 @@ describe('Uri cache Service', () => {
     });
 
     it('should add item to "cachedData" if unique', async () => {
-        const { uriCacheService, resp, cachedUData, cacheKeys: [key] } = await setupUriCacheService();
+        const {
+            uriCacheService,
+            resp,
+            cachedUData,
+            cacheKeys: [key],
+        } = await setupUriCacheService();
         uriCacheService.setData(key, resp);
         uriCacheService.setData(key, resp);
 
@@ -55,7 +60,12 @@ describe('Uri cache Service', () => {
     });
 
     it('should get item from "cachedData"', async () => {
-        const { uriCacheService, resp, cachedUData, cacheKeys: [key1, key2] } = await setupUriCacheService();
+        const {
+            uriCacheService,
+            resp,
+            cachedUData,
+            cacheKeys: [key1, key2],
+        } = await setupUriCacheService();
         uriCacheService.setData(key1, resp);
         expect(cachedUData.size).toBe(1);
         expect(uriCacheService.getData(key1)).toBe(resp);
@@ -63,7 +73,12 @@ describe('Uri cache Service', () => {
     });
 
     it('should delete item from "cachedData"', async () => {
-        const { uriCacheService, resp, cachedUData, cacheKeys: [key1] } = await setupUriCacheService();
+        const {
+            uriCacheService,
+            resp,
+            cachedUData,
+            cacheKeys: [key1],
+        } = await setupUriCacheService();
         uriCacheService.setData(key1, resp);
         expect(cachedUData.size).toBe(1);
         uriCacheService.deleteData(key1);
@@ -71,7 +86,12 @@ describe('Uri cache Service', () => {
     });
 
     it('should clear "cachedData"', async () => {
-        const { uriCacheService, resp, cachedUData, cacheKeys: [key1, key2] } = await setupUriCacheService();
+        const {
+            uriCacheService,
+            resp,
+            cachedUData,
+            cacheKeys: [key1, key2],
+        } = await setupUriCacheService();
         uriCacheService.setData(key1, resp);
         uriCacheService.setData(key2, resp);
         expect(cachedUData.size).toBe(2);

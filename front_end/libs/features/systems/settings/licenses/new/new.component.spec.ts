@@ -2,29 +2,22 @@ import { DebugElement } from '@angular/core';
 import { MockProvider } from 'ng-mocks';
 import { testBedSetupFactory } from 'test_utils/test_bed_setup_factory';
 
-import {
-    NxContentBlockComponent
-} from '@components/content-block/content-block.component';
-import {
-    NxContentBlockSectionComponent
-} from '@components/content-block/section/section.component';
-import {
-    NxProcessButtonComponent
-} from '@components/process-button/process-button.component';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { setupComponent } from '@pages/src/setup';
 import { NxProcessService } from '@services/process.service';
 
 import { NxLicenseNewComponent } from './new.component';
 
-const setupNewLicenseComponent = (): ReturnType<typeof setupComponent<NxLicenseNewComponent>> => testBedSetupFactory([
-    NxContentBlockComponent,
-    NxContentBlockSectionComponent,
-    NxProcessButtonComponent,
-], [
-    MockProvider(NxProcessService),
-])(NxLicenseNewComponent);
+const setupNewLicenseComponent = (): ReturnType<typeof setupComponent<NxLicenseNewComponent>> =>
+    testBedSetupFactory(
+        [NxContentBlockComponent, NxContentBlockSectionComponent, NxProcessButtonComponent],
+        [MockProvider(NxProcessService)],
+    )(NxLicenseNewComponent);
 
-const getButton = (debugElement: DebugElement) => debugElement.nativeElement.querySelector('nx-process-button').querySelector('button');
+const getButton = (debugElement: DebugElement) =>
+    debugElement.nativeElement.querySelector('nx-process-button').querySelector('button');
 
 describe('Licenses (New)', () => {
     it('should create the component', async () => {
@@ -41,8 +34,7 @@ describe('Licenses (New)', () => {
     it('should call changeServer', async () => {
         const { component } = await setupNewLicenseComponent();
         component.changeServer({ name: 'foo', value: 'bar', status: 'baz' });
-        expect(component.selectedServer)
-            .toEqual({ name: 'foo', value: 'bar', status: 'baz' });
+        expect(component.selectedServer).toEqual({ name: 'foo', value: 'bar', status: 'baz' });
     });
 
     it('should call displayErrors', async () => {
@@ -53,9 +45,11 @@ describe('Licenses (New)', () => {
 
     it('should call isActivated', async () => {
         const { component } = await setupNewLicenseComponent();
-        component.licenses = [{
-            key: '0000-0000-0000-0000'
-        }];
+        component.licenses = [
+            {
+                key: '0000-0000-0000-0000',
+            },
+        ];
         const res = component.isActivated('0000000000000000');
         expect(res).toBeTruthy();
     });

@@ -11,8 +11,8 @@ const setupMenu = async (): Promise<NxMenusService> => {
         header: {
             title: '',
             description: '',
-            nodes: headerNodes
-        }
+            nodes: headerNodes,
+        },
     };
     return inject(NxMenusService);
 };

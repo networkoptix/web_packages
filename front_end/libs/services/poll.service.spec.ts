@@ -8,8 +8,7 @@ describe('Poll service', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            providers: [
-            ]
+            providers: [],
         });
         poll = TestBed.inject(NxPollService);
     }));

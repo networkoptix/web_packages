@@ -69,8 +69,11 @@ describe('Nx Header Service', () => {
     it('should set location (/systems)', async () => {
         const headerService = await setupHeader();
         headerService.setLocation('/systems');
-        expect(headerService.currentLocation)
-            .toEqual({ isSystem: true, parentNode: undefined, path: '/systems' });
+        expect(headerService.currentLocation).toEqual({
+            isSystem: true,
+            parentNode: undefined,
+            path: '/systems',
+        });
     });
 
     it('should set location (/download)', async () => {

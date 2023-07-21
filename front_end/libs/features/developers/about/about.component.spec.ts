@@ -10,7 +10,7 @@ import {
     menuStructure,
     documentation,
     introNode,
-    routeLandingMock
+    routeLandingMock,
 } from '@mocks/knowledge_base_landing.mock';
 import { setupComponent } from '@pages/src/setup';
 import { NxAccountService } from '@services/account.service';
@@ -30,19 +30,19 @@ const ribbonMock: any = {
         this.isShown = false;
     },
     context: {},
-    isShown: true
+    isShown: true,
 };
 const aboutParentStructure = {
     ...menuStructure,
-    nodes: [introNode]
+    nodes: [introNode],
 };
 const mockMenu = {
     getMenu: () => new BehaviorSubject(aboutParentStructure),
-    currentSystemNode$: new BehaviorSubject(null)
+    currentSystemNode$: new BehaviorSubject(null),
 };
 
 const cloudApiMock = {
-    getDocumentation: () => new BehaviorSubject(documentation)
+    getDocumentation: () => new BehaviorSubject(documentation),
 };
 
 const providers = [

@@ -1,8 +1,6 @@
 import { cloneDeep } from 'lodash-es';
 
-import type {
-    NxSystemServer
-} from '@services/system.service/system-types';
+import type { NxSystemServer } from '@services/system.service/system-types';
 
 import * as generalUtils from './general';
 import * as nxUtils from './nx';
@@ -10,25 +8,29 @@ import * as nxUtils from './nx';
 describe('General purpose utils', () => {
     describe('cleanId', () => {
         it('should clean up id', () => {
-            expect(generalUtils.cleanId('{1ba9a833-0885-9649-8f1f-8400edf48868}'))
-                .toBe('1ba9a833-0885-9649-8f1f-8400edf48868');
+            expect(generalUtils.cleanId('{1ba9a833-0885-9649-8f1f-8400edf48868}')).toBe(
+                '1ba9a833-0885-9649-8f1f-8400edf48868',
+            );
         });
 
         it('should return the same id', () => {
-            expect(generalUtils.cleanId('1ba9a833-0885-9649-8f1f-8400edf48868'))
-                .toBe('1ba9a833-0885-9649-8f1f-8400edf48868');
+            expect(generalUtils.cleanId('1ba9a833-0885-9649-8f1f-8400edf48868')).toBe(
+                '1ba9a833-0885-9649-8f1f-8400edf48868',
+            );
         });
     });
 
     describe('dirtyId', () => {
         it('should clean up id', () => {
-            expect(generalUtils.dirtyId('1ba9a833-0885-9649-8f1f-8400edf48868'))
-                .toBe('{1ba9a833-0885-9649-8f1f-8400edf48868}');
+            expect(generalUtils.dirtyId('1ba9a833-0885-9649-8f1f-8400edf48868')).toBe(
+                '{1ba9a833-0885-9649-8f1f-8400edf48868}',
+            );
         });
 
         it('should return the same id', () => {
-            expect(generalUtils.dirtyId('{1ba9a833-0885-9649-8f1f-8400edf48868}'))
-                .toBe('{1ba9a833-0885-9649-8f1f-8400edf48868}');
+            expect(generalUtils.dirtyId('{1ba9a833-0885-9649-8f1f-8400edf48868}')).toBe(
+                '{1ba9a833-0885-9649-8f1f-8400edf48868}',
+            );
         });
     });
 
@@ -45,11 +47,12 @@ describe('General purpose utils', () => {
     });
 
     it('should clean up smb url', () => {
-        expect(generalUtils.cleanSmbUrl(
-            'admin:password@smb:/server/share/mediaserver/data'
-        )).toBe('server/share/mediaserver/data');
-        expect(generalUtils.cleanSmbUrl('smb:/server/share/mediaserver/data'))
-            .toBe('server/share/mediaserver/data');
+        expect(generalUtils.cleanSmbUrl('admin:password@smb:/server/share/mediaserver/data')).toBe(
+            'server/share/mediaserver/data',
+        );
+        expect(generalUtils.cleanSmbUrl('smb:/server/share/mediaserver/data')).toBe(
+            'server/share/mediaserver/data',
+        );
     });
 
     it('should return modulus', () => {
@@ -57,49 +60,53 @@ describe('General purpose utils', () => {
     });
 
     it('should splice a string', () => {
-        expect(generalUtils.strSplice('To be', 2, ' be or not to'))
-            .toBe('To be or not to be');
+        expect(generalUtils.strSplice('To be', 2, ' be or not to')).toBe('To be or not to be');
     });
 });
 
 describe('Nx utils', () => {
     it('should set ipv4 ip/port if any exists', () => {
         const mockServer = {
-            networkAddresses: '10.1.5.210:7001;[fe80::5a88:4ce4:a105:fdb0%3]:7001;47.44.180.186:7001'
+            networkAddresses:
+                '10.1.5.210:7001;[fe80::5a88:4ce4:a105:fdb0%3]:7001;47.44.180.186:7001',
         };
         const expectedReturnedServer = {
-            networkAddresses: '10.1.5.210:7001;[fe80::5a88:4ce4:a105:fdb0%3]:7001;47.44.180.186:7001',
+            networkAddresses:
+                '10.1.5.210:7001;[fe80::5a88:4ce4:a105:fdb0%3]:7001;47.44.180.186:7001',
             ip: '10.1.5.210',
-            port: '7001'
+            port: '7001',
         };
-        expect(nxUtils.setServerIpAndPort(mockServer as NxSystemServer))
-            .toEqual(expectedReturnedServer as NxSystemServer);
+        expect(nxUtils.setServerIpAndPort(mockServer as NxSystemServer)).toEqual(
+            expectedReturnedServer as NxSystemServer,
+        );
     });
 
     it('should set ipv6 ip/port if only ipv6 exists', () => {
         const mockServer = {
-            networkAddresses: '[fe80::5a88:4ce4:a105:fdb0%3]:7001'
+            networkAddresses: '[fe80::5a88:4ce4:a105:fdb0%3]:7001',
         };
         const expectedReturnedServer = {
             networkAddresses: '[fe80::5a88:4ce4:a105:fdb0%3]:7001',
             ip: 'fe80::5a88:4ce4:a105:fdb0%3',
-            port: '7001'
+            port: '7001',
         };
-        expect(nxUtils.setServerIpAndPort(mockServer as NxSystemServer))
-            .toEqual(expectedReturnedServer as NxSystemServer);
+        expect(nxUtils.setServerIpAndPort(mockServer as NxSystemServer)).toEqual(
+            expectedReturnedServer as NxSystemServer,
+        );
     });
 
     it('should set ip to N/A if none exists', () => {
         const mockServer = {
-            networkAddresses: ''
+            networkAddresses: '',
         };
         const expectedReturnedServer = {
             networkAddresses: '',
             ip: 'N/A',
-            port: ''
+            port: '',
         };
-        expect(nxUtils.setServerIpAndPort(mockServer as NxSystemServer))
-            .toEqual(expectedReturnedServer as NxSystemServer);
+        expect(nxUtils.setServerIpAndPort(mockServer as NxSystemServer)).toEqual(
+            expectedReturnedServer as NxSystemServer,
+        );
     });
 });
 
