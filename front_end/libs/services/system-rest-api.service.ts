@@ -40,6 +40,7 @@ import {
     memoizeAsync,
     memoizeAsyncMedium,
     memoizeAsyncPersistent,
+    memoizeAsyncShort,
 } from '@utils/memoize';
 import { withKeyMap } from '@utils/nx';
 import { startWithCache } from '@utils/start-with-cached';
@@ -70,13 +71,22 @@ import type { APIDocType, MenuManifest } from './nx-config/base-config';
 import type { IConfig } from './nx-config/config-types';
 import type {
     AggregatedUsers,
-    // CameraManagerUpdate,
+    CameraManagerUpdate,
     MediaServersAndCameras,
+    TimeAndCameras,
 } from './system-api.aggregated-types';
-import type { GetArrayTypes, GetEndpoints } from './system-api.endpoint-types';
+import type {
+    GetArrayTypesFull,
+    GetEndpoints,
+    GetEndpointsFull,
+} from './system-api.endpoint-types';
 import * as t from './system-api.types';
 import { SECURITY_LEVEL, SystemConfigSettings } from './system-api.types';
 import { NxSystemAPI } from './system-legacy-api.service';
+import {
+    DeviceType,
+    type RestV1CameraCompat,
+} from './system.service/camera-manager/camera-manager-types';
 import type { ServerPreprocess } from './system.service/system-types';
 import { NxUriCacheService } from './uri-cache.service';
 
@@ -524,34 +534,46 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     /** Overload for array return with top level keys. */
-    protected getWith<U extends keyof GetArrayTypes, K extends readonly (keyof GetArrayTypes[U])[]>(
+    protected getWith<
+        U extends keyof GetArrayTypesFull,
+        K extends readonly (keyof GetArrayTypesFull[U])[],
+    >(
         url: U,
         keys: K,
         opts?: WithOptionalJson,
-    ): Observable<RecursivePick<GetArrayTypes[U], Record<K[number], true>>[]>;
+    ): Observable<RecursivePick<GetArrayTypesFull[U], Record<K[number], true>>[]>;
     /** Overload for array return with key map. */
-    protected getWith<U extends keyof GetArrayTypes, KM extends RecursiveKeyMap<GetArrayTypes[U]>>(
+    protected getWith<
+        U extends keyof GetArrayTypesFull,
+        KM extends RecursiveKeyMap<GetArrayTypesFull[U]>,
+    >(
         url: U,
         keyMap: KM,
         opts?: WithOptionalJson,
-    ): Observable<RecursivePick<GetArrayTypes[U], KM>[]>;
+    ): Observable<RecursivePick<GetArrayTypesFull[U], KM>[]>;
     /** Overload for object return with top level keys. */
-    protected getWith<U extends keyof GetEndpoints, K extends readonly (keyof GetEndpoints[U])[]>(
+    protected getWith<
+        U extends keyof GetEndpointsFull,
+        K extends readonly (keyof GetEndpointsFull[U])[],
+    >(
         url: U,
         keys: K,
         opts?: WithOptionalJson,
-    ): Observable<RecursivePick<GetEndpoints[U], Record<K[number], true>>>;
+    ): Observable<RecursivePick<GetEndpointsFull[U], Record<K[number], true>>>;
     /** Overload for object return with key map. */
-    protected getWith<U extends keyof GetEndpoints, KM extends RecursiveKeyMap<GetEndpoints[U]>>(
+    protected getWith<
+        U extends keyof GetEndpointsFull,
+        KM extends RecursiveKeyMap<GetEndpointsFull[U]>,
+    >(
         url: U,
         keyMap: KM,
         opts?: WithOptionalJson,
-    ): Observable<RecursivePick<GetEndpoints[U], KM>>;
+    ): Observable<RecursivePick<GetEndpointsFull[U], KM>>;
     /** A method for automatically typing requests using the `_with` parameter, which causes the
      * returned object(s) to only have the specified properties.
      */
     protected getWith(
-        url: keyof GetEndpoints,
+        url: string,
         keysOrkeyMap: string[] | RecursiveKeyMap<unknown>,
         opts: WithOptionalJson = {},
     ): Observable<unknown> {
@@ -857,24 +879,95 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         );
     }
 
-    // getCameras(): Observable<any[]> {
-    //     const endpoint = '/rest/v1/devices';
-    //     const keyMap = {
-    //         ...buildTopLevelKeyMap(['id', 'name', 'serverId', 'status', 'url']),
-    //         schedule: {
-    //             isEnabled: true,
-    //         },
-    //     } as const;
-    //     return this.getWith(endpoint, keyMap).pipe(
-    //         map(cameras =>
-    //             cameras.map(({ schedule, serverId, ...rest }) => ({
-    //                 ...rest,
-    //                 scheduleEnabled: schedule.isEnabled,
-    //                 parentId: serverId,
-    //             })),
-    //         ),
-    //     );
-    // }
+    private cameraKeyMapV1 = {
+        ...buildTopLevelKeyMap(['id', 'name', 'vendor', 'model', 'url', 'serverId', 'status']),
+        options: buildTopLevelKeyMap([
+            'backupContentType',
+            'backupPolicy',
+            'backupQuality',
+            'isAudioEnabled',
+            'isControlEnabled',
+            'isDualStreamingEnabled',
+        ]),
+        parameters: buildTopLevelKeyMap([
+            'motionStream',
+            'supportedMotion',
+            'hasDualStreaming',
+            'isAudioSupported',
+            'overrideAr',
+            'rotation',
+            'bitrateInfos',
+            'mediaCapabilities',
+            'mediaStreams',
+            'ioSettings',
+            'deviceType',
+        ]),
+        motion: {
+            mask: true,
+            type: true,
+        },
+        schedule: {
+            isEnabled: true,
+            tasks: true,
+        },
+    } as const;
+
+    private patchCameraCompatibilityV1(
+        camera: RecursivePick<t.DeviceV1Full, typeof this.cameraKeyMapV1>,
+    ): RestV1CameraCompat {
+        const { serverId, options, parameters: params, motion, schedule, ...rest } = camera;
+        const {
+            isAudioEnabled: audioEnabled,
+            isControlEnabled: controlEnabled,
+            isDualStreamingEnabled,
+            ...backupOpts
+        } = options;
+        const { deviceType = DeviceType.Camera, ...parameters } = params;
+        const { type: motionType, mask: motionMask } = motion;
+        const { isEnabled: scheduleEnabled, tasks: scheduleTasks } = schedule;
+        return {
+            ...rest,
+            parentId: serverId,
+            audioEnabled,
+            controlEnabled,
+            deviceType,
+            disableDualStreaming: !isDualStreamingEnabled,
+            ...backupOpts,
+            parameters,
+            motionType,
+            motionMask,
+            scheduleEnabled,
+            scheduleTasks,
+        };
+    }
+
+    getCamera(id: string): Observable<RestV1CameraCompat> {
+        return this.getWith('/rest/v1/devices', this.cameraKeyMapV1, {
+            params: { id: this.cleanId(id) },
+        }).pipe(map(cameras => this.patchCameraCompatibilityV1(cameras[0])));
+    }
+
+    @memoizeAsyncShort
+    getCamerasWithServerTime(): Observable<TimeAndCameras> {
+        return combineLatest([this.getServerTimes(), this.getCameras()]).pipe(
+            map(([serverTimesResp, cameras]) => ({
+                serverTimes: serverTimesResp.reply,
+                cameras,
+            })),
+        );
+    }
+
+    getCameras(): Observable<RestV1CameraCompat[]> {
+        return this.getWith('/rest/v1/devices', this.cameraKeyMapV1).pipe(
+            map(cameras => cameras.map(this.patchCameraCompatibilityV1)),
+        );
+    }
+
+    getCameraCredentials(id: string): Observable<t.DeviceV1Full['credentials']> {
+        return this.getWith('/rest/v1/devices', ['credentials'], {
+            params: { id },
+        }).pipe(map(cameras => cameras[0].credentials));
+    }
 
     @memoizeAsyncMedium
     getMediaServersAndCameras(): Observable<MediaServersAndCameras> {
@@ -893,29 +986,29 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         );
     }
 
-    // updateSystemServersCameras(): Observable<CameraManagerUpdate> {
-    //     const routes = [
-    //         '/api/moduleInformation',
-    //         '/ec2/getMediaServers',
-    //         '/ec2/getTimeOfServers',
-    //     ] as const;
-    //     const aggregator = this.getRequestAggregator(routes).pipe(
-    //         map(({ reply }) => ({
-    //             moduleInfo: reply[routes[0]].reply,
-    //             servers: reply[routes[1]],
-    //             serverTimes: reply[routes[2]].reply,
-    //         })),
-    //     );
+    updateSystemServersCameras(): Observable<CameraManagerUpdate> {
+        const routes = [
+            '/api/moduleInformation',
+            '/ec2/getMediaServers',
+            '/ec2/getTimeOfServers',
+        ] as const;
+        const aggregator = this.getRequestAggregator(routes).pipe(
+            map(({ reply }) => ({
+                moduleInfo: reply[routes[0]].reply,
+                servers: reply[routes[1]],
+                serverTimes: reply[routes[2]].reply,
+            })),
+        );
 
-    //     return combineLatest([aggregator, this.getCameras()]).pipe(
-    //         map(([{ moduleInfo, servers, serverTimes }, cameras]) => ({
-    //             moduleInfo,
-    //             servers,
-    //             serverTimes,
-    //             cameras,
-    //         })),
-    //     );
-    // }
+        return combineLatest([aggregator, this.getCameras()]).pipe(
+            map(([{ moduleInfo, servers, serverTimes }, cameras]) => ({
+                moduleInfo,
+                servers,
+                serverTimes,
+                cameras,
+            })),
+        );
+    }
 
     backupControl(action?: 'start' | 'stop') {
         const backupEndpoint = `/rest/v1/servers/${this.serverId}/backupSettings`;

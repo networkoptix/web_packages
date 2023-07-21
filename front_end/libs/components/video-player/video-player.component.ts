@@ -238,7 +238,7 @@ export class NxVideoPlayerComponent {
     }
 
     ngAfterViewInit(): void {
-        const { streams: [primary, secondary] } = this.camera.addParams.mediaStreams ? JSON.parse(this.camera.addParams.mediaStreams) : { streams: [] };
+        const [primary, secondary] = this.camera.parameters.mediaStreams?.streams ?? [];
         const codecH265 = 173;
         const codecMjpeg = 7;
         const primaryIsH265 = primary?.codec === codecH265;

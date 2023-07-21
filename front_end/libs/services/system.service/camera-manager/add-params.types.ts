@@ -1,35 +1,31 @@
-type StringKeys = [
-    'credentials',
-    'DeviceUrl',
-    'driverClass',
-    'firmware',
-    'motionStream',
-    'streamFpsSharing',
-    'supportedMotion',
-    'defaultPreferredPtzPresetType',
-][number];
+export type BoolNum = 0 | 1;
 
-export type ParsedAddParams = Omit<
+export type ParsedAddParams = Partial<{
+    bitrateInfos: BitrateInfos;
+    // bitratePerGOP: number;
+    // cameraCapabilities: number;
+    // compatibleAnalyticsEngines: CompatibleAnalyticsEngines;
+    mediaCapabilities: MediaCapabilities;
+    mediaStreams: MediaStreams;
+    hasDualStreaming: BoolNum;
+    ioSettings: IoSetting[];
+    isAudioSupported: BoolNum;
+    // ptzCapabilities: number;
+    overrideAr: number;
+    rotation: number;
+    // streamUrls: StreamUrls; // DANGER: JSON is not properly formatted!
+    // trustCameraTime: BoolNum;
+}>;
+
+export type CamParameters = ParsedAddParams &
     Partial<{
-        bitrateInfos: BitrateInfos;
-        // bitratePerGOP: number;
-        // cameraCapabilities: number;
-        // compatibleAnalyticsEngines: CompatibleAnalyticsEngines;
-        mediaCapabilities: MediaCapabilities;
-        // mediaStreams: MediaStreams;
-        hasDualStreaming: boolean;
-        isAudioSupported: boolean;
-        // ptzCapabilities: number;
-        overrideAr: number;
-        rotation: number;
-        // streamUrls: StreamUrls; // DANGER: JSON is not properly formatted!
-        // trustCameraTime: boolean;
-    }>,
-    StringKeys // Actual strings should not be duplicated in parsed params
->;
+        motionStream: string;
+        supportedMotion: string;
+        // Strings params which don't need parsing
+    }>;
 
 /* Parsed JSON */
-interface BitrateInfos {
+export interface BitrateInfos {
     streams: BitrateInfoStream[];
 }
 interface BitrateInfoStream {
@@ -50,9 +46,9 @@ interface BitrateInfoStream {
 
 // type CompatibleAnalyticsEngines = string[];
 
-interface MediaCapabilities {
+export interface MediaCapabilities {
     hasAudio: boolean;
-    hasDualStreaming: false;
+    hasDualStreaming: boolean;
     streamCapabilities: [
         { key: 'primary'; value: StreamCapability },
         { key: 'secondary'; value: StreamCapability },
@@ -66,19 +62,30 @@ interface StreamCapability {
     minBitrateKbps: number;
 }
 
-// interface MediaStreams {
-//     streams: MediaStream[];
-// }
-// interface MediaStream {
-//     codec: number;
-//     customStreamParams: Record<string, unknown>;
-//     encoderIndex: number;
-//     resolution: string;
-//     transcodingRequired: boolean;
-//     transports: string[];
-// }
+export interface MediaStreams {
+    streams: MediaStream[];
+}
+interface MediaStream {
+    codec: number;
+    customStreamParams: Record<string, unknown>;
+    encoderIndex: number;
+    resolution: string;
+    transcodingRequired: boolean;
+    transports: string[];
+}
 
-// interface StreamUrls {
-//     1: string;
-//     2: string;
-// }
+export interface StreamUrls {
+    1: string;
+    2: string;
+}
+
+export interface IoSetting {
+    autoResetTimeoutMs: number;
+    iDefaultState: string;
+    id: string;
+    inputName: string;
+    oDefaultState: string;
+    outputName: string;
+    portType: string;
+    supportedPortTypes: string;
+}

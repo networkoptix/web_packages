@@ -1,5 +1,6 @@
 import type { GetEndpoints } from './system-api.endpoint-types';
 import type * as t from './system-api.types';
+import type { PreprocessCamera } from './system.service/camera-manager/camera-manager-types';
 import type { ServerPreprocess } from './system.service/system-types';
 
 export type AggregatedResp<K extends readonly (keyof GetEndpoints)[]> = t.NormalResponse<{
@@ -33,14 +34,14 @@ export type MediaServersAndCameras = t.NormalResponse<{
 
 export interface TimeAndCameras {
     serverTimes: t.ServerTime[];
-    cameras: t.ec2CameraEx[];
+    cameras: PreprocessCamera[];
 }
 
 export interface CameraManagerUpdate {
     moduleInfo: t.ModuleInformationReply;
     servers: t.ec2MediaServer[];
     serverTimes: t.ServerTime[];
-    cameras: t.ec2CameraEx[];
+    cameras: PreprocessCamera[];
 }
 
 export type HealthReport = AggregatedResp<

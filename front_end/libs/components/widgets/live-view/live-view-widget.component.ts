@@ -121,7 +121,7 @@ export class NxLiveViewWidgetComponent extends FirstPartyWidget<
             ]);
         }),
         map(([time, cameras]) =>
-            cameras.reduce((lookup, { id, parsedAddParams: { rotation }, name }) => {
+            cameras.reduce((lookup, { id, parameters: { rotation }, name }) => {
                 const previewUrl = this.system.mediaserver.previewUrl(
                     id,
                     0,

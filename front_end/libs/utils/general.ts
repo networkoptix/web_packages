@@ -304,7 +304,7 @@ for key of keyof targetType
             targetType[key]
             // Doesn't need recursion, get the property
         else
-            if value extends RecursiveKeyMap<targetType[key]>:
+            if keys[key] extends RecursiveKeyMap<targetType[key]>:
                 // This should always be true since we know keys matches
                 // targetType in structure, but still needs to be asserted for TS
                 RecursivePick<targetType[key], value>

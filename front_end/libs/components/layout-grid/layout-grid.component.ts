@@ -1001,8 +1001,7 @@ export class NxLayoutGridComponent {
             }
 
             const isRotated = Boolean(
-                (Math.round(rotation / 90) * 90 + (item.details.parsedAddParams.rotation || 0)) %
-                    180,
+                (Math.round(rotation / 90) * 90 + (item.details.parameters.rotation || 0)) % 180,
             );
 
             const aspect = isRotated ? 1 / item.aspectRatio : item.aspectRatio;

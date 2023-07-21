@@ -9,6 +9,21 @@ import type { ArrayType, KeyFilter } from '@utils/general';
 import type { MenuManifest } from './nx-config/base-config';
 import type * as t from './system-api.types';
 
+export interface GetEndpointsFull {
+    /* rest/v1 */
+    '/rest/v1/devices': t.DeviceV1Full[];
+    '/rest/v1/servers': t.RestServer[];
+    '/rest/v1/users': t.RestUser[];
+    // TODO: Fix these to have defaults
+
+    /* rest/v2 */
+    '/rest/v2/devices': t.DeviceV2Full[];
+}
+
+export type GetArrayTypesFull = {
+    [E in KeyFilter<GetEndpointsFull, unknown[]>]: ArrayType<GetEndpointsFull[E]>;
+};
+
 export interface GetEndpoints {
     /* api */
     '/api/getCurrentUser': t.CurrentUser;
@@ -57,7 +72,3 @@ export interface GetEndpoints {
     '/static/openapi_legacy.json': APIDoc;
     '/static/openapi_manifest.json': MenuManifest;
 }
-
-export type GetArrayTypes = {
-    [E in KeyFilter<GetEndpoints, unknown[]>]: ArrayType<GetEndpoints[E]>;
-};

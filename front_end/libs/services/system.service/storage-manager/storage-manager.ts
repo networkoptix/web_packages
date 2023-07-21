@@ -77,10 +77,9 @@ export class StorageManager extends StorageState {
                 ['byDefault', 'on'].includes(backupPolicy),
             );
             const camerasHaveDefaults = this.system.cameraManager.cameras.every(
-                ({ backupPolicy, backupQuality, backupType, backupContentType }) =>
+                ({ backupPolicy, backupQuality, backupContentType }) =>
                     ['on', 'CameraBackupDefault', 'byDefault'].includes(backupPolicy) &&
                     ['CameraBackupBoth', 'CameraBackupDefault'].includes(backupQuality) &&
-                    ['CameraBackupBoth', 'CameraBackupDefault'].includes(backupType) &&
                     ['archive'].includes(backupContentType),
             );
             const custom =
@@ -96,8 +95,8 @@ export class StorageManager extends StorageState {
         const custom =
             backup &&
             (backupType === 'BackupSchedule' ||
-                !this.system.cameraManager.cameras.every(({ backupType }) =>
-                    ['CameraBackupLowQuality', 'CameraBackupDefault'].includes(backupType),
+                !this.system.cameraManager.cameras.every(({ backupQuality }) =>
+                    ['CameraBackupLowQuality', 'CameraBackupDefault'].includes(backupQuality),
                 ) ||
                 settings?.backupNewCamerasByDefault !== 'true' ||
                 !['CameraBackupDefault', 'CameraBackupLowQuality'].includes(

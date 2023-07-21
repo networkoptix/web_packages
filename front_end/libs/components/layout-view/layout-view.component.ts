@@ -228,11 +228,7 @@ export class NxLayoutViewComponent {
                 const aspectRatio = currentLayout?.cellAspectRatio || 0;
 
                 const isIoOnly = (camera: NxSystemCamera): boolean =>
-                    !(
-                        !!camera.addParams.mediaStreams ||
-                        !camera.addParams.ioSettings ||
-                        !JSON.parse(camera.addParams.ioSettings).length
-                    );
+                    !(!!camera.parameters.mediaStreams || !camera.parameters.ioSettings?.length);
                 const parsedCameras = cameras.reduce((cameras, camera) => {
                     const parentServerOnline =
                         servers.find(({ id }) => id === camera.parentId).status === 'Online';
@@ -259,10 +255,7 @@ export class NxLayoutViewComponent {
                                 online,
                                 unauthorized,
                                 requiresTranscoding: [7, 173].includes(
-                                    (camera.addParams.mediaStreams
-                                        ? JSON.parse(camera.addParams.mediaStreams)
-                                        : { streams: [] }
-                                    ).streams.shift()?.codec,
+                                    (camera.parameters.mediaStreams?.streams ?? [])[0]?.codec,
                                 ),
                                 resourceType:
                                     this.LANG.layouts.titles.resourceTypes[ResourceType.CAMERA],
@@ -270,9 +263,7 @@ export class NxLayoutViewComponent {
                                 // Compatibility patch for status
                             },
                             aspectRatio:
-                                camera.parsedAddParams.overrideAr ||
-                                camera.defaultRatio ||
-                                aspectRatio,
+                                camera.parameters.overrideAr || camera.defaultRatio || aspectRatio,
                         },
                     };
                 }, {} as ResourceLookup<(typeof cameras)[0]>);
@@ -648,9 +639,9 @@ export class NxLayoutViewComponent {
             await this.pageService.redirect404();
         }
 
-        const rotation = details.parsedAddParams.rotation ?? 0;
+        const rotation = details.parameters.rotation ?? 0;
         const rotatedAspect = Boolean(rotation % 180);
-        const aspect = details.parsedAddParams.overrideAr || details.defaultRatio;
+        const aspect = details.parameters.overrideAr || details.defaultRatio;
         const cellAspectRatio = rotatedAspect ? 1 / aspect : aspect;
         return {
             backgroundHeight: -1,

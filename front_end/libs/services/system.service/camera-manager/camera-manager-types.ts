@@ -1,57 +1,78 @@
 import type { Observable } from 'rxjs';
 
-import type { Task } from '@services/system-api.types';
+import type { Task, ec2CameraEx } from '@services/system-api.types';
 
-import type { ParsedAddParams } from './add-params.types';
+import type { CamParameters } from './add-params.types';
+
+export interface Credentials {
+    user: string;
+    password: string;
+}
+
+export type RestV1CameraCompat = Pick<
+    ec2CameraEx,
+    | 'id'
+    | 'name'
+    | 'vendor'
+    | 'model'
+    | 'status'
+    | 'url'
+    | 'disableDualStreaming'
+    | 'parentId'
+    | 'audioEnabled'
+    | 'controlEnabled'
+    | 'motionType'
+    | 'motionMask'
+    | 'scheduleEnabled'
+    | 'scheduleTasks'
+    | 'backupContentType'
+    | 'backupPolicy'
+    | 'backupQuality'
+> & { deviceType: DeviceType; parameters: CamParameters };
+
+export interface RestV2CameraCompat extends RestV1CameraCompat {
+    credentials: Credentials;
+}
+
+export type PreprocessCamera = ec2CameraEx | RestV1CameraCompat | RestV2CameraCompat;
 
 export interface NxSystemCamera {
     // Shared
-    id: string;
+    id: string; // Unwrapped
     name: string;
     vendor: string;
     model: string;
     url: string;
 
-    // Renamed
+    // Compatibility patches
     parentId: string; // serverId
     audioEnabled: boolean; // options.isAudioEnabled
     controlEnabled: boolean; // options.isControlEnabled
     motionType: MotionType; // motion.type
     motionMask: string; // motion.mask
     scheduleEnabled: boolean; // schedule.isEnabled
-    scheduleTasks: Task[]; // schedule.tasks (missing metadata types)
-    backupPolicy: string; // options.backupPolicy
-    backupQuality: string; // options.backupQuality
+    scheduleTasks: Task[]; // schedule.tasks
     backupContentType: string; // options.backupContentType
-
-    // Modified
-    addParams: Record<string, string>; // Unpacked array of name/value objects
-    backupType: string; // backupType (v4 systems) || backupContentType (v5)
-    status: CameraStatus; // Replace "Recording" with "Online"
+    backupPolicy: string; // options.backupPolicy
+    backupQuality: string; // backupType (v4) => backupQuality (v5/ec2) => options.backupQuality (rest)
+    credentials?: Credentials;
+    /* Inside addParams in legacy, but 5.0 systems have a bug where requesting it
+    using `_with` on a camera that doesn't have credentials will cause the id of the camera in
+    the response to be all zeroes. The workaround for this is to only try getting credentials
+    for rest systems in the dialog to change camera credentials where it is used. */
+    parameters: CamParameters; // raw addParams in legacy, already parsed in rest
+    status: CameraStatus; // Replace "Recording" with "Online" for v5 systems
+    deviceType: DeviceType; // Not included on ec2 => parameters.deviceType on restV1 => deviceType on restV2
 
     // Calculated
     defaultRatio: number;
-    deviceType: string;
     isStream: boolean;
     maxFps: number;
-    motionEnabled: boolean;
-    motionLowResEnabled: boolean;
     parentName: string;
-    parsedAddParams: ParsedAddParams;
     previewUrl: Observable<string>;
     recordingSettings: RecordingSettings;
     recordingStatus: RecordingStatus;
     webRtcUrl: ((param: { position: string | null }) => string) | null;
-}
-
-export type TaskUpdate = Pick<Task, 'fps' | 'recordingType' | 'streamQuality'>;
-export type CameraUpdate = Pick<
-    NxSystemCamera,
-    'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'motionType' | 'motionMask'
->;
-
-export interface SaveCameraUserAttributes extends CameraUpdate {
-    scheduleTasks?: Omit<Task, 'metadataTypes'>[];
 }
 
 export enum CameraStatus {
@@ -64,6 +85,14 @@ export enum RecordingStatus {
     Recording = 'Recording',
     Scheduled = 'Scheduled',
     Archive = 'Archive',
+}
+
+export enum DeviceType {
+    Camera = 'Camera',
+    Nvr = 'NVR',
+    // io device
+    // virtual camera
+    // Supposed to be more than two types, but no example checks for them
 }
 
 export enum MotionType {
@@ -85,6 +114,7 @@ export interface RecordingSettings {
     quality: StreamQuality;
     fps: number | 'various';
     motionEnabled: boolean;
+    motionLowResEnabled: boolean;
     modes: RecordingModes[];
 }
 
@@ -117,4 +147,14 @@ export interface TimeDetail {
     durationMs: number;
     start: number;
     end: number;
+}
+
+export type TaskUpdate = Pick<Task, 'fps' | 'recordingType' | 'streamQuality'>;
+export type CameraUpdate = Pick<
+    NxSystemCamera,
+    'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'motionType' | 'motionMask'
+>;
+
+export interface SaveCameraUserAttributes extends CameraUpdate {
+    scheduleTasks?: Omit<Task, 'metadataTypes'>[];
 }

@@ -460,7 +460,7 @@ export class NxSystemStorageComponent implements OnInit {
                 (cameras, camera) => {
                     if (
                         !['CameraBackupLowQuality', 'CameraBackupDefault'].includes(
-                            camera.backupType,
+                            camera.backupQuality,
                         )
                     ) {
                         let retries = 5;

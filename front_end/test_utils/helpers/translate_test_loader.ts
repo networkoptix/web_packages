@@ -1,6 +1,6 @@
+import { TranslateLoader } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
 
-import { TranslateLoader } from '@ngx-translate/core';
 import compiledLang from '@common/language/language_i18n.json';
 
 export class TranslateTestLoader extends TranslateLoader {

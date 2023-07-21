@@ -166,7 +166,7 @@ export class NxRecordingSettingsComponent implements OnInit {
     private getSupportedMotion(): MotionType {
         const {
             selectedCamera: {
-                addParams: { supportedMotion, motionStream },
+                parameters: { supportedMotion, motionStream },
             },
         } = this;
         return supportedMotion === MotionType.HardwareGrid || motionStream === undefined
@@ -177,7 +177,9 @@ export class NxRecordingSettingsComponent implements OnInit {
     private checkModeEnabled(id: RecordingType, enabled: boolean = this.motionEnabled): boolean {
         return (
             [RecordingType.META_ALWAYS, RecordingType.ALWAYS, RecordingType.NEVER].includes(id) ||
-            (id === RecordingType.META_LOW ? this.selectedCamera.motionLowResEnabled : enabled)
+            (id === RecordingType.META_LOW
+                ? this.selectedCamera.recordingSettings.motionLowResEnabled
+                : enabled)
         );
     }
 

@@ -68,7 +68,10 @@ import type {
 } from './system-api.aggregated-types';
 import type { GetEndpoints } from './system-api.endpoint-types';
 import * as t from './system-api.types';
-import type { SaveCameraUserAttributes } from './system.service/camera-manager/camera-manager-types';
+import type {
+    PreprocessCamera,
+    SaveCameraUserAttributes,
+} from './system.service/camera-manager/camera-manager-types';
 import type { SaveStoragePayload } from './system.service/storage-manager/storage';
 import type { ServerPreprocess } from './system.service/system-types';
 import { NxUriCacheService } from './uri-cache.service';
@@ -971,7 +974,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
 
     /* End of Working with users */
     /* Cameras and Servers */
-    getCamera(id: string): Observable<t.ec2CameraEx> {
+    getCamera(id: string): Observable<PreprocessCamera> {
         const params = { id: this.cleanId(id) };
         return this.get<t.ec2CameraEx[]>('/ec2/getCamerasEx', { params }).pipe(
             map(cameras => cameras[0]),

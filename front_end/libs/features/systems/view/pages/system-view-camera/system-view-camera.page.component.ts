@@ -29,6 +29,7 @@ import { pollingTimeout } from '@pages/static-variables-features';
 import { FpsMeterService } from '@services/fps-meter.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { DeviceType } from '@services/system.service/camera-manager/camera-manager-types';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { WINDOW } from '@services/window-provider';
@@ -547,7 +548,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.unsub$.next('done');
         this.getRecordsInProgress = this.id;
         const camera = this.system.cameraManager.cameras?.find(({ id }) => id?.includes(this.id));
-        this.isNvr = camera?.deviceType?.toLowerCase() === 'nvr';
+        this.isNvr = camera?.deviceType === DeviceType.Nvr;
         this.system.userManager.getUsersDataFromTheSystem().then(_ => {
             this.canViewArchives = this.system.permissionManager.permissions().viewArchives;
             if (!this.vms.selectedCamera.hasArchive && !this.vms.selectedCamera.isScheduleEnabled) {

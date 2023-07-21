@@ -42,6 +42,8 @@ import {
     SaveCameraUserAttributes,
     RecordingStatus,
     CameraStatus,
+    PreprocessCamera,
+    DeviceType,
 } from './camera-manager-types';
 
 type PartialSystem = Pick<
@@ -77,7 +79,7 @@ export class CameraManager {
                 await this.serverManager.mediaserver.updateSystemServersCameras().toPromise();
             this.moduleInfo = moduleInfo;
             this.servers = servers.sort(alphabeticalSort(this.locale, server => server.name));
-            await this.processCameras({ serverTimes, cameras });
+            await this.processCameras(cameras, serverTimes);
             return Promise.resolve();
         } catch (error) {
             if (error.name === 'TimeoutError') {
@@ -95,95 +97,34 @@ export class CameraManager {
                 if (!response) {
                     this.cameras = [];
                 } else {
-                    return this.processCameras(response);
+                    const { cameras, serverTimes } = response;
+                    return this.processCameras(cameras, serverTimes);
                 }
             });
         return this.cameras;
     }
 
-    private async processCameras({
-        serverTimes,
-        cameras,
-    }: {
-        serverTimes: ServerTime[];
-        cameras: ec2CameraEx[];
-    }): Promise<NxSystemCamera[]> {
+    private async processCameras(
+        cameras: PreprocessCamera[],
+        serverTimes: ServerTime[],
+    ): Promise<NxSystemCamera[]> {
         this.serverTimes = serverTimes;
-        try {
-            if (this.system?.permissionManager.isAdmin()) {
-                this.camerasHealth = (
-                    await firstValueFrom(this.serverManager.mediaserver.getHealthValues())
-                ).reply.cameras;
-            }
-        } catch (_) {
-            this.camerasHealth = {};
+        if (this.system?.permissionManager.isAdmin()) {
+            this.camerasHealth = (
+                await firstValueFrom(this.serverManager.mediaserver.getHealthValues())
+            ).reply.cameras;
         }
         this.cameras = cameras.map(this.parseCamera);
         return this.cameras;
     }
 
-    parseCamera = (camera: ec2CameraEx): NxSystemCamera => {
-        const backupType = camera.backupType || camera.backupQuality;
+    parseCamera = (camera: PreprocessCamera): NxSystemCamera => {
+        const { parameters, credentials, maxFps, previewUrl, defaultRatio, motionLowResEnabled } =
+            this.parseParameters(camera);
 
-        if (!camera.addParams) {
-            /* @ts-expect-error TODO: Figure out how to handle processing for rest cameras  */
-            return camera;
-        }
-
-        const addParams = Object.fromEntries(
-            camera.addParams.map(({ name, value }) => [name, value]),
-        );
-
-        // The server sends all params as strings, parsing is required
-        // for some to convert them into usable forms
-        const parsedAddParams: APT.ParsedAddParams = {};
-        const boolKeys: KeyFilter<APT.ParsedAddParams, boolean>[] = [
-            'hasDualStreaming',
-            'isAudioSupported',
-        ];
-        Object.assign(
-            parsedAddParams,
-            Object.fromEntries(
-                // "0" or "1"
-                boolKeys
-                    .filter(k => addParams[k] !== undefined)
-                    .map(k => [k, !!Number(addParams[k])]),
-            ),
-        );
-
-        const numKeys: KeyFilter<APT.ParsedAddParams, number>[] = ['overrideAr', 'rotation'];
-        Object.assign(
-            parsedAddParams,
-            Object.fromEntries(
-                numKeys.filter(k => addParams[k] !== undefined).map(k => [k, Number(addParams[k])]),
-                // Empty strings will be converted to 0
-            ),
-        );
-
-        const jsonKeys: KeyFilter<APT.ParsedAddParams, object>[] = [
-            'bitrateInfos',
-            'mediaCapabilities',
-        ];
-        Object.assign(
-            parsedAddParams,
-            Object.fromEntries(
-                jsonKeys
-                    .filter(k => addParams[k] !== undefined)
-                    .map(k => [k, JSON.parse(addParams[k])]),
-            ),
-        );
+        const backupQuality = (camera as ec2CameraEx).backupType || camera.backupQuality;
 
         const parentName = this.servers?.find(server => server.id === camera.parentId)?.name;
-        const streamCapabilities = parsedAddParams.mediaCapabilities?.streamCapabilities;
-        const primary = streamCapabilities?.find(({ key }) => key === 'primary');
-        const maxFps = primary?.value?.maxFps || 15;
-        const previewUrl = this.serverManager.mediaserver.previewUrl(
-            camera.id,
-            null,
-            parsedAddParams.overrideAr * 120,
-            120,
-            addParams.rotation,
-        );
         const webRtcUrl =
             this.system.version >= 5.1
                 ? ({ position } = { position: null }): string => {
@@ -205,68 +146,20 @@ export class CameraManager {
             status = camera.status;
         }
 
+        const recordingSettings = this.parseRecordingSettings(camera, maxFps, motionLowResEnabled);
+
         const isStream = [
             'GENERIC_RTSP',
             'GENERIC_MULTICAST',
             'GENERIC_MULTICAST',
             'HTTP_URL_PLUGIN',
         ].includes(camera.vendor);
-        const motionEnabled = ![MotionType.NoMotion, MotionType.None].includes(
-            camera.motionType as MotionType,
-        );
-
-        let defaultRatio = 0;
-        const { bitrateInfos } = parsedAddParams;
-        if (bitrateInfos) {
-            const [x, y] = bitrateInfos.streams[0].resolution.split('x');
-            defaultRatio = Number(x) / Number(y);
-        }
-        const multiStream = bitrateInfos && bitrateInfos.streams.length >= 2;
-        const motionLowResEnabled =
-            !camera.disableDualStreaming && (multiStream || parsedAddParams.hasDualStreaming);
-
-        const newApi = this.serverManager.mediaserver instanceof NxSystemRestAPI;
-        const recordingSettings: RecordingSettings = {
-            recording: camera.scheduleEnabled && !camera.scheduleTasks.every(({ fps }) => !fps),
-            quality: this.parseRecordingQuality(camera.scheduleTasks),
-            fps: this.parseFps(camera.scheduleTasks, maxFps),
-            motionEnabled,
-            modes: [
-                {
-                    name: 'always',
-                    id: newApi ? RecordingType.META_ALWAYS : RecordingType.ALWAYS,
-                    value: this.recordingScheduleForType(camera, [
-                        RecordingType.META_ONLY,
-                        RecordingType.ALWAYS,
-                    ]),
-                    enabled: true,
-                },
-                {
-                    name: 'motion',
-                    id: newApi ? RecordingType.META_ONLY : RecordingType.MOTION_ONLY,
-                    value: this.recordingScheduleForType(camera, [
-                        RecordingType.META_ONLY,
-                        RecordingType.MOTION_ONLY,
-                    ]),
-                    enabled: motionEnabled,
-                },
-                {
-                    name: 'motionLowRes',
-                    id: newApi ? RecordingType.META_LOW : RecordingType.MOTION_LOW,
-                    value: !motionEnabled
-                        ? 0
-                        : this.recordingScheduleForType(camera, [
-                              RecordingType.META_LOW,
-                              RecordingType.MOTION_LOW,
-                          ]),
-                    enabled: motionLowResEnabled && motionEnabled,
-                },
-            ],
-        };
 
         const id = cleanId(camera.id);
-
-        const deviceType = this.camerasHealth[id] ? this.camerasHealth[id].info.type : 'Camera';
+        const deviceType =
+            'deviceType' in camera
+                ? camera.deviceType
+                : this.camerasHealth[cleanId(camera.id)]?.info.type ?? DeviceType.Camera;
 
         const {
             name,
@@ -282,10 +175,10 @@ export class CameraManager {
             scheduleEnabled,
             scheduleTasks,
             backupPolicy,
-            backupQuality,
             backupContentType,
         } = camera;
         return {
+            id,
             name,
             vendor,
             model,
@@ -294,33 +187,173 @@ export class CameraManager {
             parentId,
             audioEnabled,
             controlEnabled,
-            motionType: motionType as MotionType,
+            motionType,
             motionMask,
             scheduleEnabled,
             scheduleTasks,
             backupPolicy,
             backupQuality,
             backupContentType,
-
-            id,
-            addParams,
-            backupType,
             status,
+            credentials,
+            deviceType,
+            parameters,
 
             defaultRatio,
-            deviceType,
             isStream,
             maxFps,
-            motionEnabled,
-            motionLowResEnabled,
             parentName,
-            parsedAddParams,
             previewUrl,
             recordingSettings,
             recordingStatus,
             webRtcUrl,
         };
     };
+
+    private parseParameters(
+        camera: PreprocessCamera,
+    ): Pick<
+        NxSystemCamera,
+        'parameters' | 'credentials' | 'previewUrl' | 'defaultRatio' | 'maxFps'
+    > &
+        Pick<RecordingSettings, 'motionLowResEnabled'> {
+        let credentials: NxSystemCamera['credentials'];
+        let parameters: NxSystemCamera['parameters'];
+
+        if ('addParams' in camera) {
+            const addParams = Object.fromEntries(
+                camera.addParams.map(({ name, value }) => [name, value]),
+            );
+            // The server sends all params as strings for ec2 cameras, parsing is required
+            // for some to convert them into usable forms
+
+            const { motionStream, supportedMotion } = addParams;
+            parameters = { motionStream, supportedMotion };
+            // These two are already strings
+
+            if (addParams.credentials) {
+                const [user, password] = addParams.credentials.split(':');
+                credentials = { user, password };
+            }
+
+            const boolKeys: KeyFilter<APT.ParsedAddParams, APT.BoolNum>[] = [
+                'hasDualStreaming',
+                'isAudioSupported',
+            ];
+            Object.assign(
+                parameters,
+                Object.fromEntries(
+                    // "0" or "1"
+                    boolKeys
+                        .filter(k => addParams[k] !== undefined)
+                        .map(k => [k, Number(addParams[k])]),
+                ),
+            );
+
+            const numKeys: KeyFilter<APT.ParsedAddParams, number>[] = ['overrideAr', 'rotation'];
+            Object.assign(
+                parameters,
+                Object.fromEntries(
+                    numKeys
+                        .filter(k => addParams[k] !== undefined)
+                        .map(k => [k, Number(addParams[k])]),
+                    // Empty strings will be converted to 0
+                ),
+            );
+
+            const jsonKeys: KeyFilter<APT.ParsedAddParams, object>[] = [
+                'bitrateInfos',
+                'mediaCapabilities',
+                'mediaStreams',
+                'ioSettings',
+            ];
+            Object.assign(
+                parameters,
+                Object.fromEntries(
+                    jsonKeys
+                        .filter(k => addParams[k] !== undefined)
+                        .map(k => [k, JSON.parse(addParams[k])]),
+                ),
+            );
+        } else {
+            if ('credentials' in camera) {
+                credentials = camera.credentials;
+            }
+            parameters = camera.parameters ?? {};
+        }
+
+        const primaryStream = parameters.mediaCapabilities?.streamCapabilities?.find(
+            ({ key }) => key === 'primary',
+        );
+        const maxFps = primaryStream?.value?.maxFps || 15;
+        const previewUrl = this.serverManager.mediaserver.previewUrl(
+            camera.id,
+            null,
+            parameters.overrideAr * 120,
+            120,
+            parameters.rotation,
+        );
+
+        let defaultRatio = 0;
+        const { bitrateInfos } = parameters;
+        if (bitrateInfos) {
+            const [x, y] = bitrateInfos.streams[0].resolution.split('x');
+            defaultRatio = Number(x) / Number(y);
+        }
+        const multiStream = bitrateInfos && bitrateInfos.streams.length >= 2;
+        const motionLowResEnabled =
+            !camera.disableDualStreaming && (multiStream || !!parameters.hasDualStreaming);
+
+        return { parameters, credentials, maxFps, previewUrl, defaultRatio, motionLowResEnabled };
+    }
+
+    private parseRecordingSettings(
+        { motionType, scheduleEnabled, scheduleTasks }: PreprocessCamera,
+        maxFps: number,
+        motionLowResEnabled: boolean,
+    ): RecordingSettings {
+        const motionEnabled = ![MotionType.NoMotion, MotionType.None].includes(motionType);
+
+        const newApi = this.serverManager.mediaserver instanceof NxSystemRestAPI;
+        return {
+            recording: scheduleEnabled && !scheduleTasks.every(({ fps }) => !fps),
+            quality: this.parseRecordingQuality(scheduleTasks),
+            fps: this.parseFps(scheduleTasks, maxFps),
+            motionEnabled,
+            motionLowResEnabled,
+            modes: [
+                {
+                    name: 'always',
+                    id: newApi ? RecordingType.META_ALWAYS : RecordingType.ALWAYS,
+                    value: this.recordingScheduleForType(scheduleTasks, [
+                        RecordingType.META_ONLY,
+                        RecordingType.ALWAYS,
+                    ]),
+                    enabled: true,
+                },
+                {
+                    name: 'motion',
+                    id: newApi ? RecordingType.META_ONLY : RecordingType.MOTION_ONLY,
+                    value: this.recordingScheduleForType(scheduleTasks, [
+                        RecordingType.META_ONLY,
+                        RecordingType.MOTION_ONLY,
+                    ]),
+                    enabled: motionEnabled,
+                },
+                {
+                    name: 'motionLowRes',
+                    id: newApi ? RecordingType.META_LOW : RecordingType.MOTION_LOW,
+                    value: !motionEnabled
+                        ? 0
+                        : this.recordingScheduleForType(scheduleTasks, [
+                              RecordingType.META_LOW,
+                              RecordingType.MOTION_LOW,
+                          ]),
+                    enabled: motionLowResEnabled && motionEnabled,
+                },
+            ],
+        };
+    }
 
     updateRecordingSettings(
         updatedTask: TaskUpdate,
@@ -354,11 +387,11 @@ export class CameraManager {
     }
 
     private parseFps(schedule: Task[], max: number): number | 'various' {
-        const schedulesWithFps = schedule
+        const taskFps = schedule
             .filter(s => s.fps !== 0 && s.recordingType !== RecordingType.NEVER)
             .map(s => s.fps);
-        const currentFps = Array.from(new Set(schedulesWithFps));
-        if (schedulesWithFps.length === 0) {
+        const currentFps = Array.from(new Set(taskFps));
+        if (taskFps.length === 0) {
             return max;
         } else if (currentFps.length === 1) {
             return currentFps[0];
@@ -382,7 +415,7 @@ export class CameraManager {
     }
 
     private recordingScheduleForType(
-        { scheduleTasks }: ec2CameraEx,
+        scheduleTasks: Task[],
         types: RecordingType[],
     ): RecordingModes['value'] {
         let scheduled = 0;
@@ -403,7 +436,11 @@ export class CameraManager {
         }
     }
 
-    private getRecordingStatus({ status, scheduleTasks, parentId }: ec2CameraEx): RecordingStatus {
+    private getRecordingStatus({
+        status,
+        scheduleTasks,
+        parentId,
+    }: PreprocessCamera): RecordingStatus {
         const serverTime = this.serverTimes.find(({ serverId }) => serverId === parentId);
         let recording = false;
         if (serverTime) {

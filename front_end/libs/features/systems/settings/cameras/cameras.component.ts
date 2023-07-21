@@ -589,7 +589,7 @@ export class NxCamerasComponent implements OnInit {
             deviceType,
             isStream,
             defaultRatio,
-            parsedAddParams,
+            parameters,
             audioEnabled,
             recordingSettings,
             motionType,
@@ -617,11 +617,10 @@ export class NxCamerasComponent implements OnInit {
             this.aspectRatios[0].value = defaultRatio;
         }
         this.selectedAspect =
-            this.aspectRatios.find(({ value }) => value === parsedAddParams.overrideAr) ||
+            this.aspectRatios.find(({ value }) => value === parameters.overrideAr) ||
             this.aspectRatios[0];
         this.selectedRotation =
-            this.rotations.find(({ value }) => value === parsedAddParams.rotation) ||
-            this.rotations[0];
+            this.rotations.find(({ value }) => value === parameters.rotation) || this.rotations[0];
         this.audioEnabled = audioEnabled;
         this.recordingModesWatcher.value = recordingSettings.modes;
         if (this.recordingSettingsComponent) {
