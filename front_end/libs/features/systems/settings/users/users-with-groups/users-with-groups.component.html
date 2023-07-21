@@ -65,12 +65,13 @@
                             >Permission Groups</label
                         >
                         <nx-multi-select
+                            *ngIf="selectedUser.canBeEdited"
                             id="user-groups"
                             name="userGroupsSelect"
                             [canSelectAll]="false"
                             [canSearch]="false"
                             description="User Groups"
-                            [items]="processedGroups"
+                            [items]="system.userManager.groups"
                             [ngModel]="selectedGroups"
                             (ngModelChange)="toggleGroup($event)"
                             [moreLeftPadding]="true"

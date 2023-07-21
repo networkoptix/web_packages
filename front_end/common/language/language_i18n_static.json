@@ -1204,6 +1204,7 @@
     "search": {
         "All": "All",
         "Any": "Any",
+        "None": "None",
         "Search": "Search",
         "analytics": "Analytics",
         "analyticsSelected": "analytics events",

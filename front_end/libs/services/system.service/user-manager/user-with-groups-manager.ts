@@ -6,17 +6,23 @@ import { environment } from '@environments/environment';
 import { nxConfig } from '@services/nx-config/config';
 import { NxSystemBase } from '@services/system/system-base';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
-import { cleanId } from '@utils/general';
+import { cleanId, paramSortFunc } from '@utils/general';
 
 import { UserManager } from './user-manager';
 import { NxUserGroup, NxSystemUser } from './user-manager-types.bak';
 
+interface UserPerms {
+    groupIds?: string[];
+    permissions: string;
+}
+
 export class UserWithGroupsManager extends UserManager {
+    readonly administratorGroup = '{00000000-0000-0000-0000-100000000000}';
     LANG = staticLang;
 
     protected mediaserver: NxSystemRestAPI3;
-    protected _userGroups: NxUserGroup[];
-    protected _groupPermissions: {
+    userGroups: NxUserGroup[];
+    protected groupsToPermissions: {
         [id: string]: Set<string>;
     };
     protected _ownerEmail: string;
@@ -44,14 +50,6 @@ export class UserWithGroupsManager extends UserManager {
             (this._ownerEmail && this.currentUserEmail === this._ownerEmail) ||
             (this.currentUser && this.isOwner(this.currentUser))
         );
-    }
-
-    get userGroups(): NxUserGroup[] {
-        return this._userGroups || [];
-    }
-
-    set userGroups(userGroups: NxUserGroup[]) {
-        this._userGroups = userGroups;
     }
 
     // get isMine(): boolean {
@@ -119,43 +117,62 @@ export class UserWithGroupsManager extends UserManager {
     }
 
     processGroups(userGroups: NxUserGroup[]): void {
-        this._userGroups = userGroups;
-        const processedGroups: {
+        const { defaultUserGroupText, customUserGroupText } = this.LANG.dialogs.titles;
+        const groupsToPermissions: {
             [id: string]: Set<string>;
         } = {};
-        userGroups.forEach((userGroup: NxUserGroup) => {
-            processedGroups[userGroup.id] = new Set(userGroup?.permissions?.split('|'));
-            if (!userGroup.description && userGroup.isPredefined) {
-                userGroup.description =
-                    this.LANG.accessRoles[userGroup.name].description || userGroup.name;
+        let groupsForDropdown: NxUserGroup[] = [{ id: 'title', label: defaultUserGroupText }];
+        let customTitleNeeded = false;
+        let startOfCustomGroups = -1;
+        userGroups.forEach(({ id, name, description, attributes, permissions }, index) => {
+            groupsToPermissions[id] = new Set(permissions?.split('|'));
+            if (!description && attributes?.includes('readonly')) {
+                userGroups[id].description = this.LANG.accessRoles[name].description || name;
+            }
+
+            if (name !== 'Owner') {
+                // Do not allow Administrator to be in the dropdowns. Only Channel partners can use this group.
+                if (id === this.administratorGroup) {
+                    return;
+                }
+                // Used to insert the horizontal divider for the mult-select dropdown
+                if (!customTitleNeeded && !attributes?.includes('readonly')) {
+                    customTitleNeeded = true;
+                    startOfCustomGroups = index + 2;
+                    groupsForDropdown.push(
+                        { id: 'horizontal', label: 'horizontal' },
+                        { id: 'title', label: customUserGroupText },
+                    );
+                }
+                groupsForDropdown.push({ id, label: name, tooltip: description });
             }
         });
-        this._groupPermissions = processedGroups;
+        if (startOfCustomGroups !== -1) {
+            groupsForDropdown = [
+                ...groupsForDropdown.slice(0, startOfCustomGroups),
+                ...groupsForDropdown
+                    .slice(startOfCustomGroups)
+                    .sort(paramSortFunc(({ label }) => label)),
+            ];
+        }
+        this.userGroups = userGroups;
+        this.groupsToPermissions = groupsToPermissions;
+        this.groups = groupsForDropdown;
     }
 
-    getPermissionsFromUserGroups({
-        groupIds,
-        permissions,
-    }: {
-        groupIds?: string[];
-        permissions: string;
-    }): Set<string> {
-        const permissionSet = new Set<string>(
+    getPermissionsFromUserGroups({ groupIds, permissions }: UserPerms): Set<string> {
+        const initialPermissionSet = new Set<string>(
             permissions && permissions.includes('|') ? permissions.split('|') : [permissions],
         );
         // cloud owner currently has no userGroupIds, but instead has permissions set on the user object permissions field
-        if (groupIds?.length > 0) {
-            groupIds.forEach((id: string) => {
-                this._groupPermissions[id].forEach(id => {
-                    permissionSet.add(id);
-                });
-            });
-
-            // sometimes a user can have 'NoGlobalPermissions' set in their permissions field
-            // but have a userGroupId with permissions --> so removing in such cases (mainly Cloud Owner)
-            permissionSet.delete('NoGlobalPermissions');
-        }
-        return permissionSet;
+        const calculatedPermissions = groupIds.reduce(
+            (perms, id) => new Set([...perms, ...this.groupsToPermissions[id]]),
+            initialPermissionSet,
+        );
+        // sometimes a user can have 'NoGlobalPermissions' set in their permissions field
+        // but have a userGroupId with permissions --> so removing in such cases (mainly Cloud Owner)
+        calculatedPermissions.delete('NoGlobalPermissions');
+        return calculatedPermissions;
     }
 
     override processUsers(usersWithGroups: NxSystemUser[]): NxSystemUser[] | false {
@@ -186,6 +203,7 @@ export class UserWithGroupsManager extends UserManager {
                 // should we add a list of user group names?
                 // user.userGroupNames = [];
                 // allMediaPermissionFlag exists if the all camera permission option selected...this still true?
+                user.isOwner = user.groupIds.includes(this.administratorGroup);
                 user.isAdmin = this.isAdmin(user);
                 user.isCloud = user.type === 'cloud';
                 user.isLdap = user.type === 'ldap';
@@ -229,7 +247,11 @@ export class UserWithGroupsManager extends UserManager {
          *   they also can not be edited
          */
         const isNotMeOrOwner = !(user.isMe || user.isOwner);
-        return isNotMeOrOwner && (this.isMySystem || !user.isAdmin);
+        return (
+            isNotMeOrOwner &&
+            (this.isMySystem || !user.isAdmin) &&
+            !user.attributes.includes('readonly')
+        );
     }
 
     modifyUser(user: NxSystemUser): Promise<NxSystemUser> {
@@ -263,7 +285,6 @@ export class UserWithGroupsManager extends UserManager {
 
         // v3 doesn't like user permissions and groupIds for modifyUser
         delete user.permissions;
-        delete user.groupIds;
 
         return lastValueFrom(
             this.mediaserver.modifyUser(this.cleanupUserObject(user), cleanId(user.id)),

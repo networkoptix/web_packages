@@ -26,8 +26,6 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
     selectedGroups: string[];
     selectedGroupsList: { name: string; description: string }[];
 
-    processedGroups: { id: string; label: string; tooltip?: string }[];
-
     @ViewChild('userGroupsForm', { read: NgForm }) private userGroupsForm: NgForm;
 
     protected initProcesses(): void {
@@ -58,8 +56,6 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
 
     protected setUser(): Promise<boolean | void> | void {
         if (this.system?.userManager?.users?.length) {
-            this.processGroups();
-
             this.locked.clear();
 
             let user: NxSystemUser;
@@ -113,42 +109,22 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
         }
     }
 
-    private processGroups(): void {
-        const { defaultUserGroupText, customUserGroupText } = this.LANG.dialogs.titles;
-        this.processedGroups = [{ id: 'title', label: defaultUserGroupText }];
-        let customTitleNeeded = false;
-        (this.system.userManager as UserWithGroupsManager).userGroups.forEach(
-            ({ id, name, description, attributes }) => {
-                if (name !== 'Owner') {
-                    if (!customTitleNeeded && !attributes?.includes('readonly')) {
-                        customTitleNeeded = true;
-                        this.processedGroups.push(
-                            { id: 'horizontal', label: 'horizontal' },
-                            { id: 'title', label: customUserGroupText },
-                        );
-                    }
-                    this.processedGroups.push({ id, label: name, tooltip: description });
-                }
-            },
-        );
-    }
-
     toggleGroup(newList: string[]): void {
         this.selectedGroups = [...newList];
         this.processSelectedGroupsList(this.selectedGroups);
     }
 
     private processSelectedGroupsList(newList: string[], localOwner = false): void {
-        this.selectedGroupsList = [];
-        (this.system.userManager as UserWithGroupsManager).userGroups.forEach(
-            ({ id, name, description }) => {
-                if (newList.includes(id)) {
-                    if (localOwner) {
-                        description = this.LANG.accessRoles.Administrator.description;
-                    }
-                    this.selectedGroupsList.push({ name, description });
+        this.selectedGroupsList = (
+            this.system.userManager as UserWithGroupsManager
+        ).userGroups.reduce((groups, { id, name, description }) => {
+            if (newList.includes(id)) {
+                if (localOwner) {
+                    description = this.LANG.accessRoles.Administrator.description;
                 }
-            },
-        );
+                groups.push({ name, description });
+            }
+            return groups;
+        }, []);
     }
 }

@@ -31,6 +31,7 @@ export class UserManager {
     protected _ownerEmail: string = '';
     private _accessRole: string = '';
     accessRoles: NxAccessRole[];
+    groups: { id: string; label: string; tooltip?: string }[];
     currentUser: NxUser;
     users: NxUser[];
 

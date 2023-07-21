@@ -11,13 +11,10 @@ import { NxNavigationTileComponent } from '@components/dropdowns/drop-menu/navig
 import { NxSystemTileComponent } from '@components/dropdowns/drop-menu/system-tile/system-tile.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { environment } from '@environments/environment';
-import { NxAccountService } from '@services/account.service';
-import type { Account } from '@services/account.service/account';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
-import type { ec2User, CurrentUser } from '@services/system-api.types';
 import { NxUriService } from '@services/uri.service';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -65,7 +62,6 @@ export class NxDropMenu extends BaseDropdown {
         private uriService: NxUriService,
         public headerService: NxHeaderService,
         private menusService: NxMenusService,
-        private accountService: NxAccountService,
     ) {
         super(configService);
         this.menusService.currentSystemNode$.pipe(untilDestroyed(this)).subscribe(_ => {
@@ -107,6 +103,7 @@ export class NxDropMenu extends BaseDropdown {
             .subscribe(header => {
                 const nodes = this.menusService.cleanEmptyNodes(header.nodes);
                 if (environment.isLocal) {
+                    // TODO: Come back here to fix CLOUD-10906
                     this.replaceCloudHost(nodes);
                 }
                 this.menuNodes$.next(nodes);
@@ -175,20 +172,15 @@ export class NxDropMenu extends BaseDropdown {
             if (changes.systems.currentValue[0] === undefined) {
                 return; // Account for weird state to avoid errors
             }
-            // Todo: Fix so that it checks for admin correctly.
-            let user: ec2User | CurrentUser | Account;
-            if (environment.isLocal) {
-                user = await this.accountService.mediaServerApi.getCurrentUser(true);
-            } else {
-                user = await this.accountService.get(false);
-            }
-            const isAdmin = user?.permissions?.includes('GlobalAdminPermission') || false;
             this.systems$.next(changes.systems.currentValue);
             const activeSystem =
                 this.headerService.activeSystem ||
                 this.headerService.lastActive$.value ||
                 this.systems[0];
-            this.menusService.updateActiveSystemMenu(activeSystem, isAdmin);
+            this.menusService.updateActiveSystemMenu(
+                activeSystem,
+                activeSystem?.permissionManager?.isAdmin(),
+            );
         }
         this.systemCounter = this.systems && this.systems.length;
     }

@@ -1,5 +1,6 @@
 import type { CloudUser } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { ec2PredefinedRole, ec2User, RestUserCompat } from '@services/system-api.types';
+import { NxUserGroup } from '@services/system.service/user-manager/user-manager-types.bak';
 
 import type { CustomPermission } from '../../nx-config/base-config';
 
@@ -55,6 +56,7 @@ export interface NxUserPwChange extends NxUser {
 /** The base data for adding a new cloud user */
 export interface NewUserBase extends Pick<ec2User, 'email' | 'isEnabled' | 'isCloud'> {
     role: NxAccessRole;
+    useGroupIds?: NxUserGroup[]; // TODO: Fix with CLOUD-10973 or after most fixes are done
 }
 
 export interface NewUserData extends Omit<NewUserBase, 'role'> {
