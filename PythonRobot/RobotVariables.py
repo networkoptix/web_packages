@@ -1,38 +1,49 @@
-import json, re, os
+import json, re, os, glob
 
 class RobotVariables():
     def __init__(self, language: str) -> None:
+        self.warn_about_duplicates = False
+        self.variables = {}
+        self.current_dir = os.path.abspath(os.getcwd())
         if language in ["en_US"]:
             self.language = language
-    
-    def lookup_translation_variables(self, variable_name):
-        current_dir = os.path.abspath(os.getcwd())
-        filename = "variables_language_en_US.json"
-        file = os.path.join(current_dir, filename)
-        with open(file, encoding="utf-8") as f:
-            translation_variables = json.load(f)
-            if variable_name in translation_variables:
-                return translation_variables[variable_name]
-        return None
+            # Join the current directory path with the relative file path
+            self.load_variables(os.path.join(self.current_dir, 'variables_language_en_US.json'))
+            self.load_variables(os.path.join(self.current_dir, 'account_variables.json'))
 
-    def lookup_account_variables(self, variable_name):
-        current_dir = os.path.abspath(os.getcwd())
-        filename = 'account_variables.json'
-        file = os.path.join(current_dir, filename)
-        with open(file, encoding="utf-8") as f:
-            account_variables = json.load(f)
-            if variable_name in account_variables:
-                return account_variables[variable_name]
-        return None
+        # Filepaths will take directories and find the json files in them
+        # it will also take single json files
+        filepaths = [os.path.join(self.current_dir, 'robot_tests/customizations/default.json')]
+        for filepath in filepaths:
+            if os.path.isdir(filepath):
+                self.load_variables_from_dir(filepath)
+            else:
+                self.load_variables(filepath)
 
-    def lookup_variables_dict(self, variable_name):
-        from variables_dict import variables_dict, variables
-        if variable_name in variables_dict:
-            return variables_dict[variable_name]
+    def load_variables(self, filepath):
+        if not os.path.isfile(filepath):
+            print(f"File {filepath} not found.")
+            return
+        with open(filepath, encoding="utf-8") as f:
+            json_data = json.load(f)
+            transformed_data = {k.replace(" ", "_"): v for k, v in json_data.items()}
+            for k, v in transformed_data.items(): 
+                if self.warn_about_duplicates:
+                    if k in self.variables:
+                        print(f'Warning: Key "{k}" in {filepath} is not unique. Overwriting value.')
+                self.variables[k] = v
 
-        if variable_name in variables:
-            return variables[variable_name]
-        return None
+    def load_variables_from_dir(self, directory):
+        for file in glob.glob(os.path.join(directory, '*.json')):
+            self.load_variables(file)
+
+    def __getattr__(self, variable_name):
+        if variable_name not in self.variables:
+            raise AttributeError(f"Variable {variable_name} not found in {self.language} or in variables_dict.py")
+        result = self.variables[variable_name]
+        if isinstance(result, str):
+            return self.replace_nested_variables(result)
+        return result
 
     def replace_nested_variables(self, value):
         # Regex pattern to find strings like {VARIABLE_NAME}
@@ -42,25 +53,3 @@ class RobotVariables():
             replacement_value = self.__getattr__(match)
             value = value.replace('{' + match + '}', replacement_value)
         return value
-
-    def __getattr__(self, variable_name):
-        result = self.lookup_translation_variables(variable_name)
-        if result is not None and type(result) is str:
-            return self.replace_nested_variables(result)
-        if result:
-            return result   
-
-        result = self.lookup_account_variables(variable_name)
-        if result is not None and type(result) is str:
-            return self.replace_nested_variables(result)
-        if result:
-            return result 
-
-        result = self.lookup_variables_dict(variable_name)
-        if result is not None and type(result) is str:
-            return self.replace_nested_variables(result)
-        elif result is not None:
-            return result
-
-        raise AttributeError(f"Variable {variable_name} not found in {self.language} or in variables_dict.py")
-
