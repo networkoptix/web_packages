@@ -108,11 +108,16 @@ export class NxThemeService {
             await this.setTheme(this.themeSelected, undefined);
             return;
         }
-
         this.themeSelected = this.sessionStorage.retrieve('theme');
-        NxConfigService.isDarkTheme = this.themeSelected.startsWith('dark');
 
         this.darkThemeMq = this.window.matchMedia('(prefers-color-scheme: dark)');
+
+        if (this.themeSelected === 'auto') {
+            NxConfigService.isDarkTheme = this.darkThemeMq.matches;
+        } else {
+            NxConfigService.isDarkTheme = this.themeSelected.startsWith('dark');
+        }
+
         this.darkThemeMq.addEventListener('change', e => {
             this.themeSelected = this.sessionStorage.retrieve('theme');
             if (this.themeSelected !== 'auto') {
@@ -151,7 +156,6 @@ export class NxThemeService {
         ) {
             themesEnabled = true;
         }
-
         themeSelected = themesEnabled ? themeSelected || 'auto' : 'light';
         if (
             themeSelected === 'auto' ||
@@ -163,7 +167,7 @@ export class NxThemeService {
             NxConfigService.isDarkTheme = this.darkThemeMq.matches;
             const theme = NxConfigService.isDarkTheme && themesEnabled ? this.getThemeRealName('dark') : this.getThemeRealName('light');
             this.window.document.documentElement.setAttribute('data-theme', theme);
-            this.cookieService.set('theme', themeSelected);
+            this.cookieService.set('theme', theme);
         } else {
             if (
                 docTheme === this.userTheme &&
