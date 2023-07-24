@@ -24,7 +24,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
     templateUrl: 'download.component.html',
     styleUrls: ['download.component.scss'],
 })
-export class DownloadComponent implements OnInit {
+export class DownloadComponentNewComponent implements OnInit {
     private sub: Subscription;
     private platform: string;
     private activeOs: string;

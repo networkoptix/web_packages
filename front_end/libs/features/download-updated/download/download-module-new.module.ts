@@ -11,7 +11,7 @@ import { NxSectionPlaceholderComponent } from '@components/placeholders/section/
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@pipes/pipes.module';
 
-import { DownloadComponent } from './download.component';
+import { DownloadComponentNewComponent } from './download-component-new.component';
 import { OsResolver } from './os-resolver';
 
 @Injectable({ providedIn: 'root' })
@@ -36,13 +36,13 @@ const appRoutes: Routes = [
     {
         path: '',
         title: 'download',
-        component: DownloadComponent,
+        component: DownloadComponentNewComponent,
         resolve: { platform: OsResolver },
     },
     {
         path: ':platform',
         title: TitleResolver,
-        component: DownloadComponent,
+        component: DownloadComponentNewComponent,
     },
 ];
 
@@ -60,8 +60,8 @@ const appRoutes: Routes = [
         NxSectionPlaceholderComponent,
     ],
     providers: [OsResolver],
-    declarations: [DownloadComponent],
+    declarations: [DownloadComponentNewComponent],
     bootstrap: [],
     exports: [],
 })
-export class DownloadModule {}
+export class DownloadModuleNewModule {}
