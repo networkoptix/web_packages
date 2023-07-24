@@ -1,4 +1,4 @@
-import { CdkStepper } from '@angular/cdk/stepper';
+import { CdkStepper, CdkStepperModule } from '@angular/cdk/stepper';
 import { CommonModule } from '@angular/common';
 import { Component, Input, TemplateRef } from '@angular/core';
 
@@ -9,7 +9,7 @@ import { Component, Input, TemplateRef } from '@angular/core';
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     providers: [{ provide: CdkStepper, useExisting: NxStepperComponent }],
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, CdkStepperModule],
 })
 export class NxStepperComponent extends CdkStepper {
     @Input() customButtonLabels: string[];
