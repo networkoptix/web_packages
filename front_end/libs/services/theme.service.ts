@@ -47,11 +47,11 @@ export class NxThemeService {
         @Inject(DOCUMENT) protected document: Document,
     ) {
         this.CONFIG = configService.getConfig();
+        this.viewType = this.route.snapshot.queryParams.view_type || 'web';
         if (!this.CONFIG.featureFlags.themesEnabled) {
             return;
         }
         this.themeCustomProperty = this.cloudApi.customAccountPropertyFactory('theme', { theme: this.CONFIG.themeConfig.default as AvailableThemes });
-        this.viewType = this.route.snapshot.queryParams.view_type || 'web';
 
         if (this.CONFIG.themeConfig) {
             // set availThemes //
