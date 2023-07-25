@@ -6,11 +6,10 @@ import {
     OnDestroy,
     OnInit,
     Input,
+    booleanAttribute,
 } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
 import { takeUntil, debounceTime } from 'rxjs/operators';
-
-import { CoercedBoolInput, IBool } from '@decorators/ibool';
 
 import { IntersectionStatus } from './nx-intersection.directive.types';
 
@@ -41,7 +40,7 @@ const fromIntersectionObserver = (
     element: HTMLElement,
     config: IntersectionObserverInit,
     debounce = 0,
-    emitVisibleOnlyOnce: CoercedBoolInput = false,
+    emitVisibleOnlyOnce: boolean = false,
 ): Observable<IntersectionStatus> =>
     new Observable<IntersectionStatus>(subscriber => {
         const subject$ = new Subject<{
@@ -93,7 +92,7 @@ export class NxIntersectionObserver implements OnInit, OnDestroy {
     @Input() intersectionRootMargin: string = '0px';
     @Input() intersectionRoot: HTMLElement;
     @Input() intersectionThreshold: number | number[];
-    @IBool() @Input() emitVisibleOnlyOnce: CoercedBoolInput = false;
+    @Input({ transform: booleanAttribute }) emitVisibleOnlyOnce: boolean = false;
 
     @Output() nxOnIntersect = new EventEmitter<IntersectionStatus>();
 

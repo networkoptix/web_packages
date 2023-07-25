@@ -14,7 +14,6 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { fromEvent, Subject } from 'rxjs';
 import { debounceTime, startWith } from 'rxjs/operators';
 
-import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemService } from '@services/system.service/system.service';
 import { WINDOW } from '@services/window-provider';
@@ -51,7 +50,7 @@ const VMS_VERSION_TIMELINE_ENABLED = 4.2;
     styleUrls: ['./timeline.component.scss'],
 })
 export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
-    @IBool() @Input() canExport: CoercedBoolInput;
+    @Input() canExport: boolean;
     @ViewChild('canvas') canvasView: ElementRef<HTMLCanvasElement>;
     @ViewChild('canvasWrapper') canvasWrapper: ElementRef<HTMLDivElement>;
 

@@ -1,9 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
+import {
+    booleanAttribute,
+    Component,
+    EventEmitter,
+    forwardRef,
+    Input,
+    OnInit,
+    Output,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import type { Params } from '@angular/router';
-
-import { IBool, CoercedBoolInput } from '@decorators/ibool';
 
 /* Usage
  <nx-tag
@@ -39,8 +45,8 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
     @Input() element: string = 'badge';
     @Input() name: string;
     @Input() size: string = 'small';
-    @IBool() @Input() clickable: CoercedBoolInput = true;
-    @IBool() @Input() locked: CoercedBoolInput;
+    @Input({ transform: booleanAttribute }) clickable: boolean = true;
+    @Input({ transform: booleanAttribute }) locked: boolean;
     @Input() link: string;
     @Input() linkParam: Params = {};
     @Input('value') selected: boolean;

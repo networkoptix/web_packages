@@ -9,7 +9,7 @@
         [ngModelOptions]="{ standalone: true }"
         labelText="releases"
         disabled
-        checked
+        [checked]="true"
     >
     </nx-checkbox>
     <nx-checkbox
@@ -18,7 +18,7 @@
         [ngModelOptions]="{ standalone: true }"
         (onClick)="initMenu()"
         labelText="betas"
-        checked
+        [checked]="true"
     ></nx-checkbox>
     <nx-checkbox
         componentId="patches"
@@ -26,7 +26,7 @@
         [ngModelOptions]="{ standalone: true }"
         (onClick)="initMenu()"
         labelText="patches"
-        checked
+        [checked]="true"
     ></nx-checkbox>
     <nx-checkbox
         componentId="other"
@@ -34,7 +34,7 @@
         [ngModelOptions]="{ standalone: true }"
         (onClick)="initMenu()"
         labelText="other"
-        checked
+        [checked]="true"
     ></nx-checkbox>
     <!-- FOR TESTING ONLY: REMOVE -->
 </div>

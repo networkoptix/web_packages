@@ -6,7 +6,6 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxRadioComponent } from '@components/radio/radio.component';
-import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { icons } from '@lib/variables/static-variables';
 import { NxSystem } from '@services/system.service/system';
 
@@ -25,7 +24,7 @@ export class NxMergeChoosePrimaryComponent implements OnInit {
 
     @Input() system: NxSystem;
     @Input() targetSystem: MergeSystem;
-    @IBool() @Input() currentSystemIsPrimary: CoercedBoolInput;
+    @Input() currentSystemIsPrimary: boolean;
     @Output() currentSystemIsPrimaryChange = new EventEmitter<boolean>();
     @Input() errorCode: string;
     @Output() setCurrentState = new EventEmitter<MergeStateType>();

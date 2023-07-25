@@ -1,8 +1,7 @@
 /* eslint-disable */
-import { Component, ElementRef, EventEmitter, HostBinding, Input, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostBinding, Input, Output, TemplateRef, ViewChild, booleanAttribute } from '@angular/core';
 import { v4 as uuid } from 'uuid';
 
-import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
@@ -45,9 +44,9 @@ export class NxVideoPlayerComponent {
      * Pings the server to allow NxCurrentRelayInterceptor to map to resolved relay instance.
      */
     @Input() pingServer: () => Observable<unknown>;
-    @IBool() @Input() controls: CoercedBoolInput = false;
-    @IBool() @Input() autoplay: CoercedBoolInput = false;
-    @IBool() @Input() autopause: CoercedBoolInput = false;
+    @Input({ transform: booleanAttribute }) controls: boolean = false;
+    @Input({ transform: booleanAttribute }) autoplay: boolean = false;
+    @Input({ transform: booleanAttribute }) autopause: boolean = false;
     @Input() fullScreenTarget: HTMLElement;
     @Input() showFullScreenButton: boolean = true;
     @Input() zoom: Pick<LayoutItem, 'zoomTop' | 'zoomRight' | 'zoomBottom' | 'zoomLeft'>;

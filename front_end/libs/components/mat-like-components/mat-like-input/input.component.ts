@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
+import {
+    booleanAttribute,
+    Component,
+    EventEmitter,
+    forwardRef,
+    Input,
+    OnInit,
+    Output,
+} from '@angular/core';
 import {
     ControlValueAccessor,
     FormControl,
@@ -11,7 +19,6 @@ import {
 } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { DirectivesModule } from '@directives/directives.module';
 
 /* Usage
@@ -52,8 +59,8 @@ import { DirectivesModule } from '@directives/directives.module';
 })
 export class NxMatLikeInputComponent implements OnInit, ControlValueAccessor, Validator {
     @Input() componentId: string;
-    @IBool() @Input() disabled: CoercedBoolInput;
-    @IBool() @Input() required: CoercedBoolInput;
+    @Input({ transform: booleanAttribute }) disabled: boolean;
+    @Input({ transform: booleanAttribute }) required: boolean;
     @Input() label: string;
     @Input() setFocus: boolean = false;
     @Input() autocomplete: string = 'on';

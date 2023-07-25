@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild, booleanAttribute } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
@@ -9,7 +9,6 @@ import { BehaviorSubject, combineLatest } from 'rxjs';
 
 import { accountSelectors } from '@common/store/account';
 import { accountDropdown } from '@components/static-variables-components';
-import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { DirectivesModule } from '@directives/directives.module';
 import { environment } from '@environments/environment';
 import { icons } from '@lib/variables/static-variables';
@@ -34,7 +33,7 @@ import { BaseDropdown } from '../injDropdown';
     standalone: true,
 })
 export class NxAccountSettingsDropdown extends BaseDropdown {
-    @IBool() @Input() small: CoercedBoolInput;
+    @Input({ transform: booleanAttribute }) small: boolean;
     @ViewChild('dropdown') dropdown: ElementRef<HTMLDivElement>;
     dropdownWidth$ = new BehaviorSubject(0);
     buttonWidth = new BehaviorSubject(0);

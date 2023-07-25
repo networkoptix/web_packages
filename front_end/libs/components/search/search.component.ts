@@ -9,6 +9,7 @@ import {
     EventEmitter,
     Output,
     Inject,
+    booleanAttribute,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -23,7 +24,6 @@ import staticLang from '@common/language/language_i18n_static.json';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-select.component';
 import { NxTagComponent } from '@components/tag/tag.component';
-import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { icons, search } from '@lib/variables/static-variables';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
@@ -89,7 +89,7 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
     @Input() layout: 'search' | 'selectors' | 'compact' | 'full' = 'full';
     @Input() layoutMod: boolean; // mod for 'selectors' layout (HM is using 100% width width Bootstrap) ... at some point we should unify this BS
     @Input() placeholder: string;
-    @IBool() @Input() instant: CoercedBoolInput;
+    @Input({ transform: booleanAttribute }) instant: boolean;
 
     @Output() onFocus = new EventEmitter<void>();
     @Output() onFocusOut = new EventEmitter<void>();

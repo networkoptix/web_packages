@@ -1,7 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-
-import { IBool, CoercedBoolInput } from '@decorators/ibool';
+import {
+    Component,
+    ElementRef,
+    Input,
+    OnInit,
+    ViewChild,
+    ViewEncapsulation,
+    booleanAttribute,
+} from '@angular/core';
 
 /* Usage
 <nx-section>
@@ -26,7 +32,7 @@ import { IBool, CoercedBoolInput } from '@decorators/ibool';
 })
 export class NxContentBlockSectionComponent implements OnInit {
     @Input() type: string;
-    @IBool() @Input() nonPadded: CoercedBoolInput;
+    @Input({ transform: booleanAttribute }) nonPadded: boolean;
 
     haveSubheader: boolean;
 

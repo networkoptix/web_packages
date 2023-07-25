@@ -3,7 +3,6 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { CoercedBoolInput } from '@decorators/ibool';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons } from '@variables/static-variables';
 
@@ -20,7 +19,7 @@ import { selectCurrentOrganizationRootGroupItems } from '../../store/groups/grou
 export class NxSystemGroupsSidebarComponent implements OnInit {
     @Input() currentGroupId: string;
     @Input() openGroups: OpenGroups;
-    @Input() hasGroups: CoercedBoolInput;
+    @Input() hasGroups: boolean;
     @Input() userEmail: string;
     @Input() currentPath: GroupPath[];
     @Output() dismiss = new EventEmitter<void>();

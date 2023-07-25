@@ -9,9 +9,9 @@ import {
     Output,
     Renderer2,
     ViewChild,
+    booleanAttribute,
 } from '@angular/core';
 
-import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { NgChanges } from '@utils/ng-changes';
 
 type SliderRange = { start: number; end: number; decimal?: boolean };
@@ -26,11 +26,10 @@ type SliderRange = { start: number; end: number; decimal?: boolean };
 export class NxSliderComponent implements OnInit, OnChanges {
     @Input() id: string;
     @Input() name: string;
-    @IBool() @Input() disabled: CoercedBoolInput;
+    @Input({ transform: booleanAttribute }) disabled: boolean;
     @Input() value: number;
     @Input() label: string;
     @Input() range: SliderRange = { start: 0, end: 100, decimal: false };
-    @IBool() @Input() showWarning: CoercedBoolInput;
     @Output() onDrag = new EventEmitter<number>();
 
     componentId: string;

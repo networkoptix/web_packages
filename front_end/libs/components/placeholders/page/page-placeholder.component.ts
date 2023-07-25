@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation, booleanAttribute } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -7,7 +7,6 @@ import { SubscriptionLike } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxFooterComponent } from '@components/footer/footer.component';
-import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { icons } from '@lib/variables/static-variables';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
@@ -40,13 +39,13 @@ export class NxPagePlaceholderComponent implements OnInit {
     @Input() iconClass: string;
     @Input() placeholderTitle: string | { params: { systemName: string }; value: string };
     @Input() message: string;
-    @IBool() @Input() preloader: CoercedBoolInput;
-    @IBool() @Input() condition: CoercedBoolInput;
-    @IBool() @Input() withFooter: CoercedBoolInput;
-    @IBool() @Input() constrainWidth: CoercedBoolInput;
+    @Input({ transform: booleanAttribute }) preloader: boolean;
+    @Input() condition: boolean;
+    @Input({ transform: booleanAttribute }) withFooter: boolean;
+    @Input({ transform: booleanAttribute }) constrainWidth: boolean;
     @Input() data: { systemName: string };
-    @IBool() @Input() showMainButton: CoercedBoolInput = false;
-    @IBool() @Input() addPadding: CoercedBoolInput = true;
+    @Input({ transform: booleanAttribute }) showMainButton: boolean = false;
+    @Input({ transform: booleanAttribute }) addPadding: boolean = true;
 
     LANG = staticLang;
 

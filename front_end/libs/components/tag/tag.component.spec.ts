@@ -21,7 +21,7 @@ describe('NxTagComponent', () => {
 
     it('should init component (w/ OPTIONS)', async () => {
         const { component, fixture } = await setupRadioComponent();
-        component.locked = ''; // not undefined
+        component.locked = true;
         component.element = 'btn';
         component.type = 'success';
         fixture.detectChanges();
@@ -48,7 +48,7 @@ describe('NxTagComponent', () => {
     it('should not change state when clicked if locked', async () => {
         const { component, fixture, debugElement } = await setupRadioComponent();
         component.type = 'success';
-        component.locked = ''; // not undefined
+        component.locked = true;
         fixture.detectChanges();
 
         const tag = debugElement.nativeElement.querySelector('a');

@@ -1,4 +1,12 @@
-import { Component, ElementRef, Inject, Input, OnChanges, TemplateRef } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    Inject,
+    Input,
+    OnChanges,
+    TemplateRef,
+    booleanAttribute,
+} from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { LegendPosition, NgxChartsModule } from '@swimlane/ngx-charts';
@@ -11,7 +19,6 @@ import { NxContentBlockComponent } from '@components/content-block/content-block
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSectionPlaceholderComponent } from '@components/placeholders/section/section-placeholder.component';
-import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { NxAccountService } from '@services/account.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
@@ -42,9 +49,9 @@ export class NxMonitoringGraphComponent implements OnChanges {
     @Input() system: NxSystem;
     @Input() systemId: string;
     @Input() selectedServerId: string;
-    @IBool() @Input() noFrame: CoercedBoolInput;
+    @Input({ transform: booleanAttribute }) noFrame: boolean;
     @Input() refreshInterval: number = 1000;
-    @IBool() @Input() showFullscreen: CoercedBoolInput;
+    @Input({ transform: booleanAttribute }) showFullscreen: boolean;
     @Input() lostConnectionPlaceholder: TemplateRef<unknown>;
 
     LANG = staticLang;

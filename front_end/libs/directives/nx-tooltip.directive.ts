@@ -16,13 +16,13 @@ import {
     OnInit,
     TemplateRef,
     ViewContainerRef,
+    booleanAttribute,
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subject, timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { NxTooltipComponent } from '@components/tooltip/tooltip.component';
-import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { NgChanges } from '@utils/ng-changes';
 
 @UntilDestroy()
@@ -35,11 +35,11 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
     @Input('nxTooltip') content: string | TemplateRef<unknown>;
     @Input() alternativeTargetRef: Element;
 
-    @IBool() @Input() horizontal: CoercedBoolInput;
-    @IBool() @Input() alternateStyle: CoercedBoolInput;
-    @IBool() @Input() alternateSecondary: CoercedBoolInput;
-    @IBool() @Input() forceDark: CoercedBoolInput;
-    @IBool() @Input() forceLight: CoercedBoolInput;
+    @Input({ transform: booleanAttribute }) horizontal: boolean;
+    @Input({ transform: booleanAttribute }) alternateStyle: boolean;
+    @Input({ transform: booleanAttribute }) alternateSecondary: boolean;
+    @Input({ transform: booleanAttribute }) forceDark: boolean;
+    @Input({ transform: booleanAttribute }) forceLight: boolean;
 
     constructor(
         private overlayPositionBuilder: OverlayPositionBuilder,

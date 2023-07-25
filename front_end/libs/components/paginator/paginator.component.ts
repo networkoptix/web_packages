@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, booleanAttribute } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
 
-import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NgChanges } from '@utils/ng-changes';
@@ -20,8 +19,8 @@ import { NgChanges } from '@utils/ng-changes';
 export class NxPaginatorComponent {
     @Input() numPages: number;
     @Input() pagesToShow: number;
-    @IBool() @Input() tempDisabled: CoercedBoolInput;
-    @IBool() @Input() showPrevNext: CoercedBoolInput;
+    @Input({ transform: booleanAttribute }) tempDisabled: boolean;
+    @Input({ transform: booleanAttribute }) showPrevNext: boolean;
 
     @Output() onChange = new EventEmitter<number>();
 

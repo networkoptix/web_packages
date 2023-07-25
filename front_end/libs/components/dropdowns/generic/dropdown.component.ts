@@ -6,10 +6,10 @@ import {
     Output,
     ViewChild,
     ElementRef,
+    booleanAttribute,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { icons } from '@lib/variables/static-variables';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { caseInsenstiveSearch } from '@utils/general';
@@ -50,13 +50,13 @@ export class NxGenericDropdown<
     @Input() id: string = 'genericSelect';
     @Input() items: Item[];
     @Input() selected: Item | false;
-    @IBool() @Input() merge: CoercedBoolInput;
-    @IBool() @Input() ellipsisMargin: CoercedBoolInput;
-    @IBool() @Input() hrMargin: CoercedBoolInput;
+    @Input({ transform: booleanAttribute }) merge: boolean;
+    @Input({ transform: booleanAttribute }) ellipsisMargin: boolean;
+    @Input({ transform: booleanAttribute }) hrMargin: boolean;
     @Input() stillLoading: boolean;
     @Input() type: string;
-    @IBool() @Input() hideSelectedItem: CoercedBoolInput = false;
-    @IBool() @Input() canSearch: CoercedBoolInput;
+    @Input({ transform: booleanAttribute }) hideSelectedItem: boolean = false;
+    @Input({ transform: booleanAttribute }) canSearch: boolean;
     @Input() noMatchMsg: string;
     @Input() forcePosition: {
         left?: number;
@@ -65,7 +65,7 @@ export class NxGenericDropdown<
         width?: number;
         offsetTop?: number;
     };
-    @IBool() @Input() disabled: CoercedBoolInput;
+    @Input({ transform: booleanAttribute }) disabled: boolean;
 
     @Output() onSelected = new EventEmitter<Item>();
     icons = icons;

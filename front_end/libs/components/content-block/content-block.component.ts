@@ -1,7 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-
-import { CoercedBoolInput, IBool } from '@decorators/ibool';
+import {
+    Component,
+    ElementRef,
+    Input,
+    OnInit,
+    ViewChild,
+    ViewEncapsulation,
+    booleanAttribute,
+} from '@angular/core';
 
 /* Usage
  <nx-block type?="gray | simple-alert ...more to come" fixed-height? hoverable? header-style="extended | slim"?>
@@ -41,9 +47,9 @@ import { CoercedBoolInput, IBool } from '@decorators/ibool';
 })
 export class NxContentBlockComponent implements OnInit {
     @Input('type') type: string;
-    @IBool() @Input('auto-height') autoHeight: CoercedBoolInput;
-    @IBool() @Input('fixed-height') fixedHeight: CoercedBoolInput;
-    @IBool() @Input('hoverable') hoverable: CoercedBoolInput;
+    @Input({ alias: 'auto-height', transform: booleanAttribute }) autoHeight: boolean;
+    @Input({ alias: 'fixed-height', transform: booleanAttribute }) fixedHeight: boolean;
+    @Input({ alias: 'hoverable', transform: booleanAttribute }) hoverable: boolean;
     @Input('header-style') headerStyle: string;
     @Input('header-class') headerClass: string;
 

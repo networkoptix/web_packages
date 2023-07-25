@@ -9,6 +9,7 @@ import {
     EventEmitter,
     Output,
     Renderer2,
+    booleanAttribute,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -16,7 +17,6 @@ import { cloneDeep, isEqual } from 'lodash-es';
 import { fromEvent, Subject } from 'rxjs';
 import { distinctUntilChanged, map, startWith, takeUntil } from 'rxjs/operators';
 
-import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { NxApplyService } from '@services/apply.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxSearchService } from '@services/search.service';
@@ -54,8 +54,8 @@ const SCROLL_AREA_LIMIT = 120;
 export class NxMenuComponent implements OnInit, OnChanges {
     @Input() system: NxSystem;
     @Input() content: Content;
-    @IBool() @Input() searchable: CoercedBoolInput;
-    @Input() autoFit: boolean = false;
+    @Input({ transform: booleanAttribute }) searchable: boolean;
+    @Input({ transform: booleanAttribute }) autoFit: boolean = false;
 
     @Output() menuSearchMode = new EventEmitter<boolean>();
     @Output() contentToggle = new EventEmitter<ContentToggle>();

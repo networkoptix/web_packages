@@ -6,7 +6,6 @@ import { forkJoin, take } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { selectCurrentUser } from '@common/store/account/account.selectors';
-import { CoercedBoolInput } from '@decorators/ibool';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { Account } from '@services/account.service/account';
 import { icons } from '@variables/static-variables';
@@ -27,7 +26,7 @@ import {
     styleUrls: ['groups-cards.component.scss'],
 })
 export class NxGroupsCardsComponent implements OnInit {
-    @Input() inRoot: CoercedBoolInput;
+    @Input() inRoot: boolean;
     hasGroups$ = this.store.select<boolean>(selectHasGroups);
     currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
     currentGroups$ = this.store.select<GroupItem[]>(selectCurrentGroupItems);

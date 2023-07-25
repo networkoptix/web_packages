@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
+import {
+    booleanAttribute,
+    Component,
+    EventEmitter,
+    forwardRef,
+    Input,
+    OnInit,
+    Output,
+} from '@angular/core';
 import {
     ControlValueAccessor,
     NG_VALUE_ACCESSOR,
@@ -8,7 +16,6 @@ import {
     FormControl,
 } from '@angular/forms';
 
-import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { NgChanges } from '@utils/ng-changes';
 
 @Component({
@@ -29,11 +36,11 @@ import { NgChanges } from '@utils/ng-changes';
 export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validator {
     @Input() id: string;
     @Input() name: string;
-    @IBool() @Input() required: CoercedBoolInput;
+    @Input({ transform: booleanAttribute }) required: boolean;
     @Input() checked: boolean;
-    @IBool() @Input() disabled: CoercedBoolInput;
+    @Input({ transform: booleanAttribute }) disabled: boolean;
     @Input() label: string;
-    @IBool() @Input() showWarning: CoercedBoolInput;
+    @Input({ transform: booleanAttribute }) showWarning: boolean;
     @Output() onClick = new EventEmitter<boolean>();
 
     @Output() onSwitch = new EventEmitter<boolean>();

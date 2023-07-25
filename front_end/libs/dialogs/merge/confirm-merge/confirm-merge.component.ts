@@ -7,7 +7,6 @@ import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
-import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { DirectivesModule } from '@directives/directives.module';
 import { icons } from '@lib/variables/static-variables';
 import { Process } from '@services/process.service/process';
@@ -37,11 +36,11 @@ export class NxMergeConfirmMergeComponent implements OnChanges {
     @Input() confirmMergeProcess: Process;
     @Input() primaryName: string;
     @Input() secondaryName: string;
-    @IBool() @Input() tooManyServers: CoercedBoolInput = false;
+    @Input() tooManyServers: boolean = false;
     @Input() maxServers: number;
     @Input() supportLink: string;
-    @IBool() @Input() isLocal: CoercedBoolInput;
-    @IBool() @Input() isSessionOauth: CoercedBoolInput = false;
+    @Input() isLocal: boolean;
+    @Input() isSessionOauth: boolean = false;
     @Input() password: string;
     @Output() passwordChange = new EventEmitter<string>();
     @Input() errorCode: string;

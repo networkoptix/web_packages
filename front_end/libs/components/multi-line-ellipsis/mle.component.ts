@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, booleanAttribute } from '@angular/core';
 
-import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { ResizeModule } from '@directives/resize/resize.module';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -22,8 +21,8 @@ import { NgChanges } from '@utils/ng-changes';
     imports: [CommonModule, ResizeModule],
 })
 export class NxMultiLineEllipsisComponent implements OnChanges {
-    @IBool() @Input() gradientOnly: CoercedBoolInput = false;
-    @IBool() @Input() viewMore: CoercedBoolInput;
+    @Input({ transform: booleanAttribute }) gradientOnly: boolean = false;
+    @Input({ transform: booleanAttribute }) viewMore: boolean;
     @Input() viewHeight: number;
     @Input() viewLineHeight: number;
     @Input() viewLines: number;

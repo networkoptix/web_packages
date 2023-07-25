@@ -1,8 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, booleanAttribute } from '@angular/core';
 import { Router } from '@angular/router';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons, openClientError } from '@lib/variables/static-variables';
 import type { Account } from '@services/account.service/account';
@@ -23,7 +22,7 @@ export class NxSystemCardComponent implements OnInit {
     @Input() system: SystemItem;
     @Input() search: string;
     @Input() account: Account;
-    @IBool() @Input() showOwner: CoercedBoolInput = true;
+    @Input({ transform: booleanAttribute }) showOwner: boolean = true;
 
     LANG = staticLang;
     CONFIG: IConfig;

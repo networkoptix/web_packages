@@ -8,6 +8,7 @@ import {
     OnInit,
     ViewEncapsulation,
     OnChanges,
+    booleanAttribute,
 } from '@angular/core';
 import {
     NG_VALUE_ACCESSOR,
@@ -19,7 +20,6 @@ import {
     FormsModule,
 } from '@angular/forms';
 
-import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { NgChanges } from '@utils/ng-changes';
 
 /* Usage
@@ -57,9 +57,9 @@ import { NgChanges } from '@utils/ng-changes';
 })
 export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {
     @Input() componentId: string;
-    @IBool() @Input() required: CoercedBoolInput;
-    @IBool() @Input() checked: CoercedBoolInput;
-    @IBool() @Input() disabled: CoercedBoolInput;
+    @Input({ transform: booleanAttribute }) required: boolean;
+    @Input() checked: boolean;
+    @Input({ transform: booleanAttribute }) disabled: boolean;
     @Input() labelText: string;
     @Input() ariaText: string = '';
     @Input() color: string;
@@ -98,7 +98,7 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
         setTimeout(() => {
             // set state after model was updated
             if (this.checked !== undefined) {
-                this.value = this.checked as boolean;
+                this.value = this.checked;
             }
             this.setState();
         });
@@ -106,7 +106,7 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
 
     ngOnChanges(changes: NgChanges<NxCheckboxComponent>): void {
         if (changes.checked) {
-            this.value = changes.checked.currentValue as boolean;
+            this.value = changes.checked.currentValue;
             this.state = this.cbxStates[String(this.value)];
         }
     }

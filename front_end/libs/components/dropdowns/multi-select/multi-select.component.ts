@@ -1,11 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, forwardRef } from '@angular/core';
+import { Component, Input, booleanAttribute, forwardRef } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
-import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { DirectivesModule } from '@directives/directives.module';
 import { icons } from '@lib/variables/static-variables';
 import { Translatable } from '@pipes/nx-translate.types';
@@ -57,9 +56,9 @@ import type { MultiSelectItem } from './multi-select.component.types';
 export class NxMultiSelectDropdown extends BaseDropdown {
     @Input() id: string = 'multiselect';
     @Input('items') itemsOrig: MultiSelectItem[];
-    @IBool() @Input() canSelectAll: CoercedBoolInput;
-    @IBool() @Input() canSearch: CoercedBoolInput;
-    @IBool() @Input() moreLeftPadding: CoercedBoolInput;
+    @Input({ transform: booleanAttribute }) canSelectAll: boolean;
+    @Input({ transform: booleanAttribute }) canSearch: boolean;
+    @Input({ transform: booleanAttribute }) moreLeftPadding: boolean;
 
     icons = icons;
     public items: MultiSelectItem[] = [];

@@ -16,6 +16,7 @@ import {
     Renderer2,
     TemplateRef,
     ViewChild,
+    booleanAttribute,
 } from '@angular/core';
 import { Params } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -28,7 +29,6 @@ import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.
 import { NxPaginatorComponent } from '@components/paginator/paginator.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSectionPlaceholderComponent } from '@components/placeholders/section/section-placeholder.component';
-import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { Size } from '@directives/resize/nx-resize.directive.types';
 import { ResizeModule } from '@directives/resize/resize.module';
 import staticLang from '@language/language_i18n_static.json';
@@ -82,11 +82,11 @@ const ROW_HEIGHT = 40; // if needed a change - do it in theme_variable_common to
 export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
     @Input() data: T[];
 
-    @IBool() @Input('set-pagination') setPagination: CoercedBoolInput;
-    @IBool() @Input('set-rows') setRows: CoercedBoolInput;
-    @IBool() @Input('set-rows-auto') setAutoRows: CoercedBoolInput;
-    @IBool() @Input('set-sorting') setSorting: CoercedBoolInput;
-    @IBool() @Input('set-rearrange') setRearrange: CoercedBoolInput;
+    @Input({ alias: 'set-pagination', transform: booleanAttribute }) setPagination: boolean;
+    @Input({ alias: 'set-rows', transform: booleanAttribute }) setRows: boolean;
+    @Input({ alias: 'set-rows-auto', transform: booleanAttribute }) setAutoRows: boolean;
+    @Input({ alias: 'set-sorting', transform: booleanAttribute }) setSorting: boolean;
+    @Input({ alias: 'set-rearrange', transform: booleanAttribute }) setRearrange: boolean;
     @Input('set-arrange') setArrange: string[] = [];
     @Input('set-row-expand') setRowExpand: boolean = false;
     @Input('rows-per-page') rowsPerPage: Array<number> = [10, 25, 50, 100];

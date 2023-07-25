@@ -8,6 +8,7 @@ import {
     OnInit,
     ViewEncapsulation,
     ViewChild,
+    booleanAttribute,
 } from '@angular/core';
 import {
     NG_VALUE_ACCESSOR,
@@ -16,8 +17,6 @@ import {
     ValidationErrors,
     FormControl,
 } from '@angular/forms';
-
-import { IBool, CoercedBoolInput } from '@decorators/ibool';
 
 /* Usage
  <nx-radio
@@ -50,7 +49,7 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
     @Input() name: string;
     @Input() label: string;
     @Input() value: string | number;
-    @IBool() @Input() disabled: CoercedBoolInput;
+    @Input({ transform: booleanAttribute }) disabled: boolean;
     @Output() onClick = new EventEmitter<string>();
 
     @ViewChild('inputRadioFocus') inputRadio: HTMLFormElement;

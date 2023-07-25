@@ -8,6 +8,7 @@ import {
     Output,
     ViewChild,
     ElementRef,
+    booleanAttribute,
 } from '@angular/core';
 import {
     ControlValueAccessor,
@@ -20,7 +21,6 @@ import {
 } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { icons } from '@lib/variables/static-variables';
 
 /* Usage
@@ -65,8 +65,8 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor, Validat
     @Input() min: number;
     @Input() max: number;
     @Input() step: number | 'any';
-    @IBool() @Input() disabled: CoercedBoolInput;
-    @IBool() @Input() required: CoercedBoolInput;
+    @Input({ transform: booleanAttribute }) disabled: boolean;
+    @Input({ transform: booleanAttribute }) required: boolean;
     @Input() placeholder: string | number = '- -';
 
     @Output() onChange = new EventEmitter<number>();

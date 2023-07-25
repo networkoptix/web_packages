@@ -7,7 +7,6 @@ import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
-import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { icons } from '@lib/variables/static-variables';
 import { PipesModule } from '@pipes/pipes.module';
 import { Process } from '@services/process.service/process';
@@ -34,8 +33,8 @@ export class NxMergeGenericMergeComponent {
     icons = icons;
 
     @Input() genericMergeProcess: Process;
-    @IBool() @Input() thisSystemHasOutdatedServer: CoercedBoolInput;
-    @IBool() @Input() failedToFindAnySystem: CoercedBoolInput;
+    @Input() thisSystemHasOutdatedServer: boolean;
+    @Input() failedToFindAnySystem: boolean;
     @Input() serverUrlErrorText: string;
     @Input() errorCode: string;
     @Output() close = new EventEmitter<void>();

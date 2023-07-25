@@ -8,6 +8,7 @@ import {
     OnInit,
     ViewChild,
     ViewEncapsulation,
+    booleanAttribute,
 } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
@@ -20,7 +21,6 @@ import { NxContentBlockSectionComponent } from '@components/content-block/sectio
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { PrimaryButtonModule } from '@components/primary-button/primary-button.module';
 import { NxThemeSwitcherComponent } from '@components/theme-switcher/theme-switcher.component';
-import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { NxMenuService } from '@menu/menu.service';
 import { NxSessionService } from '@services/session.service';
 import { NxThemeService } from '@services/theme.service';
@@ -45,7 +45,7 @@ import { NxThemeService } from '@services/theme.service';
     ],
 })
 export class NxThemeGeneratorComponent implements OnInit, AfterViewInit {
-    @IBool() @Input('advanced') advanced: CoercedBoolInput;
+    @Input({ alias: 'advanced', transform: booleanAttribute }) advanced: boolean;
     @Input('generatorLayout') generatorLayout: string = 'general';
 
     LANG = staticLang;

@@ -8,10 +8,10 @@ import {
     Output,
     EventEmitter,
     LOCALE_ID,
+    booleanAttribute,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { environment } from '@environments/environment';
 import { icons, images } from '@lib/variables/static-variables';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -29,8 +29,8 @@ class BaseLanguageDropdown extends BaseDropdown {
     @Input() dropup;
     @Input() short;
     @Input() altStyle;
-    @IBool() @Input() inHeader: CoercedBoolInput = false;
-    @IBool() @Input() inFooter: CoercedBoolInput = false;
+    @Input({ transform: booleanAttribute }) inHeader: boolean = false;
+    @Input({ transform: booleanAttribute }) inFooter: boolean = false;
     @Output() langChange = new EventEmitter<string>();
 
     currentLang: string;

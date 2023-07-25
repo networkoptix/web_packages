@@ -6,7 +6,6 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
-import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { icons } from '@lib/variables/static-variables';
 import { Process } from '@services/process.service/process';
 import { NgChanges } from '@utils/ng-changes';
@@ -34,7 +33,7 @@ export class NxMergeAdminPasswordComponent implements OnChanges {
     @Input() password: string;
     @Output() passwordChange = new EventEmitter<string>();
     @Input() targetSystem: MergeSystem;
-    @IBool() @Input() isSessionOauth: CoercedBoolInput;
+    @Input() isSessionOauth: boolean;
     @Input() errorCode: string;
     @Output() setCurrentState = new EventEmitter<MergeStateType>();
 

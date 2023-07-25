@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, booleanAttribute } from '@angular/core';
 
-import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { icons } from '@lib/variables/static-variables';
 import { PipesModule } from '@pipes/pipes.module';
 import { VmsClientPlaybackModule } from '@vms-client/submodules/playback/playback.module';
@@ -16,8 +15,8 @@ import { VmsClientPlaybackModule } from '@vms-client/submodules/playback/playbac
 export class ClipComponent {
     @Input() sourceUrl: string;
     @Input() posterUrl: string;
-    @IBool() @Input() disableDownload: CoercedBoolInput;
-    @IBool() @Input() disablePictureInPicture: CoercedBoolInput;
+    @Input({ transform: booleanAttribute }) disableDownload: boolean;
+    @Input({ transform: booleanAttribute }) disablePictureInPicture: boolean;
     @Output() error = new EventEmitter<void>();
 
     readonly internalPoster: string;
