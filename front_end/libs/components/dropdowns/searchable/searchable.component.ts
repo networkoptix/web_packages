@@ -149,6 +149,7 @@ export class NxSearchableDropdown extends BaseDropdown implements Validator {
             const freeTypeItem: Item = {
                 name: filter,
                 value: filter,
+                disabled: false,
             };
             // this.selectItem(freeTypeItem);
             this._selectedItem = freeTypeItem;
