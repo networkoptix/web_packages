@@ -301,6 +301,29 @@ def validate_serialized_attachments(attachments):
     if errors := [error for attachment in attachments if (error := validate_attachment(attachment))]:
         raise ValidationError(errors)
 
+def normalize_system_email_data(data):
+    '''
+    Handles normalization of data from mediaservers to match the SystemEmail model.
+
+    Currently the mediaserver uses messageBody and messagePlainBody, but the SystemEmail model uses messageHtml and messageText.
+
+    The mediaserver also uses camelCase for the attachment keys, but the SystemEmail model uses lowercase.
+
+    We should have the mediaserver use the same keys as the SystemEmail model.
+
+    This fix would handle previously built mediaserver versions in case emails through cloud are turned on.
+    '''
+    if message_body := data.pop('messageBody', ''):
+        data['messageHtml'] = message_body
+
+    if message_plain_body := data.pop('messagePlainBody', ''):
+        data['messageText'] = message_plain_body
+
+    if attachments := data.pop('attachments', []):
+        data['attachments'] = [{ k.lower(): v for k, v in attachment.items() } for attachment in attachments]
+
+    return data
+
 
 class SystemEmailSerializer(serializers.ModelSerializer):
     systemId = serializers.CharField(
@@ -321,6 +344,11 @@ class SystemEmailSerializer(serializers.ModelSerializer):
         model = SystemEmail
         fields = ('systemId', 'subject', 'messageHtml',
                   'messageText', 'targets', 'attachments', 'messageId')
+
+    def __init__(self, *args, **kwargs):
+        if data := kwargs.pop('data', False):
+            kwargs['data'] = normalize_system_email_data(data)
+        super().__init__(*args, **kwargs)
 
     def create(self, *, customization):
         self.is_valid(True)
