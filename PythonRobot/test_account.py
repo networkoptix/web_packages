@@ -1,11 +1,11 @@
 import json
 from time import sleep
 from selenium import webdriver
-from resource import get_headless_chrome
-from resource import get_lang_list
+from resource_import import get_headless_chrome
+from resource_import import get_lang_list
 from variables import ERROR_COLOR
 from selenium.webdriver.common.by import By
-from resource import verify_in_account_page, validate_log_out, get_random_email, register_and_activate_account, send_restore_password_email
+from resource_import import verify_in_account_page, validate_log_out, get_random_email, register_and_activate_account, send_restore_password_email
 from selenium.webdriver.chrome.options import Options
 
 from RobotVariables import RobotVariables
@@ -294,19 +294,19 @@ def test_language_change_affects_emails():
 
     send_restore_password_email(driver, random_email)
     sleep(10)
-    mbox = resource.open_mailbox(host=rb.BASE_HOST,password=rb.BASE_EMAIL_PASSWORD, email=random_email, is_secure=True)
-    email_uid = resource.wait_for_email(mbox, recipient=random_email, timeout=120, status="UNREAD")
-    resource.delete_email(mbox, email_uid)
-    resource.check_language_logged_in(random_email, password)
+    mbox = resource_import.open_mailbox(host=rb.BASE_HOST,password=rb.BASE_EMAIL_PASSWORD, email=random_email, is_secure=True)
+    email_uid = resource_import.wait_for_email(mbox, recipient=random_email, timeout=120, status="UNREAD")
+    resource_import.delete_email(mbox, email_uid)
+    resource_import.check_language_logged_in(random_email, password)
 
 def test_language_change_is_new_default():
     """15 Language change is new default"""
-    lang_dict = resource.get_lang_list()
+    lang_dict = resource_import.get_lang_list()
     ja_JP_account_info = lang_dict['ja_JP']['ACCOUNT INFORMATION']
     de_DE_account_info = lang_dict['de_DE']['ACCOUNT INFORMATION']
 
-    driver = resource.get_headless_chrome()
-    email = resource.get_random_email()
+    driver = resource_import.get_headless_chrome()
+    email = resource_import.get_random_email()
     password = "qweasd 123"
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
     robot_keywords.go_to_url(driver, rb.ENV + "/account")
@@ -332,7 +332,7 @@ def test_language_change_is_new_default():
     elif lang == 'de_DE':
         robot_keywords.wait_until_element_is_visible(driver, f"//header//h4[contains(text(),'{de_DE_account_info}')]")
 
-    resource.logout_japanese(driver)
+    resource_import.logout_japanese(driver)
     robot_keywords.go_to_url(driver, rb.ENV + "/account")
     cloud_login(driver, email, password, button=None, api=False)
 
@@ -352,7 +352,7 @@ def test_language_change_is_new_default():
     elif rb.LANGUAGE == 'de_DE':
         robot_keywords.wait_until_element_is_visible(driver, f"//header//h4[contains(text(),'{de_DE_account_info}')]")
 
-    resource.check_language_logged_in(email, password)
+    resource_import.check_language_logged_in(email, password)
     sleep(3)
     driver.refresh()
 

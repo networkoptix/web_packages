@@ -38,3 +38,4 @@ cloud/requirements.txt
 cloud/requirements-license.json
 **/migrations.json
 PythonRobot/letsencrypt-stg.crt
+PythonRobot/chromedriver

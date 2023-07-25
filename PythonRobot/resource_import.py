@@ -2,6 +2,7 @@
 import time
 import email
 from email.header import decode_header
+from re import findall
 import imaplib
 import json
 import os
@@ -48,6 +49,7 @@ def get_headless_chrome():
     chrome_options = Options()
     chrome_options.add_argument("--enable-logging")
     chrome_options.add_argument("--log-level=3")
+    chrome_options.binary_location = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
     #chrome_options.add_argument("--headless")
    
     capabilities = DesiredCapabilities.CHROME
@@ -108,34 +110,45 @@ def activate(driver, email, password=rb.BASE_PASSWORD, from_email=rb.FROM_EMAIL_
             robot_keywords.wait_until_element_is_visible(driver, element)
     else:
         api = CloudPortalAPI.CloudPortalAPI()
-
-
         api.activate_account_via_api(email, password)
+
+def get_nx_links_from_email(self, email_index, body):
+        url = rf'href=[\'\"]?(https:\/\/([^<>]*)(|.dev|.test|\.mx\/|.host\/|\.com\/)(authorize)\/[^\'\" >]+)'
+        res = findall(url, str(body))
+        return str(res[0][0])
 
 def get_email_link(recipient, link_type, from_email=rb.FROM_EMAIL_DEFAULT, timeout=300):
     if from_email:
         mbox = open_mailbox(host=rb.BASE_HOST,password=rb.BASE_EMAIL_PASSWORD, email=recipient, is_secure=True)
         email_uid = wait_for_email(mbox, recipient=recipient, timeout=120, status="UNREAD")
+        if link_type == "activate":
+            check_email_subject(email_uid, rb.ACTIVATE_YOUR_ACCOUNT_EMAIL_SUBJECT, rb.BASE_EMAIL, rb.BASE_EMAIL_PASSWORD, rb.BASE_HOST, rb.BASE_PORT)
+        body = mbox.uid('fetch', email_uid, '(BODY.PEEK[TEXT])')
+        links = get_nx_links_from_email(email_uid, link_type, body)   
+        return links
+    else:
+        print("from email only")
+        pass
     
 
-def register(first_name, last_name, email, password, checked=False, view_type=""):
-    if view_type:
-        robot_keywords.go_to_url(rb.ENV + "/authorize?client_type=create&view_type=" + view_type)
-    else:
-        robot_keywords.go_to_url(rb.ENV + "/authorize?client_type=create")
-    validate_on_register_page()
-    robot_keywords.input_text(rb.REGISTER_FIRST_NAME_INPUT, first_name)
-    robot_keywords.input_text(rb.REGISTER_LAST_NAME_INPUT, last_name)
+# def register(first_name, last_name, email, password, checked=False, view_type=""):
+#     if view_type:
+#         robot_keywords.go_to_url(rb.ENV + "/authorize?client_type=create&view_type=" + view_type)
+#     else:
+#         robot_keywords.go_to_url(rb.ENV + "/authorize?client_type=create")
+#     validate_on_register_page()
+#     robot_keywords.input_text(rb.REGISTER_FIRST_NAME_INPUT, first_name)
+#     robot_keywords.input_text(rb.REGISTER_LAST_NAME_INPUT, last_name)
 
-    try:
-        robot_keywords.wait_until_element_is_visible(rb.REGISTER_EMAIL_INPUT_LOCKED, 5)
-    except selenium.common.exceptions.TimeoutException:
-        robot_keywords.input_text(rb.REGISTER_EMAIL_INPUT, email)
+#     try:
+#         robot_keywords.wait_until_element_is_visible(rb.REGISTER_EMAIL_INPUT_LOCKED, 5)
+#     except selenium.common.exceptions.TimeoutException:
+#         robot_keywords.input_text(rb.REGISTER_EMAIL_INPUT, email)
 
-    robot_keywords.input_text(rb.REGISTER_PASSWORD_INPUT, password)
-    if not checked:
-        robot_keywords.click_element(rb.TERMS_AND_CONDITIONS_CHECKBOX_VISIBLE)
-    robot_keywords.click_button(rb.CREATE_ACCOUNT_BUTTON)
+#     robot_keywords.input_text(rb.REGISTER_PASSWORD_INPUT, password)
+#     if not checked:
+#         robot_keywords.click_element(rb.TERMS_AND_CONDITIONS_CHECKBOX_VISIBLE)
+#     robot_keywords.click_button(rb.CREATE_ACCOUNT_BUTTON)
 
 def register_and_activate_account(driver, first_name, last_name, email, password, reg="api", from_email=rb.FROM_EMAIL_DEFAULT):
     api = CloudPortalAPI.CloudPortalAPI()
@@ -273,8 +286,7 @@ def open_mailbox(host=rb.BASE_HOST, password=rb.BASE_PASSWORD, email=rb.BASE_EMA
             mail = imaplib.IMAP4(host)
 
         mail.login(email, password)
-        mail.select('inbox')  
-        
+        mail.select('inbox')         
         return mail
 
     except Exception as e:
@@ -336,7 +348,7 @@ def check_email_subject(self, email_id, sub_text, email_address, password, host,
                 if sub_text != header_str.strip():
                     raise Exception(header_str + ' was not ' + sub_text)
         conn.logout()
-        
+   
 def detect_language(text):
     detected_langs = str(Translator().detect(text))
     return detected_langs
