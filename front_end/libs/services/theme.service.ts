@@ -140,7 +140,7 @@ export class NxThemeService {
         if (this.themeSelected === 'auto') {
             NxConfigService.isDarkTheme = this.darkThemeMq.matches;
         } else {
-            NxConfigService.isDarkTheme = this.themeSelected.startsWith('dark');
+            NxConfigService.isDarkTheme = !!this.themeSelected?.startsWith('dark');
         }
 
         this.darkThemeMq.addEventListener('change', e => {
