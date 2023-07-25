@@ -359,7 +359,7 @@ def test_language_change_is_new_default():
 
 if __name__ == "__main__":
 
-    # test_can_access_account_page_from_dropdown()
+    test_can_access_account_page_from_dropdown()
     # test_can_access_account_page_from_direct_link()
     # # #test_cannot_access_account_page_from_direct_link_closing_log()
     # test_cannot_access_account_page_from_direct_link_on_valid_login()

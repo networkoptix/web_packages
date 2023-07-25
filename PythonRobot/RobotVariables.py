@@ -1,24 +1,20 @@
 import json, re, os, glob
+from PythonRobot.variables_dict import variables_dict, variables
 
 class RobotVariables():
     def __init__(self, language: str) -> None:
-        self.warn_about_duplicates = False
         self.variables = {}
+        self.warn_about_duplicates = False
         self.current_dir = os.path.abspath(os.getcwd())
         if language in ["en_US"]:
             self.language = language
-            # Join the current directory path with the relative file path
-            self.load_variables(os.path.join(self.current_dir, 'variables_language_en_US.json'))
-            self.load_variables(os.path.join(self.current_dir, 'account_variables.json'))
+            self.load_variables(os.path.join(self.current_dir, 'PythonRobot','variables_language_en_US.json'))
+            self.load_variables(os.path.join(self.current_dir, 'PythonRobot', 'account_variables.json'))
+            self.load_variables(os.path.join(self.current_dir, 'robot_tests/customizations/default.json'))
 
-        # Filepaths will take directories and find the json files in them
-        # it will also take single json files
-        filepaths = [os.path.join(self.current_dir, 'robot_tests/customizations/default.json')]
-        for filepath in filepaths:
-            if os.path.isdir(filepath):
-                self.load_variables_from_dir(filepath)
-            else:
-                self.load_variables(filepath)
+        # Load the variables from variables_dict.py
+        self.variables.update(variables_dict)
+        self.variables.update(variables)
 
     def load_variables(self, filepath):
         if not os.path.isfile(filepath):
@@ -28,14 +24,27 @@ class RobotVariables():
             json_data = json.load(f)
             transformed_data = {k.replace(" ", "_"): v for k, v in json_data.items()}
             for k, v in transformed_data.items(): 
-                if self.warn_about_duplicates:
-                    if k in self.variables:
-                        print(f'Warning: Key "{k}" in {filepath} is not unique. Overwriting value.')
+                if k in self.variables and self.warn_about_duplicates:
+                    print(f'Warning: Key "{k}" in {filepath} is not unique. Overwriting value.')
                 self.variables[k] = v
 
-    def load_variables_from_dir(self, directory):
-        for file in glob.glob(os.path.join(directory, '*.json')):
-            self.load_variables(file)
+    def lookup_variables_dict(self, variable_name):
+        if variable_name in variables_dict:
+            return variables_dict[variable_name]
+        if variable_name in variables:
+            return variables[variable_name]
+        return None
+
+    def replace_nested_variables(self, value):
+        # Regex pattern to find strings like {VARIABLE_NAME} or %VARIABLE_NAME%
+        patterns = [r'{([A-Z_]+)}', r'%([A-Z_]+)%']
+        for pattern in patterns:
+            matches = re.findall(pattern, value)
+            for match in matches:
+                replacement_value = self.__getattr__(match)
+                # Replace the matched string with the replacement value
+                value = value.replace('{' + match + '}' if '{' in pattern else '%' + match + '%', replacement_value)
+        return value
 
     def __getattr__(self, variable_name):
         if variable_name not in self.variables:
@@ -44,12 +53,3 @@ class RobotVariables():
         if isinstance(result, str):
             return self.replace_nested_variables(result)
         return result
-
-    def replace_nested_variables(self, value):
-        # Regex pattern to find strings like {VARIABLE_NAME}
-        pattern = r'{([A-Z_]+)}'
-        matches = re.findall(pattern, value)
-        for match in matches:
-            replacement_value = self.__getattr__(match)
-            value = value.replace('{' + match + '}', replacement_value)
-        return value
