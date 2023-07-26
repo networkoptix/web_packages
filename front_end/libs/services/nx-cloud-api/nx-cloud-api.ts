@@ -874,7 +874,7 @@ export class NxCloudApiService {
     }
 
     /* Ownership transfer */
-    @memoizeAsyncLong
+    @memoizeAsyncShort
     getTransfers(): Observable<t.SystemTransferInfo[]> {
         return this.http.get<t.SystemTransferInfo[]>(`${apiBase}/transfer/`);
     }
