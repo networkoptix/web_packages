@@ -645,7 +645,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 camerasNode.level3 = this.system.cameraManager.cameras.map<Level3Item>(camera => ({
                     id: camera.id.replace(/\s|\{|\}/g, ''),
                     svgIcon: this.getCameraStatusIcon(camera),
-                    disabled: camera.status === 'Offline' || camera.status === 'Unauthorized',
+                    disabled: camera.status === 'offline' || camera.status === 'unauthorized',
                     label: camera.name,
                     indent: true,
                     path: `cameras/${camera.id.replace(/\s|\{|\}/g, '')}`,
