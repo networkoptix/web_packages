@@ -28,14 +28,12 @@ export interface GetEndpoints {
     /* api */
     '/api/getCurrentUser': t.CurrentUser;
     '/api/getNonce': { nonce: string; realm: string };
-    // '/api/iflist': t.NormalResponse<t.ServerNetworkSettings>;
     '/api/moduleInformation': t.ModuleInformation;
     '/api/settingsDocumentation': t.ServerDocumentation;
-    // '/api/synchronizedTime': t.SystemTime;
     '/api/systemSettings': t.SystemSettingsResp;
 
     /* ec2 */
-    '/ec2/getAccessRights': t.ec2AccessRight[];
+    '/ec2/getCameraHistoryItems': t.Ec2CameraHistoryItems;
     '/ec2/getCamerasEx': t.ec2CameraEx[];
     '/ec2/getEventRules': t.EventRule[];
     '/ec2/getHardwareIdsOfServers': t.ServerHardareIdsResp;
@@ -43,7 +41,6 @@ export interface GetEndpoints {
     '/ec2/getMediaServers': t.ec2MediaServer[];
     '/ec2/getMediaServersEx': t.ec2MediaServerEx[];
     '/ec2/getPredefinedRoles': t.ec2PredefinedRole[];
-    // '/ec2/getResourceTypes': t.GetResourceTypes;
     '/ec2/getSettings': t.Param[];
     '/ec2/getStorages': t.ec2Storage[];
     '/ec2/getTimeOfServers': t.TimeOfServers;
@@ -53,6 +50,7 @@ export interface GetEndpoints {
     '/ec2/metrics/alarms': t.Alarms;
     '/ec2/metrics/manifest': t.Manifests;
     '/ec2/metrics/values': t.Values;
+    '/ec2/recordedTimePeriods': t.Ec2RecordedTimePeriodsResp;
 
     /* rest/v1 */
     '/rest/v1/devices': t.Device[];

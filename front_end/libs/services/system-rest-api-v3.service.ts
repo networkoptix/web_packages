@@ -64,10 +64,6 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
                     })),
                     '/ec2/getPredefinedRoles': [],
                     '/ec2/getUserRoles': roles.filter(({ name }) => name !== 'Owner'), // hide the owner role
-                    '/ec2/getAccessRights': users.map(({ id, accessibleResources }) => ({
-                        userId: id,
-                        resourceIds: accessibleResources ?? [],
-                    })),
                 },
             })),
         );

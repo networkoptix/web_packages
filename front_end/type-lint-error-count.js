@@ -43,7 +43,7 @@ module.exports = {
     'libs/components/process-button/process-button.component.ts': 6,
     'libs/components/radio/radio.component.ts': 3,
     'libs/components/summary/summary.component.ts': 1,
-    'libs/components/systems-list/list.component.ts': 2,
+    'libs/components/systems-list/list.component.ts': 1,
     'libs/components/widgets/bookmarks/bookmarks-widget.component.ts': 3,
     'libs/components/widgets/event-generator/event-generator.component.ts': 3,
     'libs/components/widgets/health-monitor/health-monitor-widget.component.ts': 18,
@@ -91,7 +91,7 @@ module.exports = {
     'libs/features/health/card/card.component.ts': 1,
     'libs/features/health/health-layout.service.ts': 27,
     'libs/features/health/health.service.ts': 42,
-    'libs/features/health/health/health.component.ts': 26,
+    'libs/features/health/health/health.component.ts': 25,
     'libs/features/health/metrics/metrics.component.ts': 12,
     'libs/features/health/table-components/dynamic-table-panel/dynamic-table-panel.component.ts': 5,
     'libs/features/health/table-components/dynamic-table/dynamic-table.component.ts': 43,
@@ -123,8 +123,8 @@ module.exports = {
     'libs/features/systems/view/pages/system-view-index/system-view-index.page.component.ts': 8,
     'libs/features/systems/view/vms-client/submodules/playback/components/playback-controls/playback-controls.component.ts': 6,
     'libs/features/systems/view/vms-client/submodules/playback/components/playback-state-indicator/playback-state-indicator.component.ts': 3,
-    'libs/features/systems/view/vms-client/submodules/playback/components/player/player-js/player-js.component.ts': 8,
-    'libs/features/systems/view/vms-client/submodules/playback/components/player/player.component.ts': 2,
+    'libs/features/systems/view/vms-client/submodules/playback/components/player/player-js/player-js.component.ts': 5,
+    'libs/features/systems/view/vms-client/submodules/playback/components/player/player.component.ts': 3,
     'libs/features/systems/view/vms-client/submodules/playback/services/playback.service.ts': 6,
     'libs/features/systems/view/vms-client/submodules/timeline/components/timeline-scrollbar/timeline-scrollbar.component.ts': 1,
     'libs/features/systems/view/vms-client/submodules/timeline/components/timeline-selection/timeline-selection.component.ts': 12,
@@ -145,9 +145,9 @@ module.exports = {
     'libs/features/systems/view/vms-client/submodules/vms/components/highlighted-string/highlighted-string.component.ts': 5,
     'libs/features/systems/view/vms-client/submodules/vms/components/media-server-list/media-server-list.component.ts': 12,
     'libs/features/systems/view/vms-client/submodules/vms/datatypes/BirdViewTree.ts': 23,
-    'libs/features/systems/view/vms-client/submodules/vms/datatypes/Camera.ts': 24,
+    'libs/features/systems/view/vms-client/submodules/vms/datatypes/Camera.ts': 23,
     'libs/features/systems/view/vms-client/submodules/vms/datatypes/TestCamera.ts': 14,
-    'libs/features/systems/view/vms-client/submodules/vms/services/vms.service.ts': 6,
+    'libs/features/systems/view/vms-client/submodules/vms/services/vms.service.ts': 3,
     'libs/features/systems/view/vms-client/submodules/vms/testMediaServers.ts': 5,
     'libs/features/systems/view/vms-client/utils/generateClickDubleClickPair.ts': 5,
     'libs/services/account.service/base.ts': 35,
@@ -168,10 +168,9 @@ module.exports = {
     'libs/services/process.service/process.service.ts': 3,
     'libs/services/process.service/process.ts': 29,
     'libs/services/system-api.service.ts': 3,
-    'libs/services/system-api.types.ts': 3,
-    'libs/services/system-legacy-api.service.ts': 108,
+    'libs/services/system-legacy-api.service.ts': 87,
     'libs/services/system-rest-api-v2.service.ts': 12,
-    'libs/services/system-rest-api.service.ts': 65,
+    'libs/services/system-rest-api.service.ts': 63,
     'libs/services/system.service/server-manager/server-manager.ts': 23,
     'libs/services/system.service/storage-manager/current-storage-state.ts': 3,
     'libs/services/system.service/storage-manager/storage-manager.ts': 10,
@@ -299,7 +298,7 @@ libs/components/console-table/table-data-source.ts
   147:59  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
 
 libs/components/content-block/alert/block-default.component.spec.ts
-  26:24  error  Missing return type on function  @typescript-eslint/explicit-function-return-type
+  27:24  error  Missing return type on function  @typescript-eslint/explicit-function-return-type
 
 libs/components/developers-menu/developers-menu.component.ts
    53:5   error  Missing Input type               nx/explicit-angular-boundary-types
@@ -576,10 +575,9 @@ libs/components/radio/radio.component.ts
   97:22  error  Untyped argument                          nx/no-untyped-arg
 
 libs/components/summary/summary.component.ts
-  100:17  error  Untyped argument  nx/no-untyped-arg
+  83:17  error  Untyped argument  nx/no-untyped-arg
 
 libs/components/systems-list/list.component.ts
-  77:5   error  Missing Input type                                                                                                                                                                                                                                                                                                                                                                                                  nx/explicit-angular-boundary-types
   79:27  error  Don't use `Function` as a type. The `Function` type accepts any function-like value.
 It provides no type safety when calling the function, which can be a common source of bugs.
 It also accepts things like class declarations, which will throw at runtime as they will not be called with `new`.
@@ -623,12 +621,12 @@ libs/components/widgets/helper-classes.ts
   81:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
 
 libs/components/widgets/live-view/live-view-widget.component.ts
-   67:5   error  Untyped subject                           nx/no-untyped-subject
-   80:5   error  Untyped subject                           nx/no-untyped-subject
-   94:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  139:24  error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  166:19  error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  190:28  error  Untyped argument                          nx/no-untyped-arg
+   68:5   error  Untyped subject                           nx/no-untyped-subject
+   81:5   error  Untyped subject                           nx/no-untyped-subject
+   95:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  140:24  error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  167:19  error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  191:28  error  Untyped argument                          nx/no-untyped-arg
 
 libs/components/widgets/server-logger/server-logger-widget.component.ts
    60:5   error  Untyped subject                  nx/no-untyped-subject
@@ -655,18 +653,18 @@ libs/components/widgets/third-party/third-party-widget.component.ts
   167:58  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
 
 libs/dialogs/add-widget/add-widget.component.ts
-  54:16  error  Untyped argument                          nx/no-untyped-arg
-  81:50  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  88:29  error  Untyped argument                          nx/no-untyped-arg
+   73:16  error  Untyped argument                          nx/no-untyped-arg
+  100:50  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  107:29  error  Untyped argument                          nx/no-untyped-arg
 
 libs/dialogs/edit/edit.component.ts
-   68:50  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-   94:27  error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  130:30  error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  144:31  error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  152:29  error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  203:31  error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  247:19  error  Untyped argument                          nx/no-untyped-arg
+   89:50  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  115:27  error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  151:30  error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  165:31  error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  173:29  error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  224:31  error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  268:19  error  Untyped argument                          nx/no-untyped-arg
 
 libs/dialogs/merge/merge.component.ts
     45:18  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
@@ -1061,33 +1059,33 @@ libs/features/email-notifications/email-notifications.component.ts
   242:22  error  Untyped argument                          nx/no-untyped-arg
 
 libs/features/health/alerts/alerts.component.ts
-   34:20  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-   47:13  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-   49:5   error  Untyped property                          nx/no-untyped-init
-   64:5   error  Untyped property                          nx/no-untyped-init
+   35:20  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   48:13  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   50:5   error  Untyped property                          nx/no-untyped-init
    65:5   error  Untyped property                          nx/no-untyped-init
-   67:5   error  Untyped property                          nx/no-untyped-init
+   66:5   error  Untyped property                          nx/no-untyped-init
    68:5   error  Untyped property                          nx/no-untyped-init
-   70:5   error  Untyped property                          nx/no-untyped-init
-   73:5   error  Untyped property                          nx/no-untyped-init
-   76:5   error  Untyped property                          nx/no-untyped-init
-  245:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  245:15  error  Untyped argument                          nx/no-untyped-arg
-  245:22  error  Untyped argument                          nx/no-untyped-arg
-  299:9   error  Untyped declaration                       nx/no-untyped-init
-  300:9   error  Untyped declaration                       nx/no-untyped-init
-  303:24  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  329:9   error  Untyped declaration                       nx/no-untyped-init
-  330:9   error  Untyped declaration                       nx/no-untyped-init
-  333:24  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  353:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  376:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  377:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  380:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  380:38  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  391:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  399:69  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  454:21  error  Untyped argument                          nx/no-untyped-arg
+   69:5   error  Untyped property                          nx/no-untyped-init
+   71:5   error  Untyped property                          nx/no-untyped-init
+   74:5   error  Untyped property                          nx/no-untyped-init
+   77:5   error  Untyped property                          nx/no-untyped-init
+  243:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  243:15  error  Untyped argument                          nx/no-untyped-arg
+  243:22  error  Untyped argument                          nx/no-untyped-arg
+  297:9   error  Untyped declaration                       nx/no-untyped-init
+  298:9   error  Untyped declaration                       nx/no-untyped-init
+  301:24  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  327:9   error  Untyped declaration                       nx/no-untyped-init
+  328:9   error  Untyped declaration                       nx/no-untyped-init
+  331:24  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  351:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  374:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  375:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  378:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  378:38  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  389:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  397:69  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  452:21  error  Untyped argument                          nx/no-untyped-arg
 
 libs/features/health/card/card.component.ts
   11:5  error  Missing Input type  nx/explicit-angular-boundary-types
@@ -1166,46 +1164,45 @@ libs/features/health/health.service.ts
   243:20  error  Untyped argument                          nx/no-untyped-arg
 
 libs/features/health/health/health.component.ts
-   52:5   error  Untyped property                          nx/no-untyped-init
-   55:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  143:46  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  230:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  285:23  error  Untyped argument                          nx/no-untyped-arg
-  296:9   error  Untyped declaration                       nx/no-untyped-init
-  332:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  332:18  error  Untyped argument                          nx/no-untyped-arg
-  346:52  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  363:17  error  Untyped declaration                       nx/no-untyped-init
-  380:33  error  Untyped declaration                       nx/no-untyped-init
-  393:53  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  458:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  458:18  error  Untyped argument                          nx/no-untyped-arg
-  458:26  error  Untyped argument                          nx/no-untyped-arg
-  458:34  error  Untyped argument                          nx/no-untyped-arg
-  481:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  524:55  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  524:68  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  529:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  530:9   error  Untyped declaration                       nx/no-untyped-init
-  532:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  545:20  error  Untyped argument                          nx/no-untyped-arg
-  546:24  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  553:9   error  Untyped declaration                       nx/no-untyped-init
-  627:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   59:5   error  Untyped property                          nx/no-untyped-init
+   62:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  217:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  272:23  error  Untyped argument                          nx/no-untyped-arg
+  283:9   error  Untyped declaration                       nx/no-untyped-init
+  319:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  319:18  error  Untyped argument                          nx/no-untyped-arg
+  333:52  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  350:17  error  Untyped declaration                       nx/no-untyped-init
+  367:33  error  Untyped declaration                       nx/no-untyped-init
+  380:53  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  445:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  445:18  error  Untyped argument                          nx/no-untyped-arg
+  445:26  error  Untyped argument                          nx/no-untyped-arg
+  445:34  error  Untyped argument                          nx/no-untyped-arg
+  468:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  511:55  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  511:68  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  516:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  517:9   error  Untyped declaration                       nx/no-untyped-init
+  519:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  532:20  error  Untyped argument                          nx/no-untyped-arg
+  533:24  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  540:9   error  Untyped declaration                       nx/no-untyped-init
+  614:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
 
 libs/features/health/metrics/metrics.component.ts
    41:5   error  Untyped property                          nx/no-untyped-init
+   44:5   error  Untyped property                          nx/no-untyped-init
    45:5   error  Untyped property                          nx/no-untyped-init
-   46:5   error  Untyped property                          nx/no-untyped-init
+   52:5   error  Untyped property                          nx/no-untyped-init
    53:5   error  Untyped property                          nx/no-untyped-init
    54:5   error  Untyped property                          nx/no-untyped-init
-   55:5   error  Untyped property                          nx/no-untyped-init
+   56:5   error  Untyped property                          nx/no-untyped-init
    57:5   error  Untyped property                          nx/no-untyped-init
    58:5   error  Untyped property                          nx/no-untyped-init
-   59:5   error  Untyped property                          nx/no-untyped-init
-   61:5   error  Untyped property                          nx/no-untyped-init
-  143:86  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  262:21  error  Untyped argument                          nx/no-untyped-arg
+   60:5   error  Untyped property                          nx/no-untyped-init
+  140:86  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  259:21  error  Untyped argument                          nx/no-untyped-arg
 
 libs/features/health/table-components/dynamic-table-panel/dynamic-table-panel.component.ts
   27:5   error  Missing Input type                        nx/explicit-angular-boundary-types
@@ -1274,38 +1271,38 @@ libs/features/health/table-components/single-entity/single-entity.component.ts
   24:5  error  Untyped property    nx/no-untyped-init
 
 libs/features/health/viewer/viewer.component.ts
-   43:5   error  Untyped property                          nx/no-untyped-init
-   46:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-   57:5   error  Untyped property                          nx/no-untyped-init
-  141:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  206:23  error  Untyped argument                          nx/no-untyped-arg
-  217:9   error  Untyped declaration                       nx/no-untyped-init
-  253:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  253:18  error  Untyped argument                          nx/no-untyped-arg
-  267:52  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  284:17  error  Untyped declaration                       nx/no-untyped-init
-  301:33  error  Untyped declaration                       nx/no-untyped-init
-  314:53  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  379:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  379:18  error  Untyped argument                          nx/no-untyped-arg
-  379:26  error  Untyped argument                          nx/no-untyped-arg
-  379:34  error  Untyped argument                          nx/no-untyped-arg
-  402:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  445:55  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  445:68  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  450:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  451:9   error  Untyped declaration                       nx/no-untyped-init
-  453:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  466:20  error  Untyped argument                          nx/no-untyped-arg
-  467:24  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  494:9   error  Untyped declaration                       nx/no-untyped-init
+   51:5   error  Untyped property                          nx/no-untyped-init
+   54:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   65:5   error  Untyped property                          nx/no-untyped-init
+  150:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  215:23  error  Untyped argument                          nx/no-untyped-arg
+  226:9   error  Untyped declaration                       nx/no-untyped-init
+  262:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  262:18  error  Untyped argument                          nx/no-untyped-arg
+  276:52  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  293:17  error  Untyped declaration                       nx/no-untyped-init
+  310:33  error  Untyped declaration                       nx/no-untyped-init
+  323:53  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  388:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  388:18  error  Untyped argument                          nx/no-untyped-arg
+  388:26  error  Untyped argument                          nx/no-untyped-arg
+  388:34  error  Untyped argument                          nx/no-untyped-arg
+  411:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  454:55  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  454:68  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  459:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  460:9   error  Untyped declaration                       nx/no-untyped-init
+  462:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  475:20  error  Untyped argument                          nx/no-untyped-arg
+  476:24  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  503:9   error  Untyped declaration                       nx/no-untyped-init
 
 libs/features/integration/details/details.component.ts
    40:5   error  Untyped property  nx/no-untyped-init
-  258:40  error  Untyped argument  nx/no-untyped-arg
-  258:53  error  Untyped argument  nx/no-untyped-arg
-  275:27  error  Untyped argument  nx/no-untyped-arg
-  288:33  error  Untyped argument  nx/no-untyped-arg
+  259:40  error  Untyped argument  nx/no-untyped-arg
+  259:53  error  Untyped argument  nx/no-untyped-arg
+  276:27  error  Untyped argument  nx/no-untyped-arg
+  289:33  error  Untyped argument  nx/no-untyped-arg
 
 libs/features/integration/integration.service.ts
    80:29  error  Untyped argument                          nx/no-untyped-arg
@@ -1388,12 +1385,12 @@ libs/features/push-notifications/push-notifications.module.ts
   23:8  error  Missing return type on function  @typescript-eslint/explicit-function-return-type
 
 libs/features/systems/settings/admin/admin.component.ts
-   60:5  error  Untyped property                 nx/no-untyped-init
-   82:5  error  Untyped property                 nx/no-untyped-init
-   83:5  error  Untyped property                 nx/no-untyped-init
-  466:5  error  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  519:5  error  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  592:5  error  Missing return type on function  @typescript-eslint/explicit-function-return-type
+   68:5  error  Untyped property                 nx/no-untyped-init
+   90:5  error  Untyped property                 nx/no-untyped-init
+   91:5  error  Untyped property                 nx/no-untyped-init
+  440:5  error  Missing return type on function  @typescript-eslint/explicit-function-return-type
+  493:5  error  Missing return type on function  @typescript-eslint/explicit-function-return-type
+  564:5  error  Missing return type on function  @typescript-eslint/explicit-function-return-type
 
 libs/features/systems/settings/admin/advanced/advanced.component.ts
    36:5   error  Untyped property                 nx/no-untyped-init
@@ -1449,10 +1446,10 @@ libs/features/systems/settings/cameras/motion-detection-settings/motion-detectio
   232:29  error  Missing return type on function  @typescript-eslint/explicit-function-return-type
 
 libs/features/systems/settings/cloud-storage/cloud-storage.component.ts
-   91:15  error  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  114:20  error  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  149:31  error  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  153:26  error  Missing return type on function  @typescript-eslint/explicit-function-return-type
+   88:15  error  Missing return type on function  @typescript-eslint/explicit-function-return-type
+  111:20  error  Missing return type on function  @typescript-eslint/explicit-function-return-type
+  121:31  error  Missing return type on function  @typescript-eslint/explicit-function-return-type
+  125:26  error  Missing return type on function  @typescript-eslint/explicit-function-return-type
 
 libs/features/systems/settings/licenses/license-details/license.component.spec.ts
   157:17  error  Missing return type on function  @typescript-eslint/explicit-function-return-type
@@ -1466,14 +1463,14 @@ libs/features/systems/settings/licenses/license-details/license.component.ts
   99:9   error  Untyped declaration                       nx/no-untyped-init
 
 libs/features/systems/settings/licenses/licenses.component.ts
+   28:5   error  Untyped subject                           nx/no-untyped-subject
+   29:5   error  Untyped subject                           nx/no-untyped-subject
    30:5   error  Untyped subject                           nx/no-untyped-subject
-   31:5   error  Untyped subject                           nx/no-untyped-subject
-   32:5   error  Untyped subject                           nx/no-untyped-subject
-   34:15  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-   96:31  error  Untyped argument                          nx/no-untyped-arg
-  161:31  error  Untyped argument                          nx/no-untyped-arg
-  186:31  error  Untyped argument                          nx/no-untyped-arg
-  205:48  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   32:15  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   75:31  error  Untyped argument                          nx/no-untyped-arg
+  140:31  error  Untyped argument                          nx/no-untyped-arg
+  165:31  error  Untyped argument                          nx/no-untyped-arg
+  184:48  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
 
 libs/features/systems/settings/licenses/new/new.component.spec.ts
   27:19  error  Missing return type on function  @typescript-eslint/explicit-function-return-type
@@ -1501,18 +1498,18 @@ libs/features/systems/settings/licenses/trial/trial.component.ts
   63:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
 
 libs/features/systems/settings/settings.component.ts
-   57:5   error  Missing Input type                        nx/explicit-angular-boundary-types
-   58:5   error  Missing Input type                        nx/explicit-angular-boundary-types
-   62:5   error  Untyped property                          nx/no-untyped-init
-   70:5   error  Untyped property                          nx/no-untyped-init
-   79:5   error  Untyped property                          nx/no-untyped-init
+   68:5   error  Missing Input type                        nx/explicit-angular-boundary-types
+   69:5   error  Missing Input type                        nx/explicit-angular-boundary-types
    81:5   error  Untyped property                          nx/no-untyped-init
-  105:5   error  Untyped subject                           nx/no-untyped-subject
-  577:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  635:37  error  Untyped argument                          nx/no-untyped-arg
-  635:37  error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  693:62  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  856:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   89:5   error  Untyped property                          nx/no-untyped-init
+   98:5   error  Untyped property                          nx/no-untyped-init
+  100:5   error  Untyped property                          nx/no-untyped-init
+  120:5   error  Untyped subject                           nx/no-untyped-subject
+  589:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  648:37  error  Untyped argument                          nx/no-untyped-arg
+  648:37  error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  708:62  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  875:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
 
 libs/features/systems/view/pages/system-view-camera/fullscreen.ts
    1:1  error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
@@ -1523,45 +1520,45 @@ libs/features/systems/view/pages/system-view-camera/fullscreen.ts
   13:5  error  Include a description after the "@ts-expect-error" directive to explain why the @ts-expect-error is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
 
 libs/features/systems/view/pages/system-view-camera/system-view-camera.page.component.ts
-   83:21  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
-   84:25  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
-   91:45  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
-  160:9   error  Include a description after the "@ts-expect-error" directive to explain why the @ts-expect-error is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
-  175:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  183:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  265:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  334:35  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
-  395:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  405:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  409:28  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
-  426:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  430:27  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
+   82:21  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
+   83:25  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
+   90:45  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
+  162:9   error  Include a description after the "@ts-expect-error" directive to explain why the @ts-expect-error is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
+  177:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+  185:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+  261:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+  330:35  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
+  391:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+  401:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+  405:28  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
+  422:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+  426:27  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
+  479:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+  479:27  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
   483:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  483:27  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
-  487:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  500:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  519:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  519:27  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
-  524:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  654:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  654:47  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
-  658:9   error  Untyped declaration                                                                                                                                            nx/no-untyped-init
-  689:28  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
-  808:29  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
-  825:41  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
-  829:27  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
-  847:9   error  Untyped declaration                                                                                                                                            nx/no-untyped-init
-  876:25  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
+  496:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+  515:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+  515:27  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
+  520:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+  649:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+  649:47  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
+  653:9   error  Untyped declaration                                                                                                                                            nx/no-untyped-init
+  684:28  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
+  801:29  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
+  818:41  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
+  822:27  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
+  840:9   error  Untyped declaration                                                                                                                                            nx/no-untyped-init
+  869:25  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
 
 libs/features/systems/view/pages/system-view-index/system-view-index.page.component.ts
-   77:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-   78:25  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  101:21  error  Untyped argument                          nx/no-untyped-arg
-  279:37  error  Untyped argument                          nx/no-untyped-arg
-  279:50  error  Untyped argument                          nx/no-untyped-arg
-  291:28  error  Untyped argument                          nx/no-untyped-arg
-  440:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  540:31  error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   75:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   76:25  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   99:21  error  Untyped argument                          nx/no-untyped-arg
+  252:37  error  Untyped argument                          nx/no-untyped-arg
+  252:50  error  Untyped argument                          nx/no-untyped-arg
+  264:28  error  Untyped argument                          nx/no-untyped-arg
+  385:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  474:31  error  Missing return type on function           @typescript-eslint/explicit-function-return-type
 
 libs/features/systems/view/vms-client/submodules/playback/components/playback-controls/playback-controls.component.ts
    54:21  error  Include a description after the "@ts-expect-error" directive to explain why the @ts-expect-error is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
@@ -1577,32 +1574,30 @@ libs/features/systems/view/vms-client/submodules/playback/components/playback-st
   29:5  error  Missing return type on function  @typescript-eslint/explicit-function-return-type
 
 libs/features/systems/view/vms-client/submodules/playback/components/player/player-js/player-js.component.ts
-  21:27  error  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
-  22:25  error  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
-  31:11  error  Don't use `Function` as a type. The `Function` type accepts any function-like value.
+  28:11  error  Don't use `Function` as a type. The `Function` type accepts any function-like value.
 It provides no type safety when calling the function, which can be a common source of bugs.
 It also accepts things like class declarations, which will throw at runtime as they will not be called with `new`.
 If you are expecting the function to accept certain arguments, you should explicitly define the function shape  @typescript-eslint/ban-types
-  32:12  error  Don't use `Function` as a type. The `Function` type accepts any function-like value.
+  29:12  error  Don't use `Function` as a type. The `Function` type accepts any function-like value.
 It provides no type safety when calling the function, which can be a common source of bugs.
 It also accepts things like class declarations, which will throw at runtime as they will not be called with `new`.
 If you are expecting the function to accept certain arguments, you should explicitly define the function shape  @typescript-eslint/ban-types
-  43:45  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
-  58:5   error  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
-  69:9   error  Untyped declaration                                                                                                                                                                                                                                                                                                                                                                                                 nx/no-untyped-init
-  76:28  error  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
+  41:45  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  70:9   error  Untyped declaration                                                                                                                                                                                                                                                                                                                                                                                                 nx/no-untyped-init
+  86:28  error  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
 
 libs/features/systems/view/vms-client/submodules/playback/components/player/player.component.ts
-  135:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  140:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   70:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  139:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  149:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
 
 libs/features/systems/view/vms-client/submodules/playback/services/playback.service.ts
    28:9   error  Untyped declaration              nx/no-untyped-init
    29:9   error  Untyped declaration              nx/no-untyped-init
    82:5   error  Missing return type on function  @typescript-eslint/explicit-function-return-type
   116:5   error  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  139:5   error  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  192:21  error  Untyped argument                 nx/no-untyped-arg
+  136:5   error  Missing return type on function  @typescript-eslint/explicit-function-return-type
+  189:21  error  Untyped argument                 nx/no-untyped-arg
 
 libs/features/systems/view/vms-client/submodules/timeline/components/timeline-scrollbar/timeline-scrollbar.component.ts
   192:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
@@ -1788,28 +1783,27 @@ If you are expecting the function to accept certain arguments, you should explic
 libs/features/systems/view/vms-client/submodules/vms/datatypes/Camera.ts
    23:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
    27:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   60:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   93:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   98:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  102:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  109:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  110:38  error  Untyped argument                          nx/no-untyped-arg
-  110:38  error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  133:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  137:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  137:40  error  Untyped argument                          nx/no-untyped-arg
-  138:23  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  139:9   error  Untyped declaration                       nx/no-untyped-init
-  197:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  201:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   59:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   85:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   90:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   97:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   98:38  error  Untyped argument                          nx/no-untyped-arg
+   98:38  error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  121:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  125:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  125:40  error  Untyped argument                          nx/no-untyped-arg
+  126:23  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  127:9   error  Untyped declaration                       nx/no-untyped-init
+  185:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  189:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  200:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  204:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  208:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
   212:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
   216:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
   220:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  224:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  228:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  232:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  239:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  260:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  227:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  248:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
 
 libs/features/systems/view/vms-client/submodules/vms/datatypes/TestCamera.ts
    14:5  error  Missing return type on function  @typescript-eslint/explicit-function-return-type
@@ -1828,12 +1822,9 @@ libs/features/systems/view/vms-client/submodules/vms/datatypes/TestCamera.ts
   114:5  error  Missing return type on function  @typescript-eslint/explicit-function-return-type
 
 libs/features/systems/view/vms-client/submodules/vms/services/vms.service.ts
-   66:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   70:31  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
-   81:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  159:9   error  Include a description after the "@ts-expect-error" directive to explain why the @ts-expect-error is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
-  170:47  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
-  170:54  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
+   38:5   error  Missing return type on function  @typescript-eslint/explicit-function-return-type
+  132:47  error  Untyped argument                 nx/no-untyped-arg
+  132:54  error  Untyped argument                 nx/no-untyped-arg
 
 libs/features/systems/view/vms-client/submodules/vms/testMediaServers.ts
   11:1   error  Missing return type on function  @typescript-eslint/explicit-function-return-type
@@ -2166,8 +2157,8 @@ libs/services/oauth.service.ts
    50:5   error  Missing return type on function  @typescript-eslint/explicit-function-return-type
    58:31  error  Untyped argument                 nx/no-untyped-arg
    58:31  error  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  120:12  error  Untyped argument                 nx/no-untyped-arg
-  127:15  error  Untyped argument                 nx/no-untyped-arg
+  121:12  error  Untyped argument                 nx/no-untyped-arg
+  128:15  error  Untyped argument                 nx/no-untyped-arg
 
 libs/services/process.service/process.service.ts
   27:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
@@ -2213,226 +2204,198 @@ libs/services/system-api.service.ts
   51:51  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
   71:9   error  Untyped declaration                       nx/no-untyped-init
 
-libs/services/system-api.types.ts
-  727:16  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  839:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  840:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-
 libs/services/system-legacy-api.service.ts
-   159:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   163:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   167:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   175:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   175:27  error  Untyped argument                          nx/no-untyped-arg
-   190:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   203:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   204:37  error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   223:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   233:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   306:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   334:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   334:28  error  Untyped argument                          nx/no-untyped-arg
-   381:76  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-   404:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   409:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   414:41  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-   462:47  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-   473:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   478:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   485:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   505:72  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-   506:9   error  Untyped declaration                       nx/no-untyped-init
-   506:9   error  Untyped declaration                       nx/no-untyped-init
-   506:9   error  Untyped declaration                       nx/no-untyped-init
-   506:9   error  Untyped declaration                       nx/no-untyped-init
-   506:9   error  Untyped declaration                       nx/no-untyped-init
-   509:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-   517:28  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-   528:83  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-   532:46  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-   536:65  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-   540:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   550:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   558:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   562:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   567:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   573:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   577:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   578:26  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-   581:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   585:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   589:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   592:25  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-   627:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   162:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   166:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   170:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   178:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   178:27  error  Untyped argument                          nx/no-untyped-arg
+   193:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   206:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   207:37  error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   226:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   236:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   327:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   355:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   355:28  error  Untyped argument                          nx/no-untyped-arg
+   402:76  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   425:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   430:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   435:41  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   483:47  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   494:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   499:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   506:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   526:72  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   527:9   error  Untyped declaration                       nx/no-untyped-init
+   527:9   error  Untyped declaration                       nx/no-untyped-init
+   527:9   error  Untyped declaration                       nx/no-untyped-init
+   527:9   error  Untyped declaration                       nx/no-untyped-init
+   527:9   error  Untyped declaration                       nx/no-untyped-init
+   530:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   538:28  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   549:83  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   553:46  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   557:65  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   561:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   571:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   580:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   586:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   590:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   591:26  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   594:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   598:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   618:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   624:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
    633:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   639:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   664:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   665:25  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-   672:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   634:25  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   665:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
    682:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   686:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   703:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   710:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   717:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   734:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   734:28  error  Untyped argument                          nx/no-untyped-arg
-   766:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   767:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-   773:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   773:29  error  Untyped argument                          nx/no-untyped-arg
-   774:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-   784:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   785:26  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-   797:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   813:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   814:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-   819:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   823:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   830:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   839:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   843:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   851:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   867:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   868:43  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-   874:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   682:28  error  Untyped argument                          nx/no-untyped-arg
+   714:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   715:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   721:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   721:29  error  Untyped argument                          nx/no-untyped-arg
+   722:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   732:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   733:26  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   745:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   761:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   762:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   767:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   771:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   778:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   787:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   791:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   799:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   815:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   816:43  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   822:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   826:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   846:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   846:21  error  Untyped argument                          nx/no-untyped-arg
    878:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   898:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   898:21  error  Untyped argument                          nx/no-untyped-arg
-   930:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   936:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   976:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-   980:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  1007:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  1031:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  1080:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  1094:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  1110:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  1110:25  error  Untyped argument                          nx/no-untyped-arg
-  1134:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  1175:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  1210:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   884:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   924:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   928:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+   979:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  1028:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  1028:25  error  Untyped argument                          nx/no-untyped-arg
+  1152:9   error  Untyped argument                          nx/no-untyped-arg
+  1154:9   error  Untyped declaration                       nx/no-untyped-init
+  1155:9   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  1155:39  error  Untyped argument                          nx/no-untyped-arg
   1215:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  1220:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  1252:9   error  Untyped argument                          nx/no-untyped-arg
-  1254:9   error  Untyped declaration                       nx/no-untyped-init
-  1255:9   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  1255:39  error  Untyped argument                          nx/no-untyped-arg
-  1315:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  1319:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  1335:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  1341:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  1354:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  1372:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  1372:18  error  Untyped argument                          nx/no-untyped-arg
-  1396:15  error  Untyped argument                          nx/no-untyped-arg
-  1400:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  1404:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  1219:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  1254:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  1272:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  1272:18  error  Untyped argument                          nx/no-untyped-arg
+  1296:15  error  Untyped argument                          nx/no-untyped-arg
+  1304:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
 
 libs/services/system-rest-api-v2.service.ts
-  190:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  204:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  222:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  257:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  294:30  error  Untyped argument                          nx/no-untyped-arg
-  294:30  error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  309:66  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  330:21  error  Untyped argument                          nx/no-untyped-arg
-  330:38  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  339:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  344:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  349:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  191:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  205:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  223:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  258:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  295:30  error  Untyped argument                          nx/no-untyped-arg
+  295:30  error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  310:66  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  331:21  error  Untyped argument                          nx/no-untyped-arg
+  331:38  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  340:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  345:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  350:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
 
 libs/services/system-rest-api.service.ts
-   144:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   148:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   152:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   156:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   160:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   166:28  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
-   179:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   179:24  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
-   183:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   187:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   218:95  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
-   219:23  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
-   232:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   273:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   273:22  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
-   273:30  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
-   275:46  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
-   299:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   299:25  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
-   299:43  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
-   308:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   308:28  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
-   364:24  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
-   383:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   383:25  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
-   389:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   389:27  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
-   407:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   430:19  error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   436:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   507:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   520:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   537:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   615:47  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
-   623:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   649:46  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
-   653:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   666:25  error  Include a description after the "@ts-expect-error" directive to explain why the @ts-expect-error is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
+   157:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+   161:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+   165:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+   169:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+   173:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+   179:28  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
+   192:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+   192:24  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
+   196:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+   200:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+   231:95  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
+   232:23  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
+   245:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+   286:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+   286:22  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
+   286:30  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
+   288:46  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
+   312:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+   312:25  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
+   312:43  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
+   321:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+   321:28  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
+   377:24  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
+   396:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+   396:25  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
+   402:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+   402:27  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
+   420:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+   443:19  error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+   449:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+   589:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+   602:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+   619:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+   686:47  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
    694:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+   720:46  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
    724:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   729:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   756:34  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
-   762:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   774:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   873:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   882:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   882:18  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
-   886:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   887:26  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
-   902:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   908:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   925:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-   939:30  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
-   946:30  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
-   953:39  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
-   978:29  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
-  1000:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  1006:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  1010:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  1022:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  1038:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  1078:17  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
-  1100:39  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
-  1107:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  1154:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+   737:25  error  Include a description after the "@ts-expect-error" directive to explain why the @ts-expect-error is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
+   765:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+   827:34  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
+   833:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+   845:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+  1014:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+  1023:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+  1023:18  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
+  1027:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+  1028:26  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
+  1043:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+  1049:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+  1066:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+  1080:30  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
+  1087:30  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
+  1094:39  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
+  1119:29  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
+  1141:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+  1147:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+  1151:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+  1163:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+  1179:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+  1219:17  error  Untyped argument                                                                                                                                               nx/no-untyped-arg
+  1241:39  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
+  1248:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
+  1295:5   error  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
 
 libs/services/system.service/server-manager/server-manager.ts
    53:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
    92:44  error  Missing return type on function           @typescript-eslint/explicit-function-return-type
   192:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  208:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  217:9   error  Untyped argument                          nx/no-untyped-arg
-  242:28  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  244:28  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  244:56  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  264:24  error  Untyped argument                          nx/no-untyped-arg
-  270:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  270:38  error  Untyped argument                          nx/no-untyped-arg
-  301:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  348:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  365:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  369:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  373:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  396:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  423:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  427:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  431:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  435:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  435:31  error  Untyped argument                          nx/no-untyped-arg
-  439:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  211:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  220:9   error  Untyped argument                          nx/no-untyped-arg
+  245:28  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  247:28  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  247:56  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  267:24  error  Untyped argument                          nx/no-untyped-arg
+  273:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  273:38  error  Untyped argument                          nx/no-untyped-arg
+  304:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  351:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  368:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  372:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  376:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  399:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  426:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  430:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  434:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  438:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  438:31  error  Untyped argument                          nx/no-untyped-arg
+  442:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
 
 libs/services/system.service/storage-manager/current-storage-state.ts
   12:43  error  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
@@ -2450,10 +2413,10 @@ libs/services/system.service/storage-manager/storage-manager.ts
    66:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
    70:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
    74:64  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  109:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  113:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  113:22  error  Untyped argument                          nx/no-untyped-arg
-  117:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  108:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  112:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  112:22  error  Untyped argument                          nx/no-untyped-arg
+  116:5   error  Missing return type on function           @typescript-eslint/explicit-function-return-type
 
 libs/services/system.service/storage-manager/storage-state.ts
    16:18  error  Missing return type on function           @typescript-eslint/explicit-function-return-type
@@ -2528,6 +2491,6 @@ packages/dashboard-widget-state/types.ts
   22:50  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
   30:18  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
 
-✖ 1928 problems (1928 errors, 0 warnings)
+✖ 1894 problems (1894 errors, 0 warnings)
 
 */

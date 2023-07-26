@@ -33,6 +33,7 @@ import { getPredefinedRolesLegacy } from '@services/mediaserver-apis/endpoints/g
 import { getUserRolesRestV1 } from '@services/mediaserver-apis/endpoints/get-user-roles';
 import { getUsersRestV1 } from '@services/mediaserver-apis/endpoints/get-users';
 import { NxStorageService } from '@services/storage.service';
+import { SECURITY_LEVEL } from '@setup-wizard/src/app/types/wizard-state.types';
 import { RecursiveKeyMap, RecursivePick, buildTopLevelKeyMap } from '@utils/general';
 import { InterceptorManager } from '@utils/interceptor-manager';
 import {
@@ -81,7 +82,7 @@ import type {
     GetEndpointsFull,
 } from './system-api.endpoint-types';
 import * as t from './system-api.types';
-import { SECURITY_LEVEL, SystemConfigSettings } from './system-api.types';
+import { SystemConfigSettings } from './system-api.types';
 import { NxSystemAPI } from './system-legacy-api.service';
 import {
     DeviceType,
@@ -1331,10 +1332,6 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                     })),
                     '/ec2/getPredefinedRoles': predefinedRoles,
                     '/ec2/getUserRoles': roles.filter(({ name }) => name !== 'Owner'), // hide the owner role
-                    '/ec2/getAccessRights': users.map(({ id, accessibleResources }) => ({
-                        userId: id,
-                        resourceIds: accessibleResources ?? [],
-                    })),
                 },
             })),
         );

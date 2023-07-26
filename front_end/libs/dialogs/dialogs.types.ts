@@ -16,6 +16,7 @@ import type {
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import type { CloudResponse, SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { Process } from '@services/process.service/process';
+import type { MergeInfo } from '@services/system-api.types';
 import type { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import type { CloudStorageManager } from '@services/system.service/cloud-storage-manager/cloud-storage-manager';
 import type { LicenseManager } from '@services/system.service/license-manager/licence-manager';
@@ -25,7 +26,7 @@ import type { NxSystemServer } from '@services/system.service/system-types';
 import type { NxUser } from '@services/system.service/user-manager/user-manager-types';
 import type { NxSystemInfo } from '@services/systems.service.types';
 
-import { MergeError, MergeInfo } from './merge/merge.refactor.component.types';
+import { MergeError } from './merge/merge.refactor.component.types';
 import { NewFeatureTemplate } from './new-feature/new-feature.component.types';
 import { TfaAction } from './two-fa/two-fa.component.types';
 import type { SessionState } from './update-session/update-session.component.types';

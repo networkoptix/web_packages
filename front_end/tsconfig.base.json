@@ -39,6 +39,7 @@
             "@resolvers/*": ["libs/resolvers/*"],
             "@routeGuards/*": ["libs/routeGuards/*"],
             "@services/*": ["libs/services/*"],
+            "@setup-wizard/*": ["apps/setup-wizard/*"],
             "@store/*": ["common/store/*"],
             "@styles/*": ["common/styles/*"],
             "@utils/*": ["libs/utils/*"],

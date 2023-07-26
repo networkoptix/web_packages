@@ -7,9 +7,9 @@ import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.t
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import staticLang from '@language/language_i18n_static.json';
 import { PipesModule } from '@pipes/pipes.module';
-import { SECURITY_LEVEL } from '@services/system-api.types';
 
 import { WizardStateService } from '../../services/wizard-state.service';
+import { SECURITY_LEVEL } from '../../types/wizard-state.types';
 
 @Component({
     selector: 'nx-advanced-component',

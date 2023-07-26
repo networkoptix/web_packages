@@ -36,3 +36,8 @@ export const enum FORM_STATE {
     INVALID = 'INVALID',
     VALID = 'VALID',
 }
+
+export const enum SECURITY_LEVEL {
+    STANDARD = 'standard',
+    HIGH = 'high',
+}

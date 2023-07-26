@@ -37,20 +37,6 @@ export interface MergeDropdownItem extends DropdownItem<string> {
     url?: string;
 }
 
-export interface MergeInfo {
-    primary: {
-        id: string;
-        name: string;
-    };
-    secondary: {
-        id: string;
-        name: string;
-    };
-    role: string;
-    anotherSystemId: string;
-    startTime?: string;
-}
-
 export interface MergeError {
     resultCode: string;
     errorText: string;

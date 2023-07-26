@@ -576,14 +576,6 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         }).toPromise();
     }
 
-    getScripts() {
-        return this.get('/api/scriptList').toPromise();
-    }
-
-    execute(script: string, mode: string = '') {
-        return this.post(`/api/execute${script}?${mode}`);
-    }
-
     @memoizeAsyncMedium
     getSystemSettings() {
         return getSystemSettingsLegacyV1.apply(this) as ReturnType<
@@ -605,28 +597,6 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
 
     ping() {
         return this.get('/api/ping');
-    }
-
-    pingSystem(url: string, remoteLogin: string, remotePassword: string) {
-        return this.getNonce(remoteLogin, url)
-            .toPromise()
-            .then((res: any) => {
-                if (res.data.error !== '0') {
-                    return Promise.reject(res);
-                }
-                const {
-                    data: {
-                        reply: { realm, nonce },
-                    },
-                } = res;
-                const getKey = this.digest(remoteLogin, remotePassword, realm, nonce, 'GET');
-
-                if (!url.startsWith('http')) {
-                    url = 'http://' + url;
-                }
-
-                return this.get('/api/pingSystem', { params: { getKey, url } }).toPromise();
-            });
     }
 
     @memoizeAsyncPersistent
@@ -657,28 +627,6 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
 
     createEvent = createEventLegacyV1;
 
-    getEvents(
-        from: number,
-        to: number,
-        cameraId?: string,
-        eventType?: t.EventTypes,
-        actionType?: t.ActionTypes,
-        eventRuleId?: string,
-    ) {
-        // eslint-disable-next-line camelcase
-        const [event_type, action_type, brule_id] = [eventType, actionType, eventRuleId];
-        return this.get('/api/getEvents', {
-            params: {
-                from,
-                to,
-                cameraId,
-                event_type,
-                action_type,
-                brule_id,
-            },
-        }).toPromise();
-    }
-
     /**
      * @deprecated remove method once support for 4.2 systems is dropped.
      */
@@ -687,25 +635,6 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
             '/api/backupControl',
             action ? { params: { action } } : {},
         ).toPromise();
-    }
-
-    @memoizeAsyncLong
-    cameraDiagnostic(cameraId: string, type: t.CameraDiagnosticSteps) {
-        return this.get('/api/doCameraDiagnosticsStep', {
-            params: {
-                cameraId,
-                type,
-            },
-        }).toPromise();
-    }
-
-    // @memoizeAsyncLong
-    // getServerNetworkSettings(): Promise<t.NormalResponse<t.ServerNetworkSettings>> {
-    //     return this.get('/api/iflist').toPromise();
-    // }
-
-    setServerNetworkSettings(networkSettings: t.ServerNetworkSettings) {
-        return this.post('/api/ifconfig', networkSettings).toPromise();
     }
 
     setAuthKeys(authGet: string, authPost: string, authPlay: string): void {
@@ -933,12 +862,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
 
     /* Working with users */
     getAggregatedUsersData(): Observable<AggregatedUsers> {
-        const routes = [
-            '/ec2/getUsers',
-            '/ec2/getPredefinedRoles',
-            '/ec2/getUserRoles',
-            '/ec2/getAccessRights',
-        ] as const;
+        const routes = ['/ec2/getUsers', '/ec2/getPredefinedRoles', '/ec2/getUserRoles'] as const;
         return this.getRequestAggregator(routes);
     }
 
@@ -1096,36 +1020,6 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         );
     }
 
-    hlsUrl(cameraId: string, position: string = 'now', resolution: string = '') {
-        const data: {
-            pos?: string;
-            auth: string;
-        } = {
-            auth: this.authGet,
-        };
-        if (position) {
-            data.pos = position;
-        }
-        const url = `/web/hls/${this.cleanId(cameraId)}.m3u8?${resolution}`;
-        return this.generateGetUrl(url, data);
-    }
-
-    webmUrl(cameraId: string, position: string, resolution: string, force: boolean) {
-        const data: {
-            auth: string;
-            resolution: string;
-            pos?: string;
-        } = {
-            auth: this.authGet,
-            resolution,
-        };
-        if (position) {
-            data.pos = position;
-        }
-        const url = `/media/${this.cleanId(cameraId)}.webm?rt`;
-        return this.generateGetUrl(url, data, force);
-    }
-
     public getExportUrl({ transport, cameraId, pos, endPos, duration }) {
         if (!['mp4', 'mkv'].includes(transport)) {
             transport = 'mkv';
@@ -1158,7 +1052,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         limit: number,
         label: string,
         periodsType: number,
-    ) {
+    ): Observable<t.Ec2RecordedTimePeriodsResp> {
         const date = new Date();
         if (typeof startTime === 'undefined') {
             startTime = date.getTime() - 30 * 24 * 60 * 60 * 1000;
@@ -1184,38 +1078,20 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
             params.limit = limit;
         }
         // RecordedTimePeriods
-        return this.get<t.Ec2RecordedTimePeriods>(
+        return this.get<t.Ec2RecordedTimePeriodsResp>(
             `/ec2/recordedTimePeriods?keepSmallChunks&${label || ''}`,
             { params },
         );
     }
 
     // TODO: param type
-    recordedTimePeriods(params: RequestParams) {
-        return this.get<t.Ec2RecordedTimePeriods>('/ec2/recordedTimePeriods', { params }).pipe(
+    recordedTimePeriods(params: RequestParams): Observable<t.Ec2RecordedTimePeriodsResp['reply']> {
+        return this.get<t.Ec2RecordedTimePeriodsResp>('/ec2/recordedTimePeriods', { params }).pipe(
             map(({ reply }) => reply),
         );
     }
 
     /* End of Working with archive */
-
-    setCameraPath(cameraId: string): void {
-        let systemLink = '';
-        const route = this.location.path().startsWith('/embed') ? '/embed/' : '';
-
-        if (this.systemId) {
-            if (route !== '') {
-                systemLink = route + this.systemId;
-            } else {
-                systemLink = `/systems/${this.systemId}`;
-            }
-        }
-        this.location.path(
-            `${systemLink}/view/${this.cleanId(cameraId)}`,
-            // @ts-expect-error: TODO Expected 0-1 arguments, but got 2
-            false,
-        );
-    }
 
     /* Health Monitor */
 

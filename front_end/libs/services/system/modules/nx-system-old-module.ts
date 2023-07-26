@@ -12,7 +12,6 @@ import { v4 as uuid } from 'uuid';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
-import { MergeInfo } from '@dialogs/merge/merge.refactor.component.types';
 import { environment } from '@environments/environment';
 import { updateInterval } from '@lib/variables/static-variables';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -39,6 +38,9 @@ import {
     RawRule,
     SystemConfigSettings,
     ec2CameraEx,
+    MergeInfo,
+    ActionParams,
+    EventCondition,
 } from '../../system-api.types';
 import { NxSystemAPI } from '../../system-legacy-api.service';
 import { CameraManager } from '../../system.service/camera-manager/camera-manager';
@@ -869,7 +871,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     static getActionParams = (
         [actionResourceId, ...additionalResources]: string[],
         useSource = false,
-    ) => ({
+    ): ActionParams => ({
         allUsers: false,
         authType: 'authBasicAndDigest',
         durationMs: 600000,
@@ -888,8 +890,8 @@ export class NxSystemOldModule extends NxSystemModuleBase {
 
     static getEventCondition =
         (resourceName: string, noDescription = false) =>
-        (...valuesToParse: string[]) => {
-            const lookupGroupAliases = (groupName: string) => {
+        (...valuesToParse: string[]): EventCondition => {
+            const lookupGroupAliases = (groupName: string): string[] => {
                 const aliases = {
                     all: ['everyone'],
                     Administrator: ['admin', 'admins'],
@@ -899,14 +901,17 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                 };
                 return [groupName, ...(aliases[groupName] || [])];
             };
-            const toCondition = (value: string) => {
+            const toCondition = (value: string): string => {
                 const cleaned = value.replace('Alexa ', '').toLowerCase();
                 const split = cleaned.split(' ');
                 return split.length === 1 ? cleaned : `"${cleaned}" ${split.join(' ')}`;
             };
             const condition = valuesToParse
-                .reduce((values, cur) => [...values, ...lookupGroupAliases(cur)], [])
-                .reduce((conditions, condition) => `${conditions} ${toCondition(condition)}`, '');
+                .reduce<string[]>((values, cur) => [...values, ...lookupGroupAliases(cur)], [])
+                .reduce<string>(
+                    (conditions, condition) => `${conditions} ${toCondition(condition)}`,
+                    '',
+                );
 
             return {
                 caption: condition,

@@ -157,7 +157,6 @@ export class UserManager {
                     const users = data['/ec2/getUsers'];
                     const userRoles = data['/ec2/getUserRoles'];
                     const predefinedRoles = data['/ec2/getPredefinedRoles'];
-                    // const accessRights = data['/ec2/getAccessRights'];
                     return new Promise(resolve => {
                         this.updateAccessRoles(predefinedRoles, userRoles);
                         this.processUsers(users);

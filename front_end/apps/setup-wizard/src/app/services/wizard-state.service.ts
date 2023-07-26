@@ -22,7 +22,6 @@ import { IConfig } from '@services/nx-config/config-types';
 import {
     ModuleInformationReply,
     NormalResponse,
-    SECURITY_LEVEL,
     SystemConfigSettings,
     UserSession,
 } from '@services/system-api.types';
@@ -33,7 +32,7 @@ import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { WINDOW } from '@services/window-provider';
 import { alphabeticalSort } from '@utils/general';
 
-import { FORM_STATE, iState, WIZARD_STATE } from '../types/wizard-state.types';
+import { FORM_STATE, iState, WIZARD_STATE, SECURITY_LEVEL } from '../types/wizard-state.types';
 
 interface BindResponse {
     id: string;
@@ -204,7 +203,7 @@ export class WizardStateService {
         statisticReportsLastTime: undefined,
         statisticReportLastVersion: '',
         systemName: '',
-        mergeInfo: {},
+        mergeInfo: undefined,
     };
 
     // eslint-disable-next-line nx/no-untyped-init

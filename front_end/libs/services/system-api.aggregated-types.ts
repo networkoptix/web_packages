@@ -20,7 +20,6 @@ export interface GetLicenses {
 
 export interface AggregatedUsers {
     reply: {
-        '/ec2/getAccessRights': t.ec2AccessRight[];
         '/ec2/getPredefinedRoles': t.ec2PredefinedRole[];
         '/ec2/getUserRoles': (t.ec2UserRole | t.RestUserRole)[];
         '/ec2/getUsers': (t.ec2User | t.RestUserCompat)[];
