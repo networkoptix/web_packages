@@ -3,15 +3,15 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { nxConfig } from '@services/nx-config/config';
 
-import { CPResovler } from '../CP-resolver';
 import { NxGroupsCardsComponent } from '../components/groups-cards/groups-cards.component';
 import { NxOrganizationReportsComponent } from '../components/reports/reports.component';
 import { NxOrganizationSettingsComponent } from '../components/settings/settings.component';
 import { NxOrganizationUsersComponent } from '../components/users/org-users/org-users.component';
+import { CPResovler } from '../resolvers/CP-resolver';
 import { WithParentDataResolver } from '../resolvers/data-resolver';
+import { RoleResolver } from '../resolvers/role-resolver';
+import { TabGuard } from '../resolvers/tab-guard';
 import { TabResolver } from '../resolvers/tab-resolver';
-import { RoleResolver } from '../role-resolver';
-import { TabGuard } from '../tab-guard';
 
 import { NxOrganizationsComponent } from './organization.component';
 

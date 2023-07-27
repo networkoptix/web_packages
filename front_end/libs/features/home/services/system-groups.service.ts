@@ -90,6 +90,7 @@ export class NxSystemGroupsService {
                 switchMap(url => {
                     if (!this.connection$) {
                         this.connection$ = webSocket(url);
+                        this.send({ action: WebSocketAction.SYSTEMS });
                         while (this.queue.length) {
                             this.send(this.queue.shift());
                         }

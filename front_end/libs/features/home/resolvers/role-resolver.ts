@@ -4,8 +4,9 @@ import { firstValueFrom, Observable } from 'rxjs';
 
 import { NxAccountService } from '@services/account.service';
 
-import { OrgResolver } from './resolvers/org-resolver';
-import { NxChannelPartnersService } from './services/channel-partners.service';
+import { NxChannelPartnersService } from '../services/channel-partners.service';
+
+import { OrgResolver } from './org-resolver';
 
 @Injectable()
 export class RoleResolver implements Resolve<boolean> {

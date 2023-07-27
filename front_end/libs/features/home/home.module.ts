@@ -18,7 +18,6 @@ import { DirectivesModule } from '@directives/directives.module';
 import { AuthGuard } from '@guards/authGuard';
 import { NxUsersTableComponent } from '@pages/home/components/users-table/users-table.component';
 
-import { CPResovler } from './CP-resolver';
 import { NxChannelPartnersComponent } from './channel-partners/channel-partners.component';
 import { NxGroupCardComponent } from './components/group-card/group-card.component';
 import { NxGroupsCardsComponent } from './components/groups-cards/groups-cards.component';
@@ -34,15 +33,16 @@ import { NxChannelPartnerUsersComponent } from './components/users/channel-partn
 import { NxOrganizationUsersComponent } from './components/users/org-users/org-users.component';
 import { NxHomeComponent } from './home.component';
 import { NxOrganizationsComponent } from './organizations/organization.component';
+import { CPResovler } from './resolvers/CP-resolver';
 import { WithParentDataResolver } from './resolvers/data-resolver';
 import { OrgResolver } from './resolvers/org-resolver';
+import { RoleResolver } from './resolvers/role-resolver';
 import { SubChannelResolver } from './resolvers/subchannel-resolver';
+import { TabGuard } from './resolvers/tab-guard';
 import { TabResolver } from './resolvers/tab-resolver';
-import { RoleResolver } from './role-resolver';
 import { channelPartnersReducer } from './store/channel-partners/channel-partners.reducer';
 import { groupsReducer } from './store/groups/groups.reducer';
 import { NxGroupsSystemsComponent } from './systems/systems.component';
-import { TabGuard } from './tab-guard';
 
 const homeRoutes: Routes = [
     {

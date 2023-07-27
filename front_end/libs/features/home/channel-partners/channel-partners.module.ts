@@ -7,9 +7,9 @@ import { NxSubchannelComponent } from '../components/subchannel/subchannel.compo
 import { NxSubchannelsComponent } from '../components/subchannels/subchannels.component';
 import { NxOrganizationUsersComponent } from '../components/users/org-users/org-users.component';
 import { WithParentDataResolver } from '../resolvers/data-resolver';
+import { RoleResolver } from '../resolvers/role-resolver';
+import { TabGuard } from '../resolvers/tab-guard';
 import { TabResolver } from '../resolvers/tab-resolver';
-import { RoleResolver } from '../role-resolver';
-import { TabGuard } from '../tab-guard';
 
 import { NxChannelPartnersComponent } from './channel-partners.component';
 
