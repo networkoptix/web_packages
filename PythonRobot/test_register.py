@@ -44,6 +44,25 @@ def page_in_anonymous_state_redister_home():
     robot_keywords.go_to_url(driver, rb.ENV)
     Button(driver, rb.CREATE_ACCOUNT_BODY).click()
     RegisterForm(driver)
+    driver.close()
+
+def page_in_anonymouse_state_navigation():
+    """4. Should open register page in anonymous state"""
+    driver = get_headless_chrome()
+    robot_keywords.go_to_url(driver, f'{rb.ENV}/authorize?client_type=create')
+    RegisterForm(driver)
+    driver.close()
+
+def register_user_with_correct_credentials():
+    """5. Should register user with correct credentials"""
+    email = get_random_email(sendemail=True)
+    driver = get_headless_chrome()
+    robot_keywords.go_to_url(driver, f'{rb.ENV}/authorize?client_type=create')
+    register_form = RegisterForm(driver)
+    register_form.register_new_user("mark", "hamill", email, rb.BASE_PASSWORD)
+    register_form.account_creation_success()
+    driver.close()
+
 
 
 if __name__ == "__main__":
@@ -53,5 +72,11 @@ if __name__ == "__main__":
     # open_from_success_page()
     # print(f'{Fore.WHITE}{open_from_success_page.__doc__}\t\t\t\t{Fore.GREEN}| PASS |')
 
-    page_in_anonymous_state_redister_home()
-    print(f'{Fore.WHITE}{page_in_anonymous_state_redister_home.__doc__}\t\t\t\t{Fore.GREEN}| PASS |')
+    # page_in_anonymous_state_redister_home()
+    # print(f'{Fore.WHITE}{page_in_anonymous_state_redister_home.__doc__}\t\t\t\t{Fore.GREEN}| PASS |')
+
+    # page_in_anonymouse_state_navigation()
+    # print(f'{Fore.WHITE}{page_in_anonymouse_state_navigation.__doc__}\t\t\t\t\t\t\t\t\t{Fore.GREEN}| PASS |')
+
+    register_user_with_correct_credentials()
+    print(f'{Fore.WHITE}{register_user_with_correct_credentials.__doc__}\t\t\t\t\t\t\t\t{Fore.GREEN}| PASS |')

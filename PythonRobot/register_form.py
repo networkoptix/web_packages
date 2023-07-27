@@ -3,6 +3,7 @@ from text_field import TextField
 from button import Button
 from checkbox import Checkbox
 from RobotVariables import RobotVariables
+from generic_element import Element
 
 
 class RegisterForm:
@@ -32,6 +33,9 @@ class RegisterForm:
     
     def terms_and_conditions_checkbox(self):
         return Checkbox(self.driver, "//nx-checkbox[@name='termsAndConditions']", "//input[@id='termsAndConditions']")
+
+    def account_creation_success(self):
+        return Element(self.driver, "//nx-authorize-activate-account-component", wait_for=True)
 
     def _wait_until_form_is_visible(self):
         robot_keywords.wait_until_element_is_visible(self.driver, "//nx-authorize-create-account-component")
