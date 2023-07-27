@@ -30,7 +30,7 @@
     </div>
     <div
         class="merge-window"
-        [ngSwitch]="currentState"
+        [ngSwitch]="currentState()"
     >
         <nx-merge-select-system-component
             #nxMergeSelectSystem
@@ -50,7 +50,7 @@
             [noOtherSystems]="noOtherSystems"
             [getSystemInfo]="getSystemInfo"
             [errorCode]="selectSystemErrorCode"
-            (setCurrentState)="setCurrentState($event)"
+            (setCurrentState)="updateStateHistory($event)"
         ></nx-merge-select-system-component>
         <nx-merge-admin-password-component
             *ngSwitchCase="MergeState.admin"
@@ -59,7 +59,7 @@
             [targetSystem]="targetSystem"
             [isSessionOauth]="isSessionOauth"
             [errorCode]="adminPasswordErrorCode"
-            (setCurrentState)="setCurrentState($event)"
+            (setCurrentState)="updateStateHistory($event)"
         ></nx-merge-admin-password-component>
         <nx-merge-choose-primary-component
             *ngSwitchCase="MergeState.primary"
@@ -67,7 +67,7 @@
             [targetSystem]="targetSystem"
             [(currentSystemIsPrimary)]="currentSystemIsPrimary"
             [errorCode]="choosePrimaryErrorCode"
-            (setCurrentState)="setCurrentState($event)"
+            (setCurrentState)="updateStateHistory($event)"
         ></nx-merge-choose-primary-component>
         <nx-merge-confirm-merge-component
             *ngSwitchCase="MergeState.confirm"
@@ -81,7 +81,7 @@
             [isSessionOauth]="isSessionOauth"
             [(password)]="confirmPassword"
             [errorCode]="confirmMergeErrorCode"
-            (setCurrentState)="setCurrentState($event)"
+            (setCurrentState)="updateStateHistory($event)"
         ></nx-merge-confirm-merge-component>
         <nx-merge-generic-merge-component
             *ngSwitchCase="MergeState.generic"
@@ -91,7 +91,7 @@
             [serverUrlErrorText]="serverUrlErrorText"
             [errorCode]="genericMergeErrorCode"
             (close)="close()"
-            (setCurrentState)="setCurrentState($event)"
+            (setCurrentState)="updateStateHistory($event)"
         ></nx-merge-generic-merge-component>
     </div>
 </div>

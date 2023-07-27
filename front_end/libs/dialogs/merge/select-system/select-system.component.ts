@@ -20,11 +20,7 @@ import { ModuleInformation } from '@services/system-api.types';
 import { NxSystem } from '@services/system.service/system';
 import { NgChanges } from '@utils/ng-changes';
 
-import type {
-    MergeStateType,
-    MergeSystem,
-    MergeDropdownItem,
-} from '../merge.refactor.component.types';
+import type { MergeSystem, MergeDropdownItem, MergeState } from '../merge.refactor.component.types';
 
 @Component({
     selector: 'nx-merge-select-system-component',
@@ -45,22 +41,22 @@ export class NxMergeSelectSystemComponent implements OnInit, OnChanges {
     @Input() selectSystemProcess: Process;
     @Input() mergeSystems: MergeSystem[];
     @Input() system: NxSystem;
-    @Input() isLocal: boolean;
     @Input() cloudHost: string;
     @Input() targetSystem: MergeSystem;
-    @Output() targetSystemChange = new EventEmitter<MergeSystem>();
-    @Input() otherSystem: boolean;
-    @Output() otherSystemChange = new EventEmitter<boolean>();
     @Input() serverUrl: string;
-    @Output() serverUrlChange = new EventEmitter<string>();
     @Input() cleanUpUrl: (serverUrl: string) => string;
     @Input() existingSystems: { [ip: string]: string };
+    @Input() getSystemInfo: (systemId: string) => Promise<ModuleInformation>;
+    @Input() errorCode: string;
+    @Input() isLocal: boolean;
+    @Input() otherSystem: boolean;
     @Input() checking: boolean;
     @Input() checkedOnce: boolean;
     @Input() noOtherSystems: boolean;
-    @Input() getSystemInfo: (systemId: string) => Promise<ModuleInformation>;
-    @Input() errorCode: string;
-    @Output() setCurrentState = new EventEmitter<MergeStateType>();
+    @Output() targetSystemChange = new EventEmitter<MergeSystem>();
+    @Output() otherSystemChange = new EventEmitter<boolean>();
+    @Output() serverUrlChange = new EventEmitter<string>();
+    @Output() setCurrentState = new EventEmitter<MergeState>();
     @ViewChild('serverUrlInput', { static: false }) serverUrlInputElement: NgModel;
 
     // class variables
@@ -69,6 +65,7 @@ export class NxMergeSelectSystemComponent implements OnInit, OnChanges {
     selectedSystem: MergeDropdownItem;
     downloadHTML: string;
     currentSystemName: string;
+    isOffline: boolean;
 
     // text variables
     bodyTitle: string;
@@ -91,7 +88,7 @@ export class NxMergeSelectSystemComponent implements OnInit, OnChanges {
         });
     }
 
-    ngOnInit(): void {
+    async ngOnInit(): Promise<void> {
         this.currentSystemName = this.system.info.name;
         this.checkMergeButtonText = this.ti(this.LANG.dialogs.merge.next);
 
@@ -112,19 +109,21 @@ export class NxMergeSelectSystemComponent implements OnInit, OnChanges {
             };
         } else {
             this.processedSystems = this.processSystems(this.mergeSystems);
-            this.setTargetSystem(this.selectInitialSystem());
+            await this.setTargetSystem(this.selectInitialSystem());
         }
 
         this.systemsProcessed = true;
     }
 
-    ngOnChanges(changes: NgChanges<NxMergeSelectSystemComponent>): void {
-        if (changes.mergeSystems?.currentValue && changes.mergeSystems.previousValue) {
+    async ngOnChanges(changes: NgChanges<NxMergeSelectSystemComponent>): Promise<void> {
+        if (changes.mergeSystems?.currentValue) {
             this.systemsProcessed = false;
             this.processedSystems = this.processSystems(changes.mergeSystems.currentValue);
+            if (!this.targetSystem) {
+                await this.setTargetSystem(this.selectInitialSystem());
+            }
             this.systemsProcessed = true;
         }
-
         if (changes.checkedOnce?.currentValue) {
             this.checkMergeButtonText = this.ti(this.LANG.dialogs.merge.check);
         }
@@ -140,7 +139,7 @@ export class NxMergeSelectSystemComponent implements OnInit, OnChanges {
         const statusOffline = ` – ${this.ti(this.LANG.systemStatuses.offline)}`;
         const statusCloud = ` – ${this.ti(this.LANG.dialogs.merge.cloud)}`;
 
-        const processedSystems: MergeDropdownItem[] = systems.map(
+        const processedSystems: MergeDropdownItem[] = (systems || []).map(
             ({
                 id,
                 name,
@@ -272,12 +271,25 @@ export class NxMergeSelectSystemComponent implements OnInit, OnChanges {
     async setTargetSystem(selectedSystem: MergeDropdownItem): Promise<void> {
         // TODO: probably need to add the top part of the original setTargetSystem in about canceling process service
         // gets triggered for peer discovered only (not cloud or other systems)
+        if (!selectedSystem) {
+            return;
+        }
+        this.isOffline = selectedSystem.help && selectedSystem.help.includes('offline');
         if (selectedSystem.url) {
             this.serverUrlInputValidationErrorText = undefined;
             this.serverUrlChange.emit(selectedSystem.url);
         }
 
-        if (selectedSystem.value.includes('otherSystem')) {
+        if (this.isOffline) {
+            this.serverUrlInputValidationErrorText = this.ti(
+                this.LANG.dialogs.merge.systemOffline,
+                selectedSystem.name,
+            );
+        } else {
+            this.serverUrlInputValidationErrorText = undefined;
+        }
+
+        if (selectedSystem.value && selectedSystem.value.includes('otherSystem')) {
             this.serverUrlInputValidationErrorText = undefined;
             this.otherSystemChange.emit(true);
             if (!selectedSystem.value.includes('AutoChange')) {
@@ -286,9 +298,8 @@ export class NxMergeSelectSystemComponent implements OnInit, OnChanges {
         } else {
             let targetSystem: MergeSystem;
             if (!this.isLocal) {
-                const systemModuleInfo: ModuleInformation = await this.getSystemInfo(
-                    selectedSystem.value,
-                );
+                const systemModuleInfo = await this.getSystemInfo(selectedSystem.value);
+
                 for (const system of this.mergeSystems) {
                     if (system.id === selectedSystem.value) {
                         system.protoVersion = systemModuleInfo.reply.protoVersion;
@@ -298,7 +309,7 @@ export class NxMergeSelectSystemComponent implements OnInit, OnChanges {
                 }
                 this.processSystems(this.mergeSystems);
             }
-            if (!targetSystem) {
+            if (!targetSystem && this.mergeSystems) {
                 targetSystem = this.mergeSystems.find(
                     (s: MergeSystem) => selectedSystem.name === s.name,
                 );
@@ -353,51 +364,4 @@ export class NxMergeSelectSystemComponent implements OnInit, OnChanges {
             );
         }
     }
-
-    // setTargetSystem(targetSystem, serverUrlInputValue = ''): void {
-    //     // cancels process service if new system selected while checking
-    //     if (this.checkMergeabilityProcess.processing && !this.systemUpdating) {
-    //         this.checkMergeabilityProcess.processing = false;
-    //         this.checkMergeabilityProcess.finished = true;
-    //         this.checking = false;
-    //         this.setTargetSystem(targetSystem, serverUrlInputValue);
-    //     } else {
-    //         let showUpdate = this.checkMergeDefault;
-    //         const templateUpdates: any = {};
-    //         if (targetSystem.value === this.otherSystem) {
-    //             this.targetSystemDropdown = { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem };
-    //             this.targetSystem = targetSystem;
-    //             showUpdate = this.serverUrlState;
-    //             Object.assign(templateUpdates, { serverUrlInputValue, selectedTarget: this.otherSystem });
-    //         } else {
-    //             this.targetSystem = this.systemsWithInfo.find(system => system.id === targetSystem.value) ||
-    //                 this.peerSystems.find(system => system.id === targetSystem.value);
-    //             this.targetSystem.value = this.targetSystem.id;
-    //             this.targetSystemDropdown = this.makeSelectorList([this.targetSystem])[0];
-    //             this.systemMergeable = this.checkMergeability(this.targetSystem);
-    //             Object.assign(templateUpdates, {
-    //                 helpText: this.LANG.dialogs.merge.ownerCanMergeText,
-    //                 selectedTarget: this.targetSystem.value
-    //             });
-
-    //             if (this.targetSystem.systemName) {
-    //                 showUpdate = this.serverUrlState;
-    //                 templateUpdates.serverUrlInputValue = this.targetSystem.url;
-    //                 delete templateUpdates.helpText;
-    //             }
-    //             if (this.systemMergeable) {
-    //                 showUpdate = this.targetSystem.systemName ? this.serverUrlMergeError : this.checkMergeError;
-    //                 templateUpdates.checkingErrorText = this.systemMergeable;
-    //                 delete templateUpdates.helpText;
-    //             }
-    //         }
-    //         this.setSystems();
-    //         this.updateShow(showUpdate, templateUpdates);
-    //         setTimeout(() => {
-    //             if (this.machine.state.show.serverUrlInput) {
-    //                 this.serverUrlInputFocus.nativeElement.focus();
-    //             }
-    //         });
-    //     }
-    // }
 }

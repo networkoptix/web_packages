@@ -1,4 +1,5 @@
 <form
+    *ngIf="mergeSystems?.length"
     #checkMergeForm="ngForm"
     name="checkMergeForm"
 >
@@ -59,7 +60,7 @@
             </label>
         </div>
         <p
-            *ngIf="!selectedSystem.status || checking"
+            *ngIf="!selectedSystem?.status || checking"
             class="light-text"
         >
             <span
@@ -75,9 +76,9 @@
             </span>
         </p>
         <p
-            *ngIf="selectedSystem.status && !checking"
+            *ngIf="isOffline || (selectedSystem?.status && !checking)"
             [ngClass]="{ 'error-text-margin': serverUrlInput }"
-            [innerHTML]="selectedSystem.status"
+            [innerHTML]="isOffline ? serverUrlInputValidationErrorText : selectedSystem.status"
             class="error-label"
         ></p>
     </main>

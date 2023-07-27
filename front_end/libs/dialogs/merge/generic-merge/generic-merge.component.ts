@@ -11,7 +11,7 @@ import { icons } from '@lib/variables/static-variables';
 import { PipesModule } from '@pipes/pipes.module';
 import { Process } from '@services/process.service/process';
 
-import type { MergeStateType } from '../merge.refactor.component.types';
+import { MergeState } from '../merge.refactor.component.types';
 
 @Component({
     selector: 'nx-merge-generic-merge-component',
@@ -33,10 +33,10 @@ export class NxMergeGenericMergeComponent {
     icons = icons;
 
     @Input() genericMergeProcess: Process;
-    @Input() thisSystemHasOutdatedServer: boolean;
-    @Input() failedToFindAnySystem: boolean;
     @Input() serverUrlErrorText: string;
     @Input() errorCode: string;
+    @Input() thisSystemHasOutdatedServer: boolean;
+    @Input() failedToFindAnySystem: boolean;
     @Output() close = new EventEmitter<void>();
-    @Output() setCurrentState = new EventEmitter<MergeStateType>();
+    @Output() setCurrentState = new EventEmitter<MergeState>();
 }

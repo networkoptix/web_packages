@@ -45,7 +45,7 @@
         <button
             class="btn btn-primary svg-icon next-button"
             type="button"
-            (click)="setCurrentState.emit('confirm')"
+            (click)="setCurrentState.emit(MergeState.confirm)"
         >
             <ng-container>{{ 'Next' | translate }}</ng-container>
             <svg-icon

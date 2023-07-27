@@ -7,7 +7,7 @@ version testing:
 
 ~~1. We'll need to convert this to use the CDK instead of the dialog overlay~~
 
-2. Test error codes. We want to move from `errorString` to `error` and make sure it's being mapped to the correct error message for both rest and legacy API. We'll use `MergeServerErrorCodes` and `MergeRestServerErrorCodes`, which are at the top of `merge.refactor.component.ts`. Eg:
+~~2. Test error codes. We want to move from `errorString` to `error` and make sure it's being mapped to the correct error message for both rest and legacy API. We'll use `MergeServerErrorCodes` and `MergeRestServerErrorCodes`, which are at the top of `merge.refactor.component.ts`. Eg:~~
     ```javascript
     const MergeServerErrorCodes = {
         1: 'noServerFound',
@@ -27,12 +27,13 @@ version testing:
     > Note: we may need to use a different system if there are too many errors for a single error number
     > - Potential error codes for rest are at: `/api-tool/main?version=current%20api`
     > - Potential error codes for legacy api are at: `/api/mergeSystems`
+    
 
 3. We should be able to press the process btn multiple times
     If the user presses the button while it's processing, then it will stop the previous process and restart the process altogether
 
-4. We need to investigate local primary, cloud secondary
-    One particular area of the code to look is the comment in `processSystems()` from `select-system.component.ts` in the `if (this.isLocal)` section.
+~~4. We need to investigate local primary, cloud secondary
+    One particular area of the code to look is the comment in `processSystems()` from `select-system.component.ts` in the `if (this.isLocal)` section.~~
 
 ~~5. Verify that `otherSystem` (boolean) works properly~~
 ~~    We haven't fully tested how that should get handled within the whole merge process~~
@@ -58,9 +59,9 @@ version testing:
 **Future TODO:**
 1. Turn `modal-footer` into a component
 
-2. Look into using `this.system.useRest` instead of `this.system.isSessionOauth`
+~~2. Look into using `this.system.useRest` instead of `this.system.isSessionOauth`~~
 
-3. Const variable for magic strings (keep it inside of `merge.refactor.component.ts`)
+~~3. Const variable for magic strings (keep it inside of `merge.refactor.component.ts`)~~
 
 ***
 

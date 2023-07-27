@@ -12,7 +12,7 @@ import { icons } from '@lib/variables/static-variables';
 import { Process } from '@services/process.service/process';
 import { NgChanges } from '@utils/ng-changes';
 
-import type { MergeStateType } from '../merge.refactor.component.types';
+import { MergeState } from '../merge.refactor.component.types';
 
 @Component({
     selector: 'nx-merge-confirm-merge-component',
@@ -36,15 +36,15 @@ export class NxMergeConfirmMergeComponent implements OnChanges {
     @Input() confirmMergeProcess: Process;
     @Input() primaryName: string;
     @Input() secondaryName: string;
-    @Input() tooManyServers: boolean = false;
     @Input() maxServers: number;
     @Input() supportLink: string;
-    @Input() isLocal: boolean;
-    @Input() isSessionOauth: boolean = false;
     @Input() password: string;
-    @Output() passwordChange = new EventEmitter<string>();
     @Input() errorCode: string;
-    @Output() setCurrentState = new EventEmitter<MergeStateType>();
+    @Input() tooManyServers: boolean = false;
+    @Input() isSessionOauth: boolean = false;
+    @Input() isLocal: boolean;
+    @Output() passwordChange = new EventEmitter<string>();
+    @Output() setCurrentState = new EventEmitter<MergeState>();
 
     @ViewChild('confirmMergeForm', { static: false }) confirmMergeForm: NgForm;
     header: string;

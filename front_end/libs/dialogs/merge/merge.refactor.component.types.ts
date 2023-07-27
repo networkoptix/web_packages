@@ -8,8 +8,6 @@ export enum MergeState {
     generic = 'generic',
 }
 
-export type MergeStateType = `${MergeState}`;
-
 // think about typing separately for systems & auto-discovered systems
 export type MergeSystem = {
     id: string; // peer have {} around id
@@ -33,6 +31,8 @@ export type MergeSystem = {
 // what's localId vs cloudId from /rest/v1/system/info?
 
 export interface MergeDropdownItem extends DropdownItem<string> {
+    help?: string;
+    isMergeable?: boolean;
     status?: string;
     url?: string;
 }

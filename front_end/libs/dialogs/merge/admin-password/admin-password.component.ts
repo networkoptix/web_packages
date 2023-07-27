@@ -10,7 +10,7 @@ import { icons } from '@lib/variables/static-variables';
 import { Process } from '@services/process.service/process';
 import { NgChanges } from '@utils/ng-changes';
 
-import type { MergeStateType, MergeSystem } from '../merge.refactor.component.types';
+import type { MergeState, MergeSystem } from '../merge.refactor.component.types';
 
 @Component({
     selector: 'nx-merge-admin-password-component',
@@ -31,11 +31,11 @@ export class NxMergeAdminPasswordComponent implements OnChanges {
 
     @Input() adminPasswordProcess: Process;
     @Input() password: string;
-    @Output() passwordChange = new EventEmitter<string>();
     @Input() targetSystem: MergeSystem;
-    @Input() isSessionOauth: boolean;
     @Input() errorCode: string;
-    @Output() setCurrentState = new EventEmitter<MergeStateType>();
+    @Input() isSessionOauth: boolean;
+    @Output() passwordChange = new EventEmitter<string>();
+    @Output() setCurrentState = new EventEmitter<MergeState>();
 
     @ViewChild('adminPasswordForm', { static: false }) adminPasswordForm: NgForm;
     header: string;
