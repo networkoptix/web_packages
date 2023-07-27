@@ -5,7 +5,7 @@ from resource_import import get_headless_chrome
 from resource_import import get_lang_list
 from variables import ERROR_COLOR
 from selenium.webdriver.common.by import By
-from resource_import import verify_in_account_page, validate_log_out, get_random_email, register_and_activate_account, send_restore_password_email
+from resource_import import verify_in_account_page, get_random_email, register_and_activate_account, send_restore_password_email
 from selenium.webdriver.chrome.options import Options
 
 from RobotVariables import RobotVariables
@@ -13,9 +13,8 @@ from requests import HTTPError
 from urllib3.exceptions import MaxRetryError
 from NoptixLibrary.CloudPortalAPI import CloudPortalAPI
 import robot_keywords
-import resource
-# from NoptixLibrary import open_mailbox, wait_for_email
-#from NoptixLibrary.GenericKeywords import check_language_logged_in
+import resource_import
+
 
 
 password = "qweasd1234"
