@@ -1,80 +1,90 @@
 //@use "theme_variables_common" as *;
+@use "_mixins";
 
 :host {
-	position: relative;
-	display: block;
+    position: relative;
+    display: block;
 
-	&:hover input:enabled ~ .spinner-button {
-		display: block;
-	}
+    &:hover input:enabled {
+        & {
+            padding-right: 20px !important;
+        }
+        ~ .spinner-button {
+            display: block;
+        }
+    }
 
-	input {
-		&.ng-invalid:not(.ng-untouched) {
-			input {
-				border-color: var(--input-error-color) !important;
-			}
-		}
+    input {
+        @include mixins.ellipsis;
 
-		&:disabled ~ div.spinner-button {
-			display: none !important;
-		}
-		&:focus ~ div.spinner-button,
-		{
-			display: block !important;
-		}
+        &.ng-invalid:not(.ng-untouched) {
+            input {
+                border-color: var(--input-error-color) !important;
+            }
+        }
 
-		&::-webkit-outer-spin-button,
-		&::-webkit-inner-spin-button {
-			-webkit-appearance: none;
-		}
-		& {
-			-moz-appearance:textfield;
-		}
-	}
+        &:focus {
+            padding-right: 20px !important;
+            & ~ div.spinner-button {
+                display: block !important;
+            }
+        }
+        &:disabled ~ div.spinner-button {
+            display: none !important;
+        }
 
-	.spinner-button {
-		display: none;
-		position: absolute;
-		cursor: pointer;
-		z-index: 2;
-		background-color: var(--input-numeric-arrow-bg);
-		width: 15px;
-		text-align: center;
-		margin: 0;
-		pointer-events: auto;
-		height: 15px;
-		line-height: 10px;
-		right: 3px;
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+        & {
+            -moz-appearance:textfield;
+        }
+    }
 
-		svg-icon {
-			display: inline-block;
+    .spinner-button {
+        display: none;
+        position: absolute;
+        cursor: pointer;
+        z-index: 2;
+        background-color: var(--input-numeric-arrow-bg);
+        width: 15px;
+        text-align: center;
+        margin: 0;
+        pointer-events: auto;
+        height: 15px;
+        line-height: 10px;
+        right: 3px;
 
-			svg {
-				width: 15px;
-				height: 15px;
+        svg-icon {
+            display: inline-block;
 
-				.st0 {
-					stroke: var(--input-numeric-arrow-color);
-					fill: none;
-				}
-			}
-		}
+            svg {
+                width: 15px;
+                height: 15px;
 
-		&:hover {
-			// numeric input "steal" arrow's hover event
-		}
+                .st0 {
+                    stroke: var(--input-numeric-arrow-color);
+                    fill: none;
+                }
+            }
+        }
 
-		&--increment {
-			top: 1px;
-			transform: rotate(180deg);
+        &:hover {
+            // numeric input "steal" arrow's hover event
+        }
 
-			svg-icon svg {
-				margin-left: -1px
-			}
-		}
+        &--increment {
+            top: 1px;
+            transform: rotate(180deg);
 
-		&--decrement {
-			bottom: 1px;
-		}
-	}
+            svg-icon svg {
+                margin-left: -1px
+            }
+        }
+
+        &--decrement {
+            bottom: 1px;
+        }
+    }
 }
