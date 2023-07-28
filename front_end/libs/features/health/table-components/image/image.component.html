@@ -49,7 +49,9 @@
     <ng-template #noLivePreview>
         <div
             *ngIf="isPrimary; else noMiniPreview"
-            [ngSwitch]="lightBackground || motionPreview ? 'No Image' : state"
+            [ngSwitch]="
+                lightBackground || motionPreview ? 'No Image' : unavailableMessage ? '' : state
+            "
             [ngClass]="
                 lightBackground || motionPreview
                     ? 'light-camera-preview image-unavailable-border'
@@ -81,7 +83,7 @@
                 AUTHENTICATION REQUIRED
             </div>
             <div *ngSwitchDefault>
-                {{ unavailableMessage | translate }}
+                {{ unavailableMessage || defaultUnavailableMessage | translate }}
             </div>
         </div>
         <ng-template #noMiniPreview>
