@@ -9,12 +9,13 @@ import { PlaybackQuality } from '../view.types';
 
 @UntilDestroy()
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class CameraQualityStorageService {
     user = '';
     constructor(private localStorageService: LocalStorageService, private store: Store) {
-        this.store.select(accountSelectors.selectCurrentUser)
+        this.store
+            .select(accountSelectors.selectCurrentUser)
             .pipe(untilDestroyed(this))
             .subscribe(({ email, id }) => {
                 this.user = email || id;
@@ -22,15 +23,10 @@ export class CameraQualityStorageService {
     }
 
     public get(cameraId: string): string {
-        return this.localStorageService.retrieve(
-            `${this.user}_quality_${cameraId}`
-        ) || '';
+        return this.localStorageService.retrieve(`${this.user}_quality_${cameraId}`) || '';
     }
 
     public set(cameraId: string, quality: PlaybackQuality): void {
-        this.localStorageService.store(
-            `${this.user}_quality_${cameraId}`,
-            quality
-        );
+        this.localStorageService.store(`${this.user}_quality_${cameraId}`, quality);
     }
 }

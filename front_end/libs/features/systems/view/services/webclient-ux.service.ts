@@ -6,15 +6,15 @@ import type { WebClientUxState } from '../view.types';
 const webClientUxInitialState: WebClientUxState = {
     isFullScreen: false,
     isSidebarShown: true,
-    isTimelineShown: true
+    isTimelineShown: true,
 };
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class WebClientUxService {
     protected _subject = new BehaviorSubject<WebClientUxState>({
-        ...webClientUxInitialState
+        ...webClientUxInitialState,
     });
 
     protected _emit(): void {

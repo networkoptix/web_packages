@@ -9,12 +9,13 @@ import { PlaybackTransport } from '../view.types';
 
 @UntilDestroy()
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class CameraTransportStorageService {
     user = '';
     constructor(private localStorageService: LocalStorageService, private store: Store) {
-        this.store.select(accountSelectors.selectCurrentUser)
+        this.store
+            .select(accountSelectors.selectCurrentUser)
             .pipe(untilDestroyed(this))
             .subscribe(({ email, id }) => {
                 this.user = email || id;
@@ -22,16 +23,12 @@ export class CameraTransportStorageService {
     }
 
     public get(cameraId: string): PlaybackTransport {
-        return this.localStorageService.retrieve(
-            `${this.user}_transport_${cameraId}`
-        );
+        return this.localStorageService.retrieve(`${this.user}_transport_${cameraId}`);
     }
 
     public set(cameraId: string, transport: PlaybackTransport): void {
         if (transport) {
-            this.localStorageService.store(
-                `${this.user}_transport_${cameraId}`, transport
-            );
+            this.localStorageService.store(`${this.user}_transport_${cameraId}`, transport);
         }
     }
 }

@@ -33,9 +33,7 @@ export class NxCameraDetailsComponent implements OnChanges {
     constructor(
         private clipboardService: ClipboardService,
         @Inject(WINDOW) private window: Window,
-    ) {
-
-    }
+    ) {}
 
     ngOnChanges(): void {
         if (this.camera) {
@@ -45,40 +43,49 @@ export class NxCameraDetailsComponent implements OnChanges {
             }
             this.currentUrl = this.window.location.href;
             const mediaStreams = this.camera.mediaStreams;
-            const findIndexTransports = (index: number): MediaStreamInfo | undefined => mediaStreams
-                .find(({ encoderIndex }) => index === encoderIndex);
+            const findIndexTransports = (index: number): MediaStreamInfo | undefined =>
+                mediaStreams.find(({ encoderIndex }) => index === encoderIndex);
 
             const calcTransportUrls = (stream: MediaStreamInfo): Array<ITransport> => {
                 // TODO: convert reduce to map
-                return stream?.transports.reduce((urls: ITransport[], transport) => {
-                    const resolutions: { [key: string]: string } = this.camera.availableTransportsAndResolutions[transport];
-                    let resolution = '';
-                    switch (transport) {
-                        case 'rtsp':
-                            resolution = stream.encoderIndex.toString();
-                            break;
-                        case 'hls':
-                            resolution = stream.encoderIndex === 1 ? 'lo' : 'hi';
-                            break;
-                        default:
-                            resolution = stream.encoderIndex === 1 ? resolutions.low : resolutions.high;
-                    }
-                    urls.push({ name: transport, url: this.camera.getVideoUrl(transport, resolution) });
-                    return urls;
-                }, []) || [];
+                return (
+                    stream?.transports.reduce((urls: ITransport[], transport) => {
+                        const resolutions: { [key: string]: string } =
+                            this.camera.availableTransportsAndResolutions[transport];
+                        let resolution = '';
+                        switch (transport) {
+                            case 'rtsp':
+                                resolution = stream.encoderIndex.toString();
+                                break;
+                            case 'hls':
+                                resolution = stream.encoderIndex === 1 ? 'lo' : 'hi';
+                                break;
+                            default:
+                                resolution =
+                                    stream.encoderIndex === 1 ? resolutions.low : resolutions.high;
+                        }
+                        urls.push({
+                            name: transport,
+                            url: this.camera.getVideoUrl(transport, resolution),
+                        });
+                        return urls;
+                    }, []) || []
+                );
             };
 
             this.cameraDetails = [
                 {
                     name: this.LANG.common.cameraLinks.lowStream,
-                    transports: calcTransportUrls(findIndexTransports(1))
-                }, {
+                    transports: calcTransportUrls(findIndexTransports(1)),
+                },
+                {
                     name: this.LANG.common.cameraLinks.highStream,
-                    transports: calcTransportUrls(findIndexTransports(0))
-                }, {
+                    transports: calcTransportUrls(findIndexTransports(0)),
+                },
+                {
                     name: this.LANG.common.cameraLinks.transcoding,
-                    transports: calcTransportUrls(findIndexTransports(-1))
-                }
+                    transports: calcTransportUrls(findIndexTransports(-1)),
+                },
             ];
         }
     }

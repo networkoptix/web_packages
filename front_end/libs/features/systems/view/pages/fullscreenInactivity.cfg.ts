@@ -1,3 +1,3 @@
 export const fullscreenInactivityCfg = {
-    delayMs: 3000
+    delayMs: 3000,
 };
