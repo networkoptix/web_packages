@@ -11,7 +11,7 @@ for (const line of stdOut.split('\n')) {
         currentFile = path.relative(__dirname, line).replace(/\\/g, '/');
         relativeReplacements[line] = currentFile;
         errorCount[currentFile] = 0;
-    } else if (/\s+\d+:\d+/.test(line)) {
+    } else if (/^\s+\d+:\d+/.test(line)) {
         errorCount[currentFile] += 1;
     }
 }
@@ -24,7 +24,7 @@ const errorTxt =
     '/** Error counts for files with type linting errors.\n\n * Update this file with `npm run update-type-blacklist`.\n */\nmodule.exports = ' +
     JSON.stringify(errorCount, null, 4).replace(/"/g, "'") +
     ';\n/*' +
-    stdOut +
+    stdOut.replace(/^\s+\d+:\d+\s+error/gm, '') +
     '\n*/';
 process.stdout.write(errorTxt);
 process.exit(0);
