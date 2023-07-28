@@ -1,37 +1,55 @@
-/* Copyright 2018-present Network Optix, Inc. Licensed under MPL 2.0: www.mozilla.org/MPL/2.0/ */
+<!-- Copyright 2018-present Network Optix, Inc. Licensed under MPL 2.0: www.mozilla.org/MPL/2.0/ -->
 
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WebRTC Stream Manager Example</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WebRTC Stream Manager Example</title>
-</head>
+  <body>
+    <div id="app">
+      <h1 id="description"></h1>
+      <div class="card">
+        <form name="cloud-data">
+          <div>
+            <label for="cloudInstance">Cloud Instance Url</label>
+            <input
+              type="url"
+              name="cloudInstance"
+              id="endpcloudInstanceoint"
+              required
+              value=""
+              placeholder="https://nxvms.com"
+            />
+          </div>
+          <button type="submit">Authenticate</button>
+        </form>
 
-<body>
-  <div id="app">
-    <h1 id="description"></h1>
-    <div class="card">
-      <p>Update url then click <b>Start WebRTC Connection</b> button.</p>
-      <form name="endpoint">
-        <fieldset>
-          <span>wss://</span>
-          <input type="text" name="endpoint" id="endpoint" required value="" placeholder="localhost:7001" style="flex: 1 0 216px">
-          <span>/webrtc-tracker?camera_id=</span>
-          <input type="text" name="cameraId" id="cameraId" required value="" placeholder="78a4ba56-ffcc-4da1-89dc-d0f5a1595611" style="flex: 0 0 248px">
-          <span>&auth=</span>
-          <input type="text" name="auth" id="auth" required value=""
-            placeholder="MDRiZTcyOGZmZGIxNDdlZWI3NTFkMDI4MWIzYWIzOTgtMjUyMDg1NTQ4NjpncXJaQjV2Z2NuZkdzbTIzeDV0YkFWQlM0UjVFUjA9aHprYnZqOjE1NGVmMjY5YzhjZGY1ZjY3MTFkMjcyOTFiYmU0NGY5" style="flex: 0 1 100%">
-        </fieldset>
-        <button type="submit">Start WebRTC Connection</button>
-      </form>
+        <form name="endpoint-data">
+          <fieldset>
+            <legend>Endpoint Options</legend>
+            <div>
+              <label for="selectedSystem">Select a system</label>
+              <select name="selectedSystem">
+                <option value="loading">Loading Systems...</option>
+              </select>
+            </div>
+            <div id="selectedCamera">
+              <label for="selectedCamera">Select a camera</label>
+              <select name="selectedCamera">
+                <option value="loading">Loading Cameras...</option>
+              </select>
+            </div>
+          </fieldset>
+          <button type="submit" disabled>Start WebRTC Connection</button>
+        </form>
+      </div>
+      <div class="card">
+        <video id="targetVideo" autoplay muted></video>
+      </div>
     </div>
-    <div class="card">
-      <video id="targetVideo" autoplay muted></video>
-    </div>
-  </div>
-  <script type="module" src="/src/main.ts"></script>
-</body>
-
+    <script type="module" src="/src/main.ts"></script>
+  </body>
 </html>

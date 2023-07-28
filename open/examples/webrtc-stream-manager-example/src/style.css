@@ -50,14 +50,25 @@ h1 {
   width: 100%;
 }
 
-#targetVideo, fieldset {
+#targetVideo, form {
   outline: 4px auto #666
 }
 
-fieldset {
+form {
   display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
+  flex-direction: column;
+}
+
+form > div {
+  display: flex;
+}
+
+form > div > input {
+  flex-grow: 1;
+}
+
+form > div > label {
+  flex-grow: 0;
 }
 
 span {
@@ -116,4 +127,21 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+[name="endpoint-data"], [name="cloud-data"] {
+  display: none;
+  padding: 16px;
+}
+
+fieldset > div {
+  margin: 8px;
+}
+
+#selectedCamera {
+  display: none;
+}
+
+label {
+  margin: 0 16px;
 }

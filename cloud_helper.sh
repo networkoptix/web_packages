@@ -549,6 +549,7 @@ do
             VERSION=$2
             PORTS=${3:-"7001"}
             USE_LOCAL="false"
+            CLOUD_HOST="test.cloud.hdw.mx"
 
             if [ "$DOWNLOAD_BUILD" == "true" ]; then
                 echo "fetching $VERSION"

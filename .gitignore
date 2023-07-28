@@ -39,3 +39,6 @@ cloud/requirements-license.json
 **/migrations.json
 PythonRobot/letsencrypt-stg.crt
 PythonRobot/chromedriver
+
+# Local Netlify folder
+.netlify

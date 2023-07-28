@@ -8,16 +8,20 @@
   "type": "module",
   "scripts": {
     "start": "nx run webrtc-stream-manager-example:serve",
-    "serve": "vite",
-    "build:demo": "tsc --outDir ../dist/webrtc-stream-manager-example && vite build --outDir ../dist/webrtc-stream-manager-example --emptyOutDir --base ./ && cp ./package.json ../dist/webrtc-stream-manager-example/package.json",
-    "deploy:demo": "echo 'FUTURE TODO: Add UI wrapper to display show all buildable demos and deploy them statically'",
+    "serve": "node -e \"require('cors-anywhere').createServer().listen(4242, '0.0.0.0')\" & vite",
+    "build:demo": "tsc --outDir ../dist/webrtc-stream-manager-example && vite build --outDir ../dist/webrtc-stream-manager-example --emptyOutDir --base ./ && cp ./package.json ../dist/webrtc-stream-manager-example/package.json && cp -r ./netlify ../dist/webrtc-stream-manager-example/netlify",
+    "zipSource": "pushd \"$(git rev-parse --show-toplevel)\" && git archive --output ./open/examples/dist/webrtc-stream-manager-example/source.zip HEAD open && popd",
+    "deploy:demo": "npm run build:demo && npm run zipSource && pushd ../dist/webrtc-stream-manager-example && netlify deploy --prod && popd",
     "ci:check": "echo 'Additional CI checks can be added here'"
   },
   "dependencies": {
-    "@networkoptix/webrtc-stream-manager": "*"
+    "@netlify/functions": "^1.6.0",
+    "@networkoptix/webrtc-stream-manager": "*",
+    "@types/node": "^14.18.54"
   },
   "devDependencies": {
-    "typescript": "^4.9.3",
+    "cors-anywhere": "^0.4.4",
+    "typescript": "^5.0.2",
     "vite": "^4.2.0"
   }
 }
