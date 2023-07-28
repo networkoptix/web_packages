@@ -54,6 +54,8 @@ version testing:
 
 ~~10. Mixins for repetitive CSS~~
 
+11. Improve variable names for Merge
+
 ***
 
 **Future TODO:**

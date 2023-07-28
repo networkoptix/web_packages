@@ -151,6 +151,7 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
         return historyLength ? history[historyLength - 1] : MergeState.select;
     });
     stateHistory = signal<MergeState[]>([]);
+    currentSystemIsPrimary = signal(true);
     readonly MergeState = MergeState;
     isLocal: boolean = environment.isLocal;
     dryRunAvailable: boolean;
@@ -160,44 +161,29 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
     mergeSystems: MergeSystem[];
     system: NxSystem;
     targetSystem: MergeSystem;
-    _currentSystemIsPrimary: boolean = true;
-    primarySystem: NxSystem | MergeSystem;
-    secondarySystem: NxSystem | MergeSystem;
     cleanUrl: string;
     serverUrl: string;
     remotePassword: string;
-
-    get currentSystemIsPrimary(): boolean {
-        return this._currentSystemIsPrimary;
-    }
-
-    set currentSystemIsPrimary(newValue: boolean) {
-        this._currentSystemIsPrimary = newValue;
-        this.primarySystem = newValue ? this.system : this.targetSystem;
-        this.secondarySystem = newValue ? this.targetSystem : this.system;
-    }
-
-    get primaryName(): string {
+    primarySystem = computed<NxSystem | MergeSystem>(() => {
+        return this.currentSystemIsPrimary() ? this.system : this.targetSystem;
+    });
+    secondarySystem = computed<NxSystem | MergeSystem>(() => {
+        return this.currentSystemIsPrimary() ? this.targetSystem : this.system;
+    });
+    primaryName = computed<string>(() => {
         return escape(
-            this.currentSystemIsPrimary
+            this.currentSystemIsPrimary()
                 ? this.system.info.name
-                : this.targetSystem.name || this.defaultServerName,
+                : this.targetSystem.name || this.defaultServerName(),
         );
-    }
-
-    get secondaryName(): string {
+    });
+    secondaryName = computed<string>(() => {
         return escape(
-            this.currentSystemIsPrimary
-                ? this.targetSystem.name || this.defaultServerName
+            this.currentSystemIsPrimary()
+                ? this.targetSystem.name || this.defaultServerName()
                 : this.system.info.name,
         );
-    }
-
-    get defaultServerName(): string {
-        return this.translateService.instant(this.LANG.dialogs.merge.serverAtUrl, {
-            url: this.cleanUrl || this.serverUrl || this.targetSystem.url,
-        });
-    }
+    });
 
     isNxSystem = (s: NxSystem | MergeSystem): s is NxSystem => {
         return (s as NxSystem).info !== undefined;
@@ -269,6 +255,7 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
         this.cloudHost = this.CONFIG.cloudHost;
         effect(() => {
             const state = this.currentState();
+
             if ([MergeState.select, MergeState.admin, MergeState.confirm].includes(state)) {
                 this.setupUpdateWebadminSession(state);
             }
@@ -311,6 +298,12 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
             systemId,
         )}/api/moduleInformation`;
         return lastValueFrom(this.httpService.get<ModuleInformation>(url));
+    };
+
+    defaultServerName = (): string => {
+        return this.translateService.instant(this.LANG.dialogs.merge.serverAtUrl, {
+            url: this.cleanUrl || this.serverUrl || this.targetSystem.url,
+        });
     };
 
     // not sure how this is going to work for the generic component yet
@@ -454,7 +447,7 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                 this.checking = false;
                 if (res !== ResponseStrings.skip) {
                     this.checkedMergeabilityOnce = false;
-                    this.currentSystemIsPrimary = true;
+                    this.currentSystemIsPrimary.set(true);
                     // covers case where system (cloud & non-cloud) is not set up yet
                     if (res.isNew) {
                         if (this.serverUrl) {
@@ -572,7 +565,7 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                 }
 
                 if (this.isLocal) {
-                    const takeRemoteSettings = this.system.id === this.secondarySystem.id;
+                    const takeRemoteSettings = this.system.id === this.secondarySystem().id;
                     const bothAreCloud = this.isSessionOauth && !!this.targetSystem.cloudSystemId;
                     return this.system.mediaserver
                         .mergeSystems(
@@ -585,8 +578,8 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                         .toPromise();
                 } else {
                     return this.cloudApi.merge(
-                        this.primarySystem.id,
-                        this.secondarySystem.id,
+                        this.primarySystem().id,
+                        this.secondarySystem().id,
                         password,
                     );
                 }
@@ -636,16 +629,16 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                     }
                     this.close({
                         secondary: {
-                            id: this.secondarySystem.id,
-                            name: this.secondaryName,
+                            id: this.secondarySystem().id,
+                            name: this.secondaryName(),
                         },
                         primary: {
-                            id: this.primarySystem.id,
-                            name: this.primaryName,
+                            id: this.primarySystem().id,
+                            name: this.primaryName(),
                         },
                         anotherSystemId: this.targetSystem.id,
                         role:
-                            this.primarySystem.id === this.system.id
+                            this.primarySystem().id === this.system.id
                                 ? this.CONFIG.system.status.master
                                 : this.CONFIG.system.status.slave,
                     });
@@ -815,7 +808,7 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
         const secondary = this.targetSystem;
         if (!!primary.cloudSystemId !== !!secondary.cloudSystemId) {
             if (secondary.cloudSystemId) {
-                this.currentSystemIsPrimary = false;
+                this.currentSystemIsPrimary.set(false);
             }
             this.stateHistory.update(history => [...history, MergeState.confirm]);
         } else if (primary.cloudOwnerId !== secondary.cloudOwnerId) {
@@ -827,20 +820,26 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
 
     handleMergeError(error: MergeErrorData): void {
         const err = cloneDeep(error.data);
-        err.primarySystemName = this.primaryName;
-        err.secondarySystemName = this.secondaryName;
+        err.primarySystemName = this.primaryName();
+        err.secondarySystemName = this.secondaryName();
 
         let system: NxSystemInfo;
         this.systemsService
             .forceUpdateSystems()
             .toPromise()
             .then(systems => {
-                system = systems.find(system => system.id === this.primarySystem.id);
+                system = systems.find(system => system.id === this.primarySystem().id);
             })
             .finally(() => {
+                const primarySystem = this.primarySystem();
                 let stateOfHealth = system?.stateOfHealth;
-                if (!stateOfHealth && this.isMergeSystem(this.primarySystem)) {
-                    stateOfHealth = this.primarySystem.stateOfHealth;
+                if (
+                    !stateOfHealth &&
+                    this.isMergeSystem(primarySystem) &&
+                    'stateOfHealth' in primarySystem &&
+                    primarySystem.stateOfHealth
+                ) {
+                    stateOfHealth = primarySystem.stateOfHealth;
                 }
 
                 err.failedSystemName =

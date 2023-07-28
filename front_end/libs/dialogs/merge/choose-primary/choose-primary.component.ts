@@ -26,7 +26,6 @@ export class NxMergeChoosePrimaryComponent implements OnInit {
     @Input() system: NxSystem;
     @Input() targetSystem: MergeSystem;
     @Input() errorCode: string;
-    @Input() currentSystemIsPrimary: boolean;
     @Output() currentSystemIsPrimaryChange = new EventEmitter<boolean>();
     @Output() setCurrentState = new EventEmitter<MergeState>();
 

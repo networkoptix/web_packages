@@ -65,15 +65,14 @@
             *ngSwitchCase="MergeState.primary"
             [system]="system"
             [targetSystem]="targetSystem"
-            [(currentSystemIsPrimary)]="currentSystemIsPrimary"
             [errorCode]="choosePrimaryErrorCode"
             (setCurrentState)="updateStateHistory($event)"
         ></nx-merge-choose-primary-component>
         <nx-merge-confirm-merge-component
             *ngSwitchCase="MergeState.confirm"
             [confirmMergeProcess]="confirmMergeProcess"
-            [primaryName]="primaryName"
-            [secondaryName]="secondaryName"
+            [primaryName]="primaryName()"
+            [secondaryName]="secondaryName()"
             [tooManyServers]="tooManyServers"
             [maxServers]="maxServers"
             [supportLink]="CONFIG.company.links.support"
