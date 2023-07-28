@@ -37,6 +37,9 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
             iceServers,
         });
 
-        this.ontrack = (event: RTCTrackEvent): unknown => trackHandler(event.streams[0]);
+        // TODO: Need to fix handling audio playback.
+        // Mediaserver sends a stream with just video then separately sends a stream with just audio.
+        // Need to figure out how to handle this to enable audio in next release.
+        this.ontrack = (event: RTCTrackEvent): unknown => event.track.kind === 'video' && trackHandler(event.streams[0]);
     }
 }
