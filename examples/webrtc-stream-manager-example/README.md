@@ -12,7 +12,7 @@ For full documentation on the `@networkoptix/webrtc-stream-manager` package [vie
 
 ### Install workspace dependencies
 
-From the root folder run `npm install`. This will install shared workspace dependencies and link local packages.
+Within the root folder run `npm install`. This will install shared workspace dependencies and link local packages.
 
 ```sh
 npm install
@@ -20,7 +20,7 @@ npm install
 
 ### Run demo
 
-Running `npm start` will start running the demo.
+Within the `examples/webrtc-stream-manager-example` folder the `npm start` command will start running the demo.
 
 ```sh
 npm start
@@ -30,7 +30,16 @@ npm start
 
 Open [http://127.0.0.1:5173](http://127.0.0.1:5173).
 
-Enter the `server_url`, `camera_id`, and `auth` then click the `Start WebRTC Connection` button to start playing live stream from a camera.
+Enter the `Cloud Instance Url` for the instance with the system you'd like view a WebRTC stream.
+
+Click `Authenticate` to login using oauth.
+
+After oauth redirects back to the demo, the first online system that supports WebRTC and the first online camera
+from that system is automatically selected.
+
+If you would like to select a different system or camera the available options will are available on the dropdown.
+
+Click `Start WebRTC Connection` to begin playback.
 
 ---
 
@@ -45,23 +54,18 @@ Then we subscribe to the returned observable and handle the `stream` or `error` 
 In this demo we're just setting the srcObject to the stream.
 
 ```typescript
-const startStream = (event: SubmitEvent) => {
-  event.preventDefault()
+const startStream = (relayUrl: string, cameraId: string, serverId: string) => {
+  const webRtcUrlFactory = () =>
+  `wss://${relayUrl}/webrtc-tracker/?camera_id=${cameraId}&x-server-guid=${serverId}`;
 
-  const data = new FormData(form);
-
-  const webRtcUrlFactory = () => `wss://${data.get('endpoint')}/webrtc-tracker?camera_id=${data.get('cameraId')}&auth=${data.get('auth')}`
-
-  WebRTCStreamManager.connect(webRtcUrlFactory, videoElement).subscribe(([stream, error]) => {
+WebRTCStreamManager.connect(webRtcUrlFactory, videoElement)
+  .pipe(takeUntil(newStream$))
+  .subscribe(([stream, error]) => {
     if (stream) {
       videoElement.srcObject = stream;
       videoElement.muted = true;
       videoElement.autoplay = true;
     }
-
-    if (error) {
-      alert('Error playing back stream')
-    }
-  })
+  });
 }
 ```
