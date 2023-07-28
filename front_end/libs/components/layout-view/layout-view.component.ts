@@ -57,7 +57,7 @@ import { NxSystem } from '@services/system.service/system';
 import { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
-import { alphabeticalSort, cleanId } from '@utils/general';
+import { alphabeticalSort, cleanId, dirtyId } from '@utils/general';
 import { generateTour, translateStep } from '@utils/nx';
 
 interface Resource {
@@ -208,10 +208,7 @@ export class NxLayoutViewComponent {
                 this.#selectedLayout$.pipe(startWith(null)),
                 this.availableLayouts$.pipe(startWith([])),
                 userManager.getUsersDataFromTheSystem().then(() => {
-                    const { currentOwner, users } = userManager;
-                    const currentUser = users.find(
-                        ({ email }) => email === this.accountService.account.email,
-                    );
+                    const { currentOwner, currentUser } = userManager;
                     return { currentUser, currentOwner };
                 }),
             ]),
@@ -299,10 +296,12 @@ export class NxLayoutViewComponent {
                     }),
                     {} as ResourceLookup<(typeof webPages)[0]>,
                 );
+
                 const byName = alphabeticalSort<Pick<Resource, 'name'>>(
                     this.locale,
                     r => r.name || '',
                 );
+
                 const layoutsForTree = layouts
                     .filter(layout => layout.id && layout.id !== 'new')
                     .filter(layout =>
@@ -317,7 +316,8 @@ export class NxLayoutViewComponent {
                         type: ResourceType.LAYOUT,
                         details,
                     }));
-                const parsedResources = {
+
+                const parsedResources = Object.entries({
                     ...parsedServers,
                     ...parsedCameras,
                     ...parsedWebPages,
@@ -325,8 +325,13 @@ export class NxLayoutViewComponent {
                         (acc, layout) => ({ ...acc, [layout.details.id]: layout }),
                         {},
                     ),
-                };
+                }).reduce((newObject, [id, value]) => {
+                    newObject[dirtyId(id)] = value;
+                    return newObject;
+                }, {});
+
                 const serversForTree = Object.values(parsedServers).sort(byName);
+
                 const camerasForTree = Object.values(parsedCameras)
                     .sort(byName)
                     .filter(
@@ -334,6 +339,7 @@ export class NxLayoutViewComponent {
                             this.CONFIG.featureFlags.layoutsIoDevices ||
                             type !== ResourceType.IO_DEVICE,
                     );
+
                 const webPagesForTree = Object.values(parsedWebPages).sort(byName);
 
                 return {
