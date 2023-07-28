@@ -227,7 +227,7 @@ export class NxLayoutViewComponent {
 
                 const isIoOnly = (camera: NxSystemCamera): boolean =>
                     !(
-                        !!camera.addParams.mediaStreams ||
+                        !!camera.parsedAddParams.mediaCapabilities?.streamCapabilities?.length ||
                         !camera.addParams.ioSettings ||
                         !JSON.parse(camera.addParams.ioSettings).length
                     );
