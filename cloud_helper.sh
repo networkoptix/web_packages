@@ -310,7 +310,7 @@ function run_virtual_cameras() {
         docker cp $VIDEO_DIR $container:$RUN_TIME
 
         echo "Running test cameras for for $container"
-        docker exec -itd -w $RUN_TIME $container /bin/bash -c "./testcamera -S -I 127.0.0.1 \"files=${cameras}\""
+        docker exec -itd -w $RUN_TIME $container /bin/bash -c "./testcamera -S -I=127.0.0.1 \"files=${cameras}\""
     done
 
 }

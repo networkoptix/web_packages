@@ -81,7 +81,7 @@
                                 >
                             </button>
                             <button
-                                *ngIf="canSeeInfo"
+                                *ngIf="canSeeInfo()"
                                 class="camera-buttons"
                                 id="detailed-info"
                                 [routerLink]="fullInfoPath()"
