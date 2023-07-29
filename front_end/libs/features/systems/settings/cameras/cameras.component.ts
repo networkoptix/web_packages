@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit, Inject, ViewContainerRef } from '@angular
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { isEqual } from 'lodash-es';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import {
     Subscription,
@@ -492,11 +491,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     this.noCameras = false;
                 }
                 this.cameraSubscription?.unsubscribe();
-                let prevCameras: NxSystemCamera[] = [];
                 this.cameraSubscription = this.system.infoSubject
                     .pipe(
                         untilDestroyed(this),
-                        filter(res => {
+                        tap(res => {
                             this.noCameras = res.cameraManager.cameras?.length === 0;
                             if (this.noCameras) {
                                 this.showPreloader = false;
@@ -511,10 +509,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                                     this.parsedCameraId;
                                 this.initUpdateProcess();
                             }
-
-                            const camerasEqual = isEqual(prevCameras, res.cameraManager.cameras);
-                            prevCameras = [...res.cameraManager.cameras];
-                            return !camerasEqual;
                         }),
                         map(system => {
                             if (!system.cameraManager.cameras) {
