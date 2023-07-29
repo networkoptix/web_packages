@@ -2210,6 +2210,28 @@ class TestDataStructure:
         ds.type = DataStructure.DATA_TYPES.external_file
         assert ds.has_file_field
 
+    def test_broken_order(self, version_factory, review_factory, record_factory, default_portal,
+                          default_customization, default_customization_ctx):
+        ctx = baker.make('Context', asset_type=default_portal.asset_type, name="TEST CONTEXT", translatable=False)
+        data_structure: DataStructure = baker.make(
+            'DataStructure', type=DataStructure.DATA_TYPES.text, default='default text',
+            translatable=False, name='test_order_ds', context=ctx
+        )
+        accepted = AssetCustomizationReview.REVIEW_STATES.accepted
+        versions = [version_factory(default_portal, default_customization) for _ in range(4)]
+        data_rec_0 = record_factory(ds=data_structure, asset=default_portal,
+                                    version=versions[3], value=f'value {uuid4()}')
+        data_rec_1 = record_factory(ds=data_structure, asset=default_portal,
+                                    version=versions[2], value=f'value {uuid4()}')
+        data_rec_2 = record_factory(ds=data_structure, asset=default_portal,
+                                    version=versions[0], value=f'value {uuid4()}')
+        data_rec_3 = record_factory(ds=data_structure, asset=default_portal,
+                                    version=versions[1], value=f'value {uuid4()}')
+        review = review_factory(version=versions[2], customization=default_customization, state=accepted)
+
+        assert data_structure.find_actual_value(asset=default_portal, draft=True, use_cached=False) == data_rec_0.value
+        assert data_structure.find_actual_value(asset=default_portal, draft=False, use_cached=False) == data_rec_1.value
+
 
 class TestGetTosReviews:
     @pytest.fixture(autouse=True)

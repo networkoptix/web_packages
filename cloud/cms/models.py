@@ -1328,6 +1328,8 @@ class DataStructure(models.Model):
                 content_record = content_record_english
 
         if content_record.exists():
+            if draft:
+                content_record = content_record.order_by('version_id')
             if not version_id and draft:
                 content_value = content_record.last().cast_value
             else:  # Here find a datarecord with version_id
@@ -1423,7 +1425,7 @@ class DataStructure(models.Model):
             while remaining:
                 fished_records_qs = records.filter(
                     data_structure__in=remaining, **kwargs
-                ).select_related('data_structure').order_by('-pk')[:len(data_structures_needed) * 3]
+                ).select_related('data_structure')[:len(data_structures_needed) * 3]
                 if not fished_records_qs.count():
                     return remaining
                 for record in fished_records_qs:
@@ -1442,7 +1444,7 @@ class DataStructure(models.Model):
                 language=language, customization_name=customization_name
             )
 
-        records = DataRecord.objects.filter(asset=asset)
+        records = DataRecord.objects.filter(asset=asset).order_by('-version_id')
         if version_id:
             records = records.filter(version_id__lte=version_id)
             if customization_name:
@@ -1452,16 +1454,14 @@ class DataStructure(models.Model):
         if not (draft or only_review):
             records = records.filter(
                 version__assetcustomizationreview__state=AssetCustomizationReview.REVIEW_STATES.accepted
-            ).order_by('-version_id')
-        elif version_id:
-            records = records.order_by('-version_id')
+            )
         elif only_review:
             records = records.filter(
                 version__assetcustomizationreview__state__in=[
                     AssetCustomizationReview.REVIEW_STATES.pending,
                     AssetCustomizationReview.REVIEW_STATES.rejected,
                     AssetCustomizationReview.REVIEW_STATES.blocked
-                ]).order_by('-version_id')
+                ])
         cached_ds_set = set(cached_values.keys())
         data_structure_set = set(data_structures) - cached_ds_set
         fished_records = {}
