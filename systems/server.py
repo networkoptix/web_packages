@@ -10,11 +10,14 @@ from debug_tools import PrintDebug
 from models import db
 from nx_common import CloudConnector, LicenseConnector
 from rest_v1 import rest_blueprint
-from views import GroupView, ParamsValidator, UserView
+from views import GroupView, ParamsValidator, UserView, OrganizationView
 
 dictConfig({
     'version': 1,
     'loggers': {
+        __name__: {
+            'level': 'INFO'
+        },
         'quart.app': {
             'level': 'INFO',
         },
@@ -73,7 +76,6 @@ async def receiving(cloud_connector):
         while True:
             action, data = ParamsValidator.validate_group(await websocket.receive())
             async with LicenseConnector(user_email) as license_api:
-                print('opened license api')
                 token = await cloud_connector.get_token()
                 await license_api.update_token(token)
                 try:
@@ -107,11 +109,15 @@ async def receiving(cloud_connector):
                         res = UserView.list_users(data['group_id'])
                     elif action == 'update_user':
                         user = [{'email': data['email'], 'role': data['role'], 'enabled': data.get('enabled', True)}]
-                        res = await UserView.update_users_in_group(data['group_id'], user)
+                        res = await UserView.update_users_in_group(cloud_connector.share_system, data['group_id'], user)
                     # End of user management
                     elif action == 'systems':
                         res = await cloud_connector.get_systems()
                         # app.logger.debug(res)
+                    elif action == 'create_org_user':
+                        res = await OrganizationView.add_user_to_org(cloud_connector, license_api, token, data['org_id'], data['email'], data['role'], data['groups'])
+                    elif action == 'update_org_user':
+                        res = await OrganizationView.update_org_user(cloud_connector, license_api, token, data['org_id'], data['email'], data['role'], data['groups'])
                     elif action == 'aggregate_systems_request':
                         res = await cloud_connector.aggregate_request(
                             data['url'], method=data['method'], post_body=data.get('postBody')
@@ -137,7 +143,6 @@ async def receiving(cloud_connector):
                         }))
 
                 except httpx.HTTPError as e:
-                    print('closing kicenseapi')
                     await license_api.session.aclose()
                     raise(e)
     except asyncio.CancelledError as e:

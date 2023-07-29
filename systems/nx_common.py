@@ -1,6 +1,7 @@
 import asyncio
 import httpx
 import os
+import traceback
 
 from models import Group
 
@@ -12,6 +13,31 @@ from quart import current_app, request, websocket
 CLOUD_HOST = os.getenv('CLOUD_HOST') or 'cloud-test.hdw.mx'  # or 'localhost:8001'
 LICENSE_PORTAL = os.getenv('LICENSE_PORTAL') or 'nxlicensed.test.hdw.mx'
 RELAY = os.getenv('CLOUD_RELAY') or 'https://{systemId}.relay.relay.cloud.hdw.mx'
+
+async def share(api, systems, users):
+    shared_systems = []
+
+    for system_id in systems:
+        for user in users:
+            try:
+                email = user.get('email').lower()
+                role = user.get('role', '')
+                isEnabled = user.get('enabled', True)
+                params = {
+                    'systemId': system_id,
+                    'accountEmail': email,
+                    'accessRole': role,
+                    'isEnabled': isEnabled
+                }
+                if not params['accessRole']:
+                    del params['accessRole']
+
+                res = await api.session.post(f'https://{CLOUD_HOST}/cdb/system/share', json=params)
+                shared_systems.append(res)
+            except APIException:
+                current_app.logger.error(traceback.format_exc())
+                pass
+    return shared_systems  
 
 
 def is_org_admin(f):
@@ -129,10 +155,10 @@ class CloudConnector:
     async def __aexit__(self, *args, **kwargs):
         await self.session.aclose()
 
-    async def _get_wrapper(self, route, params=None, _websocket=None):
+    async def _get_wrapper(self, route, params=None, _websocket=None, auth=None):
         res = None
         try:
-            res = await self.session.get(f'https://{CLOUD_HOST}{route}', params=params)
+            res = await self.session.get(f'https://{CLOUD_HOST}{route}', params=params, headers=({"Authorization": f'Bearer {auth}'}) if auth else None)
             res.raise_for_status()
             if res and res.status_code == 401:
                 await websocket.close(res.status_code, 'Failed auth')
@@ -144,10 +170,10 @@ class CloudConnector:
                     return await websocket.close(res.status_code, 'Failed auth')
                 raise e
 
-    async def _post_wrapper(self, route, data=None, _websocket=None):
+    async def _post_wrapper(self, route, data=None, _websocket=None, auth=None):
         res = None
         try:
-            res = await self.session.post(f'https://{CLOUD_HOST}{route}', json=data)  # , verify=False)
+            res = await self.session.post(f'https://{CLOUD_HOST}{route}', json=data, headers=({"Authorization": f'Bearer {auth}'}) if auth else None)  # , verify=False)
             res.raise_for_status()
             return res.json()
         except httpx.HTTPError as e:
@@ -248,12 +274,7 @@ class CloudConnector:
         return res
 
     async def share_system(self, systems, users):
-        request_url = f'/api/systems/group-users'
-        data = {
-            'systems': systems,
-            'users': users
-        }
-        return await self._post_wrapper(request_url, data)
+        return await share(self, systems, users)
 
 
 class RestConnector:
@@ -280,12 +301,7 @@ class RestConnector:
         return user.get('username')
 
     async def share_system(self, systems, users):
-        route = '/api/systems/group-users'
-        data = {
-            'systems': systems,
-            'users': users
-        }
-        return await self._post(route, data=data)
+        return await share(self, systems, users)
 
     async def get_system(self, system_id):
         system = await self._get("/cdb/systems/get", params={'systemId': system_id})

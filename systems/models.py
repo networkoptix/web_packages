@@ -117,9 +117,9 @@ class Group(db.Model):
                     continue
                 user_entry = User.query.filter(User.email == email and User.group_id == self.id)
                 user_entry.role = role
-                bulk_user_user.append(user_entry)
+                bulk_user_user.append(user_entry.as_dict())
             remaining_users.append(user)
-        await modify_users(systems, [user.as_dict() for user in remaining_users])
+        await modify_users(systems, remaining_users)
 
         if len(bulk_user_user):
             db.session.bulk_save_objects(bulk_user_user)

@@ -1,9 +1,20 @@
 import json
+import httpx
+import logging
 from enum import Enum
 # from quart import current_app used for logging
 
 from models import Group, System, User, db
+from asyncio import gather
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger()
+
+def get_role(role):
+    admin_roles = ['Organization Administrator', 'Administrator']
+    role = 'cloudAdmin' if role in admin_roles else 'advancedViewer'
+    return role
+    
 
 class ActionEnum(Enum):
     AGGREGATE_SYSTEMS_REQUEST = 'aggregate_systems_request'
@@ -19,6 +30,8 @@ class ActionEnum(Enum):
     DELETE_USER = 'delete_user'
     LIST_USERS = 'list_users'
     UPDATE_USER = 'update_user'
+    CREATE_ORG_USER = 'create_org_user'
+    UPDATE_ORG_USER = 'update_org_user'
 
     @classmethod
     def _get_actions(cls):
@@ -61,7 +74,9 @@ class ParamsValidator:
             ActionEnum.CREATE_USER: ['email', 'group_id', 'role'],
             ActionEnum.DELETE_USER: ['email', 'group_id'],
             ActionEnum.LIST_USERS: ['group_id'],
-            ActionEnum.UPDATE_USER: ['email', 'group_id', 'role']
+            ActionEnum.UPDATE_USER: ['email', 'group_id', 'role'],
+            ActionEnum.CREATE_ORG_USER: ['org_id', 'email', 'role'],
+            ActionEnum.UPDATE_ORG_USER: ['org_id', 'email', 'role'],
         }
 
         enum_action = ActionEnum(action)
@@ -190,6 +205,9 @@ class UserView:
 
     @staticmethod
     async def add_user_to_group(add_user_to_cloud, group_id, email, role):
+        user = User.query.filter(User.email == email, User.group_id == group_id).first()
+        if user:
+            return {'msg': f'{email} already exists in group {group_id}', 'err': 403}
         user = [UserView.add_user_to_db(group_id, email, role)]
         group = Group.query.get(group_id)
         if not group:
@@ -207,7 +225,7 @@ class UserView:
 
     @staticmethod
     def remove_user_from_db(group_id, email):
-        user = User.query.filter(User.email == email and User.group_id == group_id)
+        user = User.query.filter(User.email == email, User.group_id == group_id).first()
         if not user:
             return {'msg': 'User does not exist in group', 'err': 404}
 
@@ -231,3 +249,65 @@ class UserView:
             return {'msg': f'Group not found. Failed to update users'}, 404
         await group.update_users_in_group(modify_user, users)
         return {'msg': 'Users have been updated for group'}
+    
+class OrganizationView:
+    async def _users_post(cloud_api, system_id, authToken, email, accessRole):
+        body = {
+            "accountEmail": email,
+            "accessRole": accessRole,
+            "userRoleId": "",
+            "customPermissions": "",
+            "isEnabled": True,
+            "vmsUserId": ""
+        }
+        try:
+            res = await cloud_api._post_wrapper(f'/cdb/systems/{system_id}/users', body, auth=authToken)
+            return res
+        except httpx.HTTPStatusError as err:
+            log_msg = f'\nPOST: /cdb/systems/{system_id}/users\nJson: {body}'
+            logger.error(f'{log_msg}\n{err}')
+            pass
+
+    @classmethod
+    async def add_user_to_org(self, cloud_api, license_api, authToken, org_id, email, role, groups=None):
+        try:
+            res = await gather(license_api._license_post(f'/nxlicensed/api/v2/partners/organizations/{org_id}/users/', {"email": email, "role": role}),license_api._license_get(f'/nxlicensed/api/v2/partners/organizations/{org_id}/cloud_systems/'))
+            systems = res[1]
+            groups = GroupView.list_groups(org_id) if not groups else groups
+            added_groups = []
+            added_systems = []
+            access_role = get_role(role)
+            
+            for group in groups:
+                group_id = group['id']
+                res = await UserView.add_user_to_group(cloud_api.share_system, group_id, email, access_role)
+                added_groups.append(res)
+
+            for system in systems:
+                system_id = system['systemId']
+                res = await self._users_post(cloud_api, system_id, authToken, email, access_role)
+                added_systems.append(res)
+            return {"added_groups": added_groups, "added_systems": added_systems}
+        except httpx.HTTPStatusError as e:
+            raise(e)
+        
+    @classmethod
+    async def update_org_user(self, cloud_api, license_api, authToken, org_id, email, role, groups=None):
+        try:
+            body = {
+                "email": email,
+                "role": role,
+            }
+            updated_org = await license_api._license_post(f'/nxlicensed/api/v2/partners/organizations/{org_id}/users/', body)
+            
+            access_role = get_role(role)
+            updated_systems = []
+            groups = GroupView.list_groups(org_id) if not groups else groups
+            for group in groups:
+                for system in group['systems']:
+                    system_id = system['id']
+                    res = await self._users_post(cloud_api, system_id, authToken, email, access_role)
+                    updated_systems.append(res)
+            return { "updated_org": updated_org, "updated_systems": updated_systems}
+        except httpx.HTTPStatusError as e:
+            raise(e)
