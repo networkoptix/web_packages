@@ -178,6 +178,7 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
             this.window.HTMLTextAreaElement?.prototype,
             'value',
         )?.set;
+        textContent = textContent.replace(/\u00A0/g, ' '); // Replace non-breaking spaces to make JSON parse properly
         setValue?.call(this.textarea, textContent);
         this.textarea.dispatchEvent(new Event('change', { bubbles: true }));
     };
