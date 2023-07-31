@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, DestroyRef, Input, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -13,9 +13,10 @@ export class NxNoCamerasComponent implements OnInit {
     @Input() system: NxSystem;
     private router: Router = inject(Router);
     private activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+    destroyRef = inject(DestroyRef);
 
     ngOnInit(): void {
-        this.system.infoSubject.pipe(takeUntilDestroyed()).subscribe(system => {
+        this.system.infoSubject.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(system => {
             if (system?.cameraManager.cameras?.length > 0) {
                 const cameraId = system.cameraManager.cameras[0].id;
                 this.router.navigate([cameraId], { relativeTo: this.activatedRoute });
