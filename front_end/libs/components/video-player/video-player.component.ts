@@ -12,6 +12,7 @@ import { BehaviorSubject, firstValueFrom, Observable, of, shareReplay, Subject, 
 import staticLang from '@common/language/language_i18n_static.json';
 import { LayoutItem } from '@services/system-api.types';
 import { Translatable } from '@pipes/nx-translate.types';
+import { NxAppStateService } from '@services/nx-app-state.service';
 
 type DrawImagePartialTuple = [number, number, number, number];
 
@@ -113,10 +114,14 @@ export class NxVideoPlayerComponent {
 
     constructor(
         configService: NxConfigService,
+        appStateService: NxAppStateService,
         private elRef: ElementRef,
     ) {
         this.CONFIG = configService.config;
         this.playerId = uuid();
+        appStateService.userInteracted$.pipe(takeUntil(this.cancelMonitoringFps$), untilDestroyed(this)).subscribe(() => {
+            this.webRtcPlayerRef.nativeElement.muted = false
+        })
     }
 
     reconnect$ = new BehaviorSubject<void>(null);
@@ -200,7 +205,10 @@ export class NxVideoPlayerComponent {
             }
         })
 
-        return canvas.captureStream();
+        const newStream = canvas.captureStream();
+        stream.getAudioTracks().forEach(track => newStream.addTrack(track));
+
+        return newStream;
     }
 
     cancelMonitoringFps$ = new Subject<void>();
