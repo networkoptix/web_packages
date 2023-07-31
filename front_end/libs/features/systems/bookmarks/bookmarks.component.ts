@@ -12,7 +12,7 @@ import { pollingTimeout } from '@pages/static-variables-features';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxPageService } from '@services/page.service';
-import type { BookmarksParams, BookmarksTags, Device } from '@services/system-api.types';
+import type { BookmarksParams, BookmarksTags } from '@services/system-api.types';
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
@@ -28,7 +28,7 @@ import {
 } from '@utils/general';
 import { getSysLang } from '@utils/nx';
 
-import type { Bookmark, TimeRange } from './bookmarks.types';
+import type { Bookmark, BookmarksDevice, TimeRange } from './bookmarks.types';
 import type { NxDateAndTimeFilterComponent } from './components/date-and-time-filter/date-and-time-filter.component';
 
 interface BookmarkParams {
@@ -179,7 +179,7 @@ export class NxBookmarksComponent implements OnInit {
         };
     }
 
-    updateDevices(devices: Device[]): void {
+    updateDevices(devices: BookmarksDevice[]): void {
         this.devices = devices.map(d => d.name).sort(alphabeticalSort(this.locale, t => t));
         this.suggestions = {
             ...this.suggestions,
@@ -199,7 +199,7 @@ export class NxBookmarksComponent implements OnInit {
                 zip([
                     mediaserver.getBookmarks(params),
                     mediaserver.getBookmarkTags(),
-                    mediaserver.getDevices(),
+                    mediaserver.getBookmarksDevices(),
                     mediaserver.getServerTimes(),
                 ]),
             ),

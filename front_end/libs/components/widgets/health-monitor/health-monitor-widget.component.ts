@@ -22,6 +22,7 @@ import { PipesModule } from '@pipes/pipes.module';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { System } from '@services/nx-cloud-api/nx-cloud-api.types';
+import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 
@@ -122,7 +123,7 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget<
     updatingIn = 0;
     manifest;
     selectedSystem: SystemDropdownItem;
-    devices = [];
+    devices: { id: string; name: string }[] = [];
     loading = Date.now();
     updater$ = new Subject();
     alarms$ = this.updater$.pipe(
@@ -291,7 +292,8 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget<
         }
 
         this.system = nextSystem;
-        this.devices = await (this.system.mediaserver.getDevices() as any)
+        this.devices = await (this.system.mediaserver as NxSystemRestAPI)
+            ._getHmWidgetDevices()
             .toPromise()
             .catch(_ => []);
         this.selectedSystem = system;

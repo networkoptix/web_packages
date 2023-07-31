@@ -11,7 +11,7 @@ import { getSystemMetricsManifestV2 } from '@services/mediaserver-apis/endpoints
 import { getSystemMetricsValuesV2 } from '@services/mediaserver-apis/endpoints/system-metrics-values';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
 import { NxSystemUser } from '@services/system.service/user-manager/user-manager-types.bak';
-import { buildTopLevelKeyMap, RecursivePick } from '@utils/general';
+import type { NxRecursivePick } from '@utils/nx';
 
 import { addUserRestV2 } from './mediaserver-apis/endpoints/add-user';
 import { wizardGetSystemSettingsRestV2 } from './mediaserver-apis/endpoints/wizard-get-system-settings';
@@ -19,7 +19,7 @@ import { NxAppStateService } from './nx-app-state.service';
 import { IConfig } from './nx-config/config-types';
 import type { HealthReport } from './system-api.aggregated-types';
 import * as t from './system-api.types';
-import { ChangedIdReturned } from './system-api.types';
+import { ChangedIdReturned, cameraKeyMapV2 } from './system-api.types';
 import { NxSystemRestAPI } from './system-rest-api.service';
 import { type RestV2CameraCompat } from './system.service/camera-manager/camera-manager-types';
 import { NxUriCacheService } from './uri-cache.service';
@@ -394,51 +394,8 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
         return this.delete<t.ChangedIdReturned>(`/rest/v1/users/${this.cleanId(userId)}`);
     }
 
-    private cameraKeyMapV2 = {
-        ...buildTopLevelKeyMap([
-            'id',
-            'name',
-            'vendor',
-            'model',
-            'url',
-            'serverId',
-            'status',
-            'deviceType',
-            'credentials',
-        ]),
-        options: buildTopLevelKeyMap([
-            'backupContentType',
-            'backupPolicy',
-            'backupQuality',
-            'isAudioEnabled',
-            'isControlEnabled',
-            'isDualStreamingEnabled',
-        ]),
-        parameters: buildTopLevelKeyMap([
-            'motionStream',
-            'supportedMotion',
-            'hasDualStreaming',
-            'isAudioSupported',
-            'overrideAr',
-            'rotation',
-            'bitrateInfos',
-            'mediaCapabilities',
-            'mediaStreams',
-            'ioSettings',
-            'deviceType',
-        ]),
-        motion: {
-            mask: true,
-            type: true,
-        },
-        schedule: {
-            isEnabled: true,
-            tasks: true,
-        },
-    } as const;
-
     private patchCameraCompatibilityV2(
-        camera: RecursivePick<t.DeviceV2Full, typeof this.cameraKeyMapV2>,
+        camera: NxRecursivePick<t.DeviceV2Full, typeof cameraKeyMapV2>,
     ): RestV2CameraCompat {
         const { serverId, options, parameters, motion, schedule, ...rest } = camera;
         const {
@@ -465,13 +422,13 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
     }
 
     getCamera(id: string): Observable<RestV2CameraCompat> {
-        return this.getWith('/rest/v2/devices', this.cameraKeyMapV2, {
+        return this.getWith('/rest/v2/devices', cameraKeyMapV2, {
             params: { id: this.cleanId(id) },
         }).pipe(map(cameras => this.patchCameraCompatibilityV2(cameras[0])));
     }
 
     getCameras(): Observable<RestV2CameraCompat[]> {
-        return this.getWith('/rest/v2/devices', this.cameraKeyMapV2).pipe(
+        return this.getWith('/rest/v2/devices', cameraKeyMapV2).pipe(
             map(cameras => cameras.map(this.patchCameraCompatibilityV2)),
         );
     }

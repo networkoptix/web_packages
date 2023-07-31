@@ -18,7 +18,6 @@ import type {
     ec2CameraEx,
     ec2MediaServer,
     ServerTime,
-    Task,
     ChangedIdReturned,
     CameraValues,
 } from '@services/system-api.types';
@@ -44,6 +43,7 @@ import {
     CameraStatus,
     PreprocessCamera,
     DeviceType,
+    ScheduleTask,
 } from './camera-manager-types';
 
 type PartialSystem = Pick<
@@ -386,7 +386,7 @@ export class CameraManager {
         return this.serverManager.mediaserver.updateRecordingSettings(updateParams).toPromise();
     }
 
-    private parseFps(schedule: Task[], max: number): number | 'various' {
+    private parseFps(schedule: ScheduleTask[], max: number): number | 'various' {
         const taskFps = schedule
             .filter(s => s.fps !== 0 && s.recordingType !== RecordingType.NEVER)
             .map(s => s.fps);
@@ -400,7 +400,7 @@ export class CameraManager {
         }
     }
 
-    private parseRecordingQuality(schedule: Task[]): StreamQuality {
+    private parseRecordingQuality(schedule: ScheduleTask[]): StreamQuality {
         const streamQualities = ['low', 'normal', 'high', 'highest'];
         let quality = schedule.length ? 'various' : 'high';
         for (const stream of streamQualities) {
@@ -415,7 +415,7 @@ export class CameraManager {
     }
 
     private recordingScheduleForType(
-        scheduleTasks: Task[],
+        scheduleTasks: ScheduleTask[],
         types: RecordingType[],
     ): RecordingModes['value'] {
         let scheduled = 0;

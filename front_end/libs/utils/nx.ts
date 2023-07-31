@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 /* Specific-purpose utility functions. If a function/type only involves
 primitives it should probaly go in general.ts intead.  */
 
@@ -16,7 +17,7 @@ import { nxConfig as CONFIG } from '@services/nx-config/config';
 import type { ec2MediaServer } from '@services/system-api.types';
 import type { CloudUserCompat } from '@services/system.service/user-manager/user-manager-types';
 
-import type { RecursiveKeyMap } from './general';
+import type { ArrayType } from './general';
 
 /**
  * Pass a function that evaluates a menu node to fulfill a specific condition,
@@ -351,15 +352,66 @@ export function htmlStrConstructor(nodes: HtmlStrElem[], translate?: TranslateSe
     return elems.join('');
 }
 
+/*
+for key of keyof targetType
+    if key extends keyof keys
+        if keys[key] extends true
+            targetType[key]
+        else
+            // Additional branch
+            if keys[key] extends NxRecursiveKeyMap<ArrayElementType<targetType[key]>>
+                NxRecursivePick<ArrayElementType<targetType[key]>, keys[key]>[]
+            else
+                if keys[key] extends NxRecursiveKeyMap<targetType[key]>:
+                    NxRecursivePick<targetType[key], value>
+                else
+                    never
+    else
+        never
+*/
+/** A modification of the general RecursivePick type to also be able to pick array elements.
+ *
+ * This one is specifically for use with the `_with` parameter for API requests since the
+ * parameter is applied to array elements.
+ *
+ */
+export type NxRecursivePick<T, Keys extends NxRecursiveKeyMap<T>> = Pick<
+    {
+        [K in keyof T]: K extends keyof Keys
+            ? Keys[K] extends true
+                ? T[K]
+                : Keys[K] extends NxRecursiveKeyMap<ArrayType<T[K]>>
+                ? NxRecursivePick<ArrayType<T[K]>, Keys[K]>[]
+                : Keys[K] extends NxRecursiveKeyMap<T[K]>
+                ? NxRecursivePick<T[K], Keys[K]>
+                : never
+            : never;
+    },
+    keyof T & keyof Keys
+>;
+
+/* The ordering of the branches is important here.
+
+Arrays extend object but interfaces *do not* extend Record so we need to first
+check for arrays, then filter objects out from primitives.
+*/
+export type NxRecursiveKeyMap<T> = {
+    [K in keyof T]?: T[K] extends unknown[]
+        ? NxRecursiveKeyMap<T[K][number]> | true
+        : T[K] extends object
+        ? NxRecursiveKeyMap<T[K]> | true
+        : true;
+};
+
 /** Generate string for the `_with` param for `/rest` endpoints.
  *
  * e.g. `'foo,bar,fizz.buzz'` => Get properties `foo`, `bar`, and `buzz` inside `fizz`
  */
-export function withKeyMap(keys: RecursiveKeyMap<unknown>): string {
+export function withKeyMap(keys: NxRecursiveKeyMap<unknown>): string {
     const props: string[] = [];
 
-    function addKeys(keys: RecursiveKeyMap<unknown>, parentKeys: string[]): void {
-        Object.entries<true | RecursiveKeyMap<unknown>>(keys).forEach(([key, value]) => {
+    function addKeys(keys: NxRecursiveKeyMap<unknown>, parentKeys: string[]): void {
+        Object.entries<true | NxRecursiveKeyMap<unknown>>(keys).forEach(([key, value]) => {
             const keyList = [...parentKeys, key];
             if (value === true) {
                 props.push(keyList.join('.'));

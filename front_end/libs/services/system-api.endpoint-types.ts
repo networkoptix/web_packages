@@ -53,13 +53,11 @@ export interface GetEndpoints {
     '/ec2/recordedTimePeriods': t.Ec2RecordedTimePeriodsResp;
 
     /* rest/v1 */
-    '/rest/v1/devices': t.Device[];
     '/rest/v1/servers': t.RestServer[];
     '/rest/v1/system/merge': t.MergeStatus;
     '/rest/v1/users': t.RestUser[];
 
     /* rest/v2 */
-    '/rest/v2/devices': t.Device[]; // TODO: Separate v2 and v1 device types
     '/rest/v2/system/metrics/alarms': t.AlarmsReply;
     '/rest/v2/system/metrics/manifest': t.Manifests['reply'];
     '/rest/v2/system/metrics/values': t.ValuesReply;

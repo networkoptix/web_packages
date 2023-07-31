@@ -17,12 +17,12 @@ export type ParsedAddParams = Partial<{
     // trustCameraTime: BoolNum;
 }>;
 
-export type CamParameters = ParsedAddParams &
-    Partial<{
-        motionStream: string;
-        supportedMotion: string;
-        // Strings params which don't need parsing
-    }>;
+// export type CamParameters = ParsedAddParams &
+//     Partial<{
+//         motionStream: string;
+//         supportedMotion: string;
+//         // Strings params which don't need parsing
+//     }>;
 
 /* Parsed JSON */
 export interface BitrateInfos {
@@ -41,7 +41,7 @@ interface BitrateInfoStream {
     rawSuggestedBitrate: number;
     resolution: string;
     suggestedBitrate: number;
-    timestamp: Date;
+    timestamp: string;
 }
 
 // type CompatibleAnalyticsEngines = string[];

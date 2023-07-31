@@ -12,6 +12,8 @@ import {
     RecordingStatus,
 } from '@services/system.service/camera-manager/camera-manager-types';
 import type { MotionType } from '@services/system.service/camera-manager/camera-manager-types';
+import { buildTopLevelKeyMap } from '@utils/general';
+import type { NxRecursiveKeyMap } from '@utils/nx';
 
 import { HiddenParams, NormalResponse, Param } from './system-api.types';
 
@@ -164,46 +166,127 @@ export interface DeviceV1Full {
     vendor: string;
 }
 
+const camObjParamKeys = {
+    bitrateInfos: {
+        streams: { resolution: true },
+    },
+    ioSettings: { id: true },
+    mediaCapabilities: {
+        streamCapabilities: {
+            key: true,
+            value: { maxFps: true },
+        },
+    },
+    mediaStreams: {
+        streams: { codec: true },
+    },
+} as const satisfies NxRecursiveKeyMap<DeviceV2Full['parameters']>;
+
+export const cameraKeyMapV1 = {
+    ...buildTopLevelKeyMap(['id', 'name', 'vendor', 'model', 'url', 'serverId', 'status']),
+    options: buildTopLevelKeyMap([
+        'backupContentType',
+        'backupPolicy',
+        'backupQuality',
+        'isAudioEnabled',
+        'isControlEnabled',
+        'isDualStreamingEnabled',
+    ]),
+    parameters: {
+        ...buildTopLevelKeyMap([
+            // 'bitrateInfos',
+            'deviceType',
+            'hasDualStreaming',
+            // 'ioSettings',
+            'isAudioSupported',
+            // 'mediaCapabilities',
+            // 'mediaStreams',
+            'motionStream',
+            'overrideAr',
+            'rotation',
+            'supportedMotion',
+        ]),
+        ...camObjParamKeys,
+    },
+    motion: {
+        mask: true,
+        type: true,
+    },
+    schedule: {
+        isEnabled: true,
+        tasks: buildTopLevelKeyMap([
+            // 'bitrateKbps',
+            'dayOfWeek',
+            'endTime',
+            'fps',
+            // 'metadataTypes',
+            'recordingType',
+            'startTime',
+            'streamQuality',
+        ]),
+    },
+} as const;
+
 export interface DeviceV2Full extends DeviceV1Full {
     deviceType: DeviceType; // Moved from parameters to top level property
     parameters: Omit<DeviceV1Full['parameters'], 'deviceType'>;
 }
 
-export type DevicesParams = Omit<HiddenParams, '_local'>;
+export const cameraKeyMapV2 = {
+    ...buildTopLevelKeyMap([
+        'id',
+        'name',
+        'vendor',
+        'model',
+        'url',
+        'serverId',
+        'status',
+        'deviceType',
+        'credentials',
+    ]),
+    options: buildTopLevelKeyMap([
+        'backupContentType',
+        'backupPolicy',
+        'backupQuality',
+        'isAudioEnabled',
+        'isControlEnabled',
+        'isDualStreamingEnabled',
+    ]),
+    parameters: {
+        ...buildTopLevelKeyMap([
+            // 'bitrateInfos',
+            'hasDualStreaming',
+            // 'ioSettings',
+            'isAudioSupported',
+            // 'mediaCapabilities',
+            // 'mediaStreams',
+            'motionStream',
+            'overrideAr',
+            'rotation',
+            'supportedMotion',
+        ]),
+        ...camObjParamKeys,
+    },
+    motion: {
+        mask: true,
+        type: true,
+    },
+    schedule: {
+        isEnabled: true,
+        tasks: buildTopLevelKeyMap([
+            // 'bitrateKbps',
+            'dayOfWeek',
+            'endTime',
+            'fps',
+            // 'metadataTypes',
+            'recordingType',
+            'startTime',
+            'streamQuality',
+        ]),
+    },
+} as const;
 
-export interface Device {
-    capabilities?: string;
-    credentials?: { user: string; password: string };
-    deviceType: string;
-    id: string;
-    isLicenseUsed?: boolean;
-    isManuallyAdded?: boolean;
-    mac?: string;
-    model?: string;
-    motion?: { mask: string; type: string };
-    name: string;
-    options?: Record<string, string>;
-    parameters?: Record<string, unknown>;
-    physicalId: string;
-    schedule?: {
-        isEnabled?: boolean;
-        maxArchiveDays: number;
-        maxArchivePeriodS: number;
-        minArchiveDays: number;
-        minArchivePeriodS: number;
-        tasks?: {
-            dayOfWeek?: number;
-            endTime: number;
-            fps: number;
-            streamQuality: string;
-        }[];
-    };
-    serverId: string;
-    status: CameraStatus | RecordingStatus.Recording;
-    typeId: string;
-    url: string;
-    vendor: string;
-}
+export type DevicesParams = Omit<HiddenParams, '_local'>;
 
 export type Ec2RecordedTimePeriodsResp = NormalResponse<
     {

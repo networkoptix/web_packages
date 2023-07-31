@@ -29,12 +29,16 @@ import {
 import { environment } from '@environments/environment';
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
 import { NxHealthService } from '@pages/health/health.service';
+import {
+    bookmarksDeviceKeys,
+    type BookmarksDevice,
+} from '@pages/systems/bookmarks/bookmarks.types';
 import { getPredefinedRolesLegacy } from '@services/mediaserver-apis/endpoints/get-predefined-roles';
 import { getUserRolesRestV1 } from '@services/mediaserver-apis/endpoints/get-user-roles';
 import { getUsersRestV1 } from '@services/mediaserver-apis/endpoints/get-users';
 import { NxStorageService } from '@services/storage.service';
 import { SECURITY_LEVEL } from '@setup-wizard/src/app/types/wizard-state.types';
-import { RecursiveKeyMap, RecursivePick, buildTopLevelKeyMap } from '@utils/general';
+import { buildTopLevelKeyMap } from '@utils/general';
 import { InterceptorManager } from '@utils/interceptor-manager';
 import {
     defaultHashFunction,
@@ -43,7 +47,7 @@ import {
     memoizeAsyncPersistent,
     memoizeAsyncShort,
 } from '@utils/memoize';
-import { withKeyMap } from '@utils/nx';
+import { withKeyMap, NxRecursiveKeyMap, NxRecursivePick } from '@utils/nx';
 import { startWithCache } from '@utils/start-with-cached';
 
 import { apiTool, servers } from '../variables/static-variables';
@@ -82,7 +86,7 @@ import type {
     GetEndpointsFull,
 } from './system-api.endpoint-types';
 import * as t from './system-api.types';
-import { SystemConfigSettings } from './system-api.types';
+import { SystemConfigSettings, cameraKeyMapV1 } from './system-api.types';
 import { NxSystemAPI } from './system-legacy-api.service';
 import {
     DeviceType,
@@ -542,16 +546,16 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         url: U,
         keys: K,
         opts?: WithOptionalJson,
-    ): Observable<RecursivePick<GetArrayTypesFull[U], Record<K[number], true>>[]>;
+    ): Observable<NxRecursivePick<GetArrayTypesFull[U], Record<K[number], true>>[]>;
     /** Overload for array return with key map. */
     protected getWith<
         U extends keyof GetArrayTypesFull,
-        KM extends RecursiveKeyMap<GetArrayTypesFull[U]>,
+        KM extends NxRecursiveKeyMap<GetArrayTypesFull[U]>,
     >(
         url: U,
         keyMap: KM,
         opts?: WithOptionalJson,
-    ): Observable<RecursivePick<GetArrayTypesFull[U], KM>[]>;
+    ): Observable<NxRecursivePick<GetArrayTypesFull[U], KM>[]>;
     /** Overload for object return with top level keys. */
     protected getWith<
         U extends keyof GetEndpointsFull,
@@ -560,22 +564,22 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         url: U,
         keys: K,
         opts?: WithOptionalJson,
-    ): Observable<RecursivePick<GetEndpointsFull[U], Record<K[number], true>>>;
+    ): Observable<NxRecursivePick<GetEndpointsFull[U], Record<K[number], true>>>;
     /** Overload for object return with key map. */
     protected getWith<
         U extends keyof GetEndpointsFull,
-        KM extends RecursiveKeyMap<GetEndpointsFull[U]>,
+        KM extends NxRecursiveKeyMap<GetEndpointsFull[U]>,
     >(
         url: U,
         keyMap: KM,
         opts?: WithOptionalJson,
-    ): Observable<RecursivePick<GetEndpointsFull[U], KM>>;
+    ): Observable<NxRecursivePick<GetEndpointsFull[U], KM>>;
     /** A method for automatically typing requests using the `_with` parameter, which causes the
      * returned object(s) to only have the specified properties.
      */
     protected getWith(
         url: string,
-        keysOrkeyMap: string[] | RecursiveKeyMap<unknown>,
+        keysOrkeyMap: string[] | NxRecursiveKeyMap<unknown>,
         opts: WithOptionalJson = {},
     ): Observable<unknown> {
         const keyMap = Array.isArray(keysOrkeyMap)
@@ -880,41 +884,8 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         );
     }
 
-    private cameraKeyMapV1 = {
-        ...buildTopLevelKeyMap(['id', 'name', 'vendor', 'model', 'url', 'serverId', 'status']),
-        options: buildTopLevelKeyMap([
-            'backupContentType',
-            'backupPolicy',
-            'backupQuality',
-            'isAudioEnabled',
-            'isControlEnabled',
-            'isDualStreamingEnabled',
-        ]),
-        parameters: buildTopLevelKeyMap([
-            'motionStream',
-            'supportedMotion',
-            'hasDualStreaming',
-            'isAudioSupported',
-            'overrideAr',
-            'rotation',
-            'bitrateInfos',
-            'mediaCapabilities',
-            'mediaStreams',
-            'ioSettings',
-            'deviceType',
-        ]),
-        motion: {
-            mask: true,
-            type: true,
-        },
-        schedule: {
-            isEnabled: true,
-            tasks: true,
-        },
-    } as const;
-
     private patchCameraCompatibilityV1(
-        camera: RecursivePick<t.DeviceV1Full, typeof this.cameraKeyMapV1>,
+        camera: NxRecursivePick<t.DeviceV1Full, typeof cameraKeyMapV1>,
     ): RestV1CameraCompat {
         const { serverId, options, parameters: params, motion, schedule, ...rest } = camera;
         const {
@@ -943,7 +914,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     getCamera(id: string): Observable<RestV1CameraCompat> {
-        return this.getWith('/rest/v1/devices', this.cameraKeyMapV1, {
+        return this.getWith('/rest/v1/devices', cameraKeyMapV1, {
             params: { id: this.cleanId(id) },
         }).pipe(map(cameras => this.patchCameraCompatibilityV1(cameras[0])));
     }
@@ -959,7 +930,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     getCameras(): Observable<RestV1CameraCompat[]> {
-        return this.getWith('/rest/v1/devices', this.cameraKeyMapV1).pipe(
+        return this.getWith('/rest/v1/devices', cameraKeyMapV1).pipe(
             map(cameras => cameras.map(this.patchCameraCompatibilityV1)),
         );
     }
@@ -1208,12 +1179,17 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return this.get('/rest/v1/devices/*/bookmarks/*/tags', { params: params as RequestParams });
     }
 
+    getBookmarksDevices(): Observable<BookmarksDevice[]> {
+        return this.getWith('/rest/v1/devices', bookmarksDeviceKeys);
+    }
+
     changePassword(cameraId: string, user: string, password: string): Observable<unknown> {
         return this.post(`/rest/v1/devices/${cameraId}/changePassword`, { user, password });
     }
 
-    getDevices(params: t.DevicesParams = {}): Observable<t.Device[]> {
-        return this.get('/rest/v1/devices', { params });
+    // Widgets aren't being used at the moment, but making this so the base getDevices() can be removed
+    _getHmWidgetDevices(): Observable<{ id: string; name: string }[]> {
+        return this.getWith('/rest/v1/devices', ['id', 'name']);
     }
 
     getWebPages(params = {}): Observable<t.WebPages> {

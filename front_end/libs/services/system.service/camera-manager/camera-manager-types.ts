@@ -1,8 +1,7 @@
 import type { Observable } from 'rxjs';
 
-import type { Task, ec2CameraEx } from '@services/system-api.types';
-
-import type { CamParameters } from './add-params.types';
+import type { DeviceV2Full, Task, cameraKeyMapV2, ec2CameraEx } from '@services/system-api.types';
+import type { NxRecursivePick } from '@utils/nx';
 
 export interface Credentials {
     user: string;
@@ -24,11 +23,23 @@ export type RestV1CameraCompat = Pick<
     | 'motionType'
     | 'motionMask'
     | 'scheduleEnabled'
-    | 'scheduleTasks'
     | 'backupContentType'
     | 'backupPolicy'
     | 'backupQuality'
-> & { deviceType: DeviceType; parameters: CamParameters };
+> & { deviceType: DeviceType; scheduleTasks: ScheduleTask[]; parameters: CamParameters };
+
+export type ScheduleTask = NxRecursivePick<
+    DeviceV2Full['schedule'],
+    (typeof cameraKeyMapV2)['schedule']
+>['tasks'][number];
+// Removed bitrateKbps and metadataTypes
+
+type CamParameters = NxRecursivePick<
+    DeviceV2Full['parameters'],
+    (typeof cameraKeyMapV2)['parameters']
+>;
+// Using deviceV2 because we don't want deviceType in the params
+// Cut down object params to only used properties
 
 export interface RestV2CameraCompat extends RestV1CameraCompat {
     credentials: Credentials;
@@ -51,7 +62,7 @@ export interface NxSystemCamera {
     motionType: MotionType; // motion.type
     motionMask: string; // motion.mask
     scheduleEnabled: boolean; // schedule.isEnabled
-    scheduleTasks: Task[]; // schedule.tasks
+    scheduleTasks: ScheduleTask[]; // schedule.tasks
     backupContentType: string; // options.backupContentType
     backupPolicy: string; // options.backupPolicy
     backupQuality: string; // backupType (v4) => backupQuality (v5/ec2) => options.backupQuality (rest)
