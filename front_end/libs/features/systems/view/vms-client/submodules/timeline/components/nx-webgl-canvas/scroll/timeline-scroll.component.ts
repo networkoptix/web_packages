@@ -11,7 +11,7 @@ import { NxWebGLService } from '@vms-client/submodules/timeline/components/nx-we
 @Component({
     selector: 'nx-timeline-scroll',
     templateUrl: './timeline-scroll.component.html',
-    styleUrls: ['./timeline-scroll.component.scss']
+    styleUrls: ['./timeline-scroll.component.scss'],
 })
 export class TimelineScrollComponent {
     @Input() barWidth: number;
@@ -53,39 +53,31 @@ export class TimelineScrollComponent {
 
     SCROLL_DIRECTION = SCROLL_DIRECTION;
 
-    constructor(
-        public webglService: NxWebGLService,
-    ) {
-        webglService.canScroll$
-            .pipe(untilDestroyed(this))
-            .subscribe(subject => {
-                this.canScrollLeft = subject.left;
-                if (!subject.left) {
-                    this.constantScroll.emit({
-                        direction: SCROLL_DIRECTION.left,
-                        action: 'stop'
-                    });
-                }
-                this.canScrollRight = subject.right;
-                if (!subject.right) {
-                    this.constantScroll.emit({
-                        direction: SCROLL_DIRECTION.right,
-                        action: 'stop'
-                    });
-                }
-            });
+    constructor(public webglService: NxWebGLService) {
+        webglService.canScroll$.pipe(untilDestroyed(this)).subscribe(subject => {
+            this.canScrollLeft = subject.left;
+            if (!subject.left) {
+                this.constantScroll.emit({
+                    direction: SCROLL_DIRECTION.left,
+                    action: 'stop',
+                });
+            }
+            this.canScrollRight = subject.right;
+            if (!subject.right) {
+                this.constantScroll.emit({
+                    direction: SCROLL_DIRECTION.right,
+                    action: 'stop',
+                });
+            }
+        });
 
-        webglService.selectionDrag$
-            .pipe(untilDestroyed(this))
-            .subscribe(value => {
-                this.onSelectionDrag = value;
-            });
+        webglService.selectionDrag$.pipe(untilDestroyed(this)).subscribe(value => {
+            this.onSelectionDrag = value;
+        });
 
-        webglService.scrollBarScroll$
-            .pipe(untilDestroyed(this))
-            .subscribe(value => {
-                this.onScrollBarScroll = value;
-            });
+        webglService.scrollBarScroll$.pipe(untilDestroyed(this)).subscribe(value => {
+            this.onScrollBarScroll = value;
+        });
 
         webglService.selection$.subscribe((selection: ExportSelection) => {
             const end: number = webglService.xScaleOriginal$.value(selection.endDate);
@@ -137,9 +129,10 @@ export class TimelineScrollComponent {
             const barLow = e.offsetX - this.barWidth / 2;
             const barHigh = e.offsetX + this.barWidth;
             // this.currentPos = bar > 0 ? bar : 0;
-            this.barPos = barLow < 0
-                ? 0
-                : barHigh < this.webglService.canvasWidth$.value
+            this.barPos =
+                barLow < 0
+                    ? 0
+                    : barHigh < this.webglService.canvasWidth$.value
                     ? barLow
                     : this.webglService.canvasWidth$.value - this.barWidth;
 
@@ -162,11 +155,14 @@ export class TimelineScrollComponent {
     }
 
     scrollTo(direction: SCROLL_DIRECTION): void {
-        if (direction === SCROLL_DIRECTION.constantLeft || direction === SCROLL_DIRECTION.constantRight) {
+        if (
+            direction === SCROLL_DIRECTION.constantLeft ||
+            direction === SCROLL_DIRECTION.constantRight
+        ) {
             this.continuousScroll = true;
             this.constantScroll.emit({
                 direction,
-                action: 'start'
+                action: 'start',
             });
             return;
         }
@@ -177,7 +173,7 @@ export class TimelineScrollComponent {
         if (this.continuousScroll) {
             this.constantScroll.emit({
                 direction,
-                action: 'stop'
+                action: 'stop',
             });
             this.continuousScroll = false;
         }

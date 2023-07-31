@@ -31,10 +31,7 @@ export class WebGlTimeUnderMouseComponent implements OnChanges {
     @ViewChild('timeUnderEar', { static: true })
     protected timeUnderEar: ElementRef<HTMLDivElement>;
 
-    constructor(
-        languageService: NxLanguageProviderService,
-        private webglService: NxWebGLService,
-    ) {
+    constructor(languageService: NxLanguageProviderService, private webglService: NxWebGLService) {
         languageService.loadTimelineTranslations();
     }
 
@@ -62,8 +59,11 @@ export class WebGlTimeUnderMouseComponent implements OnChanges {
             this.timeUnderEar.nativeElement.style.left = `${PRIMARY_WIDTH / 2}px`;
             this.vlPosition = this.position;
         } else if (this.position + PRIMARY_WIDTH / 2 >= this.webglService.canvasWidth$.value) {
-            this.timeUnderEar.nativeElement.style.left = `${this.webglService.canvasWidth$.value - PRIMARY_WIDTH / 2}px`;
-            const padding = this.webglService.canvasWidth$.value - this.position - PRIMARY_WIDTH / 2;
+            this.timeUnderEar.nativeElement.style.left = `${
+                this.webglService.canvasWidth$.value - PRIMARY_WIDTH / 2
+            }px`;
+            const padding =
+                this.webglService.canvasWidth$.value - this.position - PRIMARY_WIDTH / 2;
             this.vlPosition = PRIMARY_WIDTH / 2 - padding;
         } else {
             this.timeUnderEar.nativeElement.style.left = `${this.position}px`;
@@ -93,7 +93,8 @@ export class WebGlTimeUnderMouseComponent implements OnChanges {
                 tr = PRIMARY_WIDTH;
                 b = PRIMARY_WIDTH - (this.webglService.canvasWidth$.value - this.position);
             } else {
-                const padding = this.webglService.canvasWidth$.value - this.position - PRIMARY_WIDTH / 2;
+                const padding =
+                    this.webglService.canvasWidth$.value - this.position - PRIMARY_WIDTH / 2;
                 tl -= padding;
                 tr -= padding;
                 b -= padding;

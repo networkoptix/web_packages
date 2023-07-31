@@ -1,11 +1,12 @@
 import { DOCUMENT } from '@angular/common';
 import {
     AfterViewInit,
-    Component, Inject,
+    Component,
+    Inject,
     Input,
     OnChanges,
     OnInit,
-    ViewEncapsulation
+    ViewEncapsulation,
 } from '@angular/core';
 import { chartCartesian } from '@d3fc/d3fc-chart';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -20,7 +21,7 @@ import { NxWebGLService } from '@vms-client/submodules/timeline/components/nx-we
 enum CHUNK {
     RECORDS,
     BOOKMARK,
-    ANALYTICS
+    ANALYTICS,
 }
 
 interface DATA {
@@ -79,8 +80,7 @@ export class SimpleNxWebGLCanvasComponent implements OnInit, AfterViewInit, OnCh
     constructor(
         private webglService: NxWebGLService,
         @Inject(DOCUMENT) private document: Document,
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         this.data = [];
@@ -97,13 +97,16 @@ export class SimpleNxWebGLCanvasComponent implements OnInit, AfterViewInit, OnCh
                 this.xScaleOriginal?.domain([this.start, this.nowMs]);
 
                 if (this.zoomEvent) {
-                    this.xScale.domain(this.zoomEvent.transform.rescaleX(this.xScaleOriginal).domain());
+                    this.xScale.domain(
+                        this.zoomEvent.transform.rescaleX(this.xScaleOriginal).domain(),
+                    );
 
                     this.nowDateDomain = this.xScale.domain()[1];
                     this.nowDateOrigDomain = this.xScaleOriginal.domain()[1];
                 }
 
-                const periodMinutes = this.xScale?.domain()[1].getTime() - this.xScale?.domain()[0].getTime();
+                const periodMinutes =
+                    this.xScale?.domain()[1].getTime() - this.xScale?.domain()[0].getTime();
                 const last10minutes =
                     this.xScale?.domain()[1].getTime() >= this.nowMs - LAST_MINUTE_SIZE &&
                     periodMinutes < ZOOM_WINDOW_TO_ANIMATE_MS;
@@ -117,9 +120,10 @@ export class SimpleNxWebGLCanvasComponent implements OnInit, AfterViewInit, OnCh
     initBars(
         data: Array<DATA>,
         xScale: d3.ScaleTime<number, number, never>,
-        yScale: d3.ScaleLinear<number, number, never>
+        yScale: d3.ScaleLinear<number, number, never>,
     ): void {
-        this.barSeries = (fc.seriesWebglBar(data)
+        this.barSeries = fc
+            .seriesWebglBar(data)
             .equals((previousData, currentData) => previousData === currentData)
             .xScale(xScale)
             .yScale(yScale)
@@ -129,7 +133,8 @@ export class SimpleNxWebGLCanvasComponent implements OnInit, AfterViewInit, OnCh
                 return Math.max(1, xScale(d.x + d.width) - xScale(d.x));
             })
             .decorate(context => {
-                fc.webglFillColor()
+                fc
+                    .webglFillColor()
                     .data(data)
                     .value(d => {
                         switch (d.type) {
@@ -142,11 +147,12 @@ export class SimpleNxWebGLCanvasComponent implements OnInit, AfterViewInit, OnCh
                                 return [76 / 255, 188 / 255, 40 / 255, 1];
                         }
                     })(context);
-            }) as never);
+            }) as never;
     }
 
     initXscale(): void {
-        this.xScale = d3.scaleTime()
+        this.xScale = d3
+            .scaleTime()
             .domain([this.start, this.nowMs])
             .range([0, this.webglService.canvasWidth$.value]);
 
@@ -157,8 +163,14 @@ export class SimpleNxWebGLCanvasComponent implements OnInit, AfterViewInit, OnCh
         this.zoom = d3
             .zoom()
             .scaleExtent([1, this.timeFrameInS])
-            .translateExtent([[0, 0], [this.webglService.canvasWidth$.value, this.webglService.canvasHeight$.value]])
-            .extent([[0, 0], [this.webglService.canvasWidth$.value, this.webglService.canvasHeight$.value]])
+            .translateExtent([
+                [0, 0],
+                [this.webglService.canvasWidth$.value, this.webglService.canvasHeight$.value],
+            ])
+            .extent([
+                [0, 0],
+                [this.webglService.canvasWidth$.value, this.webglService.canvasHeight$.value],
+            ])
             .on('start', event => {
                 this.zoomInProcess = true;
             })
@@ -177,14 +189,13 @@ export class SimpleNxWebGLCanvasComponent implements OnInit, AfterViewInit, OnCh
 
         this.initBars(data, this.xScale, d3.scaleLinear());
 
-        const pointer = fc.pointer()
-            .on('point', ([coord]) => {
-                if (!coord) {
-                    return;
-                }
+        const pointer = fc.pointer().on('point', ([coord]) => {
+            if (!coord) {
+                return;
+            }
 
-                this.currentPointer = this.xScale.invert(coord.x);
-            });
+            this.currentPointer = this.xScale.invert(coord.x);
+        });
 
         this.chart = chartCartesian(this.xScale, d3.scaleLinear())
             .webglPlotArea(this.barSeries)
@@ -211,7 +222,7 @@ export class SimpleNxWebGLCanvasComponent implements OnInit, AfterViewInit, OnCh
                         console.info(' => ', this.currentPointer);
                     })
                     .call(this.zoom)
-                    .call(pointer)
+                    .call(pointer),
             );
 
         this.redraw();
@@ -227,10 +238,14 @@ export class SimpleNxWebGLCanvasComponent implements OnInit, AfterViewInit, OnCh
 
         this.chart.xDomain(this.xScale.domain());
 
-        const displayData = this.data.filter(d =>
-            !(d.type === CHUNK.BOOKMARK && !this.showData.bookmarks ||
-                d.type === CHUNK.ANALYTICS && !this.showData.analytics ||
-                d.type === CHUNK.RECORDS && !this.showData.records));
+        const displayData = this.data.filter(
+            d =>
+                !(
+                    (d.type === CHUNK.BOOKMARK && !this.showData.bookmarks) ||
+                    (d.type === CHUNK.ANALYTICS && !this.showData.analytics) ||
+                    (d.type === CHUNK.RECORDS && !this.showData.records)
+                ),
+        );
 
         if (this.dataSet !== displayData.length) {
             this.dataSet = displayData.length;
@@ -238,19 +253,14 @@ export class SimpleNxWebGLCanvasComponent implements OnInit, AfterViewInit, OnCh
             return;
         }
 
-        d3
-            .select('#chart')
-            .datum(displayData)
-            .call(this.chart);
+        d3.select('#chart').datum(displayData).call(this.chart);
     };
 
     private addData(dataObj: Record<string, string>[], type?: CHUNK): void {
         const newData = dataObj.map((chunk: Record<string, string>) => {
             const chunkStart = parseInt(chunk.startTimeMs);
             let chunkEnd = parseInt(chunk.durationMs);
-            chunkEnd = chunkEnd < 0
-                ? Date.now() - chunkStart
-                : chunkEnd;
+            chunkEnd = chunkEnd < 0 ? Date.now() - chunkStart : chunkEnd;
 
             return { x: chunkStart, y: 30, width: chunkEnd, type };
         });
@@ -259,7 +269,7 @@ export class SimpleNxWebGLCanvasComponent implements OnInit, AfterViewInit, OnCh
         this.redraw();
     }
 
-    ngOnChanges(changes:NgChanges<SimpleNxWebGLCanvasComponent>): void {
+    ngOnChanges(changes: NgChanges<SimpleNxWebGLCanvasComponent>): void {
         if (changes.initialData?.currentValue?.length) {
             this.data = this.initialData.map((chunk: Record<string, string>) => {
                 const chunkStart = parseInt(chunk.startTimeMs);

@@ -5,9 +5,7 @@ import dateFormat from 'dateformat';
 import { BehaviorSubject } from 'rxjs';
 
 import { ExportSelection } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/selection/selection.types';
-import {
-    ZOOM_DIRECTIONS
-} from '@vms-client/submodules/timeline/components/nx-webgl-canvas/zoom/zoom.types';
+import { ZOOM_DIRECTIONS } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/zoom/zoom.types';
 
 import { SCROLL_DIRECTIONS } from './webgl.types';
 
@@ -16,7 +14,7 @@ const DATE_FORMAT = 'ddd mmm dd yyyy';
 
 @UntilDestroy()
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NxWebGLService {
     canvasWidth$ = new BehaviorSubject<number>(0);
@@ -78,15 +76,10 @@ export class NxWebGLService {
         selection.start = xScale(selection.startDate);
         selection.end = xScale(selection.endDate);
 
-        selection.startDisplay =
-                        selection.start < 0
-                            ? 0
-                            : selection.start;
+        selection.startDisplay = selection.start < 0 ? 0 : selection.start;
 
         selection.endDisplay =
-                        selection.end > this.canvasWidth$.value
-                            ? this.canvasWidth$.value
-                            : selection.end;
+            selection.end > this.canvasWidth$.value ? this.canvasWidth$.value : selection.end;
 
         selection.leftDate = dateFormat(selection.startDate, DATE_FORMAT);
         selection.leftTime = dateFormat(selection.startDate, TIME_FORMAT);

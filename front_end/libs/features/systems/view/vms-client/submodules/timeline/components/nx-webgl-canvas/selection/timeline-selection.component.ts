@@ -1,4 +1,12 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    OnChanges,
+    Output,
+    ViewChild,
+} from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { animationFrameScheduler, distinctUntilChanged, interval, Subject, takeUntil } from 'rxjs';
 
@@ -72,35 +80,26 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
 
     dragStop$: Subject<boolean> = new Subject<boolean>();
 
-    constructor(
-        languageService: NxLanguageProviderService,
-        private webglService: NxWebGLService,
-    ) {
+    constructor(languageService: NxLanguageProviderService, private webglService: NxWebGLService) {
         languageService.loadTimelineTranslations();
 
         this.webglService.selection$
-            .pipe(
-                untilDestroyed(this),
-                distinctUntilChanged()
-            )
+            .pipe(untilDestroyed(this), distinctUntilChanged())
             .subscribe((selection: ExportSelection) => {
                 this.selection = selection;
                 this.leftEarPosition();
                 this.rightEarPosition();
             });
 
-        this.webglService.levelZoom$
-            .pipe(untilDestroyed(this))
-            .subscribe(level => {
-                if (this.selection.active) {
-                    this.webglService.updateSelection();
-                }
-            });
+        this.webglService.levelZoom$.pipe(untilDestroyed(this)).subscribe(level => {
+            if (this.selection.active) {
+                this.webglService.updateSelection();
+            }
+        });
 
-        this.webglService.canvasWidth$
-            .subscribe((width: number) => {
-                this.canvasWidth = width;
-            });
+        this.webglService.canvasWidth$.subscribe((width: number) => {
+            this.canvasWidth = width;
+        });
     }
 
     ngOnChanges(changes: NgChanges<WebGlTimelineSelectionComponent>): void {
@@ -124,7 +123,7 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
         this.webglService.selectionReset();
     }
 
-    selectionHandler(event : MouseEvent, action: SELECTION_ACTION): void {
+    selectionHandler(event: MouseEvent, action: SELECTION_ACTION): void {
         if (action === SELECTION_ACTION.start && !this.mouseOverEar && this.selection.active) {
             this.webglService.selectionReset();
         }
@@ -157,7 +156,7 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
         this.webglService.selection$.next(this.selection);
     }
 
-    selectionMoveHandler(event : MouseEvent): void {
+    selectionMoveHandler(event: MouseEvent): void {
         if (this.selection.drag) {
             // event.offsetX reports "closest" object, so we get values 0,1,3,4
             // when over selection and 100+ when are over timeline
@@ -192,7 +191,7 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
                 this.scroll(SCROLL_DIRECTION.right);
                 this.rightEarPosition();
             }
-            if (duration <= 0 && (this.dragLeft || newDrag) || duration > 0 && this.dragLeft) {
+            if ((duration <= 0 && (this.dragLeft || newDrag)) || (duration > 0 && this.dragLeft)) {
                 this.dragLeft = true;
                 this.selection.start = offsetX;
                 this.selection.startDisplay = offsetX;
@@ -219,12 +218,12 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
             const step = this.edgeScrollingSpeed(diff);
 
             interval(0, animationFrameScheduler)
-                .pipe(
-                    untilDestroyed(this),
-                    takeUntil(this.dragStop$)
-                )
+                .pipe(untilDestroyed(this), takeUntil(this.dragStop$))
                 .subscribe(() => {
-                    this.scrollShift.emit({ direction: SCROLL_DIRECTION.scrollTo, position: -step });
+                    this.scrollShift.emit({
+                        direction: SCROLL_DIRECTION.scrollTo,
+                        position: -step,
+                    });
                 });
         } else if (
             this.webglService.canScroll$.value.left &&
@@ -235,10 +234,7 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
             const step = this.edgeScrollingSpeed(this.selection.start);
 
             interval(0, animationFrameScheduler)
-                .pipe(
-                    untilDestroyed(this),
-                    takeUntil(this.dragStop$)
-                )
+                .pipe(untilDestroyed(this), takeUntil(this.dragStop$))
                 .subscribe(() => {
                     this.scrollShift.emit({ direction: SCROLL_DIRECTION.scrollTo, position: step });
                 });
@@ -247,9 +243,7 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
         }
     }
 
-    private distanceToScrollingSpeed(
-        distanceFromEdge: number,
-    ): EDGE_SCROLLING_SPEED {
+    private distanceToScrollingSpeed(distanceFromEdge: number): EDGE_SCROLLING_SPEED {
         if (distanceFromEdge > EDGE_SCROLLING_SPEED_POS.FAR) {
             return EDGE_SCROLLING_SPEED.NONE;
         }

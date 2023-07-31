@@ -39,10 +39,7 @@ export class WebGlTimelinePlaybackIndicatorComponent implements OnChanges {
     @ViewChild('timePlaybackLine', { static: true })
     protected timePlaybackLine: ElementRef<HTMLDivElement>;
 
-    constructor(
-        languageService: NxLanguageProviderService,
-        private webglService: NxWebGLService,
-    ) {
+    constructor(languageService: NxLanguageProviderService, private webglService: NxWebGLService) {
         languageService.loadTimelineTranslations();
 
         this.webglService.xScale$.subscribe(scale => {
@@ -81,17 +78,26 @@ export class WebGlTimelinePlaybackIndicatorComponent implements OnChanges {
         if (this.playbackPosition - PRIMARY_WIDTH / 2 <= 0) {
             this.timePlaybackEar.nativeElement.style.left = `${PRIMARY_WIDTH / 2}px`;
             this.vlPosition = this.playbackPosition;
-        } else if (this.playbackPosition + PRIMARY_WIDTH / 2 >= this.webglService.canvasWidth$.value) {
-            this.timePlaybackEar.nativeElement.style.left = `${this.webglService.canvasWidth$.value - PRIMARY_WIDTH / 2}px`;
-            const padding = this.webglService.canvasWidth$.value - this.playbackPosition - PRIMARY_WIDTH / 2;
+        } else if (
+            this.playbackPosition + PRIMARY_WIDTH / 2 >=
+            this.webglService.canvasWidth$.value
+        ) {
+            this.timePlaybackEar.nativeElement.style.left = `${
+                this.webglService.canvasWidth$.value - PRIMARY_WIDTH / 2
+            }px`;
+            const padding =
+                this.webglService.canvasWidth$.value - this.playbackPosition - PRIMARY_WIDTH / 2;
             this.vlPosition = PRIMARY_WIDTH / 2 - padding;
         } else {
             this.timePlaybackEar.nativeElement.style.left = `${this.playbackPosition}px`;
             this.vlPosition = PRIMARY_WIDTH / 2;
         }
 
-        this.timePlaybackLine.nativeElement.style.opacity =
-            [0, PRIMARY_WIDTH].includes(this.vlPosition) ? '0' : '1';
+        this.timePlaybackLine.nativeElement.style.opacity = [0, PRIMARY_WIDTH].includes(
+            this.vlPosition,
+        )
+            ? '0'
+            : '1';
     }
 
     private svgArrowPoints(): string {
@@ -113,13 +119,19 @@ export class WebGlTimelinePlaybackIndicatorComponent implements OnChanges {
                 tr += offset;
                 b += offset;
             }
-        } else if (this.webglService.canvasWidth$.value - this.playbackPosition < PRIMARY_WIDTH / 2) {
+        } else if (
+            this.webglService.canvasWidth$.value - this.playbackPosition <
+            PRIMARY_WIDTH / 2
+        ) {
             if (this.webglService.canvasWidth$.value - this.playbackPosition < ARROW_WIDTH) {
                 tl = PRIMARY_WIDTH - ARROW_WIDTH;
                 tr = PRIMARY_WIDTH;
                 b = PRIMARY_WIDTH - (this.webglService.canvasWidth$.value - this.playbackPosition);
             } else {
-                const padding = this.webglService.canvasWidth$.value - this.playbackPosition - PRIMARY_WIDTH / 2;
+                const padding =
+                    this.webglService.canvasWidth$.value -
+                    this.playbackPosition -
+                    PRIMARY_WIDTH / 2;
                 tl -= padding;
                 tr -= padding;
                 b -= padding;

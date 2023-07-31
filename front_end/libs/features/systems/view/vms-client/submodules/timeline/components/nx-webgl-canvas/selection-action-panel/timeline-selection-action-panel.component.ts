@@ -62,25 +62,23 @@ export class WebGlTimelineSelectionActionPanelComponent implements OnInit, After
     ) {}
 
     public ngOnInit(): void {
-        this.webglService.selection$
-            .pipe(untilDestroyed(this))
-            .subscribe(selection => {
-                this.selection = selection;
-                this.self.nativeElement.classList.toggle('active', selection.active && !selection.drag);
+        this.webglService.selection$.pipe(untilDestroyed(this)).subscribe(selection => {
+            this.selection = selection;
+            this.self.nativeElement.classList.toggle('active', selection.active && !selection.drag);
 
-                if (selection.active) {
-                    // this.exportUrl();
-                    this.exportEnabled = true;
-                    // !!this.vms.selectedCamera.getRecords(
-                    //     Math.max(this.status.range.start, this.selection.timeline.fullRange.start),
-                    //     Math.min(this.status.range.end, this.selection.timeline.fullRange.end),
-                    //     1000
-                    // ).length;
-                } else {
-                    this.exportLink = '';
-                    this.exportBtn.nativeElement.href = '#';
-                }
-            });
+            if (selection.active) {
+                // this.exportUrl();
+                this.exportEnabled = true;
+                // !!this.vms.selectedCamera.getRecords(
+                //     Math.max(this.status.range.start, this.selection.timeline.fullRange.start),
+                //     Math.min(this.status.range.end, this.selection.timeline.fullRange.end),
+                //     1000
+                // ).length;
+            } else {
+                this.exportLink = '';
+                this.exportBtn.nativeElement.href = '#';
+            }
+        });
 
         // this.selection.subject
         //     .pipe(untilDestroyed(this))
@@ -96,7 +94,7 @@ export class WebGlTimelineSelectionActionPanelComponent implements OnInit, After
                 this.system = this.systemService.createLocalSystem(
                     this.accountService.mediaServerApi,
                     account.id,
-                    account.email
+                    account.email,
                 );
             } else {
                 // this.system = this.systemService.createSystem(
@@ -135,9 +133,10 @@ export class WebGlTimelineSelectionActionPanelComponent implements OnInit, After
             {
                 panelClass: 'hint-popover',
                 arrowOffset: 4,
-                positionStrategy: POS_STRATEGY.DEFAULT
+                positionStrategy: POS_STRATEGY.DEFAULT,
             },
-            this._viewContainerRef);
+            this._viewContainerRef,
+        );
     }
 
     closeLegend(): void {
@@ -165,9 +164,7 @@ export class WebGlTimelineSelectionActionPanelComponent implements OnInit, After
     // }
 
     public initSetTimeDialog(): void {
-        const dialog = this.dialogs.selectWebGlTimeRange(
-            this.selection
-        );
+        const dialog = this.dialogs.selectWebGlTimeRange(this.selection);
         dialog.then(result => this.onTimeSetDialogDone(result));
     }
 
