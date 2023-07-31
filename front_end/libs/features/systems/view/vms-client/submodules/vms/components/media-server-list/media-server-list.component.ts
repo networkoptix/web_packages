@@ -66,15 +66,12 @@ export class MediaServerListComponent implements OnChanges {
 
     protected _resetServersVisibility(): void {
         if (this.processedMediaservers) {
-            this.isServerExpanded = this.processedMediaservers.reduce(
-                (acc, ms) => {
-                    const key = `nx_system_${this.systemId}_server_${ms.id}_expansion_status`;
-                    const status = this.localStorage.retrieve(key);
-                    acc[ms.id] = status ? JSON.parse(status) : false;
-                    return acc;
-                },
-                {}
-            );
+            this.isServerExpanded = this.processedMediaservers.reduce((acc, ms) => {
+                const key = `nx_system_${this.systemId}_server_${ms.id}_expansion_status`;
+                const status = this.localStorage.retrieve(key);
+                acc[ms.id] = status ? JSON.parse(status) : false;
+                return acc;
+            }, {});
         } else {
             this.isServerExpanded = {};
         }
@@ -98,9 +95,10 @@ export class MediaServerListComponent implements OnChanges {
         }
         token = token.toLocaleLowerCase();
         this.mediaservers = this.processedMediaservers.reduce((acc: any[], ms) => {
-            const cameras = ms.cameras.filter(c =>
-                c.name.toLocaleLowerCase().includes(token) ||
-                c.url.toLocaleLowerCase().includes(token)
+            const cameras = ms.cameras.filter(
+                c =>
+                    c.name.toLocaleLowerCase().includes(token) ||
+                    c.url.toLocaleLowerCase().includes(token),
             );
             if (
                 cameras.length ||

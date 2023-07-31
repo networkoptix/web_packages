@@ -45,11 +45,7 @@ export class Camera implements ICamera {
         protected _archiveRange: ISimpleTimeRange,
         protected _archive: CameraArchive = [],
         public readonly thumbnailUrl: Observable<string> | undefined = undefined,
-        public readonly getVideoUrl: (
-            transport: string,
-            quality: string,
-            t?: ms
-        ) => string,
+        public readonly getVideoUrl: (transport: string, quality: string, t?: ms) => string,
         public readonly getPosterUrl: (t?: ms) => Observable<string>,
         public readonly require2fa: boolean = false,
     ) {
@@ -128,17 +124,16 @@ export class Camera implements ICamera {
         const isHls = transport === 'hls';
         this._mediaStreams
             .filter(s => s.resolution !== '*')
-            .map(s =>
-                s.transports.filter(t => t === transport) &&
-                resolutions.push(s.resolution)
-            );
+            .map(s => s.transports.filter(t => t === transport) && resolutions.push(s.resolution));
 
         if (resolutions.length === 1) {
             result.high = isHls ? 'hi' : resolutions[0];
         } else {
-            const high = resolutions.filter(r => {
-                return !this._resolutionIsLow(r);
-            }).sort();
+            const high = resolutions
+                .filter(r => {
+                    return !this._resolutionIsLow(r);
+                })
+                .sort();
             if (high.length) {
                 result.high = isHls ? 'hi' : high[high.length - 1];
             }
@@ -155,14 +150,12 @@ export class Camera implements ICamera {
         }
 
         if (resolutions.length && transport !== 'hls') {
-            const primaryResolutionHeight = parseInt(
-                (result.high || result.low).split('x')[1]
-            );
+            const primaryResolutionHeight = parseInt((result.high || result.low).split('x')[1]);
             const defaultResolutions = {
                 1080: '1920x1080',
                 720: '1280x720',
                 480: '854x480',
-                360: '640x360'
+                360: '640x360',
             };
             [1080, 720, 480, 360].forEach(yResolution => {
                 if (primaryResolutionHeight >= yResolution) {
@@ -174,12 +167,17 @@ export class Camera implements ICamera {
     }
 
     protected _resolutionIsLow(s: string): boolean {
-        return s.split('x').map(r => parseInt(r)).reduce((acc, v) => {
-            if (acc > v) {
-                acc = v;
-            }
-            return acc;
-        }, Infinity) < 720;
+        return (
+            s
+                .split('x')
+                .map(r => parseInt(r))
+                .reduce((acc, v) => {
+                    if (acc > v) {
+                        acc = v;
+                    }
+                    return acc;
+                }, Infinity) < 720
+        );
     }
 
     public get isVirtual() {
@@ -189,11 +187,7 @@ export class Camera implements ICamera {
     public get isLive() {
         return (
             !this.isVirtual &&
-            (
-                this.status === 'Online' ||
-                this.status === 'Live' ||
-                this.status === 'Recording'
-            )
+            (this.status === 'Online' || this.status === 'Live' || this.status === 'Recording')
         );
     }
 
@@ -218,10 +212,7 @@ export class Camera implements ICamera {
     }
 
     public get hasArchive() {
-        return !!(
-            this.archiveRange &&
-            this.archiveRange.end > this.archiveRange.start
-        );
+        return !!(this.archiveRange && this.archiveRange.end > this.archiveRange.start);
     }
 
     public getRecords(startMs: ms, endMs: ms, minGapMs: ms) {

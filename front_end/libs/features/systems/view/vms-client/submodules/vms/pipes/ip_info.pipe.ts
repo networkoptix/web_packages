@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-    name: 'ip_info'
+    name: 'ip_info',
 })
 export class IpInfoPipe implements PipeTransform {
     public transform(url: string): string {

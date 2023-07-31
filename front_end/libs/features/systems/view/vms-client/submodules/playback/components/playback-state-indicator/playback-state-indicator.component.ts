@@ -37,11 +37,9 @@ export class PlaybackStateIndicatorComponent implements OnInit {
     ) {}
 
     public ngOnInit(): void {
-        this.playback.subject
-            .pipe(untilDestroyed(this))
-            .subscribe((s: PlaybackState) => {
-                this.onSubjectChange(s);
-            });
+        this.playback.subject.pipe(untilDestroyed(this)).subscribe((s: PlaybackState) => {
+            this.onSubjectChange(s);
+        });
     }
 
     public onSubjectChange(s: PlaybackState): void {

@@ -15,7 +15,7 @@ type fairMs = ms;
 type tweakedMs = ms;
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class VideoManagementSystemService {
     static readonly statusRefreshInterval = 15000;
@@ -24,8 +24,7 @@ export class VideoManagementSystemService {
     serverTimes = signal<Array<ServerTimeInfo>>([]);
     systemId: Signal<string> = computed(() => this.state().systemId);
 
-    constructor(
-    ) {
+    constructor() {
         this.reset();
     }
 
@@ -85,9 +84,8 @@ export class VideoManagementSystemService {
             const { parentServerId, preferredServerId } = this._selectedCamera();
             const targetServerIds = [parentServerId, preferredServerId];
             const preferredServerTime =
-                serverTimes.find(st =>
-                    targetServerIds.includes(st.serverId)) || serverTimes[0];
-            const clientTZO = -(new Date()).getTimezoneOffset() * 60000;
+                serverTimes.find(st => targetServerIds.includes(st.serverId)) || serverTimes[0];
+            const clientTZO = -new Date().getTimezoneOffset() * 60000;
             const serverTZO = preferredServerTime?.timeZoneOffset;
             if (serverTZO === undefined) {
                 return 0;
@@ -106,10 +104,7 @@ export class VideoManagementSystemService {
         return t - this.timeZoneOffset;
     }
 
-    public setMediaServers(
-        systemId: string,
-        mediaServers: Array<IMediaServer>
-    ): void {
+    public setMediaServers(systemId: string, mediaServers: Array<IMediaServer>): void {
         // console.log('setMediaServers', systemId, mediaServers, updateCamerasOnly);
         this.state.mutate(state => {
             state.systemId = systemId;
@@ -152,7 +147,12 @@ export class VideoManagementSystemService {
 
     public selectCamera(cameraId: GUID): void {
         const state = this.state();
-        if (!state || state.mode === VMS_MODE.NOT_INITIALIZED || !state.mediaServers.length || !Object.keys(state.cameras).length) {
+        if (
+            !state ||
+            state.mode === VMS_MODE.NOT_INITIALIZED ||
+            !state.mediaServers.length ||
+            !Object.keys(state.cameras).length
+        ) {
             // console.warn('attempt to select camera while VMS is not initialized yet');
             return;
         }

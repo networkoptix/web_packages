@@ -7,5 +7,5 @@ export const components = [
     PlaybackControlsComponent,
     PlaybackStateIndicatorComponent,
     PlayerJsComponent,
-    PlayerComponent
+    PlayerComponent,
 ];

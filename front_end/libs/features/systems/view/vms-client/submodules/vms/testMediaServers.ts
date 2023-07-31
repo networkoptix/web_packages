@@ -16,15 +16,16 @@ function generateGappedArchive(start, end, count) {
         result.push(new SimpleTimeRange(t, t + len));
     }
     if (result[result.length - 1].end > now) {
-        result[result.length - 1] = new SimpleTimeRange(
-            result[result.length - 1].start,
-            now
-        );
+        result[result.length - 1] = new SimpleTimeRange(result[result.length - 1].start, now);
     }
     return result;
 }
 
-const TEST_GAPPED_ARCHIVE = generateGappedArchive(TEST_ARCHIVE_RANGE.start, TEST_ARCHIVE_RANGE.end, 20);
+const TEST_GAPPED_ARCHIVE = generateGappedArchive(
+    TEST_ARCHIVE_RANGE.start,
+    TEST_ARCHIVE_RANGE.end,
+    20,
+);
 
 export const fakeMediaServerData: Array<MediaServer> = [
     {
@@ -40,7 +41,7 @@ export const fakeMediaServerData: Array<MediaServer> = [
                 'Recording',
                 TEST_THUMBNAIL_URL,
                 TEST_ARCHIVE_RANGE,
-                TEST_ARCHIVE
+                TEST_ARCHIVE,
             ),
             new TestCamera(
                 'live-no-archive-test-camera',
@@ -48,7 +49,7 @@ export const fakeMediaServerData: Array<MediaServer> = [
                 'Live Recording test camera with no archive',
                 'http://fake.media-server.local/live-no-archive-test-camera',
                 'Recording',
-                TEST_THUMBNAIL_URL
+                TEST_THUMBNAIL_URL,
             ),
             new TestCamera(
                 'not-live-not-recording-test-camera-with-archive',
@@ -58,14 +59,14 @@ export const fakeMediaServerData: Array<MediaServer> = [
                 'Archive',
                 undefined,
                 TEST_ARCHIVE_RANGE,
-                TEST_ARCHIVE
+                TEST_ARCHIVE,
             ),
             new TestCamera(
                 'offline-test-camera-with-no-archive',
                 'fake-media-server',
                 'Offline test camera with no archive',
                 'http://fake.media-server.local/offline-test-camera-with-no-archive',
-                'Offline'
+                'Offline',
             ),
             new TestCamera(
                 'live-not-recording-test-camera-with-no-archive',
@@ -73,16 +74,15 @@ export const fakeMediaServerData: Array<MediaServer> = [
                 'Live, not recording test camera with no archive',
                 'http://fake.media-server.local/live-not-recording-test-camera-with-no-archive',
                 'Live',
-                TEST_THUMBNAIL_URL
-            )
-        ]
+                TEST_THUMBNAIL_URL,
+            ),
+        ],
     },
     {
         id: 'offline-fake-media-server',
         name: 'Offline Fake Media Server',
         url: 'http://offline-fake.media-server.local',
-        cameras: [
-        ]
+        cameras: [],
     },
     {
         id: 'gapped-fake-media-server',
@@ -97,7 +97,7 @@ export const fakeMediaServerData: Array<MediaServer> = [
                 'Offline',
                 TEST_THUMBNAIL_URL,
                 TEST_ARCHIVE_RANGE,
-                TEST_GAPPED_ARCHIVE
+                TEST_GAPPED_ARCHIVE,
             ),
             new TestCamera(
                 'offline-twice-gapped-test-camera',
@@ -107,7 +107,7 @@ export const fakeMediaServerData: Array<MediaServer> = [
                 'Offline',
                 TEST_THUMBNAIL_URL,
                 new SimpleTimeRange(now - DURATION * 2, now),
-                generateGappedArchive(now - DURATION * 2, now, 20)
+                generateGappedArchive(now - DURATION * 2, now, 20),
             ),
             new TestCamera(
                 'offline-thrice-gapped-test-camera',
@@ -117,7 +117,7 @@ export const fakeMediaServerData: Array<MediaServer> = [
                 'Offline',
                 TEST_THUMBNAIL_URL,
                 new SimpleTimeRange(now - DURATION * 2, now),
-                generateGappedArchive(now - DURATION * 2, now, 60)
+                generateGappedArchive(now - DURATION * 2, now, 60),
             ),
             new TestCamera(
                 'offline-thousand-chunks-test-camera',
@@ -127,7 +127,7 @@ export const fakeMediaServerData: Array<MediaServer> = [
                 'Offline',
                 TEST_THUMBNAIL_URL,
                 new SimpleTimeRange(now - DURATION * 2, now),
-                generateGappedArchive(now - DURATION * 2, now, 1e3)
+                generateGappedArchive(now - DURATION * 2, now, 1e3),
             ),
             new TestCamera(
                 'offline-ten-thousands-chunks-test-camera',
@@ -137,7 +137,7 @@ export const fakeMediaServerData: Array<MediaServer> = [
                 'Offline',
                 TEST_THUMBNAIL_URL,
                 new SimpleTimeRange(now - DURATION * 2, now),
-                generateGappedArchive(now - DURATION * 2, now, 1e4)
+                generateGappedArchive(now - DURATION * 2, now, 1e4),
             ),
             new TestCamera(
                 'offline-100K-chunks-test-camera',
@@ -147,7 +147,7 @@ export const fakeMediaServerData: Array<MediaServer> = [
                 'Offline',
                 TEST_THUMBNAIL_URL,
                 new SimpleTimeRange(now - DURATION * 2, now),
-                generateGappedArchive(now - DURATION * 2, now, 1e5)
+                generateGappedArchive(now - DURATION * 2, now, 1e5),
             ),
             new TestCamera(
                 'offline-200K-chunks-test-camera',
@@ -157,7 +157,7 @@ export const fakeMediaServerData: Array<MediaServer> = [
                 'Offline',
                 TEST_THUMBNAIL_URL,
                 new SimpleTimeRange(now - DURATION * 2, now),
-                generateGappedArchive(now - DURATION * 2, now, 2e5)
+                generateGappedArchive(now - DURATION * 2, now, 2e5),
             ),
             new TestCamera(
                 'offline-500K-chunks-test-camera',
@@ -167,7 +167,7 @@ export const fakeMediaServerData: Array<MediaServer> = [
                 'Offline',
                 TEST_THUMBNAIL_URL,
                 new SimpleTimeRange(now - DURATION * 2, now),
-                generateGappedArchive(now - DURATION * 2, now, 5e5)
+                generateGappedArchive(now - DURATION * 2, now, 5e5),
             ),
             new TestCamera(
                 'offline-1M-chunks-test-camera',
@@ -177,7 +177,7 @@ export const fakeMediaServerData: Array<MediaServer> = [
                 'Offline',
                 TEST_THUMBNAIL_URL,
                 new SimpleTimeRange(now - DURATION * 2, now),
-                generateGappedArchive(now - DURATION * 2, now, 1e6)
+                generateGappedArchive(now - DURATION * 2, now, 1e6),
             ),
             new TestCamera(
                 'offline-10M-chunks-test-camera',
@@ -187,8 +187,8 @@ export const fakeMediaServerData: Array<MediaServer> = [
                 'Offline',
                 TEST_THUMBNAIL_URL,
                 new SimpleTimeRange(now - DURATION * 2, now),
-                generateGappedArchive(now - DURATION * 2, now, 1e7)
-            )
+                generateGappedArchive(now - DURATION * 2, now, 1e7),
+            ),
             // new TestCamera(
             //     'offline-100M-chunks-test-camera',
             //     '100M-chunks-fake-media-server',
@@ -209,6 +209,6 @@ export const fakeMediaServerData: Array<MediaServer> = [
             //     new SimpleTimeRange(now - DURATION * 200, now),
             //     generateGappedArchive(now - DURATION * 200, now, 1e9)
             // ),
-        ]
-    }
+        ],
+    },
 ];

@@ -9,7 +9,7 @@ export enum PLAYBACK_MODE {
     LIVE = 2,
 }
 export enum PLAYBACK_ERROR {
-    DEMUXER_ERROR_COULD_NOT_OPEN = 'DEMUXER_ERROR_COULD_NOT_OPEN'
+    DEMUXER_ERROR_COULD_NOT_OPEN = 'DEMUXER_ERROR_COULD_NOT_OPEN',
 }
 
 export interface AbstractPlaybackState {
@@ -53,14 +53,14 @@ export type PlaybackState = StoppedPlaybackState | ArchivePlaybackState | LivePl
 
 export function createInitialStoppedState(
     quality: PlaybackQuality = 'auto',
-    transport: PlaybackTransport = 'webm'
+    transport: PlaybackTransport = 'webm',
 ): StoppedPlaybackState {
     return {
         mode: PLAYBACK_MODE.STOPPED,
         initializedAt: Date.now(),
         quality,
         transport,
-        error: ''
+        error: '',
     };
 }
 
@@ -69,7 +69,7 @@ export function createInitialArchiveState(
     t: ms,
     quality: PlaybackQuality = 'auto',
     transport: PlaybackTransport = 'webm',
-    posterUrl?: Observable<string>
+    posterUrl?: Observable<string>,
 ): ArchivePlaybackState {
     return {
         mode: PLAYBACK_MODE.ARCHIVE,
@@ -83,7 +83,7 @@ export function createInitialArchiveState(
         quality,
         transport,
         initializedAt: Date.now(),
-        error: ''
+        error: '',
     };
 }
 
@@ -91,7 +91,7 @@ export function createInitialLiveState(
     sourceUrl: string,
     quality: PlaybackQuality = 'auto',
     transport: PlaybackTransport = 'webm',
-    posterUrl?: Observable<string>
+    posterUrl?: Observable<string>,
 ): LivePlaybackState {
     return {
         mode: PLAYBACK_MODE.LIVE,
@@ -102,6 +102,6 @@ export function createInitialLiveState(
         transport,
         currentTime: Date.now(),
         initializedAt: Date.now(),
-        error: ''
+        error: '',
     };
 }

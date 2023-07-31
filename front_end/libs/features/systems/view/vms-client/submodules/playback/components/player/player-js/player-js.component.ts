@@ -8,7 +8,7 @@ import {
     EventEmitter,
     ViewEncapsulation,
     OnChanges,
-    Inject
+    Inject,
 } from '@angular/core';
 import type videojs from 'video.js';
 
@@ -48,15 +48,16 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
     protected transport = '';
     private readonly xRuntimeGuid = 'x-runtime-guid';
 
-    constructor(@Inject(WINDOW) public window: Window) {
-    }
+    constructor(@Inject(WINDOW) public window: Window) {}
 
     // For lazy loading player
     #videojs: videojs;
 
-    private supportsNativeHls():boolean {
+    private supportsNativeHls(): boolean {
         const video = this.window.document.createElement('video');
-        const supportsHls = !!(video.canPlayType('application/vnd.apple.megURL') || video.canPlayType('audio/mpegurl'));
+        const supportsHls = !!(
+            video.canPlayType('application/vnd.apple.megURL') || video.canPlayType('audio/mpegurl')
+        );
         video.remove();
         return supportsHls;
     }
@@ -75,12 +76,12 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
             inactivityTimeout: 0,
             html5: {
                 vhs: {
-                    overrideNative: nativeSupport
+                    overrideNative: nativeSupport,
                 },
                 nativeVideoTracks: !nativeSupport,
                 nativeAudioTracks: !nativeSupport,
-                nativeTextTracks: !nativeSupport
-            }
+                nativeTextTracks: !nativeSupport,
+            },
         };
 
         const resetTimer = () => {
@@ -152,12 +153,8 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         this.mode = this.mode ?? PLAYBACK_MODE.LIVE;
 
         if (
-            this.videoView && (
-                changes.mode ||
-                changes.sourceUrl ||
-                changes.posterUrl ||
-                changes.paused
-            )
+            this.videoView &&
+            (changes.mode || changes.sourceUrl || changes.posterUrl || changes.paused)
         ) {
             if (this.sourceUrl) {
                 this.transport = this.sourceUrl?.includes('m3u8') ? 'hls' : 'webm';

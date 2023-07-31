@@ -37,10 +37,7 @@ export class HighlightedStringComponent {
         if (!this.tokenMatches) {
             return '';
         } else {
-            return this.string.slice(
-                this.matchPosition,
-                this.matchPosition + this.token.length
-            );
+            return this.string.slice(this.matchPosition, this.matchPosition + this.token.length);
         }
     }
 }

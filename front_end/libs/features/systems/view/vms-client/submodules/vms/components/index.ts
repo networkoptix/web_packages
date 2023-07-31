@@ -5,5 +5,5 @@ import { NxMediaServerListHeaderComponent } from './media-server-list-header/med
 export const components = [
     MediaServerListComponent,
     NxMediaServerListHeaderComponent,
-    HighlightedStringComponent
+    HighlightedStringComponent,
 ];

@@ -51,10 +51,14 @@ export class PlaybackControlsComponent implements OnInit {
                     // this.state is used instead of "prev" because when in ARCHIVE mode "pause" is
                     // same for both objects (weird) ... hence -> this.state = { ...s };
                     // not using function reference as I need "this" -- TT
-                    // @ts-expect-error
-                    return this.state?.mode === curr.mode && (curr.paused === undefined || this.state?.paused === curr.paused);
+                    return (
+                        this.state?.mode === curr.mode &&
+                        // @ts-expect-error
+                        (curr.paused === undefined || this.state?.paused === curr.paused)
+                    );
                 }),
-                untilDestroyed(this))
+                untilDestroyed(this),
+            )
             .subscribe(state => {
                 this.onSubjectChange(state);
             });
@@ -146,11 +150,8 @@ export class PlaybackControlsComponent implements OnInit {
     }
 
     protected togglePause() {
-        const canPauseLive = (
-            this.playback.canStop &&
-            !this.playback.canPlayLive &&
-            !this.playback.livePaused
-        );
+        const canPauseLive =
+            this.playback.canStop && !this.playback.canPlayLive && !this.playback.livePaused;
         if (this.playback.canPause || canPauseLive) {
             this.playback.livePaused = canPauseLive;
             if (!canPauseLive) {

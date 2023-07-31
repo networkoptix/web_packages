@@ -8,9 +8,8 @@ xdescribe('PlaybackControlsComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [PlaybackControlsComponent]
-        })
-            .compileComponents();
+            declarations: [PlaybackControlsComponent],
+        }).compileComponents();
     }));
 
     beforeEach(() => {

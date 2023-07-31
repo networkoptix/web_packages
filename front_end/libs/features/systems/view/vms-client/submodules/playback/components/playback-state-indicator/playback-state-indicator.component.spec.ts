@@ -8,9 +8,8 @@ xdescribe('PlaybackStateIndicatorComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [PlaybackStateIndicatorComponent]
-        })
-            .compileComponents();
+            declarations: [PlaybackStateIndicatorComponent],
+        }).compileComponents();
     }));
 
     beforeEach(() => {

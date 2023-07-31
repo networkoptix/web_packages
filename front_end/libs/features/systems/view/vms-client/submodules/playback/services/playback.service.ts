@@ -19,7 +19,7 @@ import {
 
 @UntilDestroy()
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class PlaybackService {
     protected extractDimensions(): number[] {
@@ -35,9 +35,10 @@ export class PlaybackService {
                 const transports = Object.keys(transportsAndResolutions);
                 if (transports.length > 1) {
                     const parsedQuality = quality === 'hi' ? 'high' : 'low';
-                    const nonHlsTransport = transports.find(_transport =>
-                        _transport !== 'hls' &&
-                            parsedQuality in transportsAndResolutions[_transport]
+                    const nonHlsTransport = transports.find(
+                        _transport =>
+                            _transport !== 'hls' &&
+                            parsedQuality in transportsAndResolutions[_transport],
                     );
                     if (nonHlsTransport) {
                         quality = transportsAndResolutions[nonHlsTransport][parsedQuality];
@@ -64,9 +65,7 @@ export class PlaybackService {
         this.handleAnimationFrame();
     }
 
-    public _subject = new BehaviorSubject<PlaybackState>(
-        createInitialStoppedState()
-    );
+    public _subject = new BehaviorSubject<PlaybackState>(createInitialStoppedState());
 
     protected _emit(): void {
         this._subject.next(this.state);
@@ -121,13 +120,10 @@ export class PlaybackService {
         this.livePaused = false;
         const [width, height] = this.extractDimensions();
         this._state = createInitialLiveState(
-            this.vms.selectedCamera.getVideoUrl(
-                this._state.transport,
-                this._state.quality
-            ),
+            this.vms.selectedCamera.getVideoUrl(this._state.transport, this._state.quality),
             this._state.quality,
             this._state.transport,
-            this.vms.selectedCamera.getPosterUrl(undefined, width, height)
+            this.vms.selectedCamera.getPosterUrl(undefined, width, height),
         );
 
         this._emit();
@@ -147,10 +143,7 @@ export class PlaybackService {
             const LAST_MINUTE_SIZE = 9e4; // 1.5 minutes
             const isThereRecord = this.vms.selectedCamera.isThereRecord(t);
             const nextRecord = this.vms.selectedCamera.getNextRecord(t);
-            if (
-                t > Date.now() - LAST_MINUTE_SIZE ||
-                (!isThereRecord && !nextRecord)
-            ) {
+            if (t > Date.now() - LAST_MINUTE_SIZE || (!isThereRecord && !nextRecord)) {
                 return this.playLive();
             } else if (!isThereRecord) {
                 t = this.vms.selectedCamera.getNextRecord(t)?.start;
@@ -162,19 +155,15 @@ export class PlaybackService {
         }
         const [width, height] = this.extractDimensions();
         this._state = createInitialArchiveState(
-            this.vms.selectedCamera.getVideoUrl(
-                this._state.transport,
-                this._state.quality,
-                t
-            ),
+            this.vms.selectedCamera.getVideoUrl(this._state.transport, this._state.quality, t),
             t,
             this._state.quality,
             this._state.transport,
             this.vms.selectedCamera.getPosterUrl(
                 this.vms.selectedCamera.isThereRecord(t) ? t : undefined,
                 width,
-                height
-            )
+                height,
+            ),
         );
         this._state.paused = paused;
 
@@ -182,7 +171,7 @@ export class PlaybackService {
     }
 
     public unplayableArchive(): void {
-        (<ArchivePlaybackState> this._state).encrypted = true;
+        (<ArchivePlaybackState>this._state).encrypted = true;
         this._emit();
     }
 
@@ -192,10 +181,7 @@ export class PlaybackService {
     }
 
     public stop(withError: string = ''): void {
-        this._state = createInitialStoppedState(
-            this._state.quality,
-            this._state.transport
-        );
+        this._state = createInitialStoppedState(this._state.quality, this._state.transport);
         this._state.error = withError;
         this._emit();
     }
@@ -205,10 +191,7 @@ export class PlaybackService {
             case PLAYBACK_MODE.STOPPED:
                 break;
             case PLAYBACK_MODE.LIVE:
-                if (
-                    this.vms.selectedCamera.isRecording ||
-                    this.vms.selectedCamera.hasArchive
-                ) {
+                if (this.vms.selectedCamera.isRecording || this.vms.selectedCamera.hasArchive) {
                     this.playArchive(Date.now(), true);
                 } else {
                     this.stop();
@@ -301,9 +284,7 @@ export class PlaybackService {
                             this._state.currentTime > this.timeline.visibleRange.start + marginMs &&
                             this._state.currentTime < this.timeline.visibleRange.end
                         ) {
-                            this.timeline.jumpScrollTo(
-                                this.timeline.visibleRange.start + diff
-                            );
+                            this.timeline.jumpScrollTo(this.timeline.visibleRange.start + diff);
                         }
                     }
 
@@ -321,8 +302,10 @@ export class PlaybackService {
             case PLAYBACK_MODE.LIVE:
                 return true;
             case PLAYBACK_MODE.ARCHIVE:
-                return this._state.currentTime < this.timeline.visibleRange.start ||
-                    this._state.currentTime > this.timeline.visibleRange.end;
+                return (
+                    this._state.currentTime < this.timeline.visibleRange.start ||
+                    this._state.currentTime > this.timeline.visibleRange.end
+                );
             default:
                 return false;
         }
@@ -335,8 +318,10 @@ export class PlaybackService {
             case PLAYBACK_MODE.LIVE:
                 return 1.0;
             case PLAYBACK_MODE.ARCHIVE:
-                return (this._state.currentTime - this.timeline.visibleRange.start) /
-                    this.timeline.visibleRange.duration;
+                return (
+                    (this._state.currentTime - this.timeline.visibleRange.start) /
+                    this.timeline.visibleRange.duration
+                );
             default:
                 return 0.0;
         }
@@ -420,23 +405,18 @@ export class PlaybackService {
             const state = this._state;
 
             if (!this.vms.selectedCamera.isThereRecord(state.currentTime)) {
-                const nextChunk = this.vms.selectedCamera.getNextRecord(
-                    state.currentTime
-                );
+                const nextChunk = this.vms.selectedCamera.getNextRecord(state.currentTime);
                 if (nextChunk) {
                     const wasVisible = !this.isBeyondVisibleRange;
                     const nextChunkStart = nextChunk.start;
-                    const diff = nextChunkStart - (this._state).currentTime;
+                    const diff = nextChunkStart - this._state.currentTime;
                     this._state.currentTime = nextChunkStart;
                     this._state.startTime += diff;
 
                     // TODO: request scroll jump animation
                     // this.timeline.jumpScrollTo(this._state.currentTime)
                     if (wasVisible) {
-                        this.timeline.jumpScrollTo(
-                            diff + this.timeline.visibleRange.start,
-                            false
-                        );
+                        this.timeline.jumpScrollTo(diff + this.timeline.visibleRange.start, false);
                     }
 
                     // TODO: maybe the logic here should be very different, actually
@@ -445,7 +425,7 @@ export class PlaybackService {
                     const LAST_MINUTE_SIZE = 1.5 * 60 * 1000; // 1.5 minutes
                     const lastMinuteStartMs: ms = Date.now() - LAST_MINUTE_SIZE;
                     if (
-                        lastChunk && lastChunk.end < state.currentTime ||
+                        (lastChunk && lastChunk.end < state.currentTime) ||
                         state.currentTime >= lastMinuteStartMs
                     ) {
                         this.canPlayLive ? this.playLive() : this.stop();
@@ -456,7 +436,10 @@ export class PlaybackService {
     }
 
     public changeTransport(st: PlaybackTransport): void {
-        if (this._state.transport === st || !this.vms.selectedCamera.availableTransports.includes(st)) {
+        if (
+            this._state.transport === st ||
+            !this.vms.selectedCamera.availableTransports.includes(st)
+        ) {
             return;
         }
         this._state.transport = st;

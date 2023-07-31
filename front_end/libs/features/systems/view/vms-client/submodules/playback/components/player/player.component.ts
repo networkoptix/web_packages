@@ -1,5 +1,13 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit, AfterViewInit, Output, EventEmitter, ElementRef, effect } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    AfterViewInit,
+    Output,
+    EventEmitter,
+    ElementRef,
+    effect,
+} from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { SessionStorageService } from 'ngx-webstorage';
 
@@ -46,7 +54,7 @@ export class PlayerComponent implements OnInit, AfterViewInit {
 
     private serverErrors = {
         cannotDecrypt: 'Cannot decrypt media',
-        setupPassword: 'Please set up camera password'
+        setupPassword: 'Please set up camera password',
     };
     private readonly xRuntimeGuid = 'x-runtime-guid';
 
@@ -59,7 +67,7 @@ export class PlayerComponent implements OnInit, AfterViewInit {
     ) {
         this.handleClick = generateClickDubleClickPair(
             e => this.onClick(e),
-            e => this.onDblClick(e)
+            e => this.onDblClick(e),
         );
 
         effect(() => {
@@ -76,11 +84,9 @@ export class PlayerComponent implements OnInit, AfterViewInit {
     }
 
     public ngAfterViewInit(): void {
-        this.playback.subject
-            .pipe(untilDestroyed(this))
-            .subscribe((s: PlaybackState) => {
-                this.onPlaybackSubjectChange(s);
-            });
+        this.playback.subject.pipe(untilDestroyed(this)).subscribe((s: PlaybackState) => {
+            this.onPlaybackSubjectChange(s);
+        });
     }
 
     public onPlaybackSubjectChange(s: PlaybackState | ArchivePlaybackState): void {
@@ -93,9 +99,7 @@ export class PlayerComponent implements OnInit, AfterViewInit {
         this.errorPlaybackDescription = (<ArchivePlaybackState>s).error;
 
         this.errorEncryption = (<ArchivePlaybackState>s).encrypted;
-        this.showOverlay = !this.errorEncryption && !this.errorPlayback
-            ? this.showOverlay
-            : false;
+        this.showOverlay = !this.errorEncryption && !this.errorPlayback ? this.showOverlay : false;
     }
 
     public onVmsSubjectChange(s: VmsState): void {
@@ -114,16 +118,18 @@ export class PlayerComponent implements OnInit, AfterViewInit {
         }, 0);
         if (s > 1 && 'currentTime' in this.playback.state) {
             this.playback.pause();
-            setTimeout(() => this.playback.playArchive(
-                (<ArchivePlaybackState | LivePlaybackState> this.playback.state).currentTime - s
-            ));
+            setTimeout(() =>
+                this.playback.playArchive(
+                    (<ArchivePlaybackState | LivePlaybackState>this.playback.state).currentTime - s,
+                ),
+            );
         } else if (s === 1) {
             switch (this.playback.state.mode) {
                 case PLAYBACK_MODE.LIVE:
                 case PLAYBACK_MODE.ARCHIVE:
                     if (
                         !this.playback.state.started &&
-                        !(<ArchivePlaybackState> this.playback.state).paused
+                        !(<ArchivePlaybackState>this.playback.state).paused
                     ) {
                         this.playback.handleStarted();
                     }
@@ -144,25 +150,29 @@ export class PlayerComponent implements OnInit, AfterViewInit {
             if (auth) {
                 headers[this.xRuntimeGuid] = auth;
             }
-            this.http.get(player.src(), { headers })
+            this.http
+                .get(player.src(), { headers })
                 .pipe(untilDestroyed(this))
-                .subscribe((response: any) => {
-                    switch (response?.error) {
-                        case '4':
-                            if (response.errorString === this.serverErrors.cannotDecrypt) {
-                                this.playback.unplayableArchive();
-                            } else {
-                                this.playback.setError(response.errorString);
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-                }, error => {
-                    if (error.name !== 'HttpErrorResponse') {
-                        this.playback.setError(error.message);
-                    }
-                });
+                .subscribe(
+                    (response: any) => {
+                        switch (response?.error) {
+                            case '4':
+                                if (response.errorString === this.serverErrors.cannotDecrypt) {
+                                    this.playback.unplayableArchive();
+                                } else {
+                                    this.playback.setError(response.errorString);
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    },
+                    error => {
+                        if (error.name !== 'HttpErrorResponse') {
+                            this.playback.setError(error.message);
+                        }
+                    },
+                );
         }
     }
 

@@ -3,7 +3,13 @@ import { Observable } from 'rxjs';
 import { PlaybackTransport } from '@view/view.types';
 import { ms, int } from '@vms-client/utils/type-aliases';
 
-export type CAMERA_STATUS = 'Live' | 'Archive' | 'Recording' | 'Online' | 'Offline' | 'Unauthorized';
+export type CAMERA_STATUS =
+    | 'Live'
+    | 'Archive'
+    | 'Recording'
+    | 'Online'
+    | 'Offline'
+    | 'Unauthorized';
 
 export interface ISimpleTimeRange {
     start: ms;
@@ -25,7 +31,7 @@ export class SimpleTimeRange {
         // public start: ms,
         // public end: ms
         public readonly start: ms,
-        public readonly end: ms
+        public readonly end: ms,
     ) {}
 
     public get duration(): ms {
@@ -41,7 +47,7 @@ export class SimpleTimeRange {
     }
 
     public contains(r: SimpleTimeRange): boolean {
-        return (this.start <= r.start && this.end >= r.end);
+        return this.start <= r.start && this.end >= r.end;
     }
 
     public isContained(r: SimpleTimeRange): boolean {
@@ -107,10 +113,10 @@ export interface ICamera {
     availableTransports: Array<PlaybackTransport>;
     availableTransportsAndResolutions: AvailableTransportsAndResolutions;
 
-    pushRecordedChunks (rs: CameraArchive);
+    pushRecordedChunks(rs: CameraArchive);
 
-    isThereRecord (t: ms);
-    getNextRecord (t: ms): ISimpleTimeRange;
+    isThereRecord(t: ms);
+    getNextRecord(t: ms): ISimpleTimeRange;
 
     preferredServerId: string;
     parentServerId: string;

@@ -99,7 +99,7 @@ export class TestCamera implements ICamera {
     public get availableTransportsAndResolutions() {
         return {
             hls: ['lo', 'hi', ''],
-            webm: ['AxB']
+            webm: ['AxB'],
         };
     }
 

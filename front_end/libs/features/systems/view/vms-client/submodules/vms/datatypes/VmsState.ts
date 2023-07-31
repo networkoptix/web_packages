@@ -30,5 +30,5 @@ export const initializeVmsState = (): VmsState => ({
     mediaServers: [],
     cameras: {},
     selectedCameraId: '',
-    selectedCamera: undefined
+    selectedCamera: undefined,
 });

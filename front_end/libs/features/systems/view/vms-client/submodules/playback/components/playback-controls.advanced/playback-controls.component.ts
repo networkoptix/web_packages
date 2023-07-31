@@ -20,11 +20,9 @@ export class PlaybackAdvControlsComponent implements OnInit {
     constructor(public playback: PlaybackService, protected selection: TimelineSelectionService) {}
 
     public ngOnInit(): void {
-        this.playback.subject
-            .pipe(untilDestroyed(this))
-            .subscribe((s: PlaybackState) => {
-                this.onSubjectChange(s);
-            });
+        this.playback.subject.pipe(untilDestroyed(this)).subscribe((s: PlaybackState) => {
+            this.onSubjectChange(s);
+        });
     }
 
     public onSubjectChange(s: PlaybackState): void {

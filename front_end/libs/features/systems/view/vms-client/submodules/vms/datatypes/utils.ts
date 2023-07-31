@@ -13,9 +13,9 @@ export function _isThereRecord(archive: CameraArchive, t: ms): boolean {
             return true;
         }
         if (rec.start > t) {
-            r = (m < r) ? m : (r - 1);
+            r = m < r ? m : r - 1;
         } else {
-            l = (m > l) ? m : (l + 1);
+            l = m > l ? m : l + 1;
         }
     }
     return false;
@@ -36,9 +36,9 @@ export function _getNextRecord(archive: CameraArchive, t: ms): ISimpleTimeRange 
             return rec;
         }
         if (rec.start > t) {
-            r = (m < r) ? m : (r - 1);
+            r = m < r ? m : r - 1;
         } else {
-            l = (m > l) ? m : (l + 1);
+            l = m > l ? m : l + 1;
         }
     }
     if (l === r && archive[l].start >= t) {
