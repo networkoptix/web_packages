@@ -7,7 +7,7 @@ For development set `CLOUD_PORTAL_CONF_DIR` environment variable (for example, t
 1. Install homebrew
 2. Install required packages
     ```shell
-    brew install node n pyenv openssl docker docker-compose mysql-client
+    brew install n pyenv openssl docker docker-compose mysql-client
     ```
 3. Install rosetta 2
     ```shell
