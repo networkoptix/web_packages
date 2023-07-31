@@ -44,11 +44,11 @@ $pressedColor: $textColor;
   > .vertical-line {
     content: "";
     width: 2px;
-    height: 83px;
+    height: 90px;
     background-color: $usualBackground;
     position: absolute;
     left: 50%;
-    bottom: -85px;
+    bottom: -92px;
     transform: translateX(-50%);
   }
 

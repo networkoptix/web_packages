@@ -1,13 +1,11 @@
-import { CdkDrag, CdkDragMove, CdkDragStart } from '@angular/cdk/drag-drop';
-import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
+import { CdkDrag, CdkDragStart } from '@angular/cdk/drag-drop';
+import { Component, ElementRef, EventEmitter, Output, Input, ViewChild } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { images } from '@lib/variables/static-variables';
-import { NgChanges } from '@utils/ng-changes';
 import { SCROLL_DIRECTION } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/scroll/scroll.types';
+import { ExportSelection } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/selection/selection.types';
 import { NxWebGLService } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/services/webgl.service';
-
-// const MIN_BAR_WIDTH_PX = 50;
 
 @UntilDestroy()
 @Component({
@@ -15,36 +13,36 @@ import { NxWebGLService } from '@vms-client/submodules/timeline/components/nx-we
     templateUrl: './timeline-scroll.component.html',
     styleUrls: ['./timeline-scroll.component.scss']
 })
-export class TimelineScrollComponent implements OnChanges {
-    @Input('zoomLevel') zoomLevel:number = 1;
+export class TimelineScrollComponent {
+    @Input() barWidth: number;
+    @Input() barPos: number;
+    @Input() playbackPos: number;
 
     @Output() singleScroll = new EventEmitter<SCROLL_DIRECTION>();
     @Output() constantScroll = new EventEmitter<{
         direction: SCROLL_DIRECTION;
         action: string;
     }>();
+    @Output() scrollToPos = new EventEmitter<{
+        direction: SCROLL_DIRECTION;
+        position: number;
+    }>();
+    @Output() scrollEnd = new EventEmitter<boolean>();
 
     @ViewChild('background') backgroundView: ElementRef<HTMLDivElement>;
     @ViewChild('bar') barView: ElementRef<HTMLDivElement>;
-    @ViewChild('honestBar') honestBarView: ElementRef<HTMLDivElement>;
-    @ViewChild('currentPlayback') currentPlaybackView: ElementRef<HTMLDivElement>;
     @ViewChild('left') leftView: ElementRef<HTMLDivElement>;
     @ViewChild('right') rightView: ElementRef<HTMLDivElement>;
-    @ViewChild('currentSelection') currentSelectionView: ElementRef<HTMLDivElement>;
+    // @ViewChild('currentSelection') currentSelectionView: ElementRef<HTMLDivElement>;
 
     images = images;
-    timeoutScroll: NodeJS.Timeout;
 
-    draggable: CdkDrag;
-    barWidth: string = '100%';
     public isBarGrabbed: boolean = false;
-    public showHonestBar: boolean = false;
-
-    // public barLeftPx: px = 0;
-    // public barWidthPx: px = 0;
-    // public honestBarLeftPx: px = 0;
-    // public honestBarWidthPx: px = 0;
+    draggable: CdkDrag;
+    selectionStart: number;
+    selectionWidth: number;
     onSelectionDrag: boolean = false;
+    onScrollBarScroll: boolean = false;
     canScrollLeft: boolean;
     canScrollRight: boolean;
     currentPos: number;
@@ -52,10 +50,11 @@ export class TimelineScrollComponent implements OnChanges {
     continuousScroll: boolean = false;
     public disabled: boolean = false;
     public isSelected: boolean = false;
+
     SCROLL_DIRECTION = SCROLL_DIRECTION;
 
     constructor(
-        webglService: NxWebGLService,
+        public webglService: NxWebGLService,
     ) {
         webglService.canScroll$
             .pipe(untilDestroyed(this))
@@ -81,40 +80,85 @@ export class TimelineScrollComponent implements OnChanges {
             .subscribe(value => {
                 this.onSelectionDrag = value;
             });
+
+        webglService.scrollBarScroll$
+            .pipe(untilDestroyed(this))
+            .subscribe(value => {
+                this.onScrollBarScroll = value;
+            });
+
+        webglService.selection$.subscribe((selection: ExportSelection) => {
+            const end: number = webglService.xScaleOriginal$.value(selection.endDate);
+            this.selectionStart = webglService.xScaleOriginal$.value(selection.startDate);
+            this.selectionWidth = end - this.selectionStart;
+        });
+
+        // webglService.canvasWidth$
+        //     .pipe(untilDestroyed(this))
+        //     .subscribe(value => {
+        //         this.overallWidth = value * webglService.levelZoom$.value;
+        //     });
+        //
+        // webglService.levelZoom$
+        //     .pipe(untilDestroyed(this))
+        //     .subscribe(value => {
+        //         this.overallWidth = webglService.canvasWidth$.value * value;
+        //     });
+        // webglService.levelZoom$
+        //     .pipe(untilDestroyed(this))
+        //     .subscribe(level => {
+        //         const zoom = Math.trunc(level);
+        //         if (zoom === 1) {
+        //             this.barWidth = '100%';
+        //             this.draggable?.setFreeDragPosition({ x: 0, y: 0 });
+        //         } else {
+        //             this.barWidth = 100 - (zoom / 5) + '%';
+        //             this.draggable?.setFreeDragPosition({ x: zoom, y: 0 });
+        //         }
+        //     });
     }
 
-    ngOnChanges(changes: NgChanges<TimelineScrollComponent>): void {
-        if (changes.zoomLevel?.currentValue) {
-            const zoom = Math.trunc(changes.zoomLevel.currentValue);
-            if (zoom === 1) {
-                this.barWidth = '100%';
-                this.draggable.setFreeDragPosition({ x: 0, y: 0 });
-            } else {
-                this.barWidth = 100 - zoom + '%';
-                this.draggable.setFreeDragPosition({ x: zoom, y: 0 });
-            }
+    // handleBarMouseUp(e: MouseEvent | TouchEvent): void {
+    //     // this.isBarGrabbed = false;
+    // }
+    //
+    // handleBarMouseDown(e: MouseEvent | TouchEvent): void {
+    //     // debugger;
+    // }
+
+    // setDraggable(e: CdkDragStart): void {
+    //     // this.draggable = e.source;
+    //     e.event.preventDefault();
+    // }
+
+    // eslint-disable-next-line nx/no-untyped-arg
+    handleBarClick(e): void {
+        if (e.target.id === 'background') {
+            const barLow = e.offsetX - this.barWidth / 2;
+            const barHigh = e.offsetX + this.barWidth;
+            // this.currentPos = bar > 0 ? bar : 0;
+            this.barPos = barLow < 0
+                ? 0
+                : barHigh < this.webglService.canvasWidth$.value
+                    ? barLow
+                    : this.webglService.canvasWidth$.value - this.barWidth;
+
+            this.scrollToPos.emit({ direction: SCROLL_DIRECTION.scrollTo, position: this.barPos });
         }
     }
 
-    handleBarMouseUp(e: MouseEvent | TouchEvent): void {
-        // this.isBarGrabbed = false;
+    handleBarDragMove(e: CdkDragStart): void {
+        // CdlDrag uses translate to manage element position
+        this.currentPos = this.barPos + e.source.getFreeDragPosition().x;
+        this.webglService.scrollBarScroll$.next(true);
+        this.scrollToPos.emit({ direction: SCROLL_DIRECTION.scrollTo, position: this.currentPos });
     }
 
-    handleBarMouseDown(e: MouseEvent | TouchEvent): void {
-        // debugger;
-    }
-
-    setDraggable(e: CdkDragStart): void {
-        this.draggable = e.source;
-    }
-
-    handleBarDragMouseMove(e: CdkDragMove): void {
-        const dir = this.currentPos > e.source.getFreeDragPosition().x
-            ? 0
-            : 1;
-        this.currentPos = e.source.getFreeDragPosition().x;
-        // console.log('e => ', e.source.getFreeDragPosition());
-        this.singleScroll.emit(dir);
+    // eslint-disable-next-line nx/no-untyped-arg
+    handleBarDragEnd(e): void {
+        e.source.reset();
+        this.webglService.scrollBarScroll$.next(false);
+        this.scrollEnd.emit(true);
     }
 
     scrollTo(direction: SCROLL_DIRECTION): void {

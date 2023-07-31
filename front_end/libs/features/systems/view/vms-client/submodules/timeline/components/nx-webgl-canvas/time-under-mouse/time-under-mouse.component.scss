@@ -42,11 +42,11 @@
     > .vertical-line {
         content: "";
         width: 2px;
-        height: 85px;
+        height: 90px;
         background-color: var(--time-under-mouse-bg);
         position: absolute;
         left: 50%;
-        bottom: -88px;
+        bottom: -92px;
         transform: translateX(-50%);
     }
 

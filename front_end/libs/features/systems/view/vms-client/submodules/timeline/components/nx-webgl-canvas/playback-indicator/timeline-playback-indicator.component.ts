@@ -36,12 +36,21 @@ export class WebGlTimelinePlaybackIndicatorComponent implements OnChanges {
 
     @ViewChild('timePlaybackEar', { static: true })
     protected timePlaybackEar: ElementRef<HTMLDivElement>;
+    @ViewChild('timePlaybackLine', { static: true })
+    protected timePlaybackLine: ElementRef<HTMLDivElement>;
 
     constructor(
         languageService: NxLanguageProviderService,
         private webglService: NxWebGLService,
     ) {
         languageService.loadTimelineTranslations();
+
+        this.webglService.xScale$.subscribe(scale => {
+            if (this.playbackPosition !== undefined && this.playbackTime) {
+                this.playbackPosition = scale(this.playbackTime);
+                this.setMarkerPosition();
+            }
+        });
     }
 
     ngOnChanges(changes: NgChanges<WebGlTimelinePlaybackIndicatorComponent>): void {
@@ -55,6 +64,13 @@ export class WebGlTimelinePlaybackIndicatorComponent implements OnChanges {
 
     private setMarkerPosition(): void {
         if (this.playbackPosition !== undefined) {
+            if (this.playbackPosition > this.webglService.canvasWidth$.value) {
+                this.playbackPosition = this.webglService.canvasWidth$.value;
+            }
+
+            if (this.playbackPosition < 0) {
+                this.playbackPosition = 0;
+            }
             this.timePlaybackEar.nativeElement.style.opacity = '1';
             this.svgArrow = this.svgArrowPoints();
         } else {
@@ -73,6 +89,9 @@ export class WebGlTimelinePlaybackIndicatorComponent implements OnChanges {
             this.timePlaybackEar.nativeElement.style.left = `${this.playbackPosition}px`;
             this.vlPosition = PRIMARY_WIDTH / 2;
         }
+
+        this.timePlaybackLine.nativeElement.style.opacity =
+            [0, PRIMARY_WIDTH].includes(this.vlPosition) ? '0' : '1';
     }
 
     private svgArrowPoints(): string {

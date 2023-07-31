@@ -22,6 +22,7 @@ export class NxWebGLService {
     canvasWidth$ = new BehaviorSubject<number>(0);
     canvasHeight$ = new BehaviorSubject<number>(0);
     canvasRect$ = new BehaviorSubject<DOMRect>(new DOMRect());
+    xScaleOriginal$ = new BehaviorSubject<d3.ScaleTime<number, number, never>>(d3.scaleUtc());
     xScale$ = new BehaviorSubject<d3.ScaleTime<number, number, never>>(d3.scaleUtc());
     canScroll$ = new BehaviorSubject<SCROLL_DIRECTIONS>({
         left: false,
@@ -33,6 +34,7 @@ export class NxWebGLService {
     });
     levelZoom$ = new BehaviorSubject<number>(1);
     selectionDrag$ = new BehaviorSubject<boolean>(false);
+    scrollBarScroll$ = new BehaviorSubject<boolean>(false);
     selection$ = new BehaviorSubject<ExportSelection>({
         active: false,
         drag: false,

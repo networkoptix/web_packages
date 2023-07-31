@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { WebGlTimelinePlaybackIndicatorComponent } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/playback-indicator/timeline-playback-indicator.component';
 import { TimelineScrollComponent } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/scroll/timeline-scroll.component';
@@ -31,6 +32,7 @@ import { WebGlTimelineZoomComponent } from '@vms-client/submodules/timeline/comp
         TranslateModule,
         DragDropModule,
         DirectivesModule,
+        NxPreLoaderComponent,
     ],
     providers: [],
 })

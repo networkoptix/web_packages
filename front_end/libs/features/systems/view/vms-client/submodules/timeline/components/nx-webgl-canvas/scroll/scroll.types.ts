@@ -5,6 +5,7 @@ export enum SCROLL_DIRECTION {
     constantRight,
     beginning,
     end,
+    scrollTo,
 }
 
 export const SCROLL_FACTOR_PX = 100;

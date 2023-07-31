@@ -87,7 +87,7 @@ export class NxThemeGeneratorComponent implements OnInit, AfterViewInit {
 
     colorNumbers: Array<number>;
     hexLight: Array<string> = [];
-    hexAdditionalLight: Array<string> = [];
+    // hexAdditionalLight: Array<string> = [];
     hexDark: Array<string> = [];
     hexError: Array<Record<string, string>> = [];
     hexGreen: Array<Record<string, string>> = [];

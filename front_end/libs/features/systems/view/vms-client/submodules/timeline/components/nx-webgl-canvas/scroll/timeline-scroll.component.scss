@@ -6,21 +6,16 @@ $current-selection-indicator-color: theme_vars.$blue1;
 
 :host {
     display: block;
-    position: absolute;
-    bottom: 1px;
-    left: 0;
-    right: 0;
-    width: 100%;
+    position: relative;
+    margin-top: -1px;
     height: 14px;
     background: transparent;
 
     > .background {
         background-color: var(--body-bg);
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
+        position: relative;
+        border: none;
+        height: 100%;
 
         > .current-playback-indicator {
             pointer-events: none;
@@ -45,17 +40,18 @@ $current-selection-indicator-color: theme_vars.$blue1;
             position: absolute;
             bottom: 0;
             top: 4px;
-            opacity: 0.0;
+            opacity: 0;
             // transition: opacity 0.2s ease-in-out;
             z-index: 10;
 
             &.active {
-                opacity: 0.15;
+                opacity: 0.5;
             }
         }
 
         > .bar {
             position: absolute;
+            border: none;
             top: 0;
             bottom: 0;
             background: var(--timeline-scrollbar-bg);
@@ -85,33 +81,15 @@ $current-selection-indicator-color: theme_vars.$blue1;
             &:hover {
                 background: var(--timeline-scrollbar-hover-bg);
             }
-
-            // &.grabbed {
-            //   cursor: grabbing; // Alex Pats banned it =)
-            // }
-        }
-
-        > .honest-bar {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            background: red;
-            pointer-events: none;
-            opacity: 0.0;
-
-            &.visible {
-                opacity: 0.0; // set positive for debug, could be done from browser console, too
-                // opacity: 0.5;
-            }
         }
     }
 
     > .button {
         position: absolute;
         z-index: 12;
-        top: -88px;
+        top: -91px;
         width: 25px;
-        height: 50px;
+        height: 52px;
         cursor: pointer;
         display: none;
         background: var(--timeline-scrollbutton-bg) no-repeat center center;
@@ -121,7 +99,7 @@ $current-selection-indicator-color: theme_vars.$blue1;
         }
 
         &.enabled {
-            opacity: .8;
+            opacity: .6;
             display: flex;
             align-items: center;
             justify-content: center;

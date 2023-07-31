@@ -1,14 +1,10 @@
 :host {
   box-sizing: border-box;
   background-color: var(--view-bg);
-  margin-top: -1px;
-  height: 104px;
+  height: 105px;
   width: 40px;
   overflow: hidden;
   padding: 6px 1px;
-  border-left: 1px solid var(--border-color);
-  border-top: 1px solid var(--border-color);
-  border-bottom: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
   justify-content: space-around;

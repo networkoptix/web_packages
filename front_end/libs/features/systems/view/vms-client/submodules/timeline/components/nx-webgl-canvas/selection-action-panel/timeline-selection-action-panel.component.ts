@@ -66,7 +66,7 @@ export class WebGlTimelineSelectionActionPanelComponent implements OnInit, After
             .pipe(untilDestroyed(this))
             .subscribe(selection => {
                 this.selection = selection;
-                this.self.nativeElement.classList.toggle('active', selection.active);
+                this.self.nativeElement.classList.toggle('active', selection.active && !selection.drag);
 
                 if (selection.active) {
                     // this.exportUrl();
