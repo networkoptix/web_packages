@@ -1,4 +1,6 @@
+import { NgFor, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { icons } from '@lib/variables/static-variables';
 // import { System } from '@services/nx-cloud-api/nx-cloud-api.types';
@@ -28,6 +30,8 @@ const mockSystems = ['sys1', 'sys2', 'sys3', 'sys4', 'sys5'];
     selector: 'nx-channel-partner-information',
     templateUrl: 'information.component.html',
     styleUrls: ['information.component.scss'],
+    standalone: true,
+    imports: [NgIf, NgFor, AngularSvgIconModule],
 })
 export class NxChannelPartnerInformationComponent {
     systems = mockSystems;

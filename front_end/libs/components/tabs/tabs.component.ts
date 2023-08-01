@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
     Component,
     ContentChildren,
@@ -7,6 +8,7 @@ import {
     Output,
     QueryList,
 } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { NxTabsDirective } from './tabs.directive';
 import { Tab, TabEmit } from './tabs.types';
@@ -15,6 +17,8 @@ import { Tab, TabEmit } from './tabs.types';
     selector: 'nx-tabs',
     templateUrl: 'tabs.component.html',
     styleUrls: ['tabs.component.scss'],
+    standalone: true,
+    imports: [TranslateModule, CommonModule],
 })
 export class NxTabsComponent implements OnInit {
     @Input() onLoadTab: Tab;

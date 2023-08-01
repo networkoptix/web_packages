@@ -1,5 +1,10 @@
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
+import { NxBaseTableComponent } from '@components/table/table.component';
 import staticLang from '@language/language_i18n_static.json';
 import { icons } from '@lib/variables/static-variables';
 import { ChannelPartnerUser } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
@@ -8,6 +13,16 @@ import { ChannelPartnerUser } from '@services/nx-cloud-api/cloud-services/channe
     selector: 'nx-users-table',
     templateUrl: 'users-table.component.html',
     styleUrls: ['users-table.component.scss'],
+    standalone: true,
+    imports: [
+        AngularSvgIconModule,
+        NgFor,
+        NgIf,
+        NgClass,
+        TranslateModule,
+        NxCheckboxComponent,
+        NxBaseTableComponent,
+    ],
 })
 export class NxUsersTableComponent {
     @Input() headers: Record<string, Record<string, number | string>>;

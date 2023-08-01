@@ -1,7 +1,11 @@
+import { CdkMenuModule } from '@angular/cdk/menu';
+import { NgClass, NgIf } from '@angular/common';
 import { Component, Input, OnInit, booleanAttribute } from '@angular/core';
 import { Router } from '@angular/router';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons, openClientError } from '@lib/variables/static-variables';
 import type { Account } from '@services/account.service/account';
@@ -17,6 +21,8 @@ import type { SystemItem } from '../../home.types';
     selector: 'nx-system-card',
     templateUrl: 'system-card.component.html',
     styleUrls: ['system-card.component.scss'],
+    standalone: true,
+    imports: [CdkMenuModule, AngularSvgIconModule, NxSearchHighlightComponent, NgClass, NgIf],
 })
 export class NxSystemCardComponent implements OnInit {
     @Input() system: SystemItem;

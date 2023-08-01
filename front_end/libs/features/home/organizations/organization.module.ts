@@ -20,7 +20,7 @@ const orgRoutes: Routes = [
         path: ':id',
         component: NxOrganizationsComponent,
         resolve: {
-            currentTab: TabResolver,
+            currentTabRoute: TabResolver,
             parentData: WithParentDataResolver,
             isAdmin: RoleResolver,
             inChannelPartner: CPResovler,

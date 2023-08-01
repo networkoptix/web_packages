@@ -80,7 +80,7 @@ const ROW_HEIGHT = 40; // if needed a change - do it in theme_variable_common to
     ],
 })
 export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
-    @Input() data: T[];
+    @Input() data: T[] = [];
 
     @Input({ alias: 'set-pagination', transform: booleanAttribute }) setPagination: boolean;
     @Input({ alias: 'set-rows', transform: booleanAttribute }) setRows: boolean;
@@ -183,23 +183,20 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
         this.sortElements(true);
     }
 
-    ngOnChanges(changes: NgChanges<NxBaseTableComponent<T>>): void {
-        if (changes.data) {
-            if (
-                changes.data.firstChange ||
-                (!changes.data.firstChange &&
-                    !isEqual(changes.data.currentValue, changes.data.previousValue))
-            ) {
-                this._headers = <Prop>Object.keys(this.data[0]);
-                this.headers = [...this._headers];
+    ngOnChanges({ additionalClasses, data }: NgChanges<NxBaseTableComponent<T>>): void {
+        if (
+            data?.currentValue &&
+            (data.firstChange || !isEqual(data.currentValue, data?.previousValue))
+        ) {
+            this._headers = <Prop>Object.keys(this.data[0]);
+            this.headers = [...this._headers];
 
-                this.createTemplate();
-                this.currentPage = 1;
-                this.initPageRows();
-            }
+            this.createTemplate();
+            this.currentPage = 1;
+            this.initPageRows();
         }
 
-        if (changes.additionalClasses?.currentValue) {
+        if (additionalClasses?.currentValue) {
             this.tableClasses = this.additionalClasses.join(' ');
         }
     }

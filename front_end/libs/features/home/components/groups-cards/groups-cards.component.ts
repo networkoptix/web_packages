@@ -2,7 +2,6 @@ import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { forkJoin, take } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { selectCurrentUser } from '@common/store/account/account.selectors';
@@ -26,16 +25,18 @@ import {
     styleUrls: ['groups-cards.component.scss'],
 })
 export class NxGroupsCardsComponent implements OnInit {
+    LANG = staticLang;
+    icons = icons;
+
     @Input() inRoot: boolean;
     hasGroups$ = this.store.select<boolean>(selectHasGroups);
     currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
     currentGroups$ = this.store.select<GroupItem[]>(selectCurrentGroupItems);
     currentSystems$ = this.store.select<SystemItem[]>(selectCurrentSystemItems);
+    currentGroupId = this.store.selectSignal<string>(selectCurrentGroupId);
+    hasGroups = this.store.selectSignal<boolean>(selectHasGroups);
     account$ = this.store.select<Account>(selectCurrentUser);
     isAdmin = true;
-
-    LANG = staticLang;
-    icons = icons;
 
     constructor(
         private groupsService: NxSystemGroupsService,
@@ -71,14 +72,10 @@ export class NxGroupsCardsComponent implements OnInit {
     }
 
     newGroupDialog(): void {
-        const currentGroupId$ = this.currentGroupId$.pipe(take(1));
-        const hasGroups$ = this.hasGroups$.pipe(take(1));
-        forkJoin([currentGroupId$, hasGroups$]).subscribe(([currentGroupId, hasGroups]) =>
-            this.dialogsService.createSystemGroup({
-                targetId: currentGroupId,
-                hasGroups,
-                parentGroup: null,
-            }),
-        );
+        this.dialogsService.createSystemGroup({
+            targetId: this.currentGroupId(),
+            hasGroups: this.hasGroups(),
+            parentGroup: null,
+        });
     }
 }

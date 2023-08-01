@@ -1,9 +1,13 @@
-import type { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { DragDropModule, type CdkDragDrop } from '@angular/cdk/drag-drop';
+import { CdkMenuModule } from '@angular/cdk/menu';
+import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { DirectivesModule } from '@directives/directives.module';
 import { icons } from '@lib/variables/static-variables';
 
 import { GroupItem, GroupsItem, OpenGroups } from '../../home.types';
@@ -16,6 +20,17 @@ import { selectCurrentGroupId } from '../../store/groups/groups.selectors';
     selector: 'nx-sidebar-level',
     templateUrl: 'sidebar-level.component.html',
     styleUrls: ['sidebar-level.component.scss'],
+    standalone: true,
+    imports: [
+        CdkMenuModule,
+        DirectivesModule,
+        NgFor,
+        NgIf,
+        NgClass,
+        AsyncPipe,
+        AngularSvgIconModule,
+        DragDropModule,
+    ],
 })
 export class NxGroupsSidebarLevelComponent {
     @Input() groups: GroupItem[];

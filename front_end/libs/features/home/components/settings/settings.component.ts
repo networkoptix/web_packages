@@ -4,5 +4,6 @@ import { Component } from '@angular/core';
     selector: 'nx-organization-settings',
     templateUrl: 'settings.component.html',
     styleUrls: ['settings.component.scss'],
+    standalone: true,
 })
 export class NxOrganizationSettingsComponent {}

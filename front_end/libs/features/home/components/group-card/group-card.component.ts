@@ -1,16 +1,22 @@
+import { CdkMenuModule } from '@angular/cdk/menu';
 import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { icons } from '@lib/variables/static-variables';
 
 import type { GroupItem } from '../../home.types';
 import { NxSystemGroupsService } from '../../services/system-groups.service';
+
 @Component({
     selector: 'nx-group-card',
     templateUrl: 'group-card.component.html',
     styleUrls: ['../system-card/system-card.component.scss', 'group-card.component.scss'],
+    standalone: true,
+    imports: [CdkMenuModule, NxSearchHighlightComponent, AngularSvgIconModule],
 })
 export class NxGroupCardComponent {
     @Input() group: GroupItem;

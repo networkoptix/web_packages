@@ -16,21 +16,12 @@ import { NxTabsComponent } from '@components/tabs/tabs.component';
 import { NxTabsDirective } from '@components/tabs/tabs.directive';
 import { DirectivesModule } from '@directives/directives.module';
 import { AuthGuard } from '@guards/authGuard';
-import { NxUsersTableComponent } from '@pages/home/components/users-table/users-table.component';
 
 import { NxChannelPartnersComponent } from './channel-partners/channel-partners.component';
 import { NxGroupCardComponent } from './components/group-card/group-card.component';
 import { NxGroupsCardsComponent } from './components/groups-cards/groups-cards.component';
-import { NxChannelPartnerInformationComponent } from './components/information/information.component';
-import { NxOrganizationReportsComponent } from './components/reports/reports.component';
-import { NxOrganizationSettingsComponent } from './components/settings/settings.component';
 import { NxSystemGroupsSidebarComponent } from './components/sidebar/sidebar.component';
-import { NxGroupsSidebarLevelComponent } from './components/sidebar-level/sidebar-level.component';
-import { NxSubchannelComponent } from './components/subchannel/subchannel.component';
-import { NxSubchannelsComponent } from './components/subchannels/subchannels.component';
 import { NxSystemCardComponent } from './components/system-card/system-card.component';
-import { NxChannelPartnerUsersComponent } from './components/users/channel-partner-users/channel-partner-users.component';
-import { NxOrganizationUsersComponent } from './components/users/org-users/org-users.component';
 import { NxHomeComponent } from './home.component';
 import { NxOrganizationsComponent } from './organizations/organization.component';
 import { CPResovler } from './resolvers/CP-resolver';
@@ -98,27 +89,16 @@ const homeRoutes: Routes = [
         NxBaseTableComponent,
         NxSearchHighlightComponent,
         NxPreLoaderComponent,
-    ],
-    declarations: [
-        NxOrganizationsComponent,
-        NxGroupCardComponent,
-        NxGroupsCardsComponent,
-        NxGroupsSystemsComponent,
         NxTabsComponent,
-        NxTabsDirective,
-        NxGroupsSidebarLevelComponent,
         NxSystemGroupsSidebarComponent,
         NxSystemCardComponent,
-        NxOrganizationReportsComponent,
-        NxOrganizationSettingsComponent,
-        NxOrganizationUsersComponent,
-        NxChannelPartnerUsersComponent,
-        NxGroupsSystemsComponent,
-        NxUsersTableComponent,
+        NxGroupCardComponent,
+    ],
+    declarations: [
+        NxGroupsCardsComponent,
+        NxOrganizationsComponent,
+        NxTabsDirective,
         NxChannelPartnersComponent,
-        NxChannelPartnerInformationComponent,
-        NxSubchannelsComponent,
-        NxSubchannelComponent,
         NxHomeComponent,
     ],
     providers: [

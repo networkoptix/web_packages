@@ -32,3 +32,6 @@ Home is broken down into **3** categories;
 - [] Remove organization nodes from the header ?
 - [] Update preloader logic for components ( currently displays overlaying preloader in between navigations )
 - [] Role Resolver / Tab Guard is a bit funky with the way that data is stored / handled by resolvers and guards
+- [] Add real time support for adding subchannels ( currently requires refresh to show new subchannels )
+- [] Convert resolvers from classes to functional resovlers
+- [] Add memoization for to Channel Partners API

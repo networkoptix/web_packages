@@ -1,9 +1,8 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { combineLatest, take } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { selectCurrentUser } from '@common/store/account/account.selectors';
@@ -11,6 +10,7 @@ import { Tab, TabEmit } from '@components/tabs/tabs.types';
 import { icons } from '@lib/variables/static-variables';
 import { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import { Organization } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 import { nxConfig } from '@services/nx-config/config';
 import { IConfig } from '@services/nx-config/config-types';
@@ -53,11 +53,17 @@ export class NxOrganizationsComponent implements OnInit {
         },
     ];
 
-    userEmail: string;
     currentTab: Tab;
     isLoading = true;
-    inChannelPartner = this.route.snapshot.data.inChannelPartner;
-    isAdmin = this.route.snapshot.data.isAdmin;
+    userEmail: string;
+    @Input() inChannelPartner: boolean;
+    @Input() isAdmin: boolean;
+    @Input() currentTabRoute: string;
+
+    account = this.store.selectSignal<Account>(selectCurrentUser);
+    organizations = this.store.selectSignal<Organization[]>(selectRootOrganizations);
+    currentPartnerOrganizations = this.store.selectSignal<Organization[]>(selectCurrentPartnerOrgs);
+    currentPartnerId = this.store.selectSignal<string>(selectCurrentPartnerId);
 
     openGroups$ = this.store.select<OpenGroups>(selectOpenGroups);
     currentPath$ = this.store.select<GroupPath[]>(selectCurrentPath);
@@ -65,8 +71,6 @@ export class NxOrganizationsComponent implements OnInit {
     hasGroups$ = this.store.select<boolean>(selectHasGroups);
     currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
     currentOrganization$ = this.store.select(selectCurrentOrganization);
-    currentPartnerOrganizations$ = this.store.select(selectCurrentPartnerOrgs);
-    organizations$ = this.store.select(selectRootOrganizations);
     rootGroup$ = this.store.select<Crumb>(selectCurrentRootGroup);
 
     constructor(
@@ -102,31 +106,25 @@ export class NxOrganizationsComponent implements OnInit {
             ];
             this.tabs.push(...adminTabs);
         }
-        this.currentTab = this.tabs.find(tab => tab.route === this.route.snapshot.data.currentTab);
+        this.currentTab = this.tabs.find(tab => tab.route === this.currentTabRoute);
         this.route.params.pipe(untilDestroyed(this)).subscribe(({ id }) => {
             this.groupsService.getGroups(id);
             this.store.dispatch(CPActions.setCurrentOrgId({ currentOrgId: id }));
-            combineLatest([this.organizations$, this.currentPartnerOrganizations$])
-                .pipe(take(1))
-                .subscribe(([orgs, partnerOrgs]) => {
-                    if (!orgs.find(o => o.id === id) && !partnerOrgs.find(o => o.id === id)) {
-                        this.router.navigate(['404']);
-                    }
-                });
+            const orgs = this.organizations();
+            const partnerOrgs = this.currentPartnerOrganizations();
+            if (!orgs.find(o => o.id === id) && !partnerOrgs.find(o => o.id === id)) {
+                this.router.navigate(['404']);
+            }
             this.isLoading = false;
         });
 
-        this.store
-            .select<Account>(selectCurrentUser)
-            .pipe(take(1))
-            .subscribe(({ email }) => {
-                this.userEmail = email;
-                this.sidebarSettings = this.cloudApi.customAccountPropertyFactory(
-                    'showSidebarState',
-                    email,
-                    { showSidebarState: true },
-                );
-            });
+        const { email } = this.account();
+        this.userEmail = email;
+        this.sidebarSettings = this.cloudApi.customAccountPropertyFactory(
+            'showSidebarState',
+            email,
+            { showSidebarState: true },
+        );
     }
 
     public handleSidebarTogglingEarClick(): void {
@@ -162,11 +160,6 @@ export class NxOrganizationsComponent implements OnInit {
     }
 
     toRoot(): void {
-        this.store
-            .select(selectCurrentPartnerId)
-            .pipe(take(1))
-            .subscribe(id => {
-                this.router.navigate(['home', 'channelPartners', id]);
-            });
+        this.router.navigate(['home', 'channelPartners', this.currentPartnerId()]);
     }
 }

@@ -1,3 +1,4 @@
+import { NgFor } from '@angular/common';
 import { Component } from '@angular/core';
 
 type Service = {
@@ -11,6 +12,8 @@ type Service = {
         '../groups-cards/groups-cards.component.scss',
         '../system-card/system-card.component.scss',
     ],
+    standalone: true,
+    imports: [NgFor],
 })
 export class NxOrganizationReportsComponent {
     services = [

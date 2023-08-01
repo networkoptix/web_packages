@@ -5,7 +5,7 @@ import { NxChannelPartnerInformationComponent } from '../components/information/
 import { NxOrganizationSettingsComponent } from '../components/settings/settings.component';
 import { NxSubchannelComponent } from '../components/subchannel/subchannel.component';
 import { NxSubchannelsComponent } from '../components/subchannels/subchannels.component';
-import { NxOrganizationUsersComponent } from '../components/users/org-users/org-users.component';
+import { NxChannelPartnerUsersComponent } from '../components/users/channel-partner-users/channel-partner-users.component';
 import { WithParentDataResolver } from '../resolvers/data-resolver';
 import { RoleResolver } from '../resolvers/role-resolver';
 import { TabGuard } from '../resolvers/tab-guard';
@@ -18,7 +18,7 @@ const CPRoutes: Routes = [
         path: ':id',
         component: NxChannelPartnersComponent,
         resolve: {
-            currentTab: TabResolver,
+            currentTabRoute: TabResolver,
             parentData: WithParentDataResolver,
             isAdmin: RoleResolver,
         },
@@ -46,7 +46,7 @@ const CPRoutes: Routes = [
                 children: [
                     {
                         path: ':subchannelId',
-                        resolve: { currentTab: TabResolver },
+                        resolve: { currentTabRoute: TabResolver },
                         component: NxSubchannelComponent,
                         children: [
                             {
@@ -68,7 +68,7 @@ const CPRoutes: Routes = [
             {
                 path: 'users',
                 canActivate: [TabGuard],
-                component: NxOrganizationUsersComponent,
+                component: NxChannelPartnerUsersComponent,
             },
         ],
     },

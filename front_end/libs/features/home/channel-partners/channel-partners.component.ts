@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
@@ -40,8 +40,8 @@ export class NxChannelPartnersComponent implements OnInit {
     channelPartners$ = this.store.select<ChannelPartner[]>(selectChannelPartners);
     currentPartner$ = this.store.select<ChannelPartner>(selectCurrentPartner);
     organizations$ = this.store.select<Organization[]>(selectCurrentPartnerOrgs);
-    // Update this to use Angular 16 input
-    isAdmin = this.route.snapshot.data.isAdmin;
+    @Input() isAdmin: boolean;
+    @Input() currentTabRoute: string;
     currentTab: Tab;
     tabs: Tab[] = [
         {
@@ -82,7 +82,7 @@ export class NxChannelPartnersComponent implements OnInit {
                 ],
             );
         }
-        this.currentTab = this.tabs.find(tab => tab.route === this.route.snapshot.data.currentTab);
+        this.currentTab = this.tabs.find(tab => tab.route === this.currentTabRoute);
         this.route.params
             .pipe(untilDestroyed(this), combineLatestWith(this.channelPartners$))
             .subscribe(([{ id }, partners]) => {

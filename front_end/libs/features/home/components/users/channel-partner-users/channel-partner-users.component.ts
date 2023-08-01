@@ -1,11 +1,16 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { distinctUntilChanged, map, Observable, switchMap } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
 import { ChannelPartnerUser } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+
+import { NxUsersTableComponent } from '../../users-table/users-table.component';
 
 interface ChannelPartnerUserExt extends ChannelPartnerUser {
     fullName: string;
@@ -19,6 +24,8 @@ interface ChannelPartnerUserExt extends ChannelPartnerUser {
         'channel-partner-users.component.scss',
         '../../../components/groups-cards/groups-cards.component.scss',
     ],
+    standalone: true,
+    imports: [AsyncPipe, NxUsersTableComponent, TranslateModule, AngularSvgIconModule],
 })
 export class NxChannelPartnerUsersComponent implements OnInit {
     LANG = staticLang;

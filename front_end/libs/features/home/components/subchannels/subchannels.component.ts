@@ -1,10 +1,14 @@
+import { CdkMenuModule } from '@angular/cdk/menu';
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { filter, map, take } from 'rxjs';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { map } from 'rxjs';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { DirectivesModule } from '@directives/directives.module';
 import { icons } from '@lib/variables/static-variables';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
 import {
@@ -23,11 +27,21 @@ import * as CPActions from '../../store/channel-partners/channel-partners.action
         '../../components/groups-cards/groups-cards.component.scss',
         '../../components/system-card/system-card.component.scss',
     ],
+    standalone: true,
+    imports: [
+        RouterOutlet,
+        CdkMenuModule,
+        DirectivesModule,
+        AngularSvgIconModule,
+        NgFor,
+        NgIf,
+        AsyncPipe,
+    ],
 })
 export class NxSubchannelsComponent {
     icons = icons;
     isAdmin = true;
-    currentPartnerId$ = this.store.select(selectCurrentPartnerId).pipe(filter(res => !!res));
+    currentPartnerId = this.store.selectSignal<string>(selectCurrentPartnerId);
     subchannels$ = this.store.select(selectCurrentSubchannelPartners);
     inSubchannels$ = this.route.parent.data.pipe(map(data => data.parentData.inSubchannel));
 
@@ -38,19 +52,15 @@ export class NxSubchannelsComponent {
         private router: Router,
         private route: ActivatedRoute,
     ) {
-        this.currentPartnerId$.pipe(untilDestroyed(this)).subscribe(id => {
-            this.CPService.getSubChannelPartners(id).subscribe(partners => {
-                this.store.dispatch(
-                    CPActions.setCurrentSubchannelPartners({ currentSubchannels: partners }),
-                );
-            });
+        this.CPService.getSubChannelPartners(this.currentPartnerId()).subscribe(partners => {
+            this.store.dispatch(
+                CPActions.setCurrentSubchannelPartners({ currentSubchannels: partners }),
+            );
         });
     }
 
     newPartnerDialog(): void {
-        this.currentPartnerId$
-            .pipe(take(1))
-            .subscribe(id => this.dialogsService.createChannelPartner(id));
+        this.dialogsService.createChannelPartner(this.currentPartnerId());
     }
 
     handleChannelClick(id: string): void {
