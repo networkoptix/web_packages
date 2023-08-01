@@ -1,5 +1,5 @@
 import json, re, os, glob
-from PythonRobot.variables_dict import variables_dict, variables
+from variables_dict import variables_dict, variables
 
 class RobotVariables():
     def __init__(self, language: str) -> None:
@@ -8,9 +8,9 @@ class RobotVariables():
         self.current_dir = os.path.abspath(os.getcwd())
         if language in ["en_US"]:
             self.language = language
-            self.load_variables(os.path.join(self.current_dir, 'PythonRobot','variables_language_en_US.json'))
-            self.load_variables(os.path.join(self.current_dir, 'PythonRobot', 'account_variables.json'))
-            self.load_variables(os.path.join(self.current_dir, 'robot_tests/customizations/default.json'))
+            self.load_variables(os.path.join(self.current_dir,'variables_language_en_US.json'))
+            self.load_variables(os.path.join(self.current_dir, 'account_variables.json'))
+            self.load_variables(os.path.join(self.current_dir, 'customizations', 'default.json'))
 
         # Load the variables from variables_dict.py
         self.variables.update(variables_dict)

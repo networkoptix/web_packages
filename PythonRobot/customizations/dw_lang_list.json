@@ -1,0 +1,21 @@
+	   	{
+    	"en_US":
+    		{
+    		"ACCOUNT TEXT"	   	    :	"Account",
+    		"ACCOUNT INFORMATION"   :	"Account Information",
+    		"CREATE ACCOUNT TEXT"   :	"Create Account",
+            "DEFAULT"				:	"YES"
+    		},
+    	 "fr_FR":
+    		{
+    		"ACCOUNT TEXT"	   	    :	"Compte",
+    		"ACCOUNT INFORMATION"   :	"Compte Information",
+    		"CREATE ACCOUNT TEXT"   :	"Créer compte"
+    		},
+     	 "es_ES":
+    		{
+    		"ACCOUNT TEXT"	   	    :	"Cuenta",
+    		"ACCOUNT INFORMATION"   :	"Información de la Cuenta",
+    		"CREATE ACCOUNT TEXT"   :	"Crear Cuenta"
+    		}
+    	}

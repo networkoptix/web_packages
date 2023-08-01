@@ -193,7 +193,7 @@ def get_headless_chrome():
     chrome_options = Options()
     chrome_options.add_argument("--enable-logging")
     chrome_options.add_argument("--log-level=3")
-    chrome_options.binary_location = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+    #chrome_options.binary_location = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
     #chrome_options.add_argument("--headless")
    
     capabilities = DesiredCapabilities.CHROME
