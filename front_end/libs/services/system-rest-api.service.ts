@@ -7,6 +7,7 @@ import {
     BehaviorSubject,
     combineLatest,
     firstValueFrom,
+    forkJoin,
     from,
     Observable,
     of,
@@ -33,10 +34,12 @@ import {
     bookmarksDeviceKeys,
     type BookmarksDevice,
 } from '@pages/systems/bookmarks/bookmarks.types';
+import { addUserRestV1 } from '@services/mediaserver-apis/endpoints/add-user';
 import { getPredefinedRolesLegacy } from '@services/mediaserver-apis/endpoints/get-predefined-roles';
 import { getUserRolesRestV1 } from '@services/mediaserver-apis/endpoints/get-user-roles';
 import { getUsersRestV1 } from '@services/mediaserver-apis/endpoints/get-users';
 import { NxStorageService } from '@services/storage.service';
+import { SystemUser, RestV1User, NxUser, Role, UserType } from '@services/system-user.types';
 import { SECURITY_LEVEL } from '@setup-wizard/src/app/types/wizard-state.types';
 import { buildTopLevelKeyMap } from '@utils/general';
 import { InterceptorManager } from '@utils/interceptor-manager';
@@ -86,7 +89,7 @@ import type {
     GetEndpointsFull,
 } from './system-api.endpoint-types';
 import * as t from './system-api.types';
-import { SystemConfigSettings, cameraKeyMapV1 } from './system-api.types';
+import { ChangedIdReturned, SystemConfigSettings, cameraKeyMapV1 } from './system-api.types';
 import { NxSystemAPI } from './system-legacy-api.service';
 import {
     DeviceType,
@@ -117,7 +120,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     protected injector: Injector;
     readonly sessionFreshnessSec: number = 600;
 
-    #vmsToken: string;
+    protected _vmsToken: string;
 
     readonly apiDocURL: object = {
         main: '/swagger-ui/openapi_v1.json',
@@ -194,11 +197,11 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     public setVmsToken(token) {
-        this.#vmsToken = token;
+        this._vmsToken = token;
     }
 
     public get vmsToken() {
-        return this.#vmsToken;
+        return this._vmsToken;
     }
 
     setupSystem(
@@ -383,8 +386,8 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         // if (!environment.isLocal && this.authGet) {
         //     params.auth = this.authGet;
         // }
-        if (this.#vmsToken) {
-            headers = headers.set(this.token, this.#vmsToken);
+        if (this._vmsToken) {
+            headers = headers.set(this.token, this._vmsToken);
         }
         if (this.accessToken) {
             headers = headers.set('Authorization', `Bearer ${this.accessToken}`);
@@ -425,7 +428,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         const accessToken = this.accessToken;
         let headers = new HttpHeaders();
         if (useToken) {
-            headers = headers.set(this.token, accessToken || this.#vmsToken || '');
+            headers = headers.set(this.token, accessToken || this._vmsToken || '');
         }
         if (!environment.isLocal && accessToken) {
             if (!this.cookieLoginSupport) {
@@ -637,7 +640,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     @memoizeAsync(defaultHashFunction, forceReload => !!forceReload, 10 * 1000)
-    public getCurrentUser(forceReload?: boolean): Promise<t.ec2User | t.CurrentUser> {
+    public getCurrentUser(forceReload?: boolean): Promise<SystemUser> {
         let headers: RequestOpts['headers'];
         if (forceReload) {
             // Clean cache to
@@ -660,10 +663,10 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                 .toPromise()
                 .then(result => {
                     if (!this.accessToken) {
-                        this.#vmsToken = result.token;
+                        this._vmsToken = result.token;
                     }
-                    return this.get<t.CurrentUser[]>('/rest/v1/users', {
-                        params: { name: result.username },
+                    return this.get<RestV1User[]>('/rest/v1/users', {
+                        params: { name: result.username, _keepDefault: true },
                     }).toPromise();
                 })
                 .then(result => {
@@ -789,7 +792,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         }
         return cloudLogoutObservable
             .pipe(
-                map(() => this.delete(`/rest/v1/login/sessions/${accessToken || this.#vmsToken}`)),
+                map(() => this.delete(`/rest/v1/login/sessions/${accessToken || this._vmsToken}`)),
                 map(() => this.clearTokens()),
             )
             .toPromise();
@@ -1289,9 +1292,21 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         throw new Error('should only be using rest v2 version');
     }
 
+    getPredefinedRoles = getPredefinedRolesLegacy;
     getUsers = getUsersRestV1;
     getUserRoles = getUserRolesRestV1;
-    getPredefinedRoles = getPredefinedRolesLegacy;
+
+    @memoizeAsyncShort
+    getAllRoles(): Observable<Role[]> {
+        return forkJoin([this.getPredefinedRoles(), this.getUserRoles()]).pipe(
+            map(([predefinedRoles, customRoles]) =>
+                [...predefinedRoles, ...customRoles].map(role => ({
+                    ...role,
+                    permissions: role.permissions.split('|').sort().join('|'),
+                })),
+            ),
+        );
+    }
 
     getAggregatedUsersData(): Observable<AggregatedUsers> {
         return combineLatest([
@@ -1311,5 +1326,26 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                 },
             })),
         );
+    }
+
+    addUser = addUserRestV1;
+
+    override saveUser(user: NxUser): Observable<ChangedIdReturned> {
+        const isCloud = user.type === UserType.cloud;
+        user.isHttpDigestEnabled = !isCloud;
+
+        if (!isCloud) {
+            user.name && delete user.name;
+            user.isHttpDigestEnabled && delete user.isHttpDigestEnabled;
+        }
+
+        return this.patch<t.ChangedIdReturned>(
+            `/rest/v1/users/${user.id}`,
+            this.cleanUserObject(user),
+        );
+    }
+
+    deleteUser(userId: string): Observable<ChangedIdReturned> {
+        return this.delete<t.ChangedIdReturned>(`/rest/v1/users/${this.cleanId(userId)}`);
     }
 }

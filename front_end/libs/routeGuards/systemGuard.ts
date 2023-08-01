@@ -1,4 +1,3 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -13,7 +12,6 @@ import { NxSystemAPI } from '@services/system-legacy-api.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
-import type { NxUser } from '@services/system.service/user-manager/user-manager-types';
 import { NxSystemsService } from '@services/systems.service';
 
 @Injectable()
@@ -141,33 +139,33 @@ export class SystemGuard {
                 }
                 await currSystem.update();
             }
-            if (currSystem.userManager.users === undefined) {
-                try {
-                    await currSystem.userManager.getUsersDataFromTheSystem();
-                } catch (e) {
-                    if (e === 'Media server cloud not be reached.') {
-                        const cloudUsers = await currSystem.getUsersCachedInCloud();
-                        if (cloudUsers instanceof HttpErrorResponse && cloudUsers.status === 403) {
-                            // Non-admin user doesn't have permission to view cached cloud users
-                            const accessRole = currSystem.info.accessRole as string;
-                            const permissions = nxConfig.accessRoles.predefinedRoles.find(role => {
-                                let name = role.name.replace(' ', '');
-                                name = name.charAt(0).toLowerCase() + name.slice(1);
-                                // Live Viewer => liveViewer
-                                return accessRole === name;
-                            }).permissions;
-
-                            currSystem.userManager.currentUser = { permissions } as NxUser;
-                            // We only care about permissions here
-                        } else {
-                            currSystem.userManager.processUsers(cloudUsers);
-                        }
-                    } else {
-                        throw e;
-                    }
-                }
-            }
-            this.menusService.currentUser = currSystem.userManager.currentUser;
+            // if (currSystem.userManager.users === undefined) {
+            //     try {
+            //         await currSystem.userManager.getUsersDataFromTheSystem();
+            //     } catch (e) {
+            //         if (e === 'Media server cloud not be reached.') {
+            //             const cloudUsers = await currSystem.getUsersCachedInCloud();
+            //             if (cloudUsers instanceof HttpErrorResponse && cloudUsers.status === 403) {
+            //                 // Non-admin user doesn't have permission to view cached cloud users
+            //                 const accessRole = currSystem.info.accessRole as string;
+            //                 const permissions = nxConfig.accessRoles.predefinedRoles.find(role => {
+            //                     let name = role.name.replace(' ', '');
+            //                     name = name.charAt(0).toLowerCase() + name.slice(1);
+            //                     // Live Viewer => liveViewer
+            //                     return accessRole === name;
+            //                 }).permissions;
+            //
+            //                 currSystem.userManager.currentUser = { permissions } as NxUser;
+            //                 // We only care about permissions here
+            //             } else {
+            //                 currSystem.userManager.processUsers(cloudUsers);
+            //             }
+            //         } else {
+            //             throw e;
+            //         }
+            //     }
+            // }
+            this.menusService.currentUser = currSystem.permissionManager.currentUser();
             this.menusService.updateActiveSystemMenu(
                 currSystem,
                 currSystem.permissionManager.isAdmin(),

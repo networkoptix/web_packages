@@ -1,10 +1,12 @@
 import {
     AfterViewInit,
     Component,
+    computed,
     Inject,
     Input,
     OnDestroy,
     OnInit,
+    Signal,
     ViewChild,
     ViewContainerRef,
 } from '@angular/core';
@@ -92,6 +94,14 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
 
     transferInfo: SystemTransferInfo;
 
+    userRole: Signal<string> = computed(() => {
+        const accessRole = this.system.permissionManager.currentUser()?.accessRole;
+        if (Object.keys(this.LANG.accessRoles).includes(accessRole)) {
+            return this.LANG.accessRoles[accessRole].label;
+        }
+        return accessRole;
+    });
+
     /** Owner (current user) can send a new ownership transfer request */
     get canSendTransferRequest(): boolean {
         return (
@@ -107,7 +117,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
         return (
             !environment.isLocal &&
             !!this.transferInfo &&
-            this.transferInfo.toAccount === this.system.userManager.currentUserEmail
+            this.transferInfo.toAccount === this.system.permissionManager.currentUser().email
         );
     }
 
@@ -228,7 +238,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
             renameDisabled: false,
         };
 
-        this.system.userManager.currentUserEmail = this.accountService.email;
+        // TODO: Need to remove or replace with permission manager ????
+        // this.system.userManager.currentUserEmail = this.accountService.email;
 
         if (this.systemSubscription) {
             this.systemSubscription.unsubscribe();
@@ -374,7 +385,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
                         console.error(error);
                     });
                 }
-                if (this.system.userManager.currentUser?.isCloud) {
+                if (this.system.permissionManager.isCloud()) {
                     return this.accountService.logout();
                 }
                 // give the user chance to read the toaster
@@ -559,14 +570,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
                 this.updateSettings(this.currentlyMerging);
                 this.syncMergeAlerts();
             });
-    }
-
-    updateUserRole() {
-        let userRole = this.system.userManager.accessRole;
-        if (userRole in this.LANG.accessRoles) {
-            userRole = this.LANG.accessRoles[userRole].label;
-        }
-        return userRole;
     }
 
     hideAdvancedSettings(): void {

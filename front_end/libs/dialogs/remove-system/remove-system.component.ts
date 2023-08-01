@@ -63,7 +63,7 @@ export class RemoveSystemModalContent extends ModalBase<DT['return']> {
     };
 
     ngOnInit(): void {
-        this.auth.username = this.system.userManager.currentUserEmail;
+        this.auth.username = this.system.permissionManager.currentUser().email;
 
         this.disconnectFromAccount = this.processService.createProcess(
             () => {

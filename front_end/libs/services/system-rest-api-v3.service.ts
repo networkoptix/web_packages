@@ -5,15 +5,17 @@ import { CookieService } from 'ngx-cookie-service';
 import { Observable, combineLatest, map } from 'rxjs';
 
 import { NxHealthService } from '@pages/health/health.service';
+import { RequestOpts } from '@services/mediaserver-apis/connections/adapters/adapter-target-types';
 import { getUsersRestV3 } from '@services/mediaserver-apis/endpoints/get-users';
+import { UserSession } from '@services/system-api.types';
+import { RestV3User, SystemUser, UserGroup } from '@services/system-user.types';
+import { defaultHashFunction, memoizeAsync } from '@utils/memoize';
 
 import { NxAppStateService } from './nx-app-state.service';
 import { IConfig } from './nx-config/config-types';
-import * as t from './system-api-groups.types.bak';
 import type { AggregatedUsers } from './system-api.aggregated-types';
 import { ChangedIdReturned } from './system-api.types';
 import { NxSystemRestAPI2 } from './system-rest-api-v2.service';
-import { NxSystemUser } from './system.service/user-manager/user-manager-types.bak';
 import { NxUriCacheService } from './uri-cache.service';
 
 export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
@@ -50,6 +52,56 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
         this.version = 5.2;
     }
 
+    @memoizeAsync(defaultHashFunction, forceReload => !!forceReload, 10 * 1000)
+    public getCurrentUser(forceReload?: boolean): Promise<SystemUser> {
+        let headers: RequestOpts['headers'];
+        if (forceReload) {
+            // Clean cache to
+            this.currentUser = undefined;
+            this.userRequest = undefined;
+            headers = { 'reset-cache': 'reset' };
+        }
+        if (this.currentUser) {
+            // We have user - return him right away
+            return Promise.resolve(this.currentUser);
+        }
+        if (this.userRequest) {
+            // Currently requesting user
+            return this.userRequest;
+        }
+
+        if (!this.CONFIG.newSystem) {
+            const endpoint = `/rest/v1/login/sessions/${this.accessToken || 'current'}`;
+            this.userRequest = this.get<UserSession>(endpoint, { headers })
+                .toPromise()
+                .then(result => {
+                    if (!this.accessToken) {
+                        this._vmsToken = result.token;
+                    }
+                    return this.get<RestV3User[]>('/rest/v3/users', {
+                        params: { name: result.username, _keepDefault: true },
+                    }).toPromise();
+                })
+                .then(result => {
+                    this.currentUser = result[0];
+                    return this.currentUser;
+                })
+                .catch(err => {
+                    // Unknown session token
+                    if (err.errorId === 'cantProcessRequest') {
+                        this.accessToken = '';
+                    }
+                    return undefined;
+                });
+        } else {
+            this.userRequest = Promise.resolve(undefined);
+        }
+        this.userRequest.finally(() => {
+            this.userRequest = undefined; // Clear cache in case of errors
+        });
+        return this.userRequest;
+    }
+
     // getUsers
     getUsers = getUsersRestV3;
 
@@ -80,15 +132,12 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
     // }
 
     // saveUser
-    modifyUser(
-        user: Partial<NxSystemUser>,
-        id: string,
-    ): Observable<NxSystemUser | t.User | ChangedIdReturned> {
-        return this.patch(`/rest/v3/users/${id}`, user);
+    modifyUser(user: RestV3User, id: string): Observable<RestV3User | ChangedIdReturned> {
+        return this.patch(`/rest/v3/users/${id}`, { ...user });
     }
 
     // getUserGroups
-    getUserGroups(): Observable<t.UserGroups[]> {
+    getUserGroups(): Observable<UserGroup[]> {
         return this.get('/rest/v3/userGroups');
     }
 
@@ -107,13 +156,12 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
         fullName: string,
         email: string,
         type: 'local' | 'cloud' = 'cloud',
-    ): Partial<t.User> {
+    ): Partial<RestV3User> {
         return {
             name: '',
             email,
             type,
             fullName,
-            isOwner: false,
             permissions: 'NoGlobalPermissions',
             isEnabled: true,
             groupIds: [],

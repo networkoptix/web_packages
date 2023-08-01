@@ -23,6 +23,7 @@ import { MenuModule } from '@menu/menu.module';
 import { PipesModule } from '@pipes/pipes.module';
 import { currentSystemResolver } from '@resolvers/current-system-resolver';
 import { SystemTitleResolver } from '@resolvers/system-title-resolver';
+import { userResolver } from '@resolvers/user-resolver';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystemService } from '@services/system.service/system.service';
 
@@ -68,7 +69,7 @@ const cameraResolver: ResolveFn<NxSystemCamera> = async (
     if (ec2Camera) {
         return currentSystem.cameraManager.parseCamera(ec2Camera);
     }
-    router.navigateByUrl(createUrlTreeFromSnapshot(route, ['../']));
+    await router.navigateByUrl(createUrlTreeFromSnapshot(route, ['../']));
     return undefined;
 };
 export const cloudSettingsRoutes: Routes = [
@@ -94,17 +95,18 @@ export const cloudSettingsRoutes: Routes = [
             },
             {
                 path: 'users',
-                title: SystemTitleResolver,
-                component: NxSystemUsersComponent,
-                canDeactivate: [ApplyGuard],
-                resolve: { system: currentSystemResolver },
+                redirectTo: 'users/',
             },
             {
                 path: 'users/:userId',
                 title: SystemTitleResolver,
                 component: NxSystemUsersComponent,
+                canActivate: [SystemGuard],
                 canDeactivate: [ApplyGuard],
-                resolve: { system: currentSystemResolver },
+                resolve: {
+                    system: currentSystemResolver,
+                    user: userResolver,
+                },
             },
             {
                 path: 'servers',

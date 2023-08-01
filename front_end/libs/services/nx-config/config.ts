@@ -231,25 +231,30 @@ export const nxConfig: IConfig = {
                     'GlobalAdminPermission|GlobalEditCamerasPermission|GlobalControlVideoWallPermission|GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission',
             },
             {
+                isOwner: false,
                 name: 'Administrator',
                 permissions:
                     'GlobalAdminPermission|GlobalEditCamerasPermission|GlobalControlVideoWallPermission|GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission',
             },
             {
+                isOwner: false,
                 name: 'Advanced Viewer',
                 permissions:
                     'GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission',
             },
             {
+                isOwner: false,
                 name: 'Viewer',
                 permissions:
                     'GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission',
             },
             {
+                isOwner: false,
                 name: 'Live Viewer',
                 permissions: 'GlobalAccessAllMediaPermission',
             },
             {
+                isOwner: false,
                 name: 'Custom',
                 permissions: 'NoPermission',
             },

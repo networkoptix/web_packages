@@ -1,7 +1,7 @@
 import { InjectionToken } from '@angular/core';
 
 import { environment } from '@environments/environment';
-import type { NxSystemRole } from '@services/system.service/user-manager/user-manager-types.bak';
+import { Role } from '@services/system-user.types';
 import { InterceptorManager } from '@utils/interceptor-manager';
 
 import { nxConfig } from './config';
@@ -170,7 +170,7 @@ export class DynamicConfig {
         } else if (!environment.isLocal && Object.keys(data).length > 0) {
             // extend CONFIG ... ugly // @ts-ignore ... no implementation for // @ts-ignore-start/end
             // This was done every time a system is created. Its only need once
-            nxConfig.accessRoles.predefinedRoles.forEach((option: NxSystemRole) => {
+            nxConfig.accessRoles.predefinedRoles.forEach((option: Role) => {
                 if (option.permissions) {
                     option.permissions = option.permissions.split('|').sort().join('|');
                 }

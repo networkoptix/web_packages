@@ -25,6 +25,7 @@ import { NxSystemAPIService } from '@services/system-api.service';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
+import { CloudUserCompat, CurrentUser, SystemUser } from '@services/system-user.types';
 import { PermissionManager } from '@services/system.service/permission-manager/permission-manager';
 import { cleanId, KeyFilter } from '@utils/general';
 import { memoizeAsyncPersistent, memoizeDecorator } from '@utils/memoize';
@@ -50,7 +51,6 @@ import { ServerManager } from '../../system.service/server-manager/server-manage
 import { NxSystem } from '../../system.service/system';
 import { NxMediaServer, ServerPreprocess, ServerTimeInfo } from '../../system.service/system-types';
 import { UserManager } from '../../system.service/user-manager/user-manager';
-import { NxUser, CloudUserCompat } from '../../system.service/user-manager/user-manager-types';
 import { NxSystemsService } from '../../systems.service';
 import { NxSystemBase } from '../system-base';
 
@@ -413,11 +413,11 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                         if (Object.keys(res).length) {
                             parsedSettings = parseSettings(res);
                         }
-                        const currentUser = {
-                            ...this.userManager.currentUser,
-                        };
-                        delete currentUser.name;
-                        Object.assign(parsedSettings, currentUser);
+                        const currentUser = this.permissionManager.currentUser();
+                        if (currentUser) {
+                            delete currentUser.name;
+                            Object.assign(parsedSettings, currentUser);
+                        }
                         if (this.info) {
                             Object.assign(this.info, parsedSettings); // Update
                         } else {
@@ -489,9 +489,6 @@ export class NxSystemOldModule extends NxSystemModuleBase {
 
                 if (!suppressUpdate) {
                     this.systemInfo = this;
-                }
-                if (!this.userManager.accessRole) {
-                    this.userManager.accessRole = this.info.accessRole;
                 }
                 return Promise.resolve(this);
             })
@@ -792,15 +789,16 @@ export class NxSystemOldModule extends NxSystemModuleBase {
      * Handles rules that need to be added/removed when enabling/disabling Alexa
      */
     updateAlexaRules(enabled = true) {
+        const currentUser = this.permissionManager.currentUser();
         return this.mediaserver
             .getEventRules()
             .pipe(
                 switchMap(existingRules =>
                     (enabled ? this.#addAlexaRules : this.#removeAlexaRules)(
                         existingRules,
-                        this.userManager.currentUser,
-                        `"Alexa layout command for ${this.userManager.currentUser.email}"`,
-                        `"Alexa command for ${this.userManager.currentUser.email}"`,
+                        currentUser,
+                        `"Alexa layout command for ${currentUser.email}"`,
+                        `"Alexa command for ${currentUser.email}"`,
                     ),
                 ),
             );
@@ -808,7 +806,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
 
     #addAlexaRules = async (
         existingRules: EventRule[],
-        user: NxUser,
+        user: CurrentUser,
         alarmResourceName: string,
         doCommandResourceName: string,
     ) => {
@@ -843,7 +841,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
 
     #removeAlexaRules = async (
         existingRules: EventRule[],
-        user: NxUser,
+        user: CurrentUser,
         alarmResourceName: string,
         doCommandResourceName: string,
     ) => {
@@ -1001,7 +999,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
             .users(this.id)
             .toPromise()
             .then(data => {
-                return data.map<CloudUserCompat>(user => ({
+                return data.map<SystemUser>(user => ({
                     ...user,
                     isCloud: true,
                     permissions: this.userManager.normalizePermissionString(user.customPermissions),
@@ -1061,8 +1059,8 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     }
 
     deleteFromCurrentAccount(password?: string) {
-        const currentUser = this.userManager.currentUser;
-        const email = currentUser ? currentUser.email : this.userManager.currentUserEmail;
+        const currentUser = this.permissionManager.currentUser();
+        const email = currentUser ? currentUser.email : this.currentUserEmail;
         if (this.isAvailable && currentUser) {
             // Try to remove me from the system directly
             this.userManager.deleteUser(currentUser).catch(err => {

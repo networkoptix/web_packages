@@ -387,7 +387,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
                         const resourceName = condition.resourceName;
                         return resourceName === command;
                     });
-                const currentUserEmail = this.system.userManager.currentUser.email;
+                const currentUserEmail = this.system.permissionManager.currentUser().email;
                 const layoutCommand = `"Alexa layout command for ${currentUserEmail}"`;
                 const customCommand = `"Alexa command for ${currentUserEmail}"`;
                 const rulesSetup = !!checkCommand(layoutCommand) && !!checkCommand(customCommand);

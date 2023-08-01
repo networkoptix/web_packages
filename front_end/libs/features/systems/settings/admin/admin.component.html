@@ -100,7 +100,8 @@
                                 !transferInfo ||
                                 (transferInfo &&
                                     !system.permissionManager.isOwner() &&
-                                    transferInfo.toAccount !== system.userManager.currentUserEmail)
+                                    transferInfo.toAccount !==
+                                        system.permissionManager.currentUser().email)
                             "
                             [ngTemplateOutlet]="ownerText"
                         ></ng-template>
@@ -111,7 +112,8 @@
                         <ng-template
                             *ngIf="
                                 transferInfo &&
-                                transferInfo.toAccount === system.userManager.currentUserEmail
+                                transferInfo.toAccount ===
+                                    system.permissionManager.currentUser().email
                             "
                             [ngTemplateOutlet]="systemOfferedText"
                         ></ng-template>
@@ -147,7 +149,7 @@
                         ><span>&nbsp;– </span>
                         <span
                             class="name"
-                            [innerText]="updateUserRole() | translate"
+                            [innerText]="userRole() | translate"
                         ></span>
                     </span>
                     <div

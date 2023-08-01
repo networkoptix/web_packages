@@ -3,6 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { environment } from '@environments/environment';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import type { NxUser } from '@services/system-user.types';
 import { NxSystem } from '@services/system.service/system';
 
 @Component({
@@ -12,6 +13,7 @@ import { NxSystem } from '@services/system.service/system';
 })
 export class NxSystemUsersComponent implements OnInit {
     @Input() system: NxSystem;
+    @Input() user: NxUser;
     readonly environment = environment;
     CONFIG: IConfig;
 

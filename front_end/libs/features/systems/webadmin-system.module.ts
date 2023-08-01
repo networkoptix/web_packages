@@ -5,9 +5,11 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
+import { SystemGuard } from '@guards/systemGuard';
 import { MenuModule } from '@menu/menu.module';
 import { PipesModule } from '@pipes/pipes.module';
 import { currentSystemResolver } from '@resolvers/current-system-resolver';
+import { userResolver } from '@resolvers/user-resolver';
 
 import { NxSystemAdminComponent } from './settings/admin/admin.component';
 import { NxSystemAdminModule } from './settings/admin/admin.module';
@@ -45,17 +47,15 @@ export const localSettingsRoutes: Routes = [
             },
             {
                 path: 'users',
-                component: NxSystemUsersComponent,
-                canDeactivate: [ApplyGuard],
-                runGuardsAndResolvers: 'always',
-                resolve: { system: currentSystemResolver },
+                redirectTo: 'users/',
             },
             {
                 path: 'users/:userId',
                 component: NxSystemUsersComponent,
+                canActivate: [SystemGuard],
                 canDeactivate: [ApplyGuard],
                 runGuardsAndResolvers: 'always',
-                resolve: { system: currentSystemResolver },
+                resolve: { system: currentSystemResolver, user: userResolver },
             },
             {
                 path: 'servers',

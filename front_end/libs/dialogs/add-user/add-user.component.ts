@@ -18,10 +18,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { ChangedIdReturned } from '@services/system-api.types';
-import type {
-    NewUserBase,
-    NxAccessRole,
-} from '@services/system.service/user-manager/user-manager-types';
+import { AddUser, Role } from '@services/system-user.types';
 import { NxToastService } from '@services/toast.service';
 
 import type { AddUser as DT } from '../dialogs.types';
@@ -51,8 +48,10 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
     hideErrors: boolean = true;
     systemName: string;
     addUser: Process;
-    user: NewUserBase;
-    selectedPermissionSubject = new BehaviorSubject<NxAccessRole>({
+    user: AddUser;
+    selectedPermissionSubject = new BehaviorSubject<Role>({
+        id: '',
+        isOwner: false,
         name: '',
         permissions: '',
     });
@@ -69,11 +68,11 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
         this.CONFIG = configService.getConfig();
     }
 
-    get selectedPermission(): NxAccessRole {
+    get selectedPermission(): Role {
         return this.selectedPermissionSubject.getValue();
     }
 
-    set selectedPermission(role: NxAccessRole) {
+    set selectedPermission(role: Role) {
         this.user.role = role;
         this.selectedPermissionSubject.next(role);
     }
@@ -90,7 +89,7 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
         this.hideErrors = false;
     };
 
-    setPermission(role: NxAccessRole): void {
+    setPermission(role: Role): void {
         this.selectedPermission = role;
         this.accessDescription = this.getAccessDescription();
     }
@@ -99,7 +98,7 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
         this.user.email = this.user.email.toLowerCase();
         // this.user.userGroupIds.push(this.userGroupIds);
         return this.system.userManager
-            .saveUser(this.user)
+            .addUser(this.user)
             .then(user => this.system.getUsers(true).then(() => user));
     }
 

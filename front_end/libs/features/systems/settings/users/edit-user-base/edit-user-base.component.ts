@@ -1,9 +1,16 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    signal,
+    ViewChild,
+    ViewContainerRef,
+} from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { untilDestroyed } from '@ngneat/until-destroy';
-import { isEqual } from 'lodash-es';
-import { Subscription } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { ToastType } from '@components/toast-container/toast.types';
@@ -14,50 +21,49 @@ import { NxMenuService } from '@menu/menu.service';
 import { NxApplyService } from '@services/apply.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
+import { NxUser, UserType } from '@services/system-user.types';
 import type { NxSystem } from '@services/system.service/system';
-import { NxSystemUser } from '@services/system.service/user-manager/user-manager-types.bak';
 import { NxToastService } from '@services/toast.service';
 import { NxUriService } from '@services/uri.service';
 import { cleanId } from '@utils/general';
+import { NgChanges } from '@utils/ng-changes';
 
 @Component({
     template: '',
 })
-export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy {
-    protected abstract setUser();
+export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy, OnChanges {
     protected abstract initProcesses();
+    protected abstract changeUser(user: NxUser);
+
     readonly environment = environment;
-    LANG = staticLang;
+    readonly credentialsValidation = credentialsValidation;
+    readonly icons = icons;
+    readonly menus = menus;
+    readonly LANG = staticLang;
+    readonly UserType = UserType;
 
     @Input() system: NxSystem;
+    @Input() selectedUser: NxUser;
 
-    protected paramUser: string;
     protected editUser: Process;
     protected locked = new Set<string>();
-    protected localUserName: string;
+    protected isCloud = signal(false);
+    protected isLdap = signal(false);
+    protected isLocal = signal(false);
+    protected isMe = signal(false);
+    protected canBeEdited = signal(false);
 
-    selectedUser: NxSystemUser;
     systemAvailable: boolean;
     deleteMessage: string;
     fullName: string;
     email: string;
     username: string;
     role: string;
-    credentialsValidation = credentialsValidation;
-    icons = icons;
-    menus = menus;
-
-    protected passwordChanged: boolean = false;
-    protected userSubscription: Subscription;
 
     @ViewChild('pageApply', { read: ViewContainerRef, static: true })
     protected pageApply: ViewContainerRef;
     @ViewChild('userEnabledForm', { read: NgForm }) protected userEnabledForm: NgForm;
     @ViewChild('userSettingsForm', { read: NgForm }) protected userSettingsForm: NgForm;
-
-    get shouldChangePassword(): boolean {
-        return this.localUserName !== this.username && !this.passwordChanged;
-    }
 
     constructor(
         protected route: ActivatedRoute,
@@ -71,47 +77,20 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy {
         this.menuService.selectedSection.set('users');
     }
 
+    ngOnChanges(changes: NgChanges<NxSystemUsersBaseComponent>): void {
+        const user = changes.selectedUser.currentValue;
+        this.menuService.selectedDetailsSection.set(user?.id);
+        if (user) {
+            this.locked.clear();
+            this.setUserHelper(user);
+            this.changeUser(user);
+        }
+    }
+
     public ngOnInit(): void {
         this.applyService.initPageFormsWatcher(this.pageApply);
-
-        this.route.params.pipe(untilDestroyed(this)).subscribe(params => {
-            if (params.userId) {
-                this.paramUser = params.userId;
-                const qmIndex = this.paramUser.indexOf('?');
-                if (qmIndex > -1) {
-                    this.paramUser = this.paramUser.substring(0, qmIndex);
-                }
-                this.menuService.selectedDetailsSection.set(this.paramUser);
-                this.setUser();
-            }
-        });
-        // Route guard did not work :( ... so doing it the old way
-        if (!this.system.permissionManager.permissions().editUsers) {
-            this.uriService
-                .navigateSystem(`${menus.systemSettings.baseUrl}SYSTEM_ID`, this.system)
-                .catch(error => {
-                    console.error(error);
-                });
-
-            return;
-        }
-        this.userSubscription?.unsubscribe();
-        this.userSubscription = this.system.infoSubject.pipe(untilDestroyed(this)).subscribe(() => {
+        this.system.infoSubject.pipe(untilDestroyed(this)).subscribe(() => {
             this.systemAvailable = this.system.isAvailable && this.system.mergeInfo === undefined;
-
-            const updatedUser = this.findUser();
-
-            const cleanUser = { ...this.selectedUser };
-            delete cleanUser.role?.optionLabel;
-
-            if (
-                !this.applyService.locked &&
-                (this.paramUser === undefined ||
-                    this.paramUser !== cleanId(this.selectedUser?.id) ||
-                    !isEqual(updatedUser, cleanUser))
-            ) {
-                this.setUser();
-            }
         });
 
         this.initProcesses();
@@ -132,8 +111,6 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy {
         this.dialogs.removeUser({ system: this.system, user }).then(result => {
             this.locked.delete(user.email);
             if (result) {
-                this.paramUser = nextUserId;
-
                 this.uriService
                     .navigateSystem(
                         `${menus.systemSettings.baseUrl}SYSTEM_ID/users/${nextUserId}`,
@@ -149,11 +126,7 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy {
     }
 
     public changePassword(): void {
-        this.dialogs
-            .changePassword({ system: this.system, user: this.selectedUser })
-            .then(result => {
-                this.passwordChanged = result;
-            });
+        this.dialogs.changePassword({ system: this.system, user: this.selectedUser });
     }
 
     protected calcNextUserId(): string {
@@ -168,9 +141,6 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy {
     }
 
     protected checkIfEditable(): Promise<Error> {
-        if (this.shouldChangePassword) {
-            return Promise.reject({ errorString: 'password needs to change' });
-        }
         if (this.userSettingsForm?.invalid) {
             return Promise.reject({ errorString: 'form is invalid' });
         }
@@ -179,12 +149,8 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy {
         }
     }
 
-    protected findUser(): NxSystemUser {
-        return this.system.userManager.users.find(user => cleanId(user.id) === this.paramUser);
-    }
-
-    protected formatUser(user: NxSystemUser): NxSystemUser {
-        user.name = this.localUserName;
+    protected formatUser(user: NxUser): NxUser {
+        user.name = this.username;
         user.email = this.email;
         user.fullName = this.fullName;
         return user;
@@ -196,33 +162,23 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy {
         });
     }
 
-    protected routeToFirstUser(): Promise<boolean | void> {
-        const user = this.system.userManager.users[0];
-        const userId = cleanId(user.id);
+    protected setUserHelper(user: NxUser): void {
+        const currentUser = this.system.permissionManager.currentUser();
+        this.isCloud.set(user.type === UserType.cloud);
+        this.isLdap.set(user.type === UserType.ldap);
+        this.isLocal.set(user.type === UserType.local);
+        this.isMe.set(currentUser.id === user.id);
+        this.canBeEdited.set(user.canBeEdited);
 
-        return this.uriService
-            .navigateSystem(`${menus.systemSettings.baseUrl}SYSTEM_ID/users/${userId}`, this.system)
-            .catch(error => {
-                console.error(error);
-            });
-    }
-
-    protected setUserHelper(user: NxSystemUser): void {
-        this.passwordChanged = false;
-
-        this.selectedUser = { ...user };
-        delete this.selectedUser.role?.optionLabel; // clean any leftovers
-        this.localUserName = this.selectedUser.name;
-
-        this.deleteMessage = this.selectedUser.isCloud
+        this.deleteMessage = this.isCloud()
             ? this.LANG.system.users.cloudDelete
             : this.LANG.system.users.localDelete;
 
-        this.menuService.selectedDetailsSection.set(cleanId(this.selectedUser.id));
+        this.menuService.selectedDetailsSection.set(cleanId(user.id));
 
-        this.fullName = this.selectedUser.fullName;
-        this.email = this.selectedUser.email;
-        this.username = user.isCloud ? user.email : user.name;
+        this.fullName = user.fullName;
+        this.email = user.email;
+        this.username = this.isCloud() ? user.email : user.name;
     }
 
     protected showUserChangeFailedToast(): void {

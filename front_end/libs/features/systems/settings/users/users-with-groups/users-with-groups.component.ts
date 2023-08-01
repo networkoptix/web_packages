@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import type { NxSystemUser } from '@services/system.service/user-manager/user-manager-types.bak';
+import { NxUser } from '@services/system-user.types';
 import { UserWithGroupsManager } from '@services/system.service/user-manager/user-with-groups-manager';
 
 import { NxSystemUsersBaseComponent } from '../edit-user-base/edit-user-base.component';
@@ -27,6 +27,46 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
     selectedGroupsList: { name: string; description: string }[];
 
     @ViewChild('userGroupsForm', { read: NgForm }) private userGroupsForm: NgForm;
+    protected changeUser(user: NxUser): void {
+        // deals with the lack of userGroupIds for cloud Owner
+        if (user.isOwner && user.type === 'cloud') {
+            this.selectedGroupsList = [
+                {
+                    name: this.LANG.accessRoles.Owner.label,
+                    description: this.LANG.accessRoles.Owner.description,
+                },
+            ];
+        } else {
+            this.selectedGroups = user.groupIds;
+            const isLocalOwner = !this.isCloud() && user.isOwner;
+            this.processSelectedGroupsList(this.selectedGroups, isLocalOwner);
+        }
+
+        this.applyService.resetFormWatchers();
+        setTimeout(() => {
+            this.applyService.createFormWatcher(
+                'userEnabledForm',
+                this.userEnabledForm,
+                this.editUser,
+            );
+
+            if (user.canBeEdited) {
+                this.applyService.createFormWatcher(
+                    'userGroupsForm',
+                    this.userGroupsForm,
+                    this.editUser,
+                );
+            }
+
+            if (!this.isCloud()) {
+                this.applyService.createFormWatcher(
+                    'userSettingsForm',
+                    this.userSettingsForm,
+                    this.editUser,
+                );
+            }
+        });
+    }
 
     protected initProcesses(): void {
         // DO not attempt to set the process correctly!!! Due to issues with multiple for watchers it's best to leave this alone for now.
@@ -43,7 +83,6 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
                     this.showUserChangeFailedToast();
                 } finally {
                     this.locked.delete(user.email);
-                    this.setUser();
                 }
             },
             {
@@ -52,61 +91,6 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
             undefined,
             () => {}, // Added to suppress the default logging in processes
         );
-    }
-
-    protected setUser(): Promise<boolean | void> | void {
-        if (this.system?.userManager?.users?.length) {
-            this.locked.clear();
-
-            let user: NxSystemUser;
-            if (this.paramUser) {
-                user = this.findUser();
-            }
-            if (!user) {
-                return this.routeToFirstUser();
-            }
-
-            this.setUserHelper(user);
-
-            // deals with the lack of userGroupIds for cloud Owner
-            if (this.selectedUser.isOwner && this.selectedUser.type === 'cloud') {
-                this.selectedGroupsList = [
-                    {
-                        name: this.LANG.accessRoles.Owner.label,
-                        description: this.LANG.accessRoles.Owner.description,
-                    },
-                ];
-            } else {
-                this.selectedGroups = this.selectedUser.groupIds;
-                const isLocalOwner = !this.selectedUser.isCloud && this.selectedUser.isOwner;
-                this.processSelectedGroupsList(this.selectedGroups, isLocalOwner);
-            }
-
-            this.applyService.resetFormWatchers();
-            setTimeout(() => {
-                this.applyService.createFormWatcher(
-                    'userEnabledForm',
-                    this.userEnabledForm,
-                    this.editUser,
-                );
-
-                if (this.selectedUser.canBeEdited) {
-                    this.applyService.createFormWatcher(
-                        'userGroupsForm',
-                        this.userGroupsForm,
-                        this.editUser,
-                    );
-                }
-
-                if (!this.selectedUser.isCloud) {
-                    this.applyService.createFormWatcher(
-                        'userSettingsForm',
-                        this.userSettingsForm,
-                        this.editUser,
-                    );
-                }
-            });
-        }
     }
 
     toggleGroup(newList: string[]): void {

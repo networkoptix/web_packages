@@ -23,7 +23,7 @@
     </div>
     <div class="modal-body">
         <p
-            *ngIf="system.userManager.currentUser.isCloud && environment.isLocal"
+            *ngIf="environment.isLocal && system.permissionManager.isCloud()"
             translate
         >
             You will be logged out

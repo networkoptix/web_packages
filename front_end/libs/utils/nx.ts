@@ -15,7 +15,6 @@ import type {
 import type { MenuNode } from '@services/menus.service.types';
 import { nxConfig as CONFIG } from '@services/nx-config/config';
 import type { ec2MediaServer } from '@services/system-api.types';
-import type { CloudUserCompat } from '@services/system.service/user-manager/user-manager-types';
 
 import type { ArrayType } from './general';
 
@@ -186,12 +185,12 @@ export const nestedTranslation = (
 
 export const ZERO_ID = '{00000000-0000-0000-0000-000000000000}';
 
-export function isAdmin(userOrRole: { permissions: string } | CloudUserCompat): boolean {
+export function isAdmin(userOrRole: { accessRole?: string; permissions: string }): boolean {
     const { permissions } = userOrRole;
     return (
         permissions.includes(CONFIG.accessRoles.globalAdminPermissionFlag) ||
         ('customPermissions' in userOrRole &&
-            CONFIG.accessRoles.adminAccess.includes(userOrRole.accessRole.toLowerCase()))
+            CONFIG.accessRoles.adminAccess.includes(userOrRole?.accessRole.toLowerCase()))
     );
 }
 

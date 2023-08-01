@@ -3,10 +3,7 @@ import { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
 import { NxSystemUsersBaseComponent } from '@pages/systems/settings/users/edit-user-base/edit-user-base.component';
-import type {
-    NxAccessRole,
-    NxUser,
-} from '@services/system.service/user-manager/user-manager-types';
+import { NxUser, Role } from '@services/system-user.types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -15,12 +12,38 @@ import type {
     styleUrls: ['users-with-roles.component.scss'],
 })
 export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent {
-    // TODO: Remove this once user groups is typed
-    selectedUser: NxUser;
-
     accessDescription: string;
 
     @ViewChild('userRoleForm', { read: NgForm }) private userRoleForm: NgForm;
+    protected changeUser(user: NxUser): void {
+        this.applyService.resetFormWatchers();
+        this.setPermission(user.role);
+        this.role = !this.isCloud() && user.name === 'admin' ? 'Owner' : user.role.name;
+
+        setTimeout(() => {
+            this.applyService.createFormWatcher(
+                'userEnabledForm',
+                this.userEnabledForm,
+                this.editUser,
+            );
+
+            if (user.canBeEdited) {
+                this.applyService.createFormWatcher(
+                    'userRoleForm',
+                    this.userRoleForm,
+                    this.editUser,
+                );
+            }
+
+            if (user.type !== this.UserType.cloud) {
+                this.applyService.createFormWatcher(
+                    'userSettingsForm',
+                    this.userSettingsForm,
+                    this.editUser,
+                );
+            }
+        });
+    }
 
     protected initProcesses(): void {
         // DO not attempt to set the process correctly!!! Due to issues with multiple for watchers it's best to leave this alone for now.
@@ -36,7 +59,6 @@ export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent 
                     this.showUserChangeFailedToast();
                 } finally {
                     this.locked.delete(user.email);
-                    this.setUser();
                 }
             },
             {
@@ -47,50 +69,7 @@ export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent 
         );
     }
 
-    protected setUser(): Promise<boolean | void> | void {
-        if (this.system?.userManager?.users?.length) {
-            this.locked.clear();
-
-            let user: NxUser;
-            if (this.paramUser) {
-                user = this.findUser();
-            }
-            if (!user) {
-                return this.routeToFirstUser();
-            }
-
-            this.applyService.resetFormWatchers();
-            this.setUserHelper(user);
-            this.setPermission(this.selectedUser.role);
-            this.role = !user.isCloud && user.name === 'admin' ? 'Owner' : user.role.name;
-
-            setTimeout(() => {
-                this.applyService.createFormWatcher(
-                    'userEnabledForm',
-                    this.userEnabledForm,
-                    this.editUser,
-                );
-
-                if (this.selectedUser.canBeEdited) {
-                    this.applyService.createFormWatcher(
-                        'userRoleForm',
-                        this.userRoleForm,
-                        this.editUser,
-                    );
-                }
-
-                if (!this.selectedUser.isCloud) {
-                    this.applyService.createFormWatcher(
-                        'userSettingsForm',
-                        this.userSettingsForm,
-                        this.editUser,
-                    );
-                }
-            });
-        }
-    }
-
-    public setPermission(role: NxAccessRole): void {
+    public setPermission(role: Role): void {
         this.selectedUser.role = { ...role };
         const userRole = this.selectedUser.role?.name ?? this.selectedUser.accessRole;
         this.accessDescription = this.LANG.accessRoles[userRole]

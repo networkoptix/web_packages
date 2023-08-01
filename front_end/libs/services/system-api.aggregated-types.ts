@@ -1,5 +1,6 @@
 import type { GetEndpoints } from './system-api.endpoint-types';
 import type * as t from './system-api.types';
+import type { LegacyRole, PredefinedLegacyRole, SystemUser } from './system-user.types';
 import type { PreprocessCamera } from './system.service/camera-manager/camera-manager-types';
 import type { ServerPreprocess } from './system.service/system-types';
 
@@ -18,11 +19,18 @@ export interface GetLicenses {
     hwids: string[];
 }
 
+export interface AggregatedRoles {
+    reply: {
+        '/ec2/getPredefinedRoles': PredefinedLegacyRole[];
+        '/ec2/getUserRoles': LegacyRole[];
+    };
+}
+
 export interface AggregatedUsers {
     reply: {
-        '/ec2/getPredefinedRoles': t.ec2PredefinedRole[];
-        '/ec2/getUserRoles': (t.ec2UserRole | t.RestUserRole)[];
-        '/ec2/getUsers': (t.ec2User | t.RestUserCompat)[];
+        '/ec2/getPredefinedRoles': PredefinedLegacyRole[];
+        '/ec2/getUserRoles': LegacyRole[];
+        '/ec2/getUsers': SystemUser[];
     };
 }
 

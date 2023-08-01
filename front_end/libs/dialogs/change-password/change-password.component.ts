@@ -1,6 +1,14 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
-import { Component, Inject, Renderer2, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+import {
+    Component,
+    Inject,
+    Renderer2,
+    ViewChild,
+    OnInit,
+    AfterViewInit,
+    computed,
+} from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -15,8 +23,8 @@ import type { ChangePassword as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
+import { NxUser } from '@services/system-user.types';
 import type { NxSystem } from '@services/system.service/system';
-import type { NxUser } from '@services/system.service/user-manager/user-manager-types';
 import { NxToastService } from '@services/toast.service';
 import { assignFrom } from '@utils/general';
 
@@ -67,9 +75,13 @@ export class ChangePasswordModalContent
         this.confirmNewPasswordForUser = '';
     }
 
-    public get isMyLocalSystem(): boolean {
-        return this.user.isLocalOwner && this.user.isMe;
-    }
+    isLocalOwner = computed(() => {
+        if (!this.system || !this.user) {
+            return false;
+        }
+        const currentUser = this.system.permissionManager.currentUser();
+        return this.user.isLocalOwner && this.user.id === currentUser.id;
+    });
 
     ngOnInit(): void {
         assignFrom(this.dialogData, ['system', 'user'], this);
@@ -82,7 +94,7 @@ export class ChangePasswordModalContent
                     password: this.newPasswordForUser,
                 };
 
-                if (this.isMyLocalSystem) {
+                if (this.isLocalOwner()) {
                     if (this.confirmNewPasswordForUser !== this.newPasswordForUser) {
                         this.changePasswordForm.controls.confirmNewPassword.setErrors({
                             dontMatch: true,

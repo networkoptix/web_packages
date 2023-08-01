@@ -35,6 +35,7 @@ import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { NxUser, UserType } from '@services/system-user.types';
 import {
     RecordingStatus,
     type NxSystemCamera,
@@ -42,7 +43,6 @@ import {
 } from '@services/system.service/camera-manager/camera-manager-types';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/system-types';
-import type { NxUser } from '@services/system.service/user-manager/user-manager-types';
 import { NxSystemsService } from '@services/systems.service';
 import { NxToastService } from '@services/toast.service';
 import { NxUriService } from '@services/uri.service';
@@ -705,7 +705,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 const cloudUsers: Level3Item[] = [];
                 const localUsers: Level3Item[] = [];
                 // TODO: Reconcile UserManager types
-                this.system.userManager.users.forEach((user: any) => {
+                this.system.userManager.users.forEach((user: NxUser) => {
                     const id = cleanId(user.id);
                     let additionalLabel: Translatable;
                     if (this.system.version >= 5.2 && this.CONFIG.featureFlags.usersWithGroups) {
@@ -720,12 +720,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         } else if (user.groupIds.length >= 2) {
                             additionalLabel = {
                                 value: this.LANG.userGroups.multiple,
-                                params: { number: user.groupIds.length },
+                                params: { number: user.groupIds.length.toString() },
                             };
                         }
                     } else {
                         additionalLabel =
-                            !user.isCloud && (user as NxUser).name === 'admin'
+                            user.type !== UserType.cloud && user.name === 'admin'
                                 ? this.LANG.accessRoles.Owner.label || 'Owner'
                                 : this.LANG.accessRoles[user.role.name]?.label || user.role.name;
                     }
@@ -733,11 +733,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         id,
                         additionalLabel,
                         disabled: !user.isEnabled,
-                        label: 'name' in user ? user.name : user.email,
+                        label: user.name || user.email,
                         path: 'users/' + id,
                         svgIcon: 'user',
                     };
-                    if (user.isCloud) {
+                    if (user.type === UserType.cloud) {
                         node.svgIcon = 'user_cloud';
                         node.icon = '';
                         node.label = user.email;

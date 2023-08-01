@@ -10,6 +10,7 @@ import { ToastType } from '@components/toast-container/toast.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
+import { UserType } from '@services/system-user.types';
 import { NxToastService } from '@services/toast.service';
 
 import type { RemoveUser as DT } from '../dialogs.types';
@@ -45,7 +46,7 @@ export class RemoveUserModalContent extends ModalBase<DT['return']> {
 
     ngOnInit(): void {
         const { user, system } = this.dialogData;
-        const msg = user.isCloud ? 'remove' : 'delete';
+        const msg = user.type === UserType.cloud ? 'remove' : 'delete';
         this.dialogTitle = this.LANG.dialogs.titles[`${msg}User`];
         this.dialogButtonText = this.LANG.dialogs.buttons[msg];
 

@@ -6,24 +6,16 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { DirectivesModule } from '@directives/directives.module';
 import { icons } from '@lib/variables/static-variables';
-import { CustomPermission } from '@services/nx-config/base-config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import type { Role } from '@services/system-user.types';
 import type { NxSystem } from '@services/system.service/system';
-import type {
-    NxAccessRole,
-    PredefinedRole,
-    UserRole,
-} from '@services/system.service/user-manager/user-manager-types';
 import type { NgChanges } from '@utils/ng-changes';
 import { isAdmin } from '@utils/nx';
 
 import { BaseDropdown } from '../injDropdown';
 
 // NxAccessLevel with optionLabel added for dropdown
-type AccessLevelItem =
-    | (PredefinedRole & { optionLabel: string })
-    | (UserRole & { optionLabel: string })
-    | (CustomPermission & { optionLabel: string });
+type AccessLevelItem = Role & { optionLabel: string };
 
 @Component({
     selector: 'nx-permissions-select',
@@ -44,7 +36,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
     @Input() id: string;
     @Input() name: string;
     @Input({ transform: booleanAttribute }) disabled: boolean;
-    @Input() roles: NxAccessRole[];
+    @Input() roles: Role[];
     @Input() system: NxSystem;
 
     componentId: string;
@@ -80,7 +72,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
     private processAccessRoles(): void {
         this.accessRoles = this.roles
             .filter(role => {
-                const ownerLevel = (role as PredefinedRole).isOwner;
+                const ownerLevel = 'isOwner' in role && role.isOwner;
                 const adminLevel = isAdmin(role);
                 // Don't allow owner level in dropdown
                 // Don't allow admin level if not owner

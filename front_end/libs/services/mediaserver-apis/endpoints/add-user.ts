@@ -1,17 +1,20 @@
 import { Observable } from 'rxjs';
 
 import { ChangedIdReturned } from '@services/system-api.types';
-import { NxSystemUser } from '@services/system.service/user-manager/user-manager-types.bak';
+import { BaseNewUser, RestNewUser } from '@services/system-user.types';
 
 import { MediaserverLegacyConnection } from '../connections/adapters/adapter-target-types';
 import { cleanUserObjectRest } from '../utils/clean-user-object';
 
-export function addUserRestV2(
+export function addUserRestV1(
     this: MediaserverLegacyConnection,
-    user: NxSystemUser,
+    user: BaseNewUser,
 ): Observable<ChangedIdReturned> {
-    user.type = user.isCloud ? 'cloud' : 'local'; // TODO: add LDAP
-    user.isHttpDigestEnabled = !user.isCloud;
+    const userData: RestNewUser = {
+        ...user,
+        type: user.isCloud ? 'cloud' : 'local',
+        isHttpDigestEnabled: !user.isCloud,
+    };
 
-    return this.post<ChangedIdReturned>('/rest/v1/users', cleanUserObjectRest(user));
+    return this.post<ChangedIdReturned>('/rest/v1/users', cleanUserObjectRest(userData));
 }

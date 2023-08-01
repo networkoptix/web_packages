@@ -9,6 +9,7 @@ import { filter, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
 import { Auth, MenuNode } from '@services/menus.service.types';
+import { CurrentUser } from '@services/system-user.types';
 
 import { apiBase } from '../variables/static-variables';
 
@@ -16,7 +17,6 @@ import { MenuStructure, MenusStructure } from './nx-config/base-config';
 import { nxConfig } from './nx-config/config';
 import type { IConfig } from './nx-config/config-types';
 import { NxSessionService } from './session.service';
-import type { NxUser } from './system.service/user-manager/user-manager-types';
 import { windowFactory } from './window-provider';
 
 @UntilDestroy({ checkProperties: true })
@@ -32,7 +32,7 @@ export class NxMenusService {
     public currentSystemNode$ = new BehaviorSubject<MenuNode>(null);
     apiBase: string = apiBase;
 
-    currentUser: NxUser;
+    currentUser: CurrentUser;
 
     endpoint: Partial<{
         view: boolean;
@@ -357,7 +357,7 @@ export class NxMenusService {
         if (
             this.CONFIG.featureFlags.bookmarks &&
             activeSystem.version >= 5 &&
-            this.currentUser?.permissions.includes('GlobalViewBookmarksPermission') &&
+            this.currentUser?.permissions.viewBookmarks &&
             !(this.deviceService.isMobile() || this.deviceService.isTablet())
         ) {
             const bookmarksNode = new MenuNode(

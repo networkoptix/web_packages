@@ -17,19 +17,19 @@
                 >
                     <div
                         class="header-username"
-                        [ngClass]="{ 'mb-2': selectedUser.isCloud }"
+                        [ngClass]="{ 'mb-2': isCloud() }"
                     >
                         <h2 class="fs-mask heading-style">{{ username }}</h2>
                         <div class="user-status-switch-wrapper">
                             <span
                                 *ngIf="!selectedUser.isEnabled"
                                 class="text-danger"
-                                [ngClass]="{ 'pr-2': selectedUser.canBeEdited }"
+                                [ngClass]="{ 'pr-2': canBeEdited() }"
                                 translate
                                 >User disabled</span
                             >
                             <nx-switch
-                                *ngIf="systemAvailable && selectedUser.canBeEdited"
+                                *ngIf="systemAvailable && canBeEdited()"
                                 [(ngModel)]="selectedUser.isEnabled"
                                 id="user-active-status"
                                 name="user-active-status"
@@ -40,7 +40,7 @@
                 </form>
                 <div>
                     <span
-                        *ngIf="selectedUser.isCloud"
+                        *ngIf="isCloud()"
                         class="fs-mask user-name"
                         >{{ selectedUser.fullName }}</span
                     >
@@ -49,7 +49,7 @@
 
             <nx-section>
                 <div
-                    *ngIf="selectedUser.canBeEdited"
+                    *ngIf="canBeEdited()"
                     class="mr-2 mt-2 mb-3 pl-2"
                     style="width: 300px"
                 >
@@ -65,7 +65,7 @@
                             >Permission Groups</label
                         >
                         <nx-multi-select
-                            *ngIf="selectedUser.canBeEdited"
+                            *ngIf="canBeEdited()"
                             id="user-groups"
                             name="userGroupsSelect"
                             [canSelectAll]="false"
@@ -81,7 +81,7 @@
                 </div>
                 <div
                     class="pl-2"
-                    [ngClass]="{ 'mt-2': !selectedUser.canBeEdited }"
+                    [ngClass]="{ 'mt-2': !canBeEdited() }"
                 >
                     <p
                         class="group-list-item"
@@ -95,7 +95,7 @@
 
             <nx-section
                 type="no-spacing"
-                *ngIf="!selectedUser.isCloud"
+                *ngIf="!isCloud()"
             >
                 <form
                     #userSettingsForm="ngForm"
@@ -109,8 +109,7 @@
                             class="control-label text-nowrap user-form-labels text-right"
                             [ngClass]="{
                                 'disabled-input-label':
-                                    !(environment.isLocal && selectedUser.isMe) &&
-                                    !selectedUser.canBeEdited
+                                    !(environment.isLocal && isMe()) && !canBeEdited()
                             }"
                             translate
                             >Name</label
@@ -121,10 +120,7 @@
                             [(ngModel)]="fullName"
                             name="fullName"
                             id="fullName"
-                            [disabled]="
-                                !(environment.isLocal && selectedUser.isMe) &&
-                                !selectedUser.canBeEdited
-                            "
+                            [disabled]="!(environment.isLocal && isMe()) && !canBeEdited()"
                             maxlength="255"
                         />
                     </div>
@@ -134,8 +130,7 @@
                             class="control-label text-nowrap user-form-labels text-right"
                             [ngClass]="{
                                 'disabled-input-label':
-                                    !(environment.isLocal && selectedUser.isMe) &&
-                                    !selectedUser.canBeEdited
+                                    !(environment.isLocal && isMe()) && !canBeEdited()
                             }"
                             translate
                             >Email</label
@@ -148,11 +143,8 @@
                             id="email"
                             #emailInput="ngModel"
                             pattern="{{ credentialsValidation.emailRegex }}"
-                            [readonly]="selectedUser.isLdap"
-                            [disabled]="
-                                !(environment.isLocal && selectedUser.isMe) &&
-                                !selectedUser.canBeEdited
-                            "
+                            [readonly]="isLdap()"
+                            [disabled]="!(environment.isLocal && isMe()) && !canBeEdited()"
                             maxlength="255"
                         />
                         <span
@@ -167,14 +159,14 @@
 
             <nx-section
                 *ngIf="
-                    (!environment.isLocal && selectedUser.isCloud && selectedUser.isMe) ||
-                    (!selectedUser.isCloud && selectedUser.canBeEdited) ||
-                    (selectedUser.isLocalOwner && selectedUser.isMe) ||
-                    selectedUser.canBeEdited
+                    (!environment.isLocal && isCloud() && isMe()) ||
+                    (!isCloud() && canBeEdited()) ||
+                    (isLocal() && isMe()) ||
+                    canBeEdited()
                 "
             >
                 <div
-                    *ngIf="!environment.isLocal && selectedUser.isCloud && selectedUser.isMe"
+                    *ngIf="!environment.isLocal && isCloud() && isMe()"
                     class="float-left"
                 >
                     <button
@@ -187,30 +179,21 @@
                     </button>
                 </div>
                 <div
-                    *ngIf="
-                        (!selectedUser.isCloud && selectedUser.canBeEdited) ||
-                        (selectedUser.isLocalOwner && selectedUser.isMe)
-                    "
+                    *ngIf="(!isCloud() && canBeEdited()) || (isLocal() && isMe())"
                     class="float-left"
                 >
                     <button
                         class="btn btn-default"
                         (click)="changePassword()"
-                        [disabled]="selectedUser.isLdap"
+                        [disabled]="isLdap()"
                         translate
                     >
                         Change Password
                     </button>
-                    <span
-                        *ngIf="shouldChangePassword"
-                        class="input-error password-change-required"
-                        translate
-                        >Password has to be changed when the login is changed</span
-                    >
                 </div>
                 <div
                     class="float-right"
-                    *ngIf="selectedUser.canBeEdited"
+                    *ngIf="canBeEdited()"
                 >
                     <button
                         class="btn btn-default has-icon"

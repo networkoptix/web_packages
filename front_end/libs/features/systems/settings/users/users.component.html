@@ -2,9 +2,11 @@
 
 <nx-system-user-with-roles-component
     *ngIf="before5dot2"
+    [selectedUser]="user"
     [system]="system"
 ></nx-system-user-with-roles-component>
 <nx-system-user-with-groups-component
     *ngIf="fiveDot2Plus"
+    [selectedUser]="user"
     [system]="system"
 ></nx-system-user-with-groups-component>

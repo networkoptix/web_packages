@@ -20,6 +20,7 @@ import {
 import { environment } from '@environments/environment';
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
 import { NxHealthService } from '@pages/health/health.service';
+import { LegacyNewUser, LegacyUser, Role, SystemUser } from '@services/system-user.types';
 import { InterceptorManager } from '@utils/interceptor-manager';
 import {
     memoizeAsync,
@@ -44,7 +45,7 @@ import type {
     RequestOpts,
     WithResponseType,
 } from './mediaserver-apis/connections/adapters/adapter-target-types';
-import type { addUserRestV2 } from './mediaserver-apis/endpoints/add-user';
+import type { addUserRestV1 } from './mediaserver-apis/endpoints/add-user';
 import { createEventLegacyV1 } from './mediaserver-apis/endpoints/create-event';
 import { getNonceLegacyV1 } from './mediaserver-apis/endpoints/get-nonce';
 import { getSystemSettingsLegacyV1 } from './mediaserver-apis/endpoints/get-system-settings';
@@ -66,6 +67,7 @@ import type {
     GetLicenses,
     HealthReport,
 } from './system-api.aggregated-types';
+import { AggregatedRoles } from './system-api.aggregated-types';
 import type { GetEndpoints } from './system-api.endpoint-types';
 import * as t from './system-api.types';
 import type {
@@ -122,9 +124,9 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
 
     protected serverId: string;
     protected systemId: string;
-    protected currentUser: t.ec2User | t.CurrentUser;
+    protected currentUser: SystemUser;
     protected userEmail: string;
-    protected userRequest: Promise<t.ec2User | t.CurrentUser>;
+    protected userRequest: Promise<SystemUser>;
     unauthorizedCallback: (params: unknown) => Promise<unknown>;
     cacheService: NxUriCacheService;
     cookieService: CookieService;
@@ -437,7 +439,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     }
 
     @memoizeAsync(defaultHashFunction, forceReload => !!forceReload, 10 * 1000)
-    public getCurrentUser(forceReload?: boolean): Promise<t.ec2User | t.CurrentUser> {
+    public getCurrentUser(forceReload?: boolean): Promise<SystemUser> {
         let headers: RequestOpts['headers'];
         if (forceReload) {
             // Clean cache to
@@ -453,27 +455,14 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
             // Currently requesting user
             return this.userRequest;
         }
-        if (this.userEmail) {
-            const endpoint = '/ec2/getUsers';
-            this.cacheService.addToCache(endpoint);
-            this.userRequest = this.get(endpoint, { headers })
-                .toPromise()
-                .then(result => {
-                    this.currentUser = result.find(user => {
-                        return user.name.toLowerCase() === this.userEmail.toLowerCase();
-                    });
-                    return this.currentUser;
-                });
-        } else {
-            const endpoint = '/api/getCurrentUser';
-            this.cacheService.addToCache(endpoint);
-            this.userRequest = this.get(endpoint, { headers })
-                .toPromise()
-                .then(result => {
-                    this.currentUser = result;
-                    return this.currentUser;
-                });
-        }
+        const endpoint = '/api/getCurrentUser';
+        this.cacheService.addToCache(endpoint);
+        this.userRequest = this.get(endpoint, { headers })
+            .toPromise()
+            .then(({ reply }) => {
+                this.currentUser = reply;
+                return this.currentUser;
+            });
         this.userRequest.finally(() => {
             this.userRequest = undefined; // Clear cache in case of errors
         });
@@ -861,12 +850,27 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     /* End of Server settings */
 
     /* Working with users */
+
+    @memoizeAsyncShort
+    getAllRoles(): Observable<Role[]> {
+        const endpoints = ['/ec2/getPredefinedRoles', '/ec2/getUserRoles'];
+        return this.getRequestAggregator<AggregatedRoles>(endpoints).pipe(
+            map(({ reply }) =>
+                Object.values(reply).flatMap(roles =>
+                    roles.map(role => ({
+                        ...role,
+                        permissions: role.permissions.split('|').sort().join('|'),
+                    })),
+                ),
+            ),
+        );
+    }
     getAggregatedUsersData(): Observable<AggregatedUsers> {
         const routes = ['/ec2/getUsers', '/ec2/getPredefinedRoles', '/ec2/getUserRoles'] as const;
         return this.getRequestAggregator(routes);
     }
 
-    saveUser<U extends t.ec2SaveUser>(user: U): Observable<t.ChangedIdReturned> {
+    saveUser(user: LegacyNewUser | LegacyUser): Observable<t.ChangedIdReturned> {
         return this.post<t.ChangedIdReturned>('/ec2/saveUser', this.cleanUserObject(user));
     }
 
@@ -876,11 +880,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         });
     }
 
-    isEmptyId(id: string) {
-        return !id || id === this.emptyId;
-    }
-
-    protected cleanUserObject<U extends t.ec2SaveUser>(user: U): t.ec2SaveUser {
+    protected cleanUserObject(user: LegacyNewUser | LegacyUser): Partial<LegacyUser> {
         const supportedFields: (keyof t.ec2SaveUser)[] = [
             'id',
             'email',
@@ -1324,5 +1324,5 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
 
     addUser = notImplementedCustomMessage(
         'should only be using rest v2 version',
-    ) as typeof addUserRestV2;
+    ) as typeof addUserRestV1;
 }

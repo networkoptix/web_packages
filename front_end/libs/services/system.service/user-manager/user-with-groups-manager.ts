@@ -2,14 +2,19 @@ import { LOCALE_ID } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { environment } from '@environments/environment';
 import { nxConfig } from '@services/nx-config/config';
 import { NxSystemBase } from '@services/system/system-base';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
-import { cleanId, paramSortFunc } from '@utils/general';
+import {
+    NxUser,
+    RestV3User,
+    UserGroup,
+    UserGroupDropdown,
+    UserType,
+} from '@services/system-user.types';
+import { alphabeticalSort, cleanId } from '@utils/general';
 
 import { UserManager } from './user-manager';
-import { NxUserGroup, NxSystemUser } from './user-manager-types.bak';
 
 interface UserPerms {
     groupIds?: string[];
@@ -18,20 +23,20 @@ interface UserPerms {
 
 export class UserWithGroupsManager extends UserManager {
     readonly administratorGroup = '{00000000-0000-0000-0000-100000000000}';
+    readonly powerUserGroup = '{00000000-0000-0000-0000-100000000001}';
     LANG = staticLang;
 
     protected mediaserver: NxSystemRestAPI3;
-    userGroups: NxUserGroup[];
+    userGroups: UserGroup[];
     protected groupsToPermissions: {
         [id: string]: Set<string>;
     };
     protected _ownerEmail: string;
-    protected _userId: string;
     protected locale: string;
     // isMySystem: boolean;
-    currentUser: NxSystemUser;
+    currentUser: NxUser;
     currentUserEmail: string;
-    users: NxSystemUser[];
+    users: NxUser[];
 
     protected CONFIG = nxConfig;
 
@@ -40,7 +45,6 @@ export class UserWithGroupsManager extends UserManager {
         this.locale = NxSystemBase.INJECTOR.get(LOCALE_ID);
         this.mediaserver = mediaserver;
         this.currentUserEmail = currentUserEmail;
-        this._userId = userId;
 
         this._ownerEmail = '';
     }
@@ -73,15 +77,15 @@ export class UserWithGroupsManager extends UserManager {
         }
     }
 
-    get currentOwner(): NxSystemUser {
+    override get currentOwner(): NxUser {
         return this.users.find(user => {
             return user.isOwner && user.type === 'cloud';
         });
     }
 
     // returns all users that are not owners
-    override nonOwners({ cloud, local }: { cloud?: boolean; local?: boolean }): NxSystemUser[] {
-        return this.users.filter((user: NxSystemUser) => {
+    override nonOwners({ cloud, local }: { cloud?: boolean; local?: boolean }): NxUser[] {
+        return this.users.filter((user: NxUser) => {
             if ((user.type === 'cloud' && cloud) || (user.type === 'local' && local)) {
                 return !user.isOwner;
             }
@@ -89,12 +93,7 @@ export class UserWithGroupsManager extends UserManager {
         });
     }
 
-    // TODO: Replace this with util
-    protected isAdmin(userOrRole: { permissions: string }): boolean {
-        return userOrRole.permissions?.includes(this.CONFIG.accessRoles.globalAdminPermissionFlag);
-    }
-
-    override async deleteUser(removedUser: NxSystemUser): Promise<void> {
+    override async deleteUser(removedUser: NxUser): Promise<void> {
         try {
             const deletedUser = await lastValueFrom(this.mediaserver.deleteUser(removedUser.id));
             this.users = this.users.filter(user => user.id !== deletedUser.id);
@@ -107,21 +106,21 @@ export class UserWithGroupsManager extends UserManager {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     override async getUsersDataFromTheSystem(): Promise<any> {
         try {
-            const userGroups: NxUserGroup[] = await lastValueFrom(this.mediaserver.getUserGroups());
+            const userGroups: UserGroup[] = await lastValueFrom(this.mediaserver.getUserGroups());
             this.processGroups(userGroups);
-            const users: NxSystemUser[] = await lastValueFrom(this.mediaserver.getUsers());
+            const users: NxUser[] = await lastValueFrom(this.mediaserver.getUsers());
             return Promise.resolve(this.processUsers(users));
         } catch (err) {
             return Promise.reject('Media server cloud not be reached.');
         }
     }
 
-    processGroups(userGroups: NxUserGroup[]): void {
+    processGroups(userGroups: UserGroup[]): void {
         const { defaultUserGroupText, customUserGroupText } = this.LANG.dialogs.titles;
         const groupsToPermissions: {
             [id: string]: Set<string>;
         } = {};
-        let groupsForDropdown: NxUserGroup[] = [{ id: 'title', label: defaultUserGroupText }];
+        let groupsForDropdown: UserGroupDropdown[] = [{ id: 'title', label: defaultUserGroupText }];
         let customTitleNeeded = false;
         let startOfCustomGroups = -1;
         userGroups.forEach(({ id, name, description, attributes, permissions }, index) => {
@@ -152,7 +151,7 @@ export class UserWithGroupsManager extends UserManager {
                 ...groupsForDropdown.slice(0, startOfCustomGroups),
                 ...groupsForDropdown
                     .slice(startOfCustomGroups)
-                    .sort(paramSortFunc(({ label }) => label)),
+                    .sort(alphabeticalSort(this.locale, ({ label }) => label)),
             ];
         }
         this.userGroups = userGroups;
@@ -175,9 +174,9 @@ export class UserWithGroupsManager extends UserManager {
         return calculatedPermissions;
     }
 
-    override processUsers(usersWithGroups: NxSystemUser[]): NxSystemUser[] | false {
+    override processUsers(usersWithGroups: NxUser[]): NxUser[] {
         if (!Array.isArray(usersWithGroups)) {
-            return false;
+            return [];
         }
         /**
          * individual camera rights set by `resourceAccessRights` on the user object, but not implemented yet
@@ -188,33 +187,28 @@ export class UserWithGroupsManager extends UserManager {
          * or do I need to iterate through and form my own set of master permissions?
          */
         this.users = usersWithGroups
-            .map((user: NxSystemUser) => {
+            .map((user: NxUser) => {
                 // if local user has no fullName, do we need to add name as fullName?
                 // if (!user.fullName && user.name) {
                 //     user.fullName = user.name;
                 // }
-                user.permissionsSet = this.getPermissionsFromUserGroups(user);
+                const permissionsSet = this.getPermissionsFromUserGroups(user);
                 if (user.groupIds === undefined) {
                     user.groupIds = [];
                 }
                 user.permissions = this.normalizePermissionString(
-                    [user.permissions, Array.from(user.permissionsSet).join('|')].join('|'),
+                    [user.permissions, Array.from(permissionsSet).join('|')].join('|'),
                 );
                 // should we add a list of user group names?
                 // user.userGroupNames = [];
                 // allMediaPermissionFlag exists if the all camera permission option selected...this still true?
                 user.isOwner = user.groupIds.includes(this.administratorGroup);
-                user.isAdmin = this.isAdmin(user);
-                user.isCloud = user.type === 'cloud';
-                user.isLdap = user.type === 'ldap';
-                user.isCloudOwner = user.isCloud && user.isOwner;
-                user.isLocalOwner = user.type === 'local' && user.isOwner;
-                user.isMe = environment.isLocal
-                    ? user.id === this._userId
-                    : user.isCloud && user.email === this.currentUserEmail;
+                user.isAdmin = user.isOwner || user.groupIds.includes(this.powerUserGroup);
+                user.isCloudOwner = user.type === UserType.cloud && user.isOwner;
+                user.isLocalOwner = user.type === UserType.local && user.isOwner;
                 user.canBeEdited = this.canBeEdited(user);
 
-                if (user.isMe) {
+                if (this.userId === user.id) {
                     this.currentUser = user;
                     // set userGroups for user?
                 }
@@ -236,7 +230,7 @@ export class UserWithGroupsManager extends UserManager {
         return this.users;
     }
 
-    override canBeEdited(user: NxSystemUser): boolean {
+    protected override canBeEdited(user: NxUser): boolean {
         /**
          * User can not be edited if:
          * - this user is the current user
@@ -246,23 +240,22 @@ export class UserWithGroupsManager extends UserManager {
          * Furthermore, if the system is not mine and the user is an admin,
          *   they also can not be edited
          */
-        const isNotMeOrOwner = !(user.isMe || user.isOwner);
         return (
-            isNotMeOrOwner &&
-            (this.isMySystem || !user.isAdmin) &&
-            !user.attributes.includes('readonly')
+            !user.isOwner &&
+            !user.attributes.includes('readonly') &&
+            (this.isMySystem || !user.isAdmin)
         );
     }
 
-    modifyUser(user: NxSystemUser): Promise<NxSystemUser> {
+    modifyUser(user: NxUser): Promise<NxUser> {
         let userCreated = false;
-        const isSelf = user.id === this.currentUser.id;
+        const isSelf = user.id === this.currentUser?.id;
         if (isSelf && user.type === 'cloud') {
             return Promise.reject({ resultCode: 'cantAddYourOwnEmail' });
         }
 
         if (!user.id) {
-            let existingUser: Partial<NxSystemUser> = this.users.find(u => {
+            let existingUser: Partial<NxUser> = this.users.find(u => {
                 return user.email === u.email;
             });
             if (!existingUser) {
@@ -288,7 +281,7 @@ export class UserWithGroupsManager extends UserManager {
 
         return lastValueFrom(
             this.mediaserver.modifyUser(this.cleanupUserObject(user), cleanId(user.id)),
-        ).then((savedUser: NxSystemUser) => {
+        ).then((savedUser: NxUser) => {
             user.id = savedUser.id;
             if (userCreated) {
                 this.users.push(user);
@@ -300,20 +293,28 @@ export class UserWithGroupsManager extends UserManager {
     // modify object doesn't seem to allow for extra fields
     // so only including fields that will potentially change
     cleanupUserObject({
+        id,
+        attributes,
         name,
         email,
         fullName,
         permissions,
         isEnabled,
         groupIds,
-    }: NxSystemUser): Partial<NxSystemUser> {
+        type,
+        resourceAccessRights,
+    }: NxUser): RestV3User {
         return {
+            id,
+            attributes,
             name,
             email,
             fullName,
             permissions,
             isEnabled,
             groupIds,
+            type,
+            resourceAccessRights,
         };
     }
 }

@@ -10,16 +10,14 @@ import { getSystemMetricsAlarmsV2 } from '@services/mediaserver-apis/endpoints/s
 import { getSystemMetricsManifestV2 } from '@services/mediaserver-apis/endpoints/system-metrics-manifest';
 import { getSystemMetricsValuesV2 } from '@services/mediaserver-apis/endpoints/system-metrics-values';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
-import { NxSystemUser } from '@services/system.service/user-manager/user-manager-types.bak';
 import type { NxRecursivePick } from '@utils/nx';
 
-import { addUserRestV2 } from './mediaserver-apis/endpoints/add-user';
 import { wizardGetSystemSettingsRestV2 } from './mediaserver-apis/endpoints/wizard-get-system-settings';
 import { NxAppStateService } from './nx-app-state.service';
 import { IConfig } from './nx-config/config-types';
 import type { HealthReport } from './system-api.aggregated-types';
 import * as t from './system-api.types';
-import { ChangedIdReturned, cameraKeyMapV2 } from './system-api.types';
+import { cameraKeyMapV2 } from './system-api.types';
 import { NxSystemRestAPI } from './system-rest-api.service';
 import { type RestV2CameraCompat } from './system.service/camera-manager/camera-manager-types';
 import { NxUriCacheService } from './uri-cache.service';
@@ -371,28 +369,6 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
         );
     }
     /** End of Health Monitoring **/
-
-    addUser = addUserRestV2;
-
-    // Users
-    saveUser(user: NxSystemUser): Observable<ChangedIdReturned> {
-        user.type = user.isCloud ? 'cloud' : 'local'; // TODO: add LDAP
-        user.isHttpDigestEnabled = !user.isCloud;
-
-        if (!user.isCloud) {
-            user.name && delete user.name;
-            user.isHttpDigestEnabled && delete user.isHttpDigestEnabled;
-        }
-
-        return this.patch<t.ChangedIdReturned>(
-            `/rest/v1/users/${user.id}`,
-            this.cleanUserObject(user),
-        );
-    }
-
-    deleteUser(userId: string): Observable<ChangedIdReturned> {
-        return this.delete<t.ChangedIdReturned>(`/rest/v1/users/${this.cleanId(userId)}`);
-    }
 
     private patchCameraCompatibilityV2(
         camera: NxRecursivePick<t.DeviceV2Full, typeof cameraKeyMapV2>,
