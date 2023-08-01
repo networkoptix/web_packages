@@ -37,6 +37,7 @@ def get_config(customization=None):
     if settings.LOCAL_ENVIRONMENT:
         _HOST = 'https://cloud-test.hdw.mx'
         conf["cloud_db"]["url"] = f"{_HOST}/cdb"
+        conf["cloud_portal"]["url"] = f'{_HOST}'
         conf["cloud_storage"]["url"] = f"{_HOST}/cdb/storage"
         conf["cloud_storages"]["url"] = f"{_HOST}/cdb/storages"
     return conf
@@ -45,4 +46,4 @@ def get_config(customization=None):
 def get_cloud_portal_url(customization=None):
     if not customization:
         customization = customization_ctx.get()
-    return get_cached_config(customization)["cloud_db"]["url"]
+    return get_cached_config(customization)["cloud_portal"]["url"]

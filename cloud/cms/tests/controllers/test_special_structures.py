@@ -8,8 +8,8 @@ from cms.controllers.special_structures import SpecialStructures, VMS_LIN_PATH, 
 
 
 class TestSpecialStructures:
-    CLOUD_HOST = '$CLOUD_PORTAL_HOST'
-    CLOUD_LINK = 'https://$CLOUD_PORTAL_HOST'
+    CLOUD_HOST = 'cloud-test.hdw.mx'
+    CLOUD_LINK = 'https://cloud-test.hdw.mx'
     DS_TEST_NAME = '%TEST%'
     DS_TEST_CONFIG = {'ds': 'Test Config'}
 
