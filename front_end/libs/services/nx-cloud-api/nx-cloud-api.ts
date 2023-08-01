@@ -823,11 +823,9 @@ export class NxCloudApiService {
     }
 
     activate(code: string) {
-        return this.http
-            .post<t.CloudResponse>(apiBase + '/account/activate', {
-                code,
-            })
-            .toPromise();
+        return this.http.post<t.CloudResponse>(apiBase + '/account/activate', {
+            code,
+        });
     }
 
     restorePasswordRequest(userEmail: string) {
