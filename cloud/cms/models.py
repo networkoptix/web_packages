@@ -1317,6 +1317,9 @@ class DataStructure(models.Model):
         content_value = ""
         if not asset:
             return DataStructure.cast_value(self, self.default)
+
+        if asset.is_single_customization and not customization_name:
+            customization_name = asset.customizations.first().name
         content_record = DataRecord.objects.filter(
             asset=asset, data_structure=self)
 
@@ -1473,6 +1476,10 @@ class DataStructure(models.Model):
             return remaining
 
         from cms.helpers.cached_asset import AssetCacheLoaderBase
+
+        if asset.is_single_customization and not customization_name and not customization_ctx.get():
+            customization_name = asset.customizations.first().name
+
         cached_values = {}
         if not draft and not only_review and use_cached and not as_records:
             cached_values = AssetCacheLoaderBase.get_values(
