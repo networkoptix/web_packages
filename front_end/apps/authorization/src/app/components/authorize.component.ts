@@ -296,9 +296,14 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             } else if (this.action === 'restore_password') {
                 this.currentState = AuthorizeState.reset;
             } else if (this.action === 'activate') {
-                await lastValueFrom(this.authService.activate(this.loginCode)).catch(err =>
-                    console.error(err),
-                );
+                await lastValueFrom(
+                    this.cloudService.activate(this.loginCode).pipe(
+                        catchError(err => {
+                            console.error(err);
+                            return this.authService.activate(this.loginCode);
+                        }),
+                    ),
+                ).catch(err => console.error(err));
                 this.fromEmail$.next(true);
                 this.activated$.next(true);
                 this.currentState = AuthorizeState.activate;

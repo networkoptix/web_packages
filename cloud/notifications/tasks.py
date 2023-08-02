@@ -104,8 +104,10 @@ def send_email(msg_id, queue="", attempt=1, email_type='', emails = None, sessio
                 message.save()
                 return
 
-            cloud_users = [user['accountEmail'] for user in users['sharing']]
-            message.targets = [email for email in message.targets if email in cloud_users]
+            cloud_users = [email for email in message.targets if email in [user['accountEmail'] for user in users['sharing']]]
+            activated_cloud_users = Account.objects.filter(email__in=cloud_users).exclude(activated_date=None).values_list('email', flat=True)
+            message.targets = [email for email in message.targets if email in activated_cloud_users]
+            emails = message.targets
 
 
         message.save()

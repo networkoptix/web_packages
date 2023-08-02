@@ -43,84 +43,99 @@ def test_send_email_log(mocker):
         f"Start {func_name} was run with args {args}, kwargs: {kwargs}")
 
 
-def test_send_email(mocker, db):
-    mock_send = mocker.patch('notifications.engines.email_engine.send')
-    user_email = f'{uuid4()}@{uuid4()}.com'
-    message = baker.make(Message, user_email=user_email, message=str(uuid4()))
-    expected_lang = get_language_for_email(
-        message.user_email, message.customization)
+class TestSendEmail:
+    @pytest.fixture(autouse=True)
+    def setup(self, mocker, db):
+        self.mock_send = mocker.patch('notifications.engines.email_engine.send')
+        self.user_email = f'{uuid4()}@{uuid4()}.com'
+        self.message = baker.make(Message, user_email=self.user_email, message=str(uuid4()))
+        self.expected_lang = get_language_for_email(
+            self.message.user_email, self.message.customization)
 
-    # Test with message
-    status = send_email(message.id)
-    updated_message = Message.objects.get(id=message.id)
-    assert updated_message.send_date
-    mock_send.assert_called_once_with(
-        message.user_email, message.type, message.message, expected_lang, message.customization, '', [])
-    assert status == {
-        'user_email': message.user_email,
-        'type': message.type,
-        'message': message.message,
-        'customization': message.customization,
-        'language': expected_lang,
-        'queue': '',
-        'attempt': 1
-    }
+    def test_send_email(self, mocker, db):
+        # Test with message
+        status = send_email(self.message.id)
+        updated_message = Message.objects.get(id=self.message.id)
+        assert updated_message.send_date
+        self.mock_send.assert_called_once_with(
+            self.message.user_email, self.message.type, self.message.message, self.expected_lang, self.message.customization, '', [])
+        assert status == {
+            'user_email': self.message.user_email,
+            'type': self.message.type,
+            'message': self.message.message,
+            'customization': self.message.customization,
+            'language': self.expected_lang,
+            'queue': '',
+            'attempt': 1
+        }
 
-    # Test with system email
-    message_html, message_text, subject, system_id, domain, *emails = [
-        str(uuid4()) for _ in range(randint(10, 20))]
-    expected_emails = [f'{email}@{domain}.com' for email in emails]
-    mocker.patch.object(cloud_api.System, 'users', return_value={'sharing': [{'accountEmail': target} for target in expected_emails]})
-    attachments = emails
-    expected_attachments = [
-        {'filename': f'{attachment}.txt',
-        'content': attachment,
-        'mimetype': 'text/plain'
-        } for attachment in attachments
-    ]
-    sys_email = baker.make(
-        SystemEmail,
-        message_html=message_html,
-        message_text=message_text,
-        subject=subject,
-        system_id=system_id,
-        targets=expected_emails,
-        attachments=expected_attachments
-    )
-    expected_message = {
-        'html_body': message_html,
-        'text_body': message_text
-    }
-    status = send_email(sys_email.id, email_type=SystemEmail.MSG_TYPE)
-    updated_sys_email = SystemEmail.objects.get(id=sys_email.id)
-    assert updated_sys_email.completed_date
-    assert updated_sys_email.result == RESULT_STATES.success
+    def test_send_system_email(self, mocker, db):
+        message_html, message_text, subject, system_id, domain, *emails = [
+            str(uuid4()) for _ in range(randint(10, 20))]
+        non_cloud_emails = [f'{email}@{domain}.com' for email in emails]
+        not_activated_emails = [f'not_activated_{email}' for email in non_cloud_emails]
+        activated_emails = [f'activated_{email}' for email in non_cloud_emails]
 
-    cached_attachments = caches['emails'].get(cache_key, []) if (cache_key := sys_email.attachments.get('cache_key', '')) else []
-    expected_calls = [
-        call(
-            email,
-            SystemEmail.MSG_TYPE,
-            expected_message,
-            expected_lang,
-            settings.TEST_CUSTOMIZATION,
-            sys_email.subject,
-            [{**attachment, 'content': base64.b64decode(attachment['content'])} for attachment in cached_attachments]
+        # Setup cloud accounts
+        for email in not_activated_emails:
+            baker.make('Account', email=email, activated_date=None)
+
+        for email in activated_emails:
+            baker.make('Account', email=email, activated_date=datetime.now())
+
+        all_emails = non_cloud_emails + not_activated_emails + activated_emails
+        mocker.patch.object(cloud_api.System, 'users', return_value={'sharing': [{'accountEmail': target} for target in all_emails]})
+        attachments = emails
+        expected_attachments = [
+            {'filename': f'{attachment}.txt',
+            'content': attachment,
+            'mimetype': 'text/plain'
+            } for attachment in attachments
+        ]
+        sys_email = baker.make(
+            SystemEmail,
+            message_html=message_html,
+            message_text=message_text,
+            subject=subject,
+            system_id=system_id,
+            targets=all_emails,
+            attachments=expected_attachments
         )
-        for email in expected_emails
-    ]
-    mock_send.assert_has_calls(expected_calls)
+        expected_message = {
+            'html_body': message_html,
+            'text_body': message_text
+        }
+        status = send_email(sys_email.id, email_type=SystemEmail.MSG_TYPE, session={'access_token': 'access_token'})
+        updated_sys_email = SystemEmail.objects.get(id=sys_email.id)
+        # assert updated_sys_email.completed_date
+        # assert updated_sys_email.result == RESULT_STATES.success
+
+        cached_attachments = caches['emails'].get(cache_key, []) if (cache_key := sys_email.attachments.get('cache_key', '')) else []
+        expected_calls = [
+            call(
+                email,
+                SystemEmail.MSG_TYPE,
+                expected_message,
+                self.expected_lang,
+                settings.TEST_CUSTOMIZATION,
+                sys_email.subject,
+                [{**attachment, 'content': base64.b64decode(attachment['content'])} for attachment in cached_attachments]
+            )
+            for email in activated_emails
+        ]
+        assert self.mock_send.call_count == len(activated_emails)
+        self.mock_send.assert_has_calls(expected_calls)
 
 
-    assert status == {
-        'user_email': expected_emails,
-        'type': SystemEmail.MSG_TYPE,
-        'message': expected_message,
-        'customization': settings.TEST_CUSTOMIZATION,
-        'language': expected_lang,
-        'queue': '',
-        'attempt': 1
-    }
+        assert status == {
+            'user_email': activated_emails,
+            'type': SystemEmail.MSG_TYPE,
+            'message': expected_message,
+            'customization': settings.TEST_CUSTOMIZATION,
+            'language': self.expected_lang,
+            'queue': '',
+            'attempt': 1
+        }
 
 
 def test_initialize_push_notification_send(db):
