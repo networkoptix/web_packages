@@ -78,6 +78,23 @@ export class NxChannelPartnerComponent implements OnInit {
         });
     }
 
+    changePartnerState(channelPartner: ChannelPartner): void {
+        const { state: currentState, id } = channelPartner;
+        this.dialogs
+            .changeCpState({
+                currentState,
+                update: newState => this.cpService.updateChannelPartner(id, { state: newState }),
+            })
+            .then(res => {
+                if (res) {
+                    this.refresh$.next();
+                    this.toastService.notify(
+                        `Changed state for partner ${channelPartner.name} to ${res}`,
+                    );
+                }
+            });
+    }
+
     deleteChannelPartner(channelPartner: Id): void {
         this.cpService.removeChannelPartner(channelPartner).subscribe({
             next: () => {

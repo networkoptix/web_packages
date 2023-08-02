@@ -773,6 +773,14 @@
         },
         "updateCameraCredentials": {
             "mismatch": "Passwords do not match"
+        },
+        "channelPartners": {
+            "usersAccess": "All users have access to the cloud",
+            "usersNoAccess":  "All users have \u200B | no access | \u200B to the cloud",
+            "systemsAccess": "All systems have access to services",
+            "systemsNoAccess": "All systems have \u200B | no access | \u200B to services",
+            "recordingEnabled": "Recording is enabled for cameras",
+            "recordingDisabled": "Recording is \u200B | disabled | \u200B for cameras "
         }
     },
     "downloads": {

@@ -24,12 +24,23 @@
 
     <ng-container *ngIf="!error">
         <h1>{{ partner?.name }}</h1>
-        <button
-            class="btn-primary"
-            (click)="updateChannelPartner(partner)"
+        <div
+            class="mb-3 d-flex"
+            [style]="{ gap: '5px' }"
         >
-            Update
-        </button>
+            <button
+                class="btn-primary"
+                (click)="updateChannelPartner(partner)"
+            >
+                Update
+            </button>
+            <button
+                class="btn-primary"
+                (click)="changePartnerState(partner)"
+            >
+                Change state
+            </button>
+        </div>
         <ul>
             <li *ngFor="let prop of partner | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
         </ul>
@@ -41,7 +52,7 @@
         >
             New Sub Partner
         </button>
-        <div *ngFor="let partner of subPartners$ | async">
+        <div *ngFor="let partner of subPartners$ | ngrxPush">
             <h4>
                 <a [routerLink]="'../' + partner.id">{{ partner.name }}</a>
             </h4>
@@ -65,7 +76,7 @@
         >
             New Organization
         </button>
-        <div *ngFor="let org of organizations$ | async">
+        <div *ngFor="let org of organizations$ | ngrxPush">
             <h4>
                 <a [routerLink]="'../org/' + org.id">{{ org.name }}</a>
             </h4>
@@ -87,7 +98,7 @@
         >
             New User
         </button>
-        <div *ngFor="let user of users$ | async">
+        <div *ngFor="let user of users$ | ngrxPush">
             <h4>{{ user.email }}</h4>
             <div
                 class="mb-3 d-flex"

@@ -1,0 +1,120 @@
+<form
+    #formName="ngForm"
+    class="NxChangeStateModalContent"
+>
+    <div class="modal-header">
+        <h1
+            class="modal-title"
+            translate
+        >
+            State
+        </h1>
+        <button
+            *ngIf="closable"
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="close()"
+        >
+            <span class="close-content"></span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <mat-button-toggle-group
+            name="state"
+            [(value)]="newState"
+        >
+            <mat-button-toggle
+                [name]="State.Active"
+                [value]="State.Active"
+                disableRipple
+            >
+                <svg-icon [src]="icons.dir + 'play.svg'"></svg-icon>
+                <span translate>Active</span>
+            </mat-button-toggle>
+            <mat-button-toggle
+                [name]="State.Suspended"
+                [value]="State.Suspended"
+                disableRipple
+            >
+                <svg-icon [src]="icons.dir + 'pause.svg'"></svg-icon>
+                <span translate>Suspend</span>
+            </mat-button-toggle>
+            <mat-button-toggle
+                id="shutdown-btn"
+                [name]="State.ShutDown"
+                [value]="State.ShutDown"
+                disableRipple
+            >
+                <svg-icon [src]="icons.dir + 'stop.svg'"></svg-icon>
+                <span translate>Shut down</span>
+            </mat-button-toggle>
+        </mat-button-toggle-group>
+
+        <ul
+            [ngSwitch]="newState"
+            class="status-info"
+        >
+            <ng-container *ngSwitchCase="State.Active">
+                <li>{{ LANG.dialogs.channelPartners.usersAccess | translate }}</li>
+                <li>{{ LANG.dialogs.channelPartners.systemsAccess | translate }}</li>
+                <li>{{ LANG.dialogs.channelPartners.recordingEnabled | translate }}</li>
+            </ng-container>
+            <ng-container *ngSwitchCase="State.Suspended">
+                <li
+                    *ngrxLet="
+                        LANG.dialogs.channelPartners.usersNoAccess | translate as usersNoAccess
+                    "
+                >
+                    <span>{{ usersNoAccess | translateCut : 0 }}</span
+                    ><span class="error">{{ usersNoAccess | translateCut : 1 }}</span
+                    ><span>{{ usersNoAccess | translateCut : 2 }}</span>
+                </li>
+                <li>{{ LANG.dialogs.channelPartners.systemsAccess | translate }}</li>
+                <li>{{ LANG.dialogs.channelPartners.recordingEnabled | translate }}</li>
+            </ng-container>
+            <ng-container *ngSwitchCase="State.ShutDown">
+                <li
+                    *ngrxLet="
+                        LANG.dialogs.channelPartners.usersNoAccess | translate as usersNoAccess
+                    "
+                >
+                    <span>{{ usersNoAccess | translateCut : 0 }}</span
+                    ><span class="error">{{ usersNoAccess | translateCut : 1 }}</span
+                    ><span>{{ usersNoAccess | translateCut : 2 }}</span>
+                </li>
+                <li
+                    *ngrxLet="
+                        LANG.dialogs.channelPartners.systemsNoAccess | translate as systemsNoAccess
+                    "
+                >
+                    <span>{{ systemsNoAccess | translateCut : 0 }}</span
+                    ><span class="error">{{ systemsNoAccess | translateCut : 1 }}</span
+                    ><span>{{ systemsNoAccess | translateCut : 2 }}</span>
+                </li>
+                <li
+                    *ngrxLet="
+                        LANG.dialogs.channelPartners.recordingDisabled
+                            | translate as recordingDisabled
+                    "
+                >
+                    <span>{{ recordingDisabled | translateCut : 0 }}</span
+                    ><span class="error">{{ recordingDisabled | translateCut : 1 }}</span
+                    ><span>{{ recordingDisabled | translateCut : 2 }}</span>
+                </li>
+            </ng-container>
+        </ul>
+    </div>
+    <div class="modal-footer">
+        <nx-process-button
+            [process]="changeStateProcess"
+            [buttonText]="'Apply' | translate"
+        ></nx-process-button>
+        <nx-cancel-button
+            [process]="changeStateProcess"
+            [cancelFn]="unlock"
+            [discardFn]="close"
+        ></nx-cancel-button>
+    </div>
+</form>

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 // import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
+import { LetDirective, PushPipe } from '@ngrx/component';
 
 import { NxChannelPartnerComponent } from './channel-partner/channel-partner.component';
 import { NxChannelPartnerModule } from './channel-partner/channel-partner.module';
@@ -35,6 +36,8 @@ const appRoutes: Routes = [
 
         NxChannelPartnerModule,
         NxOrganizationModule,
+        LetDirective,
+        PushPipe,
     ],
     declarations: [NxChannelPartnersComponent],
     providers: [],

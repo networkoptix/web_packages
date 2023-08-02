@@ -24,12 +24,23 @@
 
     <ng-container *ngIf="!error">
         <h1>{{ org?.name }}</h1>
-        <button
-            class="btn-primary"
-            (click)="updateOrganization(org)"
+        <div
+            class="mb-3 d-flex"
+            [style]="{ gap: '5px' }"
         >
-            Update
-        </button>
+            <button
+                class="btn-primary"
+                (click)="updateOrganization(org)"
+            >
+                Update
+            </button>
+            <button
+                class="btn-primary"
+                (click)="changeOrganizationState(org)"
+            >
+                Change state
+            </button>
+        </div>
         <ul>
             <li *ngFor="let prop of org | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
         </ul>
@@ -43,7 +54,7 @@
             >
                 New User
             </button>
-            <div *ngFor="let user of users$ | async">
+            <div *ngFor="let user of users$ | ngrxPush">
                 <h4>{{ user.email }}</h4>
                 <div
                     class="mb-3 d-flex"

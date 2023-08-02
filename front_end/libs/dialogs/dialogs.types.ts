@@ -1,6 +1,7 @@
 import type { SelectionModel } from '@angular/cdk/collections';
 import type { DialogRef } from '@angular/cdk/dialog';
 import type { EventEmitter, TemplateRef } from '@angular/core';
+import type { Observable } from 'rxjs';
 
 import type { Bookmark } from '@pages/systems/bookmarks/bookmarks.types';
 import type { ExportSelection } from '@pages/systems/view/vms-client/submodules/timeline/components/nx-webgl-canvas/selection/selection.types';
@@ -13,6 +14,7 @@ import type {
     Id as CpId,
     Organization,
     OrganizationUser,
+    State,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import type { CloudResponse, SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { Process } from '@services/process.service/process';
@@ -141,6 +143,10 @@ export type AddOrganization = DialogType<CpId, Organization>;
 export type EditOrganization = DialogType<Organization, Organization>;
 export type AddOrgUser = DialogType<CpId, OrganizationUser>;
 export type EditOrgUser = DialogType<{ orgId: CpId; user: OrganizationUser }, OrganizationUser>;
+export type ChangeCpState = DialogType<
+    { currentState: State; update: (newState: State) => Observable<unknown> },
+    State
+>;
 
 /* Groups */
 export type CreateSystemGroup = DialogType<

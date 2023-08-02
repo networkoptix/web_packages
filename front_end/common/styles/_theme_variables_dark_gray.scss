@@ -657,6 +657,14 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --CP-pane-header-background: var(--dark_gray_1);
     --CP-pane-header-border: var(--dark7);
 
+    --change-state-dialog-error-txt-color: var(--red_l1);
+    --change-state-dialog-btn-bg: var(--dark5);
+    --change-state-dialog-color: var(--light16);
+    --change-state-dialog-btn-checked-bg: var(--dark10);
+    --change-state-dialog-btn-checked-color: var(--light4);
+    --change-state-dialog-shutdown-btn-bg: var(--red_main);
+    --change-state-dialog-shutdown-btn-color: var(--light1);
+
     /* Bookmarks */
     --bookmarks-background-color: inherit;
     --bookmarks-calendar-today-border: rgba(255, 255, 255, 0.38);
@@ -697,7 +705,7 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
 
     /* System Admin */
     --system-admin-info-text: #E1E7EA; //$light4;
-    
+
     /* Layouts */
     --svg-toggle-arrow-color: var(--light17);
     --svg-tab-arrow-color: var(--light5);

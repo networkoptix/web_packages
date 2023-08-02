@@ -68,6 +68,23 @@ export class NxOrganizationComponent implements OnInit {
         });
     }
 
+    changeOrganizationState(organization: Organization): void {
+        const { state: currentState, id } = organization;
+        this.dialogs
+            .changeCpState({
+                currentState,
+                update: newState => this.cpService.updateOrganization(id, { state: newState }),
+            })
+            .then(res => {
+                if (res) {
+                    this.refresh$.next();
+                    this.toastService.notify(
+                        `Changed state for org ${organization.name} to ${res}`,
+                    );
+                }
+            });
+    }
+
     newOrgUser(orgId: Id): void {
         this.dialogs.addOrgUser(orgId).then(res => {
             if (res) {

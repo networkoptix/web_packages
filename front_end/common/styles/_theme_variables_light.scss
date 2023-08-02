@@ -678,6 +678,14 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --CP-pane-header-background: var(--light1);
     --CP-pane-header-border: var(--light4);
 
+    --change-state-dialog-error-txt-color: var(--red_l1);
+    --change-state-dialog-btn-bg: initial;
+    --change-state-dialog-color: var(--dark9);
+    --change-state-dialog-btn-checked-bg: #e0e0e0;
+    --change-state-dialog-btn-checked-color: var(--dark9);
+    --change-state-dialog-shutdown-btn-bg: var(--red_main);
+    --change-state-dialog-shutdown-btn-color: var(--light1);
+
     /*  */
     --new-feature-gradient: linear-gradient(242.24deg, var(--light2) 0.43%, var(--brand-l4) 122.68%);
     --cloud-storage-spot-gradient: radial-gradient(50% 50% at 50% 50%, #D9D9D9 0%, #A8E1FE 0.01%, rgba(255, 255, 255, 0) 98.65%);

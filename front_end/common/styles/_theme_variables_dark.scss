@@ -652,7 +652,7 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --group-card-border-color: var(--dark10);
 
     --channel-partner-card-status-background: var(--dark11);
-    
+
     --subchannel-partner-card-id-background: var(--light16);
     --subchannel-partner-card-id-color: var(--dark4);
     --subchannel-partner-card-org-fill: var(--dark16);
@@ -677,6 +677,14 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --CP-pane-border: var(--dark5);
     --CP-pane-header-background: var(--dark4);
     --CP-pane-header-border: var(--dark7);
+
+    --change-state-dialog-error-txt-color: var(--red_l1);
+    --change-state-dialog-btn-bg: var(--dark5);
+    --change-state-dialog-color: var(--light16);
+    --change-state-dialog-btn-checked-bg: var(--dark10);
+    --change-state-dialog-btn-checked-color: var(--light4);
+    --change-state-dialog-shutdown-btn-bg: var(--red_main);
+    --change-state-dialog-shutdown-btn-color: var(--light1);
 
     /*  */
     --new-feature-gradient: linear-gradient(242.24deg, var(--dark2) 0.43%, var(--brand-d4) 122.68%);

@@ -642,6 +642,14 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --CP-pane-header-background: var(--light_gray_1);
     --CP-pane-header-border: var(--light_gray_7);
 
+    --change-state-dialog-error-txt-color: var(--red_l1);
+    --change-state-dialog-btn-bg: initial;
+    --change-state-dialog-color: var(--dark9);
+    --change-state-dialog-btn-checked-bg: #e0e0e0;
+    --change-state-dialog-btn-checked-color: var(--dark9);
+    --change-state-dialog-shutdown-btn-bg: var(--red_main);
+    --change-state-dialog-shutdown-btn-color: var(--light1);
+
     /* Bookmarks */
     --bookmarks-background-color: #{$additional_light2};
     --bookmarks-calendar-today-border: rgba(0, 0, 0, 0.38);

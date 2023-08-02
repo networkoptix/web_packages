@@ -305,6 +305,12 @@ export class NxDialogsService {
         ),
     );
 
+    changeCpState = this.dialogV2Factory<Dt.ChangeCpState>(() =>
+        import('./channel-partners/change-state/change-state.component').then(
+            m => m.NxChangeStateModalContent,
+        ),
+    );
+
     /* Groups */
     createSystemGroup = this.dialogV2Factory<Dt.CreateSystemGroup>(
         () =>

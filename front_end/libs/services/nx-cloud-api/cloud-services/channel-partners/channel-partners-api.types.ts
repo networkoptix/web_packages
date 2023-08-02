@@ -13,7 +13,7 @@ export enum State {
 
 /* Channel Partners */
 export interface ChannelPartner {
-    effectiveState: string;
+    effectiveState: State;
     id: Id;
     name: string;
     organizations: Url;
@@ -58,7 +58,7 @@ export interface Organization {
     channelPartner: Id;
     channelPartnerCanAdminister: boolean;
     cloudSystems: Url;
-    effectiveState: string;
+    effectiveState: State;
     id: Id;
     name: string;
     state: State;

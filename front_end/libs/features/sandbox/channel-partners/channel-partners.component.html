@@ -17,9 +17,9 @@
 </div>
 
 <h2>Channel Partners</h2>
-<div *ngFor="let partner of channelParters$ | async">
+<div *ngFor="let partner of channelParters$ | ngrxPush">
     <h4>
-        <a [routerLink]="partner.id.toString()">{{ partner.name }}</a>
+        <a [routerLink]="partner.id">{{ partner.name }}</a>
     </h4>
     <ul>
         <li *ngFor="let prop of partner | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
@@ -27,7 +27,7 @@
 </div>
 
 <h2>Partner Roles</h2>
-<div *ngFor="let role of channelPartnerRoles$ | async">
+<div *ngFor="let role of channelPartnerRoles$ | ngrxPush">
     <h4>{{ role.name }}</h4>
     <ul>
         <li *ngFor="let prop of role | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
@@ -35,9 +35,9 @@
 </div>
 
 <h2>Organizations</h2>
-<div *ngFor="let org of organizations$ | async">
+<div *ngFor="let org of organizations$ | ngrxPush">
     <h4>
-        <a [routerLink]="'org/' + org.id.toString()">{{ org.name }}</a>
+        <a [routerLink]="'org/' + org.id">{{ org.name }}</a>
     </h4>
     <ul>
         <li *ngFor="let prop of org | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
@@ -45,7 +45,7 @@
 </div>
 
 <h2>Organization Roles</h2>
-<div *ngFor="let role of organizationRoles$ | async">
+<div *ngFor="let role of organizationRoles$ | ngrxPush">
     <h4>{{ role.name }}</h4>
     <ul>
         <li *ngFor="let prop of role | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
