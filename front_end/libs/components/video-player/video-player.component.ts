@@ -114,14 +114,11 @@ export class NxVideoPlayerComponent {
 
     constructor(
         configService: NxConfigService,
-        appStateService: NxAppStateService,
+        private appStateService: NxAppStateService,
         private elRef: ElementRef,
     ) {
         this.CONFIG = configService.config;
         this.playerId = uuid();
-        appStateService.userInteracted$.pipe(takeUntil(this.cancelMonitoringFps$), untilDestroyed(this)).subscribe(() => {
-            this.webRtcPlayerRef.nativeElement.muted = false
-        })
     }
 
     reconnect$ = new BehaviorSubject<void>(null);
@@ -275,6 +272,12 @@ export class NxVideoPlayerComponent {
                     while (this.webRtcPlayerRef.nativeElement.paused || this.webRtcPlayerRef.nativeElement.currentTime < 1) {
                         await new Promise(resolve => setTimeout(resolve, 100));
                     }
+
+                    // Unmute and autoplay when user interacts with the page
+                    this.appStateService.userInteracted$.pipe(takeUntil(this.cancelMonitoringFps$), untilDestroyed(this)).subscribe(() => {
+                        this.webRtcPlayerRef.nativeElement.muted = false;
+                        this.webRtcPlayerRef.nativeElement.autoplay = true;
+                    })
 
                     this.connectionEstablished = true;
 
