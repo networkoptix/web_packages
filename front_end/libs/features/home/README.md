@@ -22,16 +22,16 @@ Home is broken down into **3** categories;
 ## Todo
 
 ### Features:
-- [] Search for Organizations/Groups/Systems in their respective components
-- [] Update entirety with new Angular 16 features
-- [] Placeholder for no systems in organization
-- [] Placeholder for no subchannel partners
-- [] Update sidebar to show nested groups within organizations
+- [ ] Search for Organizations/Groups/Systems in their respective components
+- [ ] Update entirety with new Angular 16 features
+- [ ] Placeholder for no systems in organization
+- [ ] Placeholder for no subchannel partners
+- [ ] Update sidebar to show nested groups within organizations
 
 ### Minor Tasks
-- [] Remove organization nodes from the header ?
-- [] Update preloader logic for components ( currently displays overlaying preloader in between navigations )
-- [] Role Resolver / Tab Guard is a bit funky with the way that data is stored / handled by resolvers and guards
-- [] Add real time support for adding subchannels ( currently requires refresh to show new subchannels )
-- [] Convert resolvers from classes to functional resovlers
-- [] Add memoization for to Channel Partners API
+- [ ] Remove organization nodes from the header ?
+- [ ] Update preloader logic for components ( currently displays overlaying preloader in between navigations )
+- [ ] Role Resolver / Tab Guard is a bit funky with the way that data is stored / handled by resolvers and guards
+- [ ] Add real time support for adding subchannels ( currently requires refresh to show new subchannels )
+- [ ] Convert resolvers from classes to functional resovlers
+- [ ] Add memoization for to Channel Partners API
