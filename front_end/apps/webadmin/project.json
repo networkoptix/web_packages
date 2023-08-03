@@ -99,6 +99,7 @@
             },
             "configurations": {
                 "development": {
+                    "tsConfig": "apps/webadmin/tsconfig.serve.json",
                     "fileReplacements": [
                         {
                             "replace": "common/environments/environment.ts",

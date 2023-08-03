@@ -83,6 +83,7 @@
                     ]
                 },
                 "development": {
+                    "tsConfig": "apps/authorization/tsconfig.serve.json",
                     "fileReplacements": [
                         {
                             "replace": "common/environments/environment.ts",

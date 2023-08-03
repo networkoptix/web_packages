@@ -99,7 +99,6 @@
                     "vendorChunk": false,
                     "commonChunk": false,
                     "buildOptimizer": true,
-                    "commonChunk": false,
                     "budgets": [
                         {
                             "type": "initial",
@@ -114,6 +113,7 @@
                     ]
                 },
                 "development": {
+                    "tsConfig": "apps/setup-wizard/tsconfig.serve.json",
                     "fileReplacements": [
                         {
                             "replace": "common/environments/environment.ts",

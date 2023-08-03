@@ -104,6 +104,7 @@
             },
             "configurations": {
                 "dev": {
+                    "tsConfig": "apps/front-end/tsconfig.serve.json",
                     "fileReplacements": [
                         {
                             "replace": "common/environments/environment.ts",
@@ -112,6 +113,7 @@
                     ]
                 },
                 "local": {
+                    "tsConfig": "apps/front-end/tsconfig.serve.json",
                     "fileReplacements": [
                         {
                             "replace": "common/environments/environment.ts",

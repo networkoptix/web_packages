@@ -11227,8 +11227,7 @@
         "nx-open-web@0.0.0": {
             "licenses": "UNLICENSED",
             "private": [],
-            "path": "cloud_portal/front_end/node_modules/nx-open-web",
-            "licenseFile": "cloud_portal/front_end/node_modules/nx-open-web/README.md"
+            "path": "cloud_portal/front_end/node_modules/nx-open-web"
         },
         "nx@16.5.0": {
             "licenses": "MIT",
@@ -15123,8 +15122,7 @@
         "nx-open-web@0.0.0": {
             "licenses": "UNLICENSED",
             "private": [],
-            "path": "cloud_portal/open",
-            "licenseFile": "cloud_portal/open/README.md"
+            "path": "cloud_portal/open"
         }
     },
     "/open/packages/webrtc-stream-manager/": {
