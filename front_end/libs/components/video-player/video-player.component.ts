@@ -8,7 +8,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ConnectionError, WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';
-import { BehaviorSubject, firstValueFrom, Observable, of, shareReplay, Subject, switchMap, tap, interval, startWith, map, timer, scan, takeUntil, filter } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable, of, shareReplay, Subject, switchMap, tap, interval, startWith, map, timer, scan, takeUntil, filter, timeout, catchError } from 'rxjs';
 import staticLang from '@common/language/language_i18n_static.json';
 import { LayoutItem } from '@services/system-api.types';
 import { Translatable } from '@pipes/nx-translate.types';
@@ -266,18 +266,27 @@ export class NxVideoPlayerComponent {
                 if (stream) {
                     this.monitorFps(connection);
                     this.webRtcPlayerRef.nativeElement.srcObject = await this.zoomStream(stream);
-                    this.webRtcPlayerRef.nativeElement.muted = true;
+                    // Checks if user has interacted to unmute
+                    this.webRtcPlayerRef.nativeElement.muted = await firstValueFrom(
+                        this.appStateService.userInteracted$.pipe(
+                            map(() => false),
+                            timeout(10),
+                            catchError(() => of(true)),
+                        ),
+                    );
                     this.webRtcPlayerRef.nativeElement.autoplay = true;
 
                     while (this.webRtcPlayerRef.nativeElement.paused || this.webRtcPlayerRef.nativeElement.currentTime < 1) {
                         await new Promise(resolve => setTimeout(resolve, 100));
                     }
 
-                    // Unmute and autoplay when user interacts with the page
-                    this.appStateService.userInteracted$.pipe(takeUntil(this.cancelMonitoringFps$), untilDestroyed(this)).subscribe(() => {
-                        this.webRtcPlayerRef.nativeElement.muted = false;
-                        this.webRtcPlayerRef.nativeElement.autoplay = true;
-                    })
+                    if (this.webRtcPlayerRef.nativeElement.muted) {
+                        // Unmute and autoplay when user interacts with the page
+                        this.appStateService.userInteracted$.pipe(takeUntil(this.cancelMonitoringFps$), untilDestroyed(this)).subscribe(() => {
+                            this.webRtcPlayerRef.nativeElement.muted = false;
+                            this.webRtcPlayerRef.nativeElement.autoplay = true;
+                        })
+                    }
 
                     this.connectionEstablished = true;
 
