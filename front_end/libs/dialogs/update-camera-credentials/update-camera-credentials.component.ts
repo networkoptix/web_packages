@@ -57,10 +57,10 @@ export class UpdateCameraCredentialsModalContent extends ModalBase<DT['return']>
 
     ngOnInit(): void {
         pickFrom(this.dialogData, ['system', 'camera', 'updateCallback', 'defaultPassword'], this);
-
-        const [loginName, password] = this.camera.addParams.credentials
-            ? this.camera.addParams.credentials.split(':')
-            : ['', ''];
+        const currentCredentials = this.camera.addParams.credentials || this.camera.addParams.defaultCredentials;
+        const [loginName, password] = currentCredentials
+            ? currentCredentials.split(':')
+            : ['admin', ''];
         this.currentCredentials = { loginName, password };
         this.cameraLoginCredentials = loginName;
         this.cameraPasswordCredentials = (!this.defaultPassword && loginName) ? password : '';
@@ -83,7 +83,7 @@ export class UpdateCameraCredentialsModalContent extends ModalBase<DT['return']>
                 }
                 return this.system.serverManager.updateResource(
                     this.camera.id,
-                    { credentials: `${this.cameraLoginCredentials || 'admin'}:${this.cameraPasswordCredentials}` }
+                    { credentials: `${this.cameraLoginCredentials}:${this.cameraPasswordCredentials}` }
                 );
             };
 
