@@ -330,6 +330,47 @@ class TestDownloads(DownloadsBase):
         utils.downloads(request)
         cache_mock['global'].set.assert_called_with('downloads_default', False)
 
+class TestDownloadsReleases(DownloadsBase):
+    def make_request(self):
+        request = self.arf.get('/api/utils/downloads-releases')
+        request.user = self.user
+        request.session = {}
+        return utils.downloads_releases(request)
+
+    def test_success(self):
+        assert not caches['global'].get('downloads_releases_default')
+        response = self.make_request()
+        assert response.status_code == status.HTTP_200_OK
+        assert caches['global'].get('downloads_releases_default')
+
+        # With cache
+        response = self.make_request()
+        assert response.status_code == status.HTTP_200_OK
+        assert caches['global'].get('downloads_releases_default')
+
+    def test_downloads_not_public(self):
+        self.settings_mock.return_value['publicDownloads'] = False
+        self.user = AnonymousUser()
+
+        response = self.make_request()
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+
+    def test_clear_cache(self, mocker):
+        assert not caches['global'].get('downloads_releases_default')
+        response = self.make_request()
+        assert response.status_code == status.HTTP_200_OK
+        assert caches['global'].get('downloads_releases_default')
+
+        cache_mock = mocker.patch.object(utils, 'caches')
+        cache_mock['global'].set = mocker.MagicMock()
+
+        request = self.arf.post('/api/utils/downloads-releases')
+        self.user.is_superuser = True
+        request.user = self.user
+        request.session = {}
+        utils.downloads_releases(request)
+        cache_mock['global'].set.assert_called_with('downloads_releases_default', False)
+
 
 class TestGetSettings:
     @pytest.fixture(autouse=True)

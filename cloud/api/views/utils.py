@@ -387,13 +387,74 @@ def downloads(request):
 
     # Remove platforms that are not marked as available.
     available_platforms = settings_cache['availableDownloadsPlatform']
+    downloads_json['platforms'] = clean_platforms(downloads_json, available_platforms)
+    return Response(downloads_json)
+
+
+def clean_platforms(release, available_platforms):
     platforms = []
-    for platform in downloads_json['platforms']:
+    for platform in release.get('platforms'):
         if platform['name'] in available_platforms:
             platforms.append(platform)
+    return platforms
 
-    downloads_json['platforms'] = platforms
-    return Response(downloads_json)
+
+def get_latest_vms_build_by_release_type(downloads_data, release_type):
+    PRODUCT_DESCRIPTION = "Video Management System"
+    # Gets the first build for the release type that's a vms. Sometimes mobile builds are there in releases.
+    if release := next(filter(lambda build: build.get('productDescription') == PRODUCT_DESCRIPTION, downloads_data.get(release_type, [])), None):
+        del release['releaseNotes'] # Don't need on the releases page since its only show on the Other page.
+    return release
+
+
+@swagger_auto_schema(method="GET",  # auto_schema=None,
+                     operation_description="Returns the download information for the latest beta, patch, and release.")
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="Forces the downloads cache to clear and returns the "
+                                           "new download information.")
+@api_view(['GET', 'POST'])
+@permission_classes((AllowAny, ))
+def downloads_releases(request):
+    global_cache = caches['global']
+    customization = request.CUSTOMIZATION
+
+    cache_key = f"downloads_releases_{customization}"
+    settings_cache = get_settings_from_cache(customization=customization)
+
+    public_downloads = settings_cache['publicDownloads']
+    if not public_downloads and not request.user.is_authenticated:
+        raise APIForbiddenException(
+            "Not authorized", ErrorCodes.not_authorized)
+
+    if request.user.is_superuser and request.method == 'POST':  # clear cache on POST request - only for this customization
+        global_cache.set(cache_key, False)
+
+    downloads_releases_json = global_cache.get(cache_key, False)
+
+    if not downloads_releases_json:
+        try:
+            customization_downloads_url = settings.DOWNLOADS_JSON.replace('{{customization}}', customization)
+            res = requests.get(customization_downloads_url)
+            res.raise_for_status()
+            downloads_data = res.json()
+        except requests.exceptions.HTTPError:
+            logger.warning(
+                f"Customization does not have a downloads.json: {customization}. {settings.CONFIG_ERROR}")
+            return Response(None)
+
+        release_types = ['betas', 'patches', 'releases']
+        data = { release_type: get_latest_vms_build_by_release_type(downloads_data, release_type)
+                 for release_type in release_types }
+        global_cache.set(cache_key, json.dumps(data))
+    else:
+        data = json.loads(downloads_releases_json)
+
+    available_platforms = settings_cache['availableDownloadsPlatform']
+    for key, value in data.items():
+        if value and 'platforms' in value:
+            data[key]['platforms'] = clean_platforms(value, available_platforms)
+
+    return Response(data)
 
 
 def get_feature_flags(request):
