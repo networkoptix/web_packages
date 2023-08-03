@@ -38,6 +38,7 @@
                 <img
                     [alt]="CONFIG.cloudName + ' logo'"
                     [src]="'/static/images/dark_logo.png'"
+                    [ngClass]="{ 'short-logo': CONFIG.customization === 'default' }"
                     class="logo-png"
                     onerror="this.onerror=null;this.src='/static/images/logo.png'"
                     data-testid="logo"

@@ -46,6 +46,13 @@
 
         a {
             flex-grow: 1;
+            img {
+                height: 40px;
+                width: auto;
+                &.short-logo {
+                    height: 30px !important;
+                }
+            }
         }
 
         .current-system-display {
