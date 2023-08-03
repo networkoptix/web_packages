@@ -63,20 +63,50 @@ def register_user_with_correct_credentials():
     register_form.account_creation_success()
     driver.close()
 
+def valid_inputs_no_errors():
+    """7. With valid inputs no errors are displayed"""
+    email = get_random_email(sendemail=True)
+    driver = get_headless_chrome()
+    robot_keywords.go_to_url(driver, rb.ENV)
+    HeaderNav(driver).create_account().click()
+    register_form = RegisterForm(driver)
+    register_form.first_name_input().input_text("mark")
+    register_form.last_name_input().input_text( "hamill")
+    register_form.email_input().input_text(email)
+    register_form.password_input().input_text(rb.BASE_PASSWORD)
+    register_form.terms_and_conditions_checkbox().select() 
+    if register_form.first_name_is_required_error().in_dom:
+        raise RuntimeError("Fist name required error was visible")
+    if register_form.last_name_is_required_error().in_dom:
+        raise RuntimeError("last name required error was visible")
+    if register_form.email_is_required_error().in_dom:
+        raise RuntimeError("email required error was visible")
+    if register_form.password_is_required_error().in_dom:
+        raise RuntimeError("password required error was visible")
+    if register_form.email_is_invalid_error().in_dom:
+        raise RuntimeError("email invalid error was visible")
+    if register_form.password_special_chars_error().in_dom:
+        raise RuntimeError("password special chars error was visible")
+    if register_form.password_is_weak_error().in_dom:
+        raise RuntimeError("password weak error was visible")
+    driver.close()
 
 
 if __name__ == "__main__":
-    # page_in_anonymous_state_register_header()
-    # print(f'{Fore.WHITE}{page_in_anonymous_state_register_header.__doc__}\t\t\t\t{Fore.GREEN}| PASS |')
+    page_in_anonymous_state_register_header()
+    print(f'{Fore.WHITE}{page_in_anonymous_state_register_header.__doc__}\t\t\t{Fore.GREEN}| PASS |')
 
-    # open_from_success_page()
-    # print(f'{Fore.WHITE}{open_from_success_page.__doc__}\t\t\t\t{Fore.GREEN}| PASS |')
+    open_from_success_page()
+    print(f'{Fore.WHITE}{open_from_success_page.__doc__}\t\t{Fore.GREEN}| PASS |')
 
-    # page_in_anonymous_state_redister_home()
-    # print(f'{Fore.WHITE}{page_in_anonymous_state_redister_home.__doc__}\t\t\t\t{Fore.GREEN}| PASS |')
+    page_in_anonymous_state_redister_home()
+    print(f'{Fore.WHITE}{page_in_anonymous_state_redister_home.__doc__}\t\t\t\t{Fore.GREEN}| PASS |')
 
-    # page_in_anonymouse_state_navigation()
-    # print(f'{Fore.WHITE}{page_in_anonymouse_state_navigation.__doc__}\t\t\t\t\t\t\t\t\t{Fore.GREEN}| PASS |')
+    page_in_anonymouse_state_navigation()
+    print(f'{Fore.WHITE}{page_in_anonymouse_state_navigation.__doc__}\t\t\t\t\t\t\t\t\t{Fore.GREEN}| PASS |')
 
     register_user_with_correct_credentials()
     print(f'{Fore.WHITE}{register_user_with_correct_credentials.__doc__}\t\t\t\t\t\t\t\t{Fore.GREEN}| PASS |')
+
+    valid_inputs_no_errors()
+    print(f'{Fore.WHITE}{valid_inputs_no_errors.__doc__}\t\t\t\t\t\t\t\t\t{Fore.GREEN}| PASS |')

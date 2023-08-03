@@ -10,6 +10,7 @@ class RegisterForm:
     def __init__(self, driver, lang="en_US"):
         self.driver = driver
         self.rb = RobotVariables(lang)
+        self.required_text = f"/following-sibling::p[contains(@class,error-label) and contains(text(),'{self.rb.REQUIRED_TEXT}')]"
         self._wait_until_form_is_visible()
         self._location_is_correct()
 
@@ -35,7 +36,28 @@ class RegisterForm:
         return Checkbox(self.driver, "//nx-checkbox[@name='termsAndConditions']", "//input[@id='termsAndConditions']")
 
     def account_creation_success(self):
-        return Element(self.driver, "//nx-authorize-activate-account-component", wait_for=True)
+        return Element(self.driver, "//nx-authorize-activate-account-component")
+
+    def first_name_is_required_error(self):
+        return Element(self.driver, f"{self.first_name_input}{self.required_text}", time_out=.5)
+
+    def last_name_is_required_error(self):
+        return Element(self.driver, f"{self.last_name_input}{self.required_text}", time_out=.5)
+
+    def email_is_required_error(self):
+        return Element(self.driver, f"{self.email_input}{self.required_text}", time_out=.5)
+
+    def password_is_required_error(self):
+        return Element(self.driver, f"{self.password_input}{self.required_text}", time_out=.5)
+
+    def email_is_invalid_error(self):
+        return Element(self.driver, f"//p[contains(@class,error-label) and contains(text(),'{self.rb.EMAIL_INVALID_TEXT}')]", time_out=.5)
+    
+    def password_special_chars_error(self):
+        return Element(self.driver, f"//div[contains(@class,input-error) and contains(text(),'{self.rb.PASSWORD_SPECIAL_CHARS_TEXT}')]", time_out=.5)
+
+    def password_is_weak_error(self):
+        return Element(self.driver, f"//div[contains(@class,input-error) and contains(text(),'{self.rb.PASSWORD_IS_WEAK_TEXT}')]", time_out=.5)
 
     def _wait_until_form_is_visible(self):
         robot_keywords.wait_until_element_is_visible(self.driver, "//nx-authorize-create-account-component")

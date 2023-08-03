@@ -15,12 +15,10 @@ class Checkbox:
 
     def select(self):
         if not self.actual_element.is_selected():
-            print("selecting")
             self.clickable_element.click()
     
     def unselect(self):
         if self.actual_element.is_selected():
-            print("unselecting")
             self.clickable_element.click()
 
     def checked(self):

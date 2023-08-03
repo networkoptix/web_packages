@@ -141,7 +141,7 @@ def wait_until_page_contains(driver: webdriver, text: str, timeout: int = 10) ->
 def wait_until_page_contains_element(driver: webdriver, locator: str, timeout: int = 10) -> None:
     WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.XPATH, locator)))
 
-def  wait_until_page_does_not_contain_element(driver: webdriver, locator: str, timeout: int = 10) -> None:
+def wait_until_page_does_not_contain_element(driver: webdriver, locator: str, timeout: int = 10) -> None:
     WebDriverWait(driver, timeout).until_not(EC.presence_of_element_located((By.XPATH, locator)))
 
 def wait_until_textfield_contains(driver, locator, expected_text, timeout: int = 10) -> None:
