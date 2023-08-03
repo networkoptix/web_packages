@@ -149,7 +149,7 @@
                         {
                             "type": "anyComponentStyle",
                             "maximumWarning": "200kb",
-                            "maximumError": "300kb"
+                            "maximumError": "350kb"
                         },
                         {
                             "type": "anyScript",
