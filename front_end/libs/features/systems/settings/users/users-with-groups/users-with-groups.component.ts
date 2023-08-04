@@ -28,19 +28,9 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
 
     @ViewChild('userGroupsForm', { read: NgForm }) private userGroupsForm: NgForm;
     protected changeUser(user: NxUser): void {
-        // deals with the lack of userGroupIds for cloud Owner
-        if (user.isOwner && user.type === 'cloud') {
-            this.selectedGroupsList = [
-                {
-                    name: this.LANG.accessRoles.Owner.label,
-                    description: this.LANG.accessRoles.Owner.description,
-                },
-            ];
-        } else {
-            this.selectedGroups = user.groupIds;
-            const isLocalOwner = !this.isCloud() && user.isOwner;
-            this.processSelectedGroupsList(this.selectedGroups, isLocalOwner);
-        }
+        this.selectedGroups = user.groupIds;
+        const isLocalOwner = !this.isCloud() && user.isOwner;
+        this.processSelectedGroupsList(this.selectedGroups, isLocalOwner);
 
         this.applyService.resetFormWatchers();
         setTimeout(() => {

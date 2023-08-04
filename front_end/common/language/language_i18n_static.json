@@ -740,7 +740,7 @@
             "serversDetach": "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?",
             "serversReset": "Reset server&nbsp;<strong>{ title }</strong>&nbsp;to defaults?",
             "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?",
-            "defaultUserGroupText": "Default",
+            "defaultUserGroupText": "Built In",
             "customUserGroupText": "Custom"
         },
         "tooltips": {
@@ -1221,6 +1221,7 @@
         "hardwareTypes": "Types",
         "minResolution": "Minimum Resolution",
         "search_ipvd": "Search by model or manufacturer",
+        "selectOptions": "Select Options",
         "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
         "vendor": "Manufacturer",
         "vendors": "Manufacturers",

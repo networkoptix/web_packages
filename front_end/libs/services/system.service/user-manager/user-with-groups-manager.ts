@@ -151,7 +151,7 @@ export class UserWithGroupsManager extends UserManager {
                 ...groupsForDropdown.slice(0, startOfCustomGroups),
                 ...groupsForDropdown
                     .slice(startOfCustomGroups)
-                    .sort(alphabeticalSort(this.locale, ({ label }) => label)),
+                    .sort(alphabeticalSort(this.locale, ({ label }) => label.toLowerCase())),
             ];
         }
         this.userGroups = userGroups;

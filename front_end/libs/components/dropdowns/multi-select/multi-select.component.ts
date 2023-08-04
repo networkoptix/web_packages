@@ -136,7 +136,9 @@ export class NxMultiSelectDropdown extends BaseDropdown {
             }
             case 0:
                 this.textSelected =
-                    this.id === 'user-groups' ? this.LANG.search.None : this.LANG.search.Any;
+                    this.id === 'user-groups'
+                        ? this.LANG.search.selectOptions
+                        : this.LANG.search.Any;
                 break;
             case this.items.length: {
                 this.textSelected =
