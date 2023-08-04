@@ -33,10 +33,15 @@ const proxyTargetConfig = {
         cloud: 'https://dev3.cloud.hdw.mx',
     },
 };
-const useProxy = process.env.WEBADMIN_TARGET || 'local';
-const targets = proxyTargetConfig[useProxy];
 
-console.log(`Running ${useProxy} w/ targets : ${JSON.stringify(targets)}`);
+const host = process.env.WEBADMIN_TARGET || 'local';
+const cloud = process.env.CLOUD_TARGET || 'cloud-test.hdw.mx';
+const targets = proxyTargetConfig[host] || {
+    host,
+    cloud,
+};
+
+console.log(`Running ${host} w/ targets : ${JSON.stringify(targets)}`);
 
 const PROXY_CONFIG = [
     {

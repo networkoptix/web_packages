@@ -14,6 +14,7 @@
         "build": {
             "executor": "@nx/angular:webpack-browser",
             "options": {
+                "outputPath": "dist/authorization",
                 "allowedCommonJsDependencies": ["md5", "uuid"],
                 "index": "apps/authorization/src/index.html",
                 "main": "apps/authorization/src/main.ts",

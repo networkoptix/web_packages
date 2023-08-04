@@ -1,15 +1,21 @@
 const defaultCloud = 'https://cloud-test.hdw.mx';
+const source = 'https://localhost:9003';
 const proxyTargetConfig = {
     local: {
-        source: 'https://localhost:9003',
+        source,
         host: 'https://localhost:7001',
         cloud: defaultCloud,
     },
 };
-const useProxy = process.env.WEBADMIN_TARGET || 'local';
-const targets = proxyTargetConfig[useProxy];
+const host = process.env.WEBADMIN_TARGET || 'local';
+const cloud = process.env.CLOUD_TARGET || 'cloud-test.hdw.mx';
+const targets = proxyTargetConfig[host] || {
+    host,
+    cloud,
+    source,
+};
 
-console.log(`Running ${useProxy} w/ targets : ${JSON.stringify(targets)}`);
+console.log(`Running ${host} w/ targets : ${JSON.stringify(targets)}`);
 
 const PROXY_CONFIG = [
     {
@@ -35,7 +41,7 @@ const PROXY_CONFIG = [
     },
     {
         context: ['/static/lang_en_US', '/static'],
-        target: 'https://localhost:9003',
+        target: source,
         changeOrigin: true,
         secure: false,
         bypass: function (req, res, proxyOptions) {

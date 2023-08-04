@@ -9,7 +9,8 @@ const proxyTargetConfig = {
     regress: 'https://regress.cloud.hdw.mx',
     qa: 'https://qa.cloud.hdw.mx',
 };
-const target = process.env.CLOUD_TARGET || 'cloud-test';
+const cloudTarget = process.env.CLOUD_TARGET || 'cloud-test';
+const target = proxyTargetConfig[cloudTarget] || cloudTarget;
 const PROXY_CONFIG = [
     {
         context: [
@@ -40,11 +41,11 @@ const PROXY_CONFIG = [
             '/swagger-ui',
             '/static/scripts/commonPasswordsList.json',
         ],
-        target: proxyTargetConfig[target],
+        target,
         changeOrigin: true,
         secure: false,
         bypass: function (req, res, proxyOptions) {
-            req.headers.origin = proxyTargetConfig[target];
+            req.headers.origin = target;
         },
     },
     {
