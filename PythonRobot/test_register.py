@@ -10,6 +10,7 @@ from colorama import Fore, Back, Style
 from button import Button
 from header import HeaderNav
 from register_form import RegisterForm
+from selenium.webdriver.common.keys import Keys
 
 rb = RobotVariables("en_US")
 # driver = get_headless_chrome()
@@ -65,7 +66,7 @@ def register_user_with_correct_credentials():
 
 def valid_inputs_no_errors():
     """7. With valid inputs no errors are displayed"""
-    email = get_random_email(sendemail=True)
+    email = get_random_email()
     driver = get_headless_chrome()
     robot_keywords.go_to_url(driver, rb.ENV)
     HeaderNav(driver).create_account().click()
@@ -106,6 +107,21 @@ def password_masking_and_eye_icon():
     assert register_form.password_input().field_type() == "password", "Input type should be 'password'"    
     driver.close()
 
+def should_respond_to_enter_key():
+    """9. Should respond to Enter key and save data"""
+    email = get_random_email()
+    driver = get_headless_chrome()
+    robot_keywords.go_to_url(driver, f'{rb.ENV}/authorize?client_type=create')
+    register_form = RegisterForm(driver)
+    register_form.first_name_input().input_text("mark")
+    register_form.last_name_input().input_text( "hamill")
+    register_form.email_input().input_text(email)
+    register_form.password_input().input_text(rb.BASE_PASSWORD)
+    register_form.terms_and_conditions_checkbox().select()
+    register_form.password_input().input_text(Keys.ENTER)
+    register_form.account_creation_success()
+    driver.close()
+
 if __name__ == "__main__":
     page_in_anonymous_state_register_header()
     print(f'{Fore.WHITE}{page_in_anonymous_state_register_header.__doc__}\t\t\t{Fore.GREEN}| PASS |')
@@ -127,3 +143,6 @@ if __name__ == "__main__":
 
     password_masking_and_eye_icon()
     print(f'{Fore.WHITE}{password_masking_and_eye_icon.__doc__}\t\t\t\t\t{Fore.GREEN}| PASS |')
+
+    should_respond_to_enter_key()
+    print(f'{Fore.WHITE}{should_respond_to_enter_key.__doc__}\t\t\t\t\t\t\t\t\t{Fore.GREEN}| PASS |')
