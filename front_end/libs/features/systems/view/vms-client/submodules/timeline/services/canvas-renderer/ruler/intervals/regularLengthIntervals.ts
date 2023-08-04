@@ -30,5 +30,5 @@ export const regularLengthIntervals: Array<RegularLengthInterval> = [
     ROUGH_YEAR,
     10 * ROUGH_YEAR,
     100 * ROUGH_YEAR,
-    1000 * ROUGH_YEAR
+    1000 * ROUGH_YEAR,
 ];

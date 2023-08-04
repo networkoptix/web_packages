@@ -24,5 +24,5 @@ export const MIN_WIDTHS_FOR_INTERVALS = {
     'half-year': [5, 60, 360, 3600],
     year: [15, 40, 120, 720],
     decade: [15, 40, 400, 9000],
-    century: [15, 40, 400, 4000]
+    century: [15, 40, 400, 4000],
 };

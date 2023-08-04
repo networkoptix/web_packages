@@ -27,7 +27,7 @@ describe('isAlignedByIrregularInterval', () => {
             6 * 3600000,
             12 * 3600000,
             24 * 3600000,
-            7 * 24 * 3600000
+            7 * 24 * 3600000,
         ];
         regularIntervals.forEach(i => {
             const l = alignTimeStamp(t, i);
@@ -39,8 +39,14 @@ describe('isAlignedByIrregularInterval', () => {
     });
 
     it('checks irregular interval alignments correctly', () => {
-        const irregularIntervals:Array<IrregularLengthInterval> = [
-            'month', 'quarter-year', 'half-year', 'year', 'decade', 'century', 'millenia'
+        const irregularIntervals: Array<IrregularLengthInterval> = [
+            'month',
+            'quarter-year',
+            'half-year',
+            'year',
+            'decade',
+            'century',
+            'millenia',
         ];
         irregularIntervals.forEach(i => {
             const l = alignTimeStamp(t, i);

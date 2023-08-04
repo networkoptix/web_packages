@@ -7,7 +7,10 @@ export function getWeightArrayFromIntervalList(arr: Array<any>) {
     }, {});
 }
 
-export function getIntervalDiffDict(a1: Array<IrregularLengthInterval>, a2: Array<IrregularLengthInterval>) {
+export function getIntervalDiffDict(
+    a1: Array<IrregularLengthInterval>,
+    a2: Array<IrregularLengthInterval>,
+) {
     const d1 = getWeightArrayFromIntervalList(a1);
     const d2 = getWeightArrayFromIntervalList(a2);
     const result = {};
@@ -18,8 +21,10 @@ export function getIntervalDiffDict(a1: Array<IrregularLengthInterval>, a2: Arra
             result[d1k] = d1[d1k];
         }
     });
-    Object.keys(d2).filter(d2k => !(d2k in result)).forEach(d2k => {
-        result[d2k] = [0, d2[d2k]];
-    });
+    Object.keys(d2)
+        .filter(d2k => !(d2k in result))
+        .forEach(d2k => {
+            result[d2k] = [0, d2[d2k]];
+        });
     return result;
 }

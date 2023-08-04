@@ -12,7 +12,7 @@ import type { TimelineServiceStatus } from './timeline.services.types';
 
 @UntilDestroy()
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class TimelineService {
     public readonly renderFps: number;
@@ -32,10 +32,7 @@ export class TimelineService {
         const _30fps = Math.ceil(1000 / 30); // ~34ms
 
         this.renderFps = _60fps;
-        if (
-            browserDetector.isMobile() ||
-            ['safari', 'firefox'].includes(browserDetector.browser)
-        ) {
+        if (browserDetector.isMobile() || ['safari', 'firefox'].includes(browserDetector.browser)) {
             this.renderFps = _30fps;
         }
 
@@ -60,16 +57,15 @@ export class TimelineService {
             visibleRange: this.visibleRange,
             canvasGeometry: this.canvasGeometry,
             zoom: this.zoomStatus,
-            canvasGeometryUpdateRequested: this.canvasGeometryUpdateRequested
+            canvasGeometryUpdateRequested: this.canvasGeometryUpdateRequested,
         });
     }
 
     public get zoomStatus() {
         return {
-            canZoomIn: (
-                this._visibleRange.duration / this.canvasGeometry.dpr
-            ) > this.canvasGeometry.width,
-            canZoomOut: this._visibleRange.duration < this._fullRange.duration
+            canZoomIn:
+                this._visibleRange.duration / this.canvasGeometry.dpr > this.canvasGeometry.width,
+            canZoomOut: this._visibleRange.duration < this._fullRange.duration,
         };
     }
 
@@ -152,7 +148,7 @@ export class TimelineService {
 
     public timeToDomOffsetX(t: ms): px {
         return Math.round(
-            (t - this._visibleRange.start) / (this.msPerCanvasPx * this._canvasGeometry.dpr)
+            (t - this._visibleRange.start) / (this.msPerCanvasPx * this._canvasGeometry.dpr),
         );
     }
 
@@ -271,7 +267,7 @@ export class TimelineService {
         if (diff < cfg.SCROLL_ANIMATION_DURATION_MS) {
             this._animationStep++;
             const percentage = diff / cfg.SCROLL_ANIMATION_DURATION_MS;
-            const diffMs = (this._targetScrollMs - this._initialScrollMs);
+            const diffMs = this._targetScrollMs - this._initialScrollMs;
             const dMs = Math.round(diffMs * percentage);
             const current = this._initialScrollMs + dMs;
             this._changeVisibleDurationStart(current);

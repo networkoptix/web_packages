@@ -4,7 +4,7 @@ import { TimelineService } from './timeline.service';
 import { TimelineTimeUnderMouseService } from './timeline.time-under-mouse.service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class TimelineExtendToNowService {
     constructor(

@@ -6,7 +6,7 @@ import { TimelineService } from './timeline.service';
 import { TimelineTimeUnderMouseService } from './timeline.time-under-mouse.service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class TimelineWheelHandlerService {
     constructor(
@@ -39,7 +39,7 @@ export class TimelineWheelHandlerService {
     public wheelScroll(delta: int): void {
         const step = 0.01;
         const offset = this._sanitizeOffset(
-            Math.round(delta * step * this.timeline.visibleRange.duration)
+            Math.round(delta * step * this.timeline.visibleRange.duration),
         );
         this.timeline.shiftVisibleRange(offset);
     }
@@ -52,11 +52,15 @@ export class TimelineWheelHandlerService {
         if (e.offsetX < edgeOffsetPx) {
             offset = 0;
             // console.log('left edge')
-        } else if (e.offsetX > (this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - edgeOffsetPx)) {
+        } else if (
+            e.offsetX >
+            this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - edgeOffsetPx
+        ) {
             offset = 1.0;
             // console.log('right edge')
         } else {
-            offset = e.offsetX / (this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr);
+            offset =
+                e.offsetX / (this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr);
             // console.log('normal')
         }
         const duration = this.timeline.visibleRange.duration;

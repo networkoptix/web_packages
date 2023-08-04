@@ -11,7 +11,7 @@ import type { TimelineScrollbarAbsoluteServiceStatus } from './timeline.services
 const MIN_BAR_WIDTH_PX = 50;
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class TimelineScrollbarAbsoluteService {
     constructor(
@@ -31,7 +31,7 @@ export class TimelineScrollbarAbsoluteService {
         left: 0,
         honestLeft: 0,
         width: 0,
-        honestWidth: 0
+        honestWidth: 0,
     });
 
     protected _emit(): void {
@@ -42,7 +42,7 @@ export class TimelineScrollbarAbsoluteService {
             honestLeft: this.honestLeft,
             width: this.width,
             honestWidth: this.honestWidth,
-            isBarGrabbed: this._isBarGrabbed
+            isBarGrabbed: this._isBarGrabbed,
         });
     }
 

@@ -6,7 +6,7 @@ function drawWithClipRect(
     y0: px,
     w: px,
     h: px,
-    draw: Function
+    draw: Function,
 ) {
     ctx.save();
     const clippingRect = new Path2D();
@@ -23,7 +23,7 @@ function drawSingleStripe(
     y0: px,
     stripeWidth: px,
     slopeWidth: px,
-    h: px
+    h: px,
 ) {
     ctx.beginPath();
     ctx.moveTo(x0, y0);
@@ -35,7 +35,7 @@ function drawSingleStripe(
 }
 
 function getOffset(speed: pxPerSecond, period: px) {
-    return Math.round((Date.now() * speed / 1000) % period);
+    return Math.round(((Date.now() * speed) / 1000) % period);
 }
 
 export function drawStripyBar(
@@ -48,7 +48,7 @@ export function drawStripyBar(
     slopeWidth: px,
     speed: pxPerSecond,
     backgroundColor: color,
-    stripeColor: color
+    stripeColor: color,
 ) {
     const tw = stripeWidth + slopeWidth;
     drawWithClipRect(ctx, x0, y0, w, h, () => {

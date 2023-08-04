@@ -4,7 +4,7 @@ import { timeStampMs, alignTimeStamp } from './alignTimeStamp';
 
 export const isAlignedByIrregularInterval = (
     when: timeStampMs,
-    interval: IrregularLengthInterval
+    interval: IrregularLengthInterval,
 ): boolean => {
     return when === alignTimeStamp(when, interval);
 };

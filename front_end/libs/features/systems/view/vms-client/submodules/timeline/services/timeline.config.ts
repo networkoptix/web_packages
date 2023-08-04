@@ -7,9 +7,8 @@ export const cfg = {
 
     ruler: {
         top: {
-            relativeHeight: 0.2
+            relativeHeight: 0.2,
         },
-        primary: {
-        }
-    }
+        primary: {},
+    },
 };

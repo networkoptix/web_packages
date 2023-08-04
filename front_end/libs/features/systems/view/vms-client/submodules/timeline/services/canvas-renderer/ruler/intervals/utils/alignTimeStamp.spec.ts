@@ -26,7 +26,7 @@ xdescribe('alignTimeStamp', () => {
             6 * 3600000,
             12 * 3600000,
             24 * 3600000,
-            7 * 24 * 3600000
+            7 * 24 * 3600000,
         ];
         regularIntervals.forEach(i => {
             const l = alignTimeStamp(t, i);
@@ -45,17 +45,16 @@ xdescribe('alignTimeStamp', () => {
         expect(new Date(alignTimeStamp(t, 60 * 60 * 1000)).getMinutes()).toEqual(0);
         expect(new Date(alignTimeStamp(t, 60 * 60 * 1000, 'right')).getMinutes()).toEqual(0);
 
-        expect(new Date(alignTimeStamp(t, 24 * 60 * 60 * 1000)).getHours())
-            .toEqual(new Date(t).getTimezoneOffset() / -60);
-        expect(new Date(alignTimeStamp(t, 24 * 60 * 60 * 1000, 'right')).getHours())
-            .toEqual(new Date(t).getTimezoneOffset() / -60);
+        expect(new Date(alignTimeStamp(t, 24 * 60 * 60 * 1000)).getHours()).toEqual(
+            new Date(t).getTimezoneOffset() / -60,
+        );
+        expect(new Date(alignTimeStamp(t, 24 * 60 * 60 * 1000, 'right')).getHours()).toEqual(
+            new Date(t).getTimezoneOffset() / -60,
+        );
     });
 
     it('aligns irregular intervals correctly', () => {
-        function check(
-            i: IrregularLengthInterval,
-            d: 'left' | 'right' = 'left'
-        ): number {
+        function check(i: IrregularLengthInterval, d: 'left' | 'right' = 'left'): number {
             const r = alignTimeStamp(t, i, d);
             const v = new Date(r);
             switch (i) {

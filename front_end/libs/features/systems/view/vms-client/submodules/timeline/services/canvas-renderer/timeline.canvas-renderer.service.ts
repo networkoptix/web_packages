@@ -10,7 +10,7 @@ import { TimelineDebugCanvasRendererService } from './timeline.debug-canvas-rend
 import { TimelineRecordsCanvasRendererService } from './timeline.records-canvas-renderer.service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class TimelineCanvasRendererService {
     protected CONFIG: IConfig;
@@ -26,7 +26,12 @@ export class TimelineCanvasRendererService {
     }
 
     public render(ctx: CanvasRenderingContext2D): void {
-        ctx.clearRect(0, 0, this.timeline.canvasGeometry.width, this.timeline.canvasGeometry.height);
+        ctx.clearRect(
+            0,
+            0,
+            this.timeline.canvasGeometry.width,
+            this.timeline.canvasGeometry.height,
+        );
         this.rulerRenderer.render(ctx);
         this.recordsRenderer.render(ctx);
 

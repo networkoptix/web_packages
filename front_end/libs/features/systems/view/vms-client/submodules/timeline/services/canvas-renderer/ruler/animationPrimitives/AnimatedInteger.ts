@@ -34,9 +34,7 @@ export class AnimatedInteger extends AnimatedFloat implements IAnimated<int> {
         super.forceShift(delta);
     }
 
-    protected _getCurrentValue(
-        dt: durationMs = Date.now() - this._lastChange
-    ): int {
+    protected _getCurrentValue(dt: durationMs = Date.now() - this._lastChange): int {
         return Math.round(super._getCurrentValue(dt));
     }
 }

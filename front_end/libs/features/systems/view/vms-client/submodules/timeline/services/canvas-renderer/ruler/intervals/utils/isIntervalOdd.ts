@@ -2,10 +2,7 @@ import { IrregularLengthInterval } from '../IrregularLengthInterval';
 
 import { timeStampMs, durationMs } from './alignTimeStamp';
 
-export function isIntervalOdd(
-    t: timeStampMs,
-    d: IrregularLengthInterval
-) {
+export function isIntervalOdd(t: timeStampMs, d: IrregularLengthInterval) {
     const date = new Date(t);
     let v;
     switch (d) {
@@ -27,9 +24,9 @@ export function isIntervalOdd(
         case 'century':
             v = Math.floor(date.getFullYear() / 100);
             break;
-            // case 'millenia':
-            //   v = Math.floor(date.getFullYear()) % 1000
-            //   break
+        // case 'millenia':
+        //   v = Math.floor(date.getFullYear()) % 1000
+        //   break
         default:
             return !!(Math.floor(t / <durationMs>d) % 2);
     }

@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import {
-    RecordsConfig
-} from '@vms-client/submodules/timeline/services/canvas-renderer/drawingConfigs/drowingConfigs.service.types';
+import { RecordsConfig } from '@vms-client/submodules/timeline/services/canvas-renderer/drawingConfigs/drowingConfigs.service.types';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 import { float, ms } from '@vms-client/utils/type-aliases';
 
@@ -14,7 +12,7 @@ import { getSlopeWidth } from './stripy-bar/slope';
 import { drawStripyBar } from './stripy-bar/stripy-bar';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class TimelineRecordsCanvasRendererService {
     constructor(
@@ -38,13 +36,9 @@ export class TimelineRecordsCanvasRendererService {
         ctx.fillStyle = this.cfg.BACKGROUND_FILL_STYLE;
         ctx.fillRect(
             0,
-            Math.round(
-                this.cfg.RECORDS_OFFSET_RELATIVE * this.timeline.canvasGeometry.height
-            ),
+            Math.round(this.cfg.RECORDS_OFFSET_RELATIVE * this.timeline.canvasGeometry.height),
             this.timeline.canvasGeometry.width,
-            Math.round(
-                this.cfg.RECORDS_HEIGHT_RELATIVE * this.timeline.canvasGeometry.height
-            )
+            Math.round(this.cfg.RECORDS_HEIGHT_RELATIVE * this.timeline.canvasGeometry.height),
         );
     }
 
@@ -88,9 +82,7 @@ export class TimelineRecordsCanvasRendererService {
 
     protected _drawLastMinuteStripes(ctx, lastMinuteStartMs, pxPerMs): void {
         const dpr = this.timeline.canvasGeometry.dpr;
-        const x = Math.round(
-            (lastMinuteStartMs - this.timeline.visibleRange.start) * pxPerMs
-        );
+        const x = Math.round((lastMinuteStartMs - this.timeline.visibleRange.start) * pxPerMs);
         const w = this.timeline.canvasGeometry.width - x;
         const ch = this.timeline.canvasGeometry.height;
         const y = Math.round(this.cfg.RECORDS_OFFSET_RELATIVE * ch);
@@ -98,13 +90,15 @@ export class TimelineRecordsCanvasRendererService {
 
         drawStripyBar(
             ctx,
-            x, y,
-            w, h,
+            x,
+            y,
+            w,
+            h,
             stripeCfg.stripeWidth * dpr,
             getSlopeWidth(stripeCfg.slope, h), // memoized
             stripeCfg.speed * dpr,
             stripeCfg.backgroundColor,
-            stripeCfg.stripeColor
+            stripeCfg.stripeColor,
         );
     }
 }

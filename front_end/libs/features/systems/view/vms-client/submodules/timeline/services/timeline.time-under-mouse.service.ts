@@ -8,7 +8,7 @@ import { TimelineService } from './timeline.service';
 import type { TimelineTimeUnderMouseServiceStatus } from './timeline.services.types';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class TimelineTimeUnderMouseService {
     protected _isMouseInside: boolean = false;
@@ -23,7 +23,7 @@ export class TimelineTimeUnderMouseService {
             isMouseInside: this._isMouseInside,
             timeUnderMouse: this._timeUnderMouse,
             offsetX: this._offsetX,
-            pressed: this._pressed
+            pressed: this._pressed,
         });
     }
 

@@ -36,5 +36,5 @@ export const primaryRulerDateFormats = {
     'half-year': LF.MONTH,
     year: LF.YEAR,
     decade: LF.YEAR,
-    century: LF.YEAR
+    century: LF.YEAR,
 };

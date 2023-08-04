@@ -8,14 +8,17 @@ export type durationMs = ms;
 export function alignTimeStamp(
     t: timeStampMs,
     d: IrregularLengthInterval,
-    alignment: 'left' | 'right' = 'left'
+    alignment: 'left' | 'right' = 'left',
 ): number {
     const date = new Date(t);
     const incIfRight = alignment === 'right' ? 1 : 0;
-    const round = Math[{
-        left: 'floor',
-        right: 'ceil'
-    }[alignment]];
+    const round =
+        Math[
+            {
+                left: 'floor',
+                right: 'ceil',
+            }[alignment]
+        ];
 
     switch (d) {
         case 'month':

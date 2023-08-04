@@ -2,7 +2,8 @@ function findTouch(e: TouchEvent): Touch | undefined {
     return e.targetTouches?.[0] || e.changedTouches?.[0] || e.touches?.[0];
 }
 
-const isMouseEvent = (e: MouseEvent | TouchEvent): e is MouseEvent => e instanceof MouseEvent || 'screenX' in e;
+const isMouseEvent = (e: MouseEvent | TouchEvent): e is MouseEvent =>
+    e instanceof MouseEvent || 'screenX' in e;
 
 export function calcClientX(e: MouseEvent | TouchEvent): number {
     let clientX: number;

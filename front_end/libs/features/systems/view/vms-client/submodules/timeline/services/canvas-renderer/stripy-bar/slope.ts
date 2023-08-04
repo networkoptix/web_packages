@@ -1,7 +1,7 @@
 import { deg, rad, px } from './types';
 
 function degToRad(x: deg): rad {
-    return Math.PI / 180 * x;
+    return (Math.PI / 180) * x;
 }
 
 const cache: Record<string, number> = {};

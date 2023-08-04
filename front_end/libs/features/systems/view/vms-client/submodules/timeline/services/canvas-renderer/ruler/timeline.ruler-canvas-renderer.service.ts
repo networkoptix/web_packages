@@ -4,7 +4,7 @@ import { TimelinePrimaryRulerCanvasRendererService } from './timeline.primary-ru
 import { TimelineTopRulerCanvasRendererService } from './timeline.top-ruler-canvas-renderer.service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class TimelineRulerCanvasRendererService {
     constructor(

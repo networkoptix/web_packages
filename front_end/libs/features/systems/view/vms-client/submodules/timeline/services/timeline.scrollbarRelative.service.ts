@@ -10,28 +10,26 @@ import type { TimelineScrollbarRelativeServiceStatus } from './timeline.services
 // const SCROLL_TRESHOLD_MS = 10;
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class TimelineScrollbarRelativeService {
     constructor(protected timeline: TimelineService) {
         this.timeline.subject.subscribe(this._emit.bind(this));
     }
 
-    protected _subject = new BehaviorSubject<TimelineScrollbarRelativeServiceStatus>(
-        {
-            magnification: 1.0,
-            offset: 0.0,
-            canScrollLeft: false,
-            canScrollRight: false
-        }
-    );
+    protected _subject = new BehaviorSubject<TimelineScrollbarRelativeServiceStatus>({
+        magnification: 1.0,
+        offset: 0.0,
+        canScrollLeft: false,
+        canScrollRight: false,
+    });
 
     protected _emit(): void {
         this._subject.next({
             magnification: this.magnification,
             offset: this.offset,
             canScrollLeft: this.canScrollLeft,
-            canScrollRight: this.canScrollRight
+            canScrollRight: this.canScrollRight,
         });
     }
 
@@ -45,8 +43,8 @@ export class TimelineScrollbarRelativeService {
             Math.min(
                 (this.timeline.targetScrollMs - this.timeline.fullRange.start) /
                     this.timeline.fullRange.duration,
-                1.0 - 1 / this.magnification
-            )
+                1.0 - 1 / this.magnification,
+            ),
         );
     }
 
@@ -79,7 +77,8 @@ export class TimelineScrollbarRelativeService {
         this._timestampMouseDown = Date.now();
         this.holdScrollTargetTime = this._targetTimeFromMouseEvent(e);
         this._scrollDirection =
-            calcOffsetX(e) < (this.offset * this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr)
+            calcOffsetX(e) <
+            (this.offset * this.timeline.canvasGeometry.width) / this.timeline.canvasGeometry.dpr
                 ? -1
                 : +1;
     }
@@ -90,16 +89,14 @@ export class TimelineScrollbarRelativeService {
         const sinceMouseDown: ms = Date.now() - this._timestampMouseDown;
         const edgeTimeSinceMouseDown: ms = 200;
         if (sinceMouseDown < edgeTimeSinceMouseDown) {
-        // console.log(sinceMouseDown, 'jump one screen', this._scrollDirection)
+            // console.log(sinceMouseDown, 'jump one screen', this._scrollDirection)
             this.timeline.jumpScrollTo(
-                (
-                    this.timeline.visibleRange.start +
-            this.timeline.visibleRange.duration * this._scrollDirection
-                ),
-                true
+                this.timeline.visibleRange.start +
+                    this.timeline.visibleRange.duration * this._scrollDirection,
+                true,
             );
         } else {
-        // console.log('normal mouse up')
+            // console.log('normal mouse up')
         }
     }
 
@@ -110,7 +107,8 @@ export class TimelineScrollbarRelativeService {
 
     public handleButtonRightMouseDown(): void {
         this.isBackgroundMouseDown = true;
-        this.holdScrollTargetTime = this.timeline.fullRange.end - this.timeline.visibleRange.duration;
+        this.holdScrollTargetTime =
+            this.timeline.fullRange.end - this.timeline.visibleRange.duration;
     }
 
     public updateIfMouseIsDown(): void {
@@ -135,7 +133,7 @@ export class TimelineScrollbarRelativeService {
     public handleButtonRightDblClick(): void {
         this.timeline.jumpScrollTo(
             this.timeline.fullRange.end - this.timeline.visibleRange.duration,
-            true
+            true,
         );
         this._emit();
     }
@@ -143,10 +141,9 @@ export class TimelineScrollbarRelativeService {
     protected _targetTimeFromMouseEvent(e: MouseEvent | TouchEvent): ms {
         return Math.round(
             this.timeline.fullRange.start +
-        this.timeline.fullRange.duration * (
-            calcOffsetX(e) / (e.target as HTMLElement).clientWidth
-        ) -
-        this.timeline.visibleRange.duration * 0.5
+                this.timeline.fullRange.duration *
+                    (calcOffsetX(e) / (e.target as HTMLElement).clientWidth) -
+                this.timeline.visibleRange.duration * 0.5,
         );
     }
 }

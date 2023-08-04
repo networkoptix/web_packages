@@ -6,5 +6,5 @@ export const TOP__MIN_WIDTH_FOR_INTERVALS = {
     [DAY]: 170,
     month: 170,
     year: 100,
-    century: 0
+    century: 0,
 };

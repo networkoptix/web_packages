@@ -23,6 +23,6 @@ export const irregularLengthIntervals: Array<IrregularLengthInterval> = [
     'half-year',
     'year',
     'decade',
-    'century'
+    'century',
     // 'millenia',
 ];

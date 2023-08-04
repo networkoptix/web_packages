@@ -97,10 +97,14 @@ export class AnimatedFloat implements IAnimated<float> {
         switch (this._easing) {
             case 'ease-in-out':
             case 'ease-in-out-sine':
-                return this._value + (this._target - this._value) * easeInOutSine(dt / this._animationDuration);
+                return (
+                    this._value +
+                    (this._target - this._value) * easeInOutSine(dt / this._animationDuration)
+                );
             case 'linear':
             default:
-                const result = this._value + (this._target - this._value) * dt / this._animationDuration;
+                const result =
+                    this._value + ((this._target - this._value) * dt) / this._animationDuration;
                 // if (result > 4 || result < 0) console.log('GCV', result, this._value, this._target, this)
                 return result;
         }

@@ -4,7 +4,6 @@ import { SECOND, MINUTE, HOUR, DAY } from '../intervals/regularLengthIntervals';
 import { LABEL_FORMATS as LF } from './label_formats';
 
 export const topRulerDateFormats = {
-
     [SECOND]: { top: 'd mmm HH:MM:ss', serif: 'ss"s"' },
     [5 * SECOND]: { top: 'd mmm HH:MM:ss', serif: 'ss"s"' },
     [10 * SECOND]: { top: 'd mmm HH:MM:ss', serif: 'ss"s"' },
@@ -34,5 +33,5 @@ export const topRulerDateFormats = {
     year: { top: LF.YEAR, serif: LF.YEAR },
 
     // [ROUGH_CENTURY]: { top: LF.YEAR, serif: LF.YEAR, },
-    century: { top: LF.YEAR, serif: LF.YEAR }
+    century: { top: LF.YEAR, serif: LF.YEAR },
 };

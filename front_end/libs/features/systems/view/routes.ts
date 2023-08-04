@@ -16,7 +16,7 @@ export const routes: Routes = [
                 path: ':cameraId',
                 component: NxSystemViewCameraPageComponent,
                 // canActivate: [AuthGuard]
-            }
-        ]
-    }
+            },
+        ],
+    },
 ];

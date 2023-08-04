@@ -82,5 +82,5 @@ export const colors = {
     additional_light5: '#FFFFF8',
     additional_light6: '#FFFFF7',
     additional_light7: '#F5F7F9',
-    additional_light8: '#E1E7EA'
+    additional_light8: '#E1E7EA',
 };
