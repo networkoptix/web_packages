@@ -1,0 +1,10 @@
+<button
+    class="btn"
+    [ngClass]="{
+        'btn-primary': type === ButtonType.brand,
+        'btn-default': type === ButtonType.secondary,
+    }"
+    [innerText]="text"
+    (click)="handleClick()"
+    [disabled]="disabled"
+></button>

@@ -91,6 +91,11 @@ export class NxSandboxComponent {
                             path: '/apply-service-section',
                         },
                         {
+                            id: 'buttons',
+                            label: 'Buttons',
+                            path: '/buttons',
+                        },
+                        {
                             id: 'dropdowns',
                             label: 'Dropdowns',
                             path: '/dropdowns',

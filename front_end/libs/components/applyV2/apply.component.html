@@ -1,0 +1,24 @@
+<div
+    *ngIf="visible"
+    class="placeholder-text unsaved-changes"
+>
+    <div
+        *ngIf="warn"
+        class="warning-text pb-3"
+    >
+        {{ warn }}
+    </div>
+    <div class="d-flex">
+        <nx-button
+            [type]="ButtonType.brand"
+            [disabled]="saveDisabled"
+            (onClick)="save()"
+            text="{{ 'Save' | translate }}"
+        ></nx-button>
+        <nx-button
+            [type]="ButtonType.secondary"
+            (onClick)="discard()"
+            text="{{ 'Cancel' | translate }}"
+        ></nx-button>
+    </div>
+</div>

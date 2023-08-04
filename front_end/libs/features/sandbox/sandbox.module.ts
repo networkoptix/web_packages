@@ -5,6 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { NxButtonComponent } from '@components/button/button.component';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
@@ -41,6 +42,7 @@ import { NxGridLayoutModule } from '../layout/layout.module';
 
 import { NxArchSvgComponent } from './arch-svg/arch-svg.component';
 import { NxBasicColorsComponent } from './basic-colors/colors.component';
+import { NxButtonsExampleComponent } from './buttons/buttonsExample.component';
 import { NxCustomColorsComponent } from './custom-colors/colors.component';
 import { DynamicFormApplyExampleComponent } from './dynamic-form-apply-example/dynamic-form-apply-example.component';
 import { FormApplyExampleComponent } from './form-apply-example/form-apply-example.component';
@@ -70,6 +72,10 @@ const appRoutes: Routes = [
                 path: 'basic-colors',
                 component: NxBasicColorsComponent,
                 canDeactivate: [ApplyGuard],
+            },
+            {
+                path: 'buttons',
+                component: NxButtonsExampleComponent,
             },
             {
                 path: 'webgl',
@@ -197,6 +203,7 @@ const appRoutes: Routes = [
         DangerButtonModule,
         NxRadioComponent,
         NxTagComponent,
+        NxButtonComponent,
     ],
     providers: [],
 
@@ -220,6 +227,7 @@ const appRoutes: Routes = [
         NxHSLThemeColorsComponent,
         WebglComponent,
         SimpleWebglComponent,
+        NxButtonsExampleComponent,
     ],
     bootstrap: [],
     exports: [NxSandboxComponent],

@@ -1,0 +1,36 @@
+<div>
+    <span>Primary/Brand button</span>
+    <nx-button
+        [type]="ButtonType.brand"
+        text="Primary"
+        [disabled]="false"
+        (click)="onClick()"
+    />
+</div>
+<div>
+    <span>Secondary button</span>
+    <nx-button
+        [type]="ButtonType.secondary"
+        text="Secondary"
+        [disabled]="false"
+        (click)="onClick()"
+    />
+</div>
+<div>
+    <span>Primary/Brand button disabled</span>
+    <nx-button
+        [type]="ButtonType.brand"
+        text="Primary"
+        [disabled]="true"
+        (click)="onClick()"
+    />
+</div>
+<div>
+    <span>Secondary button disabled</span>
+    <nx-button
+        [type]="ButtonType.secondary"
+        text="Secondary"
+        [disabled]="true"
+        (click)="onClick()"
+    />
+</div>
