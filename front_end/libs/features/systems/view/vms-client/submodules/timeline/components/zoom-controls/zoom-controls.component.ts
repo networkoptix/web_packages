@@ -39,11 +39,9 @@ export class ZoomControlsComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.timeline.subject
-            .pipe(untilDestroyed(this))
-            .subscribe((s: TimelineServiceStatus) => {
-                this.onTimelineSubjectChange(s);
-            });
+        this.timeline.subject.pipe(untilDestroyed(this)).subscribe((s: TimelineServiceStatus) => {
+            this.onTimelineSubjectChange(s);
+        });
 
         interval(0, animationFrameScheduler)
             .pipe(untilDestroyed(this))

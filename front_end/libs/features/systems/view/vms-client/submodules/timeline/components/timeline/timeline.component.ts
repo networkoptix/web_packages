@@ -86,13 +86,10 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
             device.deviceType !== 'mobile' &&
             systemService.getCurrentSystem().version >= VMS_VERSION_TIMELINE_ENABLED;
 
-        this.selection.subject
-            .pipe(untilDestroyed(this))
-            .subscribe(selection => {
-                this.isDragging =
-                    selection.dragMode !== SELECTION_DRAG_MODE.NO_DRAGGING ||
-                    selection.hoverMode;
-            });
+        this.selection.subject.pipe(untilDestroyed(this)).subscribe(selection => {
+            this.isDragging =
+                selection.dragMode !== SELECTION_DRAG_MODE.NO_DRAGGING || selection.hoverMode;
+        });
     }
 
     protected _onTimelineStatusChange(s: TimelineServiceStatus): void {
@@ -123,10 +120,9 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
                 if (!this._animationFrameRequestHandler) {
                     // allow CanvasGeometry to be updated
                     setTimeout(() => {
-                        this._animationFrameRequestHandler =
-                            requestAnimationFrame(() =>
-                                this.onAnimationFrame(),
-                            );
+                        this._animationFrameRequestHandler = requestAnimationFrame(() =>
+                            this.onAnimationFrame(),
+                        );
                     }, 250);
                 }
             });
@@ -135,8 +131,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         this._pinchDestructor = onPinch(
             this.canvasView.nativeElement,
             ({ newScale, scaleChange, offset }) => {
-                const durationDelta =
-                    (scaleChange - 1) * this.timeline.fullRange.duration;
+                const durationDelta = (scaleChange - 1) * this.timeline.fullRange.duration;
                 this.timeline.zoom(durationDelta, offset);
             },
         );
@@ -170,11 +165,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         const dpr = this.window.devicePixelRatio;
         this.canvasView.nativeElement.width = rect.width * dpr;
         this.canvasView.nativeElement.height = rect.height * dpr;
-        this.timeline.setCanvasGeometry(
-            rect.width * dpr,
-            rect.height * dpr,
-            dpr,
-        );
+        this.timeline.setCanvasGeometry(rect.width * dpr, rect.height * dpr, dpr);
     }
 
     public canvasWheelHandler(e: WheelEvent): void {
@@ -200,11 +191,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         if (this.isDragging) {
-            const dt =
-                -1 *
-                this.timeline.domWidthToDuration(
-                    screenX - this._mouseDownScreenX,
-                );
+            const dt = -1 * this.timeline.domWidthToDuration(screenX - this._mouseDownScreenX);
             // short circuit unrealistically big "dt"
             // and prevent timeline jump when dragging
             if (Math.abs(dt) < MOUSE_MOVE_DT_LIMIT) {
@@ -240,8 +227,11 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.archiveSelectionEnabled && this.isDragging) {
             const edge = this.exitEdge(e, this.canvasWrapper.nativeElement);
             switch (edge) {
-                case 'left' : this.selection.fitStart(); return;
-                case 'right' : this.selection.fitEnd();
+                case 'left':
+                    this.selection.fitStart();
+                    return;
+                case 'right':
+                    this.selection.fitEnd();
             }
         }
     }
@@ -276,10 +266,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         }, CLICK_AND_HOLD_TIMEOUT);
     }
 
-    public canvasMouseUpHandler(
-        e: MouseEvent | TouchEvent,
-        mustPlay: boolean = false,
-    ): void {
+    public canvasMouseUpHandler(e: MouseEvent | TouchEvent, mustPlay: boolean = false): void {
         e.stopPropagation();
         e.preventDefault();
 
@@ -323,15 +310,10 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
             this.timeline.jumpScrollTo(time - offset, true);
         } else if (
             offsetX >
-            this.timeline.canvasGeometry.width /
-                this.timeline.canvasGeometry.dpr -
-                edgeWidth
+            this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - edgeWidth
         ) {
             // console.log('right edge fix')
-            this.timeline.jumpScrollTo(
-                time - this.timeline.visibleRange.duration + offset,
-                true,
-            );
+            this.timeline.jumpScrollTo(time - this.timeline.visibleRange.duration + offset, true);
         }
     }
 
@@ -346,9 +328,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
             if (!this.selection.handleMouseUp(e)) {
                 this._play(
                     e.clientX -
-                        (
-                            this.canvasView.nativeElement as HTMLElement
-                        ).getBoundingClientRect().left,
+                        (this.canvasView.nativeElement as HTMLElement).getBoundingClientRect().left,
                 );
             }
         }

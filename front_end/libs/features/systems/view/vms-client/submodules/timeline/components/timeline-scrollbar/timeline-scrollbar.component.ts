@@ -11,9 +11,7 @@ import {
 import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
 import { float, px } from '@vms-client/utils/type-aliases';
 
-import {
-    TimelineScrollbarAbsoluteService,
-} from '../../services/timeline.scrollbarAbsolute.service';
+import { TimelineScrollbarAbsoluteService } from '../../services/timeline.scrollbarAbsolute.service';
 import { TimelineScrollbarRelativeService } from '../../services/timeline.scrollbarRelative.service';
 import { TimelineSelectionService } from '../../services/timeline.selection.service';
 import { TimelineService } from '../../services/timeline.service';
@@ -78,17 +76,15 @@ export class TimelineScrollbarComponent implements AfterViewInit {
     public ngAfterViewInit(): void {
         this.scrollbarAbsolute.subject
             .pipe(untilDestroyed(this))
-            .subscribe((s:TimelineScrollbarAbsoluteServiceStatus) => {
+            .subscribe((s: TimelineScrollbarAbsoluteServiceStatus) => {
                 setTimeout(() => {
                     this.onScrollBarSubjectChange(s);
                 });
             });
 
-        this.playback.subject
-            .pipe(untilDestroyed(this))
-            .subscribe((s: PlaybackState) => {
-                this.onPlaybackSubjectChange(s);
-            });
+        this.playback.subject.pipe(untilDestroyed(this)).subscribe((s: PlaybackState) => {
+            this.onPlaybackSubjectChange(s);
+        });
 
         this.selection.subject
             .pipe(untilDestroyed(this))
@@ -138,23 +134,23 @@ export class TimelineScrollbarComponent implements AfterViewInit {
                     const width = this.barWidthPx;
                     const duration = vr.duration;
                     const t = ct - vr.start;
-                    this.playbackLeftPixel = x0 + width * t / duration;
+                    this.playbackLeftPixel = x0 + (width * t) / duration;
                 } else if (ct > vr.end) {
                     // after the bar
                     const duration = this.timeline.fullRange.end - vr.end;
-                    const width = this.backgroundView.nativeElement
-                        .getBoundingClientRect().width -
+                    const width =
+                        this.backgroundView.nativeElement.getBoundingClientRect().width -
                         (this.barLeftPx + this.barWidthPx);
                     const x0 = this.barLeftPx + this.barWidthPx;
                     const t = ct - vr.end;
-                    this.playbackLeftPixel = x0 + width * t / duration;
+                    this.playbackLeftPixel = x0 + (width * t) / duration;
                 } else {
                     // before the bar
                     const duration = vr.start - this.timeline.fullRange.start;
                     const width = this.barLeftPx;
                     const x0 = 0;
                     const t = ct - fr.start;
-                    this.playbackLeftPixel = x0 + width * t / duration;
+                    this.playbackLeftPixel = x0 + (width * t) / duration;
                 }
                 this.isPlaying = true;
             }, 0);
@@ -164,14 +160,11 @@ export class TimelineScrollbarComponent implements AfterViewInit {
     public onSelectionSubjectChange(s: TimelineSelectionServiceStatus): void {
         this.isSelected = s.isActive;
         if (s.isActive) {
-            const bgw = this.backgroundView.nativeElement
-                .getBoundingClientRect().width;
-            this.selectionLeftPixel = bgw *
-                (s.range.start - this.timeline.fullRange.start) /
+            const bgw = this.backgroundView.nativeElement.getBoundingClientRect().width;
+            this.selectionLeftPixel =
+                (bgw * (s.range.start - this.timeline.fullRange.start)) /
                 this.timeline.fullRange.duration;
-            this.selectionWidthPixel = bgw *
-                s.range.duration /
-                this.timeline.fullRange.duration;
+            this.selectionWidthPixel = (bgw * s.range.duration) / this.timeline.fullRange.duration;
         } else {
             this.selectionLeftPixel = -1;
             this.selectionWidthPixel = 0;
@@ -195,10 +188,7 @@ export class TimelineScrollbarComponent implements AfterViewInit {
         }
         const lastTouched = this.lastTouched;
         // Detect and handle double touches
-        if (
-            lastTouched?.target === e.target &&
-            lastTouched?.timeStamp + 500 > e.timeStamp
-        ) {
+        if (lastTouched?.target === e.target && lastTouched?.timeStamp + 500 > e.timeStamp) {
             switch (e.target) {
                 case this.leftView.nativeElement:
                     this.buttonLeftDblClickHandler();
@@ -303,7 +293,8 @@ export class TimelineScrollbarComponent implements AfterViewInit {
         this._prevMouseUpTime = now;
     }
 
-    public barHandleMouseUp(e: MouseEvent | TouchEvent): void { // this UX is a bit doubtful
+    public barHandleMouseUp(e: MouseEvent | TouchEvent): void {
+        // this UX is a bit doubtful
         const now = Date.now();
         if (now - this._prevMouseUpTime < this._doubleClickDelay) {
             this.barDblClickHandler(e);

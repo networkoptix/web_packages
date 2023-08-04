@@ -8,9 +8,8 @@ xdescribe('TimeUnderMouseComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [TimeUnderMouseComponent]
-        })
-            .compileComponents();
+            declarations: [TimeUnderMouseComponent],
+        }).compileComponents();
     }));
 
     beforeEach(() => {

@@ -8,9 +8,8 @@ xdescribe('TimelineSelectionComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [TimelineSelectionComponent]
-        })
-            .compileComponents();
+            declarations: [TimelineSelectionComponent],
+        }).compileComponents();
     }));
 
     beforeEach(() => {

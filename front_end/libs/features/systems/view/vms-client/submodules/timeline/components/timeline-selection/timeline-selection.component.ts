@@ -108,9 +108,7 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
             this.rightDate = '';
             this.rightTime = '';
         } else {
-            const tweakedTStart = this.vms.tweakT(
-                this.selectionStatus.range.start,
-            );
+            const tweakedTStart = this.vms.tweakT(this.selectionStatus.range.start);
             const tweakedTEnd = this.vms.tweakT(this.selectionStatus.range.end);
             this.leftDate = dateFormat(tweakedTStart, DATE_FORMAT_STRING);
             this.leftTime = dateFormat(tweakedTStart, TIME_FORMAT_STRING);
@@ -138,11 +136,9 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
                 this.onSelectionSubjectChange(s);
             });
 
-        this.timeline.subject
-            .pipe(untilDestroyed(this))
-            .subscribe((s: TimelineServiceStatus) => {
-                this.onTimelineSubjectChange(s);
-            });
+        this.timeline.subject.pipe(untilDestroyed(this)).subscribe((s: TimelineServiceStatus) => {
+            this.onTimelineSubjectChange(s);
+        });
 
         interval(0, animationFrameScheduler)
             .pipe(untilDestroyed(this))
@@ -156,10 +152,7 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
         const offset = this.timeline.domWidthToDuration((1 << speed) * 10);
         let target = this.timeline.visibleRange.start;
 
-        target =
-            direction === EDGE_SCROLLING_DIRECTION.LEFT
-                ? target - offset
-                : target + offset;
+        target = direction === EDGE_SCROLLING_DIRECTION.LEFT ? target - offset : target + offset;
 
         if (this.timeline.stepScrollToStartTime(target, EDGE_SCROLL_STEP)) {
             this.updateMouseMoveEvent(this._lastMouseMoveEvent);
@@ -182,9 +175,7 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
             return;
         }
 
-        const timelineWidth =
-            this.timeline.canvasGeometry.width /
-            this.timeline.canvasGeometry.dpr;
+        const timelineWidth = this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr;
         if (direction === EDGE_SCROLLING_DIRECTION.LEFT) {
             // left going left
             if (this.left < EDGE_SCROLLING_SPEED_POS.FAR) {
@@ -205,17 +196,12 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
                 this.scrollTimeline(this.right, EDGE_SCROLLING_DIRECTION.RIGHT);
             }
             if (timelineWidth - this.right < EDGE_SCROLLING_SPEED_POS.FAR) {
-                this.scrollTimeline(
-                    timelineWidth - this.right,
-                    EDGE_SCROLLING_DIRECTION.LEFT,
-                );
+                this.scrollTimeline(timelineWidth - this.right, EDGE_SCROLLING_DIRECTION.LEFT);
             }
         }
     }
 
-    private distanceToScrollingSpeed(
-        distanceFromEdge: px,
-    ): EDGE_SCROLLING_SPEED {
+    private distanceToScrollingSpeed(distanceFromEdge: px): EDGE_SCROLLING_SPEED {
         if (distanceFromEdge > EDGE_SCROLLING_SPEED_POS.FAR) {
             return EDGE_SCROLLING_SPEED.NONE;
         }
@@ -242,14 +228,11 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
     private _updateCss(): void {
         if (this.selectedRangeView && this.selectionStatus.isActive) {
             this.selectedRangeView.nativeElement.classList.add('active');
-            this.left = this.timeline.timeToDomOffsetX(
-                this.selectionStatus.range.start,
-            );
-            this.duration = this.timeline.durationToDomWidth(
-                this.selectionStatus.range.duration,
-            );
+            this.left = this.timeline.timeToDomOffsetX(this.selectionStatus.range.start);
+            this.duration = this.timeline.durationToDomWidth(this.selectionStatus.range.duration);
 
-            const canvasWidth = this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr;
+            const canvasWidth =
+                this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr;
             const range = this.left + this.duration;
 
             // left ear
@@ -319,7 +302,8 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
         let offset;
 
         if (this.selectionStatus.dragMode || this.selectionStatus.hoverMode) {
-            const canvasWidth = this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr;
+            const canvasWidth =
+                this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr;
             const range = this.left + this.duration;
             offset = canvasWidth - range - WNM;
 
@@ -386,14 +370,9 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
             this.timeline.jumpScrollTo(time - offset, true);
         } else if (
             offsetX >
-            this.timeline.canvasGeometry.width /
-                this.timeline.canvasGeometry.dpr -
-                edgeWidth
+            this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - edgeWidth
         ) {
-            this.timeline.jumpScrollTo(
-                time - this.timeline.visibleRange.duration + offset,
-                true,
-            );
+            this.timeline.jumpScrollTo(time - this.timeline.visibleRange.duration + offset, true);
         }
     }
 

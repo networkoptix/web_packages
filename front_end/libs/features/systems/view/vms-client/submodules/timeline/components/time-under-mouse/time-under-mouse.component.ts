@@ -57,7 +57,10 @@ export class TimeUnderMouseComponent implements OnInit {
             if (offset < marginLeft) {
                 offset = marginLeft;
             }
-            const marginRight = this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - MARGIN - PRIMARY_WIDTH / 2;
+            const marginRight =
+                this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr -
+                MARGIN -
+                PRIMARY_WIDTH / 2;
             if (offset > marginRight) {
                 offset = marginRight;
             }

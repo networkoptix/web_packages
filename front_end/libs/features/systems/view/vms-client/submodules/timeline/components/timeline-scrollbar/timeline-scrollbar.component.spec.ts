@@ -8,9 +8,8 @@ xdescribe('TimelineScrollbarComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [TimelineScrollbarComponent]
-        })
-            .compileComponents();
+            declarations: [TimelineScrollbarComponent],
+        }).compileComponents();
     }));
 
     beforeEach(() => {

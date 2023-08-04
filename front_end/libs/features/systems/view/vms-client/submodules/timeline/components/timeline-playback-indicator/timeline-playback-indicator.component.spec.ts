@@ -8,9 +8,8 @@ xdescribe('TimelinePlaybackIndicatorComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [TimelinePlaybackIndicatorComponent]
-        })
-            .compileComponents();
+            declarations: [TimelinePlaybackIndicatorComponent],
+        }).compileComponents();
     }));
 
     beforeEach(() => {

@@ -411,7 +411,7 @@ module.exports = {
                 'libs/features/systems/view/pages/**/*.ts',
                 'libs/features/systems/view/services/**/*.ts',
                 'libs/features/systems/view/vms-client/submodules/playback/**/*.ts',
-                'libs/features/systems/view/vms-client/submodules/timeline/components/[a-s]*/**/*.ts',
+                'libs/features/systems/view/vms-client/submodules/timeline/components/**/*.ts',
                 // 'libs/features/systems/view/vms-client/submodules/timeline/services/**/*.ts',
                 'libs/features/systems/view/vms-client/submodules/vms/**/*.ts',
                 // 'libs/features/systems/view/vms-client/utils/**/*.ts',

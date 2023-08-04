@@ -54,11 +54,9 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
     ) {}
 
     public ngOnInit(): void {
-        this.selection.subject
-            .pipe(untilDestroyed(this))
-            .subscribe(s => {
-                this.onSubjectChange(s);
-            });
+        this.selection.subject.pipe(untilDestroyed(this)).subscribe(s => {
+            this.onSubjectChange(s);
+        });
 
         this.accountService.get().then(account => {
             if (!account) {
@@ -68,13 +66,10 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
                 this.system = this.systemService.createLocalSystem(
                     this.accountService.mediaServerApi,
                     account.id,
-                    account.email
+                    account.email,
                 );
             } else {
-                this.system = this.systemService.createSystem(
-                    account.email,
-                    this.vms.systemId()
-                );
+                this.system = this.systemService.createSystem(account.email, this.vms.systemId());
             }
         });
     }
@@ -94,7 +89,11 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
             transport = 'mkv';
         }
         this.exportLink = this.system
-            ? this.system.mediaserver.getExportUrl(this.selection.exportUrlParams as Parameters<typeof this.system.mediaserver.getExportUrl>[0])
+            ? this.system.mediaserver.getExportUrl(
+                  this.selection.exportUrlParams as Parameters<
+                      typeof this.system.mediaserver.getExportUrl
+                  >[0],
+              )
             : '';
 
         this.exportName = `${this.selection.cameraId}.${transport}`;
@@ -107,9 +106,10 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
             {
                 panelClass: 'hint-popover',
                 arrowOffset: 4,
-                positionStrategy: POS_STRATEGY.DEFAULT
+                positionStrategy: POS_STRATEGY.DEFAULT,
             },
-            this._viewContainerRef);
+            this._viewContainerRef,
+        );
     }
 
     closeLegend(): void {
@@ -128,7 +128,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
             this.exportEnabled = !!this.vms.selectedCamera.getRecords(
                 Math.max(this.status.range.start, this.selection.timeline.fullRange.start),
                 Math.min(this.status.range.end, this.selection.timeline.fullRange.end),
-                1000
+                1000,
             ).length;
         } else {
             this.exportLink = '';
@@ -137,14 +137,16 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
     }
 
     public initSetTimeDialog(): void {
-        this.dialogs.selectTimeRange({
-            selection: this.selection,
-            start: this.timeline.fullRange.start,
-            end: this.timeline.fullRange.end,
-        }).then(result => {
-            if (result?.start) {
-                this.selection.range = result as TimeRange;
-            }
-        });
+        this.dialogs
+            .selectTimeRange({
+                selection: this.selection,
+                start: this.timeline.fullRange.start,
+                end: this.timeline.fullRange.end,
+            })
+            .then(result => {
+                if (result?.start) {
+                    this.selection.range = result as TimeRange;
+                }
+            });
     }
 }

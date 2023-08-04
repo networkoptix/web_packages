@@ -49,34 +49,35 @@ export class TimelinePlaybackIndicatorComponent implements OnInit {
             this.timeline.jumpScrollTo(
                 this.playback.state.currentTime -
                     Math.round(this.timeline.visibleRange.duration / 2),
-                true
+                true,
             );
         }
     }
 
     public ngOnInit(): void {
-        this.playback.subject
-            .pipe(untilDestroyed(this))
-            .subscribe(s => {
-                this.onPlaybackSubjectChange(s);
-            });
+        this.playback.subject.pipe(untilDestroyed(this)).subscribe(s => {
+            this.onPlaybackSubjectChange(s);
+        });
 
-        this.timeline.subject
-            .pipe(untilDestroyed(this))
-            .subscribe((s: TimelineServiceStatus) => {
-                this.onTimelineSubjectChange(s);
-            });
+        this.timeline.subject.pipe(untilDestroyed(this)).subscribe((s: TimelineServiceStatus) => {
+            this.onTimelineSubjectChange(s);
+        });
     }
 
     public get edgeCaseClasses(): Record<string, boolean> {
-        this.self.nativeElement.classList[(this.visible ? 'add' : 'remove')]('visible-opacity');
+        this.self.nativeElement.classList[this.visible ? 'add' : 'remove']('visible-opacity');
         return {
             'left-most': this.honestOffset <= 0,
-            leftish: this.honestOffset > 0 &&
-                this.honestOffset < (MARGIN + PRIMARY_WIDTH) / 2,
-            rightish: this.honestOffset < this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr &&
-                this.honestOffset > this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - (MARGIN + PRIMARY_WIDTH),
-            'right-most': this.honestOffset >= this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr
+            leftish: this.honestOffset > 0 && this.honestOffset < (MARGIN + PRIMARY_WIDTH) / 2,
+            rightish:
+                this.honestOffset <
+                    this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr &&
+                this.honestOffset >
+                    this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr -
+                        (MARGIN + PRIMARY_WIDTH),
+            'right-most':
+                this.honestOffset >=
+                this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr,
         };
     }
 
@@ -146,8 +147,9 @@ export class TimelinePlaybackIndicatorComponent implements OnInit {
                 MARGIN + PRIMARY_WIDTH / 2,
                 Math.min(
                     this.honestOffset,
-                    (this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr) - (MARGIN + PRIMARY_WIDTH / 2)
-                )
+                    this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr -
+                        (MARGIN + PRIMARY_WIDTH / 2),
+                ),
             );
             // if (Math.abs(this.honestOffset - ho) > 1) {
             //     console.log('jump', Date.now(), 'time', this.timeMs, new Date(this.timeMs), 'honest', ho, '->', this.honestOffset, 'visible', vo, '->', this.visibleOffset)

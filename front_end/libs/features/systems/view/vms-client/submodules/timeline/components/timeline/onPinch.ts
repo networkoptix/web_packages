@@ -6,8 +6,8 @@ export function onPinch(el: HTMLElement, onPinchMove: Function = () => {}) {
     const onTouchMove = event => {
         if (event.touches.length === 2) {
             const currentDistance = Math.hypot(
-                (event.touches[0].pageX - event.touches[1].pageX),
-                (event.touches[0].pageY - event.touches[1].pageY)
+                event.touches[0].pageX - event.touches[1].pageX,
+                event.touches[0].pageY - event.touches[1].pageY,
             );
 
             if (distance === undefined) {
