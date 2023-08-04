@@ -26,7 +26,7 @@ import { cleanId, KeyFilter } from '@utils/general';
 import { memoizeAsyncPersistent, memoizeDecorator } from '@utils/memoize';
 import { setServerIpAndPort } from '@utils/nx';
 
-import type { MediaServersAndCameras } from '../../system-api.aggregated-types';
+import type { ViewMediaServersAndCameras } from '../../system-api.aggregated-types';
 import {
     EventRule,
     EventTypes,
@@ -37,6 +37,7 @@ import {
     MergeInfo,
     ActionParams,
     EventCondition,
+    ec2MediaServerEx,
 } from '../../system-api.types';
 import { NxSystemAPI } from '../../system-legacy-api.service';
 import { CameraManager } from '../../system.service/camera-manager/camera-manager';
@@ -44,7 +45,7 @@ import { CloudStorageManager } from '../../system.service/cloud-storage-manager/
 import { LicenseManager } from '../../system.service/license-manager/licence-manager';
 import { ServerManager } from '../../system.service/server-manager/server-manager';
 import { NxSystem } from '../../system.service/system';
-import { NxMediaServer, ServerPreprocess, ServerTimeInfo } from '../../system.service/system-types';
+import { NxViewMediaServer, ServerTimeInfo } from '../../system.service/system-types';
 import { UserManager } from '../../system.service/user-manager/user-manager';
 import { NxSystemsService } from '../../systems.service';
 import { NxSystemBase } from '../system-base';
@@ -95,7 +96,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     mergeInfo: MergeInfo;
     cloudStorageSystemEnabled: boolean = false;
     cloudStorageCapable: boolean = false;
-    mediaservers: NxMediaServer[] = null;
+    mediaservers: NxViewMediaServer[] = null;
 
     CONFIG: IConfig;
     LANG = staticLang;
@@ -550,7 +551,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
             this.updatePromise = this.getInfo(true, false, true)
                 .then(() =>
                     this.isOnline
-                        ? this.proxied.cameraManager.updateSystemServersCameras()
+                        ? this.proxied.cameraManager.updateSystemCameras()
                         : Promise.reject({ offline: true }),
                 )
                 .then(() => this.proxied.serverManager.getForceServers(false).toPromise())
@@ -595,13 +596,13 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         return this.mediaserver.updateOrGetSettings(updateParams);
     }
 
-    public getMediaServersAndCameras(force: boolean = false): Promise<NxMediaServer[]> {
+    public getViewMediaServersAndCameras(force: boolean = false): Promise<NxViewMediaServer[]> {
         if (this.mediaservers && !force) {
             return Promise.resolve(this.mediaservers);
         }
 
         return this.mediaserver
-            .getMediaServersAndCameras()
+            .getViewMediaServersAndCameras()
             .toPromise()
             .then(
                 response => {
@@ -618,13 +619,15 @@ export class NxSystemOldModule extends NxSystemModuleBase {
             );
     }
 
-    protected processMediaServersAndCameras(apiReply: MediaServersAndCameras): NxMediaServer[] {
+    protected processMediaServersAndCameras(
+        apiReply: ViewMediaServersAndCameras,
+    ): NxViewMediaServer[] {
         const msIds = [
             // 'authKey',
             'id',
             // 'metadataStorageId',
             // 'typeId',
-        ] satisfies KeyFilter<ServerPreprocess, string>[];
+        ] satisfies KeyFilter<ec2MediaServerEx, string>[];
         const camIds = ['id', 'parentId', 'preferredServerId', 'typeId'] satisfies KeyFilter<
             ec2CameraEx,
             string

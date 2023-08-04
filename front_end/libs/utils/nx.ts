@@ -14,7 +14,6 @@ import type {
 } from '@pipes/nx-translate.types';
 import type { MenuNode } from '@services/menus.service.types';
 import { nxConfig as CONFIG } from '@services/nx-config/config';
-import type { ec2MediaServer } from '@services/system-api.types';
 
 import type { ArrayType } from './general';
 
@@ -44,26 +43,28 @@ export function findMenuNode(
     return foundNode;
 }
 
-export type ParsedNetworkAddresses<S> = S & { ip: string; port: string };
-export function setServerIpAndPort<S extends Pick<ec2MediaServer, 'networkAddresses'>>(
-    server: S,
-): ParsedNetworkAddresses<S> {
-    const ipv4Addresses: string[] = []; // 192.168.5.1:7001
-    const ipv6Addresses: string[] = []; // [fe80::e58b:1151:3859:a75a%2]:7001
-    server.networkAddresses.split(';').forEach(addr => {
-        if (addr.startsWith('[')) {
-            ipv6Addresses.push(addr);
-        } else if (addr) {
-            ipv4Addresses.push(addr);
+export type WithIpAndPort<S> = S & { ip: string; port: string };
+export function setServerIpAndPort<S extends { endpoints: string[] }>(server: S): WithIpAndPort<S> {
+    let ipv4Address: string; // 192.168.5.1:7001
+    let ipv6Address: string; // [fe80::e58b:1151:3859:a75a%2]:7001
+    for (const address of server.endpoints) {
+        if (address.startsWith('[')) {
+            ipv6Address ??= address;
+        } else if (address) {
+            ipv4Address ??= address;
         }
-    });
+
+        if (ipv4Address) {
+            break;
+        }
+    }
 
     let ip: string;
     let port: string;
-    if (ipv4Addresses.length) {
-        [ip, port] = ipv4Addresses[0].split(':');
-    } else if (ipv6Addresses.length) {
-        [ip, port] = ipv6Addresses[0].slice(1).split(']:');
+    if (ipv4Address) {
+        [ip, port] = ipv4Address.split(':');
+    } else if (ipv6Address) {
+        [ip, port] = ipv6Address.slice(1).split(']:');
     } else {
         ip = 'N/A';
         port = '';

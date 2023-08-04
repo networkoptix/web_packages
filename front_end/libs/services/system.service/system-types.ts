@@ -1,19 +1,5 @@
-import type { ParsedNetworkAddresses } from '@utils/nx';
-
-import type { ec2CameraEx } from '../system-api.types';
-
-export interface ServerPreprocess {
-    backupType?: string;
-    id: string;
-    name: string;
-    networkAddresses: string;
-    osInfo: string;
-    /** Note: Legacy ec2 non-Ex server does not include status */
-    status?: string;
-    version: string;
-}
-
-export type NxSystemServer = ParsedNetworkAddresses<ServerPreprocess>;
+export * from './system-server-types';
+// TODO: Un-barrelize after organization is complete
 
 export interface ModuleInfo {
     brand: string;
@@ -50,10 +36,6 @@ export interface ServerTimeInfo {
     osTimeOffset: number;
     serverId: string; // supposed to be stripped of {} around the UUID
     timeZoneOffset: number;
-}
-
-export interface NxMediaServer extends ParsedNetworkAddresses<ServerPreprocess> {
-    cameras: ec2CameraEx[];
 }
 
 export interface Condition {

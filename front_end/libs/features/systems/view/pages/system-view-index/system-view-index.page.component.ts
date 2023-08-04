@@ -25,7 +25,7 @@ import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { ec2CameraEx } from '@services/system-api.types';
 import type { NxSystem } from '@services/system.service/system';
-import type { NxMediaServer } from '@services/system.service/system-types';
+import type { NxViewMediaServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
@@ -282,8 +282,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     }
 
     private mediaServerChanged(
-        mediaServers: NxMediaServer[],
-        cachedServers: NxMediaServer[],
+        mediaServers: NxViewMediaServer[],
+        cachedServers: NxViewMediaServer[],
     ): boolean {
         if (mediaServers.length !== cachedServers.length) {
             return true;
@@ -314,7 +314,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
     private processCameras(
         c: ec2CameraEx,
-        ms: NxMediaServer,
+        ms: NxViewMediaServer,
         archiveRanges: Record<string, SimpleTimeRange>,
     ): Camera {
         this.hasCameras = true;
@@ -348,7 +348,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     }
 
     private async findCamerasWithArchive(
-        mediaServers: NxMediaServer[],
+        mediaServers: NxViewMediaServer[],
         archiveRanges: Record<string, SimpleTimeRange>,
     ): Promise<void> {
         return this.system.mediaserver
@@ -370,7 +370,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
     private _initSystem() {
         let processingMediaServers = false;
-        let cachedMediaServers: NxMediaServer[] = [];
+        let cachedMediaServers: NxViewMediaServer[] = [];
         const firstLoad = new Subject();
 
         firstLoad.pipe(take(1)).subscribe(() => {
@@ -388,8 +388,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     return;
                 }
 
-                const mediaServers = await this.system.getMediaServersAndCameras(true);
-                // mediaServers length is 0 when getMediaServersAndCameras fails. No system can ever have 0 servers.
+                const mediaServers = await this.system.getViewMediaServersAndCameras(true);
+                // mediaServers length is 0 when getViewMediaServersAndCameras fails. No system can ever have 0 servers.
                 if (
                     (this.initialized &&
                         !this.mediaServerChanged(mediaServers, cachedMediaServers)) ||

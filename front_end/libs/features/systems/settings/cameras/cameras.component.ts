@@ -42,6 +42,7 @@ import {
     TaskUpdate,
     StreamQuality,
     CameraStatus,
+    DeviceType,
 } from '@services/system.service/camera-manager/camera-manager-types';
 import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
@@ -489,7 +490,6 @@ export class NxCamerasComponent implements OnInit, OnChanges {
             vendor,
             model,
             url,
-            parentName,
             deviceType,
             isStream,
             defaultRatio,
@@ -499,14 +499,17 @@ export class NxCamerasComponent implements OnInit, OnChanges {
             motionType,
             motionMask,
         } = this.camera;
-        this.settingsDisabled = deviceType !== 'Camera' || !vendor;
-        this.settingsRecordingDisabled = environment.isLocal || deviceType !== 'Camera' || !vendor;
+        this.settingsDisabled = deviceType !== DeviceType.Camera || !vendor;
+        this.settingsRecordingDisabled =
+            environment.isLocal || deviceType !== DeviceType.Camera || !vendor;
         const deviceColumn = [
             new InfoBlockSection([
                 new InfoBlockLine(this.LANG.common.vendor, vendor),
                 new InfoBlockLine(this.LANG.common.model, model),
             ]),
         ];
+
+        const parentName = this.system.serverManager.servers.find(s => s.id)?.name;
         const otherInfoColumn = [
             new InfoBlockSection([
                 new InfoBlockLine(this.LANG.common.ip, url),

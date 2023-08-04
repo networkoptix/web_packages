@@ -46,6 +46,7 @@ import { InterceptorManager } from '@utils/interceptor-manager';
 import {
     defaultHashFunction,
     memoizeAsync,
+    memoizeAsyncLong,
     memoizeAsyncMedium,
     memoizeAsyncPersistent,
     memoizeAsyncShort,
@@ -79,9 +80,9 @@ import type { APIDocType, MenuManifest } from './nx-config/base-config';
 import type { IConfig } from './nx-config/config-types';
 import type {
     AggregatedUsers,
-    CameraManagerUpdate,
-    MediaServersAndCameras,
-    TimeAndCameras,
+    ViewMediaServersAndCameras,
+    CamerasAndServerTimes,
+    StorageAnalytics,
 } from './system-api.aggregated-types';
 import type {
     GetArrayTypesFull,
@@ -95,7 +96,7 @@ import {
     DeviceType,
     type RestV1CameraCompat,
 } from './system.service/camera-manager/camera-manager-types';
-import type { ServerPreprocess } from './system.service/system-types';
+import { serverKeyMapV1, type RestV1ServerCompat } from './system.service/system-types';
 import { NxUriCacheService } from './uri-cache.service';
 
 /**
@@ -863,28 +864,11 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         );
     }
 
-    getMediaServers(useCache: boolean): Observable<ServerPreprocess[]> {
+    getMediaServers(useCache: boolean): Observable<RestV1ServerCompat[]> {
         const endpoint = '/rest/v1/servers';
-        const keys = ['id', 'endpoints', 'name', 'osInfo', 'status', 'version'] as const;
-        return this.getWith(endpoint, keys, {
+        return this.getWith(endpoint, serverKeyMapV1, {
             headers: this.cacheHeader(useCache),
-        }).pipe(
-            map(res => {
-                const servers = res.map(server => {
-                    return {
-                        ...server,
-                        networkAddresses: server.endpoints.join(';'),
-                        // Reconstruct network addresses from endpoints
-                        osInfo:
-                            typeof server.osInfo !== 'string'
-                                ? JSON.stringify(server.osInfo)
-                                : server.osInfo,
-                        // Revert osInfo to JSON string
-                    };
-                });
-                return servers;
-            }),
-        );
+        });
     }
 
     private patchCameraCompatibilityV1(
@@ -923,7 +907,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     @memoizeAsyncShort
-    getCamerasWithServerTime(): Observable<TimeAndCameras> {
+    getCamerasAndServerTime(): Observable<CamerasAndServerTimes> {
         return combineLatest([this.getServerTimes(), this.getCameras()]).pipe(
             map(([serverTimesResp, cameras]) => ({
                 serverTimes: serverTimesResp.reply,
@@ -944,9 +928,15 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         }).pipe(map(cameras => cameras[0].credentials));
     }
 
+    getViewMediaServers() {
+        return this.get('/ec2/getMediaServersEx', {
+            headers: this.cacheHeader(false),
+        });
+    }
+
     @memoizeAsyncMedium
-    getMediaServersAndCameras(): Observable<MediaServersAndCameras> {
-        const servers = this.getMediaServers(false);
+    getViewMediaServersAndCameras(): Observable<ViewMediaServersAndCameras> {
+        const servers = this.getViewMediaServers();
         const cameras = this.get('/ec2/getCamerasEx');
         return combineLatest([servers, cameras]).pipe(
             map(([mediaServers, cameras]) => ({
@@ -954,33 +944,40 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                 errorId: 'ok',
                 errorString: '',
                 reply: {
-                    '/ec2/getMediaServers': mediaServers,
+                    '/ec2/getMediaServersEx': mediaServers,
                     '/ec2/getCamerasEx': cameras,
                 },
             })),
         );
     }
 
-    updateSystemServersCameras(): Observable<CameraManagerUpdate> {
-        const routes = [
-            '/api/moduleInformation',
-            '/ec2/getMediaServers',
-            '/ec2/getTimeOfServers',
-        ] as const;
-        const aggregator = this.getRequestAggregator(routes).pipe(
-            map(({ reply }) => ({
-                moduleInfo: reply[routes[0]].reply,
-                servers: reply[routes[1]],
-                serverTimes: reply[routes[2]].reply,
-            })),
-        );
+    public getServerTimes(): Observable<t.TimeOfServers> {
+        return this.get('/ec2/getTimeOfServers');
+    }
 
-        return combineLatest([aggregator, this.getCameras()]).pipe(
-            map(([{ moduleInfo, servers, serverTimes }, cameras]) => ({
-                moduleInfo,
-                servers,
-                serverTimes,
-                cameras,
+    @memoizeAsyncLong
+    public getStorageAnalytics(): Observable<StorageAnalytics> {
+        const getAnalytics = this.get<unknown[]>('/ec2/analyticsLookupObjectTracks', {
+            params: { limit: 1 },
+        });
+        const cameraKeyMap = {
+            serverId: true,
+            parameters: { compatibleAnalyticsEngines: true },
+        } satisfies NxRecursiveKeyMap<t.DeviceV1Full>;
+        const getCameras = this.getWith('/rest/v1/devices', cameraKeyMap);
+        const getServer = this.getWith('/rest/v1/servers', ['metadataStorageId'], {
+            params: { id: this.serverId },
+        }).pipe(map(([server]) => server));
+
+        return combineLatest([getAnalytics, getCameras, getServer]).pipe(
+            map(([analytics, cameras, server]) => ({
+                hasAnalyticsData: !!analytics.length,
+                hasPlugins: cameras.some(
+                    c =>
+                        c.serverId === this.serverId &&
+                        !!c.parameters.compatibleAnalyticsEngines?.length,
+                ),
+                metadataStorageId: server.metadataStorageId,
             })),
         );
     }

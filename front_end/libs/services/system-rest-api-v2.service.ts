@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injector } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
-import { forkJoin, Observable } from 'rxjs';
+import { combineLatest, forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { NxHealthService } from '@pages/health/health.service';
@@ -10,16 +10,18 @@ import { getSystemMetricsAlarmsV2 } from '@services/mediaserver-apis/endpoints/s
 import { getSystemMetricsManifestV2 } from '@services/mediaserver-apis/endpoints/system-metrics-manifest';
 import { getSystemMetricsValuesV2 } from '@services/mediaserver-apis/endpoints/system-metrics-values';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
-import type { NxRecursivePick } from '@utils/nx';
+import { memoizeAsyncLong } from '@utils/memoize';
+import type { NxRecursiveKeyMap, NxRecursivePick } from '@utils/nx';
 
 import { wizardGetSystemSettingsRestV2 } from './mediaserver-apis/endpoints/wizard-get-system-settings';
 import { NxAppStateService } from './nx-app-state.service';
 import { IConfig } from './nx-config/config-types';
-import type { HealthReport } from './system-api.aggregated-types';
+import type { HealthReport, StorageAnalytics } from './system-api.aggregated-types';
 import * as t from './system-api.types';
 import { cameraKeyMapV2 } from './system-api.types';
 import { NxSystemRestAPI } from './system-rest-api.service';
 import { type RestV2CameraCompat } from './system.service/camera-manager/camera-manager-types';
+import { RestV2ServerCompat, serverKeyMapV2 } from './system.service/system-server-types';
 import { NxUriCacheService } from './uri-cache.service';
 
 interface CustomFilter {
@@ -406,6 +408,44 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
     getCameras(): Observable<RestV2CameraCompat[]> {
         return this.getWith('/rest/v2/devices', cameraKeyMapV2).pipe(
             map(cameras => cameras.map(this.patchCameraCompatibilityV2)),
+        );
+    }
+
+    getMediaServers(useCache: boolean): Observable<RestV2ServerCompat[]> {
+        const endpoint = '/rest/v2/servers';
+        return this.getWith(endpoint, serverKeyMapV2, {
+            headers: this.cacheHeader(useCache),
+        });
+    }
+
+    @memoizeAsyncLong
+    public getStorageAnalytics(): Observable<StorageAnalytics> {
+        const getAnalytics = this.get<unknown[]>('/ec2/analyticsLookupObjectTracks', {
+            params: { limit: 1 },
+        });
+        const cameraKeyMap = {
+            serverId: true,
+            parameters: { compatibleAnalyticsEngines: true },
+        } satisfies NxRecursiveKeyMap<t.DeviceV2Full>;
+        const getCameras = this.getWith('/rest/v2/devices', cameraKeyMap);
+        const getServer = this.getWith(
+            '/rest/v2/servers',
+            { parameters: { metadataStorageId: true } },
+            {
+                params: { id: this.serverId },
+            },
+        ).pipe(map(([server]) => server));
+
+        return combineLatest([getAnalytics, getCameras, getServer]).pipe(
+            map(([analytics, cameras, server]) => ({
+                hasAnalyticsData: !!analytics.length,
+                hasPlugins: cameras.some(
+                    c =>
+                        c.serverId === this.serverId &&
+                        !!c.parameters.compatibleAnalyticsEngines?.length,
+                ),
+                metadataStorageId: server.parameters.metadataStorageId,
+            })),
         );
     }
 }

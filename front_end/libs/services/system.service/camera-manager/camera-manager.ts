@@ -1,4 +1,3 @@
-import { LOCALE_ID } from '@angular/core';
 import { flatten, isEqual } from 'lodash-es';
 import {
     animationFrameScheduler,
@@ -13,19 +12,16 @@ import {
 } from 'rxjs';
 
 import { NxSystemOldModule } from '@services/system/modules/nx-system-old-module';
-import { NxSystemBase } from '@services/system/system-base';
 import type {
     ec2CameraEx,
-    ec2MediaServer,
     ServerTime,
     ChangedIdReturned,
     CameraValues,
 } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
-import { alphabeticalSort, cleanId, KeyFilter, MS, paramSortFunc } from '@utils/general';
+import { cleanId, KeyFilter, MS, paramSortFunc } from '@utils/general';
 
 import type { ServerManager } from '../server-manager/server-manager';
-import { ModuleInfo } from '../system-types';
 
 import type * as APT from './add-params.types';
 import {
@@ -62,23 +58,18 @@ export class CameraManager {
     private camerasHealth: CameraValues = {};
     private serverManager: ServerManager;
     private serverTimes: ServerTime[];
-    private locale: string;
 
-    servers: ec2MediaServer[];
     cameras: NxSystemCamera[];
-    moduleInfo: ModuleInfo;
 
     constructor(private system: PartialSystem) {
-        this.locale = NxSystemBase.INJECTOR.get(LOCALE_ID);
         this.serverManager = this.system.serverManager;
     }
 
-    async updateSystemServersCameras(): Promise<void> {
+    async updateSystemCameras(): Promise<void> {
         try {
-            const { moduleInfo, servers, serverTimes, cameras } =
-                await this.serverManager.mediaserver.updateSystemServersCameras().toPromise();
-            this.moduleInfo = moduleInfo;
-            this.servers = servers.sort(alphabeticalSort(this.locale, server => server.name));
+            const { serverTimes, cameras } = await this.serverManager.mediaserver
+                .getCamerasAndServerTime()
+                .toPromise();
             await this.processCameras(cameras, serverTimes);
             return Promise.resolve();
         } catch (error) {
@@ -91,7 +82,7 @@ export class CameraManager {
 
     async getCameras(): Promise<NxSystemCamera[]> {
         await this.serverManager.mediaserver
-            .getCamerasWithServerTime()
+            .getCamerasAndServerTime()
             .toPromise()
             .then(response => {
                 if (!response) {
@@ -124,7 +115,6 @@ export class CameraManager {
 
         const backupQuality = (camera as ec2CameraEx).backupType || camera.backupQuality;
 
-        const parentName = this.servers?.find(server => server.id === camera.parentId)?.name;
         const webRtcUrl =
             this.system.version >= 5.1
                 ? ({ position } = { position: null }): string => {
@@ -202,7 +192,6 @@ export class CameraManager {
             defaultRatio,
             isStream,
             maxFps,
-            parentName,
             previewUrl,
             recordingSettings,
             recordingStatus,

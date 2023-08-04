@@ -82,7 +82,7 @@ export class ResetServerModalContent extends ModalBase<DT['return']> implements 
         const isResettingCurrentServer = (): boolean => {
             const currentServer = this.system.serverManager.servers.find(s => s.id === server.id);
             return (
-                currentServer.networkAddresses.includes(this.document.location.host) ||
+                currentServer.endpoints.some(e => e.includes(this.document.location.host)) ||
                 this.system.info.name === currentServer.name
             );
         };

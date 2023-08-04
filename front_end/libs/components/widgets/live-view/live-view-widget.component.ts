@@ -169,7 +169,7 @@ export class NxLiveViewWidgetComponent extends FirstPartyWidget<
             this.accountService.email,
             this.card.config.selectedSystem,
         );
-        return this.system.getMediaServersAndCameras(true);
+        return this.system.getViewMediaServersAndCameras(true);
     };
 
     updateSystem(system: SystemDropdownItem): void {

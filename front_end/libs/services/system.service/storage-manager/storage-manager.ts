@@ -72,7 +72,7 @@ export class StorageManager extends StorageState {
             ?.settings;
         try {
             const { quality, backupNewCameras } = JSON.parse((<any>settings).backupSettings);
-            await this.system.cameraManager.updateSystemServersCameras();
+            await this.system.cameraManager.updateSystemCameras();
             const backup = this.system.cameraManager.cameras.some(({ backupPolicy }) =>
                 ['byDefault', 'on'].includes(backupPolicy),
             );

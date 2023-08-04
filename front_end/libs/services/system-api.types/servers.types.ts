@@ -57,23 +57,66 @@ export interface ec2MediaServerEx extends ec2MediaServer {
     storages: ec2Storage[];
 }
 
-export interface RestServer {
+// TODO: Figure out final place for this, it's used in multiple places
+export interface OsInfo {
+    platform: string;
+    variant: string;
+    variantVersion: string;
+}
+
+export interface RestV1ServerFull {
+    authkey: string;
+    backupBitrateBytesPerSecond: unknown[];
     endpoints: string[];
     flags: string;
     id: string;
+    isFailoverEnabled: boolean;
     maxCameras: number;
     metadataStorageId: string;
     name: string;
-    osInfo: {
-        platform: string;
-        variant: string;
-        variantVersion: string;
-    };
+    osInfo: OsInfo;
+    parameters: Partial<{
+        analyticsTaxonomyDescriptors: unknown; // Complicated, leaving unknown for now
+        certificate: string;
+        cpuArchitecture: string;
+        cpuModelName: string;
+        fullVersion: string;
+        guidConflictDetected: boolean;
+        hddList: string;
+        networkInterfaces: string;
+        physicalMemory: number;
+        productNameShort: string;
+        publicIp: string;
+        publicationType: string;
+        systemRuntime: string;
+        timezoneUtcOffset: string;
+        udtInternetTraffic_bytes: number;
+        userProvidedCertificate: string;
+    }>;
     status: string;
-    storages: ec2Storage[];
+    storages: RestV1Storage[];
     url: string;
     version: string;
-    parameters: Record<string, unknown>;
+}
+
+interface RestV1Storage {
+    id: string;
+    isBackup: boolean;
+    isUsedForWriting: boolean;
+    name: string;
+    parameters: {
+        space: number;
+    };
+    serverId: string;
+    spaceLimitB: number;
+    status: string;
+    type: string;
+}
+
+export interface RestV2ServerFull extends Omit<RestV1ServerFull, 'authKey' | 'metadataStorageId'> {
+    parameters: RestV1ServerFull['parameters'] & {
+        metadataStorageId: string; // Moved from top level to parameters
+    };
 }
 
 export type ServerHardareIdsResp = NormalResponse<ServerHardwareIds[]>;

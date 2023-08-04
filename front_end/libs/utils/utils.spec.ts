@@ -1,7 +1,5 @@
 import { cloneDeep } from 'lodash-es';
 
-import type { NxSystemServer } from '@services/system.service/system-types';
-
 import * as generalUtils from './general';
 import * as nxUtils from './nx';
 
@@ -67,46 +65,42 @@ describe('General purpose utils', () => {
 describe('Nx utils', () => {
     it('should set ipv4 ip/port if any exists', () => {
         const mockServer = {
-            networkAddresses:
-                '10.1.5.210:7001;[fe80::5a88:4ce4:a105:fdb0%3]:7001;47.44.180.186:7001',
+            endpoints: [
+                '10.1.5.210:7001',
+                '[fe80::5a88:4ce4:a105:fdb0%3]:7001',
+                '47.44.180.186:7001',
+            ],
         };
         const expectedReturnedServer = {
-            networkAddresses:
-                '10.1.5.210:7001;[fe80::5a88:4ce4:a105:fdb0%3]:7001;47.44.180.186:7001',
+            ...mockServer,
             ip: '10.1.5.210',
             port: '7001',
         };
-        expect(nxUtils.setServerIpAndPort(mockServer as NxSystemServer)).toEqual(
-            expectedReturnedServer as NxSystemServer,
-        );
+        expect(nxUtils.setServerIpAndPort(mockServer)).toEqual(expectedReturnedServer);
     });
 
     it('should set ipv6 ip/port if only ipv6 exists', () => {
         const mockServer = {
-            networkAddresses: '[fe80::5a88:4ce4:a105:fdb0%3]:7001',
+            endpoints: ['[fe80::5a88:4ce4:a105:fdb0%3]:7001'],
         };
         const expectedReturnedServer = {
-            networkAddresses: '[fe80::5a88:4ce4:a105:fdb0%3]:7001',
+            ...mockServer,
             ip: 'fe80::5a88:4ce4:a105:fdb0%3',
             port: '7001',
         };
-        expect(nxUtils.setServerIpAndPort(mockServer as NxSystemServer)).toEqual(
-            expectedReturnedServer as NxSystemServer,
-        );
+        expect(nxUtils.setServerIpAndPort(mockServer)).toEqual(expectedReturnedServer);
     });
 
     it('should set ip to N/A if none exists', () => {
         const mockServer = {
-            networkAddresses: '',
+            endpoints: [],
         };
         const expectedReturnedServer = {
-            networkAddresses: '',
+            ...mockServer,
             ip: 'N/A',
             port: '',
         };
-        expect(nxUtils.setServerIpAndPort(mockServer as NxSystemServer)).toEqual(
-            expectedReturnedServer as NxSystemServer,
-        );
+        expect(nxUtils.setServerIpAndPort(mockServer)).toEqual(expectedReturnedServer);
     });
 });
 

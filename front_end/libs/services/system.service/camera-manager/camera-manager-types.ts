@@ -79,7 +79,6 @@ export interface NxSystemCamera {
     defaultRatio: number;
     isStream: boolean;
     maxFps: number;
-    parentName: string;
     previewUrl: Observable<string>;
     recordingSettings: RecordingSettings;
     recordingStatus: RecordingStatus;

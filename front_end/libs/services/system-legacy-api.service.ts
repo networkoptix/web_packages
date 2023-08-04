@@ -59,11 +59,10 @@ import type { APIDocType, MenuManifest } from './nx-config/base-config';
 import type { IConfig } from './nx-config/config-types';
 import type {
     AggregatedUsers,
-    MediaServersAndCameras,
-    TimeAndCameras,
+    ViewMediaServersAndCameras,
+    CamerasAndServerTimes,
     AggregatedResp,
     StorageAnalytics,
-    CameraManagerUpdate,
     GetLicenses,
     HealthReport,
 } from './system-api.aggregated-types';
@@ -75,7 +74,7 @@ import type {
     SaveCameraUserAttributes,
 } from './system.service/camera-manager/camera-manager-types';
 import type { SaveStoragePayload } from './system.service/storage-manager/storage';
-import type { ServerPreprocess } from './system.service/system-types';
+import type { PreprocessServer } from './system.service/system-types';
 import { NxUriCacheService } from './uri-cache.service';
 import { WINDOW } from './window-provider';
 
@@ -667,23 +666,21 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     @memoizeAsyncLong
     public getStorageAnalytics(): Observable<StorageAnalytics> {
         const analyticsEndpoint = '/ec2/analyticsLookupObjectTracks?limit=1';
-        const getCamerasEndpoint = `/ec2/getCamerasEx?id=${this.serverId}`;
+        const getCamerasEndpoint = '/ec2/getCamerasEx';
         const getServerEndpoint = '/ec2/getMediaServersEx';
         return this.getRequestAggregator<
             t.NormalResponse<{
                 [analyticsEndpoint]: unknown[];
-                // Can't use cameras endpoint in type because it's not a string literal
-                [getServerEndpoint]: t.ec2MediaServerEx[];
+                [getCamerasEndpoint]: GetEndpoints[typeof getCamerasEndpoint];
+                [getServerEndpoint]: GetEndpoints[typeof getServerEndpoint];
             }>
         >([analyticsEndpoint, getCamerasEndpoint, getServerEndpoint]).pipe(
             map(({ reply }) => ({
                 hasAnalyticsData: !!reply[analyticsEndpoint].length,
-                hasPlugins: (reply[getCamerasEndpoint] as t.ec2CameraEx[]).some(
+                hasPlugins: reply[getCamerasEndpoint].some(
                     ({ addParams, parentId }) =>
-                        addParams.find(
-                            ({ name }) =>
-                                name === 'compatibleAnalyticsEngines' && parentId === this.serverId,
-                        ),
+                        parentId === this.serverId &&
+                        addParams.find(({ name }) => name === 'compatibleAnalyticsEngines'),
                 ),
                 metadataStorageId: reply[getServerEndpoint]
                     .find(({ id }) => id === this.serverId)
@@ -898,12 +895,12 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     }
 
     @memoizeAsyncShort
-    getCamerasWithServerTime(): Observable<TimeAndCameras> {
-        const routes = ['/ec2/getTimeOfServers', '/ec2/getCamerasEx'] as const;
+    getCamerasAndServerTime(): Observable<CamerasAndServerTimes> {
+        const routes = ['/ec2/getCamerasEx', '/ec2/getTimeOfServers'] as const;
         return this.getRequestAggregator(routes).pipe(
             map(({ reply }) => ({
-                serverTimes: reply[routes[0]].reply,
-                cameras: reply[routes[1]],
+                cameras: reply[routes[0]],
+                serverTimes: reply[routes[1]].reply,
             })),
         );
     }
@@ -925,16 +922,24 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     }
 
     @memoizeAsync(defaultHashFunction, useCache => !useCache, 60 * 1000)
-    getMediaServers(useCache: boolean): Observable<ServerPreprocess[]> {
+    getMediaServers(useCache: boolean): Observable<PreprocessServer[]> {
         const endpoint = '/ec2/getMediaServersEx';
         return this.get(endpoint, {
             headers: this.cacheHeader(useCache),
-        });
+        }).pipe(
+            map(servers =>
+                servers.map(({ osInfo, networkAddresses, ...rest }) => ({
+                    ...rest,
+                    osInfo: JSON.parse(osInfo),
+                    endpoints: networkAddresses ? networkAddresses.split(';') : [],
+                })),
+            ),
+        );
     }
 
     @memoizeAsyncMedium
-    getMediaServersAndCameras(): Observable<MediaServersAndCameras> {
-        const routes = ['/ec2/getMediaServers', '/ec2/getCamerasEx'] as const;
+    getViewMediaServersAndCameras(): Observable<ViewMediaServersAndCameras> {
+        const routes = ['/ec2/getMediaServersEx', '/ec2/getCamerasEx'] as const;
         return this.getRequestAggregator(routes);
     }
 
@@ -942,23 +947,6 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     // getResourceTypes(): Observable<t.GetResourceTypes> {
     //     return this.get('/ec2/getResourceTypes');
     // }
-
-    updateSystemServersCameras(): Observable<CameraManagerUpdate> {
-        const routes = [
-            '/api/moduleInformation',
-            '/ec2/getMediaServers',
-            '/ec2/getTimeOfServers',
-            '/ec2/getCamerasEx',
-        ] as const;
-        return this.getRequestAggregator(routes).pipe(
-            map(({ reply }) => ({
-                moduleInfo: reply[routes[0]].reply,
-                servers: reply[routes[1]],
-                serverTimes: reply[routes[2]].reply,
-                cameras: reply[routes[3]],
-            })),
-        );
-    }
 
     /* End of Cameras and Servers */
 

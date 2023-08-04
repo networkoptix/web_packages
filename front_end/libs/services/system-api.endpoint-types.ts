@@ -19,12 +19,13 @@ import { NormalResponse } from './system-api.types';
 export interface GetEndpointsFull {
     /* rest/v1 */
     '/rest/v1/devices': t.DeviceV1Full[];
-    '/rest/v1/servers': t.RestServer[];
+    '/rest/v1/servers': t.RestV1ServerFull[];
     '/rest/v1/users': RestV1User[];
     // TODO: Fix these to have defaults
 
     /* rest/v2 */
     '/rest/v2/devices': t.DeviceV2Full[];
+    '/rest/v2/servers': t.RestV2ServerFull[];
 }
 
 export type GetArrayTypesFull = {
@@ -60,7 +61,6 @@ export interface GetEndpoints {
     '/ec2/recordedTimePeriods': t.Ec2RecordedTimePeriodsResp;
 
     /* rest/v1 */
-    '/rest/v1/servers': t.RestServer[];
     '/rest/v1/system/merge': t.MergeStatus;
     '/rest/v1/users': RestV1User[];
 
