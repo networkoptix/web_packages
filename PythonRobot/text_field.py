@@ -20,8 +20,10 @@ class TextField:
         self.selenium_element.clear()
         self.selenium_element.send_keys(text)
 
+
     def clear(self):
         self.selenium_element.clear()
+
 
     def get_outline_color(self) -> str:
         return self.selenium_element.value_of_css_property("border-color")

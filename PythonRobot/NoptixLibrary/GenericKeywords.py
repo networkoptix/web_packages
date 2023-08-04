@@ -775,7 +775,7 @@ class GenericKeywords:
     def create_systems(self):
         jsonPath = os.path.join(
             "server_json",
-            "systems-page.json",
+            "systems_page.json",
         )
         with open(jsonPath, encoding="utf-8") as suite_json:
             serversJson = json.load(suite_json)

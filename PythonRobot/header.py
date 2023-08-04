@@ -38,6 +38,10 @@ class HeaderNav:
             "//header//a[contains(text(),'{LOG_IN_BUTTON_TEXT}')]/..")
         return Button(self.driver, translated_xpath)
 
+    def my_systems_button(self):
+        # Todo: add "My Systems" to the translation files
+        return Button(self.driver, "//div[contains(text(), 'My Systems')]")
+
     def log_out(self):
         self.account_dropdown().click()
         self.log_out_option().click()
