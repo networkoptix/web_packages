@@ -53,19 +53,21 @@ def system_tiles_represent_actual_information():
     robot_keywords.close_browser(driver)
     print("pass")
 
+
 def no_systems_connected():
     driver = get_headless_chrome()
     email = get_random_email()
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
     robot_keywords.go_to_url(driver, ENV)
+    HeaderNav(driver).log_in_button().click()
     LoginDialog(driver).basic_cloud_login(email, password)
     systems_page = SystemsPage(driver)
-    
+    systems_page.no_systems()
 
-    #[Tags]    C41866    threaded
-    #Log In    ${no sys user}    ${base password}    api=${False}
-    #Wait Until Element Is Visible    ${YOU HAVE NO SYSTEMS}
-    #Validate Header Button Text    0
+    robot_keywords.close_browser(driver)
+    print("pass")
+
 if __name__ == "__main__":
     system_tiles_represent_actual_information()
+    no_systems_connected()
     keywords.teardown_servers(SERVERS)
