@@ -61,7 +61,7 @@ class Alert {
     warnings: string[] = [];
 
     constructor(public cameraId: string, { availability }: AlarmsReply['cameras'][string]) {
-        Object.values(availability).forEach(alertType => {
+        Object.values(availability || {}).forEach(alertType => {
             Object.values(alertType).forEach(item => {
                 const text = `Camera ${item.text}`;
                 if (item.level === 'error') {
@@ -365,7 +365,7 @@ export class NxCamerasComponent implements OnInit, OnChanges {
     }
 
     // TODO: When saving component gets reset
-    private saveSettings(): Promise<NxSystemCamera[]> {
+    private saveSettings(): Promise<NxSystemCamera> {
         const newApi = this.system.serverManager.mediaserver instanceof NxSystemRestAPI;
         if (!(this.recordingSettingsComponent?.safeToUpdateRecordingSettings ?? true)) {
             this.applyService.setWarn(this.LANG.common.recordingSettingsWarning);
@@ -413,13 +413,18 @@ export class NxCamerasComponent implements OnInit, OnChanges {
                 rotation,
             }),
         ]).then(_ => {
-            return this.system.cameraManager.getCameras().then(updatedCameras => {
-                this.setCamera();
-                this.toggleMotionGrid();
-                // this updates the menu with any changes. we should look to avoid this pattern
-                this.system.systemInfo = this.system;
-                return updatedCameras;
-            });
+            return this.system.serverManager.mediaserver
+                .getCamera(this.camera.id)
+                .toPromise()
+                .then(updatedCamera => {
+                    const newNxSystemCamera = this.system.cameraManager.parseCamera(updatedCamera);
+                    this.camera = newNxSystemCamera;
+                    this.setCamera();
+                    this.toggleMotionGrid();
+                    // this updates the menu with any changes. we should look to avoid this pattern
+                    this.system.systemInfo = this.system;
+                    return newNxSystemCamera;
+                });
         });
     }
 
@@ -518,7 +523,6 @@ export class NxCamerasComponent implements OnInit, OnChanges {
         ];
         this.cameraDetailColumns = isStream ? [otherInfoColumn] : [deviceColumn, otherInfoColumn];
         this.cameraName = this.camera.name;
-        this.motionGridChangeWatcher.originalValue = false;
         // Setup the automatic value based on the camera's dimensions
         if (defaultRatio) {
             this.aspectRatios[0].value = defaultRatio;
@@ -545,13 +549,65 @@ export class NxCamerasComponent implements OnInit, OnChanges {
         }
         this.recordingWatcher.value = recordingSettings.recording;
         this.motionType = motionType;
-        this.motionMaskWatcher.originalValue = motionMask || settingsConfig.defaultMotionMask;
         this.updateValues();
+
+        this.setWatcherDefaults({
+            motionGridChange: false,
+            cameraName: this.cameraName,
+            selectedAspect: this.selectedAspect.value,
+            selectedRotation: this.selectedRotation.value,
+            audioEnabled: this.audioEnabled,
+            recording: this.recordingWatcher.value,
+            recordingModes: this.recordingModesWatcher.value,
+            selectedFps: this.recordingSettingsComponent?.selectedFps,
+            selectedQuality: this.recordingSettingsComponent?.selectedQuality?.value,
+            motionEnabled: this.motionType,
+            motionMask: motionMask || settingsConfig.defaultMotionMask,
+        });
 
         this.applyService.reset();
         this.applyService.setVisible();
         this.showPreloader = false;
     };
+
+    // TODO: Temporary until we remove watchers
+    private setWatcherDefaults({
+        motionGridChange,
+        cameraName,
+        selectedAspect,
+        selectedRotation,
+        audioEnabled,
+        recording,
+        recordingModes,
+        selectedFps,
+        selectedQuality,
+        motionEnabled,
+        motionMask,
+    }: {
+        motionGridChange: boolean;
+        cameraName: string;
+        selectedAspect: number;
+        selectedRotation: number;
+        audioEnabled: boolean;
+        recording: boolean;
+        recordingModes: RecordingModes[];
+        selectedFps: number;
+        selectedQuality: StreamQuality;
+        motionEnabled: MotionType;
+        motionMask: string;
+    }): void {
+        this.motionGridChangeWatcher.originalValue = motionGridChange;
+        this.cameraNameWatcher.originalValue = cameraName;
+        this.selectedAspectWatcher.originalValue = selectedAspect;
+        this.selectedRotationWatcher.originalValue = selectedRotation;
+        this.audioEnabledWatcher.originalValue = audioEnabled;
+        this.recordingWatcher.originalValue = recording;
+        this.recordingModesWatcher.originalValue = recordingModes;
+        this.selectedFpsWatcher.originalValue = selectedFps;
+        this.selectedQualityWatcher.originalValue = selectedQuality;
+        this.motionEnabledWatcher.originalValue = motionEnabled;
+        this.motionMaskWatcher.originalValue = motionMask;
+    }
 
     private updateAlerts(): void {
         const currentAlerts = this.alerts.find(({ cameraId }) => cameraId === this.camera.id);
