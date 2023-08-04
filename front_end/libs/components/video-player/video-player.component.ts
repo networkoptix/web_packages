@@ -276,8 +276,8 @@ export class NxVideoPlayerComponent {
                     );
                     this.webRtcPlayerRef.nativeElement.autoplay = true;
 
-                    while (this.webRtcPlayerRef.nativeElement.paused || this.webRtcPlayerRef.nativeElement.currentTime < 1) {
-                        await new Promise(resolve => setTimeout(resolve, 100));
+                    while (this.webRtcPlayerRef.nativeElement.paused) {
+                        await new Promise(resolve => setTimeout(resolve, 10));
                     }
 
                     if (this.webRtcPlayerRef.nativeElement.muted) {
@@ -287,6 +287,11 @@ export class NxVideoPlayerComponent {
                             this.webRtcPlayerRef.nativeElement.autoplay = true;
                         })
                     }
+
+                    while (this.webRtcPlayerRef.nativeElement.currentTime < 1) {
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                    }
+
 
                     this.connectionEstablished = true;
 
