@@ -14,7 +14,7 @@ import { defaultHashFunction, memoizeAsync } from '@utils/memoize';
 import { NxAppStateService } from './nx-app-state.service';
 import { IConfig } from './nx-config/config-types';
 import type { AggregatedUsers } from './system-api.aggregated-types';
-import { ChangedIdReturned } from './system-api.types';
+import { ChangedIdReturned, UnauthorizedCallback } from './system-api.types';
 import { NxSystemRestAPI2 } from './system-rest-api-v2.service';
 import { NxUriCacheService } from './uri-cache.service';
 
@@ -28,7 +28,7 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
         userEmail: string,
         systemId: string,
         serverId: string,
-        unauthorizedCallback: (params: Record<string, unknown>) => Promise<unknown>,
+        unauthorizedCallback: UnauthorizedCallback,
         cacheService: NxUriCacheService,
         cookieService: CookieService,
         healthService: NxHealthService,

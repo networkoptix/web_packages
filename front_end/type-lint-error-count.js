@@ -35,7 +35,6 @@ module.exports = {
     'libs/components/html-input/editor-config.ts': 11,
     'libs/components/html-input/html-input.component.ts': 8,
     'libs/components/info-block/info-block.component.ts': 9,
-    'libs/components/layout-right/layout.component.ts': 2,
     'libs/components/logger/logger.component.ts': 5,
     'libs/components/open-client-button/client-button.component.ts': 5,
     'libs/components/password-input-tag-validation/password-tag-validation.component.ts': 1,
@@ -46,7 +45,7 @@ module.exports = {
     'libs/components/systems-list/list.component.ts': 1,
     'libs/components/widgets/bookmarks/bookmarks-widget.component.ts': 3,
     'libs/components/widgets/event-generator/event-generator.component.ts': 3,
-    'libs/components/widgets/health-monitor/health-monitor-widget.component.ts': 18,
+    'libs/components/widgets/health-monitor/health-monitor-widget.component.ts': 16,
     'libs/components/widgets/helper-classes.ts': 5,
     'libs/components/widgets/live-view/live-view-widget.component.ts': 6,
     'libs/components/widgets/server-logger/server-logger-widget.component.ts': 3,
@@ -105,7 +104,7 @@ module.exports = {
     'libs/features/landing/landing.component.ts': 6,
     'libs/features/push-notifications/push-notifications.component.ts': 26,
     'libs/features/push-notifications/push-notifications.module.ts': 1,
-    'libs/features/systems/settings/admin/admin.component.ts': 6,
+    'libs/features/systems/settings/admin/admin.component.ts': 5,
     'libs/features/systems/settings/admin/advanced/advanced.component.ts': 9,
     'libs/features/systems/settings/admin/standard/standard.component.ts': 12,
     'libs/features/systems/settings/cameras/motion-detection-settings/motion-detection-overlay/MotionMaskRenderer.ts': 18,
@@ -117,8 +116,8 @@ module.exports = {
     'libs/features/systems/settings/licenses/new/new.component.spec.ts': 1,
     'libs/features/systems/settings/licenses/new/new.component.ts': 11,
     'libs/features/systems/settings/licenses/trial/trial.component.ts': 7,
-    'libs/features/systems/settings/settings.component.ts': 12,
-    'libs/features/systems/view/pages/system-view-camera/fullscreen.ts': 6,
+    'libs/features/systems/settings/settings.component.ts': 11,
+    'libs/features/systems/view/pages/system-view-camera/fullscreen.ts': 3,
     'libs/features/systems/view/pages/system-view-camera/system-view-camera.page.component.ts': 29,
     'libs/features/systems/view/pages/system-view-index/system-view-index.page.component.ts': 8,
     'libs/features/systems/view/vms-client/submodules/playback/components/playback-controls/playback-controls.component.ts': 6,
@@ -167,16 +166,16 @@ module.exports = {
     'libs/services/oauth.service.ts': 8,
     'libs/services/process.service/process.service.ts': 3,
     'libs/services/process.service/process.ts': 29,
-    'libs/services/system-api.service.ts': 3,
-    'libs/services/system-legacy-api.service.ts': 87,
+    'libs/services/system-legacy-api.service.ts': 85,
     'libs/services/system-rest-api-v2.service.ts': 12,
-    'libs/services/system-rest-api.service.ts': 63,
+    'libs/services/system-rest-api.service.ts': 61,
     'libs/services/system.service/server-manager/server-manager.ts': 23,
     'libs/services/system.service/storage-manager/current-storage-state.ts': 3,
     'libs/services/system.service/storage-manager/storage-manager.ts': 10,
     'libs/services/system.service/storage-manager/storage-state.ts': 17,
     'libs/services/system.service/storage-manager/storage.ts': 32,
     'libs/services/system.service/system-types.ts': 5,
+    'libs/services/system/modules/nx-system-old-module.ts': 51,
     'libs/utils/logger.ts': 5,
     'packages/dashboard-widget-state/types.ts': 4
 };
@@ -523,10 +522,6 @@ libs/components/info-block/info-block.component.ts
   Untyped argument                 nx/no-untyped-arg
   Untyped argument                 nx/no-untyped-arg
 
-libs/components/layout-right/layout.component.ts
-  Missing Input type  nx/explicit-angular-boundary-types
-  Missing Input type  nx/explicit-angular-boundary-types
-
 libs/components/logger/logger.component.ts
   Missing Input type               nx/explicit-angular-boundary-types
   Missing Input type               nx/explicit-angular-boundary-types
@@ -603,7 +598,6 @@ libs/components/widgets/health-monitor/health-monitor-widget.component.ts
   Untyped subject                           nx/no-untyped-subject
   Untyped property                          nx/no-untyped-init
   Untyped property                          nx/no-untyped-init
-  Untyped property                          nx/no-untyped-init
   Untyped subject                           nx/no-untyped-subject
   Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
   Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
@@ -611,7 +605,6 @@ libs/components/widgets/health-monitor/health-monitor-widget.component.ts
   Untyped argument                          nx/no-untyped-arg
   Missing return type on function           @typescript-eslint/explicit-function-return-type
   Untyped argument                          nx/no-untyped-arg
-  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
 
 libs/components/widgets/helper-classes.ts
   Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
@@ -1390,7 +1383,6 @@ libs/features/systems/settings/admin/admin.component.ts
   Untyped property                 nx/no-untyped-init
   Missing return type on function  @typescript-eslint/explicit-function-return-type
   Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
 
 libs/features/systems/settings/admin/advanced/advanced.component.ts
   Untyped property                 nx/no-untyped-init
@@ -1498,26 +1490,22 @@ libs/features/systems/settings/licenses/trial/trial.component.ts
   Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
 
 libs/features/systems/settings/settings.component.ts
-  Missing Input type                        nx/explicit-angular-boundary-types
-  Missing Input type                        nx/explicit-angular-boundary-types
-  Untyped property                          nx/no-untyped-init
-  Untyped property                          nx/no-untyped-init
-  Untyped property                          nx/no-untyped-init
-  Untyped property                          nx/no-untyped-init
-  Untyped subject                           nx/no-untyped-subject
-  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  Untyped argument                          nx/no-untyped-arg
-  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  Missing Input type               nx/explicit-angular-boundary-types
+  Missing Input type               nx/explicit-angular-boundary-types
+  Untyped property                 nx/no-untyped-init
+  Untyped property                 nx/no-untyped-init
+  Untyped property                 nx/no-untyped-init
+  Untyped property                 nx/no-untyped-init
+  Untyped subject                  nx/no-untyped-subject
+  Missing return type on function  @typescript-eslint/explicit-function-return-type
+  Untyped argument                 nx/no-untyped-arg
+  Missing return type on function  @typescript-eslint/explicit-function-return-type
+  Missing return type on function  @typescript-eslint/explicit-function-return-type
 
 libs/features/systems/view/pages/system-view-camera/fullscreen.ts
-  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  Include a description after the "@ts-expect-error" directive to explain why the @ts-expect-error is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
-  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  Include a description after the "@ts-expect-error" directive to explain why the @ts-expect-error is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
-  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  Include a description after the "@ts-expect-error" directive to explain why the @ts-expect-error is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
+  Missing return type on function  @typescript-eslint/explicit-function-return-type
+  Missing return type on function  @typescript-eslint/explicit-function-return-type
+  Missing return type on function  @typescript-eslint/explicit-function-return-type
 
 libs/features/systems/view/pages/system-view-camera/system-view-camera.page.component.ts
   Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
@@ -2199,11 +2187,6 @@ If you are expecting the function to accept certain arguments, you should explic
   Untyped argument                                                                                                                                                                                                                                                                                                                                                                                                    nx/no-untyped-arg
   Untyped argument                                                                                                                                                                                                                                                                                                                                                                                                    nx/no-untyped-arg
 
-libs/services/system-api.service.ts
-  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  Untyped declaration                       nx/no-untyped-init
-
 libs/services/system-legacy-api.service.ts
   Missing return type on function           @typescript-eslint/explicit-function-return-type
   Missing return type on function           @typescript-eslint/explicit-function-return-type
@@ -2218,7 +2201,6 @@ libs/services/system-legacy-api.service.ts
   Missing return type on function           @typescript-eslint/explicit-function-return-type
   Missing return type on function           @typescript-eslint/explicit-function-return-type
   Untyped argument                          nx/no-untyped-arg
-  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
   Missing return type on function           @typescript-eslint/explicit-function-return-type
   Missing return type on function           @typescript-eslint/explicit-function-return-type
   Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
@@ -2274,7 +2256,6 @@ libs/services/system-legacy-api.service.ts
   Missing return type on function           @typescript-eslint/explicit-function-return-type
   Missing return type on function           @typescript-eslint/explicit-function-return-type
   Untyped argument                          nx/no-untyped-arg
-  Missing return type on function           @typescript-eslint/explicit-function-return-type
   Missing return type on function           @typescript-eslint/explicit-function-return-type
   Missing return type on function           @typescript-eslint/explicit-function-return-type
   Missing return type on function           @typescript-eslint/explicit-function-return-type
@@ -2312,8 +2293,6 @@ libs/services/system-rest-api.service.ts
   Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
   Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
   Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  Untyped argument                                                                                                                                               nx/no-untyped-arg
   Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
   Untyped argument                                                                                                                                               nx/no-untyped-arg
   Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
@@ -2478,6 +2457,59 @@ libs/services/system.service/system-types.ts
   Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
   Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
 
+libs/services/system/modules/nx-system-old-module.ts
+  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  Untyped argument                          nx/no-untyped-arg
+  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  Untyped argument                          nx/no-untyped-arg
+  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  Untyped argument                          nx/no-untyped-arg
+  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  Untyped argument                          nx/no-untyped-arg
+  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  Untyped declaration                       nx/no-untyped-init
+  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  Untyped declaration                       nx/no-untyped-init
+  Untyped argument                          nx/no-untyped-arg
+  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  Untyped argument                          nx/no-untyped-arg
+  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  Untyped argument                          nx/no-untyped-arg
+  Untyped argument                          nx/no-untyped-arg
+  Untyped argument                          nx/no-untyped-arg
+  Untyped argument                          nx/no-untyped-arg
+  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  Untyped argument                          nx/no-untyped-arg
+  Untyped argument                          nx/no-untyped-arg
+  Untyped argument                          nx/no-untyped-arg
+  Untyped argument                          nx/no-untyped-arg
+  Untyped argument                          nx/no-untyped-arg
+  Untyped argument                          nx/no-untyped-arg
+  Untyped argument                          nx/no-untyped-arg
+  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  Missing return type on function           @typescript-eslint/explicit-function-return-type
+  Missing return type on function           @typescript-eslint/explicit-function-return-type
+
 libs/utils/logger.ts
   Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
   Untyped argument                          nx/no-untyped-arg
@@ -2491,6 +2523,6 @@ packages/dashboard-widget-state/types.ts
   Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
   Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
 
-✖ 1894 problems (1894 errors, 0 warnings)
+✖ 1929 problems (1929 errors, 0 warnings)
 
 */

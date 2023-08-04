@@ -162,12 +162,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                     isOnline: true,
                     mediaserver: undefined,
                 };
-                this.system.mediaserver = this.serverApi.createConnection(
-                    undefined,
-                    undefined,
-                    undefined,
-                    () => {},
-                );
+                this.system.mediaserver = this.serverApi.createConnection();
                 this.menu.base = '/health';
             }
             this.healthService.system = this.system;

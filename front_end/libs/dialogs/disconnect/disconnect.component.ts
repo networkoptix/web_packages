@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { Observable, of, Subject, takeUntil, timer } from 'rxjs';
+import { Observable, Subject, takeUntil, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -133,8 +133,6 @@ export class DisconnectModalContent extends ModalBase<DT['return']> {
     }
 
     private disconnectLocal(): Promise<void> {
-        return this.systemApiService
-            .createConnection<NxSystemRestAPI>(undefined, undefined, undefined, () => of(''))
-            .disconnectFromCloud();
+        return (this.systemApiService.createConnection() as NxSystemRestAPI).disconnectFromCloud();
     }
 }

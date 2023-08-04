@@ -135,7 +135,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         userEmail: string,
         systemId: string,
         serverId: string,
-        unauthorizedCallback: (params: Record<string, unknown>) => Promise<unknown>,
+        unauthorizedCallback: t.UnauthorizedCallback,
         cacheService: NxUriCacheService,
         cookieService: CookieService,
         healthService: NxHealthService,
@@ -177,13 +177,13 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return `${this.systemId ? this.systemId + '-' : ''}${this.token}`;
     }
 
-    public get accessToken() {
+    public get accessToken(): string {
         return this.CONFIG.featureFlags.useAuthenticationInterceptor
             ? `${InterceptorManager.USE_SYSTEM_TOKEN}|${this.systemId}|${this.urlBase}/rest/v1/login/sessions/{accessToken}?setCookie=true`
             : this.sessionStorage.retrieve(this.cloudAccessTokenName);
     }
 
-    public set accessToken(token) {
+    public set accessToken(token: string) {
         const { accessToken, cloudAccessToken } = this.getTokens();
         if (
             this.isSessionOauth &&
@@ -363,7 +363,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                             if (expiredSession) {
                                 return this.logout();
                             } else if (authorizationError) {
-                                return from(this.unauthorizedCallback(error));
+                                return from(this.unauthorizedCallback(true));
                             }
                         } else if (expiredSession || authorizationError) {
                             return this.refreshTokens(refreshToken, true).pipe(

@@ -53,3 +53,5 @@ export type HiddenParams = Partial<{
     _orderBy: string | string[];
     // Single string = array of one string
 }>;
+
+export type UnauthorizedCallback = (force: boolean) => Promise<string | boolean | void>;

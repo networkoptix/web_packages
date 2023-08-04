@@ -106,7 +106,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
         userEmail: string,
         systemId: string,
         serverId: string,
-        unauthorizedCallback: (params: Record<string, unknown>) => Promise<unknown>,
+        unauthorizedCallback: t.UnauthorizedCallback,
         cacheService: NxUriCacheService,
         cookieService: CookieService,
         healthService: NxHealthService,

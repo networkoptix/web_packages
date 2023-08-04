@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable nx/no-untyped-init */
-/* eslint-disable nx/no-untyped-arg */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-
 import { Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subscription, Observable, forkJoin, firstValueFrom } from 'rxjs';
@@ -266,20 +261,20 @@ export class NxSystemOldModule extends NxSystemModuleBase {
            Other cases are not distinguishable
         */
         const unauthorizedCallback = this.useRest
-            ? force => this.updateToken(force)
-            : force => this.updateSystemAuth(force);
+            ? (force: boolean) => this.updateToken(force)
+            : (force: boolean) => this.updateSystemAuth(force);
         if (!this.mediaserver) {
-            this.mediaserver = this.systemApiService.createConnection(
-                currentUserEmail,
+            this.mediaserver = this.systemApiService.createConnection({
+                user: currentUserEmail,
                 systemId,
                 serverId,
                 unauthorizedCallback,
-                this.version,
-            );
+                version: this.version,
+            });
         }
-        // Handling promise to satisfy the linter.
+
         if (!this.useRest || !(<NxSystemRestAPI>this.mediaserver)?.accessToken) {
-            unauthorizedCallback(true).then(() => {});
+            unauthorizedCallback(true);
         }
 
         /**
@@ -300,7 +295,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         this.systemPoll = this.pollService.createPoll<any>(() => this.update(), updateInterval);
     };
 
-    updateSystemAuth = (force = true) => {
+    updateSystemAuth = (force: boolean = true): Promise<boolean | void> => {
         if (environment.isLocal || (!force && this.mediaserver?.authGet)) {
             // no need to update
             return Promise.resolve(true);
@@ -324,7 +319,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
             });
     };
 
-    updateToken = async (force = true) => {
+    updateToken = async (force = true): Promise<string> => {
         if (!this.mediaserver) {
             if (!this.proxied.serverManager) {
                 return '';
@@ -600,63 +595,27 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         return this.mediaserver.updateOrGetSettings(updateParams);
     }
 
-    authPromise: Promise<any>;
-
-    ensureSystemAuth(force?) {
-        if (environment.isLocal) {
-            return Promise.resolve();
-        }
-
-        if (this.authPromise) {
-            return this.authPromise;
-        }
-
-        if (
-            !force &&
-            (this.mediaserver?.authGet || (<NxSystemRestAPI>this.mediaserver).accessToken)
-        ) {
-            return Promise.resolve(true);
-        }
-
-        this.authPromise = this.mediaserver.unauthorizedCallback(true).then((auth: any) => {
-            if (auth.authGet) {
-                this.mediaserver.setAuthKeys(auth.authGet, auth.authPost, auth.authPlay);
-                this.authPromise = null;
-            } else if (auth.access_token) {
-                (this.mediaserver as NxSystemRestAPI).setTokens(auth, true).subscribe(() => {});
-            } else {
-                this.authPromise = null;
-                return Promise.reject(auth);
-            }
-            return Promise.resolve(true);
-        });
-
-        return this.authPromise;
-    }
-
     public getMediaServersAndCameras(force: boolean = false): Promise<NxMediaServer[]> {
         if (this.mediaservers && !force) {
             return Promise.resolve(this.mediaservers);
         }
 
-        return this.ensureSystemAuth().then(() => {
-            return this.mediaserver
-                .getMediaServersAndCameras()
-                .toPromise()
-                .then(
-                    response => {
-                        if ((response.error && response.error !== '0') || !response.reply) {
-                            console.error('error getting mediaservers and cameras');
-                            return [];
-                        }
-                        return this.processMediaServersAndCameras(response);
-                    },
-                    err => {
-                        console.error('getMediaServersAndCameras failure', err);
+        return this.mediaserver
+            .getMediaServersAndCameras()
+            .toPromise()
+            .then(
+                response => {
+                    if ((response.error && response.error !== '0') || !response.reply) {
+                        console.error('error getting mediaservers and cameras');
                         return [];
-                    },
-                );
-        });
+                    }
+                    return this.processMediaServersAndCameras(response);
+                },
+                err => {
+                    console.error('getMediaServersAndCameras failure', err);
+                    return [];
+                },
+            );
     }
 
     protected processMediaServersAndCameras(apiReply: MediaServersAndCameras): NxMediaServer[] {
@@ -701,50 +660,43 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     }
 
     public getCameraRecords(cameraId, startTime?, endTime?, detail?, limit?, label?, periodsType?) {
-        return this.ensureSystemAuth().then(() =>
-            this.mediaserver
-                .getRecords(cameraId, startTime, endTime, detail, limit, label, periodsType)
-                .toPromise(),
-        );
+        return this.mediaserver
+            .getRecords(cameraId, startTime, endTime, detail, limit, label, periodsType)
+            .toPromise();
     }
 
     public getServerTimes(): Promise<Array<ServerTimeInfo>> {
-        return this.ensureSystemAuth().then(() => {
-            return this.mediaserver
-                .getServerTimes()
-                .toPromise()
-                .then(
-                    r => {
-                        if (!r?.reply) {
-                            this.attempts++;
-                            return this.attempts < this.apiRequestAttempts
-                                ? this.getServerTimes()
-                                : Promise.resolve([]);
-                        }
-                        this.attempts = 0;
-                        const now = Date.now();
-                        return r.reply.map(i => ({
-                            vmsTime: parseInt(i.vmsTime),
-                            vmsTimeOffset: now - parseInt(i.vmsTime),
-                            osTimeOffset: now - parseInt(i.osTime),
-                            serverId: i.serverId.slice(1, i.serverId.length - 1),
-                            timeZoneOffset: parseInt(i.timeZoneOffset),
-                        }));
-                    },
-                    err => {
-                        if (
-                            err.name === 'TimeoutError' &&
-                            this.attempts < this.apiRequestAttempts
-                        ) {
-                            this.attempts++;
-                            return this.getServerTimes();
-                        }
+        return this.mediaserver
+            .getServerTimes()
+            .toPromise()
+            .then(
+                r => {
+                    if (!r?.reply) {
+                        this.attempts++;
+                        return this.attempts < this.apiRequestAttempts
+                            ? this.getServerTimes()
+                            : Promise.resolve([]);
+                    }
+                    this.attempts = 0;
+                    const now = Date.now();
+                    return r.reply.map(i => ({
+                        vmsTime: parseInt(i.vmsTime),
+                        vmsTimeOffset: now - parseInt(i.vmsTime),
+                        osTimeOffset: now - parseInt(i.osTime),
+                        serverId: i.serverId.slice(1, i.serverId.length - 1),
+                        timeZoneOffset: parseInt(i.timeZoneOffset),
+                    }));
+                },
+                err => {
+                    if (err.name === 'TimeoutError' && this.attempts < this.apiRequestAttempts) {
+                        this.attempts++;
+                        return this.getServerTimes();
+                    }
 
-                        this.attempts = 0;
-                        return Promise.reject(err);
-                    },
-                );
-        });
+                    this.attempts = 0;
+                    return Promise.reject(err);
+                },
+            );
     }
 
     public ptz(ptzCommand: PtzCommand) {

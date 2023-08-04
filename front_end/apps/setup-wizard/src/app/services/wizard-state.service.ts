@@ -25,10 +25,7 @@ import {
     SystemConfigSettings,
     UserSession,
 } from '@services/system-api.types';
-import { NxSystemAPI } from '@services/system-legacy-api.service';
-import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
-import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { WINDOW } from '@services/window-provider';
 import { alphabeticalSort } from '@utils/general';
 
@@ -140,7 +137,7 @@ export class WizardStateService {
 
     CONFIG: IConfig;
     LANG = staticLang;
-    server: NxSystemRestAPI | NxSystemRestAPI2;
+    server: NxSystemRestAPI3;
 
     private readonly defaultUser = 'admin';
     private readonly flags: ServerFlags = {
@@ -755,6 +752,8 @@ export class WizardStateService {
             .catch(this.offlineErrorHandler)
             .then(() => {
                 this.server
+                    // @ts-expect-error FIXME: We're supposed to add security level but security
+                    // level arg is missing in v2 method
                     .setupLocalSystem(systemName, localPassword, settings, this.securityLevel)
                     .toPromise()
                     .then(() => {
@@ -911,15 +910,8 @@ export class WizardStateService {
             });
     };
 
-    createConnection<
-        S extends NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2 | NxSystemRestAPI3 =
-            | NxSystemAPI
-            | NxSystemRestAPI
-            | NxSystemRestAPI2
-            | NxSystemRestAPI3,
-    >(): S {
+    createConnection(): NxSystemRestAPI3 {
         const unauthorizedCallback = (): Promise<string> => Promise.resolve('');
-        // eslint-disable-next-line nx/no-untyped-init
         const serverApi = new NxSystemRestAPI3(
             this.http,
             nxConfig,
@@ -933,7 +925,7 @@ export class WizardStateService {
             null,
             null,
             this.injector,
-        ) as S;
+        );
         NxCurrentRelayInterceptor.currentRelays[serverApi.currentRelayHost] = serverApi;
         return serverApi;
     }

@@ -115,13 +115,13 @@ export class ServerManager {
                                       return true;
                                   });
                 }
-                mediaserverConnections[server.id] ||= this.systemApiService.createConnection(
-                    this.currentUserEmail,
-                    this.systemId,
-                    server.id,
+                mediaserverConnections[server.id] ||= this.systemApiService.createConnection({
+                    user: this.currentUserEmail,
+                    systemId: this.systemId,
+                    serverId: server.id,
                     unauthorizedCallback,
-                    this.system.version,
-                );
+                    version: this.system.version,
+                });
                 const { authGet, authPost, authPlay } = this.mediaserver.getAuthKeys();
                 mediaserverConnections[server.id].setAuthKeys(authGet, authPost, authPlay);
                 return mediaserverConnections;

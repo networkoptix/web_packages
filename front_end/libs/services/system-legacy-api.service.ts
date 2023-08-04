@@ -127,7 +127,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     protected currentUser: SystemUser;
     protected userEmail: string;
     protected userRequest: Promise<SystemUser>;
-    unauthorizedCallback: (params: unknown) => Promise<unknown>;
+    unauthorizedCallback: t.UnauthorizedCallback;
     cacheService: NxUriCacheService;
     cookieService: CookieService;
     healthService: NxHealthService;
@@ -141,7 +141,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         userEmail: string,
         systemId: string,
         serverId: string,
-        unauthorizedCallback: (params: Record<string, unknown>) => Promise<unknown>,
+        unauthorizedCallback: t.UnauthorizedCallback,
         cacheService: NxUriCacheService,
         cookieService: CookieService,
         healthService: NxHealthService,
@@ -158,7 +158,13 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         this.healthService = healthService;
         this.appState = appState;
         this.injector = injector;
-        this.init(userEmail, systemId, serverId, unauthorizedCallback);
+
+        this.setAuthKeys('', '', '');
+        this.userEmail = userEmail;
+        this.systemId = systemId;
+        this.serverId = serverId;
+        this.unauthorizedCallback = unauthorizedCallback;
+        this.currentRelayHost = this.urlBase.split('://').pop();
     }
 
     public get window() {
@@ -363,7 +369,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
                         error.status === 403 ||
                         error.resultCode === 'forbidden'
                     ) {
-                        return from(this.unauthorizedCallback(error));
+                        return from(this.unauthorizedCallback(true));
                     } else if (error.status === 503) {
                         // Repeat the request once again for 503 error
                         return of('');
@@ -396,20 +402,6 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
 
     protected proxy = proxyLegacyV1;
     currentRelayHost = '';
-
-    init(
-        userEmail: string,
-        systemId: string,
-        serverId: string,
-        unauthorizedCallback: (params: Record<string, unknown>) => Promise<any>,
-    ): void {
-        this.setAuthKeys('', '', '');
-        this.userEmail = userEmail;
-        this.systemId = systemId;
-        this.serverId = serverId;
-        this.unauthorizedCallback = unauthorizedCallback;
-        this.currentRelayHost = this.urlBase.split('://').pop();
-    }
 
     /**
      * Pings the server. This allows the NxCurrentRelayInterceptor interceptor to inspect the response.
