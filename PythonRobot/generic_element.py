@@ -25,4 +25,3 @@ class Element:
         return self.element.is_displayed()
 
 
-

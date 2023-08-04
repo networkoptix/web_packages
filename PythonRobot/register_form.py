@@ -58,7 +58,13 @@ class RegisterForm:
 
     def password_is_weak_error(self):
         return Element(self.driver, f"//div[contains(@class,input-error) and contains(text(),'{self.rb.PASSWORD_IS_WEAK_TEXT}')]", time_out=.5)
-
+    
+    def password_eye_open(self):
+        return Button(self.driver, "//svg-icon[contains(@data-src,'/images/icons/text_buttons/eye.svg')]/parent::span")
+    
+    def password_eye_closed(self):
+        return Button(self.driver, "//svg-icon[contains(@data-src,'/images/icons/text_buttons/eye_closed.svg')]/parent::span")
+                                        
     def _wait_until_form_is_visible(self):
         robot_keywords.wait_until_element_is_visible(self.driver, "//nx-authorize-create-account-component")
         self.first_name_input()

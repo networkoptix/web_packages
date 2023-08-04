@@ -91,6 +91,20 @@ def valid_inputs_no_errors():
         raise RuntimeError("password weak error was visible")
     driver.close()
 
+def password_masking_and_eye_icon():
+    """8. Displays password masked, shows password and changes eye icon when clicked"""   
+    driver = get_headless_chrome()
+    robot_keywords.go_to_url(driver, f'{rb.ENV}/authorize?client_type=create')
+    register_form = RegisterForm(driver)
+    register_form.password_eye_closed()
+    assert register_form.password_input().field_type() == "password", "Input type should be 'password'"
+    register_form.password_eye_closed().click()
+    assert register_form.password_eye_open().is_visible, "Eye icon not open"
+    assert register_form.password_input().field_type() == "text", "Input type should be 'text'"
+    register_form.password_eye_open().click()
+    assert register_form.password_eye_closed().is_visible, "Eye icon not closed"
+    assert register_form.password_input().field_type() == "password", "Input type should be 'password'"    
+    driver.close()
 
 if __name__ == "__main__":
     page_in_anonymous_state_register_header()
@@ -110,3 +124,6 @@ if __name__ == "__main__":
 
     valid_inputs_no_errors()
     print(f'{Fore.WHITE}{valid_inputs_no_errors.__doc__}\t\t\t\t\t\t\t\t\t{Fore.GREEN}| PASS |')
+
+    password_masking_and_eye_icon()
+    print(f'{Fore.WHITE}{password_masking_and_eye_icon.__doc__}\t\t\t\t\t{Fore.GREEN}| PASS |')
