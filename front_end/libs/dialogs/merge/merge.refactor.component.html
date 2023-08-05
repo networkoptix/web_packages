@@ -67,6 +67,7 @@
             [targetSystem]="targetSystem"
             [errorCode]="choosePrimaryErrorCode"
             (setCurrentState)="updateStateHistory($event)"
+            (currentSystemIsPrimaryChange)="checkForChoosePrimary($event)"
         ></nx-merge-choose-primary-component>
         <nx-merge-confirm-merge-component
             *ngSwitchCase="MergeState.confirm"

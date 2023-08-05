@@ -7,7 +7,6 @@ import {
     Inject,
     OnDestroy,
     OnInit,
-    // ViewEncapsulation,
     LOCALE_ID,
     ViewChild,
     signal,
@@ -21,7 +20,6 @@ import { cloneDeep, escape } from 'lodash-es';
 import { lastValueFrom } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
-// import { NxToastService } from '@dialogs/toast.service';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { ToastType } from '@components/toast-container/toast.types';
@@ -35,7 +33,6 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-// import { NxThemeService } from '@services/theme.service';
 import {
     DiscoveredPeersReply,
     ModuleInformation,
@@ -57,8 +54,6 @@ import { NxMergeConfirmMergeComponent } from './confirm-merge/confirm-merge.comp
 import { NxMergeGenericMergeComponent } from './generic-merge/generic-merge.component';
 import { MergeErrorData, MergeState, MergeSystem } from './merge.refactor.component.types';
 import { NxMergeSelectSystemComponent } from './select-system/select-system.component';
-
-const MAX_SERVERS = 100;
 
 const MergeServerErrorCodes = {
     1: 'noServerFound',
@@ -87,22 +82,21 @@ const ResponseStrings = {
     timeoutHasOccured: 'Timeout has occurred',
     noServerFound: 'noServerFound',
     unknownError: 'unknownError',
-    potentialErrorString: 'potentialErrorString',
     serverNotAvailable: 'serverNotAvailable',
-    systemOfflineUrl: 'systemOfflineUrl',
     missingPassword: 'missingPassword',
     wrongPassword: 'wrongPassword',
-    required: 'required',
+    passwordRequired: 'passwordRequired',
     vmsRequestFailure: 'vmsRequestFailure',
     timeoutError: 'TimeoutError',
-    knownBothSystemsConnectedToCloud: 'knownBothSystemsConnectedToCloud',
-    unknownBothSystemsConnectedToCloud: 'unknownBothSystemsConnectedToCloud',
+    bothSystemsConnectedToCloud: 'bothSystemsConnectedToCloud',
+    unknownTargetSystemConnectedToCloud: 'unknownTargetSystemConnectedToCloud',
     systemOffline: 'systemOffline',
+    systemOfflineUrl: 'systemOfflineUrl',
     secondarySystemUnavailable: 'secondarySystemUnavailable',
-    secondaryOffline: 'secondaryOffline',
+    secondarySystemIsOffline: 'secondarySystemIsOffline',
     duplicateServers: 'duplicateServers',
-    SystemVersionNew: 'SystemVersionNew',
-    SystemVersionOld: 'SystemVersionOld',
+    currentSystemVersionIsNewer: 'currentSystemVersionIsNewer',
+    currentSystemVersionIsOlder: 'currentSystemVersionIsOlder',
     differentOwners: 'differentOwners',
     configurationError: 'CONFIGURATION_ERROR',
     serviceUnavailable: 'Service Unavailable',
@@ -112,6 +106,7 @@ const ResponseStrings = {
     skip: 'skip',
     online: 'online',
     fail: 'fail',
+    wrongLogin: 'Wrong username or password.',
 };
 
 @UntilDestroy({ checkProperties: true })
@@ -119,7 +114,6 @@ const ResponseStrings = {
     selector: 'nx-merge-refactor-component',
     templateUrl: 'merge.refactor.component.html',
     styleUrls: ['merge.refactor.component.scss'],
-    // encapsulation: ViewEncapsulation.None,
     standalone: true,
     imports: [
         CommonModule,
@@ -137,7 +131,6 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
     LANG = staticLang;
     account: Account;
     readonly environment = environment;
-    readonly wrongLogin: string = 'Wrong username or password.';
 
     // only used inside parent component
     systems: NxSystemInfo[];
@@ -153,10 +146,10 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
     stateHistory = signal<MergeState[]>([]);
     currentSystemIsPrimary = signal(true);
     readonly MergeState = MergeState;
+    readonly maxServers = 100;
     isLocal: boolean = environment.isLocal;
     dryRunAvailable: boolean;
     isSessionOauth: boolean;
-    maxServers = MAX_SERVERS;
     systemUrls: { [ip: string]: string } = {};
     mergeSystems: MergeSystem[];
     system: NxSystem;
@@ -234,15 +227,10 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
         private cloudApi: NxCloudApiService,
         private processService: NxProcessService,
         private toastService: NxToastService,
-        // private cdRef: ChangeDetectorRef, // verify whether this is needed
-        // private simpleDialogService: NxSimpleDialogsService,
         private systemService: NxSystemService,
         private systemsService: NxSystemsService,
         private ribbonService: NxRibbonService,
         private title: Title,
-        // private localStorageService: LocalStorageService,
-        // private themeService: NxThemeService,
-        // private cookieService: CookieService,
         private accountService: NxAccountService,
         private elem: ElementRef<HTMLElement>,
         public dialogRef: DialogRef<DT['return']>,
@@ -266,7 +254,18 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                         .querySelector<HTMLInputElement>('#adminPassword')
                         .focus();
                 } else if (state === MergeState.primary) {
-                    this.elem.nativeElement.querySelector<HTMLInputElement>('#firstSystem').focus();
+                    // Handles the radio button that was set when going back from MergeState.confirm
+                    const firstSystem =
+                        this.elem.nativeElement.querySelector<HTMLInputElement>('#firstSystem');
+                    const secondSystem =
+                        this.elem.nativeElement.querySelector<HTMLInputElement>('#secondSystem');
+                    if (this.currentSystemIsPrimary()) {
+                        firstSystem.click();
+                        firstSystem.focus();
+                    } else {
+                        secondSystem.click();
+                        secondSystem.focus();
+                    }
                 } else if (state === MergeState.confirm) {
                     this.elem.nativeElement
                         .querySelector<HTMLButtonElement>('#confirmBackBtn')
@@ -512,7 +511,7 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
             },
             {
                 ignoreError: true,
-                errorCodes: { [this.wrongLogin]: ResponseStrings.potentialErrorString },
+                errorCodes: { [ResponseStrings.wrongLogin]: ResponseStrings.wrongLogin },
             },
             res => {
                 this.unlock();
@@ -521,7 +520,7 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                 }
                 if (!res.error || res.error === '0') {
                     this.remotePassword = this.adminPassword;
-                    this.checkForChoosePrimary();
+                    this.checkForChoosePrimary(false);
                 } else if (res.error !== '0') {
                     let errorCode: string =
                         MergeServerErrorCodes[res.error] || ResponseStrings.serverNotAvailable;
@@ -593,13 +592,13 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                         return this.LANG.toastMessage.system.merge.failed;
                     },
                     missingPassword: () => {
-                        this.confirmMergeErrorCode = ResponseStrings.required;
+                        this.confirmMergeErrorCode = ResponseStrings.passwordRequired;
                     },
                     wrongPassword: () => {
                         this.confirmMergeErrorCode = ResponseStrings.wrongPassword;
                         this.confirmPassword = '';
                     },
-                    [this.wrongLogin]: ResponseStrings.potentialErrorString,
+                    [ResponseStrings.wrongLogin]: ResponseStrings.wrongLogin,
                 },
                 ignoreError: true,
             },
@@ -728,8 +727,8 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
             ) {
                 throw Error(
                     !this.targetSystem?.name
-                        ? ResponseStrings.unknownBothSystemsConnectedToCloud
-                        : ResponseStrings.knownBothSystemsConnectedToCloud,
+                        ? ResponseStrings.unknownTargetSystemConnectedToCloud
+                        : ResponseStrings.bothSystemsConnectedToCloud,
                 );
             }
 
@@ -773,7 +772,7 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                 ).reply.protoVersion;
             } catch (err) {
                 if (err.status === 502) {
-                    throw Error(ResponseStrings.secondaryOffline);
+                    throw Error(ResponseStrings.secondarySystemIsOffline);
                 }
             }
 
@@ -793,8 +792,8 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
             } else {
                 throw Error(
                     mainSystemProto < targetSystemProto
-                        ? ResponseStrings.SystemVersionNew
-                        : ResponseStrings.SystemVersionOld,
+                        ? ResponseStrings.currentSystemVersionIsNewer
+                        : ResponseStrings.currentSystemVersionIsOlder,
                 );
             }
             targetSystemService.stopPoll();
@@ -803,9 +802,13 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
         return this.targetSystem.isNew ? isNew : { error: '0' };
     }
 
-    checkForChoosePrimary(): void {
+    checkForChoosePrimary(changePrimary: boolean): void {
         const primary = this.system.serverManager.moduleInfo;
         const secondary = this.targetSystem;
+        changePrimary
+            ? this.currentSystemIsPrimary.set(false)
+            : this.currentSystemIsPrimary.set(true);
+
         if (!!primary.cloudSystemId !== !!secondary.cloudSystemId) {
             if (secondary.cloudSystemId) {
                 this.currentSystemIsPrimary.set(false);

@@ -32,7 +32,7 @@ export class NxMergeChoosePrimaryComponent implements OnInit {
     primarySystemId: string;
 
     isCurrentSystemPrimary(): void {
-        this.currentSystemIsPrimaryChange.emit(this.system.id === this.primarySystemId);
+        this.currentSystemIsPrimaryChange.emit(this.system.id !== this.primarySystemId);
     }
 
     ngOnInit(): void {
