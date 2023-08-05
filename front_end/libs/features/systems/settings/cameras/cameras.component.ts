@@ -659,7 +659,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     }),
                 ]).then(_ => {
                     return this.system.cameraManager.getCameras().then(res => {
-                        this.setCamera();
+                        this.selectedAspectWatcher.value = undefined;
+                        this.selectedRotationWatcher.value = undefined;
+                        this.setCamera(true);
                         this.toggleMotionGrid();
                         this.settingsService.system = this.system;
                         this.system.systemInfo = this.system;
