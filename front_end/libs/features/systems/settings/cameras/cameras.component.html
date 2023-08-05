@@ -63,6 +63,7 @@
                             class="camera-button-div"
                         >
                             <button
+                                *ngIf="canSeeView()"
                                 class="camera-buttons"
                                 [routerLink]="cameraViewPath()"
                                 id="view-camera"

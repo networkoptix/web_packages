@@ -7,7 +7,6 @@ import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import { NxMenusService } from '@services/menus.service';
 import { nxConfig } from '@services/nx-config/config';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import type { NxSystem } from '@services/system.service/system';
@@ -24,7 +23,6 @@ export class SystemGuard {
         private systemService: NxSystemService,
         private systemsService: NxSystemsService,
         private menusService: NxMenusService,
-        private configService: NxConfigService,
         private deviceService: DeviceDetectorService,
     ) {}
 
@@ -60,27 +58,19 @@ export class SystemGuard {
             const permissions = system.permissionManager.permissions();
             const isOwner = system.permissionManager.isOwner();
             const isAdmin = permissions.isAdmin || isOwner;
-            const sysVersion = system.version || parseFloat(system.info.version);
-
-            // https://networkoptix.atlassian.net/wiki/spaces/FS/pages/2786951363/Bookmarks+on+Cloud#User-Permissions-new
-            /* This condition should be kept in sync with the node add condition
-            for header in menus.service.ts */
-            const canViewBookmarks =
-                this.configService.flagsEnabled('bookmarks') &&
-                sysVersion >= 5 &&
-                permissions.viewBookmarks &&
-                !(this.deviceService.isMobile() || this.deviceService.isTablet());
 
             const canViewChecks = {
                 users: permissions.editUsers,
                 'cloud-storage': system.canUserViewCloudStorage(),
-                health: isAdmin,
+                health: permissions.systemHealth,
                 licenses: isAdmin,
                 advanced: isAdmin,
                 servers: isAdmin,
-                monitoring: isAdmin,
+                monitoring: permissions.viewLogs,
                 layouts: system.canViewLayouts(),
-                bookmarks: canViewBookmarks,
+                bookmarks: system.canViewBookmarks(
+                    this.deviceService.isMobile() || this.deviceService.isTablet(),
+                ),
             };
 
             return (
@@ -139,32 +129,7 @@ export class SystemGuard {
                 }
                 await currSystem.update();
             }
-            // if (currSystem.userManager.users === undefined) {
-            //     try {
-            //         await currSystem.userManager.getUsersDataFromTheSystem();
-            //     } catch (e) {
-            //         if (e === 'Media server cloud not be reached.') {
-            //             const cloudUsers = await currSystem.getUsersCachedInCloud();
-            //             if (cloudUsers instanceof HttpErrorResponse && cloudUsers.status === 403) {
-            //                 // Non-admin user doesn't have permission to view cached cloud users
-            //                 const accessRole = currSystem.info.accessRole as string;
-            //                 const permissions = nxConfig.accessRoles.predefinedRoles.find(role => {
-            //                     let name = role.name.replace(' ', '');
-            //                     name = name.charAt(0).toLowerCase() + name.slice(1);
-            //                     // Live Viewer => liveViewer
-            //                     return accessRole === name;
-            //                 }).permissions;
-            //
-            //                 currSystem.userManager.currentUser = { permissions } as NxUser;
-            //                 // We only care about permissions here
-            //             } else {
-            //                 currSystem.userManager.processUsers(cloudUsers);
-            //             }
-            //         } else {
-            //             throw e;
-            //         }
-            //     }
-            // }
+
             this.menusService.currentUser = currSystem.permissionManager.currentUser();
             this.menusService.updateActiveSystemMenu(
                 currSystem,

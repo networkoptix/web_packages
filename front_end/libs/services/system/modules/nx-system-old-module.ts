@@ -372,6 +372,15 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         );
     }
 
+    canViewBookmarks(isMobile?: boolean) {
+        return (
+            !isMobile &&
+            this.CONFIG.featureFlags.bookmarks &&
+            this.version >= 5 &&
+            this.permissionManager.permissions()?.viewBookmarks
+        );
+    }
+
     getInfoFromCloudDb() {
         return this.cloudApi.systems(this.id);
     }

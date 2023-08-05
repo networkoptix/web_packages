@@ -6,8 +6,13 @@ export interface Permissions {
     editUsers: boolean;
     editCameras: boolean;
     exportArchives: boolean;
+    generateEvents: boolean;
+    manageBookmarks: boolean;
+    systemHealth: boolean;
+    view: boolean;
     viewArchives: boolean;
     viewBookmarks: boolean;
+    viewLogs: boolean;
 }
 
 /* Types for dealing with roles.
@@ -54,7 +59,7 @@ export interface UserGroup {
     name: string;
     parentGroupIds: string[];
     permissions: string;
-    resourceAccessRights: unknown;
+    resourceAccessRights: { [key: string]: string };
     type: string;
 }
 
@@ -119,7 +124,7 @@ export interface RestV3User {
     type: string;
     attributes: string; // v3
     groupIds: string[]; // v3
-    resourceAccessRights: unknown; // v3
+    resourceAccessRights: { [key: string]: string }; // v3
 }
 
 export type RestUser = RestV1User | RestV3User;
@@ -138,8 +143,7 @@ export interface CurrentUser {
     isOwner: boolean;
     name: string;
     permissions: Permissions;
-    permissionsString: string;
-    resourceAccessRights?: unknown;
+    resourceAccessRights?: { [key: string]: string };
     type?: string; // might remove since we have all of the is vars
 }
 
@@ -160,7 +164,7 @@ export interface NxUser {
     isOwner: boolean;
     name: string;
     permissions: string;
-    resourceAccessRights?: unknown;
+    resourceAccessRights?: { [key: string]: string };
     role?: Role;
     type: string;
     userRoleId?: string;

@@ -5,7 +5,6 @@ import {
     ViewContainerRef,
     ViewChild,
     computed,
-    Signal,
     Input,
     OnChanges,
 } from '@angular/core';
@@ -135,16 +134,21 @@ export class NxCamerasComponent implements OnInit, OnChanges {
     motionEnabledWatcher = new Watcher<MotionType>();
     motionMaskWatcher = new Watcher<string>();
 
-    editCameras: Signal<boolean> = computed(
-        () => this.system.permissionManager.permissions().editCameras,
-    );
-    canSeeInfo: Signal<boolean> = computed(() => {
+    editCameras = computed<boolean>(() => this.system.permissionManager.permissions().editCameras);
+    canSeeInfo = computed<boolean>(() => {
         if (!this.system.isOnline || !this.system.isAvailable) {
             return false;
         }
-        return this.system.permissionManager.isAdmin();
+        return this.system.permissionManager.permissions()?.systemHealth;
     });
-    fullInfoPath: Signal<string> = computed(() => {
+    canSeeView = computed<boolean>(() => {
+        if (!this.system.isOnline || !this.system.isAvailable) {
+            return false;
+        }
+        const permissions = this.system.permissionManager.permissions();
+        return permissions.view || permissions.viewArchives;
+    });
+    fullInfoPath = computed<string>(() => {
         return (
             this.uriService.getSystemSettingsRoute({
                 systemId: this.system.id,
@@ -152,7 +156,7 @@ export class NxCamerasComponent implements OnInit, OnChanges {
             }) + menus.systemSettings.cameras.path
         );
     });
-    cameraViewPath: Signal<string> = computed(() => {
+    cameraViewPath = computed<string>(() => {
         return (
             this.uriService.getSystemSettingsRoute({
                 systemId: this.system.id,

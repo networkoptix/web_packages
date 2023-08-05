@@ -316,25 +316,27 @@ export class NxMenusService {
                 ? 'system.svg'
                 : 'system_offline.svg';
 
-        const hasAdminAccess = activeSystem?.accessRole
-            ? this.CONFIG.accessRoles.adminAccess.includes(activeSystem.accessRole.toLowerCase())
-            : isLocalAdmin || false;
+        const nodes = [];
+        const permissions = activeSystem.permissionManager?.permissions() || {};
+        if (permissions.view || permissions.viewArchives) {
+            const viewNode = new MenuNode(
+                'View',
+                this.getUrl(activeSystem.id, { view: true }),
+                this.LANG?.serverTabTitles.View,
+                this.endpoint.view || false,
+            );
+            nodes.push(viewNode);
+        }
 
-        const viewNode = new MenuNode(
-            'View',
-            this.getUrl(activeSystem.id, { view: true }),
-            this.LANG?.serverTabTitles.View,
-            this.endpoint.view || false,
-        );
         const settingsNode = new MenuNode(
             'Settings',
             this.getUrl(activeSystem.id, { settings: true }),
             this.LANG?.serverTabTitles.Settings,
             this.endpoint.settings || false,
         );
+        nodes.push(settingsNode);
 
-        const nodes = [viewNode, settingsNode];
-        if (hasAdminAccess) {
+        if (permissions.systemHealth) {
             const informationNode = new MenuNode(
                 'Information',
                 this.getUrl(activeSystem.id, { information: true }),
@@ -342,7 +344,9 @@ export class NxMenusService {
                 this.endpoint.information || false,
             );
             nodes.push(informationNode);
+        }
 
+        if (permissions.viewLogs) {
             const monitoringNode = new MenuNode(
                 'Monitoring',
                 this.getUrl(activeSystem.id, { monitoring: true }),
@@ -352,13 +356,11 @@ export class NxMenusService {
             nodes.push(monitoringNode);
         }
 
-        /* This conditition should be kept in sync with the access condition
-        in bookmarksGuard.ts */
         if (
-            this.CONFIG.featureFlags.bookmarks &&
-            activeSystem.version >= 5 &&
-            this.currentUser?.permissions.viewBookmarks &&
-            !(this.deviceService.isMobile() || this.deviceService.isTablet())
+            permissions.viewBookmarks &&
+            activeSystem.canViewBookmarks(
+                this.deviceService.isMobile() || this.deviceService.isTablet(),
+            )
         ) {
             const bookmarksNode = new MenuNode(
                 'Bookmarks',
