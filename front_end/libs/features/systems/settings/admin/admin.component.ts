@@ -29,7 +29,7 @@ import type { Account } from '@services/account.service/account';
 import { NxApplyService } from '@services/apply.service';
 import { FormWatcher } from '@services/apply.service/watcher';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import type { SystemTransferInfo, CloudResponse } from '@services/nx-cloud-api/nx-cloud-api.types';
+import type { SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
@@ -271,7 +271,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
 
                 // TODO: In develop add a store for transfers.
                 if (this.ownershipTransferEnabled && !environment.isLocal) {
-                    this.cloudApiService.getTransfers().subscribe((res: SystemTransferInfo[]) => {
+                    this.cloudApiService.getTransfers().subscribe(res => {
                         this.transferInfo = res.find(
                             transfer => transfer.systemId === this.system.id,
                         );
@@ -580,24 +580,20 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     acceptOwnershipTransfer(): void {
-        this.cloudApiService
-            .respondToTransfer(this.system.id, 'accepted')
-            .subscribe((_res: CloudResponse) => {
-                this.transferInfo = undefined;
-                this.window.location.reload();
-            });
+        this.cloudApiService.respondToTransfer(this.system.id, 'accepted').subscribe(_ => {
+            this.transferInfo = undefined;
+            this.window.location.reload();
+        });
     }
 
     rejectOwnershipTransfer(): void {
-        this.cloudApiService
-            .respondToTransfer(this.system.id, 'rejected')
-            .subscribe((_res: CloudResponse) => {
-                this.transferInfo = undefined;
-            });
+        this.cloudApiService.respondToTransfer(this.system.id, 'rejected').subscribe(_ => {
+            this.transferInfo = undefined;
+        });
     }
 
     cancelOwnershipTransfer(): void {
-        this.cloudApiService.cancelTransfer(this.system.id).subscribe((_res: CloudResponse) => {
+        this.cloudApiService.cancelTransfer(this.system.id).subscribe(_ => {
             this.transferInfo = undefined;
         });
     }

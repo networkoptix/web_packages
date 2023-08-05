@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    TemplateRef,
+    ViewEncapsulation,
+} from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
@@ -27,6 +35,7 @@ export class NxAlertBlockComponent implements OnInit {
     @Input() iconSrc: string;
     @Input() line1: string;
     @Input() line2: string;
+    @Input() content2: TemplateRef<unknown>;
     @Input() type: 'error' | 'warning' | 'info' | 'default' = 'default';
 
     @Input() btnIconSrc: string;

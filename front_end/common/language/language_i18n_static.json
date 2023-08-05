@@ -725,7 +725,8 @@
             "createdInsideSelectedGroup": "New group will be created in {parentGroup}"
         },
         "transferOwnership": {
-            "userNotFound": "{ newOwnerEmail } is not a user in the system"
+            "userNotFound": "{ newOwnerEmail } is not a user in the system",
+            "aboutToTransfer": "You are about to transfer ownership to \u200B | { newOwner } |"
         },
         "titles": {
             "error": "Error",

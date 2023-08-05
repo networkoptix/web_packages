@@ -23,8 +23,12 @@
                         [ngClass]="line2 ? 'mb-2' : ''"
                         [innerHtml]="line1"
                     ></div>
+                    <ng-template
+                        *ngIf="content2"
+                        [ngTemplateOutlet]="content2"
+                    ></ng-template>
                     <span
-                        *ngIf="line2"
+                        *ngIf="!content2 && line2"
                         [innerHtml]="line2"
                     ></span>
                 </div>

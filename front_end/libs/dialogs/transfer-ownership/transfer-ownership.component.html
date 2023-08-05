@@ -22,125 +22,266 @@
             <div class="close-content"></div>
         </button>
     </div>
-    <ng-container *ngIf="!transferComplete; else transferSuccessTemplate">
-        <div *ngIf="userItems.length; else noUsers">
-            <div class="modal-body pb-1">
-                <div class="form-group">
-                    <label
-                        for="newSystemOwner"
-                        translate
-                        >New system owner:</label
-                    >
+
+    <nx-pre-loader *ngIf="!(userItems$$() && orgItems$$()); else content"></nx-pre-loader>
+
+    <ng-template #content>
+        <nx-transfer-stepper #stepper>
+            <cdk-step><ng-container [ngTemplateOutlet]="newOwnerSelect"></ng-container></cdk-step>
+            <cdk-step><ng-container [ngTemplateOutlet]="confirmation"></ng-container></cdk-step>
+            <cdk-step><ng-container [ngTemplateOutlet]="success"></ng-container></cdk-step>
+        </nx-transfer-stepper>
+    </ng-template>
+
+    <ng-template #userSelect>
+        <nx-searchable-select
+            class="fs-mask"
+            [items]="userItems$$()"
+            [ngModel]="selectedUser"
+            (ngModelChange)="selectUser($event)"
+            (onClickElsewhere)="checkUser($event)"
+            [selected]="selectedUser"
+            [noMatchMsg]="LANG.search.userNotFound"
+            [ngModelOptions]="{ standalone: true }"
+            [placeholder]="'Email' | translate"
+        ></nx-searchable-select>
+        <div
+            class="col-12 ml-n2 d-flex"
+            *ngIf="transferOwnershipForm.errors"
+        >
+            <span
+                *ngIf="transferOwnershipForm.errors.userDisabled"
+                class="input-info subtext error-label"
+                translate
+                >User disabled</span
+            >
+            <span
+                *ngIf="transferOwnershipForm.errors.userNotFound"
+                class="input-info subtext error-label"
+                translate
+                >User not found</span
+            >
+        </div>
+    </ng-template>
+
+    <ng-template #noUsers>
+        <svg-icon
+            nx-add-svg-src
+            [src]="icons.dirSectionPlaceholder + 'NoUsers.svg'"
+            [svgStyle]="{ 'height.px': '64', 'width.px': '64' }"
+        ></svg-icon>
+        <h3 translate>No users</h3>
+        <div class="msg-wrapper">
+            <p translate>There are no other users on the system besides you.</p>
+            <p translate>Add them to system to be able to transfer rights</p>
+        </div>
+        <button
+            class="btn btn-default"
+            (click)="openAddUserDialog()"
+            translate
+        >
+            Add Users
+        </button>
+    </ng-template>
+
+    <ng-template #newOwnerSelect>
+        <ng-container *ngIf="isOrgMember$$()">
+            <div class="modal-body">
+                <div class="radio-container">
+                    <nx-radio
+                        name="transfertarget"
+                        [ngModel]="transferTargetType$$()"
+                        (ngModelChange)="transferTargetType$$.set($event)"
+                        componentId="user"
+                        value="user"
+                        [label]="'To User' | translate"
+                    ></nx-radio>
+                    <nx-radio
+                        name="transfertarget"
+                        [ngModel]="transferTargetType$$()"
+                        (ngModelChange)="transferTargetType$$.set($event)"
+                        componentId="org"
+                        value="org"
+                        [label]="'To Organization' | translate"
+                    ></nx-radio>
+                </div>
+                <ng-container *ngIf="transferTargetType$$() === 'user'">
+                    <ng-container
+                        *ngIf="usersInSystem$$()"
+                        [ngTemplateOutlet]="userSelect"
+                    ></ng-container>
+                    <ng-container *ngIf="!usersInSystem$$()">
+                        <div class="no-users no-users__with-orgs">
+                            <ng-container [ngTemplateOutlet]="noUsers"></ng-container>
+                        </div>
+                    </ng-container>
+                </ng-container>
+                <ng-container *ngIf="transferTargetType$$() === 'org'">
                     <nx-searchable-select
                         class="fs-mask"
-                        [items]="userItems"
-                        [ngModel]="selectedUser"
-                        (ngModelChange)="selectUser($event)"
-                        (onClickElsewhere)="checkUser($event)"
-                        [selected]="selectedUser"
-                        canSearch
-                        [noMatchMsg]="LANG.search.userNotFound"
+                        [items]="orgItems$$()"
+                        [ngModel]="selectedOrg"
+                        (ngModelChange)="selectOrg($event)"
+                        (onClickElsewhere)="checkOrg($event)"
+                        [selected]="selectedOrg"
+                        [noMatchMsg]="'Organization not found' | translate"
                         [ngModelOptions]="{ standalone: true }"
-                        [placeholder]="'Email' | translate"
+                        [placeholder]="'Organization' | translate"
                     ></nx-searchable-select>
                     <div
                         class="col-12 ml-n2 d-flex"
                         *ngIf="transferOwnershipForm.errors"
                     >
                         <span
-                            *ngIf="transferOwnershipForm.errors.userDisabled"
+                            *ngIf="transferOwnershipForm.errors.orgNotFound"
                             class="input-info subtext error-label"
                             translate
-                            >User disabled</span
-                        >
-                        <span
-                            *ngIf="transferOwnershipForm.errors.userNotFound"
-                            class="input-info subtext error-label"
-                            translate
-                            >The user was not found in this system</span
+                            >Organization not found</span
                         >
                     </div>
+                </ng-container>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="!isOrgMember$$()">
+            <ng-container *ngIf="usersInSystem$$()">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label
+                            for="newSystemOwner"
+                            translate
+                            >To User</label
+                        >
+                        <ng-container [ngTemplateOutlet]="userSelect"></ng-container>
+                    </div>
                 </div>
-                <nx-alert-block
-                    type="warning"
-                    id="restarting"
-                    [iconSrc]="icons.dirNonStandard + 'error.svg'"
-                    [line1]="'WARNING' | translate"
-                    [line2]="
-                        'Once the ownership transfer is complete, you will be removed from the system.'
-                            | translate
-                    "
-                >
-                </nx-alert-block>
-            </div>
-            <div class="modal-footer">
-                <nx-process-button
-                    [process]="transferOwnership"
-                    [form]="transferOwnershipForm"
-                    [buttonText]="'Send Request' | translate"
-                    [buttonDisabled]="!selectedUser || !!transferOwnershipForm.errors"
-                ></nx-process-button>
-                <nx-cancel-button
-                    [process]="transferOwnership"
-                    [cancelFn]="unlock"
-                    [discardFn]="close"
-                ></nx-cancel-button>
-            </div>
+            </ng-container>
+            <ng-container *ngIf="!usersInSystem$$()">
+                <div class="modal-body no-users no-users__without-orgs">
+                    <ng-container [ngTemplateOutlet]="noUsers"></ng-container>
+                </div>
+            </ng-container>
+        </ng-container>
+        <div
+            class="modal-footer modal-footer__justify-right"
+            *ngIf="usersInSystem$$() || transferTargetType$$() === 'org'"
+        >
+            <nx-process-button
+                [process]="advanceProcess"
+                [form]="transferOwnershipForm"
+                [buttonText]="'Next' | translate"
+                [buttonDisabled]="
+                    (transferTargetType$$() === 'user' && !selectedUser) ||
+                    (transferTargetType$$() === 'org' && !selectedOrg) ||
+                    !!transferOwnershipForm.errors
+                "
+                [svg]="{ src: 'arrow_right' }"
+            ></nx-process-button>
         </div>
-        <ng-template #noUsers>
-            <div class="no-users">
+    </ng-template>
+
+    <ng-template #confirmation>
+        <div class="modal-body">
+            <p
+                *ngrxLet="
+                    LANG.dialogs.transferOwnership.aboutToTransfer
+                        | translate : { newOwner } as aboutToTransfer
+                "
+            >
+                <span>{{ aboutToTransfer | translateCut : 0 }}</span
+                ><span
+                    ><strong>{{ aboutToTransfer | translateCut : 1 }}</strong></span
+                ><span>{{ aboutToTransfer | translateCut : 2 }}</span>
+            </p>
+            <ng-template #content2>
+                <span
+                    *ngIf="currentOwnerType === 'user'"
+                    translate
+                    >Once the ownership transfer is complete, you will be removed from the
+                    system.</span
+                >
+                <ul
+                    class="from-org-warning"
+                    *ngIf="currentOwnerType === 'org'"
+                >
+                    <li translate>
+                        Licenses that were used in this system will be deactivated for this system
+                        but can be activated again in another system
+                    </li>
+                    <li translate>
+                        Channel Partner and Organization users will be removed from this system
+                    </li>
+                </ul>
+            </ng-template>
+            <!-- TODO: Create another warning block that matches the spec -->
+            <nx-alert-block
+                type="warning"
+                id="transfer-warning"
+                [iconSrc]="icons.dirNonStandard + 'warning.svg'"
+                [line1]="'WARNING' | translate"
+                [content2]="content2"
+            >
+            </nx-alert-block>
+        </div>
+        <div class="modal-footer modal-footer__justify-between">
+            <button
+                class="btn btn-default"
+                (click)="stepper.previous()"
+                [disabled]="transferToUser.processing || transferToOrg.processing"
+            >
                 <svg-icon
-                    nx-add-svg-src
-                    [src]="icons.dirSectionPlaceholder + 'NoUsers.svg'"
-                    [svgStyle]="{ 'height.px': '64', 'width.px': '64' }"
+                    class="arrow-left"
+                    [src]="icons.dir + 'arrow_left.svg'"
+                    [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
                 ></svg-icon>
-                <h3 translate>No users</h3>
-                <p translate>
-                    There are no other users on the system besides you. Add them to system to be
-                    able to transfer rights
-                </p>
-                <button
-                    class="btn btn-default"
-                    (click)="openAddUserDialog()"
+            </button>
+            <nx-process-button
+                [process]="transferTargetType$$() === 'user' ? transferToUser : transferToOrg"
+                [form]="transferOwnershipForm"
+                [buttonText]="'Transfer' | translate"
+            ></nx-process-button>
+        </div>
+    </ng-template>
+
+    <ng-template #success>
+        <div class="modal-body d-flex flex-column align-items-center mb-4">
+            <svg-icon
+                nx-add-svg-src
+                class="mt-1 mb-2"
+                [svgStyle]="{ 'height.px': '79' }"
+                [src]="icons.dirSectionPlaceholder + 'mail_placeholder.svg'"
+            ></svg-icon>
+            <p
+                *ngIf="transferTargetType$$() === 'org' && isOrgAdmin; else normaResult"
+                id="request-sent"
+                class="mt-1"
+                translate
+            >
+                System ownership was successfully changed
+            </p>
+            <ng-template #normaResult>
+                <p
+                    id="request-sent"
+                    class="mt-1"
                     translate
                 >
-                    Add Users
-                </button>
-            </div>
-        </ng-template>
-    </ng-container>
+                    Request has been sent
+                </p>
+                <p
+                    class="subtext mt-1"
+                    translate
+                >
+                    Ownership transfer will occur as soon as the new owner accepts the request.
+                </p>
+            </ng-template>
+        </div>
+        <div class="modal-footer modal-footer__justify-right">
+            <button
+                class="btn btn-primary min-w-100 mt-4 mb-4"
+                (click)="close(transferInfo)"
+                translate
+            >
+                OK
+            </button>
+        </div>
+    </ng-template>
 </form>
-
-<ng-template #transferSuccessTemplate>
-    <div class="modal-body d-flex flex-column align-items-center mb-4">
-        <svg-icon
-            nx-add-svg-src
-            class="mt-1 mb-2"
-            [svgStyle]="{ 'height.px': '79' }"
-            [src]="icons.dirSectionPlaceholder + 'mail_placeholder.svg'"
-        ></svg-icon>
-        <p
-            id="request-sent"
-            class="mt-1"
-            translate
-        >
-            Request has been sent
-        </p>
-        <p
-            class="subtext mt-1"
-            translate
-        >
-            Ownership transfer will occur as soon as the new owner accepts the request. You may
-            still cancel the transfer before the new owner accepts it.
-        </p>
-    </div>
-    <div class="modal-footer">
-        <button
-            class="btn btn-primary min-w-100 mt-4 mb-4"
-            (click)="close(transferInfo)"
-            translate
-        >
-            OK
-        </button>
-    </div>
-</ng-template>
