@@ -178,6 +178,25 @@ def should_respond_to_tab_key():
     register_form.password_is_required_error()
     driver.close()
 
+def terms_and_conditions_in_new_page():
+    """11. Should open Terms and conditions in a new page"""
+    driver = get_headless_chrome()
+    robot_keywords.go_to_url(driver, f'{rb.ENV}/authorize?client_type=create')
+    RegisterForm(driver).terms_and_conditions_link().click()
+    robot_keywords.sleep(1)
+    driver.switch_to.window(driver.window_handles[1])
+    robot_keywords.location_should_be(driver, f"{rb.ENV}content/eula")
+    driver.close()
+
+def privacy_policy_in_new_page():
+    """12. Should open Privacy Policy in a new page"""
+    driver = get_headless_chrome()
+    robot_keywords.go_to_url(driver, f'{rb.ENV}/authorize?client_type=create')
+    RegisterForm(driver).privacy_policy_link().click()
+    robot_keywords.sleep(1)
+    driver.switch_to.window(driver.window_handles[1])
+    robot_keywords.location_should_be(driver, "https://www.networkoptix.com/privacy-policy")
+    driver.close()
 
 if __name__ == "__main__":
     page_in_anonymous_state_register_header()
@@ -206,3 +225,9 @@ if __name__ == "__main__":
 
     should_respond_to_tab_key()
     print(f'{Fore.WHITE}{should_respond_to_tab_key.__doc__}\t\t\t\t\t\t\t\t\t\t\t{Fore.GREEN}| PASS |')
+
+    terms_and_conditions_in_new_page()
+    print(f'{Fore.WHITE}{terms_and_conditions_in_new_page.__doc__}\t\t\t\t\t\t\t\t{Fore.GREEN}| PASS |')
+
+    privacy_policy_in_new_page()
+    print(f'{Fore.WHITE}{privacy_policy_in_new_page.__doc__}\t\t\t\t\t\t\t\t\t{Fore.GREEN}| PASS |')
