@@ -11,6 +11,7 @@ from button import Button
 from header import HeaderNav
 from register_form import RegisterForm
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
 
 rb = RobotVariables("en_US")
 # driver = get_headless_chrome()
@@ -122,6 +123,62 @@ def should_respond_to_enter_key():
     register_form.account_creation_success()
     driver.close()
 
+def should_respond_to_tab_key():
+    """10. Should respond to Tab key"""
+    driver = get_headless_chrome()
+    robot_keywords.go_to_url(driver, rb.ENV)
+    HeaderNav(driver).create_account().click()
+    register_form = RegisterForm(driver)
+    robot_keywords.sleep(1)
+    assert register_form.email_input().is_focused, "Email input not focused by default"
+    ActionChains(driver).send_keys(Keys.TAB).perform()
+    # register_form.email_input().send_keys(Keys.TAB)
+    robot_keywords.sleep(1)
+    assert register_form.first_name_input().is_focused, "First name input not focused after TAB"
+    ActionChains(driver).send_keys(Keys.TAB).perform()
+    robot_keywords.sleep(1)
+    assert register_form.last_name_input().is_focused, "Last name input not focused after TAB"
+    ActionChains(driver).send_keys(Keys.TAB).perform()
+    robot_keywords.sleep(1)
+    assert register_form.password_input().is_focused, "Password input not focused after TAB"
+    ActionChains(driver).send_keys(Keys.TAB).perform()
+    robot_keywords.sleep(1)
+    assert register_form.terms_and_conditions_checkbox().is_focused, "Terms and conditions not focused after TAB"
+    ActionChains(driver).send_keys(Keys.SPACE).perform()
+    robot_keywords.sleep(1)
+    assert register_form.terms_and_conditions_checkbox().checked(), "Terms and conditions not checked"
+    ActionChains(driver).send_keys(Keys.SPACE).perform()
+    robot_keywords.sleep(2)
+    assert register_form.terms_and_conditions_checkbox().unchecked(), "Terms and conditions checked"
+    ActionChains(driver).send_keys(Keys.TAB).perform()
+    robot_keywords.sleep(1)
+    ActionChains(driver).send_keys(Keys.ENTER).perform()
+    robot_keywords.sleep(1)
+    assert register_form.terms_and_conditions_link().is_focused, "TaC link not focused after TAB"
+    driver.switch_to.window(driver.window_handles[1])
+    robot_keywords.location_should_be(driver, f"{rb.ENV}content/eula")
+    driver.switch_to.window(driver.window_handles[0])
+    ActionChains(driver).send_keys(Keys.TAB).perform()
+    robot_keywords.sleep(1)
+    ActionChains(driver).send_keys(Keys.ENTER).perform()
+    robot_keywords.sleep(1)
+    assert register_form.privacy_policy_link().is_focused, "Privacy link not focused after TAB"
+    driver.switch_to.window(driver.window_handles[2])
+    robot_keywords.location_should_be(driver, "https://www.networkoptix.com/privacy-policy")
+    driver.switch_to.window(driver.window_handles[0])
+    ActionChains(driver).send_keys(Keys.TAB).perform()
+    robot_keywords.sleep(1)
+    assert register_form.login_button().is_focused, "Login Button not focused after TAB"
+    ActionChains(driver).send_keys(Keys.TAB).perform()
+    robot_keywords.sleep(1)
+    assert register_form.create_account_button().is_focused, "Create Account Button not focused after TAB" 
+    register_form.first_name_is_required_error()
+    register_form.last_name_is_required_error()
+    register_form.email_is_required_error()
+    register_form.password_is_required_error()
+    driver.close()
+
+
 if __name__ == "__main__":
     page_in_anonymous_state_register_header()
     print(f'{Fore.WHITE}{page_in_anonymous_state_register_header.__doc__}\t\t\t{Fore.GREEN}| PASS |')
@@ -146,3 +203,6 @@ if __name__ == "__main__":
 
     should_respond_to_enter_key()
     print(f'{Fore.WHITE}{should_respond_to_enter_key.__doc__}\t\t\t\t\t\t\t\t\t{Fore.GREEN}| PASS |')
+
+    should_respond_to_tab_key()
+    print(f'{Fore.WHITE}{should_respond_to_tab_key.__doc__}\t\t\t\t\t\t\t\t\t\t\t{Fore.GREEN}| PASS |')

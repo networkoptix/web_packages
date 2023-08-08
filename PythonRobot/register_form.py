@@ -9,6 +9,7 @@ from generic_element import Element
 class RegisterForm:
     def __init__(self, driver, lang="en_US"):
         self.driver = driver
+        self.locator = "//nx-authorize-create-account-component"
         self.rb = RobotVariables(lang)
         self.required_text = f"/following-sibling::p[contains(@class,error-label) and contains(text(),'{self.rb.REQUIRED_TEXT}')]"
         self._wait_until_form_is_visible()
@@ -34,6 +35,12 @@ class RegisterForm:
     
     def terms_and_conditions_checkbox(self):
         return Checkbox(self.driver, "//nx-checkbox[@name='termsAndConditions']", "//input[@id='termsAndConditions']")
+    
+    def terms_and_conditions_link(self):
+        return Button(self.driver, "//a[@href='/content/eula']")
+    
+    def privacy_policy_link(self):
+        return Button(self.driver, "//a[@href='https://www.networkoptix.com/privacy-policy/']")
 
     def account_creation_success(self):
         return Element(self.driver, "//nx-authorize-activate-account-component")
@@ -64,7 +71,10 @@ class RegisterForm:
     
     def password_eye_closed(self):
         return Button(self.driver, "//svg-icon[contains(@data-src,'/images/icons/text_buttons/eye_closed.svg')]/parent::span")
-                                        
+    
+    def login_button(self):
+        return Button(self.driver, "//span[@data-testid='createAccountLogIn']/parent::button")
+                                   
     def _wait_until_form_is_visible(self):
         robot_keywords.wait_until_element_is_visible(self.driver, "//nx-authorize-create-account-component")
         self.first_name_input()

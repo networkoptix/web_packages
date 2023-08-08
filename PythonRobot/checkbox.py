@@ -9,17 +9,25 @@ class Checkbox:
         robot_keywords.wait_until_element_is_visible(self.driver, visible_locator)
         self.actual_element = self.driver.find_element(By.XPATH, f"{visible_locator}{actual_locator}")
         self.clickable_element = self.driver.find_element(By.XPATH, visible_locator)
+        self.checked_xpath = f'{visible_locator}//span[@class="tick checked"]'
+        self.unchecked_xpath = f'{visible_locator}//span[contains(@class,"unchecked")]'
 
     def click(self):
         self.clickable_element.click()
 
     def select(self):
-        if not self.actual_element.is_selected():
+        if self.unchecked():
             self.clickable_element.click()
     
     def unselect(self):
-        if self.actual_element.is_selected():
+        if self.checked():
             self.clickable_element.click()
 
     def checked(self):
-        return self.actual_element.is_selected()
+        return self.driver.find_element(By.XPATH, self.checked_xpath)
+    
+    def unchecked(self):
+         return self.driver.find_element(By.XPATH, self.unchecked_xpath)
+    
+    def is_focused(self):
+        return self.actual_element == self.driver.switch_to.active_element
